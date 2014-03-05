@@ -23,7 +23,7 @@
 angular.module('Bastion.content-views').factory('Filter',
     ['$resource', function ($resource) {
 
-        return $resource('/api/v2/filters/:filterId/:action',
+        return $resource('/api/v2/content_view_filters/:filterId/:action',
             {filterId: '@id', 'content_view_id': '@content_view.id'},
             {
                 query: {method: 'GET', isArray: false},

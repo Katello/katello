@@ -43,7 +43,7 @@ Katello::Engine.routes.draw do
           get :available_puppet_modules
         end
         api_resources :content_view_puppet_modules, :controller => :content_view_puppet_modules
-        api_resources :filters do
+        api_resources :filters, :controller => :content_view_filters do
           member do
             get :available_errata
             get :available_package_groups
@@ -55,6 +55,17 @@ Katello::Engine.routes.draw do
         api_resources :repositories, :only => [:index]
         api_resources :content_view_versions, :only => [:index]
       end
+
+      api_resources :content_view_filters do
+        api_resources :errata, :only => [:index]
+        api_resources :package_groups, :only => [:index]
+        api_resources :rules, :controller => :content_view_filter_rules
+        member do
+          get :available_errata
+          get :available_package_groups
+        end
+      end
+
       api_resources :content_view_versions, :only => [:index, :show] do
         member do
           post :promote
@@ -73,20 +84,6 @@ Katello::Engine.routes.draw do
       end
 
       api_resources :errata, :only => [:index, :show]
-
-      # content view filters
-      api_resources :filters do
-        api_resources :errata, :only => [:index]
-        api_resources :package_groups, :only => [:index]
-        api_resources :rules, :controller => :filter_rules
-        member do
-          get :available_errata
-          get :available_package_groups
-        end
-      end
-
-      # content view filter rules
-      api_resources :rules, :controller => :filter_rules
 
       api_resources :gpg_keys, :only => [:index, :show, :create, :update, :destroy] do
         post :content, :on => :member

@@ -49,7 +49,7 @@ class ContentView < Katello::Model
            :dependent => :destroy
   alias_method :puppet_modules, :content_view_puppet_modules
 
-  has_many :filters, :dependent => :destroy, :class_name => "Katello::Filter"
+  has_many :filters, :dependent => :destroy, :class_name => "Katello::ContentViewFilter"
 
   has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict
   has_many :systems, :class_name => "Katello::System", :dependent => :restrict
@@ -430,7 +430,7 @@ class ContentView < Katello::Model
   def remove_repository(repository)
     filters.each do |filter_item|
       repo_exists = Repository.unscoped.joins(:filters).where(
-          Filter.table_name => {:id => filter_item.id}, :id => repository.id).count
+          ContentViewFilter.table_name => {:id => filter_item.id}, :id => repository.id).count
       if repo_exists
         filter_item.repositories.delete(repository)
         filter_item.save!
@@ -486,7 +486,7 @@ class ContentView < Katello::Model
   #  end
   #
   #  if applicable_filters.empty? || copy_clauses
-  #    pulp_task = repo.clone_contents_by_filter(cloned, Filter::PUPPET_MODULE, copy_clauses)
+  #    pulp_task = repo.clone_contents_by_filter(cloned, ContentViewFilter::PUPPET_MODULE, copy_clauses)
   #    PulpTaskStatus.wait_for_tasks([pulp_task])
   #  end
   #end
@@ -525,19 +525,19 @@ class ContentView < Katello::Model
     end
 
     if applicable_filters.empty? || copy_clauses
-      pulp_task = repo.clone_contents_by_filter(cloned, Filter::PACKAGE, copy_clauses)
+      pulp_task = repo.clone_contents_by_filter(cloned, ContentViewFilter::PACKAGE, copy_clauses)
       PulpTaskStatus.wait_for_tasks([pulp_task])
       process_errata_and_groups = true
     end
 
     if remove_clauses
-      pulp_task = cloned.unassociate_by_filter(Filter::PACKAGE, remove_clauses)
+      pulp_task = cloned.unassociate_by_filter(ContentViewFilter::PACKAGE, remove_clauses)
       PulpTaskStatus.wait_for_tasks([pulp_task])
       process_errata_and_groups = true
     end
 
     if process_errata_and_groups
-      group_tasks = [Filter::ERRATA, Filter::PACKAGE_GROUP].collect do |content_type|
+      group_tasks = [ContentViewFilter::ERRATA, ContentViewFilter::PACKAGE_GROUP].collect do |content_type|
         repo.clone_contents_by_filter(cloned, content_type, nil)
       end
       PulpTaskStatus.wait_for_tasks(group_tasks)

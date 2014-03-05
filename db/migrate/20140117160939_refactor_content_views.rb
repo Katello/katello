@@ -31,10 +31,13 @@ class RefactorContentViews < ActiveRecord::Migration
     rename_column :katello_content_view_repositories, :content_view_definition_id, :content_view_id
 
     # katello filters
-    rename_column :katello_filters, :content_view_definition_id, :content_view_id
-    add_column :katello_filters, :type, :string
-    add_column :katello_filters, :inclusion, :boolean, :default => false, :null => false
-    add_column :katello_filters, :parameters, :text
+    rename_table :katello_filters, :katello_content_view_filters
+    rename_table :katello_filters_repositories, :katello_content_view_filters_repositories
+    rename_column :katello_content_view_filters_repositories, :filter_id, :content_view_filter_id
+
+    rename_column :katello_content_view_filters, :content_view_definition_id, :content_view_id
+    add_column :katello_content_view_filters, :type, :string
+    add_column :katello_content_view_filters, :inclusion, :boolean, :default => false, :null => false
   end
 
   def down
@@ -89,9 +92,13 @@ class RefactorContentViews < ActiveRecord::Migration
     rename_table :katello_content_view_repositories, :katello_content_view_definition_repositories
 
     # katello filters
+    rename_table :katello_content_view_filters, :katello_filters
+
+    rename_column :katello_content_view_filters_repositories, :content_view_filter_id, :filter_id
+    rename_table :katello_content_view_filters_repositories, :katello_filters_repositories
+
     rename_column :katello_filters, :content_view_id, :content_view_definition_id
     remove_column :katello_filters, :type
-    remove_column :katello_filters, :parameters
 
     add_foreign_key "katello_component_content_views", "katello_content_view_definition_bases",
                             :name => "component_content_views_content_view_definition_id_fk", :column => "content_view_definition_id"
