@@ -13,7 +13,6 @@
 module Actions
   module Katello
     module Repository
-
       # Clones the contnet of the repository into the environment
       # effectively promotion the repository to the environment
       class CloneToEnvironment < Actions::Base
@@ -29,10 +28,8 @@ module Actions
             end
             plan_action(Repository::CloneContent, repository, clone, [])
             concurrence do
-              plan_action(Katello::Repository::NodeMetadataGenerate,
-                          clone)
-              plan_action(Pulp::Repository::RegenerateApplicability,
-                            pulp_id: clone.pulp_id)
+              plan_action(Katello::Repository::NodeMetadataGenerate, clone)
+              plan_action(Pulp::Repository::RegenerateApplicability, pulp_id: clone.pulp_id)
             end
           end
         end
@@ -47,12 +44,10 @@ module Actions
             clone = ::Katello::Repository.find(clone.id) # reload readonly object
             clone.update_attributes!(content_view_version_id: version.id)
           else
-            clone = repository.build_clone(environment: environment,
-                                           content_view: version.content_view)
+            clone = repository.build_clone(environment: environment, content_view: version.content_view)
           end
           return clone
         end
-
 
       end
     end
