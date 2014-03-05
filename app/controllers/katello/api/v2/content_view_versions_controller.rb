@@ -44,7 +44,7 @@ module Katello
       respond :resource => @version
     end
 
-    api :POST, "/content_view_versions/:id/promote"
+    api :POST, "/content_view_versions/:id/promote", "Promote a content view version"
     param :id, :identifier, :desc => "Content view version identifier", :required => true
     param :environment_id, :identifier
     def promote
