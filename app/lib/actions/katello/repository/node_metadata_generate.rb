@@ -13,7 +13,7 @@
 module Actions
   module Katello
     module Repository
-      class NodeMetadataGenerate < Dynflow::Action
+      class NodeMetadataGenerate < Actions::Base
 
         def plan(repo)
           plan_self('id' => repo.id)

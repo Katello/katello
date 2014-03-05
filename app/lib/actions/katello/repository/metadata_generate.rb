@@ -13,7 +13,7 @@
 module Actions
   module Katello
     module Repository
-      class MetadataGenerate < Dynflow::Action
+      class MetadataGenerate < Actions::Base
 
         def plan(repository, source_repository = nil)
           plan_action(Pulp::Repository::DistributorPublish,

@@ -13,7 +13,7 @@
 module Actions
   module Katello
     module System
-      class Create < Dynflow::Action
+      class Create < Actions::Base
 
         def self.subscribe
           Headpin::System::Create

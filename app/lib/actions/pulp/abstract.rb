@@ -12,7 +12,7 @@
 
 module Actions
   module Pulp
-    class Abstract < Dynflow::Action
+    class Abstract < Actions::Base
       middleware.use ::Actions::Middleware::RemoteAction
 
       def pulp_resources

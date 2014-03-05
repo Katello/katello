@@ -13,7 +13,10 @@
 module Actions
   module Katello
     module Repository
-      class Reindex < Dynflow::Action
+      # Unlike ElasticSearch::Reindex, this action does the reindexing in run phase
+      # which allows concurrent execution of more indexing actions in scope of
+      # one content view
+      class Reindex < Actions::Base
 
         middleware.use ::Actions::Middleware::RemoteAction
 

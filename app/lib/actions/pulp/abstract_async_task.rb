@@ -13,7 +13,7 @@
 module Actions
   module Pulp
     class AbstractAsyncTask < Pulp::Abstract
-      include Dynflow::Action::Polling
+      include Actions::Base::Polling
 
       def done?
         !!external_task[:finish_time]

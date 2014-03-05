@@ -13,7 +13,7 @@
 module Actions
   module Katello
     module ContentView
-      class UpdateEnvironment < Dynflow::Action
+      class UpdateEnvironment < Actions::Base
 
         def plan(content_view, environment, new_content_id = nil)
           view_env = content_view.content_view_environment(environment)

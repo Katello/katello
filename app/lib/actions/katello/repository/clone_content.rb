@@ -13,7 +13,7 @@
 module Actions
   module Katello
     module Repository
-      class CloneContent < Dynflow::Action
+      class CloneContent < Actions::Base
 
         def plan(source_repo, target_repo, filters)
           if target_repo.puppet?

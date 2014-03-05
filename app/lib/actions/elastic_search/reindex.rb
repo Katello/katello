@@ -12,7 +12,7 @@
 
 module Actions
   module ElasticSearch
-    class Reindex < Dynflow::Action
+    class Reindex < Actions::Base
 
       middleware.use ::Actions::Middleware::RemoteAction
 
