@@ -20,8 +20,7 @@
          tooltip="{{ 'You cannot remove this product because it was published to a content view or because you do not have permission.' | translate }}"
          tooltip-append-to-body="true">
       </i>
-      <button class="btn"
-              ng-class="{'btn-danger': product.permissions.deletable, 'btn-default': !product.permissions.deletable}"
+      <button class="btn btn-default"
               ng-hide="product.readonly"
               ng-click="openModal()"
               ng-disabled="!product.permissions.deletable">

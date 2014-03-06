@@ -17,7 +17,7 @@
          modal-header='Remove Repository "{{repository.name}}"?'
          modal-body='Are you sure you want to remove repository "{{ repository.name }}"?'></div>
 
-    <button class="btn btn-danger"
+    <button class="btn btn-default"
             ng-click="openModal()"
             ng-disabled="!repository.permissions.deletable">
       {{ "Remove Repository" | translate }}
