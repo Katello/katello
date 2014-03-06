@@ -1,6 +1,6 @@
 <section>
 
-  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div data-block="messages" alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
   <h4>
     <span data-block="header"></span>
@@ -26,7 +26,7 @@
 
     <div class="col-sm-6">
       <div class="fr">
-        <span class="nutupane-info fl">
+        <span class="nutupane-info fl" data-block="selection-summary">
           <span translate>{{ detailsTable.numSelected }} Selected</span>
           <span>|</span>
           <a class="deselect-action"

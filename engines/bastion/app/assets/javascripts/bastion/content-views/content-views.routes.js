@@ -91,7 +91,12 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         controller: 'ContentViewAvailableRepositoriesController',
         templateUrl: 'content-views/details/views/content-view-repositories.html'
     })
-
+    .state('content-views.details.history', {
+        collapsed: true,
+        url: '/history',
+        controller: 'ContentViewHistoryController',
+        templateUrl: 'content-views/details/views/content-view-details-history.html'
+    })
     .state('content-views.details.puppet-modules', {
         abstract: true,
         collapsed: true,

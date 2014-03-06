@@ -31,6 +31,7 @@ angular.module('Bastion.content-views').factory('ContentView',
                 query:  {method: 'GET', isArray: false},
                 update: {method: 'PUT'},
                 publish: {method: 'POST', params: {action: 'publish'}},
+                history: {method: 'GET', params: {action: 'history'}},
                 versions: {method: 'GET', isArray: false, params: {action: 'content_view_versions'}}
             }
         );
