@@ -23,8 +23,11 @@ module Actions
 
         def plan(repo)
           action_subject(repo)
-          plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
-          plan_action(ElasticSearch::Reindex, repo)
+          sequence do
+            plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
+            plan_action(ElasticSearch::Repository::IndexContent, id: repo.id)
+            plan_action(ElasticSearch::Reindex, repo)
+          end
         end
 
         def humanized_name

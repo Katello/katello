@@ -12,24 +12,19 @@
 
 module Actions
   module ElasticSearch
-    class Reindex < ElasticSearch::Abstract
+    module Repository
+      class IndexContent < ElasticSearch::Abstract
 
-      def plan(record)
-        plan_self(id: record.id,
-                  class_name: record.class.name)
+        input_format do
+          param :id, Integer
+        end
+
+        def run
+          repo = ::Katello::Repository.find(input[:id])
+          repo.index_content
+        end
+
       end
-
-      input_format do
-        param :id
-        param :class_name
-      end
-
-      def finalize
-        model_class = input['class_name'].constantize
-        record = model_class.find(input['id'])
-        record.update_index
-      end
-
     end
   end
 end
