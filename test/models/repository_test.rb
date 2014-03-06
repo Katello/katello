@@ -166,6 +166,20 @@ class RepositoryInstanceTest < RepositoryTestBase
     assert_equal "Empty_Organization-library_label-org_default_label-fedora_label-fedora_17_x86_64_label", repo_id
   end
 
+  def test_clone_repo_path
+    path = Repository.clone_repo_path(:repository => @fedora_17_x86_64,
+                                      :version => @fedora_17_x86_64.content_view_version,
+                                      :content_view => @fedora_17_x86_64.content_view
+                                     )
+    assert_equal "/content_views/org_default_label/1/library/fedora_17_label", path
+
+    path = Repository.clone_repo_path(:repository => @fedora_17_x86_64,
+                                      :environment => @fedora_17_x86_64.organization.library,
+                                      :content_view => @fedora_17_x86_64.content_view
+                                     )
+    assert_equal "/library_default_view_library/library/fedora_17_label", path
+  end
+
   def test_clone_repo_path_for_component
     skip "TODO: Fix content views"
     # validate that clone repo path for a component view does not include the component view label

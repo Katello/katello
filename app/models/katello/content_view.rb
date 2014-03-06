@@ -25,6 +25,8 @@ class ContentView < Katello::Model
     Katello::Actions::ContentViewCreate
   end
 
+  CONTENT_DIR = "content_views"
+
   before_destroy :confirm_not_promoted # RAILS3458: this needs to come before associations
 
   belongs_to :organization, :inverse_of => :content_views, :class_name => "::Organization"

@@ -227,7 +227,7 @@ class Repository < Katello::Model
                                          :content_view_id => options[:content_view]).first
       "#{org}/#{cve.label}/#{content_path}"
     else
-      "#{org}/#{options[:content_view].label}/#{options[:version].version}/#{content_path}"
+      "#{org}/#{ContentView::CONTENT_DIR}/#{options[:content_view].label}/#{options[:version].version}/#{content_path}"
     end
   end
 
