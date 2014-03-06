@@ -16,39 +16,35 @@ module Actions
       class CloneContent < Actions::Base
 
         def plan(source_repo, target_repo, filters)
-          if target_repo.puppet?
-            fail NotImplementedError
-          else
-            copy_clauses = nil
-            remove_clauses = nil
-            process_errata_and_groups = false
-            filters = filters.yum unless filters.is_a? Array
+          copy_clauses = nil
+          remove_clauses = nil
+          process_errata_and_groups = false
+          filters = filters.yum unless filters.is_a? Array
 
-            if filters.any?
-              clause_gen = Util::PackageClauseGenerator.new(repo, filters)
-              clause_gen.generate
-              copy_clauses = clause_gen.copy_clause
-              remove_clauses = clause_gen.remove_clause
-            end
+          if filters.any?
+            clause_gen = ::Katello::Util::PackageClauseGenerator.new(source_repo, filters)
+            clause_gen.generate
+            copy_clauses = clause_gen.copy_clause
+            remove_clauses = clause_gen.remove_clause
+          end
 
-            sequence do
-              if filters.empty? || copy_clauses
-                plan_copy(Pulp::Repository::CopyRpm, source_repo, target_repo, copy_clauses)
-                process_errata_and_groups = true
-              end
-              if remove_clauses
-                plan_remove(Pulp::Repository::RemoveRpm, target_repo, remove_clauses)
-                process_errata_and_groups = true
-              end
-              if process_errata_and_groups
-                plan_copy(Pulp::Repository::CopyErrata, source_repo, target_repo, copy_clauses)
-                plan_copy(Pulp::Repository::CopyPackageGroup, source_repo, target_repo, copy_clauses)
-              end
-              plan_copy(Pulp::Repository::CopyYumMetadataFile, source_repo, target_repo)
-              plan_copy(Pulp::Repository::CopyDistribution, source_repo, target_repo)
-              plan_action(Katello::Repository::MetadataGenerate, target_repo, filters.empty? ? source_repo : nil)
-              plan_action(Katello::Repository::Reindex, target_repo)
+          sequence do
+            if filters.empty? || copy_clauses
+              plan_copy(Pulp::Repository::CopyRpm, source_repo, target_repo, copy_clauses)
+              process_errata_and_groups = true
             end
+            if remove_clauses
+              plan_remove(Pulp::Repository::RemoveRpm, target_repo, remove_clauses)
+              process_errata_and_groups = true
+            end
+            if process_errata_and_groups
+              plan_copy(Pulp::Repository::CopyErrata, source_repo, target_repo, copy_clauses)
+              plan_copy(Pulp::Repository::CopyPackageGroup, source_repo, target_repo, copy_clauses)
+            end
+            plan_copy(Pulp::Repository::CopyYumMetadataFile, source_repo, target_repo)
+            plan_copy(Pulp::Repository::CopyDistribution, source_repo, target_repo)
+            plan_action(Katello::Repository::MetadataGenerate, target_repo, filters.empty? ? source_repo : nil)
+            plan_action(ElasticSearch::Repository::IndexContent, id: target_repo.id)
           end
         end
 
