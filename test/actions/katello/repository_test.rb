@@ -17,34 +17,36 @@ module Katello
   describe ::Actions::Katello::Repository do
     include Dynflow::Testing
     include Support::Actions::Fixtures
+    include FactoryGirl::Syntax::Methods
 
     describe "Create" do
       let(:action_class) { ::Actions::Katello::Repository::Create }
 
-      it 'plans' do
-        # TODO remove this mocking when action is broken down
-        cp           = mock 'cp', update_cp_content: nil
-        organization = mock 'organization', default_content_view: cp, library: nil
-        product      = mock 'product', organization: organization
-        repository   = mock 'repository',
-                            save!:             true,
-                            product:           product,
-                            generate_metadata: nil
+      let(:repository) { build(:katello_repository, id: 123) }
 
+      it 'plans' do
         action = create_action action_class
+        repository.stubs(organization: build(:katello_organization))
+        repository.expects(:save!)
         action.expects(:action_subject).with(repository)
+        action.execution_plan.stub_planned_action(::Actions::Katello::Product::ContentCreate) do |content_create|
+          content_create.stubs(input: { content_id: 123 })
+        end
         plan_action action, repository
       end
     end
 
     describe 'Destroy' do
       let(:action_class) { ::Actions::Katello::Repository::Destroy }
+      let(:pulp_action_class) { ::Actions::Pulp::Repository::Destroy }
 
       it 'plans' do
-        repository   = mock 'repository', destroy: true
+        repository   = mock 'repository', pulp_id: 123, destroy: true
         action       = create_action action_class
         action.stubs(:action_subject).with(repository)
         plan_action action, repository
+        assert_action_planed_with action, pulp_action_class, pulp_id: 123
+        assert_action_planed_with action, ::Actions::Katello::Product::ContentDestroy, repository
       end
     end
 
