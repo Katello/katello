@@ -24,8 +24,8 @@
 angular.module('Bastion.content-views').factory('ContentView',
     ['$resource', 'CurrentOrganization',
     function ($resource, CurrentOrganization) {
-
-        return $resource('/api/v2/content_views/:id/:action',
+        var resource =
+         $resource('/api/v2/content_views/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 query:  {method: 'GET', isArray: false},
@@ -46,6 +46,23 @@ angular.module('Bastion.content-views').factory('ContentView',
                 }}
             }
         );
+        resource.availablePuppetModuleNames = function(){ return {
+            total: 10,
+            subtotal: 10,
+            results: [
+                {name: 'apple'},
+                {name: 'pear'},
+                {name: 'peach'},
+                {name: 'pepper'},
+                {name: 'orange'},
+                {name: 'mango'},
+                {name: 'pineapple'},
+                {name: 'tomayto'},
+                {name: 'tomahto'},
+                {name: 'plum'}
+            ]
+        }};
 
+        return resource;
     }]
 );

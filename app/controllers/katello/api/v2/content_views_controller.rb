@@ -15,7 +15,8 @@ module Katello
     before_filter :find_content_view, :except => [:index, :create]
     before_filter :find_organization, :only => [:index, :create]
     before_filter :find_environment, :only => [:index]
-    before_filter :load_search_service, :only => [:index, :history, :available_puppet_modules]
+    before_filter :load_search_service, :only => [:index, :history, :available_puppet_modules,
+                                                  :available_puppet_module_names]
     before_filter :authorize
 
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids component_ids))
@@ -40,7 +41,8 @@ module Katello
         :update                   => edit_rule,
         :publish                  => publish_rule,
         :available_puppet_modules => view_rule,
-        :history                  => view_rule
+        :history                  => view_rule,
+        :available_puppet_module_names => view_rule
       }
     end
 
@@ -106,15 +108,32 @@ module Katello
     api :GET, "/content_views/:id/available_puppet_modules",
         "Get puppet modules that are available to be added to the content view"
     param :id, :identifier, :desc => "content view numeric identifier", :required => true
+    param :name, String, :desc => "module name to restrict modules for", :required => false
     def available_puppet_modules
       current_ids = @view.content_view_puppet_modules.map(&:uuid)
-      repo_ids = @view.organization.library.puppet_repositories.pluck(:pulp_id)
+      repo_ids = @view.organization.library.puppet_repositories.readable(@view.organization.library).pluck(:pulp_id)
       search_filters = [{ :terms => { :repoids => repo_ids } },
                         { :not => { :terms => { :id => current_ids } } }]
+      search_filters << { :term => { :name => params[:name] } } if params[:name]
       options = { :filters => search_filters }
 
       respond_for_index :template => '../puppet_modules/index',
                         :collection => item_search(PuppetModule, params, options)
+    end
+
+    api :GET, "/content_views/:id/available_puppet_module_names",
+        "Get puppet modules names that are available to be added to the content view"
+    param :id, :identifier, :desc => "content view numeric identifier", :required => true
+    def available_puppet_module_names
+      current_ids = @view.content_view_puppet_modules.map(&:uuid)
+      repo_ids = @view.organization.library.puppet_repositories.readable(
+          @view.organization.library).pluck(:pulp_id)
+      search_filters = [{ :terms => { :repoids => repo_ids } },
+                        { :not => { :terms => { :id => current_ids } } }]
+      options = {:filters  => search_filters}
+
+      respond_for_index :template => '../puppet_modules/names',
+                        :collection => facet_search(PuppetModule, 'name', options)
     end
 
     api :GET, "/content_views/:id/history", "Show a content view's history"

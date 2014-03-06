@@ -1,0 +1,40 @@
+<div class="details details-full">
+
+  <a ui-sref="content-views.details.puppet-modules.list" >
+    <i class="icon-double-angle-left"></i>
+    {{ "Back to Module List" | translate }}
+  </a>
+
+  <h3 translate>Select A New Puppet Module To Add</h3>
+
+  <div class="details-header">
+    <input type="text"
+           class="form-control filter-input"
+           placeholder="{{ 'Filter' | translate }}"
+           ng-model="filterTerm"/>
+  </div>
+
+  <table class="table table-striped table-bordered" alch-table="table" ng-class="{'table-mask': table.working}">
+    <thead>
+      <tr alch-table-head>
+        <th alch-table-column>{{ "Name" | translate }}</th>
+        <th alch-table-column>{{ "Actions" | translate }}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr alch-table-row ng-repeat="item in names | filter:filterTerm">
+        <td alch-table-cell >{{ item.name }}</td>
+        <td alch-table-cell >
+          <button translate ng-click="selectVersion(item.name)">
+            Select a Version
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<button translate ui-sref="content-views.details.puppet-modules.list">
+  Cancel
+</button>

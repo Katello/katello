@@ -23,13 +23,25 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewPuppetModulesController',
-    ['$scope', function ($scope) {
+    ['$scope', 'gettext', 'ContentViewPuppetModule',
+    function ($scope, gettext, ContentViewPuppetModule) {
 
         $scope.table = {};
-        $scope.contentView.$versions(function (versions) {
-            $scope.contentView.versions = versions.results;
-            $scope.table.rows = $scope.contentView.versions;
-        });
+        $scope.modules = ContentViewPuppetModule.query({contentViewId: $scope.$stateParams.contentViewId}).results
+        $scope.versionText = function(module) {
+            var text = module.version;
+            if (module.version === undefined) {
+                text = gettext("Latest (Currently %s)").replace('%s', module.computedVersion);
+            }
+            return text;
+        };
+
+        $scope.selectNewVersion = function(module) {
+            console.log(module);
+            $scope.$parent.currentModule = module;
+            $scope.transitionTo('content-views.details.puppet-modules.versions',
+                {contentViewId: $scope.$stateParams.contentViewId});
+        }
 
     }]
 );

@@ -196,5 +196,23 @@ module Katello
       end
     end
 
+    def test_available_puppet_module_names
+      Support::SearchService::FakeSearchService.any_instance.stubs(:facets).returns({'facet_search' => {'terms' => []}})
+
+      get :available_puppet_module_names, :id => @content_view.id
+
+      assert_response :success
+      assert_template 'katello/api/v2/content_views/../puppet_modules/names'
+    end
+
+    def test_available_puppet_module_names_protected
+      allowed_perms = [@read_permission]
+      denied_perms = [@no_permission]
+
+      assert_protected_action(:available_puppet_module_names, allowed_perms, denied_perms) do
+        get :available_puppet_module_names, :id => @content_view.id
+      end
+    end
+
   end
 end

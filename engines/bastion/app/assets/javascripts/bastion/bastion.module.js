@@ -41,6 +41,7 @@ angular.module('Bastion', [
     'Bastion.organizations',
     'Bastion.products',
     'Bastion.providers',
+    'Bastion.puppet-modules',
     'Bastion.repositories',
     'Bastion.subscriptions',
     'Bastion.sync-plans',

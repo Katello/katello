@@ -82,6 +82,9 @@
 //= require "bastion/providers/providers.module.js"
 //= require_tree "./providers"
 
+//= require "bastion/puppet-modules/puppet-modules.module.js"
+//= require_tree "./puppet-modules"
+
 //= require "bastion/repositories/repositories.module.js"
 //= require_tree "./repositories"
 

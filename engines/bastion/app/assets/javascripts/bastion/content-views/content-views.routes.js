@@ -121,17 +121,22 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
     })
     .state('content-views.details.puppet-modules.list', {
         collapsed: true,
-        url: '/puppet_modules/list',
-        controller: 'ContentViewPuppetModulesListController',
-        templateUrl: 'content-views/details/views/content-view-puppet-modules.html'
+        url: '/puppet_modules/',
+        controller: 'ContentViewPuppetModulesController',
+        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-modules.html'
     })
-    .state('content-views.details.puppet-modules.available', {
+    .state('content-views.details.puppet-modules.names', {
         collapsed: true,
-        url: '/puppet_modules/available',
-        controller: 'ContentViewAvailablePuppetModulesController',
-        templateUrl: 'content-views/details/views/content-view-puppet-modules.html'
+        url: '/puppet_modules/name',
+        controller: 'ContentViewPuppetModuleNamesController',
+        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-module-names.html'
     })
-
+    .state('content-views.details.puppet-modules.versions', {
+        collapsed: true,
+        url: '/puppet_modules/version',
+        controller: 'ContentViewPuppetModuleVersionsController',
+        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-module-versions.html'
+    })
     .state('content-views.details.info', {
         collapsed: true,
         url: '/info',

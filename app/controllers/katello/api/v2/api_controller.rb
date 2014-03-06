@@ -48,6 +48,7 @@ module Katello
     param :root_name, String, :desc => "root-node of collection contained in responses (default: 'results')"
 
     def item_search(item_class, params, options)
+      fail "@search_service search not defined" if @search_service.nil?
       if params[:order]
         (params[:sort_by], params[:sort_order]) = params[:order].split(' ')
       end
@@ -77,6 +78,25 @@ module Katello
         :total    => @search_service.total_items,
         :page     => options[:page],
         :per_page => options[:per_page]
+      }
+    end
+
+    def facet_search(item_class, term , options)
+      fail "@search_service search not defined" if @search_service.nil?
+      facet_name = 'facet_search'
+
+      @search_service.model =  item_class
+      options[:per_page] = 1
+      options[:facets] = {facet_name => term}
+
+      @search_service.retrieve('', 0, options)
+
+      facets = @search_service.facets[facet_name]['terms']
+      results = facets.collect{|f| Katello::Glue::ElasticSearch::FacetItem.new(f)}
+     {
+        :results  => results.sort_by{|f| f.term },
+        :subtotal => results.length,
+        :total    => results.length,
       }
     end
 

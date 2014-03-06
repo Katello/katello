@@ -15,7 +15,7 @@ module Glue
   module ElasticSearch
     class Items
 
-      attr_accessor :obj_class, :query_string, :results, :total, :filters, :search_options
+      attr_accessor :obj_class, :query_string, :results, :total, :filters, :search_options, :facets
       alias_method :model=, :obj_class=
 
       def initialize(obj_class = nil)
@@ -23,6 +23,7 @@ module Glue
         @query_string = query_string
         @results      = []
         @filters      = []
+        @facets       = []
       end
 
       # Retrieves items from the Elasticsearch index
@@ -75,6 +76,7 @@ module Glue
                     else
                       search_options[:per_page] || total_items
                     end
+        facet_size = search_options[:facets] ? total_items : 0
         filters = @filters
         filters = [filters] if !filters.is_a? Array
 
@@ -92,11 +94,21 @@ module Glue
 
           filter :and, filters if filters.any?
 
+          if search_options[:facets]
+            search_options[:facets].each_pair do |name, value|
+              facet name do
+                terms value, :size => facet_size
+              end
+            end
+          end
+
           size page_size
           from start
         end
 
         total_count = @results.total
+
+        @facets = @results.facets
 
         if search_options[:load_records?]
           @results = load_records

@@ -13,13 +13,34 @@
 
 /**
  * @ngdoc object
- * @name  Bastion.content-views.controller:ContentViewPuppetModulesListController
+ * @name  Bastion.content-views.controller:ContentViewPuppetModulesController
+ *
+ * @requires $scope
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
  *   Defines the columns to display and the transform function for how to generate each row
  *   within the table.
  */
-angular.module('Bastion.content-views').controller('ContentViewPuppetModulesListController',
-    [function () {}]
+angular.module('Bastion.content-views').controller('ContentViewPuppetModuleVersionsController',
+    ['$scope', 'PuppetModule', function ($scope, PuppetModule) {
+
+
+        console.log($scope.currentModule);
+
+        if ($scope.currentModule === undefined) {
+            //$scope.transitionTo('content-views.details.puppet-modules.list',
+            //    {contentViewId: $scope.$stateParams.contentViewId});
+            $scope.versions = [];
+        } else {
+            $scope.versions = PuppetModule.query({name: $scope.currentModule.name}).results
+        }
+
+
+        $scope.addModule = function(module) {
+
+
+        };
+
+    }]
 );
