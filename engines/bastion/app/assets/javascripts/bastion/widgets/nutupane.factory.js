@@ -68,6 +68,9 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 table.working = true;
 
                 params.page = table.resource.page + 1;
+                params.search = table.searchTerm || "";
+                params.search = self.searchTransform(params.search);
+
                 resource[table.action](params, function (response) {
 
                     angular.forEach(response.results, function (row) {
@@ -127,8 +130,6 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 if (table.rows.length === 0) {
                     table.resource.page = 0;
                 }
-                params.search = table.searchTerm || "";
-                params.search = self.searchTransform(params.search);
                 return self.load();
             };
 
@@ -162,11 +163,12 @@ angular.module('Bastion.widgets').factory('Nutupane',
             };
 
             self.getAllSelectedResults = function (identifier) {
-                var selected;
+                var selected, selectedRows;
                 identifier = identifier || 'id';
                 selected = {
                     included: {
                         ids: [],
+                        resources: [],
                         search: null
                     },
                     excluded: {
@@ -178,7 +180,9 @@ angular.module('Bastion.widgets').factory('Nutupane',
                     selected.included.search = self.table.searchTerm || '';
                     selected.excluded.ids = _.pluck(self.getDeselected(), identifier);
                 } else {
-                    selected.included.ids = _.pluck(self.table.getSelected(), identifier);
+                    selectedRows = self.table.getSelected();
+                    selected.included.ids = _.pluck(selectedRows, identifier);
+                    selected.included.resources = selectedRows;
                 }
                 return selected;
             };

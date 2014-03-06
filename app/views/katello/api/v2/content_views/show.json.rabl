@@ -38,9 +38,7 @@ child :repositories => :repositories do
 end
 
 child :components => :components do
-  attributes :id, :name
-  attributes :version, :content_view_id
-  attributes :created_at => :published
+  extends 'katello/api/v2/content_view_versions/show'
 end
 
 extends 'katello/api/v2/common/timestamps'
