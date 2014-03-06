@@ -394,7 +394,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   DESC
   param :enabled_repos, Hash, :required => true do
     param :repos, Array, :required => true do
-      params :baseurl, Array, :description => "List of enabled repo urls for the repo (Only first is used.)", :required => false
+      param :baseurl, Array, :description => "List of enabled repo urls for the repo (Only first is used.)", :required => false
     end
   end
   param :id, String, :desc => "UUID of the system", :required => true
