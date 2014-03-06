@@ -12,24 +12,8 @@
 
 module Actions
   module ElasticSearch
-    class Reindex < ElasticSearch::Abstract
-
-      def plan(record)
-        plan_self(id: record.id,
-                  class_name: record.class.name)
-      end
-
-      input_format do
-        param :id
-        param :class_name
-      end
-
-      def finalize
-        model_class = input['class_name'].constantize
-        record = model_class.find(input['id'])
-        record.update_index
-      end
-
+    class Abstract < Actions::Base
+      middleware.use ::Actions::Middleware::RemoteAction
     end
   end
 end

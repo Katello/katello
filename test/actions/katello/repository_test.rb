@@ -71,13 +71,14 @@ module Katello
       let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
 
       it 'plans' do
-        repository   = mock 'repository', pulp_id: 1
+        repository   = mock 'repository', pulp_id: 'pulp-repo-1', id: 1
         action       = create_action action_class
         action.stubs(:action_subject).with(repository)
         plan_action action, repository
 
-        assert_action_planed action, pulp_action_class
-        assert_action_planed action, ::Actions::ElasticSearch::Reindex
+        assert_action_planed_with action, pulp_action_class, pulp_id: 'pulp-repo-1'
+        assert_action_planed_with action, ::Actions::ElasticSearch::Repository::IndexContent, id: 1
+        assert_action_planed_with action, ::Actions::ElasticSearch::Reindex, repository
       end
 
       describe 'progress' do
