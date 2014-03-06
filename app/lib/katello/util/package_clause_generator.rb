@@ -18,11 +18,11 @@ module Util
     protected
 
     def fetch_filters
-      Filter.yum
+      ContentViewFilter.yum
     end
 
     def collect_clauses(repo, filters)
-      [ErratumFilter, PackageGroupFilter, PackageFilter].collect do |filter_class|
+      [ContentViewErratumFilter, ContentViewPackageGroupFilter, ContentViewPackageFilter].collect do |filter_class|
         content_type_filters = filters.where(:type => filter_class)
         make_package_clauses(repo, content_type_filters) unless content_type_filters.empty?
       end
@@ -51,9 +51,9 @@ module Util
 
     def package_clauses_from_content(content_type, pulp_content_clauses)
       case content_type
-      when Filter::ERRATA
+      when ContentViewFilter::ERRATA
         package_clauses_for_errata(pulp_content_clauses)
-      when Filter::PACKAGE_GROUP
+      when ContentViewFilter::PACKAGE_GROUP
         package_clauses_for_group(pulp_content_clauses)
       else
         {"$or" => pulp_content_clauses}

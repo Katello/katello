@@ -16,7 +16,10 @@
  * @name  Bastion.content-views.controller:ContentViewPromotionController
  *
  * @requires $scope
- * @requires ContentView
+ * @requires gettext
+ * @requires ContentViewVersion
+ * @requires Organization
+ * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
@@ -24,41 +27,56 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewPromotionController',
-    ['$scope', 'ContentView', 'CurrentOrganization', '$http',
-    function ($scope, ContentView, CurrentOrganization, $http) {
+    ['$scope', 'gettext', 'ContentViewVersion', 'Organization', 'CurrentOrganization',
+    function ($scope, gettext, ContentViewVersion, Organization, CurrentOrganization) {
 
         $scope.promotion = {};
 
-        $http.get('/katello/organizations/' + CurrentOrganization + '/environments/registerable_paths')
-            .success(function (paths) {
+        $scope.availableEnvironments =  Organization.paths({id: CurrentOrganization});
 
-                angular.forEach($scope.version.environments, function (environment) {
-                    angular.forEach(paths, function (path) {
-                        angular.forEach(path, function (item, index) {
-                            if (environment.id.toString() === item.id.toString()) {
-                                if (index + 1 < path.length) {
-                                    path[index + 1].selectable = true;
-                                }
-                            }
-                        });
-                    });
-                });
+        $scope.enabledCheck = function (env) {
+            var enabled = false,
+                envIds = _.pluck($scope.version.environments, 'id');
 
-                $scope.availableEnvironments =  paths;
-            });
+            if (!env.prior) {
+                env.prior = {};
+            }
 
-        $scope.contentView.$version($scope.$stateParams.versionId, function (version) {
-            $scope.version = version;
-        });
+            if (envIds.indexOf(env.id) !== -1) {
+                //if version is already promoted to the environment
+                enabled = false;
+            } else if (env.library) {
+                //allow library for all versions
+                enabled = true;
+            } else if (envIds.length !== 0 && envIds.indexOf(env.prior.id) !== -1) {
+                //if environment is a successor an existing environment
+                enabled = true;
+            }
+            return enabled;
+        };
+
+        $scope.version = ContentViewVersion.query({id: $scope.$stateParams.versionId});
+        $scope.currentOrganization = CurrentOrganization;
 
         $scope.promote = function () {
-            angular.forEach($scope.availableEnvironments, function (path) {
-                if (path.selectable) {
-                    $scope.contentView.version.environments.push(path);
-                }
-            });
-
-            $scope.transitionTo('content-views-details.versions', {contentViewId: $scope.contentView.id});
+            $scope.promoting = true;
+            ContentViewVersion.promote({id: $scope.version.id, 'environment_id': $scope.selectedEnvironment.id},
+                success, failure);
         };
+
+        function success() {
+            var message = gettext('Successfully initiated promotion of %cv version %ver to %env.');
+            message = message.replace('%cv', $scope.contentView.name).replace('%env', $scope.selectedEnvironment.name);
+            message = message.replace('%ver', $scope.version.version);
+            $scope.promoting = false;
+            $scope.$parent.successMessages = [message];
+            $scope.transitionTo('content-views.details.versions', {contentViewId: $scope.contentView.id});
+        }
+
+        function failure(response) {
+            $scope.promoting = false;
+            $scope.$parent.errorMessages = [response.data.displayMessage];
+        }
+
     }]
 );

@@ -34,14 +34,18 @@ class ContentViewVersion < Katello::Model
   has_many :repositories, :class_name => "Katello::Repository", :dependent => :destroy
   has_one :task_status, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
 
-  has_many :content_view_components
-  has_many :composite_content_views, :through => :content_view_components
+  has_many :content_view_components, :inverse_of => :content_view_version
+  has_many :composite_content_views, :through => :content_view_components, :source => :content_view
 
   scope :default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true)
   scope :non_default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false)
 
   def to_s
     name
+  end
+
+  def active_history
+    self.history.active
   end
 
   def name
@@ -61,7 +65,7 @@ class ContentViewVersion < Katello::Model
   end
 
   def non_archive_repos
-    self.repositories.select { |repo| repo.environment.present? }
+    self.repositories.non_archived
   end
 
   def products(env = nil)
@@ -96,7 +100,7 @@ class ContentViewVersion < Katello::Model
         self.content_view.versions.in_environment(from_env).count > 1
   end
 
-  def promote(to_env)
+  def promote(to_env, options = {:async => true})
     history = ContentViewHistory.create!(:content_view_version => self, :user => User.current.login,
                                :environment => to_env, :status => ContentViewHistory::IN_PROGRESS)
 
@@ -106,8 +110,17 @@ class ContentViewVersion < Katello::Model
     promote_version.environments << to_env unless promote_version.environments.include?(to_env)
     promote_version.save!
 
+    replacing_version.environments.delete(to_env) if replacing_version
+
+    if options[:async]
+      self.async(:organization => self.content_view.organization).promote_content(to_env, replacing_version, history)
+    else
+      promote_content(to_env, replacing_version, history)
+    end
+  end
+
+  def promote_content(to_env, replacing_version, history)
     if replacing_version
-      replacing_version.environments.delete(to_env)
       PulpTaskStatus.wait_for_tasks(prepare_repos_for_promotion(replacing_version.repos(to_env), self.archived_repos))
     end
 
@@ -145,7 +158,7 @@ class ContentViewVersion < Katello::Model
       clone = self.get_repo_clone(to_env, repo).first
       if clone.nil?
         # this repo doesn't currently exist in the next environment, so create it
-        clone = repo.create_clone({:environment => to_env, :version => self, :content_view => self.content_view})
+        clone = repo.create_clone({:environment => to_env, :content_view => self.content_view})
         tasks << repo.clone_contents(clone)
       else
         # this repo already exists in the next environment, so update it
@@ -176,7 +189,7 @@ class ContentViewVersion < Katello::Model
   end
 
   def trigger_repository_changes(options = {})
-    repos_changed = options[:non_archive] ? non_archive_repos : repositories
+    repos_changed = options[:non_archive] ? non_archive_repos : repositories.reload
 
     Repository.trigger_contents_changed(repos_changed, :wait => true, :reindex => true,
                                         :cloned_repo_overrides => options.fetch(:cloned_repo_overrides, []))

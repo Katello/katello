@@ -81,7 +81,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
     @search_service.model = Repository
     repositories, total_count = @search_service.retrieve(params[:search], params[:offset], options)
-
     collection = {
       :results  => repositories,
       :subtotal => total_count,

@@ -151,6 +151,26 @@ module Katello
       assert_includes @content_view.repositories(true).map(&:id), repository.id
     end
 
+    def test_update_components
+      version = @content_view.versions.first
+      composite = ContentView.find(katello_content_views(:composite_view))
+      refute_includes composite.components(true).map(&:id), version.id
+      put :update, :id => composite.id, :component_ids => [version.id]
+
+      assert_response :success
+      assert_includes composite.components(true).map(&:id), version.id
+      assert_equal 1, composite.components(true).length
+    end
+
+    def test_remove_components
+      version = @content_view.versions.first
+      composite = ContentView.find(katello_content_views(:composite_view))
+      composite.components << version
+      refute_empty composite.components(true)
+      put :update, :id => composite.id, :component_ids => []
+      assert_empty composite.components(true)
+    end
+
     def test_update_protected
       allowed_perms = [@create_permission, @update_permission]
       denied_perms = [@no_permission, @read_permission]

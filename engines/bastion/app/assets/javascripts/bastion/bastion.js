@@ -58,6 +58,9 @@
 //= require "bastion/subscriptions/subscriptions.module.js"
 //= require_tree "./subscriptions"
 
+//= require "bastion/content-views/versions/content-view-versions.module.js"
+//= require_tree "./content-views/versions"
+
 //= require "bastion/content-views/content-views.module"
 //= require_tree "./content-views"
 

@@ -31,7 +31,7 @@ module Katello
     api :GET, "/content_views/:content_view_id/content_view_versions", "List content view versions"
     param :content_view_id, :identifier, :desc => "Content view identifier", :required => true
     def index
-      collection = {:results  => @view.versions,
+      collection = {:results  => @view.versions.order('version desc'),
                     :subtotal => @view.versions.count,
                     :total    => @view.versions.count
                    }
@@ -44,11 +44,11 @@ module Katello
       respond :resource => @version
     end
 
-    api :POST, "/content_view_versions/:id/promote"
+    api :POST, "/content_view_versions/:id/promote", "Promote a content view version"
     param :id, :identifier, :desc => "Content view version identifier", :required => true
     param :environment_id, :identifier
     def promote
-      respond_for_async :resource => @version.async(:organization => @organization).promote(@environment)
+      respond_for_async :resource => @version.promote(@environment)
     end
 
     private

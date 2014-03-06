@@ -170,9 +170,9 @@ module Katello
     param :organization_id, String, :desc => "organization identifier"
     def paths
       paths = @organization.promotion_paths.inject([]) do |result, path|
-        result << { :path => [@organization.library] + path }
+        result << { :environments => [@organization.library] + path }
       end
-      paths = [{ :path => [@organization.library] }] if paths.empty?
+      paths = [{ :environments => [@organization.library] }] if paths.empty?
 
       respond_for_index(:collection => paths, :template => :paths)
     end

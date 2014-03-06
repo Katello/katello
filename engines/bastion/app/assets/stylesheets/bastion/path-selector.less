@@ -2,7 +2,8 @@
 @widget-background-color: #F9F8F8;
 @breadcrumbbg_color: #e9e9e9;
 @listhover_color: #00a8d6;
-@path-item-color: #e9e9e9;
+@path-item-color: #FFF;//#e9e9e9;
+@disabled-item-color: #e9e9e9;
 @path-active-color: #005870;
 
 .path-selector {
@@ -15,8 +16,6 @@
     margin-bottom: 10px;
     display: inline-block;
     border: 1px solid @widget-border-color;
-    border-radius: 3px;
-    box-shadow: 0px 0px 15px @widget-border-color;
 
     .path-list-item {
       float: left;
@@ -26,14 +25,13 @@
       &:first-child {
         label {
           padding-left: 12px;
-          border-radius: 0 0 3px 3px;
         }
       }
       &:last-child {
         label {
-          border-radius: 3px 3px 0 0;
+          padding-right: 16px;
 
-          &:hover {
+          &:hover:not([disabled]) {
             color: white;
             background: @listhover_color;
           }
@@ -47,8 +45,12 @@
 
       label {
         color: black;
+        font-size: 12px;
+        font-weight: normal;
+        font-family: "Open Sans", Helvetica, Arial, sans-serif;
+        line-height: 20px;
         margin: 0;
-        padding: 12px 8px 12px 30px;
+        padding: 12px 10px 12px 30px;
         position: relative;
         background: @path-item-color;
 
@@ -59,7 +61,7 @@
           &:after { border-left-color: @path-active-color; };
           &:hover:after { border-left-color: @listhover_color; }
         }
-        &:hover {
+        &:hover:not([disabled])  {
           background: @listhover_color;
           color: white;
           &:after { border-left-color: @listhover_color; }
@@ -71,7 +73,7 @@
           height: 0;
           border-top: 30px solid transparent;            //Go big on the size, and let overflow hide
           border-bottom: 30px solid transparent;
-          border-left: 15px solid @breadcrumbbg_color;
+          border-left: 15px solid @path-item-color;//@breadcrumbbg_color;
           position: absolute;
           top: 50%;
           margin-top: -30px;
@@ -92,6 +94,28 @@
           margin-left: 1px;
           left: 100%;
           z-index: 101;
+        }
+
+        input[type="checkbox"] {
+          margin: 0;
+          vertical-align: middle;
+          margin-right: 2px;
+          margin-bottom: 1px;
+        }
+      }
+
+      &.disabled-item {
+
+        label {
+          background: @disabled-item-color;
+
+          &:after {
+            border-left: 15px solid @breadcrumbbg_color;
+          }
+        }
+
+        input[type="checkbox"] {
+          display: none;
         }
       }
     }

@@ -42,9 +42,8 @@ describe('Controller: EnvironmentsController', function () {
             rows: [
                 {
                     permissions: {readonly: false},
-                    path: [
-                        {environment: {id: 1}},
-                        {environment: {id: 2}}
+                    environments: [
+                         {id: 1}, {id: 2}
                     ]
                 }
             ]

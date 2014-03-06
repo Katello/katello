@@ -39,6 +39,17 @@ describe('Directive: pathSelector', function() {
             ]
         ];
         scope.paths = paths;
+
+        scope.objPaths = [
+            {
+                environments: [
+                    {id: 1, name: 'Library'},
+                    {id: 2, name: 'Dev'},
+                    {id: 3, name: 'Test'}
+                ]
+            }
+        ];
+
         scope.environment = {};
 
         element = angular.element('<div path-selector="paths" ng-model="environment" mode="singleSelect"></div>');
@@ -71,17 +82,38 @@ describe('Directive: pathSelector', function() {
     });
 
     it("should provide a way to disable path selection", function () {
-        scope.disableAll = false;
-
         element = angular.element('<div path-selector="paths" ng-model="environment" mode="singleSelect" disable-trigger="disableAll"></div>');
         compile(element)(scope);
-        scope.$digest();
 
+        scope.disableAll = false;
+        scope.$digest();
         expect(element.find('.path-list-item:first input').attr('disabled')).toBe(undefined);
 
         scope.disableAll = true;
         scope.$digest();
-
         expect(element.find('.path-list-item:first input').attr('disabled')).toBe('disabled');
+    });
+
+    it("should provide a way to control disablement via a function", function () {
+        scope.check = function () { return false };
+        element = angular.element('<div path-selector="paths" ng-model="environment" mode="singleSelect" enabled-check="check(item)"></div>');
+        compile(element)(scope);
+
+        scope.$digest();
+        expect(element.find('.path-list-item:first input').attr('disabled')).toBe('disabled');
+
+        scope.check = function () { return true };
+        scope.$digest();
+        expect(element.find('.path-list-item:first input').attr('disabled')).toBe(undefined);
+    });
+
+    it("should provide a way to use paths that are objects", function() {
+        element = angular.element('<div path-selector="objPaths" ng-model="environment" mode="singleSelect" path-attribute="environments"></div>');
+        compile(element)(scope);
+        scope.$digest();
+
+        expect(element.find('.path-list').length).toBe(1);
+        expect(element.find('.path-list:first .path-list-item').length).toBe(3);
+
     });
 });

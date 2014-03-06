@@ -1,0 +1,23 @@
+simple_filter:
+  name:            Simple Filter
+  type:            <%= Katello::ContentViewPackageFilter.name %>
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
+
+populated_package_filter:
+  name:            Populated Package Filter
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
+  type:            <%= Katello::ContentViewPackageFilter.name %>
+
+populated_package_group_filter:
+  name:            Populated Package Group Filter
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
+  type:            <%= Katello::ContentViewPackageGroupFilter.name %>
+
+populated_erratum_filter:
+  name:            Populated Erratum Filter
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
+  type:            <%= Katello::ContentViewErratumFilter.name %>
+
+populated_filter_with_repos_and_filters:
+  name:            Populated Filter
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
