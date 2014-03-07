@@ -57,6 +57,7 @@ module Glue
         all_rows      = false
         sort_by       = search_options.fetch(:sort_by, 'name_sort')
         sort_order    = search_options[:sort_order] || 'ASC'
+        facet_filters  = search_options[:facet_filters] || {}
         total_count   = 0
 
         sort_by = format_sort(sort_by)
@@ -96,8 +97,9 @@ module Glue
 
           if search_options[:facets]
             search_options[:facets].each_pair do |name, value|
-              facet name do
+              facet(name, :facet_filter => facet_filters) do
                 terms value, :size => facet_size
+
               end
             end
           end

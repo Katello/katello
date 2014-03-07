@@ -13,34 +13,23 @@
 
 /**
  * @ngdoc service
- * @name  Bastion.content-views.factory:ContentView
+ * @name  Bastion.content-views.factory:ContentViewPuppetModule
  *
  * @requires $resource
  * @requires CurrentOrganization
  *
  * @description
- *   Provides a $resource for interacting with environments.
+ *   Provides a $resource for interacting with content view puppet modules.
  */
 angular.module('Bastion.content-views').factory('ContentViewPuppetModule',
     ['$resource', 'CurrentOrganization',
     function ($resource, CurrentOrganization) {
-        var resource =
-         $resource('/api/v2/content_views/:contentViewid/puppet_modules/:id/:action',
-            {id: '@id', contentViewid: '@contentViewid', 'organization_id': CurrentOrganization},
+        return $resource('/api/v2/content_views/:contentViewId/content_view_puppet_modules/:id/:action',
+            {id: '@id', contentViewId: '@contentViewId', 'organization_id': CurrentOrganization},
             {
                 query:  {method: 'GET', isArray: false},
                 update: {method: 'PUT'}
             }
         );
-
-        resource.query = function(){ return {
-            total: 1,
-            subtotal: 1,
-            results: [
-                {name: 'apple', author: 'joe', uuid: '1234', id: 1, version: 5.0},
-                {name: 'pear', author: 'willbur', uuid: '1455dsf', id: 2, version: undefined, computedVersion: 2.1 }
-            ]
-        }};
-        return resource;
     }]
 );

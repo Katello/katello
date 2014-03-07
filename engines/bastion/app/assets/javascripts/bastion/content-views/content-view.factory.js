@@ -16,16 +16,16 @@
  * @name  Bastion.content-views.factory:ContentView
  *
  * @requires $resource
+ * @requires gettext
  * @requires CurrentOrganization
  *
  * @description
  *   Provides a $resource for interacting with environments.
  */
 angular.module('Bastion.content-views').factory('ContentView',
-    ['$resource', 'CurrentOrganization',
-    function ($resource, CurrentOrganization) {
-        var resource =
-         $resource('/api/v2/content_views/:id/:action',
+    ['$resource', 'gettext', 'CurrentOrganization',
+    function ($resource, gettext, CurrentOrganization) {
+        return $resource('/api/v2/content_views/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 query:  {method: 'GET', isArray: false},
@@ -43,26 +43,24 @@ angular.module('Bastion.content-views').factory('ContentView',
                         return !contentView.composite && contentView.versions.length > 0;
                     });
                     return {results: contentViews};
-                }}
+                }},
+                availablePuppetModules: {method: 'GET', params: {action: 'available_puppet_modules'},
+                    transformResponse: function (data) {
+                        var response = angular.fromJson(data);
+
+                        angular.forEach(_.groupBy(response.results, 'author'), function (puppetModules) {
+                            var latest = angular.copy(puppetModules[puppetModules.length - 1]);
+                            latest.version = gettext('Use Latest (currently %s)').replace('%s', latest.version);
+                            latest.useLatest = true;
+                            response.results.unshift(latest);
+                        });
+
+                        return response;
+                    }
+                },
+                availablePuppetModuleNames: {method: 'GET', params: {action: 'available_puppet_module_names'}}
             }
         );
-        resource.availablePuppetModuleNames = function(){ return {
-            total: 10,
-            subtotal: 10,
-            results: [
-                {name: 'apple'},
-                {name: 'pear'},
-                {name: 'peach'},
-                {name: 'pepper'},
-                {name: 'orange'},
-                {name: 'mango'},
-                {name: 'pineapple'},
-                {name: 'tomayto'},
-                {name: 'tomahto'},
-                {name: 'plum'}
-            ]
-        }};
 
-        return resource;
     }]
 );

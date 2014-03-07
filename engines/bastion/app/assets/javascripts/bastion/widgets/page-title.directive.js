@@ -40,12 +40,17 @@ angular.module('Bastion.widgets').directive('pageTitle', ['PageTitle', function 
                 if (ngModel) {
                     var unbind = scope.$watch(function () {
                         return ngModel.$viewValue;
-                    }, function (resource) {
+                    }, function (model) {
                         unbind();
-                        resource.$promise.then(function (model) {
+                        if (model.hasOwnProperty('$promise')) {
+                            model.$promise.then(function (model) {
+                                scope[scope.modelName] = model;
+                                PageTitle.setTitle(title, scope);
+                            });
+                        } else {
                             scope[scope.modelName] = model;
                             PageTitle.setTitle(title, scope);
-                        });
+                        }
                     });
                 } else {
                     PageTitle.setTitle(title, scope);

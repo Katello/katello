@@ -16,31 +16,63 @@
  * @name  Bastion.content-views.controller:ContentViewPuppetModulesController
  *
  * @requires $scope
+ * @requires gettext
+ * @requires ContentView
+ * @requires ContentViewPuppetModule
  *
  * @description
- *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
- *   Defines the columns to display and the transform function for how to generate each row
- *   within the table.
+ *   Provides the ability to select a version of a Puppet Module for a Content View.
  */
 angular.module('Bastion.content-views').controller('ContentViewPuppetModuleVersionsController',
-    ['$scope', 'PuppetModule', function ($scope, PuppetModule) {
+    ['$scope', 'gettext', 'ContentView', 'ContentViewPuppetModule',
+    function ($scope, gettext, ContentView, ContentViewPuppetModule) {
+        var success, error;
 
+        $scope.versionsLoading = true;
+        $scope.successMessages = [];
+        $scope.erroressages = [];
 
-        console.log($scope.currentModule);
+        $scope.versions = ContentView.availablePuppetModules(
+            {
+                name: $scope.$stateParams.moduleName,
+                id: $scope.$stateParams.contentViewId
+            }, function () {
+                $scope.versionsLoading = false;
+            }
+        );
 
-        if ($scope.currentModule === undefined) {
-            //$scope.transitionTo('content-views.details.puppet-modules.list',
-            //    {contentViewId: $scope.$stateParams.contentViewId});
-            $scope.versions = [];
-        } else {
-            $scope.versions = PuppetModule.query({name: $scope.currentModule.name}).results
-        }
+        $scope.selectVersion = function (module) {
+            var contentViewPuppetModule, contentViewPuppetModuleData = {
+                contentViewId: $scope.$stateParams.contentViewId,
+                uuid: module.id,
+                author: module.author,
+                name: module.name
+            };
 
+            if (module.useLatest) {
+                contentViewPuppetModuleData.uuid = null;
+            }
 
-        $scope.addModule = function(module) {
+            contentViewPuppetModule = new ContentViewPuppetModule(contentViewPuppetModuleData);
 
-
+            if ($scope.$stateParams.moduleId) {
+                contentViewPuppetModule.id = $scope.$stateParams.moduleId;
+                contentViewPuppetModule.$update(success, error);
+            } else {
+                contentViewPuppetModule.$save(success, error);
+            }
         };
 
+        success = function () {
+            $scope.transitionTo('content-views.details.puppet-modules.list',
+                {contentViewId: $scope.$stateParams.contentViewId});
+            $scope.successMessages = [gettext('Puppet module added to Content View')];
+        };
+
+        error = function (response) {
+            angular.forEach(response.data.errors, function (errorMessage) {
+                $scope.errorMessages.push(gettext("An error occurred updating the Content View: ") + errorMessage);
+            });
+        };
     }]
 );

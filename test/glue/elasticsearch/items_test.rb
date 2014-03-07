@@ -39,6 +39,7 @@ class GlueElasticSearchTest < ActiveSupport::TestCase
     @results.expect(:total, 0)
     @results.expect(:total, 0)
     @results.expect(:results, [])
+    @results.expect(:facets, {})
 
     @FakeClass.stub(:search, @results) do
       items, count = @items.retrieve("*")

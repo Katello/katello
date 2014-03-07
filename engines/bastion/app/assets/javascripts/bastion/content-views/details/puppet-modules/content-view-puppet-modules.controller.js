@@ -16,32 +16,63 @@
  * @name  Bastion.content-views.controller:ContentViewPuppetModulesController
  *
  * @requires $scope
+ * @requires gettext
+ * @requires Nutupane
+ * @requires ContentViewPuppetModule
  *
  * @description
- *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
- *   Defines the columns to display and the transform function for how to generate each row
- *   within the table.
+ *   Provides functionality to the Content View existing Puppet Modules list.
  */
 angular.module('Bastion.content-views').controller('ContentViewPuppetModulesController',
-    ['$scope', 'gettext', 'ContentViewPuppetModule',
-    function ($scope, gettext, ContentViewPuppetModule) {
+    ['$scope', 'gettext', 'Nutupane', 'ContentViewPuppetModule',
+    function ($scope, gettext, Nutupane, ContentViewPuppetModule) {
+        var nutupane = new Nutupane(ContentViewPuppetModule, {
+            contentViewId: $scope.$stateParams.contentViewId,
+            'paged': true
+        });
 
-        $scope.table = {};
-        $scope.modules = ContentViewPuppetModule.query({contentViewId: $scope.$stateParams.contentViewId}).results
-        $scope.versionText = function(module) {
-            var text = module.version;
-            if (module.version === undefined) {
-                text = gettext("Latest (Currently %s)").replace('%s', module.computedVersion);
+        $scope.detailsTable = nutupane.table;
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
+
+        $scope.versionText = function (module) {
+            var version = gettext("Latest (Currently %s)").replace('%s', module['computed_version']);
+            if (module['puppet_module']) {
+                version = module['puppet_module'].version;
             }
-            return text;
+            return version;
         };
 
-        $scope.selectNewVersion = function(module) {
-            console.log(module);
-            $scope.$parent.currentModule = module;
-            $scope.transitionTo('content-views.details.puppet-modules.versions',
-                {contentViewId: $scope.$stateParams.contentViewId});
-        }
+        $scope.selectNewVersion = function (module) {
+            $scope.transitionTo('content-views.details.puppet-modules.versionsForModule',
+                {
+                    contentViewId: $scope.$stateParams.contentViewId,
+                    moduleName: module.name,
+                    moduleId: module.id
+                }
+            );
+        };
+
+        $scope.removeModule = function (module) {
+            var success, error;
+
+            success = function () {
+                $scope.successMessages = [gettext('Module %s removed from Content View.')
+                    .replace('%s', module.name)];
+                nutupane.removeRow(module.id);
+            };
+
+            error = function (response) {
+                angular.forEach(response.data.errors, function (errorMessage) {
+                    $scope.errorMessages = [gettext("An error occurred updating the Content View: ") + errorMessage];
+                });
+            };
+
+            ContentViewPuppetModule.remove({
+                contentViewId: $scope.$stateParams.contentViewId,
+                id: module.id
+            }, success, error);
+        };
 
     }]
 );

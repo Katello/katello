@@ -1,17 +1,28 @@
+<span page-title ng-model="$stateParams">{{ 'Versions for Puppet Module:' | translate }} {{ $stateParams.moduleName }}</span>
+
 <div class="details details-full">
+  <div class="loading-mask loading-mask-panel" ng-show="versionsLoading">
+    <i class="icon-spinner icon-spin"></i>
+    {{ "Loading..." | translate }}
+  </div>
 
+  <ol class="breadcrumb">
+    <li>
+      <a ui-sref="content-views.details.puppet-modules.list">
+        {{ "Module List" | translate }}
+      </a>
+    </li>
+    <li>
+      <a ui-sref="content-views.details.puppet-modules.names">
+        {{ "Select Module" | translate }}
+      </a>
+    </li>
+    <li class="active">
+      {{ $stateParams.moduleName }}
+    </li>
+  </ol>
 
-  <a ui-sref="content-views.details.puppet-modules.names" ng-show="!currentModule.id">
-    <i class="icon-double-angle-left"></i>
-    {{ "Select a Different Name" | translate }}
-  </a>
-
-  <a ui-sref="content-views.details.puppet-modules.names" ng-show="currentModule.id">
-    <i class="icon-double-angle-left"></i>
-    {{ "Return to Module List" | translate }}
-  </a>
-
-  <h3 translate>Select an Available Version of {{ currentModule.name }}</h3>
+  <h3 translate>Select an Available Version of {{ $stateParams.moduleName }}</h3>
 
   <div class="details-header">
     <input type="text"
@@ -25,24 +36,24 @@
       <tr alch-table-head>
         <th alch-table-column>{{ "Author" | translate }}</th>
         <th alch-table-column>{{ "Version" | translate }}</th>
+        <th alch-table-column>{{ "Summary" | translate }}</th>
         <th alch-table-column>{{ "Repositories" | translate }}</th>
-        <th alch-table-column>{{ "Created" | translate }}</th>
         <th alch-table-column>{{ "Actions" | translate }}</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr alch-table-row ng-repeat="item in versions | filter:filterTerm">
+      <tr alch-table-row ng-repeat="item in versions.results | filter:filterTerm | orderBy:'author'">
         <td alch-table-cell >{{ item.author }}</td>
         <td alch-table-cell >{{ item.version }}</td>
+        <td alch-table-cell >{{ item.summary }}</td>
         <td alch-table-cell >
           <ul ng-repeat="repo in item.repositories">
             <li>{{ repo.name }}</li>
           </ul>
         </td>
-        <td alch-table-cell >{{ item.date }}</td>
-        <td alch-table-cell >
-          <button translate ng-click="selectVersion(item.name)">
+        <td alch-table-cell class="action-cell">
+          <button translate ng-click="selectVersion(item)">
             Select Version
           </button>
         </td>
@@ -50,7 +61,3 @@
     </tbody>
   </table>
 </div>
-
-<button translate ui-sref="content-views.details.puppet-modules.list">
-  Cancel
-</button>

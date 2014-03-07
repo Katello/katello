@@ -184,7 +184,7 @@ module Katello
       get :available_puppet_modules, :id => @content_view.id
 
       assert_response :success
-      assert_template 'katello/api/v2/content_views/../puppet_modules/index'
+      assert_template 'katello/api/v2/content_views/puppet_modules'
     end
 
     def test_available_puppet_modules_protected

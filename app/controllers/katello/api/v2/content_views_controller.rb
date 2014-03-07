@@ -110,26 +110,36 @@ module Katello
     param :id, :identifier, :desc => "content view numeric identifier", :required => true
     param :name, String, :desc => "module name to restrict modules for", :required => false
     def available_puppet_modules
-      current_ids = @view.content_view_puppet_modules.map(&:uuid)
+      current_ids = @view.content_view_puppet_modules.map(&:uuid).reject{|p| p.nil?}
+
       repo_ids = @view.organization.library.puppet_repositories.readable(@view.organization.library).pluck(:pulp_id)
-      search_filters = [{ :terms => { :repoids => repo_ids } },
-                        { :not => { :terms => { :id => current_ids } } }]
+      search_filters = [{ :terms => { :repoids => repo_ids }}]
+
+      if !current_ids.empty?
+        search_filters << { :not => { :terms => { :id => current_ids } } }
+      end
       search_filters << { :term => { :name => params[:name] } } if params[:name]
       options = { :filters => search_filters }
 
-      respond_for_index :template => '../puppet_modules/index',
-                        :collection => item_search(PuppetModule, params, options)
+      collection = item_search(PuppetModule, params, options)
+      collection[:results] = collection[:results].map{|i| PuppetModule.new(i.as_json) }
+
+      respond_for_index :template => 'puppet_modules', :collection => collection
     end
 
     api :GET, "/content_views/:id/available_puppet_module_names",
         "Get puppet modules names that are available to be added to the content view"
     param :id, :identifier, :desc => "content view numeric identifier", :required => true
     def available_puppet_module_names
-      current_ids = @view.content_view_puppet_modules.map(&:uuid)
+      current_names = @view.content_view_puppet_modules.map(&:name).reject{|p| p.nil?}
       repo_ids = @view.organization.library.puppet_repositories.readable(
           @view.organization.library).pluck(:pulp_id)
-      search_filters = [{ :terms => { :repoids => repo_ids } },
-                        { :not => { :terms => { :id => current_ids } } }]
+      search_filters = [{ :terms => { :repoids => repo_ids } }]
+
+      if !current_names.empty?
+        search_filters << { :not => { :terms => { :name => current_names } } }
+      end
+
       options = {:filters  => search_filters}
 
       respond_for_index :template => '../puppet_modules/names',

@@ -121,19 +121,26 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
     })
     .state('content-views.details.puppet-modules.list', {
         collapsed: true,
-        url: '/puppet_modules/',
+        url: '/puppet_modules',
         controller: 'ContentViewPuppetModulesController',
         templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-modules.html'
     })
     .state('content-views.details.puppet-modules.names', {
         collapsed: true,
-        url: '/puppet_modules/name',
+        url: '/puppet_modules/names',
         controller: 'ContentViewPuppetModuleNamesController',
         templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-module-names.html'
     })
     .state('content-views.details.puppet-modules.versions', {
         collapsed: true,
-        url: '/puppet_modules/version',
+        url: '/puppet_modules/:moduleName/versions',
+        controller: 'ContentViewPuppetModuleVersionsController',
+        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-module-versions.html'
+    })
+    // Necessary until ui-router supports optional parameters, see https://github.com/angular-ui/ui-router/issues/108
+    .state('content-views.details.puppet-modules.versionsForModule', {
+        collapsed: true,
+        url: '/puppet_modules/:moduleName/versions/:moduleId',
         controller: 'ContentViewPuppetModuleVersionsController',
         templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-module-versions.html'
     })

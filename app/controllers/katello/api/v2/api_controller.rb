@@ -88,12 +88,13 @@ module Katello
       @search_service.model =  item_class
       options[:per_page] = 1
       options[:facets] = {facet_name => term}
+      options[:facet_filters] =  options[:filters]
 
       @search_service.retrieve('', 0, options)
 
       facets = @search_service.facets[facet_name]['terms']
       results = facets.collect{|f| Katello::Glue::ElasticSearch::FacetItem.new(f)}
-     {
+      {
         :results  => results.sort_by{|f| f.term },
         :subtotal => results.length,
         :total    => results.length,

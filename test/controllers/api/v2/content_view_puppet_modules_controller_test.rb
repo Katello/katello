@@ -33,6 +33,9 @@ module Katello
       @create_permission = UserPermission.new(:create, :content_views)
       @read_permission = UserPermission.new(:read, :content_views)
       @no_permission = NO_PERMISSION
+      PuppetModule.stubs(:find).returns(@puppet_module)
+      @puppet_module.stubs(:repositories).returns([])
+      PuppetModule.stubs(:exists?).returns(true)
     end
 
     def setup
@@ -42,7 +45,6 @@ module Katello
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       models
       permissions
-      Katello::PuppetModule.stubs(:exists?).returns(true)
     end
 
     def test_index
