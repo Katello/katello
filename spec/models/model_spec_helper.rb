@@ -114,14 +114,17 @@ EOKEY
   end
 
   def disable_org_orchestration
+    ::Actions::ElasticSearch::Reindex.any_instance.stubs(:finalize)
     Resources::Candlepin::Owner.stubs(:create).returns({})
     Resources::Candlepin::Owner.stubs(:create_user).returns(true)
     Resources::Candlepin::Owner.stubs(:destroy).returns(true)
     Resources::Candlepin::Owner.stubs(:get_ueber_cert).returns({ :cert => CERT, :key => KEY })
+    Organization.any_instance.stubs(:ensure_not_in_transaction!)
     disable_env_orchestration # env is orchestrated with org - we disable this as well
   end
 
   def disable_env_orchestration
+    disable_foreman_tasks_hooks(KTEnvironment)
     Resources::Candlepin::Environment.stubs(:create).returns({})
     Resources::Candlepin::Environment.stubs(:destroy).returns({})
     Resources::Candlepin::Environment.stubs(:find).returns({ :environmentContent => [] })

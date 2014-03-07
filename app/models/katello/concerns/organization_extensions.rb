@@ -23,14 +23,9 @@ module Katello
         include Glue::Candlepin::Owner if Katello.config.use_cp
         include Glue if Katello.config.use_cp
 
-        include Glue::Event
-
-        def create_event
-          Headpin::Actions::OrgCreate
-        end
-
-        def destroy_event
-          Headpin::Actions::OrgDestroy
+        def create_action
+          sync_action!
+          ::Actions::Headpin::Organization::Create
         end
 
         include AsyncOrchestration

@@ -51,6 +51,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     version = ContentViewVersion.new(:version => 1, :content_view => view)
     version.environments << organization.library
     version.save!
+    ForemanTasks.sync_task(::Actions::Headpin::ContentView::Create, view)
 
     if options[:async]
       async_task = self.async(:organization => self.organization,
