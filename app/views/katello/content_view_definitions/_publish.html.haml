@@ -1,8 +1,8 @@
 = content_for :title do
   #{_("Publish View Definition")}
 
-= content_for :subcontent do
 
+= content_for :subcontent_noscroll do
   = kt_form_for Katello::ContentView.new, :remote => true, :html => {:id => 'publish_form'} do |form|
 
     = form.text_field :name, :label => _("Name"), :class => :name_input
