@@ -12,6 +12,9 @@
 
 module Katello
   class ActivationKeysController < Katello::ApplicationController
+
+    include Foreman::Controller::AutoCompleteSearch
+
     respond_to :html, :js
 
     before_filter :authorize
@@ -20,7 +23,8 @@ module Katello
       read_test = lambda {ActivationKey.readable?(current_organization)}
       {
         :index => read_test,
-        :all => read_test
+        :all => read_test,
+        :auto_complete_search => read_test
       }
     end
 
