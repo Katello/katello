@@ -56,6 +56,8 @@ class KTEnvironment < Katello::Model
            :dependent => :destroy, :foreign_key => :environment_id
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
            :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
+  has_many :content_view_puppet_environments, :class_name => "Katello::ContentViewPuppetEnvironment",
+           :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
   has_many :content_view_versions, :through => :content_view_environments, :inverse_of => :environments
   has_many :content_views, :through => :content_view_environments, :inverse_of => :environments
   has_many :content_view_histories, :class_name => "Katello::ContentViewHistory", :dependent => :destroy,

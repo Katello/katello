@@ -78,8 +78,9 @@ module OrganizationHelperMethods
   def publish_content_view(name, org, repos)
     Katello.pulp_server.extensions.repository.stubs(:create).returns({})
     Repository.any_instance.stubs(:clone_contents).returns([])
-    ContentView.any_instance.stubs(:associate_yum_types).returns([])
+    ContentView.any_instance.stubs(:associate_yum_content).returns([])
     Repository.stubs(:trigger_contents_changed).returns([])
+    Repository.stubs(:non_puppet).returns(repos)
     cv = ContentView.create!(:organization => org, :name => name)
     cv.repositories = repos
     cv.save!
