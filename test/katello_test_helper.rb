@@ -2,6 +2,7 @@ require 'test_helper'
 require 'factory_girl_rails'
 require "webmock/minitest"
 require "mocha/setup"
+require 'dynflow/testing'
 
 require "#{Katello::Engine.root}/test/support/minitest/spec/shared_examples"
 require "#{Katello::Engine.root}/spec/helpers/login_helper_methods"
@@ -21,7 +22,6 @@ require "#{Katello::Engine.root}/test/support/auth_support"
 require "#{Katello::Engine.root}/test/support/controller_support"
 require "#{Katello::Engine.root}/test/support/search_service"
 
-require 'dynflow/testing'
 Mocha::Mock.send :include, Dynflow::Testing::Mimic
 Dynflow::Testing.logger_adapter.level = 1
 require "#{Katello::Engine.root}/test/support/actions/fixtures"
