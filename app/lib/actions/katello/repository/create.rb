@@ -15,6 +15,7 @@ module Actions
     module Repository
       class Create < Actions::EntryAction
 
+        # rubocop:disable MethodLength
         def plan(repository, clone = false)
           repository.disable_auto_reindex!
           repository.save!
@@ -22,8 +23,6 @@ module Actions
           plan_self
 
           org = repository.organization
-          # check the instance variable, as we do not want to go to pulp
-          checksum_type = repository.checksum_type if self.instance_variable_get('@checksum_type')
           if repository.puppet?
             path = File.join(::Katello.config.puppet_repo_root,
                              ::Katello::KTEnvironment.construct_name(repository.environment.organization,
@@ -43,7 +42,7 @@ module Actions
                         ssl_client_cert: repository.feed_cert,
                         ssl_client_key: repository.feed_key,
                         unprotected: repository.unprotected,
-                        checksum_type: checksum_type,
+                        checksum_type: repository.checksum_type,
                         path: path,
                         with_importer: true)
 

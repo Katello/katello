@@ -34,9 +34,6 @@ module Glue::Pulp::Repo
                                        end
                                      end)
 
-      lazy_accessor :checksum_type,
-                    :initializer => lambda { |s| self.lookup_checksum_type if pulp_id}
-
       lazy_accessor :importers,
                     :initializer => lambda { |s| pulp_repo_facts["importers"] if pulp_id }
 
@@ -115,7 +112,7 @@ module Glue::Pulp::Repo
       pulp_repo_facts.merge(as_json).merge(:sync_state => sync_state)
     end
 
-    def lookup_checksum_type
+    def pulp_checksum_type
       find_distributor['config']['checksum_type'] if self.yum? && find_distributor
     end
 
@@ -169,7 +166,7 @@ module Glue::Pulp::Repo
         yum_dist_id = self.pulp_id
         yum_dist_options = {:protected => true, :id => yum_dist_id, :auto_publish => true}
         #check the instance variable, as we do not want to go to pulp
-        yum_dist_options['checksum_type'] = self.checksum_type if self.instance_variable_get('@checksum_type')
+        yum_dist_options['checksum_type'] = self.checksum_type if self.checksum_type
         yum_dist = Runcible::Models::YumDistributor.new(self.relative_path, (self.unprotected || false), true,
                                                         yum_dist_options)
         clone_dist = Runcible::Models::YumCloneDistributor.new(:id => "#{self.pulp_id}_clone",

@@ -72,38 +72,5 @@ describe Repository do
     })
     repository.update_content
   end
-
-  # If some of tests in following describe block is broken, read this carefully!
-  # Situation where two products share same Candlepin content can occur. This happens during
-  # manifest import in Candlepin so katello has no control over it. However when deleting content
-  # we must be sure that there is no other product using this content. That's why this test makes
-  # sure we decide based on #other_repos_with_same_content method whether we delete content or not.
-  describe "#del_content" do
-    before do
-      repository.stubs(:other_repos_with_same_product_and_content).returns([])
-      repository.product.stubs(:remove_content_by_id).returns(true)
-
-      provider = stub
-      provider.stubs(:redhat_provider?).returns(false)
-      repository.product.stubs(:provider).returns(provider)
-    end
-
-    context "there isn't another product using same candlepin content" do
-      before { Resources::Candlepin::Content.expects(:destroy).once }
-      it "should delete CP content (katello)" do #TODO headpin
-        repository.del_content
-      end
-    end
-
-    context "there is another product using same candlepin content" do
-      before do
-        Resources::Candlepin::Content.expects(:destroy).never
-        repository.stubs(:other_repos_with_same_content).returns(['not', 'empty'])
-      end
-      it "should not delete CP content (katello)" do #TODO headpin
-        repository.del_content
-      end
-    end
-  end
 end
 end

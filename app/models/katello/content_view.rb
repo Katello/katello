@@ -429,7 +429,6 @@ class ContentView < Katello::Model
                                :environments => [organization.library])
   end
 
-
   protected
 
   def remove_repository(repository)

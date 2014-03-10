@@ -197,11 +197,12 @@ describe Product, :katello => true do
           @repo_name = "repo"
           @repo_label = "repo"
           disable_repo_orchestration
-          @p.add_repo(@repo_label, @repo_name, "http://test/repo","yum")
+          @p.add_repo(@repo_label, @repo_name, "http://test/repo","yum").save!
         end
 
         it "should raise conflict error" do
-          lambda { @p.add_repo(@repo_label, @repo_name, "http://test/repo","yum") }.must_raise(Errors::ConflictException)
+          lambda {@p.add_repo(@repo_label, @repo_name, "http://test/repo","yum")}.must_raise(
+              Errors::ConflictException)
         end
       end
     end

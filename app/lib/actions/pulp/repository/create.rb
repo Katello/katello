@@ -80,8 +80,8 @@ module Actions
         def yum_distributor
             yum_dist_options = { protected: true,
                                  id: input[:pulp_id],
-                                 auto_publish: true,
-                                 checksum_type: input[:checksum_type] }
+                                 auto_publish: true }
+            yum_dist_options[:checksum_type] = input[:checksum_type] if input[:checksum_type]
             Runcible::Models::YumDistributor.new(input[:path],
                                                  input[:unprotected] || false,
                                                  true,
