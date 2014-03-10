@@ -37,6 +37,12 @@ module Actions
         def presenter
           Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Repository::Sync))
         end
+
+        def pulp_task_id
+          pulp_action = planned_actions(Pulp::Repository::Sync).first
+          pulp_action.output[:pulp_task] &&
+              pulp_action.output[:pulp_task][:task_id]
+        end
       end
     end
   end
