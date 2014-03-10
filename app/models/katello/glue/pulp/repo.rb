@@ -491,7 +491,20 @@ module Glue::Pulp::Repo
       return [task]
     end
 
+    # Returns true if the pulp_task_id was triggered by the last synchronization
+    # action for the repository. Dynflow action handles the synchronization
+    # by it's own so no need to synchronize it again in this callback. Since the
+    # callbacks are run just after synchronization is finished, it should be enough
+    # to check for the last synchronization task.
+    def dynflow_handled_last_sync?(pulp_task_id)
+      task = ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Repository::Sync).
+          for_resource(self).order(:started_at).last
+      return task && task.main_action.pulp_task_id == pulp_task_id
+    end
+
     def handle_sync_complete_task(pulp_task_id, notifier_service = Notify)
+      return if dynflow_handled_last_sync?(pulp_task_id)
+
       pulp_task =  Katello.pulp_server.resources.task.poll(pulp_task_id)
 
       if pulp_task.nil?
@@ -499,7 +512,7 @@ module Glue::Pulp::Repo
         return
       end
 
-      task = PulpTaskStatus.using_pulp_task(pulp_task)
+      task = PulpSyncStatus.using_pulp_task(pulp_task)
       task.user ||= User.current
       task.organization ||= self.environment.organization
       task.save!
