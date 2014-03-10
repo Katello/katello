@@ -330,6 +330,7 @@ Katello::Engine.routes.draw do
       match '/consumers/:id/profile/' => 'candlepin_proxies#upload_package_profile', :via => :put
       match '/consumers/:id/packages/' => 'candlepin_proxies#upload_package_profile', :via => :put
       match '/consumers/:id/checkin/' => 'candlepin_proxies#checkin', :via => :put
+      match '/consumers/:id' => 'candlepin_proxies#facts', :via => :put
 
       # development / debugging support
       if Rails.env == "development"
