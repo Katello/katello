@@ -70,6 +70,13 @@ module Katello
       let(:action_class) { ::Actions::Katello::Repository::Sync }
       let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
 
+      let :action do
+        create_action(action_class).tap do |action|
+          action.stubs(planned_actions: [pulp_action])
+        end
+      end
+      let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
+
       it 'plans' do
         repository   = mock 'repository', pulp_id: 'pulp-repo-1', id: 1
         action       = create_action action_class
@@ -81,15 +88,13 @@ module Katello
         assert_action_planed_with action, ::Actions::ElasticSearch::Reindex, repository
       end
 
+      describe '#pulp_task_id' do
+        let(:fixture_variant) { :success }
+
+        specify { action.pulp_task_id.must_equal "f723b378-b535-41a7-8440-8ab7851fda10" }
+      end
+
       describe 'progress' do
-        let :action do
-          create_action(action_class).tap do |action|
-            action.stubs(planned_actions: [pulp_action])
-          end
-        end
-
-        let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
-
         describe 'successfully synchronized' do
           let(:fixture_variant) { :success }
 

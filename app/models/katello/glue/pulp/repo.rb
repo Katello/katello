@@ -512,7 +512,7 @@ module Glue::Pulp::Repo
         return
       end
 
-      task = PulpTaskStatus.using_pulp_task(pulp_task)
+      task = PulpSyncStatus.using_pulp_task(pulp_task)
       task.user ||= User.current
       task.organization ||= self.environment.organization
       task.save!
