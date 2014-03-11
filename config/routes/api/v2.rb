@@ -42,7 +42,7 @@ Katello::Engine.routes.draw do
           get :history
           get :available_puppet_modules
         end
-        api_resources :content_view_puppet_modules, :controller => :content_view_puppet_modules
+        api_resources :content_view_puppet_modules
         api_resources :filters, :controller => :content_view_filters do
           member do
             get :available_errata
