@@ -29,7 +29,7 @@ module Katello
         trigger = create_action trigger_class
         trigger.input[:uuid] = 123
         action = create_action(action_class, trigger)
-        plan_action action, system
+        plan_action action, system, []
         assert_action_planed_with(action,
                                   ::Actions::Pulp::Consumer::Create,
                                   uuid: 123,

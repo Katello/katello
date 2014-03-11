@@ -19,7 +19,7 @@ module Actions
           Headpin::System::Create
         end
 
-        def plan(system)
+        def plan(system, activation_keys = [])
           plan_action(Pulp::Consumer::Create,
                       uuid: trigger.input[:uuid],
                       name: system.name)
