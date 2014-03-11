@@ -42,7 +42,11 @@ module Katello
         ::Katello::ContentView.expects(:create!).returns(content_view).with do |arg_hash|
           arg_hash[:default] == true
         end
-        content_view.expects(:add_environment).once.with(library).returns(content_view_environment)
+
+        content_view.expects(:add_environment).once.with do |env, version|
+          env == library && !version.nil?
+        end.returns(content_view_environment)
+
         ::Katello::ContentViewVersion.expects(:create!)
 
         plan_action(action, library)
