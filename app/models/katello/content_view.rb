@@ -150,6 +150,15 @@ class ContentView < Katello::Model
     Repository.where(:id => repo_ids)
   end
 
+  def puppet_env(env)
+    if env
+      ids = versions.flat_map { |version| version.content_view_puppet_environments.in_environment(env) }.map(&:id)
+    else
+      ids = []
+    end
+    ContentViewPuppetEnvironment.where(:id => ids).first
+  end
+
   def library_repos
     Repository.where(:id => library_repo_ids)
   end
@@ -266,16 +275,17 @@ class ContentView < Katello::Model
     # 1. generate the version repositories
     publish_version_content(version)
     clone_overrides = self.repositories.select{|r| self.filters.applicable(r).empty?}
-    version.trigger_repository_changes(:cloned_repo_overrides => clone_overrides, :wait => true)
+    version.trigger_contents_changed(:cloned_repo_overrides => clone_overrides, :wait => true)
 
     # 2. generate the library repositories
-    publish_library_content(version)
+    publish_library_yum_content(version)
+    publish_library_puppet_content(version)
 
     # 3. update candlepin, etc
     update_cp_content(self.organization.library)
 
     clone_overrides = self.repositories.select{|r| self.filters.applicable(r).empty?}
-    version.trigger_repository_changes(:cloned_repo_overrides => clone_overrides, :non_archive => true)
+    version.trigger_contents_changed(:cloned_repo_overrides => clone_overrides, :non_archive => true)
 
     Katello::Foreman.update_foreman_content(self.organization, self.organization.library, self)
 
@@ -297,19 +307,19 @@ class ContentView < Katello::Model
     raise e
   end
 
-  def publish_library_content(version)
+  def publish_library_yum_content(version)
+
+    # prepare the yum repos currently in the library for the publish
     async_tasks = []
-
-    # prepare the repos currently in the library for the publish
     repos(organization.library).each do |repo|
-      repo.content_view_version_id = version.id
-      repo.save!
-
       if repository_ids.include?(repo.library_instance_id)
+        repo.content_view_version_id = version.id
+        repo.save!
+
         # this repo is in both the content view and in the library,
         # so clear it and later we'll regenerate the content... this is more
         # efficient than deleting the repo and recreating it...
-        async_tasks +=  repo.clear_contents
+        async_tasks += repo.clear_contents
       else
         # this repo no longer exists in the view, so destroy it
         repo.destroy
@@ -335,16 +345,52 @@ class ContentView < Katello::Model
     end
 
     repos_to_filter.each do |repo|
-      associate_yum_types(repo) unless repo.puppet?
+      associate_yum_content(repo) unless repo.puppet?
     end
 
-    PulpTaskStatus.wait_for_tasks async_tasks.flatten(1)
+    PulpTaskStatus.wait_for_tasks async_tasks unless async_tasks.blank?
+  end
+
+  def publish_library_puppet_content(version)
+    # prepare the puppet environment currently in the library for the publish
+    async_tasks = []
+    if puppet_env = puppet_env(organization.library)
+      if !content_view_puppet_modules.empty?
+        puppet_env.content_view_version_id = version.id
+        puppet_env.save!
+
+        # this puppet environment has been previously published and the version
+        # being published has puppet modules, so clear it and later we'll
+        # regenerate the content... this is more efficient than deleting the
+        # env/repo and recreating it...
+        async_tasks += puppet_env.clear_contents
+      else
+        # this content view doesn't contain any puppet modules, so destroy
+        # the environment
+        puppet_env.destroy
+      end
+    end
+    PulpTaskStatus.wait_for_tasks async_tasks unless async_tasks.blank?
+
+    unless content_view_puppet_modules.empty?
+      unless puppet_env
+        puppet_env = create_puppet_env(:environment => organization.library, :content_view => self)
+      end
+      associate_puppet_content(puppet_env)
+    end
+
+    PulpTaskStatus.wait_for_tasks async_tasks unless async_tasks.blank?
   end
 
   def publish_version_content(version)
     repositories.non_puppet.each do |repo|
-      cloned = repo.create_clone(:content_view => self, :version => version)
-      associate_yum_types(cloned)
+      clone = repo.create_clone(:content_view => self, :version => version)
+      associate_yum_content(clone)
+    end
+
+    unless content_view_puppet_modules.empty?
+      puppet_env = create_puppet_env(:content_view => self, :version => version)
+      associate_puppet_content(puppet_env)
     end
   end
 
@@ -427,6 +473,26 @@ class ContentView < Katello::Model
     ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.cp_id
   end
 
+  def create_puppet_env(options)
+    if options[:environment] && options[:version]
+      fail "Cannot create into both an environment and a content view version archive"
+    end
+
+    to_env       = options[:environment]
+    version      = options[:version]
+    content_view = options[:content_view] || to_env.default_content_view
+    to_version   = version || content_view.version(to_env)
+
+    # Construct the pulp id using org/view/version or org/env/view
+    pulp_id = ContentViewPuppetEnvironment.generate_pulp_id(organization.label, to_env.try(:label),
+                                                            self.label, version.try(:version))
+
+    ContentViewPuppetEnvironment.create!(:environment => to_env,
+                                         :content_view_version => to_version,
+                                         :name => self.name,
+                                         :pulp_id => pulp_id)
+  end
+
   protected
 
   def remove_repository(repository)
@@ -472,28 +538,44 @@ class ContentView < Katello::Model
     return true
   end
 
-  # TODO: Puppet content is no longer handled using a 'filter'.  Instead, we'll be
-  # TODO: associating puppet modules with a content view and at publish-time, building
-  # TODO: a new repo for the view with those modules.  This will be handled in a
-  # TODO: sepparate PR that will be coming soon...
-  #def associate_puppet(cloned)
-  #  repo = cloned.library_instance_id ? cloned.library_instance : cloned
-  #  applicable_filters = filters.applicable(repo).puppet
-  #  copy_clauses = nil
-  #
-  #  if applicable_filters.any?
-  #    clause_gen = Util::PuppetClauseGenerator.new(repo, applicable_filters)
-  #    clause_gen.generate
-  #    copy_clauses = clause_gen.copy_clause
-  #  end
-  #
-  #  if applicable_filters.empty? || copy_clauses
-  #    pulp_task = repo.clone_contents_by_filter(cloned, ContentViewFilter::PUPPET_MODULE, copy_clauses)
-  #    PulpTaskStatus.wait_for_tasks([pulp_task])
-  #  end
-  #end
+  def associate_puppet_content(puppet_env)
+    unless content_view_puppet_modules.empty?
+      # In order to copy the puppet modules to the new repo, we need to retrieve the module
+      # details.  This is necessary since pulp requires both a source and destination
+      # repo id to copy content.
+      ids = []
+      names_and_authors = []
+      content_view_puppet_modules.each do |cvpm|
+        if cvpm.uuid
+          ids << cvpm.uuid
+        else
+          names_and_authors << { :name => cvpm.name, :author => cvpm.author }
+        end
+      end
 
-  def associate_yum_types(cloned)
+      puppet_modules = ids.blank? ? [] : PuppetModule.id_search(ids)
+      unless names_and_authors.blank?
+        puppet_modules << PuppetModule.latest_modules_search(names_and_authors,
+                                                             self.organization.library.repositories.puppet_type.map(&:pulp_id))
+      end
+
+      # In order to minimize the number of copy requests, organize the data by repoid.
+      modules_by_repoid = puppet_modules.flatten.each_with_object({}) do |puppet_module, result|
+        result[puppet_module.repoids.first] ||= []
+        result[puppet_module.repoids.first] << puppet_module.id
+      end
+
+      async_tasks = []
+      modules_by_repoid.each_pair do |repoid, puppet_module_ids|
+        async_tasks << Katello.pulp_server.extensions.puppet_module.copy(repoid,
+                                                                         puppet_env.pulp_id,
+                                                                         :ids => puppet_module_ids)
+      end
+      PulpTaskStatus.wait_for_tasks(async_tasks)
+    end
+  end
+
+  def associate_yum_content(cloned)
     # Intended Behaviour
     # Includes are cumulative -> If you say include errata and include packages, its the sum
     # Excludes are processed after includes

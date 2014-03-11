@@ -32,6 +32,8 @@ class ContentViewVersion < Katello::Model
   has_many :history, :class_name => "Katello::ContentViewHistory", :inverse_of => :content_view_version,
            :dependent => :destroy, :foreign_key => :katello_content_view_version_id
   has_many :repositories, :class_name => "Katello::Repository", :dependent => :destroy
+  has_many :content_view_puppet_environments, :class_name => "Katello::ContentViewPuppetEnvironment",
+           :dependent => :destroy
   has_one :task_status, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
 
   has_many :content_view_components, :inverse_of => :content_view_version
@@ -58,6 +60,10 @@ class ContentViewVersion < Katello::Model
 
   def repos(env)
     self.repositories.in_environment(env)
+  end
+
+  def puppet_env(env)
+    self.content_view_puppet_environments.in_environment(env).first
   end
 
   def archived_repos
@@ -113,23 +119,30 @@ class ContentViewVersion < Katello::Model
     replacing_version.environments.delete(to_env) if replacing_version
 
     if options[:async]
-      self.async(:organization => self.content_view.organization).promote_content(to_env, replacing_version, history)
+      self.async(:organization => self.content_view.organization).promote_content(to_env, replacing_version,
+                                                                                  promote_version, history)
     else
       promote_content(to_env, replacing_version, history)
     end
   end
 
   def promote_content(to_env, replacing_version, history)
+    puppet_env = self.puppet_env(to_env.prior)  # puppet env to be promoted
+
     if replacing_version
       PulpTaskStatus.wait_for_tasks(prepare_repos_for_promotion(replacing_version.repos(to_env), self.archived_repos))
+      prepare_puppet_env_for_promotion(replacing_version.puppet_env(to_env), puppet_env)
     end
 
     PulpTaskStatus.wait_for_tasks(promote_repos(to_env, self.archived_repos))
+    promote_puppet_env(to_env, puppet_env) if puppet_env
 
     Katello::Foreman.update_foreman_content(to_env.organization, to_env, self.content_view)
     self.content_view.update_cp_content(to_env)
+
     Repository.trigger_contents_changed(self.repos(to_env), :wait => true, :reindex => true)
     history.update_attributes!(:status => ContentViewHistory::SUCCESSFUL)
+
   rescue => e
     history.update_attributes!(:status => ContentViewHistory::FAILED)
     raise e
@@ -172,6 +185,35 @@ class ContentViewVersion < Katello::Model
     tasks.flatten
   end
 
+  def prepare_puppet_env_for_promotion(env_to_replace, env_to_promote)
+    # If the to_env already has a puppet environment from a previous promotion,
+    # clear it if the from_env also has a puppet environment that is being promoted;
+    # otherwise, delete it.
+    if env_to_replace
+      if env_to_promote
+        PulpTaskStatus.wait_for_tasks(env_to_replace.clear_contents)
+      else
+        env_to_replace.destroy
+      end
+    end
+  end
+
+  def promote_puppet_env(to_lifecycle_env, from_puppet_env)
+    to_puppet_env = Katello::ContentViewPuppetEnvironment.in_content_view(self.content_view).
+        in_environment(to_lifecycle_env).first
+
+    if to_puppet_env
+      to_puppet_env = ContentViewPuppetEnvironment.find(to_puppet_env) # reload readonly obj
+      to_puppet_env.content_view_version = self
+      to_puppet_env.save!
+    else
+      to_puppet_env = content_view.create_puppet_env(:environment => to_lifecycle_env, :content_view => self.content_view)
+    end
+
+    PulpTaskStatus.wait_for_tasks(from_puppet_env.clone_contents(to_puppet_env))
+    ContentViewPuppetEnvironment.trigger_contents_changed([to_puppet_env], :wait => true, :reindex => true)
+  end
+
   def delete(from_env)
     unless deletable?(from_env)
       fail Errors::ChangesetContentException.new(_("Cannot delete view %{view} from %{env}, systems are currently subscribed. " +
@@ -188,11 +230,19 @@ class ContentViewVersion < Katello::Model
     end
   end
 
-  def trigger_repository_changes(options = {})
+  def trigger_contents_changed(options = {})
     repos_changed = options[:non_archive] ? non_archive_repos : repositories.reload
 
     Repository.trigger_contents_changed(repos_changed, :wait => true, :reindex => true,
                                         :cloned_repo_overrides => options.fetch(:cloned_repo_overrides, []))
+
+    envs_changed = if options[:non_archive]
+                     content_view_puppet_environments.non_archived
+                   else
+                     content_view_puppet_environments.reload
+                   end
+
+    ContentViewPuppetEnvironment.trigger_contents_changed(envs_changed, :wait => true, :reindex => true)
   end
 
   def environments=(envs)
