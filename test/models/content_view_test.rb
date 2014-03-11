@@ -168,7 +168,7 @@ class ContentViewTest < ActiveSupport::TestCase
 
   def test_content_view_components
     assert_raises(ActiveRecord::RecordInvalid) do
-      @library_dev_view.components << @library_view.versions.first
+      @library_dev_view.update_attributes!(:component_ids => [@library_view.versions.first.id])
     end
 
     component = ContentViewComponent.new(:content_view => @library_dev_view,
@@ -176,6 +176,31 @@ class ContentViewTest < ActiveSupport::TestCase
                                         )
     refute component.valid?
     refute component.save
+  end
+
+  def test_repositories_to_publish
+    composite = ContentView.find(katello_content_views(:composite_view))
+    v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
+    composite.update_attributes(:component_ids => [v1.id])
+    repo_ids = composite.repositories_to_publish.map(&:library_instance_id)
+    assert_equal v1.content_view.repository_ids, repo_ids
+
+    repo = Repository.find(katello_repositories(:fedora_17_x86_64))
+    assert_equal [repo.id], @library_view.repositories_to_publish.map(&:id)
+  end
+
+  def test_repo_conflicts
+    composite = ContentView.find(katello_content_views(:composite_view))
+    v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
+    v2 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2))
+
+    refute composite.update_attributes(component_ids: [v1.id, v2.id])
+    assert_equal 1, composite.errors.count
+    assert composite.errors.full_messages.first =~ /^Repository conflict/
+
+    assert_raises(RuntimeError) do
+      composite.components << v1
+    end
   end
 
   def test_unique_environments

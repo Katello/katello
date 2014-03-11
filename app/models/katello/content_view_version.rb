@@ -42,6 +42,10 @@ class ContentViewVersion < Katello::Model
   scope :default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true)
   scope :non_default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false)
 
+  def self.with_library_repo(repo)
+    joins(:repositories).where("#{Katello::Repository.table_name}.library_instance_id" => repo)
+  end
+
   def to_s
     name
   end

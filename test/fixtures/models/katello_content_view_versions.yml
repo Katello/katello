@@ -12,22 +12,23 @@ staging_default_version:
   version: 1
 # END TODO: REMOVE THESE TWO
 
-library_view_version:
+library_view_version_1:
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
   version: 1
+
+library_view_version_2:
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
+  version: 2
 
 library_dev_view_version:
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_view) %>
   version: 1
 
-library_component_view1_version:
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:component_view_1) %>
-  version: 1
-
-library_component_view2_version:
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:component_view_2) %>
-  version: 1
-
 candlepin_library_dev_cv_version:
   content_view_id: <%= ActiveRecord::Fixtures.identify(:candlepin_library_dev_cv) %>
   version: 1
+
+composite_view_version_1:
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:composite_view) %>
+  version: 1
+
