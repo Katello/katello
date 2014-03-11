@@ -78,7 +78,7 @@ angular.module('Bastion').config(
     function ($httpProvider, $urlRouterProvider, $provide, BastionConfig, RootURL) {
         $httpProvider.defaults.headers.common = {
             Accept: 'application/json, text/plain, version=2; */*',
-            'X-XSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+            'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
         };
         $urlRouterProvider.otherwise("/");
 
@@ -98,7 +98,17 @@ angular.module('Bastion').config(
             };
         }]);
 
-        $httpProvider.interceptors.push('PrefixInterceptor');
+        $provide.factory('UnauthorizedInterceptor', ['$q', '$window', function ($q, $window) {
+            return {
+                responseError: function (response) {
+                    if (response.status === 401) {
+                        $window.location.href = '/users/login';
+                    } else {
+                        return $q.reject(response);
+                    }
+                }
+            };
+        }]);
 
         // Add Xs around translated strings if the config value mark_translated is set.
         if (BastionConfig.markTranslated) {
@@ -112,6 +122,8 @@ angular.module('Bastion').config(
             }]);
         }
 
+        $httpProvider.interceptors.push('PrefixInterceptor');
+        $httpProvider.interceptors.push('UnauthorizedInterceptor');
     }]
 );
 
