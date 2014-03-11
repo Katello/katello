@@ -35,6 +35,7 @@ Katello::Engine.routes.draw do
   resources :content_views, :only => [:index] do
     collection do
       get :all
+      get :auto_complete
     end
   end
 
