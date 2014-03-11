@@ -27,14 +27,6 @@ module Katello
       refute_empty @model.errors[:base]
     end
 
-    test "fails if both name and uuid provided" do
-      @model = OpenStruct.new(:errors => {:base => []}, :name => "module name",
-                              :author => "module author", :uuid => "3bd47a52-0847-42b5-90ff-206307b48b22")
-      @validator.validate(@model)
-
-      refute_empty @model.errors[:base]
-    end
-
     test "passes if name provided" do
       @model = OpenStruct.new(:errors => {:base => []}, :name => "module name")
       @validator.validate(@model)

@@ -23,5 +23,19 @@ module Katello
     validates :uuid, :uniqueness => { :scope => :content_view_id }, :allow_blank => true
 
     validates_with Validators::ContentViewPuppetModuleValidator
+
+    before_save :set_attributes
+
+    private
+
+    def set_attributes
+      if self.uuid && Katello.config.use_pulp
+        puppet_module = PuppetModule.find(self.uuid)
+        fail Errors::NotFound, _("Couldn't find Puppet Module with id=%s") % self.uuid unless puppet_module
+
+        self.name = puppet_module.name
+        self.author = puppet_module.author
+      end
+    end
   end
 end
