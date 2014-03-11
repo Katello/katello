@@ -1,4 +1,4 @@
-#
+
 # Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -28,9 +28,9 @@ class ContentViewTest < ActiveSupport::TestCase
     @organization     = get_organization
     @library          = KTEnvironment.find(katello_environments(:library).id)
     @dev              = KTEnvironment.find(katello_environments(:dev).id)
-    @default_view     = ContentView.find(katello_content_views(:acme_default))
-    @library_view     = ContentView.find(katello_content_views(:library_view))
-    @library_dev_view = ContentView.find(katello_content_views(:library_dev_view))
+    @default_view     = ContentView.find(katello_content_views(:acme_default).id)
+    @library_view     = ContentView.find(katello_content_views(:library_view).id)
+    @library_dev_view = ContentView.find(katello_content_views(:library_dev_view).id)
   end
 
   def test_create
@@ -98,6 +98,7 @@ class ContentViewTest < ActiveSupport::TestCase
     content_view = @library_view
     refute_includes content_view.environments, @dev
     content_view.promote(@library, @dev)
+
     assert_includes content_view.environments, @dev
     refute_empty ContentViewEnvironment.where(:content_view_id => content_view,
                                                 :environment_id => @dev)

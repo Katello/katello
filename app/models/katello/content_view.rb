@@ -18,7 +18,6 @@ class ContentView < Katello::Model
   include Authorization::ContentView
   include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
   include AsyncOrchestration
-
   include Glue::Event
 
   def create_event

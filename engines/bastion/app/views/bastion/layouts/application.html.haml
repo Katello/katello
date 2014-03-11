@@ -7,7 +7,7 @@
 
 = content_for(:content) do
   %article.maincontent.rcue-styles{'ng-app' => "Bastion"}
-    %section{'ui-view' => ''}
+    %section.container-fluid{'ui-view' => ''}
 
 = content_for(:javascripts) do
   = javascript_include_tag 'bastion/bastion'

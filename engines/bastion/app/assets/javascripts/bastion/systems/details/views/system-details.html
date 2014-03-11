@@ -16,7 +16,7 @@
            modal-header='Remove System "{{system.name}}"?'
            modal-body='Are you sure you want to remove system "{{ system.name }}"?'></div>
 
-      <button class="btn btn-danger" ng-disabled="system.readonly" ng-click="openModal()" translate>Remove System</button>
+      <button class="btn btn-default" ng-disabled="system.readonly" ng-click="openModal()" translate>Remove System</button>
       <button class="btn btn-default" ui-sref="systems.index">
         <i class="icon-remove"></i>
         {{ "Close" | translate }}
