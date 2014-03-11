@@ -39,6 +39,7 @@ namespace :katello do
       Tire.index(Katello::Package.index).delete
       Tire.index(Katello::Errata.index).delete
       Tire.index(Katello::PackageGroup.index).delete
+      Tire.index(Katello::PuppetModule.index).delete
       Tire.index(Katello::Pool.index).delete
       puts "Elasticsearch Indices cleared."
     end
