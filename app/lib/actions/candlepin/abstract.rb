@@ -12,7 +12,7 @@
 
 module Actions
   module Candlepin
-    class Abstract < Dynflow::Action
+    class Abstract < Actions::Base
       middleware.use ::Actions::Middleware::RemoteAction
     end
   end
