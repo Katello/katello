@@ -120,7 +120,7 @@ class ContentViewVersion < Katello::Model
 
     if options[:async]
       self.async(:organization => self.content_view.organization).promote_content(to_env, replacing_version,
-                                                                                  promote_version, history)
+                                                                                  history)
     else
       promote_content(to_env, replacing_version, history)
     end
