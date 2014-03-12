@@ -11,18 +11,27 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Headpin
-    module User
-      class Create < Actions::EntryAction
+  module Katello
+    module Provider
+      class ManifestDelete < Actions::AbstractAsyncTask
 
-        def plan(user)
-          user.disable_auto_reindex!
-          action_subject user
-          plan_action ElasticSearch::Reindex, user
+        def plan(provider)
+          action_subject provider
+        end
+
+        input_format do
+          param :provider, Hash do
+            param :id
+          end
         end
 
         def humanized_name
-          _("Create")
+          _("Delete Manifest")
+        end
+
+        def run
+          provider = ::Katello::Provider.find(input[:provider][:id])
+          provider.delete_manifest(:async => false, :notify => false)
         end
 
       end

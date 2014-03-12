@@ -21,17 +21,20 @@ module Katello
     describe "Create" do
       let(:action_class) { ::Actions::Katello::User::Create }
 
-      specify { assert ::Actions::Headpin::User::Create, action_class.subscribe }
-
       it 'plans' do
-        user         = stub 'cp', remote_id: 'stubbed_user'
-        action = create_and_plan_action action_class, user
+        user         = stub('cp',
+                            remote_id: 'stubbed_user',
+                            disable_auto_reindex!: true)
+        action = create_action action_class
+        action.stubs(:action_subject).with(user)
+        plan_action(action, user)
         assert_action_planed_with(action,
                                   ::Actions::Pulp::User::Create,
                                   remote_id: 'stubbed_user')
         assert_action_planed_with(action,
                                   ::Actions::Pulp::User::SetSuperuser,
                                   remote_id: 'stubbed_user')
+        assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, user)
       end
     end
   end

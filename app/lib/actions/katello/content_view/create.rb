@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Headpin
+  module Katello
     module ContentView
       class Create < Actions::Base
         def plan(content_view)

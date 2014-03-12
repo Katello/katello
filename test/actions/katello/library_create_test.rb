@@ -14,14 +14,14 @@ require 'katello_test_helper'
 
 module Katello
 
-  describe ::Actions::Headpin::ContentView do
+  describe ::Actions::Katello::ContentView do
     include Dynflow::Testing
     include Support::Actions::Fixtures
     include Support::Actions::RemoteAction
     include FactoryGirl::Syntax::Methods
 
     describe "Library Create" do
-      let(:action_class) { ::Actions::Headpin::Environment::LibraryCreate }
+      let(:action_class) { ::Actions::Katello::Environment::LibraryCreate }
       let(:action) { create_action action_class }
 
       let(:library) do
@@ -48,11 +48,11 @@ module Katello
         plan_action(action, library)
 
         assert_action_planed_with(action,
-                                  ::Actions::Headpin::ContentView::Create,
+                                  ::Actions::Katello::ContentView::Create,
                                   content_view)
 
         assert_action_planed_with(action,
-                                  ::Actions::Headpin::ContentView::EnvironmentCreate,
+                                  ::Actions::Katello::ContentView::EnvironmentCreate,
                                   content_view_environment)
         assert_action_planed_with(action,
                                   ::Actions::Katello::Foreman::ContentUpdate,

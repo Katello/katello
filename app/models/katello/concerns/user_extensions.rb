@@ -28,7 +28,7 @@ module Katello
 
         def create_action
           sync_action!
-          ::Actions::Headpin::User::Create
+          ::Actions::Katello::User::Create
         end
 
         include Ext::IndexedModel

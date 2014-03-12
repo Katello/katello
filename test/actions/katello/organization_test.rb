@@ -14,14 +14,14 @@ require 'katello_test_helper'
 
 module Katello
 
-  describe ::Actions::Headpin::Organization do
+  describe ::Actions::Katello::Organization do
     include Dynflow::Testing
     include Support::Actions::Fixtures
     include Support::Actions::RemoteAction
     include FactoryGirl::Syntax::Methods
 
     describe "Create" do
-      let(:action_class) { ::Actions::Headpin::Organization::Create }
+      let(:action_class) { ::Actions::Katello::Organization::Create }
       let(:action) { create_action action_class }
 
       let(:organization) do
@@ -42,7 +42,7 @@ module Katello
                                   name: organization.name)
 
         assert_action_planed_with(action,
-                                  ::Actions::Headpin::Environment::LibraryCreate,
+                                  ::Actions::Katello::Environment::LibraryCreate,
                                   organization.library)
 
         assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, organization)
