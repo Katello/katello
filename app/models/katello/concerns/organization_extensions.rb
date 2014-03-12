@@ -61,7 +61,6 @@ module Katello
         scope :having_name_or_label, lambda { |name_or_label| { :conditions => ["name = :id or label = :id", {:id => name_or_label}] } }
 
         before_create :create_library
-        before_create :create_redhat_provider
         after_initialize :initialize_default_info
 
         validates :name, :uniqueness => true, :presence => true
@@ -123,7 +122,7 @@ module Katello
         end
 
         def create_redhat_provider
-          self.providers << Katello::Provider.new(:name => "Red Hat", :provider_type => Katello::Provider::REDHAT, :organization => self)
+          self.providers << Katello::Provider.create!(:name => "Red Hat", :provider_type => Katello::Provider::REDHAT, :organization => self)
         end
 
         def validate_destroy(current_org)

@@ -41,7 +41,6 @@ module Actions
           output[:response] = ::Katello::Resources::Candlepin::Product.create_unlimited_subscription(input[:owner_key],
                                                                                                      input[:product_id])
         end
-
       end
 
     end

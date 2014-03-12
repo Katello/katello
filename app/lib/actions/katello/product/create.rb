@@ -16,26 +16,23 @@ module Actions
       class Create < Actions::EntryAction
 
         # @param [Katello::Product] product
-        # @param [Katello::Provider] provider
         # @param [Katello::Organization] organization
-        def plan(product, provider, organization)
-
+        def plan(product, organization)
           product.disable_auto_reindex!
-          product.provider = provider
+          product.provider = ::Katello::Provider.create_anonymous!(organization)
 
-          if product.provider.nil?
-            create_anonymous = plan_action ::Actions::Katello::Provider::CreateAnonymous, organization
-            product.provider = create_anonymous.output[:response]
-          end
+          cp_create = plan_action(::Actions::Candlepin::Product::SetProduct,
+                      :name => product.name,
+                      :multiplier => product.multiplier || 1,
+                      :attributes => product.attrs || [{:name => "arch", :value => "ALL"}])
 
-          plan_action ::Actions::Candlepin::Provider::SetProduct, product.name, product.multiplier || 1, product.attrs
-
-          if product.provider && product.provider.yum_repo?
-            plan_action ::Actions::Candlepin::Provider::SetUnlimitedSubscription, organization.label, product.cp_id
-          end
+          plan_action(::Actions::Candlepin::Product::SetUnlimitedSubscription,
+                      :owner_key => organization.label,
+                      :product_id => cp_create.output[:response][:id])
 
           product.save!
-          action_subject product
+          action_subject product, :cp_id => cp_create.output[:response][:id]
+          plan_self
           plan_action ElasticSearch::Reindex, product
         end
 
@@ -43,8 +40,14 @@ module Actions
           _("Create")
         end
 
-      end
+        def finalize
+            prod = ::Katello::Product.find(input[:product][:id])
+            prod.disable_auto_reindex!
+            prod.cp_id = input[:cp_id]
+            prod.save!
+        end
 
+      end
     end
   end
 end
