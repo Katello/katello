@@ -25,7 +25,7 @@ module Actions
                                       label:  organization.label,
                                       name: organization.name)
             end
-            organization.providers.first.save!
+            plan_action ::Actions::Katello::Provider::CreateRedHat, organization
             plan_action(Environment::LibraryCreate, organization.library)
             organization.save!
           end
