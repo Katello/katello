@@ -12,42 +12,44 @@
 
 require 'katello_test_helper'
 
-module Katello
+module ::Actions::Katello::Organization
 
-  describe ::Actions::Katello::Organization do
+  class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
     include Support::Actions::RemoteAction
     include FactoryGirl::Syntax::Methods
 
-    describe "Create" do
-      let(:action_class) { ::Actions::Katello::Organization::Create }
-      let(:action) { create_action action_class }
+    let(:action) { create_action action_class }
+  end
 
-      let(:organization) do
-        build(:katello_organization, :acme_corporation, :with_library)
-      end
+  class CreateTest < TestBase
+    let(:action_class) { ::Actions::Katello::Organization::Create }
+    let(:action) { create_action action_class }
 
-      it 'plans' do
-        provider = mock()
-        provider.expects(:save!).returns([])
-        organization.expects(:providers).returns([provider])
-        organization.expects(:save!)
-        organization.expects(:disable_auto_reindex!).returns
-        action.stubs(:action_subject).with(organization, any_parameters)
-        plan_action(action, organization)
-        assert_action_planed_with(action,
-                                  ::Actions::Candlepin::Owner::Create,
-                                  label:  organization.label,
-                                  name: organization.name)
+    let(:organization) do
+      build(:katello_organization, :acme_corporation, :with_library)
+    end
 
-        assert_action_planed_with(action,
-                                  ::Actions::Katello::Environment::LibraryCreate,
-                                  organization.library)
+    it 'plans' do
+      provider = mock()
+      provider.expects(:save!).returns([])
+      organization.expects(:providers).returns([provider])
+      organization.expects(:save!)
+      organization.expects(:disable_auto_reindex!).returns
+      action.stubs(:action_subject).with(organization, any_parameters)
+      plan_action(action, organization)
+      assert_action_planed_with(action,
+                                ::Actions::Candlepin::Owner::Create,
+                                label:  organization.label,
+                                name: organization.name)
 
-        assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, organization)
+      assert_action_planed_with(action,
+                                ::Actions::Katello::Environment::LibraryCreate,
+                                organization.library)
 
-      end
+      assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, organization)
+
     end
   end
 end

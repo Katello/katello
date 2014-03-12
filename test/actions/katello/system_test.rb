@@ -12,51 +12,52 @@
 
 require 'katello_test_helper'
 
-module Katello
+module ::Actions::Katello::System
 
-  describe ::Actions::Katello::System do
+  class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::RemoteAction
+    include Support::Actions::Fixtures
     include FactoryGirl::Syntax::Methods
 
-    describe "Create" do
-      let(:action_class) { ::Actions::Katello::System::Create }
-      let(:trigger_class) { ::Actions::Katello::System::Create }
-      let(:action) { create_action action_class }
+    let(:action) { create_action action_class }
+  end
 
-      let(:system) do
-        env = build(:katello_k_t_environment,
-                    :library,
-                    organization: build(:katello_organization, :acme_corporation))
-        build(:katello_system, :alabama, environment: env)
-      end
+  class CreateTest < TestBase
+    let(:action_class) { ::Actions::Katello::System::Create }
 
-      it 'plans' do
-        stub_remote_user
-        system.expects(:save!)
-        action.stubs(:action_subject).with do |subject, params|
-          subject.must_equal(system)
-          params[:uuid].must_be_kind_of Dynflow::ExecutionPlan::OutputReference
-          params[:uuid].subkeys.must_equal %w[response uuid]
-        end
-        plan_action(action, system)
-        assert_action_planed(action, ::Actions::Candlepin::Consumer::Create)
-        assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, system)
-        assert_action_planed_with(action, ::Actions::Pulp::Consumer::Create) do |params, *_|
-          params[:uuid].must_be_kind_of Dynflow::ExecutionPlan::OutputReference
-          params[:uuid].subkeys.must_equal %w[response uuid]
-        end
-      end
+    let(:system) do
+      env = build(:katello_k_t_environment,
+                  :library,
+                  organization: build(:katello_organization, :acme_corporation))
+      build(:katello_system, :alabama, environment: env)
+    end
 
-      it 'updates the uuid in finalize method' do
-        System.stubs(:find).with(123).returns(system)
-        action.input[:remote_user] = 'user'
-        action.input[:system] = { id:  123 }
-        action.input[:uuid] = '123'
-        system.expects(:save!)
-        finalize_action action
-        system.uuid.must_equal '123'
+    it 'plans' do
+      stub_remote_user
+      system.expects(:save!)
+      action.stubs(:action_subject).with do |subject, params|
+        subject.must_equal(system)
+        params[:uuid].must_be_kind_of Dynflow::ExecutionPlan::OutputReference
+        params[:uuid].subkeys.must_equal %w[response uuid]
       end
+      plan_action(action, system)
+      assert_action_planed(action, ::Actions::Candlepin::Consumer::Create)
+      assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, system)
+      assert_action_planed_with(action, ::Actions::Pulp::Consumer::Create) do |params, *_|
+        params[:uuid].must_be_kind_of Dynflow::ExecutionPlan::OutputReference
+        params[:uuid].subkeys.must_equal %w[response uuid]
+      end
+    end
+
+    it 'updates the uuid in finalize method' do
+      ::Katello::System.stubs(:find).with(123).returns(system)
+      action.input[:remote_user] = 'user'
+      action.input[:system] = { id:  123 }
+      action.input[:uuid] = '123'
+      system.expects(:save!)
+      finalize_action action
+      system.uuid.must_equal '123'
     end
   end
 end

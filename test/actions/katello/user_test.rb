@@ -12,30 +12,28 @@
 
 require 'katello_test_helper'
 
-module Katello
+module ::Actions::Katello::User
 
-  describe ::Actions::Katello::User do
+  class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
 
-    describe "Create" do
-      let(:action_class) { ::Actions::Katello::User::Create }
+    let(:action) { create_action action_class }
+  end
 
-      it 'plans' do
-        user         = stub('cp',
-                            remote_id: 'stubbed_user',
-                            disable_auto_reindex!: true)
-        action = create_action action_class
-        action.stubs(:action_subject).with(user)
-        plan_action(action, user)
-        assert_action_planed_with(action,
-                                  ::Actions::Pulp::User::Create,
-                                  remote_id: 'stubbed_user')
-        assert_action_planed_with(action,
-                                  ::Actions::Pulp::User::SetSuperuser,
-                                  remote_id: 'stubbed_user')
-        assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, user)
-      end
+  class CreateTest < TestBase
+    let(:action_class) { ::Actions::Katello::User::Create }
+
+    it 'plans' do
+      user = stub('cp',
+                  remote_id: 'stubbed_user',
+                  disable_auto_reindex!: true)
+      action.stubs(:action_subject).with(user)
+      plan_action(action, user)
+      assert_action_planed_with(action, ::Actions::Pulp::User::Create, remote_id: 'stubbed_user')
+      assert_action_planed_with(action,
+                                ::Actions::Pulp::User::SetSuperuser, remote_id: 'stubbed_user')
+      assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, user)
     end
   end
 end

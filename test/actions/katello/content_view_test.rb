@@ -12,28 +12,51 @@
 
 require 'katello_test_helper'
 
-module Katello
-  describe ::Actions::Katello::ContentView do
+module ::Actions::Katello::ContentView
+
+  class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
     include Support::Actions::RemoteAction
     include FactoryGirl::Syntax::Methods
 
-    describe "Create" do
-      let(:action_class) { ::Actions::Katello::ContentView::Create }
-      let(:action) { create_action action_class }
+    let(:action) { create_action action_class }
+  end
 
-      let(:content_view) do
-        katello_content_views(:acme_default)
-      end
+  class EnvironmentCreateTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::EnvironmentCreate }
 
-      it 'plans' do
-        Katello::Configuration::Node.any_instance.stubs(:use_elasticsearch).returns(true)
-        content_view.expects(:save!)
-        content_view.expects(:disable_auto_reindex!)
-        plan_action(action, content_view)
-        assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, content_view)
-      end
+    let(:content_view_environment) do
+      katello_content_view_environments(:library_default_view_environment)
+    end
+
+    it 'plans' do
+      Katello::Configuration::Node.any_instance.stubs(:use_cp).returns(true)
+      content_view_environment.expects(:save!)
+      plan_action(action, content_view_environment)
+      content_view = content_view_environment.content_view
+      assert_action_planed_with(action,
+                                ::Actions::Candlepin::Environment::Create,
+                                'organization_label' => content_view.organization.label,
+                                'cp_id' => content_view_environment.cp_id,
+                                'name' => content_view_environment.label,
+                                'description' => content_view.description)
+    end
+  end
+
+  class CreateTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::Create }
+
+    let(:content_view) do
+      katello_content_views(:acme_default)
+    end
+
+    it 'plans' do
+      Katello::Configuration::Node.any_instance.stubs(:use_elasticsearch).returns(true)
+      content_view.expects(:save!)
+      content_view.expects(:disable_auto_reindex!)
+      plan_action(action, content_view)
+      assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, content_view)
     end
   end
 end
