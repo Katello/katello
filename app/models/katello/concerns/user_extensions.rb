@@ -24,6 +24,7 @@ module Katello
         include Glue::ElasticSearch::User if Katello.config.use_elasticsearch
         include Glue if Katello.config.use_cp || Katello.config.use_pulp
         include ForemanTasks::Concerns::ActionSubject
+        include ForemanTasks::Concerns::ActionTriggering
 
         def create_action
           sync_action!
