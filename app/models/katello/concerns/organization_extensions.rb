@@ -20,6 +20,7 @@ module Katello
         ALLOWED_DEFAULT_INFO_TYPES = %w(system distributor)
 
         include ForemanTasks::Concerns::ActionSubject
+        include ForemanTasks::Concerns::ActionTriggering
         include Glue::Candlepin::Owner if Katello.config.use_cp
         include Glue if Katello.config.use_cp
 
