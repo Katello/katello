@@ -316,9 +316,9 @@ module Glue::Candlepin::Product
 
     def save_product_orchestration
       case self.orchestration_for
-      when :create
-        pre_queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
-        pre_queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
+      #when :create
+      #  pre_queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
+      #  pre_queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
       when :import_from_cp
         # we leave it as it is - to not break re-import logic
       when :import_from_cp_ar_setup

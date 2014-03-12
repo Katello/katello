@@ -72,9 +72,9 @@ module Katello
     param_group :product
     def create
       params[:product][:label] = labelize_params(product_params) if product_params
-      params[:product][:provider_id] ||= @provider.id
-      product = Product.create!(product_params)
+      product = Product.new(product_params)
 
+      sync_task(::Actions::Katello::Product::Create, product, @provider, @organization)
       respond(:resource => product)
     end
 
@@ -108,8 +108,8 @@ module Katello
     protected
 
     def find_or_create_provider
+      @organization = find_organization
       @provider = Provider.find(product_params[:provider_id]) if product_params[:provider_id]
-      @provider ||= Provider.create_anonymous!(find_organization)
     end
 
     def find_product
