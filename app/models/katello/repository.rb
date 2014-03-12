@@ -88,6 +88,7 @@ class Repository < Katello::Model
   scope :puppet_type, where(:content_type => PUPPET_TYPE)
   scope :non_puppet, where("content_type != ?", PUPPET_TYPE)
   scope :non_archived, where('environment_id is not NULL')
+  scope :archived, where('environment_id is NULL')
 
   def organization
     if self.environment

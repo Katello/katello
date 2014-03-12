@@ -39,7 +39,13 @@ class ContentView < Katello::Model
 
   has_many :content_view_components, :class_name => "Katello::ContentViewComponent", :dependent => :destroy
   has_many :components, :through => :content_view_components, :class_name => "Katello::ContentViewVersion",
-    :source => :content_view_version
+    :source => :content_view_version do
+    def <<(*args)
+      # this doesn't go through validation and generate a nice error message
+      # for the API/UI to use
+      fail "Adding components without doing validation is not supported"
+    end
+  end
 
   has_many :distributors, :class_name => "Katello::Distributor", :dependent => :restrict
   has_many :content_view_repositories, :dependent => :destroy
@@ -60,6 +66,7 @@ class ContentView < Katello::Model
                     :presence => true
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
   validates :organization_id, :presence => true
+  validate :check_repo_conflicts
 
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
@@ -172,6 +179,19 @@ class ContentView < Katello::Model
       where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
   end
 
+  def repositories_to_publish
+    if composite?
+      ids = components.flat_map { |version| version.repositories.archived }.map(&:id)
+      Repository.where(:id => ids)
+    else
+      repositories
+    end
+  end
+
+  def repositories_to_publish_ids
+    composite? ? repositories_to_publish.pluck(&:id) : repository_ids
+  end
+
   def repos_in_product(env, product)
     version = version(env)
     if version
@@ -274,8 +294,6 @@ class ContentView < Katello::Model
   def publish_content(version, notify = false)
     # 1. generate the version repositories
     publish_version_content(version)
-    clone_overrides = self.repositories.select{|r| self.filters.applicable(r).empty?}
-    version.trigger_contents_changed(:cloned_repo_overrides => clone_overrides, :wait => true)
 
     # 2. generate the library repositories
     publish_library_yum_content(version)
@@ -312,7 +330,7 @@ class ContentView < Katello::Model
     # prepare the yum repos currently in the library for the publish
     async_tasks = []
     repos(organization.library).each do |repo|
-      if repository_ids.include?(repo.library_instance_id)
+      if repositories_to_publish_ids.include?(repo.library_instance_id)
         repo.content_view_version_id = version.id
         repo.save!
 
@@ -329,7 +347,7 @@ class ContentView < Katello::Model
 
     async_tasks = []
     repos_to_filter = []
-    repositories.each do |repo|
+    repositories_to_publish.each do |repo|
       # the repos from the content view are based upon initial synced repos, we need to
       # determine if each of those repos has been cloned in library
       library_clone = get_repo_clone(organization.library, repo).first
@@ -383,7 +401,7 @@ class ContentView < Katello::Model
   end
 
   def publish_version_content(version)
-    repositories.non_puppet.each do |repo|
+    repositories_to_publish.each do |repo|
       clone = repo.create_clone(:content_view => self, :version => version)
       associate_yum_content(clone)
     end
@@ -392,33 +410,44 @@ class ContentView < Katello::Model
       puppet_env = create_puppet_env(:content_view => self, :version => version)
       associate_puppet_content(puppet_env)
     end
+
+    clone_overrides = repositories_to_publish.select{|r| self.filters.applicable(r).empty?}
+    version.trigger_contents_changed(:cloned_repo_overrides => clone_overrides, :wait => true)
   end
 
   def ready_to_publish?
     !has_puppet_repo_conflicts? && !has_repo_conflicts?
   end
 
+  def duplicate_repositories
+    counts = repositories_to_publish.each_with_object(Hash.new(0)) do |repo, h|
+      h[repo.library_instance_id] += 1
+    end
+    ids = counts.select { |k, v| v > 1 }.keys
+    Repository.where(:id => ids)
+  end
+
   def has_repo_conflicts?
     # Check to see if there is a repo conflict in the component views. A
     # conflict exists if the same repo exists in more than one of those
     # component views.
-    if self.composite?
-      repos_hash = self.views_repos
-      repos_hash.each do |view_id, repo_ids|
-        repos_hash.each do |other_view_id, other_repo_ids|
-          return true if (view_id != other_view_id) && !repo_ids.intersection(other_repo_ids).empty?
-        end
-      end
+    self.composite? && duplicate_repositories.any?
+  end
+
+  def check_repo_conflicts
+    duplicate_repositories.each do |repo|
+      versions = components.with_library_repo(repo).uniq.map(&:name).join(", ")
+      msg = _("Repository conflict: '%{repo}' is in %{versions}.") % {repo: repo.name, versions: versions}
+      errors.add(:base, msg)
     end
-    false
   end
 
   def has_puppet_repo_conflicts?
     # Check to see if there is a puppet conflict in the component views. A
     # conflict exists if more than one view has a puppet repo
     if self.composite?
-      repos = content_view_components.map { |view| view.repos(organization.library) }.flatten
-      return repos.select(&:puppet?).length > 1
+      #repos = content_view_components.map { |view| view.repos(organization.library) }.flatten
+      #return repos.select(&:puppet?).length > 1
     end
     false
   end

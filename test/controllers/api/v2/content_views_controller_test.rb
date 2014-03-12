@@ -165,7 +165,7 @@ module Katello
     def test_remove_components
       version = @content_view.versions.first
       composite = ContentView.find(katello_content_views(:composite_view))
-      composite.components << version
+      composite.components = [version]
       refute_empty composite.components(true)
       put :update, :id => composite.id, :component_ids => []
       assert_empty composite.components(true)

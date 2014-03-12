@@ -32,17 +32,6 @@ rhel_6_x86_64:
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
 
-fedora_17_x86_64_library_view:
-  name:                 Fedora 17 x86_64
-  pulp_id:              3
-  content_id:           1
-  label:                fedora_17_x86_64_label
-  relative_path:        '/ACME_Corporation/library/LibraryView/fedora_17_label'
-  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
-  product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version) %>
-
 p_forge:
   name:                 P Forge
   pulp_id:              4
@@ -66,6 +55,42 @@ dev_p_forge:
   product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:dev_default_version) %>
+
+fedora_17_x86_64_library_view_1:
+  name:                 Fedora 17 x86_64
+  pulp_id:              3
+  content_id:           1
+  label:                fedora_17_x86_64_label
+  library_instance:     fedora_17_x86_64
+  relative_path:        '/ACME_Corporation/library/LibraryView/fedora_17_label'
+  environment_id:
+  product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>
+
+fedora_17_x86_64_library_view_2:
+  name:                 Fedora 17 x86_64
+  pulp_id:              3
+  content_id:           1
+  label:                fedora_17_x86_64_label
+  library_instance:     fedora_17_x86_64
+  relative_path:        '/ACME_Corporation/library/LibraryView/fedora_17_label'
+  environment_id:
+  product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>
+
+fedora_17_x86_64_library_view_2_library:
+  name:                 Fedora 17 x86_64
+  pulp_id:              3
+  content_id:           1
+  label:                fedora_17_x86_64_label
+  library_instance:     fedora_17_x86_64
+  relative_path:        '/ACME_Corporation/library/LibraryView/fedora_17_label'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>
 
 fedora_17_unpublished:
   name:                 Fedora 17 x86_64
