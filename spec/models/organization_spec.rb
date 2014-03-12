@@ -19,8 +19,10 @@ describe Organization do
   before(:each) do
     Resources::Candlepin::Owner.stubs(:create_user).returns(true)
     Resources::Candlepin::Owner.expects(:create).at_least_once.returns({})
+    ::Actions::ElasticSearch::Reindex.any_instance.stubs(:finalize)
     disable_env_orchestration
-    @organization = Organization.create(:name => 'test_org_name', :label=>'test_org_label')
+    Organization.any_instance.stubs(:ensure_not_in_transaction!)
+    @organization = Organization.create!(:name => 'test_org_name', :label=>'test_org_label')
   end
 
   describe "organization validation" do

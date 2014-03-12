@@ -15,7 +15,6 @@ require File.expand_path("../models/model_spec_helper", File.dirname(__FILE__))
 module Katello
 module OrganizationHelperMethods
   include OrchestrationHelper
-
   def new_test_org user=nil
     disable_org_orchestration
     suffix = Organization.count + 1
@@ -36,6 +35,7 @@ module OrganizationHelperMethods
   end
 
   def create_environment(attrs)
+    User.current.remote_id =  User.current.login
     env = KTEnvironment.create!(attrs)
     if block_given?
       yield env

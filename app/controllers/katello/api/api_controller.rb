@@ -52,19 +52,15 @@ class Api::ApiController < ::Api::BaseController
   def require_user
     if authenticate && session[:user]
       User.current = User.find(session[:user])
+    elsif (ssl_client_cert = client_cert_from_request).present?
+      consumer_cert = OpenSSL::X509::Certificate.new(ssl_client_cert)
+      uuid = uuid(consumer_cert)
+      User.current = CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid)
+    elsif authenticate
+      User.current
     else
-      # If the request is from rhsm, it may include a client cert; therefore, use it
-      ssl_client_cert = client_cert_from_request
-      unless ssl_client_cert.blank?
-        consumer_cert = OpenSSL::X509::Certificate.new(ssl_client_cert)
-        uuid = uuid(consumer_cert)
-        User.current = CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid)
-      end
+      deny_access
     end
-  rescue => e
-    logger.error "failed to authenticate API request: " << pp_exception(e)
-    head :status => HttpErrors::INTERNAL_ERROR
-    return false
   end
 
   def request_from_katello_cli?

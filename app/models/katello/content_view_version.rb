@@ -261,9 +261,8 @@ class ContentViewVersion < Katello::Model
       cve = ContentViewEnvironment.find_by_environment_id_and_content_view_id(env, content_view_id)
       self.content_view_environments << cve
     else
-      content_view_environments.build(:environment_id => env.id,
-                                      :content_view_id => content_view_id
-                                     )
+      env = content_view.add_environment(env, self)
+      ForemanTasks.sync_task(::Actions::Headpin::ContentView::EnvironmentCreate, env)
     end
   end
 

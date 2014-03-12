@@ -23,15 +23,18 @@ describe ApplicationInfoHelper do
 
   context '.can_read_system_info?' do
     before(:each) do
+
       Resources::Candlepin::Owner.stubs(:create_user).returns(true)
-      Resources::Candlepin::Owner.expects(:create).once.returns({})
       disable_env_orchestration
       disable_user_orchestration
+      Organization.any_instance.stubs(:ensure_not_in_transaction!)
+      Resources::Candlepin::Owner.expects(:create).once.returns({})
+      ::Actions::ElasticSearch::Reindex.any_instance.stubs(:finalize)
       Katello.config[:warden] = 'ldap'
       Katello.config[:validate_ldap] = false
       User.stubs(:cp_oauth_header).returns("abc123")
-
       as_admin do
+        User.current.stubs(:remote_id).returns(User.current.login)
         @org = Organization.create!(:name => "Haskell_Curry_Inc",
                                     :label => "haskell_curry_inc"
                                    )

@@ -12,9 +12,7 @@
 
 module Actions
   module ElasticSearch
-    class Reindex < Dynflow::Action
-
-      middleware.use ::Actions::Middleware::RemoteAction
+    class Reindex < ElasticSearch::Abstract
 
       def plan(record)
         plan_self(id: record.id,

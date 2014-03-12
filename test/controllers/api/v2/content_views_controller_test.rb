@@ -17,16 +17,16 @@ module Katello
   class Api::V2::ContentViewsControllerTest < ActionController::TestCase
 
     def self.before_suite
-      models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion",
-                "Repository"]
+      models = ["ContentViewEnvironment", "ContentViewVersion",
+                "Repository", "ContentViewComponent", "ContentView"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
       super
     end
 
     def models
       @organization = get_organization
-      @library = katello_environments(:library)
-      @content_view = katello_content_views(:library_dev_view)
+      @library = KTEnvironment.find(katello_environments(:library))
+      @content_view = ContentView.find(katello_content_views(:library_dev_view))
     end
 
     def permissions
