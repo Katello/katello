@@ -25,24 +25,64 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewVersionsController',
-    ['$scope', 'gettext', 'ContentViewVersion', function ($scope, gettext, ContentViewVersion) {
+    ['$scope', 'gettext', 'ContentViewVersion', 'AggregateTask',
+        function ($scope, gettext, ContentViewVersion, AggregateTask) {
 
         $scope.table = {};
 
         ContentViewVersion.query({'content_view_id': $scope.$stateParams.contentViewId}, function (data) {
             $scope.versions = data.results;
+            processTasks($scope.versions);
+        });
+
+        function processTasks(versions) {
+            _.each(versions, function (version) {
+                var taskIds = _.map(version['active_history'], function (history) {
+                                    return history.task.id;
+                                });
+                if (taskIds.length > 0) {
+                    version.task = AggregateTask.new(taskIds);
+                }
+            });
+        }
+
+        $scope.$on('$destroy', function () {
+            _.each($scope.versions, function (version) {
+                if (version.task) {
+                    version.task.unregisterAll();
+                }
+            });
         });
 
         $scope.status = function (version) {
-            var count = version['active_history'].length,
-                status = '';
+            var promoteCount = version['active_history'].length,
+                publish = _.findWhere(version['active_history'], {publish: true});
 
-            if (count > 1) {
-                status = gettext("Promoting to %count environments.").replace('%count', count);
-            } else if (count === 1) {
-                status =  gettext("Promoting to 1 environment.");
+            if (publish) {
+                promoteCount = promoteCount - 1;
+            }
+            return statusMessage(publish, promoteCount);
+        };
+
+        function statusMessage(isPublishing, promoteCount) {
+            var status = '';
+            if (promoteCount > 1) {
+                if (isPublishing) {
+                    status = gettext("Publishing and promoting to %count environments.").replace(
+                        '%count', promoteCount);
+                }
+                else {
+                    status = gettext("Promoting to %count environments.").replace('%count', promoteCount);
+                }
+            } else if (promoteCount === 1 || isPublishing) {
+                if (isPublishing) {
+                    status = gettext("Publishing and promoting to 1 environment.");
+                }
+                else {
+                    status =  gettext("Promoting to 1 environment.");
+                }
             }
             return status;
-        };
+        }
     }]
 );

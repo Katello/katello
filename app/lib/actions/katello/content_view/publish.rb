@@ -23,6 +23,9 @@ module Actions
           version = content_view.create_new_version
           library = content_view.organization.library
 
+          history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
+                                               :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task)
+
           sequence do
             concurrence do
               content_view.repositories.non_puppet.each do |repository|
@@ -37,11 +40,18 @@ module Actions
             end
 
             plan_action(ContentView::UpdateEnvironment, content_view, library)
+            plan_self(history_id: history.id)
           end
         end
 
         def humanized_name
           _("Publish")
+        end
+
+        def finalize
+          history = ::Katello::ContentViewHistory.find(input[:history_id])
+          history.status = ::Katello::ContentViewHistory::SUCCESSFUL
+          history.save!
         end
 
         private

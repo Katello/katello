@@ -11,7 +11,7 @@
        <tr alch-table-head>
          <th translate>Date</th>
          <th translate>Version</th>
-         <th translate>Environment</th>
+         <th translate>Action</th>
          <th translate>User</th>
          <th translate>Status</th>
        </tr>
@@ -21,9 +21,9 @@
        <tr alch-table-row ng-repeat="history in detailsTable.rows">
          <td alch-table-cell>{{ history.created_at | date:'short' }}</td>
          <td alch-table-cell>{{ history.version }} </td>
-         <td alch-table-cell>{{ history.environment.name }}</td>
+         <td alch-table-cell>{{ actionText(history) }}</td>
          <td alch-table-cell>{{ history.user }}</td>
-         <td alch-table-cell>{{ history.status }}</td>
+         <td alch-table-cell>{{ history.task.result }}</td>
        </tr>
      </tbody>
     </table>
