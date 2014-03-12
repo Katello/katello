@@ -71,7 +71,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
   end
 
   def create
-    provider = Provider.new!(provider_params) do |p|
+    provider = Provider.new(provider_params) do |p|
       p.organization  = @organization
       p.provider_type = params[:provider]["provider_type"] if params[:provider].member? "provider_type"
       p.description = params[:provider]["description"] if params[:provider].member? "description"
