@@ -25,8 +25,8 @@ module Actions
                                       label:  organization.label,
                                       name: organization.name)
             end
-            plan_action ::Actions::Katello::Provider::CreateRedHat, organization
             plan_action(Environment::LibraryCreate, organization.library)
+            organization.create_redhat_provider
             organization.save!
           end
           if cp_create

@@ -73,8 +73,7 @@ module Katello
     def create
       params[:product][:label] = labelize_params(product_params) if product_params
       product = Product.new(product_params)
-
-      sync_task(::Actions::Katello::Product::Create, product, @provider, @organization)
+      sync_task(::Actions::Katello::Product::Create, product, @organization)
       respond(:resource => product)
     end
 
