@@ -30,6 +30,7 @@ module Actions
 
           plan_action(Headpin::ContentView::Create, library_view)
           plan_action(Headpin::ContentView::EnvironmentCreate, library_view_env)
+          plan_action(Katello::Foreman::ContentUpdate, library_env, library_view)
         end
 
         def humanized_name

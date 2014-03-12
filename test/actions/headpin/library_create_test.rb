@@ -54,6 +54,9 @@ module Katello
         assert_action_planed_with(action,
                                   ::Actions::Headpin::ContentView::EnvironmentCreate,
                                   content_view_environment)
+        assert_action_planed_with(action,
+                                  ::Actions::Katello::Foreman::ContentUpdate,
+                                  library, content_view)
       end
     end
   end
