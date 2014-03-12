@@ -62,13 +62,14 @@ angular.module('Bastion.tasks').factory('AggregateTask',
 
                 _.each(taskMap, function (task) {
                     if (weights[task.progressbar.type] > weights[found]) {
+
                         found = task.progressbar.type;
                     }
                 });
                 return found;
             },
             greatestState = function () {
-                var found = 'success',
+                var found = 'stopped',
                     weights = {
                         running: 3,
                         pending: 2,

@@ -29,7 +29,7 @@
             <div ng-hide="version.active_history.length === 0"
                  ng-class="{ active: (version.task.state === 'pending' || version.task.state === 'running') }"
                  class="progress progress-striped">
-              <span progressbar value="version.task.progressbar.value" type="{{version.task.progressbar.type}}"></span>
+              <span progressbar value="version.task.progressbar.value" ></span> <!-- type="{{version.task.progressbar.type}}" -->
             </div>
               {{ status(version) }}
           </a>
