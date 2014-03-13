@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require File.expand_path("repository_base", File.dirname(__FILE__))
-require File.expand_path("authorization/repository_authorization_test", File.dirname(__FILE__))
 
 module Katello
 class RepositoryCreateTest < RepositoryTestBase
@@ -166,17 +165,37 @@ class RepositoryInstanceTest < RepositoryTestBase
     assert_equal "Empty_Organization-library_label-org_default_label-fedora_label-fedora_17_x86_64_label", repo_id
   end
 
-  def test_clone_repo_path_for_component
-    skip "TODO: Fix content views"
-    # validate that clone repo path for a component view does not include the component view label
-    @content_view_definition = katello_content_view_definition_bases(:composite_def)
-    dev = KTEnvironment.find(katello_environments(:dev).id)
-    cv = @content_view_definition.component_content_views.where(:label => "component_view_1").first
-    cve = ContentViewEnvironment.where(:environment_id => dev,
-                                        :content_view_id => cv).first
+  def test_clone_repo_path
+    path = Repository.clone_repo_path(:repository => @fedora_17_x86_64,
+                                      :version => @fedora_17_x86_64.content_view_version,
+                                      :content_view => @fedora_17_x86_64.content_view
+                                     )
+    assert_equal "/content_views/org_default_label/1/library/fedora_17_label", path
 
-    relative_path = Repository.clone_repo_path(@fedora_17_x86_64, dev, cv)
+    path = Repository.clone_repo_path(:repository => @fedora_17_x86_64,
+                                      :environment => @fedora_17_x86_64.organization.library,
+                                      :content_view => @fedora_17_x86_64.content_view
+                                     )
+    assert_equal "/library_default_view_library/library/fedora_17_label", path
+  end
+
+  def test_clone_repo_path_for_component
+    # validate that clone repo path for a component view does not include the component view label
+    library = KTEnvironment.find(katello_environments(:library).id)
+    cv = ContentView.find(katello_content_views(:composite_view))
+    cve = ContentViewEnvironment.where(:environment_id => library,
+                                        :content_view_id => cv).first
+    relative_path = Repository.clone_repo_path(repository: @fedora_17_x86_64,
+                                               environment: library,
+                                               content_view: cv)
     assert_equal "/#{cve.label}/library/fedora_17_label", relative_path
+
+    # archive path
+    version = stub(:version => 1)
+    relative_path = Repository.clone_repo_path(repository: @fedora_17_x86_64,
+                                               version: version,
+                                               content_view: cv)
+    assert_equal "/content_views/composite_view/1/library/fedora_17_label", relative_path
   end
 
   def test_blank_feed_url

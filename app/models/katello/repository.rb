@@ -88,7 +88,7 @@ class Repository < Katello::Model
   scope :puppet_type, where(:content_type => PUPPET_TYPE)
   scope :non_puppet, where("content_type != ?", PUPPET_TYPE)
   scope :non_archived, where('environment_id is not NULL')
-  scope :archived, where(environment_id: nil)
+  scope :archived, where('environment_id is NULL')
 
   def organization
     if self.environment
@@ -232,7 +232,7 @@ class Repository < Katello::Model
                                          :content_view_id => options[:content_view]).first
       "#{org}/#{cve.label}/#{content_path}"
     else
-      "#{org}/#{options[:content_view].label}/#{options[:version].version}/#{content_path}"
+      "#{org}/#{ContentView::CONTENT_DIR}/#{options[:content_view].label}/#{options[:version].version}/#{content_path}"
     end
   end
 

@@ -19,14 +19,16 @@ describe('Controller: SystemRegisterController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $location = $injector.get('$location'),
-            Node = $injector.get('MockResource').$new();
+            Node = $injector.get('MockResource').$new(),
+            BastionConfig = {consumerCertRPM: 'katello-ca.rpm'};
 
         $scope = $injector.get('$rootScope').$new();
         $controller('SystemRegisterController', {
             $scope: $scope,
             $location: $location,
             Node: Node,
-            CurrentOrganization: 'ACME'
+            CurrentOrganization: 'ACME',
+            BastionConfig: BastionConfig
         });
     }));
 

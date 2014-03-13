@@ -46,8 +46,14 @@ angular.module('Bastion.content-views').controller('NewContentViewController',
         });
 
         function success(response) {
+            var successState = 'content-views.details.repositories.available';
+
+            if (response.composite) {
+                successState = 'content-views.details.composite-content-views.available';
+            }
+
             $scope.$parent.table.addRow(response);
-            $scope.transitionTo('content-views.details.repositories.available', {contentViewId: response.id});
+            $scope.transitionTo(successState, {contentViewId: response.id});
         }
 
         function error(response) {

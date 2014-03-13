@@ -23,7 +23,7 @@ module Actions
 
         # @api override - pulp extension representing the content type to copy
         def content_extension
-          raise NotImplementedError
+          fail NotImplementedError
         end
 
         def invoke_external_task

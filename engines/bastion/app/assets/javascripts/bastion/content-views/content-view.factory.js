@@ -31,7 +31,19 @@ angular.module('Bastion.content-views').factory('ContentView',
                 query:  {method: 'GET', isArray: false},
                 update: {method: 'PUT'},
                 publish: {method: 'POST', params: {action: 'publish'}},
-                versions: {method: 'GET', isArray: false, params: {action: 'content_view_versions'}}
+                history: {method: 'GET', params: {action: 'history'}},
+                versions: {method: 'GET', isArray: false, params: {action: 'content_view_versions'}},
+                components: {method: 'GET', transformResponse: function (data) {
+                    var contentView = angular.fromJson(data);
+                    return {results: contentView.components};
+                }},
+                compositeEligible: {method: 'GET', transformResponse: function (data) {
+                    var contentViews = angular.fromJson(data).results;
+                    contentViews = _.filter(contentViews, function (contentView) {
+                        return !contentView.composite && contentView.versions.length > 0;
+                    });
+                    return {results: contentViews};
+                }}
             }
         );
 

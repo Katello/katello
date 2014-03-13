@@ -43,8 +43,10 @@ class GlueCandlepinConsumerTestBase < ActiveSupport::TestCase
     @@dev_cve.cp_id = @@dev_cv.cp_environment_id @@dev
 
     # Create the environment in candlepin
-    @@org.set_owner
-    @@dev_cve.set_environment
+    CandlepinOwnerSupport.set_owner(@@org)
+
+    User.current.remote_id =  User.current.login
+    ForemanTasks.sync_task(::Actions::Katello::ContentView::EnvironmentCreate, @@dev_cve)
   end
 
   def self.after_suite

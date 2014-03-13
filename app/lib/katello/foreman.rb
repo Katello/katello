@@ -29,12 +29,10 @@ module Katello
         has_puppet_content = true if repo.puppet?
       end
 
-      if has_puppet_content
-        foreman_environment = Environment.find_or_create_by_katello_id(org, env, content_view)
+      foreman_environment = Environment.find_or_create_by_katello_id(org, env, content_view)
 
-        if (foreman_smart_proxy = SmartProxy.find_by_name(Katello.config.host))
-          PuppetClassImporter.new(:url => foreman_smart_proxy.url).update_environment(foreman_environment)
-        end
+      if has_puppet_content && (foreman_smart_proxy = SmartProxy.find_by_name(Katello.config.host))
+        PuppetClassImporter.new(:url => foreman_smart_proxy.url).update_environment(foreman_environment)
       end
     end
   end

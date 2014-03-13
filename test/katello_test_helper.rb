@@ -123,7 +123,7 @@ class ActionController::TestCase
     user ||= users(:admin)
     user = User.find(user)
     User.current = user
-
+    User.current.stubs(:remote_id).returns(User.current.login)
     if permissions
       permissions.call(Katello::AuthorizationSupportMethods::UserPermissionsGenerator.new(user))
     end
@@ -156,12 +156,10 @@ class ActiveSupport::TestCase
   def get_organization(org = nil)
     saved_user = User.current
     User.current = User.find(users(:admin))
-
     org = org.nil? ? :empty_organization : org
     organization = Organization.find(taxonomies(org.to_sym))
     organization.setup_label_from_name
     organization.save!
-
     User.current = saved_user
     organization
   end
@@ -211,6 +209,13 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
 
         # include the concern again after Organization reloading
         Organization.send :include, Katello::Concerns::OrganizationExtensions
+        Organization.class_eval do
+          def ensure_not_in_transaction!
+          end
+
+          def execute_planned_action
+          end
+        end
       end
 
       @@model_service_cache[model] = cached_entry

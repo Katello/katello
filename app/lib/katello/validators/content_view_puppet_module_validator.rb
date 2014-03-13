@@ -15,15 +15,8 @@ module Validators
   class ContentViewPuppetModuleValidator < ActiveModel::Validator
 
     def validate(record)
-      if record.name.blank? && record.uuid.blank?
-        invalid_parameters = _("Invalid puppet module parameters specified.  Either 'uuid' or 'name' must be specified.")
-        record.errors[:base] << invalid_parameters
-        return
-      end
-
-      if (!record.name.blank? || !record.author.blank?) && !record.uuid.blank?
-        invalid_parameters = _("Invalid puppet module parameters combination specified, cannot specify both " +
-                               "'uuid' and 'name' or 'author' in the same tuple.")
+      if record.name.blank? && record.author.blank? && record.uuid.blank?
+        invalid_parameters = _("Invalid puppet module parameters specified.  Either 'uuid' or 'name' and 'author' must be specified.")
         record.errors[:base] << invalid_parameters
         return
       end

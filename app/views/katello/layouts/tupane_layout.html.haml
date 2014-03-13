@@ -1,4 +1,4 @@
-- if content_for?(:content) or content_for?(:subcontent)
+- if content_for?(:content) || content_for?(:subcontent) || content_for?(:subcontent_noscroll)
 
   - if content_for?(:title)
     .head
@@ -24,6 +24,11 @@
     %a.panel-close{:href => "#", "data-close"=>"subpanel"} #{_("Close")}
     #subpanel_main.scroll-pane
       = yield :subcontent
+
+  - if content_for?(:subcontent_noscroll)
+    %a.panel-close{:href => "#", "data-close"=>"subpanel"} #{_("Close")}
+    #subpanel_main
+      = yield :subcontent_noscroll
 
 - if content_for?(:footer)
   .tupane_footer

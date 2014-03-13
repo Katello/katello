@@ -12,9 +12,9 @@
 
 require 'katello_test_helper'
 
-module Katello
+module Actions::ElasticSearch
 
-  describe ::Actions::ElasticSearch do
+  class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::RemoteAction
     include FactoryGirl::Syntax::Methods
@@ -24,34 +24,34 @@ module Katello
     end
 
     let(:repository) { build(:katello_repository, id: 123) }
+  end
 
-    describe 'Reindex' do
-      let(:action_class) { ::Actions::ElasticSearch::Reindex }
+  class ReindexTest < TestBase
+    let(:action_class) { ::Actions::ElasticSearch::Reindex }
 
-      let(:planned_action) do
-        create_and_plan_action action_class, repository
-      end
-
-      it 'finalizes' do
-        finalize_action planned_action do |action|
-          ::Katello::Repository.expects(:find).with(123).returns(repository)
-          repository.expects(:update_index)
-        end
-      end
+    let(:planned_action) do
+      create_and_plan_action action_class, repository
     end
 
-    describe 'Repository::IndexContent' do
-      let(:action_class) { ::Actions::ElasticSearch::Repository::IndexContent }
-
-      let(:planned_action) do
-        create_and_plan_action action_class, id: 123
+    it 'finalizes' do
+      finalize_action planned_action do |action|
+        ::Katello::Repository.expects(:find).with(123).returns(repository)
+        repository.expects(:update_index)
       end
+    end
+  end
 
-      it 'runs' do
-        run_action planned_action do |action|
-          ::Katello::Repository.expects(:find).with(123).returns(repository)
-          repository.expects(:index_content)
-        end
+  class Repository::IndexContentTest < TestBase
+    let(:action_class) { ::Actions::ElasticSearch::Repository::IndexContent }
+
+    let(:planned_action) do
+      create_and_plan_action action_class, id: 123
+    end
+
+    it 'runs' do
+      run_action planned_action do |action|
+        ::Katello::Repository.expects(:find).with(123).returns(repository)
+        repository.expects(:index_content)
       end
     end
   end

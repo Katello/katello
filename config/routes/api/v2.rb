@@ -42,7 +42,7 @@ Katello::Engine.routes.draw do
           get :history
           get :available_puppet_modules
         end
-        api_resources :content_view_puppet_modules, :controller => :content_view_puppet_modules
+        api_resources :content_view_puppet_modules
         api_resources :filters, :controller => :content_view_filters do
           member do
             get :available_errata
@@ -219,7 +219,6 @@ Katello::Engine.routes.draw do
         match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
         api_resources :content_views, :only => [:index, :create]
-        api_resources :content_view_definitions, :only => [:index, :create]
         api_resources :subscriptions, :only => [:index, :upload, :delete_manifest, :refresh_manifest, :show] do
           collection do
             post :upload

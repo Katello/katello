@@ -26,7 +26,9 @@ module Katello
     root = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
 
     @configuration_loader ||= Configuration::Loader.new(
-      :config_file_paths        => %W(#{root}/config/katello.yml /etc/katello/katello.yml),
+      :config_file_paths        => %W(#{root}/config/katello.yml
+                                      #{Rails.root}/config/settings.plugins.d/katello.yaml
+                                      /etc/katello/katello.yml),
       :default_config_file_path => "#{root}/config/katello_defaults.yml",
 
       :validation               => lambda do |*_|
@@ -37,7 +39,7 @@ module Katello
                      elastic_url rest_client_timeout elastic_index
                      katello_version pulp email_reply_address
                      embed_yard_documentation logging system_lang profiling
-                     exception_paranoia hide_exceptions))
+                     exception_paranoia hide_exceptions consumer_cert_rpm))
 
         has_values :app_mode, %w(katello headpin)
         has_values :url_prefix, %w(/headpin /sam /katello)

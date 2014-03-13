@@ -91,7 +91,7 @@ KT.redhat_provider_page = (function($) {
     },
     repoSetChange = function(checkbox, is_refresh) {
         var url = checkbox.data("url"),
-            disable_url = checkbox.data("disable_url"),
+            disable_url = checkbox.data("disable-url"),
             content_id = checkbox.attr("value");
         if (checkbox.attr('checked') || is_refresh) {
             refresh_repo_set(url, content_id, is_refresh);

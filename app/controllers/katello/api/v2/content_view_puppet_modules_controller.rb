@@ -29,7 +29,7 @@ module Katello
       }
     end
 
-    api :GET, "/content_views/:content_view_id/puppet_modules", "List content view puppet modules"
+    api :GET, "/content_views/:content_view_id/content_view_puppet_modules", "List content view puppet modules"
     param :content_view_id, :identifier, :desc => "content view identifier", :required => true
     def index
       options = sort_params
@@ -40,7 +40,7 @@ module Katello
       respond(:collection => item_search(ContentViewPuppetModule, params, options))
     end
 
-    api :POST, "/content_views/:content_view_id/puppet_modules",
+    api :POST, "/content_views/:content_view_id/content_view_puppet_modules",
         "Add a puppet module to the content view"
     param :content_view_id, :identifier, :desc => "content view identifier", :required => true
     param :name, String, :desc => "name of the puppet module"
@@ -54,13 +54,13 @@ module Katello
       respond :resource => @puppet_module
     end
 
-    api :GET, "/content_views/:content_view_id/puppet_modules/:id", "Show a content view puppet module"
+    api :GET, "/content_views/:content_view_id/content_view_puppet_modules/:id", "Show a content view puppet module"
     param :content_view_id, :number, :desc => "content view numeric identifier", :required => true
     def show
       respond :resource => @puppet_module
     end
 
-    api :PUT, "/content_views/:content_view_id/puppet_modules/:id",
+    api :PUT, "/content_views/:content_view_id/content_view_puppet_modules/:id",
         "Update a puppet module associated with the content view"
     param :content_view_id, :identifier, :desc => "content view identifier", :required => true
     param :id, :identifier, :desc => "puppet module identifier", :required => true
@@ -72,7 +72,7 @@ module Katello
       respond :resource => @puppet_module
     end
 
-    api :DELETE, "/content_views/:content_view_id/puppet_modules/:id",
+    api :DELETE, "/content_views/:content_view_id/content_view_puppet_modules/:id",
         "Remove a puppet module from the content view"
     param :content_view_id, :identifier, :desc => "content view identifier", :required => true
     param :id, :identifier, :desc => "puppet module identifierr", :required => true

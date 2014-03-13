@@ -18,7 +18,7 @@ module Katello
     end
 
     def subscription_manager_configuration_url
-      "#{Setting['foreman_url']}/pub/candlepin-cert-consumer-#{host(Setting['foreman_url'])}-1.0-1.noarch.rpm"
+      "#{Setting['foreman_url']}/pub/#{Katello.config.consumer_cert_rpm}"
     end
   end
 end
