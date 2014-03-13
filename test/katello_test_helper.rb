@@ -212,6 +212,9 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
         Organization.class_eval do
           def ensure_not_in_transaction!
           end
+
+          def execute_planned_action
+          end
         end
       end
 
