@@ -26,7 +26,7 @@ module Katello
 
         def create_action
           sync_action!
-          ::Actions::Headpin::Organization::Create
+          ::Actions::Katello::Organization::Create
         end
 
         include AsyncOrchestration

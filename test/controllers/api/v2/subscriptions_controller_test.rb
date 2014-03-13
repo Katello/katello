@@ -118,7 +118,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
   end
 
   def test_upload
-    assert_async_task ::Actions::Headpin::Provider::ManifestImport do |provider, path, force|
+    assert_async_task ::Actions::Katello::Provider::ManifestImport do |provider, path, force|
       assert_equal(@organization.redhat_provider.id, provider.id)
       assert_match(/\.zip$/, path)
     end
@@ -141,7 +141,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
     Provider.any_instance.stubs(:refresh_manifest)
     Provider.any_instance.stubs(:organization).returns(@organization)
     Organization.any_instance.stubs(:owner_details).returns("upstreamConsumer" => "JarJarBinks")
-    assert_async_task(::Actions::Headpin::Provider::ManifestRefresh) do |provider, upstream|
+    assert_async_task(::Actions::Katello::Provider::ManifestRefresh) do |provider, upstream|
       assert_equal(@organization.redhat_provider.id, provider.id)
       assert_equal("JarJarBinks", upstream)
     end
@@ -160,7 +160,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
 
   def test_delete_manifest
     Provider.any_instance.stubs(:delete_manifest)
-    assert_async_task(::Actions::Headpin::Provider::ManifestDelete) do |provider|
+    assert_async_task(::Actions::Katello::Provider::ManifestDelete) do |provider|
       assert_equal(@organization.redhat_provider.id, provider.id)
     end
     post :delete_manifest, :organization_id => @organization.label
