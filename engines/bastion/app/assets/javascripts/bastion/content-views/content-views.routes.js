@@ -91,7 +91,29 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         controller: 'ContentViewAvailableRepositoriesController',
         templateUrl: 'content-views/details/views/content-view-repositories.html'
     })
-
+    .state('content-views.details.history', {
+        collapsed: true,
+        url: '/history',
+        controller: 'ContentViewHistoryController',
+        templateUrl: 'content-views/details/views/content-view-details-history.html'
+    })
+    .state('content-views.details.composite-content-views', {
+        abstract: true,
+        collapsed: true,
+        templateUrl: 'content-views/details/views/content-view-composite.html'
+    })
+    .state('content-views.details.composite-content-views.list', {
+        collapsed: true,
+        url: '/content-views',
+        controller: 'ContentViewCompositeContentViewsListController',
+        templateUrl: 'content-views/details/views/content-view-composite-content-views-list.html'
+    })
+    .state('content-views.details.composite-content-views.available', {
+        collapsed: true,
+        url: '/content-views/available',
+        controller: 'ContentViewCompositeAvailableContentViewsController',
+        templateUrl: 'content-views/details/views/content-view-composite-available-content-views.html'
+    })
     .state('content-views.details.puppet-modules', {
         abstract: true,
         collapsed: true,

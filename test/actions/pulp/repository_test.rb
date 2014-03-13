@@ -12,10 +12,9 @@
 
 require 'katello_test_helper'
 
-module Katello
-  action_class = ::Actions::Pulp::Repository::Sync
+module ::Actions::Pulp::Repository
 
-  describe action_class do
+  class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::PulpTask
     include Support::Actions::RemoteAction
@@ -23,6 +22,11 @@ module Katello
     before do
       stub_remote_user
     end
+  end
+
+  class SyncTest < TestBase
+
+    let(:action_class) { ::Actions::Pulp::Repository::Sync }
 
     it 'runs' do
       action        = create_action action_class

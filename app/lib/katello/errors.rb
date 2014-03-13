@@ -34,8 +34,6 @@ module Errors
 
   class ContentViewRepositoryOverlap < StandardError; end
 
-  class ContentViewDefinitionBadContent < StandardError; end
-
   class ContentViewTaskInProgress < StandardError; end
 
   class SystemGroupEmptyException < StandardError

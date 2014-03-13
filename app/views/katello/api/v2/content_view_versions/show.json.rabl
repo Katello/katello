@@ -4,9 +4,10 @@ extends 'katello/api/v2/common/identifier'
 
 attributes :version
 attributes :composite_content_view_ids
+attributes :content_view_id
 
 child :content_view => :content_view do
-  attributes :id, :name, :label
+  extends 'katello/api/v2/content_views/show'
 end
 
 child :composite_content_views do
@@ -16,6 +17,10 @@ end
 extends 'katello/api/v2/common/timestamps'
 
 child :environments => :environments do
+  attributes :id, :name, :label
+end
+
+child :repositories => :repositories do
   attributes :id, :name, :label
 end
 

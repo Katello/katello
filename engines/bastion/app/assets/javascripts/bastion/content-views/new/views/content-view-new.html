@@ -63,6 +63,15 @@
         </textarea>
       </div>
 
+      <div alch-form-group label="{{ 'Composite View?' | translate }}">
+        <input id="composite"
+               name="composite"
+               ng-model="contentView.composite"
+               type="checkbox"
+               tabindex="4"/>
+        <p class="help-block" translate>A composite view contains other content views.</p>
+      </div>
+
       <div alch-form-buttons
            on-cancel="transitionTo('content-views.index')"
            on-save="save(contentView)"
@@ -70,13 +79,4 @@
       </div>
     </form>
   </div>
-
-  <div class="row animate-show" ng-show="createOption == 'existing'">
-    <header class="col-sm-12">
-      <h3 translate>Existing Content Views <span class="sub-header">Choose one or more existing views to build from</span></h3>
-    </header>
-
-    <div ng-include src="'content-views/views/content-views-table-full.html'" class="col-sm-12"></div>
-  </div>
-
 </section>

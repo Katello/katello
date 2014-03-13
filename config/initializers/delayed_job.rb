@@ -12,5 +12,17 @@ if defined?(Delayed)
       Delayed::Worker.logger.error(error.backtrace.join("\n"))
     end
     alias_method_chain :handle_failed_job, :loggin
+
+    class << self
+      def after_fork_with_dynflow(*args)
+        after_fork_without_dynflow(*args)
+        if ForemanTasks.dynflow.initialized?
+          # Delayed jobs runs with daemons which means we need to reinitialize
+          # the world after forking to reopen the db connection
+          ForemanTasks.dynflow.reinitialize!
+        end
+      end
+      alias_method_chain :after_fork, :dynflow
+    end
   end
 end

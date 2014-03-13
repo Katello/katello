@@ -12,10 +12,8 @@
 
 require 'katello_test_helper'
 
-module Katello
-  namespace = ::Actions::Pulp::User
-
-  describe namespace do
+module ::Actions::Pulp::User
+  class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::RemoteAction
 
@@ -27,27 +25,26 @@ module Katello
       create_and_plan_action action_class,
                              remote_id: 'user_id'
     end
-
-    describe 'Create' do
-      let(:action_class) { ::Actions::Pulp::User::Create }
-
-      it 'runs' do
-        run_action planned_action do |action|
-          runcible_expects(action, :resources, :user, :create)
-        end
-      end
-    end
-
-    describe 'Create' do
-      let(:action_class) { ::Actions::Pulp::User::SetSuperuser }
-
-      it 'runs' do
-        run_action planned_action do |action|
-          runcible_expects(action, :resources, :role, :add)
-        end
-      end
-    end
-
   end
 
+  class CreateTest < TestBase
+    let(:action_class) { ::Actions::Pulp::User::Create }
+
+    it 'runs' do
+      run_action planned_action do |action|
+        runcible_expects(action, :resources, :user, :create)
+      end
+    end
+  end
+
+  class SetSuperuserTest < TestBase
+    let(:action_class) { ::Actions::Pulp::User::SetSuperuser }
+
+    it 'runs' do
+      run_action planned_action do |action|
+        runcible_expects(action, :resources, :role, :add)
+      end
+    end
+  end
 end
+

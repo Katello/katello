@@ -1,7 +1,8 @@
 <section class="nutupane-details" ng-cloak alch-container-scroll>
 
   <header class="details-header row">
-    <h2 class="col-sm-6">{{ contentView.name }}</h2>
+    <h2 class="col-sm-6" ng-hide="contentView.composite">{{ contentView.name }}</h2>
+    <h2 class="col-sm-6" ng-show="contentView.composite" translate>Composite Content View {{ contentView.name }}</h2>
 
     <div class="col-sm-6">
       <div class="fr">
@@ -37,7 +38,15 @@
         </a>
       </li>
 
-      <li class="dropdown" ng-class="{active: stateIncludes('content-views.details.repositories') || stateIncludes('content-views.details.filters')}">
+      <li ng-class="{active: stateIncludes('content-views.details.composite-content-views')}" ng-show="contentView.composite">
+        <a ui-sref="content-views.details.composite-content-views.list" translate>
+          Content Views
+        </a>
+      </li>
+
+      <li class="dropdown"
+          ng-class="{active: stateIncludes('content-views.details.repositories') || stateIncludes('content-views.details.filters')}"
+          ng-hide="contentView.composite">
         <a class="dropdown-toggle">
           <span translate>Content</span>
           <i class="icon-chevron-down"></i>
@@ -56,9 +65,16 @@
         </ul>
       </li>
 
-      <li ng-class="{active: stateIncludes('content-views.details.puppet-modules')}">
+      <li ng-class="{active: stateIncludes('content-views.details.puppet-modules')}"
+          ng-hide="contentView.composite">
         <a ui-sref="content-views.details.puppet-modules.list" translate>
           Puppet Modules
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('content-views.details.history')}">
+        <a ui-sref="content-views.details.history" translate>
+          History
         </a>
       </li>
 

@@ -3,6 +3,7 @@
   <thead>
     <tr alch-table-head row-select>
       <th alch-table-column>{{ "Name" | translate }}</th>
+      <th alch-table-column>{{ "Composite View?" | translate }}</th>
       <th alch-table-column>{{ "Last Published" | translate }}</th>
       <th alch-table-column>{{ "Environments" | translate }}</th>
       <th alch-table-column>{{ "Repositories" | translate }}</th>
@@ -12,14 +13,13 @@
   <tbody>
     <tr alch-table-row ng-repeat="contentView in table.rows" row-select="contentView">
       <td alch-table-cell>
-        <a ng-if="contentView.versions.length !== 0"
-           ui-sref="content-views.details.versions({contentViewId: contentView.id})">
+        <a ui-sref="content-views.details.versions({contentViewId: contentView.id})">
           {{ contentView.name }}
         </a>
-        <a ng-if="contentView.versions.length === 0"
-           ui-sref="content-views.details.repositories.available({contentViewId: contentView.id})">
-          {{ contentView.name }}
-        </a>
+      </td>
+      <td alch-table-cell>
+        <span ng-show="contentView.composite" translate>Yes</span>
+        <span ng-hide="contentView.composite" translate>No</span>
       </td>
       <td alch-table-cell>
         <span ng-show="contentView.last_published">{{ contentView.last_published | date:"medium" }}</span>

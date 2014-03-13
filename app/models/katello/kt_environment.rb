@@ -13,20 +13,9 @@
 module Katello
 class KTEnvironment < Katello::Model
   self.include_root_in_json = false
-
   include Authorization::Environment
   include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
-
-  include Glue::Event
-
-  def create_event
-    Katello::Actions::EnvironmentCreate
-  end
-
-  def destroy_event
-    Katello::Actions::EnvironmentDestroy
-  end
 
   self.table_name = "katello_environments"
   include Ext::LabelFromName
@@ -56,6 +45,8 @@ class KTEnvironment < Katello::Model
            :dependent => :destroy, :foreign_key => :environment_id
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
            :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
+  has_many :content_view_puppet_environments, :class_name => "Katello::ContentViewPuppetEnvironment",
+           :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
   has_many :content_view_versions, :through => :content_view_environments, :inverse_of => :environments
   has_many :content_views, :through => :content_view_environments, :inverse_of => :environments
   has_many :content_view_histories, :class_name => "Katello::ContentViewHistory", :dependent => :destroy,
@@ -73,14 +64,13 @@ class KTEnvironment < Katello::Model
                    :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library", :unless => :library? }
   validates :label, :presence => true, :uniqueness => {:scope => :organization_id,
                                                        :message => N_("of environment must be unique within one organization")},
-                    :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library", :unless => :library?}
+                    :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library", :unless => :library?},
+                    :exclusion => { :in => [ContentView::CONTENT_DIR], :message => N_(": '%s' is a built-in environment") % ContentView::CONTENT_DIR }
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_with Validators::PriorValidator
   validates_with Validators::PathDescendentsValidator
-
-  after_create :create_default_content_view_version
 
   after_destroy :unset_users_with_default
 
@@ -280,26 +270,6 @@ class KTEnvironment < Katello::Model
       self.repositories.enabled.map(&:minor).compact.uniq.sort
     else
       self.organization.redhat_provider.available_releases
-    end
-  end
-
-  def create_default_content_view_version
-    if library?
-      # Sadly this has to be created here, if it is created in the org
-      # it will not actually exist when we go to create library and so
-      # we can't look it up via a query (org.default_content_view)
-      content_view = self.organization.default_content_view
-      if content_view.nil?
-        content_view = Katello::ContentView.create!(:default => true, :name => "Default Organization View",
-                                       :organization => self.organization)
-      end
-
-      if content_view.version(self).nil?
-        version = ContentViewVersion.new(:content_view => content_view,
-                                         :version => 1)
-        version.environments << self
-        version.save!
-      end
     end
   end
 

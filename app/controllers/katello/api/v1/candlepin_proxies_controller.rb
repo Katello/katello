@@ -20,10 +20,10 @@ module Katello
     before_filter :find_only_environment, :only => [:consumer_create]
     before_filter :find_environment, :only => [:index]
     before_filter :find_environment_and_content_view, :only => [:consumer_create]
-    before_filter :find_content_view, :only => [:consumer_create]
+    before_filter :find_content_view, :only => [:consumer_create, :facts]
     before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
     before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin,
-                                          :upload_package_profile, :regenerate_identity_certificates]
+                                          :upload_package_profile, :regenerate_identity_certificates, :facts]
     before_filter :find_user_by_login, :only => [:list_owners]
     before_filter :authorize, :except => [:consumer_activate, :upload_package_profile]
 
@@ -82,6 +82,11 @@ module Katello
       list_owners_test = lambda { @user.id == User.current.id } #user can see only his/her owners
       register_system        = lambda { System.registerable?(@environment, @organization, @content_view) }
       index_systems          = lambda { System.any_readable?(@organization) }
+      edit_system            = lambda do
+        subscribable = @content_view ? @content_view.subscribable? : true
+        subscribable && (@system.editable? || User.consumer?)
+      end
+
       {
         :get    => proxy_test,
         :post   => proxy_test,
@@ -97,7 +102,8 @@ module Katello
         :index                  => index_systems,
         :hypervisors_update     => consumer_only,
         :list_owners            => list_owners_test,
-        :rhsm_index             => lambda {true}
+        :rhsm_index             => lambda {true},
+        :facts                  => edit_system
       }
     end
 
@@ -210,7 +216,7 @@ module Katello
       @system = System.new(system_params.merge(:environment  => @environment,
                                                :content_view => @content_view,
                                                :serviceLevel => params[:service_level]))
-      sync_task(::Actions::Headpin::System::Create, @system)
+      sync_task(::Actions::Katello::System::Create, @system)
       @system.reload
       render :json => Resources::Candlepin::Consumer.get(@system.uuid)
     end
@@ -219,7 +225,7 @@ module Katello
     #param :id, String, :desc => "UUID of the consumer", :required => true
     def consumer_destroy
       @system.destroy
-      respond :message => _("Deleted consumer '%s'") % params[:id], :status => 204
+      render :text => _("Deleted consumer '%s'") % params[:id], :status => 204
     end
 
     # used for registering with activation keys
@@ -249,6 +255,19 @@ module Katello
 
         render :json => Resources::Candlepin::Consumer.get(@system.uuid)
       end
+    end
+
+    def facts
+      attrs = params.clone
+      slice_attrs = [:name, :description, :location,
+                     :facts, :guestIds, :installedProducts,
+                     :releaseVer, :serviceLevel, :lastCheckin
+                     ]
+      attrs[:installedProducts] = [] if attrs.key?(:installedProducts) && attrs[:installedProducts].nil?
+
+      @system.update_attributes!(attrs.slice(*slice_attrs))
+
+      render :json => {:content => _("Facts successfully updated.")}, :status => 200
     end
 
     private

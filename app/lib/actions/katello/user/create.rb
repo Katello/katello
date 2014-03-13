@@ -12,20 +12,22 @@
 
 module Actions
   module Katello
-    module User
-      class Create < Actions::Base
+    class Create < Actions::EntryAction
 
-        def self.subscribe
-          Headpin::User::Create
-        end
-
-        def plan(user)
-          sequence do
-            plan_action(Pulp::User::Create, remote_id: user.remote_id)
-            plan_action(Pulp::User::SetSuperuser, remote_id: user.remote_id)
-          end
+      def plan(user)
+        user.disable_auto_reindex!
+        action_subject user
+        sequence do
+          plan_action(Pulp::User::Create, remote_id: user.remote_id)
+          plan_action(Pulp::User::SetSuperuser, remote_id: user.remote_id)
+          plan_action(ElasticSearch::Reindex, user)
         end
       end
+
+      def humanized_name
+        _("Create")
+      end
+
     end
   end
 end

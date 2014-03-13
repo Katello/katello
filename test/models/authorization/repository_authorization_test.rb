@@ -33,7 +33,7 @@ class RepositoryAuthorizationAdminTest < AuthorizationTestBase
   end
 
   def test_deletable?
-    repository = Repository.find(katello_repositories(:fedora_17_x86_64_library_view))
+    repository = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1))
     assert repository.deletable?
   end
 

@@ -65,7 +65,7 @@ namespace :test do
         ]
         t.verbose = true
       end
-      
+
       Rake::Task[test_task.name].invoke
     end
   end
