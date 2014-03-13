@@ -136,6 +136,7 @@ module Katello
 
       @environment = KTEnvironment.find(environment_id)
       fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+      @organization = @environment.organization
       @environment
     end
 
