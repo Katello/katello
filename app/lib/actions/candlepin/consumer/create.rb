@@ -25,6 +25,7 @@ module Actions
           param :release_ver
           param :service_level
           param :capabilities
+          param :activation_keys
         end
 
         def run
@@ -39,7 +40,8 @@ module Actions
                      input[:release_ver],
                      input[:service_level],
                      "",
-                     input[:capabilities])
+                     input[:capabilities],
+                     input[:activation_keys])
         end
       end
     end
