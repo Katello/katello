@@ -19,13 +19,21 @@ module Katello
     belongs_to :repository, :inverse_of => :content_view_repositories,
       :class_name => "Katello::Repository"
 
+    validates :repository_id, :uniqueness => {:scope => :content_view_id}
     validate :content_view_composite
+    validate :non_puppet_repository
 
     private
 
     def content_view_composite
       if content_view.composite?
         errors.add(:base, _("Cannot add repositories to a composite content view"))
+      end
+    end
+
+    def non_puppet_repository
+      if repository.puppet?
+        errors.add(:base, _("Cannot add puppet repositories to a content view"))
       end
     end
   end
