@@ -113,6 +113,13 @@ module Glue::ElasticSearch::PuppetModule
       multi_search.reject{ |results| results[0].nil? }.map{ |results| results[0] }
     end
 
+    def exists?(options)
+      results = PuppetModule.latest_modules_search([{ :name => options[:name],
+                                                      :author => options[:author] }],
+                                                   options[:repoids])
+      results.present?
+    end
+
     def search(options = {}, &block)
       Tire.search(self.index, &block).results
     end
