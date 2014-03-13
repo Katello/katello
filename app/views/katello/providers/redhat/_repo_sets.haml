@@ -27,7 +27,7 @@
                           :id=>"spinner_set_#{product_content.content.id}", :style=>"margin-right:1px;")
                       %input.repo_set_enable{:type=>:checkbox, :value=>product_content.content.id,
                                            :data=>{:url => refresh_content_product_path(product.id),
-                                                   :disable_url=>disable_content_product_path(product.id),
+                                                   'disable-url'=>disable_content_product_path(product.id),
                                                    :orphaned => orphaned.to_s},
                                            :disabled =>(!product_content.can_disable? || !@provider.editable? || (orphaned && !content_enabled)),
                                            :checked=>(:checked if content_enabled)}

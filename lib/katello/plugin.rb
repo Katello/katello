@@ -1,7 +1,7 @@
 Foreman::Plugin.register :katello do
   requires_foreman '> 1.3'
 
-  sub_menu :top_menu, :content, :caption => N_('Content'), :after => :monitor_menu do
+  sub_menu :top_menu, :content_menu, :caption => N_('Content'), :after => :monitor_menu do
     menu :top_menu,
          :environments,
          :caption => N_('Lifecycle Environments'),
@@ -27,7 +27,7 @@ Foreman::Plugin.register :katello do
                        :action => 'all'},
          :engine => Katello::Engine
 
-    divider :top_menu, :parent => :content
+    divider :top_menu, :parent => :content_menu
     menu :top_menu,
          :redhat_provider,
          :caption => N_('Red Hat Repositories'),
@@ -49,7 +49,7 @@ Foreman::Plugin.register :katello do
                        :action => 'all'},
          :engine => Katello::Engine
 
-    divider :top_menu, :parent => :content
+    divider :top_menu, :parent => :content_menu
     menu :top_menu,
          :sync_status,
          :caption => N_('Sync Status'),
@@ -64,7 +64,7 @@ Foreman::Plugin.register :katello do
                        :action => 'all'},
          :engine => Katello::Engine
 
-    divider :top_menu, :parent => :content
+    divider :top_menu, :parent => :content_menu
     menu :top_menu,
          :content_views,
          :caption => N_('Content Views'),

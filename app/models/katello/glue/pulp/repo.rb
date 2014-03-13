@@ -73,14 +73,17 @@ module Glue::Pulp::Repo
           pre_queue.create(:name => "update pulp repo: #{self.name}", :priority => 2,
                            :action => [self, :refresh_pulp_repo, nil, nil, nil])
         end
-        if self.unprotected_changed?
-          post_queue.create(:name => "generate metadata for pulp repo #{self.name}", :priority => 3, :action => [self, :generate_metadata])
+        if self.respond_to?(:unprotected) && self.unprotected_changed?
+          post_queue.create(:name => "generate metadata for pulp repo #{self.name}", :priority => 3,
+                            :action => [self, :generate_metadata])
         end
       end
     end
 
     def pulp_update_needed?
-      (self.feed_changed? || self.unprotected_changed?) && !self.product.provider.redhat_provider?
+      ((self.respond_to?(:feed) && self.feed_changed?) ||
+       (self.respond_to?(:unprotected) && self.unprotected_changed?)) &&
+      !self.product.provider.redhat_provider?
     end
 
     def last_sync
@@ -113,7 +116,7 @@ module Glue::Pulp::Repo
     end
 
     def pulp_checksum_type
-      find_distributor['config']['checksum_type'] if self.yum? && find_distributor
+      find_distributor['config']['checksum_type'] if self.try(:yum?) && find_distributor
     end
 
     def create_pulp_repo
@@ -154,7 +157,9 @@ module Glue::Pulp::Repo
                                           :ssl_client_key => self.feed_key,
                                           :feed => self.feed)
       when Repository::PUPPET_TYPE
-        Runcible::Models::PuppetImporter.new(:feed => self.feed)
+        options = {}
+        options[:feed] = self.feed if self.respond_to?(:feed)
+        Runcible::Models::PuppetImporter.new(options)
       else
         fail _("Unexpected repo type %s") % self.content_type
       end
@@ -178,7 +183,7 @@ module Glue::Pulp::Repo
         [dist]
       when Repository::PUPPET_TYPE
         repo_path =  File.join(Katello.config.puppet_repo_root,
-                               Environment.construct_name(self.environment.organization,
+                               Environment.construct_name(self.organization,
                                                           self.environment,
                                                           self.content_view),
                                'modules')
@@ -469,7 +474,20 @@ module Glue::Pulp::Repo
       return [task]
     end
 
+    # Returns true if the pulp_task_id was triggered by the last synchronization
+    # action for the repository. Dynflow action handles the synchronization
+    # by it's own so no need to synchronize it again in this callback. Since the
+    # callbacks are run just after synchronization is finished, it should be enough
+    # to check for the last synchronization task.
+    def dynflow_handled_last_sync?(pulp_task_id)
+      task = ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Repository::Sync).
+          for_resource(self).order(:started_at).last
+      return task && task.main_action.pulp_task_id == pulp_task_id
+    end
+
     def handle_sync_complete_task(pulp_task_id, notifier_service = Notify)
+      return if dynflow_handled_last_sync?(pulp_task_id)
+
       pulp_task =  Katello.pulp_server.resources.task.poll(pulp_task_id)
 
       if pulp_task.nil?
@@ -477,7 +495,7 @@ module Glue::Pulp::Repo
         return
       end
 
-      task = PulpTaskStatus.using_pulp_task(pulp_task)
+      task = PulpSyncStatus.using_pulp_task(pulp_task)
       task.user ||= User.current
       task.organization ||= organization
       task.save!
@@ -645,21 +663,30 @@ module Glue::Pulp::Repo
     def generate_metadata(options = {})
       force_regeneration = options.fetch(:force_regeneration, false)
       cloned_repo_override = options.fetch(:cloned_repo_override, nil)
+
+      unless force_regeneration
+        clone = cloned_repo_override ||
+            self.content_view_version.repositories.where(:library_instance_id => self.library_instance_id).where("id != #{self.id}").first
+      end
+
       tasks = []
-      clone = cloned_repo_override || self.content_view_version.repositories.where(:library_instance_id => self.library_instance_id).where("id != #{self.id}").first
       if force_regeneration || self.content_view.default? || clone.nil?
         tasks << self.publish_distributor
       else
         tasks << self.publish_clone_distributor(clone)
       end
-      if self.find_node_distributor
+
+      # If this repository is for an 'archive', it doesn't need to be
+      # published using the node distributor.
+      if !self.archive? && self.find_node_distributor
         if options[:node_publish_async]
           self.async(:organization => self.organization,
-                           :task_type => TaskStatus::TYPES[:content_view_node_publish][:type]).publish_node_distributor
+                     :task_type => TaskStatus::TYPES[:content_view_node_publish][:type]).publish_node_distributor
         else
           tasks << self.publish_node_distributor
         end
       end
+
       tasks
     end
 

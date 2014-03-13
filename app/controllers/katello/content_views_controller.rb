@@ -17,10 +17,12 @@ module Katello
 
     def rules
       index_rule = lambda { true }
+      auto_complete_rule = lambda { ContentView.any_readable?(current_organization) }
 
       {
         :index => index_rule,
-        :all => index_rule
+        :all => index_rule,
+        :auto_complete => auto_complete_rule
       }
     end
 
@@ -30,6 +32,20 @@ module Katello
 
     def all
       redirect_to :action => 'index', :anchor => '/content_views'
+    end
+
+    def auto_complete
+      query = "name_autocomplete:#{params[:term]}"
+      org = current_organization
+      content_views = ContentView.search do
+        query do
+          string query
+        end
+        filter :term, {:organization_id => org.id}
+      end
+      render :json => content_views.collect{|s| {:label => s.name, :value => s.name, :id => s.id}}
+    rescue Tire::Search::SearchRequestFailed
+      render :json => Support.array_with_total
     end
 
   end

@@ -17,16 +17,16 @@ module Katello
   class Api::V2::ContentViewsControllerTest < ActionController::TestCase
 
     def self.before_suite
-      models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion",
-                "Repository"]
+      models = ["ContentViewEnvironment", "ContentViewVersion",
+                "Repository", "ContentViewComponent", "ContentView"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
       super
     end
 
     def models
       @organization = get_organization
-      @library = katello_environments(:library)
-      @content_view = katello_content_views(:library_dev_view)
+      @library = KTEnvironment.find(katello_environments(:library))
+      @content_view = ContentView.find(katello_content_views(:library_dev_view))
     end
 
     def permissions
@@ -130,7 +130,7 @@ module Katello
       get :history, :id => @content_view
 
       assert_response :success
-      assert_template 'api/v2/content_views/history'
+      assert_template 'katello/api/v2/content_views/../content_view_histories/index'
     end
 
     def test_history_protected
@@ -165,7 +165,7 @@ module Katello
     def test_remove_components
       version = @content_view.versions.first
       composite = ContentView.find(katello_content_views(:composite_view))
-      composite.components << version
+      composite.components = [version]
       refute_empty composite.components(true)
       put :update, :id => composite.id, :component_ids => []
       assert_empty composite.components(true)

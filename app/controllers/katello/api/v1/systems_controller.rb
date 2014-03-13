@@ -24,13 +24,13 @@ class Api::V1::SystemsController < Api::V1::ApiController
   before_filter :find_environment_and_content_view, :only => [:create]
   before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
-                                        :upload_package_profile, :errata, :package_profile, :subscribe,
+                                        :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
                                         :add_system_groups, :remove_system_groups, :refresh_subscriptions, :checkin,
                                         :subscription_status]
   before_filter :find_content_view, :only => [:create, :update]
 
-  before_filter :authorize, :except => [:activate, :upload_package_profile]
+  before_filter :authorize, :except => [:activate]
 
   def organization_id_keys
     [:organization_id, :owner]
@@ -49,11 +49,6 @@ class Api::V1::SystemsController < Api::V1::ApiController
     read_system            = lambda { @system.readable? || User.consumer? }
     delete_system          = lambda { @system.deletable? || User.consumer? }
 
-    # After a system registers, it immediately uploads its packages. Although newer subscription-managers send
-    # certificate (User.consumer? == true), some do not. In this case, confirm that the user has permission to
-    # register systems in the system's organization and environment.
-   upload_system_packages = lambda { @system.editable? || System.registerable?(@system.environment, @system.organization) || User.consumer? }
-
     {
         :new                              => register_system,
         :create                           => register_system,
@@ -66,7 +61,6 @@ class Api::V1::SystemsController < Api::V1::ApiController
         :destroy                          => delete_system,
         :package_profile                  => read_system,
         :errata                           => read_system,
-        :upload_package_profile           => upload_system_packages,
         :report                           => index_systems,
         :subscribe                        => edit_system,
         :unsubscribe                      => edit_system,
@@ -329,7 +323,7 @@ This information is then used for computing the errata available for the system.
   DESC
   param :enabled_repos, Hash, :required => true do
     param :repos, Array, :required => true do
-      params :baseurl, Array, :description => "List of enabled repo urls for the repo (Only first is used.)", :required => false
+      param :baseurl, Array, :description => "List of enabled repo urls for the repo (Only first is used.)", :required => false
     end
   end
   def enabled_repos

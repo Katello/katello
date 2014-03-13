@@ -23,7 +23,11 @@
     <tbody>
       <tr alch-table-row ng-repeat="version in versions | filter:filterTerm">
         <td alch-table-cell translate>Version {{ version.version }}</td>
-        <td alch-table-cell >{{ status(version) }}</td>
+        <td alch-table-cell >
+          <a ui-sref="content-views.details.history">
+            {{ status(version) }}
+          </a>
+        </td>
         <td alch-table-cell>
           <li ng-repeat="environment in version.environments">
             {{ environment.name }}

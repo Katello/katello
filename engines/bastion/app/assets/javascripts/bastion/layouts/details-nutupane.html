@@ -1,6 +1,6 @@
 <section>
 
-  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div data-block="messages" alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
   <h4>
     <span data-block="header"></span>
@@ -8,25 +8,27 @@
 
   <div class="row nutupane-bar">
     <div class="col-sm-3">
-      <div class="input-group input-group">
-        <input type="text"
-               class="form-control"
-               placeholder="{{ 'Search...' | translate }}"
-               ng-model="detailsTable.searchTerm"
-               on-enter="detailsTable.search(table.searchTerm)"/>
-        <span class="input-group-btn">
-          <button ng-click="detailsTable.search(detailsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
-        </span>
+      <div data-block="search">
+        <div class="input-group input-group">
+          <input type="text"
+                 class="form-control"
+                 placeholder="{{ 'Search...' | translate }}"
+                 ng-model="detailsTable.searchTerm"
+                 on-enter="detailsTable.search(table.searchTerm)"/>
+          <span class="input-group-btn">
+            <button ng-click="detailsTable.search(detailsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
+          </span>
+        </div>
       </div>
     </div>
 
     <div class="col-sm-3 nutupane-info">
-      <span translate>Showing {{ detailsTable.rows.length }} of {{ detailsTable.resource.subtotal }} ({{ detailsTable.resource.total }} Total)</span>
+      <span data-block="result-count" translate>Showing {{ detailsTable.rows.length }} of {{ detailsTable.resource.subtotal }} ({{ detailsTable.resource.total }} Total)</span>
     </div>
 
     <div class="col-sm-6">
       <div class="fr">
-        <span class="nutupane-info fl">
+        <span class="nutupane-info fl" data-block="selection-summary">
           <span translate>{{ detailsTable.numSelected }} Selected</span>
           <span>|</span>
           <a class="deselect-action"

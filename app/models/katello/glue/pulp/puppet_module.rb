@@ -26,6 +26,11 @@ module Glue::Pulp::PuppetModule
         Katello::PuppetModule.new(attrs) if !attrs.nil?
       end
 
+      def self.find_by_ids(ids)
+        pulp_puppet_modules = Katello.pulp_server.extensions.puppet_module.find_all_by_unit_ids(ids)
+        pulp_puppet_modules.collect { |puppet_module| Katello::PuppetModule.new(puppet_module) }
+      end
+
       def self.generate_unit_data(filepath)
         data = parse_metadata(filepath)
 

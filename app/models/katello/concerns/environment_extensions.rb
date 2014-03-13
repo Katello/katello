@@ -41,7 +41,13 @@ module Katello
 
         # content_view_id provides the uniqueness of the name
         def construct_name(org, env, content_view)
-          name = ["KT", org.label, env.label, content_view.label, content_view.id].reject(&:blank?).join('_')
+          name = ["KT",
+                  org.try(:label),
+                  env.try(:label),
+                  content_view.try(:label),
+                  content_view.try(:id)
+                 ].reject(&:blank?).join('_')
+
           return name.gsub('-', '_')
         end
       end

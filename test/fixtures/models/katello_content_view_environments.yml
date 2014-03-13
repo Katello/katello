@@ -36,7 +36,7 @@ library_view_library:
   cp_id:          4
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
@@ -60,16 +60,6 @@ library_dev_view_dev:
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
-dev_component_view_environment:
-  name:          Component Published Dev view environment
-  label:         'dev/component_view_1'
-  cp_id:         7
-  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:component_view_1) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_component_view_1_version) %>
-  created_at: <%= Time.now %>
-  updated_at: <%= Time.now %>
-
 candlepin_library_dev_cve:
   name:         Library and Dev Content View Environment
   label:        'candlepin_library_dev_cve'
@@ -78,5 +68,15 @@ candlepin_library_dev_cve:
   environment_id: <%= ActiveRecord::Fixtures.identify(:candlepin_dev) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:candlepin_library_dev_cv) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:candlepin_library_dev_cv_version) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+library_composite_view:
+  name: Published Library Composite Content View Environment
+  label: 'library/composite_view'
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:composite_view) %>
+  cp_id: 9
+  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:composite_view_version_1) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>

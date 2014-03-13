@@ -11,20 +11,22 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Headpin
-    module User
-      class Create < Actions::EntryAction
-
-        def plan(user)
-          user.disable_auto_reindex!
-          action_subject user
-          plan_action ElasticSearch::Reindex, user
+  module Candlepin
+    module Environment
+      class Create < Candlepin::Abstract
+        input_format do
+          param :organization_label
+          param :cp_id
+          param :name
+          param :description
         end
 
-        def humanized_name
-          _("Create")
+        def run
+          ::Katello::Resources::Candlepin::Environment.create(input['organization_label'],
+                                                   input['cp_id'],
+                                                   input['name'],
+                                                   input['description'])
         end
-
       end
     end
   end

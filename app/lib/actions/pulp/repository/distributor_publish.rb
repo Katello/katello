@@ -47,7 +47,6 @@ module Actions
           distributor_id(input[:source_pulp_id], Runcible::Models::YumDistributor.type_id)
         end
 
-
         def repo(pulp_id)
           pulp_extensions.repository.retrieve_with_details(pulp_id)
         end
