@@ -142,7 +142,7 @@ Requires: %{?scl_prefix}rubygem-compass-rails
 Requires: %{?scl_prefix}rubygem-compass-960-plugin 
 Requires: %{?scl_prefix}rubygem-haml-rails 
 Requires: %{?scl_prefix}rubygem-ui_alchemy-rails = 1.0.12
-Requires: %{?scl_prefix}rubygem-deface
+Requires: %{?scl_prefix}rubygem-deface < 1.0.0
 Requires: %{?scl_prefix}rubygem-strong_parameters
 BuildRequires: foreman >= 1.3.0
 BuildRequires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
@@ -173,7 +173,7 @@ BuildRequires: %{?scl_prefix}rubygem-compass-rails
 BuildRequires: %{?scl_prefix}rubygem-compass-960-plugin 
 BuildRequires: %{?scl_prefix}rubygem-haml-rails 
 BuildRequires: %{?scl_prefix}rubygem-ui_alchemy-rails = 1.0.12
-BuildRequires: %{?scl_prefix}rubygem-deface
+BuildRequires: %{?scl_prefix}rubygem-deface < 1.0.0
 BuildRequires: %{?scl_prefix}rubygem(uglifier) >= 1.0.3
 BuildRequires: %{?scl_prefix}rubygem-strong_parameters
 BuildRequires: %{?scl_prefix}rubygems
