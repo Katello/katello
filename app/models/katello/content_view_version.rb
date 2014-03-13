@@ -46,6 +46,11 @@ class ContentViewVersion < Katello::Model
     joins(:repositories).where("#{Katello::Repository.table_name}.library_instance_id" => repo)
   end
 
+  def self.with_puppet_module(name)
+    joins(:content_view_puppet_environments).
+      where("#{ContentViewPuppetEnvironment.table_name}.name = ?", name)
+  end
+
   def to_s
     name
   end
@@ -264,6 +269,14 @@ class ContentViewVersion < Katello::Model
       env = content_view.add_environment(env, self)
       ForemanTasks.sync_task(::Actions::Headpin::ContentView::EnvironmentCreate, env)
     end
+  end
+
+  def archive_puppet_environment
+    content_view_puppet_environments.archived.first
+  end
+
+  def puppet_modules
+    archive_puppet_environment.puppet_modules
   end
 
   private

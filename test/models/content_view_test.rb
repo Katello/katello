@@ -179,7 +179,22 @@ class ContentViewTest < ActiveSupport::TestCase
     refute component.save
   end
 
+  def test_composite_views_with_composite_versions
+    ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
+    ContentViewVersion.any_instance.stubs(:content_view).returns(stub(:composite? => true))
+    composite = ContentView.find(katello_content_views(:composite_view))
+    v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
+    refute composite.update_attributes(:component_ids => [v1.id])
+
+    component = ContentViewComponent.new(:content_view => compsite,
+                                         :content_view_version => v1
+                                        )
+    refute component.valid?
+    refute component.save
+  end
+
   def test_repositories_to_publish
+    ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
     composite = ContentView.find(katello_content_views(:composite_view))
     v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
     composite.update_attributes(:component_ids => [v1.id])
@@ -191,6 +206,7 @@ class ContentViewTest < ActiveSupport::TestCase
   end
 
   def test_repo_conflicts
+    ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
     composite = ContentView.find(katello_content_views(:composite_view))
     v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
     v2 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2))
@@ -201,6 +217,31 @@ class ContentViewTest < ActiveSupport::TestCase
 
     assert_raises(RuntimeError) do
       composite.components << v1
+    end
+  end
+
+  def test_puppet_module_conflicts
+    composite = ContentView.find(katello_content_views(:composite_view))
+    view = create(:katello_content_view)
+    versions = 2.times.map do |i|
+      create(:katello_content_view_version, :content_view => view)
+    end
+    ContentViewVersion.any_instance.stubs(:puppet_modules).returns([stub(:name => "httpd")]).twice
+
+    refute composite.update_attributes(component_ids: versions.map(&:id))
+    assert_equal 1, composite.errors.count
+    assert composite.errors.full_messages.first =~ /^Puppet module conflict/
+
+    assert_raises(RuntimeError) do
+      composite.components << versions.first
+    end
+  end
+
+  def test_puppet_repos
+    @p_forge = Repository.find(katello_repositories(:p_forge))
+
+    assert_raises(ActiveRecord::RecordInvalid) do
+      @library_view.repositories << @p_forge
     end
   end
 
