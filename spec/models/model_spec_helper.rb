@@ -15,6 +15,8 @@ require File.expand_path("../helpers/repo_test_data", File.dirname(__FILE__))
 module Katello
 module OrchestrationHelper
 
+  include Dynflow::Testing
+
   CERT = <<EOCERT
 -----BEGIN CERTIFICATE-----
 MIIF7DCCBVWgAwIBAgIIB1AMflT0SrswDQYJKoZIhvcNAQEFBQAwRjElMCMGA1UE
@@ -114,12 +116,24 @@ EOKEY
   end
 
   def disable_org_orchestration
-    ::Actions::ElasticSearch::Reindex.any_instance.stubs(:finalize)
     Resources::Candlepin::Owner.stubs(:create).returns({})
     Resources::Candlepin::Owner.stubs(:create_user).returns(true)
     Resources::Candlepin::Owner.stubs(:destroy).returns(true)
     Resources::Candlepin::Owner.stubs(:get_ueber_cert).returns({ :cert => CERT, :key => KEY })
     Organization.any_instance.stubs(:ensure_not_in_transaction!)
+    Organization.any_instance.stubs(:plan_action).with do |action_class, *args|
+      # many tests expect library to be orchestrated: let's make them happy
+      # but don't go though the whole Dynflow process (as it's slow with sqlite)
+      if action_class == ::Actions::Headpin::Organization::Create
+        org = args.first
+        ::Actions::Headpin::Organization::Create.any_instance.stubs(action_subject: nil)
+        create_and_plan_action(::Actions::Headpin::Organization::Create, org)
+        if org.library.new_record?
+          create_and_plan_action(::Actions::Headpin::Environment::LibraryCreate, org.library)
+        end
+      end
+      true
+    end
     disable_env_orchestration # env is orchestrated with org - we disable this as well
   end
 
@@ -146,6 +160,7 @@ EOKEY
     disable_foreman_tasks_hooks(User)
   end
 
+  # Disable completely the foreman tasks hooks for the model (even the plan phase)
   def disable_foreman_tasks_hooks(model)
     model.any_instance.stubs(create_action: nil, update_action: nil, destroy_action: nil)
   end
