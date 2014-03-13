@@ -28,7 +28,7 @@ module Actions
         # @api override - pulp extension representing the content to remove
         # e.g. pulp.extensions.rpm
         def content_extension
-          raise NotImplementedError
+          fail NotImplementedError
         end
 
         def criteria
