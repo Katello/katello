@@ -216,7 +216,7 @@ module Katello
       @system = System.new(system_params.merge(:environment  => @environment,
                                                :content_view => @content_view,
                                                :serviceLevel => params[:service_level]))
-      sync_task(::Actions::Headpin::System::Create, @system)
+      sync_task(::Actions::Katello::System::Create, @system)
       @system.reload
       render :json => Resources::Candlepin::Consumer.get(@system.uuid)
     end

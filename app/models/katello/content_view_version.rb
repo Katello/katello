@@ -262,7 +262,7 @@ class ContentViewVersion < Katello::Model
       self.content_view_environments << cve
     else
       env = content_view.add_environment(env, self)
-      ForemanTasks.sync_task(::Actions::Headpin::ContentView::EnvironmentCreate, env)
+      ForemanTasks.sync_task(::Actions::Katello::ContentView::EnvironmentCreate, env)
     end
   end
 

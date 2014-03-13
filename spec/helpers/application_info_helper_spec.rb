@@ -27,9 +27,8 @@ describe ApplicationInfoHelper do
       Resources::Candlepin::Owner.stubs(:create_user).returns(true)
       disable_env_orchestration
       disable_user_orchestration
+      disable_foreman_tasks_hooks_execution(Organization)
       Organization.any_instance.stubs(:ensure_not_in_transaction!)
-      Resources::Candlepin::Owner.expects(:create).once.returns({})
-      ::Actions::ElasticSearch::Reindex.any_instance.stubs(:finalize)
       Katello.config[:warden] = 'ldap'
       Katello.config[:validate_ldap] = false
       User.stubs(:cp_oauth_header).returns("abc123")

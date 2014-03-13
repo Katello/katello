@@ -46,7 +46,7 @@ class GlueCandlepinConsumerTestBase < ActiveSupport::TestCase
     CandlepinOwnerSupport.set_owner(@@org)
 
     User.current.remote_id =  User.current.login
-    ForemanTasks.sync_task(::Actions::Headpin::ContentView::EnvironmentCreate, @@dev_cve)
+    ForemanTasks.sync_task(::Actions::Katello::ContentView::EnvironmentCreate, @@dev_cve)
   end
 
   def self.after_suite

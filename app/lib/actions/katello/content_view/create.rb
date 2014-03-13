@@ -1,5 +1,5 @@
 #
-# Copyright 2014 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,27 +11,17 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Headpin
-    module Provider
-      class ManifestDelete < Actions::AbstractAsyncTask
-
-        def plan(provider)
-          action_subject provider
-        end
-
-        input_format do
-          param :provider, Hash do
-            param :id
-          end
+  module Katello
+    module ContentView
+      class Create < Actions::Base
+        def plan(content_view)
+          content_view.disable_auto_reindex! if ::Katello.config.use_elasticsearch
+          content_view.save!
+          plan_action(ElasticSearch::Reindex, content_view) if ::Katello.config.use_elasticsearch
         end
 
         def humanized_name
-          _("Delete Manifest")
-        end
-
-        def run
-          provider = ::Katello::Provider.find(input[:provider][:id])
-          provider.delete_manifest(:async => false, :notify => false)
+          _("Create")
         end
 
       end

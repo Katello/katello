@@ -11,29 +11,36 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Headpin
+  module Katello
     module Provider
-      class ManifestRefresh < Actions::AbstractAsyncTask
+      class ManifestImport < Actions::AbstractAsyncTask
 
-        def plan(provider, upstream)
+        def plan(provider, path, force)
+          # this is simple replacement of previous usage of delayed jobs
+          # TODO: extract the REST calls from Provider#import_manifest
+          # and construct proper execution plan
           action_subject provider
-          plan_self :upstream => upstream
+          plan_self path: path, force: force
         end
 
         input_format do
           param :provider, Hash do
             param :id
           end
-          param :upstream
+          param :path
+          param :force
         end
 
         def humanized_name
-          _("Refresh Manifest")
+          _("Import Manifest")
         end
 
         def run
           provider = ::Katello::Provider.find(input[:provider][:id])
-          provider.refresh_manifest(input[:upstream], :async => false, :notify => false)
+          provider.import_manifest(input[:path],
+                                   force:  input[:force],
+                                   async:  false,
+                                   notify: false)
         end
 
       end

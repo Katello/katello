@@ -11,20 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Headpin
-    module User
-      class Create < Actions::EntryAction
-
-        def plan(user)
-          user.disable_auto_reindex!
-          action_subject user
-          plan_action ElasticSearch::Reindex, user
-        end
-
-        def humanized_name
-          _("Create")
-        end
-
+  module Katello
+    module Foreman
+      class Abstract < Actions::Base
       end
     end
   end
