@@ -13,17 +13,43 @@
 module Actions
   module Katello
     module System
-      class Create < Dynflow::Action
+      class Create < Actions::EntryAction
 
-        def self.subscribe
-          Headpin::System::Create
-        end
+        middleware.use ::Actions::Middleware::RemoteAction
 
         def plan(system)
+          system.disable_auto_reindex!
+          cp_create = plan_action(Candlepin::Consumer::Create,
+                                  cp_environment_id:   system.cp_environment_id,
+                                  organization_label:  system.organization.label,
+                                  name:                system.name,
+                                  cp_type:             system.cp_type,
+                                  facts:               system.facts,
+                                  installed_products:  system.installedProducts,
+                                  autoheal:            system.autoheal,
+                                  release_ver:         system.release,
+                                  service_level:       system.serviceLevel,
+                                  capabiliteis:        system.capabilities)
+          system.save!
+          action_subject system, uuid: cp_create.output[:response][:uuid]
+          plan_self
           plan_action(Pulp::Consumer::Create,
-                      uuid: trigger.input[:uuid],
+                      uuid: cp_create.output[:response][:uuid],
                       name: system.name)
+          plan_action ElasticSearch::Reindex, system
         end
+
+        def humanized_name
+          _("Create")
+        end
+
+        def finalize
+          system = ::Katello::System.find(input[:system][:id])
+          system.disable_auto_reindex!
+          system.uuid = input[:uuid]
+          system.save!
+        end
+
       end
     end
   end

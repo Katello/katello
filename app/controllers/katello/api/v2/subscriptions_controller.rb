@@ -172,7 +172,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
       temp_file.close
     end
 
-    task = async_task(::Actions::Headpin::Provider::ManifestImport, @provider, File.expand_path(temp_file.path), params[:force])
+    task = async_task(::Actions::Katello::Provider::ManifestImport, @provider, File.expand_path(temp_file.path), params[:force])
     respond_for_async :resource => task
   end
 
@@ -182,14 +182,14 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     details  = @provider.organization.owner_details
     upstream = details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
 
-    task = async_task(::Actions::Headpin::Provider::ManifestRefresh, @provider, upstream)
+    task = async_task(::Actions::Katello::Provider::ManifestRefresh, @provider, upstream)
     respond_for_async :resource => task
   end
 
   api :POST, "/organizations/:organization_id/subscriptions/delete_manifest", "Delete manifest from Red Hat provider"
   param :organization_id, :identifier, :desc => "Organization id", :required => true
   def delete_manifest
-    task = async_task(::Actions::Headpin::Provider::ManifestDelete, @provider)
+    task = async_task(::Actions::Katello::Provider::ManifestDelete, @provider)
     respond_for_async :resource => task
   end
 

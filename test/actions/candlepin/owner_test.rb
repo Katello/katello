@@ -12,31 +12,24 @@
 
 require 'katello_test_helper'
 
-module Katello
-  namespace = ::Actions::Candlepin::Owner
+class Actions::Candlepin::Owner::CreateTest < ActiveSupport::TestCase
+  include Dynflow::Testing
+  include Support::Actions::RemoteAction
 
-  describe namespace do
-    include Dynflow::Testing
-    include Support::Actions::RemoteAction
-
-    before do
-      stub_remote_user
-    end
-
-    describe 'Create' do
-      let(:action_class) { ::Actions::Candlepin::Owner::Create }
-      let(:label) { "foo"}
-      let(:name) { "boo"}
-
-      let(:planned_action) do
-        create_and_plan_action action_class, label: label, name: name
-      end
-
-      it 'runs' do
-        ::Katello::Resources::Candlepin::Owner.expects(:create).with(label, name)
-        run_action planned_action
-      end
-    end
+  before do
+    stub_remote_user
   end
 
+  let(:action_class) { ::Actions::Candlepin::Owner::Create }
+  let(:label) { "foo"}
+  let(:name) { "boo"}
+
+  let(:planned_action) do
+    create_and_plan_action action_class, label: label, name: name
+  end
+
+  it 'runs' do
+    ::Katello::Resources::Candlepin::Owner.expects(:create).with(label, name)
+    run_action planned_action
+  end
 end
