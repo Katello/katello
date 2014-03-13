@@ -107,6 +107,11 @@ class ApplicationController < ::ApplicationController
   include AuthorizationRules
   include Menu
 
+  # Override Foreman authorized method to call the Katello authorize check
+  def authorized
+    authorize_katello
+  end
+
   before_filter :verify_ldap
 
   def section_id

@@ -17,9 +17,7 @@ class Api::ApiController < ::Api::BaseController
   include ForemanTasks::Triggers
 
   respond_to :json
-  before_filter :require_user
   before_filter :verify_ldap
-  before_filter :add_candlepin_version_header
   before_filter :turn_off_strong_params
 
   # override warden current_user (returns nil because there is no user in that scope)
@@ -38,28 +36,15 @@ class Api::ApiController < ::Api::BaseController
 
   protected
 
-  def add_candlepin_version_header
-    response.headers["X-CANDLEPIN-VERSION"] = "katello/#{Katello.config.katello_version}"
+  # Override Foreman authorized method to call the Katello authorize check
+  def authorized
+    authorize_katello
   end
 
   def verify_ldap
     if !request.authorization.blank?
       u = current_user
       u.verify_ldap_roles if (Katello.config.ldap_roles && !u.nil?)
-    end
-  end
-
-  def require_user
-    if authenticate && session[:user]
-      User.current = User.find(session[:user])
-    elsif (ssl_client_cert = client_cert_from_request).present?
-      consumer_cert = OpenSSL::X509::Certificate.new(ssl_client_cert)
-      uuid = uuid(consumer_cert)
-      User.current = CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid)
-    elsif authenticate
-      User.current
-    else
-      deny_access
     end
   end
 
@@ -117,27 +102,6 @@ class Api::ApiController < ::Api::BaseController
     method_name = ('respond_for_' + params[:action].to_s).to_sym
     fail "automatic response method '%s' not defined" % method_name unless respond_to?(method_name, true)
     return send(method_name, options)
-  end
-
-  def client_cert_from_request
-    cert = request.env['SSL_CLIENT_CERT'] || request.env['HTTP_SSL_CLIENT_CERT'] ||
-        ENV['SSL_CLIENT_CERT'] || ENV['HTTP_SSL_CLIENT_CERT']
-    return nil if cert.blank? || cert == "(null)"
-    # apache does not preserve new lines in cert file - work-around:
-    if cert.include?("-----BEGIN CERTIFICATE----- ")
-      cert = cert.to_s.gsub("-----BEGIN CERTIFICATE----- ", "").gsub(" -----END CERTIFICATE-----", "")
-      cert.gsub!(" ", "\n")
-      cert = "-----BEGIN CERTIFICATE-----\n#{cert}-----END CERTIFICATE-----\n"
-    end
-    return cert
-  end
-
-  def uuid(cert)
-    drop_cn_prefix_from_subject(cert.subject.to_s)
-  end
-
-  def drop_cn_prefix_from_subject(subject_string)
-    subject_string.sub(/\/CN=/i, '')
   end
 
 end

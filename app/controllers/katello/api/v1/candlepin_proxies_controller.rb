@@ -13,6 +13,12 @@
 module Katello
   class Api::V1::CandlepinProxiesController < Api::V1::ApiController
 
+    include Katello::Authentication::RhsmClientAuthentication
+
+    skip_before_filter :authorize
+    before_filter :authorize_client, :except => [:consumer_activate]
+    before_filter :add_candlepin_version_header
+
     before_filter :proxy_request_path, :proxy_request_body
     before_filter :find_organization, :only => [:rhsm_index]
     before_filter :find_default_organization_and_or_environment, :only => [:consumer_create, :index, :consumer_activate]
@@ -25,7 +31,6 @@ module Katello
     before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin,
                                           :upload_package_profile, :regenerate_identity_certificates, :facts]
     before_filter :find_user_by_login, :only => [:list_owners]
-    before_filter :authorize, :except => [:consumer_activate, :upload_package_profile]
 
     # TODO: break up method
     # rubocop:disable MethodLength
