@@ -157,6 +157,14 @@ module ProductTestData
     "created" => "2011-07-11T20=>26=>26.510+0000"
   })
 
+  DERIVED_PROVIDED_PRODUCT = HashWithIndifferentAccess.new({
+      "created" => "2013-12-30T16:11:26.000+0000",
+      "id" => "8a85f987430cc341014344462dc06c38",
+      "productId" => "180",
+      "productName" => "Red Hat Beta",
+      "updated" => "2013-12-30T16:11:26.000+0000"
+  })
+
 #   PRODUCT_WITHOUT_CONTENT_ID = HashWithIndifferentAccess.new({
 #     :name => ProductTestData::PRODUCT_NAME,
 #     :id => ProductTestData::PRODUCT_ID,

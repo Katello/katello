@@ -539,6 +539,12 @@ module Glue::Provider
     # that one that subscriptions are assigned to. Between marketing and
     # engineering products is M:N relation (see MarketingEngineeringProduct
     # model)
+    #
+    # When a subscription is defined as a virtual data center subscription,
+    # its pools will have a seperate 'derived' marketing product and a seperate set
+    # of 'derived' engineering products. These products become the marketing and
+    # engineering products for the sub pool once a host binds to the original pool.
+    # We need to make sure to include these 'derived' products when creating our mapping.
     def marketing_to_engineering_product_ids_mapping
       mapping = {}
       pools = Resources::Candlepin::Owner.pools self.organization.label
@@ -547,6 +553,14 @@ module Glue::Provider
         if pool[:providedProducts]
           eng_product_ids = pool[:providedProducts].map { |provided| provided[:productId] }
           mapping[pool[:productId]].concat(eng_product_ids)
+        end
+        # Check to see if there are any 'derived' products defined.
+        if pool[:derivedProductId]
+          mapping[pool[:derivedProductId]] ||= []
+          if pool[:derivedProvidedProducts]
+            eng_product_ids = pool[:derivedProvidedProducts].map { |provided| provided[:productId] }
+            mapping[pool[:derivedProductId]].concat(eng_product_ids)
+          end
         end
       end
       mapping
