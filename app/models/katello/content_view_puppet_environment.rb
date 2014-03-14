@@ -60,6 +60,18 @@ module Katello
       self.environment.nil?
     end
 
+    def generate_puppet_path
+      if self.environment
+        File.join(Katello.config.puppet_repo_root,
+                  Environment.construct_name(self.organization,
+                                             self.environment,
+                                             self.content_view),
+                  'modules')
+      else
+        nil #don't generate archived content view puppet environments
+      end
+    end
+
     def self.generate_pulp_id(organization_label, env_label, view_label, version)
       [organization_label, env_label, view_label, version].compact.join("-").gsub(/[^-\w]/, "_")
     end

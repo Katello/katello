@@ -510,24 +510,60 @@ class ContentView < Katello::Model
                                :content_view => self)
   end
 
-  def create_puppet_env(options)
+  def next_version
+    (self.versions.maximum(:version) || 0) + 1
+  end
+
+  def build_puppet_env(options)
     if options[:environment] && options[:version]
       fail "Cannot create into both an environment and a content view version archive"
     end
 
     to_env       = options[:environment]
     version      = options[:version]
-    content_view = options[:content_view] || to_env.default_content_view
+    content_view = self
     to_version   = version || content_view.version(to_env)
 
     # Construct the pulp id using org/view/version or org/env/view
     pulp_id = ContentViewPuppetEnvironment.generate_pulp_id(organization.label, to_env.try(:label),
                                                             self.label, version.try(:version))
 
-    ContentViewPuppetEnvironment.create!(:environment => to_env,
-                                         :content_view_version => to_version,
-                                         :name => self.name,
-                                         :pulp_id => pulp_id)
+    ContentViewPuppetEnvironment.new(:environment => to_env,
+                                     :content_view_version => to_version,
+                                     :name => self.name,
+                                     :pulp_id => pulp_id)
+  end
+
+  def create_puppet_env(options)
+    build_puppet_env(options).save!
+  end
+
+  def computed_module_ids_by_repoid
+    # In order to copy the puppet modules to the new repo, we need to retrieve the module
+    # details.  This is necessary since pulp requires both a source and destination
+    # repo id to copy content.
+    ids = []
+    names_and_authors = []
+    content_view_puppet_modules.each do |cvpm|
+      if cvpm.uuid
+        ids << cvpm.uuid
+      else
+        names_and_authors << { :name => cvpm.name, :author => cvpm.author }
+      end
+    end
+
+    puppet_modules = ids.blank? ? [] : PuppetModule.id_search(ids)
+    unless names_and_authors.blank?
+      puppet_modules << PuppetModule.latest_modules_search(names_and_authors,
+                                                           self.organization.library.repositories.puppet_type.map(&:pulp_id))
+    end
+
+    # In order to minimize the number of copy requests, organize the data by repoid.
+    modules_by_repoid = puppet_modules.flatten.each_with_object({}) do |puppet_module, result|
+      result[puppet_module.repoids.first] ||= []
+      result[puppet_module.repoids.first] << puppet_module.id
+    end
+    modules_by_repoid
   end
 
   protected
@@ -577,31 +613,7 @@ class ContentView < Katello::Model
 
   def associate_puppet_content(puppet_env)
     unless content_view_puppet_modules.empty?
-      # In order to copy the puppet modules to the new repo, we need to retrieve the module
-      # details.  This is necessary since pulp requires both a source and destination
-      # repo id to copy content.
-      ids = []
-      names_and_authors = []
-      content_view_puppet_modules.each do |cvpm|
-        if cvpm.uuid
-          ids << cvpm.uuid
-        else
-          names_and_authors << { :name => cvpm.name, :author => cvpm.author }
-        end
-      end
-
-      puppet_modules = ids.blank? ? [] : PuppetModule.id_search(ids)
-      unless names_and_authors.blank?
-        puppet_modules << PuppetModule.latest_modules_search(names_and_authors,
-                                                             self.organization.library.repositories.puppet_type.map(&:pulp_id))
-      end
-
-      # In order to minimize the number of copy requests, organize the data by repoid.
-      modules_by_repoid = puppet_modules.flatten.each_with_object({}) do |puppet_module, result|
-        result[puppet_module.repoids.first] ||= []
-        result[puppet_module.repoids.first] << puppet_module.id
-      end
-
+      modules_by_repoid = computed_module_ids_by_repoid
       async_tasks = []
       modules_by_repoid.each_pair do |repoid, puppet_module_ids|
         async_tasks << Katello.pulp_server.extensions.puppet_module.copy(repoid,

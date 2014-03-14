@@ -26,11 +26,16 @@ module Actions
           sequence do
             plan_action(ContentView::AddToEnvironment, version, library)
             concurrence do
-              content_view.repositories_to_publish.non_puppet.each do |repository|
+              content_view.repositories_to_publish.each do |repository|
                 sequence do
                   clone_to_version = plan_action(Repository::CloneToVersion, repository, version)
                   plan_action(Repository::CloneToEnvironment, clone_to_version.new_repository, library)
                 end
+              end
+
+              sequence do
+                plan_action(ContentViewPuppetEnvironment::CreateForVersion, version)
+                plan_action(ContentViewPuppetEnvironment::CloneToEnvironment, version, library)
               end
 
               repos_to_delete(content_view).each do |repo|

@@ -398,11 +398,15 @@ module Glue::Pulp::Repo
       categories
     end
 
+    def puppet_module_ids
+      Katello.pulp_server.extensions.repository.puppet_module_ids(self.pulp_id)
+    end
+
     def puppet_modules
       if @repo_puppet_modules.nil?
         # we fetch ids and then fetch modules by id, because repo puppet modules
         #  do not contain all the info we need
-        ids = Katello.pulp_server.extensions.repository.puppet_module_ids(self.pulp_id)
+        ids = puppet_module_ids
         tmp_modules = []
         ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           tmp_modules.concat(Katello.pulp_server.extensions.puppet_module.find_all_by_unit_ids(sub_list))
@@ -692,7 +696,7 @@ module Glue::Pulp::Repo
 
     def publish_distributor
       dist = find_distributor
-      Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'])
+      dist.nil? ? nil :  Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'])
     end
 
     def publish_node_distributor

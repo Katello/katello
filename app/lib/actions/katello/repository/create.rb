@@ -23,17 +23,8 @@ module Actions
           plan_self
 
           org = repository.organization
-          if repository.puppet?
-            environment_name = ::Environment.construct_name(
-              repository.environment.organization,
-              repository.environment,
-              repository.content_view
-            )
+          path = repository.relative_path if repository.puppet?
 
-            path = File.join(::Katello.config.puppet_repo_root, environment_name, 'modules')
-          else
-            path = repository.relative_path
-          end
           sequence do
             plan_action(Actions::Pulp::Repository::Create,
                         content_type: repository.content_type,
@@ -55,7 +46,7 @@ module Actions
                 content_create = plan_action(Katello::Product::ContentCreate, repository)
                 plan_action(ContentView::UpdateEnvironment, org.default_content_view, org.library, content_create.input[:content_id])
               end
-              plan_action(Katello::Repository::MetadataGenerate, repository)
+              plan_action(Katello::Repository::MetadataGenerate, repository) unless repository.puppet?
               plan_action(ElasticSearch::Reindex, repository)
             end
           end

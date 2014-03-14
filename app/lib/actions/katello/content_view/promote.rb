@@ -30,6 +30,8 @@ module Actions
                 end
               end
 
+              plan_action(ContentViewPuppetEnvironment::CloneToEnvironment, version, environment)
+
               repos_to_delete(version, environment).each do |repo|
                 plan_action(Repository::Destroy, repo)
               end

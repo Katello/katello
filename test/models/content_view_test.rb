@@ -83,6 +83,7 @@ class ContentViewTest < ActiveSupport::TestCase
   end
 
   def test_environment_content_view_env_destroy
+    ContentViewPuppetEnvironment.any_instance.stubs(:clear_content_indices)
     env = @dev
     cve = env.content_views.first.content_view_environments.where(:environment_id=>env.id).first
     env.destroy
