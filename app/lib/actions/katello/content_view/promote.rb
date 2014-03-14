@@ -22,7 +22,6 @@ module Actions
                                                 :environment => environment, :task => self.task,
                                                :status => ::Katello::ContentViewHistory::IN_PROGRESS)
 
-
           version.add_environment(environment)
           version.save!
 
@@ -37,7 +36,6 @@ module Actions
               repos_to_delete(version, environment).each do |repo|
                 plan_action(Repository::Destroy, repo)
               end
-              #TODO handle puppet content
             end
 
             plan_action(ContentView::UpdateEnvironment, version.content_view, environment)
