@@ -28,12 +28,16 @@ module Actions
           delete_ids = saved_cp_ids - input[:content_ids]
 
           output[:add_ids]         =    add_ids
-          output[:add_response]    = ::Katello::Resources::Candlepin::Environment.
+          unless add_ids.empty?
+            output[:add_response]    = ::Katello::Resources::Candlepin::Environment.
               add_content(input[:cp_environment_id], add_ids)
+          end
 
           output[:delete_ids]      = delete_ids
-          output[:delete_response] = ::Katello::Resources::Candlepin::Environment.
-              add_content(input[:cp_environment_id], delete_ids)
+          unless delete_ids.empty?
+            output[:delete_response] = ::Katello::Resources::Candlepin::Environment.
+                delete_content(input[:cp_environment_id], delete_ids)
+          end
         end
       end
     end

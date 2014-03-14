@@ -23,7 +23,7 @@ module Actions
           plan_self
 
           org = repository.organization
-          path = repository.relative_path if repository.puppet?
+          path = repository.relative_path unless repository.puppet?
 
           sequence do
             plan_action(Actions::Pulp::Repository::Create,
