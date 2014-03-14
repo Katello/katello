@@ -28,7 +28,7 @@ module Actions
 
           sequence do
             concurrence do
-              content_view.repositories.non_puppet.each do |repository|
+              content_view.repositories_to_publish.non_puppet.each do |repository|
                 sequence do
                   clone_to_version = plan_action(Repository::CloneToVersion, repository, version)
                   plan_action(Repository::CloneToEnvironment, clone_to_version.new_repository, library)
