@@ -25,5 +25,7 @@ module Katello
 
     validates :errata_id, :uniqueness => { :scope => :content_view_filter_id }, :allow_blank => true
     validates_with Validators::ContentViewErratumFilterRuleValidator
+
+    scope :with_date_or_type, where('start_date is not NULL or end_date is not NULL or types is not NULL')
   end
 end
