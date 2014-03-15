@@ -49,9 +49,11 @@ module Actions
             # when creating a clone, the following actions are handled by the
             # publish/promote process
             unless clone
-              content_create = plan_action(Katello::Product::ContentCreate, repository)
+              unless repository.product.redhat?
+                content_create = plan_action(Katello::Product::ContentCreate, repository)
+                plan_action(ContentView::UpdateEnvironment, org.default_content_view, org.library, content_create.input[:content_id])
+              end
               plan_action(Katello::Repository::MetadataGenerate, repository)
-              plan_action(ContentView::UpdateEnvironment, org.default_content_view, org.library, content_create.input[:content_id])
               plan_action(ElasticSearch::Reindex, repository)
             end
           end
