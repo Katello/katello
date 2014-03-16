@@ -25,7 +25,7 @@ module Actions
                                                        version: content_view_version)
           sequence do
             plan_action(Repository::Create, new_repository, true)
-            plan_action(Repository::CloneContent, repository, new_repository, filters)
+            plan_action(Repository::CloneContent, repository, new_repository, filters, true)
           end
         end
 

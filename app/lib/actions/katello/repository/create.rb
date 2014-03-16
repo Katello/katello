@@ -33,7 +33,7 @@ module Actions
             path = repository.relative_path
           end
           sequence do
-            plan_action(Pulp::Repository::Create,
+            plan_action(Actions::Pulp::Repository::Create,
                         content_type: repository.content_type,
                         pulp_id: repository.pulp_id,
                         name: repository.name,
