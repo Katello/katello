@@ -34,6 +34,7 @@ module Actions
                   plan_action(Repository::CloneToEnvironment, clone_to_version.new_repository, library)
                 end
               end
+
               repos_to_delete(content_view).each do |repo|
                 plan_action(Repository::Destroy, repo)
               end
@@ -57,8 +58,13 @@ module Actions
         private
 
         def repos_to_delete(content_view)
+          if content_view.composite?
+            library_instances = content_view.repositories_to_publish.map(&:library_instance_id)
+          else
+            library_instances = content_view.repositories_to_publish.map(&:id)
+          end
           content_view.repos(content_view.organization.library).find_all do |repo|
-            !content_view.repository_ids.include?(repo.library_instance_id)
+            !library_instances.include?(repo.library_instance_id)
           end
         end
 
