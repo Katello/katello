@@ -20,11 +20,18 @@ child :environments => :environments do
   attributes :id, :name, :label
 end
 
-child :repositories => :repositories do
+child :archived_repos => :repositories do
   attributes :id, :name, :label
 end
 
 child :active_history => :active_history do
   attributes :id
   attributes :katello_environment_id => :environment_id
+end
+
+child :puppet_modules => :puppet_modules do
+  attributes :id
+  attributes :name
+  attributes :author
+  attributes :version
 end
