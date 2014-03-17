@@ -103,6 +103,16 @@ Katello::Engine.routes.draw do
         end
       end
 
+      api_resources :repositories, :only => [:index, :create, :show, :destroy, :update] do
+        member do
+          put :enable
+          put :disable
+        end
+        collection do
+          post :sync_complete
+        end
+      end
+
       api_resources :repository_sets, :only => [:index, :show] do
         member do
           put :enable
@@ -302,9 +312,8 @@ Katello::Engine.routes.draw do
         api_attachable_resources :content_views, :controller => :changesets_content
       end
 
-      api_resources :repositories, :only => [:index, :create, :show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+      api_resources :repositories, :only => [] do
         collection do
-          post :sync_complete
           match '/bulk/destroy' => 'repositories_bulk_actions#destroy_repositories', :via => :put
           match '/bulk/sync' => 'repositories_bulk_actions#sync_repositories', :via => :post
         end
@@ -344,7 +353,6 @@ Katello::Engine.routes.draw do
       end
 
       api_resources :products, :only => [] do
-        api_resources :repositories, :only => [:create, :index]
         get :repositories, :on => :member
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
