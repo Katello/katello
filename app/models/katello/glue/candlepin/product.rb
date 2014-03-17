@@ -160,20 +160,6 @@ module Glue::Candlepin::Product
       Resources::Candlepin::Product.remove_content cp_id, content_id
     end
 
-    def set_product
-      Rails.logger.debug "Creating a product in candlepin: #{name}"
-      self.attrs ||=  [{:name => "arch", :value => "ALL"}]
-      json = Resources::Candlepin::Product.create(
-        :name => self.name,
-        :multiplier => self.multiplier || 1,
-        :attributes => self.attrs # name collision with ActiveRecord
-      )
-      self.cp_id = json[:id]
-    rescue => e
-      Rails.logger.error "Failed to create candlepin product #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
     def del_product
       return true unless no_other_assignment?
       Rails.logger.debug "Deleting product in candlepin: #{name}"
@@ -316,9 +302,6 @@ module Glue::Candlepin::Product
 
     def save_product_orchestration
       case self.orchestration_for
-      when :create
-        pre_queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
-        pre_queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
       when :import_from_cp
         # we leave it as it is - to not break re-import logic
       when :import_from_cp_ar_setup

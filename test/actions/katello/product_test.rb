@@ -70,3 +70,47 @@ module Katello
 
   end
 end
+
+module ::Actions::Katello::Product
+
+  class TestBase < ActiveSupport::TestCase
+    include Dynflow::Testing
+    include Support::Actions::Fixtures
+    include Support::Actions::RemoteAction
+    include FactoryGirl::Syntax::Methods
+
+    let( :action ) { create_action action_class }
+  end
+
+  class CreateTest < TestBase
+    let( :action_class ) { ::Actions::Katello::Product::Create }
+    let( :product ) do
+      katello_products( :fedora )
+    end
+
+    it 'plans' do
+      product.orchestration_for = :create
+      action.stubs(:action_subject).with do |subject, params|
+        subject.must_equal(product)
+        params[:cp_id].must_be_kind_of Dynflow::ExecutionPlan::OutputReference
+        params[:cp_id].subkeys.must_equal %w[response id]
+      end
+
+      product.expects(:disable_auto_reindex!).returns
+      product.expects(:save!).returns( [] )
+
+      plan_action(action, product, product.organization)
+
+      assert_action_planed_with(action,
+                                ::Actions::Candlepin::Product::Create,
+                                :name => product.name,
+                                :multiplier => 1,
+                                :attributes=>[{:name=>"arch", :value=>"ALL"}])
+
+      # TODO figure out how to specify the candlepin id or a placeholder
+      assert_action_planed( action, ::Actions::Candlepin::Product::CreateUnlimitedSubscription)
+      assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, product)
+    end
+  end
+end
+
