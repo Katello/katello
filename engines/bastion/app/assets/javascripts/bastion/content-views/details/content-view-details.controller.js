@@ -25,13 +25,37 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewDetailsController',
-    ['$scope', 'ContentView', 'gettext',
-    function ($scope, ContentView, gettext) {
+    ['$scope', 'ContentView', 'ContentViewVersion', 'AggregateTask', 'gettext',
+    function ($scope, ContentView, ContentViewVersion, AggregateTask, gettext) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
         $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId});
+
+        function processTasks(versions) {
+            _.each(versions, function (version) {
+                var taskIds = _.map(version['active_history'], function (history) {
+                                    return history.task.id;
+                                });
+                if (taskIds.length > 0) {
+                    version.task = AggregateTask.new(taskIds, function (task) {
+                        version.task = task;
+                    });
+                }
+            });
+        }
+
+        $scope.reloadVersions = function () {
+            var contentViewId = $scope.contentView.id || $scope.$stateParams.contentViewId;
+            ContentViewVersion.query({'content_view_id': contentViewId}, function (data) {
+                $scope.versions = data.results;
+                if ($scope.contentView) {
+                    $scope.contentView.versions = data.results;
+                }
+                processTasks($scope.versions);
+            });
+        };
 
         $scope.save = function (contentView) {
             return contentView.$update(saveSuccess, saveError);

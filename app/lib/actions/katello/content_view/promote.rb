@@ -13,37 +13,39 @@
 module Actions
   module Katello
     module ContentView
-      class Publish < Actions::EntryAction
+      class Promote < Actions::EntryAction
 
-        def plan(content_view)
-          action_subject(content_view)
-          version = content_view.create_new_version
-          library = content_view.organization.library
+        def plan(version, environment)
+          action_subject(version.content_view)
 
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
-                                               :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task)
+                                                :environment => environment, :task => self.task,
+                                               :status => ::Katello::ContentViewHistory::IN_PROGRESS)
+
+          version.add_environment(environment)
+          version.save!
 
           sequence do
             concurrence do
-              content_view.repositories_to_publish.non_puppet.each do |repository|
+
+              version.archived_repos.non_puppet.each do |repository|
                 sequence do
-                  clone_to_version = plan_action(Repository::CloneToVersion, repository, version)
-                  plan_action(Repository::CloneToEnvironment, clone_to_version.new_repository, library)
+                  plan_action(Repository::CloneToEnvironment, repository, environment)
                 end
               end
 
-              repos_to_delete(content_view).each do |repo|
+              repos_to_delete(version, environment).each do |repo|
                 plan_action(Repository::Destroy, repo)
               end
             end
 
-            plan_action(ContentView::UpdateEnvironment, content_view, library)
+            plan_action(ContentView::UpdateEnvironment, version.content_view, environment)
             plan_self(history_id: history.id)
           end
         end
 
         def humanized_name
-          _("Publish")
+          _("Promotion")
         end
 
         def finalize
@@ -54,14 +56,10 @@ module Actions
 
         private
 
-        def repos_to_delete(content_view)
-          if content_view.composite?
-            library_instances = content_view.repositories_to_publish.map(&:library_instance_id)
-          else
-            library_instances = content_view.repositories_to_publish.map(&:id)
-          end
-          content_view.repos(content_view.organization.library).find_all do |repo|
-            !library_instances.include?(repo.library_instance_id)
+        def repos_to_delete(version, environment)
+          archived_library_instance_ids = version.archived_repos.collect{|archived| archived.library_instance_id}
+          version.content_view.repos(environment).find_all do |repo|
+            !archived_library_instance_ids.include?(repo.library_instance_id)
           end
         end
 

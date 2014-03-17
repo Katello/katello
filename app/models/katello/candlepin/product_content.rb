@@ -12,6 +12,8 @@
 
 module Katello
 class Candlepin::ProductContent
+  include ForemanTasks::Triggers
+
   attr_accessor :content, :enabled, :product
 
   def initialize(params = {}, product_id = nil)
@@ -111,7 +113,8 @@ class Candlepin::ProductContent
             unprotected = false
           end
           Rails.logger.error("Content type: '#{content_type}'")
-          Repository.create!(:environment => product.organization.library,
+
+          repo = Repository.new(:environment => product.organization.library,
                              :product => product,
                              :pulp_id => product.repo_id(repo_name),
                              :cp_label => self.content.label,
@@ -132,6 +135,8 @@ class Candlepin::ProductContent
                              :unprotected => unprotected,
                              :content_view_version => product.organization.library.default_content_view_version
                             )
+          #Temporarily running task here until entire repo set enable is dynflowed
+          sync_task(::Actions::Katello::Repository::Create, repo)
         end
         product.repositories_cdn_import_passed! unless product.cdn_import_success?
         @repos = nil #reset repo cache

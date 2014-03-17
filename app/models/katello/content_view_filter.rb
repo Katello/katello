@@ -42,9 +42,11 @@ class ContentViewFilter < Katello::Model
   scope :whitelist, where(:inclusion => true)
   scope :blacklist, where(:inclusion => false)
 
-  scope :yum, where(:type => [ContentViewPackageGroupFilter.name,
-                              ContentViewErratumFilter.name,
-                              ContentViewPackageFilter.name])
+  def self.yum
+    where(:type => [::Katello::ContentViewPackageGroupFilter.name,
+                    ::Katello::ContentViewErratumFilter.name,
+                    ::Katello::ContentViewPackageFilter.name])
+  end
 
   def params_format
     {}

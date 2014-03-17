@@ -23,11 +23,13 @@ describe('Controller: ContentViewPublishController', function() {
 
         ContentView.publish = function(options, callback) {  callback({id: 3}) };
         $scope = $injector.get('$rootScope').$new();
+        $scope.reloadVersions = function () {};
 
         $scope.contentView = ContentView.get({id: 1});
         $scope.contentView.versions = [];
-        
+
         spyOn($scope, 'transitionTo');
+        spyOn($scope, 'reloadVersions');
 
         $controller('ContentViewPublishController', {
             $scope: $scope,
@@ -43,8 +45,8 @@ describe('Controller: ContentViewPublishController', function() {
     it('provides a method to publish a content view version', function() {
         $scope.publish($scope.contentView, $scope.version);
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.tasks.details',
-            {contentViewId: $scope.contentView.id, taskId: 3});
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.versions',
+            {contentViewId: $scope.contentView.id});
     });
 
 });

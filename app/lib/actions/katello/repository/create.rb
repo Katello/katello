@@ -24,16 +24,18 @@ module Actions
 
           org = repository.organization
           if repository.puppet?
-            path = File.join(::Katello.config.puppet_repo_root,
-                             ::Katello::KTEnvironment.construct_name(repository.environment.organization,
-                                                                     repository.environment,
-                                                                     repository.content_view),
-                             'modules')
+            environment_name = ::Environment.construct_name(
+              repository.environment.organization,
+              repository.environment,
+              repository.content_view
+            )
+
+            path = File.join(::Katello.config.puppet_repo_root, environment_name, 'modules')
           else
             path = repository.relative_path
           end
           sequence do
-            plan_action(Pulp::Repository::Create,
+            plan_action(Actions::Pulp::Repository::Create,
                         content_type: repository.content_type,
                         pulp_id: repository.pulp_id,
                         name: repository.name,
@@ -49,9 +51,11 @@ module Actions
             # when creating a clone, the following actions are handled by the
             # publish/promote process
             unless clone
-              content_create = plan_action(Katello::Product::ContentCreate, repository)
+              unless repository.product.redhat?
+                content_create = plan_action(Katello::Product::ContentCreate, repository)
+                plan_action(ContentView::UpdateEnvironment, org.default_content_view, org.library, content_create.input[:content_id])
+              end
               plan_action(Katello::Repository::MetadataGenerate, repository)
-              plan_action(ContentView::UpdateEnvironment, org.default_content_view, org.library, content_create.input[:content_id])
               plan_action(ElasticSearch::Reindex, repository)
             end
           end

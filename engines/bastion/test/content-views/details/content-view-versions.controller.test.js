@@ -12,23 +12,25 @@
  **/
 
 describe('Controller: ContentViewVersionsController', function() {
-    var $scope, versions;
+    var $scope, versions, AggregateTask;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
         var gettext = function() {},
-            $controller = $injector.get('$controller'),
-            ContentViewVersion = $injector.get('MockResource').$new();
+            $controller = $injector.get('$controller');
 
         $scope = $injector.get('$rootScope').$new();
 
         $scope.contentView = ContentView.get({id: 1});
 
+        $scope.reloadVersions = function () {};
+
+        spyOn($scope, 'reloadVersions');
+
         $controller('ContentViewVersionsController', {
             $scope: $scope,
-            gettext: gettext,
-            ContentViewVersion: ContentViewVersion
+            gettext: gettext
         });
     }));
 

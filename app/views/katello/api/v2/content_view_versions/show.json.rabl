@@ -25,6 +25,5 @@ child :repositories => :repositories do
 end
 
 child :active_history => :active_history do
-  attributes :id
-  attributes :katello_environment_id => :environment_id
+  extends 'katello/api/v2/content_view_histories/show'
 end

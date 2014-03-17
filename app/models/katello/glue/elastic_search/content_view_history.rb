@@ -34,7 +34,7 @@ module Glue::ElasticSearch::ContentViewHistory
 
     def extended_index_attrs
       {
-        :environment => self.environment.name,
+        :environment => self.environment.try(:name),
         :version_id => self.version.id,
         :version => self.version.version,
         :content_view_id => self.content_view.id,

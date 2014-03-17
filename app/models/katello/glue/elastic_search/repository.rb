@@ -123,7 +123,7 @@ module Glue::ElasticSearch::Repository
     end
 
     def indexed_errata_ids
-      options = {:repoids => [self.pulp_id], :fields => [:id], :start => 0, :page_size => 1}
+      options = {:filters => {:repoids => [self.pulp_id]}, :fields => [:id], :start => 0, :page_size => 1}
       options[:page_size] = ::Katello::Errata.legacy_search("", options).total
       ::Katello::Errata.legacy_search("", options).collect{|e| e.id}
     end
@@ -138,7 +138,6 @@ module Glue::ElasticSearch::Repository
       else
         errata_ids = self.errata_ids
         search_errata_ids = self.indexed_errata_ids
-
         Katello::Errata.add_indexed_repoid(errata_ids - search_errata_ids, self.pulp_id)
         Katello::Errata.remove_indexed_repoid(search_errata_ids - errata_ids, self.pulp_id)
       end

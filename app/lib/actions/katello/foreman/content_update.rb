@@ -14,6 +14,7 @@ module Actions
   module Katello
     module Foreman
       class ContentUpdate < Actions::Katello::Foreman::Abstract
+        middleware.use ::Actions::Middleware::RemoteAction
 
         def plan(environment, content_view)
           plan_self(environment_id: environment.id,
