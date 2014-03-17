@@ -25,22 +25,28 @@
 angular.module('Bastion.tasks').factory('AggregateTask',
     ['Task', function (Task) {
 
-        var newAggregate = function (taskIds, updateTaskIn) {
+        /**
+          * @param {Array} taskIds ids of tasks to be polled for
+          *
+          * @param {Function} callback function to reflect the
+          *        changes after the task was updated.
+          *        The function is called with the updated aggregated task
+          */
+        var newAggregate = function (taskIds, callback) {
             var taskMap = {},
                 taskSearches = {},
-                externalUpdateTask = updateTaskIn,
                 state,
                 progressbar = {};
 
             var updateTask = function (task) {
                 taskMap[task.id] = task;
-                if (externalUpdateTask) {
-                    externalUpdateTask(task);
-                }
                 if (!task.pending) {
                     unregisterSearch(task.id);
                 }
                 updateProgress();
+                if (callback) {
+                    callback(task);
+                }
             },
             unregisterSearch = function (taskId) {
                 if (taskSearches[taskId]) {

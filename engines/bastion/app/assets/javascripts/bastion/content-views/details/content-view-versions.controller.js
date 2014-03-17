@@ -41,7 +41,9 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
                                     return history.task.id;
                                 });
                 if (taskIds.length > 0) {
-                    version.task = AggregateTask.new(taskIds);
+                    version.task = AggregateTask.new(taskIds, function (task) {
+                        version.task = task;
+                    });
                 }
             });
         }
