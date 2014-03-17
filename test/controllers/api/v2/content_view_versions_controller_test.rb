@@ -45,6 +45,7 @@ module Katello
     end
 
     def test_index
+      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
       get :index, :content_view_id => @content_view.id
       assert_response :success
       assert_template 'api/v2/content_view_versions/index'
@@ -63,6 +64,7 @@ module Katello
     end
 
     def test_show
+      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
       get :show, :id => @content_view.versions.first.id
       assert_response :success
       assert_template 'api/v2/content_view_versions/show'

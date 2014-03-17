@@ -70,6 +70,10 @@ class ContentViewVersion < Katello::Model
     self.content_view_puppet_environments.in_environment(env).first
   end
 
+  def puppet_modules
+    self.content_view_puppet_environments.first.puppet_modules
+  end
+
   def archived_repos
     self.repos(nil)
   end
