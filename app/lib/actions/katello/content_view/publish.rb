@@ -17,9 +17,6 @@ module Actions
 
         def plan(content_view)
           action_subject(content_view)
-          unless content_view.ready_to_publish?
-            fail _("Cannot publish view. Check for repository conflicts.")
-          end
           version = content_view.create_new_version
           library = content_view.organization.library
 
