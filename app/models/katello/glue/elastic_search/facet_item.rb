@@ -1,6 +1,5 @@
-# encoding: utf-8
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,27 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Support
-  module SearchService
+module Katello
+class Glue::ElasticSearch::FacetItem
 
-    class FakeSearchService
+  attr_accessor :term, :count
 
-      def model=(klass)
-      end
-
-      def retrieve(*args)
-        return [], 0
-      end
-
-      def facets
-        {}
-      end
-
-      def total_items
-        0
-      end
-
-    end
-
+  def initialize(params = {})
+    params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
   end
+
+end
 end

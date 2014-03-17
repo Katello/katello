@@ -1,5 +1,8 @@
 <section>
-
+  <div class="loading-mask loading-mask-panel" ng-show="detailsTable.working">
+    <i class="icon-spinner icon-spin"></i>
+    {{ "Loading..." | translate }}
+  </div>
   <div data-block="messages" alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
   <h4>
@@ -26,7 +29,7 @@
       <span data-block="result-count" translate>Showing {{ detailsTable.rows.length }} of {{ detailsTable.resource.subtotal }} ({{ detailsTable.resource.total }} Total)</span>
     </div>
 
-    <div class="col-sm-6">
+    <div class="col-sm-5 fr">
       <div class="fr">
         <span class="nutupane-info fl" data-block="selection-summary">
           <span translate>{{ detailsTable.numSelected }} Selected</span>
