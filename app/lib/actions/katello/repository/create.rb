@@ -24,11 +24,13 @@ module Actions
 
           org = repository.organization
           if repository.puppet?
-            path = File.join(::Katello.config.puppet_repo_root,
-                             ::Katello::KTEnvironment.construct_name(repository.environment.organization,
-                                                                     repository.environment,
-                                                                     repository.content_view),
-                             'modules')
+            environment_name = ::Environment.construct_name(
+              repository.environment.organization,
+              repository.environment,
+              repository.content_view
+            )
+
+            path = File.join(::Katello.config.puppet_repo_root, environment_name, 'modules')
           else
             path = repository.relative_path
           end

@@ -105,7 +105,7 @@ module Actions
         end
 
         def puppet_install_distributor
-          Runcible::Models::PuppetInstallDistributor.new(repo_path,
+          Runcible::Models::PuppetInstallDistributor.new(input[:path],
                                                          id: input[:pulp_id],
                                                          auto_publish: true)
         end

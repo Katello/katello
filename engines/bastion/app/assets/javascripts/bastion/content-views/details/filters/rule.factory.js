@@ -24,7 +24,7 @@ angular.module('Bastion.content-views').factory('Rule',
     ['$resource', function ($resource) {
 
         return $resource('/api/v2/content_view_filters/:filterId/rules/:ruleId',
-            {ruleId: '@id', filterId: '@filter_id'},
+            {ruleId: '@id', filterId: '@content_view_filter_id'},
             {
                 query: {method: 'GET', isArray: false},
                 update: {method: 'PUT'},
