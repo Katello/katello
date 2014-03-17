@@ -60,15 +60,15 @@ class ContentViewErratumFilterRuleTest < ActiveSupport::TestCase
 
   def test_with_duplicate_errata_id
     @rule.save!
-    attrs = FactoryGirl.attributes_for(:katello_content_view_erratum_filter_rule,
-                                       :errata_id => @rule.errata_id)
+
+    rule2 = FactoryGirl.build(:katello_content_view_erratum_filter_rule)
+    rule2.errata_id = @rule.errata_id
+    rule2.filter = @rule.filter
 
     assert_raises(ActiveRecord::RecordInvalid) do
-      ContentViewErratumFilterRule.create!(attrs)
+      rule2.save!
     end
-    rule_item = ContentViewErratumFilterRule.create(attrs)
-    refute rule_item.persisted?
-    refute rule_item.save
+    refute rule2.save
   end
 
   def test_start_date
