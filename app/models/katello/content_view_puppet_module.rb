@@ -24,12 +24,27 @@ module Katello
 
     validates_with Validators::ContentViewPuppetModuleValidator
 
+    def puppet_module
+      PuppetModule.find(self.uuid)
+    end
+
+    def computed_version
+      computed_version = nil
+      if Katello.config.use_elasticsearch
+        names_and_authors = [{:name => self.name, :author => self.author}]
+        search = PuppetModule.latest_modules_search(names_and_authors,
+                                           self.content_view.organization.library.repositories.puppet_type.map(&:pulp_id))
+        computed_version = search[0].version
+      end
+      computed_version
+    end
+
     before_save :set_attributes
 
     private
 
     def set_attributes
-      if self.uuid && Katello.config.use_pulp
+      if self.uuid.present? && Katello.config.use_pulp
         puppet_module = PuppetModule.find(self.uuid)
         fail Errors::NotFound, _("Couldn't find Puppet Module with id=%s") % self.uuid unless puppet_module
 

@@ -14,13 +14,14 @@
 describe('Controller: ContentViewAvailableRepositoriesController', function() {
     var $scope;
 
-    beforeEach(module('Bastion.content-views', 'Bastion.test-mocks', 'gettext'))
+    beforeEach(module('Bastion.content-views', 'Bastion.test-mocks', 'gettext'));
 
     beforeEach(inject(function($injector) {
         var Nutupane,
             $controller = $injector.get('$controller'),
             ContentViewRepositoriesUtil = $injector.get('ContentViewRepositoriesUtil'),
-            Repository = $injector.get('MockResource').$new();
+            Repository = $injector.get('MockResource').$new(),
+            ContentView = $injector.get('MockResource').$new();
 
         Nutupane = function () {
             this.getAllSelectedResults = function () {

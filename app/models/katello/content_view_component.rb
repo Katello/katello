@@ -19,13 +19,17 @@ module Katello
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",
       :inverse_of => :content_view_components
 
-    validate :content_view_composite
+    validates :content_view_version_id, :uniqueness => {:scope => :content_view_id}
+    validate :content_view_types
 
     private
 
-    def content_view_composite
+    def content_view_types
       if !content_view.composite?
         errors.add(:base, _("Cannot add component versions to a non-composite content view"))
+      end
+      if content_view_version.content_view.composite?
+        errors.add(:base, _("Cannot add composite versions to a composite content view"))
       end
     end
   end

@@ -38,7 +38,6 @@ class ContentView < Katello::Model
     :source => :content_view_version do
     def <<(*args)
       # this doesn't go through validation and generate a nice error message
-      # for the API/UI to use
       fail "Adding components without doing validation is not supported"
     end
   end
@@ -63,6 +62,7 @@ class ContentView < Katello::Model
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
   validates :organization_id, :presence => true
   validate :check_repo_conflicts
+  validate :check_puppet_conflicts
 
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
@@ -162,6 +162,11 @@ class ContentView < Katello::Model
     ContentViewPuppetEnvironment.where(:id => ids).first
   end
 
+  def  puppet_repos
+    # These are the repos that may contain puppet modules that can be associated with the content view
+    self.organization.library.repositories.puppet_type
+  end
+
   def library_repos
     Repository.where(:id => library_repo_ids)
   end
@@ -186,6 +191,14 @@ class ContentView < Katello::Model
 
   def repositories_to_publish_ids
     composite? ? repositories_to_publish.pluck(&:id) : repository_ids
+  end
+
+  def puppet_modules_to_publish
+    if composite?
+      components.flat_map { |version| version.puppet_modules }
+    else
+      content_view_puppet_modules
+    end
   end
 
   def repos_in_product(env, product)
@@ -252,6 +265,7 @@ class ContentView < Katello::Model
   end
 
   def publish(options = { })
+    fail "Cannot publish content view without a logged in user." if User.current.nil?
     options = { :async => true, :notify => false }.merge(options)
 
     version = create_new_version
@@ -407,10 +421,6 @@ class ContentView < Katello::Model
     version.trigger_contents_changed(:cloned_repo_overrides => clone_overrides, :wait => true)
   end
 
-  def ready_to_publish?
-    !has_puppet_repo_conflicts? && !has_repo_conflicts?
-  end
-
   def duplicate_repositories
     counts = repositories_to_publish.each_with_object(Hash.new(0)) do |repo, h|
       h[repo.library_instance_id] += 1
@@ -419,11 +429,11 @@ class ContentView < Katello::Model
     Repository.where(:id => ids)
   end
 
-  def has_repo_conflicts?
-    # Check to see if there is a repo conflict in the component views. A
-    # conflict exists if the same repo exists in more than one of those
-    # component views.
-    self.composite? && duplicate_repositories.any?
+  def duplicate_puppet_modules
+    counts = puppet_modules_to_publish.each_with_object(Hash.new(0)) do |puppet_module, h|
+      h[puppet_module.name] += 1
+    end
+    counts.select { |k, v| v > 1 }.keys
   end
 
   def check_repo_conflicts
@@ -434,22 +444,12 @@ class ContentView < Katello::Model
     end
   end
 
-  def has_puppet_repo_conflicts?
-    # Check to see if there is a puppet conflict in the component views. A
-    # conflict exists if more than one view has a puppet repo
-    if self.composite?
-      #repos = content_view_components.map { |view| view.repos(organization.library) }.flatten
-      #return repos.select(&:puppet?).length > 1
-    end
-    false
-  end
-
-  def views_repos
-    # For composite content views
-    # Retrieve a hash where, key=view.id and value=Set(view's repo library instance ids)
-    self.component_content_views.inject({}) do |view_repos, view|
-      view_repos.update view.id => view.repos(self.organization.library).
-          inject(Set.new) { |ids, repo| ids << repo.library_instance_id }
+  def check_puppet_conflicts
+    duplicate_puppet_modules.each do |name|
+      versions = components.select { |v| v.puppet_modules.map(&:name).include?(name) }
+      names = versions.map(&:name).join(", ")
+      msg = _("Puppet module conflict: '%{mod}' is in %{versions}.") % {mod: name, versions: names}
+      errors.add(:base, msg)
     end
   end
 

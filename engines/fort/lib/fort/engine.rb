@@ -28,7 +28,7 @@ module Fort
     initializer "fort.register_actions", :before => 'foreman_tasks.initialize_dynflow' do |app|
       app_lib_dir = "#{config.root}/app/lib"
       app.config.autoload_paths += [app_lib_dir]
-      actions_path = "#{app_lib_dir}/fort/actions"
+      actions_path = "#{app_lib_dir}/actions"
       ForemanTasks.dynflow.config.eager_load_paths << actions_path
     end
 

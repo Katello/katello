@@ -142,16 +142,23 @@ module Katello
       end
     end
 
-    def test_update_repositories
+    def test_update_puppet_repositories
       repository = katello_repositories(:p_forge)
       refute_includes @content_view.repositories(true).map(&:id), repository.id
-      put :update, :id => @content_view, :repository_ids => [repository.id]
+      put :update, :id => @content_view.id, :repository_ids => [repository.id]
+      assert_response 422 # cannot add puppet repos to cv
+    end
 
+    def test_update_repositories
+      repository = katello_repositories(:fedora_17_unpublished)
+      refute_includes @content_view.repositories(true).map(&:id), repository.id
+      put :update, :id => @content_view.id, :repository_ids => [repository.id]
       assert_response :success
       assert_includes @content_view.repositories(true).map(&:id), repository.id
     end
 
     def test_update_components
+      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
       version = @content_view.versions.first
       composite = ContentView.find(katello_content_views(:composite_view))
       refute_includes composite.components(true).map(&:id), version.id
@@ -184,7 +191,7 @@ module Katello
       get :available_puppet_modules, :id => @content_view.id
 
       assert_response :success
-      assert_template 'katello/api/v2/content_views/../puppet_modules/index'
+      assert_template 'katello/api/v2/content_views/puppet_modules'
     end
 
     def test_available_puppet_modules_protected
@@ -193,6 +200,24 @@ module Katello
 
       assert_protected_action(:available_puppet_modules, allowed_perms, denied_perms) do
         get :available_puppet_modules, :id => @content_view.id
+      end
+    end
+
+    def test_available_puppet_module_names
+      Support::SearchService::FakeSearchService.any_instance.stubs(:facets).returns({'facet_search' => {'terms' => []}})
+
+      get :available_puppet_module_names, :id => @content_view.id
+
+      assert_response :success
+      assert_template 'katello/api/v2/content_views/../puppet_modules/names'
+    end
+
+    def test_available_puppet_module_names_protected
+      allowed_perms = [@read_permission]
+      denied_perms = [@no_permission]
+
+      assert_protected_action(:available_puppet_module_names, allowed_perms, denied_perms) do
+        get :available_puppet_module_names, :id => @content_view.id
       end
     end
 

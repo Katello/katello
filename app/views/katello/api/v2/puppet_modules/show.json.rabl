@@ -12,3 +12,8 @@ attributes :source
 attributes :dependencies
 attributes :checksums
 attributes :tag_list
+attributes :repoids
+
+child :repositories => :repositories do |repository|
+  extends 'katello/api/v2/repositories/show'
+end

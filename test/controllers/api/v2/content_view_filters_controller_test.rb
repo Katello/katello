@@ -106,8 +106,7 @@ module Katello
 
     def test_update_repositories
       repository = Repository.find(katello_repositories(:fedora_17_x86_64).id)
-      @content_view.repositories << repository
-      @content_view.save
+      assert_includes @content_view.repositories.map(&:id), repository.id
       refute_includes @filter.repositories(true).map(&:id), repository.id
 
       put :update, :content_view_id => @filter.content_view_id, :id => @filter,

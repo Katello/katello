@@ -36,7 +36,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   end
 
   api :GET, "/content_views/:content_view_id/filters", "List filters"
-  api :GET, "/filters", "List filters"
+  api :GET, "/content_view_filters", "List filters"
   param :content_view_id, :identifier, :desc => "content view identifier", :required => true
   def index
     options = sort_params
@@ -48,7 +48,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   end
 
   api :POST, "/content_views/:content_view_id/filters", "Create a filter for a content view"
-  api :POST, "/filters", "Create a filter for a content view"
+  api :POST, "/content_view_filters", "Create a filter for a content view"
   param :content_view_id, :identifier, :desc => "content view identifier", :required => true
   param :name, String, :desc => "name of the filter", :required => true
   param :type, String, :desc => "type of filter (e.g. rpm, package_group, erratum)", :required => true
@@ -60,7 +60,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   end
 
   api :GET, "/content_views/:content_view_id/filters/:id", "Show filter info"
-  api :GET, "/filters/:id", "Show filter info"
+  api :GET, "/content_view_filters/:id", "Show filter info"
   param :content_view_id, :identifier, :desc => "content view identifier"
   param :id, :identifier, :desc => "filter identifier", :required => true
   def show
@@ -68,7 +68,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   end
 
   api :PUT, "/content_views/:content_view_id/filters/:id", "Update a filter"
-  api :PUT, "/filters/:id", "Update a filter"
+  api :PUT, "/content_view_filters/:id", "Update a filter"
   param :content_view_id, :identifier, :desc => "content view identifier"
   param :id, :identifier, :desc => "filter identifier", :required => true
   param :name, String, :desc => "new name for the filter"
@@ -80,7 +80,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   end
 
   api :DELETE, "/content_views/:content_view_id/filters/:id", "Delete a filter"
-  api :DELETE, "/filters/:id", "Delete a filter"
+  api :DELETE, "/content_view_filters/:id", "Delete a filter"
   param :content_view_id, :identifier, :desc => "content view identifier"
   param :id, :identifier, :desc => "filter identifier", :required => true
   def destroy
@@ -90,7 +90,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
 
   api :GET, "/content_views/:content_view_id/filters/:id/available_errata",
       "Get errata that are available to be added to the filter"
-  api :GET, "/filters/:id/available_errata",
+  api :GET, "/content_view_filters/:id/available_errata",
       "Get errata that are available to be added to the filter"
   param :content_view_id, :identifier, :desc => "content view identifier"
   param :id, :identifier, :desc => "filter identifier", :required => true
@@ -112,7 +112,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
 
   api :GET, "/content_views/:content_view_id/filters/:id/available_package_groups",
       "Get package groups that are available to be added to the filter"
-  api :GET, "/filters/:id/available_package_groups",
+  api :GET, "/content_view_filters/:id/available_package_groups",
       "Get package groups that are available to be added to the filter"
   param :content_view_id, :identifier, :desc => "content view identifier"
   param :id, :identifier, :desc => "filter identifier", :required => true
