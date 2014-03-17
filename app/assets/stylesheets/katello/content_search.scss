@@ -243,6 +243,10 @@ table.changelog {
 
   .icon-chevron-down, .icon-chevron-right {
     padding: 0 4px;
+    float: left;
+    padding-top: 2px;
+    vertical-align: top;
+    font-size: 10px;
   }
 
   #grid_loading_screen {
@@ -419,6 +423,7 @@ table.changelog {
         height: $comparison_grid_row-height;
         vertical-align: bottom;
         font-weight: bold;
+        width: 100%;
 
         &[data-collapsed] span {
           width: 80%;
@@ -431,7 +436,7 @@ table.changelog {
         padding: 6px 3px;
       }
       .row_height_3 {
-        height: 48px;
+        height: 64px;
       }
 
       .grid_row_level_0 {
@@ -524,7 +529,7 @@ table.changelog {
           .grid_cell_data, i { margin-top: 14px; }
         }
         .row_height_3 {
-          height: 48px !important;
+          height: 64px !important;
 
           .grid_cell_data, i { margin-top: 24px; }
         }
@@ -533,6 +538,7 @@ table.changelog {
           background-color: $widget-background-color;
           height: $comparison_grid_row-height - 6;
           padding: 6px 0 0 10px;
+          height: 32px;
 
           span { margin-left: 10px; }
           a { margin-left: 5px; }
@@ -581,7 +587,7 @@ table.changelog {
             line-height: 24px !important;
           }
           &.row_height_3 {
-            height: 48px !important;
+            height: 64px !important;
             line-height: 32px !important;
           }
 
