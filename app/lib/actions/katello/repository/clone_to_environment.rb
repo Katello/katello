@@ -26,7 +26,7 @@ module Actions
             else
               plan_action(Repository::Clear, clone)
             end
-            plan_action(Repository::CloneContent, repository, clone, [])
+            plan_action(Repository::CloneContent, repository, clone, [], false)
             concurrence do
               plan_action(Katello::Repository::NodeMetadataGenerate, clone)
               plan_action(Pulp::Repository::RegenerateApplicability, pulp_id: clone.pulp_id)
@@ -38,8 +38,8 @@ module Actions
         # visible for the systems in the environment
         def find_or_build_environment_clone(repository, environment)
           version = repository.content_view_version
-          library = repository.organization.library
-          clone = version.content_view.get_repo_clone(library, repository).first
+
+          clone = version.content_view.get_repo_clone(environment, repository).first
           if clone
             clone = ::Katello::Repository.find(clone.id) # reload readonly object
             clone.update_attributes!(content_view_version_id: version.id)

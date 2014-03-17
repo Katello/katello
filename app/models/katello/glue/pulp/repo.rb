@@ -806,6 +806,26 @@ module Glue::Pulp::Repo
       Katello.pulp_server.extensions.repository.unit_search(self.pulp_id, options)
     end
 
+    # A helper method used by purge_empty_groups_errata
+    # to obtain a list of package filenames and names
+    # so that it could mix/match empty package groups
+    # and errata and purge them.
+    def package_lists_for_publish
+      names = []
+      filenames = []
+
+      rpms = Katello.pulp_server.extensions.repository.unit_search(self.pulp_id,
+                                                                   :type_ids => ['rpm'],
+                                                                   :fields => {:unit => %w(filename name)})
+
+      rpms.each do |rpm|
+        filenames << rpm["metadata"]["filename"]
+        names << rpm["metadata"]["name"]
+      end
+      {:names => names.to_set,
+       :filenames => filenames.to_set}
+    end
+
     protected
 
     def _get_most_recent_sync_status
@@ -825,26 +845,6 @@ module Glue::Pulp::Repo
         history = sort_sync_status(history)
         return PulpSyncStatus.pulp_task(history.first.with_indifferent_access)
       end
-    end
-
-    # A helper method used by purge_empty_groups_errata
-    # to obtain a list of package filenames and names
-    # so that it could mix/match empty package groups
-    # and errata and purge them.
-    def package_lists_for_publish
-      names = []
-      filenames = []
-
-      rpms = Katello.pulp_server.extensions.repository.unit_search(self.pulp_id,
-                                                                   :type_ids => ['rpm'],
-                                                                   :fields => {:unit => %w(filename name)})
-
-      rpms.each do |rpm|
-        filenames << rpm["metadata"]["filename"]
-        names << rpm["metadata"]["name"]
-      end
-      {:names => names.to_set,
-       :filenames => filenames.to_set}
     end
 
   end

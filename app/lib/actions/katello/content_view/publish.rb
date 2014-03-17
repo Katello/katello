@@ -23,20 +23,25 @@ module Actions
           version = content_view.create_new_version
           library = content_view.organization.library
 
+          history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
+                                               :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task)
+
           sequence do
             concurrence do
-              content_view.repositories.non_puppet.each do |repository|
+              content_view.repositories_to_publish.non_puppet.each do |repository|
                 sequence do
                   clone_to_version = plan_action(Repository::CloneToVersion, repository, version)
                   plan_action(Repository::CloneToEnvironment, clone_to_version.new_repository, library)
                 end
               end
+
               repos_to_delete(content_view).each do |repo|
                 plan_action(Repository::Destroy, repo)
               end
             end
 
             plan_action(ContentView::UpdateEnvironment, content_view, library)
+            plan_self(history_id: history.id)
           end
         end
 
@@ -44,11 +49,22 @@ module Actions
           _("Publish")
         end
 
+        def finalize
+          history = ::Katello::ContentViewHistory.find(input[:history_id])
+          history.status = ::Katello::ContentViewHistory::SUCCESSFUL
+          history.save!
+        end
+
         private
 
         def repos_to_delete(content_view)
+          if content_view.composite?
+            library_instances = content_view.repositories_to_publish.map(&:library_instance_id)
+          else
+            library_instances = content_view.repositories_to_publish.map(&:id)
+          end
           content_view.repos(content_view.organization.library).find_all do |repo|
-            !content_view.repository_ids.include?(repo.library_instance_id)
+            !library_instances.include?(repo.library_instance_id)
           end
         end
 

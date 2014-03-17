@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: ContentViewVersionsController', function() {
-    var $scope, versions;
+    var $scope, versions, AggregateTask;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'));
 
@@ -21,6 +21,8 @@ describe('Controller: ContentViewVersionsController', function() {
             $controller = $injector.get('$controller'),
             ContentViewVersion = $injector.get('MockResource').$new();
 
+        AggregateTask = {newAggregate: function(){}};
+
         $scope = $injector.get('$rootScope').$new();
 
         $scope.contentView = ContentView.get({id: 1});
@@ -28,7 +30,8 @@ describe('Controller: ContentViewVersionsController', function() {
         $controller('ContentViewVersionsController', {
             $scope: $scope,
             gettext: gettext,
-            ContentViewVersion: ContentViewVersion
+            ContentViewVersion: ContentViewVersion,
+            AggregateTask: AggregateTask
         });
     }));
 

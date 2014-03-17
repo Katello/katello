@@ -268,6 +268,7 @@ describe KTEnvironment do
           repo = stub
           repo.stubs(:content_id).returns(id)
           repo.stubs(:enabled).returns(true)
+          repo.stubs(:yum?).returns(true)
           repo
         end
 

@@ -25,7 +25,13 @@
         <td alch-table-cell translate>Version {{ version.version }}</td>
         <td alch-table-cell >
           <a ui-sref="content-views.details.history">
-            {{ status(version) }}
+
+            <div ng-hide="version.active_history.length === 0"
+                 ng-class="{ active: (version.task.state === 'pending' || version.task.state === 'running') }"
+                 class="progress progress-striped">
+              <span progressbar value="version.task.progressbar.value" ></span> <!-- type="{{version.task.progressbar.type}}" -->
+            </div>
+              {{ status(version) }}
           </a>
         </td>
         <td alch-table-cell>

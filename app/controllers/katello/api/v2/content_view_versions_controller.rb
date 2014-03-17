@@ -48,7 +48,8 @@ module Katello
     param :id, :identifier, :desc => "Content view version identifier", :required => true
     param :environment_id, :identifier
     def promote
-      respond_for_async :resource => @version.promote(@environment)
+      task = async_task(::Actions::Katello::ContentView::Promote, @version, @environment)
+      respond_for_async :resource => task
     end
 
     private
