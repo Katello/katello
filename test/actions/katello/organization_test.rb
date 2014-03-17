@@ -33,8 +33,7 @@ module ::Actions::Katello::Organization
 
     it 'plans' do
       provider = mock()
-      provider.expects(:save!).returns([])
-      organization.expects(:providers).returns([provider])
+      organization.expects(:providers).returns([provider]).times(2)
       organization.expects(:save!)
       organization.expects(:disable_auto_reindex!).returns
       action.stubs(:action_subject).with(organization, any_parameters)

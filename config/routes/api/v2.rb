@@ -105,7 +105,6 @@ Katello::Engine.routes.draw do
           get :download_debug_certificate
         end
         api_resources :products, :only => [:index]
-        api_resources :providers, :only => [:index]
         api_resources :subscriptions, :only => [:index] do
           collection do
             match '/available' => 'subscriptions#available', :via => :get
@@ -133,18 +132,6 @@ Katello::Engine.routes.draw do
           end
         end
       end
-
-      api_resources :providers, :only => [:index, :create, :show, :destroy, :update] do
-        member do
-          post :delete_manifest
-          post :import_manifest
-          post :product_create
-          get :products
-          put :refresh_manifest
-          put :refresh_products
-        end
-      end
-
       api_resources :puppet_modules, :only => [:index, :show]
 
       api_resources :repository_sets, :only => [:index, :show] do
@@ -204,7 +191,6 @@ Katello::Engine.routes.draw do
           end
         end
         api_resources :tasks, :only => [:index, :show]
-        api_resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
         scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
@@ -281,12 +267,6 @@ Katello::Engine.routes.draw do
         end
       end
       match "/distributor_versions" => "distributors#versions", :via => :get, :as => :distributor_versions
-
-      api_resources :providers do
-        api_resources :sync, :only => [:index, :create] do
-          delete :index, :on => :collection, :action => :cancel
-        end
-      end
 
       api_resources :repositories, :only => [:index, :create, :show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
         collection do

@@ -12,9 +12,7 @@
 
 module Katello
   class Api::V2::ProductsController < Api::V2::ApiController
-
-    before_filter :find_or_create_provider, :only => [:create]
-    before_filter :find_organization, :only => [:index]
+    before_filter :find_organization, :only => [:index, :create]
     before_filter :find_product, :only => [:update, :destroy, :show]
     before_filter :authorize
 
@@ -32,7 +30,7 @@ module Katello
 
     def rules
       index_test = lambda { Product.any_readable?(@organization) }
-      create_test = lambda { @provider.nil? ? true : Product.creatable?(@provider) }
+      create_test = lambda { Product.creatable?(@organization.anonymous_provider) }
       read_test  = lambda { @product.readable? }
       edit_test  = lambda { @product.editable? || @product.syncable? }
       delete_test = lambda { @product.deletable?}
@@ -72,9 +70,9 @@ module Katello
     param_group :product
     def create
       params[:product][:label] = labelize_params(product_params) if product_params
-      params[:product][:provider_id] ||= @provider.id
-      product = Product.create!(product_params)
+      product = Product.new(product_params)
 
+      sync_task(::Actions::Katello::Product::Create, product, @organization)
       respond(:resource => product)
     end
 
@@ -107,11 +105,6 @@ module Katello
 
     protected
 
-    def find_or_create_provider
-      @provider = Provider.find(product_params[:provider_id]) if product_params[:provider_id]
-      @provider ||= Provider.create_anonymous!(find_organization)
-    end
-
     def find_product
       @product = Product.find_by_id(params[:id]) if params[:id]
     end
@@ -126,7 +119,7 @@ module Katello
     end
 
     def product_params
-      params.require(:product).permit(:name, :label, :description, :provider_id, :gpg_key_id, :sync_plan_id)
+      params.require(:product).permit(:name, :label, :description, :gpg_key_id, :sync_plan_id)
     end
 
   end

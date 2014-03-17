@@ -4,6 +4,12 @@ fedora_hosted:
   provider_type: 'Custom'
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
+anonymous:
+  name:         Anonymous
+  description:  Project and repository hosting.
+  provider_type: 'Anonymous'
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+
 redhat:
   name: Red Hat Provider
   description: Provider of all your red hat needs
