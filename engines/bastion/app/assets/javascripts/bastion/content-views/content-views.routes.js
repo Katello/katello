@@ -225,5 +225,21 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         url: '/filters/:filterId/errata/date_type',
         controller: 'DateTypeErrataFilterController',
         templateUrl: 'content-views/details/filters/views/date-type-errata-filter.html'
+    })
+    .state('content-views.details.tasks', {
+        abstract: true,
+        collapsed: true,
+        template: '<div ui-view></div>'
+    })
+    .state('content-views.details.tasks.index', {
+        url: '/tasks',
+        collapsed: true,
+        templateUrl: 'content-views/details/views/content-view-details-tasks.html'
+    })
+    .state('content-views.details.tasks.details', {
+        url: '/tasks/:taskId',
+        collapsed: true,
+        controller: 'TaskDetailsController',
+        templateUrl: 'tasks/views/task-details.html'
     });
 }]);

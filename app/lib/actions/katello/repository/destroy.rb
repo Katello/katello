@@ -17,6 +17,8 @@ module Actions
 
         def plan(repository)
           action_subject(repository)
+          plan_action(Pulp::Repository::Destroy, pulp_id: repository.pulp_id)
+          plan_action(Product::ContentDestroy, repository)
           repository.destroy
         end
 

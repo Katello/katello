@@ -14,6 +14,7 @@ require 'katello_test_helper'
 
 class Actions::Katello::Foreman::ContentUpdateTest < ActiveSupport::TestCase
   include Dynflow::Testing
+  include Support::Actions::RemoteAction
 
   let(:action_class) { ::Actions::Katello::Foreman::ContentUpdate }
   let(:action) { create_action action_class }
@@ -26,11 +27,16 @@ class Actions::Katello::Foreman::ContentUpdateTest < ActiveSupport::TestCase
     katello_content_views(:library_view)
   end
 
+  before do
+    stub_remote_user
+  end
+
   it 'plans' do
     plan_action(action, environment, content_view)
     assert_finalize_phase(action)
     action.input.must_equal("environment_id" => environment.id,
-                            "content_view_id" => content_view.id)
+                            "content_view_id" => content_view.id,
+                            "remote_user" => "user")
   end
 
   it 'updates the foreman content' do

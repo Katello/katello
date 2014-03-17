@@ -21,13 +21,15 @@ describe('Controller: ContentViewPublishController', function() {
             ContentView = $injector.get('MockResource').$new(),
             gettext = $injector.get('gettextMock');
 
-        ContentView.publish = function(options, callback) {  callback({version: 3, 'content_view': {id: 1}}) };
+        ContentView.publish = function(options, callback) {  callback({id: 3}) };
         $scope = $injector.get('$rootScope').$new();
+        $scope.reloadVersions = function () {};
 
         $scope.contentView = ContentView.get({id: 1});
         $scope.contentView.versions = [];
-        
+
         spyOn($scope, 'transitionTo');
+        spyOn($scope, 'reloadVersions');
 
         $controller('ContentViewPublishController', {
             $scope: $scope,

@@ -22,6 +22,9 @@ describe('Controller: ContentViewDetailsController', function() {
             gettext = $injector.get('gettextMock');
 
         ContentView = $injector.get('MockResource').$new();
+        ContentViewVersion = $injector.get('MockResource').$new();
+        AggregateTask = {newAggregate: function(){}};
+
         $scope = $injector.get('$rootScope').$new();
 
         $scope.$stateParams = {contentViewId: 1};
@@ -29,12 +32,18 @@ describe('Controller: ContentViewDetailsController', function() {
         $controller('ContentViewDetailsController', {
             $scope: $scope,
             ContentView: ContentView,
+            ContentViewVersion: ContentViewVersion,
+            AggregateTask: AggregateTask,
             gettext: gettext
         });
     }));
 
     it("retrieves and puts the content view on the scope", function() {
         expect($scope.contentView).toBeDefined();
+    });
+
+    it("defines a method for deloading the versions", function() {
+        expect($scope.reloadVersions).toBeDefined();
     });
 
     it('provides a method to save a product', function() {

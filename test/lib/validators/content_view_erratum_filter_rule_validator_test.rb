@@ -24,6 +24,7 @@ module Katello
     end
 
     def setup
+      User.current = User.first
       @validator = Validators::ContentViewErratumFilterRuleValidator.new({})
       @filter = FactoryGirl.create(:katello_content_view_erratum_filter)
     end

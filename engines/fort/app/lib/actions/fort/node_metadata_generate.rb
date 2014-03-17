@@ -18,6 +18,10 @@ module Actions
         Actions::Katello::Repository::NodeMetadataGenerate
       end
 
+      def plan(*args)
+        plan_self(trigger.input.merge(trigger_output: trigger.output))
+      end
+
       def run
         repo = ::Katello::Repository.find(input['id'])
         if repo.environment

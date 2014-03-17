@@ -83,6 +83,12 @@
           Details
         </a>
       </li>
+      <li ng-class="{active: stateIncludes('content-views.details.tasks')}">
+        <a translate
+           ui-sref="content-views.details.tasks.index({contentViewId: contentView.id})">
+          Tasks
+        </a>
+      </li>
     </ul>
   </nav>
 

@@ -32,6 +32,14 @@ class GluePulpRepoTestBase < ActiveSupport::TestCase
     @@fedora_17_x86_64.feed = "file:///var/www/test_repos/zoo"
   end
 
+  def self.delete_repo(repo)
+    ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :pulp_id => repo.pulp_id)
+  end
+
+  def delete_repo(repo)
+    GluePulpRepoTestBase.delete_repo(repo)
+  end
+
 end
 
 
@@ -49,12 +57,7 @@ class GluePulpRepoTestCreateDestroy < GluePulpRepoTestBase
 
   def test_create_pulp_repo
     assert @fedora_17_x86_64.create_pulp_repo
-    @fedora_17_x86_64.destroy_repo
-  end
-
-  def test_destroy_repo
-    @fedora_17_x86_64.create_pulp_repo
-    assert @fedora_17_x86_64.destroy_repo
+    delete_repo(@fedora_17_x86_64)
   end
 
 end
@@ -68,7 +71,7 @@ class GluePulpRepoTest < GluePulpRepoTestBase
   end
 
   def self.after_suite
-    @@fedora_17_x86_64.destroy_repo
+    delete_repo(@@fedora_17_x86_64)
     VCR.eject_cassette
   end
 
@@ -134,7 +137,7 @@ class GluePulpRepoAfterSyncTest < GluePulpRepoTestBase
   end
 
   def self.after_suite
-    @@fedora_17_x86_64.destroy_repo
+    delete_repo(@@fedora_17_x86_64)
     VCR.eject_cassette
   end
 
@@ -168,7 +171,7 @@ class GluePulpChangeFeedTest < GluePulpRepoTestBase
   end
 
   def self.after_suite
-    @@fedora_17_x86_64.destroy_repo
+    delete_repo(@@fedora_17_x86_64)
     VCR.eject_cassette
   end
 
@@ -195,7 +198,7 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
   end
 
   def self.after_suite
-    @@p_forge.destroy_repo
+    delete_repo(@@p_forge)
     VCR.eject_cassette
   end
 
@@ -234,7 +237,7 @@ class GluePulpRepoContentsTest < GluePulpRepoTestBase
   end
 
   def self.after_suite
-    @@fedora_17_x86_64.destroy_repo
+    delete_repo(@@fedora_17_x86_64)
     VCR.eject_cassette
   end
 
@@ -349,7 +352,7 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
   end
 
   def self.after_suite
-    @@fedora_17_x86_64.destroy_repo
+    delete_repo(@@fedora_17_x86_64)
     VCR.eject_cassette
   end
 
@@ -375,7 +378,7 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
 
     TaskSupport.wait_on_tasks(task_list)
   ensure
-    @@fedora_17_x86_64_dev.destroy_repo
+    delete_repo(@@fedora_17_x86_64_dev)
   end
 
 end

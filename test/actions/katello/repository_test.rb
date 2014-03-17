@@ -17,41 +17,42 @@ module ::Actions::Katello::Repository
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
+    include FactoryGirl::Syntax::Methods
 
     let(:action) { create_action action_class }
+    let(:repository) { katello_repositories(:fedora_17_x86_64) }
   end
 
   class CreateTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Create }
 
     it 'plans' do
-      # TODO remove this mocking when action is broken down
-      cp           = mock 'cp', update_cp_content: nil
-      organization = mock 'organization', default_content_view: cp, library: nil
-      product      = mock 'product', organization: organization
-      repository   = mock 'repository',
-          save!:             true,
-          product:           product,
-          generate_metadata: nil
-
+      repository.expects(:save!)
       action.expects(:action_subject).with(repository)
+      action.execution_plan.stub_planned_action(::Actions::Katello::Product::ContentCreate) do |content_create|
+        content_create.stubs(input: { content_id: 123 })
+      end
       plan_action action, repository
     end
   end
 
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Destroy }
+    let(:pulp_action_class) { ::Actions::Pulp::Repository::Destroy }
 
     it 'plans' do
-      repository   = mock 'repository', destroy: true
+      repository.expects(:destroy)
+      action       = create_action action_class
       action.stubs(:action_subject).with(repository)
       plan_action action, repository
+      assert_action_planed_with action, pulp_action_class, pulp_id: repository.pulp_id
+      assert_action_planed_with action, ::Actions::Katello::Product::ContentDestroy, repository
     end
   end
 
-  class DiscoverTest < TestBase
+  class DyscoverTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Discover }
-    let(:action_planned) { create_and_plan_action action_class, 'http://' }
+    let(:action_planned) { create_and_plan_action action_class, url = 'http://' }
 
     it 'plans' do
       assert_run_phase action_planned
@@ -70,31 +71,25 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::Sync }
     let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
 
-    let :action do
-      create_action(action_class).tap do |action|
-        action.stubs(planned_actions: [pulp_action])
-      end
-    end
-    let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
-
     it 'plans' do
-      repository   = mock 'repository', pulp_id: 'pulp-repo-1', id: 1
       action       = create_action action_class
       action.stubs(:action_subject).with(repository)
       plan_action action, repository
 
-      assert_action_planed_with action, pulp_action_class, pulp_id: 'pulp-repo-1'
-      assert_action_planed_with action, ::Actions::ElasticSearch::Repository::IndexContent, id: 1
+      assert_action_planed_with action, pulp_action_class, pulp_id: repository.pulp_id
+      assert_action_planed_with action, ::Actions::ElasticSearch::Repository::IndexContent, id: repository.id
       assert_action_planed_with action, ::Actions::ElasticSearch::Reindex, repository
     end
 
-    describe '#pulp_task_id' do
-      let(:fixture_variant) { :success }
-
-      specify { action.pulp_task_id.must_equal "f723b378-b535-41a7-8440-8ab7851fda10" }
-    end
-
     describe 'progress' do
+      let :action do
+        create_action(action_class).tap do |action|
+          action.stubs(planned_actions: [pulp_action])
+        end
+      end
+
+      let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
+
       describe 'successfully synchronized' do
         let(:fixture_variant) { :success }
 

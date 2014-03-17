@@ -12,14 +12,14 @@ attributes :gpg_key_id
 attributes :productContent
 
 node :repository_count do |product|
-  if product.repositories.to_a.any?
-    product.repositories.enabled.count
+  if product.library_repositories.to_a.any?
+    product.library_repositories.enabled.count
   else
     0
   end
 end
 
-child :repositories => :repositories do
+child :repositories => :library_repositories do
     extends 'katello/api/v2/repositories/show'
 end
 

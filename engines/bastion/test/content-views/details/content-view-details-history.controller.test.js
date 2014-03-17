@@ -18,7 +18,8 @@ describe('Controller: ContentViewHistoryController', function() {
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
-            ContentView = $injector.get('MockResource').$new();
+            ContentView = $injector.get('MockResource').$new(),
+            gettext = function(text) {return text};
 
         history = [];
         ContentView.history = function(options, callback) {  callback(history) };
@@ -38,7 +39,8 @@ describe('Controller: ContentViewHistoryController', function() {
         $controller('ContentViewHistoryController', {
             $scope: $scope,
             ContentView: ContentView,
-            Nutupane: Nutupane
+            Nutupane: Nutupane,
+            gettext: gettext
         });
     }));
 

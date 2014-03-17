@@ -13,7 +13,7 @@
 module Actions
   module Katello
     module Repository
-      class NodeMetadataGenerate < Dynflow::Action
+      class NodeMetadataGenerate < Actions::Base
 
         def plan(repo)
           plan_self('id' => repo.id)
@@ -21,6 +21,12 @@ module Actions
 
         input_format do
           param :id, Integer
+        end
+
+        def run
+          # We define the run method for the subscribed actions
+          # to be able to run after the action
+          # TODO: remove after fixing in Dynflow
         end
 
       end

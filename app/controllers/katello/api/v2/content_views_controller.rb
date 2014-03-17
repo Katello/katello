@@ -94,9 +94,8 @@ module Katello
     api :POST, "/content_views/:id/publish", "Publish a content view"
     param :id, :identifier, :desc => "Content view identifier", :required => true
     def publish
-      version = @view.publish
-
-      respond_for_show :resource => version, :template => 'version'
+      task = async_task(::Actions::Katello::ContentView::Publish, @view)
+      respond_for_async :resource => task
     end
 
     api :GET, "/content_views/:id", "Show a content view"

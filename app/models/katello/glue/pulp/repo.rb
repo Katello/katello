@@ -22,17 +22,17 @@ module Glue::Pulp::Repo
     base.class_eval do
 
       before_save :save_repo_orchestration
-      before_destroy :destroy_repo_orchestration
 
       lazy_accessor :pulp_repo_facts,
                     :initializer => (lambda do |s|
                                        if pulp_id
-                                         Katello.pulp_server.extensions.repository.retrieve_with_details(pulp_id)
+                                         begin
+                                           Katello.pulp_server.extensions.repository.retrieve_with_details(pulp_id)
+                                         rescue RestClient::ResourceNotFound
+                                           nil # not found = it was not orchestrated yet
+                                         end
                                        end
                                      end)
-
-      lazy_accessor :checksum_type,
-                    :initializer => lambda { |s| self.lookup_checksum_type if pulp_id}
 
       lazy_accessor :importers,
                     :initializer => lambda { |s| pulp_repo_facts["importers"] if pulp_id }
@@ -68,8 +68,6 @@ module Glue::Pulp::Repo
   module InstanceMethods
     def save_repo_orchestration
       case orchestration_for
-      when :create
-        pre_queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :create_pulp_repo])
       when :update
         if self.pulp_update_needed?
           pre_queue.create(:name => "update pulp repo: #{self.name}", :priority => 2,
@@ -117,8 +115,8 @@ module Glue::Pulp::Repo
       pulp_repo_facts.merge(as_json).merge(:sync_state => sync_state)
     end
 
-    def lookup_checksum_type
-      find_distributor['config']['checksum_type'] if self.respond_to?(:yum?) && self.yum? && find_distributor
+    def pulp_checksum_type
+      find_distributor['config']['checksum_type'] if self.try(:yum?) && find_distributor
     end
 
     def create_pulp_repo
@@ -173,7 +171,7 @@ module Glue::Pulp::Repo
         yum_dist_id = self.pulp_id
         yum_dist_options = {:protected => true, :id => yum_dist_id, :auto_publish => true}
         #check the instance variable, as we do not want to go to pulp
-        yum_dist_options['checksum_type'] = self.checksum_type if self.instance_variable_get('@checksum_type')
+        yum_dist_options['checksum_type'] = self.checksum_type if self.checksum_type
         yum_dist = Runcible::Models::YumDistributor.new(self.relative_path, (self.unprotected || false), true,
                                                         yum_dist_options)
         clone_dist = Runcible::Models::YumCloneDistributor.new(:id => "#{self.pulp_id}_clone",
@@ -245,21 +243,12 @@ module Glue::Pulp::Repo
       PulpTaskStatus.using_pulp_task(task)
     end
 
-    def destroy_repo
-      Katello.pulp_server.extensions.repository.delete(self.pulp_id)
-      true
-    end
-
     def other_repos_with_same_product_and_content
       Repository.where(:content_id => self.content_id).in_product(self.product).pluck(:pulp_id) - [self.pulp_id]
     end
 
     def other_repos_with_same_content
       Repository.where(:content_id => self.content_id).pluck(:pulp_id) - [self.pulp_id]
-    end
-
-    def destroy_repo_orchestration
-      pre_queue.create(:name => "delete pulp repo : #{self.name}", :priority => 3, :action => [self, :destroy_repo])
     end
 
     def package_ids
@@ -817,6 +806,24 @@ module Glue::Pulp::Repo
       Katello.pulp_server.extensions.repository.unit_search(self.pulp_id, options)
     end
 
+    # A helper method used by purge_empty_groups_errata
+    # to obtain a list of package filenames and names
+    # so that it could mix/match empty package groups
+    # and errata and purge them.
+    def package_lists_for_publish
+      names = []
+      filenames = []
+      rpms = Katello.pulp_server.extensions.repository.unit_search(self.pulp_id,
+                                                                   :type_ids => ['rpm'],
+                                                                   :fields => {:unit => %w(filename name)})
+      rpms.each do |rpm|
+        filenames << rpm["metadata"]["filename"]
+        names << rpm["metadata"]["name"]
+      end
+      {:names => names.to_set,
+       :filenames => filenames.to_set}
+    end
+
     protected
 
     def _get_most_recent_sync_status
@@ -836,26 +843,6 @@ module Glue::Pulp::Repo
         history = sort_sync_status(history)
         return PulpSyncStatus.pulp_task(history.first.with_indifferent_access)
       end
-    end
-
-    # A helper method used by purge_empty_groups_errata
-    # to obtain a list of package filenames and names
-    # so that it could mix/match empty package groups
-    # and errata and purge them.
-    def package_lists_for_publish
-      names = []
-      filenames = []
-
-      rpms = Katello.pulp_server.extensions.repository.unit_search(self.pulp_id,
-                                                                   :type_ids => ['rpm'],
-                                                                   :fields => {:unit => %w(filename name)})
-
-      rpms.each do |rpm|
-        filenames << rpm["metadata"]["filename"]
-        names << rpm["metadata"]["name"]
-      end
-      {:names => names.to_set,
-       :filenames => filenames.to_set}
     end
 
   end

@@ -25,22 +25,25 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewPublishController',
-    ['$scope', 'gettext', 'ContentView',  function ($scope, gettext, ContentView) {
+    ['$scope', 'gettext', 'ContentView', function ($scope, gettext, ContentView) {
 
         $scope.version = {};
 
-        $scope.publish = function (contentView, version) {
-            ContentView.publish({id: contentView.id, version: version}, success, failure);
+        $scope.publish = function (contentView) {
+            $scope.working = true;
+            ContentView.publish(contentView, success, failure);
         };
 
-        function success(version) {
-            $scope.contentView.versions.unshift(version);
-            $scope.$parent.successMessages = [gettext('Successfully published new version.')];
-            $scope.transitionTo('content-views.details.versions', {contentViewId: version['content_view'].id});
+        function success() {
+            $scope.reloadVersions();
+            $scope.transitionTo('content-views.details.versions',
+                                {contentViewId: $scope.contentView.id});
+            $scope.working = false;
         }
 
         function failure(response) {
             $scope.$parent.errorMessages = [response.data.displayMessage];
+            $scope.working = false;
         }
 
     }]
