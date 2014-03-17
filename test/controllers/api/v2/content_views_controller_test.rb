@@ -142,16 +142,23 @@ module Katello
       end
     end
 
-    def test_update_repositories
+    def test_update_puppet_repositories
       repository = katello_repositories(:p_forge)
       refute_includes @content_view.repositories(true).map(&:id), repository.id
-      put :update, :id => @content_view, :repository_ids => [repository.id]
+      put :update, :id => @content_view.id, :repository_ids => [repository.id]
+      assert_response 422 # cannot add puppet repos to cv
+    end
 
+    def test_update_repositories
+      repository = katello_repositories(:fedora_17_unpublished)
+      refute_includes @content_view.repositories(true).map(&:id), repository.id
+      put :update, :id => @content_view.id, :repository_ids => [repository.id]
       assert_response :success
       assert_includes @content_view.repositories(true).map(&:id), repository.id
     end
 
     def test_update_components
+      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
       version = @content_view.versions.first
       composite = ContentView.find(katello_content_views(:composite_view))
       refute_includes composite.components(true).map(&:id), version.id
