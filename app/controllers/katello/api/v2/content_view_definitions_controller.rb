@@ -19,6 +19,7 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
 
   resource_description do
     api_version "v2"
+    api_base_url "#{Katello.config.url_prefix}/api"
   end
 
   def_param_group :content_view_definition do

@@ -13,6 +13,7 @@
 module Katello
 class Api::V1::EnvironmentsController < Api::V1::ApiController
   resource_description do
+    resource_id 'lifecycle_environment'
     description <<-EOS
       # Description
 
@@ -40,7 +41,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     EOS
 
     api_version 'v1'
-    api_version 'v2'
+    api_base_url "#{Katello.config.url_prefix}/api"
   end
 
   respond_to :json

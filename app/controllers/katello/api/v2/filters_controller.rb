@@ -17,6 +17,11 @@ class Api::V2::FiltersController < Api::V1::FiltersController
 
   include Api::V2::Rendering
 
+  resource_description do
+    api_version 'v2'
+    api_base_url "#{Katello.config.url_prefix}/api"
+  end
+
   api :GET, "/content_view_definitions/:content_view_definition_id/filters",
       "List filters"
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true

@@ -26,6 +26,7 @@ module Katello
 
     resource_description do
       api_version 'v2'
+      api_base_url "#{Katello.config.url_prefix}/api"
     end
 
     rescue_from(ActionController::ParameterMissing) do |parameter_missing_exception|
@@ -37,7 +38,7 @@ module Katello
       param :page, :number, :desc => "Page number, starting at 1"
       param :per_page,  :number, :desc => "Number of results per page to return"
       param :order, String, :desc => "Sort field and order, eg. 'name DESC'"
-      param :full_results, BooleanValidator, :desc => "Whether or not to show all results"
+      param :full_results, :bool, :desc => "Whether or not to show all results"
       param :sort, Hash, :desc => "Hash version of 'order' param" do
         param :by, String, :desc => "Field to sort the results on"
         param :order, String, :desc => "How to order the sorted results (e.g. ASC for ascending)"

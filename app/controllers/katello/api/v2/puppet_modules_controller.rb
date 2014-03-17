@@ -13,5 +13,10 @@
 module Katello
 class Api::V2::PuppetModulesController < Api::V1::PuppetModulesController
   include Api::V2::Rendering
+
+  resource_description do
+    api_version 'v2'
+    api_base_url "#{Katello.config.url_prefix}/api"
+  end
 end
 end
