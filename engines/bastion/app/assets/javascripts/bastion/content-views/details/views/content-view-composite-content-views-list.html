@@ -32,7 +32,8 @@
       </thead>
 
       <tbody>
-      <tr alch-table-row ng-repeat="contentViewVersion in detailsTable.rows | filter:contentViewVersionFilter" row-select="contentViewVersion">
+      <tr alch-table-row ng-repeat="contentViewVersion in detailsTable.rows | filter:contentViewVersionFilter | orderBy:'name'"
+          row-select="contentViewVersion">
         <td alch-table-cell>{{ contentViewVersion.content_view.name }}</td>
         <td alch-table-cell>
           <select class="form-control"
