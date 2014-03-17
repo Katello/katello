@@ -71,18 +71,23 @@ class Api::V2::ProvidersController < Api::V2::ApiController
   end
 
   def create
-    provider = Provider.create!(provider_params) do |p|
+    provider = Provider.new(provider_params) do |p|
       p.organization  = @organization
       p.provider_type = params[:provider]["provider_type"] if params[:provider].member? "provider_type"
       p.description = params[:provider]["description"] if params[:provider].member? "description"
+
       if params[:provider].member? "name"
         p.name = params[:provider]["name"]
         p.provider_type ||= Provider::CUSTOM
+
       else
         p.name = SecureRandom.uuid
         p.provider_type = Provider::ANONYMOUS
+
       end
     end
+
+    async_task(::Actions::Katello::Provider::Create, provider)
     respond(:resource => provider)
   end
 
