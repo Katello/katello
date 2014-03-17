@@ -23,11 +23,13 @@ describe('Controller: ContentViewPublishController', function() {
 
         ContentView.publish = function(options, callback) {  callback({id: 3}) };
         $scope = $injector.get('$rootScope').$new();
+        $scope.reloadVersions = function () {};
 
         $scope.contentView = ContentView.get({id: 1});
         $scope.contentView.versions = [];
-        
+
         spyOn($scope, 'transitionTo');
+        spyOn($scope, 'reloadVersions');
 
         $controller('ContentViewPublishController', {
             $scope: $scope,

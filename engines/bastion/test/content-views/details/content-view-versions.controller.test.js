@@ -18,20 +18,19 @@ describe('Controller: ContentViewVersionsController', function() {
 
     beforeEach(inject(function($injector) {
         var gettext = function() {},
-            $controller = $injector.get('$controller'),
-            ContentViewVersion = $injector.get('MockResource').$new();
-
-        AggregateTask = {newAggregate: function(){}};
+            $controller = $injector.get('$controller');
 
         $scope = $injector.get('$rootScope').$new();
 
         $scope.contentView = ContentView.get({id: 1});
 
+        $scope.reloadVersions = function () {};
+
+        spyOn($scope, 'reloadVersions');
+
         $controller('ContentViewVersionsController', {
             $scope: $scope,
-            gettext: gettext,
-            ContentViewVersion: ContentViewVersion,
-            AggregateTask: AggregateTask
+            gettext: gettext
         });
     }));
 
