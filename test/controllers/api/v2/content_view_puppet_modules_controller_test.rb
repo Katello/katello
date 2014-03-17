@@ -33,6 +33,9 @@ module Katello
       @create_permission = UserPermission.new(:create, :content_views)
       @read_permission = UserPermission.new(:read, :content_views)
       @no_permission = NO_PERMISSION
+      PuppetModule.stubs(:find).returns(@puppet_module)
+      @puppet_module.stubs(:repositories).returns([])
+      PuppetModule.stubs(:exists?).returns(true)
     end
 
     def setup

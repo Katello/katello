@@ -41,6 +41,7 @@ Katello::Engine.routes.draw do
           post :refresh
           get :history
           get :available_puppet_modules
+          get :available_puppet_module_names
         end
         api_resources :content_view_puppet_modules
         api_resources :filters, :controller => :content_view_filters do

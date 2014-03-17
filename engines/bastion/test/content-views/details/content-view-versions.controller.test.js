@@ -18,7 +18,9 @@ describe('Controller: ContentViewVersionsController', function() {
 
     beforeEach(inject(function($injector) {
         var gettext = function() {},
-            $controller = $injector.get('$controller');
+            $controller = $injector.get('$controller'),
+            ContentViewVersion = $injector.get('MockResource').$new(),
+            ContentView = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
 

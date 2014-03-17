@@ -152,13 +152,19 @@ angular.module('Bastion.test-mocks').factory('MockResource', function () {
             params = null;
             delete params;
 
-            success(params);
+            if (this.failed) {
+                error({ data: {errors: ['error!']}});
+            } else {
+                success(params);
+            }
 
             return true;
         };
 
+        Resource.remove = Resource.delete;
+
         return Resource;
-    };
+    }
 
     return {
         $new: function() {

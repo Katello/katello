@@ -266,6 +266,14 @@ class ContentViewVersion < Katello::Model
     end
   end
 
+  def archive_puppet_environment
+    content_view_puppet_environments.archived.first
+  end
+
+  def puppet_modules
+    archive_puppet_environment.puppet_modules
+  end
+
   private
 
   def remove_environment(env)
