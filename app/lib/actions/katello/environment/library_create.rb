@@ -27,10 +27,9 @@ module Actions
           end
 
           version = library_view.versions.first
-          library_view_env = library_view.add_environment(library_env, version)
 
           plan_action(Katello::ContentView::Create, library_view)
-          plan_action(Katello::ContentView::EnvironmentCreate, library_view_env)
+          plan_action(Katello::ContentView::AddToEnvironment, version, library_env)
           plan_action(Katello::Foreman::ContentUpdate, library_env, library_view)
         end
 

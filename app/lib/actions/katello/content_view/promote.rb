@@ -20,11 +20,9 @@ module Actions
 
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
                                                 :environment => environment, :task => self.task,
-                                               :status => ::Katello::ContentViewHistory::IN_PROGRESS)
-          version.add_environment(environment)
-          version.save!
-
+                                                :status => ::Katello::ContentViewHistory::IN_PROGRESS)
           sequence do
+            plan_action(ContentView::AddToEnvironment, version, environment)
             concurrence do
               version.archived_repos.non_puppet.each do |repository|
                 sequence do

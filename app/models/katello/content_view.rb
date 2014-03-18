@@ -264,11 +264,17 @@ class ContentView < Katello::Model
     environments.where(:library => false).length > 0
   end
 
+  # rubocop:disable MethodLength
   def publish(options = { })
     fail "Cannot publish content view without a logged in user." if User.current.nil?
     options = { :async => true, :notify => false }.merge(options)
 
     version = create_new_version
+    if cve = self.content_view_environment(organization.library)
+      version.content_view_environments << cve
+    else
+      self.add_environment(organization.library, version)
+    end
 
     if options[:async]
       task  = self.async(:organization => self.organization,
@@ -501,8 +507,7 @@ class ContentView < Katello::Model
   def create_new_version
     next_version_id = (self.versions.maximum(:version) || 0) + 1
     ContentViewVersion.create!(:version => next_version_id,
-                               :content_view => self,
-                               :environments => [organization.library])
+                               :content_view => self)
   end
 
   def create_puppet_env(options)

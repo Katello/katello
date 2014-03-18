@@ -17,7 +17,7 @@ class ContentViewErratumFilterRuleTest < ActiveSupport::TestCase
 
   def self.before_suite
     models = ["Organization", "KTEnvironment", "User", "ContentView",
-              "ContentViewEnvironment", "ContentViewFilter",
+              "ContentViewVersion", "ContentViewEnvironment", "ContentViewFilter",
               "ContentViewErratumFilter", "ContentViewErratumFilterRule"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
   end

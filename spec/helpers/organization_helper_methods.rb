@@ -58,7 +58,7 @@ module OrganizationHelperMethods
 
       version = ContentViewVersion.new(:content_view => view,
                                        :version => 1)
-      version.environments << env
+      view.add_environment(env, version)
       version.save!
       view.save!
     end

@@ -24,6 +24,7 @@ module Actions
                                                :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task)
 
           sequence do
+            plan_action(ContentView::AddToEnvironment, version, library)
             concurrence do
               content_view.repositories_to_publish.non_puppet.each do |repository|
                 sequence do

@@ -23,11 +23,7 @@ class ContentViewVersion < Katello::Model
   has_many :environments, :through      => :content_view_environments,
                           :class_name   => "Katello::KTEnvironment",
                           :inverse_of   => :content_view_versions,
-                          :after_remove => :remove_environment do
-                            def <<(env)
-                              proxy_association.owner.add_environment(env)
-                            end
-                          end
+                          :after_remove => :remove_environment
 
   has_many :history, :class_name => "Katello::ContentViewHistory", :inverse_of => :content_view_version,
            :dependent => :destroy, :foreign_key => :katello_content_view_version_id
@@ -253,29 +249,16 @@ class ContentViewVersion < Katello::Model
     ContentViewPuppetEnvironment.trigger_contents_changed(envs_changed, :wait => true, :reindex => true)
   end
 
-  def environments=(envs)
-    envs.each do |environment|
-      add_environment(environment)
-    end
-  end
-
-  def add_environment(env)
-    if content_view.environments.include?(env)
-      # use the existing content_view_environment
-      cve = ContentViewEnvironment.find_by_environment_id_and_content_view_id(env, content_view_id)
-      self.content_view_environments << cve
-    else
-      env = content_view.add_environment(env, self)
-      ForemanTasks.sync_task(::Actions::Katello::ContentView::EnvironmentCreate, env)
-    end
-  end
-
   def archive_puppet_environment
     content_view_puppet_environments.archived.first
   end
 
   def puppet_modules
-    archive_puppet_environment.puppet_modules
+    if archive_puppet_environment
+      archive_puppet_environment.puppet_modules
+    else
+      []
+    end
   end
 
   private
