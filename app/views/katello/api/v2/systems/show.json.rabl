@@ -32,7 +32,7 @@ attributes :installedProducts
 
 
 
-node :releaseVer do |sys|
+node :release_ver do |sys|
   sys.releaseVer.is_a?(Hash) ? sys.releaseVer[:releaseVer] : sys.releaseVer
 end
 

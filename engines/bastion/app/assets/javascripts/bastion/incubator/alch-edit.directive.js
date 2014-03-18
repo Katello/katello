@@ -50,8 +50,12 @@ angular.module('alchemy')
 
                 if (options !== undefined) {
                     if (options.hasOwnProperty('then')) {
+                        $scope.workingMode = true;
+                        $scope.editMode = false;
                         options.then(function (data) {
                             $scope.options = data;
+                            $scope.workingMode = false;
+                            $scope.editMode = true;
 
                             if ($scope.options.length === 0) {
                                 $scope.disableSave = true;
