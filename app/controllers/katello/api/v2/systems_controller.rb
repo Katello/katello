@@ -547,9 +547,9 @@ class Api::V2::SystemsController < Api::V2::ApiController
       :release_ver => :releaseVer,
       :service_level => :serviceLevel,
       :last_checkin => :lastCheckin }.each do |snake, camel|
-      if params[:system][snake]
+      if params[snake]
         system_params[camel] = params[snake]
-      elsif params[:system][camel]
+      elsif params[camel]
         system_params[camel] = params[camel]
       end
     end
