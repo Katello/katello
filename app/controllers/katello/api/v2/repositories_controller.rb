@@ -17,6 +17,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   before_filter :find_product, :only => [:index]
   before_filter :find_product_for_create, :only => [:create]
   before_filter :find_repository, :only => [:show, :update, :destroy, :sync]
+  before_filter :error_on_rh_product, :only => [:create, :update, :destroy]
   before_filter :authorize
 
   skip_before_filter :authorize, :only => [:sync_complete]
@@ -52,11 +53,11 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   end
 
   api :GET, "/repositories", "List of repositories"
-  param :organization_id, :number, :required => true, :desc => "id of an organization to show repositories in"
-  param :product_id, :number, :required => false, :desc => "id of a product to show repositories of"
-  param :environment_id, :number, :required => false, :desc => "id of an environment to show repositories in"
-  param :library, :bool, :required => false, :desc => "show repositories in Library and the default content view"
-  param :enabled, :bool, :required => false, :desc => "limit to only enabled repositories"
+  param :organization_id, :number, :required => true, :desc => "ID of an organization to show repositories in"
+  param :product_id, :number, :desc => "ID of a product to show repositories of"
+  param :environment_id, :number, :desc => "ID of an environment to show repositories in"
+  param :library, :bool, :desc => "show repositories in Library and the default content view"
+  param :enabled, :bool, :desc => "limit to only enabled repositories"
   param_group :search, Api::V2::ApiController
   def index
     options = sort_params
@@ -66,27 +67,20 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     if @product
       options[:filters] << {:term => {:product_id => @product.id}}
     else
-      product_ids = Product.readable(@organization).pluck("#{Product.table_name}.id")
-      options[:filters] << [{:terms => {:product_id => product_ids}}]
+      product_ids = @organization.products.collect { |p| p.id }
+      options[:filters] << {:terms => {:product_id => product_ids}}
     end
 
     options[:filters] << {:term => {:enabled => params[:enabled]}} if params[:enabled]
     options[:filters] << {:term => {:environment_id => params[:environment_id]}} if params[:environment_id]
     options[:filters] << {:term => {:content_view_version_id => @organization.default_content_view.versions.first.id}} if params[:library]
 
-    @search_service.model = Repository
-    repositories, total_count = @search_service.retrieve(params[:search], params[:offset], options)
-
-    collection = {
-      :results  => repositories,
-      :subtotal => total_count,
-      :total    => @search_service.total_items
-    }
-
-    respond_for_index :collection => collection
+    respond :collection => item_search(Repository, params, options)
   end
 
   api :POST, "/repositories", "Create a repository"
+  param :organization_id, :number, :required => true, :desc => "ID of an organization"
+  param :product_id, :number, :desc => "ID of a product to create the repository for"
   param_group :repo
   def create
     params[:label] = labelize_params(params)
@@ -102,23 +96,23 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   end
 
   api :GET, "/repositories/:id", "Show a repository"
-  param :id, :identifier, :required => true, :desc => "repository id"
+  param :id, :identifier, :required => true, :desc => "repository ID"
   def show
     respond_for_show(:resource => @repository)
   end
 
   api :POST, "/repositories/:id/sync", "Sync a repository"
-  param :id, :identifier, :required => true, :desc => "repository id"
+  param :id, :identifier, :required => true, :desc => "repository ID"
   def sync
     task = async_task(::Actions::Katello::Repository::Sync, @repository)
     respond_for_async :resource => task
   end
 
   api :PUT, "/repositories/:id", "Update a repository"
-  param :id, :identifier, :required => true, :desc => "repository id"
-  param :gpg_key_id, :number, :desc => "id of a gpg key that will be assigned to this repository"
+  param :name, String, :required => true
+  param :url, String, :required => true, :desc => "repository source url"
+  param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the new repository"
   def update
-    fail HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
     @repository.update_attributes!(repository_params)
     respond_for_show(:resource => @repository)
   end
@@ -158,6 +152,22 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     render :nothing => true
   end
 
+  api :PUT, "/repositories/:id/enable", "Enable a repository"
+  param :id, :identifier, :required => true, :desc => "repository ID"
+  def enable
+    @repository.enabled = true
+    @repository.save!
+    respond_for_show :resource => @repository
+  end
+
+  api :PUT, "/repositories/:id/disable", "Disable a repository"
+  param :id, :identifier, :required => true, :desc => "repository ID"
+  def disable
+    @repository.enabled = false
+    @repository.save!
+    respond_for_show :resource => @repository
+  end
+
   protected
 
   def find_product
@@ -174,6 +184,10 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
   def repository_params
     params.require(:repository).permit(:feed, :gpg_key_id, :unprotected)
+  end
+
+  def error_on_rh_product
+    fail HttpErrors::BadRequest, _("Red Hat products cannot be manipulated.") if @product.redhat?
   end
 
 end
