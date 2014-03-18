@@ -275,7 +275,11 @@ class ContentViewVersion < Katello::Model
   end
 
   def puppet_modules
-    archive_puppet_environment.puppet_modules
+    if archive_puppet_environment
+      archive_puppet_environment.puppet_modules
+    else
+      []
+    end
   end
 
   private
