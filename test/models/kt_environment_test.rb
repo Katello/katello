@@ -20,7 +20,7 @@ class KTEnvironmentTestBase < ActiveSupport::TestCase
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['Repository', 'KTEnvironment', 'ContentView',
+    models    = ['Repository', 'KTEnvironment', 'ContentView', 'ContentViewVersion',
                  'ContentViewEnvironment', 'Organization', 'Product',
                  'Provider']
     disable_glue_layers(services, models, true)

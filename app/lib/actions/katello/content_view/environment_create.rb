@@ -19,10 +19,10 @@ module Actions
           if ::Katello.config.use_cp
             content_view = content_view_environment.content_view
             plan_action(Candlepin::Environment::Create,
-                        'organization_label' => content_view.organization.label,
-                        'cp_id' => content_view_environment.cp_id,
-                        'name' => content_view_environment.label,
-                        'description' => content_view.description)
+                        organization_label: content_view.organization.label,
+                        cp_id:              content_view_environment.cp_id,
+                        name:               content_view_environment.label,
+                        description:        content_view.description)
           end
         end
 

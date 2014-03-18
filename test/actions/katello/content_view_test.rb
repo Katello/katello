@@ -37,10 +37,10 @@ module ::Actions::Katello::ContentView
       content_view = content_view_environment.content_view
       assert_action_planed_with(action,
                                 ::Actions::Candlepin::Environment::Create,
-                                'organization_label' => content_view.organization.label,
-                                'cp_id' => content_view_environment.cp_id,
-                                'name' => content_view_environment.label,
-                                'description' => content_view.description)
+                                organization_label: content_view.organization.label,
+                                cp_id:              content_view_environment.cp_id,
+                                name:               content_view_environment.label,
+                                description:        content_view.description)
     end
   end
 
