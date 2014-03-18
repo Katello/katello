@@ -23,6 +23,39 @@ module ::Actions::Katello::ContentView
     let(:action) { create_action action_class }
   end
 
+  class AddToEnvironmentTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::AddToEnvironment }
+
+    let(:environment) do
+      katello_environments(:library)
+    end
+
+    let(:content_view) do
+      katello_content_views(:no_environment_view)
+    end
+
+    def content_view_environment
+      ::Katello::ContentViewEnvironment.where(:environment_id => environment.id, :content_view_id => content_view.id).first      
+    end
+
+    it 'plans' do
+      content_view_environment.must_be_nil
+
+      version = content_view.create_new_version
+      action = create_and_plan_action(action_class, version, environment)
+      assert_action_planed_with(action, EnvironmentCreate) do |(cve)|
+        cve.environment.must_equal environment
+        cve.content_view.must_equal content_view
+      end
+      content_view_environment.content_view_version.version.must_equal 1
+
+      version = content_view.create_new_version
+      action = create_and_plan_action(action_class, version, environment)
+      refute_action_planed(action, EnvironmentCreate)
+      content_view_environment.content_view_version.version.must_equal 2
+    end
+  end
+
   class EnvironmentCreateTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::EnvironmentCreate }
 
@@ -59,4 +92,5 @@ module ::Actions::Katello::ContentView
       assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, content_view)
     end
   end
+
 end
