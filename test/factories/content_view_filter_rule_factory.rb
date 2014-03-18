@@ -12,5 +12,6 @@ FactoryGirl.define do
   factory :katello_content_view_erratum_filter_rule,
           :class => Katello::ContentViewErratumFilterRule do
     sequence(:errata_id) { |n| "RHBA-2014-#{n}"}
+    association :filter, :factory => :katello_content_view_erratum_filter
   end
 end
