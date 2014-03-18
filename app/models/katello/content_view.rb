@@ -467,7 +467,7 @@ class ContentView < Katello::Model
   # candlepin to become aware that the view is available for consumers.
   def add_environment(env, version)
     if self.content_view_environments.where(:environment_id => env.id).empty?
-      label = self.generate_cp_environment_label(env)
+      label = generate_cp_environment_label(env)
       ContentViewEnvironment.create!(:name => label,
                                      :label => label,
                                      :cp_id => generate_cp_environment_id(env),
