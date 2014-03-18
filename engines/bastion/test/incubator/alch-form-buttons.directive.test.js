@@ -17,7 +17,7 @@ describe('Directive: alchFormButtons', function() {
 
     beforeEach(module(
         'alchemy',
-        'widgets/views/save-control.html',
+        'incubator/views/alch-save-control.html',
         'incubator/views/alch-form-buttons.html'
     ));
 

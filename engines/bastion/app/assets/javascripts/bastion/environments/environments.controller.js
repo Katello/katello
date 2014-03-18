@@ -36,9 +36,9 @@ angular.module('Bastion.environments').controller('EnvironmentsController',
             });
 
             $scope.initiateCreatePath = function () {
-                if ($scope.environmentsTable.rows[0].path.length > 1) {
+                if ($scope.environmentsTable.rows[0].environments.length > 1) {
                     $scope.environmentsTable.rows.unshift([]);
-                    $scope.environmentsTable.rows[0].path = [$scope.environmentsTable.rows[1].path[0]];
+                    $scope.environmentsTable.rows[0].environments = [$scope.environmentsTable.rows[1].environments[0]];
                     $scope.environmentsTable.rows[0].permissions = $scope.environmentsTable.rows[1].permissions;
                 }
                 $scope.environmentsTable.rows[0].pathId = 0;

@@ -45,7 +45,7 @@ module Authorization::Repository
     end
 
     def readable(env)
-      prod_ids = Product.readable(env.organization).collect { |p| p.id }
+      prod_ids = Katello::Product.all_readable(env.organization).collect { |p| p.id }
       where(product_id: prod_ids, :environment_id => env.id)
     end
 

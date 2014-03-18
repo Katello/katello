@@ -20,7 +20,7 @@ class KTEnvironmentTestBase < ActiveSupport::TestCase
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['Repository', 'KTEnvironment', 'ContentView',
+    models    = ['Repository', 'KTEnvironment', 'ContentView', 'ContentViewVersion',
                  'ContentViewEnvironment', 'Organization', 'Product',
                  'Provider']
     disable_glue_layers(services, models, true)
@@ -72,6 +72,14 @@ class KTEnvironmentTest < KTEnvironmentTestBase
     refute_empty @library.products
     assert_equal @library.products.uniq.sort, @library.products.sort
     assert_operator @library.repositories.map(&:product).length, :>, @library.products.length
+  end
+
+  def test_content_view_label
+    env = @acme_corporation.environments.build(:name => "Test", :label => ContentView::CONTENT_DIR,
+                                               :prior => @library)
+    refute env.save
+    assert_equal 1, env.errors.size
+    assert env.errors.has_key?(:label)
   end
 end
 end

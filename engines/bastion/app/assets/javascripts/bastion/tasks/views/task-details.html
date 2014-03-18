@@ -1,5 +1,5 @@
 <a href="" ng-click="transitionBack()">
-  <i class="icon-backward"></i>
+  <i class="icon-double-angle-left"></i>
   {{ "Back" | translate }}
 </a>
 
@@ -53,7 +53,7 @@
       </div>
 
        <div ng-class="{ active: (task.state === 'pending' || task.state === 'running') }" class="progress progress-striped">
-         <span progressbar value="task.progressbar.value" type="{{task.progressbar.type}}"></span>
+         <span progressbar animate="false" value="task.progressbar.value" type="{{task.progressbar.type}}"></span>
        </div>
     </section>
 

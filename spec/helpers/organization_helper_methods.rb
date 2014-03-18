@@ -52,18 +52,13 @@ module OrganizationHelperMethods
     if !env.library? && !env.default_content_view
       return env.content_views.first unless env.content_views.empty?
 
-      count = ContentViewDefinition.count + 1
-      definition = ContentViewDefinition.create!(:name => "test def #{count}", :label => "test_def_#{count}",
-                                              :description => 'test description',
-                                              :organization => env.organization)
       count = ContentView.count + 1
       view = ContentView.create!(:name => "test view #{count}", :label => "test_view_#{count}",
-                              :organization => env.organization,
-                              :content_view_definition => definition)
+                              :organization => env.organization)
 
       version = ContentViewVersion.new(:content_view => view,
                                        :version => 1)
-      version.environments << env
+      view.add_environment(env, version)
       version.save!
       view.save!
     end
@@ -76,7 +71,21 @@ module OrganizationHelperMethods
     Repository.any_instance.stubs(:sync).returns([])
     Repository.any_instance.stubs(:pulp_repo_facts).returns({:clone_ids => []})
     Glue::Event.stubs(:trigger).returns({})
-    cv.promote(from_env, to_env)
+    version = cv.version(from_env)
+    version.promote(to_env)
+  end
+
+  def publish_content_view(name, org, repos)
+    Katello.pulp_server.extensions.repository.stubs(:create).returns({})
+    Repository.any_instance.stubs(:clone_contents).returns([])
+    ContentView.any_instance.stubs(:associate_yum_content).returns([])
+    Repository.stubs(:trigger_contents_changed).returns([])
+    Repository.stubs(:non_puppet).returns(repos)
+    cv = ContentView.create!(:organization => org, :name => name)
+    cv.repositories = repos
+    cv.save!
+    cv.publish(:async => false)
+    cv
   end
 
   def create_activation_key(attrs)

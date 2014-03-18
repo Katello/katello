@@ -20,57 +20,82 @@ class Api::V2::ErrataController < Api::V2::ApiController
     api_version 'v2'
   end
 
-  before_filter :find_organization, :only => [:show]
-  before_filter :find_environment, :only => [:index]
+  before_filter :find_optional_organization, :only => [:show]
   before_filter :find_repository, :only => [:index, :show]
-  before_filter :find_erratum, :only => [:show]
-  before_filter :require_repo_or_environment, :only => [:index]
+  before_filter :find_content_view, :only => [:index]
+  before_filter :find_filter, :only => [:index]
   before_filter :authorize
+  before_filter :find_erratum, :only => [:show]
 
   def rules
-    env_readable = lambda { @environment.contents_readable? }
-    readable     = lambda { Repository.any_readable?(@organization) }
+    readable = lambda do
+      (@organization && Repository.any_readable?(@organization)) ||
+      (@filter && @filter.content_view.readable?) ||
+      (@repo && @repo.environment.contents_readable? && @repo.product.readable?)
+    end
     {
-        :index => env_readable,
+        :index => readable,
         :show  => readable,
     }
   end
 
+  api :GET, "/errata", "List errata"
+  api :GET, "/content_views/:content_view_id/filters/:filter_id/errata", "List errata"
+  api :GET, "/content_view_filters/:content_view_filter_id/errata", "List errata"
   api :GET, "/repositories/:repository_id/errata", "List errata"
-  api :GET, "/environments/:environment_id/errata", "List errata"
-  param :environment_id, :number, :desc => "The environment containing the errata."
-  param :product_id, :number, :desc => "The product which contains errata."
-  param :repository_id, :number, :desc => "The repository which contains errata."
-  param :severity, String, :desc => "Severity of errata. Usually one of: Critical, Important, Moderate, Low. Case insensitive."
-  param :type, String, :desc => "Type of errata. Usually one of: security, bugfix, enhancement. Case insensitive."
+  param :content_view_id, :identifier, :desc => "content view identifier"
+  param :filter_id, :identifier, :desc => "content view filter identifier"
+  param :content_view_filter_id, :identifier, :desc => "content view filter identifier"
+  param :repository_id, :number, :desc => "repository identifier", :required => true
   def index
-    filter = params.symbolize_keys.slice(:repository_id, :product_id, :environment_id, :type, :severity)
-    respond :collection => Errata.filter(filter)
+    collection = if @repo && !@repo.puppet?
+                   filter_by_repoids [@repo.pulp_id]
+                 elsif @filter
+                   filter_by_errata_id @filter.erratum_rules.map(&:errata_id)
+                 else
+                   filter_by_repoids
+                 end
+
+    respond(:collection => collection)
   end
 
-  api :GET, "/repositories/:repository_id/errata/:id", "Show an erratum"
   api :GET, "/errata/:id", "Show an erratum"
+  api :GET, "/repositories/:repository_id/errata/:id", "Show an erratum"
+  param :repository_id, :number, :desc => "repository identifier"
+  param :id, String, :desc => "erratum identifier", :required => true
   def show
     respond :resource => @erratum
   end
 
   private
 
-  def find_environment
-    if params.key?(:environment_id)
-      @environment = KTEnvironment.find(params[:environment_id])
-      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
-      @environment
+  def filter_by_errata_id(ids)
+    options = sort_params
+    options[:filters] = [:terms => { :errata_id_exact => ids }]
+    item_search(Errata, params, options)
+  end
+
+  def filter_by_repoids(repoids = [])
+    options = sort_params
+    options[:filters] = [{ :terms => { :repoids => repoids } }]
+    item_search(Errata, params, options)
+  end
+
+  def find_content_view
+    @view = ContentView.find(params[:content_view_id]) if params[:content_view_id]
+  end
+
+  def find_filter
+    if @view
+      @filter = @view.filters.find_by_id(params[:filter_id])
+      fail HttpErrors::NotFound, _("Couldn't find Filter with id=%s") % params[:filter_id] unless @filter
+    else
+      @filter = ContentViewFilter.find(params[:content_view_filter_id]) if params[:content_view_filter_id]
     end
   end
 
   def find_repository
-    if params.key?(:repository_id)
-      @repo = Repository.find(params[:repository_id])
-      fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
-      @environment ||= @repo.environment
-      @repo
-    end
+    @repo = Repository.find(params[:repository_id]) if params[:repository_id]
   end
 
   def find_erratum
@@ -79,10 +104,6 @@ class Api::V2::ErrataController < Api::V2::ApiController
     fail HttpErrors::NotFound, _("Erratum with id '%s' not found") % params[:id] if @erratum.nil?
     fail HttpErrors::NotFound, _("Erratum '%s' not found within the repository") % params[:id] unless @repo.nil? || @erratum.repoids.include?(@repo.pulp_id)
     @erratum
-  end
-
-  def require_repo_or_environment
-    fail HttpErrors::BadRequest, _("Either repository or environment is required.") % params[:id] if @repo.nil? && @environment.nil?
   end
 end
 end

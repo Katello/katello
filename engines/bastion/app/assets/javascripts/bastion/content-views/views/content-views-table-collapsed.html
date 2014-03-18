@@ -1,0 +1,20 @@
+<table class="table table-striped" ng-class="{'table-mask': table.working}">
+
+  <thead>
+    <tr alch-table-head row-select>
+      <th alch-table-column sortable>{{ "Name" | translate }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr alch-table-row ng-repeat="contentView in table.rows" row-select="contentView">
+      <td alch-table-cell>
+        <a ui-sref="content-views.details.versions({contentViewId: contentView.id})">
+          {{ contentView.name }}
+        </a>
+        <i class="icon-chevron-right selected-icon" ng-show="contentView.selected"></i>
+      </td>
+    </tr>
+  </tbody>
+
+</table>

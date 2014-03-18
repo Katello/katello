@@ -14,19 +14,20 @@ module Katello
 module Glue::ElasticSearch::PuppetModule
   extend ActiveSupport::Concern
 
-    included do
-      def index_options
-        {
-          "_type"             => :puppet_module,
-          "name_sort"         => name.downcase,
-          "name_autocomplete" => name,
-          "author_autocomplete" => author,
-          "sortable_version"  => sortable_version
-        }
-      end
+  included do
+    def index_options
+      {
+        "_type"             => :puppet_module,
+        "name_sort"         => name.downcase,
+        "name_autocomplete" => name,
+        "author_autocomplete" => author,
+        "sortable_version"  => sortable_version
+      }
     end
+  end
 
   module ClassMethods
+
     def index_settings
       {
         "index" => {
@@ -76,7 +77,7 @@ module Glue::ElasticSearch::PuppetModule
 
     def id_search(ids)
       return Util::Support.array_with_total unless Tire.index(self.index).exists?
-      search = Tire.search self.index do
+      search = PuppetModule.search do
         fields [:id, :name, :repoids]
         query do
           all
@@ -84,12 +85,56 @@ module Glue::ElasticSearch::PuppetModule
         size ids.size
         filter :terms, :id => ids
       end
-      search.results
+      search.to_a
+    end
+
+    # Find the 'latest' version of the puppet modules provided across
+    # the list of repos provided.
+    def latest_modules_search(names_and_authors, repoids)
+      return Util::Support.array_with_total unless Tire.index(self.index).exists?
+
+      # use multi-search to perform a single request to elasticsearch which
+      # will perform N queries/searches
+      multi_search = PuppetModule.multi_search do
+        names_and_authors.each do |item|
+          search do
+            query do
+              string "name:#{ item[:name] } author:#{ item[:author] }", :default_operator => 'AND'
+            end
+            size 1
+            filter :terms, :repoids => repoids
+            sort { by :sortable_version, "desc" }
+          end
+        end
+      end
+
+      # multi_search will return a result set for each query.
+      # since each query will have a single document, return a list of those individual results
+      multi_search.reject{ |results| results[0].nil? }.map{ |results| results[0] }
+    end
+
+    def exists?(options)
+      results = PuppetModule.latest_modules_search([{ :name => options[:name],
+                                                      :author => options[:author] }],
+                                                   options[:repoids])
+      results.present?
+    end
+
+    def search(options = {}, &block)
+      Tire.search(self.index, &block).results
+    end
+
+    def multi_search(options = {}, &block)
+      Tire.multi_search(self.index, &block).results
+    end
+
+    def mapping
+      Tire.index(self.index).mapping
     end
 
     # TODO: break up method
     # rubocop:disable MethodLength
-    def search(query, options = {})
+    def legacy_search(query, options = {})
       options = {:start => 0,
                  :page_size => 10,
                  :repoids => nil,

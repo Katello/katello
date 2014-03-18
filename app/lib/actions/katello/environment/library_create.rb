@@ -20,16 +20,16 @@ module Actions
           library_view = ::Katello::ContentView.create!(:default => true,
                                              :name => "Default Organization View",
                                              :organization => library_env.organization)
-          library_view_env = library_view.add_environment(library_env)
 
           ::Katello::ContentViewVersion.create! do |v|
             v.content_view = library_view
             v.version = 1
-            v.content_view_version_environments.build(:environment => library_env)
           end
 
+          version = library_view.versions.first
+
           plan_action(Katello::ContentView::Create, library_view)
-          plan_action(Katello::ContentView::EnvironmentCreate, library_view_env)
+          plan_action(Katello::ContentView::AddToEnvironment, version, library_env)
           plan_action(Katello::Foreman::ContentUpdate, library_env, library_view)
         end
 

@@ -15,7 +15,7 @@ module Glue
   module ElasticSearch
     class Items
 
-      attr_accessor :obj_class, :query_string, :results, :total, :filters, :search_options
+      attr_accessor :obj_class, :query_string, :results, :total, :filters, :search_options, :facets
       alias_method :model=, :obj_class=
 
       def initialize(obj_class = nil)
@@ -23,6 +23,7 @@ module Glue
         @query_string = query_string
         @results      = []
         @filters      = []
+        @facets       = []
       end
 
       # Retrieves items from the Elasticsearch index
@@ -56,6 +57,7 @@ module Glue
         all_rows      = false
         sort_by       = search_options.fetch(:sort_by, 'name_sort')
         sort_order    = search_options[:sort_order] || 'ASC'
+        facet_filters  = search_options[:facet_filters] || {}
         total_count   = 0
 
         sort_by = format_sort(sort_by)
@@ -75,6 +77,7 @@ module Glue
                     else
                       search_options[:per_page] || total_items
                     end
+        facet_size = search_options[:facets] ? total_items : 0
         filters = @filters
         filters = [filters] if !filters.is_a? Array
 
@@ -92,11 +95,22 @@ module Glue
 
           filter :and, filters if filters.any?
 
+          if search_options[:facets]
+            search_options[:facets].each_pair do |name, value|
+              facet(name, :facet_filter => facet_filters) do
+                terms value, :size => facet_size
+
+              end
+            end
+          end
+
           size page_size
           from start
         end
 
         total_count = @results.total
+
+        @facets = @results.facets
 
         if search_options[:load_records?]
           @results = load_records
@@ -165,7 +179,9 @@ module Glue
 
       def format_sort(sort_by)
         mapping = @obj_class.mapping || {}
-        unless mapping[sort_by.to_sym] && mapping[sort_by.to_sym][:type] == 'date'
+        if mapping[sort_by.to_sym] && mapping[sort_by.to_sym][:type] == 'date'
+          sort_by
+        else
           sort_by + '_sort' if !sort_by.to_s.include?('_sort')
         end
       end

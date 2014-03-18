@@ -1,9 +1,7 @@
 collection Katello::Util::Data::ostructize(@collection)
 
-child :path, :root => :path do
-  node :environment do |env|
-    partial('katello/api/v2/environments/show', :object => env)
-  end
+child :environments => :environments do
+  extends('katello/api/v2/environments/show')
 end
 
 node :permissions do |env|

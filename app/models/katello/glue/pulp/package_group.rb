@@ -19,6 +19,11 @@ module Glue::Pulp::PackageGroup
       attr_accessor :name, :package_group_id, :default_package_names, :id, :repoid, :conditional_package_names,
                       :mandatory_package_names, :description, :optional_package_names
 
+      def self.find(id)
+        attrs = Katello.pulp_server.extensions.package_group.find_by_unit_id(id)
+        Katello::PackageGroup.new(attrs) if !attrs.nil?
+      end
+
       def self.list_by_filter_clauses(clauses)
         package_groups = Katello.pulp_server.extensions.package_group.search(Katello::PackageGroup::CONTENT_TYPE,
                                                                              :filters => clauses)

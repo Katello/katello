@@ -45,18 +45,15 @@ module ::Actions::Katello::Environment
       ::Katello::ContentView.expects(:create!).returns(content_view).with do |arg_hash|
         arg_hash[:default] == true
       end
-      content_view.expects(:add_environment).once.with(library).returns(content_view_environment)
-      ::Katello::ContentViewVersion.expects(:create!)
 
       plan_action(action, library)
 
       assert_action_planed_with(action,
                                 ::Actions::Katello::ContentView::Create,
                                 content_view)
-
       assert_action_planed_with(action,
-                                ::Actions::Katello::ContentView::EnvironmentCreate,
-                                content_view_environment)
+                                ::Actions::Katello::ContentView::AddToEnvironment,
+                                content_view.versions.first, library)
       assert_action_planed_with(action,
                                 ::Actions::Katello::Foreman::ContentUpdate,
                                 library, content_view)

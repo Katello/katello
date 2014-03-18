@@ -144,8 +144,9 @@ module ContentSearch
                                     :filters => {:repoids => view_repos.map(&:pulp_id)},
                                     :search_mode => search_mode)
                 when :puppet_module
-                  PuppetModule.search('', :start => offset, :page_size => page_size,
-                                          :repoids => view_repos.map(&:pulp_id), :search_mode => search_mode)
+                  PuppetModule.legacy_search('', :start => offset, :page_size => page_size,
+                                             :repoids => view_repos.map(&:pulp_id),
+                                             :search_mode => search_mode)
                 end
 
         next if units.empty? # if we don't have units, don't show repo

@@ -33,7 +33,7 @@ module ContentSearch
         all_repos = repo.environmental_instances(view).pluck(:pulp_id)
 
         cols = {}
-        Repository.where(:pulp_id => all_repos).each do |r|
+        Repository.non_archived.where(:pulp_id => all_repos).each do |r|
           cols[r.environment.id] = if env_ids.include?(r.environment_id)
                                      Cell.new(:hover => lambda{repo_hover_html(r)},
                                               :hover_details => lambda{repo_hover_html(r, true)})

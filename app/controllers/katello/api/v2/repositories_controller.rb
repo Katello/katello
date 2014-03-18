@@ -52,11 +52,14 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   end
 
   api :GET, "/repositories", "List of repositories"
+  api :GET, "/content_views/:id/repositories", "List of repositories for a content view"
   param :organization_id, :number, :required => true, :desc => "id of an organization to show repositories in"
   param :product_id, :number, :required => false, :desc => "id of a product to show repositories of"
   param :environment_id, :number, :required => false, :desc => "id of an environment to show repositories in"
+  param :content_view_id, :number, :required => false, :desc => "id of a content view to show repositories in"
   param :library, :bool, :required => false, :desc => "show repositories in Library and the default content view"
   param :enabled, :bool, :required => false, :desc => "limit to only enabled repositories"
+  param :content_type, String, :required => false, :desc => "limit to only repositories of this time"
   param_group :search, Api::V2::ApiController
   def index
     options = sort_params
@@ -67,16 +70,17 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
       options[:filters] << {:term => {:product_id => @product.id}}
     else
       product_ids = Product.readable(@organization).pluck("#{Product.table_name}.id")
-      options[:filters] << [{:terms => {:product_id => product_ids}}]
+      options[:filters] << {:terms => {:product_id => product_ids}}
     end
 
     options[:filters] << {:term => {:enabled => params[:enabled]}} if params[:enabled]
     options[:filters] << {:term => {:environment_id => params[:environment_id]}} if params[:environment_id]
+    options[:filters] << {:term => {:content_view_ids => params[:content_view_id]}} if params[:content_view_id]
     options[:filters] << {:term => {:content_view_version_id => @organization.default_content_view.versions.first.id}} if params[:library]
+    options[:filters] << {:term => {:content_type => params[:content_type]}} if params[:content_type]
 
     @search_service.model = Repository
     repositories, total_count = @search_service.retrieve(params[:search], params[:offset], options)
-
     collection = {
       :results  => repositories,
       :subtotal => total_count,
@@ -97,7 +101,8 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
     repository = @product.add_repo(params[:label], params[:name], params[:url],
                                    params[:content_type], params[:unprotected], gpg_key)
-    trigger(::Actions::Katello::Repository::Create, repository)
+    sync_task(::Actions::Katello::Repository::Create, repository)
+    repository = Repository.find(repository.id)
     respond_for_show(:resource => repository)
   end
 

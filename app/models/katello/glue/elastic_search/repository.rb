@@ -33,10 +33,17 @@ module Glue::ElasticSearch::Repository
     end
 
     def extended_index_attrs
-      {:environment => self.environment.name, :environment_id => self.environment.id, :clone_ids => self.clones.pluck(:pulp_id),
-       :product => self.product.name, :product_id => self.product.id,
-       :default_content_view => self.content_view_version.has_default_content_view?,
-       :name_sort => self.name }
+      {
+        :environment => self.environment.try(:name),
+        :archive => self.archive?,
+        :environment_id => self.environment.try(:id),
+        :clone_ids => self.clones.pluck(:pulp_id),
+        :product => self.product.name,
+        :product_id => self.product.id,
+        :default_content_view => self.content_view_version.has_default_content_view?,
+        :name_sort => self.name,
+        :content_view_ids => self.content_view_ids
+      }
     end
 
     def update_related_index
@@ -116,7 +123,7 @@ module Glue::ElasticSearch::Repository
     end
 
     def indexed_errata_ids
-      options = {:repoids => [self.pulp_id], :fields => [:id], :start => 0, :page_size => 1}
+      options = {:filters => {:repoids => [self.pulp_id]}, :fields => [:id], :start => 0, :page_size => 1}
       options[:page_size] = ::Katello::Errata.legacy_search("", options).total
       ::Katello::Errata.legacy_search("", options).collect{|e| e.id}
     end
@@ -131,7 +138,6 @@ module Glue::ElasticSearch::Repository
       else
         errata_ids = self.errata_ids
         search_errata_ids = self.indexed_errata_ids
-
         Katello::Errata.add_indexed_repoid(errata_ids - search_errata_ids, self.pulp_id)
         Katello::Errata.remove_indexed_repoid(search_errata_ids - errata_ids, self.pulp_id)
       end
@@ -239,7 +245,7 @@ module Glue::ElasticSearch::Repository
     end
 
     def puppet_module_count
-      results = Katello::PuppetModule.search('', :page_size => 1, :repoids => [self.pulp_id])
+      results = Katello::PuppetModule.legacy_search('', :page_size => 1, :repoids => [self.pulp_id])
       results.empty? ? 0 : results.total
     end
 

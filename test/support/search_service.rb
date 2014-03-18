@@ -23,6 +23,10 @@ module Support
         return [], 0
       end
 
+      def facets
+        {}
+      end
+
       def total_items
         0
       end

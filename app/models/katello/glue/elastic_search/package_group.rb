@@ -58,6 +58,14 @@ module Glue::ElasticSearch::PackageGroup
         "#{Katello.config.elastic_index}_package_group"
       end
 
+      def self.mapping
+        Tire.index(self.index).mapping
+      end
+
+      def self.search(options = {}, &block)
+        Tire.search(self.index, &block).results
+      end
+
       def self.id_search(ids)
         return Util::Support.array_with_total unless Tire.index(self.index).exists?
         search = Tire.search self.index do
@@ -71,8 +79,8 @@ module Glue::ElasticSearch::PackageGroup
         search.results
       end
 
-      def self.search(query, start, page_size, repoid = nil, sort = [:name_sort, "asc"],
-                      default_field = 'name')
+      def self.legacy_search(query, start, page_size, repoid = nil, sort = [:name_sort, "asc"],
+                             default_field = 'name')
         return Util::Support.array_with_total if !Tire.index(self.index).exists?
 
         all_rows = query.blank? #if blank, get all rows

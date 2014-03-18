@@ -1,0 +1,70 @@
+<nav>
+  <ul class="nav nav-tabs">
+    <li ng-class="{active: isState('content-views.details.filters.details.erratum.list')}">
+      <a ui-sref="content-views.details.filters.details.erratum.list">
+        <span translate>
+          List/Remove
+        </span>
+      </a>
+    </li>
+
+    <li ng-class="{active: isState('content-views.details.filters.details.erratum.available')}"
+        ng-show="!contentView.permissions.editable">
+      <a ui-sref="content-views.details.filters.details.erratum.available">
+        <span translate>
+          Add
+        </span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<div ng-if="isState('content-views.details.filters.details.erratum.available')">
+  <form name="errataForm" class="form-horizontal">
+    <div ng-include="'content-views/details/filters/views/date-type-errata.html'"></div>
+  </form>
+</div>
+
+<div class="col-sm-12">
+  <button class="btn btn-primary fr"
+          ng-show="isState('content-views.details.filters.details.erratum.list')"
+          ng-click="removeErrata(contentView)">
+    <i class="icon-trash"></i>
+    <span translate>Remove Errata</span>
+  </button>
+  <button class="btn btn-primary fr"
+          ng-show="isState('content-views.details.filters.details.erratum.available')"
+          ng-click="addErrata(filter)">
+    <i class="icon-plus"></i>
+    <span translate>Add Errata</span>
+  </button>
+</div>
+
+<div alch-table="errataTable" class="nutupane">
+  <div alch-infinite-scroll="errataTable.nextPage()" data="errataTable.rows">
+
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr alch-table-head row-select>
+          <th class="col-sm-2" alch-table-column translate>Errata ID</th>
+          <th class="col-sm-2" alch-table-column translate>Errata Type</th>
+          <th class="col-sm-2" alch-table-column translate>Issued</th>
+          <th alch-table-column translate>Title</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr alch-table-row ng-repeat="errata in errataTable.rows | filter:errataFilter" row-select="errata">
+          <td alch-table-cell>{{ errata.errata_id }}</td>
+          <td alch-table-cell>
+            {{ errata.type }}
+          </td>
+          <td alch-table-cell>
+            {{ errata.issued | date:'M/d/yy' }}
+          </td>
+          <td alch-table-cell>{{ errata.title }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

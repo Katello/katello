@@ -1,0 +1,140 @@
+<div>
+
+  <div class="details-header">
+    <input type="text"
+           class="form-control filter-input"
+           placeholder="{{ 'Filter' | translate }}"
+           ng-model="repositorySearch"/>
+
+    <button class="btn btn-default fr" ng-click="removeRules(filter)">
+      <i class="icon-plus"></i>
+      <span translate>Remove Packages</span>
+    </button>
+  </div>
+
+  <table class="table table-bordered table-striped">
+
+    <thead>
+      <tr>
+        <th class="row-select"><input type="checkbox" ng-model="allSelected" ng-change="selectAll(allSelected)"/></th>
+        <th translate>Package Name</th>
+        <th class="col-sm-5" translate>Detail</th>
+        <th class="col-sm-2"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td></td><!-- Empty cell since the first row is special -->
+        <td>
+          <input type="text" class="form-control" ng-model="rule.name"/>
+        </td>
+        <td>
+          <span class="col-sm-12" ng-class="{ 'col-sm-7': rule.type != 'all'}">
+            <select class="form-control" ng-model="rule.type" ng-change="clearValues(rule)">
+              <option value="all" translate>All Versions</option>
+              <option value="equal" translate>Equal To</option>
+              <option value="greater" translate>Greater Than</option>
+              <option value="less" translate>Less Than</option>
+              <option value="range" translate>Range</option>
+            </select>
+          </span>
+        
+          <span ng-show="rule.type === 'greater' || rule.type === 'less' || rule.type === 'range'">
+            <span class="col-sm-2">
+              <input type="text"
+                     class="form-control"
+                     ng-model="rule.min_version"
+                     ng-disabled="rule.type === 'less'"/>
+            </span>
+            <span class="fl">-</span>
+            <span class="col-sm-2">
+              <input type="text"
+                     class="form-control"
+                     ng-model="rule.max_version"
+                     ng-disabled="rule.type === 'greater'"/>
+            </span>
+          </span>
+
+          <span ng-show="rule.type === 'equal'">
+            <span class="col-sm-4">
+              <input type="text" class="form-control" ng-model="rule.version"/>
+            </span>
+          </span>
+        </td>
+        <td class="action-cell">
+          <button class="btn btn-default" ng-click="addRule(rule, filter)" ng-disabled="!valid(rule)">
+            <i class="icon-plus"></i>
+            <span translate>Add</span>
+          </button>
+        </td>
+      </tr>
+
+      <tr ng-repeat="rule in filter.rules" row-select="rule">
+        <td class="row-select">
+          <input type="checkbox" ng-model="rule.selected"/>
+        </td>
+        <td>
+          <input class="form-control" ng-model="rule.name" ng-readonly="!rule.editMode"/>
+        </td>
+        <td>
+          <span class="col-sm-12" ng-class="{ 'col-sm-7': rule.type != 'all'}">
+            <select class="form-control"
+                    ng-model="rule.type"
+                    ng-readonly="!rule.editMode"
+                    ng-disabled="!rule.editMode">
+              <option value="all" translate>All Versions</option>
+              <option value="equal" translate>Equal To</option>
+              <option value="greater" translate>Greater Than</option>
+              <option value="less" translate>Less Than</option>
+              <option value="range" translate>Range</option>
+            </select>
+          </span>
+        
+          <span ng-show="rule.type === 'greater' || rule.type === 'less' || rule.type === 'range'">
+            <span class="col-sm-2">
+              <input type="text"
+                     class="form-control"
+                     ng-model="rule.min_version"
+                     ng-readonly="!rule.editMode"
+                     ng-disabled="rule.type === 'less'"/>
+            </span>
+            <span class="fl" ng-show="rule.type === 'range' && rule.editMode">-</span>
+            <span class="col-sm-2">
+              <input type="text"
+                     class="form-control"
+                     ng-model="rule.max_version"
+                     ng-readonly="!rule.editMode"
+                     ng-disabled="rule.type === 'greater'"/>
+            </span>
+          </span>
+
+          <span ng-show="rule.type === 'equal'">
+            <span class="col-sm-4">
+              <input type="text"
+                     class="form-control"
+                     ng-model="rule.version"
+                     ng-readonly="!rule.editMode"/>
+            </span>
+          </span>
+        </td>
+        <td class="action-cell">
+          <button class="btn btn-default" ng-click="rule.editMode = true" ng-hide="rule.editMode">
+            <i class="icon-edit"></i>
+            <span translate>Edit</span>
+          </button>
+
+          <button alch-save-control
+                  on-cancel="rule.editMode = false"
+                  on-save="updateRule(rule, filter)"
+                  working="rule.working"
+                  invalid="!valid(rule)"
+                  ng-show="rule.editMode">
+          </button>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+
+</div>

@@ -1,0 +1,43 @@
+<table class="table table-striped table-bordered"  alch-table="table" ng-class="{'table-mask': table.working}">
+
+  <thead>
+    <tr alch-table-head row-select>
+      <th alch-table-column>{{ "Name" | translate }}</th>
+      <th alch-table-column>{{ "Composite View?" | translate }}</th>
+      <th alch-table-column>{{ "Last Published" | translate }}</th>
+      <th alch-table-column>{{ "Environments" | translate }}</th>
+      <th alch-table-column>{{ "Repositories" | translate }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr alch-table-row ng-repeat="contentView in table.rows" row-select="contentView">
+      <td alch-table-cell>
+        <a ui-sref="content-views.details.versions({contentViewId: contentView.id})">
+          {{ contentView.name }}
+        </a>
+      </td>
+      <td alch-table-cell>
+        <span ng-show="contentView.composite" translate>Yes</span>
+        <span ng-hide="contentView.composite" translate>No</span>
+      </td>
+      <td alch-table-cell>
+        <span ng-show="contentView.last_published">{{ contentView.last_published | date:"medium" }}</span>
+        <span ng-hide="contentView.last_published" translate>
+          Not yet published
+        </span>
+      </td>
+      <td alch-table-cell>
+        <span ng-show="contentView.environments.length !== 0"
+              ng-repeat="environment in contentView.environments">
+          {{ environment.name }}<span ng-if="!$last">, </span>
+        </span>
+        <span ng-show="contentView.environments.length === 0" translate>
+          Not yet published
+        </span>
+      </td>
+      <td alch-table-cell class="number-cell">{{ contentView.repositories.length }}</td>
+    </tr>
+  </tbody>
+
+</table>

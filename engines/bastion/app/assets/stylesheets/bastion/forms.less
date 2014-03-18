@@ -1,11 +1,32 @@
 .required {
-  color: red;
-
   .control-label {
     color: inherit;
 
     &:after {
       content: "*";
     }
+  }
+}
+
+.form-control {
+
+  &[readonly], &[readonly="readonly"] {
+    border: none;
+    background: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 0.01px;
+    text-overflow: '';
+    color: @input-color;
+  }
+
+}
+
+.datepicker-selector {
+  cursor: pointer;
+
+  &:hover {
+    font-weight: bold;
   }
 }

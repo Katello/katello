@@ -1,0 +1,13 @@
+<div class="details details-full">
+
+  <header class="details-header">
+    <h3>
+      <a ui-sref="content-views.details.filters.list" translate>Filters</a>
+      <i class="icon-double-angle-right"></i>
+      {{ filter.name }}: {{ filter.inclusion | filterType }} {{ filter.type | filterContentType }}
+    </h3>
+  </header>
+
+  <div ui-view></div>
+
+</div>

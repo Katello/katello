@@ -44,35 +44,28 @@ namespace :test do
           "#{Katello::Engine.root}/test/helpers/*_test.rb",
           "#{Katello::Engine.root}/test/lib/navigation/*_test.rb",
           "#{Katello::Engine.root}/test/lib/validators/*_test.rb",
-          "#{Katello::Engine.root}/test/controllers/content_views_controller_test.rb",
-          "#{Katello::Engine.root}/test/controllers/filter_rules_controller_test.rb",
-          "#{Katello::Engine.root}/test/controllers/filters_controller_test.rb",
-          "#{Katello::Engine.root}/test/controllers/products_controller_test.rb",
           "#{Katello::Engine.root}/test/lib/repo_discovery_test.rb",
           "#{Katello::Engine.root}/test/models/authorization/*_test.rb",
+          "#{Katello::Engine.root}/test/models/concerns/*_test.rb",
           "#{Katello::Engine.root}/test/models/association_test.rb",
           "#{Katello::Engine.root}/test/models/repository_test.rb",
           "#{Katello::Engine.root}/test/models/system_test.rb",
           "#{Katello::Engine.root}/test/models/distributor_test.rb",
           "#{Katello::Engine.root}/test/models/activation_key_test.rb",
-          "#{Katello::Engine.root}/test/models/changeset_test.rb",
           "#{Katello::Engine.root}/test/models/content_view_test.rb",
-          "#{Katello::Engine.root}/test/models/content_view_version_test.rb",
-          "#{Katello::Engine.root}/test/models/deletion_changeset_test.rb",
-          "#{Katello::Engine.root}/test/models/erratum_rule_test.rb",
-          "#{Katello::Engine.root}/test/models/filter_test.rb",
+          "#{Katello::Engine.root}/test/models/content_view_filter_test.rb",
+          "#{Katello::Engine.root}/test/models/content_view_erratum_filter_rule_test.rb",
+          "#{Katello::Engine.root}/test/models/content_view_package_filter_rule_test.rb",
+          "#{Katello::Engine.root}/test/models/content_view_package_group_filter_rule_test.rb",
           "#{Katello::Engine.root}/test/models/kt_environment_test.rb",
           "#{Katello::Engine.root}/test/models/organization_test.rb",
           "#{Katello::Engine.root}/test/models/organization_destroyer_test.rb",
-          "#{Katello::Engine.root}/test/models/package_rule_test.rb",
-          "#{Katello::Engine.root}/test/models/package_group_rule_test.rb",
-          "#{Katello::Engine.root}/test/models/content_view_definition_test.rb",
           "#{Katello::Engine.root}/test/models/puppet_module_test.rb",
           "#{Katello::Engine.root}/test/models/pulp_sync_status_test.rb"
         ]
         t.verbose = true
       end
-      
+
       Rake::Task[test_task.name].invoke
     end
   end

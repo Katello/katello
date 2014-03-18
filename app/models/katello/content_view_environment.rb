@@ -19,11 +19,32 @@ class ContentViewEnvironment < Katello::Model
   include Glue if Katello.config.use_cp
 
   belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_environments
-  belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :content_view_environments
+  belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :content_view_environments
+  belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",
+    :inverse_of => :content_view_environments
+
+  validates :environment_id, uniqueness: {scope: :content_view_id}, presence: true
+  validates :content_view_id, presence: true
+
+  before_save :generate_info
 
   # retrieve the owning environment for this content view environment.
   def owner
     self.environment
+  end
+
+  private
+
+  def generate_info
+    self.name ||= environment.name
+
+    if content_view.default?
+      self.label ||= environment.label
+      self.cp_id ||= environment.id.to_s
+    else
+      self.label ||= [environment.label, content_view.label].join('/')
+      self.cp_id ||= [environment.id, content_view.id].join('-')
+    end
   end
 end
 end

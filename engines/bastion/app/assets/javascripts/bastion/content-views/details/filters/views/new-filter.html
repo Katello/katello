@@ -1,0 +1,61 @@
+<div class="details details-full">
+
+  <a ui-sref="content-views.details.filters.list">
+    <i class="icon-double-angle-left"></i>
+    <span translate>Filters List</span>
+  </a>
+
+  <header class="details-header">
+    <h3 translate>Add New Filter</h3>
+  </header>
+
+  <form name="filterForm" class="form-horizontal" role="form" novalidate>
+    <div alch-form-group label="{{ 'Name' | translate }}">
+      <input id="name"
+             name="name"
+             ng-model="filter.name"
+             type="text"
+             tabindex="1"
+             autofocus
+             required/>
+    </div>
+    
+    <div alch-form-group label="{{ 'Content Type' | translate }}">
+      <select id="type"
+              name="type"
+              ng-model="filter.type"
+              tabindex="2"
+              required>
+        <option value="rpm" translate>Package</option>
+        <option value="package_group" translate>Package Group</option>
+        <option value="erratumId" translate>Erratum - by ID</option>
+        <option value="erratumDateType" translate>Erratum - by Date and Type</option>
+      </select>
+    </div>
+
+    <div alch-form-group label="{{ 'Type' | translate }}">
+      <select id="inclusion"
+              name="inclusion"
+              ng-model="filter.inclusion"
+              tabindex="3"
+              required>
+        <option value="true" translate>Include</option>
+        <option value="false" translate>Exclude</option>
+      </select>
+    </div>
+
+    <div alch-form-group label="{{ 'Description' | translate }}">
+      <textarea id="description"
+                name="description"
+                ng-model="filter.description"
+                tabindex="3">
+      </textarea>
+    </div>
+
+    <div alch-form-buttons
+         on-cancel="transitionTo('content-views.details.filters.list', {contentViewId: contentView.id})"
+         on-save="save(filter, contentView)">
+    </div>
+  </form>
+
+</div>

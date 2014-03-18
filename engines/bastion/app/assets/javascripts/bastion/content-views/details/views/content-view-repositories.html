@@ -1,0 +1,118 @@
+<div class="details details-full">
+
+  <h3 translate>
+    Repository Selection
+  </h3>
+
+  <nav>
+    <ul class="nav nav-tabs">
+      <li ng-class="{active: isState('content-views.details.repositories.list')}">
+        <a ui-sref="content-views.details.repositories.list">
+          <span translate>
+            List/Remove
+          </span>
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('content-views.details.repositories.available')}" ng-show="!contentView.permissions.editable">
+        <a ui-sref="content-views.details.repositories.available" translate>
+          Add
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="details-header row">
+    <div class="col-sm-8">
+      <div class="input-group">
+
+        <span class="input-group-addon">
+          <select ng-model="product" ng-options="product.name for (id, product) in products">
+          </select>
+        </span>
+
+        <input type="text"
+               class="form-control filter-input"
+               placeholder="{{ 'Filter' | translate }}"
+               ng-model="repositorySearch"/>
+
+      </div>
+    </div>
+
+    <div class="col-sm-4">
+      <button class="btn btn-primary fr" ng-show="isState('content-views.details.repositories.list')" ng-click="removeRepositories(contentView)">
+        <i class="icon-trash"></i>
+        <span translate>Remove Repositories</span>
+      </button>
+      <button class="btn btn-primary fr" ng-show="isState('content-views.details.repositories.available')" ng-click="addRepositories(contentView)">
+        <i class="icon-plus"></i>
+        <span translate>Add Repositories</span>
+      </button>
+    </div>
+  </div>
+
+  <div alch-table="repositoriesTable" class="nutupane">
+    <div alch-infinite-scroll="repositoriesTable.nextPage()" data="repositoriesTable.rows">
+
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr alch-table-head row-select>
+            <th alch-table-column translate>Name</th>
+            <th alch-table-column translate>Product</th>
+            <th alch-table-column translate>Last Sync</th>
+            <th alch-table-column translate>Sync State</th>
+            <th alch-table-column translate>Content</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr alch-table-row ng-repeat="repository in repositoriesTable.rows | filter:repositoryFilter" row-select="repository">
+            <td alch-table-cell>
+              <a ui-sref="products.details.repositories.info({productId: repository.product.id, repositoryId: repository.id})">
+                {{ repository.name }}
+              </a>
+            </td>
+            <td alch-table-cell>{{ repository.product.name }}</td>
+            <td alch-table-cell>
+              <span ng-show="repository.feed">
+                {{ repository.last_sync | date:"short" }}
+              </span>
+              <span ng-hide="repository.feed" translate>N/A</span>
+            </td>
+            <td alch-table-cell>
+              <span ng-show="repository.feed">
+                <a href="sync_management/index">{{ repository.sync_state }}</a>
+              </span>
+              <span ng-hide="repository.feed" translate>N/A</span>
+            </td>
+            <td alch-table-cell>
+              <div>
+                <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages"
+                   ng-show="repository.content_type == 'yum'"
+                   translate>
+                  {{ repository.content_counts.rpm || 0 }} Packages
+                </a>
+              </div>
+              <div>
+                <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata"
+                   ng-show="repository.content_type == 'yum'"
+                   translate>
+                  {{ repository.content_counts.erratum || 0 }} Errata
+                </a>
+              </div>
+              <div>
+                <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_puppet_modules"
+                   ng-show="repository.content_type == 'puppet'"
+                   translate>
+                  {{ repository.content_counts.puppet_module || 0 }} Puppet Modules
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+</div>

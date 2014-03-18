@@ -14,7 +14,7 @@ module Navigation
   module ContentMenu
     def self.included(base)
       base.class_eval do
-        helper_method :content_view_definition_navigation
+        helper_method :content_view_navigation
         helper_method :activation_keys_navigation
         helper_method :promotion_packages_navigation
         helper_method :promotion_errata_navigation
@@ -29,35 +29,34 @@ module Navigation
       end
     end
 
-    def content_view_definition_navigation
-      definition_filter_check = lambda do
-        !@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record? &&
-          !@view_definition.composite
+    def content_view_navigation
+      view_filter_check = lambda do
+        !@view.nil? && @view.readable? && !@view.new_record? && !@view.composite
       end
 
       [
-        { :key => :view_definition_views,
+        { :key => :view_views,
           :name => _("Views"),
-          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : views_content_view_definition_path(@view_definition.id),
-          :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
+          :url => (@view.nil? || @view.new_record?) ? "" : views_content_view_path(@view.id),
+          :if => lambda{!@view.nil? && @view.readable? && !@view.new_record?},
           :options => {:class => "panel_link"}
         },
-        { :key => :view_definition_content,
+        { :key => :view_content,
           :name => _("Content"),
-          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_content_view_definition_path(@view_definition.id),
-          :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
+          :url => (@view.nil? || @view.new_record?) ? "" : content_content_view_path(@view.id),
+          :if => lambda{!@view.nil? && @view.readable? && !@view.new_record?},
           :options => {:class => "panel_link"}
         },
-        { :key => :view_definition_filter,
+        { :key => :view_filter,
           :name => _("Filters"),
-          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_view_definition_filters_path(@view_definition.id),
-          :if => definition_filter_check,
+          :url => (@view.nil? || @view.new_record?) ? "" : content_view_filters_path(@view.id),
+          :if => view_filter_check,
           :options => {:class => "panel_link"}
         },
-        { :key => :view_definition_details,
+        { :key => :view_details,
           :name => _("Details"),
-          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : edit_content_view_definition_path(@view_definition.id),
-          :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
+          :url => (@view.nil? || @view.new_record?) ? "" : edit_content_view_path(@view.id),
+          :if => lambda{!@view.nil? && @view.readable? && !@view.new_record?},
           :options => {:class => "panel_link"}
         }
       ]

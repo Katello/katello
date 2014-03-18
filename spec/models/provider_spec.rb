@@ -225,17 +225,12 @@ describe Provider do
     end
 
     it "should create repositories that were added in CDN" do
-      @organization.library.repositories(true).map(&:name).sort.must_equal(["product-with-change 1.0",
-                                                                           "product-without-change 1.0",
-                                                                           "product-without-change 1.1"])
-      Katello.pulp_server.extensions.repository.stubs(:create).returns({})
+      Candlepin::ProductContent.any_instance.expects(:sync_task).with do |action_class, repo|
+        action_class.must_equal ::Actions::Katello::Repository::Create
+        repo.name.must_equal "product-with-change 1.1"
+      end
       @provider.refresh_products
-      @organization.library.repositories(true).map(&:name).sort.must_equal(["product-with-change 1.0",
-                                                                           "product-with-change 1.1",
-                                                                           "product-without-change 1.0",
-                                                                           "product-without-change 1.1"])
     end
-
   end
 
   describe "sync provider" do

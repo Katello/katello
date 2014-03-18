@@ -1,0 +1,98 @@
+<section class="nutupane-details" ng-cloak alch-container-scroll>
+
+  <header class="details-header row">
+    <h2 class="col-sm-6" ng-hide="contentView.composite">{{ contentView.name }}</h2>
+    <h2 class="col-sm-6" ng-show="contentView.composite" translate>Composite Content View {{ contentView.name }}</h2>
+
+    <div class="col-sm-6">
+      <div class="fr">
+        <a class="btn btn-primary" ui-sref="content-views.details.publish">
+          <i class="icon-paste"></i>
+          <span translate>Publish New Version</span>
+        </a>
+
+        <a class="btn btn-default" ng-hide="true" ui-sref="content-views.details.clone">
+          <i class="icon-copy"></i>
+          <span translate>Clone View</span>
+        </a>
+
+        <button ng-hide="true" class="btn btn-default" ui-sref="content-views.index">
+          <i class="icon-trash"></i>
+          {{ "Remove View" | translate }}
+        </button>
+
+        <a class="btn btn-default" ui-sref="content-views.index">
+          <i class="icon-remove"></i>
+          <span translate>Close</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <nav>
+    <ul class="nav nav-tabs">
+      <li ng-class="{active: isState('content-views.details.versions') || isState('content-views.details.promotion')}">
+        <a ui-sref="content-views.details.versions" translate>
+          Versions
+        </a>
+      </li>
+
+      <li ng-class="{active: stateIncludes('content-views.details.composite-content-views')}" ng-show="contentView.composite">
+        <a ui-sref="content-views.details.composite-content-views.list" translate>
+          Content Views
+        </a>
+      </li>
+
+      <li class="dropdown"
+          ng-class="{active: stateIncludes('content-views.details.repositories') || stateIncludes('content-views.details.filters')}"
+          ng-hide="contentView.composite">
+        <a class="dropdown-toggle">
+          <span translate>Content</span>
+          <i class="icon-chevron-down"></i>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a ui-sref="content-views.details.repositories.list" translate>
+              Repositories
+            </a>
+          </li>
+          <li>
+            <a ui-sref="content-views.details.filters.list" translate>
+              Filters
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li ng-class="{active: stateIncludes('content-views.details.puppet-modules')}"
+          ng-hide="contentView.composite">
+        <a ui-sref="content-views.details.puppet-modules.list" translate>
+          Puppet Modules
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('content-views.details.history')}">
+        <a ui-sref="content-views.details.history" translate>
+          History
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('content-views.details.info')}">
+        <a ui-sref="content-views.details.info" translate>
+          Details
+        </a>
+      </li>
+      <li ng-class="{active: stateIncludes('content-views.details.tasks')}">
+        <a translate
+           ui-sref="content-views.details.tasks.index({contentViewId: contentView.id})">
+          Tasks
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div ui-view></div>
+
+</section>

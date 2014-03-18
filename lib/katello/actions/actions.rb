@@ -5,8 +5,7 @@ module Katello
     require "katello/actions/content_view_create"
     require 'katello/actions/content_view_demote'
     require 'katello/actions/content_view_promote'
-    require 'katello/actions/content_view_publish'
-    require 'katello/actions/content_view_refresh'
+    require 'katello/actions/node_metadata_generate'
 
     require 'katello/actions/environment_create'
     require 'katello/actions/environment_destroy'

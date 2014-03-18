@@ -35,10 +35,47 @@ Katello::Engine.routes.draw do
         end
       end
 
-      api_resources :content_views, :only => [:index]
+      api_resources :content_views do
+        member do
+          post :publish
+          post :refresh
+          get :history
+          get :available_puppet_modules
+          get :available_puppet_module_names
+        end
+        api_resources :content_view_puppet_modules
+        api_resources :filters, :controller => :content_view_filters do
+          member do
+            get :available_errata
+            get :available_package_groups
+          end
+          api_resources :errata, :only => [:index]
+          api_resources :package_groups, :only => [:index]
+        end
+        api_resources :puppet_modules, :only => [:index]
+        api_resources :repositories, :only => [:index]
+        api_resources :content_view_versions, :only => [:index]
+      end
+
+      api_resources :content_view_filters do
+        api_resources :errata, :only => [:index]
+        api_resources :package_groups, :only => [:index]
+        api_resources :rules, :controller => :content_view_filter_rules
+        member do
+          get :available_errata
+          get :available_package_groups
+        end
+      end
+
+      api_resources :content_view_versions, :only => [:index, :show] do
+        member do
+          post :promote
+        end
+      end
 
       api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
         api_resources :activation_keys, :only => [:index, :create]
+        api_resources :puppet_modules, :only => [:index]
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
         end
@@ -47,13 +84,15 @@ Katello::Engine.routes.draw do
         end
       end
 
+      api_resources :errata, :only => [:index, :show]
+
       api_resources :gpg_keys, :only => [:index, :show, :create, :update, :destroy] do
         post :content, :on => :member
       end
 
       api_resources :organizations, :only => [:index, :show, :update, :create, :destroy] do
-        api_resources :activation_keys, :only => [:index, :create]
-        api_resources :content_views, :only => [:index]
+        api_resources :activation_keys, :only => [:index]
+        api_resources :content_views, :only => [:index, :create]
         api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
           collection do
             get :paths
@@ -80,6 +119,8 @@ Katello::Engine.routes.draw do
         end
       end
 
+      api_resources :package_groups, :only => [:index, :show]
+
       api_resources :ping, :only => [:index]
       match "/status" => "ping#server_status", :via => :get
 
@@ -102,6 +143,8 @@ Katello::Engine.routes.draw do
           put :refresh_products
         end
       end
+
+      api_resources :puppet_modules, :only => [:index, :show]
 
       api_resources :repository_sets, :only => [:index, :show] do
         member do
@@ -177,7 +220,6 @@ Katello::Engine.routes.draw do
         match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
         api_resources :content_views, :only => [:index, :create]
-        api_resources :content_view_definitions, :only => [:index, :create]
         api_resources :subscriptions, :only => [:index, :upload, :delete_manifest, :refresh_manifest, :show] do
           collection do
             post :upload
@@ -244,64 +286,6 @@ Katello::Engine.routes.draw do
         end
       end
 
-      api_resources :content_view_definitions, :only => [:update, :show, :destroy] do
-        member do
-          post :publish
-          post :clone
-        end
-        resources :products, :controller => :content_view_definitions, :only => [] do
-          collection do
-            get :index, :action => :list_products
-            put :index, :action => :update_products
-            get :all, :action => :list_all_products
-          end
-        end
-        resources :repositories, :controller => :content_view_definitions, :only => [] do
-          collection do
-            get :index, :action => :list_repositories
-            put :index, :action => :update_repositories
-          end
-        end
-        get :content_views
-        put :content_views, :action => :update_content_views
-        resources :filters, :controller => :filters, :only => [:index, :show, :create, :destroy] do
-          resources :products, :controller => :filters, :only => [] do
-            collection do
-              get :index, :action => :list_products
-              put :index, :action => :update_products
-            end
-          end
-          resources :repositories, :controller => :filters, :only => [] do
-            collection do
-              get :index, :action => :list_repositories
-              put :index, :action => :update_repositories
-            end
-          end
-          resources :rules, :controller => :filter_rules, :only => [:create, :destroy]
-        end
-      end
-
-      api_resources :content_views, :only => [:update, :show] do
-        member do
-          post :promote
-          post :refresh
-        end
-      end
-
-      api_resources :changesets, :only => [:show, :update, :destroy] do
-        post :apply, :on => :member, :action => :apply
-        #TODO: fix dependency resolution
-        #get :dependencies, :on => :member, :action => :dependencies
-
-        api_attachable_resources :products, :controller => :changesets_content
-        api_attachable_resources :packages, :controller => :changesets_content, :constraints => {:id => /[0-9a-zA-Z\-_.]+/}
-        api_attachable_resources :errata, :controller => :changesets_content
-        api_attachable_resources :repositories, :controller => :changesets_content, :resource_name => :repo
-        api_attachable_resources :distributions, :controller => :changesets_content
-        api_attachable_resources :templates, :controller => :changesets_content
-        api_attachable_resources :content_views, :controller => :changesets_content
-      end
-
       api_resources :repositories, :only => [:index, :create, :show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
         collection do
           post :sync_complete
@@ -315,6 +299,7 @@ Katello::Engine.routes.draw do
         api_resources :packages, :only => [:index, :show] do
           get :search, :on => :collection
         end
+        api_resources :package_groups, :only => [:index, :show]
         api_resources :errata, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z\-\+%_.:]+/}
         api_resources :distributions, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z \-\+%_.]+/}
         api_resources :puppet_modules, :only => [:index, :show] do
@@ -335,7 +320,6 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :content_views, :only => [:index]
-        api_resources :changesets, :only => [:index, :create]
 
         member do
           get :releases
@@ -380,8 +364,6 @@ Katello::Engine.routes.draw do
       api_resources :sync_plans, :only => [:show, :update, :destroy]
       api_resources :tasks, :only => [:show]
       api_resources :about, :only => [:index]
-
-      api_resources :errata, :only => [:show]
 
       # api custom information
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info

@@ -23,7 +23,7 @@ angular.module('Bastion.test-mocks').run(['$state', '$stateParams', '$rootScope'
     }
 ]);
 
-angular.module('Bastion.test-mocks').factory('MockResource', function() {
+angular.module('Bastion.test-mocks').factory('MockResource', function () {
     function resourceGenerator() {
         var Resource, mockResource, successResponse, errorResponse;
 
@@ -46,22 +46,32 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
             failed: false,
             readonly: false,
             $get: function() {},
-            $save: function(success, error) {
+            $save: function(params, success, error) {
+                if (typeof(params) === "function") {
+                    error = success;
+                    success = params;
+                }
+
                 if (!this.failed) {
-                    success(successResponse);
+                    success(this);
                 } else {
                     error(errorResponse);
                 }
             },
-            $update: function(success, error) {
+            $update: function(params, success, error) {
+                if (typeof(params) === "function") {
+                    error = success;
+                    success = params;
+                }
+
                 if (this.failed) {
                     error({ data: {errors: ['error!']}});
                 } else {
                     success(this);
                 }
             },
-            $delete: function(callback) {
-                callback();
+            $delete: function(success, failure) {
+                success(this);
             },
             $promise: {then: function(callback) {
                 callback(mockResource);
@@ -91,8 +101,10 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
             var item;
 
             angular.forEach(Resource.mockResources.results, function(value) {
-                if (value.id.toString() === params.id.toString()) {
-                    item = value;
+                if (params.id) {
+                    if (value.id.toString() === params.id.toString()) {
+                        item = value;
+                    }
                 }
             });
 
@@ -124,7 +136,11 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
         Resource.update = function(params, data, success, error) {
             var item = Resource.get(params);
 
-            item = angular.extend(item, data);
+            if (item) {
+                item = angular.extend(item, data);
+            } else {
+                item = data;
+            }
 
             if (success) {
                 success(item);
@@ -135,11 +151,20 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
         Resource.delete = function(params, success, error) {
             params = null;
             delete params;
+
+            if (this.failed) {
+                error({ data: {errors: ['error!']}});
+            } else {
+                success(params);
+            }
+
             return true;
         };
 
+        Resource.remove = Resource.delete;
+
         return Resource;
-    };
+    }
 
     return {
         $new: function() {
@@ -212,3 +237,11 @@ angular.module('Bastion.test-mocks').factory('MockOrganization',  ['MockResource
         return myMock;
     }
 ]);
+
+angular.module('Bastion.test-mocks').factory('gettextMock', function () {
+
+    return function (message) {
+        return message;
+    };
+
+});

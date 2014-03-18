@@ -1,0 +1,74 @@
+<span page-title ng-model="contentView">{{ 'Content Views for Composite Content View:' | translate }} {{ contentView.name }}</span>
+
+<div data-extend-template="layouts/details-nutupane.html">
+  <div data-block="messages"></div>
+
+  <div data-block="actions">
+    <button class="btn btn-primary fr" ng-click="removeContentViews()">
+      <i class="icon-trash"></i>
+      <span translate>Remove Content Views</span>
+    </button>
+  </div>
+
+  <div data-block="search">
+    <input type="text"
+           class="form-control"
+           placeholder="{{ 'Filter...' | translate }}"
+           ng-model="contentViewVersionFilter"/>
+  </div>
+
+  <span data-block="result-count"></span>
+
+  <div data-block="table">
+    <table class="table table-bordered table-striped">
+      <thead>
+      <tr alch-table-head row-select>
+        <th alch-table-column translate>Name</th>
+        <th alch-table-column translate>Version</th>
+        <th alch-table-column translate>Environment</th>
+        <th alch-table-column translate>Description</th>
+        <th alch-table-column translate>Content</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr alch-table-row ng-repeat="contentViewVersion in detailsTable.rows | filter:contentViewVersionFilter" row-select="contentViewVersion">
+        <td alch-table-cell>{{ contentViewVersion.content_view.name }}</td>
+        <td alch-table-cell>
+          <select class="form-control"
+                  name="contentViewVersion.version"
+                  ng-show="contentViewVersion.content_view.versions.length > 1"
+                  ng-change="saveContentViewVersion(contentViewVersion)"
+                  ng-model="contentViewVersion.id"
+                  ng-options="cvv.id as cvv.version for cvv in contentViewVersion.content_view.versions">
+          </select>
+          <span ng-show="contentViewVersion.content_view.versions.length === 1" ng-model="contentViewVersions.version">1</span>
+        </td>
+        <td alch-table-cell>
+        <span ng-show="contentViewVersions.environments.length !== 0"
+              ng-repeat="environment in contentViewVersion.environments">
+          {{ environment.name }}<span ng-if="!$last">, </span>
+        </span>
+        <span ng-show="contentViewVersion.environments.length === 0" translate>
+          Not yet published
+        </span>
+        </td>
+        <td alch-table-cell>{{ contentViewVersion.content_view.description }}</td>
+        <td alch-table-cell>
+          <div>
+            <a ui-sref="content-views.details.repositories.list({contentViewId: contentViewVersion.content_view.id})" translate>
+              {{ contentViewVersion.repositories.length || 0 }} Repositories
+            </a>
+          </div>
+          <div>
+            <a ui-sref="content-views.details.puppet-modules.list({contentViewId: contentViewVersion.content_view.id})" translate>
+              {{ contentViewVersion.puppet_modules.length || 0 }} Puppet Modules
+            </a>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

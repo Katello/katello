@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -21,5 +21,6 @@
 angular.module('Bastion.content-views', [
     'ngResource',
     'ui.router',
+    'Bastion.content-views.versions',
     'Bastion.widgets'
 ]);

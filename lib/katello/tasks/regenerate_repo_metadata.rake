@@ -6,7 +6,7 @@ namespace :katello do
 
     Katello::Repository.all.each_with_index do |repo, i|
       puts "Regenerating #{i+1}/#{repos.count} (#{repo.pulp_id})\n"
-      Katello::PulpTaskStatus::wait_for_tasks(repo.generate_metadata(true))
+      Katello::PulpTaskStatus::wait_for_tasks(repo.generate_metadata(:force_regeneration => true))
     end
   end
 

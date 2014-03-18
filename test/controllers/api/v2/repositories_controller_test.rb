@@ -67,7 +67,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
 
   def test_create
     product = MiniTest::Mock.new
-    product.expect(:add_repo, {}, [
+    product.expect(:add_repo, @repository, [
       'Fedora_Repository',
       'Fedora Repository',
       'http://www.google.com',
@@ -77,6 +77,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     ])
     product.expect(:editable?, @product.editable?)
     product.expect(:gpg_key, nil)
+    @controller.expects(:sync_task).with(::Actions::Katello::Repository::Create, @repository).once
 
     Product.stub(:find, product) do
       post :create, :name => 'Fedora Repository',
@@ -96,7 +97,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     product.expect(:gpg_key, key)
     product.expect(:editable?, @product.editable?)
 
-    product.expect(:add_repo, {}, [
+    product.expect(:add_repo, @repository, [
       'Fedora_Repository',
       'Fedora Repository',
       'http://www.google.com',
@@ -104,6 +105,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
       nil,
       key
     ])
+    @controller.expects(:sync_task).with(::Actions::Katello::Repository::Create, @repository).once
 
     Product.stub(:find, product) do
       post :create, :name => 'Fedora Repository',

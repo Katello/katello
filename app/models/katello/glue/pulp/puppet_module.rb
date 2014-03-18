@@ -19,14 +19,16 @@ module Glue::Pulp::PuppetModule
     base.class_eval do
       attr_accessor :_storage_path, :tag_list, :description, :license, :author,
                     :_ns, :project_page, :summary, :source, :dependencies, :version,
-                    :_content_type_id, :checksums, :_id, :types, :name, :repoids
-
-      alias_method 'id=', '_id='
-      alias_method 'id', '_id'
+                    :_content_type_id, :checksums, :id, :_id, :types, :name, :repoids
 
       def self.find(id)
         attrs = Katello.pulp_server.extensions.puppet_module.find_by_unit_id(id)
         Katello::PuppetModule.new(attrs) if !attrs.nil?
+      end
+
+      def self.find_by_ids(ids)
+        pulp_puppet_modules = Katello.pulp_server.extensions.puppet_module.find_all_by_unit_ids(ids)
+        pulp_puppet_modules.collect { |puppet_module| Katello::PuppetModule.new(puppet_module) }
       end
 
       def self.generate_unit_data(filepath)
@@ -48,12 +50,17 @@ module Glue::Pulp::PuppetModule
 
   module InstanceMethods
     def initialize(params = {}, options = {})
+      params['id'] = params['id'] || params.delete('_id')
       params['repoids'] = params.delete(:repository_memberships) if params.key?(:repository_memberships)
       params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
     end
 
     def sortable_version
       Util::Package.sortable_version(self.version)
+    end
+
+    def repositories
+      Repository.where(:pulp_id => self.repoids)
     end
 
     def as_json(options = nil)

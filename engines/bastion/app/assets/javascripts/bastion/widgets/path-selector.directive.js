@@ -29,11 +29,13 @@ angular.module('Bastion.widgets').directive('pathSelector',
         scope: {
             paths: '=pathSelector',
             mode: '@',
-            disableTrigger: '='
+            disableTrigger: '=',
+            enabledCheck: '&',
+            pathAttribute: '@'
         },
         templateUrl: 'widgets/views/path-selector.html',
         link: function (scope, element, attrs, ngModel) {
-            var activeItemId;
+            var activeItemId, convertPathObjects;
 
             scope.itemSelected = function (item) {
                 if (item && scope.mode === 'singleSelect') {
@@ -43,11 +45,20 @@ angular.module('Bastion.widgets').directive('pathSelector',
                 }
             };
 
+            convertPathObjects = function (paths) {
+                if (scope.pathAttribute) {
+                    paths =  _.pluck(paths, scope.pathAttribute);
+                }
+                return paths;
+            };
+
             if (scope.paths.$promise) {
-                scope.paths.$promise.then(function () {
+                scope.paths.$promise.then(function (paths) {
+                    scope.paths = convertPathObjects(paths);
                     scope.itemSelected(ngModel.$modelValue);
                 });
             } else {
+                scope.paths = convertPathObjects(scope.paths);
                 scope.itemSelected(ngModel.$modelValue);
             }
 
@@ -60,6 +71,16 @@ angular.module('Bastion.widgets').directive('pathSelector',
                     item.disabled = disable;
                 });
             });
+
+            scope.checkEnabled = function (item) {
+                var enabled = true;
+                if (item.disabled) {
+                    enabled = false;
+                } else if (attrs.enabledCheck) {
+                    enabled = scope.enabledCheck({item: item});
+                }
+                return enabled;
+            };
 
             function selectById(id) {
                 forEachItem(function (item) {

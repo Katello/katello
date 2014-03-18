@@ -1,0 +1,36 @@
+<div alch-form-group label="{{ 'Errata Type' | translate }}">
+  <label class="checkbox-inline">
+    <input type="checkbox" ng-model="types.security" ng-change="updateTypes(types)"/>
+    <span translate>Security</span>
+  </label>
+  <label class="checkbox-inline">
+    <input type="checkbox" ng-model="types.enhancement" ng-change="updateTypes(types)"/>
+    <span translate>Enhancement</span>
+  </label>
+  <label class="checkbox-inline">
+    <input type="checkbox" ng-model="types.bugfix" ng-change="updateTypes(types)"/>
+    <span translate>Bugfix</span>
+  </label>
+</div>
+
+<div alch-form-group label="{{ 'Start Date' | translate }}">
+  <div class="input-group">
+    <input class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="rule.start_date" is-open="date.startOpen" ng-click="openStartDate($event)"/>
+    <span class="input-group-btn">
+      <button class="btn btn-default" type="button">
+        <i class="icon-calendar inline-icon" ng-click="openStartDate($event)"></i>
+      </button>
+    </span>
+  </div>
+</div>
+
+<div alch-form-group label="{{ 'End Date' | translate }}">
+  <div class="input-group">
+    <input class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="rule.end_date" is-open="date.endOpen" ng-click="openEndDate($event)"/>
+    <span class="input-group-btn">
+      <button class="btn btn-default" type="button">
+        <i class="icon-calendar inline-icon" ng-click="openEndDate($event)"></i>
+      </button>
+    </span>
+  </div>
+</div>

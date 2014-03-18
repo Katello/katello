@@ -1,0 +1,82 @@
+<section class="nutupane-details" ng-cloak alch-container-scroll>
+
+  <header class="new-header details-header">
+    <h2 class="fl" translate>New Content View</h2>
+    <div class="fr">
+      <button class="btn btn-default" ui-sref="content-views.index">
+        <i class="icon-remove"></i>
+        {{ "Close" | translate }}
+      </button>
+    </div>
+  </header>
+
+  <div class="row">
+    <form name="optionsForm" class="col-sm-12">
+      <label class="radio-inline" ng-hide="true">
+        <input type="radio"
+               ng-model="createOption"
+               name="createOptions"
+               id="createOptions1"
+               value="new"
+               checked/>
+        {{ "Create new view" | translate }}
+      </label>
+      <label class="radio-inline" ng-hide="true">
+        <input type="radio"
+               ng-model="createOption"
+               name="createOptions"
+               id="createOptions2"
+               value="existing"/>
+        {{ "Create view from existing views" | translate }}
+      </label>
+    </form>
+  </div>
+
+  <div class="row">
+    <h3 class="col-sm-12" translate>View Details</h3>
+
+    <form name="contentViewForm" class="form-horizontal col-sm-8" novalidate role="form">
+      <div alch-form-group label="{{ 'Name' | translate }}">
+        <input id="name"
+               name="name"
+               ng-model="contentView.name"
+               type="text"
+               tabindex="1"
+               autofocus
+               required/>
+      </div>
+
+      <div alch-form-group label="{{ 'Label' | translate }}">
+        <input id="label"
+               name="label"
+               ng-model="contentView.label"
+               type="text"
+               tabindex="2"
+               required/>
+      </div>
+
+      <div alch-form-group label="{{ 'Description' | translate }}">
+        <textarea id="description"
+                  name="description"
+                  ng-model="contentView.description"
+                  tabindex="3">
+        </textarea>
+      </div>
+
+      <div alch-form-group label="{{ 'Composite View?' | translate }}">
+        <input id="composite"
+               name="composite"
+               ng-model="contentView.composite"
+               type="checkbox"
+               tabindex="4"/>
+        <p class="help-block" translate>A composite view contains other content views.</p>
+      </div>
+
+      <div alch-form-buttons
+           on-cancel="transitionTo('content-views.index')"
+           on-save="save(contentView)"
+           working="working">
+      </div>
+    </form>
+  </div>
+</section>

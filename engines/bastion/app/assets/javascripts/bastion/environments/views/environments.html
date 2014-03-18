@@ -33,17 +33,17 @@
         <tbody>
           <tr ng-repeat="row in environmentsTable.rows"
               ng-controller="PathController"
-              ng-show="row.path.length > 0"
+              ng-show="row.environments.length > 0"
               path-id="{{ row.pathId = $index }}">
 
             <td class="path-selector">
               <ul class="path-list">
-                <li class="path-list-item" ng-repeat="env in row.path">
-                  <label ng-click="selectEnvironment(env.environment)"
-                         ng-class="{active: workingOn.environment === env.environment}"
+                <li class="path-list-item" ng-repeat="env in row.environments">
+                  <label ng-click="selectEnvironment(env)"
+                         ng-class="{active: workingOn === env}"
                          class="path-list-item-label">
                     <div>
-                      {{ env.environment.name }}
+                      {{ env.name }}
                     </div>
                   </label>
                 </li>

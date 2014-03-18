@@ -1,22 +1,20 @@
 #dashboard_promotions.widget.scroll-pane{"data-quantity"=>quantity}
-  - if (changets = promotions()).empty?
-    #{_("No changesets found.")}
+  - if (histories = content_view_history()).empty?
+    #{_("No Content View history events found.")}
   -else
     %ul
-      - for changeset in promotions()
+      - for history in histories
         %li
           %div.row_item
-            .col_1.one-line-ellipsis{:title=>changeset.name}
+            .col_1.one-line-ellipsis{:title=>history.content_view.name}
               %span.icon_wrap.fl
-                %span.fl{:class=>changeset_class(changeset)}
+                %span.fl{:class=>history_class(changeset)}
 
-              %h5
-                = link_to changeset.name, changeset_path_helper(changeset)
             .col_2
-              #{changeset_message(changeset)}
+              #{history_message(history)}
             .col_1.environment
               %span.icon_wrap.fl
               %h5
-                #{changeset.environment.name}
+                #{history.environment.name}
             .col_2
-              #{format_time changeset.promotion_date}
+              #{format_time history.updated_at}

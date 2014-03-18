@@ -18,25 +18,41 @@ class ContentViewVersion < Katello::Model
   include Authorization::ContentViewVersion
 
   belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
-  has_many :content_view_version_environments, :class_name => "Katello::ContentViewVersionEnvironment",
-           :dependent => :destroy
-  has_many :environments, :through      => :content_view_version_environments,
+  has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
+           :dependent => :nullify
+  has_many :environments, :through      => :content_view_environments,
                           :class_name   => "Katello::KTEnvironment",
                           :inverse_of   => :content_view_versions,
-                          :before_add    => :add_environment,
                           :after_remove => :remove_environment
 
+  has_many :history, :class_name => "Katello::ContentViewHistory", :inverse_of => :content_view_version,
+           :dependent => :destroy, :foreign_key => :katello_content_view_version_id
   has_many :repositories, :class_name => "Katello::Repository", :dependent => :destroy
+  has_many :content_view_puppet_environments, :class_name => "Katello::ContentViewPuppetEnvironment",
+           :dependent => :destroy
   has_one :task_status, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
-  belongs_to :definition_archive, :class_name => "Katello::ContentViewDefinitionArchive",
-                                  :inverse_of => :content_view_versions
 
-  validates :definition_archive_id, :presence => true, :if => :has_definition?
-
-  before_validation :create_archived_definition
+  has_many :content_view_components, :inverse_of => :content_view_version
+  has_many :composite_content_views, :through => :content_view_components, :source => :content_view
 
   scope :default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true)
   scope :non_default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false)
+
+  def self.with_library_repo(repo)
+    joins(:repositories).where("#{Katello::Repository.table_name}.library_instance_id" => repo)
+  end
+
+  def to_s
+    name
+  end
+
+  def active_history
+    self.history.active
+  end
+
+  def name
+    "#{content_view} #{version}"
+  end
 
   def has_default_content_view?
     ContentViewVersion.default_view.pluck("#{Katello::ContentViewVersion.table_name}.id").include?(self.id)
@@ -46,20 +62,28 @@ class ContentViewVersion < Katello::Model
     self.repositories.in_environment(env)
   end
 
+  def puppet_env(env)
+    self.content_view_puppet_environments.in_environment(env).first
+  end
+
+  def puppet_modules
+    self.content_view_puppet_environments.first.puppet_modules
+  end
+
+  def archived_repos
+    self.repos(nil)
+  end
+
+  def non_archive_repos
+    self.repositories.non_archived
+  end
+
   def products(env = nil)
     if env
       repos(env).map(&:product).uniq(&:id)
     else
       self.repositories.map(&:product).uniq(&:id)
     end
-  end
-
-  def content_view_definition
-    @definition ||= content_view.definition
-  end
-
-  def has_definition?
-    content_view_definition.present?
   end
 
   def repos_ordered_by_product(env)
@@ -77,100 +101,121 @@ class ContentViewVersion < Katello::Model
   end
 
   def self.in_environment(env)
-    joins(:content_view_version_environments).where("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id" => env).
-        order("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id")
-  end
-
-  def refresh_version(notify = false)
-    PulpTaskStatus.wait_for_tasks self.refresh_repos
-    self.trigger_repository_changes
-
-    self.content_view.update_cp_content(self.content_view.organization.library) if Katello.config.use_cp
-
-    Glue::Event.trigger(Katello::Actions::ContentViewRefresh, self.content_view)
-
-    Katello::Foreman.update_foreman_content(self.content_view.organization,
-                                            self.content_view.organization.library,
-                                            self.content_view)
-
-    if notify
-      message = _("Successfully generated content view '%{view_name}' version %{view_version}.") %
-          {:view_name => self.content_view.name, :view_version => self.version}
-
-      Notify.success(message, :request_type => "content_view_definitions___refresh",
-                              :organization => self.content_view.organization)
-    end
-
-  rescue => e
-    Rails.logger.error(e)
-    Rails.logger.error(e.backtrace.join("\n"))
-
-    if notify
-      message = _("Failed to generate content view '%{view_name}' version %{view_version}.") %
-          {:view_name => self.content_view.name, :view_version => self.version}
-
-      Notify.exception(message, e, :request_type => "content_view_definitions___refresh",
-                                   :organization => self.content_view.organization)
-    end
-
-    raise e
-  end
-
-  # TODO: break up method
-  # rubocop:disable MethodLength
-  def refresh_repos
-    # generate a hash of the repos associated with the definition, where key = repo id & value = repo
-    definition_repos_hash = if has_definition?
-                              Hash[ self.content_view.content_view_definition.
-                                    repos.collect{|repo| [repo.id, repo]}]
-                            else
-                              {}
-                            end
-
-    async_tasks = []
-    # prepare the repos currently in the library for the refresh
-    self.repositories.in_environment(self.content_view.organization.library).each do |repo|
-      if definition_repos_hash.include?(repo.library_instance_id)
-        # this repo is in both the definition and in the previous library version,
-        # so clear it and later we'll regenerate the content... this is more
-        # efficient than deleting the repo and recreating it...
-        async_tasks +=  repo.clear_contents
-      else
-        # this repo no longer exists in the definition, so destroy it
-        repo.destroy
-      end
-      self.reload
-    end
-    PulpTaskStatus.wait_for_tasks async_tasks unless async_tasks.blank?
-
-    async_tasks = []
-    repos_to_filter = []
-    definition_repos_hash.each do |repo_id, repo|
-      # the repos from the definition are based upon initial synced repos, we need to
-      # determine if each of those repos has been cloned in the view...
-      library_clone = self.content_view.get_repo_clone(self.content_view.organization.library, repo).first
-      if library_clone.nil?
-        # this repo doesn't currently exist in the library
-        clone = repo.create_clone(self.content_view.organization.library, self.content_view)
-        repos_to_filter << clone
-      else
-        # this repo already exists in the library, so update it
-        library_clone = Repository.find(library_clone) # reload readonly obj
-        repos_to_filter << library_clone
-      end
-    end
-    if has_definition?
-      repos_to_filter.each do |repo|
-        self.content_view.content_view_definition.associate_contents(repo)
-      end
-    end
-
-    async_tasks.flatten(1)
+    joins(:content_view_environments).where("#{Katello::ContentViewEnvironment.table_name}.environment_id" => env)
+      .order("#{Katello::ContentViewEnvironment.table_name}.environment_id")
   end
 
   def deletable?(from_env)
     !System.exists?(:environment_id => from_env, :content_view_id => self.content_view) ||
         self.content_view.versions.in_environment(from_env).count > 1
+  end
+
+  def promote(to_env, options = {:async => true})
+    history = ContentViewHistory.create!(:content_view_version => self, :user => User.current.login,
+                               :environment => to_env, :status => ContentViewHistory::IN_PROGRESS)
+
+    replacing_version = self.content_view.version(to_env)
+
+    promote_version = ContentViewVersion.find(self.id)
+    promote_version.environments << to_env unless promote_version.environments.include?(to_env)
+    promote_version.save!
+
+    replacing_version.environments.delete(to_env) if replacing_version
+
+    if options[:async]
+      self.async(:organization => self.content_view.organization).promote_content(to_env, replacing_version,
+                                                                                  history)
+    else
+      promote_content(to_env, replacing_version, history)
+    end
+  end
+
+  def promote_content(to_env, replacing_version, history)
+    puppet_env = self.puppet_env(to_env.prior)  # puppet env to be promoted
+
+    if replacing_version
+      PulpTaskStatus.wait_for_tasks(prepare_repos_for_promotion(replacing_version.repos(to_env), self.archived_repos))
+      prepare_puppet_env_for_promotion(replacing_version.puppet_env(to_env), puppet_env)
+    end
+
+    PulpTaskStatus.wait_for_tasks(promote_repos(to_env, self.archived_repos))
+    promote_puppet_env(to_env, puppet_env) if puppet_env
+
+    Katello::Foreman.update_foreman_content(to_env.organization, to_env, self.content_view)
+    self.content_view.update_cp_content(to_env)
+
+    Repository.trigger_contents_changed(self.repos(to_env), :wait => true, :reindex => true)
+    history.update_attributes!(:status => ContentViewHistory::SUCCESSFUL)
+
+  rescue => e
+    history.update_attributes!(:status => ContentViewHistory::FAILED)
+    raise e
+  end
+
+  def prepare_repos_for_promotion(repos_to_replace, repos_to_promote)
+    tasks = repos_to_replace.inject([]) do |result, repo|
+      if repos_to_promote.detect{|r| r.library_instance_id == repo.library_instance_id}
+        # a version of this repo is being promoted, so clear it and later
+        # we'll regenerate the content... this is more efficient than
+        # destroying the repo and recreating it...
+        result += repo.clear_contents
+      else
+        # a version of this repo is not being promoted, so destroy it
+        repo.destroy
+        result
+      end
+    end
+    tasks
+  end
+
+  def promote_repos(to_env, promoting_repos)
+    # promote the repos to the target env
+    tasks = []
+    promoting_repos.each do |repo|
+      clone = self.get_repo_clone(to_env, repo).first
+      if clone.nil?
+        # this repo doesn't currently exist in the next environment, so create it
+        clone = repo.create_clone({:environment => to_env, :content_view => self.content_view})
+        tasks << repo.clone_contents(clone)
+      else
+        # this repo already exists in the next environment, so update it
+        clone = Repository.find(clone) # reload readonly obj
+        clone.content_view_version = self
+        clone.save!
+        tasks << repo.clone_contents(clone)
+      end
+    end
+
+    tasks.flatten
+  end
+
+  def prepare_puppet_env_for_promotion(env_to_replace, env_to_promote)
+    # If the to_env already has a puppet environment from a previous promotion,
+    # clear it if the from_env also has a puppet environment that is being promoted;
+    # otherwise, delete it.
+    if env_to_replace
+      if env_to_promote
+        PulpTaskStatus.wait_for_tasks(env_to_replace.clear_contents)
+      else
+        env_to_replace.destroy
+      end
+    end
+  end
+
+  def promote_puppet_env(to_lifecycle_env, from_puppet_env)
+    to_puppet_env = Katello::ContentViewPuppetEnvironment.in_content_view(self.content_view).
+        in_environment(to_lifecycle_env).first
+
+    if to_puppet_env
+      to_puppet_env = ContentViewPuppetEnvironment.find(to_puppet_env) # reload readonly obj
+      to_puppet_env.content_view_version = self
+      to_puppet_env.save!
+    else
+      to_puppet_env = content_view.create_puppet_env(:environment => to_lifecycle_env, :content_view => self.content_view)
+    end
+
+    PulpTaskStatus.wait_for_tasks(from_puppet_env.clone_contents(to_puppet_env))
+    ContentViewPuppetEnvironment.trigger_contents_changed([to_puppet_env], :wait => true, :reindex => true)
   end
 
   def delete(from_env)
@@ -189,28 +234,37 @@ class ContentViewVersion < Katello::Model
     end
   end
 
-  def trigger_repository_changes
-    Repository.trigger_contents_changed(self.repositories, :wait => true, :reindex => true)
+  def trigger_contents_changed(options = {})
+    repos_changed = options[:non_archive] ? non_archive_repos : repositories.reload
+
+    Repository.trigger_contents_changed(repos_changed, :wait => true, :reindex => true,
+                                        :cloned_repo_overrides => options.fetch(:cloned_repo_overrides, []))
+
+    envs_changed = if options[:non_archive]
+                     content_view_puppet_environments.non_archived
+                   else
+                     content_view_puppet_environments.reload
+                   end
+
+    ContentViewPuppetEnvironment.trigger_contents_changed(envs_changed, :wait => true, :reindex => true)
+  end
+
+  def archive_puppet_environment
+    content_view_puppet_environments.archived.first
+  end
+
+  def puppet_modules
+    if archive_puppet_environment
+      archive_puppet_environment.puppet_modules
+    else
+      []
+    end
   end
 
   private
 
-  def add_environment(env)
-    if content_view.content_view_versions.in_environment(env).empty?
-      env = content_view.add_environment(env)
-      ForemanTasks.sync_task(::Actions::Katello::ContentView::EnvironmentCreate, env)
-    end
-
-  end
-
   def remove_environment(env)
-    content_view.remove_environment(env)  unless content_view.content_view_versions.in_environment(env).count > 1
-  end
-
-  def create_archived_definition
-    if has_definition? && self.definition_archive.nil?
-      self.definition_archive = content_view_definition.archive
-    end
+    content_view.remove_environment(env) unless content_view.content_view_versions.in_environment(env).count > 1
   end
 
 end

@@ -13,18 +13,18 @@
 module Katello
 module Util
   class PackageClauseGenerator
-    include  Util::FilterRuleClauseGenerator
+    include Util::FilterClauseGenerator
 
     protected
 
-    def fetch_rules
-      FilterRule.yum_types
+    def fetch_filters
+      ContentViewFilter.yum
     end
 
-    def collect_clauses(repo, rules)
-      [ErratumRule, PackageGroupRule, PackageRule].collect do |rule_class|
-        content_type_rules = rules.where(:type => rule_class)
-        make_package_clauses(repo, content_type_rules) unless content_type_rules.empty?
+    def collect_clauses(repo, filters)
+      [ContentViewErratumFilter, ContentViewPackageGroupFilter, ContentViewPackageFilter].collect do |filter_class|
+        content_type_filters = filters.where(:type => filter_class)
+        make_package_clauses(repo, content_type_filters) unless content_type_filters.empty?
       end
     end
 
@@ -36,10 +36,10 @@ module Util
       {"filename" => {"$exists" => true}}
     end
 
-    def make_package_clauses(repo, rules)
-      content_type = rules.first.content_type
-      pulp_content_clauses = rules.collect do |rule|
-        rule.generate_clauses(repo)
+    def make_package_clauses(repo, filters)
+      content_type = filters.first.content_type
+      pulp_content_clauses = filters.collect do |filter|
+        filter.generate_clauses(repo)
       end
       pulp_content_clauses.flatten!
       pulp_content_clauses.compact!
@@ -51,9 +51,9 @@ module Util
 
     def package_clauses_from_content(content_type, pulp_content_clauses)
       case content_type
-      when FilterRule::ERRATA
+      when ContentViewFilter::ERRATA
         package_clauses_for_errata(pulp_content_clauses)
-      when FilterRule::PACKAGE_GROUP
+      when ContentViewFilter::PACKAGE_GROUP
         package_clauses_for_group(pulp_content_clauses)
       else
         {"$or" => pulp_content_clauses}
@@ -64,7 +64,7 @@ module Util
     # output -> {"filename" => {"$in" => {"foo.el6.noarch", "..."}}} <- Packages belonging to those errata
     def package_clauses_for_errata(errata_clauses = [])
       errata_clauses = {"$or" => errata_clauses}
-      pkg_filenames = ::Errata.list_by_filter_clauses(errata_clauses).collect(&:package_filenames).flatten
+      pkg_filenames = Errata.list_by_filter_clauses(errata_clauses).collect(&:package_filenames).flatten
       {'filename' => {"$in" => pkg_filenames}} unless pkg_filenames.empty?
     end
 

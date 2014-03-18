@@ -35,9 +35,6 @@ class Product < Katello::Model
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products, :class_name => 'Katello::SyncPlan'
   belongs_to :gpg_key, :inverse_of => :products
-  has_many :content_view_definition_products, :class_name => "Katello::ContentViewDefinitionProduct",
-           :dependent => :destroy
-  has_many :content_view_definitions, :through => :content_view_definition_products
   has_many :repositories, :class_name => "Katello::Repository", :dependent => :destroy
 
   validates :provider_id, :presence => true
@@ -54,6 +51,10 @@ class Product < Katello::Model
   # scope
   def self.with_enabled_repos_only(env)
     with_repos(env, true)
+  end
+
+  def library_repositories
+    self.repositories.in_default_view
   end
 
   def self.find_by_cp_id(cp_id, organization = nil)

@@ -68,6 +68,9 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 table.working = true;
 
                 params.page = table.resource.page + 1;
+                params.search = table.searchTerm || "";
+                params.search = self.searchTransform(params.search);
+
                 resource[table.action](params, function (response) {
 
                     angular.forEach(response.results, function (row) {
@@ -127,8 +130,6 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 if (table.rows.length === 0) {
                     table.resource.page = 0;
                 }
-                params.search = table.searchTerm || "";
-                params.search = self.searchTransform(params.search);
                 return self.load();
             };
 
@@ -137,17 +138,19 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return self.load(true);
             };
 
-            self.removeRow = function (id) {
+            self.removeRow = function (id, field) {
                 var foundItem, table = self.table;
 
+                field = field || 'id';
+
                 angular.forEach(table.rows, function (item) {
-                    if (item.id === id) {
+                    if (item[field] === id) {
                         foundItem = item;
                     }
                 });
 
                 table.rows = _.reject(table.rows, function (item) {
-                    return item.id === id;
+                    return item[field] === id;
                 }, this);
 
                 table.resource.total = table.resource.total - 1;
@@ -156,16 +159,16 @@ angular.module('Bastion.widgets').factory('Nutupane',
                     table.numSelected = table.numSelected - 1;
                 }
 
-
                 return self.table.rows;
             };
 
             self.getAllSelectedResults = function (identifier) {
-                var selected;
+                var selected, selectedRows;
                 identifier = identifier || 'id';
                 selected = {
                     included: {
                         ids: [],
+                        resources: [],
                         search: null
                     },
                     excluded: {
@@ -177,7 +180,9 @@ angular.module('Bastion.widgets').factory('Nutupane',
                     selected.included.search = self.table.searchTerm || '';
                     selected.excluded.ids = _.pluck(self.getDeselected(), identifier);
                 } else {
-                    selected.included.ids = _.pluck(self.table.getSelected(), identifier);
+                    selectedRows = self.table.getSelected();
+                    selected.included.ids = _.pluck(selectedRows, identifier);
+                    selected.included.resources = selectedRows;
                 }
                 return selected;
             };

@@ -32,6 +32,14 @@ class GluePulpRepoTestBase < ActiveSupport::TestCase
     @@fedora_17_x86_64.feed = "file:///var/www/test_repos/zoo"
   end
 
+  def self.delete_repo(repo)
+    ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :pulp_id => repo.pulp_id)
+  end
+
+  def delete_repo(repo)
+    GluePulpRepoTestBase.delete_repo(repo)
+  end
+
 end
 
 
@@ -49,12 +57,7 @@ class GluePulpRepoTestCreateDestroy < GluePulpRepoTestBase
 
   def test_create_pulp_repo
     assert @fedora_17_x86_64.create_pulp_repo
-    @fedora_17_x86_64.destroy_repo
-  end
-
-  def test_destroy_repo
-    @fedora_17_x86_64.create_pulp_repo
-    assert @fedora_17_x86_64.destroy_repo
+    delete_repo(@fedora_17_x86_64)
   end
 
 end
@@ -68,7 +71,7 @@ class GluePulpRepoTest < GluePulpRepoTestBase
   end
 
   def self.after_suite
-    @@fedora_17_x86_64.destroy_repo
+    delete_repo(@@fedora_17_x86_64)
     VCR.eject_cassette
   end
 
@@ -134,7 +137,7 @@ class GluePulpRepoAfterSyncTest < GluePulpRepoTestBase
   end
 
   def self.after_suite
-    @@fedora_17_x86_64.destroy_repo
+    delete_repo(@@fedora_17_x86_64)
     VCR.eject_cassette
   end
 
@@ -168,7 +171,7 @@ class GluePulpChangeFeedTest < GluePulpRepoTestBase
   end
 
   def self.after_suite
-    @@fedora_17_x86_64.destroy_repo
+    delete_repo(@@fedora_17_x86_64)
     VCR.eject_cassette
   end
 
@@ -195,7 +198,7 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
   end
 
   def self.after_suite
-    @@p_forge.destroy_repo
+    delete_repo(@@p_forge)
     VCR.eject_cassette
   end
 
@@ -234,7 +237,7 @@ class GluePulpRepoContentsTest < GluePulpRepoTestBase
   end
 
   def self.after_suite
-    @@fedora_17_x86_64.destroy_repo
+    delete_repo(@@fedora_17_x86_64)
     VCR.eject_cassette
   end
 
@@ -349,13 +352,13 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
   end
 
   def self.after_suite
-    @@fedora_17_x86_64.destroy_repo
+    delete_repo(@@fedora_17_x86_64)
     VCR.eject_cassette
   end
 
   def test_create_clone
     staging = KTEnvironment.find(katello_environments(:staging).id)
-    clone = @@fedora_17_x86_64.create_clone(staging)
+    clone = @@fedora_17_x86_64.create_clone(:environment => staging)
 
     assert_kind_of Repository, clone
   ensure
@@ -365,7 +368,9 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
 
   def test_clone_contents
     dev = KTEnvironment.find(katello_environments(:dev).id)
-    @@fedora_17_x86_64_dev.relative_path = Repository.clone_repo_path(@@fedora_17_x86_64, dev, dev.default_content_view)
+    @@fedora_17_x86_64_dev.relative_path = Repository.clone_repo_path(:repository => @@fedora_17_x86_64,
+                                                                      :environment => dev,
+                                                                      :content_view => dev.default_content_view)
     @@fedora_17_x86_64_dev.create_pulp_repo
 
     task_list = @@fedora_17_x86_64.clone_contents(@@fedora_17_x86_64_dev)
@@ -373,118 +378,7 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
 
     TaskSupport.wait_on_tasks(task_list)
   ensure
-    @@fedora_17_x86_64_dev.destroy_repo
-  end
-
-  def test_promote
-    library = KTEnvironment.find(katello_environments(:library).id)
-    staging = KTEnvironment.find(katello_environments(:staging).id)
-
-    task_list = @@fedora_17_x86_64.promote(library, staging)
-    assert_equal 5, task_list.length
-    TaskSupport.wait_on_tasks(task_list)
-
-    clone_id = @@fedora_17_x86_64.clone_id(staging, staging.default_content_view)
-    cloned_repo = Repository.where(:pulp_id => clone_id).first
-    cloned_repo.destroy
-  end
-
-end
-
-
-class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
-
-
-  @@cloned_repo = nil
-
-  def self.before_suite
-    super
-    VCR.insert_cassette('pulp/repository/add_contents')
-
-    @@library = KTEnvironment.find(@loaded_fixtures['katello_environments']['library']['id'])
-    @@staging = KTEnvironment.find(@loaded_fixtures['katello_environments']['staging']['id'])
-
-    @@fedora_17_x86_64.create_pulp_repo
-    task_list = @@fedora_17_x86_64.sync
-    TaskSupport.wait_on_tasks(task_list)
-
-    #clone_id = @@fedora_17_x86_64.clone_id(@@staging, @@staging.default_content_view)
-    #Runcible::Extensions::Repository.delete(clone_id)
-
-
-    task = @@fedora_17_x86_64.promote(@@library, @@staging)
-    TaskSupport.wait_on_tasks(task)
-
-    clone_id = @@fedora_17_x86_64.clone_id(@@staging, @@staging.default_content_view)
-    @@cloned_repo = Repository.where(:pulp_id => clone_id).first
-  end
-
-  def self.after_suite
-    @@cloned_repo.destroy if @@cloned_repo
-    @@fedora_17_x86_64.destroy_repo if @@fedora_17_x86_64
-    VCR.eject_cassette
-  end
-
-  def test_add_packages
-    package = @@fedora_17_x86_64.find_packages_by_name('elephant').first
-
-    assert @@cloned_repo.add_packages([package['id']])
-  end
-
-  def test_add_errata
-    assert @@cloned_repo.add_errata(["RHEA-2010:0002"])
-  end
-
-  def test_add_distribution
-    assert @@cloned_repo.add_distribution("ks-Test Family-TestVariant-16-x86_64")
-  end
-
-end
-
-
-class GluePulpRepoRequiresSyncAndPromoteTest < GluePulpRepoTestBase
-
-  @@fedora_17_x86_64  = nil
-  @@cloned_repo       = nil
-  @@staging           = nil
-  @@library           = nil
-
-  def self.before_suite
-    super
-    VCR.insert_cassette('pulp/repository/remove_contents')
-
-    @@library = KTEnvironment.find(@loaded_fixtures['katello_environments']['library']['id'])
-    @@staging = KTEnvironment.find(@loaded_fixtures['katello_environments']['staging']['id'])
-
-    @@fedora_17_x86_64.create_pulp_repo
-    task_list = @@fedora_17_x86_64.sync
-    TaskSupport.wait_on_tasks(task_list)
-
-    task_list = @@fedora_17_x86_64.promote(@@library, @@staging)
-    TaskSupport.wait_on_tasks(task_list)
-
-    clone_id = @@fedora_17_x86_64.clone_id(@@staging, @@staging.default_content_view)
-    @@cloned_repo = Repository.where(:pulp_id => clone_id).first
-  end
-
-  def self.after_suite
-    @@cloned_repo.destroy if @@cloned_repo
-    @@fedora_17_x86_64.destroy_repo if @@fedora_17_x86_64
-    VCR.eject_cassette
-  end
-
-  def test_delete_packages
-    package = @@fedora_17_x86_64.find_packages_by_name('elephant').first
-
-    assert @@cloned_repo.delete_packages([package['id']])
-  end
-
-  def test_delete_errata
-    assert @@cloned_repo.delete_errata(["RHEA-2010:0002"])
-  end
-
-  def test_delete_distribution
-    assert @@cloned_repo.delete_distribution("ks-Test Family-TestVariant-16-x86_64")
+    delete_repo(@@fedora_17_x86_64_dev)
   end
 
 end

@@ -265,7 +265,7 @@ module Glue::Pulp::Repos
     def repo_id(content_name, env_label = nil)
       return if content_name.nil?
       return content_name if content_name.include?(self.organization.label) && content_name.include?(self.label.to_s)
-      Repository.repo_id(self.label.to_s, content_name.to_s, env_label, self.organization.label, nil)
+      Repository.repo_id(self.label.to_s, content_name.to_s, env_label, self.organization.label, nil, nil)
     end
 
     def repo_url(content_url)
@@ -297,22 +297,18 @@ module Glue::Pulp::Repos
       unprotected = unprotected.nil? ? false : unprotected
       check_for_repo_conflicts(name, label)
 
-      repo = Repository.create!(:environment => self.organization.library,
-                                :product => self,
-                                :pulp_id => repo_id(label),
-                                :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, label),
-                                :arch => arch,
-                                :name => name,
-                                :label => label,
-                                :feed => url,
-                                :gpg_key => gpg,
-                                :unprotected => unprotected,
-                                :content_type => repo_type,
-                                :content_view_version => self.organization.library.default_content_view_version
-      )
-      self.organization.default_content_view.update_cp_content(self.organization.library)
-      repo.generate_metadata
-      repo
+      Repository.new(:environment => self.organization.library,
+                     :product => self,
+                     :pulp_id => repo_id(label),
+                     :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, label),
+                     :arch => arch,
+                     :name => name,
+                     :label => label,
+                     :feed => url,
+                     :gpg_key => gpg,
+                     :unprotected => unprotected,
+                     :content_type => repo_type,
+                     :content_view_version => self.organization.library.default_content_view_version)
     end
 
     def setup_sync_schedule

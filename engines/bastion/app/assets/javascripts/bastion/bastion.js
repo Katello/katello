@@ -20,6 +20,7 @@
 //= require "bastion/angular-gettext/angular-gettext"
 //= require "bastion/angular-blocks/angular-blocks"
 //= require_tree "../../../../vendor/assets/javascripts/bastion/angular-bootstrap"
+//= require "bastion/angular-animate/angular-animate"
 //= require "bastion/alchemy/alchemy"
 
 //= require "katello/common/katello.global"
@@ -56,6 +57,9 @@
 
 //= require "bastion/subscriptions/subscriptions.module.js"
 //= require_tree "./subscriptions"
+
+//= require "bastion/content-views/versions/content-view-versions.module.js"
+//= require_tree "./content-views/versions"
 
 //= require "bastion/content-views/content-views.module"
 //= require_tree "./content-views"

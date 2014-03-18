@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -15,13 +15,50 @@ module Actions
     module Repository
       class Create < Actions::EntryAction
 
-        def plan(repository)
+        # rubocop:disable MethodLength
+        def plan(repository, clone = false)
+          repository.disable_auto_reindex!
           repository.save!
-          # TODO: should be done in other actions
-          org = repository.product.organization
-          org.default_content_view.update_cp_content(org.library)
-          repository.generate_metadata
           action_subject(repository)
+          plan_self
+
+          org = repository.organization
+          if repository.puppet?
+            environment_name = ::Environment.construct_name(
+              repository.environment.organization,
+              repository.environment,
+              repository.content_view
+            )
+
+            path = File.join(::Katello.config.puppet_repo_root, environment_name, 'modules')
+          else
+            path = repository.relative_path
+          end
+          sequence do
+            plan_action(Actions::Pulp::Repository::Create,
+                        content_type: repository.content_type,
+                        pulp_id: repository.pulp_id,
+                        name: repository.name,
+                        feed: repository.feed,
+                        ssl_ca_cert: repository.feed_ca,
+                        ssl_client_cert: repository.feed_cert,
+                        ssl_client_key: repository.feed_key,
+                        unprotected: repository.unprotected,
+                        checksum_type: repository.checksum_type,
+                        path: path,
+                        with_importer: true)
+
+            # when creating a clone, the following actions are handled by the
+            # publish/promote process
+            unless clone
+              unless repository.product.redhat?
+                content_create = plan_action(Katello::Product::ContentCreate, repository)
+                plan_action(ContentView::UpdateEnvironment, org.default_content_view, org.library, content_create.input[:content_id])
+              end
+              plan_action(Katello::Repository::MetadataGenerate, repository)
+              plan_action(ElasticSearch::Reindex, repository)
+            end
+          end
         end
 
         def humanized_name

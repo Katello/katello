@@ -52,16 +52,17 @@ class Repository < Katello::Model
            :class_name  => 'Katello::Repository',
            :dependent   => :restrict,
            :foreign_key => :library_instance_id
-  has_many :content_view_definition_repositories, :class_name => "Katello::ContentViewDefinitionRepository",
+  has_many :content_view_repositories, :class_name => "Katello::ContentViewRepository",
            :dependent => :destroy
-  has_many :content_view_definitions, :through => :content_view_definition_repositories
+  has_many :content_views, :through => :content_view_repositories
   # rubocop:disable HasAndBelongsToMany
   # TODO: change this into has_many :through association
-  has_and_belongs_to_many :filters, :class_name => "Katello::Filter", :join_table => :katello_filters_repositories
+  has_and_belongs_to_many :filters, :class_name => "Katello::ContentViewFilter",
+                          :join_table => :katello_content_view_filters_repositories,
+                          :foreign_key => :content_view_filter_id
   belongs_to :content_view_version, :inverse_of => :repositories
 
   validates :product_id, :presence => true
-  validates :environment_id, :presence => true
   validates :pulp_id, :presence => true, :uniqueness => true
   #validates :content_id, :presence => true #add back after fixing add_repo orchestration
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
@@ -69,7 +70,7 @@ class Repository < Katello::Model
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloUrlFormatValidator,
     :attributes => :feed, :blank_allowed => proc { |o| o.custom? }, :field_name => :url,
-    :if => proc { |o| o.environment.library? && o.in_default_view? }
+    :if => proc { |o| o.in_default_view? }
   validates :content_type, :inclusion => {
       :in => TYPES,
       :allow_blank => false,
@@ -86,9 +87,15 @@ class Repository < Katello::Model
   scope :file_type, where(:content_type => FILE_TYPE)
   scope :puppet_type, where(:content_type => PUPPET_TYPE)
   scope :non_puppet, where("content_type != ?", PUPPET_TYPE)
+  scope :non_archived, where('environment_id is not NULL')
+  scope :archived, where('environment_id is NULL')
 
   def organization
-    self.environment.organization
+    if self.environment
+      self.environment.organization
+    else
+      self.content_view.organization
+    end
   end
 
   def content_view
@@ -112,8 +119,16 @@ class Repository < Katello::Model
     content_type == PUPPET_TYPE
   end
 
+  def archive?
+    self.environment.nil?
+  end
+
   def yum?
     content_type == YUM_TYPE
+  end
+
+  def file?
+    content_type == FILE_TYPE
   end
 
   def in_default_view?
@@ -165,10 +180,10 @@ class Repository < Katello::Model
   end
 
   def promoted?
-    if self.environment.library?
-      Repository.where(:library_instance_id => self.id).count > 0
-    else
+    if environment && environment.library? && Repository.where(:library_instance_id => self.id).any?
       true
+    else
+      false
     end
   end
 
@@ -179,7 +194,7 @@ class Repository < Katello::Model
       Repository.in_environment(env).where(:library_instance_id => lib_id).
           joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => true).first
     else
-      # this repo is part of a content view that was published from a user created definition
+      # this repo is part of a content view that was published from a user created view
       self.content_view.get_repo_clone(env, self).first
     end
   end
@@ -208,21 +223,27 @@ class Repository < Katello::Model
     ret
   end
 
-  def self.clone_repo_path(repo, environment, content_view)
+  def self.clone_repo_path(options)
+    repo = options[:repository]
     repo_lib = repo.library_instance ? repo.library_instance : repo
     org, _, content_path = repo_lib.relative_path.split("/", 3)
-    cve = ContentViewEnvironment.where(:environment_id => environment,
-                                       :content_view_id => content_view).first
-    "#{org}/#{cve.label}/#{content_path}"
+    if options[:environment]
+      cve = ContentViewEnvironment.where(:environment_id => options[:environment],
+                                         :content_view_id => options[:content_view]).first
+      "#{org}/#{cve.label}/#{content_path}"
+    else
+      "#{org}/#{ContentView::CONTENT_DIR}/#{options[:content_view].label}/#{options[:version].version}/#{content_path}"
+    end
   end
 
-  def self.repo_id(product_label, repo_label, env_label, organization_label, view_label)
-    [organization_label, env_label, view_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/, "_")
+  def self.repo_id(product_label, repo_label, env_label, organization_label, view_label, version)
+    [organization_label, env_label, view_label, version, product_label, repo_label].compact.join("-").gsub(/[^-\w]/, "_")
   end
 
-  def clone_id(env, content_view)
-    Repository.repo_id(self.product.label, self.label, env.label,
-                             env.organization.label, content_view.label)
+  def clone_id(env, content_view, version = nil)
+    Repository.repo_id(self.product.label, self.label, env.try(:label),
+                       organization.label, content_view.label,
+                       version)
   end
 
   def trigger_contents_changed(options)
@@ -246,9 +267,17 @@ class Repository < Katello::Model
     wait = options.fetch(:wait, false)
     reindex = options.fetch(:reindex, true) && Katello.config.use_elasticsearch
     publish = options.fetch(:publish, true) && Katello.config.use_pulp
+    cloned_repo_overrides = options.fetch(:cloned_repo_overrides, [])
 
     tasks = []
-    tasks += repos.flat_map{|repo| repo.generate_metadata} if publish
+    if publish
+      tasks += repos.flat_map do |repo|
+        clone = cloned_repo_overrides.find do |c|
+          repo.library_instance_id == c.id || repo.library_instance_id == c.library_instance_id
+        end
+        repo.generate_metadata(:cloned_repo_override => clone, :node_publish_async => true)
+      end
+    end
     repos.each{|repo| repo.generate_applicability } #don't wait on applicability
     repos.each{|repo| repo.index_content } if reindex
 
@@ -257,43 +286,60 @@ class Repository < Katello::Model
 
   # TODO: break up method
   # rubocop:disable MethodLength
-  def create_clone(to_env, content_view = nil)
-    content_view = to_env.default_content_view if content_view.nil?
-    view_version = content_view.version(to_env)
-    fail _("View %{view} has not been promoted to %{env}") %
-              {:view => content_view.name, :env => to_env.name} if view_version.nil?
+  def build_clone(options)
+    to_env       = options[:environment]
+    version      = options[:version]
+    content_view = options[:content_view] || to_env.default_content_view
+    to_version   = version || content_view.version(to_env)
+    library      = self.library_instance ? self.library_instance : self
 
-    library = self.library_instance ? self.library_instance : self
+    if to_env && version
+      fail "Cannot clone into both an environment and a content view version archive"
+    end
+
+    if to_version.nil?
+      fail _("View %{view} has not been promoted to %{env}") %
+                {:view => content_view.name, :env => to_env.name}
+    end
 
     if content_view.default?
-      fail _("Cannot clone repository from %{from_env} to %{to_env}.  They are not sequential.") %
+      fail _("Cannot clone repository from %{from_env} to %{to_env}. They are not sequential.") %
                 {:from_env => self.environment.name, :to_env => to_env.name} if to_env.prior != self.environment
       fail _("Repository has already been promoted to %{to_env}") %
               {:to_env => to_env} if self.is_cloned_in?(to_env)
     else
       fail _("Repository has already been cloned to %{cv_name} in environment %{to_env}") %
-                {:to_env => to_env, :cv_name => content_view.name} if
+                {:to_env => to_env, :cv_name => content_view.name} if to_env &&
           content_view.repos(to_env).where(:library_instance_id => library.id).count > 0
     end
 
-    clone = Repository.new(:environment => to_env,
-                           :product => self.product,
-                           :cp_label => self.cp_label,
-                           :library_instance => library,
-                           :label => self.label,
-                           :name => self.name,
-                           :arch => self.arch,
-                           :major => self.major,
-                           :minor => self.minor,
-                           :enabled => self.enabled,
-                           :content_id => self.content_id,
-                           :content_view_version => view_version,
-                           :content_type => self.content_type,
-                           :unprotected => self.unprotected
-                           )
-    clone.checksum_type = self.checksum_type if self.checksum_type
-    clone.pulp_id = clone.clone_id(to_env, content_view)
-    clone.relative_path = Repository.clone_repo_path(self, to_env, content_view)
+    Repository.new(:environment => to_env,
+                   :product => self.product,
+                   :cp_label => self.cp_label,
+                   :library_instance => library,
+                   :label => self.label,
+                   :name => self.name,
+                   :arch => self.arch,
+                   :major => self.major,
+                   :minor => self.minor,
+                   :enabled => self.enabled,
+                   :content_id => self.content_id,
+                   :content_view_version => to_version,
+                   :content_type => self.content_type,
+                   :unprotected => self.unprotected) do |clone|
+
+      clone.checksum_type = self.checksum_type
+      clone.pulp_id = clone.clone_id(to_env, content_view, version.try(:version))
+      clone.relative_path = Repository.clone_repo_path(:repository => self,
+                                                       :environment => to_env,
+                                                       :content_view => content_view,
+                                                       :version => version)
+    end
+
+  end
+
+  def create_clone(options)
+    clone = build_clone(options)
     clone.save!
     return clone
   end
@@ -302,7 +348,7 @@ class Repository < Katello::Model
   # equivalent of repo
   def environmental_instances(view)
     repo = self.library_instance || self
-    search = Repository.where("library_instance_id=%s or #{Katello::Repository.table_name}.id=%s"  % [repo.id, repo.id])
+    search = Repository.non_archived.where("library_instance_id=%s or #{Katello::Repository.table_name}.id=%s"  % [repo.id, repo.id])
     search.in_content_views([view])
   end
 
