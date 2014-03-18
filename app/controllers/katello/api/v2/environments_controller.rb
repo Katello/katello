@@ -14,6 +14,7 @@ module Katello
   class Api::V2::EnvironmentsController < Api::V2::ApiController
 
     resource_description do
+      resource_id 'lifecycle_environments'
       description <<-DESC
         # Description
 
@@ -41,6 +42,7 @@ module Katello
       DESC
 
       api_version 'v2'
+      api_base_url "#{Katello.config.url_prefix}/api"
     end
 
     respond_to :json

@@ -22,7 +22,7 @@ class Api::V1::ApiController < Api::ApiController
 
   resource_description do
     api_version 'v1'
-    api_version 'v2'
+    api_base_url "#{Katello.config.url_prefix}/api"
   end
 
   # remove unwanted parameters 'action' and 'controller' from params list and return it

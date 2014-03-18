@@ -17,10 +17,10 @@ module Katello
     end
 
     initializer "katello.apipie" do
-      # When Katello is loaded, the apidoc is restricted just to the Katello controllers.
-      # This way, it's possible to generate both Foreman bindings (when Katello is not loaded)
-      # or just Katello bindings (when Katello loaded) the same way.
-      Apipie.configuration.api_controllers_matcher = "#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"
+      Apipie.configuration.api_controllers_matcher << "#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"
+      Apipie.configuration.ignored += %w[Api::V2::OrganizationsController]
+      Apipie.configuration.checksum_path += ['/katello/api/']
+      require 'katello/apipie/validators'
     end
 
     initializer "katello.register_actions", :before => 'foreman_tasks.initialize_dynflow' do |app|

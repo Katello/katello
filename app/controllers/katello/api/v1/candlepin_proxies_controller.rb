@@ -386,16 +386,10 @@ module Katello
       get_content_view_environment("cp_id", id)
     end
 
-    def get_content_view_environments(name = nil)
+    def get_content_view_environments(label = nil)
       environments = ContentViewEnvironment.joins(:content_view => :organization).
           where("#{Organization.table_name}.id = ?", @organization.id)
-      environments = environments.where("#{Katello::ContentViewEnvironment.table_name}.name = ?", name) if name
-
-      if environments.empty?
-        environments = ContentViewEnvironment.joins(:content_view => :organization).
-            where("#{Organization.table_name}.id = ?", @organization.id)
-        environments = environments.where("#{Katello::ContentViewEnvironment.table_name}.label = ?", name) if name
-      end
+      environments = environments.where("#{Katello::ContentViewEnvironment.table_name}.label = ?", label) if label
 
       # remove any content view environments that aren't readable
       unless @organization.readable?

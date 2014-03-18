@@ -47,7 +47,7 @@ BuildRequires:  %{?scl_prefix}rubygems-devel
 Requires: %{?scl_prefix}ruby(release) = 2.0.0
 BuildRequires: %{?scl_prefix}ruby(release) = 2.0.0
 %else
-%if "%{?scl}" == "ruby193" || 0%{?rhel} > 6 || 0%{?fedora} > 16 
+%if "%{?scl}" == "ruby193" || 0%{?rhel} > 6 || 0%{?fedora} > 16
 Requires: %{?scl_prefix}ruby(abi) = 1.9.1
 BuildRequires: %{?scl_prefix}ruby(abi) = 1.9.1
 %else
@@ -108,70 +108,70 @@ Requires: v8
 Requires: %{?scl_prefix}rubygems
 Requires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
 Requires: %{?scl_prefix}rubygem-rails
-Requires: %{?scl_prefix}rubygem-json 
-Requires: %{?scl_prefix}rubygem-oauth 
+Requires: %{?scl_prefix}rubygem-json
+Requires: %{?scl_prefix}rubygem-oauth
 Requires: %{?scl_prefix}rubygem-rest-client
-Requires: %{?scl_prefix}rubygem-net-ldap 
+Requires: %{?scl_prefix}rubygem-net-ldap
 Requires: %{?scl_prefix}rubygem-ldap_fluff >= 0.2.2
 Requires: %{?scl_prefix}rubygem-foreigner => 1.4.2
 Requires: %{?scl_prefix}rubygem-foreigner < 1.5
 Requires: %{?scl_prefix}rubygem-daemons >= 1.1.4
-Requires: %{?scl_prefix}rubygem-uuidtools 
-Requires: %{?scl_prefix}rubygem-rabl 
+Requires: %{?scl_prefix}rubygem-uuidtools
+Requires: %{?scl_prefix}rubygem-rabl
 Requires: %{?scl_prefix}rubygem-tire => 0.6.2
 Requires: %{?scl_prefix}rubygem-tire < 0.7
 Requires: %{?scl_prefix}rubygem-logging >= 1.8.0
-Requires: %{?scl_prefix}rubygem-hooks 
+Requires: %{?scl_prefix}rubygem-hooks
 Requires: %{?scl_prefix}rubygem-foreman-tasks >= 0.1.0
-Requires: %{?scl_prefix}rubygem-justified 
+Requires: %{?scl_prefix}rubygem-justified
 Requires: %{?scl_prefix}rubygem-delayed_job => 3.0.2
 Requires: %{?scl_prefix}rubygem-delayed_job < 3.1
 Requires: %{?scl_prefix}rubygem-delayed_job_active_record => 0.3.3
 Requires: %{?scl_prefix}rubygem-delayed_job_active_record < 0.4
-Requires: %{?scl_prefix}rubygem-gettext_i18n_rails 
+Requires: %{?scl_prefix}rubygem-gettext_i18n_rails
 Requires: %{?scl_prefix}rubygem-i18n_data >= 0.2.6
-Requires: %{?scl_prefix}rubygem-apipie-rails >= 0.0.13
-Requires: %{?scl_prefix}rubygem-maruku 
+Requires: %{?scl_prefix}rubygem-apipie-rails >= 0.1.1
+Requires: %{?scl_prefix}rubygem-maruku
 Requires: %{?scl_prefix}rubygem-runcible >= 1.0.8
 Requires: %{?scl_prefix}rubygem-ruby-openid
-Requires: %{?scl_prefix}rubygem-anemone 
+Requires: %{?scl_prefix}rubygem-anemone
 Requires: %{?scl_prefix}rubygem-simple-navigation >= 3.3.4
 Requires: %{?scl_prefix}rubygem-sass-rails
-Requires: %{?scl_prefix}rubygem-less-rails 
-Requires: %{?scl_prefix}rubygem-compass-rails 
-Requires: %{?scl_prefix}rubygem-compass-960-plugin 
-Requires: %{?scl_prefix}rubygem-haml-rails 
+Requires: %{?scl_prefix}rubygem-less-rails
+Requires: %{?scl_prefix}rubygem-compass-rails
+Requires: %{?scl_prefix}rubygem-compass-960-plugin
+Requires: %{?scl_prefix}rubygem-haml-rails
 Requires: %{?scl_prefix}rubygem-ui_alchemy-rails = 1.0.12
 Requires: %{?scl_prefix}rubygem-deface < 1.0.0
 Requires: %{?scl_prefix}rubygem-strong_parameters
 BuildRequires: foreman >= 1.3.0
 BuildRequires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
-BuildRequires: %{?scl_prefix}rubygem-net-ldap 
+BuildRequires: %{?scl_prefix}rubygem-net-ldap
 BuildRequires: %{?scl_prefix}rubygem-ldap_fluff >= 0.2.2
 BuildRequires: %{?scl_prefix}rubygem-sqlite3
 BuildRequires: %{?scl_prefix}rubygem-tire => 0.6.2
 BuildRequires: %{?scl_prefix}rubygem-tire < 0.7
 BuildRequires: %{?scl_prefix}rubygem-logging >= 1.8.0
-BuildRequires: %{?scl_prefix}rubygem-hooks 
+BuildRequires: %{?scl_prefix}rubygem-hooks
 BuildRequires: %{?scl_prefix}rubygem-foreman-tasks >= 0.1.0
-BuildRequires: %{?scl_prefix}rubygem-justified 
+BuildRequires: %{?scl_prefix}rubygem-justified
 BuildRequires: %{?scl_prefix}rubygem-delayed_job => 3.0.2
 BuildRequires: %{?scl_prefix}rubygem-delayed_job < 3.1
 BuildRequires: %{?scl_prefix}rubygem-delayed_job_active_record => 0.3.3
 BuildRequires: %{?scl_prefix}rubygem-delayed_job_active_record < 0.4
-BuildRequires: %{?scl_prefix}rubygem-gettext_i18n_rails 
+BuildRequires: %{?scl_prefix}rubygem-gettext_i18n_rails
 BuildRequires: %{?scl_prefix}rubygem-i18n_data >= 0.2.6
-BuildRequires: %{?scl_prefix}rubygem-apipie-rails >= 0.0.13
-BuildRequires: %{?scl_prefix}rubygem-maruku 
+BuildRequires: %{?scl_prefix}rubygem-apipie-rails >= 0.1.1
+BuildRequires: %{?scl_prefix}rubygem-maruku
 BuildRequires: %{?scl_prefix}rubygem-runcible >= 1.0.8
 BuildRequires: %{?scl_prefix}rubygem-ruby-openid
-BuildRequires: %{?scl_prefix}rubygem-anemone 
+BuildRequires: %{?scl_prefix}rubygem-anemone
 BuildRequires: %{?scl_prefix}rubygem-simple-navigation >= 3.3.4
 BuildRequires: %{?scl_prefix}rubygem-sass-rails
-BuildRequires: %{?scl_prefix}rubygem-less-rails 
-BuildRequires: %{?scl_prefix}rubygem-compass-rails 
-BuildRequires: %{?scl_prefix}rubygem-compass-960-plugin 
-BuildRequires: %{?scl_prefix}rubygem-haml-rails 
+BuildRequires: %{?scl_prefix}rubygem-less-rails
+BuildRequires: %{?scl_prefix}rubygem-compass-rails
+BuildRequires: %{?scl_prefix}rubygem-compass-960-plugin
+BuildRequires: %{?scl_prefix}rubygem-haml-rails
 BuildRequires: %{?scl_prefix}rubygem-ui_alchemy-rails = 1.0.12
 BuildRequires: %{?scl_prefix}rubygem-deface < 1.0.0
 BuildRequires: %{?scl_prefix}rubygem(uglifier) >= 1.0.3
@@ -215,7 +215,7 @@ cat <<GEMFILE > ./bundler.d/%{gem_name}.rb
 group :katello do
   gem '%{gem_name}'
   gem 'sass-rails'
-end 
+end
 GEMFILE
 
 unlink tmp
@@ -234,7 +234,7 @@ cat <<GEMFILE > %{buildroot}%{foreman_bundlerd_dir}/%{gem_name}.rb
 group :katello do
   gem '%{gem_name}'
   gem 'sass-rails'
-end 
+end
 GEMFILE
 
 mkdir -p %{buildroot}%{foreman_dir}/public/assets
@@ -260,7 +260,7 @@ ln -s %{gem_instdir}/public/assets/bastion %{buildroot}%{foreman_dir}/public/ass
 * Tue Jan 21 2014 Mike McCune <mmccune@redhat.com> 1.5.0-10
 - rebuild with latest in master
 * Mon Dec 16 2013 Jason Montleon <jmontleo@redhat.com> 1.5.0-9
-- Tag rubygem-katello-1.5.0-9 
+- Tag rubygem-katello-1.5.0-9
 
 * Mon Dec 16 2013 Jason Montleon <jmontleo@redhat.com> 1.5.0-9
 - fixes for engine packaging (jmontleo@redhat.com)

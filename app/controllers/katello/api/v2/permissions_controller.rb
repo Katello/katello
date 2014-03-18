@@ -17,6 +17,7 @@ class Api::V2::PermissionsController < Api::V1::PermissionsController
 
   resource_description do
     api_version "v2"
+    api_base_url "#{Katello.config.url_prefix}/api"
   end
 
   api :POST, "/roles/:role_id/permissions", "Create a roles permission"
