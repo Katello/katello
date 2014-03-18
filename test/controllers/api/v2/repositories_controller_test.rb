@@ -77,7 +77,6 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     ])
     product.expect(:editable?, @product.editable?)
     product.expect(:gpg_key, nil)
-
     @controller.expects(:sync_task).with(::Actions::Katello::Repository::Create, @repository).once
 
     Product.stub(:find, product) do
@@ -106,7 +105,6 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
       nil,
       key
     ])
-
     @controller.expects(:sync_task).with(::Actions::Katello::Repository::Create, @repository).once
 
     Product.stub(:find, product) do

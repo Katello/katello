@@ -91,7 +91,6 @@ module Actions
         def yum_clone_distributor
             Runcible::Models::YumCloneDistributor.new(id: "#{input[:pulp_id]}_clone",
                                                         destination_distributor_id: input[:pulp_id])
-
         end
 
         def nodes_distributor

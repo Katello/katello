@@ -53,7 +53,6 @@ module RepositorySupport
 
   def self.destroy_repo
     ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :pulp_id => @repo.pulp_id)
-
   rescue RestClient::ResourceNotFound => e
   end
 

@@ -813,11 +813,9 @@ module Glue::Pulp::Repo
     def package_lists_for_publish
       names = []
       filenames = []
-
       rpms = Katello.pulp_server.extensions.repository.unit_search(self.pulp_id,
                                                                    :type_ids => ['rpm'],
                                                                    :fields => {:unit => %w(filename name)})
-
       rpms.each do |rpm|
         filenames << rpm["metadata"]["filename"]
         names << rpm["metadata"]["name"]

@@ -112,8 +112,8 @@ class Candlepin::ProductContent
             # Keep the regular updates repos protected
             unprotected = false
           end
-          Rails.logger.error("Content type: '#{content_type}'")
 
+          Rails.logger.error("Content type: '#{content_type}'")
           repo = Repository.new(:environment => product.organization.library,
                              :product => product,
                              :pulp_id => product.repo_id(repo_name),

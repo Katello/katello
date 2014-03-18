@@ -20,7 +20,6 @@ module ::Actions::Katello::Repository
     include FactoryGirl::Syntax::Methods
 
     let(:action) { create_action action_class }
-
     let(:repository) { katello_repositories(:fedora_17_x86_64) }
   end
 
@@ -69,8 +68,6 @@ module ::Actions::Katello::Repository
   end
 
   class SyncTest < TestBase
-
-
     let(:action_class) { ::Actions::Katello::Repository::Sync }
     let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
 

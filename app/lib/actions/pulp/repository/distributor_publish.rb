@@ -39,7 +39,6 @@ module Actions
           if input[:distributor_type_id] == Runcible::Models::YumCloneDistributor.type_id
             { override_config: { source_repo_id: input[:source_pulp_id],
                                  source_distributor_id: source_distributor_id} }
-
           end
         end
 

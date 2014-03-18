@@ -499,7 +499,6 @@ class ContentView < Katello::Model
 
   def create_new_version
     next_version_id = (self.versions.maximum(:version) || 0) + 1
-
     ContentViewVersion.create!(:version => next_version_id,
                                :content_view => self,
                                :environments => [organization.library])
