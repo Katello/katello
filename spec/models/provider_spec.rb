@@ -445,17 +445,6 @@ describe Provider do
 
   end
 
-  describe "#failed_products" do
-    before do
-      @provider = Provider.create(:name => 'test')
-      @provider.products.expects(:repositories_cdn_import_failed).once
-    end
-
-    it "should ask products for repositories_cdn_import_failed" do
-      @provider.failed_products
-    end
-  end
-
   it 'should be destroyable' do
     disable_product_orchestration
     provider = create(:katello_provider, organization: @organization)

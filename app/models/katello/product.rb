@@ -179,8 +179,6 @@ class Product < Katello::Model
 
   scope :all_in_org, lambda{|org| Product.joins(:provider).where("#{Katello::Provider.table_name}.organization_id = ?", org.id)}
 
-  scope :repositories_cdn_import_failed, where(:cdn_import_success => false)
-
   def assign_unique_label
     self.label = Util::Model.labelize(self.name) if self.label.blank?
 

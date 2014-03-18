@@ -21,6 +21,7 @@ module Util
     def initialize(cdn_resource)
       @resource = cdn_resource
       @substitutions = Thread.current[:cdn_var_substitutor_cache] || {}
+      @status = true
     end
 
     # using substitutor from whithin the block makes sure that every
@@ -124,7 +125,7 @@ module Util
       @resource.get(File.join(base_path, "listing")).split("\n")
     rescue Errors::NotFound => e # some of listing file points to not existing content
       @resource.log :error, e.message
-      @resource.product.try(:repositories_cdn_import_failed!)
+      @status = false
       [] # return no substitution for unreachable listings
     end
 

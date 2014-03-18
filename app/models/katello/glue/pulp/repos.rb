@@ -318,20 +318,6 @@ module Glue::Pulp::Repos
       end
     end
 
-    def repositories_cdn_import_failed!
-      set_repositories_cdn_import false
-    end
-
-    def repositories_cdn_import_passed!
-      set_repositories_cdn_import true
-    end
-
-    # update flag skipping all callbacks (hence orchestration)
-    # after upgrade to >= 3.1.0 we could use #update_column
-    def set_repositories_cdn_import(value)
-      self.class.where(:id => self.id).update_all(:cdn_import_success => value)
-    end
-
     def del_repos
       #destroy all repos in all environments
       Rails.logger.debug "deleting all repositories in product #{self.label}"

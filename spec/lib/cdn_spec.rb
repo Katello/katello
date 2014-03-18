@@ -20,7 +20,7 @@ describe Resources::CDN::CdnResource do
   let(:another_path_with_variables) { "/content/dist/rhel/server/6/$releasever/$basearch/os" }
   let(:connect_options) do
     {:ssl_client_cert => "456",:ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123",
-    :product => OpenStruct.new(:repositories_cdn_import_failed! => true)}
+    :product => OpenStruct.new}
   end
 
   before do
@@ -68,12 +68,6 @@ describe Resources::CDN::CdnResource do
       subject.precalculate([path_with_variables])
       subject.expects(:for_each_substitute_of_next_var).never # doesn't calculate results
       substitutions_with_urls = subject.substitute_vars(path_with_variables)
-    end
-
-    it "should describe why it failed when some listing unavailable" do
-      Net::HTTP.any_instance.stubs(:start).raises(RestClient::ResourceNotFound)
-      connect_options[:product].expects(:repositories_cdn_import_failed!).once
-      subject.precalculate([path_with_variables]).wont_be_nil
     end
   end
 
