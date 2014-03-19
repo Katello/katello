@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -70,3 +70,46 @@ module Katello
 
   end
 end
+
+module ::Actions::Katello::Product
+
+  class TestBase < ActiveSupport::TestCase
+    include Dynflow::Testing
+    include Support::Actions::Fixtures
+    include Support::Actions::RemoteAction
+    include FactoryGirl::Syntax::Methods
+
+    let( :action ) { create_action action_class }
+  end
+
+  class CreateTest < TestBase
+    let( :action_class ) { ::Actions::Katello::Product::Create }
+    let( :action ) { create_action action_class }
+
+    let( :product ) do
+      katello_products( :fedora )
+    end
+    let( :organization ) do
+      build( :katello_organization, :acme_corporation, :with_library )
+    end
+  end
+
+  it 'plans' do
+    product.expects( :disable_auto_reindex ).returns
+    product.expects( :save! ).returns( [] )
+    action.stubs( :action_subject ).with( product, any_parameters )
+    plan_action( action, provider, organization )
+    assert_action_planed_with( action,
+                               ::Actions::Candlepin::Product::SetProduct,
+                               name: product.name,
+                               multiplier: 1,
+                               attributes: product.attrs )
+    # TODO figure out how to specify the candlepin id or a placeholder
+    assert_action_planed_with( action,
+                               ::Actions::Candlepin::Product::SetUnlimitedSubscription,
+                               owner_key: organization.label,
+                               cp_id: nil )
+  end
+
+end
+

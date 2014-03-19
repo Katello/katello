@@ -25,8 +25,8 @@ module Actions
                                       label:  organization.label,
                                       name: organization.name)
             end
-            organization.providers.first.save!
             plan_action(Environment::LibraryCreate, organization.library)
+            organization.create_redhat_provider
             organization.save!
           end
           if cp_create
