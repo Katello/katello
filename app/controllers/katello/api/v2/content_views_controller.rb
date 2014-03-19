@@ -56,9 +56,9 @@ module Katello
 
       ids = if @environment
               # TODO: move environment to an ES filter
-              ContentView.non_default.readable(@organization).in_environment(@environment).pluck(:id)
+              ContentView.non_default.readable(@organization).in_environment(@environment).pluck('katello_content_views.id')
             else
-              ContentView.non_default.readable(@organization).pluck(:id)
+              ContentView.non_default.readable(@organization).pluck('katello_content_views.id')
             end
       options[:filters] = [{:terms => {:id => ids}}]
 
