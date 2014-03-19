@@ -258,16 +258,6 @@ module Glue::Provider
       Resources::Candlepin::Owner.imports self.organization.label
     end
 
-    # All products that had problem with repository creation in pulp
-    def failed_products
-      self.products.repositories_cdn_import_failed
-    end
-
-    # Returns text representation of failed products status
-    def failed_products_status
-      (s = failed_products.size) > 0 ? (_('%d products may have missing repositories') % s) : _('OK')
-    end
-
     # TODO: break up method
     # rubocop:disable MethodLength
     def queue_import_manifest(options)
@@ -320,17 +310,6 @@ module Glue::Provider
                       _("Subscription manifest uploaded successfully for provider '%s'.")
                     end
           values = [self.name]
-          if self.failed_products.present?
-            message << _("There are %d products having repositories that could not be created.")
-            builder = Object.new.extend(ActionView::Helpers::UrlHelper, ActionView::Helpers::TagHelper)
-            path    = Katello.config.url_prefix + '/' + Rails.application.routes.url_helpers.refresh_products_providers_path(:id => self)
-            link    = builder.link_to(_('repository refresh'),
-                                      path,
-                                      :method => :put,
-                                      :remote => true)
-            message << _("You can run %s action to fix this. Note that it can take some time to complete." % link)
-            values.push self.failed_products.size
-          end
           Notify.success message % values,
                          :request_type => 'providers__update_redhat_provider',
                          :organization => self.organization,

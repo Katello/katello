@@ -78,7 +78,6 @@ class Candlepin::ProductContent
       cdn_var_substitutor.precalculate([content_url])
     rescue Errors::SecurityViolation => e
       # in case we cannot access CDN server to obtain repository URLS we note down error
-      self.repositories_cdn_import_failed!
       Rails.logger.error("\nproduct #{product.name} repositories import: " <<
                                    'SecurityViolation occurred when contacting CDN to fetch ' <<
                                    "listing files\n" + e.backtrace.join("\n"))
@@ -138,7 +137,6 @@ class Candlepin::ProductContent
           #Temporarily running task here until entire repo set enable is dynflowed
           sync_task(::Actions::Katello::Repository::Create, repo)
         end
-        product.repositories_cdn_import_passed! unless product.cdn_import_success?
         @repos = nil #reset repo cache
       rescue RestClient::InternalServerError => e
         if e.message.include? "Architecture must be one of"
