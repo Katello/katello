@@ -32,7 +32,10 @@ module Katello
     def destroy_repositories
       display_messages = []
 
-      @repositories.each{ |repository| repository.destroy }
+      @repositories.each do |repository|
+        trigger(::Actions::Katello::Repository::Destroy, repository)
+      end
+
       display_messages << _("Successfully removed %s repositories") % @repositories.length
       respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
     end
