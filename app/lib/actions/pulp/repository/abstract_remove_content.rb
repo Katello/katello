@@ -35,6 +35,10 @@ module Actions
           { type_ids: [content_extension.content_type], filters: {unit: input[:clauses] } }
         end
 
+        def external_task=(external_task_data)
+          super(external_task_data.except('result'))
+        end
+
       end
     end
   end
