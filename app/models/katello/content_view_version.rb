@@ -261,6 +261,28 @@ class ContentViewVersion < Katello::Model
     end
   end
 
+  def packages
+    repositories.flat_map(&:packages)
+  end
+
+  def package_count
+    packages.count
+  end
+
+  def errata
+    repositories.flat_map(&:errata)
+  end
+
+  def errata_count
+    errata.count
+  end
+
+  def errata_type_counts
+    Errata::TYPES.each_with_object({}) do |type, counts|
+      counts[type] = errata.select { |err| err.type == type }.count
+    end
+  end
+
   private
 
   def remove_environment(env)
