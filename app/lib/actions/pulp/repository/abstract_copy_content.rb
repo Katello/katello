@@ -40,6 +40,10 @@ module Actions
           end
         end
 
+        def external_task=(external_task_data)
+          super(external_task_data.except('result'))
+        end
+
       end
     end
   end
