@@ -56,7 +56,7 @@ module Katello
 
       ids = if @environment
               # TODO: move environment to an ES filter
-              ContentView.non_default.readable(@organization).in_environment(@environment).pluck(:id)
+              ContentView.non_default.readable(@organization).in_environment(@environment).pluck("#{ContentView.table_name}.id")
             else
               ContentView.non_default.readable(@organization).pluck(:id)
             end
