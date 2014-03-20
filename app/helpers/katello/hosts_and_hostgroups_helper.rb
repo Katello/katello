@@ -32,12 +32,19 @@ module Katello
         opts = envs_by_org.sort_by(&:katello_id).reduce({}) do |env_options, env|
           selected = env.id == (@host || @hostgroup).environment_id ? "selected" : ""
           kt_env_label = env.katello_id.split('/')[1]
-          env_options[kt_env_label] ||= selected
+          selected.blank? ? env_options[kt_env_label] ||= selected : env_options[kt_env_label] = selected
           env_options
         end
 
         opts = opts.sort_by(&:first).map do |kt_env_label, selected|
-          %[<option value="#{kt_org_label}/#{kt_env_label}" class="kt-env" #{selected}>#{kt_env_label}</option>]
+          kt_env = Katello::KTEnvironment.joins(:organization).
+              where("#{Katello::KTEnvironment.table_name}.label" => kt_env_label).
+              where("#{::Organization.table_name}.label" => kt_org_label).first
+
+          %[<option value="#{kt_org_label}/#{kt_env_label}"
+                    class="kt-env" data-katello-env-id="#{kt_env.id}"
+                    #{selected}>#{kt_env_label}</option>]
+
         end
 
         optgroup << opts.join

@@ -16,54 +16,24 @@ $(function() {
         $("#ak-subscriptions-info").hide();
         $("#ak-subscriptions-spinner").show();
 
-        var ktOrgLabel = selectedOrgEnvCv[0],
-            ktEnvLabel = selectedOrgEnvCv[1],
-            ktCvLabel = selectedOrgEnvCv[2],
-            ktAkeyQuery = {};
+        var selectedEnvId = $("#kt_environment_id option:selected").data('katello-env-id'),
+            selectedCvId = $("#hostgroup_environment_id").val();
 
-        // Retrieve the activation keys.  In order to do this, need to
-        // first retrieve content view & environment and then use the
-        // ids from the results to retrieve the keys.  In the future,
-        // we can simplify this logic; however, currently porting of
-        // logic from existing foreman-katello-engine.
+        // Retrieve the activation keys associated with the current
+        // environment & content view.
         $.ajax({
             type: 'get',
-            url:  foreman_url('/katello/api/organizations/' + ktOrgLabel + '/content_views'),
-            data: {'label': ktCvLabel},
+            url:  foreman_url('/katello/api/v2/environments/' + selectedEnvId + '/activation_keys'),
+            data: {'content_view_id': selectedCvId},
             success: function(response) {
-                if (response[0]) {
-                    ktAkeyQuery['content_view_id'] = response[0].id;
-
-                    $.ajax({
-                        type: 'get',
-                        url:  foreman_url('/katello/api/organizations/' + ktOrgLabel + '/environments'),
-                        data: {'label': ktEnvLabel},
-                        success: function(response) {
-                            if (response[0]) {
-                                ktAkeyQuery['environment_id'] = response[0].id;
-
-                                $.ajax({
-                                    type: 'get',
-                                    url:  foreman_url('/katello/api/v2/environments/' + ktAkeyQuery['environment_id'] + '/activation_keys'),
-                                    data: {'content_view_id': ktAkeyQuery['content_view_id']},
-                                    success: function(response) {
-                                        availableActivationKeys = {};
-                                        $.each(response['results'], function (i, key) {
-                                            availableActivationKeys[key.name] = [];
-                                            $.each(key.pools, function (j, pool) {
-                                                availableActivationKeys[key.name].push(pool.productName);
-                                            });
-                                        });
-                                        ktAkUpdateSubscriptionsInfo();
-                                    },
-                                    error: ktErrorLoadingActivationKeys
-                                });
-
-                            }
-                        },
-                        error: ktErrorLoadingActivationKeys
+                availableActivationKeys = {};
+                $.each(response['results'], function (i, key) {
+                    availableActivationKeys[key.name] = [];
+                    $.each(key.pools, function (j, pool) {
+                        availableActivationKeys[key.name].push(pool.productName);
                     });
-                }
+                });
+                ktAkUpdateSubscriptionsInfo();
             },
             error: ktErrorLoadingActivationKeys
         });

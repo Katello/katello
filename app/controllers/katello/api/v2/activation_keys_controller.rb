@@ -42,13 +42,20 @@ module Katello
     end
 
     api :GET, "/activation_keys", "List activation keys"
+    api :GET, "/environments/:environment_id/activation_keys"
     api :GET, "/organizations/:organization_id/activation_keys"
     param :organization_id, :identifier, :desc => "organization identifier", :required => true
+    param :environment_id, :identifier, :desc => "environment identifier"
+    param :content_view_id, :identifier, :desc => "content view identifier"
     param :name, String, :desc => "activation key name to filter by"
     param_group :search, Api::V2::ApiController
     def index
-      filters = [:terms => {:id => ActivationKey.readable(@organization).pluck(:id)}]
-      filters << {:term => {:name => params[:name].downcase}} if params[:name]
+      query_string = ActivationKey.readable(@organization)
+      query_string = query_string.where(:environment_id => params[:environment_id]) if params[:environment_id]
+      query_string = query_string.where(:content_view_id => params[:content_view_id]) if params[:content_view_id]
+
+      filters = [:terms => { :id => query_string.pluck(:id) }]
+      filters << {:term => { :name => params[:name].downcase} } if params[:name]
 
       options = {
           :filters       => filters,
