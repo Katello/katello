@@ -102,6 +102,7 @@ Katello::Engine.routes.draw do
           post :repo_discover
           post :cancel_repo_discover
           post :autoattach_subscriptions
+          get :download_debug_certificate
         end
         api_resources :products, :only => [:index]
         api_resources :providers, :only => [:index]

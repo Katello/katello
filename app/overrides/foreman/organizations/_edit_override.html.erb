@@ -14,7 +14,7 @@
             :help_inline => _('This certificate allows a user to view the repositories in any environment from a browser.')) do
     button_tag _('Generate and Download'), :id => :download_debug_cert_key,
                :type => :button, :style => 'margin-top: 8px;', :class => 'btn btn-small',
-               'data-url' => Katello::Engine.routes.url_helpers.download_debug_certificate_organization_path(@taxonomy.id)
+               'data-url' => "/katello/api/v2/organizations/#{@taxonomy.id}/download_debug_certificate"
   end %>
 
 <% end%>
