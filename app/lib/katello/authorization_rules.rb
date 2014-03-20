@@ -18,8 +18,9 @@ module AuthorizationRules
       before_filter :authorize
     end
   end
+
   # authorize the user for the requested action
-  def authorize(ctrl = params[:controller], action = self.action_name)
+  def authorize_katello(ctrl = params[:controller], action = self.action_name)
     user = current_user
     fail StandardError, "Current user not set" unless user
     logger.debug "Authorizing #{current_user.login} for #{ctrl}/#{action}"

@@ -19,22 +19,24 @@ class Api::V2::SystemsController < Api::V2::ApiController
 
   skip_before_filter :set_default_response_format, :only => :report
 
-  before_filter :find_default_organization_and_or_environment, :only => [:create, :index, :activate]
-  before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report]
-  before_filter :find_only_environment, :only => [:create]
-  before_filter :find_environment, :only => [:index, :report]
-  before_filter :find_system_group, :only => [:index]
-  before_filter :find_environment_and_content_view, :only => [:create]
-  before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
                                         :available_system_groups, :add_system_groups, :remove_system_groups,
                                         :refresh_subscriptions, :checkin,
                                         :subscription_status, :tasks] # TODO: this should probably be :except
-  before_filter :find_content_view, :only => [:create, :update]
+  before_filter :find_environment, :only => [:index, :report]
+  before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report]
+  before_filter :find_system_group, :only => [:index]
+  before_filter :find_default_organization_and_or_environment, :only => [:create, :index, :activate]
+  before_filter :find_only_environment, :only => [:create]
 
   before_filter :authorize, :except => [:activate, :upload_package_profile]
+
+  before_filter :find_environment_and_content_view, :only => [:create]
+  before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
+  before_filter :find_content_view, :only => [:create, :update]
+
   before_filter :load_search_service, :only => [:index, :available_system_groups, :tasks]
 
   def organization_id_keys
