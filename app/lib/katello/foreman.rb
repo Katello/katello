@@ -26,8 +26,7 @@ module Katello
 
       foreman_environment = Environment.find_or_create_by_katello_id(org, env, content_view)
 
-      if !content_view.content_view_puppet_modules.empty? &&
-          (foreman_smart_proxy = SmartProxy.find_by_name(Katello.config.host))
+      if (foreman_smart_proxy = SmartProxy.find_by_name(Katello.config.host))
         PuppetClassImporter.new(:url => foreman_smart_proxy.url).update_environment(foreman_environment)
       end
     end

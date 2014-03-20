@@ -25,6 +25,12 @@ module Katello
             changed[kind].slice!(environment.name) unless changed[kind].empty?
           end
 
+          #prevent the puppet environment from being deleted, by removing special '_destroy_' String
+          if changed['obsolete'][environment.name]
+            changed['obsolete'][environment.name] =
+              changed['obsolete'][environment.name].select{|klass| klass != '_destroy_'}
+          end
+
           # PuppetClassImporter expects [kind][env] to be in json format
           change_types.each do |kind|
             unless (envs = changed[kind]).empty?
