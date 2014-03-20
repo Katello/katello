@@ -255,7 +255,7 @@ class ContentViewVersion < Katello::Model
 
   def puppet_modules
     if archive_puppet_environment
-      archive_puppet_environment.puppet_modules
+      archive_puppet_environment.indexed_puppet_modules
     else
       []
     end

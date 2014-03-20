@@ -16,7 +16,7 @@ module Katello
   class Api::V2::ContentViewVersionsControllerTest < ActionController::TestCase
 
     def self.before_suite
-      models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion",
+      models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion", "KTEnvironment",
                 "Repository"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
       super
@@ -24,9 +24,9 @@ module Katello
 
     def models
       @organization = get_organization
-      @library = katello_environments(:library)
-      @dev = katello_environments(:dev)
-      @content_view = katello_content_views(:library_dev_view)
+      @library = KTEnvironment.find(katello_environments(:library))
+      @dev = KTEnvironment.find(katello_environments(:dev))
+      @content_view = ContentView.find(katello_content_views(:library_dev_view))
     end
 
     def permissions
@@ -80,7 +80,9 @@ module Katello
     end
 
     def test_promote
-      post :promote, :id => @content_view.versions.first.id, :environment_id => @dev.id
+      version = @content_view.versions.first
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @dev).returns({})
+      post :promote, :id => version.id, :environment_id => @dev.id
 
       assert_response :success
       assert_template 'katello/api/v2/common/async'

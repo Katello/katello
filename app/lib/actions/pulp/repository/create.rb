@@ -71,7 +71,7 @@ module Actions
           when ::Katello::Repository::FILE_TYPE
             [iso_distributor]
           when ::Katello::Repository::PUPPET_TYPE
-            [puppet_install_distributor, nodes_distributor]
+            input[:path].blank? ? [] : [puppet_install_distributor, nodes_distributor]
           else
             fail _("Unexpected repo type %s") % input[:content_type]
           end

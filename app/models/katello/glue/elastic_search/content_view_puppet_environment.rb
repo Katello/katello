@@ -80,6 +80,15 @@ module Katello
         Tire.index('katello_puppet_module').refresh
       end
 
+      def indexed_puppet_modules
+        service = Glue::ElasticSearch::Items.new
+        service.model = ::Katello::PuppetModule
+        options = {:full_result => true,
+                  :filters => {:term => {:repoids => self.pulp_id}}}
+        results, _total = service.retrieve('', 0, options)
+        results
+      end
+
       def puppet_module_count
         results = Katello::PuppetModule.legacy_search('', :page_size => 1, :repoids => [self.pulp_id])
         results.empty? ? 0 : results.total
