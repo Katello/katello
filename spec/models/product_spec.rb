@@ -50,48 +50,6 @@ describe Product, :katello => true do
     ProductTestData::PRODUCT_WITH_CP_CONTENT.merge!({:provider => @provider})
   end
 
-  describe "create product" do
-
-    describe "new product" do
-      before(:each) { @p = Product.new({}) }
-      specify { @p.productContent.must_equal([]) }
-    end
-
-    describe "with valid parameters" do
-      before(:each) do
-        disable_product_orchestration
-        @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
-      end
-
-      specify { @p.name.must_equal(ProductTestData::SIMPLE_PRODUCT['name']) }
-      specify { @p.created_at.wont_be_nil }
-      specify { @p.library.must_equal(@organization.library) }
-    end
-
-    describe "candlepin orchestration" do
-      before do
-        Resources::Candlepin::Product.stubs(:certificate).returns("")
-        Resources::Candlepin::Product.stubs(:key).returns("")
-      end
-
-      describe "with attributes" do
-        it "should create product in katello" do
-
-          expected_product = {
-              :attributes => ProductTestData::PRODUCT_WITH_ATTRS[:attrs],
-              :multiplier => ProductTestData::PRODUCT_WITH_ATTRS[:multiplier],
-              :name => ProductTestData::PRODUCT_WITH_ATTRS[:name]
-          }
-
-          Resources::Candlepin::Product.expects(:create).once.with(expected_product).returns({:id => '1'})
-          product = Product.create!(ProductTestData::PRODUCT_WITH_ATTRS)
-          product.organization.wont_be_nil
-        end
-      end
-
-    end
-  end
-
   describe "lazily-loaded attributes" do
     before(:each) do
       Resources::Candlepin::Product.stubs(:get).returns([ProductTestData::SIMPLE_PRODUCT.merge(:attributes => [])])
