@@ -17,6 +17,10 @@ module Actions
         def content_extension
           pulp_extensions.rpm
         end
+
+        def criteria
+          super.merge(fields: ::Katello::Package::PULP_SELECT_FIELDS)
+        end
       end
     end
   end
