@@ -15,6 +15,8 @@ module Katello
 class Api::V1::SystemsController < Api::V1::ApiController
   respond_to :json
 
+  include Katello::Authentication::ClientAuthentication
+
   skip_before_filter :set_default_response_format, :only => :report
 
   before_filter :find_default_organization_and_or_environment, :only => [:create, :index, :activate]
@@ -30,7 +32,8 @@ class Api::V1::SystemsController < Api::V1::ApiController
                                         :subscription_status]
   before_filter :find_content_view, :only => [:create, :update]
 
-  before_filter :authorize, :except => [:activate]
+  before_filter :authorize, :except => [:activate, :enabled_repos]
+  before_filter :authorize_client, :only => [:enabled_repos]
 
   def organization_id_keys
     [:organization_id, :owner]

@@ -13,7 +13,7 @@
 require 'openssl'
 require 'base64'
 
-module Rhsm
+module Client
   class Cert
 
     attr_accessor :cert

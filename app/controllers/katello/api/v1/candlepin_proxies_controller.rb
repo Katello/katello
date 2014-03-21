@@ -13,10 +13,10 @@
 module Katello
   class Api::V1::CandlepinProxiesController < Api::V1::ApiController
 
-    include Katello::Authentication::RhsmClientAuthentication
+    include Katello::Authentication::RhsmAuthentication
 
     skip_before_filter :authorize
-    before_filter :authorize_client, :except => [:consumer_activate]
+    before_filter :authorize_rhsm, :except => [:consumer_activate]
     before_filter :add_candlepin_version_header
 
     before_filter :proxy_request_path, :proxy_request_body

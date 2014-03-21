@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'minitest/autorun'
-require File.expand_path('../../../../app/services/rhsm/cert.rb', __FILE__)
+require File.expand_path('../../../../app/services/client/cert.rb', __FILE__)
 
-module Rhsm
+module Client
   class CertTest < MiniTest::Unit::TestCase
 
     CERT = '
@@ -45,19 +45,19 @@ module Rhsm
       -----END CERTIFICATE-----'
 
     def test_uuid
-      rhsm_cert = Rhsm::Cert.new(CERT)
+      rhsm_cert = Client::Cert.new(CERT)
       assert_equal rhsm_cert.uuid, '14e98155-731a-4cae-b151-5c504cc30e1a'
     end
 
     def test_empty_cert
       assert_raises RuntimeError do
-        Rhsm::Cert.new('')
+        Cert.new('')
       end
     end
 
     def test_bad_cert
       assert_raises OpenSSL::X509::CertificateError do
-        Rhsm::Cert.new('This is not a real cert string.')
+        Cert.new('This is not a real cert string.')
       end
     end
 
