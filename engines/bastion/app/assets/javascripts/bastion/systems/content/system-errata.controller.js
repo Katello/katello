@@ -17,7 +17,6 @@
  *
  * @requires $scope
  * @requires SystemErratum
- * @requires SystemTask
  * @requires Nutupane
  *
  * @description
@@ -25,8 +24,8 @@
  */
 /*jshint camelcase:false*/
 angular.module('Bastion.systems').controller('SystemErrataController',
-    ['$scope', 'SystemErratum', 'SystemTask', 'Nutupane',
-    function ($scope, SystemErratum, SystemTask, Nutupane) {
+    ['$scope', 'SystemErratum', 'Nutupane',
+    function ($scope, SystemErratum, Nutupane) {
         var errataNutupane;
 
         errataNutupane = new Nutupane(SystemErratum, {'id': $scope.$stateParams.systemId}, 'get');
