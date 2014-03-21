@@ -24,14 +24,16 @@
 angular.module('Bastion.systems').controller('SystemEventDetailsController',
     ['$scope', 'SystemTask',
     function ($scope, SystemTask) {
-        var eventId, setEvent;
+        var eventId, systemId, setEvent;
 
         eventId = $scope.$stateParams.eventId;
+        systemId = $scope.$stateParams.systemId;
+
         setEvent = function (event) {
             $scope.event = event;
         };
 
-        $scope.event = SystemTask.get({id: eventId}, function (data) {
+        $scope.event = SystemTask.get({id: eventId, systemId: systemId}, function (data) {
             if (data.pending) {
                 SystemTask.poll(data, setEvent);
             }

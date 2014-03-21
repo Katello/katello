@@ -87,6 +87,7 @@ angular.module('Bastion.systems').controller('SystemPackagesController',
             },
             function (scheduledTask) {
                 pkg.removeTask = scheduledTask;
+                scheduledTask.systemId = $scope.$stateParams.systemId;
                 SystemTask.poll(scheduledTask, function (polledTask) {
                     pkg.removeTask = polledTask;
                 });

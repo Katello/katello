@@ -169,6 +169,7 @@ Katello::Engine.routes.draw do
       api_resources :systems, :only => system_onlies do
         member do
           get :tasks
+          match '/tasks/:id' => 'tasks#show', :via => :get
           get :available_system_groups, :action => :available_system_groups
           post :system_groups, :action => :add_system_groups
           delete :system_groups, :action => :remove_system_groups

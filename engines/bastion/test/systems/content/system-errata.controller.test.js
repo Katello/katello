@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SystemErrataController', function() {
-    var $scope, Nutupane, SystemTask, SystemErratum,
+    var $scope, Nutupane, SystemErratum,
         mockSystem, mockTask, mockErratum;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
@@ -36,10 +36,6 @@ describe('Controller: SystemErrataController', function() {
             };
             this.get = function() {};
         };
-        SystemTask = {
-            get: function() {},
-            poll: function(task, returnFunction) {}
-        };
         SystemErratum = {
             get: function() {return []},
             apply: function(errata, success) {
@@ -55,7 +51,6 @@ describe('Controller: SystemErrataController', function() {
 
         $controller('SystemErrataController', {$scope: $scope,
                                                SystemErratum: SystemErratum,
-                                               SystemTask: SystemTask,
                                                Nutupane: Nutupane});
     }));
 

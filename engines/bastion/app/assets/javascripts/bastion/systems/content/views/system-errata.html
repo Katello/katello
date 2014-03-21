@@ -30,6 +30,7 @@
 </div>
 
 <div alch-table="errataTable">
+  <p class="alert alert-info" translate>Note that applied errata will not immediately be reflected in this table.  The delay is dependent on the value of certCheckInterval in /etc/rhsm/rhsm.conf on {{ system.name }}.</p>
   <div alch-container-scroll control-width="table" alch-infinite-scroll="errataTable.nextPage()" data="errataTable.rows">
     <table ng-class="{'table-mask': errataTable.working}" class="table table-striped">
       <thead>

@@ -24,11 +24,11 @@
 angular.module('Bastion.systems').factory('SystemTask',
     ['$resource', '$timeout',
     function ($resource, $timeout) {
-        var resource = $resource('/api/v2/systems/tasks/:id', {id: '@uuid'}, {
+        var resource = $resource('/api/v2/systems/:systemId/tasks/:id', {id: '@uuid', systemId: '@systemId'}, {
             get: {method: 'GET', params: {paged: false}, isArray: false}
         });
         resource.poll = function (task, returnFunction) {
-            resource.get({id: task.id}, function (data) {
+            resource.get({id: task.id, systemId: task.system.uuid}, function (data) {
                 if (data.pending) {
                     $timeout(function () {resource.poll(data, returnFunction)}, 1000);
                 }
