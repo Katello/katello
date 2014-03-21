@@ -43,7 +43,7 @@ module Validators
         end
 
       else
-        unless record.filter.erratum_rules.with_date_or_type.empty?
+        if record.filter_has_date_or_type_rule?
           invalid_parameters = _("May not add an id rule to a filter that has an existing type or date range rule.")
           record.errors[:base] << invalid_parameters
         end
