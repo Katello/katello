@@ -262,7 +262,7 @@ class ContentViewVersion < Katello::Model
   end
 
   def packages
-    repositories.flat_map(&:packages)
+    repositories.archived.flat_map(&:packages)
   end
 
   def package_count
@@ -270,7 +270,7 @@ class ContentViewVersion < Katello::Model
   end
 
   def errata
-    repositories.flat_map(&:errata)
+    repositories.archived.flat_map(&:errata)
   end
 
   def errata_count
