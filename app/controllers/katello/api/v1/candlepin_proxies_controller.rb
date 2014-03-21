@@ -20,7 +20,8 @@ module Katello
     before_filter :add_candlepin_version_header
 
     before_filter :proxy_request_path, :proxy_request_body
-    before_filter :find_organization, :only => [:rhsm_index]
+    before_filter :set_organization_id
+    before_filter :find_organization, :only => [:rhsm_index, :consumer_activate]
     before_filter :find_default_organization_and_or_environment, :only => [:consumer_create, :index, :consumer_activate]
     before_filter :find_optional_organization, :only => [:consumer_create, :hypervisors_update, :index, :consumer_activate]
     before_filter :find_only_environment, :only => [:consumer_create]
@@ -241,25 +242,13 @@ module Katello
       # Set it before calling find_activation_keys to allow communication with candlepin
       User.current    = User.hidden.first
       activation_keys = find_activation_keys
-      ActiveRecord::Base.transaction do
-        # create new system entry
-        @system = System.new(system_params)
 
-        # register system - we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
-        activation_keys.reverse_each { |ak| ak.apply_to_system(@system) }
-        @system.save!
+      @system = System.new(system_params.merge(:environment => activation_keys[0].environment,
+                                               :content_view => activation_keys[0].content_view))
+      sync_task(::Actions::Katello::System::Create, @system, activation_keys)
+      @system.reload
 
-        # subscribe system - if anything goes wrong subscriptions are deleted in Candlepin and exception is rethrown
-        activation_keys.each do |ak|
-          ak.subscribe_system(@system)
-          ak.system_groups.each do |group|
-            group.system_ids = (group.system_ids + [@system.id]).uniq
-            group.save!
-          end
-        end
-
-        render :json => Resources::Candlepin::Consumer.get(@system.uuid)
-      end
+      render :json => Resources::Candlepin::Consumer.get(@system.uuid)
     end
 
     def facts
@@ -276,6 +265,10 @@ module Katello
     end
 
     private
+
+    def set_organization_id
+      params[:organization_id] = params[:owner] if params[:owner]
+    end
 
     def find_system
       @system = System.first(:conditions => { :uuid => params[:id] })
@@ -367,6 +360,23 @@ module Katello
       cve = get_content_view_environment_by_label(params[:env])
       @environment = cve.environment
       @content_view = cve.content_view
+    end
+
+    def find_activation_keys
+      if ak_names = params[:activation_keys]
+        ak_names        = ak_names.split(",")
+        activation_keys = ak_names.map do |ak_name|
+          activation_key = @organization.activation_keys.find_by_name(ak_name)
+          fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
+          activation_key
+        end
+      else
+        activation_keys = []
+      end
+      if activation_keys.empty?
+        fail HttpErrors::BadRequest, _("At least one activation key must be provided")
+      end
+      activation_keys
     end
 
     def get_content_view_environment_by_label(label)

@@ -17,7 +17,7 @@ module Actions
 
         middleware.use ::Actions::Middleware::RemoteAction
 
-        def plan(system)
+        def plan(system, activation_keys = [])
           system.disable_auto_reindex!
           cp_create = plan_action(Candlepin::Consumer::Create,
                                   cp_environment_id:   system.cp_environment_id,
@@ -29,7 +29,8 @@ module Actions
                                   autoheal:            system.autoheal,
                                   release_ver:         system.release,
                                   service_level:       system.serviceLevel,
-                                  capabiliteis:        system.capabilities)
+                                  capabilities:        system.capabilities,
+                                  activation_keys:     activation_keys)
           system.save!
           action_subject system, uuid: cp_create.output[:response][:uuid]
           plan_self

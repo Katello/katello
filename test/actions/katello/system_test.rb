@@ -41,7 +41,7 @@ module ::Actions::Katello::System
         params[:uuid].must_be_kind_of Dynflow::ExecutionPlan::OutputReference
         params[:uuid].subkeys.must_equal %w[response uuid]
       end
-      plan_action(action, system)
+      plan_action(action, system, [])
       assert_action_planed(action, ::Actions::Candlepin::Consumer::Create)
       assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, system)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::Create) do |params, *_|

@@ -222,6 +222,7 @@ Katello::Engine.routes.draw do
       scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
         match '/consumers' => 'candlepin_proxies#consumer_activate', :via => :post
       end
+      match '/consumers' => 'candlepin_proxies#consumer_create', :via => :post
       match '/hypervisors' => 'candlepin_proxies#hypervisors_update', :via => :post
       match '/owners/:organization_id/environments' => 'candlepin_proxies#rhsm_index', :via => :get
       match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_pools_path
