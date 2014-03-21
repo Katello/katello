@@ -23,7 +23,7 @@ KT.auto_complete_box = function(params) {
         form_id: undefined,
         add_btn_id: undefined,
         add_btn: undefined,
-        add_text: i18n.add_plus,
+        add_text: katelloI18n.add_plus,
         require_select: false, //disable the add button if proper autocompleted item isn't selected
         add_cb: function(item, item_id, cb){cb();}
     };

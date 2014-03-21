@@ -21,11 +21,11 @@ $(document).ready(function() {
     KT.editable = (function(){
         var common_settings = {
             method          :  'PUT',
-            cancel          :  i18n.cancel,
-            submit          :  i18n.save,
-            indicator       :  i18n.saving,
-            tooltip         :  i18n.clickToEdit,
-            placeholder     :  i18n.clickToEdit,
+            cancel          :  katelloI18n.cancel,
+            submit          :  katelloI18n.save,
+            indicator       :  katelloI18n.saving,
+            tooltip         :  katelloI18n.clickToEdit,
+            placeholder     :  katelloI18n.clickToEdit,
             submitdata      :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
             onerror         :  function(settings, original, xhr) {
                 original.reset();
@@ -72,11 +72,11 @@ $(document).ready(function() {
                     data        :  null,
                     method      :  'PUT',
                     name        :  $(this).attr('name'),
-                    cancel      :  i18n.cancel,
-                    submit      :  i18n.upload,
-                    indicator   :  i18n.uploading,
-                    tooltip     :  i18n.clickToEdit,
-                    placeholder :  i18n.clickToEdit,
+                    cancel      :  katelloI18n.cancel,
+                    submit      :  katelloI18n.upload,
+                    indicator   :  katelloI18n.uploading,
+                    tooltip     :  katelloI18n.clickToEdit,
+                    placeholder :  katelloI18n.clickToEdit,
                     submitdata  :  {authenticity_token: AUTH_TOKEN},
                     onerror     :  function(settings, original, xhr) {
                         original.reset();
@@ -117,7 +117,7 @@ $(document).ready(function() {
                     name        :  $(this).attr('name'),
                     onsuccess   : function(result, status, xhr) {
                         element.text(result);
-                        notices.displayNotice("success", window.JSON.stringify({ "notices": [i18n.custom_info_update_success] }));
+                        notices.displayNotice("success", window.JSON.stringify({ "notices": [katelloI18n.custom_info_update_success] }));
                     },
                     onerror     : function(settings, original, xhr) {
                         original.reset();
@@ -204,7 +204,7 @@ $(document).ready(function() {
                         element.css('background-image', settings.image);
                         if ($(this).data('unlimited') !== undefined) {
                             if (parseInt(result,10) === $(this).data('unlimited')) {
-                                element.html(i18n.unlimited);
+                                element.html(katelloI18n.unlimited);
                             } else {
                                 element.html(result);
                             }
@@ -242,11 +242,11 @@ $(document).ready(function() {
                     width       :  300,
                     method      :  'PUT',
                     name        :  $(this).attr('name'),
-                    cancel      :  i18n.cancel,
-                    submit      :  i18n.save,
-                    indicator   :  i18n.saving,
-                    tooltip     :  i18n.clickToEdit,
-                    placeholder :  i18n.clickToEdit,
+                    cancel      :  katelloI18n.cancel,
+                    submit      :  katelloI18n.save,
+                    indicator   :  katelloI18n.saving,
+                    tooltip     :  katelloI18n.clickToEdit,
+                    placeholder :  katelloI18n.clickToEdit,
                     submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
                     onsuccess   :  function(result, status, xhr) {
                         var plan_time = $("#plan_time").text();

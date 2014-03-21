@@ -92,7 +92,7 @@ KT.roles.permissionWidget = function(){
                                   validate  : function(){
                                         if( $('#verbs').val() === null && !all_verbs_button.hasClass('selected') ){
                                             if( !$('#verbs_container').find('span').hasClass('validation_error') ){
-                                                $('#verbs_container').append('<div class="permission_widget_container"><span class="validation_error">' + i18n.verb_validation + '</span></div>');
+                                                $('#verbs_container').append('<div class="permission_widget_container"><span class="validation_error">' + katelloI18n.verb_validation + '</span></div>');
                                             }
                                             return false;
                                         } else {
@@ -159,7 +159,7 @@ KT.roles.permissionWidget = function(){
                                   validate  : function(){
                                         if( $("#permission_name").val() === "" ){
                                             if( !$('#name_container').find('span').hasClass('validation_error') ){
-                                                $('#name_container').append('<span class="validation_error">' + i18n.name_validation + '</span>');
+                                                $('#name_container').append('<span class="validation_error">' + katelloI18n.name_validation + '</span>');
                                                 $('#permission_name').addClass("input_error");
                                             }
                                             return false;
@@ -199,9 +199,9 @@ KT.roles.permissionWidget = function(){
             progress_bar.setProgress(25);
 
             all_verbs_button.removeClass('selected');
-            all_verbs_button.html(i18n.all);
+            all_verbs_button.html(katelloI18n.all);
             all_tags_button.removeClass('selected');
-            all_tags_button.html(i18n.all);
+            all_tags_button.html(katelloI18n.all);
             done_button.removeClass('disabled');
 
             next_button.show();
@@ -272,7 +272,7 @@ KT.roles.permissionWidget = function(){
                         html += '<option value="' + key + '">' + type.name + '</option>';
                     }
                 } else {
-                    html += '<option class="hidden" value="all">' + i18n.all + '</option>';
+                    html += '<option class="hidden" value="all">' + katelloI18n.all + '</option>';
                 }
             });
 
@@ -329,7 +329,7 @@ KT.roles.permissionWidget = function(){
                 reset();
                 set_types(current_organization);
                 set_verbs_and_tags(flow['resource_type'].input.val(), current_organization);
-                button.children('span').html(i18n.close_add_permission);
+                button.children('span').html(katelloI18n.close_add_permission);
                 button.addClass("highlighted");
 
                 flow['resource_type'].input.unbind('change').change(function(event){
@@ -377,13 +377,13 @@ KT.roles.permissionWidget = function(){
                 });
 
                 if( current_organization === "global" ){
-                    $('#permission_widget_header').html(i18n.add_header_global);
+                    $('#permission_widget_header').html(katelloI18n.add_header_global);
                 } else {
-                    $('#permission_widget_header').html(i18n.add_header_org + ' ' + roles_breadcrumb[current_organization].name);
+                    $('#permission_widget_header').html(katelloI18n.add_header_org + ' ' + roles_breadcrumb[current_organization].name);
                 }
                 $('#permission_widget_header').addClass('one-line-ellipsis');
             } else {
-                button.children('span').html(i18n.add_permission);
+                button.children('span').html(katelloI18n.add_permission);
                 button.removeClass("highlighted");
             }
 
@@ -400,7 +400,7 @@ KT.roles.permissionWidget = function(){
 
             if( opening ){
                 reset();
-                button.children('span').html(i18n.close_edit_permission);
+                button.children('span').html(katelloI18n.close_edit_permission);
                 button.addClass("highlighted");
                 set_types(current_organization);
 
@@ -488,10 +488,10 @@ KT.roles.permissionWidget = function(){
 
                 progress_bar.setProgress(100);
 
-                $('#permission_widget_header').html(i18n.edit_permission_header + ' ' + roles_breadcrumb[current_organization].name + ' - ' + permission.name);
+                $('#permission_widget_header').html(katelloI18n.edit_permission_header + ' ' + roles_breadcrumb[current_organization].name + ' - ' + permission.name);
                 $('#permission_widget_header').addClass('one-line-ellipsis');
             } else {
-                button.children('span').html(i18n.edit_permission);
+                button.children('span').html(katelloI18n.edit_permission);
                 button.removeClass("highlighted");
             }
 
@@ -504,8 +504,8 @@ KT.roles.permissionWidget = function(){
                 flow['resource_type'].input.hide();
                 flow['resource_type'].input.val('all');
                 $('#all_types_span').hide();
-                $('<span id="all_types_selected" class="grid_5">' + i18n.all_types_selected + '</span>').insertBefore(all_types_button);
-                all_types_button.html(i18n.cancel);
+                $('<span id="all_types_selected" class="grid_5">' + katelloI18n.all_types_selected + '</span>').insertBefore(all_types_button);
+                all_types_button.html(katelloI18n.cancel);
                 all_types_button.addClass('selected');
                 flow['verbs'].container.hide();
                 flow['tags'].container.hide();
@@ -525,7 +525,7 @@ KT.roles.permissionWidget = function(){
                 $('#all_types_span').show();
                 flow['resource_type'].input.show();
                 $('#all_types_selected').remove();
-                all_types_button.html(i18n.all);
+                all_types_button.html(katelloI18n.all);
                 all_types_button.removeClass('selected');
                 flow['verbs'].container.show();
                 flow['tags'].container.show();
@@ -548,12 +548,12 @@ KT.roles.permissionWidget = function(){
             if( !selected ){
                 flow['verbs'].input.find('option').attr('selected', 'selected');
                 flow['verbs'].input.attr('disabled', 'disabled');
-                all_verbs_button.html(i18n.cancel);
+                all_verbs_button.html(katelloI18n.cancel);
                 all_verbs_button.addClass('selected');
             } else {
                 flow['verbs'].input.find('option').removeAttr('selected');
                 flow['verbs'].input.removeAttr('disabled');
-                all_verbs_button.html(i18n.all);
+                all_verbs_button.html(katelloI18n.all);
                 all_verbs_button.removeClass('selected');
             }
         },
@@ -562,11 +562,11 @@ KT.roles.permissionWidget = function(){
 
             if( !selected ){
                 flow['tags'].input.attr('disabled', 'disabled');
-                all_tags_button.html(i18n.cancel);
+                all_tags_button.html(katelloI18n.cancel);
                 all_tags_button.addClass('selected');
             } else {
                 flow['tags'].input.removeAttr('disabled');
-                all_tags_button.html(i18n.all);
+                all_tags_button.html(katelloI18n.all);
                 all_tags_button.removeClass('selected');
             }
         };
@@ -615,11 +615,11 @@ var roleActions = (function($){
                         description = $('.edit_description'),
                         common = {
                             method      : 'PUT',
-                            cancel      :  i18n.cancel,
-                            submit      :  i18n.save,
-                            indicator   :  i18n.saving,
-                            tooltip     :  i18n.clickToEdit,
-                            placeholder :  i18n.clickToEdit,
+                            cancel      :  katelloI18n.cancel,
+                            submit      :  katelloI18n.save,
+                            indicator   :  katelloI18n.saving,
+                            tooltip     :  katelloI18n.clickToEdit,
+                            placeholder :  katelloI18n.clickToEdit,
                             submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
                             onerror     :  function(settings, original, xhr) {
                                 original.reset();
@@ -661,12 +661,12 @@ var roleActions = (function($){
                 };
 
             if ( opening ) {
-                edit_button.html(i18n.close_role_details);
+                edit_button.html(katelloI18n.close_role_details);
                 edit_button.parent().addClass("highlighted");
                 options['after_function'] = setup_edit;
             }
             else {
-                edit_button.html(i18n.edit_role_details);
+                edit_button.html(katelloI18n.edit_role_details);
                 edit_button.parent().removeClass("highlighted");
             }
 
@@ -791,7 +791,7 @@ var roleActions = (function($){
         remove_permission = function(element){
             var id = element.attr('data-id');
 
-            element.html(i18n.removing);
+            element.html(katelloI18n.removing);
 
             $.ajax({
                type     : "DELETE",
@@ -823,9 +823,9 @@ var roleActions = (function($){
             var submit_data = { update_users : { adding : adding, user_id : element.attr('data-id').split('_')[1] }};
 
             if( adding ){
-                element.html(i18n.adding);
+                element.html(katelloI18n.adding);
             } else {
-                element.html(i18n.removing);
+                element.html(katelloI18n.removing);
             }
             $.ajax({
                type     : "PUT",
@@ -980,7 +980,7 @@ var templateLibrary = (function($){
 
             KT.utils.each(items, function(item, key){
                 if( key.split("_")[0] === type ){
-                    full_access = item.full_access ? i18n.full_access : false;
+                    full_access = item.full_access ? katelloI18n.full_access : false;
                     html += listItem(key, item.name, item.count, full_access, options.no_slide);
                 }
             });
@@ -992,7 +992,7 @@ var templateLibrary = (function($){
             if (permissions.update_roles) {
               html += '<ul><li class="content_input_item"><form id="add_ldap_group_form">';
               html += '<input id="add_ldap_group_input" type="text" size="33"><form>  ';
-              html += '<a id="add_ldap_group" class="fr st_button ">' + i18n.add_plus + '</a>';
+              html += '<a id="add_ldap_group" class="fr st_button ">' + katelloI18n.add_plus + '</a>';
               html += '<input id="add_ldap_group_input_id" type="hidden">';
               html += ' </li></ul>';
             }
@@ -1010,7 +1010,7 @@ var templateLibrary = (function($){
             if ( showButton ) {
                 anchor = '<a ' + 'class="fr remove_ldap_group remove_group st_button"' +
                     'data-type="group" data-id="' + group_id + '">';
-                anchor += i18n.remove + "</a>";
+                anchor += katelloI18n.remove + "</a>";
             }
             return '<li >' + anchor + '<div class="simple_link" id="' + group_id + '"><span class="sort_attr">'  + KT.utils.escape(name) + '</span></div></li>';
         },
@@ -1026,7 +1026,7 @@ var templateLibrary = (function($){
             });
 
             if( count === 0 ){
-                html += '<li class="no_slide no_hover">' + i18n.no_permissions + '</li>';
+                html += '<li class="no_slide no_hover">' + katelloI18n.no_permissions + '</li>';
             }
             html += '</ul>';
             return html;
@@ -1037,7 +1037,7 @@ var templateLibrary = (function($){
             if ( showButton ) {
                 anchor = '<a ' + 'class="fr content_add_remove remove_permission st_button"' +
                     'data-type="permission" data-id="' + permission_id + '">';
-                anchor += i18n.remove + "</a>";
+                anchor += katelloI18n.remove + "</a>";
             }
 
             return '<li class="slide_link">' + anchor + '<div class="simple_link link_details" id="' + permission_id + '"><span class="sort_attr">'  + KT.utils.escape(name) + '</span></div></li>';
@@ -1046,14 +1046,14 @@ var templateLibrary = (function($){
             var i = 0, length = 0,
                 html = '<div class="permission_detail">';
 
-            html += '<div class="permission_detail_container"><label class="grid_3 ra">' + i18n.name_colon + '</label><span>' + KT.utils.escape(permission.name) + '</span></div>';
-            html += '<div class="permission_detail_container"><label class="grid_3 raf">' + i18n.description_colon + '</label><span>' + KT.utils.escape(permission.description) + '</span></div>';
-            html += '<div class="permission_detail_container"><label class="grid_3 ra">' + i18n.permission_for_colon + '</label><span>' + KT.utils.escape(permission.type_name) + '</span></div>';
+            html += '<div class="permission_detail_container"><label class="grid_3 ra">' + katelloI18n.name_colon + '</label><span>' + KT.utils.escape(permission.name) + '</span></div>';
+            html += '<div class="permission_detail_container"><label class="grid_3 raf">' + katelloI18n.description_colon + '</label><span>' + KT.utils.escape(permission.description) + '</span></div>';
+            html += '<div class="permission_detail_container"><label class="grid_3 ra">' + katelloI18n.permission_for_colon + '</label><span>' + KT.utils.escape(permission.type_name) + '</span></div>';
 
-            html += '<div class="permission_detail_container"><label class="grid_3 ra">' + i18n.verbs_colon + '</label><ul>';
+            html += '<div class="permission_detail_container"><label class="grid_3 ra">' + katelloI18n.verbs_colon + '</label><ul>';
 
             if( permission.verbs === 'all'){
-                    html += '<li>' + i18n.all + '</li>';
+                    html += '<li>' + katelloI18n.all + '</li>';
             } else {
                 length = permission.verbs.length;
                 for( i=0; i < length; i += 1){
@@ -1062,9 +1062,9 @@ var templateLibrary = (function($){
             }
             html += '</ul></div>';
 
-            html += '<div class="permission_detail_container"><label class="grid_3 ra">' + i18n.on_colon + '</label><ul>';
+            html += '<div class="permission_detail_container"><label class="grid_3 ra">' + katelloI18n.on_colon + '</label><ul>';
             if( permission.tags === 'all' ){
-                    html += '<li>' + i18n.all + '</li>';
+                    html += '<li>' + katelloI18n.all + '</li>';
             } else {
                 length = permission.tags.length;
                 for( i=0; i < length; i += 1){
@@ -1083,10 +1083,10 @@ var templateLibrary = (function($){
                 anchor = '<a ' + 'class="fr content_add_remove ';
                 anchor += has_role ? 'remove_user' : 'add_user';
                 anchor += ' st_button" data-type="user" data-id="' + user_id + '">';
-                anchor += has_role ? (i18n.remove + "</a>") : (i18n.add + "</a>");
+                anchor += has_role ? (katelloI18n.remove + "</a>") : (katelloI18n.add + "</a>");
             } else {
                 anchor = "<div class=\"fr st_button\">";
-                anchor += has_role ? (i18n.rule_applied + "</div>") : (i18n.rule_not_applied + "</div>");
+                anchor += has_role ? (katelloI18n.rule_applied + "</div>") : (katelloI18n.rule_not_applied + "</div>");
             }
 
             html += anchor + '<div class="simple_link ';
@@ -1119,7 +1119,7 @@ var templateLibrary = (function($){
                 }
             });
             if( count === 0 ){
-                html += '<li class="no_slide no_hover">' + i18n.no_global_permissions + '</li>';
+                html += '<li class="no_slide no_hover">' + katelloI18n.no_global_permissions + '</li>';
             }
             html += '</ul>';
             return html;
@@ -1232,34 +1232,34 @@ var rolesRenderer = (function($){
 
             if( hash_id === 'roles' ){
                 if (permissions.create_roles || permissions.update_roles) {
-                    summary.html(i18n.roles_summary);
+                    summary.html(katelloI18n.roles_summary);
                 } else {
-                    summary.html(i18n.roles_summary_readonly);
+                    summary.html(katelloI18n.roles_summary_readonly);
                 }
             } else if( hash_id === 'role_users' ) {
                 if (permissions.create_roles || permissions.update_roles) {
-                    summary.html(i18n.users_summary);
+                    summary.html(katelloI18n.users_summary);
                 } else {
-                    summary.html(i18n.users_summary_readonly);
+                    summary.html(katelloI18n.users_summary_readonly);
                 }
 
             } else if ( hash_id === 'role_permissions' ) {
                 if (permissions.create_roles || permissions.update_roles) {
-                    summary.html(i18n.role_permissions_summary);
+                    summary.html(katelloI18n.role_permissions_summary);
                 } else {
-                    summary.html(i18n.role_permissions_summary_readonly);
+                    summary.html(katelloI18n.role_permissions_summary_readonly);
                 }
             } else if ( hash_id === 'global' || hash_id.match(/organization?/g) ){
                 if (permissions.create_roles || permissions.update_roles) {
-                    summary.html(i18n.permissions_summary);
+                    summary.html(katelloI18n.permissions_summary);
                 } else {
-                    summary.html(i18n.permissions_summary_readonly);
+                    summary.html(katelloI18n.permissions_summary_readonly);
                 }
             } else if ( hash_id.match(/permission?/g) ){
                 if (permissions.create_roles || permissions.update_roles) {
-                    summary.html(i18n.permission_detail_summary);
+                    summary.html(katelloI18n.permission_detail_summary);
                 } else {
-                    summary.html(i18n.permission_detail_readonly);
+                    summary.html(katelloI18n.permission_detail_readonly);
                 }
             }
         },

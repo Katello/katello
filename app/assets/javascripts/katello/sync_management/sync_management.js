@@ -185,7 +185,7 @@ KT.content = (function(){
      var draw_syncing = function(repo_id, progress){
 
             var element = $("#repo-" + repo_id).find(".result"),
-                cancelButton = $('<a/>').attr("class", "cancel_sync").text(i18n.cancel),
+                cancelButton = $('<a/>').attr("class", "cancel_sync").text(katelloI18n.cancel),
                 progressBar = $('<div/>').attr('class', 'progress').text(" ");
             progress = progress ? progress : 0;
             progressBar.progressbar({
@@ -216,7 +216,7 @@ KT.content = (function(){
             var pg = element.find(".progress"),
                 value = pg.find(".ui-progressbar-value");
 
-            starttime = starttime === null ? i18n.no_start_time : starttime;
+            starttime = starttime === null ? katelloI18n.no_start_time : starttime;
 
             fadeUpdate(element.find(".start_time"), starttime);
             // clear duration during active sync

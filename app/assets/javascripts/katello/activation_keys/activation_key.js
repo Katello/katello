@@ -269,10 +269,10 @@ KT.activation_key = (function($) {
                         $.each(response, function(key, item) {
                             options += opt_template({key: item.id, text: item.name});
                         });
-                        highlight_content_views(i18n.select_content_view);
+                        highlight_content_views(katelloI18n.select_content_view);
                     } else {
                         // the user selected an environment that has not views, warn them
-                        highlight_content_views(i18n.no_content_views_available);
+                        highlight_content_views(katelloI18n.no_content_views_available);
                     }
                     $("#activation_key_content_view_id").html(options);
 

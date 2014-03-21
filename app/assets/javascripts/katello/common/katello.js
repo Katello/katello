@@ -237,19 +237,19 @@ KT.orgswitcher = (function($) {
                   this_checkbox.attr("checked", false);
                   this_favorite.addClass("icon-star-empty").addClass('clickable');
                   this_favorite.removeClass("icon-star");
-                  this_favorite.attr("title", i18n.make_default_org);
+                  this_favorite.attr("title", katelloI18n.make_default_org);
                   if(this_favorite.parent().find('label').length){
-                    this_favorite.parent().find('label').html(i18n.make_default_org);
+                    this_favorite.parent().find('label').html(katelloI18n.make_default_org);
                   }
                 } else {
                   this_checkbox.attr("checked", true);
                   all_favorites.removeClass("icon-star");
-                  all_favorites.attr("title", i18n.make_default_org);
+                  all_favorites.attr("title", katelloI18n.make_default_org);
                   $('.favorite').addClass("icon-star").removeClass('clickable');
                   this_favorite.removeClass("icon-star-empty").addClass("icon-star");
-                  this_favorite.attr("title", i18n.current_default_org);
+                  this_favorite.attr("title", katelloI18n.current_default_org);
                   if(this_favorite.parent().find('label').length){
-                    this_favorite.parent().find('label').html(i18n.current_default_org);
+                    this_favorite.parent().find('label').html(katelloI18n.current_default_org);
                   }
                 }
                 this_favorite.show();

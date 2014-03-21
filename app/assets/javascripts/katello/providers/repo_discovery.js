@@ -218,7 +218,7 @@ KT.discovery_templates = (function(){
 
         html += '<span class="grid_3"><span class="check_icon-black">';
         html += '<span class="hidden-text hidden"><span class="repo_tipsy la">';
-        html += i18n.existing_repos_found + '<ul>';
+        html += katelloI18n.existing_repos_found + '<ul>';
         KT.utils.each(existing_hash, function(repo_list, product_name){
             html += existing_product(product_name, repo_list);
         });
@@ -330,10 +330,10 @@ KT.repo_discovery.new_page = (function(){
 
                     created_num = $('.created_repo').length;
                     if (created_num === 1) {
-                        created_msg = i18n.discovery_success_one;
+                        created_msg = katelloI18n.discovery_success_one;
                     }
                     else{
-                        created_msg = i18n.discovery_success_multi(created_num);
+                        created_msg = katelloI18n.discovery_success_multi(created_num);
                     }
 
                     KT.panel.closeSubPanel($('#subpanel'));

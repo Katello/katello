@@ -178,7 +178,7 @@ KT.content_search_templates = (function(i18n) {
         row_header_content      : row_header_content,
         column_header           : column_header
     };
-}(i18n));
+}(katelloI18n));
 
 
 KT.content_search = function(paths_in){
@@ -188,68 +188,68 @@ KT.content_search = function(paths_in){
         comparison_grid,
     subgrids = {
         repo_packages:{id:'repo_packages',
-                       name:i18n.packages,
+                       name:katelloI18n.packages,
                        url:KT.routes.repo_packages_content_search_index_path(),
-                       cols:{description:{id:'description', name:i18n.description, span : "7"}},
+                       cols:{description:{id:'description', name:katelloI18n.description, span : "7"}},
                        selector:['repo_packages', 'repo_errata', 'repo_puppet_modules']
 
         },
         repo_errata  :{id:'repo_errata',
-                       name:i18n.errata,
+                       name:katelloI18n.errata,
                        url:KT.routes.repo_errata_content_search_index_path(),
                        cols:{
-                           title : {id:'title', name:i18n.title, span: "2"},
-                           type  : {id:'type', name:i18n.type},
-                           severity : {id:'severity', name:i18n.severity}
+                           title : {id:'title', name:katelloI18n.title, span: "2"},
+                           type  : {id:'type', name:katelloI18n.type},
+                           severity : {id:'severity', name:katelloI18n.severity}
                          },
                         selector:['repo_packages', 'repo_errata', 'repo_puppet_modules']
         },
         repo_puppet_modules:{id:'repo_puppet_modules',
-                        name:i18n.puppet_modules,
+                        name:katelloI18n.puppet_modules,
                         url:KT.routes.repo_puppet_modules_content_search_index_path(),
-                        cols:{description:{id:'description', name:i18n.description, span : "7"}},
+                        cols:{description:{id:'description', name:katelloI18n.description, span : "7"}},
                         selector:['repo_packages', 'repo_errata', 'repo_puppet_modules']
         },
         repo_compare_packages:{id:'repo_compare_packages',
-                        name:i18n.packages,
+                        name:katelloI18n.packages,
                         url:KT.routes.repo_compare_packages_content_search_index_path(),
                         selector:['repo_compare_packages', 'repo_compare_errata', 'repo_compare_puppet_modules'],
                         modes: true
         },
         repo_compare_errata:{id:'repo_compare_errata',
-                        name:i18n.errata,
+                        name:katelloI18n.errata,
                         url:KT.routes.repo_compare_errata_content_search_index_path(),
                         selector:['repo_compare_packages', 'repo_compare_errata', 'repo_compare_puppet_modules'],
                         modes: true
         },
         repo_compare_puppet_modules:{id:'repo_compare_puppet_modules',
-                        name:i18n.puppet_modules,
+                        name:katelloI18n.puppet_modules,
                         url:KT.routes.repo_compare_puppet_modules_content_search_index_path(),
                         selector:['repo_compare_packages', 'repo_compare_errata', 'repo_compare_puppet_modules'],
                         modes: true
         },
         view_compare_packages:{id:'view_compare_packages',
-                        name:i18n.packages,
+                        name:katelloI18n.packages,
                         url:KT.routes.view_compare_packages_content_search_index_path(),
                         selector:['view_compare_packages', 'view_compare_errata', 'view_compare_puppet_modules'],
                         modes: true
         },
         view_compare_errata:{id:'view_compare_errata',
-                        name:i18n.errata,
+                        name:katelloI18n.errata,
                         url:KT.routes.view_compare_errata_content_search_index_path(),
                         selector:['view_compare_packages', 'view_compare_errata', 'view_compare_puppet_modules'],
                         modes: true
         },
         view_compare_puppet_modules:{id:'view_compare_puppet_modules',
-                        name:i18n.puppet_modules,
+                        name:katelloI18n.puppet_modules,
                         url:KT.routes.view_compare_puppet_modules_content_search_index_path(),
                         selector:['view_compare_packages', 'view_compare_errata', 'view_compare_puppet_modules'],
                         modes: true
         }
     },
-    search_modes = [{id:'all', name:i18n.union},
-                    {id:'shared', name:i18n.intersection},
-                    {id:'unique', name:i18n.difference}
+    search_modes = [{id:'all', name:katelloI18n.union},
+                    {id:'shared', name:katelloI18n.intersection},
+                    {id:'unique', name:katelloI18n.difference}
                    ],
     search_pages = {errata:{url:KT.routes.errata_content_search_index_path(), modes:true},
                     repos:{url:KT.routes.repos_content_search_index_path(), modes:true, comparable:true},
@@ -282,7 +282,7 @@ KT.content_search = function(paths_in){
         if( KT.permissions.current_organization.editable ){
             footer = $('<a/>', { "href" : KT.routes.organizations_path({ anchor : 'panel=organization_' + KT.permissions.current_organization['id'] + '&panelpage=edit' })});
             footer.append($('<i/>', { "class" : "gears_icon", "data-change_on_hover" : "dark" }));
-            footer.append($('<span/>').html(i18n.manage_environments));
+            footer.append($('<span/>').html(katelloI18n.manage_environments));
             footer = footer[0].outerHTML;
         } else {
             footer = "";
@@ -749,7 +749,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
             require_select: true,
             input: ac_container.find('input:text'),
             add_btn: ac_container.find('.button'),
-            add_text: i18n.add,
+            add_text: katelloI18n.add,
             selected_input: ac_container.find('.hidden_selection'),
             add_cb: function(item, id, cleanup){
               auto_select(item, id);
@@ -872,7 +872,7 @@ KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
             });
             query.content_type = content_type;
             $(document).trigger(event_name, query);
-            get_submit_btn().val(i18n.refresh_results);
+            get_submit_btn().val(katelloI18n.refresh_results);
         },
         get_submit_btn = function(){
             return selector.parents('form').find('input[type=submit]');
@@ -880,7 +880,7 @@ KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
         change_selection = function(selected){
             var needed = mapping[selected],
                 element;
-            get_submit_btn().val(i18n.search);
+            get_submit_btn().val(katelloI18n.search);
 
             utils.each(widgets, function(value, key){
                 element = $('#' + value.id);
