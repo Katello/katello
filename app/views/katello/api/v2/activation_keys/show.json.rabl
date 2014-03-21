@@ -18,4 +18,9 @@ node :permissions do |activation_key|
   }
 end
 
+child :system_groups => :system_groups do
+  attributes :id
+  attriubtes :name
+end
+
 extends 'katello/api/v2/common/timestamps'

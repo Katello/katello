@@ -21,6 +21,8 @@ module Katello
     before_filter :authorize
     before_filter :load_search_service, :only => [:index, :available_system_groups]
 
+    wrap_parameters :include => (ActivationKey.attribute_names + %w(system_group_ids))
+
     def rules
       read_test   = lambda do
         ActivationKey.readable?(@organization) ||
