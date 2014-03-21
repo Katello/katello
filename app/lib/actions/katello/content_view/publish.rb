@@ -17,6 +17,7 @@ module Actions
 
         def plan(content_view)
           action_subject(content_view)
+          content_view.check_ready_to_publish!
           version = content_view.create_new_version
           library = content_view.organization.library
 

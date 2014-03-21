@@ -96,5 +96,11 @@ module Katello
         post :promote, :id => @content_view.versions.first.id, :environment_id => @dev.id
       end
     end
+
+    def test_promote_default
+      view = ContentView.find(katello_content_views(:acme_default))
+      post :promote, :id => view.versions.first.id, :environment_id => @dev.id
+      assert_response 400
+    end
   end
 end

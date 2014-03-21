@@ -182,7 +182,9 @@ class ContentViewTest < ActiveSupport::TestCase
 
   def test_composite_views_with_composite_versions
     ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
-    ContentViewVersion.any_instance.stubs(:content_view).returns(stub(:composite? => true))
+    view = stub(:composite? => true)
+    view.stubs(:default?).returns(false)
+    ContentViewVersion.any_instance.stubs(:content_view).returns(view)
     composite = ContentView.find(katello_content_views(:composite_view))
     v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
     assert_raises(ActiveRecord::RecordInvalid) do
