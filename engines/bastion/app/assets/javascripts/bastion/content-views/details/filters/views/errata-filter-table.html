@@ -1,7 +1,7 @@
 <nav>
   <ul class="nav nav-tabs">
     <li ng-class="{active: isState('content-views.details.filters.details.erratum.list')}">
-      <a ui-sref="content-views.details.filters.details.erratum.list">
+      <a ui-sref="content-views.details.filters.details.erratum.list({filterId: filter.id})">
         <span translate>
           List/Remove
         </span>
@@ -10,7 +10,7 @@
 
     <li ng-class="{active: isState('content-views.details.filters.details.erratum.available')}"
         ng-show="!contentView.permissions.editable">
-      <a ui-sref="content-views.details.filters.details.erratum.available">
+      <a ui-sref="content-views.details.filters.details.erratum.available({filterId: filter.id})">
         <span translate>
           Add
         </span>
