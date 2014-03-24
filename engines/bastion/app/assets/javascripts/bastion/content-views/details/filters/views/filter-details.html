@@ -1,11 +1,41 @@
+<span page-title ng-model="filter">{{ 'Filter:' | translate }} {{ filter.name }}</span>
+
 <div class="details details-full">
 
-  <header class="details-header">
-    <h3>
+  <ol class="breadcrumb">
+    <li ng-class="{active: isState('content-views.details.filters.list')}">
       <a ui-sref="content-views.details.filters.list" translate>Filters</a>
-      <i class="icon-double-angle-right"></i>
-      {{ filter.name }}: {{ filter.inclusion | filterType }} {{ filter.type | filterContentType }}
-    </h3>
+    </li>
+    
+    <li ng-if="filter.type === 'erratum'" 
+        ng-class="{active: stateIncludes('content-views.details.filters.details.erratum')}">
+      <a ng-if="!filter.rules[0].types"
+         ui-sref="content-views.details.filters.details.erratum.list({filterId: filter.id})">
+        {{ filter.name }}
+      </a>
+      <a ng-if="filter.rules[0].types"
+         ui-sref="content-views.details.filters.details.erratum.dateType({filterId: filter.id})">
+        {{ filter.name }}
+      </a>
+    </li>
+    
+    <li ng-if="filter.type === 'rpm'"
+        ng-class="{active: stateIncludes('content-views.details.filters.details.rpm')}">
+      <a ui-sref="content-views.details.filters.details.rpm({filterId: filter.id})">
+        {{ filter.name }}
+      </a>
+    </li>
+    
+    <li ng-if="filter.type === 'package_group'"
+        ng-class="{active: stateIncludes('content-views.details.filters.details.package_group')}">
+    <a ui-sref="content-views.details.filters.details.package_group.list({filterId: filter.id})">
+        {{ filter.name }}
+      </a>
+    </li>
+  </ol>
+
+  <header class="details-header">
+    <h3>{{ filter.name }} ({{ filter.inclusion | filterType }} {{ filter.type | filterContentType }})</h3>
   </header>
 
   <div ui-view></div>

@@ -1,24 +1,3 @@
-<nav>
-  <ul class="nav nav-tabs">
-    <li ng-class="{active: isState('content-views.details.filters.details.erratum.list')}">
-      <a ui-sref="content-views.details.filters.details.erratum.list({filterId: filter.id})">
-        <span translate>
-          List/Remove
-        </span>
-      </a>
-    </li>
-
-    <li ng-class="{active: isState('content-views.details.filters.details.erratum.available')}"
-        ng-show="!contentView.permissions.editable">
-      <a ui-sref="content-views.details.filters.details.erratum.available({filterId: filter.id})">
-        <span translate>
-          Add
-        </span>
-      </a>
-    </li>
-  </ul>
-</nav>
-
 <div ng-if="isState('content-views.details.filters.details.erratum.available')">
   <form name="errataForm" class="form-horizontal">
     <div ng-include="'content-views/details/filters/views/date-type-errata.html'"></div>

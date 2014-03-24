@@ -10,7 +10,7 @@ child :content_view => :content_view do
 end
 
 child :repositories => :repositories do
-  attributes :id, :name, :label
+  extends 'katello/api/v2/repositories/show'
 end
 
 node :rules do |filter|

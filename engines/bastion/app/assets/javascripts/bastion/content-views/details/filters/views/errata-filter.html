@@ -1,4 +1,42 @@
+<span page-title ng-model="filter">{{ 'Errata Filter:' | translate }} {{ filter.name }}</span>
+
 <div class="details details-full">
+  <nav>
+    <ul class="nav nav-tabs">
+      <li ng-if="!filter.rules[0].types" ng-class="{active: isState('content-views.details.filters.details.erratum.list')}">
+        <a ui-sref="content-views.details.filters.details.erratum.list({filterId: filter.id})">
+        <span translate>
+          List/Remove
+        </span>
+        </a>
+      </li>
+
+      <li ng-if="!filter.rules[0].types" ng-class="{active: isState('content-views.details.filters.details.erratum.available')}"
+          ng-show="!contentView.permissions.editable">
+        <a ui-sref="content-views.details.filters.details.erratum.available({filterId: filter.id})">
+        <span translate>
+          Add
+        </span>
+        </a>
+      </li>
+
+      <li ng-if="filter.rules[0].types" ng-class="{active: isState('content-views.details.filters.details.erratum.dateType')}"
+          ng-show="!contentView.permissions.editable">
+        <a ui-sref="content-views.details.filters.details.erratum.dateType({filterId: filter.id})">
+        <span translate>
+          Erratum Date Range
+        </span>
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('content-views.details.filters.details.erratum.repositories')}"
+          ng-show="!contentView.permissions.editable">
+        <a ui-sref="content-views.details.filters.details.erratum.repositories({filterId: filter.id})"
+           ng-include="'content-views/details/filters/views/partials/filter-repositories-count.html'">
+        </a>
+      </li>
+    </ul>
+  </nav>
 
   <div ui-view></div>
 

@@ -1,0 +1,119 @@
+<span page-title ng-model="filter">{{ 'Repositories for Filter:' | translate }} {{ filter.name }}</span>
+
+<div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+<section class="details details-full">
+
+  <div class="details-header">
+    <div class="well col-sm-8">
+      <div class="radio">
+        <label>
+          <input type="radio" ng-value="false" ng-model="showRepos" ng-click="selectAllRepositories()"/>
+          <span translate>This filter applies to all repositories in the content view (current and future).</span>
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" ng-value="true" ng-model="showRepos"/>
+          <span translate>This filter applies only to a subset of repositories in the content view.</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div ng-class="{'table-mask': !showRepos}">
+    <span class="pull-right">
+      <button class="btn btn-primary"
+              translate
+              ng-disabled="!showRepos"
+              ng-click="updateRepositories()">
+        Update Repositories
+      </button>
+    </span>
+
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="input-group">
+
+          <span class="input-group-addon">
+            <select ng-model="product" ng-options="product.name for (id, product) in products">
+            </select>
+          </span>
+
+          <input type="text"
+                 class="form-control filter-input"
+                 placeholder="{{ 'Filter' | translate }}"
+                 ng-model="repositorySearch"/>
+
+        </div>
+      </div>
+    </div>
+
+    <table alch-table="repositoriesTable"
+           class="table table-striped"
+           ng-class="{'table-mask': repositoriesTable.working}">
+      <thead>
+        <tr alch-table-head>
+          <th alch-table-column="affectedRepos">Affected?</th>
+          <th alch-table-column="name" translate>Name</th>
+          <th alch-table-column="product" translate>Product</th>
+          <th alch-table-column="type" translate>Type</th>
+          <th alch-table-column="sync-status" translate>Sync Status</th>
+          <th alch-table-column="content" translate>Content</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr alch-table-row
+            row-select="repository"
+            ng-disabled="!showRepos"
+            ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch | filter:repositoryFilter">
+          <td alch-table-cell>
+            <a ui-sref="products.details.repositories.info({productId: repository.product.id, repositoryId: repository.id})">
+              {{ repository.name }}
+            </a>
+          </td>
+          <td alch-table-cell>
+            <a ui-sref="products.details.info({productId: repository.product.id})">
+              {{ repository.product.name }}
+            </a>
+          </td>
+          <td alch-table-cell>{{ repository.content_type }}</td>
+          <td alch-table-cell>
+              <span ng-show="repository.feed">
+                <span ng-show="repository.last_sync == null" translate>
+                  Not Synced
+                </span>
+                <span ng-hide="repository.last_sync == null">
+                  <a href="sync_management/index">{{ repository.sync_state | capitalize}}</a>
+                  ({{ repository.last_sync | date:"short" }})
+                </span>
+              </span>
+            <span ng-hide="repository.feed" translate>N/A</span>
+          </td>
+          <td alch-table-cell>
+              <span ng-show="repository.content_type == 'puppet'">
+                <a translate ng-href="{{ RootURL }}/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_puppet_modules">
+                  {{ repository.content_counts.puppet_module || 0 }} Puppet Modules
+                </a>
+              </span>
+
+              <span ng-hide="repository.content_type == 'puppet'">
+                <div>
+                  <a translate ng-href="{{ RootURL }}/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages">
+                    {{ repository.content_counts.rpm || 0 }} Packages
+                  </a>
+                </div>
+
+                <div>
+                  <a translate ng-href="{{ RootURL }}/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata">
+                    {{ repository.content_counts.erratum || 0 }} Errata
+                  </a>
+                </div>
+              </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

@@ -179,53 +179,83 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         controller: 'FilterDetailsController',
         templateUrl: 'content-views/details/filters/views/filter-details.html'
     })
+
     .state('content-views.details.filters.details.rpm', {
+        abstract: true,
         collapsed: true,
-        url: '/filters/:filterId/packages',
-        controller: 'PackageFilterController',
+        url: '/filters/:filterId/package',
         templateUrl: 'content-views/details/filters/views/package-filter.html'
     })
+    .state('content-views.details.filters.details.rpm.details', {
+        url: '/details',
+        collapsed: true,
+        controller: 'PackageFilterController',
+        templateUrl: 'content-views/details/filters/views/package-filter-details.html'
+    })
+    .state('content-views.details.filters.details.rpm.repositories', {
+        collapsed: true,
+        url: '/repositories',
+        controller: 'FilterRepositoriesController',
+        templateUrl: 'content-views/details/filters/views/filter-repositories.html'
+    })
+
     .state('content-views.details.filters.details.package_group', {
         abstract: true,
         collapsed: true,
-        template: '<div ui-view></div>'
+        url: '/filters/:filterId/package-group',
+        templateUrl: 'content-views/details/filters/views/package-group-filter.html'
     })
     .state('content-views.details.filters.details.package_group.list', {
         collapsed: true,
-        url: '/filters/:filterId/package_groups/list',
+        url: '/list',
         controller: 'PackageGroupFilterListController',
-        templateUrl: 'content-views/details/filters/views/package-group-filter.html'
+        templateUrl: 'content-views/details/filters/views/package-group-filter-details.html'
     })
     .state('content-views.details.filters.details.package_group.available', {
         collapsed: true,
-        url: '/filters/:filterId/package_groups/available',
+        url: '/available',
         controller: 'AvailablePackageGroupFilterController',
-        templateUrl: 'content-views/details/filters/views/package-group-filter.html'
+        templateUrl: 'content-views/details/filters/views/package-group-filter-details.html'
     })
+    .state('content-views.details.filters.details.package_group.repositories', {
+        collapsed: true,
+        url: '/repositories',
+        controller: 'FilterRepositoriesController',
+        templateUrl: 'content-views/details/filters/views/filter-repositories.html'
+    })
+
     .state('content-views.details.filters.details.erratum', {
         abstract: true,
         collapsed: true,
+        url: '/filters/:filterId/errata',
         controller: 'ErrataFilterController',
         templateUrl: 'content-views/details/filters/views/errata-filter.html'
     })
     .state('content-views.details.filters.details.erratum.list', {
         collapsed: true,
-        url: '/filters/:filterId/errata/list',
+        url: '/list',
         controller: 'ErrataFilterListController',
-        templateUrl: 'content-views/details/filters/views/errata-filter-table.html'
+        templateUrl: 'content-views/details/filters/views/errata-filter-details.html'
     })
     .state('content-views.details.filters.details.erratum.available', {
         collapsed: true,
-        url: '/filters/:filterId/errata/available',
+        url: '/available',
         controller: 'AvailableErrataFilterController',
-        templateUrl: 'content-views/details/filters/views/errata-filter-table.html'
+        templateUrl: 'content-views/details/filters/views/errata-filter-details.html'
     })
     .state('content-views.details.filters.details.erratum.dateType', {
         collapsed: true,
-        url: '/filters/:filterId/errata/date_type',
+        url: '/date_type',
         controller: 'DateTypeErrataFilterController',
         templateUrl: 'content-views/details/filters/views/date-type-errata-filter.html'
     })
+    .state('content-views.details.filters.details.erratum.repositories', {
+        collapsed: true,
+        url: '/repositories',
+        controller: 'FilterRepositoriesController',
+        templateUrl: 'content-views/details/filters/views/filter-repositories.html'
+    })
+
     .state('content-views.details.tasks', {
         abstract: true,
         collapsed: true,
