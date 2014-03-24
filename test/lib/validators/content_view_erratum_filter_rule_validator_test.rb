@@ -53,8 +53,7 @@ module Katello
     end
 
     test "fails with errata_id, if already has a date range" do
-      Katello::ContentViewErratumFilter.any_instance.stubs(:erratum_rules).
-          returns(stub(:with_date_or_type => ["not empty"]))
+      Katello::ContentViewErratumFilterRule.any_instance.stubs(:filter_has_date_or_type_rule?).returns(true)
       model = ContentViewErratumFilterRule.new(:content_view_filter_id => @filter.id, :errata_id => "RHSA-2014:1234")
       @validator.validate(model)
       refute_empty model.errors[:base]
