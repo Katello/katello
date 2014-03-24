@@ -35,6 +35,8 @@ class ContentViewVersion < Katello::Model
   has_many :content_view_components, :inverse_of => :content_view_version
   has_many :composite_content_views, :through => :content_view_components, :source => :content_view
 
+  delegate :default, :default?, to: :content_view
+
   scope :default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true)
   scope :non_default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false)
 
@@ -55,7 +57,7 @@ class ContentViewVersion < Katello::Model
   end
 
   def has_default_content_view?
-    ContentViewVersion.default_view.pluck("#{Katello::ContentViewVersion.table_name}.id").include?(self.id)
+    default?
   end
 
   def repos(env)
@@ -281,6 +283,10 @@ class ContentViewVersion < Katello::Model
     Errata::TYPES.each_with_object({}) do |type, counts|
       counts[type] = errata.select { |err| err.type == type }.count
     end
+  end
+
+  def check_ready_to_promote!
+    fail _("Default content view versions cannot be promoted") if default?
   end
 
   private

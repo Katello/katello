@@ -31,6 +31,9 @@ module Katello
       if content_view_version.content_view.composite?
         errors.add(:base, _("Cannot add composite versions to a composite content view"))
       end
+      if content_view_version.default?
+        errors.add(:base, _("Cannot add default content view to composite content view"))
+      end
     end
   end
 end

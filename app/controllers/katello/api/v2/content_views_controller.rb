@@ -50,17 +50,20 @@ module Katello
     api :GET, "/content_views", "List content views"
     param :organization_id, :identifier, :desc => "organization identifier", :required => true
     param :environment_id, :identifier, :desc => "environment identifier"
+    param :nondefault, :bool, :desc => "Filter out default content views"
     def index
       options = sort_params
       options[:load_records?] = true
 
       ids = if @environment
               # TODO: move environment to an ES filter
-              ContentView.non_default.readable(@organization).in_environment(@environment).pluck("#{ContentView.table_name}.id")
+              ContentView.readable(@organization).in_environment(@environment).pluck("#{ContentView.table_name}.id")
             else
-              ContentView.non_default.readable(@organization).pluck(:id)
+              ContentView.readable(@organization).pluck(:id)
             end
       options[:filters] = [{:terms => {:id => ids}}]
+
+      options[:filters] << {:term => {:default => false}} if params[:nondefault]
 
       respond(:collection => item_search(ContentView, params, options))
     end
@@ -159,7 +162,11 @@ module Katello
     private
 
     def find_content_view
-      @view = ContentView.non_default.find(params[:id])
+      @view = ContentView.find(params[:id])
+
+      if @view.default? && !%w(show history).include?(params[:action])
+        fail HttpErrors::BadRequest.new(_("The default content view cannot be edited, published, or deleted."))
+      end
     end
 
     def view_params

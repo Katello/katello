@@ -47,8 +47,6 @@ module Katello
     end
 
     def test_index
-      relation = ContentView.non_default
-      ContentView.expects(:non_default).once.returns(relation)
       get :index, :organization_id => @organization.label
 
       assert_response :success
@@ -94,19 +92,10 @@ module Katello
     end
 
     def test_show
-      relation = ContentView.non_default
-      ContentView.expects(:non_default).once.returns(relation)
       get :show, :id => @content_view.id
 
       assert_response :success
       assert_template 'api/v2/content_views/show'
-    end
-
-    def test_show_fail_with_default
-      content_view = katello_content_views(:acme_default)
-      get :show, :id => content_view.id
-
-      assert_response :not_found
     end
 
     def test_show_protected
@@ -169,6 +158,14 @@ module Katello
       assert_equal 1, composite.components(true).length
     end
 
+    def test_update_default_view
+      view = ContentView.find(katello_content_views(:acme_default))
+      name = view.name
+      put :update, :id => view.id, :name => "Luke I am your father"
+      assert_response 400
+      assert_equal name, view.reload.name
+    end
+
     def test_remove_components
       version = @content_view.versions.first
       composite = ContentView.find(katello_content_views(:composite_view))
@@ -221,5 +218,12 @@ module Katello
       end
     end
 
+    def test_publish_default_view
+      view = ContentView.find(katello_content_views(:acme_default))
+      version_count = view.versions.count
+      post :publish, :id => view.id
+      assert_response 400
+      assert_equal version_count, view.versions.reload.count
+    end
   end
 end

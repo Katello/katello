@@ -17,6 +17,7 @@ module Actions
 
         def plan(version, environment)
           action_subject(version.content_view)
+          version.check_ready_to_promote!
 
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
                                                 :environment => environment, :task => self.task,

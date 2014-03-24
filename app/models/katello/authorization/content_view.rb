@@ -30,14 +30,17 @@ module Authorization::ContentView
 
   def deletable?
     return true if !Katello.config.katello?
+    return false if default?
      ::User.allowed_to?([:delete, :create], :content_views, self.id, self.organization)
   end
 
   def editable?
+    return false if default?
     ::User.allowed_to?(EDIT_PERM_VERBS, :content_views, self.id, self.organization)
   end
 
   def promotable?
+    return false if default?
     ::User.allowed_to?([:promote], :content_views, self.id, self.organization)
   end
 
@@ -47,6 +50,7 @@ module Authorization::ContentView
   end
 
   def publishable?
+    return false if default?
     ::User.allowed_to?([:publish], :content_views, self.id, self.organization)
   end
 

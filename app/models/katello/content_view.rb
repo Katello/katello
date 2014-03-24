@@ -566,6 +566,11 @@ class ContentView < Katello::Model
     modules_by_repoid
   end
 
+  def check_ready_to_publish!
+    fail _("User must be logged in.") if User.current.nil?
+    fail _("Cannot publish default content view") if default?
+  end
+
   protected
 
   def remove_repository(repository)

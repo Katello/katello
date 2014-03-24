@@ -6,6 +6,7 @@ extends 'katello/api/v2/common/org_reference'
 attributes :composite
 attributes :repository_ids
 attributes :component_ids
+attributes :default
 
 node :last_published do |content_view|
   if !content_view.versions.empty?
