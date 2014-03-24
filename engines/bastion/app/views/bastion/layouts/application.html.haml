@@ -18,7 +18,7 @@
       angular.module('Bastion').value('CurrentUser', "#{current_user.id if current_user}");
       angular.module('Bastion').constant('BastionConfig', {
           consumerCertRPM: "#{Katello.config.consumer_cert_rpm}",
-          markTranslated: #{SETTINGS[:mark_translated]}
+          markTranslated: #{SETTINGS[:mark_translated] || false}
       });
 
 = render :file => "layouts/base"
