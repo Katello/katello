@@ -38,7 +38,7 @@ angular.module('Bastion.systems').controller('SystemErrataController',
                 item.title.indexOf(searchText) >= 0;
         };
 
-        $scope.errataTable.transitionToErratum = function (erratum) {
+        $scope.transitionToErratum = function (erratum) {
             loadErratum(erratum.errata_id);
             $scope.transitionTo('systems.details.errata.details', {errataId: erratum.errata_id});
         };
