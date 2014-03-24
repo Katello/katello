@@ -15,7 +15,7 @@ module Katello
 class Api::V2::SystemsController < Api::V2::ApiController
   respond_to :json
 
-  wrap_parameters :include => (System.attribute_names + %w(type facts guest_ids installed_products))
+  wrap_parameters :include => (System.attribute_names + %w(type facts guest_ids installed_products content_view environment))
 
   skip_before_filter :set_default_response_format, :only => :report
 
