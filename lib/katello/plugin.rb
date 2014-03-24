@@ -133,4 +133,6 @@ Foreman::Plugin.register :katello do
        :engine => Katello::Engine,
        :parent => :administer_menu,
        :after => :about
+
+  Foreman::AccessControl.permission(:edit_organizations).actions << 'organizations/download_debug_certificate'
 end

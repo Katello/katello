@@ -16,7 +16,7 @@ module Katello
     include Api::V2::Rendering
     include ForemanTasks::Triggers
 
-    before_filter :local_find_taxonomy, :only => %w{repo_discover cancel_repo_discover}
+    before_filter :local_find_taxonomy, :only => %w{repo_discover cancel_repo_discover download_debug_certificate}
 
     resource_description do
       api_version 'v2'
@@ -33,7 +33,8 @@ module Katello
       {
         :auto_attach_all_systems => edit_test,
         :repo_discover => edit_test,
-        :cancel_repo_discover => edit_test
+        :cancel_repo_discover => edit_test,
+        :download_debug_certificate => edit_test
       }
     end
 
@@ -82,6 +83,16 @@ module Katello
       render :json => { message: "not implemented" }
     end
 
+    api :GET, "/organizations/:label/download_debug_certificate", "Download a debug certificate"
+    param :label, String, :desc => "Organization label"
+    def download_debug_certificate
+      pem = @organization.debug_cert
+      data = "#{ pem[:key] }\n\n#{ pem[:cert] }"
+      send_data data,
+                :filename => "#{ @organization.name }-key-cert.pem",
+                :type => "application/text"
+    end
+
     api :POST, "/organizations/:id/autoattach_subscriptions", "Auto-attach available subscriptions to all systems within an organization. Asynchronous operation."
     def autoattach_subscriptions
       async_job = @organization.auto_attach_all_systems
@@ -89,6 +100,15 @@ module Katello
     end
 
     protected
+
+    def action_permission
+      case params[:action]
+      when 'download_debug_certificate'
+        :edit
+      else
+        super
+      end
+    end
 
     def resource_identifying_attributes
       %w(id label)
