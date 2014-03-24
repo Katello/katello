@@ -30,9 +30,11 @@ angular.module('Bastion.content-views').controller('ErrataFilterListController',
     function ($scope, gettext, Nutupane, Filter, Rule) {
         var nutupane;
 
-        nutupane = new Nutupane(
-            Filter,
-            {filterId: $scope.$stateParams.filterId},
+        nutupane = new Nutupane(Filter, {
+                filterId:     $scope.$stateParams.filterId,
+                'sort_by':    'errata_id',
+                'sort_order': 'DESC'
+            },
             'errata'
         );
 

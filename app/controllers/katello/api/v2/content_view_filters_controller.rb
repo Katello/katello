@@ -99,7 +99,9 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
     repo_ids = @filter.applicable_repos.pluck(:pulp_id)
     search_filters = [{ :terms => { :repoids => repo_ids } },
                       { :not => { :terms => { :errata_id_exact => current_errata_ids } } }]
-    options = { :filters => search_filters }
+
+    options = sort_params
+    options[:filters] = search_filters
 
     collection = item_search(Errata, params, options)
     collection[:results] = collection[:results].map do |erratum|
@@ -121,7 +123,9 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
     repo_ids = @filter.applicable_repos.pluck(:pulp_id)
     search_filters = [{ :terms => { :repo_id => repo_ids } },
                       { :not => { :terms => { :name => current_ids } } }]
-    options = { :filters => search_filters }
+
+    options = sort_params
+    options[:filters] = search_filters
 
     respond_for_index :template => '../package_groups/index',
                       :collection => item_search(PackageGroup, params, options)
