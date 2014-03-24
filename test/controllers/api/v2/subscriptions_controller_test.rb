@@ -88,8 +88,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
 
   def test_create
     System.any_instance.expects(:subscribe)
-    post :create, :system_id => @system.uuid, :subscription => {
-        :subscriptions => [:subscription => {:id => 'redhat', :quantity => 1}]}
+    post :create, :system_id => @system.uuid, :subscriptions => [{:id => 'redhat', :quantity => 1}]
 
     assert_response :success
     assert_template 'katello/api/v2/subscriptions/index'
@@ -97,8 +96,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
 
   def test_destroy
     System.any_instance.expects(:unsubscribe)
-    delete :destroy, :system_id => @system.uuid, :subscription => {
-        :subscriptions => [:subscription => {:id => 1}]}
+    delete :destroy, :system_id => @system.uuid, :subscriptions => [:subscription => {:id => 1}]
 
     assert_response :success
     assert_template 'katello/api/v2/subscriptions/index'
