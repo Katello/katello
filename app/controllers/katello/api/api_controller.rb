@@ -19,11 +19,16 @@ class Api::ApiController < ::Api::BaseController
   respond_to :json
   before_filter :verify_ldap
   before_filter :turn_off_strong_params
+  before_filter :update_activity_time
 
   # override warden current_user (returns nil because there is no user in that scope)
   def current_user
     # get the logged user from the correct scope
     User.current
+  end
+
+  def update_activity_time
+    session[:expires_at] = Setting[:idle_timeout].minutes.from_now.utc
   end
 
   def load_search_service(service = nil)
