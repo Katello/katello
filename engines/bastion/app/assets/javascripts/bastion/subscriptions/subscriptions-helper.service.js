@@ -52,7 +52,7 @@ angular.module('Bastion.subscriptions').service('SubscriptionsHelper',
                 } else {
                     amount = 1;
                 }
-                selected.push({"subscription": {"id": subscription.id, "quantity": amount}});
+                selected.push({"id": subscription.id, "quantity": amount});
             });
             return selected;
         };
@@ -62,7 +62,7 @@ angular.module('Bastion.subscriptions').service('SubscriptionsHelper',
 
             selected = [];
             angular.forEach(table.getSelected(), function (subscription) {
-                selected.push({"subscription": {"id": subscription.id}});
+                selected.push({"id": subscription.id});
             });
             return selected;
         };

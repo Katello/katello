@@ -98,23 +98,23 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   api :POST, "/subscriptions/:id", "Add a subscription to a resource"
   api :POST, "/systems/:system_id/subscriptions", "Add a subscription to a system"
   api :POST, "/activation_keys/:activation_key_id/subscriptions", "Add a subscription to an activation key"
-  param :id, String, :desc => "Subscription Pool uuid"
-  param :system_id, String, :desc => "UUID of the system"
-  param :activation_key_id, String, :desc => "ID of the activation key"
-  param :quantity, :number, :desc => "Quantity of this subscriptions to add"
-  param :subscriptions, Array, :desc => "Array of subscriptions to add", :required => true do
-    param :subscription, Hash do
-      param :id, String, :desc => "Subscription Pool uuid", :required => true
-      param :quantity, :number, :desc => "Quantity of this subscriptions to add", :required => true
-    end
+  param :id, String, :desc => "Subscription Pool uuid", :required => false
+  param :system_id, String, :desc => "UUID of the system", :required => false
+  param :activation_key_id, String, :desc => "ID of the activation key", :required => false
+  param :quantity, :number, :desc => "Quantity of this subscriptions to add", :required => false
+  param :subscriptions, Array, :desc => "Array of subscriptions to add", :required => false do
+    param :id, String, :desc => "Subscription Pool uuid", :required => true
+    param :quantity, :number, :desc => "Quantity of this subscriptions to add", :required => true
   end
   def create
     object = @system || @activation_key || @distributor
-    subscription_params[:subscriptions].each do |subscription|
-      object.subscribe(subscription[:subscription][:id], subscription[:subscription][:quantity])
-    end if subscription_params[:subscriptions]
-    if subscription_params[:id] && subscription_params[:quantity]
-      object.subscribe(subscription_params[:id], subscription_params[:quantity])
+
+    if params[:subscriptions]
+      params[:subscriptions].each do |subscription|
+        object.subscribe(subscription[:id], subscription[:quantity])
+      end
+    elsif params[:id] && params.key?(:quantity)
+      object.subscribe(params[:id], params[:quantity])
     end
 
     subscriptions = if @system
@@ -131,14 +131,18 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   api :DELETE, "/subscriptions/:id", "Unattach a subscription"
   api :DELETE, "/systems/:system_id/subscriptions/:id", "Unattach a subscription"
   api :DELETE, "/activation_keys/:activation_key_id/subscriptions/:id", "Unattach a subscription"
-  param :id, String, :desc => "Subscription ID"
+  param :id, String, :desc => "Subscription ID", :required => false
   param :system_id, String, :desc => "UUID of the system"
   param :activation_key_id, String, :desc => "activation key ID"
+  param :subscriptions, Array, :desc => "Array of subscriptions to add", :required => false do
+    param :id, String, :desc => "Subscription Pool uuid", :required => true
+  end
   def destroy
     object = @system || @activation_key || @distributor
-    if params[:subscription].present?
-      subscription_params[:subscriptions].each do |subscription|
-        object.unsubscribe(subscription[:subscription][:id])
+
+    if params[:subscriptions].present?
+      params[:subscriptions].each do |subscription|
+        object.unsubscribe(subscription[:id])
       end
     elsif params[:id]
       object.unsubscribe(params[:id])
@@ -349,11 +353,5 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
 
     return subscriptions
   end
-
-  def subscription_params
-    params.require(:subscription).permit(:id, :quantity, :subscriptions => [:subscription => [:id, :quantity]])
-    params[:subscription]
-  end
-
 end
 end

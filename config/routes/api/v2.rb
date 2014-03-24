@@ -184,7 +184,7 @@ Katello::Engine.routes.draw do
         api_resources :activation_keys, :only => [:index]
         api_resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do
-            match '/' => 'subscriptions#destroy', :via => :delete
+            match '/' => 'subscriptions#destroy', :via => :put
             match '/available' => 'subscriptions#available', :via => :get
             match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
           end

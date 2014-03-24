@@ -96,7 +96,7 @@ describe('Controller: SystemAddSubscriptionsController', function() {
 
         $scope.system = new System({
             uuid: 12345,
-            subscriptions: [{subscription: {id: 1, quantity: 11}}, {subscription: {id: 2, quantity: 22}}]
+            subscriptions: [{id: 1, quantity: 11}, {id: 2, quantity: 22}]
         });
     }));
 
@@ -107,9 +107,9 @@ describe('Controller: SystemAddSubscriptionsController', function() {
     it("allows removing system groups from the system", function() {
 
         var expected = {uuid: 12345, subscriptions: [
-                                                      {subscription: {id: 2, quantity: 0}},
-                                                      {subscription: {id: 3, quantity: 1}},
-                                                      {subscription: {id: 4, quantity: 1}}
+                                                      {id: 2, quantity: 0},
+                                                      {id: 3, quantity: 1},
+                                                      {id: 4, quantity: 1}
                                                     ]};
         spyOn(System, 'addSubscriptions');
 
