@@ -19,6 +19,7 @@ class ActivationKey < Katello::Model
   include Glue if Katello.config.use_cp
   include Authorization::ActivationKey
   include Ext::LabelFromName
+  include Authorizable
 
   belongs_to :organization, :inverse_of => :activation_keys
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :activation_keys
@@ -48,6 +49,9 @@ class ActivationKey < Katello::Model
     end
   end
   validates_with Validators::ContentViewEnvironmentValidator
+
+  scoped_search :on => :name, :complete_value => :true
+  scoped_search :on => :organization_id, :complete_value => :true
 
   def environment_exists
     if environment.nil?
