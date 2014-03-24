@@ -11,30 +11,23 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module ElasticSearch
-    class Reindex < ElasticSearch::Abstract
+  module Katello
+    module User
+      class Destroy < Actions::EntryAction
 
-      def plan(record)
-        plan_self(id: record.id,
-                  class_name: record.class.name)
-      end
+        def plan(user)
+          user.disable_auto_reindex!
+          action_subject user
 
-      input_format do
-        param :id
-        param :class_name
-      end
+          sequence do
+            plan_action(Pulp::Superuser::Remove, remote_id: user.remote_id)
+            plan_action(Pulp::User::Destroy, remote_id: user.remote_id)
+          end
 
-      def finalize
-        model_class = input[:class_name].constantize
-        record      = model_class.find_by_id(input[:id])
-
-        if record
-          record.update_index
-        else
-          model_class.index.remove(type: input[:class_name], id: input[:id])
+          plan_action(ElasticSearch::Reindex, user)
         end
-      end
 
+      end
     end
   end
 end

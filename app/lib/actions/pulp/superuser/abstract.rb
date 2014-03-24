@@ -11,30 +11,27 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module ElasticSearch
-    class Reindex < ElasticSearch::Abstract
+  module Pulp
+    module Superuser
+      class Abstract < Pulp::Abstract
 
-      def plan(record)
-        plan_self(id: record.id,
-                  class_name: record.class.name)
-      end
-
-      input_format do
-        param :id
-        param :class_name
-      end
-
-      def finalize
-        model_class = input[:class_name].constantize
-        record      = model_class.find_by_id(input[:id])
-
-        if record
-          record.update_index
-        else
-          model_class.index.remove(type: input[:class_name], id: input[:id])
+        input_format do
+          param :remote_id, String
+          param :pulp_user, String
         end
-      end
 
+        def run
+          output[:response] = pulp_resources.role.
+              send(operation, 'super-users', input[:remote_id])
+        end
+
+        private
+
+        def operation
+          fail NotImplementedError
+        end
+
+      end
     end
   end
 end

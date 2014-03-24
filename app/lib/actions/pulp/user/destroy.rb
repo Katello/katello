@@ -1,5 +1,5 @@
 #
-# Copyright 2014 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,30 +11,17 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module ElasticSearch
-    class Reindex < ElasticSearch::Abstract
+  module Pulp
+    module User
+      class Destroy < Pulp::Abstract
+        input_format do
+          param :remote_id, String
+        end
 
-      def plan(record)
-        plan_self(id: record.id,
-                  class_name: record.class.name)
-      end
-
-      input_format do
-        param :id
-        param :class_name
-      end
-
-      def finalize
-        model_class = input[:class_name].constantize
-        record      = model_class.find_by_id(input[:id])
-
-        if record
-          record.update_index
-        else
-          model_class.index.remove(type: input[:class_name], id: input[:id])
+        def run
+          output[:response] = pulp_resources.user.delete(input.fetch(:remote_id))
         end
       end
-
     end
   end
 end

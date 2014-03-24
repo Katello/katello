@@ -17,7 +17,6 @@ module Glue::Pulp::User
     base.send :include, LazyAccessor
     base.class_eval do
       lazy_accessor :pulp_name, :initializer => lambda {|s| Katello.pulp_server.resources.user.retrieve(self.remote_id) }
-      before_destroy :destroy_pulp_orchestration
     end
   end
 
@@ -38,22 +37,6 @@ module Glue::Pulp::User
       return attrs
     end
 
-    def del_pulp_user
-      Katello.pulp_server.resources.user.delete(self.remote_id)
-    rescue => e
-      Rails.logger.error "Failed to delete pulp user #{self.remote_id}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
-    def del_super_admin_role
-      Katello.pulp_server.resources.role.remove("super-users", self.remote_id)
-      true #assume everything is ok unless there was an exception thrown
-    end
-
-    def destroy_pulp_orchestration
-      pre_queue.create(:name => "remove 'super-user' from: #{self.remote_id}", :priority => 3, :action => [self, :del_super_admin_role])
-      pre_queue.create(:name => "delete pulp user: #{self.remote_id}", :priority => 4, :action => [self, :del_pulp_user])
-    end
   end
 
   private

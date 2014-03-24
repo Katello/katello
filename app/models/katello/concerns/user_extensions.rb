@@ -31,6 +31,16 @@ module Katello
           ::Actions::Katello::User::Create
         end
 
+        def update_action
+          sync_action!
+          ::Actions::Katello::User::Update
+        end
+
+        def destroy_action
+          sync_action!
+          ::Actions::Katello::User::Destroy
+        end
+
         include Ext::IndexedModel
 
         include AsyncOrchestration
@@ -54,7 +64,6 @@ module Katello
         has_many :search_favorites, :dependent => :destroy, :class_name => "Katello::SearchFavorite"
         has_many :search_histories, :dependent => :destroy, :class_name => "Katello::SearchHistory"
         has_many :activation_keys, :dependent => :destroy, :class_name => "Katello::ActivationKey"
-        has_many :content_view_histories, :dependent => :nullify, :class_name => "Katello::ContentViewHistory"
         belongs_to :default_environment, :class_name => "Katello::KTEnvironment", :inverse_of => :users
         serialize :preferences, Hash
 
