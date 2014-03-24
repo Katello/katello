@@ -20,7 +20,7 @@ end
 
 child :system_groups => :system_groups do
   attributes :id
-  attriubtes :name
+  attributes :name
 end
 
 extends 'katello/api/v2/common/timestamps'
