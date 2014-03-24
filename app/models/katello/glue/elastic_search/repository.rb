@@ -240,7 +240,7 @@ module Glue::ElasticSearch::Repository
     end
 
     def package_count
-      results = Katello::Package.search('', 0, 1, :repoids => [self.pulp_id])
+      results = Katello::Package.legacy_search('', 0, 1, :repoids => [self.pulp_id])
       results.empty? ? 0 : results.total
     end
 

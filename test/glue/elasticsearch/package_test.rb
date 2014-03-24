@@ -100,7 +100,7 @@ class PackageTest < ActiveSupport::TestCase
   end
 
   def filter_search(filters)
-    Package.search("*", 0, @packages.length, [@repo.pulp_id], [:id, "ASC"], :all,
+    Package.legacy_search("*", 0, @packages.length, [@repo.pulp_id], [:id, "ASC"], :all,
                    'name', filters)
   end
 end

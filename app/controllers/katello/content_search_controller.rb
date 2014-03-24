@@ -290,7 +290,7 @@ class ContentSearchController < Katello::ApplicationController
 
   def repo_packages
     offset = params[:offset] || 0
-    packages = Package.search('', offset, current_user.page_size, [@repo.pulp_id])
+    packages = Package.legacy_search('', offset, current_user.page_size, [@repo.pulp_id])
 
     rows = packages.collect do |pack|
       { :name => package_display(pack),
@@ -397,7 +397,7 @@ class ContentSearchController < Katello::ApplicationController
 
     units = case unit_type
             when :package
-              Package.search('', offset, current_user.page_size,
+              Package.legacy_search('', offset, current_user.page_size,
                              repo_map.keys, [:nvrea_sort, "ASC"], process_search_mode)
             when :errata
               Errata.legacy_search('', :start => offset, :page_size => current_user.page_size,

@@ -46,7 +46,7 @@ module Glue::ElasticSearch::Product
 
   def total_package_count(env, view)
     repo_ids = view.repos(env).in_product(self).collect{ |r| r.pulp_id }
-    result = Katello::Package.search('*', 0, 1, repo_ids)
+    result = Katello::Package.legacy_search('*', 0, 1, repo_ids)
     result.length > 0 ? result.total : 0
   end
 

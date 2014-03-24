@@ -266,20 +266,20 @@ class ContentViewVersion < Katello::Model
   end
 
   def package_count
-    packages.count
+    Package.package_count(self.repositories.archived)
   end
 
   def errata
     repositories.archived.flat_map(&:errata)
   end
 
-  def errata_count
-    errata.count
+  def errata_count(errata_type = nil)
+    Errata.errata_count(self.repositories.archived, errata_type)
   end
 
   def errata_type_counts
     Errata::TYPES.each_with_object({}) do |type, counts|
-      counts[type] = errata.select { |err| err.type == type }.count
+      counts[type] = errata_count(type)
     end
   end
 

@@ -137,7 +137,7 @@ module ContentSearch
         # build the rows
         units = case unit_type
                 when :package
-                  Package.search('', offset, page_size, view_repos.map(&:pulp_id),
+                  Package.legacy_search('', offset, page_size, view_repos.map(&:pulp_id),
                                  [:nvrea_sort, "ASC"], search_mode)
                 when :errata
                   Errata.legacy_search('', :start => offset, :page_size => page_size,
