@@ -106,7 +106,7 @@ KT.distributors_page = (function() {
                },
                 valid_input_cb: function() {
                     var confirmation_text = removeDistributor.find('.confirmation_text');
-                    confirmation_text.html(i18n.confirm_distributor_remove_action(KT.panel.numSelected()));
+                    confirmation_text.html(katelloI18n.confirm_distributor_remove_action(KT.panel.numSelected()));
                     return true;
                 }
             }
@@ -142,10 +142,10 @@ KT.distributors_page = (function() {
                         $.each(response, function(key, item) {
                             options += opt_template({key: item.id, text: item.name});
                         });
-                        highlight_content_views(i18n.select_content_view);
+                        highlight_content_views(katelloI18n.select_content_view);
                     } else {
                         // the user selected an environment that has not views, warn them
-                        highlight_content_views(i18n.no_content_views_available);
+                        highlight_content_views(katelloI18n.no_content_views_available);
                     }
                     $("#distributor_content_view_id").html(options);
                 }

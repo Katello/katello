@@ -376,7 +376,7 @@ KT.panel = (function ($) {
                 },
                 error: function (xhr, status, error) {
                     spinner.hide();
-                    panelContent.html("<h2>" + i18n.error + "</h2><p>" + i18n.row_error + error + "</p>").fadeIn();
+                    panelContent.html("<h2>" + katelloI18n.error + "</h2><p>" + katelloI18n.row_error + error + "</p>").fadeIn();
                 }
             });
         },
@@ -484,7 +484,7 @@ KT.panel = (function ($) {
             //calc the number of active tupane rows
             var len = $('.block.active').length;
             //update the select
-            $('#select-result').html(len + i18n.items_selected).effect("highlight", {}, 200);
+            $('#select-result').html(len + katelloI18n.items_selected).effect("highlight", {}, 200);
             $('.numitems').html(len).effect("highlight", {}, 200);
             actions.resetActions(len);
             return len;

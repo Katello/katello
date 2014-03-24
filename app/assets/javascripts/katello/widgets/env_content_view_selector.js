@@ -124,10 +124,10 @@ KT.env_content_view_selector = (function() {
                             $.each(response, function(key, item) {
                                 options += opt_template({key: item.id, text: item.name});
                             });
-                            highlight_text = performing_cancel === true ? undefined : i18n.select_content_view;
+                            highlight_text = performing_cancel === true ? undefined : katelloI18n.select_content_view;
                         } else {
                             // this environment doesn't have any views, warn the user
-                            highlight_text = i18n.no_content_views_available;
+                            highlight_text = katelloI18n.no_content_views_available;
                         }
                         content_view_select.html(options);
 

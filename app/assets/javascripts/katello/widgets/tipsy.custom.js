@@ -170,10 +170,10 @@ KT.tipsy.templates = (function(){
             html = '<div>';
 
         html += '<form id="copy_form" data-url="' + element.data('url') + '">';
-        html += '<fieldset><div><label>' + i18n.name + '</label></div><div><input id="name_input" type="text" size="25" name="name"></div></fieldset>';
-        html += '<fieldset><div><label>' + i18n.description + '</label></div><div><textarea id="description_input" rows="1" cols="31" name="description"></textarea></div></fieldset>';
-        html += '<input id="copy_button" type="submit" class="fr button" disabled="disabled" value="' + i18n.copy + '">';
-        html += '<input id="cancel_copy_button" type="button" class="fr button" value="' + i18n.cancel + '">';
+        html += '<fieldset><div><label>' + katelloI18n.name + '</label></div><div><input id="name_input" type="text" size="25" name="name"></div></fieldset>';
+        html += '<fieldset><div><label>' + katelloI18n.description + '</label></div><div><textarea id="description_input" rows="1" cols="31" name="description"></textarea></div></fieldset>';
+        html += '<input id="copy_button" type="submit" class="fr button" disabled="disabled" value="' + katelloI18n.copy + '">';
+        html += '<input id="cancel_copy_button" type="button" class="fr button" value="' + katelloI18n.cancel + '">';
         html += '<form>';
         html += '</div>';
         return html;

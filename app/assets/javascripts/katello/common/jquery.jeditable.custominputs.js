@@ -43,17 +43,17 @@ $(document).ready(function() {
 
             // Update <input>'s value when clicked
             $(input).click(function() {
-                //var value = $(input).attr("checked") ? i18n.checkbox_yes : i18n.checkbox_no;
+                //var value = $(input).attr("checked") ? katelloI18n.checkbox_yes : katelloI18n.checkbox_no;
                 var value = $(input).attr("checked") ? true : false;
                 $(input).val(value);
             });
             return(input);
         },
         content : function(string, settings, original) {
-            var checked = string.indexOf(i18n.checkbox_yes)!== -1 ? 1 : 0;
+            var checked = string.indexOf(katelloI18n.checkbox_yes)!== -1 ? 1 : 0;
             var input = $(':input:first', this);
             $(input).attr("checked", checked);
-            var value = $(input).attr("checked") ? i18n.checkbox_yes : i18n.checkbox_no;
+            var value = $(input).attr("checked") ? katelloI18n.checkbox_yes : katelloI18n.checkbox_no;
             //var value = $(input).attr("checked") ? true : false;
 
             $(input).val(value);
@@ -70,7 +70,7 @@ $(document).ready(function() {
                     '" style="width:' + width + 'px;">');
             $(this).append(input);
             if (settings.unlimited !== undefined) {
-                var label = jQuery('&nbsp; <label><input type="checkbox" value=""/>&nbsp; ' + i18n.unlimited + '</label>');
+                var label = jQuery('&nbsp; <label><input type="checkbox" value=""/>&nbsp; ' + katelloI18n.unlimited + '</label>');
                 $(this).append(label);
                 var unlimited = label.find("input");
                 $(unlimited).bind('click', function(){
@@ -92,7 +92,7 @@ $(document).ready(function() {
             text_input.val(string);
             if (settings.unlimited !== undefined) {
                 var check_input = $('input', this).last();
-                if (string === settings.unlimited || string === i18n.unlimited) {
+                if (string === settings.unlimited || string === katelloI18n.unlimited) {
                     text_input.val('');
                     check_input.attr('checked', 'checked');
                     text_input.attr("disabled", true);

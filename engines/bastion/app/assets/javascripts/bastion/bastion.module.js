@@ -66,15 +66,16 @@ angular.module('Bastion').constant('RootURL', '/katello');
  * @requires $httpProvider
  * @requires $urlRouterProvider
  * @requires $provide
+ * @requires BastionConfig
  * @requires RootURL
  *
  * @description
  *   Used for establishing application wide configuration such as adding the Rails CSRF token
- *   to every request.
+ *   to every request and adding Xs to translated strings.
  */
 angular.module('Bastion').config(
-    ['$httpProvider', '$urlRouterProvider', '$provide', 'RootURL',
-    function ($httpProvider, $urlRouterProvider, $provide, RootURL) {
+    ['$httpProvider', '$urlRouterProvider', '$provide', 'BastionConfig', 'RootURL',
+    function ($httpProvider, $urlRouterProvider, $provide, BastionConfig, RootURL) {
         $httpProvider.defaults.headers.common = {
             Accept: 'application/json, text/plain, version=2; */*',
             'X-XSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
@@ -98,6 +99,19 @@ angular.module('Bastion').config(
         }]);
 
         $httpProvider.interceptors.push('PrefixInterceptor');
+
+        // Add Xs around translated strings if the config value mark_translated is set.
+        if (BastionConfig.markTranslated) {
+            $provide.decorator('gettextCatalog', ["$delegate", function ($delegate) {
+                var getString = $delegate.getString;
+
+                $delegate.getString = function (string, n) {
+                    return 'X' + getString.apply($delegate, [string, n]) + 'X';
+                };
+                return $delegate;
+            }]);
+        }
+
     }]
 );
 
@@ -138,10 +152,6 @@ angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextC
                 $state.transitionTo(fromState, fromParams);
             }
         };
-
-        // Set the current language
-        gettextCatalog.currentLanguage = currentLocale;
-
 
         // Set the current language
         gettextCatalog.currentLanguage = currentLocale;

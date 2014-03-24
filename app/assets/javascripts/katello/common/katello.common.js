@@ -38,8 +38,8 @@ KT.common = (function() {
           var settings = {
               message: undefined,
               warning_message: undefined,
-              yes_text: i18n.yes,
-              no_text: i18n.no,
+              yes_text: katelloI18n.yes,
+              no_text: katelloI18n.no,
               yes_callback: function(){},
               no_callback: function(){},
               include_cancel: false
@@ -83,7 +83,7 @@ KT.common = (function() {
                   return confirmFalse;
                 },
                 'class' : 'button',
-                'text' : i18n.cancel
+                'text' : katelloI18n.cancel
               };
           }
 
@@ -96,7 +96,7 @@ KT.common = (function() {
             modal: true,
             resizable: false,
             width: 450,
-            title: i18n.confirmation,
+            title: katelloI18n.confirmation,
             dialogClass: "confirmation",
             buttons: buttons
           });
@@ -109,7 +109,7 @@ KT.common = (function() {
             modal: true,
             resizable: false,
             width: 300,
-            title: i18n.alert,
+            title: katelloI18n.alert,
             dialogClass: "alert",
             stack: false,
             buttons: {
@@ -120,7 +120,7 @@ KT.common = (function() {
                     return false;
                   },
                   'class' : 'button',
-                  'text' : i18n.ok
+                  'text' : katelloI18n.ok
                 }
             }
           });

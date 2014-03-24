@@ -304,7 +304,7 @@ var sliding_tree = function(tree_id, options) {
                      filter_form.animate({"opacity":"1"}, { duration: 200, queue: false });
                      filter_input.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
                      $(this).css({backgroundPosition: "-32px -16px"});
-                     $(this).attr('title', i18n.close);
+                     $(this).attr('title', katelloI18n.close);
 
                      if( $('.remove_item').length ){
                          $('.remove_item').css({ top : 52 });
@@ -325,7 +325,7 @@ var sliding_tree = function(tree_id, options) {
                          }
                      });
                      $(this).css({backgroundPosition: "0 -16px"});
-                     $(this).attr('title', i18n.filter);
+                     $(this).attr('title', katelloI18n.filter);
                      filter_input.val("").change();
                      $("#" + tree_id + " .has_content .filterable li").fadeIn('fast');
                  }
@@ -522,11 +522,11 @@ sliding_tree.search = function(){
             if( !searchable ){
                 search_button.css({ backgroundPosition : "0 0" });
                 search_button.addClass('disabled');
-                search_button.attr('title', i18n.disabled_search);
+                search_button.attr('title', katelloI18n.disabled_search);
             } else {
                 search_button.css({backgroundPosition: "0 -16px"});
                 search_button.removeClass('disabled');
-                search_button.attr('title', i18n.search);
+                search_button.attr('title', katelloI18n.search);
                 //if there is a search, open the search bar
                 if($.bbq.getState(search_obj.search_bbq())){
                     open();
@@ -540,14 +540,14 @@ sliding_tree.search = function(){
              search_box.animate({"opacity":"1"}, { duration: 200, queue: false });
              search_input.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
              search_button.css({backgroundPosition: "-32px -16px"});
-             search_button.attr('title', i18n.close);
+             search_button.attr('title', katelloI18n.close);
         },
         close = function(){
              search_box.fadeOut("fast", function(){
                  bcs.animate({ "min-height" : bcs_height }, "fast");
              });
              search_button.css({ backgroundPosition : "0 -16px" });
-             search_button.attr('title', i18n.search);
+             search_button.attr('title', katelloI18n.search);
         };
 
 

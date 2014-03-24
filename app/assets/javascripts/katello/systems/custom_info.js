@@ -51,7 +51,7 @@ KT.custom_info = (function() {
             type   : $button.data("method"),
             success: function() {
                 remove_custom_info_row($button.data("id"));
-                notices.displayNotice("success", window.JSON.stringify({ "notices": [i18n.custom_info_delete_success] }));
+                notices.displayNotice("success", window.JSON.stringify({ "notices": [katelloI18n.custom_info_delete_success] }));
             },
             error  : function(data) {
                 notices.displayNotice("error", window.JSON.stringify({ "notices": [$.parseJSON(data.responseText)["displayMessage"]] }));
@@ -70,7 +70,7 @@ KT.custom_info = (function() {
             data    : { "keyname": keyname, "value": value },
             success : function(data) {
                 add_custom_info_row(data);
-                notices.displayNotice("success", window.JSON.stringify({ "notices": [i18n.custom_info_create_success] }));
+                notices.displayNotice("success", window.JSON.stringify({ "notices": [katelloI18n.custom_info_create_success] }));
             },
             error   : function(data) {
                 notices.displayNotice("error", window.JSON.stringify({ "notices": [$.parseJSON(data.responseText)["displayMessage"]] }));
@@ -108,7 +108,7 @@ KT.custom_info = (function() {
                     'data-url': update_path,
                     'name': 'custom_info[' + data["keyname"] + ']',
                     'style': 'true',
-                    'title': i18n.clickToEdit,
+                    'title': katelloI18n.clickToEdit,
                     'text': value
                 })
             })).after($('<td/>', {
@@ -118,7 +118,7 @@ KT.custom_info = (function() {
                     'data-method': 'delete',
                     'data-url': destroy_path,
                     'type': 'submit',
-                    'value': i18n.remove
+                    'value': katelloI18n.remove
                 })
             }))
         });

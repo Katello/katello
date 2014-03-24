@@ -100,7 +100,7 @@ KT.comparison_grid = function(){
                 metadata_row.remove();
                 $('#row_header_' + id).remove();
             } else {
-                metadata_row.find('span').html(i18n.counts.replace('%C', current).replace('%T', total));
+                metadata_row.find('span').html(katelloI18n.counts.replace('%C', current).replace('%T', total));
             }
         },
         add_row_header = function(id, name, type, row_level, has_children, parent_id) {
@@ -1028,4 +1028,4 @@ KT.comparison_grid.templates = (function(i18n) {
         load_more_row           : load_more_row,
         collapse_arrow          : collapse_arrow
     };
-}(i18n));
+}(katelloI18n));
