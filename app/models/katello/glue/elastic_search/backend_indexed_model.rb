@@ -22,6 +22,11 @@ module Glue::ElasticSearch::BackendIndexedModel
   end
 
   module ClassMethods
+
+    def index_exists?
+      Tire.index(self.index).exists?
+    end
+
     def update_array(object_ids, field, add_ids, remove_ids)
       obj_class = self
       script = ""
@@ -40,11 +45,14 @@ module Glue::ElasticSearch::BackendIndexedModel
     end
 
     def create_index
-      class_obj = self
-      Tire.index self.index do
-        create :settings => class_obj.index_settings, :mappings => class_obj.index_mapping
-      end unless Tire.index(class_obj.index).exists?
+      unless index_exists?
+        class_obj = self
+        Tire.index self.index do
+          create :settings => class_obj.index_settings, :mappings => class_obj.index_mapping
+        end
+      end
     end
+
   end
 
 end

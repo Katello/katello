@@ -83,6 +83,7 @@ module Glue::ElasticSearch::Errata
       end
 
       def self.errata_count(repos, errata_type = nil)
+        return Util::Support.array_with_total unless index_exists?
         repo_ids = repos.map(&:pulp_id)
         search = Errata.search do
           query do
@@ -145,7 +146,7 @@ module Glue::ElasticSearch::Errata
         search_mode = options.fetch(:search_mode, :all)
 
         repoids = filters[:repoids]
-        if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
+        if !index_exists? || (repoids && repoids.empty?)
           return Util::Support.array_with_total
         end
 
@@ -204,10 +205,7 @@ module Glue::ElasticSearch::Errata
         end
 
         unless errata.empty?
-          Tire.index Errata.index do
-            create :settings => Errata.index_settings, :mappings => Errata.index_mapping
-          end unless Tire.index(::Errata.index).exists?
-
+          create_index
           Tire.index Errata.index do
             import errata
           end
@@ -216,7 +214,7 @@ module Glue::ElasticSearch::Errata
       end
 
       def self.autocomplete_search(text, repoids = nil, page_size = 15)
-        return [] if !Tire.index(self.index).exists?
+        return [] if !index_exists?
 
         if text.blank?
           query = "id_title:(*)"

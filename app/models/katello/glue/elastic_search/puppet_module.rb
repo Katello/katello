@@ -191,10 +191,7 @@ module Glue::ElasticSearch::PuppetModule
       end
 
       unless puppet_modules.empty?
-        Tire.index Katello::PuppetModule.index do
-          create :settings => PuppetModule.index_settings, :mappings => PuppetModule.index_mapping
-        end unless Tire.index(Katello::PuppetModule.index).exists?
-
+        create_index
         Tire.index Katello::PuppetModule.index do
           import puppet_modules
         end
