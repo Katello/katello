@@ -16,11 +16,14 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
 
   before_filter :find_activation_key
   before_filter :find_system
-  before_filter :find_optional_organization, :only => [:index, :available]
+  before_filter :find_optional_organization, :only => [:index, :available, :show]
   before_filter :find_organization, :only => [:upload, :delete_manifest, :refresh_manifest]
-  before_filter :find_subscription, :only => [:show]
   before_filter :find_provider
+
+  # Authorize must be before find_subscription since find_subscription reaches out to Candlepin
+  # and needs a current user set
   before_filter :authorize
+  before_filter :find_subscription, :only => [:show]
 
   before_filter :load_search_service, :only => [:index, :available]
 
