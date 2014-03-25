@@ -49,6 +49,11 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
             return statusMessage(publish, promoteCount);
         };
 
+        $scope.hideProgress = function (version) {
+            return version['active_history'].length === 0 || (version.task.state === 'stopped' &&
+                version.task.progressbar.type === 'success');
+        };
+
         function statusMessage(isPublishing, promoteCount) {
             var status = '';
             if (promoteCount > 1) {
