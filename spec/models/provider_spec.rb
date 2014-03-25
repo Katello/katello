@@ -133,7 +133,84 @@ describe Provider do
         end
 
       end
+
+      describe "there were derived products and derived provided products included in the manifest" do
+        let(:pools) {
+          ProductTestData::POOLS.merge(
+            "derivedProductId" => "200",
+            "derivedProvidedProducts" => [ProductTestData::DERIVED_PROVIDED_PRODUCT.merge("productId" => "700")]
+          )
+        }
+
+        # product specified on the pool
+        let(:pool_product) {ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "rhel6-server")}
+        # derived product specified on the pool
+        let(:derived_product) {ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "200")}
+        # derived provided product specified on the pool
+        let(:derived_provided_product) {ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "700")}
+
+        before do
+          Glue::Candlepin::Product.stubs(:import_from_cp => [], :import_marketing_from_cp => true)
+          Resources::Candlepin::Product.stubs(:destroy).returns(true)
+          @provider.stubs(:index_subscriptions).returns([])
+
+          Resources::Candlepin::Owner.stubs(:pools).returns([pools])
+          Resources::Candlepin::Product.stubs(:get).with("rhel6-server").returns([pool_product])
+          Resources::Candlepin::Product.stubs(:get).with("200").returns([derived_product])
+          Resources::Candlepin::Product.stubs(:get).with("700").returns([derived_provided_product])
+
+          Resources::Candlepin::Product.stubs(:create).returns({:id => "200"})
+          @existing_derived_product = Product.create!({
+            :label=>"dp",
+            :name=> derived_product["name"],
+            :productContent => [],
+            :provider => @provider
+          })
+
+          Resources::Candlepin::Product.stubs(:create).returns({:id => "700"})
+          @existing_derived_provided_product = Product.create!({
+            :label=>"dpp",
+            :name=> derived_provided_product["name"],
+            :productContent => [],
+            :provider => @provider
+          })
+
+        end
+
+        it 'derived marketing and engineering products should not be removed' do
+          @provider.import_products_from_cp
+          Product.find_by_cp_id(@existing_derived_product.cp_id).wont_be_nil
+          Product.find_by_cp_id(@existing_derived_provided_product.cp_id).wont_be_nil
+        end
+
+      end
     end
+
+    describe "marketing to product id mapping" do
+      let(:pools) {
+        ProductTestData::POOLS.merge(
+          "derivedProductId" => "200",
+          "derivedProvidedProducts" => [ProductTestData::DERIVED_PROVIDED_PRODUCT.merge("productId" => "700")]
+        )
+      }
+
+      before do
+        Resources::Candlepin::Owner.stubs(:pools).returns([pools])
+      end
+
+      it "should be generated correctly" do
+        mapping = @provider.send(:marketing_to_engineering_product_ids_mapping)
+        # keys should include product and derived product ids.
+        mapping.assert_valid_keys('rhel6-server', '200')
+
+        # Ensure provided product is mapped to product
+        mapping['rhel6-server'].must_equal(['20'])
+
+        # Ensure derived provided product is mapped to derived product
+        mapping['200'].must_equal(['700'])
+      end
+    end
+
   end
 
   describe "products refresh(katello)" do
