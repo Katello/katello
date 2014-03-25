@@ -27,7 +27,7 @@ class ContentViewPackageFilter < ContentViewFilter
   def generate_clauses(repo)
     package_filenames = package_rules.reject{ |rule| rule.name.blank? }.flat_map do |rule|
       filter = version_filter(rule)
-      Package.search(rule.name, 0, repo.package_count, [repo.pulp_id], [:nvrea_sort, "asc"],
+      Package.legacy_search(rule.name, 0, repo.package_count, [repo.pulp_id], [:nvrea_sort, "asc"],
                      :all, 'name', filter).map(&:filename).compact
     end
     { 'filename' => { "$in" => package_filenames } } unless package_filenames.empty?

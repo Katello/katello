@@ -82,6 +82,20 @@ module Glue::ElasticSearch::Errata
         }
       end
 
+      def self.errata_count(repos, errata_type = nil)
+        repo_ids = repos.map(&:pulp_id)
+        search = Errata.search do
+          query do
+            all
+          end
+          fields [:id]
+          size 1
+          filter :terms, :repoids => repo_ids
+          filter :term, :type => errata_type  if errata_type
+        end
+        search.total
+      end
+
       def self.filter(filter)
         filter_for_repo = filter.slice(:repository_id, :repoid, :environment_id, :product_id)
         filter_for_errata = filter.except(*filter_for_repo.keys)

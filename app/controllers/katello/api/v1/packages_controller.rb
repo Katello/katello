@@ -37,7 +37,7 @@ class Api::V1::PackagesController < Api::V1::ApiController
   param :repository_id, :number, :desc => "environment numeric identifier"
   param :search, String, :desc => "search expression"
   def search
-    packages = Package.search(params[:search], 0, 0, [@repo.pulp_id])
+    packages = Package.legacy_search(params[:search], 0, 0, [@repo.pulp_id])
     respond_for_index :collection => packages.to_a
   end
 

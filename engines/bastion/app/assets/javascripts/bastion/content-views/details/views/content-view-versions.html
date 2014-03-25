@@ -47,8 +47,8 @@
             {{ version.errata_count || 0 }} Errata
             <span>(</span>
             <span><i class="icon-warning-sign inline-icon"></i>{{ version.errata_counts.security || 0 }}</span>
-            <span><i class="icon-bug inline-icon"></i>{{ version.errata_counts.bugs || 0 }}</span>
-            <span><i class="icon-plus-sign-alt inline-icon"></i>{{ version.errata_counts.enhancements || 0 }}</span>
+            <span><i class="icon-bug inline-icon"></i>{{ version.errata_counts.bugfix || 0 }}</span>
+            <span><i class="icon-plus-sign-alt inline-icon"></i>{{ version.errata_counts.enhancement || 0 }}</span>
             <span>)</span>
           </div>
         </td>

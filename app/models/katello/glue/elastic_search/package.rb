@@ -130,9 +130,30 @@ module Glue::ElasticSearch::Package
         search.results
       end
 
+      def self.package_count(repos)
+        repo_ids = repos.map(&:pulp_id)
+        search = Package.search do
+          query do
+            all
+          end
+          fields [:id]
+          size 1
+          filter :terms, :repoids => repo_ids
+        end
+        search.total
+      end
+
+      def self.mapping
+        Tire.index(self.index).mapping
+      end
+
+      def self.search(options = {}, &block)
+        Tire.search(self.index, &block).results
+      end
+
       # TODO: break up method
       # rubocop:disable MethodLength
-      def self.search(query, start = 0, page_size = 15, repoids = nil, sort = [:nvrea_sort, "asc"],
+      def self.legacy_search(query, start = 0, page_size = 15, repoids = nil, sort = [:nvrea_sort, "asc"],
                       search_mode = :all, default_field = 'nvrea', filters = [])
         if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
           return Util::Support.array_with_total
