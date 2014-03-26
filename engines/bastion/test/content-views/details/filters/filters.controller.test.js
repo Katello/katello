@@ -20,7 +20,7 @@ describe('Controller: FiltersController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             ContentView = $injector.get('MockResource').$new(),
-            gettext = $injector.get('gettextMock'),
+            translate = $injector.get('translateMock'),
             Nutupane = function() {
                 this.table = {};
                 this.getAllSelectedResults = function () {
@@ -38,7 +38,7 @@ describe('Controller: FiltersController', function() {
 
         $controller('FiltersController', {
             $scope: $scope,
-            gettext: gettext,
+            translate: translate,
             Filter: Filter,
             Nutupane: Nutupane
         });

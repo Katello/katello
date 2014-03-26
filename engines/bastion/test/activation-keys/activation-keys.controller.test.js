@@ -34,7 +34,7 @@ describe('Controller: ActivationKeysController', function() {
         $controller('ActivationKeysController', {
             $scope: $scope,
             $location: $location,
-            gettext: function(){},
+            translate: function(){},
             Nutupane: Nutupane,
             ActivationKey: ActivationKey,
             CurrentOrganization: 'CurrentOrganization'

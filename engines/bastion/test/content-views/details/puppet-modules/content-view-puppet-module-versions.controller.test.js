@@ -14,7 +14,7 @@
 describe('Controller: ContentViewPuppetModuleVersionsController', function() {
     var $scope, $controller, dependencies, ContentView, ContentViewPuppetModule, puppetModule;
 
-    beforeEach(module('Bastion.content-views', 'Bastion.test-mocks', 'gettext'))
+    beforeEach(module('Bastion.content-views', 'Bastion.test-mocks', 'Bastion.i18n'))
 
     beforeEach(inject(function($injector) {
         $controller = $injector.get('$controller');

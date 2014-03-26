@@ -30,13 +30,13 @@ describe('Controller: PackageFilterController', function() {
         $scope.filter = Filter.get({id: 1});
         $scope.filter.rules = [];
 
-        gettext = function (string) {
+        translate = function (string) {
             return string;
         };
 
         $controller('PackageFilterController', {
             $scope: $scope,
-            gettext: gettext,
+            translate: translate,
             Rule: Rule
         });
     }));

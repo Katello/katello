@@ -22,11 +22,11 @@
  *
  */
 angular.module('Bastion.subscriptions').filter('subscriptionConsumedFilter',
-    ['$filter', 'gettext',
-    function ($filter, gettext) {
+    ['$filter', 'translate',
+    function ($filter, translate) {
         return function (subscription) {
             var quantity = $filter('unlimitedFilter')(subscription.quantity);
-            return gettext('%(consumed)s out of %(quantity)s')
+            return translate('%(consumed)s out of %(quantity)s')
                 .replace('%(consumed)s', subscription.consumed)
                 .replace('%(quantity)s', quantity);
         };

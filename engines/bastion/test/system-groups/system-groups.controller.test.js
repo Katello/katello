@@ -35,7 +35,7 @@ describe('Controller: SystemGroupsController', function() {
             $scope: $scope,
             $location: $location,
             Nutupane: Nutupane,
-            gettext: function(){},
+            translate: function(){},
             SystemGroup: SystemGroup,
             CurrentOrganization: 'CurrentOrganization'
         });

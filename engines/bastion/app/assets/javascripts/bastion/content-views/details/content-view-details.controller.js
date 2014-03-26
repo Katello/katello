@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires ContentView
- * @requires gettext
+ * @requires translate
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
@@ -25,8 +25,8 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewDetailsController',
-    ['$scope', 'ContentView', 'ContentViewVersion', 'AggregateTask', 'gettext',
-    function ($scope, ContentView, ContentViewVersion, AggregateTask, gettext) {
+    ['$scope', 'ContentView', 'ContentViewVersion', 'AggregateTask', 'translate',
+    function ($scope, ContentView, ContentViewVersion, AggregateTask, translate) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -62,12 +62,12 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         };
 
         function saveSuccess() {
-            $scope.successMessages = [gettext('Content View updated.')];
+            $scope.successMessages = [translate('Content View updated.')];
         }
 
         function saveError(response) {
             angular.forEach(response.data.errors, function (errorMessage) {
-                $scope.errorMessages = [gettext("An error occurred updating the Content View: ") + errorMessage];
+                $scope.errorMessages = [translate("An error occurred updating the Content View: ") + errorMessage];
             });
         }
 

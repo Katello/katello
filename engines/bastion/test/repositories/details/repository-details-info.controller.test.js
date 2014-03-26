@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope, $state, gettext, Repository;
+    var $scope, $state, translate, Repository;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -32,7 +32,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             repositoryId: 1
         };
 
-        gettext = function(message) {
+        translate = function(message) {
             return message;
         };
 
@@ -44,7 +44,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             $scope: $scope,
             $state: $state,
             $q: $q,
-            gettext: gettext,
+            translate: translate,
             Repository: Repository,
             GPGKey: GPGKey
         });

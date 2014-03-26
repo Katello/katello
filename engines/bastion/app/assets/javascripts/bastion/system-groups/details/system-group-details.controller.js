@@ -18,15 +18,15 @@
  * @requires $scope
  * @requires $state
  * @requires $q
- * @requires gettext
+ * @requires translate
  * @requires SystemGroup
  *
  * @description
  *   Provides the functionality for the system group details action pane.
  */
 angular.module('Bastion.system-groups').controller('SystemGroupDetailsController',
-    ['$scope', '$state', '$q', 'gettext', 'SystemGroup',
-    function ($scope, $state, $q, gettext, SystemGroup) {
+    ['$scope', '$state', '$q', 'translate', 'SystemGroup',
+    function ($scope, $state, $q, translate, SystemGroup) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
         $scope.copyErrorMessages = [];
@@ -47,11 +47,11 @@ angular.module('Bastion.system-groups').controller('SystemGroupDetailsController
 
             group.$update(function (response) {
                 deferred.resolve(response);
-                $scope.successMessages.push(gettext('System Group updated'));
+                $scope.successMessages.push(translate('System Group updated'));
                 $scope.table.replaceRow(response);
             }, function (response) {
                 deferred.reject(response);
-                $scope.errorMessages.push(gettext("An error occurred saving the System Group: ") + response.data.displayMessage);
+                $scope.errorMessages.push(translate("An error occurred saving the System Group: ") + response.data.displayMessage);
             });
             return deferred.promise;
         };
@@ -72,9 +72,9 @@ angular.module('Bastion.system-groups').controller('SystemGroupDetailsController
             group.$delete(function () {
                 $scope.removeRow(id);
                 $scope.transitionTo('system-groups.index');
-                $scope.successMessages.push(gettext('System Group removed.'));
+                $scope.successMessages.push(translate('System Group removed.'));
             }, function (response) {
-                $scope.errorMessages.push(gettext("An error occurred removing the System Group: ") + response.data.displayMessage);
+                $scope.errorMessages.push(translate("An error occurred removing the System Group: ") + response.data.displayMessage);
             });
         };
 

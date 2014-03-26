@@ -238,7 +238,7 @@ angular.module('Bastion.test-mocks').factory('MockOrganization',  ['MockResource
     }
 ]);
 
-angular.module('Bastion.test-mocks').factory('gettextMock', function () {
+angular.module('Bastion.test-mocks').factory('translateMock', function () {
 
     return function (message) {
         return message;

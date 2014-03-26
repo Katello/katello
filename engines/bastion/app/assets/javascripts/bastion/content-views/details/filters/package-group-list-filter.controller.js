@@ -16,7 +16,7 @@
  * @name  Bastion.content-views.controller:PackageFilterListController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires Filter
  * @requires Rule
  * @requires Nutupane
@@ -26,8 +26,8 @@
  *   and provides a method to remove them.
  */
 angular.module('Bastion.content-views').controller('PackageGroupFilterListController',
-    ['$scope', 'gettext', 'Filter', 'Rule', 'Nutupane',
-    function ($scope, gettext, Filter, Rule, Nutupane) {
+    ['$scope', 'translate', 'Filter', 'Rule', 'Nutupane',
+    function ($scope, translate, Filter, Rule, Nutupane) {
         var nutupane;
 
         nutupane = new Nutupane(
@@ -51,7 +51,7 @@ angular.module('Bastion.content-views').controller('PackageGroupFilterListContro
 
         function success(rule) {
             nutupane.removeRow(rule.name, 'name');
-            $scope.successMessages = [gettext('Package Group successfully removed.')];
+            $scope.successMessages = [translate('Package Group successfully removed.')];
         }
 
         function failure(response) {

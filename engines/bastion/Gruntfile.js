@@ -158,6 +158,9 @@ module.exports = function (grunt) {
         },
         'nggettext_extract': {
             bastion: {
+                options: {
+                    markerName: 'translate'
+                },
                 src: ['<%= bastion.src %>/**/*.html', '<%= bastion.src %>/**/*.js'],
                 dest: '<%= bastion.src %>/i18n/katello.pot'
             }

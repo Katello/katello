@@ -16,7 +16,7 @@
  * @name  Bastion.content-views.controller:DateTypeErrataFilterController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires Rule
  *
  * @description
@@ -24,7 +24,7 @@
  *   set of errata types by which to dynamically filter.
  */
 angular.module('Bastion.content-views').controller('DateTypeErrataFilterController',
-    ['$scope', 'gettext', 'Rule', function ($scope, gettext, Rule) {
+    ['$scope', 'translate', 'Rule', function ($scope, translate, Rule) {
 
         $scope.filter.$promise.then(function (filter) {
             $scope.rule = new Rule(filter.rules[0]);
@@ -53,7 +53,7 @@ angular.module('Bastion.content-views').controller('DateTypeErrataFilterControll
         };
 
         function success() {
-            $scope.successMessages = [gettext('Updated errata filter - ' + $scope.filter.name)];
+            $scope.successMessages = [translate('Updated errata filter - ' + $scope.filter.name)];
             $scope.transitionTo('content-views.details.filters.list', {contentViewId: $scope.filter['content_view'].id});
         }
 

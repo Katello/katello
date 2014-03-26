@@ -19,7 +19,7 @@ describe('Controller: DateTypeErrataFilterController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             Filter = $injector.get('MockResource').$new(),
-            gettext = $injector.get('gettextMock');
+            translate = $injector.get('translateMock');
 
         Rule = $injector.get('MockResource').$new();
 
@@ -34,7 +34,7 @@ describe('Controller: DateTypeErrataFilterController', function() {
 
         $controller('DateTypeErrataFilterController', {
             $scope: $scope,
-            gettext: gettext,
+            translate: translate,
             Rule: Rule
         });
     }));

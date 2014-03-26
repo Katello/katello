@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires $location
- * @requires gettext
+ * @requires translate
  * @requires CurrentOrganization
  * @requires Subscription
  * @requires System
@@ -29,8 +29,8 @@
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemAddSubscriptionsController',
-    ['$scope', '$location', 'gettext', 'CurrentOrganization', 'Subscription', 'System', 'Nutupane', 'SystemsHelper', 'SubscriptionsHelper',
-    function ($scope, $location, gettext, CurrentOrganization, Subscription, System, Nutupane, SystemsHelper, SubscriptionsHelper) {
+    ['$scope', '$location', 'translate', 'CurrentOrganization', 'Subscription', 'System', 'Nutupane', 'SystemsHelper', 'SubscriptionsHelper',
+    function ($scope, $location, translate, CurrentOrganization, Subscription, System, Nutupane, SystemsHelper, SubscriptionsHelper) {
 
         var addSubscriptionsPane, params;
 
@@ -62,7 +62,7 @@ angular.module('Bastion.systems').controller('SystemAddSubscriptionsController',
 
             $scope.isAdding = true;
             System.addSubscriptions({uuid: $scope.system.uuid, 'subscriptions': selected}, function () {
-                $scope.successMessages.push(gettext("Successfully added %s subscriptions.").replace('%s', selected.length));
+                $scope.successMessages.push(translate("Successfully added %s subscriptions.").replace('%s', selected.length));
                 $scope.isAdding = false;
                 addSubscriptionsPane.refresh();
             }, function (response) {

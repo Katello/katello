@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SystemsBulkActionController', function() {
-    var $scope, $q, selected, gettext, SystemBulkAction, SystemGroup, Organization, Task, CurrentOrganization;
+    var $scope, $q, selected, translate, SystemBulkAction, SystemGroup, Organization, Task, CurrentOrganization;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
@@ -37,7 +37,7 @@ describe('Controller: SystemsBulkActionController', function() {
             query: function() {},
             poll: function() {}
         };
-        gettext = function() {};
+        translate = function() {};
         CurrentOrganization = 'foo';
     });
 
@@ -52,7 +52,7 @@ describe('Controller: SystemsBulkActionController', function() {
             SystemBulkAction: SystemBulkAction,
             SystemGroup: SystemGroup,
             CurrentOrganization: 'foo',
-            gettext: gettext,
+            translate: translate,
             Organization: Organization,
             CurrentOrganization: CurrentOrganization,
             Task: Task});

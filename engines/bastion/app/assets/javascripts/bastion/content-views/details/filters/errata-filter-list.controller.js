@@ -16,7 +16,7 @@
  * @name  Bastion.content-views.controller:ErrataFilterListController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires Nutupane
  * @requires Filter
  * @requires Rule
@@ -26,8 +26,8 @@
  *   to remove errata from the filter.
  */
 angular.module('Bastion.content-views').controller('ErrataFilterListController',
-    ['$scope', 'gettext', 'Nutupane', 'Filter', 'Rule',
-    function ($scope, gettext, Nutupane, Filter, Rule) {
+    ['$scope', 'translate', 'Nutupane', 'Filter', 'Rule',
+    function ($scope, translate, Nutupane, Filter, Rule) {
         var nutupane;
 
         nutupane = new Nutupane(Filter, {
@@ -57,7 +57,7 @@ angular.module('Bastion.content-views').controller('ErrataFilterListController',
 
         function success(rule) {
             nutupane.removeRow(rule['errata_id'], 'errata_id');
-            $scope.successMessages = [gettext('Errata successfully added.')];
+            $scope.successMessages = [translate('Errata successfully added.')];
         }
 
         function failure(response) {

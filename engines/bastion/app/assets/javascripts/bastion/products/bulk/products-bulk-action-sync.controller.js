@@ -16,14 +16,14 @@
  * @name  Bastion.products.controller:ProductsBulkActionSyncController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires ProductBulkAction
  *
  * @description
  *   A controller for providing bulk sync functionality for products..
  */
 angular.module('Bastion.products').controller('ProductsBulkActionSyncController',
-    ['$scope', 'gettext', 'ProductBulkAction', function ($scope, gettext, ProductBulkAction) {
+    ['$scope', 'translate', 'ProductBulkAction', function ($scope, translate, ProductBulkAction) {
         $scope.repositoryCount = 0;
         $scope.syncingProducts = false;
 
@@ -40,7 +40,7 @@ angular.module('Bastion.products').controller('ProductsBulkActionSyncController'
 
             error = function (error) {
                 angular.forEach(error.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(gettext("An error occurred syncing the Products: ") + errorMessage);
+                    $scope.errorMessages.push(translate("An error occurred syncing the Products: ") + errorMessage);
                 });
                 $scope.syncingProducts = false;
             };

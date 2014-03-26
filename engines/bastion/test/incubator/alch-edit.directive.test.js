@@ -38,7 +38,7 @@ describe('Directive: alchEdit', function() {
             delete: function() {}
         };
 
-        gettext = function() {
+        translate = function() {
             this.$get = function() {
                 return function() {};
             };
@@ -46,8 +46,8 @@ describe('Directive: alchEdit', function() {
             return this;
         };
 
-        $provide.provider('gettext', gettext);
-        $provide.provider('translateFilter', gettext);
+        $provide.provider('translate', translate);
+        $provide.provider('translateFilter', translate);
     }));
 
     beforeEach(inject(function(_$compile_, _$rootScope_) {

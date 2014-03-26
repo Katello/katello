@@ -18,7 +18,7 @@
  * @requires $scope
  * @requires $q
  * @requires $location
- * @requires gettext
+ * @requires translate
  * @requires Nutupane
  * @requires Subscription
  * @requires Provider
@@ -31,8 +31,8 @@
  *   within the table.
  */
 angular.module('Bastion.subscriptions').controller('SubscriptionsController',
-    ['$scope', '$filter', '$q', '$location', 'gettext', 'Nutupane', 'Subscription', 'Provider', 'CurrentOrganization', 'SubscriptionsHelper',
-    function ($scope, $filter, $q, $location, gettext, Nutupane, Subscription, Provider, CurrentOrganization, SubscriptionsHelper) {
+    ['$scope', '$filter', '$q', '$location', 'translate', 'Nutupane', 'Subscription', 'Provider', 'CurrentOrganization', 'SubscriptionsHelper',
+    function ($scope, $filter, $q, $location, translate, Nutupane, Subscription, Provider, CurrentOrganization, SubscriptionsHelper) {
 
         var params = {
             'organization_id':  CurrentOrganization,
@@ -61,21 +61,21 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
         $scope.formatConsumed = function (subscription) {
             var quantity = $filter('unlimitedFilter')(subscription.quantity);
 
-            return gettext('%(consumed)s out of %(quantity)s').replace('%(consumed)s', subscription.consumed).replace('%(quantity)s', quantity);
+            return translate('%(consumed)s out of %(quantity)s').replace('%(consumed)s', subscription.consumed).replace('%(quantity)s', quantity);
         };
 
         $scope.formatInstanceBased = function (subscription) {
             if (subscription['instance_multiplier'] === undefined || subscription['instance_multiplier'] === "" || subscription['instance_multiplier'] === 0) {
-                return gettext("No");
+                return translate("No");
             }
-            return gettext("Yes");
+            return translate("Yes");
         };
 
         $scope.subscriptionType = function (subscription) {
             if (subscription['virt_only']) {
-                return gettext('Virtual');
+                return translate('Virtual');
             } else {
-                return gettext('Physical');
+                return translate('Physical');
             }
         };
 

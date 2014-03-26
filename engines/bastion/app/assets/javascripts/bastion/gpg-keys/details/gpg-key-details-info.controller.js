@@ -17,13 +17,13 @@
  *
  * @requires $scope
  * @requires GPGKey
- * @requires gettext
+ * @requires translate
  *
  * @description
  *   Provides the functionality for the gpgKey details action pane.
  */
 angular.module('Bastion.gpg-keys').controller('GPGKeyDetailsInfoController',
-    ['$scope', 'GPGKey', 'gettext', function ($scope, GPGKey, gettext) {
+    ['$scope', 'GPGKey', 'translate', function ($scope, GPGKey, translate) {
 
         $scope.panel = $scope.panel || {loading: false};
         $scope.progress = {uploading: false};
@@ -39,7 +39,7 @@ angular.module('Bastion.gpg-keys').controller('GPGKeyDetailsInfoController',
         $scope.uploadContent = function (content) {
             if (content && (content !== "Please wait...")) {
                 if (content.status === 'success') {
-                    $scope.$parent.successMessages = [gettext('GPG Key successfully uploaded')];
+                    $scope.$parent.successMessages = [translate('GPG Key successfully uploaded')];
                     $scope.uploadStatus = 'success';
                     $scope.gpgKey.$get();
                 } else {

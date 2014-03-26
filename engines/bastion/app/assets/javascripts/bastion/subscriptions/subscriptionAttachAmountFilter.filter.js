@@ -15,15 +15,15 @@
  * @ngdoc filter
  * @name  Bastion.subscriptions.filter:subscriptionAttachAmountFilter.filter.js
  *
- * @requires gettext
+ * @requires translate
  *
  */
 angular.module('Bastion.subscriptions').filter('subscriptionAttachAmountFilter',
-    ['gettext',
-    function (gettext) {
+    ['translate',
+    function (translate) {
         return function (subscription) {
             var amount = subscription.amount;
-            return (!amount || amount < 1) ? gettext("Automatic") : amount;
+            return (!amount || amount < 1) ? translate("Automatic") : amount;
         };
     }]
 );

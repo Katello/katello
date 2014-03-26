@@ -16,7 +16,7 @@
  * @name  Bastion.content-views.controller:FiltersController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires Filter
  * @requires Nutupane
  *
@@ -24,7 +24,7 @@
  *   Handles loading all filters for a content view.
  */
 angular.module('Bastion.content-views').controller('FiltersController',
-    ['$scope', 'gettext', 'Filter', 'Nutupane', function ($scope, gettext, Filter, Nutupane) {
+    ['$scope', 'translate', 'Filter', 'Nutupane', function ($scope, translate, Filter, Nutupane) {
         var nutupane;
 
         nutupane = new Nutupane(Filter, {
@@ -69,7 +69,7 @@ angular.module('Bastion.content-views').controller('FiltersController',
 
             success = function () {
                 nutupane.removeRow(id);
-                $scope.successMessages = [gettext('Filters successfully removed.')];
+                $scope.successMessages = [translate('Filters successfully removed.')];
             };
 
             failure = function (response) {

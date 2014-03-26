@@ -18,7 +18,7 @@
  * @requires $scope
  * @requires $state
  * @requires $q
- * @requires gettext
+ * @requires translate
  * @requires Repository
  * @requires GPGKey
  *
@@ -26,7 +26,7 @@
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$state', '$q', 'gettext', 'Repository', 'GPGKey', function ($scope, $state, $q, gettext, Repository, GPGKey) {
+    ['$scope', '$state', '$q', 'translate', 'Repository', 'GPGKey', function ($scope, $state, $q, translate, Repository, GPGKey) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -62,11 +62,11 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
             repository.$update(function (response) {
                 deferred.resolve(response);
-                $scope.successMessages.push(gettext('Repository Saved.'));
+                $scope.successMessages.push(translate('Repository Saved.'));
             }, function (response) {
                 deferred.reject(response);
                 _.each(response.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(gettext("An error occurred saving the Repository: ") + errorMessage);
+                    $scope.errorMessages.push(translate("An error occurred saving the Repository: ") + errorMessage);
                 });
             });
 
@@ -88,10 +88,10 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 }
 
                 if (returnData !== null && returnData['status'] === 'success') {
-                    $scope.uploadSuccessMessages = [gettext('Puppet module successfully uploaded')];
+                    $scope.uploadSuccessMessages = [translate('Puppet module successfully uploaded')];
                     $scope.repository.$get();
                 } else {
-                    $scope.uploadErrorMessages = [gettext('Error during upload: ') + returnData.displayMessage];
+                    $scope.uploadErrorMessages = [translate('Error during upload: ') + returnData.displayMessage];
                 }
 
                 $scope.progress.uploading = false;

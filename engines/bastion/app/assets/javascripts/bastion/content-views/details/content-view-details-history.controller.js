@@ -23,8 +23,8 @@
  *   A controller for showing the history of a content view
  */
 angular.module('Bastion.content-views').controller('ContentViewHistoryController',
-    ['$scope', 'gettext', 'ContentView', 'Nutupane',
-    function ($scope, gettext, ContentView, Nutupane) {
+    ['$scope', 'translate', 'ContentView', 'Nutupane',
+    function ($scope, translate, ContentView, Nutupane) {
         var nutupane;
 
         nutupane = new Nutupane(ContentView, {
@@ -39,9 +39,9 @@ angular.module('Bastion.content-views').controller('ContentViewHistoryController
         $scope.actionText = function (history) {
             var message;
             if (history.environment) {
-                message = gettext("Promote to %s").replace('%s', history.environment.name);
+                message = translate("Promote to %s").replace('%s', history.environment.name);
             } else {
-                message = gettext("Publish new version.");
+                message = translate("Publish new version.");
             }
             return message;
         };

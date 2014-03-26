@@ -17,10 +17,10 @@ describe('Controller: ManifestController', function() {
     beforeEach(module('Bastion.subscriptions', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($controller, $rootScope, $injector) {
-        var gettext,
+        var translate,
             Provider = $injector.get('MockResource').$new();
 
-        gettext = function(a) { return a };
+        translate = function(a) { return a };
 
         $scope = $rootScope.$new();
 
@@ -28,7 +28,7 @@ describe('Controller: ManifestController', function() {
 
         $controller('ManifestController', {
             $scope: $scope,
-            gettext: gettext,
+            translate: translate,
             Provider: Provider
         });
     }));

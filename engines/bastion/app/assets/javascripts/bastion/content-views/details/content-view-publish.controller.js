@@ -16,7 +16,7 @@
  * @name  Bastion.content-views.controller:ContentViewPublishController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires ContentView
  *
  * @description
@@ -25,7 +25,7 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewPublishController',
-    ['$scope', 'gettext', 'ContentView', function ($scope, gettext, ContentView) {
+    ['$scope', 'translate', 'ContentView', function ($scope, translate, ContentView) {
 
         $scope.version = {};
 

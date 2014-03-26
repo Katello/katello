@@ -16,7 +16,7 @@
  * @name  Bastion.content-views.controller:AvailablePackageGroupFilterController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires Filter
  * @requires Rule
  * @requires Nutupane
@@ -26,8 +26,8 @@
  *   each selected package group as a filter rule.
  */
 angular.module('Bastion.content-views').controller('AvailablePackageGroupFilterController',
-    ['$scope', 'gettext', 'Filter', 'Rule', 'Nutupane',
-    function ($scope, gettext, Filter, Rule, Nutupane) {
+    ['$scope', 'translate', 'Filter', 'Rule', 'Nutupane',
+    function ($scope, translate, Filter, Rule, Nutupane) {
         var nutupane;
 
         nutupane = new Nutupane(
@@ -50,7 +50,7 @@ angular.module('Bastion.content-views').controller('AvailablePackageGroupFilterC
 
         function success(rule) {
             nutupane.removeRow(rule.name, 'name');
-            $scope.successMessages = [gettext('Package Group successfully added.')];
+            $scope.successMessages = [translate('Package Group successfully added.')];
         }
 
         function failure(response) {

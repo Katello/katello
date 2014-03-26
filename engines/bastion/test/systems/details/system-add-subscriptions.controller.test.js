@@ -14,7 +14,7 @@
 describe('Controller: SystemAddSubscriptionsController', function() {
     var $scope,
         $controller,
-        gettext,
+        translate,
         System,
         Subscription,
         Nutupane,
@@ -44,7 +44,7 @@ describe('Controller: SystemAddSubscriptionsController', function() {
 
         System.addSubscriptions = function() {};
 
-        gettext = function(message) {
+        translate = function(message) {
             return message;
         };
 
@@ -68,7 +68,7 @@ describe('Controller: SystemAddSubscriptionsController', function() {
             this.query = function() {};
             this.refresh = function() {};
         };
-        gettext = function(message) {
+        translate = function(message) {
             return message;
         };
         SystemSubscription = {
@@ -85,7 +85,7 @@ describe('Controller: SystemAddSubscriptionsController', function() {
         $controller('SystemAddSubscriptionsController', {
             $scope: $scope,
             $location: $location,
-            gettext: gettext,
+            translate: translate,
             CurrentOrganization: 'organization',
             Subscription: Subscription,
             System: System,

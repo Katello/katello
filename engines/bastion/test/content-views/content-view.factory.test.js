@@ -31,7 +31,7 @@ describe('Factory: ContentView', function() {
         };
 
         $provide.value('CurrentOrganization', 'ACME');
-        $provide.value('gettext', function(string) {return string;})
+        $provide.value('translate', function(string) {return string;})
     }));
 
     beforeEach(inject(function($injector) {

@@ -16,15 +16,15 @@
  * @name  Bastion.content-views.factory:ContentView
  *
  * @requires $resource
- * @requires gettext
+ * @requires translate
  * @requires CurrentOrganization
  *
  * @description
  *   Provides a $resource for interacting with environments.
  */
 angular.module('Bastion.content-views').factory('ContentView',
-    ['$resource', 'gettext', 'CurrentOrganization',
-    function ($resource, gettext, CurrentOrganization) {
+    ['$resource', 'translate', 'CurrentOrganization',
+    function ($resource, translate, CurrentOrganization) {
         return $resource('/api/v2/content_views/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
@@ -50,7 +50,7 @@ angular.module('Bastion.content-views').factory('ContentView',
 
                         angular.forEach(_.groupBy(response.results, 'author'), function (puppetModules) {
                             var latest = angular.copy(puppetModules[puppetModules.length - 1]);
-                            latest.version = gettext('Use Latest (currently %s)').replace('%s', latest.version);
+                            latest.version = translate('Use Latest (currently %s)').replace('%s', latest.version);
                             latest.useLatest = true;
                             response.results.unshift(latest);
                         });

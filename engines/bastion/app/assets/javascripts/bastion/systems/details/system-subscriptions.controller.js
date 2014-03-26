@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires $location
- * @requires gettext
+ * @requires translate
  * @requires Subscription
  * @requires System
  * @requires Nutupane
@@ -28,8 +28,8 @@
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemSubscriptionsController',
-    ['$scope', '$location', 'gettext', 'Subscription', 'System', 'Nutupane', 'SystemsHelper', 'SubscriptionsHelper',
-    function ($scope, $location, gettext, Subscription, System, Nutupane, SystemsHelper, SubscriptionsHelper) {
+    ['$scope', '$location', 'translate', 'Subscription', 'System', 'Nutupane', 'SystemsHelper', 'SubscriptionsHelper',
+    function ($scope, $location, translate, Subscription, System, Nutupane, SystemsHelper, SubscriptionsHelper) {
         var subscriptionsPane, params;
 
         params = {
@@ -62,11 +62,11 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
             System.removeSubscriptions({uuid: $scope.system.uuid, 'subscriptions': selected}, function () {
                 subscriptionsPane.table.selectAll(false);
                 subscriptionsPane.refresh();
-                $scope.successMessages.push(gettext("Successfully removed %s subscriptions.").replace('%s', selected.length));
+                $scope.successMessages.push(translate("Successfully removed %s subscriptions.").replace('%s', selected.length));
                 $scope.isRemoving = false;
             }, function (response) {
                 $scope.isRemoving = false;
-                $scope.errorMessages.push(gettext("An error occurred removing the subscriptions.") + response.data.displayMessage);
+                $scope.errorMessages.push(translate("An error occurred removing the subscriptions.") + response.data.displayMessage);
             });
         };
 
@@ -95,7 +95,7 @@ http://projects.theforeman.org/issues/4253
 
         $scope.availableSubscriptionsTable.formatAvailableDisplay = function (subscription) {
             var available = subscription.available;
-            available = available < 0 ? gettext('Unlimited') : available;
+            available = available < 0 ? translate('Unlimited') : available;
             subscription.availableDisplay = available;
             return subscription;
         };

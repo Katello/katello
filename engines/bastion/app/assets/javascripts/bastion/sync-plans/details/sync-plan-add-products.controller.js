@@ -18,7 +18,7 @@
  * @requires $scope
  * @requires $q
  * @requires $location
- * @requires gettext
+ * @requires translate
  * @requires SyncPlan
  * @requires Nutupane
  *
@@ -26,8 +26,8 @@
  *   Provides the functionality for adding products to a sync plan.
  */
 angular.module('Bastion.sync-plans').controller('SyncPlanAddProductsController',
-    ['$scope', '$q', '$location', 'gettext', 'SyncPlan', 'Nutupane',
-        function ($scope, $q, $location, gettext, SyncPlan, Nutupane) {
+    ['$scope', '$q', '$location', 'translate', 'SyncPlan', 'Nutupane',
+        function ($scope, $q, $location, translate, SyncPlan, Nutupane) {
             var productsNutupane, params;
 
             $scope.successMessages = [];
@@ -56,7 +56,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlanAddProductsController',
                 };
 
                 success = function (data) {
-                    $scope.successMessages = [gettext('Added %x products to sync plan "%y".')
+                    $scope.successMessages = [translate('Added %x products to sync plan "%y".')
                         .replace('%x', $scope.productsTable.numSelected).replace('%y', $scope.syncPlan.name)];
                     $scope.productsTable.working = false;
                     $scope.productsTable.selectAll(false);

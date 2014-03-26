@@ -16,7 +16,7 @@
  * @name  Bastion.content-views.controller:ContentViewPuppetModulesController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires Nutupane
  * @requires ContentViewPuppetModule
  *
@@ -24,8 +24,8 @@
  *   Provides functionality to the Content View existing Puppet Modules list.
  */
 angular.module('Bastion.content-views').controller('ContentViewPuppetModulesController',
-    ['$scope', 'gettext', 'Nutupane', 'ContentViewPuppetModule',
-    function ($scope, gettext, Nutupane, ContentViewPuppetModule) {
+    ['$scope', 'translate', 'Nutupane', 'ContentViewPuppetModule',
+    function ($scope, translate, Nutupane, ContentViewPuppetModule) {
         var nutupane = new Nutupane(ContentViewPuppetModule, {
             contentViewId: $scope.$stateParams.contentViewId,
             'paged': true
@@ -36,7 +36,7 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModulesCont
         $scope.errorMessages = [];
 
         $scope.versionText = function (module) {
-            var version = gettext("Latest (Currently %s)").replace('%s', module['computed_version']);
+            var version = translate("Latest (Currently %s)").replace('%s', module['computed_version']);
             if (module['puppet_module']) {
                 version = module['puppet_module'].version;
             }
@@ -57,14 +57,14 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModulesCont
             var success, error;
 
             success = function () {
-                $scope.successMessages = [gettext('Module %s removed from Content View.')
+                $scope.successMessages = [translate('Module %s removed from Content View.')
                     .replace('%s', module.name)];
                 nutupane.removeRow(module.id);
             };
 
             error = function (response) {
                 angular.forEach(response.data.errors, function (errorMessage) {
-                    $scope.errorMessages = [gettext("An error occurred updating the Content View: ") + errorMessage];
+                    $scope.errorMessages = [translate("An error occurred updating the Content View: ") + errorMessage];
                 });
             };
 

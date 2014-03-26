@@ -14,7 +14,7 @@
 describe('Controller: SystemDetailsInfoController', function() {
     var $scope,
         $controller,
-        gettext,
+        translate,
         System,
         CustomInfo,
         mockContentViews;
@@ -55,7 +55,7 @@ describe('Controller: SystemDetailsInfoController', function() {
 
         spyOn(System, 'releaseVersions').andReturn(['RHEL6']);
 
-        gettext = function(message) {
+        translate = function(message) {
             return message;
         };
 
@@ -74,7 +74,7 @@ describe('Controller: SystemDetailsInfoController', function() {
         $controller('SystemDetailsInfoController', {
             $scope: $scope,
             $q: $q,
-            gettext: gettext,
+            translate: translate,
             CustomInfo: CustomInfo,
             System: System,
             ContentView: ContentView,

@@ -47,7 +47,7 @@ describe('Controller: ManifestImportController', function() {
             Organization = $injector.get('Organization'),
             Provider = $injector.get('Provider'),
             $httpBackend = $injector.get('$httpBackend'),
-            gettext;
+            translate;
 
         $httpBackend.expectGET('/api/organization/ACME').respond(organization);
         $httpBackend.expectGET('/api/providers/1').respond(provider);
@@ -60,12 +60,12 @@ describe('Controller: ManifestImportController', function() {
         // stub out manifestHistory since it's being tested elsewhere
         $scope.manifestHistory = function(prov) { return history; };
 
-        gettext = function(a) { return a };
+        translate = function(a) { return a };
 
         $controller('ManifestImportController', {
             $scope: $scope,
             $q: $q,
-            gettext: gettext,
+            translate: translate,
             CurrentOrganization: "ACME",
             Provider: Provider,
             Organization: Organization

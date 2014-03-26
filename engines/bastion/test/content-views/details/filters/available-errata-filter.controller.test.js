@@ -19,7 +19,7 @@ describe('Controller: AvailableErrataFilterController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             Filter = $injector.get('MockResource').$new(),
-            gettext = $injector.get('gettextMock'),
+            translate = $injector.get('translateMock'),
             Nutupane = function() {
                 this.table = {};
                 this.getAllSelectedResults = function () {
@@ -38,7 +38,7 @@ describe('Controller: AvailableErrataFilterController', function() {
 
         $controller('AvailableErrataFilterController', {
             $scope: $scope,
-            gettext: gettext,
+            translate: translate,
             Nutupane: Nutupane,
             Filter: Filter,
             Rule: Rule

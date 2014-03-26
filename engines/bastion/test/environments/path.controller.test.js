@@ -13,7 +13,7 @@
 
 describe('Controller: PathController', function () {
     var $scope,
-        gettext,
+        translate,
         FormUtils,
         Environment,
         environment;
@@ -27,7 +27,7 @@ describe('Controller: PathController', function () {
             delete: function () {}
         };
 
-        gettext = function() {};
+        translate = function() {};
 
         environment = {id: 1, name: 'env name', library: false};
     });
@@ -49,7 +49,7 @@ describe('Controller: PathController', function () {
         $controller('PathController', {
             $scope: $scope,
             $q: $q,
-            gettext: gettext,
+            translate: translate,
             $timeout: $timeout,
             $http: $http,
             Environment: Environment,

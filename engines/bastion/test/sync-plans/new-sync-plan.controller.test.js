@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: NewSyncPlanController', function() {
-    var $scope, gettext, SyncPlan;
+    var $scope, translate, SyncPlan;
 
     beforeEach(module(
         'Bastion.sync-plans',
@@ -27,11 +27,11 @@ describe('Controller: NewSyncPlanController', function() {
         $scope.transitionBack = function () {};
         $scope.product = {};
 
-        gettext = function (string) { return string; };
+        translate = function (string) { return string; };
 
         $controller('NewSyncPlanController', {
             $scope: $scope,
-            gettext: gettext,
+            translate: translate,
             SyncPlan: SyncPlan
         });
 

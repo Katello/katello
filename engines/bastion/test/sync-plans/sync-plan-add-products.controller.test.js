@@ -14,7 +14,7 @@
 describe('Controller: SyncPlanAddProductsController', function() {
     var $scope,
         $controller,
-        gettext,
+        translate,
         SyncPlan,
         Nutupane;
 
@@ -29,7 +29,7 @@ describe('Controller: SyncPlanAddProductsController', function() {
 
         SyncPlan.addProducts = function() {};
 
-        gettext = function(message) {
+        translate = function(message) {
             return message;
         };
 
@@ -40,7 +40,7 @@ describe('Controller: SyncPlanAddProductsController', function() {
         $controller('SyncPlanAddProductsController', {
             $scope: $scope,
             $q: $q,
-            gettext: gettext,
+            translate: translate,
             SyncPlan: SyncPlan,
             Nutupane: Nutupane
         });

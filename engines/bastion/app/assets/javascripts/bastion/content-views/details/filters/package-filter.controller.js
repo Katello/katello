@@ -16,13 +16,13 @@
  * @name  Bastion.content-views.controller:PackageFilterController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires Rule
  *
  * @description
  */
 angular.module('Bastion.content-views').controller('PackageFilterController',
-    ['$scope', 'gettext', 'Rule', function ($scope, gettext, Rule) {
+    ['$scope', 'translate', 'Rule', function ($scope, translate, Rule) {
 
         $scope.rule = {
             type: 'all',
@@ -48,7 +48,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
             success = function () {
                 rule.editMode = false;
                 rule.working = false;
-                $scope.successMessages = [gettext('Package successfully updated.')];
+                $scope.successMessages = [translate('Package successfully updated.')];
             };
 
             failure = function () {
@@ -113,7 +113,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
             addType([rule]);
             $scope.filter.rules.push(rule);
 
-            $scope.successMessages = [gettext('Package successfully added.')];
+            $scope.successMessages = [translate('Package successfully added.')];
         }
 
         function failure(response) {
