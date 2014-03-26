@@ -154,6 +154,15 @@ Katello::Engine.routes.draw do
     end
   end
 
+  resources :errata, :only => [:show] do
+    collection do
+      get :auto_complete
+    end
+    member do
+      get :short_details
+    end
+  end
+
   resources :products, :only => [:index] do
     member do
       put :refresh_content
