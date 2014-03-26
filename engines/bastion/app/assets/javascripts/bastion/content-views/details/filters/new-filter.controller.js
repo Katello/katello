@@ -46,7 +46,10 @@ angular.module('Bastion.content-views').controller('NewFilterController',
         }
 
         function failure(response) {
-            $scope.errorMessages = [response.data.displayMessage];
+            angular.forEach(response.data.errors, function (errors, field) {
+                $scope.filterForm[field].$setValidity('server', false);
+                $scope.filterForm[field].$error.messages = errors;
+            });
         }
 
         function transitionToDetails(filter) {

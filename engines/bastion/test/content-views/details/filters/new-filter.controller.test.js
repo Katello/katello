@@ -26,6 +26,7 @@ describe('Controller: NewFilterController', function() {
         $scope = $injector.get('$rootScope').$new();
 
         $scope.contentView = {id: 1};
+        $scope.filterForm = $injector.get('MockForm');
 
         $controller('NewFilterController', {
             $scope: $scope,
@@ -90,5 +91,14 @@ describe('Controller: NewFilterController', function() {
         )
     });
 
+    it('should fail to save a new filter resource', function() {
+        $scope.filter.failed = true;
+        spyOn($scope.filter, '$save').andCallThrough();
+        $scope.save($scope.filter, $scope.contentView);
+
+        expect($scope.filter.$save).toHaveBeenCalled();
+        expect($scope.filterForm['name'].$invalid).toBe(true);
+        expect($scope.filterForm['name'].$error.messages).toBeDefined();
+    });
 });
 
