@@ -39,6 +39,7 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
 
             $scope.addContentViews = function () {
                 var selectedRows = nutupane.getAllSelectedResults().included.resources,
+                    existingComponentsIds = $scope.contentView['component_ids'],
                     versionIds = [];
 
                 angular.forEach(selectedRows, function (contentView) {
@@ -48,11 +49,15 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
                     versionIds.push(contentView.versionId);
                 });
 
-                $scope.contentView['component_ids'] = $scope.contentView['component_ids'].concat(versionIds);
+                $scope.contentView['component_ids'] = existingComponentsIds.concat(versionIds);
 
                 $scope.save($scope.contentView).then(function () {
                     nutupane.refresh();
+                }, function () {
+                    $scope.contentView['component_ids'] = existingComponentsIds;
                 });
+
+
             };
         }]
 );
