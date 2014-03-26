@@ -42,11 +42,16 @@ angular.module('Bastion.content-views').controller('AvailablePackageGroupFilterC
             var packageGroupNames = nutupane.getAllSelectedResults('name').included.ids;
 
             angular.forEach(packageGroupNames, function (name) {
-                var rule = new Rule({name: name, 'filter_id': filter.id});
-
-                rule.$save(success, failure);
+                var rule = new Rule({name: name});
+                saveRule(rule, filter);
             });
         };
+
+        function saveRule(rule, filter) {
+            var params = {filterId: filter.id};
+
+            rule.$save(params, success, failure);
+        }
 
         function success(rule) {
             nutupane.removeRow(rule.name, 'name');

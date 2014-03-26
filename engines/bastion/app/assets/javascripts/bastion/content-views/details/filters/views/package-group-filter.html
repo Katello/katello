@@ -4,7 +4,7 @@
   <nav>
     <ul class="nav nav-tabs">
       <li ng-class="{active: isState('content-views.details.filters.details.package_group.list')}">
-        <a ui-sref="content-views.details.filters.details.package_group.list">
+        <a ui-sref="content-views.details.filters.details.package_group.list({filterId: filter.id})">
         <span translate>
           List/Remove
         </span>
@@ -13,7 +13,7 @@
 
       <li ng-class="{active: isState('content-views.details.filters.details.package_group.available')}"
           ng-show="!contentView.permissions.editable">
-        <a ui-sref="content-views.details.filters.details.package_group.available">
+        <a ui-sref="content-views.details.filters.details.package_group.available({filterId: filter.id})">
         <span translate>
           Add
         </span>
