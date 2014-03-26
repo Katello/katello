@@ -23,6 +23,11 @@ module Actions
           pulp_extensions.repository.regenerate_applicability_by_ids([input[:pulp_id]])
         end
 
+        def external_task=(external_task_data)
+          #ignore errors, see issue #4875
+          output[:pulp_task] = external_task_data
+        end
+
       end
     end
   end
