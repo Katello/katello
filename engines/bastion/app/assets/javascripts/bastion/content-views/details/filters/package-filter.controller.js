@@ -101,7 +101,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
                 });
             };
 
-            Rule.delete({filterId: rule['filter_id'], ruleId: ruleId}, success, failure);
+            Rule.delete({filterId: rule['content_view_filter_id'], ruleId: ruleId}, success, failure);
         }
 
         function addSuccess(rule) {
