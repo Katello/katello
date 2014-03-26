@@ -85,7 +85,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   param :id, :identifier, :desc => "filter identifier", :required => true
   def destroy
     @filter.destroy
-    respond :resource => @filter
+    respond_for_show :resource => @filter
   end
 
   api :GET, "/content_views/:content_view_id/filters/:id/available_errata",
