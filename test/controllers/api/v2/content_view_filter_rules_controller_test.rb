@@ -118,6 +118,10 @@ module Katello
     def test_destroy
       delete :destroy, :content_view_filter_id => @filter.id, :id => @rule.id
 
+      results = JSON.parse(response.body)
+      refute results.blank?
+      assert_equal results['id'], @rule.id
+
       assert_response :success
       assert_nil ContentViewPackageFilterRule.find_by_id(@rule.id)
     end

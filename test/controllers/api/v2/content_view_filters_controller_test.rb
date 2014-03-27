@@ -128,6 +128,10 @@ module Katello
     def test_destroy
       delete :destroy, :content_view_id => @filter.content_view_id, :id => @filter.id
 
+      results = JSON.parse(response.body)
+      refute results.blank?
+      assert_equal results['id'], @filter.id
+
       assert_response :success
       assert_nil ContentViewFilter.find_by_id(@filter.id)
     end

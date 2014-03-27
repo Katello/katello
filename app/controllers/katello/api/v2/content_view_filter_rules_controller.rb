@@ -87,7 +87,7 @@ module Katello
     param :id, :identifier, :desc => "rule identifier", :required => true
     def destroy
       @rule.destroy
-      respond :resource => @rule
+      respond_for_show :resource => @rule
     end
 
     private
