@@ -42,7 +42,9 @@ module Katello
     end
 
     test "fails with start_date or end_date, if already has a rule" do
-      Katello::ContentViewErratumFilter.any_instance.stubs(:erratum_rules).returns(["not empty"])
+      rule1 = FactoryGirl.create(:katello_content_view_erratum_filter_rule)
+      Katello::ContentViewErratumFilter.any_instance.stubs(:erratum_rules).returns([rule1])
+
       model = ContentViewErratumFilterRule.new(:content_view_filter_id => @filter.id, :start_date => '2014/01/20')
       @validator.validate(model)
       refute_empty model.errors[:base]
