@@ -64,7 +64,7 @@ module Util
     # output -> {"filename" => {"$in" => {"foo.el6.noarch", "..."}}} <- Packages belonging to those errata
     def package_clauses_for_errata(errata_clauses = [])
       errata_clauses = {"$or" => errata_clauses}
-      pkg_filenames = Errata.list_by_filter_clauses(errata_clauses).collect(&:package_filenames).flatten
+      pkg_filenames = Katello::Errata.list_by_filter_clauses(errata_clauses).collect(&:package_filenames).flatten
       {'filename' => {"$in" => pkg_filenames}} unless pkg_filenames.empty?
     end
 
@@ -72,7 +72,7 @@ module Util
     # output -> {"names" => {"$in" => {"foo", "..."}}}  <- packages belonging to those packages
     def package_clauses_for_group(group_clauses = [])
       group_clauses = {"$or" => group_clauses}
-      pkg_names = PackageGroup.list_by_filter_clauses(group_clauses).collect(&:package_names).flatten
+      pkg_names = Katello::PackageGroup.list_by_filter_clauses(group_clauses).collect(&:package_names).flatten
       {'name' => {"$in" => pkg_names}} unless pkg_names.empty?
     end
 
