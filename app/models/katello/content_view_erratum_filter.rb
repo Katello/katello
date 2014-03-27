@@ -24,6 +24,7 @@ class ContentViewErratumFilter < ContentViewFilter
            :class_name => "Katello::ContentViewErratumFilterRule"
 
   def generate_clauses(repo)
+    return if erratum_rules.blank?
 
     if filter_by_id?
       errata_ids = erratum_rules.map(&:errata_id)
