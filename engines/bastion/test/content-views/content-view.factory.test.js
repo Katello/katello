@@ -46,10 +46,10 @@ describe('Factory: ContentView', function() {
     });
 
     it('provides a way to get a collection of content views', function() {
-        $httpBackend.expectGET('/api/v2/content_views?nondefault=true&organization_id=ACME')
+        $httpBackend.expectGET('/api/v2/content_views?organization_id=ACME')
                     .respond(contentViews);
 
-        ContentView.query(function (response) {
+        ContentView.queryPaged(function (response) {
             var views = response;
 
             expect(views.results.length).toBe(2);

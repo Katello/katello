@@ -45,7 +45,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionEnvironmentContro
         $scope.fetchViews = function () {
             $scope.fetchingContentViews = true;
 
-            ContentView.query({ 'environment_id': $scope.selected.environment.id }, function (response) {
+            ContentView.queryUnpaged({ 'environment_id': $scope.selected.environment.id }, function (response) {
                 $scope.contentViews = response.results;
                 $scope.fetchingContentViews = false;
             });

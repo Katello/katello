@@ -36,7 +36,6 @@ angular.module('Bastion.activation-keys').controller('NewActivationKeyController
 
         $scope.contentViews = [];
         $scope.editContentView = false;
-        $scope.disableEnvironmentSelection = false;
         $scope.environments = [];
 
         $scope.environments = Organization.registerableEnvironments({organizationId: CurrentOrganization});
@@ -51,8 +50,7 @@ angular.module('Bastion.activation-keys').controller('NewActivationKeyController
         $scope.$watch('activationKey.environment', function (environment) {
             if (environment) {
                 $scope.editContentView = true;
-                $scope.disableEnvironmentSelection = true;
-                ContentView.query({ 'environment_id': environment.id }, function (response) {
+                ContentView.queryUnpaged({ 'environment_id': environment.id }, function (response) {
                     $scope.contentViews = response.results;
                 });
             }

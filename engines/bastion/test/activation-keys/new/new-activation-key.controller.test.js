@@ -51,7 +51,7 @@ describe('Controller: NewActivationKeyController', function() {
         };
 
         ContentView = $injector.get('MockResource').$new();
-        ContentView.query = function (params, callback) {};
+        ContentView.unPaged = function (params, callback) {};
 
         FormUtils = $injector.get('FormUtils');
 
@@ -151,11 +151,11 @@ describe('Controller: NewActivationKeyController', function() {
 
     it("should fetch content views", function () {
         $httpBackend.expectGET('/organizations/default_label?name=Test+Resource').respond('changed_name');
-        spyOn(ContentView, 'query');
+        spyOn(ContentView, 'queryUnpaged');
         $scope.activationKey.environment = paths[0][0];
         $scope.$apply();
 
-        expect(ContentView.query).toHaveBeenCalled();
+        expect(ContentView.queryUnpaged).toHaveBeenCalled();
     });
 
 });
