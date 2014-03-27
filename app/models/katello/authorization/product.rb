@@ -40,7 +40,6 @@ module Katello
       end # included
 
       module ClassMethods
-
         def all_readable(org)
           Katello::Product.where(:provider_id => Katello::Provider.readable(org).pluck(:id))
         end

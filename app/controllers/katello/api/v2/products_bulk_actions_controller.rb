@@ -34,7 +34,6 @@ module Katello
     param :ids, Array, :desc => "List of product ids", :required => true
     def destroy_products
       display_messages = []
-
       @products.each{ |product| product.destroy }
       display_messages << _("Successfully removed %s product(s)") % @products.length
       respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
