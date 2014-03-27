@@ -58,6 +58,7 @@ angular.module('Bastion.content-views').controller('DateTypeErrataFilterControll
         }
 
         function failure(response) {
+            $scope.rule.working = false;
             $scope.errorMessages = [response.data.displayMessage];
         }
 

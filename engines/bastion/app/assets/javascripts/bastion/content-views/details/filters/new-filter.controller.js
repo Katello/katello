@@ -26,6 +26,7 @@ angular.module('Bastion.content-views').controller('NewFilterController',
         var filterType;
 
         $scope.filter = new Filter();
+        $scope.working = false;
 
         $scope.save = function (filter, contentView) {
             filterType = filter.type;
@@ -46,6 +47,7 @@ angular.module('Bastion.content-views').controller('NewFilterController',
         }
 
         function failure(response) {
+            $scope.working = false;
             angular.forEach(response.data.errors, function (errors, field) {
                 $scope.filterForm[field].$setValidity('server', false);
                 $scope.filterForm[field].$error.messages = errors;
