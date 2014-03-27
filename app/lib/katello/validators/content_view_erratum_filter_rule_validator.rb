@@ -37,7 +37,8 @@ module Validators
 
     def _check_single_date_range(record)
       if record.start_date || record.end_date || !record.types.empty?
-        unless record.filter.erratum_rules.empty?
+        if !record.filter.erratum_rules.empty? &&
+           !record.filter.erratum_rules.any?{ |rule| rule.id == record.id }
           invalid_parameters = _("May not add a type or date range rule to a filter that has existing rules.")
           record.errors[:base] << invalid_parameters
         end
