@@ -46,7 +46,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
   param :sync_date, String, :desc => "filter by sync date"
   param :interval, SyncPlan::TYPES, :desc => "filter by interval"
   def index
-    filters = []
+    filters = [{:term => {:organization_id => @organization.id} }]
 
     if params[:sync_date]
       filters << {:terms => {:sync_date => [params[:sync_date]] }}
