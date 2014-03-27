@@ -20,10 +20,10 @@ class SyncPlan < Katello::Model
 
   include Glue::ElasticSearch::SyncPlan if Katello.config.use_elasticsearch
 
-  NONE = _('none')
-  HOURLY = _('hourly')
-  DAILY = _('daily')
-  WEEKLY = _('weekly')
+  NONE = 'none'
+  HOURLY = 'hourly'
+  DAILY = 'daily'
+  WEEKLY = 'weekly'
   TYPES = [NONE, HOURLY, DAILY, WEEKLY]
   DURATION = { NONE => '', HOURLY => 'T1H', DAILY => 'T24H', WEEKLY => '7D' }
   WEEK_DAYS = (%W(Sunday Monday Tuesday Wednesday Thursday Friday)).collect{|d| N_(d)}
