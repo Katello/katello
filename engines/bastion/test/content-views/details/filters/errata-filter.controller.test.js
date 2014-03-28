@@ -38,9 +38,9 @@ describe('Controller: ErrataFilterController', function() {
 
     it("adds types to the scope", function() {
         expect($scope.types).toBeDefined();
-        expect($scope.types.enhancement).toBe(true);
-        expect($scope.types.bugfix).toBe(true);
-        expect($scope.types.security).toBe(true);
+        expect($scope.types.enhancement).toBe(false);
+        expect($scope.types.bugfix).toBe(false);
+        expect($scope.types.security).toBe(false);
     });
 
     it("adds a method to open the start date picker", function() {
@@ -62,17 +62,20 @@ describe('Controller: ErrataFilterController', function() {
             type: 'security'
         };
 
+        $scope.types = {'security': true};
         expect($scope.errataFilter(errata)).toBe(true);
 
-        $scope.types = ['bugfix'];
+        $scope.types = {'bugfix': false};
         expect($scope.errataFilter(errata)).toBe(false);
     });
 
-    it("should provider a method to filter errata that were issued after a particular date", function () {
+    it("should provide a method to filter errata that were issued after a particular date", function () {
         var errata = {
             type: 'security',
             issued: new Date('1/1/2012')
         };
+
+        $scope.types = {'security': true};
 
         $scope.rule['start_date'] = new Date('1/1/2012');
         expect($scope.errataFilter(errata)).toBe(true);
@@ -81,11 +84,13 @@ describe('Controller: ErrataFilterController', function() {
         expect($scope.errataFilter(errata)).toBe(false);
     });
 
-    it("should provider a method to filter errata that were issued before a particular date", function () {
+    it("should provide a method to filter errata that were issued before a particular date", function () {
         var errata = {
             type: 'security',
             issued: new Date('1/2/2012')
         };
+
+        $scope.types = {'security': true};
 
         $scope.rule['end_date'] = new Date('1/1/2012');
         expect($scope.errataFilter(errata)).toBe(false);

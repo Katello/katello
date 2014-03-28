@@ -35,9 +35,9 @@ angular.module('Bastion.content-views').controller('ErrataFilterController',
         };
 
         $scope.types = {
-            enhancement: true,
-            bugfix: true,
-            security: true
+            enhancement: false,
+            bugfix: false,
+            security: false
         };
 
         $scope.errataFilter = function (errata) {
