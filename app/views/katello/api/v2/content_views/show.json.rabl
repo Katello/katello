@@ -19,7 +19,7 @@ child :environments => :environments do
 end
 
 child :repositories => :repositories do
-  attributes :id, :name, :label
+  extends 'katello/api/v2/repositories/show'
 end
 
 child :puppet_modules => :puppet_modules do
@@ -32,10 +32,6 @@ child :versions => :versions do
   attributes :id, :version
   attributes :created_at => :published
   attributes :environment_ids
-end
-
-child :repositories => :repositories do
-  attributes :id, :name, :label
 end
 
 child :components => :components do

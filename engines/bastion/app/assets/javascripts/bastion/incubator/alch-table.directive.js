@@ -162,10 +162,11 @@ angular.module('alchemy')
         };
     }])
     .directive('alchTableRow', ['$parse', function ($parse) {
-        var rowSelectTemplate = function (model) {
+        var rowSelectTemplate = function (model, attrs) {
             return '<td class="row-select">' +
                       '<input type="checkbox"' +
                               'ng-model="' + model + '.selected"' +
+                              'ng-disabled="' + attrs['ngDisabled'] + '"' +
                               'ng-change="itemSelected(' + model + ')">' +
                    '</td>';
         }, rowChoiceTemplate = function (model) {
@@ -184,7 +185,7 @@ angular.module('alchemy')
             controller: 'AlchTableRowController',
             compile: function (tElement, tAttrs) {
                 if (tAttrs.rowSelect !== undefined) {
-                    tElement.prepend(rowSelectTemplate(tAttrs.rowSelect));
+                    tElement.prepend(rowSelectTemplate(tAttrs.rowSelect, tAttrs));
                 } else if (tAttrs.rowChoice !== undefined) {
                     tElement.prepend(rowChoiceTemplate(tAttrs.rowChoice));
                 }

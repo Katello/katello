@@ -43,6 +43,27 @@ angular.module('Bastion.content-views').controller('FiltersController',
             angular.forEach(filterIds, removeFilter);
         };
 
+        $scope.getFilterState = function (filter) {
+            var state;
+
+            switch (filter.type) {
+            case "erratum":
+                state = "content-views.details.filters.details.erratum.list({filterId: filter.id})";
+                if (filter.rules[0].types) {
+                    state = "content-views.details.filters.details.erratum.dateType({filterId: filter.id})";
+                }
+                break;
+            case "rpm":
+                state = "content-views.details.filters.details.rpm({filterId: filter.id})";
+                break;
+            case "package_group":
+                state = "content-views.details.filters.details.package_group.list({filterId: filter.id})";
+                break;
+            }
+
+            return state;
+        };
+
         function removeFilter(id) {
             var success, failure;
 

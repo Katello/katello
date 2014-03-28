@@ -54,4 +54,14 @@ describe('Controller: FiltersController', function() {
         expect($scope.successMessages.length).toBe(1);
     });
 
+    it("provides a way to get the filter's state", function() {
+        expect($scope.getFilterState({type: 'erratum', rules: [{types: false}]})).
+            toBe('content-views.details.filters.details.erratum.list({filterId: filter.id})');
+        expect($scope.getFilterState({type: 'erratum', rules: [{types: true}]})).
+            toBe('content-views.details.filters.details.erratum.dateType({filterId: filter.id})');
+        expect($scope.getFilterState({type: 'rpm'})).
+            toBe('content-views.details.filters.details.rpm({filterId: filter.id})');
+        expect($scope.getFilterState({type: 'package_group'})).
+            toBe('content-views.details.filters.details.package_group.list({filterId: filter.id})');
+    });
 });

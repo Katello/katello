@@ -1,3 +1,5 @@
+<span page-title ng-model="contentView">{{ 'Filters for Content View:' | translate }} {{ contentView.name }}</span>
+
 <div data-extend-template="layouts/details-nutupane.html">
 
   <div data-block="header">
@@ -40,7 +42,7 @@
               {{ filter.name }}
             </a>
             <a ng-if="filter.type === 'rpm'"
-               ui-sref="content-views.details.filters.details.rpm({filterId: filter.id})">
+               ui-sref="content-views.details.filters.details.rpm.details({filterId: filter.id})">
               {{ filter.name }}
             </a>
             <a ng-if="filter.type === 'package_group'"
