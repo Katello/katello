@@ -97,7 +97,7 @@ install -p -m0644 etc/service-list %{buildroot}%{_sysconfdir}/%{name}/
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_sbindir}
 ln -sv %{homedir}/script/katello-jobs %{buildroot}%{_bindir}/katello-jobs
-ln -sv %{homedir}/script/katello-debug %{buildroot}%{_bindir}/katello-debug
+ln -sv %{homedir}/script/katello-debug.sh %{buildroot}/usr/share/foreman/script/foreman-debug.d/katello-debug.sh
 ln -sv %{homedir}/script/katello-remove %{buildroot}%{_bindir}/katello-remove
 ln -sv %{homedir}/script/katello-generate-passphrase %{buildroot}%{_bindir}/katello-generate-passphrase
 ln -sv %{homedir}/script/katello-service %{buildroot}%{_bindir}/katello-service
