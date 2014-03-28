@@ -20,17 +20,17 @@
   <nav>
     <ul class="nav nav-tabs">
       <li ng-class="{active: isState('subscriptions.details.info')}">
-        <a translate ui-sref="subscriptions.details.info({subscriptionId: subscription.cp_id})">
+        <a translate ui-sref="subscriptions.details.info({subscriptionId: subscription.id})">
           Details
         </a>
       </li>
       <li ng-class="{active: stateIncludes('subscriptions.details.products')}">
-        <a translate ui-sref="subscriptions.details.products({subscriptionId: subscription.cp_id})">
+        <a translate ui-sref="subscriptions.details.products({subscriptionId: subscription.id})">
           Product Details
         </a>
       </li>
       <li ng-class="{active: stateIncludes('subscriptions.details.associations')}">
-        <a translate ui-sref="subscriptions.details.associations({subscriptionId: subscription.cp_id})">
+        <a translate ui-sref="subscriptions.details.associations({subscriptionId: subscription.id})">
           Associations
         </a>
       </li>
