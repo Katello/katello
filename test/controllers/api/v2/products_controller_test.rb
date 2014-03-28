@@ -70,10 +70,20 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
       :provider_id => @provider.id,
       :description => 'this is my cool new product.'
     }
-    post :create, :product => product_params
+    post :create, :product => product_params, :organization_id => @organization.label
 
     assert_response :success
     assert_template %w(katello/api/v2/common/create katello/api/v2/layouts/resource)
+  end
+
+  def test_create_with_bad_org
+    product_params = {
+      :name => 'fedora product',
+      :description => 'this is my cool new product.'
+    }
+    post :create, :product => product_params, :organization_id => 'asdfdsafds'
+
+    assert_response 404
   end
 
   def test_create_fail_without_product
@@ -81,9 +91,9 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     assert_response :bad_request
   end
 
-  def test_create_fail_with_only_provider_id
+  def test_create_fail_with_only_provider_id_and_org_id
     # without provider_id it's 500 and this test is for 422 errors
-    post :create, :provider_id => @provider.id
+    post :create, :provider_id => @provider, :organization_id => @organization.label
 
     assert_response :bad_request
   end
