@@ -40,4 +40,18 @@ describe('Controller: ContentViewVersionsController', function() {
         expect($scope.table).toBeDefined();
     });
 
+    it("correctly hide a version's progress", function() {
+        var version = {active_history: [], task: {state: 'running', progressbar: {type: 'success'}}};
+        expect($scope.hideProgress(version)).toBe(true);
+
+        version = {active_history: [{}], task: {state: 'running', progressbar: {type: 'success'}}};
+        expect($scope.hideProgress(version)).toBe(false);
+
+        version = {active_history: [], task: {state: 'stopped', progressbar: {type: 'success'}}};
+        expect($scope.hideProgress(version)).toBe(true);
+
+        version = {active_history: [{}], task: {state: 'stopped', progressbar: {type: 'error'}}};
+        expect($scope.hideProgress(version)).toBe(false);
+    });
+
 });

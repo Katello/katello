@@ -35,7 +35,6 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
         };
 
         function success() {
-            $scope.reloadVersions();
             $scope.transitionTo('content-views.details.versions',
                                 {contentViewId: $scope.contentView.id});
             $scope.working = false;

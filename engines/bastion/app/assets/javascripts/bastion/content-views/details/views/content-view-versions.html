@@ -24,10 +24,8 @@
       <tr alch-table-row ng-repeat="version in versions | filter:filterTerm">
         <td alch-table-cell translate>Version {{ version.version }}</td>
         <td alch-table-cell >
-          <a ui-sref="content-views.details.history">
-
-            <div ng-hide="version.active_history.length === 0"
-                 ng-class="{ active: (version.task.state === 'pending' || version.task.state === 'running') }"
+          <a ui-sref="content-views.details.history" ng-hide="hideProgress(version)">
+            <div ng-class="{ active: (version.task.state === 'pending' || version.task.state === 'running') }"
                  class="progress progress-striped">
               <span progressbar animate="false" value="version.task.progressbar.value" type="{{version.task.progressbar.type}}"></span>
             </div>
