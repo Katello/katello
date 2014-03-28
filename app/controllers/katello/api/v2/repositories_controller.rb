@@ -17,6 +17,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   before_filter :find_product, :only => [:index]
   before_filter :find_product_for_create, :only => [:create]
   before_filter :find_repository, :only => [:show, :update, :destroy, :sync]
+  before_filter :find_gpg_key, :only => [:create, :update]
   before_filter :authorize
 
   skip_before_filter :authorize, :only => [:sync_complete]
@@ -28,7 +29,8 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     param :label, String, :required => false
     param :product_id, :number, :required => true, :desc => "Product the repository belongs to"
     param :url, String, :required => true, :desc => "repository source url"
-    param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the new repository"
+    param :gpg_key_id, :number, :desc => "id of the gpg key that will be assigned to the new repository"
+    param :unprotected, :bool, :desc => "true if this repository can be published via HTTP"
     param :enabled, :bool, :desc => "flag that enables/disables the repository"
     param :content_type, String, :desc => "type of repo (either 'yum' or 'puppet', defaults to 'yum')"
   end
@@ -96,7 +98,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     params[:label] = labelize_params(params)
     gpg_key = @product.gpg_key
     unless params[:gpg_key_id].blank?
-      gpg_key = GpgKey.find(params[:gpg_key_id])
+      gpg_key = @gpg_key
     end
 
     repository = @product.add_repo(params[:label], params[:name], params[:url],
@@ -122,6 +124,8 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   api :PUT, "/repositories/:id", "Update a repository"
   param :id, :identifier, :required => true, :desc => "repository id"
   param :gpg_key_id, :number, :desc => "id of a gpg key that will be assigned to this repository"
+  param :unprotected, :bool, :desc => "true if this repository can be published via HTTP"
+  param :feed, String, :desc => "the feed url of the original repository "
   def update
     fail HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
     @repository.update_attributes!(repository_params)
@@ -175,6 +179,13 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
   def find_repository
     @repository = Repository.find(params[:id]) if params[:id]
+  end
+
+  def find_gpg_key
+    if params[:gpg_key_id]
+      @gpg_key = GpgKey.where(:organization => @organization, :id => params[:gpg_key_id]).first
+      fail HttpErrors::NotFound, _("Couldn't find gpg key '%s'") % params[:gpg_key_id] if @gpg_key.nil?
+    end
   end
 
   def repository_params

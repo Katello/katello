@@ -161,6 +161,10 @@ class Repository < Katello::Model
     end
   end
 
+  def product_type
+    redhat? ? "redhat" : "custom"
+  end
+
   def redhat?
     product.redhat?
   end
