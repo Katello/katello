@@ -44,6 +44,10 @@ class SyncManagementController < Katello::ApplicationController
     'contents'
   end
 
+  def title
+    _('Sync Status')
+  end
+
   def rules
 
     list_test = lambda{current_organization && Provider.any_readable?(current_organization) }
