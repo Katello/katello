@@ -47,7 +47,7 @@ describe('Controller: NewFilterController', function() {
         $scope.save($scope.filter, $scope.contentView);
 
         expect($scope.transitionTo).toHaveBeenCalledWith(
-            'content-views.details.filters.details.rpm',
+            'content-views.details.filters.details.rpm.details',
             {filterId: 1, contentViewId: 1}
         )
     });
