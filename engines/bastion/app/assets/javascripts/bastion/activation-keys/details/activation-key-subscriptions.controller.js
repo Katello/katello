@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires $location
- * @requires gettext
+ * @requires translate
  * @requires Nutupane
  * @requires ActivationKey
  * @requires SubscriptionsHelper
@@ -26,8 +26,8 @@
  *   Provides the functionality for the activation key subscriptions details action pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeySubscriptionsController',
-    ['$scope', '$location', 'gettext', 'Nutupane', 'ActivationKey', 'SubscriptionsHelper',
-    function ($scope, $location, gettext, Nutupane, ActivationKey, SubscriptionsHelper) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'ActivationKey', 'SubscriptionsHelper',
+    function ($scope, $location, translate, Nutupane, ActivationKey, SubscriptionsHelper) {
         var subscriptionsPane, params;
 
         params = {
@@ -60,11 +60,11 @@ angular.module('Bastion.activation-keys').controller('ActivationKeySubscriptions
             ActivationKey.removeSubscriptions({id: $scope.activationKey.id, 'subscriptions': selected}, function () {
                 subscriptionsPane.table.selectAll(false);
                 subscriptionsPane.refresh();
-                $scope.successMessages.push(gettext("Successfully removed %s subscriptions.").replace('%s', selected.length));
+                $scope.successMessages.push(translate("Successfully removed %s subscriptions.").replace('%s', selected.length));
                 $scope.isRemoving = false;
             }, function (response) {
                 $scope.isRemoving = false;
-                $scope.errorMessages.push(gettext("An error occurred removing the subscriptions.") + response.data.displayMessage);
+                $scope.errorMessages.push(translate("An error occurred removing the subscriptions.") + response.data.displayMessage);
             });
         };
 

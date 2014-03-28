@@ -68,7 +68,7 @@ describe('Controller: ActivationKeyAddSystemGroupsController', function() {
             $scope: $scope,
             $q: $q,
             $location: $location,
-            gettext: function() {},
+            translate: function() {},
             ActivationKey: ActivationKey,
             Nutupane: Nutupane
         });

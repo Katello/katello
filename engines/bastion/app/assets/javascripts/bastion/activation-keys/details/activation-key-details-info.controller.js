@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires $q
- * @requires gettext
+ * @requires translate
  * @requires ContentView
  * @requires Organization
  * @requires CurrentOrganization
@@ -26,8 +26,8 @@
  *   Provides the functionality for the activation key info details action pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoController',
-    ['$scope', '$q', 'gettext', 'ContentView', 'Organization', 'CurrentOrganization',
-        function ($scope, $q, gettext, ContentView, Organization, CurrentOrganization) {
+    ['$scope', '$q', 'translate', 'ContentView', 'Organization', 'CurrentOrganization',
+        function ($scope, $q, translate, ContentView, Organization, CurrentOrganization) {
 
         $scope.editContentView = false;
         $scope.disableEnvironmentSelection = false;
@@ -74,7 +74,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
             return deferred.promise;
         };
 
-        $scope.limitTranslations = {"-1": gettext("Unlimited")};
+        $scope.limitTranslations = {"-1": translate("Unlimited")};
 
         $scope.isUnlimited = function (activationKey) {
             return activationKey['usage_limit'] === -1;

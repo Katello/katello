@@ -18,7 +18,7 @@
  * @requires $scope
  * @requires $q
  * @requires $location
- * @requires gettext
+ * @requires translate
  * @requires System
  * @requires Nutupane
  *
@@ -26,8 +26,8 @@
  *   Provides the functionality for the list system groups details action pane.
  */
 angular.module('Bastion.systems').controller('SystemSystemGroupsController',
-    ['$scope', '$q', '$location', 'gettext', 'System', 'Nutupane',
-    function ($scope, $q, $location, gettext, System, Nutupane) {
+    ['$scope', '$q', '$location', 'translate', 'System', 'Nutupane',
+    function ($scope, $q, $location, translate, System, Nutupane) {
         var systemGroupsPane, params;
 
         $scope.successMessages = [];
@@ -59,7 +59,7 @@ angular.module('Bastion.systems').controller('SystemSystemGroupsController',
             };
 
             success = function (data) {
-                $scope.successMessages = [gettext('Removed %x system groups from system "%y".')
+                $scope.successMessages = [translate('Removed %x system groups from system "%y".')
                     .replace('%x', $scope.systemGroupsTable.numSelected).replace('%y', $scope.system.name)];
                 $scope.systemGroupsTable.working = false;
                 $scope.systemGroupsTable.selectAll(false);

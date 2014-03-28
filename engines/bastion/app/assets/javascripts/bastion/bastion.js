@@ -38,6 +38,7 @@
 //= require "bastion/incubator/format/key-value-to-string.filter.js"
 
 //= require "bastion/i18n/i18n.module"
+//= require "bastion/i18n/translate.service.js"
 //= require "bastion/i18n/translations"
 
 //= require "bastion/menu/menu.module"

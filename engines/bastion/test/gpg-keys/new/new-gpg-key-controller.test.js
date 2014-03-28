@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: NewGPGKeyController', function() {
-    var $scope, gettext;
+    var $scope, translate;
 
     beforeEach(module(
         'Bastion.gpg-keys',

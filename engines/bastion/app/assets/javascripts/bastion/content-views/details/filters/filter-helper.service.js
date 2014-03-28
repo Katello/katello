@@ -15,18 +15,18 @@
  * @ngdoc service
  * @name  Bastion.content-views.service:FilterHelper
  *
- * @requires gettext
+ * @requires translate
  *
  * @description
  *   Provides helper methods for common Filter operations.
  */
 angular.module('Bastion.content-views').service('FilterHelper',
-    ['gettext', function (gettext) {
+    ['translate', function (translate) {
 
         this.contentTypes = {
-            'rpm': gettext('Packages'),
-            'erratum': gettext('Errata'),
-            'package_group': gettext('Package Groups')
+            'rpm': translate('Packages'),
+            'erratum': translate('Errata'),
+            'package_group': translate('Package Groups')
         };
 
         this.contentType = function (type) {
@@ -34,7 +34,7 @@ angular.module('Bastion.content-views').service('FilterHelper',
         };
 
         this.type = function (type) {
-            return type ? gettext('Include') : gettext('Exclude');
+            return type ? translate('Include') : translate('Exclude');
         };
 
     }]

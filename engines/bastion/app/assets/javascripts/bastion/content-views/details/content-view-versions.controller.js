@@ -16,7 +16,7 @@
  * @name  Bastion.content-views.controller:ContentViewVersionsController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires ContentViewVersion
  *
  * @description
@@ -25,7 +25,7 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewVersionsController',
-    ['$scope', 'gettext', function ($scope, gettext) {
+    ['$scope', 'translate', function ($scope, translate) {
 
         $scope.table = {};
 
@@ -58,18 +58,18 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
             var status = '';
             if (promoteCount > 1) {
                 if (isPublishing) {
-                    status = gettext("Publishing and promoting to %count environments.").replace(
+                    status = translate("Publishing and promoting to %count environments.").replace(
                         '%count', promoteCount);
                 }
                 else {
-                    status = gettext("Promoting to %count environments.").replace('%count', promoteCount);
+                    status = translate("Promoting to %count environments.").replace('%count', promoteCount);
                 }
             } else if (promoteCount === 1 || isPublishing) {
                 if (isPublishing) {
-                    status = gettext("Publishing and promoting to 1 environment.");
+                    status = translate("Publishing and promoting to 1 environment.");
                 }
                 else {
-                    status =  gettext("Promoting to 1 environment.");
+                    status =  translate("Promoting to 1 environment.");
                 }
             }
             return status;

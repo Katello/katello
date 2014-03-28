@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires $location
- * @requires gettext
+ * @requires translate
  * @requires Nutupane
  * @requires SystemGroup
  * @requires CurrentOrganization
@@ -28,8 +28,8 @@
  *   within the table.
  */
 angular.module('Bastion.system-groups').controller('SystemGroupsController',
-    ['$scope', '$location', 'gettext', 'Nutupane', 'SystemGroup', 'CurrentOrganization',
-    function ($scope, $location, gettext, Nutupane, SystemGroup, CurrentOrganization) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'SystemGroup', 'CurrentOrganization',
+    function ($scope, $location, translate, Nutupane, SystemGroup, CurrentOrganization) {
 
         var params = {
             'organization_id':  CurrentOrganization,

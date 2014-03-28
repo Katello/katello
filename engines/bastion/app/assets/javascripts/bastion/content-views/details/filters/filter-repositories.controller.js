@@ -16,7 +16,7 @@
  * @name  Bastion.content-views.controller:FilterRepositoriesController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires Filter
  * @requires ContentViewRepositoriesUtl
  *
@@ -24,8 +24,8 @@
  *   Provides a way for users to select which repositories the filter applies to.
  */
 angular.module('Bastion.content-views').controller('FilterRepositoriesController',
-    ['$scope', 'gettext', 'Filter', 'ContentViewRepositoriesUtil',
-    function ($scope, gettext, Filter, ContentViewRepositoriesUtil) {
+    ['$scope', 'translate', 'Filter', 'ContentViewRepositoriesUtil',
+    function ($scope, translate, Filter, ContentViewRepositoriesUtil) {
         var refreshTable, success, error;
 
         ContentViewRepositoriesUtil($scope);
@@ -54,7 +54,7 @@ angular.module('Bastion.content-views').controller('FilterRepositoriesController
 
         success = function (filter) {
             refreshTable(filter);
-            $scope.successMessages = [gettext('Affected repositories have been updated.')];
+            $scope.successMessages = [translate('Affected repositories have been updated.')];
         };
 
         error = function (response) {
@@ -72,7 +72,7 @@ angular.module('Bastion.content-views').controller('FilterRepositoriesController
             var repositoryIds = _.pluck($scope.repositoriesTable.getSelected(), 'id');
 
             if (repositoryIds.length === 0) {
-                $scope.errorMessages = [gettext('You must select at least one repository.')];
+                $scope.errorMessages = [translate('You must select at least one repository.')];
             } else {
                 Filter.update({id: $scope.filter.id, 'repository_ids': repositoryIds}, success, error);
             }

@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires $location
- * @requires gettext
+ * @requires translate
  * @requires Nutupane
  * @requires ActivationKey
  * @requires CurrentOrganization
@@ -28,8 +28,8 @@
  *   within the table.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeysController',
-    ['$scope', '$location', 'gettext', 'Nutupane', 'ActivationKey', 'CurrentOrganization',
-    function ($scope, $location, gettext, Nutupane, ActivationKey, CurrentOrganization) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'ActivationKey', 'CurrentOrganization',
+    function ($scope, $location, translate, Nutupane, ActivationKey, CurrentOrganization) {
 
         var params = {
             'organization_id':  CurrentOrganization,

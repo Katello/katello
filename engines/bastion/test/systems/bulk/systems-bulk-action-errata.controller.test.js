@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SystemsBulkActionErrataController', function() {
-    var $scope, $q, gettext, SystemBulkAction, SystemGroup, selectedErrata,
+    var $scope, $q, translate, SystemBulkAction, SystemGroup, selectedErrata,
          selectedSystems, CurrentOrganization, Nutupane;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
@@ -21,7 +21,7 @@ describe('Controller: SystemsBulkActionErrataController', function() {
         SystemBulkAction = {
             installContent: function() {}
         };
-        gettext = function() {};
+        translate = function() {};
         CurrentOrganization = 'foo';
         selectedErrata = [1, 2, 3, 4]
         selectedSystems = {included: {ids: [1, 2, 3]}};
@@ -52,7 +52,7 @@ describe('Controller: SystemsBulkActionErrataController', function() {
             SystemBulkAction: SystemBulkAction,
             SystemGroup: SystemGroup,
             Nutupane: Nutupane,
-            gettext: gettext,
+            translate: translate,
             CurrentOrganization: CurrentOrganization
       	});
     }));

@@ -21,28 +21,28 @@
  * @requires SystemBulkAction
  * @requires SystemGroup
  * @requires CurrentOrganization
- * @requires gettext
+ * @requires translate
  *
  * @description
  *   A controller for providing bulk action functionality to the systems page.
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionPackagesController',
-    ['$scope', '$q', '$location', 'SystemBulkAction', 'SystemGroup', 'CurrentOrganization', 'gettext',
-    function ($scope, $q, $location, SystemBulkAction, SystemGroup, CurrentOrganization, gettext) {
+    ['$scope', '$q', '$location', 'SystemBulkAction', 'SystemGroup', 'CurrentOrganization', 'translate',
+    function ($scope, $q, $location, SystemBulkAction, SystemGroup, CurrentOrganization, translate) {
 
         $scope.setState(false, [], []);
 
         $scope.content = {
             confirm: false,
-            placeholder: gettext('Enter Package Name(s)...'),
+            placeholder: translate('Enter Package Name(s)...'),
             contentType: 'package'
         };
 
         $scope.updatePlaceholder = function (contentType) {
             if (contentType === "package") {
-                $scope.content.placeholder = gettext('Enter Package Name(s)...');
+                $scope.content.placeholder = translate('Enter Package Name(s)...');
             } else if (contentType === "package_group") {
-                $scope.content.placeholder = gettext('Enter Package Group Name(s)...');
+                $scope.content.placeholder = translate('Enter Package Group Name(s)...');
             }
         };
 
@@ -82,9 +82,9 @@ angular.module('Bastion.systems').controller('SystemsBulkActionPackagesControlle
 
         function successMessage(type) {
             var messages = {
-                install: gettext("Succesfully scheduled package installation"),
-                update: gettext("Succesfully scheduled package update"),
-                remove: gettext("Succesfully scheduled package removal")
+                install: translate("Succesfully scheduled package installation"),
+                update: translate("Succesfully scheduled package update"),
+                remove: translate("Succesfully scheduled package removal")
             };
             return messages[type];
         }

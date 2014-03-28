@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires $q
- * @requires gettext
+ * @requires translate
  * @requires $timeout
  * @requires $http
  * @requires Environment
@@ -27,8 +27,8 @@
  *   Provides the functionality for managing a single environment path..
  */
 angular.module('Bastion.environments').controller('PathController',
-    ['$scope', '$q', 'gettext', '$timeout', '$http', 'Environment', 'FormUtils',
-        function ($scope, $q, gettext, $timeout, $http, Environment, FormUtils) {
+    ['$scope', '$q', 'translate', '$timeout', '$http', 'Environment', 'FormUtils',
+        function ($scope, $q, translate, $timeout, $http, Environment, FormUtils) {
 
             $scope.environment = {};
             $scope.working = false;
@@ -55,11 +55,11 @@ angular.module('Bastion.environments').controller('PathController',
 
                 Environment.update(environment, function (response) {
                     deferred.resolve(response);
-                    $scope.successMessages.push(gettext('Save Successful.'));
+                    $scope.successMessages.push(translate('Save Successful.'));
 
                 }, function (response) {
                     deferred.reject(response);
-                    $scope.errorMessages.push(gettext("An error occurred saving the environment: ") +
+                    $scope.errorMessages.push(translate("An error occurred saving the environment: ") +
                         response.data.displayMessage);
                 });
 
@@ -84,11 +84,11 @@ angular.module('Bastion.environments').controller('PathController',
                     deferred.resolve(response);
                     $scope.close(environment);
                     removeEnvironment(environment);
-                    $scope.successMessages.push(gettext('Remove Successful.'));
+                    $scope.successMessages.push(translate('Remove Successful.'));
 
                 }, function (response) {
                     deferred.reject(response);
-                    $scope.errorMessages.push(gettext("An error occurred removing the environment: ") +
+                    $scope.errorMessages.push(translate("An error occurred removing the environment: ") +
                         response.data.displayMessage);
                 });
 
@@ -133,12 +133,12 @@ angular.module('Bastion.environments').controller('PathController',
 
                     $scope.close();
                     $scope.working = false;
-                    $scope.successMessages.push(gettext('Create Successful.'));
+                    $scope.successMessages.push(translate('Create Successful.'));
 
                 }, function (response) {
                     deferred.reject(response);
                     $scope.working = false;
-                    $scope.errorMessages.push(gettext("An error occurred creating the environment: ") +
+                    $scope.errorMessages.push(translate("An error occurred creating the environment: ") +
                         response.data.displayMessage);
                 });
 

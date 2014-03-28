@@ -14,7 +14,7 @@
 describe('Controller: SystemDetailsController', function() {
     var $scope,
         $controller,
-        gettext,
+        translate,
         System,
         Organization,
         MenuExpander,
@@ -35,7 +35,7 @@ describe('Controller: SystemDetailsController', function() {
             transitionTo: function() {}
         };
 
-        gettext = function(message) {
+        translate = function(message) {
             return message;
         };
 
@@ -73,7 +73,7 @@ describe('Controller: SystemDetailsController', function() {
         $controller('SystemDetailsController', {
             $scope: $scope,
             $state: $state,
-            gettext: gettext,
+            translate: translate,
             System: System,
             Organization: Organization,
             MenuExpander: MenuExpander

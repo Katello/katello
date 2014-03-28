@@ -16,7 +16,7 @@
  * @name  Bastion.content-views.controller:ContentViewPromotionController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires ContentViewVersion
  * @requires Organization
  * @requires CurrentOrganization
@@ -27,8 +27,8 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewPromotionController',
-    ['$scope', 'gettext', 'ContentViewVersion', 'Organization', 'CurrentOrganization',
-    function ($scope, gettext, ContentViewVersion, Organization, CurrentOrganization) {
+    ['$scope', 'translate', 'ContentViewVersion', 'Organization', 'CurrentOrganization',
+    function ($scope, translate, ContentViewVersion, Organization, CurrentOrganization) {
 
         $scope.promotion = {};
 
@@ -65,7 +65,7 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
         };
 
         function success() {
-            var message = gettext('Successfully initiated promotion of %cv version %ver to %env.');
+            var message = translate('Successfully initiated promotion of %cv version %ver to %env.');
             message = message.replace('%cv', $scope.contentView.name).replace('%env', $scope.selectedEnvironment.name);
             message = message.replace('%ver', $scope.version.version);
             $scope.promoting = false;

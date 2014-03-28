@@ -14,7 +14,7 @@
 describe('Controller: SystemSubscriptionsController', function() {
     var $scope,
         $controller,
-        gettext,
+        translate,
         System,
         Subscription,
         Nutupane,
@@ -44,7 +44,7 @@ describe('Controller: SystemSubscriptionsController', function() {
 
         System.removeSubscriptions = function() {};
 
-        gettext = function(message) {
+        translate = function(message) {
             return message;
         };
 
@@ -72,7 +72,7 @@ describe('Controller: SystemSubscriptionsController', function() {
         $controller('SystemSubscriptionsController', {
             $scope: $scope,
             $location: $location,
-            gettext: gettext,
+            translate: translate,
             Subscription: Subscription,
             System: System,
             Nutupane: Nutupane,

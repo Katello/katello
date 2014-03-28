@@ -16,7 +16,7 @@
  * @name  Bastion.products.controller:ProductsBulkActionController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires ProductBulkAction
  * @requires CurrentOrganization
  *
@@ -24,8 +24,8 @@
  *   A controller for providing bulk action functionality to the products page.
  */
 angular.module('Bastion.products').controller('ProductsBulkActionController',
-    ['$scope', 'gettext', 'ProductBulkAction', 'CurrentOrganization',
-    function ($scope, gettext, ProductBulkAction, CurrentOrganization) {
+    ['$scope', 'translate', 'ProductBulkAction', 'CurrentOrganization',
+    function ($scope, translate, ProductBulkAction, CurrentOrganization) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -64,7 +64,7 @@ angular.module('Bastion.products').controller('ProductsBulkActionController',
 
             error = function (error) {
                 angular.forEach(error.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(gettext("An error occurred removing the Products: ") + errorMessage);
+                    $scope.errorMessages.push(translate("An error occurred removing the Products: ") + errorMessage);
                 });
                 $scope.removingProducts = false;
             };

@@ -18,7 +18,7 @@
  * @requires $scope
  * @requires $q
  * @requires $location
- * @requires gettext
+ * @requires translate
  * @requires ActivationKey
  * @requires Nutupane
  *
@@ -26,8 +26,8 @@
  *   Provides the functionality for the list system groups details action pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeySystemGroupsController',
-    ['$scope', '$q', '$location', 'gettext', 'ActivationKey', 'Nutupane',
-    function ($scope, $q, $location, gettext, ActivationKey, Nutupane) {
+    ['$scope', '$q', '$location', 'translate', 'ActivationKey', 'Nutupane',
+    function ($scope, $q, $location, translate, ActivationKey, Nutupane) {
         var systemGroupsPane, params;
 
         $scope.successMessages = [];
@@ -58,7 +58,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeySystemGroupsC
             };
 
             success = function (data) {
-                $scope.successMessages = [gettext('Removed %x system groups from activation key "%y".')
+                $scope.successMessages = [translate('Removed %x system groups from activation key "%y".')
                     .replace('%x', $scope.systemGroupsTable.numSelected)
                     .replace('%y', $scope.activationKey.name)];
                 $scope.systemGroupsTable.working = false;

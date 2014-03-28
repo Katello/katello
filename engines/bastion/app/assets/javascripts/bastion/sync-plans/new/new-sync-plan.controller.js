@@ -16,16 +16,16 @@
  * @name  Bastion.sync-plans.controller:NewSyncPlanController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires SyncPlan
  *
  * @description
  *   Controls the creation of an empty SyncPlan object for use by sub-controllers.
  */
 angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
-    ['$scope', 'gettext', 'SyncPlan', function ($scope, gettext, SyncPlan) {
+    ['$scope', 'translate', 'SyncPlan', function ($scope, translate, SyncPlan) {
         var now = new Date();
-        $scope.intervals = [gettext('none'), gettext('hourly'), gettext('daily'), gettext('weekly')];
+        $scope.intervals = [translate('none'), translate('hourly'), translate('daily'), translate('weekly')];
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
@@ -37,7 +37,7 @@ angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
 
         function success(syncPlan) {
             $scope.working = false;
-            $scope.successMessages = [gettext('New sync plan successfully created.')];
+            $scope.successMessages = [translate('New sync plan successfully created.')];
             if ($scope.product) {
                 $scope.product['sync_plan_id'] = syncPlan.id;
             } else if ($scope.syncPlanTable) {

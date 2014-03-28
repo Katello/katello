@@ -19,7 +19,7 @@ describe('Controller: ContentViewPublishController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             ContentView = $injector.get('MockResource').$new(),
-            gettext = $injector.get('gettextMock');
+            translate = $injector.get('translateMock');
 
         ContentView.publish = function(options, callback) {  callback({id: 3}) };
         $scope = $injector.get('$rootScope').$new();
@@ -33,7 +33,7 @@ describe('Controller: ContentViewPublishController', function() {
 
         $controller('ContentViewPublishController', {
             $scope: $scope,
-            gettext: gettext,
+            translate: translate,
             ContentView: ContentView
         });
     }));

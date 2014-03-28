@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: GPGKeyDetailsController', function() {
-    var $scope, gettext;
+    var $scope, translate;
 
     beforeEach(module(
         'Bastion.gpg-keys',
@@ -29,7 +29,7 @@ describe('Controller: GPGKeyDetailsController', function() {
             gpgKeyId: 1
         };
 
-        gettext = function(message) {
+        translate = function(message) {
             return message;
         };
 
@@ -42,7 +42,7 @@ describe('Controller: GPGKeyDetailsController', function() {
             $scope: $scope,
             GPGKey: GPGKey,
             $q: $q,
-            gettext: gettext,
+            translate: translate,
         });
 
     }));

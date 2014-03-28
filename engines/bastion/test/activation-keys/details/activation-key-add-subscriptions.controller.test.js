@@ -306,7 +306,7 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
             $scope: $scope,
             $state: $state,
             $location: $location,
-            gettext: function() {},
+            translate: function() {},
             Nutupane: Nutupane,
             CurrentOrganization: function () {},
             Subscription: function () {},

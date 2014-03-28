@@ -18,13 +18,13 @@
  * @requires $scope
  * @requires GPGKey
  * @requires $q
- * @requires gettext
+ * @requires translate
  *
  * @description
  *   Provides the functionality for the gpgKey details action pane.
  */
 angular.module('Bastion.gpg-keys').controller('GPGKeyDetailsController',
-    ['$scope', 'GPGKey', '$q', 'gettext', function ($scope, GPGKey, $q, gettext) {
+    ['$scope', 'GPGKey', '$q', 'translate', function ($scope, GPGKey, $q, translate) {
         $scope.errorMessages = [];
         $scope.successMessages = [];
 
@@ -39,7 +39,7 @@ angular.module('Bastion.gpg-keys').controller('GPGKeyDetailsController',
 
             gpgKey.$update(function (response) {
                 deferred.resolve(response);
-                $scope.successMessages.push(gettext('Gpg Key updated'));
+                $scope.successMessages.push(translate('Gpg Key updated'));
                 $scope.table.replaceRow(response);
 
             }, function (response) {

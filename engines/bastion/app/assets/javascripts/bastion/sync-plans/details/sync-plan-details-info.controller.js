@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires $q
- * @requires gettext
+ * @requires translate
  * @requires SyncPlan
  * @requires MenuExpander
  *
@@ -25,8 +25,8 @@
  *   Provides the functionality for the sync plan details action pane.
  */
 angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
-    ['$scope', '$q', 'gettext', 'SyncPlan', 'MenuExpander',
-        function ($scope, $q, gettext, SyncPlan, MenuExpander) {
+    ['$scope', '$q', 'translate', 'SyncPlan', 'MenuExpander',
+        function ($scope, $q, translate, SyncPlan, MenuExpander) {
             $scope.successMessages = [];
             $scope.errorMessages = [];
             $scope.intervals = ['none', 'hourly', 'daily', 'weekly'];
@@ -43,11 +43,11 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
 
                 syncPlan.$update(function (response) {
                     deferred.resolve(response);
-                    $scope.successMessages.push(gettext('Sync Plan Saved'));
+                    $scope.successMessages.push(translate('Sync Plan Saved'));
                 }, function (response) {
                     deferred.reject(response);
                     angular.forEach(response.data.errors, function (errorMessage) {
-                        $scope.errorMessages.push(gettext("An error occurred saving the Sync Plan: ") + errorMessage);
+                        $scope.errorMessages.push(translate("An error occurred saving the Sync Plan: ") + errorMessage);
                     });
                 });
 

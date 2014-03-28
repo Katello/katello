@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SystemsController', function() {
-    var $scope, gettext, System, Nutupane;
+    var $scope, translate, System, Nutupane;
 
     // load the systems module and template
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
@@ -27,7 +27,7 @@ describe('Controller: SystemsController', function() {
             this.get = function() {};
             this.enableSelectAllResults = function() {}
         };
-        gettext = function(message) {
+        translate = function(message) {
             return message;
         };
         System = {};
@@ -40,7 +40,7 @@ describe('Controller: SystemsController', function() {
         $controller('SystemsController', {
             $scope: $scope,
             $state: $state,
-            gettext: gettext,
+            translate: translate,
             Nutupane: Nutupane,
             System: System,
             CurrentOrganization: 'CurrentOrganization'

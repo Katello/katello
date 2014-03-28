@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires $location
- * @requires gettext
+ * @requires translate
  * @requires Nutupane
  * @requires SyncPlan
  * @requires CurrentOrganization
@@ -28,8 +28,8 @@
  *   within the table.
  */
 angular.module('Bastion.sync-plans').controller('SyncPlansController',
-    ['$scope', '$location', 'gettext', 'Nutupane', 'SyncPlan', 'CurrentOrganization',
-        function ($scope, $location, gettext, Nutupane, SyncPlan, CurrentOrganization) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'SyncPlan', 'CurrentOrganization',
+        function ($scope, $location, translate, Nutupane, SyncPlan, CurrentOrganization) {
 
             $scope.successMessages = [];
             $scope.errorMessages = [];
@@ -60,7 +60,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlansController',
 
             $scope.removeSyncPlan = function (syncPlan) {
                 syncPlan.$remove(function () {
-                    $scope.successMessages.push(gettext('Sync Plan %s has been deleted.').replace('%s', syncPlan.name));
+                    $scope.successMessages.push(translate('Sync Plan %s has been deleted.').replace('%s', syncPlan.name));
                     $scope.removeRow(syncPlan.id);
                     $scope.transitionTo('sync-plans.index');
                 });

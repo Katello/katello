@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires $location
- * @requires gettext
+ * @requires translate
  * @requires Nutupane
  * @requires System
  * @requires CurrentOrganization
@@ -29,8 +29,8 @@
  *   within the table.
  */
 angular.module('Bastion.systems').controller('SystemsController',
-    ['$scope', '$location', 'gettext', 'Nutupane', 'System', 'CurrentOrganization', 'SystemsHelper',
-    function ($scope, $location, gettext, Nutupane, System, CurrentOrganization, SystemsHelper) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'System', 'CurrentOrganization', 'SystemsHelper',
+    function ($scope, $location, translate, Nutupane, System, CurrentOrganization, SystemsHelper) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -64,7 +64,7 @@ angular.module('Bastion.systems').controller('SystemsController',
         $scope.removeSystem = function (system) {
             system.$remove(function () {
                 $scope.removeRow(system.id);
-                $scope.successMessages.push(gettext('System %s has been deleted.').replace('%s', system.name));
+                $scope.successMessages.push(translate('System %s has been deleted.').replace('%s', system.name));
                 $scope.transitionTo('systems.index');
             });
         };

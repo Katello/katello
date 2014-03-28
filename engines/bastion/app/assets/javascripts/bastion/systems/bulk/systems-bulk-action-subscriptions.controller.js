@@ -20,7 +20,7 @@
  * @requires $location
  * @requires SystemGroup
  * @requires CurrentOrganization
- * @requires gettext
+ * @requires translate
  * @requires Organization
  * @requires Task
  *
@@ -28,9 +28,9 @@
  *   A controller for providing bulk action functionality to the systems page.
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionSubscriptionsController',
-    ['$scope', '$q', '$location', 'SystemGroup', 'CurrentOrganization', 'gettext',
+    ['$scope', '$q', '$location', 'SystemGroup', 'CurrentOrganization', 'translate',
      'Organization', 'Task',
-    function ($scope, $q, $location, SystemGroup, CurrentOrganization, gettext,
+    function ($scope, $q, $location, SystemGroup, CurrentOrganization, translate,
         Organization, Task) {
 
         $scope.actionParams = {
@@ -56,14 +56,14 @@ angular.module('Bastion.systems').controller('SystemsBulkActionSubscriptionsCont
                     $scope.subscription.workingMode = false;
                 });
 
-                $scope.successMessages.push(gettext('Successfully Scheduled Auto-attach.'));
+                $scope.successMessages.push(translate('Successfully Scheduled Auto-attach.'));
             };
 
             error = function (error) {
                 deferred.reject(error.data["errors"]);
                 $scope.subscription.workingMode = false;
                 _.each(error.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(gettext("An error occurred applying Subscriptions: ") + errorMessage);
+                    $scope.errorMessages.push(translate("An error occurred applying Subscriptions: ") + errorMessage);
                 });
             };
 

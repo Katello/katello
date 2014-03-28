@@ -17,7 +17,7 @@ describe('Filter: filterContentType', function() {
     beforeEach(module('Bastion.content-views'));
 
     beforeEach(module(function ($provide) {
-        $provide.value('gettext', function (string) { return string; });
+        $provide.value('translate', function (string) { return string; });
     }));
 
     beforeEach(inject(function($filter) {

@@ -14,10 +14,10 @@
 describe('Controller: FilterRepositoriesController', function() {
     var $scope, $controller, dependencies, Filter, filter;
 
-    beforeEach(module('Bastion.content-views', 'Bastion.test-mocks', 'gettext'));
+    beforeEach(module('Bastion.content-views', 'Bastion.test-mocks', 'Bastion.i18n'));
 
     beforeEach(inject(function($injector) {
-        var gettext = $injector.get('gettextMock'),
+        var translate = $injector.get('translateMock'),
             ContentViewRepositoriesUtil = $injector.get('ContentViewRepositoriesUtil');
 
         $controller = $injector.get('$controller');
@@ -41,7 +41,7 @@ describe('Controller: FilterRepositoriesController', function() {
 
         dependencies = {
             $scope: $scope,
-            gettext: gettext,
+            translate: translate,
             Filter: Filter,
             ContentViewRepositoriesUtil: ContentViewRepositoriesUtil
         };

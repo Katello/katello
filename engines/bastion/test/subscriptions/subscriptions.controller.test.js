@@ -15,7 +15,7 @@ describe('Controller: SubscriptionsController', function() {
     var $scope,
         Nutupane,
         unlimitedFilterFilter,
-        gettext;
+        translate;
 
     beforeEach(module('Bastion.subscriptions', 'Bastion.test-mocks', 'alchemy.format'));
 
@@ -29,7 +29,7 @@ describe('Controller: SubscriptionsController', function() {
     });
 
     beforeEach(module(function($provide) {
-        $provide.value('gettext', function(a) {return a});
+        $provide.value('translate', function(a) {return a});
     }));
 
     beforeEach(inject(function($controller, $rootScope, $location, $injector, $filter) {
@@ -38,7 +38,7 @@ describe('Controller: SubscriptionsController', function() {
         Subscription = $injector.get('MockResource').$new(),
         Provider = $injector.get('MockResource').$new();
 
-        gettext = function(message) {
+        translate = function(message) {
             return message;
         };
         unlimitedFilterFilter = $filter('unlimitedFilter');
@@ -47,7 +47,7 @@ describe('Controller: SubscriptionsController', function() {
             $scope: $scope,
             $q: $q,
             $location: $location,
-            gettext: gettext,
+            translate: translate,
             Nutupane: Nutupane,
             Subscription: Subscription,
             Provider: Provider,

@@ -14,7 +14,7 @@
 describe('Controller: ContentViewCompositeAvailableContentViewsController', function() {
     var $scope;
 
-    beforeEach(module('Bastion.content-views', 'Bastion.test-mocks', 'gettext'))
+    beforeEach(module('Bastion.content-views', 'Bastion.test-mocks', 'Bastion.i18n'));
 
     beforeEach(inject(function($injector) {
         var Nutupane,

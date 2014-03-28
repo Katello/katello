@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires $q
- * @requires gettext
+ * @requires translate
  * @requires CurrentOrganization
  * @requires Provider
  * @requires Organization
@@ -26,8 +26,8 @@
  *   Controls the import of a manifest.
  */
 angular.module('Bastion.subscriptions').controller('ManifestImportController',
-    ['$scope', '$q', 'gettext', 'CurrentOrganization', 'Provider', 'Organization',
-    function ($scope, $q, gettext, CurrentOrganization, Provider, Organization) {
+    ['$scope', '$q', 'translate', 'CurrentOrganization', 'Provider', 'Organization',
+    function ($scope, $q, translate, CurrentOrganization, Provider, Organization) {
 
         $scope.uploadErrorMessages = [];
         $scope.progress = {uploading: false};
@@ -47,7 +47,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
             provider.$update(function (response) {
                 deferred.resolve(response);
                 $scope.saveSuccess = true;
-                $scope.successMessages.push(gettext("Red Hat provider successfully updated."));
+                $scope.successMessages.push(translate("Red Hat provider successfully updated."));
             }, function (response) {
                 deferred.reject(response);
                 $scope.saveError = true;
@@ -60,7 +60,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
         $scope.deleteManifest = function (provider) {
             provider.$deleteManifest(function () {
                 $scope.saveSuccess = true;
-                $scope.successMessages.push(gettext("Manifest successfully deleted."));
+                $scope.successMessages.push(translate("Manifest successfully deleted."));
                 $scope.refreshTable();
 
                 // setup us up the page again
@@ -78,7 +78,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
         $scope.refreshManifest = function (provider) {
             provider.$refreshManifest(function () {
                 $scope.saveSuccess = true;
-                $scope.successMessages.push(gettext("Manifest successfully refreshed."));
+                $scope.successMessages.push(translate("Manifest successfully refreshed."));
                 $scope.refreshTable();
                 $scope.transitionTo('subscriptions.index');
             }, function (response) {
@@ -116,7 +116,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 if (returnData !== null && returnData.errors === undefined) {
                     $scope.transitionTo('tasks.details', {taskId: returnData.id});
                 } else {
-                    $scope.uploadErrorMessages = [gettext('Error during upload: ') + returnData.displayMessage];
+                    $scope.uploadErrorMessages = [translate('Error during upload: ') + returnData.displayMessage];
                 }
 
                 $scope.progress.uploading = false;

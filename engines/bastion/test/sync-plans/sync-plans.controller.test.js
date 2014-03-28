@@ -13,7 +13,7 @@
 
 describe('Controller: SyncPlansController', function() {
     var $scope,
-        gettext,
+        translate,
         Nutupane,
         SyncPlan;
 
@@ -29,7 +29,7 @@ describe('Controller: SyncPlansController', function() {
             this.removeRow = function () {};
         };
 
-        gettext = function (string) {
+        translate = function (string) {
             return string;
         };
 
@@ -42,7 +42,7 @@ describe('Controller: SyncPlansController', function() {
         $controller('SyncPlansController', {
             $scope: $scope,
             $location: $location,
-            gettext: gettext,
+            translate: translate,
             Nutupane: Nutupane,
             SyncPlan: SyncPlan,
             CurrentOrganization: 'CurrentOrganization'

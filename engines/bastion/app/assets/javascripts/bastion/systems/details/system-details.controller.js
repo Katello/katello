@@ -18,7 +18,7 @@
  * @requires $scope
  * @requires $state
  * @requires $q
- * @requires gettext
+ * @requires translate
  * @requires System
  * @requires Organization
  * @requires MenuExpander
@@ -27,8 +27,8 @@
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsController',
-    ['$scope', '$state', '$q', 'gettext', 'System', 'Organization', 'MenuExpander',
-    function ($scope, $state, $q, gettext, System, Organization, MenuExpander) {
+    ['$scope', '$state', '$q', 'translate', 'System', 'Organization', 'MenuExpander',
+    function ($scope, $state, $q, translate, System, Organization, MenuExpander) {
 
         $scope.menuExpander = MenuExpander;
         $scope.successMessages = [];
@@ -54,11 +54,11 @@ angular.module('Bastion.systems').controller('SystemDetailsController',
 
             system.$update(function (response) {
                 deferred.resolve(response);
-                $scope.successMessages.push(gettext('Save Successful.'));
+                $scope.successMessages.push(translate('Save Successful.'));
             }, function (response) {
                 deferred.reject(response);
                 _.each(response.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(gettext("An error occurred saving the System: ") + errorMessage);
+                    $scope.errorMessages.push(translate("An error occurred saving the System: ") + errorMessage);
                 });
             });
 

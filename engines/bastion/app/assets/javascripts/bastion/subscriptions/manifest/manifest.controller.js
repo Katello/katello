@@ -16,14 +16,14 @@
  * @name  Bastion.subscriptions.controller:ManifestController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires Provider
  *
  * @description
  *   Controls the managment of manifests for use by sub-controllers.
  */
 angular.module('Bastion.subscriptions').controller('ManifestController',
-    ['$scope', 'gettext', 'Provider', function ($scope, gettext, Provider) {
+    ['$scope', 'translate', 'Provider', function ($scope, translate, Provider) {
 
         $scope.panel = {loading: true};
 
@@ -34,7 +34,7 @@ angular.module('Bastion.subscriptions').controller('ManifestController',
                 statuses.push(value);
 
                 if (value['webAppPrefix'] !== undefined) {
-                    var message = gettext("Manifest from %s.").replace('%s', value['upstreamName']);
+                    var message = translate("Manifest from %s.").replace('%s', value['upstreamName']);
                     statuses.push({statusMessage: message, created: value.created});
                 }
 

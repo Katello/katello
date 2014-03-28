@@ -16,7 +16,7 @@
  * @name  Bastion.content-views.controller:AvailableErrataFilterController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires Nutupane
  * @requires Filter
  * @requires Rule
@@ -26,8 +26,8 @@
  *   functionality to create filter rules based off selected errata.
  */
 angular.module('Bastion.content-views').controller('AvailableErrataFilterController',
-    ['$scope', 'gettext', 'Nutupane', 'Filter', 'Rule',
-    function ($scope, gettext, Nutupane, Filter, Rule) {
+    ['$scope', 'translate', 'Nutupane', 'Filter', 'Rule',
+    function ($scope, translate, Nutupane, Filter, Rule) {
 
         var nutupane;
 
@@ -58,7 +58,7 @@ angular.module('Bastion.content-views').controller('AvailableErrataFilterControl
 
         function success(rule) {
             nutupane.removeRow(rule['errata_id'], 'errata_id');
-            $scope.successMessages = [gettext('Errata successfully added.')];
+            $scope.successMessages = [translate('Errata successfully added.')];
         }
 
         function failure(response) {

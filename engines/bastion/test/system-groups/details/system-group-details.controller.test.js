@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SystemGroupDetailsController', function() {
-    var $scope, gettext, SystemGroup, newGroup;
+    var $scope, translate, SystemGroup, newGroup;
 
     beforeEach(module('Bastion.system-groups', 'Bastion.test-mocks'));
 
@@ -33,14 +33,14 @@ describe('Controller: SystemGroupDetailsController', function() {
             replaceRow: function() {}
         };
 
-        gettext = function(message) {
+        translate = function(message) {
             return message;
         };
 
         $controller('SystemGroupDetailsController', {
             $scope: $scope,
             $state: $state,
-            gettext: gettext,
+            translate: translate,
             SystemGroup: SystemGroup
         });
     }));

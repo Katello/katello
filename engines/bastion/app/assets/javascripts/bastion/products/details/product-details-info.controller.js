@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires $q
- * @requires gettext
+ * @requires translate
  * @requires Product
  * @requires SyncPlan
  * @requires GPGKey
@@ -27,8 +27,8 @@
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('ProductDetailsInfoController',
-    ['$scope', '$q', 'gettext', 'Product', 'SyncPlan', 'GPGKey', 'MenuExpander',
-    function ($scope, $q, gettext, Product, SyncPlan, GPGKey, MenuExpander) {
+    ['$scope', '$q', 'translate', 'Product', 'SyncPlan', 'GPGKey', 'MenuExpander',
+    function ($scope, $q, translate, Product, SyncPlan, GPGKey, MenuExpander) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -62,11 +62,11 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
 
             product.$update(function (response) {
                 deferred.resolve(response);
-                $scope.successMessages.push(gettext('Product Saved'));
+                $scope.successMessages.push(translate('Product Saved'));
             }, function (response) {
                 deferred.reject(response);
                 angular.forEach(response.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(gettext("An error occurred saving the Product: ") + errorMessage);
+                    $scope.errorMessages.push(translate("An error occurred saving the Product: ") + errorMessage);
                 });
             });
 
@@ -83,12 +83,12 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
             $scope.productSyncing = true;
             $scope.product.$sync(function () {
                 $scope.productSyncing = false;
-                $scope.successMessages.push(gettext("Successfully started sync for %s products, you are free to leave this page.")
+                $scope.successMessages.push(translate("Successfully started sync for %s products, you are free to leave this page.")
                     .replace('%s', $scope.product.name));
             }, function (response) {
                 $scope.productSyncing = false;
                 _.each(response.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(gettext("An error occurred saving the Product: ") + errorMessage);
+                    $scope.errorMessages.push(translate("An error occurred saving the Product: ") + errorMessage);
                 });
             });
         };

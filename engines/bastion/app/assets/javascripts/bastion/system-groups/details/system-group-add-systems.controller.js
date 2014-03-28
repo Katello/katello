@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires $location
- * @requires gettext
+ * @requires translate
  * @requires Nutupane
  * @requires CurrentOrganization
  * @requires System
@@ -27,8 +27,8 @@
  *   Provides the functionality for the system  group add systems pane.
  */
 angular.module('Bastion.system-groups').controller('SystemGroupAddSystemsController',
-    ['$scope', '$state', '$location', 'gettext', 'Nutupane', 'CurrentOrganization', 'System', 'SystemGroup',
-    function ($scope, $state, $location, gettext, Nutupane, CurrentOrganization, System, SystemGroup) {
+    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'System', 'SystemGroup',
+    function ($scope, $state, $location, translate, Nutupane, CurrentOrganization, System, SystemGroup) {
 
         var addSystemsPane, params;
 
@@ -65,7 +65,7 @@ angular.module('Bastion.system-groups').controller('SystemGroupAddSystemsControl
 
             $scope.isAdding = true;
             SystemGroup.addSystems({id: $scope.group.id, 'system_ids': selected}, function () {
-                $scope.successMessages.push(gettext("Successfully added %s systems.").replace('%s', selected.length));
+                $scope.successMessages.push(translate("Successfully added %s systems.").replace('%s', selected.length));
                 $scope.isAdding = false;
                 addSystemsPane.refresh();
             }, function (response) {

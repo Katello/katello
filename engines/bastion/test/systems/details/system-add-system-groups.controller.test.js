@@ -14,7 +14,7 @@
 describe('Controller: SystemAddSystemGroupsController', function() {
     var $scope,
         $controller,
-        gettext,
+        translate,
         System,
         CurrentOrganization;
 
@@ -38,14 +38,14 @@ describe('Controller: SystemAddSystemGroupsController', function() {
 
         CurrentOrganization = 'foo';
 
-        gettext = function(message) {
+        translate = function(message) {
             return message;
         };
 
         $controller('SystemAddSystemGroupsController', {
             $scope: $scope,
             $q: $q,
-            gettext: gettext,
+            translate: translate,
             System: System,
             CurrentOrganization: CurrentOrganization
         });

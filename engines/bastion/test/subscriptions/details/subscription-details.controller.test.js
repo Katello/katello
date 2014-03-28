@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SubscriptionDetailsController', function() {
-    var $scope, gettext;
+    var $scope, translate;
 
     beforeEach(module(
         'Bastion.subscriptions',
@@ -27,11 +27,11 @@ describe('Controller: SubscriptionDetailsController', function() {
 
         $scope.$stateParams = {subscriptionId: 1};
 
-        gettext = function(a) { return a };
+        translate = function(a) { return a };
 
         $controller('SubscriptionDetailsController', {
             $scope: $scope,
-            gettext: gettext,
+            translate: translate,
             Subscription: Subscription
         });
     }));

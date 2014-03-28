@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: ProductsBulkActionSyncController', function() {
-    var $scope, $q, gettext, ProductBulkAction, selected;
+    var $scope, $q, translate, ProductBulkAction, selected;
 
     beforeEach(module('Bastion.products'));
 
@@ -24,7 +24,7 @@ describe('Controller: ProductsBulkActionSyncController', function() {
                 return {$promise: deferred.promise};
             }
         };
-        gettext = function() {};
+        translate = function() {};
     });
     
     beforeEach(inject(function($controller, $rootScope, _$q_) {
@@ -37,7 +37,7 @@ describe('Controller: ProductsBulkActionSyncController', function() {
         $controller('ProductsBulkActionSyncController', {
             $scope: $scope,
             ProductBulkAction: ProductBulkAction,
-            gettext: gettext
+            translate: translate
         });
     }));
 

@@ -15,7 +15,7 @@
  * @ngdoc object
  * @name  Bastion.content-views.service:ContentViewRepositoriesService
  *
- * @requires gettext
+ * @requires translate
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
@@ -23,7 +23,7 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').service('ContentViewRepositoriesUtil',
-    ['gettext', function (gettext) {
+    ['translate', function (translate) {
 
         return function (scope) {
 
@@ -49,7 +49,7 @@ angular.module('Bastion.content-views').service('ContentViewRepositoriesUtil',
             function extractProducts(repositories) {
                 var products = {};
 
-                scope.product = {name: gettext('All Products'), id: 'all'};
+                scope.product = {name: translate('All Products'), id: 'all'};
 
                 angular.forEach(repositories, function (repository) {
                     products[repository.product.id] = repository.product;

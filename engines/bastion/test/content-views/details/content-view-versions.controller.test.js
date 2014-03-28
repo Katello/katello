@@ -17,7 +17,7 @@ describe('Controller: ContentViewVersionsController', function() {
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
-        var gettext = function() {},
+        var translate = function() {},
             $controller = $injector.get('$controller'),
             ContentViewVersion = $injector.get('MockResource').$new(),
             ContentView = $injector.get('MockResource').$new();
@@ -32,7 +32,7 @@ describe('Controller: ContentViewVersionsController', function() {
 
         $controller('ContentViewVersionsController', {
             $scope: $scope,
-            gettext: gettext
+            translate: translate
         });
     }));
 

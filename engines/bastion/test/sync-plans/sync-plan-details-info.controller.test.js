@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SyncPlanDetailsInfoController', function() {
-    var $scope, gettext, MenuExpander;
+    var $scope, translate, MenuExpander;
 
     beforeEach(module('Bastion.sync-plans', 'Bastion.test-mocks'));
 
@@ -26,14 +26,14 @@ describe('Controller: SyncPlanDetailsInfoController', function() {
 
         MenuExpander = {};
 
-        gettext = function(message) {
+        translate = function(message) {
             return message;
         };
 
         $controller('SyncPlanDetailsInfoController', {
             $scope: $scope,
             $q: $q,
-            gettext: gettext,
+            translate: translate,
             SyncPlan: SyncPlan,
             MenuExpander: MenuExpander
         });

@@ -18,7 +18,7 @@
  * @requires $scope
  * @requires $q
  * @requires $location
- * @requires gettext
+ * @requires translate
  * @requires SyncPlan
  * @requires Nutupane
  *
@@ -26,8 +26,8 @@
  *   Provides the functionality for the sync plan list products details action pane.
  */
 angular.module('Bastion.sync-plans').controller('SyncPlanProductsController',
-    ['$scope', '$q', '$location', 'gettext', 'SyncPlan', 'Nutupane',
-        function ($scope, $q, $location, gettext, SyncPlan, Nutupane) {
+    ['$scope', '$q', '$location', 'translate', 'SyncPlan', 'Nutupane',
+        function ($scope, $q, $location, translate, SyncPlan, Nutupane) {
             var productsNutupane, params;
 
             $scope.successMessages = [];
@@ -56,7 +56,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlanProductsController',
                 };
 
                 success = function (data) {
-                    $scope.successMessages = [gettext('Removed %x products from system "%y".')
+                    $scope.successMessages = [translate('Removed %x products from system "%y".')
                         .replace('%x', $scope.productsTable.numSelected).replace('%y', $scope.syncPlan.name)];
                     $scope.productsTable.working = false;
                     $scope.productsTable.selectAll(false);

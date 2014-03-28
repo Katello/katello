@@ -19,7 +19,7 @@ describe('Controller: ContentViewDetailsController', function() {
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
-            gettext = $injector.get('gettextMock');
+            translate = $injector.get('translateMock');
 
         ContentView = $injector.get('MockResource').$new();
         ContentViewVersion = $injector.get('MockResource').$new();
@@ -34,7 +34,7 @@ describe('Controller: ContentViewDetailsController', function() {
             ContentView: ContentView,
             ContentViewVersion: ContentViewVersion,
             AggregateTask: AggregateTask,
-            gettext: gettext
+            translate: translate
         });
     }));
 

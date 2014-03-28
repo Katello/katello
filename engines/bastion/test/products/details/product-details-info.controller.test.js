@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: ProductDetailsInfoController', function() {
-    var $scope, gettext, MenuExpander;
+    var $scope, translate, MenuExpander;
 
     beforeEach(module(
         'Bastion.products',
@@ -31,14 +31,14 @@ describe('Controller: ProductDetailsInfoController', function() {
 
         MenuExpander = {};
 
-        gettext = function(message) {
+        translate = function(message) {
             return message;
         };
 
         $controller('ProductDetailsInfoController', {
             $scope: $scope,
             $q: $q,
-            gettext: gettext,
+            translate: translate,
             Product: Product,
             SyncPlan: SyncPlan,
             GPGKey: GPGKey,

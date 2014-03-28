@@ -15,15 +15,15 @@
  * @ngdoc filter
  * @name  alchemy.filter:booleanToYesNo
  *
- * @requires gettext
+ * @requires translate
  *
  * @description
  *   Provides a filter to convert a boolean to Yes/No
  */
-angular.module('alchemy.format').filter('booleanToYesNo', ['gettext', function (gettext) {
+angular.module('alchemy.format').filter('booleanToYesNo', ['translate', function (translate) {
     return function (boolValue, yesValue, noValue) {
-        yesValue = yesValue || gettext("Yes");
-        noValue = noValue || gettext("No");
+        yesValue = yesValue || translate("Yes");
+        noValue = noValue || translate("No");
 
         if (boolValue !== '' && boolValue !== null && boolValue !== undefined) {
             return (boolValue === true) ? yesValue : noValue;

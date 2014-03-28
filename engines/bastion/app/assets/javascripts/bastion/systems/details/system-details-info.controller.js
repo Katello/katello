@@ -17,7 +17,7 @@
  *
  * @requires $scope
  * @requires $q
- * @requires gettext
+ * @requires translate
  * @requires CustomInfo
  * @requires System
  * @requires ContentView
@@ -28,12 +28,12 @@
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsInfoController',
-    ['$scope', '$q', 'gettext', 'CustomInfo', 'System', 'ContentView', 'Organization', 'CurrentOrganization',
-        function ($scope, $q, gettext, CustomInfo, System, ContentView, Organization, CurrentOrganization) {
+    ['$scope', '$q', 'translate', 'CustomInfo', 'System', 'ContentView', 'Organization', 'CurrentOrganization',
+        function ($scope, $q, translate, CustomInfo, System, ContentView, Organization, CurrentOrganization) {
 
         var customInfoErrorHandler = function (error) {
             _.each(error.errors, function (errorMessage) {
-                $scope.errorMessages.push(gettext("An error occurred updating Custom Information: ") + errorMessage);
+                $scope.errorMessages.push(translate("An error occurred updating Custom Information: ") + errorMessage);
             });
         };
 

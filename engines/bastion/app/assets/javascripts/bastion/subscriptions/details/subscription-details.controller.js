@@ -16,15 +16,15 @@
  * @name  Bastion.subscriptions.controller:SubscriptionDetailsController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires Subscription
  *
  * @description
  *   Provides the functionality for the subscription details action pane.
  */
 angular.module('Bastion.subscriptions').controller('SubscriptionDetailsController',
-    ['$scope', 'gettext', 'Subscription',
-    function ($scope, gettext, Subscription) {
+    ['$scope', 'translate', 'Subscription',
+    function ($scope, translate, Subscription) {
 
         if ($scope.subscription) {
             $scope.panel = {loading: false};
@@ -40,13 +40,13 @@ angular.module('Bastion.subscriptions').controller('SubscriptionDetailsControlle
             var limits = [];
 
             if (subscription.sockets) {
-                limits.push(gettext("Sockets: %s").replace("%s", subscription.sockets));
+                limits.push(translate("Sockets: %s").replace("%s", subscription.sockets));
             }
             if (subscription.cores) {
-                limits.push(gettext("Cores: %s").replace("%s", subscription.cores));
+                limits.push(translate("Cores: %s").replace("%s", subscription.cores));
             }
             if (subscription.ram) {
-                limits.push(gettext("RAM: %s GB").replace("%s", subscription.ram));
+                limits.push(translate("RAM: %s GB").replace("%s", subscription.ram));
             }
 
             if (limits.length > 0) {

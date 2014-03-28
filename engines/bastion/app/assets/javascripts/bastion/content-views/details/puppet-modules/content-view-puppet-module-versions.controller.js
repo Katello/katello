@@ -16,7 +16,7 @@
  * @name  Bastion.content-views.controller:ContentViewPuppetModulesController
  *
  * @requires $scope
- * @requires gettext
+ * @requires translate
  * @requires ContentView
  * @requires ContentViewPuppetModule
  *
@@ -24,8 +24,8 @@
  *   Provides the ability to select a version of a Puppet Module for a Content View.
  */
 angular.module('Bastion.content-views').controller('ContentViewPuppetModuleVersionsController',
-    ['$scope', 'gettext', 'ContentView', 'ContentViewPuppetModule',
-    function ($scope, gettext, ContentView, ContentViewPuppetModule) {
+    ['$scope', 'translate', 'ContentView', 'ContentViewPuppetModule',
+    function ($scope, translate, ContentView, ContentViewPuppetModule) {
         var success, error;
 
         $scope.versionsLoading = true;
@@ -66,12 +66,12 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModuleVersi
         success = function () {
             $scope.transitionTo('content-views.details.puppet-modules.list',
                 {contentViewId: $scope.$stateParams.contentViewId});
-            $scope.successMessages = [gettext('Puppet module added to Content View')];
+            $scope.successMessages = [translate('Puppet module added to Content View')];
         };
 
         error = function (response) {
             angular.forEach(response.data.errors, function (errorMessage) {
-                $scope.errorMessages.push(gettext("An error occurred updating the Content View: ") + errorMessage);
+                $scope.errorMessages.push(translate("An error occurred updating the Content View: ") + errorMessage);
             });
         };
     }]

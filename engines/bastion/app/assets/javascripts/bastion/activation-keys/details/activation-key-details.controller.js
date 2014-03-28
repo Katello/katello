@@ -18,15 +18,15 @@
  * @requires $scope
  * @requires $state
  * @requires $q
- * @requires gettext
+ * @requires translate
  * @requires ActivationKey
  *
  * @description
  *   Provides the functionality for the activation key details action pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsController',
-    ['$scope', '$state', '$q', 'gettext', 'ActivationKey',
-    function ($scope, $state, $q, gettext, ActivationKey) {
+    ['$scope', '$state', '$q', 'translate', 'ActivationKey',
+    function ($scope, $state, $q, translate, ActivationKey) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
         $scope.copyErrorMessages = [];
@@ -47,11 +47,11 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
 
             activationKey.$update(function (response) {
                 deferred.resolve(response);
-                $scope.successMessages.push(gettext('Activation Key updated'));
+                $scope.successMessages.push(translate('Activation Key updated'));
                 $scope.table.replaceRow(response);
             }, function (response) {
                 deferred.reject(response);
-                $scope.errorMessages.push(gettext("An error occurred saving the Activation Key: ") + response.data.displayMessage);
+                $scope.errorMessages.push(translate("An error occurred saving the Activation Key: ") + response.data.displayMessage);
             });
             return deferred.promise;
         };
@@ -72,9 +72,9 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
             activationKey.$delete(function () {
                 $scope.removeRow(id);
                 $scope.transitionTo('activation-keys.index');
-                $scope.successMessages.push(gettext('Activation Key removed.'));
+                $scope.successMessages.push(translate('Activation Key removed.'));
             }, function (response) {
-                $scope.errorMessages.push(gettext("An error occurred removing the Activation Key: ") + response.data.displayMessage);
+                $scope.errorMessages.push(translate("An error occurred removing the Activation Key: ") + response.data.displayMessage);
             });
         };
 

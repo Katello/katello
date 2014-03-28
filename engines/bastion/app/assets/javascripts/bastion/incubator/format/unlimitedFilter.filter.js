@@ -21,10 +21,10 @@
  * @example
  *
  */
-angular.module('alchemy.format').filter('unlimitedFilter', ['gettext', function (gettext) {
+angular.module('alchemy.format').filter('unlimitedFilter', ['translate', function (translate) {
     return function (limit) {
         if (limit === -1) {
-            return gettext("Unlimited");
+            return translate("Unlimited");
         }
         else {
             return limit;

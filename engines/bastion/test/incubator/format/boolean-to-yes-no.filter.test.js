@@ -16,7 +16,7 @@ describe('Filter:booleanToYesNo', function() {
     beforeEach(module('alchemy.format'));
 
     beforeEach(module(function($provide) {
-        $provide.value('gettext',  function(a) {return a});
+        $provide.value('translate',  function(a) {return a});
     }));
 
     beforeEach(inject(function($filter) {
