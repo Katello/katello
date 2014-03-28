@@ -59,14 +59,14 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         }
 
         function promotionMessage(version, task) {
-            return gettext("Successfully promoted %cv version %ver to %env")
+            return translate("Successfully promoted %cv version %ver to %env")
                 .replace('%cv', version['content_view'].name)
                 .replace('%ver', version.version)
                 .replace('%env', task.input['environment_name']);
         }
 
         function publishMessage(version) {
-            return gettext("Successfully published %cv version %ver and promoted to Library")
+            return translate("Successfully published %cv version %ver and promoted to Library")
                 .replace('%cv', version['content_view'].name)
                 .replace('%ver', version.version);
         }
