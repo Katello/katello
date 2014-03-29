@@ -123,6 +123,8 @@ angular.module('Bastion.test-mocks').factory('MockResource', function () {
             }
             return Resource.mockResources;
         };
+        Resource.queryPaged = Resource.query;
+        Resource.queryUnpaged = Resource.query;
 
         Resource.save = function(params, data, success, error) {
             var item = new Resource(data);

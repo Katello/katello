@@ -30,10 +30,11 @@ angular.module('Bastion.content-views').controller('ContentViewsController',
     function ($scope, Nutupane, ContentView, CurrentOrganization) {
 
         var nutupane = new Nutupane(ContentView, {
+            'nondefault':       true,
             'organization_id':  CurrentOrganization,
             'sort_by':          'name',
             'sort_order':       'ASC'
-        });
+        }, 'queryPaged');
 
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;

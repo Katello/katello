@@ -39,6 +39,7 @@ describe('Controller: SystemDetailsInfoController', function() {
         System = $injector.get('MockResource').$new();
         $scope = $injector.get('$rootScope').$new();
 
+        ContentView.queryUnpaged = function(){};
         System.releaseVersions = function(params, callback) {
             callback.apply(this, [['RHEL6']]);
         };

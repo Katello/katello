@@ -22,10 +22,11 @@ describe('Controller: SystemsBulkActionEnvironmentController', function() {
         };
 
         CurrentOrganization = 'foo';
-        paths = [[{name: "Library", id: 1}, {name: "Dev", id: 2}]]
+        paths = [[{name: "Library", id: 1}, {name: "Dev", id: 2}]];
         selectedSystems = {included: {ids: [1, 2, 3]}};
         ContentView = $injector.get('MockResource').$new();
         Organization = $injector.get('MockResource').$new();
+        ContentView.queryUnpaged = function(){return {}};
 
         Organization.registerableEnvironments = function (params, callback) {
             var response = paths;
@@ -64,11 +65,11 @@ describe('Controller: SystemsBulkActionEnvironmentController', function() {
 
     it("should fetch content views", function () {
         $scope.selected.environment = paths[0][0];
-        spyOn(ContentView, 'query').andCallThrough();
+        spyOn(ContentView, 'queryUnpaged').andCallThrough();
 
         $scope.fetchViews();
-        expect(ContentView.query).toHaveBeenCalled();
-        expect($scope.contentViews).toBe(ContentView.query().results);
+        expect(ContentView.queryUnpaged).toHaveBeenCalled();
+        expect($scope.contentViews).toBe(ContentView.queryUnpaged().results);
     });
 
     it("should perform the correct action", function () {

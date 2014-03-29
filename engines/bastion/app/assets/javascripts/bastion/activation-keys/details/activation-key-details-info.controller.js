@@ -67,7 +67,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
         $scope.contentViews = function () {
             var deferred = $q.defer();
 
-            ContentView.query({ 'environment_id': $scope.activationKey.environment.id }, function (response) {
+            ContentView.queryUnpaged({ 'environment_id': $scope.activationKey.environment.id }, function (response) {
                 deferred.resolve(response.results);
             });
 

@@ -30,10 +30,6 @@ angular.module('Bastion.content-views').controller('NewContentViewController',
         $scope.createOption = 'new';
         $scope.table = {};
 
-        ContentView.query({}, function (response) {
-            $scope.table.rows = response.results;
-        });
-
         $scope.save = function (contentView) {
             contentView.$save(success, error);
         };

@@ -68,14 +68,14 @@
       <div class="col-sm-5 input">
         <span path-selector="environments"
               ng-model="activationKey.environment"
-              mode="singleSelect"
-              disable-trigger="disableEnvironmentSelection">
+              mode="singleSelect">
         </span>
       </div>
     </div>
 
     <div alch-form-group label="{{ 'Content View' | translate }}">
-      <select id="content_view_id"
+      <select ng-hide="contentViews.length === 0"
+              id="content_view_id"
               name="content_view_id"
               ng-model="activationKey.content_view_id"
               ng-options="contentView.id as contentView.name for contentView in contentViews"
@@ -83,8 +83,11 @@
               autofocus
               required>
       </select>
-      <span class="help-block" translate>
-        If the content view selector list is blank you will need to choose a different environment that contains at least one content view.
+      <span class="help-block" ng-show="activationKey.environment !== undefined && contentViews.length === 0" translate>
+        The selected environment contains no Content Views, please select a different environment.
+      </span>
+      <span class="help-block" ng-show="activationKey.environment === undefined" translate>
+        Please select an environment.
       </span>
     </div>
 
