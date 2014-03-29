@@ -38,9 +38,9 @@ describe('Controller: ErrataFilterController', function() {
 
     it("adds types to the scope", function() {
         expect($scope.types).toBeDefined();
-        expect($scope.types.enhancement).toBe(false);
-        expect($scope.types.bugfix).toBe(false);
-        expect($scope.types.security).toBe(false);
+        expect($scope.types.enhancement).toBe(true);
+        expect($scope.types.bugfix).toBe(true);
+        expect($scope.types.security).toBe(true);
     });
 
     it("adds a method to open the start date picker", function() {

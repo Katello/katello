@@ -31,13 +31,13 @@ angular.module('Bastion.content-views').controller('ErrataFilterController',
 
         $scope.date = {
             startOpen: false,
-            endOpen: false,
+            endOpen: false
         };
 
         $scope.types = {
-            enhancement: false,
-            bugfix: false,
-            security: false
+            enhancement: true,
+            bugfix: true,
+            security: true
         };
 
         $scope.errataFilter = function (errata) {
@@ -74,6 +74,5 @@ angular.module('Bastion.content-views').controller('ErrataFilterController',
             $scope.date.startOpen = true;
             $scope.date.endOpen = false;
         };
-
     }]
 );
