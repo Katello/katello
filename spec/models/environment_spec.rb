@@ -105,7 +105,7 @@ describe KTEnvironment do
 
     specify { @environment.prior.wont_be :nil? }
     specify { @environment.successor.must_be :nil? }
-    specify { @organization.environments.must_include(@environment) }
+    specify { @organization.kt_environments.must_include(@environment) }
     specify { @environment.organization.must_equal(@organization) }
     specify { @environment.products.size.must_equal(2) }
     specify { @environment.products.must_include(@first_product) }
@@ -182,7 +182,7 @@ describe KTEnvironment do
     describe "create environment with invalid parameters" do
       it "should be invalid to create two envs with the same name within one organization" do
         @environment2 = KTEnvironment.new({:name => @env_name})
-        @organization.environments << @environment2
+        @organization.kt_environments << @environment2
 
         @environment2.wont_be :valid?
         @environment2.errors[:name].wont_be :empty?
@@ -190,7 +190,7 @@ describe KTEnvironment do
 
       it "should be invalid to create an environment without a prior" do
         @environment2 = KTEnvironment.new({:name => @env_name})
-        @organization.environments << @environment2
+        @organization.kt_environments << @environment2
 
         @environment2.wont_be :valid?
         @environment2.errors[:prior].wont_be :empty?
@@ -201,8 +201,8 @@ describe KTEnvironment do
       before(:each) do
         @env1 = KTEnvironment.new({:name => @env_name + '-succ1', :label=>'env-succ1'})
         @env2 = KTEnvironment.new({:name => @env_name + '-succ2',:label=>'env-succ2'})
-        @organization.environments << @env1
-        @organization.environments << @env2
+        @organization.kt_environments << @env1
+        @organization.kt_environments << @env2
         @env1.prior = @environment.id
         @env1.save!
         @env2.prior = @env1.id
@@ -221,8 +221,8 @@ describe KTEnvironment do
         @e2 = create_environment({:name=>@env_name + '-succ2', :label=> @env_name + '-succ2',
                   :organization => @organization, :prior => @e1})
 
-        @organization.environments << @e1
-        @organization.environments << @e2
+        @organization.kt_environments << @e1
+        @organization.kt_environments << @e2
       end
 
       specify{ lambda {create_environment({:name=>@env_name + '-succ3', :label=> @env_name + '-succ3',

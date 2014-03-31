@@ -40,7 +40,8 @@ module Katello
         has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :destroy
         has_many :providers, :class_name => "Katello::Provider", :dependent => :destroy
         has_many :products, :class_name => "Katello::Product", :through => :providers
-        has_many :environments, :class_name => "Katello::KTEnvironment", :dependent => :destroy, :inverse_of => :organization
+        # has_many :environments is already defined in Foreman taxonomy.rb
+        has_many :kt_environments, :class_name => "Katello::KTEnvironment", :dependent => :destroy, :inverse_of => :organization
         has_one :library, :class_name => "Katello::KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
         has_many :gpg_keys, :class_name => "Katello::GpgKey", :dependent => :destroy, :inverse_of => :organization
         has_many :permissions, :class_name => "Katello::Permission", :dependent => :destroy, :inverse_of => :organization
@@ -97,16 +98,16 @@ module Katello
         end
 
         def systems
-          System.where(:environment_id => environments)
+          System.where(:environment_id => kt_environments)
         end
 
         def distributors
-          Distributor.where(:environment_id => environments)
+          Distributor.where(:environment_id => kt_environments)
         end
 
         def promotion_paths
           #I'm sure there's a better way to do this
-          self.environments.joins(:priors).where("prior_id = #{self.library.id}").order(:name).collect do |env|
+          self.kt_environments.joins(:priors).where("prior_id = #{self.library.id}").order(:name).collect do |env|
             env.path
           end
         end

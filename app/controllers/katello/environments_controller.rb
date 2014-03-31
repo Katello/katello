@@ -188,7 +188,7 @@ class EnvironmentsController < Katello::ApplicationController
 
   def envs_no_successors
     envs = [@organization.library]
-    envs += @organization.environments.reject {|item| !item.successor.nil?}
+    envs += @organization.kt_environments.reject {|item| !item.successor.nil?}
     envs
   end
 

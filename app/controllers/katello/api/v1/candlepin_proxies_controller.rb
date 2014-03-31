@@ -302,7 +302,7 @@ module Katello
 
     def find_only_environment
       if !@environment && @organization && !params.key?(:environment_id)
-        if @organization.environments.empty?
+        if @organization.kt_environments.empty?
           fail HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for system registration.") %
             { :org => @organization.name, :env => "Library" }
         end
@@ -312,14 +312,14 @@ module Katello
         # this scenario, if the org passed in matches the user's default org, use the default env. If not use
         # the single env of the org or throw an error if more than one.
         #
-        if @organization.environments.size > 1
+        if @organization.kt_environments.size > 1
           if current_user.default_environment && current_user.default_environment.organization == @organization
             @environment = current_user.default_environment
           else
             fail HttpErrors::BadRequest, _("Organization %s has more than one environment. Please specify target environment for system registration.") % @organization.name
           end
         else
-          if @environment = @organization.environments.first
+          if @environment = @organization.kt_environments.first
             return
           end
         end
