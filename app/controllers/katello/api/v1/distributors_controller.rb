@@ -189,7 +189,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
 
   def find_only_environment
     if !@environment && @organization && !params.key?(:environment_id)
-      if @organization.environments.empty?
+      if @organization.kt_environments.empty?
         fail HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for distributor registration.") %
           { :org => @organization.name, :env => "Library" }
       end
@@ -199,14 +199,14 @@ class Api::V1::DistributorsController < Api::V1::ApiController
       # this scenario, if the org passed in matches the user's default org, use the default env. If not use
       # the single env of the org or throw an error if more than one.
       #
-      if @organization.environments.size > 1
+      if @organization.kt_environments.size > 1
         if current_user.default_environment && current_user.default_environment.organization == @organization
           @environment = current_user.default_environment
         else
           fail HttpErrors::BadRequest, _("Organization %s has more than one environment. Please specify target environment for distributor registration.") % @organization.name
         end
       else
-        if @environment = @organization.environments.first
+        if @environment = @organization.kt_environments.first
           return
         end
       end
@@ -214,7 +214,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   end
 
   def find_environment_by_name
-    @environment = @organization.environments.find_by_name!(params[:env])
+    @environment = @organization.kt_environments.find_by_name!(params[:env])
   end
 
   def find_environment

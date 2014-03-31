@@ -98,7 +98,7 @@ class UsersController < Katello::ApplicationController
     accessible_envs = []
     if current_organization
       @organization   = current_organization
-      accessible_envs = current_organization.environments
+      accessible_envs = current_organization.kt_environments
       setup_environment_selector(current_organization, accessible_envs)
       @environment = first_env_in_path(accessible_envs, true)
     end
