@@ -20,13 +20,18 @@
  * @requires Rule
  *
  * @description
- *   Handles creating an errata filter that allows specification of a stare date, end date and/or
+ *   Handles creating an errata filter that allows specification of a start date, end date and/or
  *   set of errata types by which to dynamically filter.
  */
 angular.module('Bastion.content-views').controller('DateTypeErrataFilterController',
     ['$scope', 'translate', 'Rule', function ($scope, translate, Rule) {
 
         $scope.filter.$promise.then(function (filter) {
+            $scope.types = {
+                enhancement: false,
+                bugfix: false,
+                security: false
+            };
             $scope.rule = new Rule(filter.rules[0]);
 
             angular.forEach($scope.types, function (value, type) {
