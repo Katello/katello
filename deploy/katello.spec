@@ -43,6 +43,15 @@ Requires:       rubygem-hammer_cli
 Requires:       rubygem-hammer_cli_foreman
 Requires:       rubygem-hammer_cli_katello
 
+#foreman plugins and optional packages
+Requires:       ruby193-rubygem-foreman_bootdisk
+Requires:       ruby193-rubygem-foreman_discovery
+Requires:       ruby193-rubygem-foreman_hooks
+Requires:       foreman-libvirt
+Requires:       foreman-ovirt
+Requires:       foreman-vmware
+Requires:       foreman-gce
+
 BuildRequires: asciidoc
 BuildRequires: util-linux
 
