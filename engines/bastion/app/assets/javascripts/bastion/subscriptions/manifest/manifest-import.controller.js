@@ -91,6 +91,9 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
             var url = upstream['webUrl'],
                 upstreamId = upstream['uuid'];
 
+            if (!url.match(/^http/)) {
+                url = "https://" + url;
+            }
             if (!url.match(/\/$/)) {
                 url = url + "/";
             }
