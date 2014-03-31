@@ -31,7 +31,7 @@ module Authorization::System
     def readable(org)
       fail "scope requires an organization" if org.nil?
       if org.systems_readable?
-        where(:environment_id => org.environment_ids) #list all systems in an org
+        where(:environment_id => org.kt_environment_ids) #list all systems in an org
       else #just list for environments the user can access
         where_clause = "#{System.table_name}.environment_id in (#{KTEnvironment.systems_readable(org).select(:id).to_sql})"
         where_clause += " or "
@@ -43,7 +43,7 @@ module Authorization::System
 
     def editable(org)
       if org.systems_editable?
-        where(:environment_id => org.environment_ids)
+        where(:environment_id => org.kt_environment_ids)
       else
         where_clause = "#{System.table_name}.environment_id in (#{KTEnvironment.systems_editable(org).select(:id).to_sql})"
         where_clause += " or "
@@ -55,7 +55,7 @@ module Authorization::System
 
     def deletable(org)
       if org.systems_deletable?
-        where(:environment_id => org.environment_ids)
+        where(:environment_id => org.kt_environment_ids)
       else
         where_clause = "#{System.table_name}.environment_id in (#{KTEnvironment.systems_deletable(org).select(:id).to_sql})"
         where_clause += " or "

@@ -160,7 +160,7 @@ describe Organization do
       @env1.save!
 
       @env2 = KTEnvironment.new(:name=>env_name, :label=> env_name, :organization => @org2, :prior => @organization.library)
-      @org2.environments << @env2
+      @org2.kt_environments << @env2
       @env2.save!
 
       id1 = @organization.id

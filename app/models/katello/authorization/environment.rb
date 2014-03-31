@@ -78,11 +78,11 @@ module Authorization::Environment
 
     def any_viewable_for_promotions?(org)
       return false if !Katello.config.katello?
-      ::User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, org.environment_ids, org, true)
+      ::User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, org.kt_environment_ids, org, true)
     end
 
     def any_contents_readable?(org, skip_library = false)
-      ids = org.environment_ids
+      ids = org.kt_environment_ids
       ids = ids - [org.library.id] if skip_library
       ::User.allowed_to?(CONTENTS_READABLE, :environments, ids, org, true)
     end

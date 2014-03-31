@@ -23,7 +23,7 @@ module Authorization::Distributor
     def readable(org)
       fail "scope requires an organization" if org.nil?
       if org.distributors_readable?
-        where(:environment_id => org.environment_ids) #list all distributors in an org
+        where(:environment_id => org.kt_environment_ids) #list all distributors in an org
       else #just list for environments the user can access
         where("distributors.environment_id in (#{KTEnvironment.distributors_readable(org).select(:id).to_sql})")
       end
