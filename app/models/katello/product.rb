@@ -43,16 +43,6 @@ class Product < Katello::Model
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validate  :validate_unique_name
 
-  # scope
-  def self.with_repos_only(env)
-    with_repos(env, false)
-  end
-
-  # scope
-  def self.with_enabled_repos_only(env)
-    with_repos(env, true)
-  end
-
   def library_repositories
     self.repositories.in_default_view
   end
@@ -231,16 +221,6 @@ class Product < Katello::Model
   end
 
   protected
-
-  def self.with_repos(env, enabled_only)
-    query = Repository.in_environment(env.id).select(:product_id)
-    query = query.enabled if enabled_only
-    joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => env.organization).
-        where("(#{Katello::Provider.table_name}.provider_type ='#{Provider::CUSTOM}') OR \
-              (#{Katello::Provider.table_name}.provider_type ='#{Provider::ANONYMOUS}') OR \
-              (#{Katello::Provider.table_name}.provider_type ='#{Provider::REDHAT}' AND \
-              #{Katello::Product.table_name}.id in (#{query.to_sql}))")
-  end
 
   def validate_unique_name
     if self.provider && !self.provider.redhat_provider? && self.name_changed?

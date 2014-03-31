@@ -27,6 +27,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   def models
     @organization = get_organization
     @repository = katello_repositories(:fedora_17_unpublished)
+    @redhat_repository = katello_repositories(:rhel_6_x86_64)
     @product = katello_products(:fedora)
   end
 
@@ -36,6 +37,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     @update_permission = UserPermission.new(:update, :providers)
     @delete_permission = UserPermission.new(:delete, :providers)
     @sync_permission = UserPermission.new(:sync, :organizations, nil, @organization)
+    @enablement_permission = UserPermission.new(:redhat_products, :organizations, nil, @organization)
     @no_permission = NO_PERMISSION
   end
 
@@ -75,8 +77,11 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
       nil,
       nil
     ])
+
     product.expect(:editable?, @product.editable?)
     product.expect(:gpg_key, nil)
+    product.expect(:organization, @organization)
+    product.expect(:redhat?, false)
     @controller.expects(:sync_task).with(::Actions::Katello::Repository::Create, @repository).once
 
     Product.stub(:find, product) do
@@ -105,6 +110,8 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
       nil,
       key
     ])
+    product.expect(:organization, @organization)
+    product.expect(:redhat?, false)
     @controller.expects(:sync_task).with(::Actions::Katello::Repository::Create, @repository).once
 
     Product.stub(:find, product) do
@@ -204,7 +211,6 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     assert_response 403
   end
 
-
   def test_sync_protected
     allowed_perms = [@sync_permission]
     denied_perms = [@create_permission, @read_permission,
@@ -213,6 +219,41 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
 
     assert_protected_action(:sync, allowed_perms, denied_perms) do
       post :sync, :id => @repository.id
+    end
+  end
+
+  def test_enable
+    @redhat_repository_disabled = Repository.find(katello_repositories(:rhel_6_x86_64_disabled))
+    put :enable, :id => @redhat_repository_disabled.id
+    assert_response :success
+  end
+
+  def test_enable_protected
+    allowed_perms = [@enablement_permission]
+    denied_perms = [@read_permission, @no_permission]
+
+    assert_protected_action(:enable, allowed_perms, denied_perms) do
+      put :enable, :id => @repository.id
+    end
+  end
+
+  def test_disable
+    Repository.any_instance.expects(:promoted?).returns(false).at_least_once
+    put :disable, :id => @redhat_repository.id
+    assert_response :success
+  end
+
+  def test_custom_disable
+    put :disable, :id => @repository.id
+    assert_response 422
+  end
+
+  def test_disable_protected
+    allowed_perms = [@enablement_permission]
+    denied_perms = [@read_permission, @no_permission]
+
+    assert_protected_action(:disable, allowed_perms, denied_perms) do
+      put :disable, :id => @repository.id
     end
   end
 
