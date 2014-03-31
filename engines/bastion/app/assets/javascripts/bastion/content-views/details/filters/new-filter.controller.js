@@ -62,7 +62,7 @@ angular.module('Bastion.content-views').controller('NewFilterController',
             } else if (filterType === 'erratumDateType') {
                 state = 'content-views.details.filters.details.erratum.dateType';
             } else if (filterType === 'rpm') {
-                state = 'content-views.details.filters.details.rpm';
+                state = 'content-views.details.filters.details.rpm.details';
             } else if (filterType === 'package_group') {
                 state = 'content-views.details.filters.details.package_group.available';
             }
