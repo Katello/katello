@@ -571,6 +571,28 @@ class ContentView < Katello::Model
     fail _("Cannot publish default content view") if default?
   end
 
+  def check_remove_from_environment!(env)
+    errors = []
+
+    if (env_systems = systems.by_env(env)).any?
+      errors << _("Cannot remove '%{view}' from environment '%{env}' due to dependent systems: %{list}.") %
+        {view: self.name, env: env.name, list: env_systems.map(&:name).join(", ")}
+    end
+
+    if (env_distrs = distributors.by_env(env)).any?
+      errors << _("Cannot remove '%{view}' from environment '%{env}' due to dependent distributors: %{list}.") %
+        {view: self.name, env: env.name, list: env_distrs.map(&:name).join(", ")}
+    end
+
+    if (keys = activation_keys.in_environment(env)).any?
+      errors << _("Cannot remove '%{view}' from environment '%{env}' due to dependent activation keys: %{list}.") %
+        {env: env.name, list: keys.map(&:name).join(", ")}
+    end
+
+    fail errors.join(" ") if errors.any?
+    return true
+  end
+
   protected
 
   def remove_repository(repository)

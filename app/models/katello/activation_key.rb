@@ -49,6 +49,8 @@ class ActivationKey < Katello::Model
   end
   validates_with Validators::ContentViewEnvironmentValidator
 
+  scope :in_environment, lambda { |env| where(:environment_id => env) }
+
   def environment_exists
     if environment.nil?
       errors.add(:environment, _("ID: %s doesn't exist ") % environment_id)
