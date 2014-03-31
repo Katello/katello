@@ -143,7 +143,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     environment_params         = params[:environment]
     environment_params[:label] = labelize_params(environment_params)
     @environment               = KTEnvironment.new(environment_params)
-    @organization.environments << @environment
+    @organization.kt_environments << @environment
     fail ActiveRecord::RecordInvalid.new(@environment) unless @environment.valid?
     @organization.save!
     respond

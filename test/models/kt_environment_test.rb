@@ -75,8 +75,8 @@ class KTEnvironmentTest < KTEnvironmentTestBase
   end
 
   def test_content_view_label
-    env = @acme_corporation.environments.build(:name => "Test", :label => ContentView::CONTENT_DIR,
-                                               :prior => @library)
+    env = @acme_corporation.kt_environments.build(:name => "Test", :label => ContentView::CONTENT_DIR,
+                                                  :prior => @library)
     refute env.save
     assert_equal 1, env.errors.size
     assert env.errors.has_key?(:label)

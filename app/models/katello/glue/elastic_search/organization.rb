@@ -29,7 +29,7 @@ module Glue::ElasticSearch::Organization
   end
 
   def extended_index_attrs
-    {:name_sort => name.downcase, :environment => self.environments.collect{|e| e.name}}
+    {:name_sort => name.downcase, :environment => self.kt_environments.collect{|e| e.name}}
   end
 end
 end

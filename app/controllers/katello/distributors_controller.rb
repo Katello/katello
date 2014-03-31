@@ -113,7 +113,7 @@ class DistributorsController < Katello::ApplicationController
     @distributor = Distributor.new
     @distributor.facts = {} #this is nil to begin with
     @organization = current_organization
-    accessible_envs = current_organization.environments
+    accessible_envs = current_organization.kt_environments
     setup_environment_selector(current_organization, accessible_envs)
 
     # This controls whether the New Distributor page will display an environment selector or not.
@@ -403,7 +403,7 @@ class DistributorsController < Katello::ApplicationController
       :actions => Distributor.any_deletable?(@environment, current_organization) ? 'actions' : nil,
       :initial_action => :subscriptions,
       :search_class => Distributor,
-      :disable_create => current_organization.environments.length == 0 ? _("At least one environment is required to create or register distributors in your current organization.") : false
+      :disable_create => current_organization.kt_environments.length == 0 ? _("At least one environment is required to create or register distributors in your current organization.") : false
     }
   end
 

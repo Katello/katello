@@ -56,7 +56,7 @@ describe Organization do
     specify {@organization.label.must_equal('test_org_label')}
     specify {@organization.library.wont_be_nil}
     specify {@organization.redhat_provider.wont_be_nil}
-    specify {@organization.environments.size.must_equal(1)}
+    specify {@organization.kt_environments.size.must_equal(1)}
     specify {Organization.where(:name => @organization.name).size.must_equal(1)}
     specify {Organization.where(:name => @organization.name).first.must_equal(@organization)}
 
@@ -140,7 +140,7 @@ describe Organization do
 
       env_name = "prod"
       @env = KTEnvironment.new(:name=>env_name, :label=> env_name, :library => false, :prior => @organization.library)
-      @organization.environments << @env
+      @organization.kt_environments << @env
       @env.save!
 
       Organization.any_instance.stubs(:being_deleted?).returns(true)
@@ -156,11 +156,11 @@ describe Organization do
       @org2 = Organization.create!(:name=>"foobar", :label=> "foobar")
 
       @env1 = KTEnvironment.new(:name=>env_name, :label=> env_name, :organization => @organization, :prior => @organization.library)
-      @organization.environments << @env1
+      @organization.kt_environments << @env1
       @env1.save!
 
       @env2 = KTEnvironment.new(:name=>env_name, :label=> env_name, :organization => @org2, :prior => @organization.library)
-      @org2.environments << @env2
+      @org2.kt_environments << @env2
       @env2.save!
 
       id1 = @organization.id
