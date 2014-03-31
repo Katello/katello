@@ -13,6 +13,7 @@ attributes :feed,
 attributes :major, :minor
 attributes :gpg_key_id
 attributes :content_id, :content_view_version_id, :library_instance_id
+attributes :product_type
 
 node :content_counts do |repo|
   if repo.respond_to?(:pulp_repo_facts)
@@ -24,6 +25,11 @@ node :permissions do |repo|
   {
     :deletable => repo.deletable?
   }
+end
+
+child :gpg_key do |gpg|
+  attribute :name
+  attribute :id
 end
 
 child :product do |product|
