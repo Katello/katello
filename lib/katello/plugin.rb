@@ -137,4 +137,6 @@ Foreman::Plugin.register :katello do
        :after => :about
 
   Foreman::AccessControl.permission(:edit_organizations).actions << 'organizations/download_debug_certificate'
+  Foreman::AccessControl.permission(:edit_organizations).actions << 'organizations/repo_discover'
+  Foreman::AccessControl.permission(:edit_organizations).actions << 'organizations/cancel_repo_discover'
 end

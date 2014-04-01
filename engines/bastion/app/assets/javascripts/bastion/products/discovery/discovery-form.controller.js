@@ -18,7 +18,6 @@
  * @requires $scope
  * @requires $q
  * @requires CurrentOrganization
- * @requires Provider
  * @requires Product
  * @requires Repository
  * @requires FormUtils
@@ -28,8 +27,8 @@
  *      repository discovery.
  */
 angular.module('Bastion.products').controller('DiscoveryFormController',
-    ['$scope', '$q', 'CurrentOrganization', 'Provider', 'Product', 'Repository', 'GPGKey', 'FormUtils',
-    function ($scope, $q, CurrentOrganization, Provider, Product, Repository, GPGKey, FormUtils) {
+    ['$scope', '$q', 'CurrentOrganization', 'Product', 'Repository', 'GPGKey', 'FormUtils',
+    function ($scope, $q, CurrentOrganization, Product, Repository, GPGKey, FormUtils) {
 
         $scope.discovery = $scope.discovery || {selected: []};
         $scope.panel = $scope.panel || {loading: false};
@@ -46,6 +45,8 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             creating: false
         };
 
+        $scope.createRepoChoices.product['organization_id'] = CurrentOrganization;
+
         angular.forEach($scope.discovery.selected, function (repo) {
             //Add a fake form to keep track of validations
             repo.form = {
@@ -53,14 +54,6 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
                     $invalid: false
                 };
             FormUtils.labelize(repo, repo.form);
-        });
-
-        Provider.query(function (values) {
-            $scope.providers = filterEditable(values.results);
-
-            if ($scope.providers.length > 0) {
-                $scope.createRepoChoices.product['provider_id'] = $scope.providers[0].id;
-            }
         });
 
         Product.query({'organization_id': CurrentOrganization}, function (values) {
