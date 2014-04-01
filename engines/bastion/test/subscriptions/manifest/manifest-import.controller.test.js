@@ -11,7 +11,7 @@
  **/
 
 describe('Controller: ManifestImportController', function() {
-    var $scope, provider, organization, history, $q;
+    var $scope, provider, organization, history, $q, Task, Organization, Provider;
 
     beforeEach(module(
         'Bastion.subscriptions',
@@ -44,10 +44,11 @@ describe('Controller: ManifestImportController', function() {
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
-            Organization = $injector.get('Organization'),
-            Provider = $injector.get('Provider'),
             $httpBackend = $injector.get('$httpBackend'),
             translate;
+
+        Organization = $injector.get('Organization');
+        Provider = $injector.get('Provider');
 
         $httpBackend.expectGET('/api/organization/ACME').respond(organization);
         $httpBackend.expectGET('/api/providers/1').respond(provider);
@@ -56,6 +57,8 @@ describe('Controller: ManifestImportController', function() {
         $q = $injector.get('$q');
         $scope.$stateParams = {providerId: provider.id};
         $scope.provider = Provider.get({id: provider.id});
+
+        Task = {registerSearch: function() {}};
 
         // stub out manifestHistory since it's being tested elsewhere
         $scope.manifestHistory = function(prov) { return history; };
@@ -68,7 +71,8 @@ describe('Controller: ManifestImportController', function() {
             translate: translate,
             CurrentOrganization: "ACME",
             Provider: Provider,
-            Organization: Organization
+            Organization: Organization,
+            Task: Task
         });
     }));
 
@@ -141,5 +145,13 @@ describe('Controller: ManifestImportController', function() {
             expect($scope.refreshTable).toHaveBeenCalled();
         });
     });
+
+    it('should refresh provider info when requested', function() {
+        spyOn(Provider, 'get').andCallThrough();
+        spyOn(Organization, 'get').andCallThrough();
+        $scope.refreshProviderInfo();
+        expect(Provider.get).toHaveBeenCalled();
+        expect(Organization.get).toHaveBeenCalled();
+    })
 
 });

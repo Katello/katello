@@ -21,13 +21,14 @@
  * @requires CurrentOrganization
  * @requires Provider
  * @requires Organization
+ * @requires Task
  *
  * @description
  *   Controls the import of a manifest.
  */
 angular.module('Bastion.subscriptions').controller('ManifestImportController',
-    ['$scope', '$q', 'translate', 'CurrentOrganization', 'Provider', 'Organization',
-    function ($scope, $q, translate, CurrentOrganization, Provider, Organization) {
+    ['$scope', '$q', 'translate', 'CurrentOrganization', 'Provider', 'Organization', 'Task',
+    function ($scope, $q, translate, CurrentOrganization, Provider, Organization, Task) {
 
         $scope.uploadErrorMessages = [];
         $scope.progress = {uploading: false};
@@ -40,6 +41,29 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
             $scope.panel.loading = false;
             initializeManifestDetails($scope.organization, $scope.provider);
         });
+
+        $scope.$on('$destroy', function () {
+            $scope.unregisterSearch();
+        });
+
+        $scope.unregisterSearch = function () {
+            Task.unregisterSearch($scope.searchId);
+            $scope.searchId = undefined;
+        };
+
+        $scope.updateTask = function (task) {
+            $scope.task = task;
+            if (!$scope.task.pending) {
+                $scope.unregisterSearch();
+                if ($scope.task.result === 'success') {
+                    $scope.refreshProviderInfo();
+                    $scope.successMessages.push(translate("Manifest successfully imported."));
+                    $scope.refreshTable();
+                }
+            } else if ($scope.task.result === 'error') {
+                $scope.errorMessages.push(translate("Error importing manifest."));
+            }
+        };
 
         $scope.save = function (provider) {
             var deferred = $q.defer();
@@ -62,16 +86,18 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 $scope.saveSuccess = true;
                 $scope.successMessages.push(translate("Manifest successfully deleted."));
                 $scope.refreshTable();
-
-                // setup us up the page again
-                $scope.provider = Provider.get({id: $scope.$stateParams.providerId});
-                $scope.organization = Organization.get({id: CurrentOrganization});
-                $q.all([$scope.provider.$promise, $scope.organization.$promise]).then(function () {
-                    initializeManifestDetails($scope.organization, $scope.provider);
-                });
+                $scope.refreshProviderInfo();
             }, function (response) {
                 $scope.saveError = true;
                 $scope.errors = response.data.errors;
+            });
+        };
+
+        $scope.refreshProviderInfo = function () {
+            $scope.provider = Provider.get({id: $scope.$stateParams.providerId});
+            $scope.organization = Organization.get({id: CurrentOrganization});
+            $q.all([$scope.provider.$promise, $scope.organization.$promise]).then(function () {
+                initializeManifestDetails($scope.organization, $scope.provider);
             });
         };
 
@@ -117,7 +143,8 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 }
 
                 if (returnData !== null && returnData.errors === undefined) {
-                    $scope.transitionTo('tasks.details', {taskId: returnData.id});
+                    $scope.task =  returnData;
+                    $scope.searchId = Task.registerSearch({ 'type': 'task', 'task_id':  $scope.task.id }, $scope.updateTask);
                 } else {
                     $scope.uploadErrorMessages = [translate('Error during upload: ') + returnData.displayMessage];
                 }

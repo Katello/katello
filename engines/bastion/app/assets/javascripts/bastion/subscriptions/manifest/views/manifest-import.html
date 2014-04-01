@@ -59,10 +59,10 @@
 
     <div class="control-group">
       <div class="control-button">
-        <button class="primary" upload-submit ng-click="progress.uploading = true">
-          <i class="icon-spinner icon-spin" ng-show="progress.uploading"></i>
-          <span ng-show="progress.uploading" translate>Uploading...</span>
-          <span ng-hide="progress.uploading" translate>Upload</span>
+        <button class="primary" upload-submit>
+          <i class="icon-spinner icon-spin" ng-show="task.pending"></i>
+          <span ng-show="task.pending" translate>Uploading...</span>
+          <span ng-hide="task.pending" translate>Upload</span>
         </button>
       </div>
     </div>
