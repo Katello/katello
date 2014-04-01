@@ -21,13 +21,14 @@ module Katello
       # 1. install media
       # 2. environment
       # 3. puppet classes
-
       content_view.repos(env).each { |repo| Medium.update_media(repo) }
 
-      foreman_environment = Environment.find_or_create_by_katello_id(org, env, content_view)
+      unless content_view.default?
+        foreman_environment = Environment.find_or_create_by_katello_id(org, env, content_view)
 
-      if (foreman_smart_proxy = SmartProxy.find_by_name(Katello.config.host))
-        PuppetClassImporter.new(:url => foreman_smart_proxy.url).update_environment(foreman_environment)
+        if (foreman_smart_proxy = SmartProxy.find_by_name(Katello.config.host))
+          PuppetClassImporter.new(:url => foreman_smart_proxy.url).update_environment(foreman_environment)
+        end
       end
     end
   end

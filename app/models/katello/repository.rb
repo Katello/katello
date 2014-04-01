@@ -215,6 +215,7 @@ class Repository < Katello::Model
     self.handle_sync_complete_task(pulp_task_id)
     #don't publish as auto_publish should be enabled
     self.trigger_contents_changed(:wait => false, :publish => false, :reindex => true)
+    Medium.update_media(self)
     Glue::Event.trigger(Katello::Actions::RepositorySync, self)
   end
 
