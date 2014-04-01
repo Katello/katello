@@ -27,6 +27,7 @@ module Actions
             plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
             plan_action(ElasticSearch::Repository::IndexContent, id: repo.id)
             plan_action(ElasticSearch::Reindex, repo)
+            plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view)
           end
         end
 
