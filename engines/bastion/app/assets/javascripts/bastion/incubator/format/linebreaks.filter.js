@@ -12,10 +12,25 @@
  **/
 
 /**
- * @ngdoc module
- * @name  alchemy.format
+ * @ngdoc filter
+ * @name  alchemy.filter:linebreaks
  *
  * @description
- *   Module for formatting related functionality, primarily filters.
+ *   Replace new lines with <br/> elements.
+ *
+ * @example
+ *   {{ 'I have \n more than \n one line' | linebreaks }}
+ *
+ *   I have <br/>
+ *   more than <br/>
+ *   one line
  */
-angular.module('alchemy.format', ['ngSanitize']);
+angular.module('alchemy.format').filter('linebreaks', [function () {
+    return function (string) {
+        var formatted = string;
+        if (angular.isString(string)) {
+            formatted = string.replace(/\n/g, '<br/>');
+        }
+        return formatted;
+    };
+}]);

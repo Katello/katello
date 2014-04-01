@@ -18,6 +18,7 @@ describe('Directive: alchEdit', function() {
         testItem;
 
     beforeEach(module('alchemy',
+        'alchemy.format',
         'incubator/views/alch-edit.html',
         'incubator/views/alch-edit-text.html',
         'incubator/views/alch-edit-textarea.html',
