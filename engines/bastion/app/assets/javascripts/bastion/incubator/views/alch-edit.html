@@ -1,6 +1,6 @@
 <div class="alch-edit">
   <div class="value" ng-class="{ 'editable' : !readonly }" ng-click="edit()" ng-hide="editMode || workingMode">
-    <span class="editable-value">{{ displayValue }}</span>
+    <span class="editable-value" ng-bind-html="displayValue | linebreaks"></span>
     <span class="fr">
       <i class="icon-edit inline-icon" ng-hide="editMode || readonly"></i>
       <i class="icon-remove inline-icon" ng-click="delete($event)" ng-show="deletable && !editMode"></i>
