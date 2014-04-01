@@ -16,7 +16,6 @@ authconfig --useshadow --passalgo=sha256 --kickstart
 timezone UTC
 services --disabled autofs,gpm,sendmail,cups,iptables,ip6tables,auditd,arptables_jf,xfs,pcmcia,isdn,rawdevices,hpoj,bluetooth,openibd,avahi-daemon,avahi-dnsconfd,hidd,hplip,pcscd,restorecond,mcstrans,rhnsd,yum-updatesd
 
-repo --name="Extra Packages for Enterprise Linux" --mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-<%= @host.operatingsystem.major %>&arch=<%= @host.architecture %>
 
 bootloader --location=mbr --append="nofb quiet splash=quiet" <%= grub_pass %>
 key --skip
@@ -36,7 +35,6 @@ dhclient
 ntp
 wget
 @Core
-epel-release
 puppet
 
 <% if @dynamic -%>
