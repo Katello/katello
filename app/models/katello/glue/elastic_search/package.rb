@@ -70,7 +70,7 @@ module Glue::ElasticSearch::Package
       end
 
       def self.autocomplete_name(query, repoids = nil, page_size = 15)
-        return [] if !Tire.index(self.index).exists?
+        return [] if !index_exists?
 
         query = Util::Search.filter_input query
         query = "*" if query == ""
@@ -96,7 +96,7 @@ module Glue::ElasticSearch::Package
       end
 
       def self.autocomplete_nvrea(query, repoids = nil, page_size = 15)
-        return Util::Support.array_with_total if !Tire.index(self.index).exists?
+        return Util::Support.array_with_total if !index_exists?
 
         query = Util::Search.filter_input query
         query = "*" if query == ""
@@ -118,7 +118,7 @@ module Glue::ElasticSearch::Package
       end
 
       def self.id_search(ids)
-        return Util::Support.array_with_total unless Tire.index(self.index).exists?
+        return Util::Support.array_with_total unless index_exists?
         search = Tire.search self.index do
           fields [:id, :name, :nvrea, :repoids, :type, :filename, :checksum]
           query do
@@ -131,6 +131,7 @@ module Glue::ElasticSearch::Package
       end
 
       def self.package_count(repos)
+        return Util::Support.array_with_total unless index_exists?
         repo_ids = repos.map(&:pulp_id)
         search = Package.search do
           query do
@@ -155,7 +156,7 @@ module Glue::ElasticSearch::Package
       # rubocop:disable MethodLength
       def self.legacy_search(query, start = 0, page_size = 15, repoids = nil, sort = [:nvrea_sort, "asc"],
                       search_mode = :all, default_field = 'nvrea', filters = [])
-        if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
+        if !index_exists? || (repoids && repoids.empty?)
           return Util::Support.array_with_total
         end
 
@@ -217,10 +218,7 @@ module Glue::ElasticSearch::Package
         end
 
         unless pkgs.empty?
-          Tire.index Package.index do
-            create :settings => Package.index_settings, :mappings => Package.index_mapping
-          end unless Tire.index(Package.index).exists?
-
+          create_index
           Tire.index Package.index do
             import pkgs
           end
