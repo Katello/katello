@@ -53,14 +53,6 @@ describe('Controller: DiscoveryFormController', function() {
         expect($scope.createRepoChoices).toBeDefined();
     });
 
-    it('should fetch available providers and put them on the scope', function() {
-        expect($scope.providers).toBeDefined();
-    });
-
-    it('should set the repository choices product provider id', function() {
-        expect($scope.createRepoChoices.product['provider_id']).toBeDefined();
-    });
-
     it('should fetch available products and put them on the scope', function() {
         expect($scope.products).toBeDefined();
     });

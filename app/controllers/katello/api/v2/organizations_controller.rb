@@ -102,8 +102,7 @@ module Katello
     protected
 
     def action_permission
-      case params[:action]
-      when 'download_debug_certificate'
+      if %w(download_debug_certificate repo_discover cancel_repo_discover).include?(params[:action])
         :edit
       else
         super
