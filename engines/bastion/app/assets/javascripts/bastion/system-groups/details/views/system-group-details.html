@@ -1,7 +1,7 @@
 <span page-title ng-model="group">{{ 'System Group: ' | translate }} {{ group.name }}</span>
 
 <div class="loading-mask loading-mask-panel" ng-show="panel.loading">
-  <i class="icon-spinner icon-spin"></i>
+  <i class="fa fa-spinner fa fa-spin"></i>
   {{ "Loading..." | translate }}
 </div>
 
@@ -17,12 +17,12 @@
       </button>
 
       <button class="btn btn-default" ng-click="showCopy = true">
-        <i class="icon-copy"></i>
+        <i class="fa fa-copy"></i>
         {{ "Copy Group" | translate }}
       </button>
 
       <button class="btn btn-default" ui-sref="system-groups.index">
-        <i class="icon-remove"></i>
+        <i class="fa fa-remove"></i>
         {{ "Close" | translate }}
       </button>
 

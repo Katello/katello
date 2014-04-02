@@ -34,7 +34,7 @@
               - distributor_versions.each do |v|
                 %option{:value => v["name"], :selected => (v["name"] == selected_dist_version)} #{v["displayName"]}
 
-          = form.submit _("Save")
+          = form.submit _("Save"), :class => "btn btn-primary"
 - else
   = content_for :title do
     #{_("New distributor")}

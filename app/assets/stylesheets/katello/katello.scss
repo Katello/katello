@@ -1,9 +1,5 @@
 @import "compass";
 @import "katello/overrides";
-@import "alchemy-forms/forms";
-@import "alchemy-buttons/buttons";
-
-@import "bastion/font-awesome/scss/font-awesome";
 
 @import "katello/katello_base";
 
@@ -32,20 +28,12 @@
 @import "katello/jquery.multiselect.filter";
 @import "katello/ui.spinner";
 
-@import "katello/custom_info";
-@import "katello/activation_keys";
 @import "katello/content_search";
 @import "katello/contents";
 @import "katello/dashboard";
 @import "katello/distributors";
 @import "katello/generic";
 @import "katello/notifications";
-@import "katello/operations";
-
-body {
-  background-color: white;
-  min-width: $static_width;
-}
 
 pre  { text-indent: 18px; }
 a { outline: 0 none;}
@@ -107,166 +95,6 @@ a {
   }
   &:active {
     color: darken($linkfg_color, 20%);
-  }
-}
-
-/* TEXT ENTRIES */
-input, textarea {
-  @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.2) inset);
-  border: 1px solid darken($stroke_color,20%);
-  background-color: $input-background_color;
-  background: $input_background_img;
-  padding: 4px;
-  margin: 0;
-
-  &:focus {
-    border-width: 2px;
-    padding: 3px;
-    background-color: $white_color;
-    outline: none;
-  }
-  &.disabled, &[disabled] {
-    opacity: 0.4;
-  }
-  .grid_1 { width: 30px !important; }
-  .grid_2 { width: 90px !important; }
-  .grid_2 {
-    input[type="file"] { width: 90px; }
-  }
-  .grid_3 { width: 150px !important; }
-  .grid_3 {
-    input[type="search"] { width: 118px; }
-  }
-  .grid_4 { width: 210px !important; }
-  .grid_5 { width: 270px !important; }
-  .grid_6 { width: 330px !important; }
-  .grid_7 { width: 390px !important; }
-}
-
-input[type="search"] {
-  @include border-radius(20px);
-  padding: 4px 30px 4px 10px;
-
-  &:focus {
-    padding: 3px 29px 3px 9px;
-  }
-}
-/* CHECKBOXES and RADIOBUTTONS*/
-input[type="checkbox"],input[type="radio"] {
-  background-color: transparent;
-  border: none;
-  margin: 0;
-  padding: 2px;
-
-  &:focus {
-    border-width: 1px;
-    padding: 1px;
-  }
-}
-/* FILE INPUT */
-input[type="file"] {
-  /* FIXME */
-}
-
-input:focus {
-  outline: none;
-}
-
-/* custom ui spinner class for HTML5 like spinners */
-.ui-spinner {
-  width: 40px;
-}
-
-.status_exclamation_icon {
-  background: $status_exclamation_icon;
-  height: 16px;
-  width: 16px;
-  position: absolute;
-}
-.status_confirm_icon {
-  background: $status_confirm_icon;
-  @extend .status_exclamation_icon;
-}
-.status_alert_icon {
-  background: $status_alert_icon;
-  @extend .status_exclamation_icon;
-}
-
-.status_warning_icon {
-  background: $warning_icon_triangle;
-  @extend .status_exclamation_icon;
-}
-
-/* BUTTONS */
-input[type='submit'], button, .button {
-  font-family: $screenfont; /* for some reason ff3.6 won't inherit from body */
-  font-size: 10px;
-  display: inline-block;
-  vertical-align: bottom;
-  background: -moz-linear-gradient(top, #f9f9f9, #f0f0f0, #e5e5e5, #e9e9e9);
-  background: -webkit-gradient(linear, left top, left bottom, from(#f9f9f9), color-stop(0.9, #e5e5e5), to(#e9e9e9));
-  @include box-shadow(none);
-  border: 1px solid darken($stroke_color, 20%);
-  color: #221e1f;
-  cursor: pointer;
-  padding: 4px 8px;
-  @include border-radius(5px);
-  @include text-shadow(0 1px 0 rgba($white_color, 1));
-  min-height: 14px;
-  .nomargin {
-    margin: 0;
-  }
-  &:hover {
-    background: -moz-linear-gradient(top, $white_color, $white_color, #cfcfcf);
-    background: -webkit-gradient(linear, left top, left bottom, from($white_color), color-stop(0.6, $white_color), to(#cfcfcf));
-    @include box-shadow(0 1px 2px rgba(0,0,0,0.5));
-    text-decoration: none;
-    color: black;
-  }
-  &:active {
-    background: -moz-linear-gradient(top, #c2c3c0, #e4e5e4);
-    background: -webkit-gradient(linear, left top, left bottom, from(#c2c3c0), to(#e4e5e4));
-    @include box-shadow(none);
-    text-decoration: none;
-  }
-  &:focus {
-    text-decoration: none;
-    color: #000;
-    border-width: 2px;
-  }
-  &.dialogbutton {
-    float: right;
-    margin-left: 3px;
-    margin: 40px 4px 4px;
-  }
-  &.formbutton {
-    display: inline-block;
-    margin-left: 3px;
-    margin: 40px 4px 4px;
-  }
-  &.actionlink {
-    margin: 40px 0 0;
-  }
-  &.disabled, &[disabled] {
-    cursor: default;
-    background: transparent;
-    opacity: 0.4;
-
-    &:hover {
-      background: transparent;
-      @include box-shadow(none);
-    }
-  }
-  &.iconbutton {
-    display: inline-block;
-  }
-  &.tiny {
-    padding: 4px;
-    margin: 0;
-    &:active, &:focus {
-      margin: 0;
-      padding: 3px;
-    }
   }
 }
 
@@ -368,20 +196,6 @@ table {
   }
 }
 
-.lock_icon {
-  width: 16px;
-  height: 16px;
-  margin-right: 4px;
-  background: $locked_icon;
-}
-
-.action {
-  background: $search_icon_white;
-
-  &:hover { background: $search_icon_white; }
-  &:active {background: $search_icon_white; }
-}
-
 .actions {
   span {
     display: inline-block;
@@ -412,48 +226,6 @@ table {
   input[type='submit'],button,.button {
     margin: 0px 4px 4px;
   }
-}
-
-/* FORMS */
-/* generic */
-label {
-  text-align: right;
-  color: $labelfg_color;
-  &.required {
-    font-weight: bold;
-  }
-  &.header {
-    text-align: left;
-    font-weight: normal;
-    font-size: 90%;
-    margin-bottom: 1em;
-  }
-  &.big {
-    text-align: left;
-    text-transform: uppercase;
-    font-family: $headlinefont;
-    font-size: 110%;
-    font-weight: bold;
-    color: $formheadfg_color;
-  }
-}
-
-legend {
-  font-size: 130%;
-  font-family: $headlinefont;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: $header_color;
-}
-
-/* When you need to seperate items within a fieldset */
-.fielditem {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-fieldset {
-  .button{ margin-left: 10px; }
 }
 
 #toTop {

@@ -13,14 +13,19 @@
 
   th.row-select,
   td.row-select {
-    width: 25px;
-    max-width: 25px;
+    width: 50px;
+    max-width: 50px;
+  }
+
+  thead tr th:first-child, tbody tr td:first-child {
+    padding-left: 20px;
   }
 }
 
 .table-reduced {
   width: 20%;
   float: left;
+  margin-right: 0;
 }
 
 .container-scroll-wrapper {
@@ -30,12 +35,6 @@
 
 .table-mask {
   opacity: 0.4;
-}
-
-th.row-select,
-td.row-select {
-  width: 25px;
-  max-width: 25px;
 }
 
 .nutupane {
@@ -73,11 +72,11 @@ td.row-select {
         left: 4px;
       }
 
-      .icon-sort-down {
+      .fa-sort-down {
         bottom: 2px;
       }
 
-      .icon-sort-up {
+      .fa-sort-up {
         top: 4px;
       }
 
@@ -93,7 +92,7 @@ td.row-select {
     }
 
     .active-row {
-      .icon-active {
+      .fa-active {
         margin-top: 1px;
         font-size: 14px;
         position: absolute;
@@ -105,7 +104,7 @@ td.row-select {
 
 .nutupane-bar {
   background: rgb(250, 250, 250);
-  padding: 10px 15px 10px 0;
+  padding: 10px 0;
   border-bottom: 1px solid rgb(230, 230, 230);
   overflow: auto;
 
@@ -123,11 +122,9 @@ td.row-select {
 
 .nutupane-select-all {
   text-align: center;
-  .alert-info;
 }
 .nutupane-select-all-selected {
   text-align: center;
-  .alert-success;
 }
 
 .details {
@@ -185,11 +182,7 @@ td.row-select {
 
 .nutupane-details {
   height: 100%;
-  left: 20%;
-  min-width: 30%;
   padding: 20px;
-  position: absolute;
-  width: 80%;
   border-left: 1px solid #CCC;
   overflow-y: auto;
   .box-shadow(0 0 5px #dddddd inset);
@@ -207,7 +200,7 @@ td.row-select {
     }
   }
 
-  .icon-backward {
+  .fa-backward {
     padding-right: 5px;
   }
 
@@ -257,8 +250,9 @@ td.row-select {
 }
 
 .nutupane-info {
-  padding: 7px 0 0;
-  margin-right: 10px;
+  padding-left: 0;
+  padding-right: 8px;
+  padding-top: 2px;
 }
 
 .detail:not(:last-child) {
@@ -321,7 +315,7 @@ div.alch-dialog.open.info-value {
 }
 
 .details-navigation {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   border-bottom: 2px solid #e3e5e7;
   width: 100%;
 

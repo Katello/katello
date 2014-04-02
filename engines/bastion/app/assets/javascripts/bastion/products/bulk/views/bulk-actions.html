@@ -9,17 +9,17 @@
               ng-disabled="product.readonly || removeProducts.workingMode"
               ng-click="openModal()"
               ng-hide="removeProducts.workingMode">
-        <i class="icon-trash"></i>
+        <i class="fa fa-trash"></i>
         {{ "Remove Products" | translate }}
       </button>
 
       <span ng-show="removeProducts.workingMode">
-        <i class="icon-spinner inline-icon icon-spin"></i>
+        <i class="fa fa-spinner inline-icon fa fa-spin"></i>
         <span>{{ "Removing Products" | translate }}</span>
       </span>
 
       <button class="btn btn-default" ui-sref="products.index">
-        <i class="icon-remove"></i>
+        <i class="fa fa-remove"></i>
         {{ "Close" | translate }}
       </button>
 
@@ -55,7 +55,8 @@
     <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
     <div class="alert warning alert-warning" ng-show="table.numSelected == 0">
-      <i class="icon-exclamation-sign"></i>
+      <i class="pficon pficon-warning-triangle"></i>
+      <i class="pficon pficon-warning-exclamation"></i>
       {{ 'At least one product needs to be selected in order to perform a bulk action.' | translate }}
     </div>
 

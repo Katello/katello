@@ -12,7 +12,7 @@
                ng-model="systemsTable.searchTerm"
                on-enter="systemsTable.search(systemsTable.searchTerm)"/>
         <span class="input-group-btn">
-          <button ng-click="systemsTable.search(systemsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
+          <button ng-click="systemsTable.search(systemsTable.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
         </span>
       </div>
     </div>
@@ -48,7 +48,7 @@
     <div alch-container-scroll control-width="systemsTable" alch-infinite-scroll="systemsTable.nextPage()" data="systemsTable.rows">
 
       <div class="loading-mask" ng-show="systemsTable.working && systemsTable.rows.length == 0">
-        <i class="icon-spinner icon-spin"></i>
+        <i class="fa fa-spinner fa fa-spin"></i>
         {{ "Loading..." | translate }}
       </div>
 

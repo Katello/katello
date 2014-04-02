@@ -1,5 +1,5 @@
 <div class="loading-mask loading-mask-panel" ng-show="panel.loading">
-  <i class="icon-spinner icon-spin"></i>
+  <i class="fa fa-spinner fa fa-spin"></i>
   {{ "Loading..." | translate }}
 </div>
 
@@ -10,14 +10,14 @@
 
     <div class="fr">
       <button class="btn btn-default" ui-sref="subscriptions.index">
-        <i class="icon-remove"></i>
+        <i class="fa fa-remove"></i>
         {{ "Close" | translate }}
       </button>
     </div>
   </header>
 
   <nav>
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs nav-tabs-pf">
       <li ng-class="{active: isState('subscriptions.manifest.details')}">
         <a class="clickable"
            translate

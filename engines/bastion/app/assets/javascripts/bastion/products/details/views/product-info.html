@@ -1,4 +1,5 @@
 <span page-title ng-model="product">{{ 'Product information for:' | translate }} {{ product.name }}</span>
+
 <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
 <div class="details fl">
@@ -91,15 +92,15 @@
     <div class="detail">
       <button class="btn btn-default"
               ui-sref="products.details.info.new-sync-plan">
-        <i class="icon-plus"></i>
+        <i class="fa fa-plus"></i>
         <span translate>New Sync Plan</span>
       </button>
 
       <button class="btn btn-default"
               ng-click="syncProduct()">
-        <i class="icon-spinner icon-spin" ng-show="productSyncing"></i>
+        <i class="fa fa-spinner fa fa-spin" ng-show="productSyncing"></i>
         <span ng-show="productSyncing" translate>Syncing...</span>
-        <i ng-hide="productSyncing" class="icon-refresh"></i>
+        <i ng-hide="productSyncing" class="fa fa-refresh"></i>
         <span ng-hide="productSyncing" translate>Sync Now</span>
       </button>
     </div>

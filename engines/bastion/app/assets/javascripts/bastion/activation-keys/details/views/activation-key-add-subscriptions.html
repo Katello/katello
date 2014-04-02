@@ -2,17 +2,17 @@
 
 <section class="nutupane-sub-section">
 
-  <div class="nutupane-bar">
+  <div class="row nutupane-bar">
 
     <div class="col-sm-3">
-      <div class="input-group input-group">
+      <div class="input-group">
         <input type="text"
                class="form-control"
                placeholder="{{ 'Search...' | translate }}"
                ng-model="addSubscriptionsTable.searchTerm"
                on-enter="addSubscriptionsTable.search(addSubscriptionsTable.searchTerm)"/>
         <span class="input-group-btn">
-          <button ng-click="addSubscriptionsTable.search(addSubscriptionsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
+          <button ng-click="addSubscriptionsTable.search(addSubscriptionsTable.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
         </span>
       </div>
     </div>
@@ -21,18 +21,7 @@
       <span translate>Showing {{ addSubscriptionsTable.rows.length }} of {{ addSubscriptionsTable.resource.subtotal }} ({{ addSubscriptionsTable.resource.total }} Total) Subscriptions</span>
     </div>
 
-    <div class="pull-right">
-      <div class="pull-left nutupane-info">
-        <span translate>{{ addSubscriptionsTable.numSelected }} Selected</span>
-        <span>|</span>
-        <a class="deselect-action"
-           translate
-           ng-class="{ 'disabled-link' : addSubscriptionsTable.numSelected == 0 }"
-           ng-click="addSubscriptionsTable.selectAll(false)">
-          Deselect All
-        </a>
-      </div>
-
+    <div class="col-sm-6 pull-right">
       <div ng-hide="activationKey.readonly" class="nutupane-actions pull-right">
          <button class="btn btn-primary"
                  translate
@@ -42,14 +31,24 @@
          </button>
       </div>
 
+      <div class="pull-right nutupane-info">
+        <span translate>{{ addSubscriptionsTable.numSelected }} Selected</span>
+        <span>|</span>
+        <a class="deselect-action"
+           translate
+           ng-class="{ 'disabled-link' : addSubscriptionsTable.numSelected == 0 }"
+           ng-click="addSubscriptionsTable.selectAll(false)">
+          Deselect All
+        </a>
+      </div>
     </div>
   </div>
 
   <div alch-table="addSubscriptionsTable" class="nutupane">
     <div alch-container-scroll control-width="addSubscriptionsTable" alch-infinite-scroll="addSubscriptionsTable.nextPage()">
 
-      <div class="loading-mask icon-3x" ng-show="addSubscriptionsTable.working && addSubscriptionsTable.rows.length == 0">
-        <i class="icon-spinner icon-spin"></i>
+      <div class="loading-mask fa fa-3x" ng-show="addSubscriptionsTable.working && addSubscriptionsTable.rows.length == 0">
+        <i class="fa fa-spinner fa fa-spin"></i>
         {{ "Loading..." | translate }}
       </div>
 

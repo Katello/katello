@@ -1,7 +1,7 @@
 <span page-title>{{ 'Create Repositories' | translate }}</span>
 
 <a ui-sref="products.discovery.scan">
-  <i class="icon-double-angle-left"></i>
+  <i class="fa fa-double-angle-left"></i>
   {{ "Back To Repository Selection" | translate }}
 </a>
 
@@ -101,9 +101,9 @@
   <div ng-repeat="repo in discovery.selected">
     <form novalidate>
 
-      <i class="icon-circle"></i>
+      <i class="fa fa-circle"></i>
       {{  repo.url }}
-      <i class="icon-check" ng-show="repo.created"></i>
+      <i class="fa fa-check" ng-show="repo.created"></i>
 
       <div class="control-group error required" ng-show="repo.form.$invalid">
         <div class="label" >

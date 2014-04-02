@@ -14,12 +14,12 @@
       </button>
 
       <span ng-show="removingSystems">
-        <i class="icon-spinner inline-icon icon-spin"></i>
+        <i class="fa fa-spinner inline-icon fa fa-spin"></i>
         <span>{{ "Removing Systems" | translate }}</span>
       </span>
 
       <button class="btn btn-default" ui-sref="systems.index">
-        <i class="icon-remove"></i>
+        <i class="fa fa-remove"></i>
         {{ "Close" | translate }}
       </button>
 
@@ -77,14 +77,14 @@
   <div>
 
     <div class="alert warning alert-warning" ng-show="table.numSelected == 0">
-      <i class="icon-exclamation-sign"></i>
+      <i class="fa fa-exclamation-sign"></i>
       {{ 'At least one system needs to be selected in order to perform a bulk action.' | translate }}
     </div>
 
     <div alch-alert success-messages="state.successMessages" error-messages="state.errorMessages"></div>
 
     <div class="alert alert-info" ng-show="state.working">
-      <i class="icon-spinner inline-icon icon-spin"></i>
+      <i class="fa fa-spinner inline-icon fa fa-spin"></i>
       {{ 'Processing' | translate }}
     </div>
 

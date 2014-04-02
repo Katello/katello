@@ -9,22 +9,22 @@
     <div class="col-sm-6">
       <div class="fr">
         <a class="btn btn-primary" ui-sref="content-views.details.publish">
-          <i class="icon-paste"></i>
+          <i class="fa fa-paste"></i>
           <span translate>Publish New Version</span>
         </a>
 
         <a class="btn btn-default" ng-hide="true" ui-sref="content-views.details.clone">
-          <i class="icon-copy"></i>
+          <i class="fa fa-copy"></i>
           <span translate>Clone View</span>
         </a>
 
         <button ng-hide="true" class="btn btn-default" ui-sref="content-views.index">
-          <i class="icon-trash"></i>
+          <i class="fa fa-trash"></i>
           {{ "Remove View" | translate }}
         </button>
 
         <a class="btn btn-default" ui-sref="content-views.index">
-          <i class="icon-remove"></i>
+          <i class="fa fa-remove"></i>
           <span translate>Close</span>
         </a>
       </div>
@@ -33,7 +33,7 @@
   </header>
 
   <nav>
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs nav-tabs-pf">
       <li ng-class="{active: isState('content-views.details.versions') || isState('content-views.details.promotion')}">
         <a ui-sref="content-views.details.versions" translate>
           Versions
@@ -51,7 +51,7 @@
           ng-hide="contentView.composite">
         <a class="dropdown-toggle">
           <span translate>Content</span>
-          <i class="icon-chevron-down"></i>
+          <i class="fa fa-chevron-down"></i>
         </a>
         <ul class="dropdown-menu">
           <li>

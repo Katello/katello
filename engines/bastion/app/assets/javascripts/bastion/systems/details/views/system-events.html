@@ -29,9 +29,9 @@
       <tbody>
         <tr alch-table-row ng-repeat="event in eventsTable.rows">
           <td alch-table-cell>
-              <span tooltip="{{ 'Running' | translate }}" class="table-icon icon-time" ng-show="event.pending"/>
-              <span tooltip="{{ 'Failed' | translate }}" class="table-icon icon-circle red" ng-show="event.failed" />
-              <span tooltip="{{ 'Success' | translate }}" class="table-icon icon-circle green" ng-show="!event.pending && !event.failed" />
+              <span tooltip="{{ 'Running' | translate }}" class="table-icon fa fa-time" ng-show="event.pending"/>
+              <span tooltip="{{ 'Failed' | translate }}" class="table-icon fa fa-circle red" ng-show="event.failed" />
+              <span tooltip="{{ 'Success' | translate }}" class="table-icon fa fa-circle green" ng-show="!event.pending && !event.failed" />
           </td>
           <td alch-table-cell>
             <a class="active" ui-sref="systems.details.events.details({eventId: event.id})">

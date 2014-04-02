@@ -2,8 +2,7 @@
 //
 // Temporary namespace to prevent Boostrap3/RCUE from
 // Colliding with Boostrap2 from Foreman core
-.rcue-styles {
-  @import "rcue/rcue";
+  //@import "rcue/rcue";
 
   // Bastion Components
   @import "mixins";
@@ -18,19 +17,6 @@
   @import "animations";
   @import "path-selector";
   @import "typography";
-
-  body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .container-fluid {
-    margin-right: auto;
-    margin-left: auto;
-    padding-left: 15px;
-    padding-right: 15px;
-  }
 
   a {
     cursor: pointer;
@@ -92,14 +78,14 @@
     background: white;
     font-size: 3em;
 
-    .icon-spinner {
+    .fa-spinner {
       margin: 20% 0  0 40%;
     }
 
     &.loading-mask-panel {
       left: 20.1%;
 
-      .icon-spinner {
+      .fa-spinner {
         margin: 20% 0  0 33%;
       }
     }
@@ -144,4 +130,3 @@
       float: right;
     }
   }
-}

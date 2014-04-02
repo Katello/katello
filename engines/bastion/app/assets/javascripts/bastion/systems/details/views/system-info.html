@@ -61,7 +61,7 @@
       <div class="detail">
         <span class="info-label" translate>Subscription Status</span>
         <span class="info-value">
-          <i class="icon-circle" ng-class="systemTable.getStatusColor(system.compliance.status)"></i>
+          <i class="fa fa-circle" ng-class="systemTable.getStatusColor(system.compliance.status)"></i>
           {{ system.compliance.status }}
         </span>
       </div>
@@ -261,7 +261,7 @@
         <span class="info-label" translate>Interfaces</span>
         <div class="info-value">
           <div ng-repeat="(interfaceName, interface) in systemFacts.net.interface" >
-            <i ng-class="{'icon-plus': !expanded, 'icon-minus': expanded}" class="expand-icon"
+            <i ng-class="{'fa fa-plus': !expanded, 'fa fa-minus': expanded}" class="expand-icon"
                ng-hide="editMode" ng-click="expanded = !expanded"></i>
             {{ interfaceName }}
             <div class="sub-detail" ng-show="expanded">
@@ -306,7 +306,7 @@
   <div class="advanced-info" ng-show="hasAdvancedInfo">
     <header class="details-sub-header">
        <h3>
-        <i class="expand-icon" ng-class="{'icon-plus': !showAdvanced, 'icon-minus': showAdvanced}"
+        <i class="expand-icon" ng-class="{'fa fa-plus': !showAdvanced, 'fa fa-minus': showAdvanced}"
            ng-click="showAdvanced = !showAdvanced"></i>
          <span translate>Advanced Information</span>
        </h3>

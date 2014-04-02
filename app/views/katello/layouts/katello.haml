@@ -25,8 +25,8 @@
     - title = "Katello"
 
 = content_for(:content) do
-  %article#maincontent
-    %section.maincontent.container_16{:id => section_id}
+  %article.maincontent
+    %section.container-fluid{:id => section_id}
       = yield
 
 = render :template => 'layouts/base'
