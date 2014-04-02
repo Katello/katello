@@ -11,7 +11,10 @@
         <b>{{ name }}</b>
       </td>
     </tr>
-    <tr alch-table-row ng-repeat-end ng-repeat="subscription in subscriptions">
+    <tr alch-table-row
+        ng-repeat-end
+        ng-repeat="subscription in subscriptions"
+        active-row="stateIncludes('subscriptions.details', {subscriptionId: subscription.id})">
       <td alch-table-cell>
         <a ui-sref="subscriptions.details.info({subscriptionId: subscription.id})">
           {{ formatConsumed(subscription) }}

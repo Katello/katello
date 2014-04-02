@@ -6,12 +6,14 @@
   </thead>
 
   <tbody>
-    <tr alch-table-row ng-repeat="group in table.rows" row-select="product">
+    <tr alch-table-row
+        ng-repeat="group in table.rows"
+        row-select="product"
+        active-row="stateIncludes('system-groups.details', {systemGroupId: group.id})">
       <td alch-table-cell>
         <a ui-sref="system-groups.details.info({systemGroupId: group.id})">
           {{ group.name }}
         </a>
-        <i class="icon-chevron-right selected-icon" ng-show="group.selected"></i>
       </td>
     </tr>
   </tbody>

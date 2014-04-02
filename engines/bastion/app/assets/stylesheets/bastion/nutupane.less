@@ -48,7 +48,7 @@ td.row-select {
       color: #FFF;
     }
 
-    tr.active, tbody tr:hover, tr.active-row td {
+    tr.active, tbody tr:hover, tr.selected-row td {
       background-color: @listhover_color;
       color: #FFF;
 
@@ -83,10 +83,13 @@ td.row-select {
 
     }
 
-    .selected-row {
-      background-color: @listhover_color;
+    td.active-row {
+      background-color: lighten(@listhover_color, 8%);
       color: white;
 
+      a {
+        color: white;
+      }
     }
 
     .active-row {
