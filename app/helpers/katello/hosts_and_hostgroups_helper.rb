@@ -58,8 +58,23 @@ module Katello
     def content_view_options
       cv_options = ::Environment.order(:katello_id).all.map do |env|
         selected = env.id == (@host || @hostgroup).environment_id ? "selected" : ""
-        env_text = env.katello_id ? env.katello_id.split('/')[2] : env.name
-        %[<option value="#{env.id}" data-katello-id="#{env.katello_id}" #{selected}>#{env_text}</option>]
+
+        if env.katello_id
+          # rubocop:disable UselessAssignment
+          org_label, kt_env_label, content_view_label = env.katello_id.split('/')
+          option_text = content_view_label
+        else
+          option_text = env.name
+        end
+
+        content_view = Katello::ContentView.joins(:organization).
+            where("#{Katello::ContentView.table_name}.label" => content_view_label).
+            where("#{::Organization.table_name}.label" => org_label).first
+
+        %[<option value="#{env.id}"
+                  data-katello-id="#{env.katello_id}"
+                  data-content_view-id="#{content_view.try(:id)}"
+                  #{selected}>#{option_text}</option>]
       end
 
       return cv_options.join.html_safe
