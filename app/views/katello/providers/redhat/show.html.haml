@@ -12,7 +12,7 @@
         %h4 #{_("Enable Red Hat Repositories")}
 
   - if @provider.products.empty?
-    = (_("No Red Hat products currently exist, please import a manifest <a href='%s'>here</a> to receive Red Hat content.") % subscriptions_path).html_safe
+    = (_("No Red Hat products currently exist, please import a manifest <a href='%s/all'>here</a> to receive Red Hat content.") % subscriptions_path).html_safe
   - else
     - tabs = redhat_repo_tabs
     #content_tabs.grid_16
