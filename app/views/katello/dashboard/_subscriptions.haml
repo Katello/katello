@@ -38,8 +38,10 @@
           .sub_count.fr
             #{owner_info.total_valid_compliance_consumers}
       %hr
-        .sys_count.fr
-          #{owner_info.total_consumers}
+      %ul
+        %li
+          %span.h4
+            #{link_to(_("Total Systems"), "#{systems_path}#/systems")}
+          .sys_count.fr
+            #{owner_info.total_consumers}
 
-        %h4.fr
-          #{link_to(_("Total Systems"), "#{systems_path}#/systems")}
