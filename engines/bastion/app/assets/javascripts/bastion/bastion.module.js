@@ -145,7 +145,15 @@ angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextC
             return $state.is(stateName);
         };
 
-        $rootScope.stateIncludes = $state.includes;
+        $rootScope.stateIncludes = function (state, params) {
+            if (params !== undefined) {
+                angular.forEach(params, function (value, key) {
+                    params[key] = value.toString();
+                });
+            }
+
+            return $state.includes(state, params);
+        };
 
         $rootScope.transitionBack = function () {
             if (fromState) {

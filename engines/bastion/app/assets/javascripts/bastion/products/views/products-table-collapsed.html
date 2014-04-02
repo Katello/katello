@@ -6,12 +6,14 @@
   </thead>
 
   <tbody>
-    <tr alch-table-row ng-repeat="product in productTable.rows" row-select="product">
+    <tr alch-table-row
+        ng-repeat="product in productTable.rows"
+        row-select="product"
+        active-row="stateIncludes('products.details', {productId: product.id})">
       <td alch-table-cell>
         <a ui-sref="products.details.repositories.index({productId: product.id})">
           {{ product.name }}
         </a>
-        <i class="icon-chevron-right selected-icon" ng-show="product.selected"></i>
       </td>
     </tr>
   </tbody>

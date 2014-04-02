@@ -162,14 +162,17 @@ angular.module('alchemy')
         };
     }])
     .directive('alchTableRow', ['$parse', function ($parse) {
-        var rowSelectTemplate = function (model, attrs) {
+        var rowSelectTemplate, rowChoiceTemplate, activeRowTemplate;
+
+        rowSelectTemplate = function (model) {
             return '<td class="row-select">' +
                       '<input type="checkbox"' +
                               'ng-model="' + model + '.selected"' +
-                              'ng-disabled="' + attrs['ngDisabled'] + '"' +
                               'ng-change="itemSelected(' + model + ')">' +
                    '</td>';
-        }, rowChoiceTemplate = function (model) {
+        };
+
+        rowChoiceTemplate = function (model) {
             return '<td class="row-choice">' +
                       '<input type="radio"' +
                               'ng-model="table.chosenRow"' +
@@ -178,16 +181,32 @@ angular.module('alchemy')
                    '</td>';
         };
 
+        activeRowTemplate = function (activeTest) {
+            return '<i class="icon-chevron-right selected-icon" ' +
+                   'ng-show="' + activeTest  + ' "></i>';
+        };
+
         return {
             require: '^alchTable',
             restrict: 'A',
             scope: true,
             controller: 'AlchTableRowController',
             compile: function (tElement, tAttrs) {
+
+                if (tAttrs.activeRow !== undefined) {
+                    tElement.find('td:first-child').append(activeRowTemplate(tAttrs.activeRow));
+                }
+
                 if (tAttrs.rowSelect !== undefined) {
-                    tElement.prepend(rowSelectTemplate(tAttrs.rowSelect, tAttrs));
-                } else if (tAttrs.rowChoice !== undefined) {
+                    tElement.prepend(rowSelectTemplate(tAttrs.rowSelect));
+                }
+
+                if (tAttrs.rowChoice !== undefined) {
                     tElement.prepend(rowChoiceTemplate(tAttrs.rowChoice));
+                }
+
+                if (tAttrs.activeRow !== undefined) {
+                    tElement.find('td').attr('ng-class', '{ "active-row": ' + tAttrs.activeRow + ' }');
                 }
 
                 return function (scope, element, attrs, alchTableController) {
@@ -198,13 +217,17 @@ angular.module('alchemy')
 
                         scope.$watch('model.selected', function (selected) {
                             if (selected) {
-                                element.addClass('active-row');
+                                element.addClass('selected-row');
                             } else {
-                                element.removeClass('active-row');
+                                element.removeClass('selected-row');
                             }
                         });
                     } else if (attrs.rowChoice) {
                         scope.model = $parse(attrs.rowChoice)(scope);
+                    }
+
+                    if (attrs.activeRow) {
+                        scope.activeTest = $parse(attrs.activeRow)(scope);
                     }
 
                     scope.itemSelected = function (row) {
@@ -212,8 +235,8 @@ angular.module('alchemy')
                     };
 
                     scope.itemChosen = function (row) {
-                        element.parent().find('.active-row').removeClass('active-row');
-                        element.addClass('active-row');
+                        element.parent().find('.selected-row').removeClass('selected-row');
+                        element.addClass('selected-row');
                         alchTableController.itemChosen(row);
                     };
                 };

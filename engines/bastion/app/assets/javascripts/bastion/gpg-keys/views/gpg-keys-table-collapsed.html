@@ -6,7 +6,9 @@
   </thead>
 
   <tbody>
-    <tr alch-table-row ng-repeat="gpgKey in table.rows">
+    <tr alch-table-row
+        ng-repeat="gpgKey in table.rows"
+        active-row="stateIncludes('gpg-keys.details', {gpgKeyId: gpgKey.id})">
       <td alch-table-cell>
         <a class="clickable" ng-click="table.openGPGKey(gpgKey)">{{ gpgKey.name }}</a>
       </td>
