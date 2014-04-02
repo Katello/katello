@@ -69,7 +69,7 @@
         <tbody>
           <tr alch-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
             <td alch-table-cell colspan="8">
-              <a ui-sref="subscriptions.details.info({subscriptionId: name})">
+              <a href='subscriptions#/subscriptions?search=productName:"{{ name }}"'>
                 {{ name }}
               </a>
             </td>
