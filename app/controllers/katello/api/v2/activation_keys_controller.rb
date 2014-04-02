@@ -107,8 +107,8 @@ module Katello
     param_group :search, Api::V2::ApiController
     param :name, String, :desc => "system group name to filter by"
     def available_system_groups
-      filters = [:terms => {:id => SystemGroup.readable(@activation_key.organization).pluck(:id) -
-                   @activation_key.system_groups.pluck(:id)}]
+      filters = [:terms => {:id => SystemGroup.readable(@activation_key.organization).pluck("#{Katello::SystemGroup.table_name}.id") -
+                   @activation_key.system_groups.pluck("#{Katello::SystemGroup.table_name}.id")}]
       filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
       options = {
