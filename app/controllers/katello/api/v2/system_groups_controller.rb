@@ -210,7 +210,7 @@ module Katello
     private
 
     def filter_system
-      filters = [:terms => {:id => @system.system_groups.pluck(:id)}]
+      filters = [:terms => {:id => @system.system_groups.pluck("#{Katello::SystemGroup.table_name}.id")}]
 
       options = {
           :filters       => filters,
@@ -220,7 +220,7 @@ module Katello
     end
 
     def filter_activation_key
-      filters = [:terms => {:id => @activation_key.system_groups.pluck(:id)}]
+      filters = [:terms => {:id => @activation_key.system_groups.pluck("#{Katello::SystemGroup.table_name}.id")}]
 
       options = {
           :filters       => filters,
@@ -230,7 +230,7 @@ module Katello
     end
 
     def filter_organization
-      filters = [:terms => {:id => SystemGroup.readable(@organization).pluck(:id)}]
+      filters = [:terms => {:id => SystemGroup.readable(@organization).pluck("#{Katello::SystemGroup.table_name}.id")}]
       filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
       options = {
