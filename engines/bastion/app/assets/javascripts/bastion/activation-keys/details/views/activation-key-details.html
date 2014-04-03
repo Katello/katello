@@ -1,7 +1,7 @@
 <span page-title ng-model="activationKey">{{ 'Activation Key:' | translate }} {{ activationKey.name }}</span>
 
-<div class="loading-mask loading-mask-panel icon-3x" ng-show="panel.loading">
-  <i class="icon-spinner icon-spin"></i>
+<div class="loading-mask loading-mask-panel fa fa-3x" ng-show="panel.loading">
+  <i class="fa fa-spinner fa-spin"></i>
   {{ "Loading..." | translate }}
 </div>
 
@@ -18,12 +18,12 @@
 
       <!-- RFE copy activation key - http://projects.theforeman.org/issues/4407 -->
       <button class="btn btn-default" ng-click="showCopy = true" ng-hide="true">
-        <i class="icon-copy"></i>
+        <i class="fa fa-copy"></i>
         {{ "Copy Activation Key" | translate }}
       </button>
 
       <button class="btn btn-default" ui-sref="activation-keys.index">
-        <i class="icon-remove"></i>
+        <i class="fa fa-remove"></i>
         {{ "Close" | translate }}
       </button>
 

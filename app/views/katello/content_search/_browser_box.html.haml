@@ -14,7 +14,7 @@
         #view_autocomplete_list{'data-url'=>auto_complete_content_views_path}
           %input.hidden_selection{:type=>:hidden}
           = text_field_tag :view_auto_complete, "", :class => "auto_complete_input", :placeholder=>_('Auto-complete View')
-          %a.button{ :id => "add_view" }
+          %a.btn.btn-default{ :id => "add_view" }
             = _("Add")
           %ul
             %li.all
@@ -24,7 +24,7 @@
         #product_autocomplete_list{'data-url'=>auto_complete_products_path}
           %input.hidden_selection{:type=>:hidden}
           = text_field_tag :product_auto_complete, "", :class => "auto_complete_input", :placeholder=>_('Auto-complete Product')
-          %a.button{ :id => "add_product" }
+          %a.btn.btn-default{ :id => "add_product" }
             = _("Add")
           %ul
             %li.all
@@ -59,7 +59,7 @@
           = radio_button_tag :repos, :auto_complete_radio, true
           %input.hidden_selection{:type=>:hidden}
           = text_field_tag :repo_auto_complete, nil, :class => "auto_complete_input", :placeholder=>_('Auto-complete repository')
-          %a.button#add_repo
+          %a.btn.btn-default#add_repo
             = _("Add")
           %ul
             %li.all
@@ -156,4 +156,4 @@
                       name, author, version, summary, description, license, project_page, source, checksums, tag_list
 
 
-      %input#browse_button.fr.button{:type=>'submit', :value=>_('Go')}
+      %input#browse_button.fr.btn.btn-primary{:type=>'submit', :value=>_('Go')}

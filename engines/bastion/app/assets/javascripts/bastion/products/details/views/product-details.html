@@ -1,7 +1,7 @@
 <span page-title ng-model="product">{{ 'Details for Product:' | translate }} {{ product.name }}</span>
 
 <div class="loading-mask loading-mask-panel" ng-show="panel.loading">
-  <i class="icon-spinner icon-spin"></i>
+  <i class="fa fa-spinner fa fa-spin"></i>
   {{ "Loading..." | translate }}
 </div>
 
@@ -16,7 +16,7 @@
            modal-header='Remove Product "{{product.name}}"?'
            modal-body='Are you sure you want to remove product "{{ product.name }}"?'></div>
 
-      <i class="icon-question-sign" ng-show="!product.permissions.deletable"
+      <i class="fa fa-question-sign" ng-show="!product.permissions.deletable"
          tooltip="{{ 'You cannot remove this product because it was published to a content view or because you do not have permission.' | translate }}"
          tooltip-append-to-body="true">
       </i>
@@ -24,18 +24,18 @@
               ng-hide="product.readonly"
               ng-click="openModal()"
               ng-disabled="!product.permissions.deletable">
-        <i class="icon-trash"></i>
+        <i class="fa fa-trash"></i>
         {{ "Remove Product" | translate }}
       </button>
       <button class="btn btn-default" ui-sref="products.index">
-        <i class="icon-remove"></i>
+        <i class="fa fa-remove"></i>
         {{ "Close" | translate }}
       </button>
     </div>
   </header>
 
   <nav>
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs nav-tabs-pf">
       <li ng-class="{active: stateIncludes('products.details.info')}">
         <a translate
            ui-sref="products.details.info({productId: product.id})">
@@ -63,4 +63,5 @@
   </nav>
 
   <section class="nutupane-sub-section" ui-view></section>
+
 </section>

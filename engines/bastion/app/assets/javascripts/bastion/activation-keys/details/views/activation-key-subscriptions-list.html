@@ -2,17 +2,17 @@
 
 <section class="nutupane-sub-section" >
 
-  <div class="nutupane-bar">
+  <div class="row nutupane-bar">
 
     <div class="col-sm-3">
-      <div class="input-group input-group">
+      <div class="input-group">
         <input type="text"
                class="form-control"
                placeholder="{{ 'Search...' | translate }}"
                ng-model="subscriptionsTable.searchTerm"
                on-enter="subscriptionsTable.search(subscriptionsTable.searchTerm)"/>
         <span class="input-group-btn">
-          <button ng-click="subscriptionsTable.search(subscriptionsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
+          <button ng-click="subscriptionsTable.search(subscriptionsTable.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
         </span>
       </div>
     </div>
@@ -21,8 +21,17 @@
       <span translate>Showing {{ subscriptionsTable.rows.length }} of {{ subscriptionsTable.resource.subtotal }} ({{ subscriptionsTable.resource.total }} Total) Subscriptions</span>
     </div>
 
-    <div class="pull-right">
-      <div class="pull-left nutupane-info">
+    <div class="col-sm-6 pull-right">
+      <div ng-hide="activationKey.readonly" class="nutupane-actions pull-right">
+         <button class="btn btn-primary"
+                 translate
+                 ng-disabled="disableRemoveButton()"
+                 ng-click="removeSelected()">
+           Remove Selected
+         </button>
+      </div>
+
+      <div class="pull-right nutupane-info">
         <span translate>{{ subscriptionsTable.numSelected }} Selected</span>
         <span>|</span>
         <a class="deselect-action"
@@ -32,23 +41,14 @@
           Deselect All
         </a>
       </div>
-
-      <div ng-hide="activationKey.readonly" class="nutupane-actions pull-right">
-         <button class="btn btn-primary"
-                 translate
-                 ng-disabled="disableRemoveButton()"
-                 ng-click="removeSelected()">
-           Remove Selected
-         </button>
-      </div>
     </div>
   </div>
 
   <div alch-table="subscriptionsTable" class="nutupane">
     <div alch-container-scroll control-width="subscriptionsTable" alch-infinite-scroll="subscriptionsTable.nextPage()">
 
-      <div class="loading-mask icon-3x" ng-show="subscriptionsTable.working && subscriptionsTable.rows.length == 0">
-        <i class="icon-spinner icon-spin"></i>
+      <div class="loading-mask fa fa-3x" ng-show="subscriptionsTable.working && subscriptionsTable.rows.length == 0">
+        <i class="fa fa-spinner fa fa-spin"></i>
         {{ "Loading..." | translate }}
       </div>
 

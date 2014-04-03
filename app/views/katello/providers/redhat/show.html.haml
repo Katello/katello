@@ -1,23 +1,21 @@
 = javascript 'katello/providers/redhat'
 
 #redhat_provider
-  .grid_16
-    = help_tip_button('subscriptions-help')
-    = help_tip(_("Expand each Red Hat Product below to examine the different repository sets available.  When enabling a repository set, the different repositories within are discoverd and may be enabled individually."))
+  = help_tip_button('subscriptions-help')
+  = help_tip(_("Expand each Red Hat Product below to examine the different repository sets available.  When enabling a repository set, the different repositories within are discoverd and may be enabled individually."))
 
-  .grid_16
-    #providers
-      %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => "#{@provider.name}_#{@provider.id}"}
-      #provider
-        %h4 #{_("Enable Red Hat Repositories")}
+  #providers
+    %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => "#{@provider.name}_#{@provider.id}"}
+    #provider
+      %h1 #{_("Enable Red Hat Repositories")}
 
-  - if @provider.products.empty?
-    = (_("No Red Hat products currently exist, please import a manifest <a href='%s'>here</a> to receive Red Hat content.") % subscriptions_path).html_safe
-  - else
-    - tabs = redhat_repo_tabs
-    #content_tabs.grid_16
-      %ul
-        - for tab in tabs
-          %li
-            %a{:href=>redhat_provider_tab_providers_path({:tab => tab[:id]})}
-              = tab[:name]
+- if @provider.products.empty?
+  = (_("No Red Hat products currently exist, please import a manifest <a href='%s'>here</a> to receive Red Hat content.") % subscriptions_path).html_safe
+- else
+  - tabs = redhat_repo_tabs
+  #content_tabs
+    %ul.nav.nav-tabs
+      - for tab in tabs
+        %li
+          %a{:href=>redhat_provider_tab_providers_path({:tab => tab[:id]})}
+            = tab[:name]

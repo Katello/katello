@@ -1,7 +1,7 @@
 <span page-title ng-model="system">{{ 'System:' | translate }} {{ system.name }}</span>
 
 <div class="loading-mask loading-mask-panel" ng-show="panel.loading">
-  <i class="icon-spinner icon-spin"></i>
+  <i class="fa fa-spinner fa fa-spin"></i>
   {{ "Loading..." | translate }}
 </div>
 
@@ -18,7 +18,7 @@
 
       <button class="btn btn-default" ng-disabled="system.readonly" ng-click="openModal()" translate>Remove System</button>
       <button class="btn btn-default" ui-sref="systems.index">
-        <i class="icon-remove"></i>
+        <i class="fa fa-remove"></i>
         {{ "Close" | translate }}
       </button>
     </div>

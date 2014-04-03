@@ -11,7 +11,7 @@
   </div>
 
   <div class="alert alert-warning" ng-show="outOfDate">
-    <i class="inline-icon icon-exclamation"></i>
+    <i class="inline-icon fa fa-exclamation"></i>
     <span translate>
       Your selected systems have changed, it is highly recommended to refresh the calculated list of errata using the 'Refresh Errata' button below.
     </span>
@@ -26,14 +26,14 @@
 
     <div data-block="actions">
       <button class="btn btn-default" ng-disabled="detailsTable.working" ng-click="fetchErrata()">
-        <i class="icon-refresh"></i>
+        <i class="fa fa-refresh"></i>
         {{ "Refresh Table" | translate }}
       </button>
 
       <button class="btn btn-primary"
               ng-disabled="detailsTable.working || detailsTable.numSelected == 0"
               ng-click="confirm = true">
-        <i class="icon-plus"></i>
+        <i class="fa fa-plus"></i>
         {{ "Install Selected" | translate }}
       </button>
    </div>

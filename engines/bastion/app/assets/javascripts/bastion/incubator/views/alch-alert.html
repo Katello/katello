@@ -1,5 +1,10 @@
 <div ng-repeat="type in types">
   <div alert ng-repeat="alert in alerts[type]" type="type" close="closeAlert(type, $index)">
+    <i class="pficon pficon-ok" ng-if="type === 'success'"></i>
+    <i class="pficon pficon-error-exclamation" ng-if="type === 'error'"></i>
+    <i class="pficon pficon-warning-triangle" ng-if="type === 'warning'"></i>
+    <i class="pficon pficon-warning-exclamation" ng-if="type === 'warning'"></i>
+    <i class="pficon pficon-info" ng-if="type === 'info'"></i>
     {{ alert }}
   </div>
 </div>

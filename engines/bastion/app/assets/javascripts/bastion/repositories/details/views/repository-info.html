@@ -1,7 +1,7 @@
 <span page-title ng-model="repository">{{ 'Repository:' | translate }} {{ repository.name }}</span>
 <div>
   <a ng-href="#/products/{{ repository.product.id }}/repositories">
-    <i class="icon-double-angle-left"></i>
+    <i class="fa fa-double-angle-left"></i>
     {{ "Back to Repository List" | translate }}
   </a>
 
@@ -9,7 +9,7 @@
     <button class="btn btn-default"
             ng-click="syncRepository(repository); working = true"
             ng-disabled="syncInProgress(repository.sync_state)">
-      <i class="icon-refresh"></i>
+      <i class="fa fa-refresh"></i>
       <span translate>Sync Now</span>
     </button>
 
@@ -184,7 +184,7 @@
       <div class="control-group">
         <div class="control-button">
           <button class="primary" upload-submit ng-click="progress.uploading = true">
-            <i class="icon-spinner icon-spin" ng-show="progress.uploading"></i>
+            <i class="fa fa-spinner fa fa-spin" ng-show="progress.uploading"></i>
             <span ng-show="progress.uploading" translate>Uploading...</span>
             <span ng-hide="progress.uploading" translate>Upload</span>
           </button>
