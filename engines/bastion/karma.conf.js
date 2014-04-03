@@ -17,6 +17,7 @@ module.exports = function(config) {
             '.tmp/bower_components/angular-mocks/angular-mocks.js',
             'vendor/assets/javascripts/bastion/angular-sanitize/angular-sanitize.js',
             'vendor/assets/javascripts/bastion/angular-resource/angular-resource.js',
+            'vendor/assets/javascripts/bastion/**/*.js',
             'vendor/assets/javascripts/bastion/alchemy/alchemy.js',
             'vendor/assets/javascripts/bastion/underscore/underscore.js',
             'vendor/assets/javascripts/bastion/angular-ui-router/angular-ui-router.js',
@@ -27,9 +28,15 @@ module.exports = function(config) {
             '../../app/assets/javascripts/katello/common/notices.js',
             '../../app/assets/javascripts/katello/common/experimental/katello-globals.module.js',
 
-            // Must load modules first
+            // Load Bastion module first
+            'app/assets/javascripts/bastion/bastion.module.js',
+
+            // Load Bastion test constants
+            'test/bastion/test-constants.js',
+
+            // Load modules first
             'app/assets/javascripts/bastion/**/*.module.js',
-            'app/assets/javascripts/bastion/**/*.js ',
+            'app/assets/javascripts/bastion/**/*.js',
             'app/assets/javascripts/bastion/**/*.html',
 
             'test/test-mocks.module.js',
