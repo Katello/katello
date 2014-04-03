@@ -40,6 +40,19 @@ module Katello
       end # included
 
       module ClassMethods
+        # scope
+        def with_repos_only(env)
+          with_repos(env, false)
+        end
+
+        # scope
+        def with_enabled_repos_only(env)
+          with_repos(env, true)
+        end
+
+        def all_readable_in_library(org)
+          all_readable(org).with_repos_only(org.library)
+        end
 
         def all_readable(org)
           Katello::Product.where(:provider_id => Katello::Provider.readable(org).pluck(:id))
@@ -86,6 +99,16 @@ module Katello
 
         def sync_items(org)
           org.syncable? ? (joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => org)) : where("0=1")
+        end
+
+        def with_repos(env, enabled_only)
+          query = Katello::Repository.in_environment(env.id).select(:product_id)
+          query = query.enabled if enabled_only
+          joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => env.organization).
+              where("(#{Katello::Provider.table_name}.provider_type ='#{Katello::Provider::CUSTOM}') OR \
+                    (#{Katello::Provider.table_name}.provider_type ='#{Katello::Provider::ANONYMOUS}') OR \
+                    (#{Katello::Provider.table_name}.provider_type ='#{Katello::Provider::REDHAT}' AND \
+                    #{Katello::Product.table_name}.id in (#{query.to_sql}))")
         end
 
       end # ClassMethods

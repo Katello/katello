@@ -31,6 +31,21 @@ rhel_6_x86_64:
   product_id:           <%= ActiveRecord::Fixtures.identify(:redhat) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  feed:                 http://www.validurl.com
+  enabled:              true
+
+rhel_6_x86_64_disabled:
+  name:                 RHEL 6 x86_64 Disabled
+  pulp_id:              9
+  content_id:           1
+  label:                rhel_6_x86_64_disabled_label
+  relative_path:        '/ACME_Corporation/library/rhel_6_label'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:redhat) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  feed:                 http://www.validurl.com
+  enabled:              false
 
 p_forge:
   name:                 P Forge

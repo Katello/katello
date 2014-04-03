@@ -33,7 +33,6 @@ class Repository < Katello::Model
   # def create_event
   #   Katello::Actions::RepositoryCreate
   # end
-
   include AsyncOrchestration
   include Ext::LabelFromName
   include Katello::Engine.routes.url_helpers
@@ -89,6 +88,8 @@ class Repository < Katello::Model
   scope :non_puppet, where("content_type != ?", PUPPET_TYPE)
   scope :non_archived, where('environment_id is not NULL')
   scope :archived, where('environment_id is NULL')
+
+  alias_attribute :url, :feed
 
   def organization
     if self.environment

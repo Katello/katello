@@ -7,7 +7,7 @@ extends 'katello/api/v2/common/syncable'
 
 attributes :content_type
 attributes :unprotected, :full_path
-attributes :feed,
+attributes :url,
            :relative_path,
            :enabled
 attributes :major, :minor
