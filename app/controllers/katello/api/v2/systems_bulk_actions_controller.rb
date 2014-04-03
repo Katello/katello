@@ -14,17 +14,17 @@ module Katello
 class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
 
   before_filter :find_organization
-  before_filter :load_search_service
+  before_filter :find_groups, :only => [:bulk_add_system_groups, :bulk_remove_system_groups]
+  before_filter :find_environment, :only => [:environment_content_view]
+  before_filter :find_content_view, :only => [:environment_content_view]
+  before_filter :authorize
+
   before_filter :find_editable_systems, :except => [:destroy_systems, :applicable_errata]
   before_filter :find_deletable_systems, :only => [:destroy_systems]
   before_filter :find_readable_systems, :only => [:applicable_errata]
 
-  before_filter :find_environment, :only => [:environment_content_view]
-  before_filter :find_content_view, :only => [:environment_content_view]
-
-  before_filter :find_groups, :only => [:bulk_add_system_groups, :bulk_remove_system_groups]
   before_filter :validate_content_action, :only => [:install_content, :update_content, :remove_content]
-  before_filter :authorize
+  before_filter :load_search_service
 
   PARAM_ACTIONS = {
       :install_content => {
