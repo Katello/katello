@@ -10,6 +10,7 @@ require 'util/puppet'
 # variables which are taken from Puppet
 first_user_name = (un = Util::Puppet.config_value("user_name")).blank? ? 'admin' : un
 first_org_name = (org = Util::Puppet.config_value("org_name")).blank? ? 'ACME_Corporation' : org
+first_location_name = (loc = Util::Puppet.config_value("location_name")).blank? ? 'Default' : loc
 
 def format_errors(model = nil)
   return '(nil found)' if model.nil?
@@ -55,6 +56,10 @@ first_org_label = first_org_name.gsub(' ', '_')
 first_org = Organization.find_or_create_by_name(:name => first_org_name, :label => first_org_label, :description => first_org_desc)
 fail "Unable to create first org: #{format_errors first_org}" if first_org && first_org.errors.size > 0
 fail "Are you sure you cleared candlepin?! Unable to create first org!" if first_org.kt_environments.nil?
+
+# Create an Initial Location.
+# This is a global location for the satelite server by default
+Location.find_or_create_by_name(:name => first_location_name)
 
 if Katello.config.use_pulp
   Katello::Repository.ensure_sync_notification
