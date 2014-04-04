@@ -1,3 +1,10 @@
+simple_key:
+  name: Simple Activation Key
+  description: A simple activation key.
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+
 dev_key:
   name: DevKey
   created_at: <%= Time.now %>
