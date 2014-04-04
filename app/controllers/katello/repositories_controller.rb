@@ -17,12 +17,14 @@ class RepositoriesController < Katello::ApplicationController
   respond_to :html, :js
 
   before_filter :authorize
-  before_filter :find_repository
+  before_filter :find_repository, :except => [:auto_complete_library]
 
   def rules
+    read_any_test = lambda{Provider.any_readable?(current_organization)}
     org_edit = lambda{current_organization.redhat_manageable?}
     {
-      :enable_repo => org_edit
+      :enable_repo => org_edit,
+      :auto_complete_library => read_any_test
     }
   end
 
@@ -31,6 +33,26 @@ class RepositoriesController < Katello::ApplicationController
     @repository.save!
     product_content = @repository.product.product_content_by_id(@repository.content_id)
     render :json => {:id => @repository.id, :can_disable_repo_set => product_content.can_disable?}
+  end
+
+  def auto_complete_library
+    # retrieve and return a list (array) of repo names in library that contain the 'term' that was passed in
+    term = Util::Search.filter_input params[:term]
+    name = 'name:' + term
+    name_query = name + ' OR ' + name + '*'
+    ids = Repository.readable(current_organization.library).collect{|r| r.id}
+    repos = Repository.search do
+      query {string name_query}
+      filter "and", [
+          {:terms => {:id => ids}},
+          {:terms => {:enabled => [true]}}
+      ]
+    end
+
+    render :json => (repos.map do |repo|
+      label = _("%{repo} (Product: %{product})") % {:repo => repo.name, :product => repo.product}
+      {:id => repo.id, :label => label, :value => repo.name}
+    end)
   end
 
   protected
