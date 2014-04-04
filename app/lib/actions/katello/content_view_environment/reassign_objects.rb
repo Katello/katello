@@ -16,7 +16,6 @@ module Actions
       class ReassignObjects < Actions::Base
 
         def plan(content_view_environment, options)
-          action_subject(content_view_environment.content_view)
 
           concurrence do
             content_view_environment.systems.each do |system|

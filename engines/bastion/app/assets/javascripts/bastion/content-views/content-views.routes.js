@@ -74,6 +74,36 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         controller: 'ContentViewPromotionController',
         templateUrl: 'content-views/details/views/content-view-promotion.html'
     })
+    .state('content-views.details.version-deletion', {
+        collapsed: true,
+        abstract: true,
+        controller: 'ContentViewVersionDeletionController',
+        template: '<div ui-view></div>'
+    })
+    .state('content-views.details.version-deletion.environments', {
+        collapsed: true,
+        url: '/versions/:versionId/delete/environments',
+        controller: 'ContentViewVersionDeletionEnvironmentsController',
+        templateUrl: 'content-views/deletion/views/version-deletion-environments.html'
+    })
+    .state('content-views.details.version-deletion.content-hosts', {
+        url: '/versions/:versionId/delete/content-hosts',
+        collapsed: true,
+        controller: 'ContentViewVersionDeletionContentHostsController',
+        templateUrl: 'content-views/deletion/views/version-deletion-content-hosts.html'
+    })
+    .state('content-views.details.version-deletion.activation-keys', {
+        url: '/versions/:versionId/delete/activation-keys',
+        collapsed: true,
+        controller: 'ContentViewVersionDeletionActivationKeysController',
+        templateUrl: 'content-views/deletion/views/version-deletion-activation-keys.html'
+    })
+    .state('content-views.details.version-deletion.confirm', {
+        url: '/versions/:versionId/delete/confirm',
+        collapsed: true,
+        controller: 'ContentViewVersionDeletionConfirmController',
+        templateUrl: 'content-views/deletion/views/version-deletion-confirm.html'
+    })
     .state('content-views.details.repositories', {
         abstract: true,
         collapsed: true,

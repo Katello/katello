@@ -31,6 +31,7 @@ angular.module('Bastion.content-views').factory('ContentView',
                 update: {method: 'PUT'},
                 publish: {method: 'POST', params: {action: 'publish'}},
                 history: {method: 'GET', params: {action: 'history'}},
+                removeAssociations: {method: 'PUT', params: {action: 'remove'}},
                 versions: {method: 'GET', isArray: false, params: {action: 'content_view_versions'}},
                 components: {method: 'GET', transformResponse: function (data) {
                     var contentView = angular.fromJson(data);

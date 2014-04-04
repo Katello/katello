@@ -202,7 +202,7 @@ module Katello
       options[:content_view_versions] = versions
       options[:content_view_environments] = cv_envs
 
-      task = async_task(::Actions::Katello::ContentView::Remove, @view, cv_envs, versions, options)
+      task = async_task(::Actions::Katello::ContentView::Remove, @view, options)
       respond_for_async :resource => task
     end
 

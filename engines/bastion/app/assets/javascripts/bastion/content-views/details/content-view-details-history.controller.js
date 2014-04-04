@@ -37,12 +37,18 @@ angular.module('Bastion.content-views').controller('ContentViewHistoryController
         $scope.detailsTable = nutupane.table;
 
         $scope.actionText = function (history) {
-            var message;
-            if (history.environment) {
-                message = translate("Promote to %s").replace('%s', history.environment.name);
-            } else {
-                message = translate("Publish new version.");
+            var message,
+                taskType = history.task.label,
+                taskTypes = $scope.taskTypes;
+
+            if (taskType === taskTypes.deletion) {
+                message = translate("Deleted from %s").replace('%s', history.environment.name);
+            } else if (taskType === taskTypes.promotion) {
+                message = translate("Promoted to %s").replace('%s', history.environment.name);
+            } else if (taskType === taskTypes.publish) {
+                message = translate("Published new version");
             }
+
             return message;
         };
     }]

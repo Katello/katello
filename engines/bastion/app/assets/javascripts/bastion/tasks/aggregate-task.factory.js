@@ -35,8 +35,10 @@ angular.module('Bastion.tasks').factory('AggregateTask',
         var newAggregate = function (taskIds, callback) {
             var taskMap = {},
                 taskSearches = {},
-                state,
-                progressbar = {};
+                taskRepresentation = {
+                    state: undefined,
+                    progressbar: {}
+                };
 
             var updateTask = function (task) {
                 taskMap[task.id] = task;
@@ -93,21 +95,22 @@ angular.module('Bastion.tasks').factory('AggregateTask',
                 _.each(taskMap, function (task) {
                     total = total + task.progressbar.value;
                 });
-                progressbar.value = total / _.size(taskMap);
-                progressbar.type = greatestType();
-                state = greatestState();
+                taskRepresentation.progressbar.value = total / _.size(taskMap);
+                taskRepresentation.progressbar.type = greatestType();
+                taskRepresentation.state = greatestState();
             };
+
+            taskRepresentation.unregisterAll = unregisterAll;
+            taskRepresentation.unregisterSearch = unregisterSearch;
+
 
             _.each(taskIds, function (taskId) {
-                taskSearches[taskId] = Task.registerSearch({ 'type': 'task', 'task_id': taskId }, updateTask);
+                if (taskSearches[taskId] === undefined) {
+                    taskSearches[taskId] = Task.registerSearch({ 'type': 'task', 'task_id': taskId }, updateTask);
+                }
             });
 
-            return {
-                unregisterAll:    unregisterAll,
-                unregisterSearch: unregisterSearch,
-                progressbar:      progressbar,
-                state:            state
-            };
+            return taskRepresentation;
         };
         return {new: newAggregate};
     }]);

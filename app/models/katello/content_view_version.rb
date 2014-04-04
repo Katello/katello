@@ -55,7 +55,11 @@ class ContentViewVersion < Katello::Model
   end
 
   def active_history
-    self.history.active
+    self.history.select{|history| history.task.pending}
+  end
+
+  def last_event
+    self.history.order(:created_at).last
   end
 
   def name
