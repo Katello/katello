@@ -71,7 +71,7 @@
               Not Synced
             </span>
             <span ng-hide="repository.last_sync == null">
-              <a href="sync_management/index">{{ repository.sync_state | capitalize}}</a>
+              <a href="sync_management">{{ repository.sync_state | capitalize}}</a>
               ({{ repository.last_sync | date:"short" }})
             </span>
           </span>
