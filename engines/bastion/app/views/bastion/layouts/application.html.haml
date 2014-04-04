@@ -6,7 +6,7 @@
   Katello
 
 = content_for(:content) do
-  %article.maincontent.rcue-styles{'ng-app' => "Bastion"}
+  %article.maincontent.rcue-styles
     %section.container-fluid{'ui-view' => ''}
 
 = content_for(:javascripts) do
@@ -20,5 +20,6 @@
           consumerCertRPM: "#{Katello.config.consumer_cert_rpm}",
           markTranslated: #{SETTINGS[:mark_translated] || false}
       });
+  = yield :bastion_javascripts
 
 = render :file => "layouts/base"
