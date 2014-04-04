@@ -15,6 +15,9 @@ module Glue::ElasticSearch::PuppetModule
   extend ActiveSupport::Concern
 
   included do
+
+    include Glue::ElasticSearch::BackendIndexedModel
+
     def index_options
       {
         "_type"             => :puppet_module,
