@@ -18,7 +18,7 @@ module Katello
     end
 
     def subscription_manager_configuration_url
-      "#{Setting['foreman_url']}/pub/#{Katello.config.consumer_cert_rpm}"
+      "#{Setting['foreman_url']}/pub/#{Katello.config.consumer_cert_rpm}".sub(/\Ahttps/, 'http')
     end
   end
 end
