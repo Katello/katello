@@ -89,7 +89,7 @@ module Katello
       @search_service.model =  item_class
       options[:per_page] = 1
       options[:facets] = {facet_name => term}
-      options[:facet_filters] =  options[:filters]
+      options[:facet_filters] =  {:and => options[:filters]}
 
       @search_service.retrieve('', 0, options)
 
