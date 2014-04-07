@@ -26,7 +26,10 @@ module Actions
           plan_action(Candlepin::Environment::SetContent,
                       cp_environment_id: view_env.cp_id,
                       content_ids:       content_ids)
-          plan_action(Katello::Foreman::ContentUpdate, environment, content_view)
+
+          unless content_view.default?
+            plan_action(Katello::Foreman::ContentUpdate, environment, content_view)
+          end
         end
 
       end
