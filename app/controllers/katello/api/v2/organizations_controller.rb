@@ -38,7 +38,7 @@ module Katello
       }
     end
 
-    api :GET, '/organizations', 'List all :resource_id'
+    api :GET, '/organizations', 'List all organizations'
     param_group :search, Api::V2::ApiController
     def index
       @render_template = 'katello/api/v2/organizations/index'
@@ -64,6 +64,11 @@ module Katello
     param :description, String, :desc => "description"
     def create
       super
+    end
+
+    api :DELETE, '/organizations/:id', 'Delete an organization'
+    def destroy
+      process_response @organization.destroy, _("Deleted organization '%s'") % params[:id]
     end
 
     api :PUT, "/organizations/:id/repo_discover", "Discover Repositories"
