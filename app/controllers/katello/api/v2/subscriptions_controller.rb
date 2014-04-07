@@ -168,6 +168,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   api :POST, "/subscriptions/upload", "Upload a subscription manifest"
   param :organization_id, :identifier, :desc => "Organization id", :required => true
   param :content, File, :desc => "Subscription manifest file", :required => true
+  param :repository_url, String, :desc => "repository url", :required => false
   def upload
     fail HttpErrors::BadRequest, _("No manifest file uploaded") if params[:content].blank?
 
@@ -177,6 +178,12 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
       temp_file.write params[:content].read
     ensure
       temp_file.close
+    end
+
+    # repository url
+    if repo_url = params[:repository_url]
+      @provider.repository_url = repo_url
+      @provider.save!
     end
 
     task = async_task(::Actions::Katello::Provider::ManifestImport, @provider, File.expand_path(temp_file.path), params[:force])
