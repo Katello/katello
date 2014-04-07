@@ -44,7 +44,7 @@ describe('Factory: Repository', function() {
         $httpBackend.expectGET('/api/v2/repositories?organization_id=ACME&product_id=1')
                     .respond(repositories);
 
-        Repository.query({'product_id': 1}, function(repositories) {
+        Repository.queryPaged({'product_id': 1}, function(repositories) {
             expect(repositories.records.length).toBe(1);
         });
     });

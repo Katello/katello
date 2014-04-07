@@ -15,21 +15,19 @@
  * @ngdoc service
  * @name  Bastion.content-views.factory:ContentView
  *
- * @requires $resource
+ * @requires BastionResource
  * @requires translate
  * @requires CurrentOrganization
  *
  * @description
- *   Provides a $resource for interacting with environments.
+ *   Provides a BastionResource for interacting with environments.
  */
 angular.module('Bastion.content-views').factory('ContentView',
-    ['$resource', 'translate', 'CurrentOrganization',
-    function ($resource, translate, CurrentOrganization) {
-        return $resource('/api/v2/content_views/:id/:action',
+    ['BastionResource', 'translate', 'CurrentOrganization',
+    function (BastionResource, translate, CurrentOrganization) {
+        return BastionResource('/api/v2/content_views/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
-                queryPaged:  {method: 'GET', isArray: false},
-                queryUnpaged: {method: 'GET', isArray: false, params: {'full_result': true}},
                 update: {method: 'PUT'},
                 publish: {method: 'POST', params: {action: 'publish'}},
                 history: {method: 'GET', params: {action: 'history'}},

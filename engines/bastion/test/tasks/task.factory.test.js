@@ -41,10 +41,10 @@ describe('Factory: Task', function() {
     });
 
     it('provides a way to get a list of tasks', function() {
-        $httpBackend.expectGET('/api/v2/tasks?organization_id=ACME')
+        $httpBackend.expectGET('/api/v2/tasks?full_result=true&organization_id=ACME')
                     .respond(tasks);
 
-        Task.query(function(tasks) {
+        Task.queryUnpaged(function(tasks) {
             expect(tasks.records.length).toBe(1);
         });
     });

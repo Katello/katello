@@ -18,7 +18,7 @@
 * @requires Task
  *
 * @description
-*   Provides a $resource for aggregating multiple tasks into a task like interface.
+*   Provides a BastionResource for aggregating multiple tasks into a task like interface.
 *
 */
 

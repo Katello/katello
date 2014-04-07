@@ -75,7 +75,7 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
             var contentViewId = $scope.contentView.id || $scope.$stateParams.contentViewId;
             $scope.contentView.versions = [];
 
-            ContentViewVersion.query({'content_view_id': contentViewId}, function (data) {
+            ContentViewVersion.queryUnpaged({'content_view_id': contentViewId}, function (data) {
                 $scope.versions = data.results;
                 if ($scope.contentView) {
                     $scope.contentView.versions = data.results;

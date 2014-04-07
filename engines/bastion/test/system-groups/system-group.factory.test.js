@@ -36,7 +36,7 @@ describe('Factory: SystemGroup', function() {
     it('makes a request to get the system group list from the API.', function() {
         $httpBackend.expectGET('/api/system_groups').respond(systemGroups);
 
-        SystemGroup.query(function(response) {
+        SystemGroup.queryPaged(function(response) {
             expect(response.results.length).toBe(systemGroups.results.length);
 
             for (var i = 0; i < systemGroups.results.length; i++) {

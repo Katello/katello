@@ -44,7 +44,7 @@ describe('Factory: Product', function() {
     it('provides a way to get a list of products', function() {
         $httpBackend.expectGET('/api/products').respond(products);
 
-        Product.query(function(products) {
+        Product.queryPaged(function(products) {
             expect(products.records.length).toBe(2);
         });
     });

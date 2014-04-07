@@ -15,16 +15,16 @@
  * @ngdoc service
  * @name  Bastion.subscriptions.factory:Subscription
  *
- * @requires $resource
+ * @requires BastionResource
  * @requires CurrentOrganization
  *
  * @description
- *   Provides a $resource for a subscription or list of subscriptions
+ *   Provides a BastionResource for a subscription or list of subscriptions
  */
-angular.module('Bastion.subscriptions').factory('Subscription', ['$resource', 'CurrentOrganization',
-    function ($resource, CurrentOrganization) {
-        return $resource('/api/v2/organizations/:org/subscriptions/:id/:action', {'org': CurrentOrganization}, {
-            query: {method: "GET"}
-        });
+angular.module('Bastion.subscriptions').factory('Subscription', ['BastionResource', 'CurrentOrganization',
+    function (BastionResource, CurrentOrganization) {
+
+        return BastionResource('/api/v2/organizations/:org/subscriptions/:id/:action', {'org': CurrentOrganization}, {});
+
     }]
 );

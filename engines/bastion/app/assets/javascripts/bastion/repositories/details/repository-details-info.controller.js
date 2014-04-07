@@ -47,7 +47,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
         $scope.gpgKeys = function () {
             var deferred = $q.defer();
 
-            GPGKey.query(function (gpgKeys) {
+            GPGKey.queryUnpaged(function (gpgKeys) {
                 var results = gpgKeys.results;
 
                 results.unshift({id: null});

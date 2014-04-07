@@ -15,20 +15,19 @@
  * @ngdoc service
  * @name  Bastion.content-views.factory:ContentViewVersion
  *
- * @requires $resource
+ * @requires BastionResource
  * @requires CurrentOrganization
  *
  * @description
- *   Provides a $resource for interacting with Content View Versions.
+ *   Provides a BastionResource for interacting with Content View Versions.
  */
 angular.module('Bastion.content-views.versions').factory('ContentViewVersion',
-    ['$resource', 'CurrentOrganization',
-    function ($resource, CurrentOrganization) {
+    ['BastionResource', 'CurrentOrganization',
+    function (BastionResource, CurrentOrganization) {
 
-        return $resource('/api/v2/content_view_versions/:id/:action',
+        return BastionResource('/api/v2/content_view_versions/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
-                query:  {method: 'GET', isArray: false},
                 update: {method: 'PUT'},
                 promote: {method: 'POST', params: {action: 'promote'}}
             }

@@ -15,15 +15,15 @@
  * @ngdoc service
  * @name  Bastion.systems.factory:SystemErratum
  *
- * @requires $resource
+ * @requires BastionResource
  *
  * @description
- *   Provides a $resource for the system errata of a single system
+ *   Provides a BastionResource for the system errata of a single system
  */
 angular.module('Bastion.systems').factory('SystemErratum',
-    ['$resource', function ($resource) {
+    ['BastionResource', function (BastionResource) {
 
-        return $resource('/api/v2/systems/:id/errata/:errata_id/:action', {id: '@uuid'}, {
+        return BastionResource('/api/v2/systems/:id/errata/:errata_id/:action', {id: '@uuid'}, {
             get: {method: 'GET', isArray: false},
             apply: {method: 'PUT', params: {action: 'apply'}}
         });

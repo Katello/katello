@@ -15,17 +15,15 @@
  * @ngdoc service
  * @name  Bastion.errata.factory:Erratum
  *
- * @requires $resource
+ * @requires BastionResource
  *
  * @description
- *   Provides a $resource for Errata
+ *   Provides a BastionResource for Errata
  */
 angular.module('Bastion.errata').factory('Erratum',
-    ['$resource', function ($resource) {
+    ['BastionResource', function (BastionResource) {
 
-        return $resource('/api/v2/errata/:id/', {id: '@id'}, {
-            query:  { method: 'GET'}
-        });
+        return BastionResource('/api/v2/errata/:id/', {id: '@id'}, {});
 
     }]
 );

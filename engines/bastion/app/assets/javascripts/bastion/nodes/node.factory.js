@@ -15,16 +15,15 @@
  * @ngdoc service
  * @name  Bastion.nodes.factory:Node
  *
- * @requires $resource
+ * @requires BastionResource
  *
  * @description
- *   Provides a $resource for nodes or list of nodes.
+ *   Provides a BastionResource for nodes or list of nodes.
  */
 angular.module('Bastion.nodes').factory('Node',
-    ['$resource', function ($resource) {
+    ['BastionResource', function (BastionResource) {
 
-        return $resource('/api/nodes/:id/:action', {id: '@id'}, {
-            query:  {method: 'GET'}
+        return BastionResource('/api/nodes/:id/:action', {id: '@id'}, {
         });
 
     }]

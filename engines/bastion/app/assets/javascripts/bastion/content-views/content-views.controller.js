@@ -34,7 +34,7 @@ angular.module('Bastion.content-views').controller('ContentViewsController',
             'organization_id':  CurrentOrganization,
             'sort_by':          'name',
             'sort_order':       'ASC'
-        }, 'queryPaged');
+        });
 
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
