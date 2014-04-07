@@ -210,7 +210,16 @@
 
       <div class="detail">
         <div alert type="'info'" ng-show="editContentView">
-          <p translate>You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.</p>
+          <p translate ng-show="contentViews.length === 0">
+            The system requires being attached to a content view and the environment you have chosen has no content views promoted to it. 
+            See the <a href="{{ RootURL }}/content_views/all">content views page</a> to manage and promote a content view. 
+          </p>
+          <p translate ng-show="contentViews.length !== 0">
+            You must select a new content view before your change of environment can be saved. 
+          </p>
+          <p translate>
+            Use the cancel button on content view selection to revert your environment selection.
+          </p>
         </div>
         <span class="info-label" translate>Environment</span>
         <span path-selector="environments"

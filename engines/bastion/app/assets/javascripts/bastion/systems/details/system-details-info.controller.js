@@ -89,6 +89,7 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
 
             ContentView.queryUnpaged({ 'environment_id': $scope.system.environment.id}, function (response) {
                 deferred.resolve(response.results);
+                $scope.contentViews = response.results;
             });
 
             return deferred.promise;
