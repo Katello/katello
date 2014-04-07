@@ -31,6 +31,16 @@ module Katello
           ::Actions::Katello::User::Create
         end
 
+        def update_action
+          sync_action!
+          ::Actions::Katello::User::Update
+        end
+
+        def destroy_action
+          sync_action!
+          ::Actions::Katello::User::Destroy
+        end
+
         include Ext::IndexedModel
 
         include AsyncOrchestration

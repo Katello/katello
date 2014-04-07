@@ -21,30 +21,33 @@ module ::Actions::Pulp::User
       stub_remote_user
     end
 
-    let(:planned_action) do
-      create_and_plan_action action_class,
-                             remote_id: 'user_id'
+    describe 'Create' do
+      it 'runs' do
+        planned_action = create_and_plan_action ::Actions::Pulp::User::Create,
+                                                remote_id: 'user_id'
+
+        run_action planned_action do |action|
+          runcible_expects(action, :resources, :user, :create)
+        end
+      end
     end
-  end
 
-  class CreateTest < TestBase
-    let(:action_class) { ::Actions::Pulp::User::Create }
+    describe 'Superuser' do
 
-    it 'runs' do
-      run_action planned_action do |action|
-        runcible_expects(action, :resources, :user, :create)
+      { ::Actions::Pulp::Superuser::Add    => :add,
+        ::Actions::Pulp::Superuser::Remove => :remove
+      }.each do |action, method|
+        describe action.to_s.demodulize do
+          specify do
+            planned_action = create_and_plan_action action,
+                                                    remote_id: 'user_id'
+            run_action planned_action do |action|
+              runcible_expects(action, :resources, :role, method)
+            end
+          end
+        end
       end
     end
   end
 
-  class SetSuperuserTest < TestBase
-    let(:action_class) { ::Actions::Pulp::User::SetSuperuser }
-
-    it 'runs' do
-      run_action planned_action do |action|
-        runcible_expects(action, :resources, :role, :add)
-      end
-    end
-  end
 end
-

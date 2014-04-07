@@ -20,13 +20,10 @@ module Actions
           action_subject user
           sequence do
             plan_action(Pulp::User::Create, remote_id: user.remote_id)
-            plan_action(Pulp::User::SetSuperuser, remote_id: user.remote_id)
-            plan_action(ElasticSearch::Reindex, user)
+            plan_action(Pulp::Superuser::Add, remote_id: user.remote_id)
           end
-        end
 
-        def humanized_name
-          _("Create")
+          plan_action(ElasticSearch::Reindex, user)
         end
 
       end

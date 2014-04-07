@@ -18,22 +18,39 @@ module ::Actions::Katello::User
     include Dynflow::Testing
     include Support::Actions::Fixtures
 
-    let(:action) { create_action action_class }
-  end
+    actions = [Create, Update, Destroy]
 
-  class CreateTest < TestBase
-    let(:action_class) { ::Actions::Katello::User::Create }
+    actions.each do |action_class|
+      describe action_class.to_s.demodulize do
+        let(:action_class) { action_class }
 
-    it 'plans' do
-      user = stub('cp',
-                  remote_id: 'stubbed_user',
-                  disable_auto_reindex!: true)
-      action.stubs(:action_subject).with(user)
-      plan_action(action, user)
-      assert_action_planed_with(action, ::Actions::Pulp::User::Create, remote_id: 'stubbed_user')
-      assert_action_planed_with(action,
-                                ::Actions::Pulp::User::SetSuperuser, remote_id: 'stubbed_user')
-      assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, user)
+        it 'plans' do
+          user   = stub('cp',
+                        remote_id:             'stubbed_user',
+                        disable_auto_reindex!: true)
+          action = create_action action_class
+          action.stubs(:action_subject).with(user)
+          plan_action(action, user)
+          assert_action_planed_with action, ::Actions::ElasticSearch::Reindex, user
+
+          case action_class
+          when Create
+            assert_action_planed_with(action,
+                                      ::Actions::Pulp::User::Create,
+                                      remote_id: 'stubbed_user')
+            assert_action_planed_with(action,
+                                      ::Actions::Pulp::Superuser::Add,
+                                      remote_id: 'stubbed_user')
+          when Destroy
+            assert_action_planed_with(action,
+                                      ::Actions::Pulp::User::Destroy,
+                                      remote_id: 'stubbed_user')
+            assert_action_planed_with(action,
+                                      ::Actions::Pulp::Superuser::Remove,
+                                      remote_id: 'stubbed_user')
+          end
+        end
+      end
     end
   end
 end

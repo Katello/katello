@@ -33,10 +33,17 @@ module Actions::ElasticSearch
       create_and_plan_action action_class, repository
     end
 
-    it 'finalizes' do
+    it 'finalizes when resource present' do
       finalize_action planned_action do |action|
-        ::Katello::Repository.expects(:find).with(123).returns(repository)
+        ::Katello::Repository.expects(:find_by_id).with(123).returns(repository)
         repository.expects(:update_index)
+      end
+    end
+
+    it 'finalizes when resource not present' do
+      finalize_action planned_action do |action|
+        ::Katello::Repository.expects(:find_by_id).with(123).returns(nil)
+        ::Katello::Repository.expects(:index).returns(mock(:remove => true))
       end
     end
   end

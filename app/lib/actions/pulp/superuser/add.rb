@@ -12,16 +12,11 @@
 
 module Actions
   module Pulp
-    module User
-      class SetSuperuser < Pulp::Abstract
+    module Superuser
+      class Add < Abstract
 
-        input_format do
-          param :remote_id, String
-          param :pulp_user, String
-        end
-
-        def run
-          output[:response] = pulp_resources.role.add("super-users", input[:remote_id])
+        def operation
+          :add
         end
 
       end
