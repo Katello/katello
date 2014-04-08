@@ -19,6 +19,9 @@ module Actions
 
         def plan(system, activation_keys = [])
           system.disable_auto_reindex!
+
+          plan_action(Katello::System::ActivationKeys, system, activation_keys)
+
           cp_create = plan_action(Candlepin::Consumer::Create,
                                   cp_environment_id:   system.cp_environment_id,
                                   organization_label:  system.organization.label,

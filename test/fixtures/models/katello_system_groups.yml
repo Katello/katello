@@ -1,9 +1,14 @@
 simple_group:
   name:         Simple Group
-  description:  Super administrator with all access.
+  description:  The simplest of groups.
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
 another_simple_group:
   name:         Another Simple Group
-  description:  Super administrator with all access.
+  description:  Another group, keeping it simple.
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+
+yet_another_group:
+  name:         Yet Another Group
+  description:  Here we are, grouped again!
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
