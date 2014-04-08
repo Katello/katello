@@ -119,7 +119,9 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
   param_group :search, Api::V2::ApiController
   param :name, String, :desc => "product name to filter by"
   def available_products
-    filters = [:terms => {:id => Product.all_readable(@sync_plan.organization).pluck(:id) - @sync_plan.product_ids}]
+    enabled_product_ids = Product.all_readable(@sync_plan.organization).select{|p| p.enabled?}.collect(&:id)
+
+    filters = [:terms => {:id => enabled_product_ids - @sync_plan.product_ids}]
     filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
     options = {
