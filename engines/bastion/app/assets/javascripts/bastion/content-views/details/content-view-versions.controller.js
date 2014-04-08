@@ -54,6 +54,19 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
                 version.task.progressbar.type === 'success');
         };
 
+        $scope.historyText = function (history) {
+            var message = '';
+
+            if (history.length === 1) {
+                message = translate("Published.");
+            } else if (history.length > 1) {
+                message = translate("Promoted to %s")
+                    .replace('%s', history[0].environment.name);
+            }
+
+            return message;
+        };
+
         function statusMessage(isPublishing, promoteCount) {
             var status = '';
             if (promoteCount > 1) {

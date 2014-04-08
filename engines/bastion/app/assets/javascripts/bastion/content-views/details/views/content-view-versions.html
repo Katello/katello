@@ -16,7 +16,6 @@
         <th alch-table-column>{{ "Status" | translate }}</th>
         <th alch-table-column>{{ "Environments" | translate }}</th>
         <th alch-table-column>{{ "Content" | translate }}</th>
-        <th alch-table-column>{{ "Published" | translate }}</th>
         <th alch-table-column>{{ "Author" | translate }}</th>
         <th class="col-sm-1" alch-table-column>{{ "Actions" | translate }}</th>
       </tr>
@@ -33,6 +32,10 @@
             </div>
               {{ status(version) }}
           </a>
+          <span ng-show="hideProgress(version)">
+            {{ historyText(version.history) }}
+            ({{ version.history[0].created_at | date:'short' }})
+          </span>
         </td>
         <td alch-table-cell>
           <li ng-repeat="environment in version.environments">
@@ -52,7 +55,6 @@
             <span>)</span>
           </div>
         </td>
-        <td alch-table-cell>{{ version.created_at | date:"short" }}</td>
         <td alch-table-cell>{{ version.user }}</td>
         <td class="col-sm-1">
           <a ui-sref="content-views.details.promotion({contentViewId: contentView.id, versionId: version.id})">

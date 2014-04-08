@@ -12,15 +12,16 @@
  **/
 
 describe('Controller: ContentViewVersionsController', function() {
-    var $scope, versions, AggregateTask;
+    var $scope
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
-        var translate = function() {},
-            $controller = $injector.get('$controller'),
-            ContentViewVersion = $injector.get('MockResource').$new(),
-            ContentView = $injector.get('MockResource').$new();
+        var $controller = $injector.get('$controller'),
+            ContentView = $injector.get('MockResource').$new(),
+            translate = function (string) {
+                return string;
+            };
 
         $scope = $injector.get('$rootScope').$new();
 
@@ -54,4 +55,12 @@ describe('Controller: ContentViewVersionsController', function() {
         expect($scope.hideProgress(version)).toBe(false);
     });
 
+    it("determines what history text to display", function() {
+        var history = ['something'];
+
+        expect($scope.historyText(history)).toBe("Published.");
+
+        history.unshift({environment: {name: 'test'}});
+        expect($scope.historyText(history)).toBe("Promoted to test");
+    });
 });
