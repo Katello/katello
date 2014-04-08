@@ -17,10 +17,6 @@ module Glue::Candlepin::Environment
 
   def self.included(base)
     base.send :include, InstanceMethods
-
-    base.class_eval do
-      before_destroy :destroy_environment_orchestration
-    end
   end
 
   module InstanceMethods
@@ -44,12 +40,6 @@ module Glue::Candlepin::Environment
       Rails.logger.error _("Failed to delete candlepin environment %s") %
                            "#{self.label}: #{e}, #{e.backtrace.join("\n")}"
       fail e
-    end
-
-    def destroy_environment_orchestration
-      post_queue.create(:name => "candlepin environment for content view: #{self.content_view.label}",
-                        :priority => 4,
-                        :action => [self, :del_environment])
     end
 
     def update_cp_content

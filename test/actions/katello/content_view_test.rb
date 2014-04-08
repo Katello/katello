@@ -93,4 +93,29 @@ module ::Actions::Katello::ContentView
     end
   end
 
+  class RemoveFromEnvironmentTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::RemoveFromEnvironment }
+
+    let(:content_view) do
+      katello_content_views(:library_dev_view)
+    end
+
+    let(:environment) do
+      katello_environments(:dev)
+    end
+
+    it 'plans' do
+      cve = Katello::ContentViewEnvironment.where(:content_view_id => content_view, :environment_id => environment).first
+      Katello::ContentViewEnvironment.stubs(:where).returns([cve])
+      cve.expects(:destroy).returns(true)
+
+      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
+      action.stubs(:task).returns(task)
+
+      action.expects(:action_subject).with(content_view)
+      plan_action(action, content_view, environment)
+      assert_action_planed_with(action, ::Actions::Candlepin::Environment::Destroy, {cp_id: cve.cp_id})
+    end
+  end
+
 end

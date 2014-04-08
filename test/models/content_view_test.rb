@@ -260,5 +260,16 @@ class ContentViewTest < ActiveSupport::TestCase
     assert_equal 2, @library_dev_view.environments.length
   end
 
+  def test_check_remove_from_environment!
+    assert @library_dev_view.check_remove_from_environment!(@dev)
+
+    System.create!(:name => "Gregor Somosa",
+                   :environment => @dev,
+                   :content_view => @library_dev_view
+                  )
+    assert_raises RuntimeError do
+      @library_dev_view.check_remove_from_environment!(@dev)
+    end
+  end
 end
 end

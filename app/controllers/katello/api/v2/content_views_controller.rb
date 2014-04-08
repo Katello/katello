@@ -14,7 +14,7 @@ module Katello
   class Api::V2::ContentViewsController < Api::V2::ApiController
     before_filter :find_content_view, :except => [:index, :create]
     before_filter :find_organization, :only => [:index, :create]
-    before_filter :find_environment, :only => [:index]
+    before_filter :find_environment, :only => [:index, :remove_from_environment]
     before_filter :load_search_service, :only => [:index, :history, :available_puppet_modules,
                                                   :available_puppet_module_names]
     before_filter :authorize
@@ -33,16 +33,18 @@ module Katello
       create_rule  = lambda { ContentView.creatable?(@organization) }
       edit_rule    = lambda { @view.editable? }
       publish_rule = lambda { @view.publishable? }
+      promote_rule = lambda {@environment.changesets_promotable? && @view.promotable?}
 
       {
-        :index                    => index_rule,
-        :show                     => view_rule,
-        :create                   => create_rule,
-        :update                   => edit_rule,
-        :publish                  => publish_rule,
-        :available_puppet_modules => view_rule,
-        :history                  => view_rule,
-        :available_puppet_module_names => view_rule
+        :index                         => index_rule,
+        :show                          => view_rule,
+        :create                        => create_rule,
+        :update                        => edit_rule,
+        :publish                       => publish_rule,
+        :available_puppet_modules      => view_rule,
+        :history                       => view_rule,
+        :available_puppet_module_names => view_rule,
+        :remove_from_environment       => promote_rule
       }
     end
 
@@ -159,6 +161,14 @@ module Katello
                         :collection => item_search(ContentViewHistory, params, options)
     end
 
+    api :DELETE, "/content_views/:id/environments/:environment_id", "Remove a content view from an environment"
+    param :id, :number, :desc => "content view numeric identifier", :required => true
+    param :environment_id, :number, :desc => "environment numeric identifier", :required => true
+    def remove_from_environment
+      task = async_task(::Actions::Katello::ContentView::RemoveFromEnvironment, @view, @environment)
+      respond_for_async :resource => task
+    end
+
     private
 
     def find_content_view
@@ -176,7 +186,7 @@ module Katello
     end
 
     def find_environment
-      return unless params.key?(:environment_id)
+      return if !params.key?(:environment_id) && params[:action] == "index"
       @environment = KTEnvironment.find(params[:environment_id])
     end
   end

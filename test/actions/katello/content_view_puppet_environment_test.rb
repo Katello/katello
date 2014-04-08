@@ -113,4 +113,18 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
       assert_action_planed_with action, ::Actions::Katello::ContentViewPuppetEnvironment::CloneContent, new_puppet_env, module_map
     end
   end
+
+  class DestroyTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentViewPuppetEnvironment::Destroy }
+    let(:action) { create_action action_class }
+    let(:puppet_env) {katello_content_view_puppet_environments(:dev_view_puppet_environment)}
+
+    it 'plans' do
+      action.expects(:action_subject).with(puppet_env)
+      puppet_env.expects(:destroy).returns(true)
+      plan_action action, puppet_env
+
+      assert_action_planed_with action, ::Actions::Pulp::Repository::Destroy, {pulp_id: puppet_env.pulp_id}
+    end
+  end
 end
