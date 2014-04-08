@@ -267,14 +267,19 @@ angular.module('Bastion.widgets').factory('Nutupane',
             // Otherwise provides expanded functionality
 
             self.table.selectAllResults = function (selectAll) {
-                if (self.table.selectAll) {
+                if (self.table.allSelected()) {
                     self.table.selectAll(selectAll);
                 } else {
                     self.table.initialSelectAll = true;
                 }
 
                 if (self.table.selectAllResultsEnabled) {
-                    self.table.selectAllDisabled = selectAll;
+                    if (selectAll) {
+                        self.table.disableSelectAll();
+                    } else {
+                        self.table.enableSelectAll();
+                    }
+
                     self.table.allResultsSelected = selectAll;
                     self.table.numSelected = selectAll ? self.table.resource.subtotal : 0;
                 }

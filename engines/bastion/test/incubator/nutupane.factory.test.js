@@ -55,6 +55,9 @@ describe('Factory: Nutupane', function() {
             nutupane.table.working = false;
             nutupane.table.selectAll = function() {};
             nutupane.table.getSelected = function() {};
+            nutupane.table.disableSelectAll = function () { };
+            nutupane.table.enableSelectAll = function () { };
+            nutupane.table.allSelected = function () { return true; };
             nutupane.table.rows = [{id: 0, value: "value0"}, {id:1, value: "value1"}];
             nutupane.table.resource = Resource;
         });
@@ -178,11 +181,12 @@ describe('Factory: Nutupane', function() {
         it("provides a way to select all results", function() {
             nutupane.enableSelectAllResults();
             spyOn(nutupane.table, 'selectAll');
+            spyOn(nutupane.table, 'disableSelectAll');
 
             nutupane.table.selectAllResults(true);
 
             expect(nutupane.table.selectAll).toHaveBeenCalledWith(true);
-            expect(nutupane.table.selectAllDisabled).toBe(true);
+            expect(nutupane.table.disableSelectAll).toHaveBeenCalled();
             expect(nutupane.table.allResultsSelected).toBe(true);
             expect(nutupane.table.numSelected).toBe(nutupane.table.resource.subtotal);
         });
@@ -191,10 +195,11 @@ describe('Factory: Nutupane', function() {
             nutupane.enableSelectAllResults();
             nutupane.table.numSelected = 0;
             spyOn(nutupane.table, 'selectAll');
+            spyOn(nutupane.table, 'enableSelectAll');
             nutupane.table.selectAllResults(false);
 
             expect(nutupane.table.selectAll).toHaveBeenCalledWith(false);
-            expect(nutupane.table.selectAllDisabled).toBe(false);
+            expect(nutupane.table.enableSelectAll).toHaveBeenCalled();
             expect(nutupane.table.allResultsSelected).toBe(false);
             expect(nutupane.table.numSelected).toBe(0);
         });
