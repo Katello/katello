@@ -32,10 +32,9 @@ module Katello
             os.architectures << arch unless os.architectures.include?(arch)
 
             medium_name = Medium.construct_name(repo, distribution)
-            medium = Medium.create!(:name => medium_name, :path => medium_path,
-                                    :os_family => Operatingsystem::OS['foreman_os_family'],
-                                    :organization_ids => [repo.organization.id])
+            medium = Medium.find_or_create_medium(repo.organization, medium_name, medium_path)
             os.media << medium
+
             os.save!
 
           else
@@ -44,6 +43,16 @@ module Katello
             end
           end
 
+        end
+
+        def find_or_create_medium(org, medium_name, medium_path)
+          params = { :name => medium_name, :path => medium_path,
+                     :os_family => Operatingsystem::OS['foreman_os_family'] }
+
+          medium = Medium.joins(:organizations).where(params).where("taxonomies.id in (?)", [org.id]).first
+          medium = Medium.create!(params.merge({ :organization_ids => [org.id] })) unless medium
+
+          return medium
         end
 
         def construct_name(repo, distribution)

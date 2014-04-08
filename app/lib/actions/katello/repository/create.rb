@@ -44,7 +44,8 @@ module Actions
             unless clone
               unless repository.product.redhat?
                 content_create = plan_action(Katello::Product::ContentCreate, repository)
-                plan_action(ContentView::UpdateEnvironment, org.default_content_view, org.library, content_create.input[:content_id])
+                plan_action(ContentView::UpdateEnvironment, org.default_content_view,
+                            org.library, content_create.input[:content_id])
               end
               plan_action(Katello::Repository::MetadataGenerate, repository) unless repository.puppet?
               plan_action(ElasticSearch::Reindex, repository)
