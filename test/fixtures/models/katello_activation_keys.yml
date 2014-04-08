@@ -11,3 +11,10 @@ dev_key:
   updated_at: <%= Time.now %>
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
   environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+
+empty_key:
+  name: Empty Key
+  label: empty_key
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
