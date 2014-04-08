@@ -102,7 +102,7 @@ angular.module('Bastion.environments').controller('PathController',
                     return item === environment;
                 }, this);
 
-                if ($scope.row.environments.length === 1 && $scope.row.environments[0].library) {
+                if ($scope.row.environments.length === 1 && $scope.row.environments[0].library && $scope.environmentsTable.rows.length > 1) {
                     $scope.row.environments.splice(0, 1);
                 }
             }
