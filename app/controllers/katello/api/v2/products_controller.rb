@@ -88,8 +88,6 @@ module Katello
     param :id, :number, :desc => "product numeric identifier", :required => true, :allow_nil => false
     param_group :product
     def update
-      fail HttpErrors::BadRequest, _("Red Hat products cannot be updated.") if @product.redhat?
-
       reset_gpg_keys = (product_params[:gpg_key_id] != @product.gpg_key_id)
       @product.reset_repo_gpgs! if reset_gpg_keys
       @product.update_attributes!(product_params)
@@ -126,7 +124,12 @@ module Katello
     end
 
     def product_params
-      params.require(:product).permit(:name, :label, :description, :provider_id, :gpg_key_id, :sync_plan_id)
+      # only allow sync plan id to be updated if the product is a Red Hat product
+      if @product && @product.redhat?
+        params.require(:product).permit(:sync_plan_id)
+      else
+        params.require(:product).permit(:name, :label, :description, :provider_id, :gpg_key_id, :sync_plan_id)
+      end
     end
 
   end

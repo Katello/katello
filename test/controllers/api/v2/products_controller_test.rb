@@ -26,6 +26,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     @organization = get_organization
     @provider = katello_providers(:fedora_hosted)
     @product = katello_products(:empty_product)
+    @product.stubs(:redhat?).returns(false)
   end
 
   def permissions
@@ -127,6 +128,18 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     assert_response :unprocessable_entity
     assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
     assert_equal assigns[:product].name, nil
+  end
+
+  def test_update_redhat
+    @product.stubs(:redhat?).returns(true)
+
+    sync_plan = katello_sync_plans(:sync_plan_hourly)
+    put :update, :id => @product.id, :product => {:name => 'lalala', :sync_plan_id => sync_plan.id}
+
+    assert_response :success
+    assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
+    assert_equal assigns[:product].sync_plan_id, sync_plan.id
+    assert_equal @product.name, katello_products(:empty_product).name
   end
 
   def test_update_sync_plan

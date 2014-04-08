@@ -39,7 +39,7 @@
     </button>
     <button class="btn btn-primary"
             translate
-            ng-disabled="product.readonly"
+            ng-disabled="isReadOnly(product)"
             ui-sref="products.details.repositories.new({productId: product.id})">
       Create Repository
     </button>
