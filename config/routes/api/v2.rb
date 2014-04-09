@@ -39,6 +39,7 @@ Katello::Engine.routes.draw do
         member do
           post :publish
           post :refresh
+          put :remove
           get :history
           get :available_puppet_modules
           get :available_puppet_module_names
@@ -68,7 +69,7 @@ Katello::Engine.routes.draw do
         end
       end
 
-      api_resources :content_view_versions, :only => [:index, :show] do
+      api_resources :content_view_versions, :except => [:create] do
         member do
           post :promote
         end

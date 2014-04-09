@@ -17,9 +17,11 @@ class ContentViewVersion < Katello::Model
   include AsyncOrchestration
   include Authorization::ContentViewVersion
 
+  before_destroy :check_ready_to_delete!
+
   belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
-           :dependent => :nullify
+           :dependent => :destroy
   has_many :environments, :through      => :content_view_environments,
                           :class_name   => "Katello::KTEnvironment",
                           :inverse_of   => :content_view_versions,
@@ -32,7 +34,7 @@ class ContentViewVersion < Katello::Model
            :dependent => :destroy
   has_one :task_status, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
 
-  has_many :content_view_components, :inverse_of => :content_view_version
+  has_many :content_view_components, :inverse_of => :content_view_version, :dependent => :destroy
   has_many :composite_content_views, :through => :content_view_components, :source => :content_view
 
   delegate :default, :default?, to: :content_view
@@ -46,6 +48,10 @@ class ContentViewVersion < Katello::Model
 
   def to_s
     name
+  end
+
+  def organization
+    content_view.organization
   end
 
   def active_history
@@ -287,6 +293,13 @@ class ContentViewVersion < Katello::Model
 
   def check_ready_to_promote!
     fail _("Default content view versions cannot be promoted") if default?
+  end
+
+  def check_ready_to_delete!
+    if environments.any? && !organization.being_deleted?
+      fail _("Cannot delete version while it is in environments: %s") % environments.map(&:name).join(",")
+    end
+    return true
   end
 
   private

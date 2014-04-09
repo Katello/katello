@@ -33,6 +33,18 @@ class ContentViewEnvironment < Katello::Model
     self.environment
   end
 
+  def systems
+    content_view.systems.by_env(environment)
+  end
+
+  def distributors
+    content_view.distributors.by_env(environment)
+  end
+
+  def activation_keys
+    content_view.activation_keys.in_environment(environment)
+  end
+
   private
 
   def generate_info

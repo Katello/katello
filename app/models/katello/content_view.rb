@@ -460,7 +460,7 @@ class ContentView < Katello::Model
   end
 
   def content_view_environment(environment)
-    self.content_view_environments.where(:environment_id => environment.id).first
+    self.content_view_environments.where(:environment_id => environment.try(:id)).first
   end
 
   def update_cp_content(env)
