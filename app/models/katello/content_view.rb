@@ -544,7 +544,7 @@ class ContentView < Katello::Model
     # repo id to copy content.
     ids = []
     names_and_authors = []
-    content_view_puppet_modules.each do |cvpm|
+    puppet_modules_to_publish.each do |cvpm|
       if cvpm.uuid
         ids << cvpm.uuid
       else
