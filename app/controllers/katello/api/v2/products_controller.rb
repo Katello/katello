@@ -23,8 +23,6 @@ module Katello
     end
 
     def_param_group :product do
-      param :name, String, :required => true
-      param :label, String, :required => false
       param :description, String, :desc => "Product description"
       param :gpg_key_id, :number, :desc => "Identifier of the GPG key"
       param :sync_plan_id, :number, :desc => "Plan numeric identifier", :allow_nil => true
@@ -70,6 +68,8 @@ module Katello
     api :POST, "/products", "Create a product"
     param :organization_id, :identifier, "ID of the organization", :required => true
     param_group :product
+    param :name, String, :desc => "Product name", :required => true
+    param :label, String, :required => false
     def create
       params[:product][:label] = labelize_params(product_params) if product_params
       params[:product][:provider_id] ||= @provider.id
@@ -87,6 +87,7 @@ module Katello
     api :PUT, "/products/:id", "Updates a product"
     param :id, :number, :desc => "product numeric identifier", :required => true, :allow_nil => false
     param_group :product
+    param :name, String, :desc => "Product name"
     def update
       reset_gpg_keys = (product_params[:gpg_key_id] != @product.gpg_key_id)
       @product.reset_repo_gpgs! if reset_gpg_keys
