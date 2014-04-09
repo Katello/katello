@@ -21,7 +21,7 @@
          tooltip-append-to-body="true">
       </i>
       <button class="btn btn-default"
-              ng-hide="product.readonly"
+              ng-hide="isReadOnly(product)"
               ng-click="openModal()"
               ng-disabled="!product.permissions.deletable">
         <i class="icon-trash"></i>

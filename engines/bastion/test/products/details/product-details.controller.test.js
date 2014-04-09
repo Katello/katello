@@ -47,4 +47,17 @@ describe('Controller: ProductDetailsController', function() {
         expect($scope.removeRow).toHaveBeenCalledWith($scope.product.id);
     });
 
+    it("provivdes a method to check if a product is read only", function() {
+        var product = {readonly: false, redhat: false};
+        expect($scope.isReadOnly(product)).toBe(false);
+
+        product.readonly = true;
+        expect($scope.isReadOnly(product)).toBe(true);
+
+        product.redhat = true;
+        expect($scope.isReadOnly(product)).toBe(true);
+
+        product.readonly = false;
+        expect($scope.isReadOnly(product)).toBe(true);
+    });
 });

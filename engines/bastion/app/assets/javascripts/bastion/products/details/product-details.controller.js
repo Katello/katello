@@ -46,5 +46,9 @@ angular.module('Bastion.products').controller('ProductDetailsController',
                 $scope.transitionTo('products.index');
             });
         };
+
+        $scope.isReadOnly = function (product) {
+            return product.readonly || product.redhat;
+        };
     }]
 );

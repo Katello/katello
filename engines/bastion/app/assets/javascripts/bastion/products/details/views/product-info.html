@@ -10,7 +10,7 @@
       <span class="info-value"
             alch-edit-text="product.name"
             on-save="save(product)"
-            readonly="product.readonly">
+            readonly="isReadOnly(product)">
       </span>
     </div>
 
@@ -28,7 +28,7 @@
       <span class="info-label" translate>GPG Key</span>
       <span class="info-value"
             alch-edit-select="product.gpg_key.name"
-            readonly="product.readonly"
+            readonly="isReadOnly(product)"
             selector="product.gpg_key_id"
             options="gpgKeys()"
             on-save="save(product)">
@@ -40,7 +40,7 @@
       <span class="info-value"
             alch-edit-textarea="product.description"
             on-save="save(product)"
-            readonly="product.readonly">
+            readonly="isReadOnly(product)">
       </span>
     </div>
 
@@ -62,6 +62,7 @@
             selector="product.sync_plan_id"
             on-save="save(product)"
             deletable="product.sync_plan_id != null"
+            readonly="product.readonly"
             on-delete="product.sync_plan_id = null; save(product)">
       </span>
     </div>
