@@ -19,5 +19,6 @@
  *   Module for provider related functionality.
  */
 angular.module('Bastion.providers', [
-    'ngResource'
+    'ngResource',
+    'Bastion'
 ]);

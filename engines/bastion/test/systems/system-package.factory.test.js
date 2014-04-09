@@ -17,7 +17,7 @@ describe('Factory: SystemPackage', function() {
         packages,
         SystemPackage;
 
-    beforeEach(module('Bastion.systems', 'Bastion.utils'));
+    beforeEach(module('Bastion.systems', 'Bastion.utils', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         packages = {

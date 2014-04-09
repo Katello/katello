@@ -13,6 +13,18 @@
 
 angular.module('Bastion.test-mocks', ['ui.router']);
 
+angular.module('Bastion.test-mocks').config(['$provide', function ($provide) {
+
+    $provide.factory('PrefixInterceptor', function () {
+        return {
+            request: function (config) {
+                return config;
+            }
+        };
+    });
+
+}]);
+
 angular.module('Bastion.test-mocks').run(['$state', '$stateParams', '$rootScope',
     function($state, $stateParams, $rootScope) {
 

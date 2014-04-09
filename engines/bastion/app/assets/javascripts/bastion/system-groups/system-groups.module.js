@@ -18,7 +18,12 @@
  * @description
  *   Module for system groups related functionality.
  */
-angular.module('Bastion.system-groups', ['ngResource', 'Bastion.utils', 'ui.router']);
+angular.module('Bastion.system-groups', [
+    'ngResource',
+    'ui.router',
+    'Bastion',
+    'Bastion.utils'
+]);
 
 angular.module('Bastion.system-groups').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('system-groups', {

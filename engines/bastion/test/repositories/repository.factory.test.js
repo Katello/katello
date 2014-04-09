@@ -15,7 +15,7 @@ describe('Factory: Repository', function() {
     var $httpBackend,
         repositories;
 
-    beforeEach(module('Bastion.repositories'));
+    beforeEach(module('Bastion.repositories', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         repositories = {

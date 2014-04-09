@@ -33,14 +33,14 @@ describe('Factory: SystemTask', function() {
     });
 
     it('provides a way to get a system task', function() {
-        $httpBackend.expectGET('/api/v2/systems/abcde/tasks/TASK_ID?paged=false').respond(task);
+        $httpBackend.expectGET('/katello/api/v2/systems/abcde/tasks/TASK_ID?paged=false').respond(task);
         SystemTask.get({ id: 'TASK_ID', systemId: 'abcde'}, function(results) {
             expect(results.id).toBe(task.id);
         });
     });
 
     it('provides a way to poll a task', function() {
-        $httpBackend.expectGET('/api/v2/systems/abcde/tasks/PENDING_TASK_ID?paged=false').respond(pendingTask);
+        $httpBackend.expectGET('/katello/api/v2/systems/abcde/tasks/PENDING_TASK_ID?paged=false').respond(pendingTask);
         SystemTask.poll(pendingTask, function(results) {});
     });
 });

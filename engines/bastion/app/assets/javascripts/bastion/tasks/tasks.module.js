@@ -21,6 +21,7 @@
 angular.module('Bastion.tasks', [
     'ngResource',
     'ui.router',
+    'Bastion'
 ]);
 
 /**

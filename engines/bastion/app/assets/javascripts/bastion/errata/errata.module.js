@@ -19,5 +19,6 @@
  *   Module for node related functionality.
  */
 angular.module('Bastion.errata', [
-    'ngResource'
+    'ngResource',
+    'Bastion'
 ]);

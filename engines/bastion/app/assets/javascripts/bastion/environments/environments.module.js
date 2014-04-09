@@ -23,6 +23,7 @@ angular.module('Bastion.environments', [
     'alchemy',
     'alch-templates',
     'ui.router',
+    'Bastion',
     'Bastion.widgets'
 ]);
 

@@ -167,7 +167,7 @@ module.exports = function (grunt) {
         },
         'nggettext_compile': {
             options: {
-                module: 'Bastion'
+                module: 'Bastion.i18n'
             },
             bastion: {
                 src: ['<%= bastion.src %>/i18n/locale/**/*.po'],

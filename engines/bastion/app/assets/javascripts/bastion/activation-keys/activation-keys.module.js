@@ -21,6 +21,7 @@
 angular.module('Bastion.activation-keys', [
     'ngResource',
     'ui.router',
+    'Bastion',
     'Bastion.utils',
     'Bastion.widgets',
     'Bastion.system-groups'

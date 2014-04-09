@@ -18,4 +18,8 @@
  * @description
  *   Module for common Bastion widgets.
  */
-angular.module('Bastion.widgets', ['Bastion.utils', 'Bastion.organizations']);
+angular.module('Bastion.widgets', [
+    'Bastion',
+    'Bastion.utils',
+    'Bastion.organizations'
+]);

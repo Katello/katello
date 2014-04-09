@@ -16,7 +16,6 @@ angular.element(document).ready(function () {
 });
 
 BASTION_MODULES = [
-    'Bastion',
     'alchemy',
     'alchemy.format',
     'alch-templates',

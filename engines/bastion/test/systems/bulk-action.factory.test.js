@@ -17,7 +17,7 @@ describe('Factory: SystemBulkAction', function() {
         systemParams,
         systemGroupParams;
 
-    beforeEach(module('Bastion.systems'));
+    beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         var systemIds = [1, 2, 3],

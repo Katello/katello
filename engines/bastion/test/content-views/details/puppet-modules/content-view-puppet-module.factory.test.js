@@ -16,7 +16,7 @@ describe('Factory: ContentViewPuppetModule', function() {
         ContentViewPuppetModule,
         ContentViewPuppetModules;
 
-    beforeEach(module('Bastion.content-views', 'Bastion.utils'));
+    beforeEach(module('Bastion.content-views', 'Bastion.utils', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         ContentViewPuppetModules = {

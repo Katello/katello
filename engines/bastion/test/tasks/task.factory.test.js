@@ -15,7 +15,7 @@ describe('Factory: Task', function() {
     var $httpBackend,
         tasks;
 
-    beforeEach(module('Bastion.tasks'));
+    beforeEach(module('Bastion.tasks', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         tasks = {

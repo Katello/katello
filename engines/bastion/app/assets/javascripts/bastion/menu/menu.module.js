@@ -21,5 +21,6 @@
 angular.module('Bastion.menu', [
     'alchemy',
     'alch-templates',
+    'Bastion',
     'Bastion.widgets'
 ]);

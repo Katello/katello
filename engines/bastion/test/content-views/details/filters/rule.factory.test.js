@@ -15,7 +15,7 @@ describe('Factory: Rule', function() {
     var $httpBackend,
         rules;
 
-    beforeEach(module('Bastion.content-views', 'Bastion.utils'));
+    beforeEach(module('Bastion.content-views', 'Bastion.utils', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         rules = {

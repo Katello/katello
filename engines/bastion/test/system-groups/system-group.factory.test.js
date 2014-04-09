@@ -14,7 +14,7 @@
 describe('Factory: SystemGroup', function() {
     var SystemGroup, $httpBackend, systemGroups;
 
-    beforeEach(module('Bastion.system-groups'));
+    beforeEach(module('Bastion.system-groups', 'Bastion.test-mocks'));
 
     beforeEach(function() {
         systemGroups = {

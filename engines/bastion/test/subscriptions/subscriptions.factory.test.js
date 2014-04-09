@@ -17,7 +17,7 @@ describe('Factory: Subscription', function() {
         subscription,
         subscriptions;
 
-    beforeEach(module('Bastion.subscriptions'));
+    beforeEach(module('Bastion.subscriptions', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         subscriptions = {
