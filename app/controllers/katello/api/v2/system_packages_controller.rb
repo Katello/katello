@@ -45,9 +45,8 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
-      task   = @system.install_package_groups(groups)
-      respond_for_show :template => 'system_task', :resource => task
-      return
+      task   = async_task(::Actions::Katello::System::PackageGroup::Install, @system, groups)
+      respond_for_async :resource => task
     end
 
   end
@@ -58,15 +57,15 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
   def upgrade
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
-      task     = @system.update_packages(packages)
-      respond_for_show :template => 'system_task', :resource => task
+      task     = async_task(::Actions::Katello::System::Package::Update, @system, packages)
+      respond_for_async :resource => task
     end
   end
 
   api :PUT, "/systems/:system_id/packages/upgrade_all", "Update packages remotely"
   def upgrade_all
-    task     = @system.update_packages([])
-    respond_for_show :template => 'system_task', :resource => task
+    task     = async_task(::Actions::Katello::System::Package::Update, @system, [])
+    respond_for_async :resource => task
   end
 
   api :POST, "/systems/:system_id/packages/remove", "Uninstall packages remotely"
@@ -81,9 +80,8 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
-      task   = @system.uninstall_package_groups(groups)
-      respond_for_show :template => 'system_task', :resource => task
-      return
+      task   = async_task(::Actions::Katello::System::PackageGroup::Remove, @system, groups)
+      respond_for_async :resource => task
     end
   end
 

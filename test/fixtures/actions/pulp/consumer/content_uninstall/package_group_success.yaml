@@ -1,0 +1,63 @@
+---
+pulp_task:
+  task_group_id: 
+  exception: 
+  traceback: 
+  _href: /pulp/api/v2/tasks/47aeebfd-f911-41d8-9fa0-1758ccdb8cc7/
+  task_id: 47aeebfd-f911-41d8-9fa0-1758ccdb8cc7
+  call_request_tags:
+  - pulp:consumer:aedc1566-9aa8-483d-9c0c-b8a556c6fb87
+  - pulp:action:unit_uninstall
+  reasons: []
+  start_time: '2014-04-11T21:10:05Z'
+  tags:
+  - pulp:consumer:aedc1566-9aa8-483d-9c0c-b8a556c6fb87
+  - pulp:action:unit_uninstall
+  state: finished
+  finish_time: '2014-04-11T21:10:10Z'
+  dependency_failures: {}
+  schedule_id: 
+  progress:
+    steps:
+    - - Refresh Repository Metadata
+      - true
+    - - Downloading Packages
+      - true
+    - - Running Test Transaction
+      - true
+    - - Running Transaction
+      - true
+    details: {}
+  call_request_group_id: 
+  call_request_id: 47aeebfd-f911-41d8-9fa0-1758ccdb8cc7
+  principal_login: admin
+  response: accepted
+  result:
+    details:
+      package_group:
+        details:
+          resolved:
+          - name: amanda-client
+            qname: amanda-client-2.6.1p2-8.el6.x86_64
+            epoch: '0'
+            version: 2.6.1p2
+            release: 8.el6
+            arch: x86_64
+            repoid: installed
+          deps:
+          - name: amanda
+            qname: amanda-2.6.1p2-8.el6.x86_64
+            epoch: '0'
+            version: 2.6.1p2
+            release: 8.el6
+            arch: x86_64
+            repoid: installed
+        succeeded: true
+    num_changes: 2
+    succeeded: true
+    reboot:
+      scheduled: false
+      details: {}
+poll_attempts:
+  total: 8
+  failed: 0
