@@ -68,7 +68,7 @@ class Repository < Katello::Model
   validates_with Validators::RepoDisablementValidator, :attributes => :enabled, :on => :update
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloUrlFormatValidator,
-    :attributes => :feed, :blank_allowed => proc { |o| o.custom? }, :field_name => :url,
+    :attributes => :feed, :nil_allowed => proc { |o| o.custom? }, :field_name => :url,
     :if => proc { |o| o.in_default_view? }
   validates :content_type, :inclusion => {
       :in => TYPES,

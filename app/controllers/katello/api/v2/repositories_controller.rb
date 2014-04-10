@@ -102,6 +102,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   param_group :repo
   def create
     params[:label] = labelize_params(params)
+    params[:url] = nil if params[:url].blank?
     gpg_key = @product.gpg_key
     unless params[:gpg_key_id].blank?
       gpg_key = @gpg_key
@@ -133,7 +134,9 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   param :unprotected, :bool, :desc => "true if this repository can be published via HTTP"
   param :url, String, :desc => "the feed url of the original repository "
   def update
-    @repository.update_attributes!(repository_params)
+    repo_params = repository_params
+    repo_params[:url] = nil if repository_params[:url].blank?
+    @repository.update_attributes!(repo_params)
     respond_for_show(:resource => @repository)
   end
 
