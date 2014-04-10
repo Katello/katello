@@ -19,6 +19,6 @@
  *   Module for internationalization.
  */
 angular.module('Bastion.i18n', [
-    'ngResource',
-    'gettext'
+    'gettext',
+    'Bastion'
 ]);

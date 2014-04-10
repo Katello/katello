@@ -24,6 +24,7 @@ angular.module('Bastion.repositories', [
     'alch-templates',
     'ui.router',
     'ngUpload',
+    'Bastion',
     'Bastion.widgets'
 ]);
 

@@ -19,5 +19,6 @@
  *   Module for custom info related functionality.
  */
 angular.module('Bastion.custom-info', [
-    'ngResource'
+    'ngResource',
+    'Bastion'
 ]);

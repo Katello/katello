@@ -15,7 +15,7 @@ describe('Factory: Product', function() {
     var $httpBackend,
         products;
 
-    beforeEach(module('Bastion.products'));
+    beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         products = {
@@ -86,7 +86,7 @@ describe('Factory: ProductBulkAction', function() {
         productParams,
         productGroupParams;
 
-    beforeEach(module('Bastion.products'));
+    beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
 
     beforeEach(module(function() {
         var productIds = [1, 2, 3];

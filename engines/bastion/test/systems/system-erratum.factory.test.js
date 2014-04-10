@@ -17,7 +17,7 @@ describe('Factory: SystemErratum', function($provide) {
         errata,
         SystemErratum;
 
-    beforeEach(module('Bastion.systems', 'Bastion.utils'));
+    beforeEach(module('Bastion.systems', 'Bastion.utils', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         errata = {

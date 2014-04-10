@@ -21,5 +21,6 @@
 angular.module('Bastion.content-views.versions', [
     'ngResource',
     'ui.router',
+    'Bastion',
     'Bastion.widgets'
 ]);

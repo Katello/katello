@@ -20,7 +20,9 @@
  *   modules used by the application.
  */
 angular.module('Bastion', [
-    'ui.router'
+    'ui.router',
+    'gettext',
+    'Bastion.widgets'
 ]);
 
 /**

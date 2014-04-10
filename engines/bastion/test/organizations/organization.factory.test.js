@@ -17,7 +17,7 @@ describe('Factory: Organization', function() {
         Organization,
         organizations;
 
-    beforeEach(module('Bastion.organizations'));
+    beforeEach(module('Bastion.organizations', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         organizations = {

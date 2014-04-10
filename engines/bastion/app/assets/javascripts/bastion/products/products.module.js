@@ -23,6 +23,7 @@ angular.module('Bastion.products', [
     'alchemy',
     'alch-templates',
     'ui.router',
+    'Bastion',
     'Bastion.widgets',
     'Bastion.providers',
     'Bastion.sync-plans',

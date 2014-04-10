@@ -16,7 +16,7 @@ describe('Factory: Node', function() {
         nodes,
         Node;
 
-    beforeEach(module('Bastion.nodes'));
+    beforeEach(module('Bastion.nodes', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         nodes = {

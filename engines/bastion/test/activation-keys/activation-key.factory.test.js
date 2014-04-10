@@ -12,7 +12,8 @@
  **/
 
 describe('Factory: ActivationKey', function() {
-    beforeEach(module('Bastion.activation-keys'));
+
+    beforeEach(module('Bastion.activation-keys', 'Bastion.test-mocks'));
 
     beforeEach(function() {
         activationKeys = {

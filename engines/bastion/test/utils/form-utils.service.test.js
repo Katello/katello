@@ -14,7 +14,7 @@
 describe('Service:formUtils', function() {
     var FormUtils, $httpBackend;
 
-    beforeEach(module('Bastion.utils'));
+    beforeEach(module('Bastion.utils', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
         FormUtils = $injector.get('FormUtils');

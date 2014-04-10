@@ -16,16 +16,9 @@ describe('Service: translate', function() {
 
     beforeEach(module('Bastion.i18n'));
 
-    beforeEach(module(function($provide) {
-        gettextCatalog = {
-            getString: function () {}
-        };
-
-        $provide.value('gettextCatalog', gettextCatalog);
-    }));
-
-    beforeEach(inject(function(_translate_) {
+    beforeEach(inject(function(_translate_, _gettextCatalog_) {
         translate = _translate_;
+        gettextCatalog = _gettextCatalog_;
     }));
 
     it('passes through to the gettextCatalog.getString', function() {

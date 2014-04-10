@@ -17,7 +17,7 @@ describe('Factory: SyncPlan', function() {
         syncPlans,
         products;
 
-    beforeEach(module('Bastion.sync-plans'));
+    beforeEach(module('Bastion.sync-plans', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         syncPlans = {

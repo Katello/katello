@@ -19,5 +19,6 @@
  *   Module for organization related functionality.
  */
 angular.module('Bastion.organizations', [
-    'ngResource'
+    'ngResource',
+    'Bastion'
 ]);

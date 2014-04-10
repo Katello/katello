@@ -15,7 +15,7 @@ describe('Factory: Filter', function() {
     var $httpBackend,
         filters;
 
-    beforeEach(module('Bastion.content-views', 'Bastion.utils'));
+    beforeEach(module('Bastion.content-views', 'Bastion.utils', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         filters = {

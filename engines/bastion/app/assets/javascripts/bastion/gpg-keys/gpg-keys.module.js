@@ -23,6 +23,7 @@ angular.module('Bastion.gpg-keys', [
     'alchemy',
     'alch-templates',
     'ui.router',
+    'Bastion',
     'Bastion.widgets',
     'ngUpload'
 ]);

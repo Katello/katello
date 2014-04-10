@@ -15,7 +15,7 @@ describe('Factory: GPGKey', function() {
     var $httpBackend,
         gpgKeys;
 
-    beforeEach(module('Bastion.gpg-keys'));
+    beforeEach(module('Bastion.gpg-keys', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         gpgKeys = {

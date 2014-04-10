@@ -23,6 +23,7 @@ angular.module('Bastion.subscriptions', [
     'alchemy',
     'alch-templates',
     'ui.router',
+    'Bastion',
     'Bastion.widgets'
 ]);
 

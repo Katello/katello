@@ -14,7 +14,7 @@
 describe('Factory: CustomInfo', function() {
     var $httpBackend;
 
-    beforeEach(module('Bastion.custom-info'));
+    beforeEach(module('Bastion.custom-info', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
         $httpBackend = $injector.get('$httpBackend');

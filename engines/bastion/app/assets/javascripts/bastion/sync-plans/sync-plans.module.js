@@ -18,7 +18,11 @@
  * @description
  *   Module for sync plan related functionality.
  */
-angular.module('Bastion.sync-plans', ['ngResource', 'ui.router']);
+angular.module('Bastion.sync-plans', [
+    'ngResource',
+    'ui.router',
+    'Bastion'
+]);
 
 /**
  * @ngdoc object
@@ -79,7 +83,7 @@ angular.module('Bastion.sync-plans').config(['$stateProvider', function ($stateP
         controller: 'SyncPlanDetailsInfoController',
         templateUrl: 'sync-plans/details/views/sync-plan-info.html'
     })
-    
+
     .state('sync-plans.details.products', {
         abstract: true,
         collapsed: true,
