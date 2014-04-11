@@ -52,7 +52,8 @@ describe('Controller: SystemAddSystemGroupsController', function() {
 
         $scope.system = new System({
             uuid: 2,
-            systemGroups: [{id: 1, name: "lalala"}]
+            systemGroups: [{id: 1, name: "lalala"}],
+            system_group_ids: [1]
         });
     }));
 
@@ -61,15 +62,13 @@ describe('Controller: SystemAddSystemGroupsController', function() {
     });
 
     it("allows adding system groups to the system", function() {
-
-        var expected = { system : { system_group_ids : [ 1, 2 ] } };
-        spyOn(System, 'saveSystemGroups');
+        spyOn($scope.system, '$update');
 
         $scope.systemGroupsTable.getSelected = function() {
             return [{id: 2, name: "hello!"}];
         };
 
-        $scope.addSystemGroups();
-        expect(System.saveSystemGroups).toHaveBeenCalledWith({id: 2}, expected, jasmine.any(Function), jasmine.any(Function));
+        $scope.addSystemGroups($scope.system);
+        expect($scope.system.$update).toHaveBeenCalledWith({id: 2}, jasmine.any(Function), jasmine.any(Function));
     });
 });

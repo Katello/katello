@@ -15,7 +15,7 @@ module Katello
 class Api::V2::SystemsController < Api::V2::ApiController
   respond_to :json
 
-  wrap_parameters :include => (System.attribute_names + %w(type facts guest_ids installed_products content_view environment))
+  wrap_parameters :include => (System.attribute_names + %w(type facts guest_ids system_group_ids installed_products content_view environment))
 
   skip_before_filter :set_default_response_format, :only => :report
 
@@ -214,26 +214,6 @@ class Api::V2::SystemsController < Api::V2::ApiController
   def destroy
     @system.destroy
     respond :message => _("Deleted system '%s'") % params[:id], :status => 204
-  end
-
-  api :POST, "/systems/:id/system_groups", "Replace existing list of system groups"
-  param :id, String, :desc => "UUID of the system", :required => true
-  param :system_group_ids, Array, :desc => "List of group ids the system belongs to", :required => true
-  def add_system_groups
-    ids = params[:system_group_ids]
-    @system.system_group_ids = ids.try(:uniq)
-    @system.save!
-    respond_for_create
-  end
-
-  api :DELETE, '/systems/:id/system_groups', "Remove the list of given system groups"
-  param :id, String, :desc => "UUID of the system", :required => true
-  param :system_group_ids, Array, :desc => "List of system groups ids to remove from the system", :required => true
-  def remove_system_groups
-    ids = params[:system_group_ids].map(&:to_i)
-    @system.system_group_ids -= ids
-    @system.save!
-    respond_for_show(:resource => @system)
   end
 
   api :GET, "/systems/:id/packages", "List packages installed on the system"
@@ -534,7 +514,8 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   def system_params(params)
-    system_params = params.require(:system).permit(:name, :description, :location, :owner, :type, {:facts => []}, :guest_ids)
+    system_params = params.require(:system).permit(:name, :description, :location, :owner, :type, {:facts => []},
+                                                   :guest_ids, {:system_group_ids => []})
 
     if params[:system].key?(:type)
       system_params[:cp_type] = params[:type]

@@ -44,19 +44,12 @@ angular.module('Bastion.systems').controller('SystemSystemGroupsController',
         systemGroupsPane = new Nutupane(System, params, 'systemGroups');
         $scope.systemGroupsTable = systemGroupsPane.table;
 
-        $scope.removeSystemGroups = function () {
-            var data,
+        $scope.removeSystemGroups = function (system) {
+            var deferred = $q.defer(),
                 success,
                 error,
-                deferred = $q.defer(),
-                systemGroups = _.pluck($scope.system.systemGroups, 'id'),
-                systemGroupsToRemove = _.pluck($scope.systemGroupsTable.getSelected(), 'id');
-
-            data = {
-                system: {
-                    "system_group_ids": _.difference(systemGroups, systemGroupsToRemove)
-                }
-            };
+                systemGroups,
+                systemGroupsToRemove;
 
             success = function (data) {
                 $scope.successMessages = [translate('Removed %x system groups from system "%y".')
@@ -75,7 +68,12 @@ angular.module('Bastion.systems').controller('SystemSystemGroupsController',
             };
 
             $scope.systemGroupsTable.working = true;
-            System.saveSystemGroups({id: $scope.system.uuid}, data, success, error);
+
+            systemGroups = _.pluck($scope.system.systemGroups, 'id');
+            systemGroupsToRemove = _.pluck($scope.systemGroupsTable.getSelected(), 'id');
+            system["system_group_ids"] = _.difference(systemGroups, systemGroupsToRemove);
+
+            system.$update({id: $scope.system.uuid}, success, error);
             return deferred.promise;
         };
     }]

@@ -52,7 +52,8 @@ describe('Controller: SystemSystemGroupsController', function() {
 
         $scope.system = new System({
             uuid: 2,
-            systemGroups: [{id: 1, name: "lalala"}, {id: 2, name: "hello!"}]
+            systemGroups: [{id: 1, name: "lalala"}, {id: 2, name: "hello!"}],
+            system_group_ids: [1, 2]
         });
     }));
 
@@ -61,15 +62,13 @@ describe('Controller: SystemSystemGroupsController', function() {
     });
 
     it("allows removing system groups from the system", function() {
-
-        var expected = { system : { system_group_ids : [ 2 ] } };
-        spyOn(System, 'saveSystemGroups');
+        spyOn($scope.system, '$update');
 
         $scope.systemGroupsTable.getSelected = function() {
             return [{id: 1, name: "lalala"}];
         };
 
-        $scope.removeSystemGroups();
-        expect(System.saveSystemGroups).toHaveBeenCalledWith({id: 2}, expected, jasmine.any(Function), jasmine.any(Function));
+        $scope.removeSystemGroups($scope.system);
+        expect($scope.system.$update).toHaveBeenCalledWith({id: 2}, jasmine.any(Function), jasmine.any(Function));
     });
 });

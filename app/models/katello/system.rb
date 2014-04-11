@@ -28,7 +28,7 @@ class System < Katello::Model
   include AsyncOrchestration
 
   attr_accessible :name, :uuid, :description, :location, :environment, :content_view,
-                  :environment_id, :content_view_id
+                  :environment_id, :content_view_id, :system_group_ids
 
   after_rollback :rollback_on_create, :on => :create
 
