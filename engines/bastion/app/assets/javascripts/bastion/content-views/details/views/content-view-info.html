@@ -27,7 +27,8 @@
 
   <div class="detail">
     <span class="info-label" translate>Composite?</span>
-    <span class="info-value">{{ contentView.composite || false }}</span>
+    <span class="info-value" ng-show="contentView.composite" translate>Yes</span>
+    <span class="info-value" ng-hide="contentView.composite" translate>No</span>
   </div>
 
 </div>
