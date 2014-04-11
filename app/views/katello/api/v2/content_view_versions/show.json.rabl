@@ -28,6 +28,10 @@ child :archived_repos => :repositories do
   attributes :id, :name, :label
 end
 
+child :history => :history do
+  extends 'katello/api/v2/content_view_histories/show'
+end
+
 child :active_history => :active_history do
   extends 'katello/api/v2/content_view_histories/show'
 end
