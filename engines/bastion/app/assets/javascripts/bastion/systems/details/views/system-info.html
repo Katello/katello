@@ -288,9 +288,12 @@
 
     <section class="custom-information">
       <h4 translate>Custom Information</h4>
-    <span alch-edit-add-item="system.customInfo"
-          on-add="addCustomInfo(value)">
-    </span>
+
+      <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+      <span alch-edit-add-item="system.customInfo"
+            on-add="addCustomInfo(value)">
+      </span>
       <p translate ng-show="system.customInfo.length == 0">
         You don't have any custom information, add some above
       </p>

@@ -31,10 +31,8 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
     ['$scope', '$q', 'translate', 'CustomInfo', 'System', 'ContentView', 'Organization', 'CurrentOrganization',
         function ($scope, $q, translate, CustomInfo, System, ContentView, Organization, CurrentOrganization) {
 
-        var customInfoErrorHandler = function (error) {
-            _.each(error.errors, function (errorMessage) {
-                $scope.errorMessages.push(translate("An error occurred updating Custom Information: ") + errorMessage);
-            });
+        var customInfoErrorHandler = function (response) {
+            $scope.errorMessages = response.data.errors;
         };
 
         $scope.editContentView = false;
