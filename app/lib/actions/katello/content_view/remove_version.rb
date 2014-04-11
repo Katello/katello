@@ -18,7 +18,7 @@ module Actions
 
         def plan(version)
           action_subject(version.content_view)
-          version.check_ready_to_delete!
+          version.check_ready_to_destroy!
 
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version,
                                                           :user => ::User.current.login,

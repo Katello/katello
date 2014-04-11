@@ -21,6 +21,10 @@ module Katello
 
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids component_ids))
 
+    resource_description do
+      api_version "v2"
+    end
+
     def_param_group :content_view do
       param :description, String, :desc => "Description for the content view"
       param :repository_ids, Array, :desc => "List of repository ids"
@@ -45,7 +49,8 @@ module Katello
         :history                       => view_rule,
         :available_puppet_module_names => view_rule,
         :remove_from_environment       => promote_rule,
-        :remove                        => edit_rule
+        :remove                        => edit_rule,
+        :destroy                       => edit_rule
       }
     end
 
@@ -198,6 +203,13 @@ module Katello
       options[:content_view_environments] = cv_envs
 
       task = async_task(::Actions::Katello::ContentView::Remove, @view, cv_envs, versions, options)
+      respond_for_async :resource => task
+    end
+
+    api :DELETE, "/content_views/:id", "Delete a content view"
+    param :id, :number, :desc => "content view numeric identifier", :required => true
+    def destroy
+      task = async_task(::Actions::Katello::ContentView::Destroy, @view)
       respond_for_async :resource => task
     end
 

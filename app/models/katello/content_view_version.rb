@@ -17,7 +17,7 @@ class ContentViewVersion < Katello::Model
   include AsyncOrchestration
   include Authorization::ContentViewVersion
 
-  before_destroy :check_ready_to_delete!
+  before_destroy :check_ready_to_destroy!
 
   belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
@@ -295,7 +295,7 @@ class ContentViewVersion < Katello::Model
     fail _("Default content view versions cannot be promoted") if default?
   end
 
-  def check_ready_to_delete!
+  def check_ready_to_destroy!
     if environments.any? && !organization.being_deleted?
       fail _("Cannot delete version while it is in environments: %s") % environments.map(&:name).join(",")
     end

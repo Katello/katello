@@ -12,26 +12,26 @@
 
 module Actions
   module Katello
-    module ContentViewVersion
-      class Destroy < Actions::Base
+    module ContentView
+      class Destroy < Actions::EntryAction
 
-        def plan(version)
-          version.check_ready_to_destroy!
+        def plan(content_view)
+          action_subject(content_view)
+          content_view.check_ready_to_destroy!
 
           sequence do
             concurrence do
-              version.repositories.each do |repo|
-                plan_action(Repository::Destroy, repo)
-              end
-
-              version.content_view_puppet_environments.each do |puppet_env|
-                plan_action(ContentViewPuppetEnvironment::Destroy, puppet_env)
+              content_view.content_view_versions.each do |version|
+                plan_action(ContentViewVersion::Destroy, version)
               end
             end
 
-            version.reload
-            version.destroy
+            content_view.destroy
           end
+        end
+
+        def humanized_name
+          _("Delete")
         end
       end
     end

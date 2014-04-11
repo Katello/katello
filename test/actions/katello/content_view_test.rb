@@ -204,4 +204,26 @@ module ::Actions::Katello::ContentView
     end
   end
 
+  class DestroyTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::Destroy }
+
+    let(:content_view) do
+      katello_content_views(:library_dev_view)
+    end
+
+    it 'plans' do
+      view = Katello::ContentView.create!(:name => "New view",
+                                          :organization => content_view.organization
+                                         )
+      version = Katello::ContentViewVersion.create!(:content_view => view,
+                                                    :version => 1
+                                                   )
+
+      action.expects(:action_subject).with(view.reload)
+      view.expects(:destroy).returns(true)
+      plan_action(action, view)
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version)
+    end
+  end
+
 end

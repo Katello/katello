@@ -46,7 +46,7 @@ class Distributor < Katello::Model
 
   after_create :init_default_custom_info
 
-  scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
+  scope :in_environment, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
 
   def organization
