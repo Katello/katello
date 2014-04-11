@@ -19,7 +19,8 @@
 
     <form name="gpgKeyForm" class="form form-horizontal" novalidate role="form"
           action="{{ uploadURL }}"
-          ng-upload="uploadContent(content)">
+          ng-upload="uploadContent(content)"
+          upload-options-enable-rails-csrf>
 
       <div alch-form-group label="{{ 'Name' | translate }}">
         <input id="name"
