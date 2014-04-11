@@ -31,7 +31,7 @@ angular.module('Bastion.content-views').filter('availableForComposite', [functio
 
         usedContentViews = _.pluck(compositeView.components, 'content_view_id');
         return _.filter(contentViews, function (contentView) {
-            return usedContentViews.indexOf(contentView.id) === -1;
+            return usedContentViews.indexOf(contentView.id) === -1 && !contentView.default;
         });
     };
 }]);
