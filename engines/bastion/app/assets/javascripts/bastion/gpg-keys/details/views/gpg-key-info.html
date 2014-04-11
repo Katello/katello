@@ -13,7 +13,8 @@
         <form role="form"
               action="{{ uploadURL }}"
               ng-upload="uploadContent(content)"
-              upload-options-enable-controls>
+              upload-options-enable-controls
+              upload-options-enable-rails-csrf>
 
           <div class="control-group">
               <input type="file" name="content"/>
