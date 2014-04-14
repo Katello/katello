@@ -27,9 +27,9 @@ angular.module('Bastion.system-groups').factory('SystemGroup',
             get: {method: 'GET', params: {fields: 'full'}},
             update: {method: 'PUT'},
             copy: {method: 'POST', params: {action: 'copy'}},
-            systems: {method: 'GET', params: {action: 'systems'}},
-            removeSystems: {method: 'PUT', isArray: true, params: {action: 'remove_systems'}},
-            addSystems: {method: 'PUT', isArray: true, params: {action: 'add_systems'}}
+            contentHosts: {method: 'GET', params: {action: 'systems'}},
+            removeContentHosts: {method: 'PUT', isArray: true, params: {action: 'remove_systems'}},
+            addContentHosts: {method: 'PUT', isArray: true, params: {action: 'add_systems'}}
         });
 
     }]

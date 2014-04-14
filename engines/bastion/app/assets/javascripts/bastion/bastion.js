@@ -54,8 +54,8 @@
 //= require "bastion/system-groups/system-groups.module.js"
 //= require_tree "./system-groups"
 
-//= require "bastion/systems/systems.module"
-//= require_tree "./systems"
+//= require "bastion/content-hosts/content-hosts.module.js"
+//= require_tree "./content-hosts"
 
 //= require "bastion/subscriptions/subscriptions.module.js"
 //= require_tree "./subscriptions"

@@ -1,0 +1,80 @@
+<span page-title>{{ 'Content Host Bulk Packages' | translate }}</span>
+
+<div class="details">
+  <section>
+    <h4 translate>Content Host Package Management</h4>
+
+
+    <form name="systemContentForm" class="form" ng-hide="content.workingMode">
+
+      <div>
+        <input type="radio"
+               ng-model="content.contentType"
+               ng-change="updatePlaceholder(content.contentType)"
+               ng-disabled="content.confirm"
+               value="package"/>
+        <label for="package" translate>Package</label>
+
+        <input type="radio"
+               ng-model="content.contentType"
+               ng-change="updatePlaceholder(content.contentType)"
+               ng-disabled="content.confirm"
+               value="package_group"/>
+        <label for="package_group" translate>Package Group</label>
+
+      </div>
+
+      <div class="form-group">
+        <input class="form-control"
+               name="label"
+               type="text"
+               placeholder="{{ content.placeholder }}"
+               ng-model="content.content"
+               ng-disabled="content.confirm"
+               required/>
+      </div>
+
+      <div>
+        <button class="btn btn-default"
+                translate
+                ng-click="confirmContentAction('install', content)"
+                ng-disabled="!systemContentForm.$valid || content.confirm">
+          Install
+        </button>
+
+        <button class="btn btn-default"
+                translate
+                ng-click="confirmContentAction('update', content)"
+                ng-disabled="!systemContentForm.$valid || content.confirm"
+                ng-hide="content.contentType == 'errata'">
+          Update
+        </button>
+
+        <button class="btn btn-default"
+                translate
+                ng-click="confirmContentAction('remove', content)"
+                ng-disabled="!systemContentForm.$valid || content.confirm"
+                ng-hide="content.contentType == 'errata'">
+          Remove
+        </button>
+      </div>
+
+      <div class="inline-confirmation" ng-show="content.confirm">
+        <div class="confirmation_text" ng-show="content.action == 'install'" translate>
+          Are you sure you want to install {{ content.content }} on the {{ getSelectedSystemIds().length }} system(s) selected?
+        </div>
+        <div class="confirmation_text" ng-show="content.action == 'update'" translate>
+          Are you sure you want to update {{ content.content }} on the {{ getSelectedSystemIds().length }} system(s) selected?
+        </div>
+        <div class="confirmation_text" ng-show="content.action == 'remove'" translate>
+          Are you sure you want to remove {{ content.content }} from the {{ getSelectedSystemIds().length }} system(s) selected?
+        </div>
+
+        <button class="btn btn-default" ng-click="performContentAction()" translate>Yes</button>
+        <button class="btn btn-default" ng-click="content.confirm = false" translate>No</button>
+      </div>
+
+    </form>
+
+  </section>
+</div>

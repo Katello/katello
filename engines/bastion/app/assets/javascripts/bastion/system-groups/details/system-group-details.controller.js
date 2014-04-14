@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc object
- * @name  Bastion.systems.controller:SystemGroupDetailsController
+ * @name  Bastion.system-groups.controller:SystemGroupDetailsController
  *
  * @requires $scope
  * @requires $state
