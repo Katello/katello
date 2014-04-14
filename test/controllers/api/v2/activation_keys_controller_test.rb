@@ -35,8 +35,9 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      login_user(User.find(users(:admin)))
       @request.env['HTTP_ACCEPT'] = 'application/json'
+      @request.env['CONTENT_TYPE'] = 'application/json'
+      login_user(User.find(users(:admin)))
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
 
       models
@@ -72,6 +73,66 @@ module Katello
       results = JSON.parse(response.body)
       assert_equal results['name'], 'Key A'
       assert_equal results['description'], 'Key A, Key to the World'
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/create'
+    end
+
+    def test_create_nested
+      post :create, :environment => { :id => @library.id }, :content_view => { :id => @view.id },
+           :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'}
+
+      results = JSON.parse(response.body)
+      assert_equal results['name'], 'Key A2'
+      assert_equal results['description'], 'Key A2, Key to the World'
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/create'
+    end
+
+    def test_create_unlimited
+      post :create, :organization_id => @organization.id,
+           :activation_key => {:name => 'Unlimited Key', :usage_limit => 'unlimited'}
+
+      results = JSON.parse(response.body)
+      assert_equal results['name'], 'Unlimited Key'
+      assert_equal results['usage_limit'], -1
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/create'
+    end
+
+    def test_create_unlimited2
+      post :create, :organization_id => @organization.id,
+           :activation_key => {:name => 'Unlimited Key 2', :usage_limit => -1}
+
+      results = JSON.parse(response.body)
+      assert_equal results['name'], 'Unlimited Key 2'
+      assert_equal results['usage_limit'], -1
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/create'
+    end
+
+    def test_create_zero_limit
+      post :create, :organization_id => @organization.id,
+           :activation_key => {:name => 'Zero Key', :usage_limit => 0}
+
+      results = JSON.parse(response.body)
+      assert_equal results['name'], 'Zero Key'
+      assert_equal results['usage_limit'], 0
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/create'
+    end
+
+    def test_create_23_limit
+      post :create, :organization_id => @organization.id,
+           :activation_key => {:name => '23 Limited Key', :usage_limit => 23}
+
+      results = JSON.parse(response.body)
+      assert_equal results['name'], '23 Limited Key'
+      assert_equal results['usage_limit'], 23
 
       assert_response :success
       assert_template 'katello/api/v2/common/create'

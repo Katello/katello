@@ -41,6 +41,8 @@ module ::Actions::Katello::System
         params[:uuid].must_be_kind_of Dynflow::ExecutionPlan::OutputReference
         params[:uuid].subkeys.must_equal %w[response uuid]
       end
+      #::Actions::Katello::System::ActivationKeys.any_instance.stubs(:error).returns(nil)
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:error).returns(nil)
       plan_action(action, system, [])
       assert_action_planed(action, ::Actions::Candlepin::Consumer::Create)
       assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, system)

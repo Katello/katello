@@ -23,7 +23,12 @@
  */
 angular.module('alchemy.format').filter('defaultNumberString', function () {
     return function (toFormat, options) {
-        var formattedValue = (toFormat || '').toString();
+        var formattedValue;
+        if (toFormat === null) {
+            formattedValue = '';
+        } else {
+            formattedValue = toFormat.toString();
+        }
         options = options || {};
 
         if (options.hasOwnProperty(formattedValue)) {

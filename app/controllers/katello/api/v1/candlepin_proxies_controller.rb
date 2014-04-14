@@ -21,7 +21,7 @@ module Katello
 
     before_filter :proxy_request_path, :proxy_request_body
     before_filter :set_organization_id
-    before_filter :find_organization, :only => [:rhsm_index, :consumer_activate]
+    before_filter :find_organization, :only => [:rhsm_index, :consumer_activate, :consumer_create]
     before_filter :find_default_organization_and_or_environment, :only => [:consumer_create, :index, :consumer_activate]
     before_filter :find_optional_organization, :only => [:consumer_create, :hypervisors_update, :index, :consumer_activate]
     before_filter :find_only_environment, :only => [:consumer_create]
@@ -243,8 +243,7 @@ module Katello
       User.current    = User.hidden.first
       activation_keys = find_activation_keys
 
-      @system = System.new(system_params.merge(:environment => activation_keys[0].environment,
-                                               :content_view => activation_keys[0].content_view))
+      @system = System.new(system_params)
       sync_task(::Actions::Katello::System::Create, @system, activation_keys)
       @system.reload
 
@@ -417,7 +416,7 @@ module Katello
     end
 
     def system_params
-      system_params = params.slice(:name, :owner, :facts, :installedProducts)
+      system_params = params.slice(:name, :organization_id, :facts, :installedProducts)
 
       if params.key?(:cp_type)
         system_params[:cp_type] = params[:cp_type]

@@ -106,11 +106,13 @@
             None
           </span>
           <ul ng-show="contentHost.activation_keys.length > 0">
-            <li ng-repeat="ak in contentHost.activation_keys">
+            <li ng-repeat="activation_key in contentHost.activation_keys">
               <span>
-                <a ng-href="{{ getActivationKeyLink(ak) }}">{{ ak.name }}</a>
+                <a ui-sref="activation-keys.details.info({activationKeyId: activation_key.id})">
+                  {{ activation_key.name }}
+                </a>
               </span>
-              <span ng-show="ak.description"> - {{ ak.description }}</span>
+              <span ng-show="activation_key.description"> - {{ activation_key.description }}</span>
             </li>
           </ul>
         </span>

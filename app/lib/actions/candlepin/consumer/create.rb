@@ -24,6 +24,7 @@ module Actions
           param :autoheal
           param :release_ver
           param :service_level
+          param :uuid
           param :capabilities
           param :activation_keys
         end
@@ -39,7 +40,7 @@ module Actions
                      input[:autoheal],
                      input[:release_ver],
                      input[:service_level],
-                     "",
+                     input[:uuid],
                      input[:capabilities],
                      input[:activation_keys])
         end
