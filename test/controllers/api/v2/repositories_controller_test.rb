@@ -95,6 +95,35 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     end
   end
 
+  def test_create_with_empty_string_url
+    product = MiniTest::Mock.new
+    product.expect(:add_repo, @repository, [
+      'Fedora_Repository',
+      'Fedora Repository',
+      nil,
+      'yum',
+      nil,
+      nil
+    ])
+
+    product.expect(:editable?, @product.editable?)
+    product.expect(:gpg_key, nil)
+    product.expect(:organization, @organization)
+    product.expect(:redhat?, false)
+    @controller.expects(:sync_task).with(::Actions::Katello::Repository::Create, @repository).once
+
+    Product.stub(:find, product) do
+      post :create, :name => 'Fedora Repository',
+                    :product_id => @product.id,
+                    :url => '',
+                    :content_type => 'yum'
+
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
+    end
+  end
+
+
   def test_create_with_gpg_key
     key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
 
@@ -153,6 +182,13 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   def test_update
     key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
     put :update, :id => @repository.id, :repository => {:gpg_key_id => key.id}
+
+    assert_response :success
+    assert_template 'api/v2/repositories/show'
+  end
+
+  def test_update_empty_string_url
+    put :update, :id => @repository.id, :repository => {:url => ''}
 
     assert_response :success
     assert_template 'api/v2/repositories/show'

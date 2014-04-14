@@ -198,19 +198,34 @@ class RepositoryInstanceTest < RepositoryTestBase
     assert_equal "/content_views/composite_view/1/library/fedora_17_label", relative_path
   end
 
-  def test_blank_feed_url
+  def new_custom_repo
     new_custom_repo = @fedora_17_x86_64.clone
     new_custom_repo.name = "new_custom_repo"
     new_custom_repo.label = "new_custom_repo"
     new_custom_repo.pulp_id = "new_custom_repo"
-    new_custom_repo.feed = ""
-    assert new_custom_repo.save
-    assert new_custom_repo.persisted?
-    assert_equal "", new_custom_repo.reload.feed
-    refute new_custom_repo.feed?
+    new_custom_repo
+  end
 
+  def test_nil_feed_url
+    new_repo = new_custom_repo
+    new_repo.feed = nil
+    assert new_repo.save
+    assert new_repo.persisted?
+    assert_equal nil, new_repo.reload.feed
+    refute new_repo.feed?
+  end
+
+  def test_blank_feed_url
+    new_repo = new_custom_repo
+    new_repo.feed = ""
+    refute new_repo.save
+    refute new_repo.errors.empty?
+    assert_equal nil, new_repo.reload.feed
+  end
+
+  def test_nil_rhel_url
     rhel = Repository.find(katello_repositories(:rhel_6_x86_64))
-    rhel.feed = ""
+    rhel.feed = nil
     refute rhel.valid?
     refute rhel.save
     refute_empty rhel.errors

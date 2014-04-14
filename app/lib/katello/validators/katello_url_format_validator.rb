@@ -16,11 +16,11 @@ module Validators
     include KatelloUrlHelper
 
     def validate_each(record, attribute, value)
-      if options[:blank_allowed]
-        if options[:blank_allowed].respond_to?(:call)
-          return if value.blank? && options[:blank_allowed].call(record)
+      if options[:nil_allowed]
+        if options[:nil_allowed].respond_to?(:call)
+          return if value.nil? && options[:nil_allowed].call(record)
         else
-          return if value.blank?
+          return if value.nil?
         end
       end
 
