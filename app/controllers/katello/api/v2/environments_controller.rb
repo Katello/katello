@@ -129,7 +129,7 @@ module Katello
 
     api :PUT, "/environments/:id", "Update an environment"
     api :PUT, "/organizations/:organization_id/environments/:id", "Update an environment in an organization"
-    param :id, :number, :desc => "ID of the environment", :required => true
+    param :id, :number, :desc => "ID of the environment", :required => false
     param :organization_id, String, :desc => "name of the organization"
     param :new_name, String, :desc => "new name to be given to the environment"
     param :description, String, :desc => "description of the environment"
