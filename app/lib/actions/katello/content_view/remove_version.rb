@@ -1,3 +1,4 @@
+
 #
 # Copyright 2014 Red Hat, Inc.
 #
@@ -13,22 +14,18 @@
 module Actions
   module Katello
     module ContentView
-      class RemoveFromEnvironment < Actions::EntryAction
+      class RemoveVersion < Actions::EntryAction
 
-        def plan(content_view, environment)
-          action_subject(content_view)
-          content_view.check_remove_from_environment!(environment)
+        def plan(version)
+          action_subject(version.content_view)
+          version.check_ready_to_destroy!
 
-          cv_env = ::Katello::ContentViewEnvironment.where(:content_view_id => content_view.id,
-                                                        :environment_id => environment.id).first
-
-          history = ::Katello::ContentViewHistory.create!(:content_view_version => cv_env.content_view_version,
-                                                          :environment => environment,
+          history = ::Katello::ContentViewHistory.create!(:content_view_version => version,
                                                           :user => ::User.current.login,
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS,
                                                           :task => self.task)
 
-          plan_action(ContentViewEnvironment::Destroy, cv_env)
+          plan_action(ContentViewVersion::Destroy, version)
           plan_self(history_id: history.id)
         end
 
@@ -39,7 +36,7 @@ module Actions
         end
 
         def humanized_name
-          _("Remove from Environment")
+          _("Remove Version")
         end
       end
     end

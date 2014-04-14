@@ -381,7 +381,7 @@ class Repository < Katello::Model
   protected
 
   def assert_deletable
-    if self.environment.library? && self.content_view.default?
+    if self.environment.try(:library?) && self.content_view.default?
       if self.environment.organization.being_deleted?
         return true
       elsif self.custom? && self.deletable?

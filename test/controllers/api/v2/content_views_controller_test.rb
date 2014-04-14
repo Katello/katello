@@ -228,5 +228,22 @@ module Katello
       assert_response 400
       assert_equal version_count, view.versions.reload.count
     end
+
+    def test_destroy
+      view = ContentView.create!(:name => "Cat",
+                                 :organization => @organization
+                                )
+      delete :destroy, :id => view.id
+      assert_response :success
+    end
+
+    def test_destroy_protected
+      allowed_perms = [@create_permission, @update_permission]
+      denied_perms = [@no_permission, @read_permission]
+
+      assert_protected_action(:destroy, allowed_perms, denied_perms) do
+        delete :destroy, :id => @content_view.id
+      end
+    end
   end
 end
