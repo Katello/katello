@@ -5,6 +5,27 @@ simple_key:
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
 
+another_simple_key:
+  name: Another Simple Activation Key
+  description: Another simple activation key.
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+
+yet_another_simple_key:
+  name: Yet Another Activation Key
+  description: And another simple activation key!
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+
+and_yet_another_simple_key:
+  name: And Yet Another Simple Activation Key
+  description: Here we go again!
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+
 dev_key:
   name: DevKey
   created_at: <%= Time.now %>
