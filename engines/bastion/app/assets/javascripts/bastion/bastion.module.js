@@ -99,6 +99,16 @@ angular.module('Bastion').config(
 
         $httpProvider.interceptors.push('PrefixInterceptor');
         $httpProvider.interceptors.push('UnauthorizedInterceptor');
+
+        $urlRouterProvider.when('/', ['$location', '$window', function ($location, $window) {
+            var path = $window.location.pathname;
+
+            path = path.replace('/katello', '');
+
+            if (path.indexOf('.html') === -1) {
+                $location.path(path);
+            }
+        }]);
     }]
 );
 

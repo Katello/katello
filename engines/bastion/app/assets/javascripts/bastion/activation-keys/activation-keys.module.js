@@ -34,7 +34,7 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
         templateUrl: 'activation-keys/views/activation-keys.html'
     })
     .state('activation-keys.index', {
-        url: '/activation-keys',
+        url: '/activation_keys',
         views: {
             'table': {
                 templateUrl: 'activation-keys/views/activation-keys-table-full.html'
@@ -42,7 +42,7 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
         }
     })
     .state('activation-keys.new', {
-        url: '/activation-keys/new',
+        url: '/activation_keys/new',
         collapsed: true,
         views: {
             'table': {
@@ -57,7 +57,7 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
 
     $stateProvider.state("activation-keys.details", {
         abstract: true,
-        url: '/activation-keys/:activationKeyId',
+        url: '/activation_keys/:activationKeyId',
         collapsed: true,
         views: {
             'table': {
