@@ -1,6 +1,0 @@
-#!/bin/env bash
-# script for refreshing the newest content from CDN. It doesn't synchronize the
-# repositories but lets Katello know there is new content available.
-
-foreman-rake katello:refresh_cdn RAILS_ENV=production >/dev/null
-

@@ -12,7 +12,6 @@
 
 module Katello
 class Candlepin::Content
-
   # rubocop:disable SymbolName
   attr_accessor :name, :id, :type, :label, :vendor, :contentUrl, :gpgUrl
 
@@ -48,5 +47,120 @@ class Candlepin::Content
   def load_attributes(params)
     params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
   end
+
+
+  class RepositoryMapper
+    attr_reader :product, :content, :substitutions
+
+    def initialize(product, content, substitutions)
+      @product = product
+      @content = content
+      @substitutions = substitutions
+    end
+
+    def find_repository
+      ::Katello::Repository.where(product_id: product.id,
+                                  environment_id: product.organization.library.id,
+                                  pulp_id: pulp_id).first
+    end
+
+    def build_repository
+      ::Katello::Repository.new(:environment => product.organization.library,
+                                :product => product,
+                                :pulp_id => pulp_id,
+                                :cp_label => content.label,
+                                :content_id => content.id,
+                                :arch => arch,
+                                :major => major,
+                                :minor => minor,
+                                :relative_path => relative_path,
+                                :name => name,
+                                :label => label,
+                                :feed => feed_url,
+                                :feed_ca => ca,
+                                :feed_cert => product.certificate,
+                                :feed_key => product.key,
+                                :content_type => content_type,
+                                :preserve_metadata => true, #preserve repo metadata when importing from cp
+                                :unprotected => unprotected?,
+                                :content_view_version => product.organization.library.default_content_view_version)
+    end
+
+    def check_substitutions!
+      if substitutor.valid_substitutions?(content.contentUrl, substitutions)
+        return true
+      else
+        raise _("%{substitutions} are not valid substitutions for %{content_url}") %
+            { substitutions: substitutions, content_url: content.contentUrl }
+      end
+    end
+
+    def substitutor
+      product.cdn_resource.substitutor
+    end
+
+    def name
+      sorted_substitutions = substitutions.sort_by {|k, _| k.to_s}.map(&:last)
+      repo_name_parts = [content.name,
+                         sorted_substitutions].flatten.compact
+      repo_name_parts.join(" ").gsub(/[^a-z0-9\-\._ ]/i, "")
+    end
+
+    def pulp_id
+      product.repo_id(name)
+    end
+
+    def path
+      substitutions.inject(content.contentUrl) do |url, (key, value)|
+        url.gsub("$#{key}", value)
+      end
+    end
+
+    def relative_path
+      ::Katello::Glue::Pulp::Repos.repo_path_from_content_path(product.organization.library, path)
+    end
+
+    def feed_url
+      product.repo_url(path)
+    end
+
+    def arch
+      substitutions[:basearch] || "noarch"
+    end
+
+    def label
+      ::Katello::Util::Model.labelize(name)
+    end
+
+    def version
+      ::Katello::Resources::CDN::Utils.parse_version(substitutions[:releasever])
+    end
+
+    def major
+      version[:major]
+    end
+
+    def minor
+      version[:minor]
+    end
+
+    def content_type
+      kickstart? ? 'yum' : content.type
+    end
+
+    def unprotected?
+      kickstart? ? true : false
+    end
+
+    def kickstart?
+      content.type.downcase == 'kickstart'
+    end
+
+    def ca
+      File.read(::Katello::Resources::CDN::CdnResource.ca_file)
+    end
+
+  end
+
 end
 end

@@ -13,7 +13,7 @@
 module Katello
 class Api::V1::RepositoriesController < Api::V1::ApiController
   respond_to :json
-  before_filter :find_repository, :only => [:show, :update, :destroy, :package_groups, :package_group_categories, :enable, :gpg_key_content]
+  before_filter :find_repository, :only => [:show, :update, :destroy, :package_groups, :package_group_categories, :gpg_key_content]
   before_filter :find_organization, :only => [:create]
   before_filter :find_product, :only => [:create]
 
@@ -38,7 +38,6 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
         :show                     => read_test,
         :update                   => edit_test,
         :destroy                  => edit_test,
-        :enable                   => edit_test,
         :package_groups           => read_test,
         :package_group_categories => read_test
     }
@@ -82,12 +81,11 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   param :id, :identifier, :required => true, :desc => "repository id"
   param :repository, Hash, :required => true do
     param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the repository"
-    param :enabled, :bool, :desc => "flag that enables/disables the repository"
     param :url, String, :desc => "repository source url"
   end
   def update
     fail HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
-    attrs = params[:repository].slice(:gpg_key_name, :enabled)
+    attrs = params[:repository].slice(:gpg_key_namel)
     attrs[:feed] = params[:repository][:url] if params[:repository] && params[:repository][:url]
     @repository.update_attributes!(attrs)
     respond
@@ -105,23 +103,6 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
       respond :message => _("Deleted repository '%s'") % params[:id]
     else
       fail HttpErrors::BadRequest, @repository.errors.full_messages.join(" ")
-    end
-  end
-
-  api :POST, "/repositories/:id/enable", "Enable or disable a repository"
-  param :id, :identifier, :required => true
-  param :enable, :bool, :required => true, :desc => "flag that enables/disables the repository"
-  api_version "v1"
-  def enable
-    fail HttpErrors::NotFound, _("Disable/enable is not supported for custom repositories.") if !@repository.redhat?
-
-    @repository.enabled = query_params[:enable]
-    @repository.save!
-
-    if @repository.enabled?
-      render :text => _("Repository '%s' enabled.") % @repository.name, :status => 200
-    else
-      render :text => _("Repository '%s' disabled.") % @repository.name, :status => 200
     end
   end
 

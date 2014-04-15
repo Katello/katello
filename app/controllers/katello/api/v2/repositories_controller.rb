@@ -17,8 +17,8 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   before_filter :find_product, :only => [:index]
   before_filter :find_product_for_create, :only => [:create]
   before_filter :find_organization_from_product, :only => [:create]
-  before_filter :find_repository, :only => [:show, :update, :destroy, :sync, :enable, :disable]
-  before_filter :find_organization_from_repo, :only => [:update, :enable, :disable]
+  before_filter :find_repository, :only => [:show, :update, :destroy, :sync]
+  before_filter :find_organization_from_repo, :only => [:update]
   before_filter :find_gpg_key, :only => [:create, :update]
   before_filter :error_on_rh_product, :only => [:create]
   before_filter :error_on_rh_repo, :only => [:update, :destroy]
@@ -52,8 +52,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
       :create   => create_test,
       :show     => read_test,
       :sync     => edit_test,
-      :enable => org_edit,
-      :disable => org_edit,
       :update   => edit_test,
       :destroy  => edit_test,
       :sync     => sync_test
@@ -67,8 +65,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   param :environment_id, :number, :desc => "ID of an environment to show repositories in"
   param :content_view_id, :number, :desc => "ID of a content view to show repositories in"
   param :library, :bool, :desc => "show repositories in Library and the default content view"
-  param :disabled, :bool, :desc => "limit to only disabled repositories"
-  param :all, :bool, :desc => "display both enabled or disabled repositories"
   param :content_type, String, :desc => "limit to only repositories of this time"
   param_group :search, Api::V2::ApiController
   def index
@@ -81,12 +77,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     else
       product_ids = Product.all_readable_in_library(@organization).pluck("#{Product.table_name}.id")
       options[:filters] << {:terms => {:product_id => product_ids}}
-    end
-
-    if params[:disabled] && params[:disabled].to_bool
-      options[:filters] << {:term => {:enabled => false}}
-    elsif !params[:all] || !params[:all].to_bool
-      options[:filters] << {:term => {:enabled => true}}
     end
 
     options[:filters] << {:term => {:environment_id => params[:environment_id]}} if params[:environment_id]
@@ -146,20 +136,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     trigger(::Actions::Katello::Repository::Destroy, @repository)
 
     respond_for_destroy
-  end
-
-  api :PUT, "/repositories/:id/enable", "Enable a Red Hat repository"
-  param :id, :identifier, :required => true, :desc => "repository ID"
-  def enable
-    @repository.update_attributes!(:enabled => true)
-    respond_for_show :resource => @repository
-  end
-
-  api :PUT, "/repositories/:id/disable", "Disable a Red Hat repository"
-  param :id, :identifier, :required => true, :desc => "repository ID"
-  def disable
-    @repository.update_attributes!(:enabled => false)
-    respond_for_show :resource => @repository
   end
 
   api :POST, "/repositories/sync_complete"

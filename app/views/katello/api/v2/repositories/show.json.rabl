@@ -8,8 +8,7 @@ extends 'katello/api/v2/common/syncable'
 attributes :content_type
 attributes :unprotected, :full_path
 attributes :url,
-           :relative_path,
-           :enabled
+           :relative_path
 attributes :major, :minor
 attributes :gpg_key_id
 attributes :content_id, :content_view_version_id, :library_instance_id

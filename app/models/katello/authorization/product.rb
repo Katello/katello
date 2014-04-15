@@ -16,9 +16,9 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
-        scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.library)}
-        scope :editable, lambda {|org| all_editable(org).with_enabled_repos_only(org.library)}
-        scope :syncable, lambda {|org| sync_items(org).with_enabled_repos_only(org.library)}
+        scope :readable, lambda{|org| all_readable(org).with_repos(org.library)}
+        scope :editable, lambda {|org| all_editable(org).with_repos(org.library)}
+        scope :syncable, lambda {|org| sync_items(org).with_repos(org.library)}
 
         def readable?
           Katello::Product.all_readable(self.organization).where(:id => id).count > 0
@@ -40,18 +40,17 @@ module Katello
       end # included
 
       module ClassMethods
-        # scope
-        def with_repos_only(env)
-          with_repos(env, false)
-        end
-
-        # scope
-        def with_enabled_repos_only(env)
-          with_repos(env, true)
+        def with_repos(env)
+          query = Katello::Repository.in_environment(env.id).select(:product_id)
+          joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => env.organization).
+              where("(#{Katello::Provider.table_name}.provider_type ='#{Katello::Provider::CUSTOM}') OR \
+              (#{Katello::Provider.table_name}.provider_type ='#{Katello::Provider::ANONYMOUS}') OR \
+              (#{Katello::Provider.table_name}.provider_type ='#{Katello::Provider::REDHAT}' AND \
+              #{Katello::Product.table_name}.id in (#{query.to_sql}))")
         end
 
         def all_readable_in_library(org)
-          all_readable(org).with_repos_only(org.library)
+          all_readable(org).with_repos(org.library)
         end
 
         def all_readable(org)
@@ -99,16 +98,6 @@ module Katello
 
         def sync_items(org)
           org.syncable? ? (joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => org)) : where("0=1")
-        end
-
-        def with_repos(env, enabled_only)
-          query = Katello::Repository.in_environment(env.id).select(:product_id)
-          query = query.enabled if enabled_only
-          joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => env.organization).
-              where("(#{Katello::Provider.table_name}.provider_type ='#{Katello::Provider::CUSTOM}') OR \
-                    (#{Katello::Provider.table_name}.provider_type ='#{Katello::Provider::ANONYMOUS}') OR \
-                    (#{Katello::Provider.table_name}.provider_type ='#{Katello::Provider::REDHAT}' AND \
-                    #{Katello::Product.table_name}.id in (#{query.to_sql}))")
         end
 
       end # ClassMethods

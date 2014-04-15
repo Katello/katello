@@ -65,7 +65,6 @@ class Repository < Katello::Model
   validates :pulp_id, :presence => true, :uniqueness => true
   #validates :content_id, :presence => true #add back after fixing add_repo orchestration
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
-  validates_with Validators::RepoDisablementValidator, :attributes => :enabled, :on => :update
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloUrlFormatValidator,
     :attributes => :feed, :nil_allowed => proc { |o| o.custom? }, :field_name => :url,
@@ -77,7 +76,6 @@ class Repository < Katello::Model
   }
 
   default_scope order("#{Katello::Repository.table_name}.name ASC")
-  scope :enabled, where(:enabled => true)
   scope :has_feed, where('feed IS NOT NULL')
   scope :in_default_view, joins(:content_view_version => :content_view).
     where("#{Katello::ContentView.table_name}.default" => true)
@@ -328,7 +326,6 @@ class Repository < Katello::Model
                    :arch => self.arch,
                    :major => self.major,
                    :minor => self.minor,
-                   :enabled => self.enabled,
                    :content_id => self.content_id,
                    :content_view_version => to_version,
                    :content_type => self.content_type,

@@ -84,7 +84,7 @@ class Product < Katello::Model
     super
   end
 
-  def repos(env, include_disabled = false, content_view = nil, include_feedless = true)
+  def repos(env, content_view = nil, include_feedless = true)
     if content_view.nil?
       if !env.library?
         fail "No content view specified for the repos call in a " +
@@ -99,13 +99,12 @@ class Product < Katello::Model
     @repo_cache[env.id] ||= content_view.repos_in_product(env, self)
 
     repositories = @repo_cache[env.id]
-    repositories = repositories.enabled if !include_disabled
     repositories = repositories.has_feed if !include_feedless
     repositories
   end
 
   def enabled?
-    !self.provider.redhat_provider? || self.repositories.enabled.present?
+    !self.provider.redhat_provider? || self.repositories.present?
   end
 
   def organization
@@ -218,6 +217,12 @@ class Product < Katello::Model
 
   def to_action_input
     super.merge(cp_id: cp_id)
+  end
+
+  def cdn_resource
+    certs = { :ssl_client_cert => OpenSSL::X509::Certificate.new(certificate),
+              :ssl_client_key => OpenSSL::PKey::RSA.new(key) }
+    ::Katello::Resources::CDN::CdnResource.new(provider.repository_url, certs)
   end
 
   protected

@@ -231,79 +231,6 @@ describe Product, :katello => true do
 
         it { subject.must_be_kind_of(MarketingProduct) }
       end
-
-      describe "product major/minor versions" do
-        before do
-          disable_product_orchestration
-          @substitutor_mock.stubs(:precalculate).returns do |paths|
-            ret = {}
-            paths.each do |path|
-              path = path[/^.*\$\w+/]
-              path_substitutions = {}
-              [ {"releasever" => "6Server", "basearch" => "x86_64"},
-                {"releasever" => "6.0", "basearch" => "x86_64"},
-                {"releasever" => "6.1", "basearch" => "x86_64"}].each do |substitutions|
-                path_substitutions[substitutions] = substitutions.inject(path) {|new_path,(var,val)| new_path.gsub("$#{var}", val)}
-              end
-              ret[path] = path_substitutions
-            end
-            @substitutor_mock.instance_variable_set("@substitutions", ret)
-          end
-
-          @product = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
-          @product.orchestration_for = :import_from_cp
-
-          @product.productContent.each{|pc| pc.product = @product} #fake pc can't easily keep track of its product
-          Resources::CDN::CdnResource.any_instance.stubs(:get).returns({})
-          Resources::CDN::CdnResource.any_instance.stubs(:new).returns(mock("Substitutor").stubs(:substitutor).returns(@substitutor_mock))
-        end
-
-        it "should determine major and minor version of the product" do
-          skip
-          Repository.expects(:create!).once.with(:major => 6, :minor => '6Server')
-          Repository.expects(:create!).once.with(:major => 6, :minor => '6.0')
-          Repository.expects(:create!).once.with(:major => 6, :minor => '6.1')
-          @product.productContent.first.refresh_repositories
-        end
-      end
-
-      describe "product has more archs" do
-        before do
-          disable_product_orchestration
-
-          @product = Product.new(ProductTestData::PRODUCT_WITH_CONTENT.merge(:provider => @provider))
-          @product.stubs(:attrs => [{:name => 'arch', :value => 'x86_64,i386'}])
-          @product.orchestration_for = :import_from_cp
-          @product.productContent.each { |pc| pc.product = @product } #fake pc can't easily keep track of its product
-          @product.save!
-
-          @substitutor_mock.stubs(:substitute_vars).with(@product.productContent.first.content.contentUrl).returns([
-            [{'basearch' => 'i386', 'releasever' => '6Server'},
-              "#{@organization.name}/released-extra/RHEL-5-Server/6Server/i386/os/ClusterStorage"],
-            [{'basearch' => 'x86_64', 'releasever' => '6Server'},
-              "#{@organization.name}/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage"]
-          ])
-
-          Resources::CDN::CdnResource.any_instance.stubs(:new).returns(mock("Substitutor").stubs(:substitutor).returns(@substitutor_mock))
-        end
-
-        describe "repository for product content" do
-          it "should be created for each arch" do
-            skip
-            expected_feed = "#{@organization.name}/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage"
-            Repository.expects(:create!).once.with(:feed => expected_feed, :name => 'some-name33 x86_64 6Server')
-            Repository.expects(:create!).once.with(:name => 'some-name33 i386 6Server')
-            @product.productContent.first.refresh_repositories
-          end
-
-          it "should follow the format of the content url in candlepin" do
-            skip
-            expected_relative_path = "#{@organization.name}/Library/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage"
-            Repository.expects(:create!).once.with(:relative_path => expected_relative_path)
-            @product.productContent.first.refresh_repositories
-          end
-        end
-      end
     end
   end
 
@@ -318,35 +245,26 @@ describe Product, :katello => true do
       @product.stubs(:arch).returns('noarch')
       @product.save!
       Repository.any_instance.stubs(:create_pulp_repo).returns({})
-      @repo = Repository.create!(:product => @product,
-                                 :environment => @organization.library,
-                                 :name => "testrepo",
-                                 :label => "testrepo_label", :pulp_id=>"1010",
-                                 :content_id=>'123', :relative_path=>"/foo/",
-                                 :content_view_version=>@organization.library.default_content_view_version,
-                                 :feed => 'https://localhost')
-      @repo.stubs(:promoted?).returns(false)
-      @repo.stubs(:update_content).returns(Candlepin::Content.new)
     end
 
-    describe "Test list enabled repos should show redhat repos" do
-      before do
-        @repo.enabled = false
-        @repo.save!
-      end
-
+    describe "Red Hat without enabled repos" do
       specify {Product.readable(@organization).must_be_empty}
-      subject {Product.all_readable(@organization)}
-      it { subject.wont_be_empty }
-      it { subject.must_equal([@product]) }
+      specify {Product.all_readable(@organization).must_equal([@product]) }
       specify {Product.editable(@organization).must_be_empty}
       specify {Product.syncable(@organization).must_be_empty}
     end
 
-    describe "readable and syncable" do
+    describe "Red Hat repo with enabled repos" do
       before do
-        @repo.enabled = true
-        @repo.save!
+        @repo = Repository.create!(:product => @product,
+                                   :environment => @organization.library,
+                                   :name => "testrepo",
+                                   :label => "testrepo_label", :pulp_id=>"1010",
+                                   :content_id=>'123', :relative_path=>"/foo/",
+                                   :content_view_version=>@organization.library.default_content_view_version,
+                                   :feed => 'https://localhost')
+        @repo.stubs(:promoted?).returns(false)
+        @repo.stubs(:update_content).returns(Candlepin::Content.new)
       end
 
       specify { Product.readable(@organization).must_equal([@product]) }

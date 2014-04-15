@@ -184,12 +184,6 @@ module Glue::Candlepin::Product
       raise e
     end
 
-    def refresh_content(content_id)
-      pc = product_content_by_id(content_id)
-      pc.refresh_repositories
-      pc
-    end
-
     def disable_content(content_id)
       pc = product_content_by_id(content_id)
       pc.disable
