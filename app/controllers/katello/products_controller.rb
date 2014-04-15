@@ -104,7 +104,7 @@ class ProductsController < Katello::ApplicationController
     if product_content = @product.product_content_by_id(params[:content_id])
       @content = product_content.content
     else
-      raise HttpErrors::NotFound, _("Couldn't find content '%s'") % params[:content_id]
+      fail HttpErrors::NotFound, _("Couldn't find content '%s'") % params[:content_id]
     end
   end
 

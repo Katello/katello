@@ -67,7 +67,7 @@ module Actions
           if product_content = @product.product_content_by_id(input[:content_id])
             @content = product_content.content
           else
-            raise "Couldn't find content '%s'" % input[:content_id]
+            fail "Couldn't find content '%s'" % input[:content_id]
           end
         end
 

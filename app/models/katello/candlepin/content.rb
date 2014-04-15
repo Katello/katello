@@ -48,7 +48,6 @@ class Candlepin::Content
     params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
   end
 
-
   class RepositoryMapper
     attr_reader :product, :content, :substitutions
 
@@ -90,7 +89,7 @@ class Candlepin::Content
       if substitutor.valid_substitutions?(content.contentUrl, substitutions)
         return true
       else
-        raise _("%{substitutions} are not valid substitutions for %{content_url}") %
+        fail _("%{substitutions} are not valid substitutions for %{content_url}") %
             { substitutions: substitutions, content_url: content.contentUrl }
       end
     end

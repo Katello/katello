@@ -116,7 +116,7 @@ class Repository < Katello::Model
 
   def destroy!
     unless destroy
-      raise self.errors.full_messages.join('; ')
+      fail self.errors.full_messages.join('; ')
     end
   end
 

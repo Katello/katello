@@ -22,12 +22,12 @@ module LazyAccessor
     attr_accessor :lazy_attributes
 
     def lazy_attributes_options(attr)
-      if @lazy_attributes_options && @lazy_attributes_options.has_key?(attr)
+      if @lazy_attributes_options && @lazy_attributes_options.key?(attr)
         @lazy_attributes_options.fetch(attr.to_s)
       elsif superclass.respond_to?(:lazy_attributes_options)
         superclass.lazy_attributes_options(attr.to_s)
       else
-        raise "lazy attribute #{attr} not defined"
+        fail "lazy attribute #{attr} not defined"
       end
     end
 

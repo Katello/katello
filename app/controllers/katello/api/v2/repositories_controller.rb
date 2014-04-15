@@ -46,7 +46,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     read_test   = lambda { @repository.readable? }
     edit_test   = lambda { @repository.editable? }
     sync_test   = lambda { @repository.syncable? }
-    org_edit = lambda{@organization.redhat_manageable?}
     {
       :index    => index_test,
       :create   => create_test,

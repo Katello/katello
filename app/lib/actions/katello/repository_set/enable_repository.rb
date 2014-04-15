@@ -23,7 +23,7 @@ module Actions
           mapper = repository_mapper(product, content, substitutions)
           mapper.check_substitutions!
           if mapper.find_repository
-            raise ::Katello::Errors::ConflictException, _("The repository is already enabled")
+            fail ::Katello::Errors::ConflictException, _("The repository is already enabled")
           end
           repository = mapper.build_repository
           plan_action(Repository::Create, repository)
