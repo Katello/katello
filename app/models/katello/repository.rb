@@ -114,6 +114,12 @@ class Repository < Katello::Model
       .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => views.map(&:id))
   end
 
+  def destroy!
+    unless destroy
+      raise self.errors.full_messages.join('; ')
+    end
+  end
+
   def puppet?
     content_type == PUPPET_TYPE
   end

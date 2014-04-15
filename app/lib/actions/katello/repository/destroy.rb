@@ -20,7 +20,7 @@ module Actions
           plan_action(Pulp::Repository::Destroy, pulp_id: repository.pulp_id)
           plan_action(Product::ContentDestroy, repository)
           plan_action(ElasticSearch::Repository::Destroy, pulp_id: repository.pulp_id)
-          repository.destroy
+          repository.destroy!
         end
 
         def humanized_name
