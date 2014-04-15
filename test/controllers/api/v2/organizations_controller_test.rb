@@ -52,5 +52,12 @@ module Katello
       assert_template 'api/v2/organizations/show'
     end
 
+    def test_delete
+      Organization.any_instance.stubs(:destroy).returns(true)
+      delete(:destroy, :id => @organization.id)
+
+      assert_response :success
+    end
+
   end
 end
