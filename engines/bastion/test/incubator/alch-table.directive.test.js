@@ -112,14 +112,14 @@ describe('Directive: alchTable', function() {
             tableController.itemSelected(row);
 
             expect(scope.table.numSelected).toEqual(1);
-            expect(scope.table.allSelected).toEqual(false);
+            expect(scope.table.allSelected()).toEqual(false);
         });
 
         it("should select all rows", function() {
             tableController.selectAll(true);
 
             expect(scope.table.numSelected).toEqual(2);
-            expect(scope.table.allSelected).toEqual(true);
+            expect(scope.table.allSelected()).toEqual(true);
             expect(scope.table.rows[0].selected).toEqual(true);
         });
 
@@ -127,7 +127,7 @@ describe('Directive: alchTable', function() {
             tableController.selectAll(false);
 
             expect(scope.table.numSelected).toEqual(0);
-            expect(scope.table.allSelected).toEqual(false);
+            expect(scope.table.allSelected()).toEqual(false);
             expect(scope.table.rows[0].selected).toEqual(false);
         });
 
@@ -137,6 +137,17 @@ describe('Directive: alchTable', function() {
             tableController.itemChosen(row);
 
             expect(scope.table.chosenRow).toBe(row);
+        });
+
+        it("should disable select all", function() {
+            tableController.disableSelectAll(true);
+
+            expect(tableController.selection.selectAllDisabled).toBe(true);
+        });
+
+        it("should provide a method to check if all are selected", function() {
+            scope.table.selectAll(true);
+            expect(scope.table.allSelected()).toBe(true);
         });
 
     });
