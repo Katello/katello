@@ -27,7 +27,7 @@
 angular.module('Bastion.subscriptions').controller('SubscriptionProductsController',
     ['$scope', '$state', 'Subscription', 'Product', 'CurrentOrganization', function ($scope, $state, Subscription, Product, CurrentOrganization) {
 
-        Product.query({'organization_id': CurrentOrganization, 'subscription_id': $scope.$stateParams.subscriptionId}, function (response) {
+        Product.queryUnpaged({'organization_id': CurrentOrganization, 'subscription_id': $scope.$stateParams.subscriptionId}, function (response) {
             $scope.products = response.results;
         });
 

@@ -30,6 +30,7 @@
 //= require "katello/widgets/path_selector"
 
 //= require "bastion/bastion.module"
+//= require "bastion/bastion-resource.factory"
 
 //= require_tree "./incubator"
 

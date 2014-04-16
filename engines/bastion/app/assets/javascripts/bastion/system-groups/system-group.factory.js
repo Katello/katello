@@ -15,22 +15,22 @@
  * @ngdoc factory
  * @name  Bastion.system-groups.factory:SystemGroup
  *
- * @requires $resource
+ * @requires BastionResource
  *
  * @description
- *   Provides a $resource for system groups.
+ *   Provides a BastionResource for system groups.
  */
 angular.module('Bastion.system-groups').factory('SystemGroup',
-    ['$resource',
-    function ($resource) {
+    ['BastionResource', function (BastionResource) {
 
-    return $resource('/api/system_groups/:id/:action', {id: '@id'}, {
-        get: {method: 'GET', params: {fields: 'full'}},
-        query: {method: 'GET', isArray: false},
-        update: {method: 'PUT'},
-        copy: {method: 'POST', params: {action: 'copy'}},
-        systems: {method: 'GET', params: {action: 'systems'}},
-        removeSystems: {method: 'PUT', isArray: true, params: {action: 'remove_systems'}},
-        addSystems: {method: 'PUT', isArray: true, params: {action: 'add_systems'}}
-    });
-}]);
+        return BastionResource('/api/system_groups/:id/:action', {id: '@id'}, {
+            get: {method: 'GET', params: {fields: 'full'}},
+            update: {method: 'PUT'},
+            copy: {method: 'POST', params: {action: 'copy'}},
+            systems: {method: 'GET', params: {action: 'systems'}},
+            removeSystems: {method: 'PUT', isArray: true, params: {action: 'remove_systems'}},
+            addSystems: {method: 'PUT', isArray: true, params: {action: 'add_systems'}}
+        });
+
+    }]
+);

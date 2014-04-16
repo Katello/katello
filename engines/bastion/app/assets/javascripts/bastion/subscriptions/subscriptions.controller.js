@@ -79,11 +79,11 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
             }
         };
 
-        $scope.providers = Provider.query({ 'provider_type': 'Red Hat' }, function (response) {
+        $scope.providers = Provider.queryUnpaged({ 'provider_type': 'Red Hat' }, function (response) {
             $scope.provider = _.first(response.results);
         });
 
-        $scope.subscriptions = Subscription.query();
+        $scope.subscriptions = Subscription.queryPaged();
 
         $q.all([$scope.providers.$promise, $scope.subscriptions.$promise]).then(function () {
             if ($scope.subscriptions.results.length < 1) {

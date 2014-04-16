@@ -12,9 +12,7 @@
  **/
 
 describe('Factory: System', function() {
-    var $resource,
-        $q,
-        System,
+    var System,
         releaseVersions,
         availableSubscriptions,
         systemsCollection;
@@ -23,7 +21,7 @@ describe('Factory: System', function() {
 
     beforeEach(module(function($provide) {
         systemsCollection = {
-            records: [
+            results: [
                 { name: 'System1', id: 1 },
                 { name: 'System2', id: 2 }
             ],
@@ -32,65 +30,37 @@ describe('Factory: System', function() {
         };
 
         releaseVersions = ['RHEL 6', 'Burrito'];
-
         availableSubscriptions = ['subscription1', 'subscription2'];
 
-        $resource = function() {
-            this.get = function(id) {
-                return systemsCollection.records[0];
-            };
-            this.update = function(data) {
-                systemsCollection.records[0] = data;
-            };
-            this.query = function() {
-                return systemsCollection;
-            };
-
-            this.releaseVersions = function() {
-                var deferred = $q.defer();
-
-                deferred.resolve(releaseVersions);
-
-                return deferred.promise;
-            };
-
-            this.availableSubscriptions = function() {
-                var deferred = $q.defer();
-
-                deferred.resolve(availableSubscriptions);
-
-                return deferred.promise;
-            };
-            return this;
-        };
-
-        $provide.value('$resource', $resource);
         $provide.value('CurrentOrganization', 'ACME');
     }));
 
-    beforeEach(inject(function(_System_, _$q_) {
+    beforeEach(inject(function(_System_) {
         System = _System_;
-        $q = _$q_;
     }));
 
     it("provides a way to update a system", function() {
-        System.update({name: 'NewSystemName', id: 1});
-        var response = System.get({ id: 1 });
-        expect(response.name).toEqual('NewSystemName');
+        var system = systemsCollection.results[0];
+        system.name = 'NewSystemName';
+        $httpBackend.expectPUT('/api/systems').respond(system);
+
+        System.update({name: 'NewSystemName', id: 1}, function (system) {
+            expect(system.name).toEqual('NewSystemName');
+        });
     });
 
-    it("provides a way to get the possible release versions for a system via a promise", function() {
-        var releasePromise = System.releaseVersions({ id: systemsCollection.records[0].id });
+    it("provides a way to get the possible release versions for a system", function() {
+        $httpBackend.expectGET('/api/systems').respond(systemsCollection.results[0]);
 
-        releasePromise.then(function(data) {
+        System.releaseVersions({ id: systemsCollection.results[0].id }, function (data) {
             expect(data).toEqual(releaseVersions);
         });
     });
 
-    it("provides a way to get the available subscriptions for a system via a promise", function() {
-        var subscriptionPromise = System.availableSubscriptions({ id: systemsCollection.records[0].id });
+    it("provides a way to get the available subscriptions for a system", function() {
+        $httpBackend.expectGET('/api/systems').respond(availableSubscriptions);
 
-        subscriptionPromise.then(function(data) {
+        System.subscriptions({ id: systemsCollection.results[0].id }, function (data) {
             expect(data).toEqual(availableSubscriptions);
         });
     });

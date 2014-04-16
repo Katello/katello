@@ -45,7 +45,7 @@ describe('Factory: Organization', function() {
 
     it('provides a way retrieve an organization', function() {
         $httpBackend.expectGET('/api/v2/organizations').respond(organizations);
-        Organization.query(function(organizations) {
+        Organization.queryPaged(function(organizations) {
             expect(organizations.records.length).toBe(2);
         });
     });
@@ -70,7 +70,7 @@ describe('Factory: Organization', function() {
     it('provides a way to get an org', function() {
         $httpBackend.expectGET('/api/v2/organizations/ACME').respond(organizations.records[0]);
 
-        Organization.query({ id: 'ACME' }, function(response) {
+        Organization.get({ id: 'ACME' }, function(response) {
             expect(response.id).toBe(1);
         });
     });

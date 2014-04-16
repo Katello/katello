@@ -15,16 +15,15 @@
  * @ngdoc factory
  * @name  Bastion.activation-keys.factory:ActivationKey
  *
- * @requires $resource
+ * @requires BastionResource
  *
  * @description
- *   Provides a $resource for activation keys.
+ *   Provides a BastionResource for activation keys.
  */
 angular.module('Bastion.activation-keys').factory('ActivationKey',
-    ['$resource', function ($resource) {
-        return $resource('/api/v2/activation_keys/:id/:action/:action2', {id: '@id'}, {
+    ['BastionResource', function (BastionResource) {
+        return BastionResource('/api/v2/activation_keys/:id/:action/:action2', {id: '@id'}, {
             get: {method: 'GET', params: {fields: 'full'}},
-            query: {method: 'GET', isArray: false},
             update: {method: 'PUT'},
             copy: {method: 'POST', params: {action: 'copy'}},
             subscriptions: {method: 'GET', params: {action: 'subscriptions'}},

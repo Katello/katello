@@ -45,7 +45,7 @@ describe('Factory: Filter', function() {
         $httpBackend.expectGET('/api/v2/content_view_filters?content_view_id=1')
                     .respond(filters);
 
-        Filter.query({'content_view_id': 1}, function (response) {
+        Filter.queryPaged({'content_view_id': 1}, function (response) {
             var views = response;
 
             expect(views.results.length).toBe(2);

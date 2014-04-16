@@ -75,10 +75,10 @@ angular.module('Bastion.systems').controller('SystemsBulkActionSubscriptionsCont
         function autoAttachSubscriptionsInProgress() {
             // Check to see if an 'auto attach subscriptions' action is currently in progress.
             // If it is, poll on the associated task, until it is completed.
-            Organization.query({'id': CurrentOrganization}, function (organization) {
+            Organization.queryUnpaged({'id': CurrentOrganization}, function (organization) {
                 if (organization['owner_auto_attach_all_systems_task_id'] !== null) {
 
-                    Task.query({'id' : organization['owner_auto_attach_all_systems_task_id']}, function (task) {
+                    Task.queryUnpaged({'id' : organization['owner_auto_attach_all_systems_task_id']}, function (task) {
                         $scope.subscription.autoAttachTask = task;
 
                         if (task.pending) {

@@ -55,7 +55,7 @@ describe('Factory: SyncPlan', function() {
     it('provides a way to get a list of syncPlans', function() {
         $httpBackend.expectGET('/api/v2/organizations/ACME/sync_plans?full_result=true').respond(syncPlans);
 
-        SyncPlan.query(function(syncPlans) {
+        SyncPlan.queryUnpaged(function(syncPlans) {
             expect(syncPlans.records.length).toBe(2);
         });
     });

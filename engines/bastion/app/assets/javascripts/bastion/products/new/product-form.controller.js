@@ -33,19 +33,19 @@ angular.module('Bastion.products').controller('ProductFormController',
     function ($scope, $q, Product, Provider, GPGKey, SyncPlan, FormUtils) {
 
         function fetchProviders() {
-            Provider.query(function (providers) {
+            Provider.queryUnpaged(function (providers) {
                 $scope.providers = providers.results;
             });
         }
 
         function fetchGpgKeys() {
-            GPGKey.query(function (gpgKeys) {
+            GPGKey.queryUnpaged(function (gpgKeys) {
                 $scope.gpgKeys = gpgKeys.results;
             });
         }
 
         function fetchSyncPlans() {
-            SyncPlan.query(function (syncPlans) {
+            SyncPlan.queryUnpaged(function (syncPlans) {
                 $scope.syncPlans = syncPlans.results;
             });
         }

@@ -32,7 +32,7 @@ angular.module('Bastion.systems').controller('SystemRegisterController',
         $scope.baseURL = 'http://' + $location.host();
         $scope.consumerCertRPM = BastionConfig.consumerCertRPM;
 
-        $scope.nodes = Node.query(function (data) {
+        $scope.nodes = Node.queryUnpaged(function (data) {
             $scope.selectedNode = data.results[0];
         });
 

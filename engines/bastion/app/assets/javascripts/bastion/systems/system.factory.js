@@ -15,18 +15,17 @@
  * @ngdoc service
  * @name  Bastion.systems.factory:System
  *
- * @requires $resource
+ * @requires BastionResource
  *
  * @description
- *   Provides a $resource for system or list of systems.
+ *   Provides a BastionResource for system or list of systems.
  */
 angular.module('Bastion.systems').factory('System',
-    ['$resource', function ($resource) {
+    ['BastionResource', function (BastionResource) {
 
-        return $resource('/api/v2/systems/:id/:action/:action2', {id: '@uuid'}, {
+        return BastionResource('/api/v2/systems/:id/:action/:action2', {id: '@uuid'}, {
             get: {method: 'GET', params: {fields: 'full'}},
             update: {method: 'PUT'},
-            query: {method: 'GET', isArray: false},
             releaseVersions: {method: 'GET', params: {action: 'releases'}},
             saveSystemGroups: {method: 'POST', params: {action: 'system_groups'}},
             subscriptions: {method: 'GET', params: {action: 'subscriptions'}},
@@ -48,14 +47,15 @@ angular.module('Bastion.systems').factory('System',
  * @ngdoc service
  * @name  Bastion.systems.factory:SystemBulkAction
  *
- * @requires $resource
+ * @requires BastionResource
  *
  * @description
- *   Provides a $resource for bulk actions on systems.
+ *   Provides a BastionResource for bulk actions on systems.
  */
 angular.module('Bastion.systems').factory('SystemBulkAction',
-    ['$resource', function ($resource) {
-        return $resource('/api/v2/systems/bulk/:action', {}, {
+    ['BastionResource', function (BastionResource) {
+
+        return BastionResource('/api/v2/systems/bulk/:action', {}, {
             addSystemGroups: {method: 'PUT', params: {action: 'add_system_groups'}},
             applicableErrata: {method: 'POST', params: {action: 'applicable_errata'}},
             removeSystemGroups: {method: 'PUT', params: {action: 'remove_system_groups'}},
@@ -65,5 +65,6 @@ angular.module('Bastion.systems').factory('SystemBulkAction',
             removeSystems: {method: 'PUT', params: {action: 'destroy'}},
             environmentContentView: {method: 'PUT', params: {action: 'environment_content_view'}}
         });
+
     }]
 );

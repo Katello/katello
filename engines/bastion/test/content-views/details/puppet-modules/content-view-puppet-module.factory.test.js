@@ -46,10 +46,10 @@ describe('Factory: ContentViewPuppetModule', function() {
     });
 
     it('provides a way to get a collection of content views', function() {
-        $httpBackend.expectGET('/api/v2/content_views/content_view_puppet_modules?organization_id=ACME')
+        $httpBackend.expectGET('/api/v2/content_views/content_view_puppet_modules?full_result=true&organization_id=ACME')
             .respond(ContentViewPuppetModules);
 
-        ContentViewPuppetModule.query(function (response) {
+        ContentViewPuppetModule.queryUnpaged(function (response) {
             var views = response;
 
             expect(views.results.length).toBe(2);

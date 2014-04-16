@@ -15,19 +15,18 @@
  * @ngdoc service
  * @name  Katello.gpg-keys.factory:GPGKey
  *
- * @requires $resource
+ * @requires BastionResource
  *
  * @description
- *   Provides a $resource for GPG keys.
+ *   Provides a BastionResource for GPG keys.
  */
 angular.module('Bastion.gpg-keys').factory('GPGKey',
-    ['$resource', 'CurrentOrganization',
-    function ($resource, CurrentOrganization) {
+    ['BastionResource', 'CurrentOrganization',
+    function (BastionResource, CurrentOrganization) {
 
-        return $resource('/api/v2/gpg_keys/:id/:action',
+        return BastionResource('/api/v2/gpg_keys/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
-                query: { method: 'GET' },
                 update: {method: 'PUT'}
             }
         );

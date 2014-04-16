@@ -29,11 +29,11 @@ describe('Controller: SystemsBulkActionSubscriptionsController', function() {
             query: function() {}
         };
         Organization = {
-            query: function() {},
+            queryUnpaged: function() {},
             autoAttachSubscriptions: function() {}
         };
         Task = {
-            query: function() {},
+            queryUnpaged: function() {},
             poll: function() {}
         };
         translate = function() {};

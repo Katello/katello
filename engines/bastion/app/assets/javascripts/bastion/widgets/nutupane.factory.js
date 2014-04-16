@@ -47,7 +47,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
             params = params || {};
 
             self.table = {
-                action: action || 'query',
+                action: action || 'queryPaged',
                 params: params,
                 resource: resource,
                 rows: [],
