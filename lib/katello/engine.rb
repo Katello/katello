@@ -110,6 +110,7 @@ module Katello
 
     initializer 'katello.register_plugin', :after => :disable_dependency_loading do
       require 'katello/plugin'
+      require 'katello/permissions'
     end
 
     rake_tasks do
