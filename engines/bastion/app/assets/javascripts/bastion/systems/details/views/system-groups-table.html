@@ -27,13 +27,13 @@
       <button ng-if="isState('systems.details.system-groups.list')"
               class="btn btn-default"
               ng-disabled="systemGroupsTable.numSelected == 0 || systemGroupsTable.working"
-              ng-click="removeSystemGroups()">
+              ng-click="removeSystemGroups(system)">
         {{ 'Remove Selected' | translate }}
       </button>
       <button ng-if="isState('systems.details.system-groups.add')"
               class="btn btn-default"
               ng-disabled="systemGroupsTable.numSelected == 0 || systemGroupsTable.working"
-              ng-click="addSystemGroups()">
+              ng-click="addSystemGroups(system)">
         {{ 'Add Selected' | translate }}
       </button>
 

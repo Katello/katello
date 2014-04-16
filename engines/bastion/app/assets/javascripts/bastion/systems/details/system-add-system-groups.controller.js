@@ -44,19 +44,12 @@ angular.module('Bastion.systems').controller('SystemAddSystemGroupsController',
         systemGroupsPane = new Nutupane(System, params, 'availableSystemGroups');
         $scope.systemGroupsTable = systemGroupsPane.table;
 
-        $scope.addSystemGroups = function () {
-            var data,
+        $scope.addSystemGroups = function (system) {
+            var deferred = $q.defer(),
                 success,
                 error,
-                deferred = $q.defer(),
-                systemGroups = _.pluck($scope.system.systemGroups, 'id'),
-                systemGroupsToAdd = _.pluck($scope.systemGroupsTable.getSelected(), 'id');
-
-            data = {
-                system: {
-                    "system_group_ids": _.union(systemGroups, systemGroupsToAdd)
-                }
-            };
+                systemGroups,
+                systemGroupsToAdd;
 
             success = function (data) {
                 $scope.successMessages = [translate('Added %x system groups to system "%y".')
@@ -75,7 +68,12 @@ angular.module('Bastion.systems').controller('SystemAddSystemGroupsController',
             };
 
             $scope.systemGroupsTable.working = true;
-            System.saveSystemGroups({id: $scope.system.uuid}, data, success, error);
+
+            systemGroups = _.pluck($scope.system.systemGroups, 'id');
+            systemGroupsToAdd = _.pluck($scope.systemGroupsTable.getSelected(), 'id');
+            system["system_group_ids"] = _.union(systemGroups, systemGroupsToAdd);
+
+            system.$update({id: $scope.system.uuid}, success, error);
             return deferred.promise;
         };
     }]
