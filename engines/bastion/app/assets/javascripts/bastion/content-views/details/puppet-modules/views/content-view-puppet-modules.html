@@ -20,7 +20,11 @@
   </div>
 
   <div data-block="table">
-    <table class="table table-striped table-bordered">
+    <p class="alert alert-info" ng-show="detailsTable.rows.length === 0" translate>
+      You currently don't have any Puppet Modules included in this Content View, you can add puppet modules using the button on the right.
+    </p>
+
+    <table class="table table-striped table-bordered" ng-show="detailsTable.rows.length > 0">
       <thead>
         <tr alch-table-head>
           <th alch-table-column>{{ "Name" | translate }}</th>

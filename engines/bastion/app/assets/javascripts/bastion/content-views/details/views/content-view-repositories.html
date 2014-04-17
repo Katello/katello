@@ -54,9 +54,25 @@
   </div>
 
   <div alch-table="repositoriesTable" class="nutupane">
+
+    <div ng-show="repositoriesTable.rows.length === 0 && !repositoriesTable.working">
+      <p class="alert alert-info" ng-show="isState('content-views.details.repositories.list')" translate>
+        There are currently no repositories associated with this Content View, you can add some by clicking on the "Add" tab above.
+      </p>
+      <p class="alert alert-info" ng-show="isState('content-views.details.repositories.available')">
+        <span translate>There are currently no repositories to add to this Content View,</span>
+        <a ui-sref="products.index" translate>add some repositories.</a>
+      </p>
+    </div>
+
+    <div class="loading-mask loading-mask-panel" ng-show="repositoriesTable.working">
+      <i class="icon-spinner icon-spin"></i>
+      {{ "Loading..." | translate }}
+    </div>
+
     <div alch-infinite-scroll="repositoriesTable.nextPage()" data="repositoriesTable.rows">
 
-      <table class="table table-bordered table-striped">
+      <table ng-show="repositoriesTable.rows.length > 0"  class="table table-bordered table-striped">
         <thead>
           <tr alch-table-head row-select>
             <th alch-table-column translate>Name</th>
