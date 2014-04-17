@@ -318,6 +318,16 @@ Katello::Engine.routes.draw do
         api_resources :puppet_modules, :only => [:index, :show] do
           get :search, :on => :collection
         end
+
+        api_resources :content_uploads, :controller => :content_uploads, :only => [:create, :destroy] do
+          member do
+            put :upload_bits
+          end
+          collection do
+            post :file, :to => 'content_uploads#upload_file'
+            post :import_into_repo
+          end
+        end
         member do
           get :package_groups
           get :package_group_categories
