@@ -70,10 +70,10 @@ class Api::V2::ContentUploadsController < Api::V2::ApiController
   param :id, :identifier, :required => true
   param :content, File, :required => true, :desc => "file contents"
   def upload_file
-    filepath = params.try(:[], :content).try(:path)
+    filepaths = params.try(:[], :content).try(:map, &:path)
 
-    if filepath
-      @repo.upload_content(filepath)
+    if !filepaths.blank?
+      @repo.upload_content(filepaths)
       render :json => {:status => "success"}
     else
       fail HttpErrors::BadRequest, _("No file uploaded")
