@@ -38,7 +38,17 @@ class Api::ApiController < ::Api::BaseController
 
   # Override Foreman authorized method to call the Katello authorize check
   def authorized
-    authorize_katello
+    if converted_controllers.include?(request.params['controller'])
+      super
+    else
+      authorize_katello
+    end
+  end
+
+  def converted_controllers
+    [
+      'katello/api/v2/gpg_keys'
+    ]
   end
 
   def verify_ldap

@@ -208,7 +208,7 @@ class Repository < Katello::Model
     if name.blank?
       self.gpg_key = nil
     else
-      self.gpg_key = GpgKey.readable(organization).find_by_name!(name)
+      self.gpg_key = GpgKey.readable.find_by_name!(name)
     end
   end
 

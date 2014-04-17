@@ -10,32 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# TODO: Remove this module and all inclusions of it in models
+# once this is added to Foreman core https://github.com/theforeman/foreman/pull/1384
 module Katello
-module Authorization::GpgKey
-  extend ActiveSupport::Concern
+  module Authorization
+    extend ActiveSupport::Concern
 
-  module ClassMethods
-    def readable
-      GpgKey.authorized(:view_gpg_keys)
+    included do
+
+      def authorized?(permission)
+        ::User.current.can?(permission, self)
+      end
+
     end
+
   end
-
-  included do
-    include Authorizable
-    include Katello::Authorization
-
-    def readable?
-      authorized?(:view_gpg_keys)
-    end
-
-    def editable?
-      authorized?(:update_gpg_keys)
-    end
-
-    def deleteable?
-      authorized?(:destroy_gpg_keys)
-    end
-  end
-
-end
 end
