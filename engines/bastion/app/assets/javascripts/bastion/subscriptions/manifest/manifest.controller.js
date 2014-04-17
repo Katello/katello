@@ -17,20 +17,20 @@
  *
  * @requires $scope
  * @requires translate
- * @requires Provider
  *
  * @description
  *   Controls the managment of manifests for use by sub-controllers.
  */
 angular.module('Bastion.subscriptions').controller('ManifestController',
-    ['$scope', 'translate', 'Provider', function ($scope, translate, Provider) {
+    ['$scope', 'translate',
+    function ($scope, translate) {
 
         $scope.panel = {loading: true};
 
-        $scope.manifestHistory = function (provider) {
+        $scope.manifestHistory = function () {
             var statuses = [];
 
-            angular.forEach(provider['owner_imports'], function (value) {
+            angular.forEach($scope.redhatProvider['owner_imports'], function (value) {
                 statuses.push(value);
 
                 if (value['webAppPrefix'] !== undefined) {
@@ -43,6 +43,5 @@ angular.module('Bastion.subscriptions').controller('ManifestController',
             return statuses;
         };
 
-        $scope.provider = Provider.get({id: $scope.$stateParams.providerId});
     }]
 );

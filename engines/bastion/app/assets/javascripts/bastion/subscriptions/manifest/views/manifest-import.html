@@ -5,9 +5,9 @@
     <div class="detail">
       <span class="info-label" translate>Repository URL</span>
       <span class="info-value"
-        alch-edit-text="provider.repository_url"
-        on-save="save(provider)"
-        readonly="provider.readonly">
+        alch-edit-text="organization.redhat_repository_url"
+        on-save="saveCdnUrl(organization)"
+        readonly="organization.readonly">
       </span>
     </div>
   </div>
@@ -26,12 +26,16 @@
     </div>
 
     <div class="detail pull-left" ng-show="upstream != null">
-      <button class="btn btn-default" ng-click="deleteManifest(provider)">
-        {{ "Delete Manifest" | translate }}
+      <button class="btn btn-default" ng-click="deleteManifest()">
+         <i class="icon-spinner icon-spin" ng-show="deleteTask.pending"></i>
+          <span ng-show="deleteTask.pending" translate>Deleting Manifest...</span>
+          <span ng-hide="deleteTask.pending" translate>Delete Manifest</span>
       </button>
       <button class="btn btn-default" ng-disabled="upstream.idCert == undefined || upstream.idCert.cert == undefined"
-        ng-click="refreshManifest(provider)">
-        {{ "Refresh Manifest" | translate }}
+        ng-click="refreshManifest()">
+         <i class="icon-spinner icon-spin" ng-show="refreshTask.pending"></i>
+          <span ng-show="refreshTask.pending" translate>Refreshing Manifest...</span>
+          <span ng-hide="refreshTask.pending" translate>Refresh Manifest</span>
       </button>
       <span ng-show="upstream.idCert == undefined || upstream.idCert.cert == undefined"
         translate>

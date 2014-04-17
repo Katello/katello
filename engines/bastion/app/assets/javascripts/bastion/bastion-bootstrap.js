@@ -36,7 +36,6 @@ BASTION_MODULES = [
     'Bastion.nodes',
     'Bastion.organizations',
     'Bastion.products',
-    'Bastion.providers',
     'Bastion.repositories',
     'Bastion.subscriptions',
     'Bastion.sync-plans',

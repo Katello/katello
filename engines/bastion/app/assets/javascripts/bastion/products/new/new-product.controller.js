@@ -24,9 +24,7 @@
 angular.module('Bastion.products').controller('NewProductController',
     ['$scope', 'Product', 'CurrentOrganization',
     function ($scope, Product, CurrentOrganization) {
-
         $scope.product = new Product({'organization_id': CurrentOrganization});
         $scope.panel = {loading: true};
-
     }]
 );
