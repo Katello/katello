@@ -57,27 +57,36 @@ class Api::V2::SystemPackagesControllerTest < ActionController::TestCase
   end
 
   def test_install_group
-    System.any_instance.expects(:install_package_groups).with(["blah"]).returns(TaskStatus.new)
-    put :install, :system_id => @system.uuid, :groups => ["blah"]
+    assert_async_task ::Actions::Katello::System::PackageGroup::Install do |system, groups|
+      system.id == @system.id && groups == %w(blah)
+    end
+
+    put :install, :system_id => @system.uuid, :groups => %w(blah)
 
     assert_response :success
   end
 
   def test_upgrade
-    System.any_instance.expects(:update_packages).with(["foo", "bar"]).returns(TaskStatus.new)
-    put :upgrade, :system_id => @system.uuid, :packages => ["foo", "bar"]
+    assert_async_task ::Actions::Katello::System::Package::Update do |system, packages|
+      system.id == @system.id && packages == %w(foo bar)
+    end
+
+    put :upgrade, :system_id => @system.uuid, :packages => %w(foo bar)
 
     assert_response :success
   end
 
   def test_upgrade_group_fail
-    put :upgrade, :system_id => @system.uuid, :groups => ["foo", "bar"]
+    put :upgrade, :system_id => @system.uuid, :groups => %w(foo bar)
 
     assert_response 400
   end
 
   def test_upgrade_all
-    System.any_instance.expects(:update_packages).with([]).returns(TaskStatus.new)
+    assert_async_task ::Actions::Katello::System::Package::Update do |system, packages|
+      system.id == @system.id && packages == []
+    end
+
     put :upgrade_all, :system_id => @system.uuid
 
     assert_response :success
@@ -94,8 +103,11 @@ class Api::V2::SystemPackagesControllerTest < ActionController::TestCase
   end
 
   def test_remove_group
-    System.any_instance.expects(:uninstall_package_groups).with(["blah"]).returns(TaskStatus.new)
-    put :remove, :system_id => @system.uuid, :groups => ["blah"]
+    assert_async_task ::Actions::Katello::System::PackageGroup::Remove do |system, groups|
+      system.id == @system.id && groups == %w(blah)
+    end
+
+    put :remove, :system_id => @system.uuid, :groups => %w(blah)
 
     assert_response :success
   end

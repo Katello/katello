@@ -65,7 +65,7 @@ describe('Controller: SystemErrataController', function() {
         $scope.applySelected();
         expect(SystemErratum.apply).toHaveBeenCalledWith({uuid: mockSystem.uuid, errata_ids: [mockErratum.errata_id]},
                                                          jasmine.any(Function));
-        expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.events.details', {eventId: mockTask.id});
+        expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.tasks.details', {taskId: mockTask.id});
         expect($scope.errataTable.selectAll).toHaveBeenCalledWith(false);
     });
 });

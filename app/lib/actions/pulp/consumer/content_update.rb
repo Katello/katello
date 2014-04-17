@@ -13,21 +13,24 @@
 module Actions
   module Pulp
     module Consumer
-      class ContentInstall < Pulp::AbstractAsyncTask
+      class ContentUpdate < Pulp::AbstractAsyncTask
 
         include Helpers::Presenter
 
         input_format do
           param :consumer_uuid, String
-          param :type, %w[rpm package_group erratum]
+          param :type, %w[rpm]
           param :args, array_of(String)
         end
 
         def invoke_external_task
-          pulp_extensions.consumer.install_content(input[:consumer_uuid],
-                                                   input[:type],
-                                                   input[:args],
-                                                   { "importkeys" => true })
+          options = { "importkeys" => true }
+          options[:all] = true if input[:args].blank?
+
+          pulp_extensions.consumer.update_content(input[:consumer_uuid],
+                                                  input[:type],
+                                                  input[:args],
+                                                  options)
         end
 
         def presenter

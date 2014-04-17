@@ -53,7 +53,7 @@ angular.module('Bastion.systems').controller('SystemErrataController',
                 SystemErratum.apply({uuid: $scope.system.uuid, errata_ids: errataIds},
                                    function (task) {
                                         $scope.errataTable.selectAll(false);
-                                        $scope.transitionTo('systems.details.events.details', {eventId: task.id});
+                                        $scope.transitionTo('systems.details.tasks.details', {taskId: task.id});
                                     });
             }
         };

@@ -45,6 +45,12 @@ module Actions
               task_result_details[:rpm][:details]
         end
 
+        def task_package_group_details
+          task_result_details &&
+              task_result_details[:package_group] &&
+              task_result_details[:package_group][:details]
+        end
+
         def task_errors
           task_rpm_details && task_rpm_details[:errors]
         end
@@ -52,6 +58,8 @@ module Actions
         def task_result_packages
           if task_rpm_details
             task_rpm_details[:resolved] + task_rpm_details[:deps]
+          elsif task_package_group_details
+            task_package_group_details[:resolved] + task_package_group_details[:deps]
           end
         end
 
