@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 module Katello
 module Glue::ElasticSearch::BackendIndexedModel
+  UPDATE_BATCH_SIZE = 200
 
   def self.included(base)
     base.send :include, InstanceMethods
@@ -40,7 +41,9 @@ module Glue::ElasticSearch::BackendIndexedModel
           :script => script
         }
       end
-      Tire.index(obj_class.index).bulk_update(documents)
+      documents.in_groups_of(UPDATE_BATCH_SIZE, false) do |docs|
+        Tire.index(obj_class.index).bulk_update(docs)
+      end
       Tire.index(self.index).refresh
     end
 
