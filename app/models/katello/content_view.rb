@@ -489,13 +489,11 @@ class ContentView < Katello::Model
   end
 
   def create_new_version
-    next_version_id = (self.versions.maximum(:version) || 0) + 1
-    ContentViewVersion.create!(:version => next_version_id,
-                               :content_view => self)
-  end
+    version = ContentViewVersion.create!(:version => next_version,
+                                         :content_view => self)
+    increment!(:next_version)
 
-  def next_version
-    (self.versions.maximum(:version) || 0) + 1
+    version
   end
 
   def build_puppet_env(options)
