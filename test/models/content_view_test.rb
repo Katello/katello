@@ -282,5 +282,20 @@ class ContentViewTest < ActiveSupport::TestCase
                               )
     assert view.check_ready_to_destroy!
   end
+
+  def test_next_version
+    cv = ContentView.create!(:name => "test",
+                             :organization => @organization
+                            )
+    assert_equal 1, cv.next_version
+
+    assert_equal 2, @library_dev_view.next_version
+    assert_equal @library_dev_view.next_version - 1, @library_dev_view.versions.maximum(:version)
+
+    assert @library_dev_view.create_new_version
+    @library_dev_view.reload
+    assert_equal 3, @library_dev_view.next_version
+    assert_equal @library_dev_view.next_version - 1, @library_dev_view.versions.reload.last.version
+  end
 end
 end

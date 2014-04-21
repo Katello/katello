@@ -37,6 +37,10 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
         function success() {
             $scope.transitionTo('content-views.details.versions',
                                 {contentViewId: $scope.contentView.id});
+
+            //get the latest version number from the server
+            $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId});
+
             $scope.working = false;
         }
 
