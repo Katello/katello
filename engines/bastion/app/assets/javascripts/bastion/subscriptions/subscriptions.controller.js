@@ -79,7 +79,7 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
             }
         };
 
-        $scope.providers = Provider.queryUnpaged({ 'provider_type': 'Red Hat' }, function (response) {
+        $scope.providers = Provider.queryUnpaged({ 'organization_id': CurrentOrganization, 'provider_type': 'Red Hat' }, function (response) {
             $scope.provider = _.first(response.results);
         });
 
