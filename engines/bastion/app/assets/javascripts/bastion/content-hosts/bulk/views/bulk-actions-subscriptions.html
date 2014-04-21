@@ -1,0 +1,26 @@
+<span page-title>{{ 'Content Host Bulk Subscriptions' | translate }}</span>
+
+<div class="details">
+  <section>
+    <h4 translate>Content Host Subscriptions</h4>
+    <button class="btn"
+            translate
+            ng-click="subscription.confirm = true"
+            ng-disabled="subscription.workingMode">
+      Auto-attach available subscriptions to all content hosts
+    </button>
+
+    <span ng-show="subscription.workingMode">
+      <i class="icon-spinner inline-icon icon-spin"></i>
+      <span translate>Working</span>
+    </span>
+
+    <div class="inline-confirmation" ng-show="subscription.confirm">
+      <div class="confirmation_text" translate>
+        Are you sure you want to auto-attach available subscriptions to all {{ contentHostTable.resource.total }} content hosts?
+      </div>
+      <button class="btn btn-default" ng-click="performAutoAttachSubscriptions()" translate>Yes</button>
+      <button class="btn btn-default" ng-click="subscription.confirm = false" translate>No</button>
+    </div>
+  </section>
+</div>

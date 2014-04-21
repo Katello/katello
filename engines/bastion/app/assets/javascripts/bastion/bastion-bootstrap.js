@@ -41,7 +41,7 @@ BASTION_MODULES = [
     'Bastion.subscriptions',
     'Bastion.sync-plans',
     'Bastion.system-groups',
-    'Bastion.systems',
+    'Bastion.content-hosts',
     'Bastion.tasks',
     'Bastion.widgets'
 ];

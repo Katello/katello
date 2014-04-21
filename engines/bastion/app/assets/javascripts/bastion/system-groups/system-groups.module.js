@@ -79,22 +79,22 @@ angular.module('Bastion.system-groups').config(['$stateProvider', function ($sta
         controller: 'SystemGroupDetailsInfoController',
         templateUrl: 'system-groups/details/views/system-group-info.html'
     })
-    .state('system-groups.details.systems', {
+    .state('system-groups.details.content-hosts', {
         abstract: true,
         collapsed: true,
-        templateUrl: 'system-groups/details/views/system-group-systems.html'
+        templateUrl: 'system-groups/details/views/system-group-content-hosts.html'
     })
-    .state('system-groups.details.systems.list', {
-        url: '/systems',
+    .state('system-groups.details.content-hosts.list', {
+        url: '/content-hosts',
         collapsed: true,
-        controller: 'SystemGroupSystemsController',
-        templateUrl: 'system-groups/details/views/system-group-systems-list.html'
+        controller: 'SystemGroupContentHostsController',
+        templateUrl: 'system-groups/details/views/system-group-content-hosts-list.html'
     })
-    .state('system-groups.details.systems.add', {
-        url: '/add-systems',
+    .state('system-groups.details.content-hosts.add', {
+        url: '/add-content-hosts',
         collapsed: true,
-        controller: 'SystemGroupAddSystemsController',
-        templateUrl: 'system-groups/details/views/system-group-add-systems.html'
+        controller: 'SystemGroupAddContentHostsController',
+        templateUrl: 'system-groups/details/views/system-group-add-content-hosts.html'
     })
     .state('system-groups.details.actions', {
         url: '/actions',

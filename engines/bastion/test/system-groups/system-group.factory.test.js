@@ -57,30 +57,30 @@ describe('Factory: SystemGroup', function() {
         });
     });
 
-    it('provides a way to add systems', function() {
-        var systems = [{id: 1}, {id: 2}];
-        $httpBackend.expectPUT('/api/system_groups/0/add_systems').respond(systems);
-        SystemGroup.addSystems({'system_group': {'system_ids': [1,2]} , id: 0}, function(response) {
+    it('provides a way to add content hosts', function() {
+        var contentHosts = [{id: 1}, {id: 2}];
+        $httpBackend.expectPUT('/api/system_groups/0/add_systems').respond(contentHosts);
+        SystemGroup.addContentHosts({'system_group': {'system_ids': [1,2]} , id: 0}, function(response) {
             expect(response).toBeDefined();
-            expect(response.length).toBe(systems.length);
+            expect(response.length).toBe(contentHosts.length);
         });
     });
 
-    it('provides a way to remove systems', function() {
-        var systems = [{id: 1}, {id: 2}];
-        $httpBackend.expectPUT('/api/system_groups/0/remove_systems').respond(systems);
-        SystemGroup.removeSystems({'system_group': {'system_ids': [1,2]} , id: 0}, function(response) {
+    it('provides a way to remove content hosts', function() {
+        var contentHosts = [{id: 1}, {id: 2}];
+        $httpBackend.expectPUT('/api/system_groups/0/remove_systems').respond(contentHosts);
+        SystemGroup.removeContentHosts({'system_group': {'system_ids': [1,2]} , id: 0}, function(response) {
             expect(response).toBeDefined();
-            expect(response.length).toBe(systems.length);
+            expect(response.length).toBe(contentHosts.length);
         });
     });
 
-    it('provides a way to list systems', function() {
-        var systems = {results: [{id: 1}, {id: 2}]};
-        $httpBackend.expectGET('/api/system_groups/0/systems').respond(systems);
-        SystemGroup.systems({id: 0}, function(response) {
+    it('provides a way to list content hosts', function() {
+        var contentHosts = {results: [{id: 1}, {id: 2}]};
+        $httpBackend.expectGET('/api/system_groups/0/systems').respond(contentHosts);
+        SystemGroup.contentHosts({id: 0}, function(response) {
             expect(response).toBeDefined();
-            expect(response.length).toBe(systems.length);
+            expect(response.length).toBe(contentHosts.length);
         });
     });
 

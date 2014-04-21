@@ -22,9 +22,9 @@ module DashboardHelper
     render :partial => "ajax_entry", :locals => {:name => name, :url => url, :class_wrap => class_wrapper, :identifier => identifier, :dropbutton => dropbutton, :quantity => quantity}
   end
 
-  def systems_search_status_link(anchor_text, status)
+  def content_hosts_search_status_link(anchor_text, status)
     href_params = {:systems_path => systems_path, :status => status}
-    href_format = "%{systems_path}#/systems?search=status:%{status}"
+    href_format = "%{systems_path}#/content-hosts?search=status:%{status}"
     link_to(anchor_text, href_format % href_params)
   end
 

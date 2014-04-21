@@ -29,7 +29,7 @@ class SystemsController < Katello::ApplicationController
   end
 
   def all
-    redirect_to :action => 'index', :anchor => '/systems'
+    redirect_to :action => 'index', :anchor => '/content-hosts'
   end
 
   def controller_display_name

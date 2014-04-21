@@ -84,7 +84,7 @@ Foreman::Plugin.register :katello do
 
   menu :top_menu,
        :systems,
-       :caption => N_('Registered Systems'),
+       :caption => N_('Content Hosts'),
        :url_hash => {:controller => 'katello/systems',
                      :action => 'all'},
        :engine => Katello::Engine,

@@ -1,6 +1,6 @@
 #dashboard_errata.widget{"data-quantity"=>quantity, "data-id"=>"errata"}
   - if errata.empty?
-    %p #{_("There are no errata that need to be applied to registered systems.")}
+    %p #{_("There are no errata that need to be applied to registered content hosts.")}
   - else
     .list
       .block_head.clear
@@ -10,8 +10,8 @@
           #{_("Errata")}
       .scroll-pane
         - errata.each do |erratum|
-          - systems = erratum.applicable_consumers
-          - if !systems.empty?
+          - content_hosts = erratum.applicable_consumers
+          - if !content_hosts.empty?
             .errata
               %div.errata_item
                 .col_1
@@ -20,4 +20,4 @@
                 .col_2.one-line-ellipsis
                   %span
                     %a{:href=>content_search_errata_link(erratum.errata_id)}
-                      #{erratum.errata_id} (#{systems.length} #{_('Systems')})
+                      #{erratum.errata_id} (#{content_hosts.length} #{_('Content Hosts')})
