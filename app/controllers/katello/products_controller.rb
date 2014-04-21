@@ -24,8 +24,6 @@ class ProductsController < Katello::ApplicationController
     edit_test = lambda{@provider.editable?}
 
     {
-      :index => read_test,
-      :all => read_test,
       :auto_complete =>  read_test,
       :refresh_content => edit_test,
       :disable_content => edit_test,
@@ -51,14 +49,6 @@ class ProductsController < Katello::ApplicationController
     else
       render :json => @product.disable_content(params[:content_id])
     end
-  end
-
-  def index
-    render 'bastion/layouts/application', :layout => false
-  end
-
-  def all
-    redirect_to :action => 'index', :anchor => '/products'
   end
 
   def auto_complete

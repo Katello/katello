@@ -18,7 +18,7 @@
     <tbody>
       <tr ng-repeat="repository in gpgKey.repositories | filter:repositorySearch">
         <td>
-          <a ng-href="#/products/{{ repository.product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
+          <a ng-href="/products/{{ repository.product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
         </td>
         <td>
           <a ui-sref="products.details.repositories.index({productId: repository.product.id})">

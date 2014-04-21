@@ -32,7 +32,7 @@ angular.module('Bastion.system-groups').config(['$stateProvider', function ($sta
         templateUrl: 'system-groups/views/system-groups.html'
     })
     .state('system-groups.index', {
-        url: '/system-groups',
+        url: '/system_groups',
         views: {
             'table': {
                 templateUrl: 'system-groups/views/system-groups-table-full.html'
@@ -53,7 +53,7 @@ angular.module('Bastion.system-groups').config(['$stateProvider', function ($sta
         }
     })
     .state('system-groups.new.form', {
-        url: '/system-groups/new',
+        url: '/system_groups/new',
         collapsed: true,
         controller: 'SystemGroupFormController',
         templateUrl: 'system-groups/new/views/system-group-new-form.html'
@@ -61,7 +61,7 @@ angular.module('Bastion.system-groups').config(['$stateProvider', function ($sta
 
     $stateProvider.state("system-groups.details", {
         abstract: true,
-        url: '/system-groups/:systemGroupId',
+        url: '/system_groups/:systemGroupId',
         collapsed: true,
         views: {
             'table': {

@@ -1,4 +1,3 @@
-#
 # Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -10,32 +9,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-class SyncPlansController < Katello::ApplicationController
+module Bastion
+  class BastionController < Katello::ApplicationController
 
-  before_filter :authorize
+    skip_before_filter :authorize
 
-  def rules
-    read_test = lambda{current_organization && Provider.any_readable?(current_organization)}
-    {
-      :index => read_test,
-      :all => read_test
-    }
+    def index
+      render 'bastion/layouts/application', :layout => false
+    end
+
+    def index_ie
+      render 'bastion/layouts/application_ie', :layout => false
+    end
   end
-
-  def index
-    render 'bastion/layouts/application', :layout => false
-  end
-
-  def all
-    redirect_to action: 'index', :anchor => '/sync-plans'
-  end
-
-  protected
-
-  def controller_display_name
-    return 'sync_plan'
-  end
-
-end
 end
