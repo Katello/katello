@@ -109,7 +109,17 @@ class ApplicationController < ::ApplicationController
 
   # Override Foreman authorized method to call the Katello authorize check
   def authorized
-    authorize_katello
+    if converted_controllers.include?(request.params['controller'])
+      super
+    else
+      authorize_katello
+    end
+  end
+
+  def converted_controllers
+    [
+      'katello/gpg_keys'
+    ]
   end
 
   before_filter :verify_ldap

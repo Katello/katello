@@ -12,22 +12,6 @@
 
 module Katello
 class GpgKeysController < Katello::ApplicationController
-  before_filter :require_user
-  before_filter :authorize
-
-  respond_to :html, :js
-
-  def section_id
-    'contents'
-  end
-
-  def rules
-    index_test = lambda{current_organization && GpgKey.any_readable?(current_organization)}
-    {
-      :index => index_test,
-      :all => index_test,
-    }
-  end
 
   def index
     render 'bastion/layouts/application', :layout => false

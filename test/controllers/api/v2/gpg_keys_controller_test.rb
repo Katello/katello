@@ -27,8 +27,11 @@ class Api::V2::GpgKeysControllerTest < ActionController::TestCase
   end
 
   def permissions
-    @administer_permission = UserPermission.new(:gpg, :organizations, nil, @organization)
-    @no_permission = NO_PERMISSION
+    @resource_type = "Katello::GpgKey"
+    @view_permission = :view_gpg_keys
+    @create_permission = :create_gpg_keys
+    @update_permission = :update_gpg_keys
+    @destroy_permission = :destroy_gpg_keys
   end
 
   def setup
@@ -49,10 +52,10 @@ class Api::V2::GpgKeysControllerTest < ActionController::TestCase
   end
 
   def test_index_protected
-    allowed_perms = [@administer_permission]
-    denied_perms = [@no_permission]
+    allowed_perms = [@view_permission]
+    denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-    assert_protected_action(:index, allowed_perms, denied_perms) do
+    assert_protected_action(:index, allowed_perms, denied_perms, @resource_type) do
       get :index, :organization_id => @organization.label
     end
   end

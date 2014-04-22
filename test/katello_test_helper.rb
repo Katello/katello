@@ -87,6 +87,8 @@ module FixtureTestCase
     load_fixtures
     self.fixture_path = "#{Katello::Engine.root}/test/fixtures/models"
     fixtures(:all)
+
+    load "#{Katello::Engine.root}/app/policies/katello/permissions/gpg_key_permissions.rb"
   end
 
   module ClassMethods
@@ -122,7 +124,7 @@ class ActionController::TestCase
     end
 
     user ||= users(:admin)
-    user = User.find(user)
+    user = User.find(user) if user.id
     User.current = user
     User.current.stubs(:remote_id).returns(User.current.login)
     if permissions

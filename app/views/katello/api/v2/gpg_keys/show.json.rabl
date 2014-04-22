@@ -34,6 +34,6 @@ end
 
 node :permissions do |gpg_key|
   {
-    :deletable => gpg_key.manageable?
+    :deletable => gpg_key.deleteable?
   }
 end

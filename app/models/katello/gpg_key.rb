@@ -32,6 +32,9 @@ class GpgKey < Katello::Model
   validates_with Validators::ContentValidator, :attributes => :content
   validates_with Validators::GpgKeyContentValidator, :attributes => :content, :if => proc { Katello.config.gpg_strict_validation }
 
+  scoped_search :on => :name, :complete_value => true
+  scoped_search :on => :organization_id, :complete_value => true
+
   def as_json(options = {})
     options ||= {}
     ret = super(options.except(:details))
