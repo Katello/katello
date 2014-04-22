@@ -11,21 +11,31 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class SyncPlansController < Katello::ApplicationController
+  module Authorization::SyncPlan
+    extend ActiveSupport::Concern
 
-  def index
-    render 'bastion/layouts/application', :layout => false
+    module ClassMethods
+      def readable
+        SyncPlan.authorized(:view_sync_plans)
+      end
+    end
+
+    included do
+      include Authorizable
+      include Katello::Authorization
+
+      def readable?
+        authorized?(:view_sync_plans)
+      end
+
+      def editable?
+        authorized?(:update_sync_plans)
+      end
+
+      def deleteable?
+        authorized?(:destroy_sync_plans)
+      end
+    end
+
   end
-
-  def all
-    redirect_to action: 'index', :anchor => '/sync-plans'
-  end
-
-  protected
-
-  def controller_display_name
-    return 'sync_plan'
-  end
-
-end
 end

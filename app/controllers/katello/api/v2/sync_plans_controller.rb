@@ -26,20 +26,6 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
     param :description, String, :desc => "sync plan description"
   end
 
-  def rules
-    access_test = lambda { Provider.any_readable?(@organization) }
-    {
-        :index   => access_test,
-        :show    => access_test,
-        :create  => access_test,
-        :update  => access_test,
-        :destroy => access_test,
-        :available_products => access_test,
-        :add_products => access_test,
-        :remove_products => access_test
-    }
-  end
-
   api :GET, "/organizations/:organization_id/sync_plans", "List sync plans"
   param :organization_id, :identifier, :desc => "Filter sync plans by organization name or label", :required => true
   param :name, String, :desc => "filter by name"
@@ -53,6 +39,9 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
     elsif params[:interval]
       filters << {:terms => {:interval => [params[:interval]] }}
     end
+
+    ids = SyncPlan.readable.pluck(:id)
+    filters << {:terms => {:id => ids }}
 
     options = {
         :filters => filters,

@@ -44,5 +44,12 @@ class GpgKey < Katello::Model
     end
     ret
   end
+
+  private
+
+  def self.humanize_class_name
+    _("GPG Keys")
+  end
+
 end
 end
