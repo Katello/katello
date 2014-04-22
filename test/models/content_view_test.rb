@@ -295,7 +295,7 @@ class ContentViewTest < ActiveSupport::TestCase
     assert @library_dev_view.create_new_version
     @library_dev_view.reload
     assert_equal 3, @library_dev_view.next_version
-    assert_equal @library_dev_view.next_version - 1, @library_dev_view.versions.reload.last.version
+    assert_equal @library_dev_view.next_version - 1, @library_dev_view.versions.reload.maximum(:version)
   end
 end
 end
