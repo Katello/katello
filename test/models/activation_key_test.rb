@@ -34,12 +34,10 @@ class ActivationKeyTest < ActiveSupport::TestCase
     assert_includes @dev_view.activation_keys, @dev_key
   end
 
-  test "requires a content view" do
+  test "does not require a content view" do
     assert_nil @dev_key.content_view
-    refute @dev_key.save
-    assert_raises(ActiveRecord::RecordInvalid) do
-      @dev_key.save!
-    end
+    assert @dev_key.save!
+    assert_nil @dev_key.content_view
   end
 
   test "content view must be in environment" do

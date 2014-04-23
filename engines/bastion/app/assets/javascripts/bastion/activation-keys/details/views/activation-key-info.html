@@ -66,19 +66,6 @@
       </div>
 
       <div class="detail">
-        <span class="info-label" translate>Content View</span>
-        <span class="info-value"
-              alch-edit-select="activationKey.content_view.name"
-              readonly="activationKey.readonly"
-              selector="activationKey.content_view_id"
-              options="contentViews()"
-              on-cancel="cancelContentViewUpdate()"
-              on-save="saveContentView(activationKey)"
-              edit-trigger="editContentView">
-        </span>
-      </div>
-
-      <div class="detail">
         <div alert type="'info'" ng-show="editContentView">
           <p translate>You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.</p>
         </div>
@@ -90,6 +77,18 @@
         </span>
       </div>
 
+      <div class="detail">
+        <span class="info-label" translate>Content View</span>
+        <span class="info-value"
+              alch-edit-select="activationKey.content_view.name"
+              readonly="activationKey.readonly"
+              selector="activationKey.content_view_id"
+              options="contentViews()"
+              on-cancel="cancelContentViewUpdate()"
+              on-save="saveContentView(activationKey)"
+              edit-trigger="editContentView">
+        </span>
+      </div>
     </section>
   </div>
 </section>

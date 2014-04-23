@@ -20,7 +20,8 @@ module Actions
         def plan(system, activation_keys = [])
           system.disable_auto_reindex!
 
-          plan_action(Katello::System::ActivationKeys, system, activation_keys)
+          activation_key_plan = plan_action(Katello::System::ActivationKeys, system, activation_keys)
+          return if activation_key_plan.error
 
           cp_create = plan_action(Candlepin::Consumer::Create,
                                   cp_environment_id:   system.cp_environment_id,
@@ -32,6 +33,7 @@ module Actions
                                   autoheal:            system.autoheal,
                                   release_ver:         system.release,
                                   service_level:       system.serviceLevel,
+                                  uuid:                system.uuid,
                                   capabilities:        system.capabilities,
                                   activation_keys:     activation_keys)
           system.save!

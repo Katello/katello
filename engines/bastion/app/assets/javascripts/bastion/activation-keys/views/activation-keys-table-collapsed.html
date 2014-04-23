@@ -1,6 +1,6 @@
 <table alch-table="table" class="table table-striped table-full" ng-class="{'table-mask': table.working}">
   <thead>
-    <tr alch-table-head row-select>
+    <tr alch-table-head>
       <th alch-table-column sortable>{{ "Name" | translate }}</th>
     </tr>
   </thead>
@@ -8,7 +8,6 @@
   <tbody>
     <tr alch-table-row
         ng-repeat="activationKey in table.rows"
-        row-select="product"
         active-row="stateIncludes('activation-keys.details', {activationKeyId: activationKey.id})">
       <td alch-table-cell>
         <a ui-sref="activation-keys.details.info({activationKeyId: activationKey.id})">
