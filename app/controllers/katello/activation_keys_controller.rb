@@ -14,16 +14,6 @@ module Katello
   class ActivationKeysController < Katello::ApplicationController
     respond_to :html, :js
 
-    before_filter :authorize
-
-    def rules
-      read_test = lambda {ActivationKey.readable?(current_organization)}
-      {
-        :index => read_test,
-        :all => read_test
-      }
-    end
-
     def title
       _('Activation Keys')
     end

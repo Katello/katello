@@ -17,7 +17,7 @@ class ActivationKey < Katello::Model
   include Glue::Candlepin::ActivationKey if Katello.config.use_cp
   include Glue::ElasticSearch::ActivationKey if Katello.config.use_elasticsearch
   include Glue if Katello.config.use_cp
-  include Authorization::ActivationKey
+  include Katello::Authorization::ActivationKey
   include Ext::LabelFromName
 
   belongs_to :organization, :inverse_of => :activation_keys
@@ -50,6 +50,9 @@ class ActivationKey < Katello::Model
   validates_with Validators::ContentViewEnvironmentValidator
 
   scope :in_environment, lambda { |env| where(:environment_id => env) }
+
+  scoped_search :on => :name, :complete_value => true
+  scoped_search :on => :organization_id, :complete_value => true
 
   def environment_exists
     if environment_id && environment.nil?
@@ -134,22 +137,16 @@ class ActivationKey < Katello::Model
     end
   end
 
-  def as_json(*args)
-    ret = super(*args)
-    ret[:pools] = pools.map do |pool|
-      pool.as_json
-    end
-    ret[:usage_count] = usage_count
-    ret[:editable] = ActivationKey.readable?(organization)
-    ret
-  end
-
   private
 
   def set_default_content_view
     if self.environment && self.content_view.nil?
       self.content_view = self.environment.try(:default_content_view)
     end
+  end
+
+  def self.humanize_class_name
+    _("Activation Keys")
   end
 
 end

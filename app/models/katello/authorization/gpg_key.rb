@@ -16,7 +16,7 @@ module Authorization::GpgKey
 
   module ClassMethods
     def readable
-      GpgKey.authorized(:view_gpg_keys)
+      authorized(:view_gpg_keys)
     end
   end
 

@@ -35,13 +35,13 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   def rules
     read_test = lambda do
       return @system.readable? if @system
-      return ActivationKey.readable(@activation_key.organization) if @activation_key
+      return @activation_key.readable? if @activation_key
       @provider.readable?
     end
     available_test = lambda { Organization.any_readable? }
     modification_test = lambda do
       return @system.editable? if @system
-      return ActivationKey.manageable?(@activation_key.organization) if @activation_key
+      return @activation_key.editable? if @activation_key
       return @distributor.editable? if @distributor
       @provider.editable?
     end

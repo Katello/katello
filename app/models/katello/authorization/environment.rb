@@ -147,8 +147,7 @@ module Authorization::Environment
       return false if !Katello.config.katello?
       ::User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) ||
           self.organization.systems_readable? || self.organization.any_systems_registerable? ||
-          self.organization.distributors_readable? || self.organization.any_distributors_registerable? ||
-          ActivationKey.readable?(self.organization)
+          self.organization.distributors_readable? || self.organization.any_distributors_registerable?
     end
 
     def changesets_promotable?

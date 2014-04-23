@@ -29,10 +29,18 @@ module Katello
       @view = katello_content_views(:library_view)
       @library = @organization.library
 
-      ActivationKey.stubs('any_readable?').with(@organization).returns(true)
+      @activation_key.stubs(:get_key_pools).returns([])
       stub_find_organization(@organization)
     end
 
+    def permissions
+      @resource_type = "Katello::ActivationKey"
+      @view_permission = :view_activation_keys
+      @create_permission = :create_activation_keys
+      @update_permission = :update_activation_keys
+      @destroy_permission = :destroy_activation_keys
+    end
+    
     def setup
       setup_controller_defaults_api
       @request.env['HTTP_ACCEPT'] = 'application/json'
@@ -41,6 +49,7 @@ module Katello
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
 
       models
+      permissions
     end
 
     def test_index
@@ -57,6 +66,15 @@ module Katello
       assert_equal results['results'][0]['id'], @activation_key.id
     end
 
+    def test_index_protected
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+      assert_protected_action(:index, allowed_perms, denied_perms, @resource_type) do
+        get :index, :organization_id => @organization.label
+      end
+    end
+
     def test_show
       results = JSON.parse(get(:show, :id => @activation_key.id).body)
 
@@ -64,6 +82,15 @@ module Katello
 
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
+    end
+
+    def test_show_protected
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+      assert_protected_action(:show, allowed_perms, denied_perms, @resource_type) do
+        get :show, :id => @activation_key.id
+      end
     end
 
     def test_create
@@ -76,6 +103,16 @@ module Katello
 
       assert_response :success
       assert_template 'katello/api/v2/common/create'
+    end
+
+    def test_create_protected
+      allowed_perms = [@create_permission]
+      denied_perms = [@view_permission, @update_permission, @destroy_permission]
+
+      assert_protected_action(:create, allowed_perms, denied_perms, @resource_type) do
+        post :create, :environment => { :id => @library.id }, :content_view => { :id => @view.id },
+             :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'}
+      end
     end
 
     def test_create_nested
@@ -136,6 +173,41 @@ module Katello
 
       assert_response :success
       assert_template 'katello/api/v2/common/create'
+    end
+
+    def test_update
+      put :update, :id => @activation_key.id, :organization_id => @organization.id,
+          :activation_key => {:name => 'New Name'}
+
+      assert_response :success
+      assert_template 'api/v2/activation_keys/show'
+      assert_equal assigns[:activation_key].name, 'New Name'
+    end
+
+    def test_update_protected
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission]
+
+      assert_protected_action(:update, allowed_perms, denied_perms, @resource_type) do
+        put :update, :id => @activation_key.id, :organization_id => @organization.id,
+            :activation_key => {:name => 'New Name'}
+      end
+    end
+
+    def test_destroy
+      delete :destroy, :organization_id => @organization.id, :id => @activation_key.id
+
+      assert_response :success
+      assert_template 'api/v2/activation_keys/show'
+    end
+
+    def test_destroy_protected
+      allowed_perms = [@destroy_permission]
+      denied_perms = [@view_permission, @create_permission, @update_permission]
+
+      assert_protected_action(:destroy, allowed_perms, denied_perms, @resource_type) do
+        delete :destroy, :organization_id => @organization.id, :id => @activation_key.id
+      end
     end
 
   end
