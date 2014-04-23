@@ -104,6 +104,12 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         controller: 'ContentViewVersionDeletionConfirmController',
         templateUrl: 'content-views/deletion/views/version-deletion-confirm.html'
     })
+    .state('content-views.details.deletion', {
+        collapsed: true,
+        url: '/delete',
+        controller: 'ContentViewDeletionController',
+        templateUrl: 'content-views/deletion/views/content-view-deletion.html'
+    })
     .state('content-views.details.repositories', {
         abstract: true,
         collapsed: true,
