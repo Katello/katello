@@ -47,7 +47,8 @@ class Api::ApiController < ::Api::BaseController
 
   def converted_controllers
     [
-      'katello/api/v2/gpg_keys'
+      'katello/api/v2/gpg_keys',
+      'katello/api/v2/sync_plans'
     ]
   end
 
