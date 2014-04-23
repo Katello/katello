@@ -1,0 +1,47 @@
+<span page-title ng-model="contentHost">{{ 'Events for:' | translate }} {{ contentHost.name }}</span>
+
+<h4 translate>Content Host Events</h4>
+<div class="nutupane-bar">
+  <form ng-submit="eventsTable.search(eventsTable.searchTerm)">
+    <input type="text"
+           class="form-control filter-input"
+           placeholder="{{ 'Search...' | translate }}"
+           ng-model="eventsTable.searchTerm"/>
+  </form>
+
+  <span class="nutupane-info" translate>
+    Showing {{ eventsTable.rows.length }} of {{ eventsTable.resource.subtotal }} ({{ eventsTable.resource.total }} Total) Events
+  </span>
+</div>
+
+<div alch-table="eventsTable">
+  <div alch-container-scroll control-width="table" alch-infinite-scroll="eventsTable.nextPage()" data="eventsTable.rows">
+    <table ng-class="{'table-mask': eventsTable.working}" class="table table-striped">
+      <thead>
+      <tr alch-table-head>
+        <th alch-table-column="Status" style="width: 10%" translate>Status</th>
+        <th alch-table-column="Event" translate>Event</th>
+        <th alch-table-column="User" style="width: 15%" translate>User</th>
+        <th alch-table-column="Date" translate>Date</th>
+      </tr>
+      </thead>
+
+      <tbody>
+        <tr alch-table-row ng-repeat="event in eventsTable.rows">
+          <td alch-table-cell>
+              <span tooltip="{{ 'Running' | translate }}" class="table-icon icon-time" ng-show="event.pending"/>
+              <span tooltip="{{ 'Failed' | translate }}" class="table-icon icon-circle red" ng-show="event.failed" />
+              <span tooltip="{{ 'Success' | translate }}" class="table-icon icon-circle green" ng-show="!event.pending && !event.failed" />
+          </td>
+          <td alch-table-cell>
+            <a class="active" ui-sref="content-hosts.details.events.details({eventId: event.id})">
+              {{ event.message }}
+            </a>
+          </td>
+          <td alch-table-cell>{{ event.username }}</td>
+          <td alch-table-cell>{{ event.created_at | date:"short" }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

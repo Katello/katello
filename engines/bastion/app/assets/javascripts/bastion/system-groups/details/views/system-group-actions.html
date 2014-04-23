@@ -3,25 +3,25 @@
 <section class="nutupane-sub-section" >
 
   <span translate>
-    The following actions can be performed on systems in this group:
+    The following actions can be performed on content hosts in this group:
   </span>
 
   <ul class="bullet">
     <li>
-      <a translate ng-href="{{ $state.href('systems.bulk-actions.packages') }}?select_all=true&search=system_group:'{{ group.name }}'">
+      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.packages') }}?select_all=true&search=system_group:'{{ group.name }}'">
         Package Installation, Removal, and Update
       </a>
     </li>
 
 
     <li>
-      <a translate ng-href="{{ $state.href('systems.bulk-actions.errata.list') }}?select_all=true&search=system_group:'{{ group.name }}'">
+      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.errata.list') }}?select_all=true&search=system_group:'{{ group.name }}'">
         Errata Installation
       </a>
     </li>
 
     <li>
-      <a translate ng-href="{{ $state.href('systems.bulk-actions.groups') }}?select_all=true&search=system_group:'{{ group.name }}'">
+      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.groups') }}?select_all=true&search=system_group:'{{ group.name }}'">
         System Group Membership
       </a>
     </li>

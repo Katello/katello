@@ -42,9 +42,9 @@ describe('Factory: Provider', function() {
     });
 
     it('provides a way to get a list of providers', function() {
-        $httpBackend.expectGET('/api/v2/providers?organization_id=ACME&provider_type=Custom').respond(providers);
+        $httpBackend.expectGET('/api/v2/providers?full_result=true&organization_id=ACME').respond(providers);
 
-        Provider.query({ organization_id: 'ACME' }, function(providers) {
+        Provider.queryUnpaged({ organization_id: 'ACME' }, function(providers) {
             expect(providers.records.length).toBe(2);
         });
     });

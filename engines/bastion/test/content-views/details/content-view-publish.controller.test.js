@@ -27,6 +27,7 @@ describe('Controller: ContentViewPublishController', function() {
 
         $scope.contentView = ContentView.get({id: 1});
         $scope.contentView.versions = [];
+        $scope.$stateParams = {contentViewId: 1};
 
         spyOn($scope, 'transitionTo');
         spyOn($scope, 'reloadVersions');

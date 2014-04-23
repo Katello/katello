@@ -271,5 +271,31 @@ class ContentViewTest < ActiveSupport::TestCase
       @library_dev_view.check_remove_from_environment!(@dev)
     end
   end
+
+  def test_check_ready_to_destroy!
+    assert_raises(RuntimeError) do
+      @library_dev_view.check_ready_to_destroy!
+    end
+
+    view = ContentView.create!(:name => "Cat",
+                               :organization => @organization
+                              )
+    assert view.check_ready_to_destroy!
+  end
+
+  def test_next_version
+    cv = ContentView.create!(:name => "test",
+                             :organization => @organization
+                            )
+    assert_equal 1, cv.next_version
+
+    assert_equal 2, @library_dev_view.next_version
+    assert_equal @library_dev_view.next_version - 1, @library_dev_view.versions.maximum(:version)
+
+    assert @library_dev_view.create_new_version
+    @library_dev_view.reload
+    assert_equal 3, @library_dev_view.next_version
+    assert_equal @library_dev_view.next_version - 1, @library_dev_view.versions.reload.maximum(:version)
+  end
 end
 end

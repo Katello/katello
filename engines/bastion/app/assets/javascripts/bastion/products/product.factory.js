@@ -15,16 +15,15 @@
  * @ngdoc service
  * @name  Bastion.products.factory:Product
  *
- * @requires $resource
+ * @requires BastionResource
  *
  * @description
- *   Provides a $resource for product or list of products.
+ *   Provides a BastionResource for product or list of products.
  */
 angular.module('Bastion.products').factory('Product',
-    ['$resource', function ($resource) {
+    ['BastionResource', function (BastionResource) {
 
-        return $resource('/api/products/:id/:action', {id: '@id'}, {
-            query: { method: 'GET'},
+        return BastionResource('/api/products/:id/:action', {id: '@id'}, {
             update: { method: 'PUT'},
             sync: { method: 'POST', isArray: true, params: { action: 'sync' }},
             updateSyncPlan: { method: 'POST', params: { action: 'sync_plan' }}
@@ -37,14 +36,14 @@ angular.module('Bastion.products').factory('Product',
  * @ngdoc service
  * @name  Bastion.products.factory:ProductBulkAction
  *
- * @requires $resource
+ * @requires BastionResource
  *
  * @description
- *   Provides a $resource for bulk actions on products.
+ *   Provides a BastionResource for bulk actions on products.
  */
 angular.module('Bastion.products').factory('ProductBulkAction',
-    ['$resource', function ($resource) {
-        return $resource('/api/products/bulk/:action', {}, {
+    ['BastionResource', function (BastionResource) {
+        return BastionResource('/api/products/bulk/:action', {}, {
             removeProducts: {method: 'PUT', params: {action: 'destroy'}},
             syncProducts: {method: 'PUT', params: {action: 'sync'}},
             updateProductSyncPlan: {method: 'PUT', params: {action: 'sync_plan'}}

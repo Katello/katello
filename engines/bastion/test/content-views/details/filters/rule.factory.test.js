@@ -42,10 +42,10 @@ describe('Factory: Rule', function() {
     });
 
     it('provides a way to get a collection of rules', function() {
-        $httpBackend.expectGET('/api/v2/content_view_filters/1/rules')
+        $httpBackend.expectGET('/api/v2/content_view_filters/1/rules?full_result=true')
                     .respond(rules);
 
-        Rule.query({filterId: 1}, function (response) {
+        Rule.queryUnpaged({filterId: 1}, function (response) {
             var views = response;
 
             expect(views.results.length).toBe(2);

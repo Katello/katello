@@ -59,7 +59,7 @@ describe('Factory: ActivationKey', function() {
     it('ActivationKey.query GET /api/v2/activation_keys', function() {
         $httpBackend.expectGET('/api/v2/activation_keys').respond(activationKeys);
 
-        ActivationKey.query(function(response) {
+        ActivationKey.queryPaged(function(response) {
             expect(response.results.length).toBe(activationKeys.results.length);
 
             for (var i = 0; i < activationKeys.results.length; i++) {

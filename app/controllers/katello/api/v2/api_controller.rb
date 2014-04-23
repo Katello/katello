@@ -150,7 +150,7 @@ module Katello
 
     def get_organization(org_id)
       # name/label is always unique
-      return Organization.without_deleting.having_name_or_label(org_id).first
+      return Organization.without_deleting.having_name_or_label(org_id.to_s).first
     end
 
     def find_default_organization_and_or_environment

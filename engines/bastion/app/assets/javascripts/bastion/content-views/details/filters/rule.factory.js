@@ -15,18 +15,17 @@
  * @ngdoc service
  * @name  Bastion.content-views.filters.factory:Filter
  *
- * @requires $resource
+ * @requires BastionResource
  *
  * @description
- *   Provides a $resource for interacting with content view filter rules.
+ *   Provides a BastionResource for interacting with content view filter rules.
  */
 angular.module('Bastion.content-views').factory('Rule',
-    ['$resource', function ($resource) {
+    ['BastionResource', function (BastionResource) {
 
-        return $resource('/api/v2/content_view_filters/:filterId/rules/:ruleId',
+        return BastionResource('/api/v2/content_view_filters/:filterId/rules/:ruleId',
             {ruleId: '@id', filterId: '@content_view_filter_id'},
             {
-                query: {method: 'GET', isArray: false},
                 update: {method: 'PUT'},
             }
         );

@@ -19,30 +19,17 @@ module Actions
           action_subject(content_view)
           content_view.check_remove_from_environment!(environment)
 
-          cve = ::Katello::ContentViewEnvironment.where(:content_view_id => content_view.id,
+          cv_env = ::Katello::ContentViewEnvironment.where(:content_view_id => content_view.id,
                                                         :environment_id => environment.id).first
 
-          history = ::Katello::ContentViewHistory.create!(:content_view_version => cve.content_view_version,
+          history = ::Katello::ContentViewHistory.create!(:content_view_version => cv_env.content_view_version,
                                                           :environment => environment,
                                                           :user => ::User.current.login,
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS,
                                                           :task => self.task)
 
-          sequence do
-            concurrence do
-              content_view.repos(environment).each do |repo|
-                plan_action(Repository::Destroy, repo)
-              end
-
-              if puppet_env = content_view.puppet_env(environment)
-                plan_action(ContentViewPuppetEnvironment::Destroy, puppet_env)
-              end
-            end
-            plan_action(Candlepin::Environment::Destroy, cp_id: cve.cp_id)
-
-            cve.destroy
-            plan_self(history_id: history.id)
-          end
+          plan_action(ContentViewEnvironment::Destroy, cv_env)
+          plan_self(history_id: history.id)
         end
 
         def finalize
@@ -54,7 +41,6 @@ module Actions
         def humanized_name
           _("Remove from Environment")
         end
-
       end
     end
   end

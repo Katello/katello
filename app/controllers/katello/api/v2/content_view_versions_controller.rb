@@ -12,18 +12,20 @@
 
 module Katello
   class Api::V2::ContentViewVersionsController < Api::V2::ApiController
-    before_filter :find_content_view_version, :only => [:show, :promote]
+    before_filter :find_content_view_version, :only => [:show, :promote, :destroy]
     before_filter :find_content_view
     before_filter :find_environment, :only => [:promote]
     before_filter :authorize
 
     def rules
       read_rule = lambda { @view.readable? }
+      edit_rule = lambda { @view.editable? }
       promote_rule = lambda {@environment.changesets_promotable? && @view.promotable?}
       {
         :index   => read_rule,
         :show    => read_rule,
-        :promote => promote_rule
+        :promote => promote_rule,
+        :destroy => edit_rule
       }
     end
 
@@ -49,6 +51,13 @@ module Katello
     param :environment_id, :identifier
     def promote
       task = async_task(::Actions::Katello::ContentView::Promote, @version, @environment)
+      respond_for_async :resource => task
+    end
+
+    api :DELETE, "/content_view_versions/:id", "Remove content view version"
+    param :id, :identifier, :desc => "Content view version identifier", :required => true
+    def destroy
+      task = async_task(::Actions::Katello::ContentViewVersion::Destroy, @version)
       respond_for_async :resource => task
     end
 

@@ -28,7 +28,7 @@ class System < Katello::Model
   include AsyncOrchestration
 
   attr_accessible :name, :uuid, :description, :location, :environment, :content_view,
-                  :environment_id, :content_view_id
+                  :environment_id, :content_view_id, :system_group_ids
 
   after_rollback :rollback_on_create, :on => :create
 
@@ -59,7 +59,7 @@ class System < Katello::Model
   before_create  :fill_defaults
   after_create :init_default_custom_info
 
-  scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
+  scope :in_environment, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
 
   def add_system_group(system_group)

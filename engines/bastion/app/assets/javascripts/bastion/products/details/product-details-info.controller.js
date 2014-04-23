@@ -43,7 +43,7 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
         $scope.gpgKeys = function () {
             var deferred = $q.defer();
 
-            GPGKey.query(function (gpgKeys) {
+            GPGKey.queryUnpaged(function (gpgKeys) {
                 var results = gpgKeys.results;
 
                 results.unshift({id: null});
@@ -54,7 +54,7 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
         };
 
         $scope.syncPlans = function () {
-            return SyncPlan.query().$promise;
+            return SyncPlan.queryUnpaged().$promise;
         };
 
         $scope.save = function (product) {

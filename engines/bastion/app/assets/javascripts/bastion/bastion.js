@@ -30,6 +30,7 @@
 //= require "katello/widgets/path_selector"
 
 //= require "bastion/bastion.module"
+//= require "bastion/bastion-resource.factory"
 
 //= require_tree "./incubator"
 
@@ -53,8 +54,8 @@
 //= require "bastion/system-groups/system-groups.module.js"
 //= require_tree "./system-groups"
 
-//= require "bastion/systems/systems.module"
-//= require_tree "./systems"
+//= require "bastion/content-hosts/content-hosts.module.js"
+//= require_tree "./content-hosts"
 
 //= require "bastion/subscriptions/subscriptions.module.js"
 //= require_tree "./subscriptions"

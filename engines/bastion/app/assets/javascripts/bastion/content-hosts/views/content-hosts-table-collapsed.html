@@ -1,0 +1,22 @@
+<table class="table table-striped" ng-class="{'table-mask': contentHostTable.working}">
+  <thead>
+    <tr alch-table-head row-select>
+      <th alch-table-column sortable>{{ "Name" | translate }}</th>
+    </tr>
+  </thead>
+
+  <div data-extend-template="layouts/select-all-results.html"></div>
+
+  <tbody>
+    <tr alch-table-row
+        ng-repeat="contentHost in contentHostTable.rows"
+        row-select="contentHost"
+        active-row="stateIncludes('content-hosts.details', {contentHostId: contentHost.uuid})">
+      <td alch-table-cell>
+        <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
+          {{ contentHost.name }}
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

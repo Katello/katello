@@ -31,7 +31,7 @@ angular.module('Bastion.tasks', [
  * @requires $stateProvider
  *
  * @description
- *   Used for systems level configuration such as setting up the ui state machine.
+ *   Used for content hosts level configuration such as setting up the ui state machine.
  */
 angular.module('Bastion.tasks').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('tasks', {

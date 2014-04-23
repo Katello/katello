@@ -15,19 +15,18 @@
  * @ngdoc service
  * @name  Bastion.providers.factory:Provider
  *
- * @requires $resource
+ * @requires BastionResource
  * @requires CurrentOrganization
  *
  * @description
- *   Provides a $resource for product or list of providers.
+ *   Provides a BastionResource for product or list of providers.
  */
 angular.module('Bastion.providers').factory('Provider',
-    ['$resource', 'CurrentOrganization', function ($resource, CurrentOrganization) {
+    ['BastionResource', 'CurrentOrganization', function (BastionResource, CurrentOrganization) {
 
-        return $resource('/api/v2/providers/:id/:action',
+        return BastionResource('/api/v2/providers/:id/:action',
             {'id': '@id'},
             {
-                'query':  {'method': 'GET', 'params': {'provider_type': 'Custom', 'organization_id': CurrentOrganization}},
                 'save':   {'method': 'POST', 'params': {'organization_id': CurrentOrganization}},
                 'update': {'method': 'PUT'},
                 'deleteManifest': {'method': 'POST', 'params': {'action': 'delete_manifest'}},

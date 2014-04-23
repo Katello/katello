@@ -37,7 +37,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             }
         });
 
-        GPGKey.query(function (gpgKeys) {
+        GPGKey.queryUnpaged(function (gpgKeys) {
             $scope.gpgKeys = gpgKeys.results;
         });
 

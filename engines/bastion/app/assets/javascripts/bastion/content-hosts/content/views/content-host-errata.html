@@ -1,0 +1,59 @@
+<span page-title ng-model="contentHost">{{ 'Errata for: ' | translate }} {{ contentHost.name }}</span>
+<h4 translate>Applicable Errata</h4>
+
+<div class="nutupane-bar">
+  <input type="text"
+         class="form-control filter-input"
+         placeholder="{{ 'Filter' | translate }}"
+         ng-model="errataTable.errataFilterTerm"/>
+  <span class="result-count" translate>Showing {{ errataTable.resource.total }} Errata</span>
+
+  <div ng-hide="contentHost.readonly" class="fr">
+     <button class="btn btn-primary"
+             translate
+             ng-disabled="errataTable.getSelected().length == 0"
+             ng-click="applySelected()">
+       Apply Selected
+     </button>
+  </div>
+
+  <div class="fr select-action">
+    <span translate>{{ errataTable.numSelected }} Selected</span>
+    <span>|</span>
+    <a class="deselect-action"
+       translate
+       ng-class="{ 'disabled-link' : errataTable.numSelected == 0 }"
+       ng-click="errataTable.selectAll(false)">
+      Deselect All
+    </a>
+  </div>
+</div>
+
+<div alch-table="errataTable">
+  <p class="alert alert-info" translate>Note that applied errata will not immediately be reflected in this table.  The delay is dependent on the value of certCheckInterval in /etc/rhsm/rhsm.conf on {{ contentHost.name }}.</p>
+  <div alch-container-scroll control-width="table" alch-infinite-scroll="errataTable.nextPage()" data="errataTable.rows">
+    <table ng-class="{'table-mask': errataTable.working}" class="table table-striped">
+      <thead>
+        <tr alch-table-head row-select>
+          <th alch-table-column="type" translate>Type</th>
+          <th alch-table-column="errata_id" translate>Id</th>
+          <th alch-table-column="title" translate>Title</th>
+          <th alch-table-column="issued" translate>Issued</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr alch-table-row ng-repeat="erratum in errataTable.rows | filter:errataTable.errataCompare" row-select="erratum">
+          <td alch-table-cell >{{ erratum.type }}</td>
+          <td alch-table-cell >
+            <a ng-click="transitionToErratum(erratum)">
+              {{ erratum.errata_id }}
+            </a>
+          </td>
+          <td alch-table-cell >{{ erratum.title }}</td>
+          <td alch-table-cell >{{ erratum.issued }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

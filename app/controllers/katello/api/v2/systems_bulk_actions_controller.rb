@@ -83,7 +83,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
         group.save!
 
         final_count = group.system_ids.count - pre_group_count
-        display_messages << _("Successfully added %{count} system(s) to system group %{group}.") %
+        display_messages << _("Successfully added %{count} content host(s) to system group %{group}.") %
             {:count => final_count, :group => group.name }
       end
     end
@@ -105,7 +105,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
         group.save!
 
         final_count = pre_group_count - group.system_ids.count
-        display_messages << _("Successfully removed %{count} systems from system group %{group}.") %
+        display_messages << _("Successfully removed %{count} content host(s) from system group %{group}.") %
             {:count => final_count, :group => group.name }
       end
     end
@@ -160,7 +160,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   param_group :bulk_params
   def destroy_systems
     @systems.each{ |system| system.destroy }
-    display_message = _("Successfully removed %s systems") % @systems.length
+    display_message = _("Successfully removed %s content host(s)") % @systems.length
     respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => [display_message] }
   end
 
@@ -174,7 +174,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
       system.environment = @environment
       system.save!
     end
-    display_message = _("Successfully reassigned %{count} systems to %{cv} in %{env}.") %
+    display_message = _("Successfully reassigned %{count} content host(s) to %{cv} in %{env}.") %
         {:count => @systems.length, :cv => @view.name, :env => @environment.name}
     respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => [display_message]}
   end
@@ -244,7 +244,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     end
 
     if !max_systems_exceeded.empty?
-      fail HttpErrors::BadRequest, _("Maximum number of systems exceeded for system group(s): %s") % max_systems_exceeded.join(', ')
+      fail HttpErrors::BadRequest, _("Maximum number of content hosts exceeded for system group(s): %s") % max_systems_exceeded.join(', ')
     end
   end
 

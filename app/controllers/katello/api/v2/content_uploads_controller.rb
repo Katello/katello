@@ -11,14 +11,92 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::ContentUploadsController < Api::V1::ContentUploadsController
+class Api::V2::ContentUploadsController < Api::V2::ApiController
+  respond_to :json
+  before_filter :find_repository
+  before_filter :authorize
 
-  include Api::V2::Rendering
+  def rules
+    upload_test = lambda { @repo.product.editable? }
 
-  resource_description do
-    api_version 'v2'
-    api_base_url "#{Katello.config.url_prefix}/api"
+    {
+      :create => upload_test,
+      :upload_bits => upload_test,
+      :destroy => upload_test,
+      :import_into_repo => upload_test,
+      :upload_file => upload_test
+    }
   end
 
+  api :POST, "/repositories/:repo_id/content_uploads", "Create an upload request"
+  param :repo_id, :identifier, :required => true, :desc => "repository id"
+  def create
+    respond :resource => pulp_content.create_upload_request
+  end
+
+  api :PUT, "/repositories/:repo_id/content_uploads/:id/upload_bits", "Upload bits"
+  param :repo_id, :identifier, :required => true, :desc => "repository id"
+  param :id, :identifier, :required => true, :desc => "upload request id"
+  param :offset, :number, :required => true, :desc => "the offset at which Pulp will store the file contents"
+  param :content, File, :required => true, :desc => "file contents"
+  def upload_bits
+    pulp_content.upload_bits(params[:id], params[:offset], params[:content])
+    render :nothing => true
+  end
+
+  api :DELETE, "/repositories/:repo_id/content_uploads/:id", "Delete an upload request"
+  param :repo_id, :identifier, :required => true, :desc => "repository id"
+  param :id, :identifier, :required => true, :desc => "upload request id"
+  def destroy
+    pulp_content.delete_upload_request(params[:id])
+    render :nothing => true
+  end
+
+  api :POST, "/repositories/:repo_id/content_uploads/import_into_repo", "Import into a repository"
+  param :repo_id, :identifier, :required => true, :desc => "repository id"
+  param :uploads, Array, :required => true, :desc => "array of uploads to import"
+  def import_into_repo
+    params[:uploads].each do |upload|
+      pulp_content.import_into_repo(@repo.pulp_id, @repo.unit_type_id,
+        upload[:id], upload[:unit_key], {:unit_metadata => upload[:metadata]})
+    end
+
+    unit_keys = params[:uploads].map { |upload| upload[:unit_key] }
+    @repo.trigger_contents_changed(:wait => false, :index_units => unit_keys, :reindex => false)
+    render :nothing => true
+  end
+
+  api :POST, "/repositories/:id/content_uploads/file", "Upload content into the repository"
+  param :id, :identifier, :required => true
+  param :content, File, :required => true, :desc => "file contents"
+  def upload_file
+    filepaths = params.try(:[], :content).try(:map, &:path)
+
+    if !filepaths.blank?
+      @repo.upload_content(filepaths)
+      render :json => {:status => "success"}
+    else
+      fail HttpErrors::BadRequest, _("No file uploaded")
+    end
+
+  rescue Katello::Errors::InvalidPuppetModuleError => error
+    respond_for_exception(
+      error,
+      :status => :unprocessable_entity,
+      :text => error.message,
+      :errors => [error.message],
+      :with_logging => true
+    )
+  end
+
+  private
+
+  def pulp_content
+    Katello.pulp_server.resources.content
+  end
+
+  def find_repository
+    @repo = Repository.find(params[:repository_id])
+  end
 end
 end

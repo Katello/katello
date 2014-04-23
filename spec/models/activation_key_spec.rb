@@ -54,8 +54,8 @@ module Katello
 
       it "should be invalid without default environment" do
         @akey.name = 'invalid key'
-        @akey.wont_be :valid?
-        @akey.errors[:environment].wont_be_empty
+        @akey.must_be :valid?
+        @akey.errors[:base].must_be_empty
       end
 
       it "should be invalid if non-existent environment is specified" do

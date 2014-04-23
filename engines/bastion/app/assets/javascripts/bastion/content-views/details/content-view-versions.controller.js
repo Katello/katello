@@ -39,53 +39,75 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
             });
         });
 
-        $scope.status = function (version) {
-            var promoteCount = version['active_history'].length,
-                publish = _.findWhere(version['active_history'], {publish: true});
-
-            if (publish) {
-                promoteCount = promoteCount - 1;
-            }
-            return statusMessage(publish, promoteCount);
-        };
-
         $scope.hideProgress = function (version) {
             return version['active_history'].length === 0 || (version.task.state === 'stopped' &&
                 version.task.progressbar.type === 'success');
         };
 
-        $scope.historyText = function (history) {
-            var message = '';
+        $scope.historyText = function (version) {
+            var taskTypes = $scope.taskTypes,
+                taskType = version['last_event'].task.label,
+                message = "";
 
-            if (history.length === 1) {
-                message = translate("Published.");
-            } else if (history.length > 1) {
-                message = translate("Promoted to %s")
-                    .replace('%s', history[0].environment.name);
+            if (taskType === taskTypes.deletion) {
+                message = translate("Deletion from %s").replace('%s', version['last_event'].environment.name);
+            } else if (taskType === taskTypes.promotion) {
+                message = translate("Promoted to %s").replace('%s', version['last_event'].environment.name);
+            } else if (taskType === taskTypes.publish) {
+                message = translate("Published");
             }
-
             return message;
         };
 
-        function statusMessage(isPublishing, promoteCount) {
-            var status = '';
-            if (promoteCount > 1) {
-                if (isPublishing) {
-                    status = translate("Publishing and promoting to %count environments.").replace(
-                        '%count', promoteCount);
-                }
-                else {
-                    status = translate("Promoting to %count environments.").replace('%count', promoteCount);
-                }
-            } else if (promoteCount === 1 || isPublishing) {
-                if (isPublishing) {
-                    status = translate("Publishing and promoting to 1 environment.");
-                }
-                else {
-                    status =  translate("Promoting to 1 environment.");
-                }
+        $scope.status = function (version) {
+            var taskTypes = $scope.taskTypes,
+                deletionEvents = findTaskTypes(version['active_history'], taskTypes.deletion),
+                promotionEvents = findTaskTypes(version['active_history'], taskTypes.promotion),
+                publishEvents = findTaskTypes(version['active_history'], taskTypes.publish),
+                messages = "";
+
+            if (deletionEvents.length > 0) {
+                messages = deleteMessage(deletionEvents.length);
+            } else if (promotionEvents.length > 0) {
+                messages = promoteMessage(promotionEvents.length);
+            } else if (publishEvents.length > 0) {
+                messages = publishMessage(publishEvents.length);
             }
-            return status;
+
+            return messages;
+        };
+
+        function findTaskTypes(activeHistory, taskType) {
+            return _.filter(activeHistory, function (history) {
+                return history.task.label === taskType;
+            });
+        }
+
+        function deleteMessage(count) {
+            var messages = [translate('Deleting from 1 environment.'),
+                            translate("Deleting from %count environments.").replace('%count', count)];
+            return pluralSafe(count, messages);
+        }
+
+        function publishMessage(count) {
+            var messages = [translate("Publishing and promoting to 1 environment."),
+                            translate("Publishing and promoting to %count environments.").replace(
+                                        '%count', count)];
+            return pluralSafe(count, messages);
+        }
+
+        function promoteMessage(count) {
+            var messages = [translate('Promoting to 1 environment.'),
+                            translate("Promoting to %count environments.").replace('%count', count)];
+            return pluralSafe(count, messages);
+        }
+
+        function pluralSafe(count, strings) {
+            if (count === 1) {
+                return strings[0];
+            } else {
+                return strings[1];
+            }
         }
     }]
 );

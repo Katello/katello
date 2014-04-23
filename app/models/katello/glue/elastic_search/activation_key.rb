@@ -26,9 +26,10 @@ module Glue::ElasticSearch::ActivationKey
   end
 
   def extended_json
-    to_ret = {:environment  => self.environment.name,
-              :name_sort    => name.downcase,
-              :content_view => self.content_view.try(:name)
+    to_ret = {
+               :environment  => self.environment.try(:name),
+               :name_sort    => name.downcase,
+               :content_view => self.content_view.try(:name)
              }
     to_ret
   end

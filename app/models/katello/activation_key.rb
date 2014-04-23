@@ -38,13 +38,13 @@ class ActivationKey < Katello::Model
   validates :name, :presence => true
   validates :name, :uniqueness => {:scope => :organization_id}
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
-  validates :environment, :presence => true
   validate :environment_exists
-  validates :content_view, :presence => true, :allow_blank => false
   validates_each :usage_limit do |record, attr, value|
-    if !value.nil? && (value < -1 || value == 0 || (value != -1 && value < record.usage_count))
-      # we don't let users to set usage limit lower than current usage
-      record.errors[attr] << _("must be higher than current usage (%s) or unlimited" % record.usage_count)
+    if value.nil?
+      record.errors[attr] << _("cannot be nil")
+    elsif value > -1 && value < record.systems.length
+      # we don't let users to set usage limit lower than current in-use
+      record.errors[attr] << _("cannot be lower than current usage count (%s)" % record.systems.length)
     end
   end
   validates_with Validators::ContentViewEnvironmentValidator
@@ -52,9 +52,9 @@ class ActivationKey < Katello::Model
   scope :in_environment, lambda { |env| where(:environment_id => env) }
 
   def environment_exists
-    if environment.nil?
+    if environment_id && environment.nil?
       errors.add(:environment, _("ID: %s doesn't exist ") % environment_id)
-    elsif environment.organization != self.organization
+    elsif !environment.nil? && environment.organization != self.organization
       errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
     end
   end
@@ -147,7 +147,9 @@ class ActivationKey < Katello::Model
   private
 
   def set_default_content_view
-    self.content_view = self.environment.try(:default_content_view) unless self.content_view
+    if self.environment && self.content_view.nil?
+      self.content_view = self.environment.try(:default_content_view)
+    end
   end
 
 end

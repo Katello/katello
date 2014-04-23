@@ -15,21 +15,20 @@
  * @ngdoc service
  * @name  Bastion.environments.factory:Environment
  *
- * @requires $resource
+ * @requires BastionResource
  * @requires CurrentOrganization
  *
  * @description
- *   Provides a $resource for interacting with environments.
+ *   Provides a BastionResource for interacting with environments.
  */
 angular.module('Bastion.environments').factory('Environment',
-    ['$resource', 'CurrentOrganization',
-    function ($resource, CurrentOrganization) {
+    ['BastionResource', 'CurrentOrganization',
+    function (BastionResource, CurrentOrganization) {
 
-        return $resource('/api/v2/environments/:id/:action',
+        return BastionResource('/api/v2/environments/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 update: {method: 'PUT'},
-                query: {method: 'GET'}
             }
         );
 

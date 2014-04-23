@@ -41,9 +41,9 @@ describe('Factory: Node', function() {
     });
 
     it('provides a way to get a list of products', function() {
-        $httpBackend.expectGET('/api/nodes').respond(nodes);
+        $httpBackend.expectGET('/api/nodes?full_result=true').respond(nodes);
 
-        Node.query(function(nodes) {
+        Node.queryUnpaged(function(nodes) {
             expect(nodes.records.length).toBe(2);
         });
     });

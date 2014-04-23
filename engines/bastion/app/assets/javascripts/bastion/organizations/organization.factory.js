@@ -15,18 +15,17 @@
  * @ngdoc service
  * @name  Bastion.organizations.factory:Organization
  *
- * @requires $resource
+ * @requires BastionResource
  *
  * @description
- *   Provides a $resource for organization(s).
+ *   Provides a BastionResource for organization(s).
  */
 angular.module('Bastion.organizations').factory('Organization',
-    ['$resource', function ($resource) {
+    ['BastionResource', function (BastionResource) {
 
-        return $resource('/api/v2/organizations/:id/:action',
+        return BastionResource('/api/v2/organizations/:id/:action',
             {id: '@id'},
             {
-                query:  {method: 'GET', isArray: false},
                 repoDiscover: { method: 'POST', params: {action: 'repo_discover'}},
                 cancelRepoDiscover: {method: 'POST', params: {action: 'cancel_repo_discover'}},
                 autoAttachSubscriptions: {method: 'POST', params: {action: 'autoattach_subscriptions'}},

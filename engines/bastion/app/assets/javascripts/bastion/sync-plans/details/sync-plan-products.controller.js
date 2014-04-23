@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc object
- * @name  Bastion.systems.controller:SystemSystemGroupsController
+ * @name  Bastion.sync-plans.controller:SyncPlanProductsController
  *
  * @requires $scope
  * @requires $q
@@ -56,7 +56,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlanProductsController',
                 };
 
                 success = function (data) {
-                    $scope.successMessages = [translate('Removed %x products from system "%y".')
+                    $scope.successMessages = [translate('Removed %x products from sync plan "%y".')
                         .replace('%x', $scope.productsTable.numSelected).replace('%y', $scope.syncPlan.name)];
                     $scope.productsTable.working = false;
                     $scope.productsTable.selectAll(false);
