@@ -15,19 +15,18 @@
  * @ngdoc service
  * @name  Bastion.custom-info.factory:CustomInfo
  *
- * @requires $resource
+ * @requires BastionResource
  *
  * @description
- *   Provides a $resource for interacting with custom info.
+ *   Provides a BastionResource for interacting with custom info.
  */
 angular.module('Bastion.custom-info').factory('CustomInfo',
-    ['$resource', function ($resource) {
+    ['BastionResource', function (BastionResource) {
 
-        return $resource('/api/v2/custom_info/:type/:id/:action',
+        return BastionResource('/api/v2/custom_info/:type/:id/:action',
             {},
             {
                 update: { method: 'PUT' },
-                query:  { method: 'GET', isArray: false}
             }
         );
 

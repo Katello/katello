@@ -58,7 +58,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddSystemGrou
             };
 
             success = function (data) {
-                $scope.successMessages = [translate('Added %x system groups to system "%y".')
+                $scope.successMessages = [translate('Added %x system groups to activation key "%y".')
                     .replace('%x', $scope.systemGroupsTable.numSelected)
                     .replace('%y', $scope.activationKey.name)];
                 $scope.systemGroupsTable.working = false;

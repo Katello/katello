@@ -22,10 +22,12 @@ angular.module('alchemy')
     }])
     .controller('AlchTableController', ['$scope', function ($scope) {
         var rows = $scope.rows = [],
-            headers = $scope.headers = [];
+            headers = $scope.headers = [],
+            self = this;
+
+        this.selection = {allSelected: false, selectAllDisabled: false};
 
         $scope.table.numSelected = 0;
-        $scope.table.allSelected = false;
         $scope.table.chosenRow = null;
 
         $scope.table.getSelected = function () {
@@ -39,6 +41,18 @@ angular.module('alchemy')
         };
 
         $scope.table.selectAllDisabled = false;
+
+        this.disableSelectAll = $scope.table.disableSelectAll = function () {
+            self.selection.selectAllDisabled = true;
+        };
+
+        this.enableSelectAll = $scope.table.enableSelectAll = function () {
+            self.selection.selectAllDisabled = false;
+        };
+
+        $scope.table.allSelected = function () {
+            return self.selection.allSelected;
+        };
 
         this.addRow = function (row) {
             rows.push(row);
@@ -58,7 +72,7 @@ angular.module('alchemy')
 
         this.itemSelected = function (row) {
             $scope.table.numSelected += row.selected ? 1 : -1;
-            $scope.table.allSelected = false;
+            self.selection.allSelected = false;
         };
 
         this.itemChosen = function (row) {
@@ -68,12 +82,12 @@ angular.module('alchemy')
         this.selectAll = $scope.table.selectAll = function (selected) {
             var table = $scope.table;
 
-            table.allSelected = selected;
+            self.selection.allSelected = selected;
 
-            $scope.table.numSelected = table.allSelected ? table.rows.length : 0;
+            $scope.table.numSelected = self.selection.allSelected ? table.rows.length : 0;
 
             angular.forEach(table.rows, function (row) {
-                row.selected = table.allSelected;
+                row.selected = self.selection.allSelected;
             });
         };
 
@@ -82,9 +96,9 @@ angular.module('alchemy')
         var rowSelectTemplate = function () {
             return '<th class="row-select">' +
                       '<input type="checkbox"' +
-                              'ng-model="table.allSelected"' +
-                              'ng-disabled="table.selectAllDisabled"' +
-                              'ng-change="allSelected(table)">' +
+                              'ng-model="selection.allSelected"' +
+                              'ng-disabled="selection.selectAllDisabled"' +
+                              'ng-change="allSelected()">' +
                     '</th>';
         }, rowChoiceTemplate = function () {
             return '<th translate class="row-select"></th>';
@@ -111,8 +125,10 @@ angular.module('alchemy')
 
                     alchTableController.addHeader(scope.header);
 
-                    scope.allSelected = function (table) {
-                        alchTableController.selectAll(table.allSelected);
+                    scope.selection = alchTableController.selection;
+
+                    scope.allSelected = function () {
+                        alchTableController.selectAll(scope.selection.allSelected);
                     };
                 };
             }

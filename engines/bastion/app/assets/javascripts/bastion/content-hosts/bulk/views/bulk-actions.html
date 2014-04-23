@@ -1,0 +1,96 @@
+<span page-title>{{ 'Content Host Bulk Actions' | translate }}</span>
+
+<section class="nutupane-details" ng-cloak alch-container-scroll>
+  <header class="details-header">
+    <h2 class="fl" translate>Bulk Actions</h2>
+
+    <div class="fr">
+      <button class="btn btn-default"
+              translate
+              ng-disabled="contentHost.readonly || removingContentHosts"
+              ng-click="openModal()"
+              ng-hide="removingContentHosts">
+        Remove Content Hosts
+      </button>
+
+      <span ng-show="removingContentHosts">
+        <i class="icon-spinner inline-icon icon-spin"></i>
+        <span>{{ "Removing Content Hosts" | translate }}</span>
+      </span>
+
+      <button class="btn btn-default" ui-sref="content-hosts.index">
+        <i class="icon-remove"></i>
+        {{ "Close" | translate }}
+      </button>
+
+      <div alch-modal="performRemoveContentHosts()" model="table"
+           modal-header='Remove {{ contentHostTable.numSelected  }} Content Hosts?'
+           modal-body='Are you sure you want to remove the {{ contentHostTable.numSelected }} content host(s) selected?'></div>
+
+    </div>
+  </header>
+
+  <nav class="details-navigation">
+    <ul>
+      <li>
+        <a translate
+           ui-sref="content-hosts.bulk-actions.packages"
+           ng-class="{active: isState('content-hosts.bulk-actions.packages')}">
+          Packages
+        </a>
+      </li>
+
+      <li>
+        <a translate
+           ui-sref="content-hosts.bulk-actions.errata.list"
+           ng-class="{active: stateIncludes('content-hosts.bulk-actions.errata')}">
+          Errata
+        </a>
+      </li>
+
+      <li>
+        <a translate
+           ui-sref="content-hosts.bulk-actions.groups"
+           ng-class="{active: isState('content-hosts.bulk-actions.groups')}">
+          System Groups
+        </a>
+      </li>
+
+      <li>
+        <a translate
+           ui-sref="content-hosts.bulk-actions.environment"
+           ng-class="{active: isState('content-hosts.bulk-actions.environment')}">
+          Content Host Content
+        </a>
+      </li>
+
+      <li>
+        <a translate
+           ui-sref="content-hosts.bulk-actions.subscriptions"
+           ng-class="{active: isState('content-hosts.bulk-actions.subscriptions')}">
+          Subscriptions
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div>
+
+    <div class="alert warning alert-warning" ng-show="table.numSelected == 0">
+      <i class="icon-exclamation-sign"></i>
+      {{ 'At least one content host needs to be selected in order to perform a bulk action.' | translate }}
+    </div>
+
+    <div alch-alert success-messages="state.successMessages" error-messages="state.errorMessages"></div>
+
+    <div class="alert alert-info" ng-show="state.working">
+      <i class="icon-spinner inline-icon icon-spin"></i>
+      {{ 'Processing' | translate }}
+    </div>
+
+    <span ng-disabled="table.numSelected == 0">
+      <div ui-view></div>
+    </span>
+  </div>
+
+</section>

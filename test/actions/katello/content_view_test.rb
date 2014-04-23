@@ -107,14 +107,127 @@ module ::Actions::Katello::ContentView
     it 'plans' do
       cve = Katello::ContentViewEnvironment.where(:content_view_id => content_view, :environment_id => environment).first
       Katello::ContentViewEnvironment.stubs(:where).returns([cve])
-      cve.expects(:destroy).returns(true)
 
       task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
       action.stubs(:task).returns(task)
 
       action.expects(:action_subject).with(content_view)
       plan_action(action, content_view, environment)
-      assert_action_planed_with(action, ::Actions::Candlepin::Environment::Destroy, {cp_id: cve.cp_id})
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cve)
+    end
+  end
+
+  class RemoveVersionTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::RemoveVersion }
+
+    let(:content_view) do
+      katello_content_views(:library_dev_view)
+    end
+
+    it 'fails to plan for a promoted version' do
+      version = content_view.versions.first
+      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
+      action.stubs(:task).returns(task)
+
+      assert_raises(RuntimeError) do
+        plan_action(action, version)
+      end
+    end
+
+    it 'plans' do
+      version = Katello::ContentViewVersion.create!(:version => 2,
+                                                    :content_view => content_view)
+      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
+      action.stubs(:task).returns(task)
+
+      action.expects(:action_subject).with(version.content_view)
+      plan_action(action, version)
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version)
+    end
+  end
+
+  class RemoveTest < TestBase
+    before(:all) do
+      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
+      ::Actions::Katello::ContentView::Remove.any_instance.stubs(:task).returns(task)
+    end
+
+    let(:action_class) { ::Actions::Katello::ContentView::Remove }
+
+    let(:content_view) do
+      katello_content_views(:library_dev_view)
+    end
+
+    let(:environment) do
+      katello_environments(:dev)
+    end
+
+    let(:cv_env) do
+      Katello::ContentViewEnvironment.where(content_view_id: content_view,
+                                            environment_id: environment
+                                           ).first
+    end
+
+    let(:library) do
+      katello_environments(:library)
+    end
+
+    let(:default_content_view) do
+      katello_content_views(:acme_default)
+    end
+
+    it 'plans for removing environments' do
+      Katello::System.update_all(content_view_id: content_view.id)
+
+      assert_raises(RuntimeError) do
+        action.validate_options(content_view, [cv_env], [], {})
+      end
+
+      options = {content_view_environments: [cv_env],
+                 system_content_view_id: default_content_view.id,
+                 system_environment_id: library.id
+                }
+      action.expects(:action_subject).with(content_view)
+      plan_action(action, content_view, options)
+
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env)
+    end
+
+    it 'plans for removing a version and an environment' do
+      version = Katello::ContentViewEnvironment.where(content_view_id: content_view.id,
+                                                      environment_id: environment.id
+                                                     ).first.content_view_version
+
+      options = {content_view_environments: [cv_env],
+                 content_view_versions: [version]
+                }
+      action.expects(:action_subject).with(content_view)
+
+      plan_action(action, content_view, options)
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env)
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version)
+    end
+  end
+
+  class DestroyTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::Destroy }
+
+    let(:content_view) do
+      katello_content_views(:library_dev_view)
+    end
+
+    it 'plans' do
+      view = Katello::ContentView.create!(:name => "New view",
+                                          :organization => content_view.organization
+                                         )
+      version = Katello::ContentViewVersion.create!(:content_view => view,
+                                                    :version => 1
+                                                   )
+
+      action.expects(:action_subject).with(view.reload)
+      view.expects(:destroy).returns(true)
+      plan_action(action, view)
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version)
     end
   end
 

@@ -12,8 +12,7 @@
  **/
 
 describe('Factory: Environment', function() {
-    var $resource,
-        environments;
+    var environments;
 
     beforeEach(module('Bastion.environments', 'Bastion.utils'));
 
@@ -29,22 +28,6 @@ describe('Factory: Environment', function() {
             offset: 0
         };
 
-        $resource = function() {
-            this.get = function(id) {
-                return environments.results[0];
-            };
-            this.update = function(data) {
-                environments.results[0] = data;
-                return environments.results[0];
-            };
-            this.query = function() {
-                return environments;
-            };
-
-            return this;
-        };
-
-        $provide.value('$resource', $resource);
         $provide.value('CurrentOrganization', 'ACME');
     }));
 
@@ -53,26 +36,34 @@ describe('Factory: Environment', function() {
     }));
 
     it('provides a way to get a collection of environments', function() {
-        var environments = Environment.query();
+        $httpBackend.expectGET('/api/environments').respond(environments.results);
 
-        expect(environments.results.length).toBe(2);
-        expect(environments.total).toBe(10);
-        expect(environments.subtotal).toBe(5);
-        expect(environments.offset).toBe(0);
+        Environment.query(function (environments) {
+            expect(environments.results.length).toBe(2);
+            expect(environments.total).toBe(10);
+            expect(environments.subtotal).toBe(5);
+            expect(environments.offset).toBe(0);
+        });
     });
 
     it('provides a way to get a single environment', function() {
-        var environment = Environment.get({ id: 1 });
+        $httpBackend.expectGET('/api/environments').respond(environments.results[0]);
 
-        expect(environment).toBeDefined();
-        expect(environment.name).toEqual('Environment1');
+        Environment.get({ id: 1 }, function (environment) {
+            expect(environment).toBeDefined();
+            expect(environment.name).toEqual('Environment1');
+        });
     });
 
     it('provides a way to update an environment', function() {
-        var environment = Environment.update({ id: 1, name: 'NewEnvName' });
+        var environment = environments.results[0];
+        environment.name = 'NewEnvName';
+        $httpBackend.expectPUT('/api/environments').respond(environment);
 
-        expect(environment).toBeDefined();
-        expect(environment.name).toEqual('NewEnvName');
+        Environment.update({ id: 1, name: 'NewEnvName' }, function (environment) {
+            expect(environment).toBeDefined();
+            expect(environment.name).toEqual('NewEnvName');
+        });
     });
 });
 

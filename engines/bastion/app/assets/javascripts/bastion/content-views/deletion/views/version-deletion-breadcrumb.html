@@ -1,0 +1,18 @@
+<ul class="wizard">
+  <li ng-class="{active: isStep('environments')}">
+    <span translate>Lifecycle Environments</span>
+  </li>
+
+  <li ng-show="needHosts() && !isStep('environments')" ng-class="{active: isStep('contentHosts')}">
+    <span translate>Content Hosts</span>
+  </li>
+
+  <li ng-show="needActivationKeys() && !isStep('environments') && !isStep('contentHosts')"
+      ng-class="{active: isStep('activationKeys')}">
+    <span translate>Activation Keys</span>
+  </li>
+
+  <li ng-show="isStep('confirm')" ng-class="{active: isStep('confirm')}">
+    <span translate>Confirmation</span>
+  </li>
+</ul>

@@ -34,7 +34,8 @@
 
   <nav>
     <ul class="nav nav-tabs">
-      <li ng-class="{active: isState('content-views.details.versions') || isState('content-views.details.promotion')}">
+      <li ng-class="{active: isState('content-views.details.versions') || isState('content-views.details.promotion') ||
+                             stateIncludes('content-views.details.version-deletion')}">
         <a ui-sref="content-views.details.versions" translate>
           Versions
         </a>

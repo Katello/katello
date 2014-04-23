@@ -15,21 +15,20 @@
  * @ngdoc service
  * @name  Bastion.repositories.factory:Repository
  *
- * @requires $resource
+ * @requires BastionResource
  * @requires CurrentOrganization
  *
  * @description
- *   Provides a $resource for product or list of repositories.
+ *   Provides a BastionResource for product or list of repositories.
  */
 angular.module('Bastion.repositories').factory('Repository',
-    ['$resource', 'CurrentOrganization',
-    function ($resource, CurrentOrganization) {
+    ['BastionResource', 'CurrentOrganization',
+    function (BastionResource, CurrentOrganization) {
 
-        return $resource('/api/v2/repositories/:id/:action',
+        return BastionResource('/api/v2/repositories/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 update: { method: 'PUT' },
-                query: { method: 'GET' },
                 sync: { method: 'POST', params: { action: 'sync' } }
             }
         );
@@ -41,20 +40,22 @@ angular.module('Bastion.repositories').factory('Repository',
  * @ngdoc service
  * @name  Bastion.repositories.factory:RepositoryBulkAction
  *
- * @requires $resource
+ * @requires BastionResource
  * @requires CurrentOrganization
  *
  * @description
- *   Provides a $resource for bulk actions on repositories.
+ *   Provides a BastionResource for bulk actions on repositories.
  */
 angular.module('Bastion.repositories').factory('RepositoryBulkAction',
-    ['$resource', 'CurrentOrganization', function ($resource, CurrentOrganization) {
-        return $resource('/api/v2/repositories/bulk/:action',
+    ['BastionResource', 'CurrentOrganization', function (BastionResource, CurrentOrganization) {
+
+        return BastionResource('/api/v2/repositories/bulk/:action',
             {'organization_id': CurrentOrganization},
             {
                 removeRepositories: {method: 'PUT', params: {action: 'destroy'}},
                 syncRepositories: {method: 'POST', params: {action: 'sync'}}
             }
         );
+
     }]
 );

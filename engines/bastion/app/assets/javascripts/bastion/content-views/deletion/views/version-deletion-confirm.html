@@ -1,0 +1,80 @@
+<span page-title ng-model="version">{{ "Remove Version Confirmation" | translate }} {{ version.version }}</span>
+
+<section class="details details-full">
+  <h3 translate>Confirm Version Removal: Version {{ version.version }}</h3>
+
+  <div data-extend-template="content-views/deletion/views/version-deletion-breadcrumb.html"></div>
+
+  <div class="details">
+
+    <div ng-hide="deleteOptions.environments.length === 0">
+      <h5 translate>Environments</h5>
+      <i class="icon-warning-sign"></i>
+      <span translate>This version will be removed from:</span>
+      <ul class="bullet">
+        <li ng-repeat="env in deleteOptions.environments">{{ env.name }}</li>
+      </ul>
+    </div>
+
+    <br/>
+
+    <div>
+      <h5 translate>Archived Copy</h5>
+      <p ng-hide="deleteOptions.deleteArchive" translate>
+        The archive of this Version will not be deleted.  This Version will still be available to be promoted to a Lifecycle Environment.
+      </p>
+      <p ng-show="deleteOptions.deleteArchive">
+        <i class="icon-warning-sign"></i>
+        <span translate>
+          The archive of this Version will be deleted.  This Version will not be available once deletion is complete.
+        </span>
+      </p>
+    </div>
+
+    <br/>
+
+    <div>
+      <h5 translate>Content Hosts</h5>
+      <p ng-show="totalHostCount() > 0">
+        <i class="icon-warning-sign"></i>
+        <span translate>
+          {{ totalHostCount() }} Content Hosts will be moved to {{ deleteOptions.contentHosts.contentView.name }} in {{ deleteOptions.contentHosts.environment.name }}
+        </span>
+      </p>
+      <p ng-show="totalHostCount() === 0" translate>
+         No Content Hosts are affected.
+      </p>
+    </div>
+
+    <br/>
+
+    <div>
+      <h5 translate>Activation Keys</h5>
+      <p ng-show="totalActivationKeyCount() > 0">
+        <i class="icon-warning-sign"></i>
+        <span translate>
+          {{ totalActivationKeyCount() }} Activation Keys will be moved to {{ deleteOptions.activationKeys.contentView.name }} in {{ deleteOptions.activationKeys.environment.name }}
+        </span>
+      </p>
+      <p ng-show="totalActivationKeyCount() === 0" translate>
+        No activation keys are affected.
+      </p>
+    </div>
+
+    <div class="fr">
+      <a ui-sref="content-views.details.versions({contentViewId: contentView.id})" >
+        <button class="btn btn-default" ng-disabled="deleting" translate>
+          Cancel
+        </button>
+      </a>
+      <button class="btn btn-default" ng-click="transitionBack()" ng-disabled="deleting" translate>
+        Back
+      </button>
+      <button class="btn btn-primary" ng-click="performDeletion()" ng-disabled="deleting">
+        <i class="icon-spinner icon-spin" ng-show="deleting"></i>
+        <span translate>Confirm Remove</span>
+      </button>
+    </div>
+
+  </div>
+</section>

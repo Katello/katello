@@ -21,6 +21,10 @@ module Katello
 
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids component_ids))
 
+    resource_description do
+      api_version "v2"
+    end
+
     def_param_group :content_view do
       param :description, String, :desc => "Description for the content view"
       param :repository_ids, Array, :desc => "List of repository ids"
@@ -44,7 +48,9 @@ module Katello
         :available_puppet_modules      => view_rule,
         :history                       => view_rule,
         :available_puppet_module_names => view_rule,
-        :remove_from_environment       => promote_rule
+        :remove_from_environment       => promote_rule,
+        :remove                        => edit_rule,
+        :destroy                       => edit_rule
       }
     end
 
@@ -166,6 +172,44 @@ module Katello
     param :environment_id, :number, :desc => "environment numeric identifier", :required => true
     def remove_from_environment
       task = async_task(::Actions::Katello::ContentView::RemoveFromEnvironment, @view, @environment)
+      respond_for_async :resource => task
+    end
+
+    api :PUT, "/content_views/:id/remove", "Remove versions and/or environments from a content view and reassign systems and keys"
+    param :id, :number, :desc => "content view numeric identifier", :required => true
+    param :environment_ids, :number, :desc => "environment numeric identifiers to be removed"
+    param :content_view_version_ids, :number, :desc => "content view version identifiers to be deleted"
+    param :system_content_view_id, :number, :desc => "content view to reassign orphaned systems to"
+    param :system_environment_id, :number, :desc => "environment to reassign orphaned systems to"
+    param :key_content_view_id, :number, :desc => "content view to reassign orphaned activation keys to"
+    param :key_environment_id, :number, :desc => "environment to reassign orphaned activation keys to"
+    def remove
+      cv_envs = ContentViewEnvironment.where(:environment_id => params[:environment_ids],
+                                             :content_view_id => params[:id]
+                                            )
+      versions = @view.versions.where(:id => params[:content_view_version_ids])
+
+      if cv_envs.empty? && versions.empty?
+        fail _("There either were no environments nor versions specified or there were invalid environments/versions specified. "\
+               "Please check environment_ids and content_view_version_ids parameters.")
+      end
+
+      options = params.slice(:system_content_view_id,
+                             :system_environment_id,
+                             :key_content_view_id,
+                             :key_environment_id
+                            ).reject { |k, v| v.nil? }
+      options[:content_view_versions] = versions
+      options[:content_view_environments] = cv_envs
+
+      task = async_task(::Actions::Katello::ContentView::Remove, @view, options)
+      respond_for_async :resource => task
+    end
+
+    api :DELETE, "/content_views/:id", "Delete a content view"
+    param :id, :number, :desc => "content view numeric identifier", :required => true
+    def destroy
+      task = async_task(::Actions::Katello::ContentView::Destroy, @view)
       respond_for_async :resource => task
     end
 

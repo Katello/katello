@@ -15,26 +15,29 @@ require 'katello_test_helper'
 module Katello
 class ActivationKeyTest < ActiveSupport::TestCase
 
+  def self.before_suite
+    models = ["ActivationKey", "KTEnvironment", "ContentViewEnvironment", "ContentView"]
+    disable_glue_layers([], models, true)
+  end
+
   def setup
-    @dev_key = katello_activation_keys(:dev_key)
-    @dev_view = katello_content_views(:library_dev_view)
-    @lib_view = katello_content_views(:library_view)
+    @dev_key = ActivationKey.find(katello_activation_keys(:dev_key))
+    @dev_view = ContentView.find(katello_content_views(:library_dev_view))
+    @lib_view = ContentView.find(katello_content_views(:library_view))
   end
 
   test "can have content view" do
-    @dev_key = katello_activation_keys(:dev_key)
+    @dev_key = ActivationKey.find(katello_activation_keys(:dev_key))
     @dev_key.content_view = @dev_view
     assert @dev_key.save!
     assert_not_nil @dev_key.content_view
     assert_includes @dev_view.activation_keys, @dev_key
   end
 
-  test "requires a content view" do
+  test "does not require a content view" do
     assert_nil @dev_key.content_view
-    refute @dev_key.save
-    assert_raises(ActiveRecord::RecordInvalid) do
-      @dev_key.save!
-    end
+    assert @dev_key.save!
+    assert_nil @dev_key.content_view
   end
 
   test "content view must be in environment" do

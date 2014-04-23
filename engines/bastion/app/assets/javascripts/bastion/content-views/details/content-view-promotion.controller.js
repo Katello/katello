@@ -55,7 +55,7 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
             return enabled;
         };
 
-        $scope.version = ContentViewVersion.query({id: $scope.$stateParams.versionId});
+        $scope.version = ContentViewVersion.get({id: $scope.$stateParams.versionId});
         $scope.currentOrganization = CurrentOrganization;
 
         $scope.promote = function () {

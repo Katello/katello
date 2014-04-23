@@ -77,4 +77,12 @@ module ::Actions::Pulp::Consumer
       it_runs :uninstall_content
     end
   end
+
+  class ContentUpdateTest < ContentTestBase
+    let(:action_class) { ::Actions::Pulp::Consumer::ContentUpdate }
+
+    it 'runs' do
+      it_runs :update_content
+    end
+  end
 end

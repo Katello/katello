@@ -16,6 +16,8 @@ require "katello_test_helper"
 module Katello
 class Api::V2::SystemErrataControllerTest < ActionController::TestCase
 
+  include Support::ForemanTasks::Task
+
   def self.before_suite
     models = ["System"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
@@ -38,11 +40,13 @@ class Api::V2::SystemErrataControllerTest < ActionController::TestCase
   end
 
   def test_apply
-    System.any_instance.expects(:install_errata).with(["foo"]).returns(TaskStatus.new)
-    put :apply, :system_id => @system.uuid, :errata_ids => ["foo"]
+    assert_async_task ::Actions::Katello::System::Erratum::Install do |system, errata|
+      system.id == @system.id && errata == %w(foo)
+    end
+
+    put :apply, :system_id => @system.uuid, :errata_ids => %w(foo)
 
     assert_response :success
-    assert_template 'api/v2/system_errata/system_task'
   end
 
   def test_permissions

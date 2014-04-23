@@ -1,0 +1,347 @@
+<span page-title ng-model="contentHost">{{ 'Content Host' | translate }} {{ contentHost.name }}</span>
+
+<section>
+
+  <div class="details fl">
+    <section>
+      <h4 translate>Basic Information</h4>
+
+      <div class="detail">
+        <span class="info-label" translate>Name</span>
+        <span class="info-value"
+              alch-edit-text="contentHost.name"
+              readonly="contentHost.readonly"
+              on-save="save(contentHost)">
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>UUID</span>
+        <span class="info-value">{{ contentHost.uuid }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Description</span>
+        <span class="info-value"
+              alch-edit-textarea="contentHost.description"
+              readonly="contentHost.readonly"
+              on-save="save(contentHost)">
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Type</span>
+        <span class="info-value">{{ contentHost.type }}</span>
+      </div>
+
+      <div ng-show="contentHost.guests" class="detail">
+        <span class="info-label" translate>Guests</span>
+        <div class="info-value">
+          <ul>
+            <li ng-repeat="guest in contentHost.guests">
+              <a href="#/systems/{{ guest.uuid }}/info">{{ guest.name }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div ng-show="contentHost.host" class="detail">
+        <span class="info-label" translate>Host</span>
+        <div class="info-value">
+          <a href="#/systems/{{ contentHost.host.uuid }}/info">{{ contentHost.host.name }}</a>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+    </section>
+
+    <section>
+      <h4 translate>Subscriptions</h4>
+
+      <div class="detail">
+        <span class="info-label" translate>Subscription Status</span>
+        <span class="info-value">
+          <i class="icon-circle" ng-class="contentHostTable.getStatusColor(contentHost.compliance.status)"></i>
+          {{ contentHost.compliance.status }}
+        </span>
+      </div>
+
+      <div ng-show="contentHost.compliance.reasons.length > 0" class="detail">
+        <span class="info-label" translate>Details</span>
+        <div class="info-value">
+          <ul class="compliance-reasons">
+            <li ng-repeat="reason in contentHost.compliance.reasons">{{ reason.attributes.name}} - {{ reason.message }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Auto-Attach</span>
+      <span class="info-value"
+            alch-edit-checkbox="contentHost.autoheal"
+            on-save="save(contentHost)">
+      </span>
+      </div>
+      <div class="detail">
+        <span class="info-label" translate>Service Level</span>
+          <span class="info-value"
+                alch-edit-select="contentHost.serviceLevel"
+                readonly="contentHost.readonly"
+                selector="contentHost.serviceLevel"
+                options="serviceLevels()"
+                options-format="option for option in options"
+                on-save="save(contentHost)">
+          </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label"
+              translate
+              translate-n="contentHost.activation_keys.length"
+              translate-plural="Activation Keys">
+          Activation Key
+        </span>
+        <span class="info-value">
+          <span translate ng-show="contentHost.activation_keys.length == 0">
+            None
+          </span>
+          <ul ng-show="contentHost.activation_keys.length > 0">
+            <li ng-repeat="activation_key in contentHost.activation_keys">
+              <span>
+                <a ui-sref="activation-keys.details.info({activationKeyId: activation_key.id})">
+                  {{ activation_key.name }}
+                </a>
+              </span>
+              <span ng-show="activation_key.description"> - {{ activation_key.description }}</span>
+            </li>
+          </ul>
+        </span>
+      </div>
+
+      <div class="divider"></div>
+    </section>
+
+    <section>
+      <h4 translate>Content Host Properties</h4>
+
+      <div class="detail">
+        <span class="info-label" translate>OS</span>
+        <span class="info-value">{{ contentHostFacts.distribution["name"] }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Release</span>
+        <span class="info-value">{{ contentHostFacts.uname["release"] }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Arch</span>
+        <span class="info-value">{{ contentHostFacts.uname["machine"] }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Number of CPUs</span>
+        <span class="info-value">{{ contentHostFacts.cpu["cpu(s)"] }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Sockets</span>
+        <span class="info-value">{{ contentHostFacts.cpu["cpu_socket(s)"] }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Cores per Socket</span>
+        <span class="info-value">{{ contentHostFacts.cpu["core(s)_per_socket"] }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>RAM (GB)</span>
+        <span class="info-value">{{ memory(contentHostFacts) }}</span>
+      </div>
+
+      <div class="divider"></div>
+    </section>
+
+    <section>
+      <h4 translate>Installed Products</h4>
+
+      <p translate ng-show="!contentHost.installedProducts || contentHost.installedProducts.length == 0">
+        You do not have any Installed Products
+      </p>
+
+      <div ng-show="contentHost.installedProducts.length > 0">
+        <div ng-repeat="product in contentHost.installedProducts" class="detail">
+          <span class="info-label" translate>Product</span>
+          <span class="info-value">{{ product.productName }}</span>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+
+
+  <div class="fr details">
+    <section>
+      <h4 translate>Content Host Content</h4>
+
+      <div class="detail">
+        <span class="info-label" translate>Release Version</span>
+        <span class="info-value"
+              alch-edit-select="contentHost.release_ver"
+              readonly="contentHost.readonly"
+              selector="contentHost.release_ver"
+              options="releaseVersions()"
+              options-format="option for option in options"
+              on-save="save(contentHost)">
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Content View</span>
+        <span class="info-value"
+              alch-edit-select="contentHost.content_view.name"
+              readonly="contentHost.readonly"
+              selector="contentHost.content_view.id"
+              options="contentViews()"
+              on-cancel="cancelContentViewUpdate()"
+              on-save="saveContentView(contentHost)"
+              edit-trigger="editContentView">
+        </span>
+      </div>
+
+      <div class="detail">
+        <div alert type="'info'" ng-show="editContentView">
+          <p translate ng-show="contentViews.length === 0">
+            The host requires being attached to a content view and the environment you have chosen has no content views promoted to it.
+            See the <a href="{{ RootURL }}/content_views/all">content views page</a> to manage and promote a content view.
+          </p>
+          <p translate ng-show="contentViews.length !== 0">
+            You must select a new content view before your change of environment can be saved.
+          </p>
+          <p translate>
+            Use the cancel button on content view selection to revert your environment selection.
+          </p>
+        </div>
+        <span class="info-label" translate>Environment</span>
+        <span path-selector="environments"
+              ng-model="contentHost.environment"
+              mode="singleSelect"
+              disable-trigger="disableEnvironmentSelection">
+        </span>
+      </div>
+
+      <div class="divider"></div>
+    </section>
+
+    <section>
+      <h4 translate>Content Host Status</h4>
+
+      <div class="detail">
+        <span class="info-label" translate>Registered</span>
+        <span class="info-value">{{ contentHost.created | date:'short' }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Checkin</span>
+        <span class="info-value">{{ (contentHost.checkin_time | date:'short') || ("Never checked in" | translate) }}</span>
+      </div>
+
+      <div class="divider"></div>
+    </section>
+
+    <section>
+      <h4 translate>Networking</h4>
+
+      <div class="detail">
+        <span class="info-label" translate>Hostname</span>
+        <span class="info-value">{{ contentHostFacts.network.hostname }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>IPv4 Address</span>
+        <span class="info-value">{{ contentHostFacts.network.ipv4_address }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>IPv6 Address</span>
+        <span class="info-value">{{ contentHostFacts.network.ipv6_address }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Interfaces</span>
+        <div class="info-value">
+          <div ng-repeat="(interfaceName, interface) in contentHostFacts.net.interface" >
+            <i ng-class="{'icon-plus': !expanded, 'icon-minus': expanded}" class="expand-icon"
+               ng-hide="editMode" ng-click="expanded = !expanded"></i>
+            {{ interfaceName }}
+            <div class="sub-detail" ng-show="expanded">
+              <div ng-repeat="(key, value) in interface">
+                <span class="info-sub-label">{{ key.replace("_", " ") }}:</span>
+                <span class="info-sub-value">{{ value }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+    </section>
+
+    <section class="custom-information">
+      <h4 translate>Custom Information</h4>
+
+      <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+      <span alch-edit-add-item="contentHost.customInfo"
+            on-add="addCustomInfo(value)">
+      </span>
+      <p translate ng-show="contentHost.customInfo.length == 0">
+        You don't have any custom information, add some above
+      </p>
+      <div class="existing-items" ng-show="contentHost.customInfo.length > 0">
+        <h5 translate>Exsting Items</h5>
+        <input type="text" ng-model="searchTerm" placeholder="{{ 'Filter' | translate }}"/>
+        <div class="details-container">
+          <div class="detail" ng-repeat="customInfo in contentHost.customInfo | filter:searchTerm">
+            <span class="info-label">{{ customInfo.keyname }}</span>
+          <span class="info-value"
+                alch-edit-text="customInfo.value"
+                on-save="saveCustomInfo(customInfo)"
+                deletable="true"
+                on-delete="deleteCustomInfo(customInfo)">
+          </span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="advanced-info" ng-show="hasAdvancedInfo">
+    <header class="details-sub-header">
+       <h3>
+        <i class="expand-icon" ng-class="{'icon-plus': !showAdvanced, 'icon-minus': showAdvanced}"
+           ng-click="showAdvanced = !showAdvanced"></i>
+         <span translate>Advanced Information</span>
+       </h3>
+    </header>
+    <div ng-show="showAdvanced" class="details fl">
+      <section ng-show="showAdvanced" ng-repeat="(sectionName, subSection) in advancedInfoLeft">
+        <h4>{{ sectionName }}</h4>
+        <div ng-repeat="(key, value) in subSection" >
+          <div ng-include="getTemplateForType(value)"></div>
+        </div>
+        <div class="divider" ng-show="!$last"></div>
+      </section>
+    </div>
+    <div ng-show="showAdvanced" class="details fr">
+      <section ng-show="showAdvanced" ng-repeat="(sectionName, subSection) in advancedInfoRight">
+        <h4>{{ sectionName }}</h4>
+        <div ng-repeat="(key, value) in subSection" >
+          <div ng-include="getTemplateForType(value)"></div>
+        </div>
+        <div class="divider" ng-show="!$last"></div>
+      </section>
+    </div>
+  </div>
+</section>

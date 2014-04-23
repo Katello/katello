@@ -23,8 +23,6 @@ class ContentView < Katello::Model
 
   CONTENT_DIR = "content_views"
 
-  before_destroy :confirm_not_promoted # RAILS3458: this needs to come before associations
-
   belongs_to :organization, :inverse_of => :content_views, :class_name => "::Organization"
 
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment", :dependent => :destroy
@@ -75,21 +73,6 @@ class ContentView < Katello::Model
   def self.in_environment(env)
     joins(:content_view_environments).
       where("#{Katello::ContentViewEnvironment.table_name}.environment_id = ?", env.id)
-  end
-
-  def self.promoted(safe = false)
-    # retrieve the view, if it has been promoted (i.e. exists in more than 1 environment)
-    relation = select("distinct #{Katello::ContentView.table_name}.*").
-               joins(:content_view_versions => :environments).
-               where("#{Katello::KTEnvironment.table_name}.library" => false).
-               where("#{Katello::ContentView.table_name}.default" => false)
-
-    if safe
-      # do not include group and having in returned relation
-      self.where :id => relation.all.map(&:id)
-    else
-      relation
-    end
   end
 
   def to_s
@@ -461,7 +444,7 @@ class ContentView < Katello::Model
   end
 
   def content_view_environment(environment)
-    self.content_view_environments.where(:environment_id => environment.id).first
+    self.content_view_environments.where(:environment_id => environment.try(:id)).first
   end
 
   def update_cp_content(env)
@@ -506,13 +489,11 @@ class ContentView < Katello::Model
   end
 
   def create_new_version
-    next_version_id = (self.versions.maximum(:version) || 0) + 1
-    ContentViewVersion.create!(:version => next_version_id,
-                               :content_view => self)
-  end
+    version = ContentViewVersion.create!(:version => next_version,
+                                         :content_view => self)
+    increment!(:next_version)
 
-  def next_version
-    (self.versions.maximum(:version) || 0) + 1
+    version
   end
 
   def build_puppet_env(options)
@@ -575,19 +556,36 @@ class ContentView < Katello::Model
   def check_remove_from_environment!(env)
     errors = []
 
-    if (env_systems = systems.by_env(env)).any?
-      errors << _("Cannot remove '%{view}' from environment '%{env}' due to dependent systems: %{list}.") %
-        {view: self.name, env: env.name, list: env_systems.map(&:name).join(", ")}
+    dependencies = {systems:                _("systems"),
+                    distributors:           _("distributors"),
+                    activation_keys:        _("activation keys")
+    }
+
+    dependencies.each do |key, name|
+      if (models = self.association(key).scoped.in_environment(env)).any?
+        errors << _("Cannot delete '%{view}' from environment '%{env}' due to associated %{dependent}: %{names}.") %
+          {view: self.name, env: env.name, names: models.map(&:name).join(", ")}
+      end
     end
 
-    if (env_distrs = distributors.by_env(env)).any?
-      errors << _("Cannot remove '%{view}' from environment '%{env}' due to dependent distributors: %{list}.") %
-        {view: self.name, env: env.name, list: env_distrs.map(&:name).join(", ")}
-    end
+    fail errors.join(" ") if errors.any?
+    return true
+  end
 
-    if (keys = activation_keys.in_environment(env)).any?
-      errors << _("Cannot remove '%{view}' from environment '%{env}' due to dependent activation keys: %{list}.") %
-        {env: env.name, list: keys.map(&:name).join(", ")}
+  def check_ready_to_destroy!
+    errors = []
+
+    dependencies = {environments:           _("environments"),
+                    systems:                _("systems"),
+                    distributors:           _("distributors"),
+                    activation_keys:        _("activation keys")
+    }
+
+    dependencies.each do |key, name|
+      if (models = self.association(key).scoped).any?
+        errors << _("Cannot delete '%{view}' due to associated %{dependent}: %{names}.") %
+          {view: self.name, dependent: name, names: models.map(&:name).join(", ")}
+      end
     end
 
     fail errors.join(" ") if errors.any?

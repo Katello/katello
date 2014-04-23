@@ -118,7 +118,7 @@ describe Api::V1::ContentUploadsController do
       puppet_module = Rack::Test::UploadedFile.new(test_document, '')
       Repository.any_instance.stubs(:upload_content)
 
-      post action, :id => "1", :repository_id => @repo.id, :content => puppet_module
+      post action, :id => "1", :repository_id => @repo.id, :content => [puppet_module]
 
       assert_response :success
     end

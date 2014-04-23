@@ -13,12 +13,11 @@
 
 /**
  * @ngdoc object
- * @name  Bastion.products.controller:ProducFormController
+ * @name  Bastion.products.controller:ProductFormController
  *
  * @requires $scope
  * @requires $q
  * @requires Product
- * @requires Provider
  * @requires GPGKey
  * @requires SyncPlan
  * @requires FormUtils
@@ -29,23 +28,17 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductFormController',
-    ['$scope', '$q', 'Product', 'Provider', 'GPGKey', 'SyncPlan', 'FormUtils',
-    function ($scope, $q, Product, Provider, GPGKey, SyncPlan, FormUtils) {
-
-        function fetchProviders() {
-            Provider.query(function (providers) {
-                $scope.providers = providers.results;
-            });
-        }
+    ['$scope', '$q', 'Product', 'GPGKey', 'SyncPlan', 'FormUtils',
+    function ($scope, $q, Product, GPGKey, SyncPlan, FormUtils) {
 
         function fetchGpgKeys() {
-            GPGKey.query(function (gpgKeys) {
+            GPGKey.queryUnpaged(function (gpgKeys) {
                 $scope.gpgKeys = gpgKeys.results;
             });
         }
 
         function fetchSyncPlans() {
-            SyncPlan.query(function (syncPlans) {
+            SyncPlan.queryUnpaged(function (syncPlans) {
                 $scope.syncPlans = syncPlans.results;
             });
         }
@@ -53,13 +46,12 @@ angular.module('Bastion.products').controller('ProductFormController',
         function populateSelects() {
             var deferred = $q.defer();
 
-            $scope.$watch("providers && gpgKeys && syncPlans", function (value) {
+            $scope.$watch("gpgKeys && syncPlans", function (value) {
                 if (value !== undefined) {
                     deferred.resolve(true);
                 }
             });
 
-            fetchProviders();
             fetchGpgKeys();
             fetchSyncPlans();
 

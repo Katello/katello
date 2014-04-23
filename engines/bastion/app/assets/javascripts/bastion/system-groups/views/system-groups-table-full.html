@@ -2,7 +2,7 @@
   <thead>
     <tr alch-table-head row-select>
       <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
-      <th alch-table-column="systems" sortable>{{ "Systems" | translate }}</th>
+      <th alch-table-column="content-hosts" sortable>{{ "Content Hosts" | translate }}</th>
       <th alch-table-column="limit" sortable>{{ "Limit" | translate }}</th>
     </tr>
   </thead>
@@ -16,7 +16,7 @@
         <i class="icon-chevron-right selected-icon" ng-show="group.selected"></i>
       </td>
       <td alch-table-cell>
-        <a ui-sref="system-groups.details.systems({systemGroupId: group.id})">
+        <a ui-sref="system-groups.details.content-hosts.list({systemGroupId: group.id})">
           {{ group.total_systems }}
         </a>
       </td>

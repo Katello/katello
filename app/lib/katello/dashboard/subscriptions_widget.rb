@@ -18,7 +18,7 @@ class Dashboard::SubscriptionsWidget < Dashboard::Widget
   end
 
   def title
-    _("System Subscription Status")
+    _("Content Host Subscription Status")
   end
 
 end

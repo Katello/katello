@@ -15,7 +15,7 @@ module Katello
 
     before_filter :verify_presence_of_organization_or_environment, :only => [:index]
     before_filter :find_environment, :only => [:index, :create, :update]
-    before_filter :find_optional_organization, :only => [:index]
+    before_filter :find_optional_organization, :only => [:index, :create]
     before_filter :find_activation_key, :only => [:show, :update, :destroy,
                                                   :available_system_groups, :add_system_groups, :remove_system_groups]
     before_filter :authorize
@@ -73,13 +73,13 @@ module Katello
     param :label, String, :desc => "unique label"
     param :description, String, :desc => "description"
     param :environment, Hash, :desc => "environment"
-    param :environment_id, :identifier, :desc => "environment id", :required => true
-    param :content_view_id, :identifier, :desc => "content view id", :required => true
-    param :usage_limit, :number, :desc => "maximum number of uses"
+    param :environment_id, :identifier, :desc => "environment id"
+    param :content_view_id, :identifier, :desc => "content view id"
+    param :usage_limit, :number, :desc => "maximum number of registered content hosts, or 'unlimited'"
     def create
       @activation_key = ActivationKey.create!(activation_key_params) do |activation_key|
-        activation_key.environment = @environment
-        activation_key.organization = @environment.organization
+        activation_key.environment = @environment if @environment
+        activation_key.organization = @organization
         activation_key.user = current_user
       end
       respond
@@ -92,7 +92,7 @@ module Katello
     param :description, String, :desc => "description"
     param :environment_id, :identifier, :desc => "environment id", :required => true
     param :content_view_id, :identifier, :desc => "content view id", :required => true
-    param :usage_limit, :number, :desc => "maximum number of uses"
+    param :usage_limit, :number, :desc => "maximum number of registered content hosts, or 'unlimited'"
     def update
       @activation_key.update_attributes(activation_key_params)
       respond
@@ -148,7 +148,7 @@ module Katello
 
     def find_environment
       environment_id = params[:environment_id]
-      environment_id = params[:environment][:id] if !environment_id && params.key?(:environment)
+      environment_id = params[:environment][:id] if !environment_id && params[:environment]
       return if !environment_id
 
       @environment = KTEnvironment.find(environment_id)
@@ -185,17 +185,32 @@ module Katello
     end
 
     def activation_key_params
-      if params[:environment] && params[:environment][:id]
-        params[:environment_id] = params[:environment][:id]
-        params.delete(:environment)
+      key_params = params.require(:activation_key).permit(:name,
+                                                          :description,
+                                                          :environment_id,
+                                                          :organization_id,
+                                                          :content_view_id,
+                                                          :system_group_ids => [])
+
+      key_params[:environment_id] = params[:environment][:id] if params[:environment].try(:[], :id)
+      key_params[:content_view_id] = params[:content_view][:id] if params[:content_view].try(:[], :id)
+      key_params[:usage_limit] = int_limit(params)
+
+      key_params
+    end
+
+    def int_limit(key_params)
+      limit = key_params[:activation_key].try(:[], :usage_limit)
+      if limit.nil?
+        limit = -1
+      elsif limit == 'unlimited' #_('Unlimited') || limit == 'Unlimited' || limit == _('unlimited') || limit == 'unlimited'
+        limit = -1
+      else
+        limit = Integer(limit) rescue nil
+        fail(HttpErrors::BadRequest, _("Invalid usage limit value of '%{value}'") %
+            {:value => key_params[:activation_key][:usage_limit]}) if limit.nil?
       end
-      if params[:content_view] && params[:content_view][:id]
-        params[:content_view_id] = params[:content_view][:id]
-        params.delete(:content_view)
-      end
-      attrs = [:name, :description, :environment_id, :usage_limit, :organization_id, :content_view_id,
-               :system_group_ids => []]
-      params.require(:activation_key).permit(*attrs)
+      limit
     end
   end
 end

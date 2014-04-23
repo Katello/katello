@@ -24,10 +24,13 @@ describe('Controller: ContentViewVersionsController', function() {
             };
 
         $scope = $injector.get('$rootScope').$new();
-
         $scope.contentView = ContentView.get({id: 1});
-
         $scope.reloadVersions = function () {};
+        $scope.taskTypes = {
+            promotion: "promotion",
+            publish: "publish"
+        };
+
 
         spyOn($scope, 'reloadVersions');
 
@@ -56,11 +59,13 @@ describe('Controller: ContentViewVersionsController', function() {
     });
 
     it("determines what history text to display", function() {
-        var history = ['something'];
+        var version = {active_history: [],
+            last_event: {environment: {name: 'test'},
+                         task: {label: $scope.taskTypes.promotion}
+        }};
+        expect($scope.historyText(version)).toBe("Promoted to test");
 
-        expect($scope.historyText(history)).toBe("Published.");
-
-        history.unshift({environment: {name: 'test'}});
-        expect($scope.historyText(history)).toBe("Promoted to test");
+        version.last_event.task.label = $scope.taskTypes.publish;
+        expect($scope.historyText(version)).toBe("Published");
     });
 });

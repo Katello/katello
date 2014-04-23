@@ -7,6 +7,7 @@ attributes :composite
 attributes :repository_ids
 attributes :component_ids
 attributes :default
+attributes :next_version
 
 node :last_published do |content_view|
   if !content_view.versions.empty?

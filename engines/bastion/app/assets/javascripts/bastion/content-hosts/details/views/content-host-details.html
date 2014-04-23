@@ -1,0 +1,82 @@
+<span page-title ng-model="contentHost">{{ 'Content Host:' | translate }} {{ contentHost.name }}</span>
+
+<div class="loading-mask loading-mask-panel" ng-show="panel.loading">
+  <i class="icon-spinner icon-spin"></i>
+  {{ "Loading..." | translate }}
+</div>
+
+<section class="nutupane-details" ng-cloak alch-container-scroll>
+
+  <header class="details-header">
+    <h2 class="fl" translate>Content Host {{ contentHost.name }}</h2>
+
+    <div class="fr">
+
+      <div alch-modal="removeContentHost(contentHost)" model="contentHost"
+           modal-header='Remove Content Host "{{contentHost.name}}"?'
+           modal-body='Are you sure you want to remove content host "{{ contentHost.name }}"?'></div>
+
+      <button class="btn btn-default" ng-disabled="contentHost.readonly" ng-click="openModal()" translate>Remove Content Host</button>
+      <button class="btn btn-default" ui-sref="content-hosts.index">
+        <i class="icon-remove"></i>
+        {{ "Close" | translate }}
+      </button>
+    </div>
+  </header>
+
+  <nav>
+    <ul class="nav nav-tabs">
+      <li ng-class="{active: isState('content-hosts.details.info')}">
+        <a translate
+           ui-sref="content-hosts.details.info">
+          Details
+        </a>
+      </li>
+      <li ng-class="{active: isState('content-hosts.details.subscriptions.list')}">
+        <a translate
+           ui-sref="content-hosts.details.subscriptions.list">
+          Subscriptions
+        </a>
+      </li>
+      <li ng-class="{active: $state.includes('content-hosts.details.system-groups')}">
+        <a translate
+           ui-sref="content-hosts.details.system-groups.list">
+          System Groups
+        </a>
+      </li>
+      <li ng-class="{active: stateIncludes('content-hosts.details.tasks')}">
+        <a translate
+           ui-sref="content-hosts.details.tasks.index">
+          Tasks
+        </a>
+      </li>
+      <li ng-class="{active: stateIncludes('content-hosts.details.events')}">
+        <a translate
+           ui-sref="content-hosts.details.events.index">
+          Events
+        </a>
+      </li>
+      <li ng-class="{active: isState('content-hosts.details.packages')}">
+        <a translate
+           ui-sref="content-hosts.details.packages">
+          Packages
+        </a>
+      </li>
+      <li ng-class="{active: isState('content-hosts.details.errata.index')}">
+        <a translate
+           ui-sref="content-hosts.details.errata.index">
+          Errata
+        </a>
+      </li>
+      <li ng-repeat="menuItem in menuExpander.getMenu('contentHost')">
+        <a href="{{ menuItem.url }}">
+          {{ menuItem.label }}
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+  <section class="nutupane-sub-section" ui-view></section>
+</section>

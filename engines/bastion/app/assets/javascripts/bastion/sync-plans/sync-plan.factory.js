@@ -15,20 +15,19 @@
  * @ngdoc factory
  * @name  Bastion.sync-plans.factory:SyncPlan
  *
- * @requires $resource
+ * @requires BastionResource
  * @requires CurrentOrganization
  *
  * @description
- *   Provides a $resource for product or list of repositories.
+ *   Provides a BastionResource for product or list of repositories.
  */
 angular.module('Bastion.sync-plans').factory('SyncPlan',
-    ['$resource', 'CurrentOrganization',
-    function ($resource, CurrentOrganization) {
+    ['BastionResource', 'CurrentOrganization',
+    function (BastionResource, CurrentOrganization) {
 
-        return $resource('/api/v2/organizations/:organizationId/sync_plans/:id/:action',
+        return BastionResource('/api/v2/organizations/:organizationId/sync_plans/:id/:action',
             {id: '@id', organizationId: CurrentOrganization}, {
                 update: { method: 'PUT' },
-                query: { method: 'GET', params: {'full_result': true}},
                 availableProducts: {method: 'GET', params: {action: 'available_products'}},
                 addProducts: {method: 'PUT', params: {action: 'add_products'}},
                 removeProducts: {method: 'PUT', params: {action: 'remove_products'}},

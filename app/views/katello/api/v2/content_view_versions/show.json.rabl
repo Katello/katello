@@ -11,7 +11,7 @@ attributes :package_count, :errata_count
 attributes :errata_type_counts => :errata_counts
 
 child :content_view => :content_view do
-  extends 'katello/api/v2/content_views/show'
+  attributes :id, :name, :label
 end
 
 child :composite_content_views do
@@ -20,15 +20,24 @@ end
 
 extends 'katello/api/v2/common/timestamps'
 
+version = @object || @resource
 child :environments => :environments do
   attributes :id, :name, :label
+
+  node :system_count do |env|
+    Katello::System.in_environment(env).where(:content_view_id => version.content_view_id).count
+  end
+
+  node :activation_key_count do |env|
+    Katello::ActivationKey.where(:environment_id => env.id).where(:content_view_id => version.content_view_id).count
+  end
 end
 
 child :archived_repos => :repositories do
   attributes :id, :name, :label
 end
 
-child :history => :history do
+child :last_event => :last_event do
   extends 'katello/api/v2/content_view_histories/show'
 end
 

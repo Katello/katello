@@ -15,13 +15,13 @@
  * @ngdoc service
  * @name  Bastion.tasks.factory:Task
  *
- * @requires $resource
+ * @requires BastionResource
  * @requires $timeout
  * @requires $log
  * @requires CurrentOrganization
  *
  * @description
- *   Provides a $resource for task(s).
+ *   Provides a BastionResource for task(s).
  *
  *   Also provides a polling bulk search for tasks, define in
  *   foreman-tasks engine API. This allows polling for multiple task
@@ -32,19 +32,15 @@
  */
 
 angular.module('Bastion.tasks').factory('Task',
-    ['$resource', '$timeout', '$log', 'CurrentOrganization',
-    function ($resource, $timeout, $log, CurrentOrganization) {
+    ['BastionResource', '$timeout', '$log', 'CurrentOrganization',
+    function (BastionResource, $timeout, $log, CurrentOrganization) {
         var bulkSearchRunning = false, searchIdGenerator = 0,
             searchParamsById = {},  callbackById = {};
 
-        var resource = $resource('/api/v2/tasks/:id/:action',
-            {id: '@id', 'organization_id': CurrentOrganization},
-            {
-                query: {method: 'GET', isArray: false}
-            }
-        );
+        var resource = BastionResource('/api/v2/tasks/:id/:action',
+            {id: '@id', 'organization_id': CurrentOrganization}, {});
 
-        var foremanTasksResource = $resource('/foreman_tasks/api/tasks/:id/:action',
+        var foremanTasksResource = BastionResource('/foreman_tasks/api/tasks/:id/:action',
             {},
             {
                 bulkSearch: {method: 'POST', isArray: true, params: { action: 'bulk_search'}}

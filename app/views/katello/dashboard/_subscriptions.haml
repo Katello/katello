@@ -20,28 +20,28 @@
           %span
             .icon.red_icon.fl
             %h5
-              #{systems_search_status_link(_("Invalid Subscriptions"), "red")}
+              #{content_hosts_search_status_link(_("Invalid Subscriptions"), "red")}
           .sub_count.fr
             #{owner_info.total_invalid_compliance_consumers}
         %li
           %span
             .icon.yellow_icon.fl
             %h5
-              #{systems_search_status_link(_("Insufficient Subscriptions"), "yellow")}
+              #{content_hosts_search_status_link(_("Insufficient Subscriptions"), "yellow")}
           .sub_count.fr
             #{owner_info.total_partial_compliance_consumers}
         %li
           %span
             .icon.green_icon.fl
             %h5
-              #{systems_search_status_link(_("Current Subscriptions"), "green")}
+              #{content_hosts_search_status_link(_("Current Subscriptions"), "green")}
           .sub_count.fr
             #{owner_info.total_valid_compliance_consumers}
       %hr
       %ul
         %li
           %span.h4
-            #{link_to(_("Total Systems"), "#{systems_path}#/systems")}
+            #{link_to(_("Total Content Hosts"), "#{systems_path}#/content-hosts")}
           .sys_count.fr
             #{owner_info.total_consumers}
 

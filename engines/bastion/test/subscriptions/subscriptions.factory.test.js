@@ -47,7 +47,7 @@ describe('Factory: Subscription', function() {
     it('provides a way to get a list of subscriptions', function() {
         $httpBackend.expectGET('/api/v2/organizations/ACME/subscriptions').respond(subscriptions);
 
-        Subscription.query(function(subscriptions) {
+        Subscription.queryPaged(function(subscriptions) {
             expect(subscriptions.results.length).toBe(2);
         });
     });

@@ -218,7 +218,7 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
     end
 
     @filepath = File.join(Katello::Engine.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
-    @p_forge.upload_content(@filepath)
+    @p_forge.upload_content([@filepath])
     assert_includes @p_forge.puppet_modules.map(&:name), "ntp"
   end
 end

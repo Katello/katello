@@ -15,19 +15,18 @@
  * @ngdoc service
  * @name  Bastion.content-views.factory:ContentViewPuppetModule
  *
- * @requires $resource
+ * @requires BastionResource
  * @requires CurrentOrganization
  *
  * @description
- *   Provides a $resource for interacting with content view puppet modules.
+ *   Provides a BastionResource for interacting with content view puppet modules.
  */
 angular.module('Bastion.content-views').factory('ContentViewPuppetModule',
-    ['$resource', 'CurrentOrganization',
-    function ($resource, CurrentOrganization) {
-        return $resource('/api/v2/content_views/:contentViewId/content_view_puppet_modules/:id/:action',
+    ['BastionResource', 'CurrentOrganization',
+    function (BastionResource, CurrentOrganization) {
+        return BastionResource('/api/v2/content_views/:contentViewId/content_view_puppet_modules/:id/:action',
             {id: '@id', contentViewId: '@contentViewId', 'organization_id': CurrentOrganization},
             {
-                query:  {method: 'GET', isArray: false},
                 update: {method: 'PUT'}
             }
         );

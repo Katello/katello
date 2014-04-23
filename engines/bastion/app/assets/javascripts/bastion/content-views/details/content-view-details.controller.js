@@ -33,6 +33,12 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
 
         $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId});
 
+        $scope.taskTypes = {
+            publish: "Actions::Katello::ContentView::Publish",
+            promotion: "Actions::Katello::ContentView::Promote",
+            deletion:  "Actions::Katello::ContentView::Remove"
+        };
+
         function processTasks(versions) {
             _.each(versions, function (version) {
                 var taskIds = _.map(version['active_history'], function (history) {
@@ -41,19 +47,22 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
 
                 if (taskIds.length > 0) {
                     version.task = AggregateTask.new(taskIds, function (task) {
-                        taskUpdated(version, task);
+                        taskUpdated(version,  task);
                     });
                 }
             });
         }
 
         function taskUpdated(version, task) {
-            version.task = task;
+            var taskTypes = $scope.taskTypes;
+
             if (!task.pending && task.result === 'success') {
-                if (task.label === 'Actions::Katello::ContentView::Promote') {
+                if (task.label === taskTypes.promotion) {
                     $scope.successMessages.push(promotionMessage(version, task));
-                } else if (task.label === 'Actions::Katello::ContentView::Publish') {
+                } else if (task.label === taskTypes.publish) {
                     $scope.successMessages.push(publishMessage(version));
+                } else if (task.label === taskTypes.deletion) {
+                    $scope.successMessages.push(deletionMessage(version, task));
                 }
             }
         }
@@ -65,6 +74,22 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
                 .replace('%env', task.input['environment_name']);
         }
 
+        function deletionMessage(version, task) {
+            var message;
+
+            if (task.input['content_view_ids'] && task.input['content_view_ids'].length > 0) {
+                message = translate("Successfully deleted %cv version %ver.")
+                                .replace('%cv', version['content_view'].name)
+                                .replace('%ver', version.version);
+            } else {
+                message = translate("Successfully removed %cv version %ver from environments: %env")
+                                .replace('%cv', version['content_view'].name)
+                                .replace('%ver', version.version)
+                                .replace('%env', task.input['environment_names'].join(', '));
+            }
+            return message;
+        }
+
         function publishMessage(version) {
             return translate("Successfully published %cv version %ver and promoted to Library")
                 .replace('%cv', version['content_view'].name)
@@ -74,12 +99,14 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         $scope.reloadVersions = function () {
             var contentViewId = $scope.contentView.id || $scope.$stateParams.contentViewId;
             $scope.contentView.versions = [];
+            $scope.loadingVersions = true;
 
-            ContentViewVersion.query({'content_view_id': contentViewId}, function (data) {
+            ContentViewVersion.queryUnpaged({'content_view_id': contentViewId}, function (data) {
                 $scope.versions = data.results;
                 if ($scope.contentView) {
                     $scope.contentView.versions = data.results;
                 }
+                $scope.loadingVersions = false;
                 processTasks($scope.versions);
             });
         };
