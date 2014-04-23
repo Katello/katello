@@ -19,16 +19,16 @@
  * @requires $q
  * @requires translate
  * @requires CurrentOrganization
- * @requires Provider
  * @requires Organization
+ * @requires Subscription
  * @requires Task
  *
  * @description
  *   Controls the import of a manifest.
  */
 angular.module('Bastion.subscriptions').controller('ManifestImportController',
-    ['$scope', '$q', 'translate', 'CurrentOrganization', 'Provider', 'Organization', 'Task',
-    function ($scope, $q, translate, CurrentOrganization, Provider, Organization, Task) {
+    ['$scope', '$q', 'translate', 'CurrentOrganization', 'Organization', 'Subscription', 'Task',
+    function ($scope, $q, translate, CurrentOrganization, Organization, Subscription, Task) {
 
         $scope.uploadErrorMessages = [];
         $scope.progress = {uploading: false};
@@ -37,9 +37,9 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
 
         $scope.organization = Organization.get({id: CurrentOrganization});
 
-        $q.all([$scope.provider.$promise, $scope.organization.$promise]).then(function () {
+        $q.all([$scope.organization.$promise]).then(function () {
             $scope.panel.loading = false;
-            initializeManifestDetails($scope.organization, $scope.provider);
+            initializeManifestDetails($scope.organization);
         });
 
         $scope.$on('$destroy', function () {
@@ -56,7 +56,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
             if (!$scope.task.pending) {
                 $scope.unregisterSearch();
                 if ($scope.task.result === 'success') {
-                    $scope.refreshProviderInfo();
+                    $scope.refreshOrganizationInfo();
                     $scope.successMessages.push(translate("Manifest successfully imported."));
                     $scope.refreshTable();
                 }
@@ -65,52 +65,79 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
             }
         };
 
-        $scope.save = function (provider) {
-            var deferred = $q.defer();
-
-            provider.$update(function (response) {
-                deferred.resolve(response);
-                $scope.saveSuccess = true;
-                $scope.successMessages.push(translate("Red Hat provider successfully updated."));
+        $scope.deleteManifest = function () {
+            Subscription.deleteManifest(function (returnData) {
+                $scope.deleteTask =  returnData;
+                $scope.searchId = Task.registerSearch({ 'type': 'task', 'task_id':  $scope.deleteTask.id }, $scope.deleteManifestTask);
             }, function (response) {
-                deferred.reject(response);
                 $scope.saveError = true;
                 $scope.errors = response.data.errors;
+            });
+        };
+
+        $scope.deleteManifestTask = function (task) {
+            $scope.deleteTask = task;
+            if (!$scope.deleteTask.pending) {
+                $scope.unregisterSearch();
+                if ($scope.deleteTask.result === 'success') {
+                    $scope.saveSuccess = true;
+                    $scope.successMessages.push(translate("Manifest successfully deleted."));
+                    $scope.refreshTable();
+                    $scope.refreshOrganizationInfo();
+                }
+            } else if ($scope.deleteTask.result === 'error') {
+                $scope.errorMessages.push(translate("Error deleting manifest."));
+            }
+        };
+
+        $scope.refreshOrganizationInfo = function () {
+            $scope.organization = Organization.get({id: CurrentOrganization});
+            $q.all([$scope.organization.$promise]).then(function () {
+                initializeManifestDetails($scope.organization);
+            });
+        };
+
+        $scope.refreshManifest = function () {
+            Subscription.refreshManifest(function (returnData) {
+                $scope.refreshTask =  returnData;
+                $scope.searchId = Task.registerSearch({ 'type': 'task', 'task_id':  $scope.refreshTask.id }, $scope.refreshManifestTask);
+            }, function (response) {
+                $scope.saveError = true;
+                $scope.errors = response.data.errors;
+            });
+        };
+
+        $scope.refreshManifestTask = function (task) {
+            $scope.refreshTask = task;
+            if (!$scope.refreshTask.pending) {
+                $scope.unregisterSearch();
+                if ($scope.refreshTask.result === 'success') {
+                    $scope.saveSuccess = true;
+                    $scope.successMessages.push(translate("Manifest successfully refreshed."));
+                    $scope.refreshTable();
+                    $scope.refreshOrganizationInfo();
+                }
+            } else if ($scope.refreshTask.result === 'error') {
+                $scope.errorMessages.push(translate("Error refreshing manifest."));
+            }
+        };
+
+        $scope.saveCdnUrl = function (organization) {
+            var deferred = $q.defer();
+
+            organization.$update(function (response) {
+                deferred.resolve(response);
+                $scope.successMessages.push(translate('Repository URL updated'));
+                $scope.refreshTable();
+                $scope.refreshOrganizationInfo();
+            }, function (response) {
+                deferred.reject(response);
+                angular.forEach(response.data.errors, function (errorMessage) {
+                    $scope.errorMessages.push(translate("An error occurred saving the URL: ") + errorMessage);
+                });
             });
 
             return deferred.promise;
-        };
-
-        $scope.deleteManifest = function (provider) {
-            provider.$deleteManifest(function () {
-                $scope.saveSuccess = true;
-                $scope.successMessages.push(translate("Manifest successfully deleted."));
-                $scope.refreshTable();
-                $scope.refreshProviderInfo();
-            }, function (response) {
-                $scope.saveError = true;
-                $scope.errors = response.data.errors;
-            });
-        };
-
-        $scope.refreshProviderInfo = function () {
-            $scope.provider = Provider.get({id: $scope.$stateParams.providerId});
-            $scope.organization = Organization.get({id: CurrentOrganization});
-            $q.all([$scope.provider.$promise, $scope.organization.$promise]).then(function () {
-                initializeManifestDetails($scope.organization, $scope.provider);
-            });
-        };
-
-        $scope.refreshManifest = function (provider) {
-            provider.$refreshManifest(function () {
-                $scope.saveSuccess = true;
-                $scope.successMessages.push(translate("Manifest successfully refreshed."));
-                $scope.refreshTable();
-                $scope.transitionTo('subscriptions.index');
-            }, function (response) {
-                $scope.saveError = true;
-                $scope.errors = response.data.errors;
-            });
         };
 
         function buildManifestLink(upstream) {
@@ -153,8 +180,8 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
             }
         };
 
-        function initializeManifestDetails(organization, provider) {
-            $scope.manifestStatuses = $scope.manifestHistory(provider);
+        function initializeManifestDetails(organization) {
+            $scope.manifestStatuses = $scope.manifestHistory();
             if ($scope.manifestStatuses.length > 4) {
                 $scope.manifestStatuses = _.first($scope.manifestStatuses, 3);
                 $scope.showHistoryMoreLink = true;
@@ -168,6 +195,5 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 $scope.manifestName = $scope.upstream["name"] || $scope.upstream["uuid"];
             }
         }
-
     }]
 );

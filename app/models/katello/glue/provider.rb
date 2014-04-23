@@ -150,25 +150,6 @@ module Glue::Provider
       end
     end
 
-    def add_custom_product(label, name, description, url, gpg = nil)
-      # URL isn't used yet until we can do custom repo discovery in pulp
-      Rails.logger.debug "Creating custom product #{name} for provider: #{self.name}"
-      product = Product.new(
-          :name => name,
-          :label => label,
-          :description => description,
-          :multiplier => 1
-      )
-      self.products << product
-      product.provider = self
-      product.gpg_key = gpg
-      product.save!
-      product
-    rescue => e
-      Rails.logger.error "Failed to create custom product #{name} for provider #{self.name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
     def url_to_host_and_path(url = "")
       parsed = URI.parse(url)
       ["#{parsed.scheme}://#{parsed.host}#{ parsed.port ? ':' + parsed.port.to_s : '' }", parsed.path]
@@ -465,6 +446,14 @@ module Glue::Provider
       end
     end
 
+    def rules_source
+       redhat_provider? ? candlepin_ping['rulesSource'] : ''
+    end
+
+    def rules_version
+      redhat_provider? ? candlepin_ping['rulesVersion'] : ''
+    end
+
     protected
 
     # Display appropriate messages when manifest import or delete fails
@@ -563,13 +552,6 @@ module Glue::Provider
       @candlepin_ping ||= Resources::Candlepin::CandlepinPing.ping
     end
 
-    def rules_source
-      redhat_provider? ? candlepin_ping['rulesSource'] : ''
-    end
-
-    def rules_version
-      redhat_provider? ? candlepin_ping['rulesVersion'] : ''
-    end
   end
 
 end

@@ -56,7 +56,6 @@ Katello::Engine.routes.draw do
         end
         resources :sync_plans
         resources :tasks, :only => [:index]
-        resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
 
         resources :systems, :only => [:index, :create] do
           get :report, :on => :collection
@@ -121,22 +120,6 @@ Katello::Engine.routes.draw do
         end
       end
       match "/distributor_versions" => "distributors#versions", :via => :get, :as => :distributors_versions
-
-      resources :providers, :except => [:index] do
-        resources :sync, :only => [:index, :create] do
-          delete :index, :on => :collection, :action => :cancel
-        end
-        member do
-          post :import_products
-          post :import_manifest
-          post :delete_manifest
-          post :refresh_manifest
-          post :refresh_products
-          post :product_create
-          get :products
-          post :discovery
-        end
-      end
 
       resources :subscriptions, :only => [] do
         collection do

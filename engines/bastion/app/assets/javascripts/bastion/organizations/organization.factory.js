@@ -16,16 +16,17 @@
  * @name  Bastion.organizations.factory:Organization
  *
  * @requires BastionResource
+ * @requires CurrentOrganization
  *
  * @description
  *   Provides a BastionResource for organization(s).
  */
 angular.module('Bastion.organizations').factory('Organization',
-    ['BastionResource', function (BastionResource) {
-
+    ['BastionResource', 'CurrentOrganization', function (BastionResource, CurrentOrganization) {
         return BastionResource('/api/v2/organizations/:id/:action',
             {id: '@id'},
             {
+                update: { method: 'PUT'},
                 repoDiscover: { method: 'POST', params: {action: 'repo_discover'}},
                 cancelRepoDiscover: {method: 'POST', params: {action: 'cancel_repo_discover'}},
                 autoAttachSubscriptions: {method: 'POST', params: {action: 'autoattach_subscriptions'}},
@@ -38,6 +39,11 @@ angular.module('Bastion.organizations').factory('Organization',
                     method: 'GET',
                     url: '/organizations/:organizationId/environments/registerable_paths',
                     isArray: true
+                },
+                redhatProvider: {
+                    method: 'GET',
+                    url: '/api/v2/organizations/:organization_id/redhat_provider',
+                    params: {'organization_id': CurrentOrganization}
                 }
             }
         );

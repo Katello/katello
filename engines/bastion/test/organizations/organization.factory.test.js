@@ -30,6 +30,7 @@ describe('Factory: Organization', function() {
         };
 
         task = {id: 'task_id'};
+        $provide.value('CurrentOrganization', 'ACME');
     }));
 
     beforeEach(inject(function($injector) {

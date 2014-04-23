@@ -17,25 +17,17 @@ describe('Controller: ManifestController', function() {
     beforeEach(module('Bastion.subscriptions', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($controller, $rootScope, $injector) {
-        var translate,
-            Provider = $injector.get('MockResource').$new();
+        var translate;
 
         translate = function(a) { return a };
-
         $scope = $rootScope.$new();
-
-        $scope.$stateParams = {providerId: 1};
-
         $controller('ManifestController', {
             $scope: $scope,
             translate: translate,
-            Provider: Provider
+
         });
     }));
 
-    it("should set a provider resource on $scope", function() {
-        expect($scope.provider).toBeDefined();
-    });
 
     it("should provide a method to get history for a provider", function() {
         var provider,
@@ -62,6 +54,8 @@ describe('Controller: ManifestController', function() {
             statusMessage: "Manifest from bleakhouse.",
             created: "1852-03-03"
         });
+
+        $scope.redhatProvider = provider;
 
         expect($scope.manifestHistory(provider)).toEqual(history);
         expect($scope.manifestHistory(provider).length).toBe(3);

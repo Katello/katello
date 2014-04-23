@@ -13,18 +13,17 @@
 
 describe('Controller: EnvironmentsController', function () {
     var $scope,
-        Environment;
+        Organization;
 
     beforeEach(module('Bastion.environments', 'Bastion.test-mocks'));
-
-    beforeEach(function () {
-        Environment = {};
-    });
 
     beforeEach(inject(function ($injector) {
         var $controller = $injector.get('$controller'),
             $http = $injector.get('$http'),
-            $timeout = $injector.get('$timeout');
+            $timeout = $injector.get('$timeout'),
+            Organization = $injector.get('MockResource').$new();
+
+        Organization.paths = function(params) {};
 
         $scope = $injector.get('$rootScope').$new();
 
@@ -32,9 +31,10 @@ describe('Controller: EnvironmentsController', function () {
             $scope: $scope,
             $timeout: $timeout,
             $http: $http,
-            Environment: Environment,
+            Organization: Organization,
             CurrentOrganization: 'CurrentOrganization'
         });
+
     }));
 
     it('should support initializing a new path', function () {

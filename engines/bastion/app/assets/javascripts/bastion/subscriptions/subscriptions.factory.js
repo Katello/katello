@@ -23,8 +23,20 @@
  */
 angular.module('Bastion.subscriptions').factory('Subscription', ['BastionResource', 'CurrentOrganization',
     function (BastionResource, CurrentOrganization) {
+        return BastionResource('/api/v2/organizations/:org/subscriptions/:id/:action',
+            {org: CurrentOrganization, id: '@id'},
+            {
+                deleteManifest: {
+                    method: 'POST',
+                    url: '/api/v2/organizations/:org/subscriptions/delete_manifest',
+                    params: {'org': CurrentOrganization}
+                },
 
-        return BastionResource('/api/v2/organizations/:org/subscriptions/:id/:action', {'org': CurrentOrganization}, {});
-
+                refreshManifest: {
+                    method: 'PUT',
+                    url: '/api/v2/organizations/:org/subscriptions/refresh_manifest',
+                    params: {'org': CurrentOrganization}
+                }
+            });
     }]
 );
