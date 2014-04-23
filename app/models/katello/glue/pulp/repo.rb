@@ -770,31 +770,21 @@ module Glue::Pulp::Repo
       return statuses
     end
 
-    def upload_content(filepath)
+    def upload_content(filepaths)
+      files = []
+
       case content_type
       when "puppet"
-        unit_key, unit_metadata = Katello::PuppetModule.generate_unit_data(filepath)
+        filepaths.each do |filepath|
+          unit_key, unit_metadata = Katello::PuppetModule.generate_unit_data(filepath)
+          files << {:filepath => filepath, :unit_key => unit_key, :unit_metadata => unit_metadata}
+        end
       else
         fail _("Uploads not supported for content type '%s'.") % content_type
       end
 
-      upload_id = Katello.pulp_server.resources.content.create_upload_request["upload_id"]
-
-      File.open(filepath, "rb") do |file|
-        offset = 0
-        while (chunk = file.read(Katello.config.pulp.upload_chunk_size))
-          Katello.pulp_server.resources.content.upload_bits(upload_id, offset, chunk)
-          offset += Katello.config.pulp.upload_chunk_size
-        end
-      end
-
-      Katello.pulp_server.resources.content.import_into_repo(self.pulp_id, unit_type_id,
-                                                             upload_id, unit_key,
-                                                             {:unit_metadata => unit_metadata}
-                                                            )
-
-      Katello.pulp_server.resources.content.delete_upload_request(upload_id)
-      self.trigger_contents_changed(:index_units => [unit_key], :wait => false, :reindex => false)
+      files.each {|file| upload_single_file(file[:unit_key], file[:unit_metadata], file[:filepath])}
+      self.trigger_contents_changed(:index_units => files.map{|file| file[:unit_key]}, :wait => false, :reindex => false)
     end
 
     def unit_type_id
@@ -829,6 +819,24 @@ module Glue::Pulp::Repo
     end
 
     protected
+
+    def upload_single_file(unit_key, unit_metadata, filepath)
+      upload_id = Katello.pulp_server.resources.content.create_upload_request["upload_id"]
+
+      File.open(filepath, "rb") do |file|
+        offset = 0
+        while (chunk = file.read(Katello.config.pulp.upload_chunk_size))
+          Katello.pulp_server.resources.content.upload_bits(upload_id, offset, chunk)
+          offset += Katello.config.pulp.upload_chunk_size
+        end
+      end
+
+      Katello.pulp_server.resources.content.import_into_repo(self.pulp_id, unit_type_id,
+                                                             upload_id, unit_key,
+                                                             {:unit_metadata => unit_metadata}
+                                                            )
+      Katello.pulp_server.resources.content.delete_upload_request(upload_id)
+    end
 
     def _get_most_recent_sync_status
       begin

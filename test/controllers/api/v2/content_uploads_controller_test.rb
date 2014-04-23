@@ -29,7 +29,7 @@ module Katello
       @environment = katello_environments(:library)
     end
 
-    def permissions    
+    def permissions
       @edit_permission = UserPermission.new(:update, :providers)
       @read_permission = UserPermission.new(:read, :providers)
       @no_permission = NO_PERMISSION
@@ -49,38 +49,38 @@ module Katello
 
       assert_response :success
     end
-  
+
     def test_create_upload_request_protected
       allowed_perms = [@edit_permission]
       denied_perms = [@read_permission, @no_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, :repository_id => @repo.id 
+        post :create, :repository_id => @repo.id
       end
     end
 
     def test_upload_bits
       mock_pulp_server(:upload_bits => true)
       put :upload_bits, :id => "1" , :offset => "0", :content => "/tmp/my_file.rpm", :repository_id => @repo.id
-   
+
       assert_response :success
     end
-  
+
     def test_upload_bits_protected
       allowed_perms = [@edit_permission]
       denied_perms = [@read_permission, @no_permission]
 
       assert_protected_action(:upload_bits, allowed_perms, denied_perms) do
         put :upload_bits, :id => "1" , :offset => "0", :content => "/tmp/my_file.rpm", :repository_id => @repo.id
-      end	
+      end
     end
 
     def test_import_into_repo
       mock_pulp_server(:import_into_repo => true)
       Repository.any_instance.expects(:trigger_contents_changed).returns([])
       Repository.any_instance.expects(:unit_type_id).returns("rpm")
-   
-      post :import_into_repo, :id => "1", :repository_id => @repo.id, 
+
+      post :import_into_repo, :id => "1", :repository_id => @repo.id,
            :uploads => [{:unit_type_id => "rpm", :unit_key => {}, :unit_metadata => {}}]
 
       assert_response :success
@@ -92,7 +92,7 @@ module Katello
 
       assert_protected_action(:import_into_repo, allowed_perms, denied_perms) do
         post :import_into_repo, :id => "1", :unit_type_id => "rpm", :unit_key => {}, :unit_metadata => {},
-             :repository_id => @repo.id 
+             :repository_id => @repo.id
       end
     end
 
@@ -116,18 +116,18 @@ module Katello
       test_document = File.join(Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
       puppet_module = Rack::Test::UploadedFile.new(test_document, '')
       Repository.any_instance.stubs(:upload_content)
-   
-      post :upload_file, :id => "1", :repository_id => @repo.id, :content => puppet_module
+
+      post :upload_file, :id => "1", :repository_id => @repo.id, :content => [puppet_module]
 
       assert_response :success
     end
- 
+
     def test_upload_file_protected
       allowed_perms = [@edit_permission]
       denied_perms = [@read_permission, @no_permission]
 
       assert_protected_action(:upload_file, allowed_perms, denied_perms) do
-        post :upload_file, :repository_id => @repo.id 
+        post :upload_file, :repository_id => @repo.id
       end
     end
 
