@@ -94,6 +94,7 @@ module Glue::ElasticSearch::System
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :description, :type => 'string'
         indexes :content_view, :type => 'string', :analyzer => :kt_name_analyzer
+        indexes :environment, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :lastCheckin, :type => 'date'
         indexes :name_autocomplete, :type => 'string', :analyzer => 'autcomplete_name_analyzer'
         indexes :installed_products, :type => 'string', :analyzer => :kt_name_analyzer
@@ -132,6 +133,7 @@ module Glue::ElasticSearch::System
       :sockets => self.sockets,
       :custom_info => collect_custom_info,
       :content_view => self.content_view.try(:name),
+      :environment => self.environment.try(:name),
       :status => self.compliance_color,
 
       # Sortable attributes

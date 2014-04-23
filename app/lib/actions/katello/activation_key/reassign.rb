@@ -17,7 +17,6 @@ module Actions
       class Reassign < Actions::Base
 
         def plan(activation_key, content_view_id, environment_id)
-          action_subject(activation_key)
 
           activation_key.content_view_id = content_view_id
           activation_key.environment_id = environment_id

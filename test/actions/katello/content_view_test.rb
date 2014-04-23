@@ -147,6 +147,11 @@ module ::Actions::Katello::ContentView
   end
 
   class RemoveTest < TestBase
+    before(:all) do
+      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
+      ::Actions::Katello::ContentView::Remove.any_instance.stubs(:task).returns(task)
+    end
+
     let(:action_class) { ::Actions::Katello::ContentView::Remove }
 
     let(:content_view) do
@@ -185,7 +190,7 @@ module ::Actions::Katello::ContentView
       action.expects(:action_subject).with(content_view)
       plan_action(action, content_view, options)
 
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, content_view, environment)
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env)
     end
 
     it 'plans for removing a version and an environment' do
@@ -199,7 +204,7 @@ module ::Actions::Katello::ContentView
       action.expects(:action_subject).with(content_view)
 
       plan_action(action, content_view, options)
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, content_view, environment)
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env)
       assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version)
     end
   end

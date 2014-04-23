@@ -42,17 +42,26 @@ module Actions
             end
 
             all_cv_envs.each do |cve|
-              plan_action(ContentViewEnvironment::Destroy, cve.content_view, cve.environment)
+              ::Katello::ContentViewHistory.create!(:content_view_version => cve.content_view_version,
+                                                    :user => ::User.current.login, :environment => cve.environment,
+                                                    :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task)
+              plan_action(ContentViewEnvironment::Destroy, cve)
             end
 
             versions.each do |version|
+              ::Katello::ContentViewHistory.create!(:content_view_version => version,
+                                                    :user => ::User.current.login,
+                                                    :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task)
               plan_action(ContentViewVersion::Destroy, version)
             end
+
+            plan_self(content_view_id: content_view.id, environment_ids: cv_envs.map(&:environment_id),
+                      environment_names: cv_envs.map{|cve| cve.environment.name}, version_ids: versions.map(&:id))
           end
         end
 
         def humanized_name
-          _("Remove Versions and Environments")
+          _("Remove Versions and Associations")
         end
 
         def validate_options(content_view, cv_envs, versions, options)
@@ -75,7 +84,7 @@ module Actions
         end
 
         def combined_cv_envs(cv_envs, versions)
-          cv_envs + versions.flat_map(&:content_view_environments)
+          (cv_envs + versions.flat_map(&:content_view_environments)).uniq
         end
 
         def system_cve(options)

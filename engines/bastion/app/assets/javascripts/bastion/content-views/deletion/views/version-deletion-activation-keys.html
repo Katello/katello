@@ -1,0 +1,97 @@
+<span page-title ng-model="version">{{ "Remove Version" | translate }} {{ version.version }}</span>
+
+  <section class="details details-full">
+    <h3 translate>Activation Keys using Version {{ version.version }}</h3>
+
+    <div data-extend-template="content-views/deletion/views/version-deletion-breadcrumb.html"></div>
+
+    <p translate>
+      The Activation Keys listed below are currently using this Content View Version.  Before deleting the Version you must move these Activation Keys to a Lifecycle Environment where this Version is not in use.
+    </p>
+
+    <p translate>
+       If you would prefer to move portions of these Activation Keys to different Content Views or Lifecycle Environments click <a href="{{ activationKeyLink() }}">here</a> to manage them individually.
+    </p>
+
+
+    <p translate>
+      <span translate>
+        If you would prefer to move portions of these Activation Keys to different content views or Lifecycle Environments click
+      </span>
+      <a ui-sref="activation-keys.index({})" translate >here</a>
+      <span translate>to manage them individually.</span>
+    </p>
+
+    <div class="details">
+
+      <p translate>
+        Please select a Lifecycle Environment and Content View to move the affected Activation Keys to:
+      </p>
+
+      <div path-selector="environments"
+           ng-model="selectedEnvironment"
+           mode="singleSelect"></div>
+
+      <div>
+        <span translate>Content View:</span>
+        <select ng-show="!fetchingViews && selectedEnvironment && contentViewsForEnvironment.length > 0"
+                ng-options="cv.id as cv.name for cv in contentViewsForEnvironment"
+                ng-model="selectedContentViewId"></select>
+        <i ng-show="fetchingViews" class="icon-spinner icon-spin"></i>
+        <span translate ng-hide="selectedEnvironment">
+          Please select a Lifecycle Environment.
+        </span>
+        <span translate ng-show="!fetchingViews && selectedEnvironment && contentViewsForEnvironment.length === 0">
+          No Content Views available, please select another environment.
+        </span>
+      </div>
+
+      <div class="fr">
+        <a ui-sref="content-views.details.versions({contentViewId: contentView.id})" >
+          <button class="btn btn-default" translate>
+            Cancel
+          </button>
+        </a>
+        <button class="btn btn-default" ng-click="transitionBack()" translate>
+          Back
+        </button>
+        <button class="btn btn-primary" ng-click="processSelection()" ng-disabled="selectedContentViewId === undefined" translate>
+          Next
+        </button>
+      </div>
+    </div>
+
+    <br/><br/>
+    <a ng-click="toggleKeys()">
+      <p ng-show="!showKeys" translate>Show affected Activation Keys</p>
+      <p ng-show="showKeys" translate>Hide affected Activation Keys</p>
+    </a>
+
+    <div ng-show="showKeys">
+      <div data-extend-template="layouts/details-nutupane.html">
+        <h5 translate>Affected Activation Keys</h5>
+
+        <div data-block="selection-summary"></div>
+
+        <table data-block="table" class="table table-striped table-bordered">
+          <thead>
+            <tr alch-table-head>
+              <th alch-table-column="name">{{ "Name" | translate }}</th>
+              <th alch-table-column="environment.name">{{ "Lifecycle Environments" | translate }}</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr alch-table-row ng-repeat="key in detailsTable.rows">
+              <td alch-table-cell>
+                  {{ key.name }}
+              </td>
+              <td alch-table-cell>
+                  {{ key.environment.name }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>

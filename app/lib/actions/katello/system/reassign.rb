@@ -16,8 +16,6 @@ module Actions
       class Reassign < Actions::Base
 
         def plan(system, content_view_id, environment_id)
-          action_subject(system)
-
           system.content_view_id = content_view_id
           system.environment_id = environment_id
           # TODO: update cp
