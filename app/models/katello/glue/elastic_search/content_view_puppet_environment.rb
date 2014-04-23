@@ -27,8 +27,6 @@ module Katello
           indexes :name_sort, :type => 'string', :index => :not_analyzed
           indexes :labels, :type => 'string', :index => :not_analyzed
         end
-
-        before_destroy :clear_content_indices
       end
 
       def extended_index_attrs
@@ -52,34 +50,6 @@ module Katello
         end
       end
 
-      def update_puppet_modules_index
-        # for each of the puppet_modules in the repo, unassociate the repo from the module
-        puppet_modules = self.puppet_modules.collect{|puppet_module| puppet_module.as_json.merge(puppet_module.index_options)}
-        pulp_id = self.pulp_id
-
-        unless puppet_modules.empty?
-          Tire.index Katello::PuppetModule.index do
-            create :settings => Katello::PuppetModule.index_settings, :mappings => Katello::PuppetModule.index_mapping
-          end unless Tire.index(Katello::PuppetModule.index).exists?
-
-          Tire.index Katello::PuppetModule.index do
-            import puppet_modules do |documents|
-              documents.each do |document|
-                if !document["repoids"].nil? && document["repoids"].length > 1
-                  # if there is more than 1 repo associated w/ the pkg, remove this repo
-                  document["repoids"].delete(pulp_id)
-                end
-              end
-            end
-          end
-        end
-
-        # now, for any module that only had this repo asscociated with it, remove the module from the index
-        repoids = "repoids:#{pulp_id}"
-        Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_puppet_module/_query?q=#{repoids}"
-        Tire.index('katello_puppet_module').refresh
-      end
-
       def indexed_puppet_modules
         service = Glue::ElasticSearch::Items.new
         service.model = ::Katello::PuppetModule
@@ -97,10 +67,6 @@ module Katello
       def index_content
         self.index_puppet_modules
         true
-      end
-
-      def clear_content_indices
-        update_puppet_modules_index
       end
     end
   end
