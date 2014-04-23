@@ -563,8 +563,8 @@ class ContentView < Katello::Model
 
     dependencies.each do |key, name|
       if (models = self.association(key).scoped.in_environment(env)).any?
-        errors << _("Cannot delete '%{view}' from environment '%{env}' due to associated %{dependent}: %{names}.") %
-          {view: self.name, env: env.name, names: models.map(&:name).join(", ")}
+        errors << _("Cannot remove '%{view}' from environment '%{env}' due to associated %{dependent}: %{names}.") %
+          {view: self.name, env: env.name, dependent: name, names: models.map(&:name).join(", ")}
       end
     end
 
