@@ -26,7 +26,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
 
   def models
     @organization = get_organization
-    @repository = katello_repositories(:fedora_17_unpublished)
+    @repository = Repository.find(katello_repositories(:fedora_17_unpublished))
     @redhat_repository = katello_repositories(:rhel_6_x86_64)
     @product = katello_products(:fedora)
   end
@@ -121,7 +121,6 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     end
   end
 
-
   def test_create_with_gpg_key
     key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
 
@@ -198,6 +197,24 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
 
     assert_protected_action(:update, allowed_perms, denied_perms) do
       put :update, :id => @repository.id
+    end
+  end
+
+  def test_remove_packages
+    uuids = ['foo', 'bar']
+    @controller.expects(:sync_task).with(::Actions::Katello::Repository::RemovePackages,
+                                         @repository, uuids).once.returns(::ForemanTasks::Task.new)
+
+    put :remove_packages, :id => @repository.id, :uuids => uuids
+    assert_response :success
+  end
+
+  def test_remove_packages_protected
+    allowed_perms = [@update_permission]
+    denied_perms = [@read_permission, @create_permission, @destroy_permission]
+
+    assert_protected_action(:remove_packages, allowed_perms, denied_perms) do
+      put :remove_packages, :id => @repository.id, :uuids =>  ['foo', 'bar']
     end
   end
 

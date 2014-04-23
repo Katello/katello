@@ -32,7 +32,7 @@ module Actions
         end
 
         def criteria
-          { type_ids: [content_extension.content_type], filters: {unit: input[:clauses] } }
+          { type_ids: [content_extension.content_type], filters: input[:clauses] }
         end
 
         def external_task=(external_task_data)

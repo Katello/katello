@@ -150,6 +150,8 @@ Katello::Engine.routes.draw do
         end
       end
 
+      api_resources :packages, :only => [:index, :show]
+
       api_resources :package_groups, :only => [:index, :show]
 
       api_resources :ping, :only => [:index]
@@ -327,6 +329,7 @@ Katello::Engine.routes.draw do
           get :package_groups
           get :package_group_categories
           get :gpg_key_content
+          put :remove_packages
           post :sync
         end
       end

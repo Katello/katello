@@ -159,6 +159,12 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         collapsed: true,
         controller: 'RepositoryDetailsInfoController',
         templateUrl: 'repositories/details/views/repository-info.html'
+    })
+    .state('products.details.repositories.manage-packages', {
+        url: '/repositories/:repositoryId/packages',
+        collapsed: true,
+        controller: 'RepositoryManagePackagesController',
+        templateUrl: 'repositories/details/views/repository-manage-packages.html'
     });
 
     $stateProvider.state('products.details.tasks', {

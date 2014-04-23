@@ -59,6 +59,8 @@ module Glue::ElasticSearch::Package
               :nvrea_autocomplete  => { :type => 'string', :analyzer => 'autcomplete_name_analyzer'},
               :nvrea         => { :type => 'string', :analyzer => :kt_name_analyzer},
               :nvrea_sort    => { :type => 'string', :index => :not_analyzed },
+              :nvra         => { :type => 'string', :analyzer => :kt_name_analyzer},
+              :nvra_sort    => { :type => 'string', :index => :not_analyzed },
               :repoids       => { :type => 'string', :index => :not_analyzed},
               :sortable_version => { :type => 'string', :index => :not_analyzed },
               :sortable_release => { :type => 'string', :index => :not_analyzed }

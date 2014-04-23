@@ -29,7 +29,8 @@ angular.module('Bastion.repositories').factory('Repository',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 update: { method: 'PUT' },
-                sync: { method: 'POST', params: { action: 'sync' } }
+                sync: { method: 'POST', params: { action: 'sync' } },
+                removePackages: { method: 'PUT', params: { action: 'remove_packages'}}
             }
         );
 

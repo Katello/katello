@@ -79,6 +79,9 @@
 //= require "bastion/organizations/organizations.module.js"
 //= require_tree "./organizations"
 
+//= require "bastion/packages/packages.module.js"
+//= require_tree "./packages"
+
 //= require "bastion/products/products.module.js"
 //= require_tree "./products"
 

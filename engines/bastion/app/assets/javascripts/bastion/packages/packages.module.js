@@ -13,25 +13,11 @@
 
 /**
  * @ngdoc module
- * @name  Bastion.repositories
+ * @name  Bastion.packages
  *
  * @description
- *   Module for repository related functionality.
+ *   Module for package related functionality.
  */
-angular.module('Bastion.repositories', [
-    'ngResource',
-    'alchemy',
-    'alch-templates',
-    'ui.router',
-    'ngUpload',
-    'Bastion',
-    'Bastion.widgets',
-    'Bastion.packages'
-]);
-
-angular.module('Bastion.repositories').run(['$rootScope', '$state', '$stateParams',
-    function ($rootScope, $state, $stateParams) {
-        $rootScope.$state = $state;
-        $rootScope.$stateParams = $stateParams;
-    }
+angular.module('Bastion.packages', [
+    'Bastion'
 ]);
