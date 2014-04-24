@@ -50,7 +50,7 @@ describe('Controller: NewSyncPlanController', function() {
 
         $scope.createSyncPlan(syncPlan);
 
-        expect($scope.errorMessages.length).toBe(0);
+        expect($scope.working).toBe(false);
         expect($scope.successMessages.length).toBe(1);
         expect($scope.transitionBack).toHaveBeenCalled();
     });
