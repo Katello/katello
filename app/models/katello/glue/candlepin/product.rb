@@ -184,12 +184,6 @@ module Glue::Candlepin::Product
       raise e
     end
 
-    def disable_content(content_id)
-      pc = product_content_by_id(content_id)
-      pc.disable
-      pc
-    end
-
     def product_content_by_id(content_id)
       self.productContent.find{|pc| pc.content.id == content_id}
     end

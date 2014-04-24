@@ -21,7 +21,6 @@
                   %tr.collapsed.repo_set{:id=>"repo_set_#{product_content.content.id}"}
                     %td
                       %span.expander_area{:data=>{:url => available_repositories_product_path(product.id),
-                                                   'disable-url'=>disable_content_product_path(product.id),
                                                    'content-id'=> product_content.content.id,
                                                    :orphaned => orphaned.to_s}}
                         =image_tag( "katello/icons/spinner.gif", :class=>"hidden fl repo_set_spinner",

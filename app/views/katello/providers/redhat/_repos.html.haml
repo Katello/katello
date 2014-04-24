@@ -13,7 +13,7 @@
             %input.repo_enable{:id=>"input_repo_#{result[:pulp_id]}",
                                :type=>:checkbox,
                                :value=>result[:pulp_id],
-                               :data => { :url => enable_repository_product_path(scan_cdn.input[:product_id]),
+                               :data => { :url => toggle_repository_product_path(scan_cdn.input[:product_id]),
                                           'content-id' => scan_cdn.input[:content_id],
                                           'pulp-id' => result[:pulp_id],
                                           :releasever => result[:substitutions][:releasever],

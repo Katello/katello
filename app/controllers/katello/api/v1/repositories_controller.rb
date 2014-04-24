@@ -85,7 +85,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   end
   def update
     fail HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
-    attrs = params[:repository].slice(:gpg_key_namel)
+    attrs = params[:repository].slice(:gpg_key_name)
     attrs[:feed] = params[:repository][:url] if params[:repository] && params[:repository][:url]
     @repository.update_attributes!(attrs)
     respond

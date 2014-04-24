@@ -166,8 +166,7 @@ Katello::Engine.routes.draw do
   resources :products, :only => [:index] do
     member do
       get :available_repositories
-      put :enable_repository
-      put :disable_content
+      put :toggle_repository
     end
     collection do
       get :auto_complete

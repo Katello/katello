@@ -14,9 +14,9 @@ module Katello
 class ProductsController < Katello::ApplicationController
   respond_to :html, :js
 
-  before_filter :find_product, :only => [:available_repositories, :disable_content, :enable_repository]
-  before_filter :find_provider, :only => [:available_repositories, :disable_content, :enable_repository]
-  before_filter :find_content, :only => [:enable_repository]
+  before_filter :find_product, :only => [:available_repositories, :toggle_repository]
+  before_filter :find_provider, :only => [:available_repositories, :toggle_repository]
+  before_filter :find_content, :only => [:toggle_repository]
 
   before_filter :authorize
 
@@ -31,8 +31,7 @@ class ProductsController < Katello::ApplicationController
       :all => read_test,
       :auto_complete =>  read_test,
       :available_repositories => edit_test,
-      :enable_repository => edit_test,
-      :disable_content => edit_test,
+      :toggle_repository => edit_test,
     }
   end
 
@@ -49,7 +48,7 @@ class ProductsController < Katello::ApplicationController
     end
   end
 
-  def enable_repository
+  def toggle_repository
     action_class = if params[:repo] == '1'
                      ::Actions::Katello::RepositorySet::EnableRepository
                    else
@@ -57,14 +56,6 @@ class ProductsController < Katello::ApplicationController
                    end
     task = sync_task(action_class, @product, @content, substitutions)
     render :json => { :task_id => task.id }
-  end
-
-  def disable_content
-    if @product.custom?
-      render_bad_parameters _('Repository sets cannot be disabled for custom products.')
-    else
-      render :json => @product.disable_content(params[:content_id])
-    end
   end
 
   def index
