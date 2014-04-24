@@ -43,6 +43,12 @@ module MiniTest::Expectations
   infect_an_assertion :assert_recognizes, :must_recognize, :do_not_flip
 end
 
+def load_permissions
+  Dir["#{File.expand_path("#{Katello::Engine.root}/app/policies/katello/permissions", __FILE__)}/*.rb"].each do |file|
+    load file
+  end
+end
+
 module FixtureTestCase
   extend ActiveSupport::Concern
 
@@ -89,9 +95,7 @@ module FixtureTestCase
     self.fixture_path = "#{Katello::Engine.root}/test/fixtures/models"
     fixtures(:all)
 
-    Dir["#{File.expand_path("#{Katello::Engine.root}/app/policies/katello/permissions", __FILE__)}/*.rb"].each do |file|
-      load file
-    end
+    load_permissions
   end
 
   module ClassMethods

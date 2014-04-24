@@ -89,8 +89,7 @@ module Katello
       register_system        = lambda { System.registerable?(@environment, @organization, @content_view) }
       index_systems          = lambda { System.any_readable?(@organization) }
       edit_system            = lambda do
-        subscribable = @content_view ? @content_view.subscribable? : true
-        subscribable && (@system.editable? || User.consumer?)
+        @system.editable? || User.consumer?
       end
 
       {

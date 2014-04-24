@@ -15,20 +15,6 @@ module Katello
 
     before_filter :find_filter
     before_filter :find_rule, :except => [:index, :create]
-    before_filter :authorize
-
-    def rules
-      view_readable = lambda { @filter.content_view.readable? }
-      view_editable = lambda { @filter.content_view.editable? }
-
-      {
-          :index   => view_readable,
-          :create  => view_editable,
-          :show    => view_readable,
-          :update  => view_editable,
-          :destroy => view_editable
-      }
-    end
 
     api :GET, "/content_view_filters/:content_view_filter_id/rules", "List filter rules"
     param :content_view_filter_id, :identifier, :desc => "filter identifier", :required => true

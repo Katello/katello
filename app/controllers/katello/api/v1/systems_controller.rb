@@ -46,8 +46,7 @@ class Api::V1::SystemsController < Api::V1::ApiController
     register_system        = lambda { System.registerable?(@environment, @organization, @content_view) }
     consumer_only          = lambda { User.consumer? }
     edit_system            = lambda do
-      subscribable = @content_view ? @content_view.subscribable? : true
-      subscribable && (@system.editable? || User.consumer?)
+      @system.editable? || User.consumer?
     end
     read_system            = lambda { @system.readable? || User.consumer? }
     delete_system          = lambda { @system.deletable? || User.consumer? }
@@ -542,7 +541,7 @@ This information is then used for computing the errata available for the system.
     organization ||= @system.organization if @system
     organization ||= @environment.organization if @environment
     if cv_id && organization
-      @content_view = ContentView.readable(organization).find_by_id(cv_id)
+      @content_view = ContentView.readable.find_by_id(cv_id)
       fail HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
     else
       @content_view = nil

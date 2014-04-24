@@ -145,7 +145,7 @@ class ActivationKey < Katello::Model
     end
   end
 
-  def self.humanize_class_name
+  def self.humanize_class_name(name = nil)
     _("Activation Keys")
   end
 

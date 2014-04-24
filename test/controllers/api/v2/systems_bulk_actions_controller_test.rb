@@ -27,9 +27,8 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     @delete_permission = UserPermission.new(:delete_systems, :organizations, nil, @system1.organization)
     @update_group_perm = UserPermission.new(:update, :system_groups, [@system_group1.id, @system_group2.id], @system1.organization)
 
-    @subscribe_perms =  UserPermission.new(:subscribe, :content_views, @view.id, @system1.organization) +
-                             UserPermission.new(:register_systems, :environments, @library.id, @system1.organization)
-    @subscribe_perms << @update_permission
+    @subscribe_perms = UserPermission.new(:register_systems, :environments, @library.id, @system1.organization) +
+        @update_permission
 
     @no_permission = NO_PERMISSION
   end
@@ -200,7 +199,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
 
   def test_environment_content_view_permission
     good_perms = [@subscribe_perms]
-    bad_perms = [@read_permission, @delete_permission, @no_permission]
+    bad_perms = [@read_permission, @update_permission, @delete_permission, @no_permission]
 
     assert_protected_action(:environment_content_view, good_perms, bad_perms) do
       put :environment_content_view, :included => {:ids => @system_ids}, :organization_id => @org.label,
