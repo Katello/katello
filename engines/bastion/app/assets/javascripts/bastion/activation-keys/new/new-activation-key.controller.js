@@ -43,7 +43,7 @@ angular.module('Bastion.activation-keys').controller('NewActivationKeyController
         $scope.$watch('activationKey.name', function () {
             if ($scope.activationKeyForm.name) {
                 $scope.activationKeyForm.name.$setValidity('server', true);
-                FormUtils.labelize($scope.activationKey, $scope.activationKeyForm);
+                FormUtils.labelize($scope.activationKey);
             }
         });
 
