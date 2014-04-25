@@ -62,6 +62,14 @@ module Util
       initial_list + subclass_list
     end
 
+    def self.backend_search_classes
+      [Katello::Package,
+       Katello::Errata,
+       Katello::Pool,
+       Katello::PuppetModule,
+       Katello::PackageGroup]
+    end
+
     def self.get_subclasses(obj_class)
       classes = obj_class.subclasses
       subs = classes.collect {|c| get_subclasses(c) }.flatten

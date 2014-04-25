@@ -18,6 +18,17 @@ module Glue::ElasticSearch::Pool
   def self.included(base)
 
     base.class_eval do
+
+      include Glue::ElasticSearch::BackendIndexedModel
+
+      def self.search_type
+        :pool
+      end
+
+      def self.index
+        "#{Katello.config.elastic_index}_pool"
+      end
+
       # Most ActiveRecord models that need to be indexed do so through including IndexedModel. Since not all Pool
       # objects are persisted, this could lead to confusion and unnecessary overhead. (Only Pools referenced by
       # ActivationKeys are stored.) The methods below are the infrastructure for indexing the Pool objects.
@@ -153,10 +164,6 @@ module Glue::ElasticSearch::Pool
                 }
             }
         }
-      end
-
-      def self.index
-        "#{Katello.config.elastic_index}_pool"
       end
 
       def self.expiration_filter(filter_name)
