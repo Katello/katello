@@ -78,3 +78,5 @@ ConfigTemplate.where(:name => "Katello Kickstart Default for RHEL").first_or_cre
 ConfigTemplate.where(:name => "subscription_manager_registration").first_or_create!(
     :snippet  => true,
     :template => File.read("#{Katello::Engine.root}/app/views/foreman/unattended/snippets/_subscription_manager_registration.erb"))
+
+Katello::Util::Search.backend_search_classes.each{|c| c.create_index}
