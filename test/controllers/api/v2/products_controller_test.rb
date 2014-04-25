@@ -74,6 +74,13 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
       :name => 'fedora product',
       :description => 'this is my cool new product.'
     }
+    Api::V2::ProductsController.any_instance.expects(:sync_task).with do |action_class, prod, org|
+      action_class.must_equal ::Actions::Katello::Product::Create
+      prod.must_be_kind_of(Product)
+      org.must_equal @organization
+      prod.provider = @provider
+    end
+
     post :create, :product => product_params, :organization_id => @organization.label
 
     assert_response :success

@@ -70,9 +70,9 @@ module Katello
     param :label, String, :required => false
     def create
       params[:product][:label] = labelize_params(product_params) if product_params
-      product = Product.create!(product_params) do |prod|
-        prod.provider =  @organization.anonymous_provider
-      end
+      product = Product.new(product_params)
+
+      sync_task(::Actions::Katello::Product::Create, product, @organization)
       respond(:resource => product)
     end
 
