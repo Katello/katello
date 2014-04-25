@@ -46,7 +46,6 @@ module Glue::ElasticSearch::Repository
     end
 
     def update_related_index
-      self.product.update_index if self.enabled_changed?
       self.product.provider.update_index if self.product.provider.respond_to? :update_index
     end
 

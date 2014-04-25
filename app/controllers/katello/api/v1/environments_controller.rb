@@ -175,7 +175,6 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   api :GET, "/organizations/:organization_id/environments/:id/repositories", "List repositories available in the environment"
   param :id, :identifier, :desc => "environment identifier"
   param :organization_id, :identifier, :desc => "organization identifier"
-  param :include_disabled, :bool, :desc => "set to true if you want to see also disabled repositories"
   param :content_view_id, :identifier, :desc => "content view identifier", :required => false
   def repositories
     if !@environment.library? && @content_view.nil?
@@ -184,7 +183,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     end
 
     @repositories = @environment.products.all_readable(@organization).flat_map do |p|
-      p.repos(@environment, query_params[:include_disabled], @content_view)
+      p.repos(@environment, @content_view)
     end
     respond_for_index :collection => @repositories
   end

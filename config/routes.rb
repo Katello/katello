@@ -165,8 +165,8 @@ Katello::Engine.routes.draw do
 
   resources :products, :only => [:index] do
     member do
-      put :refresh_content
-      put :disable_content
+      get :available_repositories
+      put :toggle_repository
     end
     collection do
       get :auto_complete
@@ -195,7 +195,6 @@ Katello::Engine.routes.draw do
   resources :providers do
     collection do
       get :auto_complete_search
-      put :refresh_products
     end
 
     resources :products do
@@ -228,8 +227,6 @@ Katello::Engine.routes.draw do
 
   match '/providers/:id' => 'providers#update', :via => :put
   match '/providers/:id' => 'providers#update', :via => :post
-
-  match '/repositories/:id/enable_repo' => 'repositories#enable_repo', :via => :put, :as => :enable_repo
 
   resources :repositories, :only => [:new, :create, :edit, :destroy] do
     collection do

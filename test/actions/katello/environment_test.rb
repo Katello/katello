@@ -17,7 +17,6 @@ module ::Actions::Katello::Environment
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include Support::Actions::RemoteAction
     include FactoryGirl::Syntax::Methods
 
     let(:action) { create_action action_class }

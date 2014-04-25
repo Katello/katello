@@ -76,7 +76,7 @@ class SyncManagementController < Katello::ApplicationController
     @products = redhat_products + custom_products
     @product_size = {}
     @repo_status = {}
-    @product_map = collect_repos(@products, org.library, false, false)
+    @product_map = collect_repos(@products, org.library, false)
 
     @products.each { |product| get_product_info(product) }
   end

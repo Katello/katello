@@ -21,6 +21,16 @@ module LazyAccessor
   module ClassMethods
     attr_accessor :lazy_attributes
 
+    def lazy_attributes_options(attr)
+      if @lazy_attributes_options && @lazy_attributes_options.key?(attr)
+        @lazy_attributes_options.fetch(attr.to_s)
+      elsif superclass.respond_to?(:lazy_attributes_options)
+        superclass.lazy_attributes_options(attr.to_s)
+      else
+        fail "lazy attribute #{attr} not defined"
+      end
+    end
+
     # @example lazy_accessor :a, :b, :c,
     #   :initializer => lambda { json = Resources::Candlepin::Product.get(cp_id)[0] },
     #   :unless => lambda { cp_id.nil? }
@@ -30,17 +40,19 @@ module LazyAccessor
       options = args.extract_options!
       @lazy_attributes = [] if @lazy_attributes.nil?
       @lazy_attributes = @lazy_attributes.concat args
+      @lazy_attributes_options ||= {}
       fail ArgumentError, "Attribute names must be symbols" if args.any?{ |attribute| !attribute.is_a?(Symbol) }
       redefined_attr = args.find{ |attribute| instance_methods.include?(attribute.to_s) }
       Rails.logger.warn "Remote attribute '#{redefined_attr}' has already been defined" if redefined_attr
 
-      initializer = options[:initializer]
-      fail ArgumentError, "Please provide an initializer" if initializer.nil?
+      fail ArgumentError, "Please provide an initializer" if options[:initializer].nil?
 
       args.each do |symbol|
-        send :define_method, "#{symbol.to_s}_will_change!" do
-          changed_remote_attributes[symbol.to_s] ||=
-              instance_variable_get("@#{symbol.to_s}").nil? ? remote_attribute_value(symbol.to_s, initializer, args.size > 1) : instance_variable_get("@#{symbol.to_s}")
+        options[:in_group] = args.size > 1
+        @lazy_attributes_options[symbol.to_s] = options
+
+        send :define_method, "#{symbol}_will_change!" do
+          lazy_attribute_will_change!(symbol)
         end
 
         send :define_method, "#{symbol.to_s}_changed?" do
@@ -48,40 +60,19 @@ module LazyAccessor
         end
 
         send :define_method, "#{symbol.to_s}_change" do
-          attr = symbol.to_s
-          if remote_attribute_changed?(attr)
-            return [changed_remote_attributes[attr], __send__(attr)]
-          end
-          nil
+          lazy_attribute_change(symbol)
         end
 
         send :define_method, "#{symbol.to_s}_was" do
-          attr = symbol.to_s
-          remote_attribute_changed?(attr) ? changed_remote_attributes[attr] : __send__(attr)
+          lazy_attribute_was(symbol)
         end
 
         send :define_method, "#{symbol.to_s}=" do |val|
-          attr = symbol.to_s
-
-          old = instance_variable_get("@#{symbol.to_s}").nil? ? self.send(symbol) : instance_variable_get("@#{symbol.to_s}")
-          changed_remote_attributes[attr] = old if old != val
-
-          instance_variable_set("@#{attr}", val)
+          lazy_attribute_set(symbol, val)
         end
 
         send :define_method, symbol do
-          attr = symbol.to_s
-
-          excepted = options.key?(:unless) ? self.instance_eval(&options[:unless]) : new_record?
-          if !instance_variable_defined?("@#{attr}") && !excepted
-            remote_values = run_initializer(args.size > 1, initializer)
-            if args.size > 1
-              prepopulate(remote_values)
-            else
-              instance_variable_set("@#{attr}", remote_values) if respond_to?("#{attr}=")
-            end
-          end
-          instance_variable_get("@#{attr}")
+          lazy_attribute_get(symbol)
         end
       end
     end
@@ -128,8 +119,54 @@ module LazyAccessor
 
     private
 
-    def remote_attribute_value(attr, initializer, in_group)
+    def lazy_attribute_will_change!(attr)
+      changed_remote_attributes[attr.to_s] ||=
+          instance_variable_get("@#{attr}").nil? ? remote_attribute_value(attr) : instance_variable_get("@#{attr}")
+    end
+
+    def lazy_attribute_change(attr)
+      attr = attr.to_s
+      if remote_attribute_changed?(attr)
+        return [changed_remote_attributes[attr], __send__(attr)]
+      end
+    end
+
+    def lazy_attribute_was(attr)
+      attr = attr.to_s
+      remote_attribute_changed?(attr) ? changed_remote_attributes[attr] : __send__(attr)
+    end
+
+    def lazy_attribute_set(attr, val)
+      attr = attr.to_s
+
+      old = instance_variable_get("@#{attr}").nil? ? self.send(attr) : instance_variable_get("@#{attr}")
+      changed_remote_attributes[attr] = old if old != val
+
+      instance_variable_set("@#{attr}", val)
+    end
+
+    def lazy_attribute_get(attr)
+      attr = attr.to_s
+
+      options = self.class.lazy_attributes_options(attr)
+
+      excepted = options.key?(:unless) ? self.instance_eval(&options[:unless]) : new_record?
+      if !instance_variable_defined?("@#{attr}") && !excepted
+        remote_values = run_initializer(options[:in_group], options[:initializer])
+        if options[:in_group]
+          prepopulate(remote_values)
+        else
+          instance_variable_set("@#{attr}", remote_values) if respond_to?("#{attr}=")
+        end
+      end
+      instance_variable_get("@#{attr}")
+    end
+
+    def remote_attribute_value(attr)
       return nil if new_record?
+
+      options = self.class.lazy_attributes_options(attr)
+      initializer, in_group = options[:initializer], options[:in_group]
 
       remote_values = run_initializer(in_group, initializer)
       changed_remote_attributes[attr] = in_group ? remote_values["#{attr}"] : remote_values
