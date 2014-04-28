@@ -1,14 +1,8 @@
 How to work with locales
 ------------------------
 
-1) Extract strings:
+To extract the strings:
 
-bundle exec rake gettext:find
+- cd to your foreman checkout
+- execute rake plugin:gettext[katello]
 
-2) Translate strings using Zanata or other tools
-
-3) Generate mo files using GNU gettext (in SPEC):
-
-pushd locale
-  make
-popd
