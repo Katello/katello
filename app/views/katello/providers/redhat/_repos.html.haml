@@ -5,12 +5,19 @@
     %th
       = _('Repository')
   %tbody
-    - for repo in product_content.repositories
-      %tr.repo{:id=>"repo_#{repo.id}"}
+    - scan_cdn.output[:results].each do |result|
+      %tr.repo{:id=>"repo_#{result[:pulp_id]}"}
         %td
           %label
-            =image_tag( "katello/icons/spinner.gif", :class=>"hidden fl", :id=>"spinner_#{repo.id}", :style=>"margin-right:1px;")
-            %input.repo_enable{:id=>"input_repo_#{repo.id}", :type=>:checkbox, :value=>repo.id, "data-url" => enable_repo_path(repo.id),
-                  :disabled =>(repo.promoted? || !@provider.editable?), :checked=>(:checked if repo.enabled?)}
+            =image_tag( "katello/icons/spinner.gif", :class=>"hidden fl", :id=>"spinner_#{result[:pulp_id]}", :style=>"margin-right:1px;")
+            %input.repo_enable{:id=>"input_repo_#{result[:pulp_id]}",
+                               :type=>:checkbox,
+                               :value=>result[:pulp_id],
+                               :data => { :url => toggle_repository_product_path(scan_cdn.input[:product_id]),
+                                          'content-id' => scan_cdn.input[:content_id],
+                                          'pulp-id' => result[:pulp_id],
+                                          :releasever => result[:substitutions][:releasever],
+                                          :basearch => result[:substitutions][:basearch] },
+                               :disabled =>(result[:promoted] || !@provider.editable?), :checked=>(:checked if result[:enabled])}
         %td
-          #{repo.name}
+          #{result[:repo_name]}

@@ -17,14 +17,14 @@ module Katello
   class Api::V2::ProductsBulkActionsControllerTest < ActionController::TestCase
 
     def self.before_suite
-      models = ["Product", "Provider"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+      disable_models = ["Product", "MarketingProduct", "Provider"]
+      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], disable_models, true)
       super
     end
 
     def models
       @organization = get_organization
-      @products = katello_products(:empty_product, :empty_product_2)
+      @products = Product.where(:id => katello_products(:empty_product, :empty_product_2).map(&:id))
       @provider = katello_providers(:fedora_hosted)
     end
 

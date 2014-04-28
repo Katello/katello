@@ -98,19 +98,19 @@ angular.module('Bastion.subscriptions').config(['$stateProvider', function ($sta
         }
     })
     .state('subscriptions.manifest.import', {
-        url: '/subscriptions/manifest/import/:providerId',
+        url: '/subscriptions/manifest/import',
         collapsed: true,
         controller: 'ManifestImportController',
         templateUrl: 'subscriptions/manifest/views/manifest-import.html'
     })
     .state('subscriptions.manifest.details', {
-        url: '/subscriptions/manifest/details/:providerId',
+        url: '/subscriptions/manifest/details',
         collapsed: true,
         controller: 'ManifestDetailsController',
         templateUrl: 'subscriptions/manifest/views/manifest-details.html'
     })
     .state('subscriptions.manifest.history', {
-        url: '/subscriptions/manifest/history/:providerId',
+        url: '/subscriptions/manifest/history',
         collapsed: true,
         controller: 'ManifestHistoryController',
         templateUrl: 'subscriptions/manifest/views/manifest-import-history.html'

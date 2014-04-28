@@ -9,7 +9,6 @@
     <thead>
       <tr alch-table-head>
         <th alch-table-column="name" sortable translate>Name</th>
-        <th alch-table-column="provider" sortable translate>Provider</th>
         <th alch-table-column class="number-cell" translate>Repositories</th>
       </tr>
     </thead>
@@ -21,7 +20,6 @@
             {{ product.name }}
           </a>
         </td>
-        <td alch-table-cell>{{ product.provider.name }}</td>
         <td alch-table-cell class="number-cell">{{ product.repository_count }}</td>
       </tr>
     </tbody>

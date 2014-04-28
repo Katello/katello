@@ -17,7 +17,6 @@ module ::Actions::Katello::Organization
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include Support::Actions::RemoteAction
     include FactoryGirl::Syntax::Methods
 
     let(:action) { create_action action_class }
@@ -33,8 +32,7 @@ module ::Actions::Katello::Organization
 
     it 'plans' do
       provider = mock()
-      provider.expects(:save!).returns([])
-      organization.expects(:providers).returns([provider])
+      organization.expects(:providers).returns([provider]).times(2)
       organization.expects(:save!)
       organization.expects(:disable_auto_reindex!).returns
       action.stubs(:action_subject).with(organization, any_parameters)

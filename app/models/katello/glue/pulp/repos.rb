@@ -61,7 +61,7 @@ module Glue::Pulp::Repos
     items.each { |item| full_repos[item["id"]] = item }
 
     products.each do |prod|
-      prod.repos(environment, true, content_view).each do |repo|
+      prod.repos(environment, content_view).each do |repo|
         repo.populate_from(full_repos)
       end
     end
@@ -278,7 +278,7 @@ module Glue::Pulp::Repos
     end
 
     def update_repositories
-      repos = Repository.in_product(self)
+      repos = Repository.in_product(self).in_default_view
       upstream_ca = File.read(Resources::CDN::CdnResource.ca_file)
       repos.each do |repo|
         key = nil

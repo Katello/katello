@@ -37,7 +37,7 @@ angular.module('Bastion.content-views').controller('NewContentViewController',
         $scope.$watch('contentView.name', function () {
             if ($scope.contentViewForm.name) {
                 $scope.contentViewForm.name.$setValidity('server', true);
-                FormUtils.labelize($scope.contentView, $scope.contentViewForm);
+                FormUtils.labelize($scope.contentView);
             }
         });
 

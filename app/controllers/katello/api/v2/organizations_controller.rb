@@ -16,7 +16,7 @@ module Katello
     include Api::V2::Rendering
     include ForemanTasks::Triggers
 
-    before_filter :local_find_taxonomy, :only => %w{repo_discover cancel_repo_discover download_debug_certificate}
+    before_filter :local_find_taxonomy, :only => %w{repo_discover cancel_repo_discover download_debug_certificate redhat_provider update}
 
     resource_description do
       api_version 'v2'
@@ -29,12 +29,14 @@ module Katello
 
     def rules
       edit_test   = lambda { @organization.editable? }
+      redhat_provider_test   = lambda { @organization.redhat_provider.readable? }
 
       {
         :auto_attach_all_systems => edit_test,
         :repo_discover => edit_test,
         :cancel_repo_discover => edit_test,
-        :download_debug_certificate => edit_test
+        :download_debug_certificate => edit_test,
+        :redhat_provider => redhat_provider_test
       }
     end
 
@@ -54,7 +56,11 @@ module Katello
     api :PUT, '/organizations/:id', 'Update organization'
     param_group :resource, ::Api::V2::TaxonomiesController
     param :description, String, :desc => "description"
+    param :redhat_repository_url, String, :desc => "Redhat CDN url"
     def update
+      if params.key?(:redhat_repository_url)
+        @organization.redhat_provider.update_attributes!(:repository_url => params[:redhat_repository_url])
+      end
       super
     end
 
@@ -104,10 +110,16 @@ module Katello
       respond_for_async :resource => async_job
     end
 
+    api :GET, '/organizations/:id/redhat_provider', 'List all :resource_id'
+    def redhat_provider
+      respond_for_show(:resource => @organization.redhat_provider,
+                       :resource_name => "providers")
+    end
+
     protected
 
     def action_permission
-      if %w(download_debug_certificate repo_discover cancel_repo_discover).include?(params[:action])
+      if %w(download_debug_certificate redhat_provider repo_discover cancel_repo_discover).include?(params[:action])
         :edit
       else
         super

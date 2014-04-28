@@ -34,7 +34,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
         $scope.panel = $scope.panel || {loading: false};
 
         $scope.$watch('createRepoChoices.product.name', function () {
-            FormUtils.labelize($scope.createRepoChoices.product, $scope.productForm);
+            FormUtils.labelize($scope.createRepoChoices.product);
         });
 
         $scope.createRepoChoices = {
@@ -53,7 +53,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
                     messages: '',
                     $invalid: false
                 };
-            FormUtils.labelize(repo, repo.form);
+            FormUtils.labelize(repo);
         });
 
         Product.queryUnpaged({'organization_id': CurrentOrganization}, function (values) {
@@ -77,7 +77,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             if (newList) {
                 angular.forEach(newList, function (newItem, position) {
                     if (oldList === undefined || newItem.name !== oldList[position].name) {
-                        FormUtils.labelize(newItem, newItem.form);
+                        FormUtils.labelize(newItem);
                     }
                 });
             }

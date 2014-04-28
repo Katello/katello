@@ -13,21 +13,32 @@ module Support
   module ForemanTasks
     module Task
       def assert_async_task(expected_action_class, *args_expected, &block)
+        assert_foreman_task(true, expected_action_class, *args_expected, &block)
+      end
+
+      def assert_sync_task(expected_action_class, *args_expected, &block)
+        assert_foreman_task(false, expected_action_class, *args_expected, &block)
+      end
+
+      def assert_foreman_task(async, expected_action_class, *args_expected, &block)
         task_attrs = [:id, :label, :pending,
                       :username, :started_at, :ended_at, :state, :result, :progress,
                       :input, :output, :humanized, :cli_example].inject({}) { |h, k| h.update k => nil }
-        task       = mock('task', task_attrs).mimic!(::ForemanTasks::Task)
+        task       = stub('task', task_attrs).mimic!(::ForemanTasks::Task)
         block      ||= if args_expected.empty?
                          lambda { |*args| true }
                        else
                          lambda { |*args|  args == args_expected }
                        end
 
+        method = async ? :async_task : :sync_task
         @controller.
-            expects(:async_task).
+            expects(method).
             with { |action_class, *args| expected_action_class == action_class && block.call(*args) }.
             returns(task)
+        return task
       end
+
     end
   end
 end

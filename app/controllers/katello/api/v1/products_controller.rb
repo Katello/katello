@@ -106,7 +106,6 @@ class Api::V1::ProductsController < Api::V1::ApiController
   param :organization_id, :identifier, :desc => "organization identifier"
   param :environment_id, :identifier, :desc => "environment identifier"
   param :id, :number, :desc => "product numeric identifier"
-  param :include_disabled, :bool, :desc => "set to True if you want to list disabled repositories"
   param :name, :identifier, :desc => "repository identifier"
   param :content_view_id, :identifier, :desc => "find repos in content view instead of default content view"
   def repositories
@@ -115,7 +114,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
             _("Cannot retrieve repos from non-library environment '%s' without a content view.") % @environment.name
     end
 
-    respond_for_index :collection => @product.repos(@environment, query_params[:include_disabled], @content_view).
+    respond_for_index :collection => @product.repos(@environment, @content_view).
         where(query_params.slice(:name))
   end
 

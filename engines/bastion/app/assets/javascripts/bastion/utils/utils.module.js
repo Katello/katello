@@ -18,4 +18,4 @@
  * @description
  *   Module for common utilities.
  */
-angular.module('Bastion.utils', ['Bastion']);
+angular.module('Bastion.utils', ['Bastion', 'uuid4']);

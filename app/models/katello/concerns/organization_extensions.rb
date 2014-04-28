@@ -116,6 +116,10 @@ module Katello
           self.providers.redhat.first
         end
 
+        def anonymous_provider
+          self.providers.anonymous.first
+        end
+
         def repo_discovery_task
           self.task_statuses.where(:task_type => :repo_discovery).order('created_at DESC').first
         end
@@ -125,7 +129,11 @@ module Katello
         end
 
         def create_redhat_provider
-          self.providers << Katello::Provider.new(:name => "Red Hat", :provider_type => Katello::Provider::REDHAT, :organization => self)
+          self.providers << Katello::Provider.new(:name => "Red Hat", :provider_type => Katello::Provider::REDHAT)
+        end
+
+        def create_anonymous_provider
+          self.providers << Katello::Provider.new(:name => Katello::Provider::ANONYMOUS, :provider_type => Katello::Provider::ANONYMOUS)
         end
 
         def validate_destroy(current_org)
@@ -145,6 +153,10 @@ module Katello
           self.task_statuses << task
           self.save!
           task
+        end
+
+        def redhat_repository_url
+          redhat_provider.repository_url
         end
 
         def being_deleted?

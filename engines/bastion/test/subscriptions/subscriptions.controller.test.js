@@ -37,12 +37,12 @@ describe('Controller: SubscriptionsController', function() {
         $q = $injector.get('$q');
         Subscription = $injector.get('MockResource').$new(),
         Provider = $injector.get('MockResource').$new();
+        Provider.redhatProvider = function() {};
 
         translate = function(message) {
             return message;
         };
         unlimitedFilterFilter = $filter('unlimitedFilter');
-
         $controller('SubscriptionsController', {
             $scope: $scope,
             $q: $q,

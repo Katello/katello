@@ -21,7 +21,6 @@ module Glue::Candlepin::Content
       before_save :save_content_orchestration
       after_destroy :update_environment_content
       after_create :rectify_gpg_key_orchestration
-      after_update :handle_enabled_changed
     end
   end
 
@@ -35,10 +34,6 @@ module Glue::Candlepin::Content
       if !self.new_record? && should_update_content?
         pre_queue.create(:name => "update content : #{self.name}", :priority => 2, :action => [self, :update_content])
       end
-    end
-
-    def handle_enabled_changed
-      update_environment_content if self.enabled_changed?
     end
 
     def update_environment_content

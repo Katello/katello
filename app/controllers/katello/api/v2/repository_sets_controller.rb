@@ -24,10 +24,11 @@ class Api::V2::RepositorySetsController < Api::V2::ApiController
     read_test         = lambda { @product.readable? }
 
     {
-        :enable  => edit_product_test,
-        :disable => edit_product_test,
-        :index   => read_test,
-        :show    => read_test
+        :enable                 => edit_product_test,
+        :disable                => edit_product_test,
+        :index                  => read_test,
+        :show                   => read_test,
+        :available_repositories => read_test
     }
   end
 
@@ -35,23 +36,6 @@ class Api::V2::RepositorySetsController < Api::V2::ApiController
     api_version "v2"
   end
 
-  api :PUT, "/repository_sets/:id/enable", "Enable a repository set"
-  api :PUT, "/products/:product_id/repository_sets/:id/enable", "Enable a repository set"
-  param :id, :number, :required => true, :desc => "ID of the repository set to enable"
-  param :product_id, :number, :required => true, :desc => "ID of the product containing the repository set"
-  def enable
-    respond_for_show :resource => @product.refresh_content(@product_content.content.id)
-  end
-
-  api :PUT, "/repository_sets/:id/disable", "Disable a repository set"
-  api :PUT, "/products/:product_id/repository_sets/:id/disable", "Disable a repository set"
-  param :id, :number, :required => true, :desc => "ID of the repository set to enable"
-  param :product_id, :number, :required => true, :desc => "ID of the product containing the repository set"
-  def disable
-    respond_for_show :resource => @product.disable_content(@product_content.content.id)
-  end
-
-  api :GET, "/repository_sets", "List repository sets for a product"
   api :GET, "/products/:product_id/repository_sets", "List repository sets for a product."
   param :product_id, :number, :required => true, :desc => "ID of a product to list repository sets from"
   def index
@@ -62,12 +46,44 @@ class Api::V2::RepositorySetsController < Api::V2::ApiController
     respond_for_index :collection => collection
   end
 
-  api :GET, "/repository_sets/:id", "Get info about a repository set"
   api :GET, "/products/:product_id/repository_sets/:id", "Get info about a repository set"
   param :id, :number, :required => true, :desc => "ID of the repository set"
   param :product_id, :number, :required => true, :desc => "ID of a product to list repository sets from"
   def show
     respond :resource => @product_content
+  end
+
+  api :GET, "/products/:product_id/repository_sets/:id/available_repositories", "Get list or available repositories for the repository set"
+  param :id, :number, :required => true, :desc => "ID of the repository set"
+  param :product_id, :number, :required => true, :desc => "ID of a product to list repository sets from"
+  def available_repositories
+    scan_cdn = sync_task(::Actions::Katello::RepositorySet::ScanCdn, @product, @product_content.content.id)
+    collection = {
+      :results  => scan_cdn.output[:results],
+      :subtotal => scan_cdn.output[:results].size,
+      :total    => scan_cdn.output[:results].size
+    }
+    respond_for_index :collection => collection
+  end
+
+  api :PUT, "/products/:product_id/repository_sets/:id/enable", "Enable a repository from the set"
+  param :id, :number, :required => true, :desc => "ID of the repository set to enable"
+  param :product_id, :number, :required => true, :desc => "ID of the product containing the repository set"
+  param :basearch, String, :required => true, :desc => "Basearch to enable"
+  param :releasever, String, :required => true, :desc => "Releasever to enable"
+  def enable
+    task = sync_task(::Actions::Katello::RepositorySet::EnableRepository, @product, @product_content.content, substitutions)
+    respond_for_async :resource => task
+  end
+
+  api :PUT, "/products/:product_id/repository_sets/:id/disable", "Disable a repository form the set"
+  param :id, :number, :required => true, :desc => "ID of the repository set to enable"
+  param :product_id, :number, :required => true, :desc => "ID of the product containing the repository set"
+  param :basearch, String, :required => true, :desc => "Basearch to disable"
+  param :releasever, String, :required => true, :desc => "Releasever to disable"
+  def disable
+    task = sync_task(::Actions::Katello::RepositorySet::DisableRepository, @product, @product_content.content, substitutions)
+    respond_for_async :resource => task
   end
 
   private
@@ -85,6 +101,10 @@ class Api::V2::RepositorySetsController < Api::V2::ApiController
 
   def custom_product?
     fail _('Repository sets are not available for custom products.') if @product.custom?
+  end
+
+  def substitutions
+    params.slice(:basearch, :releasever)
   end
 
 end

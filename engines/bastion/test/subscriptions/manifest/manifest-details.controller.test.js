@@ -11,11 +11,10 @@
  **/
 
 describe('Controller: ManifestDetailsController', function() {
-    var $scope, provider, organization, $q;
+    var $scope, organization, $q;
 
     beforeEach(module(
         'Bastion.subscriptions',
-        'Bastion.providers',
         'Bastion.test-mocks'
     ));
 
@@ -53,18 +52,16 @@ describe('Controller: ManifestDetailsController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             Organization = $injector.get('Organization'),
-            Provider = $injector.get('Provider'),
             $httpBackend = $injector.get('$httpBackend');
 
         $httpBackend.expectGET('/api/organization/ACME').respond(organization);
-        $httpBackend.expectGET('/api/providers/1').respond(provider);
 
         $scope = $injector.get('$rootScope').$new();
         $q = $injector.get('$q');
 
         $scope.$stateParams = {subscriptionId: 1};
 
-        $scope.provider = Provider.get({id: provider.id});
+        $scope.redhatProvider = Organization.redhatProvider();
 
         $controller('ManifestDetailsController', {
             $scope: $scope,
@@ -75,7 +72,7 @@ describe('Controller: ManifestDetailsController', function() {
     }));
 
     it('should attach the manifest import to the scope', function() {
-        $q.all([$scope.provider.$promise, $scope.organization.$promise]).then(function(prov, org) {
+        $q.all([$scope.organization.$promise]).then(function(prov, org) {
             expect($scope.manifestImport).toBeDefined();
             expect($scope.manifestImport.upstreamId).toBe('abc124');
             expect($scope.manifestImport.generatedBy).toBe('bilbo');

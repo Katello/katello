@@ -53,7 +53,7 @@ class ContentNodeCapability < NodeCapability
     elsif environment.nil? && view.nil?
       nil
     else
-      repos = Katello::Repository.enabled.in_environment(self.node.environment_ids)
+      repos = Katello::Repository.in_environment(self.node.environment_ids)
       repos = repos.in_environment(environment.id) if environment
       repos = repos.in_content_views([view]) if view
       repos.pluck(:pulp_id)
@@ -61,7 +61,7 @@ class ContentNodeCapability < NodeCapability
   end
 
   def calculate_bound_repos(env_list)
-    env_list.collect{|env| Katello::Repository.in_environment(env).enabled.pluck(:pulp_id)}.flatten
+    env_list.collect{|env| Katello::Repository.in_environment(env).pluck(:pulp_id)}.flatten
   end
 
 end

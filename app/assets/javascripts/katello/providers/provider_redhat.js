@@ -33,9 +33,6 @@ $(document).ready(function() {
     });
 
     $("#ui-tabs-1").append(spinner);
-    $("#content_tabs").delegate('.repo_set_enable', 'change', function(){
-        KT.redhat_provider_page.repoSetChange($(this), false);
-    });
 
     $("#content_tabs").delegate('.repo_enable', 'change', function() {
         KT.redhat_provider_page.repoChange($(this), false);
@@ -44,12 +41,12 @@ $(document).ready(function() {
     $("#content_tabs").delegate('.repo_set_refresh', 'click', function(){
         var icon = $(this),
             row = icon.parents('.repo_set').first(),
-            checkbox;
+            expanderArea;
 
         if(!icon.hasClass('disabled')){
-            checkbox = row.find('.repo_set_enable');
-            console.log(checkbox);
-            KT.redhat_provider_page.repoSetChange(checkbox, true);
+            expanderArea = row.find('.expander_area');
+            console.log(expanderArea);
+            KT.redhat_provider_page.repoSetRefresh(expanderArea);
         }
     });
 });
@@ -70,6 +67,10 @@ KT.redhat_provider_page = (function($) {
             options['repo'] = "0";
         }
 
+        options['content_id'] = checkbox.attr("data-content-id");
+        options['releasever'] = checkbox.attr("data-releasever");
+        options['basearch'] = checkbox.attr("data-basearch");
+
         $(checkbox).hide();
         $('#spinner_'+id).removeClass('hidden').show();
         $.ajax({
@@ -78,7 +79,7 @@ KT.redhat_provider_page = (function($) {
             data: options,
             cache: false,
             success: function(data, textStatus, jqXHR){
-              KT.redhat_provider_page.checkboxHighlightRow(data['id']);
+              KT.redhat_provider_page.checkboxHighlightRow(checkbox.attr("data-pulp-id"));
               if(data['can_disable_repo_set']){
                 set_checkbox.removeAttr('disabled');
               }
@@ -89,16 +90,10 @@ KT.redhat_provider_page = (function($) {
         });
         return false;
     },
-    repoSetChange = function(checkbox, is_refresh) {
-        var url = checkbox.data("url"),
-            disable_url = checkbox.data("disable-url"),
-            content_id = checkbox.attr("value");
-        if (checkbox.attr('checked') || is_refresh) {
-            refresh_repo_set(url, content_id, is_refresh);
-        }
-        else {
-            disable_repo_set(disable_url, content_id);
-        }
+    repoSetRefresh = function(expanderArea) {
+        var url = expanderArea.data('url'),
+            content_id = expanderArea.data('content-id');
+        refresh_repo_set(url, content_id);
     },
     disable_repo_set = function(url, content_id){
         var row = $('#repo_set_' + content_id);
@@ -131,35 +126,27 @@ KT.redhat_provider_page = (function($) {
             }
         });
     },
-    refresh_repo_set = function(url, content_id, is_refresh){
+    refresh_repo_set = function(url, content_id){
         var row = $('#repo_set_' + content_id);
-        hide_repos(content_id);
         row.addClass("disable");
-        row.find('.repo_set_enable').hide();
+        row.find('.expander').hide();
         row.find('.repo_set_spinner').show();
-        row.find('.repo_set_refresh').addClass('disabled');
         $.ajax({
-            type: "PUT",
+            type: "GET",
             url: url,
             data: {content_id:content_id},
             cache: false,
             success: function(data){
                 row.find('table').replaceWith(data);
                 row.removeClass("disable");
-                row.find('.repo_set_enable').show();
                 row.find('.repo_set_spinner').hide();
                 row.find('.expander').show();
-                show_repos(content_id);
-                row.find('.repo_set_refresh').removeClass('disabled').show();
-
+                row.find('table').show();
             },
             error: function(){
                 row.removeClass("disable");
-                row.find('.repo_set_enable').show().attr('checked', is_refresh);
+                row.find('.expander').show();
                 row.find('.repo_set_spinner').hide();
-                if(is_refresh){
-                    row.find('.repo_set_refresh').removeClass('disabled').hide();
-                }
             }
         });
     },
@@ -194,11 +181,8 @@ KT.redhat_provider_page = (function($) {
         panel.find(".content_table").delegate('.expander_area', 'click', function(){
             var area = $(this),
                 row = area.parents('tr').first();
-            if(row.hasClass("disable")){
-                return;
-            }
             if(row.hasClass("collapsed")){
-                area.parent().find('table').show();
+                KT.redhat_provider_page.repoSetRefresh(area);
                 row.removeClass("collapsed").addClass('expanded');
             } else {
                 area.parent().find('table').hide();
@@ -212,7 +196,7 @@ KT.redhat_provider_page = (function($) {
         repoChange: repoChange,
         checkboxHighlightRow: checkboxHighlightRow,
         on_node_show: on_node_show,
-        repoSetChange: repoSetChange,
+        repoSetRefresh: repoSetRefresh,
         hide_repos: hide_repos,
         init_tab: init_tab
     };

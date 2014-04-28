@@ -30,7 +30,6 @@ module Katello
       setup_controller_defaults_api
       login_user(User.find(users(:admin)))
       @request.env['HTTP_ACCEPT'] = 'application/json'
-
       models
     end
 
@@ -56,6 +55,24 @@ module Katello
       Organization.any_instance.stubs(:destroy).returns(true)
       delete(:destroy, :id => @organization.id)
 
+      assert_response :success
+    end
+
+    def test_update_redhat_repo_url
+      #stub foreman super class..
+      ::Api::V2::TaxonomiesController.class_eval do
+        def params_match_database
+          @organization.id
+        end
+      end
+
+      url = "http://www.redhat.com"
+      redhat_provider = mock()
+      redhat_provider.expects(:update_attributes!).with do |arg_hash|
+        arg_hash[:repository_url] == url
+      end
+      Organization.any_instance.expects(:redhat_provider).returns(redhat_provider)
+      put(:update, :id => @organization.id, :redhat_repository_url => url)
       assert_response :success
     end
 

@@ -29,7 +29,7 @@ module Authorization::Repository
     end
 
     def redhat_deletable?
-      !self.enabled? && !self.promoted? && self.product.provider.editable?
+      !self.promoted? && self.product.provider.editable?
     end
 
     def syncable?
@@ -63,7 +63,7 @@ module Authorization::Repository
     end
 
     def libraries_content_readable(org)
-      repos = Repository.enabled.content_readable(org)
+      repos = Repository.content_readable(org)
       lib_ids = []
       repos.each{|r|  lib_ids << (r.library_instance_id || r.id)}
       where(:id => lib_ids)

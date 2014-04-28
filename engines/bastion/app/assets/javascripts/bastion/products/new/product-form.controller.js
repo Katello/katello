@@ -76,7 +76,7 @@ angular.module('Bastion.products').controller('ProductFormController',
         $scope.$watch('product.name', function () {
             if ($scope.productForm.name) {
                 $scope.productForm.name.$setValidity('server', true);
-                FormUtils.labelize($scope.product, $scope.productForm);
+                FormUtils.labelize($scope.product);
             }
         });
 

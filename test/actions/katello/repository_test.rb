@@ -20,7 +20,7 @@ module ::Actions::Katello::Repository
     include FactoryGirl::Syntax::Methods
 
     let(:action) { create_action action_class }
-    let(:repository) { katello_repositories(:fedora_17_x86_64) }
+    let(:repository) { katello_repositories(:rhel_6_x86_64) }
   end
 
   class CreateTest < TestBase
@@ -41,7 +41,7 @@ module ::Actions::Katello::Repository
     let(:pulp_action_class) { ::Actions::Pulp::Repository::Destroy }
 
     it 'plans' do
-      repository.expects(:destroy)
+      repository.expects(:destroy!)
       action       = create_action action_class
       action.stubs(:action_subject).with(repository)
       plan_action action, repository
