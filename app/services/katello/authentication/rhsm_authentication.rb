@@ -12,26 +12,19 @@
 
 module Katello
   module Authentication
+    # Include the consumer certificate as valid way to authenitcate for the controller
+    # this module is included in
     module RhsmAuthentication
-      extend ActiveSupport::Concern
+      include ClientAuthentication
 
-      included do
-        include ClientAuthentication
+      def authenticate
+        authenticate_rhsm || super
+      end
 
-        def authorize_rhsm
-          if cert_present?
-            set_client_user
-          elsif authenticate
-            User.current
-          else
-            deny_access
-          end
+      def authenticate_rhsm
+        if cert_present?
+          set_client_user
         end
-
-        def add_candlepin_version_header
-          response.headers["X-CANDLEPIN-VERSION"] = "katello/#{Katello.config.katello_version}"
-        end
-
       end
 
     end
