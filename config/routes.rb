@@ -245,8 +245,6 @@ Katello::Engine.routes.draw do
     end
   end
 
-  match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
-
   resources :organizations do
     collection do
       get :auto_complete_search
@@ -255,36 +253,22 @@ Katello::Engine.routes.draw do
     end
     member do
       get :show
-      get :environments_partial
       get :events
       get :download_debug_certificate
       get :apply_default_info_status
     end
-    resources :environments do
-      get :default_label, :on => :collection
-      member do
-        get :products
-        get :content_views
-      end
+    resources :environments, :only => [] do
       collection do
         get :registerable_paths
-      end
-      resources :content_view_versions, :only => [:show] do
-        member do
-          get :content
-        end
       end
     end
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
   match '/organizations/:id/default_info/:informable_type' => 'organizations#default_info', :via => :get, :as => :organization_default_info
 
-  resources :environments do
+  resources :environments, :only => [:index] do
     collection do
       get :all
-    end
-    member do
-      get :content_views
     end
   end
 
