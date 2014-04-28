@@ -17,8 +17,7 @@ module Actions
 
         def plan(content_view, environment, new_content_id = nil)
           view_env = content_view.content_view_environment(environment)
-          content_ids = content_view.repos(environment).select(&:enabled).
-              map(&:content_id).uniq.compact
+          content_ids = content_view.repos(environment).map(&:content_id).uniq.compact
           # in case we create new custom repository that doesn't have the
           # content_id set yet in the plan phase, we allow to pass it as
           # additional argument

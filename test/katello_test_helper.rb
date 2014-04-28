@@ -2,6 +2,7 @@ require 'test_helper'
 require 'factory_girl_rails'
 require "webmock/minitest"
 require "mocha/setup"
+require 'set'
 
 require "#{Katello::Engine.root}/test/support/minitest/spec/shared_examples"
 require "#{Katello::Engine.root}/spec/helpers/login_helper_methods"
@@ -171,11 +172,40 @@ class ActiveSupport::TestCase
 
 end
 
+def disable_lazy_accessors
+  models = Katello::Model.subclasses.find_all do |model|
+    model.ancestors.include?(Katello::LazyAccessor)
+  end
+  models.each do |model|
+    target = model.is_a?(Class) ? model.any_instance : target
+    target.stubs(:lazy_attribute_get)
+  end
+end
+
+def stub_lazy_accessors(model, stubs)
+  if model.is_a?(Class)
+    target = model.any_instance
+    model_class = model
+  else
+    target = model
+    model_class = model.class
+  end
+  return unless model_class.ancestors.include?(Katello::LazyAccessor)
+  stubs.keys.each do |attr|
+    unless model_class.lazy_attributes.include?(attr)
+      fail "#{attr} is not a lazy attribute for #{model_class}, expected one of #{model_class.lazy_attributes}"
+    end
+  end
+  target.stubs(stubs)
+end
+
 def disable_glue_layers(services=[], models=[], force_reload=false)
+  @@glue_touched_models ||= Set.new
   @@model_service_cache ||= {}
   @@model_service_cache = {} if force_reload
-  change = false
 
+  @@glue_touched_models += models
+  change = false
   Katello.config[:use_cp]            = services.include?('Candlepin') ? false : true
   Katello.config[:use_pulp]          = services.include?('Pulp') ? false : true
   Katello.config[:use_elasticsearch] = services.include?('ElasticSearch') ? false : true
@@ -189,10 +219,10 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
   models.each do |model|
     if @@model_service_cache[model] != cached_entry
       begin
-        Katello.send(:remove_const, model)
+        disable_glue_remove_const(Katello, model)
         load "#{Katello::Engine.root}/app/models/katello/#{model.underscore}.rb"
       rescue NameError
-        Object.send(:remove_const, model)
+        disable_glue_remove_const(Object, model)
         if model == 'Organization'
           load "#{Rails.root}/app/models/taxonomies/#{model.underscore}.rb"
         else
@@ -229,8 +259,33 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
   end
 
   if change
-    ActiveSupport::Dependencies::Reference.clear!
-    FactoryGirl.definition_file_paths = ["#{Rails.root}/test/factories", "#{Katello::Engine.root}/test/factories"]
-    FactoryGirl.reload
+    constants_updated
+  end
+
+end
+
+def constants_updated
+  ActiveSupport::Dependencies::Reference.clear!
+  FactoryGirl.definition_file_paths = ["#{Rails.root}/test/factories", "#{Katello::Engine.root}/test/factories"]
+  FactoryGirl.reload
+end
+
+def disable_glue_remove_const(target_module, constant)
+  @@disable_glue_models_backup ||= []
+  removed_value = target_module.send(:remove_const, constant)
+  @@disable_glue_models_backup << [target_module, constant, removed_value]
+end
+
+# +disable_glue_layers+ breaks the isolaiton between different test suites
+# this allows restoring the original classes after the suite that used
+# the disable_glue_layers stuff.
+def restore_glue_layers
+  if defined?(@@disable_glue_models_backup) && @@disable_glue_models_backup.any?
+    @@disable_glue_models_backup.each do |target_module, constant, value|
+      target_module.const_set(constant, value)
+    end
+    constants_updated
+    @@disable_glue_models_backup.clear
+    @@model_service_cache.clear if defined?(@@model_service_cache)
   end
 end

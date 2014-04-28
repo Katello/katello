@@ -237,7 +237,6 @@ describe Provider do
       product = @provider.products.create!(:name => product_name, :label => "#{product_name.hash}", :cp_id => product_name.hash)
 
       product.productContent = [product_content(product_name)]
-      product.productContent.first.stubs(:katello_enabled?).returns(true)
       product.productContent.each do |product_content|
         releases.each do |release|
           version = Resources::CDN::Utils.parse_version(release)
@@ -301,13 +300,6 @@ describe Provider do
       Thread.current[:cdn_var_substitutor_cache] = nil
     end
 
-    it "should create repositories that were added in CDN" do
-      Candlepin::ProductContent.any_instance.expects(:sync_task).with do |action_class, repo|
-        action_class.must_equal ::Actions::Katello::Repository::Create
-        repo.name.must_equal "product-with-change 1.1"
-      end
-      @provider.refresh_products
-    end
   end
 
   describe "sync provider" do

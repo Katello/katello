@@ -21,7 +21,7 @@
  * @requires translate
  * @requires Nutupane
  * @requires Subscription
- * @requires Provider
+ * @requires Organization
  * @requires CurrentOrganization
  * @requires unlimitedFilterFilter
  *
@@ -31,8 +31,8 @@
  *   within the table.
  */
 angular.module('Bastion.subscriptions').controller('SubscriptionsController',
-    ['$scope', '$filter', '$q', '$location', 'translate', 'Nutupane', 'Subscription', 'Provider', 'CurrentOrganization', 'SubscriptionsHelper',
-    function ($scope, $filter, $q, $location, translate, Nutupane, Subscription, Provider, CurrentOrganization, SubscriptionsHelper) {
+    ['$scope', '$filter', '$q', '$location', 'translate', 'Nutupane', 'Subscription', 'Organization', 'CurrentOrganization', 'SubscriptionsHelper',
+    function ($scope, $filter, $q, $location, translate, Nutupane, Subscription, Organization, CurrentOrganization, SubscriptionsHelper) {
 
         var params = {
             'organization_id':  CurrentOrganization,
@@ -78,16 +78,13 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
                 return translate('Physical');
             }
         };
-
-        $scope.providers = Provider.queryUnpaged({ 'organization_id': CurrentOrganization, 'provider_type': 'Red Hat' }, function (response) {
-            $scope.provider = _.first(response.results);
-        });
+        $scope.redhatProvider =  Organization.redhatProvider();
 
         $scope.subscriptions = Subscription.queryPaged();
 
-        $q.all([$scope.providers.$promise, $scope.subscriptions.$promise]).then(function () {
+        $q.all([$scope.subscriptions.$promise]).then(function () {
             if ($scope.subscriptions.results.length < 1) {
-                $scope.transitionTo('subscriptions.manifest.import', {providerId: $scope.provider.id});
+                $scope.transitionTo('subscriptions.manifest.import');
             }
         });
     }]

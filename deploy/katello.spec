@@ -43,6 +43,15 @@ Requires:       rubygem-hammer_cli
 Requires:       rubygem-hammer_cli_foreman
 Requires:       rubygem-hammer_cli_katello
 
+#foreman plugins and optional packages
+Requires:       ruby193-rubygem-foreman_bootdisk
+Requires:       ruby193-rubygem-foreman_discovery
+Requires:       ruby193-rubygem-foreman_hooks
+Requires:       foreman-libvirt
+Requires:       foreman-ovirt
+Requires:       foreman-vmware
+Requires:       foreman-gce
+
 BuildRequires: asciidoc
 BuildRequires: util-linux
 
@@ -58,7 +67,6 @@ Provides a package for managing application life-cycle for Linux systems.
     #replace shebangs for SCL
     find script/ -type f | xargs sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X'
     #use rake from SCL
-    sed -ri 'sX(/usr/bin/rake|/usr/bin/env rake)X%{scl_rake}Xg' script/katello-refresh-cdn
     sed -ri 'sX(/usr/bin/rake|/usr/bin/env rake)X%{scl_rake}Xg' script/katello-remove-orphans
 %endif
 
@@ -74,9 +82,7 @@ cp -R script %{buildroot}%{homedir}
 mkdir -p %{buildroot}/%{_mandir}/man8
 
 #copy cron scripts to be scheduled
-install -d -m0755 %{buildroot}%{_sysconfdir}/cron.daily
 install -d -m0755 %{buildroot}%{_sysconfdir}/cron.weekly
-install -m 755 script/katello-refresh-cdn %{buildroot}%{_sysconfdir}/cron.daily/katello-refresh-cdn
 install -m 755 script/katello-remove-orphans %{buildroot}%{_sysconfdir}/cron.weekly/katello-remove-orphans
 
 #copy init scripts and sysconfigs
@@ -92,6 +98,7 @@ mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_sbindir}
 ln -sv %{homedir}/script/katello-jobs %{buildroot}%{_bindir}/katello-jobs
 ln -sv %{homedir}/script/katello-debug %{buildroot}%{_bindir}/katello-debug
+ln -sv %{homedir}/script/katello-remove %{buildroot}%{_bindir}/katello-remove
 ln -sv %{homedir}/script/katello-generate-passphrase %{buildroot}%{_bindir}/katello-generate-passphrase
 ln -sv %{homedir}/script/katello-service %{buildroot}%{_bindir}/katello-service
 ln -sv %{homedir}/script/service-wait %{buildroot}%{_sbindir}/service-wait
@@ -132,7 +139,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/script/service-wait
 %defattr(-, katello, katello)
 %dir %{homedir}
-%config(missingok) %{_sysconfdir}/cron.daily/katello-refresh-cdn
 %config(missingok) %{_sysconfdir}/cron.weekly/katello-remove-orphans
 
 

@@ -12,7 +12,7 @@ child :products => :products do
   attributes :cp_id => :id
   attributes :name
   node :repository_count do |product|
-    product.repositories.enabled.count
+    product.repositories.count
   end
   child :provider => :provider do
     attribute :name

@@ -35,6 +35,7 @@ module KatelloMiniTestRunner
         super(suite, type)
       ensure
         suite.after_suite if suite.respond_to?(:after_suite)
+        restore_glue_layers
         ResourceTypeBackup.restore
       end
     end

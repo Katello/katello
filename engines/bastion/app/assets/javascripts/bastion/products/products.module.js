@@ -25,7 +25,6 @@ angular.module('Bastion.products', [
     'ui.router',
     'Bastion',
     'Bastion.widgets',
-    'Bastion.providers',
     'Bastion.sync-plans',
     'Bastion.gpg-keys',
     'Bastion.tasks'
@@ -73,12 +72,6 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         collapsed: true,
         controller: 'ProductFormController',
         templateUrl: 'products/new/views/product-new-form.html'
-    })
-    .state('products.new.provider', {
-        url: '/products/new/provider',
-        collapsed: true,
-        controller: 'NewProviderController',
-        templateUrl: 'providers/new/views/provider-new.html'
     })
     .state('products.new.sync-plan', {
         url: '/products/new/sync-plan',

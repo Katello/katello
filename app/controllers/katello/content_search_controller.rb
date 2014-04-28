@@ -506,8 +506,7 @@ class ContentSearchController < Katello::ApplicationController
   end
 
   def repo_search(term, readable_list, product_ids = nil)
-    conditions = [{ :terms => { :id => readable_list } },
-                  { :terms => { :enabled => [true] } }]
+    conditions = [{ :terms => { :id => readable_list } }]
     conditions << { :terms => { :product_id => product_ids } } unless product_ids.blank?
 
     #get total repos
@@ -750,7 +749,7 @@ class ContentSearchController < Katello::ApplicationController
     # repos were searched by string
     unless repo_ids.is_a? Array
       search_string = repo_ids
-      repo_ids      = Repository.enabled.non_archived.libraries_content_readable(current_organization).pluck("#{Katello::Repository.table_name}.id")
+      repo_ids      = Repository.non_archived.libraries_content_readable(current_organization).pluck("#{Katello::Repository.table_name}.id")
     end
 
     repo_search(search_string, repo_ids, product_ids)

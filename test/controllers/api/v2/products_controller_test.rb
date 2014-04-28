@@ -18,13 +18,13 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
 
   def self.before_suite
     models = ["Product"]
-    disable_glue_layers(%w(Candlepin Pulp ElasticSearch), models)
+    disable_glue_layers(%w(Candlepin Pulp ElasticSearch), models, true)
     super
   end
 
   def models
     @organization = get_organization
-    @provider = katello_providers(:fedora_hosted)
+    @provider = Provider.find(katello_providers(:anonymous))
     @product = katello_products(:empty_product)
     @product.stubs(:redhat?).returns(false)
   end
@@ -65,37 +65,55 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     end
   end
 
+
   def test_create
+    anonymous_provider = Provider.find(katello_providers(:anonymous))
+    Organization.any_instance.expects(:anonymous_provider).at_least_once.returns(anonymous_provider)
+
     product_params = {
       :name => 'fedora product',
-      :provider_id => @provider.id,
       :description => 'this is my cool new product.'
     }
-    post :create, :product => product_params
+    Api::V2::ProductsController.any_instance.expects(:sync_task).with do |action_class, prod, org|
+      action_class.must_equal ::Actions::Katello::Product::Create
+      prod.must_be_kind_of(Product)
+      org.must_equal @organization
+      prod.provider = @provider
+    end
+
+    post :create, :product => product_params, :organization_id => @organization.label
 
     assert_response :success
     assert_template %w(katello/api/v2/common/create katello/api/v2/layouts/resource)
   end
 
   def test_create_fail_without_product
+    anonymous_provider = Katello::Provider.find(katello_providers(:anonymous))
+    Organization.any_instance.expects(:anonymous_provider).returns(anonymous_provider)
+
     post :create, :organization_id => @organization.label
     assert_response :bad_request
   end
 
-  def test_create_fail_with_only_provider_id
-    # without provider_id it's 500 and this test is for 422 errors
-    post :create, :provider_id => @provider.id
-
-    assert_response :bad_request
-  end
-
   def test_create_protected
+    anonymous_provider = Katello::Provider.find(katello_providers(:anonymous))
+    Organization.any_instance.stubs(:anonymous_provider).returns(anonymous_provider)
+
     allowed_perms = [@create_permission]
     denied_perms = [@read_permission, @no_permission]
-
     assert_protected_action(:create, allowed_perms, denied_perms) do
-      post :create, :product => {:provider_id => @provider.id}, :organization_id => @organization.label
+      post :create, :product => {}, :organization_id => @organization.label
     end
+  end
+
+  def test_create_with_bad_org
+    product_params = {
+     :name => 'fedora product',
+     :description => 'this is my cool new product.'
+    }
+    post :create, :product => product_params, :organization_id => 'asdfdsafds'
+
+    assert_response 404
   end
 
   def test_show
@@ -182,6 +200,5 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
       delete :destroy, :id => @product.id
     end
   end
-
 end
 end

@@ -65,7 +65,7 @@ module ProductHelperMethods
     lib_instance = repo.library_instance.nil? ? repo : repo.library_instance
 
     repo_clone = new_test_repo(environment, repo.product, repo.name,
-                               "#{environment.organization.name}/#{environment.name}/prod/repo", true, "", lib_instance)
+                               "#{environment.organization.name}/#{environment.name}/prod/repo", "", lib_instance)
     repo.stubs(:create_clone).returns(repo_clone)
     repo.stubs(:clone_contents).returns([])
     repo.stubs(:sync).returns([])

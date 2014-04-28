@@ -11,7 +11,7 @@ child :products => :products do |product|
 
   node :repository_count do |product|
     if product.repositories.to_a.any?
-      product.repositories.enabled.count
+      product.repositories.count
     else
       0
     end

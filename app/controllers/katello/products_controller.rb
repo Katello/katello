@@ -14,10 +14,13 @@ module Katello
 class ProductsController < Katello::ApplicationController
   respond_to :html, :js
 
-  before_filter :find_product, :only => [:refresh_content, :disable_content]
-  before_filter :find_provider, :only => [:refresh_content, :disable_content]
+  before_filter :find_product, :only => [:available_repositories, :toggle_repository]
+  before_filter :find_provider, :only => [:available_repositories, :toggle_repository]
+  before_filter :find_content, :only => [:toggle_repository]
 
   before_filter :authorize
+
+  include ForemanTasks::Triggers
 
   def rules
     read_test = lambda {Product.any_readable?(current_organization)}
@@ -27,8 +30,8 @@ class ProductsController < Katello::ApplicationController
       :index => read_test,
       :all => read_test,
       :auto_complete =>  read_test,
-      :refresh_content => edit_test,
-      :disable_content => edit_test,
+      :available_repositories => edit_test,
+      :toggle_repository => edit_test,
     }
   end
 
@@ -36,21 +39,23 @@ class ProductsController < Katello::ApplicationController
     'contents'
   end
 
-  def refresh_content
+  def available_repositories
     if @product.custom?
-      render_bad_parameters _('Repository sets are enabled by default for custom products.')
+      render_bad_parameters _('Repository sets are not available for custom products.')
     else
-      pc = @product.refresh_content(params[:content_id])
-      render :partial => 'katello/providers/redhat/repos', :locals => { :product_content => pc }
+      task = sync_task(::Actions::Katello::RepositorySet::ScanCdn, @product, params[:content_id])
+      render :partial => 'katello/providers/redhat/repos', :locals => { :scan_cdn => task }
     end
   end
 
-  def disable_content
-    if @product.custom?
-      render_bad_parameters _('Repository sets cannot be disabled for custom products.')
-    else
-      render :json => @product.disable_content(params[:content_id])
-    end
+  def toggle_repository
+    action_class = if params[:repo] == '1'
+                     ::Actions::Katello::RepositorySet::EnableRepository
+                   else
+                     ::Actions::Katello::RepositorySet::DisableRepository
+                   end
+    task = sync_task(action_class, @product, @content, substitutions)
+    render :json => { :task_id => task.id }
   end
 
   def index
@@ -85,5 +90,18 @@ class ProductsController < Katello::ApplicationController
   def find_product
     @product = Product.find(params[:id])
   end
+
+  def find_content
+    if product_content = @product.product_content_by_id(params[:content_id])
+      @content = product_content.content
+    else
+      fail HttpErrors::NotFound, _("Couldn't find content '%s'") % params[:content_id]
+    end
+  end
+
+  def substitutions
+    params.slice(:basearch, :releasever)
+  end
+
 end
 end

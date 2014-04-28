@@ -22,10 +22,7 @@
  */
 angular.module('Bastion.subscriptions').controller('ManifestHistoryController',
     ['$scope', function ($scope) {
-
-        $scope.provider.$promise.then(function () {
-            $scope.manifestStatuses = $scope.manifestHistory($scope.provider);
-            $scope.panel.loading = false;
-        });
+        $scope.manifestStatuses = $scope.manifestHistory();
+        $scope.panel.loading = false;
     }]
 );

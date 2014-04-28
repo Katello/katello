@@ -18,7 +18,7 @@
           <span translate>Clone View</span>
         </a>
 
-        <button ng-hide="true" class="btn btn-default" ui-sref="content-views.index">
+        <button class="btn btn-default" ui-sref="content-views.details.deletion">
           <i class="icon-trash"></i>
           {{ "Remove View" | translate }}
         </button>
@@ -81,7 +81,7 @@
         </a>
       </li>
 
-      <li ng-class="{active: isState('content-views.details.info')}">
+      <li ng-class="{active: isState('content-views.details.info') || isState('content-views.details.deletion')}">
         <a ui-sref="content-views.details.info" translate>
           Details
         </a>

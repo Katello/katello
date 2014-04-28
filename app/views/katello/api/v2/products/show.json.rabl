@@ -14,7 +14,7 @@ attributes :redhat? => :redhat
 
 node :repository_count do |product|
   if product.library_repositories.to_a.any?
-    product.library_repositories.enabled.count
+    product.library_repositories.count
   else
     0
   end

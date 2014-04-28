@@ -121,7 +121,6 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/test.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/jenkins.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/setup.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/cdn_refresh.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/delete_orphaned_content.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/regenerate_repo_metadata.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/reindex.rake"

@@ -267,7 +267,7 @@ class KTEnvironment < Katello::Model
   # versions in the manifest.
   def available_releases
     if Katello.config.katello?
-      self.repositories.enabled.map(&:minor).compact.uniq.sort
+      self.repositories.map(&:minor).compact.uniq.sort
     else
       self.organization.redhat_provider.available_releases
     end

@@ -14,14 +14,16 @@ module Katello
 module Util
 
   class CdnVarSubstitutor
-
+    attr_reader :good_listings
+    attr_reader :bad_listings
     # cdn_resource - an object providing access to CDN. It has to
     # provide a get method that takes a path (e.g.
     # /content/rhel/6.2/listing) and returns the body response)
     def initialize(cdn_resource)
       @resource = cdn_resource
       @substitutions = Thread.current[:cdn_var_substitutor_cache] || {}
-      @status = true
+      @good_listings = Set.new
+      @bad_listings = Set.new
     end
 
     # using substitutor from whithin the block makes sure that every
@@ -106,7 +108,27 @@ module Util
       substitutions.include? substituted_url
     end
 
+    def valid_substitutions?(contnent_url, substitutions)
+      real_path = gsub_vars(contnent_url, substitutions)
+      if is_substituable(real_path)
+        return false
+      else
+        begin
+          !! @resource.get(File.join(real_path, "repodata"))
+        rescue Errors::NotFound => e
+          @resource.log :error, e.message
+          return false
+        end
+      end
+    end
+
     protected
+
+    def gsub_vars(content_url, substitutions)
+      substitutions.reduce(content_url) do |url, (key, value)|
+        url.gsub("$#{key}", value)
+      end
+    end
 
     def for_each_substitute_of_next_var(substitutions, path)
       if path =~ /^(.*?)\$([^\/]*)/
@@ -122,10 +144,12 @@ module Util
     end
 
     def get_substitutions_from(base_path)
-      @resource.get(File.join(base_path, "listing")).split("\n")
+      ret = @resource.get(File.join(base_path, "listing")).split("\n")
+      @good_listings << base_path
+      ret
     rescue Errors::NotFound => e # some of listing file points to not existing content
+      @bad_listings << base_path
       @resource.log :error, e.message
-      @status = false
       [] # return no substitution for unreachable listings
     end
 

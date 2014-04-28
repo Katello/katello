@@ -14,7 +14,7 @@ module RepositoryHelperMethods
     end
   end
 
-  def new_test_repo(env, product, name, path, enabled=true, suffix="", library_instance=nil)
+  def new_test_repo(env, product, name, path, suffix="", library_instance=nil)
     disable_repo_orchestration
     disable_product_orchestration
 
@@ -22,7 +22,7 @@ module RepositoryHelperMethods
     repo = Repository.new(:environment => env, :product => product,
                           :name => name, :label =>  "#{name}-#{random_id}",
                           :relative_path => path, :pulp_id => "pulp-id-#{random_id}",
-                          :content_id => "content-id-#{random_id}", :enabled => enabled,
+                          :content_id => "content-id-#{random_id}",
                           :content_view_version=>env.content_view_versions.first,
                           :feed=>'http://localhost.com/foo')
     repo.library_instance = library_instance if library_instance

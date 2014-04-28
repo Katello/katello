@@ -47,6 +47,10 @@ module Glue::ElasticSearch::BackendIndexedModel
       Tire.index(self.index).refresh
     end
 
+    def delete_index
+      Tire.index(self.index).delete
+    end
+
     def create_index
       unless index_exists?
         class_obj = self
