@@ -13,6 +13,8 @@
 module Fort
   class Engine < ::Rails::Engine
 
+    isolate_namespace Fort
+
     initializer 'fort.mount_engine', :after => :build_middleware_stack do |app|
       app.routes_reloader.paths << "#{Fort::Engine.root}/config/mount_engine.rb"
     end

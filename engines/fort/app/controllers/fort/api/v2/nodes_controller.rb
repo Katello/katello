@@ -13,6 +13,8 @@
 module Fort
 class Api::V2::NodesController < Katello::Api::V2::ApiController
 
+  include Katello::Authentication::RhsmAuthentication
+
   before_filter :authorize
   before_filter :find_node, :only => [:destroy, :get, :update, :show, :sync]
   before_filter :find_environment, :only => [:sync]
