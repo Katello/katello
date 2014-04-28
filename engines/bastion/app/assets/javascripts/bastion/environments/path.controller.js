@@ -115,7 +115,7 @@ angular.module('Bastion.environments').controller('PathController',
             $scope.$watch('environment.name', function () {
                 if ($scope.environmentForm.name) {
                     $scope.environmentForm.name.$setValidity('server', true);
-                    FormUtils.labelize($scope.environment, $scope.environmentForm);
+                    FormUtils.labelize($scope.environment);
                 }
             });
 

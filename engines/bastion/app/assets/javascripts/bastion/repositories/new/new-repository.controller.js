@@ -33,7 +33,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         $scope.$watch('repository.name', function () {
             if ($scope.repositoryForm.name) {
                 $scope.repositoryForm.name.$setValidity('server', true);
-                FormUtils.labelize($scope.repository, $scope.repositoryForm);
+                FormUtils.labelize($scope.repository);
             }
         });
 
