@@ -278,7 +278,7 @@ module Glue::Pulp::Repos
     end
 
     def update_repositories
-      repos = Repository.in_product(self)
+      repos = Repository.in_product(self).in_default_view
       upstream_ca = File.read(Resources::CDN::CdnResource.ca_file)
       repos.each do |repo|
         key = nil
