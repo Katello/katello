@@ -55,7 +55,7 @@ class Api::V2::GpgKeysControllerTest < ActionController::TestCase
     allowed_perms = [@view_permission]
     denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-    assert_protected_action(:index, allowed_perms, denied_perms, @resource_type) do
+    assert_protected_action(:index, allowed_perms, denied_perms) do
       get :index, :organization_id => @organization.label
     end
   end

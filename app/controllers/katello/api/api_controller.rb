@@ -49,7 +49,12 @@ class Api::ApiController < ::Api::BaseController
     [
       'katello/api/v2/activation_keys',
       'katello/api/v2/gpg_keys',
-      'katello/api/v2/sync_plans'
+      'katello/api/v2/sync_plans',
+      'katello/api/v2/products',
+      'katello/api/v2/repositories',
+      'katello/api/v2/products_bulk_actions',
+      'katello/api/v2/repositories_bulk_actions',
+      'katello/api/v2/content_uploads'
     ]
   end
 
@@ -114,6 +119,19 @@ class Api::ApiController < ::Api::BaseController
     method_name = ('respond_for_' + params[:action].to_s).to_sym
     fail "automatic response method '%s' not defined" % method_name unless respond_to?(method_name, true)
     return send(method_name, options)
+  end
+
+  def format_bulk_action_messages(args = {})
+    models     = args.fetch(:models)
+    authorized = args.fetch(:authorized)
+    messages   = []
+
+    unauthorized = models - authorized
+
+    messages << args.fetch(:success) % authorized.length if authorized.present?
+    messages << args.fetch(:error) % unauthorized if unauthorized.present?
+
+    messages
   end
 
 end

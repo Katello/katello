@@ -4,6 +4,7 @@ fedora:
   label:        fedora_label
   cp_id:        fedora
   provider_id:  <%= ActiveRecord::Fixtures.identify(:fedora_hosted) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
 redhat:
   name:         Red Hat Linux
@@ -11,6 +12,7 @@ redhat:
   cp_id:        redhat
   label:        redhat_label
   provider_id:  <%= ActiveRecord::Fixtures.identify(:redhat) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
 puppet_product:
   name:         Puppet Product
@@ -18,15 +20,18 @@ puppet_product:
   cp_id:        puppet
   label:        puppet_product
   provider_id:  <%= ActiveRecord::Fixtures.identify(:puppet_labs) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
 empty_product:
   name:         Empty Product
   cp_id:        empty_product
   label:        empty_product
   provider_id:  <%= ActiveRecord::Fixtures.identify(:fedora_hosted) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
 empty_product_2:
   name:         Empty Product_2
   cp_id:        empty_product_2
   label:        empty_product_2
   provider_id:  <%= ActiveRecord::Fixtures.identify(:fedora_hosted) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>

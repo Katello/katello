@@ -60,7 +60,7 @@ describe Provider do
       })
       @provider.save!
 
-      @product = Product.create!({:cp_id => "product_id",:label=>"prod", :name=> "prod", :productContent => [], :provider => @provider})
+      @product = Product.create!({:cp_id => "product_id",:label=>"prod", :name=> "prod", :productContent => [], :provider => @provider, :organization => @organization})
     end
 
     specify { @product.wont_be_nil }
@@ -110,7 +110,7 @@ describe Provider do
           Glue::Candlepin::Product.stubs(:import_from_cp => [], :import_marketing_from_cp => true)
           Resources::Candlepin::Product.stubs(:destroy).returns(true)
           @provider.stubs(:index_subscriptions).returns([])
-          @rh_product = Product.create!({:label=>"prod",:name=> "rh_product", :productContent => [], :provider => @provider})
+          @rh_product = Product.create!({:label=>"prod",:name=> "rh_product", :productContent => [], :provider => @provider, :organization => @organization})
           @custom_provider = Provider.create!({
             :name => 'test_provider',
             :repository_url => 'https://something.net',
@@ -119,7 +119,7 @@ describe Provider do
           })
           # cp_id gets set based on Product.create in Candlepin so we need a stub to return something besides 1
           Resources::Candlepin::Product.stubs(:create).returns({:id => 2})
-          @custom_product = Product.create!({:label=> "custom-prod",:name=> "custom_product", :productContent => [], :provider => @custom_provider})
+          @custom_product = Product.create!({:label=> "custom-prod",:name=> "custom_product", :productContent => [], :provider => @custom_provider, :organization => @organization})
         end
 
         it "should be removed from the Katello products"  do
@@ -164,7 +164,8 @@ describe Provider do
             :label=>"dp",
             :name=> derived_product["name"],
             :productContent => [],
-            :provider => @provider
+            :provider => @provider,
+            :organization => @organization
           })
 
           Resources::Candlepin::Product.stubs(:create).returns({:id => "700"})
@@ -172,7 +173,8 @@ describe Provider do
             :label=>"dpp",
             :name=> derived_provided_product["name"],
             :productContent => [],
-            :provider => @provider
+            :provider => @provider,
+            :organization => @organization
           })
 
         end
@@ -234,7 +236,7 @@ describe Provider do
     end
 
     def create_product_with_content(product_name, releases)
-      product = @provider.products.create!(:name => product_name, :label => "#{product_name.hash}", :cp_id => product_name.hash)
+      product = @provider.products.create!(:name => product_name, :label => "#{product_name.hash}", :cp_id => product_name.hash, :organization => @organization)
 
       product.productContent = [product_content(product_name)]
       product.productContent.each do |product_content|
@@ -308,8 +310,8 @@ describe Provider do
         p.organization = @organization
       end
 
-      @product1 = Product.create!({:cp_id => "product1_id",:label => "prod1", :name=> "product1", :productContent => [], :provider => @provider})
-      @product2 = Product.create!({:cp_id => "product2_id", :label=> "prod2", :name=> "product2", :productContent => [], :provider => @provider})
+      @product1 = Product.create!({:cp_id => "product1_id",:label => "prod1", :name=> "product1", :productContent => [], :provider => @provider, :organization => @organization})
+      @product2 = Product.create!({:cp_id => "product2_id", :label=> "prod2", :name=> "product2", :productContent => [], :provider => @provider, :organization => @organization})
     end
 
     it "should create sync for all it's products" do
@@ -517,7 +519,7 @@ describe Provider do
   it 'should be destroyable' do
     disable_product_orchestration
     provider = create(:katello_provider, organization: @organization)
-    create(:katello_product, :fedora, provider: provider)
+    create(:katello_product, :fedora, provider: provider, organization: @organization)
     assert provider.destroy
   end
 end

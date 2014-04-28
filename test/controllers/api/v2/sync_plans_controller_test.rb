@@ -34,6 +34,9 @@ module Katello
       @create_permission = :create_sync_plans
       @update_permission = :update_sync_plans
       @destroy_permission = :destroy_sync_plans
+
+      @read_products_permission = :view_products
+      @update_products_permission = :update_products
     end
 
     def setup
@@ -56,7 +59,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:index, allowed_perms, denied_perms, @resource_type) do
+      assert_protected_action(:index, allowed_perms, denied_perms) do
         get :index, :organization_id => @organization.label
       end
     end
@@ -84,7 +87,7 @@ module Katello
       allowed_perms = [@create_permission]
       denied_perms = [@view_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:create, allowed_perms, denied_perms, @resource_type) do
+      assert_protected_action(:create, allowed_perms, denied_perms) do
         post :create, :organization_id => @organization.label,
              :sync_plan => {:name => 'Hourly Sync Plan',
                             :sync_date => '2014-01-09 17:46:00',
@@ -105,7 +108,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms, @resource_type) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms) do
         put :update, :id => @sync_plan.id, :organization_id => @organization.label,
             :sync_plan => {:description => 'new description.'}
       end
@@ -122,7 +125,7 @@ module Katello
       allowed_perms = [@destroy_permission]
       denied_perms = [@view_permission, @create_permission, @update_permission]
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms, @resource_type) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms) do
         delete :destroy, :organization_id => @organization.label, :id => @sync_plan.id
       end
     end
@@ -135,10 +138,10 @@ module Katello
     end
 
     def test_available_products_protected
-      allowed_perms = []
-      denied_perms = [@view_permission, @create_permission, @update_permission, @destroy_permission]
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:available_products, allowed_perms, denied_perms, @resource_type) do
+      assert_protected_action(:available_products, allowed_perms, denied_perms) do
         get :available_products, :id => @sync_plan.id, :organization_id => @organization.label
       end
     end
@@ -152,8 +155,8 @@ module Katello
     end
 
     def test_add_products_protected
-      allowed_perms = []
-      denied_perms = [@view_permission, @create_permission, @update_permission, @destroy_permission]
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:add_products, allowed_perms, denied_perms) do
         put :add_products, :id => @sync_plan.id, :organization_id => @organization.label,
@@ -170,8 +173,8 @@ module Katello
     end
 
     def test_remove_products_protected
-      allowed_perms = []
-      denied_perms = [@view_permission, @create_permission, @update_permission, @destroy_permission]
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:remove_products, allowed_perms, denied_perms) do
         put :remove_products, :id => @sync_plan.id, :organization_id => @organization.label,

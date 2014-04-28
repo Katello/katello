@@ -122,7 +122,7 @@ module Katello
     def available_puppet_modules
       current_ids = @view.content_view_puppet_modules.map(&:uuid).reject{|p| p.nil?}
 
-      repo_ids = @view.organization.library.puppet_repositories.readable(@view.organization.library).pluck(:pulp_id)
+      repo_ids = @view.organization.library.puppet_repositories.pluck(:pulp_id)
       search_filters = [{ :terms => { :repoids => repo_ids }}]
 
       if !current_ids.empty?
@@ -142,8 +142,7 @@ module Katello
     param :id, :identifier, :desc => "content view numeric identifier", :required => true
     def available_puppet_module_names
       current_names = @view.content_view_puppet_modules.map(&:name).reject{|p| p.nil?}
-      repo_ids = @view.organization.library.puppet_repositories.readable(
-          @view.organization.library).pluck(:pulp_id)
+      repo_ids = @view.organization.library.puppet_repositories.pluck(:pulp_id)
       search_filters = [{ :terms => { :repoids => repo_ids } }]
 
       if !current_names.empty?

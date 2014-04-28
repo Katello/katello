@@ -32,30 +32,15 @@ angular.module('Bastion.products').controller('ProductFormController',
     function ($scope, $q, Product, GPGKey, SyncPlan, FormUtils) {
 
         function fetchGpgKeys() {
-            GPGKey.queryUnpaged(function (gpgKeys) {
+            return GPGKey.queryUnpaged(function (gpgKeys) {
                 $scope.gpgKeys = gpgKeys.results;
             });
         }
 
         function fetchSyncPlans() {
-            SyncPlan.queryUnpaged(function (syncPlans) {
+            return SyncPlan.queryUnpaged(function (syncPlans) {
                 $scope.syncPlans = syncPlans.results;
             });
-        }
-
-        function populateSelects() {
-            var deferred = $q.defer();
-
-            $scope.$watch("gpgKeys && syncPlans", function (value) {
-                if (value !== undefined) {
-                    deferred.resolve(true);
-                }
-            });
-
-            fetchGpgKeys();
-            fetchSyncPlans();
-
-            return deferred.promise;
         }
 
         function success(response) {
@@ -84,7 +69,7 @@ angular.module('Bastion.products').controller('ProductFormController',
             product.$save(success, error);
         };
 
-        populateSelects().then(function () {
+        $q.all([fetchSyncPlans().$promise, fetchGpgKeys().$promise]).finally(function () {
             $scope.panel.loading = false;
         });
     }]

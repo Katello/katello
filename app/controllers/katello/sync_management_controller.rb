@@ -68,7 +68,7 @@ class SyncManagementController < Katello::ApplicationController
 
   def index
     org = current_organization
-    @products = org.library.products.readable(org)
+    @products = org.library.products.readable
     redhat_products, custom_products = @products.partition(&:redhat?)
     redhat_products.sort_by { |p| p.name.downcase }
     custom_products.sort_by { |p| p.name.downcase }
@@ -90,7 +90,7 @@ class SyncManagementController < Katello::ApplicationController
     @show_org     = true
 
     User.current.allowed_organizations.each do |org|
-      products = org.library.products.readable(org)
+      products = org.library.products.readable
       next if products.blank?
       @sproducts.concat products.select(&:syncable_content?)
       @product_map.concat collect_repos(products, org.library)

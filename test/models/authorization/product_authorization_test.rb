@@ -22,28 +22,20 @@ class ProductAuthorizationAdminTest < AuthorizationTestBase
     @org = @acme_corporation
   end
 
-  def test_all_readable
-    refute_empty Product.all_readable(@org)
-  end
-
   def test_readable
-    refute_empty Product.readable(@org)
-  end
-
-  def test_all_editable
-    refute_empty Product.all_editable(@org)
+    refute_empty Product.readable
   end
 
   def test_editable
-    refute_empty Product.editable(@org)
+    refute_empty Product.editable
   end
 
   def test_syncable
-    refute_empty Product.syncable(@org)
+    refute_empty Product.syncable
   end
 
-  def test_any_readable?
-    assert Product.any_readable?(@org)
+  def test_syncable
+    refute_empty Product.deletable
   end
 
   def test_readable?
@@ -63,10 +55,6 @@ class ProductAuthorizationAdminTest < AuthorizationTestBase
     assert product.deletable?
   end
 
-  def test_creatable?
-    assert Product.creatable?(@fedora_hosted)
-  end
-
 end
 
 class ProductAuthorizationNoPermsTest < AuthorizationTestBase
@@ -78,28 +66,20 @@ class ProductAuthorizationNoPermsTest < AuthorizationTestBase
     @org = @acme_corporation
   end
 
-  def test_all_readable
-    assert_empty Product.all_readable(@org)
-  end
-
   def test_readable
-    assert_empty Product.readable(@org)
-  end
-
-  def test_all_editable
-    assert_empty Product.all_editable(@org)
+    assert_empty Product.readable
   end
 
   def test_editable
-    assert_empty Product.editable(@org)
+    assert_empty Product.editable
   end
 
   def test_syncable
-    assert_empty Product.syncable(@org)
+    assert_empty Product.syncable
   end
 
-  def test_any_readable?
-    refute Product.any_readable?(@org)
+  def test_deletable
+    assert_empty Product.deletable
   end
 
   def test_readable?
@@ -116,10 +96,6 @@ class ProductAuthorizationNoPermsTest < AuthorizationTestBase
 
   def test_deletable?
     refute @prod.deletable?
-  end
-
-  def test_creatable?
-    refute Product.creatable?(@fedora_hosted)
   end
 
 end

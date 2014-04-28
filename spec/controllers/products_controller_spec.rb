@@ -31,7 +31,6 @@ describe ProductsController do
 
   describe "get auto_complete_product" do
     before (:each) do
-      Product.expects(:any_readable?).once.returns(true)
       Product.expects(:search).once.returns([OpenStruct.new(:name => "a", :id =>100)])
     end
 

@@ -26,12 +26,13 @@ class Product < Katello::Model
   include Ext::LabelFromName
 
   attr_accessible :name, :label, :description, :provider_id, :provider,
-                  :gpg_key_id, :gpg_key, :cp_id, :sync_plan_id
+                  :gpg_key_id, :gpg_key, :cp_id, :sync_plan_id, :organization_id, :organization
 
   has_many :marketing_engineering_products, :class_name => "Katello::MarketingEngineeringProduct",
            :foreign_key => :engineering_product_id, :dependent => :destroy
   has_many :marketing_products, :through => :marketing_engineering_products
 
+  belongs_to :organization
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products, :class_name => 'Katello::SyncPlan'
   belongs_to :gpg_key, :inverse_of => :products
@@ -42,6 +43,9 @@ class Product < Katello::Model
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validate  :validate_unique_name
+
+  scoped_search :on => :name, :complete_value => true
+  scoped_search :on => :organization_id, :complete_value => true
 
   def library_repositories
     self.repositories.in_default_view
@@ -223,6 +227,12 @@ class Product < Katello::Model
     certs = { :ssl_client_cert => OpenSSL::X509::Certificate.new(certificate),
               :ssl_client_key => OpenSSL::PKey::RSA.new(key) }
     ::Katello::Resources::CDN::CdnResource.new(provider.repository_url, certs)
+  end
+
+  private
+
+  def self.humanize_class_name
+    _("Product")
   end
 
   protected

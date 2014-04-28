@@ -25,7 +25,7 @@ module ControllerSupport
         user = no_permission_user
         permission.call(Katello::AuthorizationSupportMethods::UserPermissionsGenerator.new(user))
       else
-        user = add_role(permission, params[:resource_type])
+        user = add_role(permission)
       end
 
       action = params[:action]
@@ -57,18 +57,16 @@ module ControllerSupport
     end
   end
 
-  def assert_protected_action(action_name, allowed_perms, denied_perms, resource_type = nil, &block)
+  def assert_protected_action(action_name, allowed_perms, denied_perms, &block)
     assert_authorized(
         :permission => allowed_perms,
         :action => action_name,
-        :request => block,
-        :resource_type => resource_type
+        :request => block
     )
     refute_authorized(
         :permission => denied_perms,
         :action => action_name,
-        :request => block,
-        :resource_type => resource_type
+        :request => block
     )
   end
 
@@ -88,8 +86,8 @@ module ControllerSupport
     user
   end
 
-  def add_role(permission, resource_type)
-    permission = Permission.where(:name => permission).first
+  def add_role(permission_name)
+    permission = Permission.find_by_name(permission_name)
     role = build(:role, :permissions => [permission])
     user = build(:user, :roles => [role])
     user.cached_roles << role

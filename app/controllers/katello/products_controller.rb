@@ -18,12 +18,10 @@ class ProductsController < Katello::ApplicationController
   before_filter :find_provider, :only => [:available_repositories, :toggle_repository]
   before_filter :find_content, :only => [:toggle_repository]
 
-  before_filter :authorize
-
   include ForemanTasks::Triggers
 
   def rules
-    read_test = lambda {Product.any_readable?(current_organization)}
+    read_test = lambda {!Product.readable.empty?}
     edit_test = lambda{@provider.editable?}
 
     {
