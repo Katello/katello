@@ -18,18 +18,23 @@ class ActivationKeyAuthorizationAdminTest < AuthorizationTestBase
   def setup
     super
     User.current = User.find(users('admin'))
+    @key = ActivationKey.find(katello_activation_keys('simple_key'))
   end
 
   def test_readable
-    refute_empty ActivationKey.readable(@acme_corporation)
+    refute_empty ActivationKey.readable
   end
 
   def test_readable?
-    assert ActivationKey.readable?(@acme_corporation)
+    assert @key.readable?
   end
 
-  def test_manageable?
-    assert ActivationKey.manageable?(@acme_corporation)
+  def test_editable?
+    assert @key.editable?
+  end
+
+  def test_deletable?
+    assert @key.deletable?
   end
 
 end
@@ -39,18 +44,19 @@ class ActivationKeyAuthorizationNoPermsTest  < AuthorizationTestBase
   def setup
     super
     User.current = User.find(users(:restricted))
-  end
-
-  def test_readable
-    assert_empty ActivationKey.readable(@acme_corporation)
+    @key = ActivationKey.find(katello_activation_keys('simple_key'))
   end
 
   def test_readable?
-    refute ActivationKey.readable?(@acme_corporation)
+    refute @key.readable?
   end
 
-  def test_manageable?
-    refute ActivationKey.manageable?(@acme_corporation)
+  def test_editable?
+    refute @key.editable?
+  end
+
+  def test_deletable?
+    refute @key.deletable?
   end
 
 end

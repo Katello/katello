@@ -16,7 +16,7 @@ module Katello
 
     module ClassMethods
       def readable
-        SyncPlan.authorized(:view_sync_plans)
+        authorized(:view_sync_plans)
       end
     end
 

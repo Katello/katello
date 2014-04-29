@@ -118,6 +118,7 @@ class ApplicationController < ::ApplicationController
 
   def converted_controllers
     [
+      'katello/activation_keys',
       'katello/gpg_keys',
       'katello/sync_plans'
     ]

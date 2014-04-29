@@ -10,11 +10,13 @@ child :environment => :environment do
 end
 attributes :environment_id
 
-attributes :usage_count, :user_id, :usage_limit, :pools, :system_template_id
+attributes :usage_count, :user_id, :usage_limit, :system_template_id
+attributes :get_key_pools => :pools
 
 node :permissions do |activation_key|
   {
-    :editable => activation_key.class.manageable?(activation_key.organization)
+    :editable => activation_key.editable?,
+    :deletable => activation_key.deletable?
   }
 end
 

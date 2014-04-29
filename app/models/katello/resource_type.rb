@@ -106,7 +106,6 @@ class ResourceType < Katello::Model
     TYPES = {
         :organizations => {:model => Organization, :name => _("Organizations"), :global => false},
         :environments => {:model => Katello::KTEnvironment, :name => _("Environments"), :global => false},
-        :activation_keys => { :model => Katello::ActivationKey, :name => _("Activation Keys"), :global => false},
         :system_groups => {:model => Katello::SystemGroup, :name => _("System Groups"), :global => false},
         :providers => { :model => Katello::Provider, :name => _("Providers"), :global => false},
         :users => { :model => User, :name => _("Users"), :global => true},
@@ -117,7 +116,6 @@ class ResourceType < Katello::Model
   else
     TYPES = {
         :organizations => {:model => Organization, :name => _("Organizations"), :global => false},
-        :activation_keys => { :model => Katello::ActivationKey, :name => _("Activation Keys"), :global => false},
         :system_groups => {:model => Katello::SystemGroup, :name => _("System Groups"), :global => false},
         :providers => { :model => Katello::Provider, :name => _("Providers"), :global => false},
         :users => { :model => User, :name => _("Users"), :global => true},
