@@ -89,6 +89,11 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
         collapsed: true,
         controller: 'ContentHostDetailsInfoController',
         templateUrl: 'content-hosts/details/views/content-host-info.html'
+    })
+    .state('content-hosts.details.provisioning', {
+        url: '/provisioning',
+        collapsed: true,
+        templateUrl: 'content-hosts/details/views/content-host-provisioning-info.html'
     });
 
     $stateProvider.state('content-hosts.details.tasks', {
