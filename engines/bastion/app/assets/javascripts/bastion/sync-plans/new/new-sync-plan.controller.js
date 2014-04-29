@@ -27,8 +27,6 @@ angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
         var now = new Date();
         $scope.intervals = [translate('none'), translate('hourly'), translate('daily'), translate('weekly')];
         $scope.successMessages = [];
-        $scope.errorMessages = [];
-
 
         $scope.syncPlan = new SyncPlan();
         $scope.syncPlan.startDate = now;
@@ -48,7 +46,10 @@ angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
 
         function error(response) {
             $scope.working = false;
-            $scope.errorMessages = response.data.errors;
+            angular.forEach(response.data.errors, function (errors, field) {
+                $scope.syncPlanForm[field].$setValidity('server', false);
+                $scope.syncPlanForm[field].$error.messages = errors;
+            });
         }
 
         $scope.createSyncPlan = function (syncPlan) {

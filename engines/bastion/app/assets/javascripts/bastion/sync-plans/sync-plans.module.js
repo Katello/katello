@@ -59,6 +59,10 @@ angular.module('Bastion.sync-plans').config(['$stateProvider', function ($stateP
             'action-panel': {
                 controller: 'NewSyncPlanController',
                 templateUrl: 'sync-plans/new/views/new-sync-plan.html'
+            },
+            'sync-plan-form@sync-plans.new': {
+                controller: 'NewSyncPlanController',
+                templateUrl: 'sync-plans/new/views/new-sync-plan-form.html'
             }
         }
     })
