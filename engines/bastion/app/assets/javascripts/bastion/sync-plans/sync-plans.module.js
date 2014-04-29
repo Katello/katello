@@ -40,7 +40,7 @@ angular.module('Bastion.sync-plans').config(['$stateProvider', function ($stateP
         templateUrl: 'sync-plans/views/sync-plans.html'
     })
     .state('sync-plans.index', {
-        url: '/sync-plans',
+        url: '/sync_plans',
         views: {
             'table': {
                 templateUrl: 'sync-plans/views/sync-plans-table-full.html'
@@ -69,7 +69,7 @@ angular.module('Bastion.sync-plans').config(['$stateProvider', function ($stateP
 
     .state("sync-plans.details", {
         abstract: true,
-        url: '/sync-plans/:syncPlanId',
+        url: '/sync_plans/:syncPlanId',
         collapsed: true,
         views: {
             'table': {

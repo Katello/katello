@@ -20,3 +20,8 @@ angular.module('Bastion').constant('BastionConfig', {
 });
 
 angular.module('templates', []);
+
+angular.module('Bastion').config(function ($urlRouterProvider) {
+    $urlRouterProvider.otherwise('/');
+});
+

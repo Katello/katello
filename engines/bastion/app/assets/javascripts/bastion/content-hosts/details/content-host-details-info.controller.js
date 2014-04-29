@@ -137,7 +137,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         };
 
         $scope.getActivationKeyLink = function (activationKey) {
-            return $scope.RootURL + '/activation_keys!=&panel=activation_key_%s&panelpage=edit'.replace('%s', activationKey.id);
+            return '/activation_keys!=&panel=activation_key_%s&panelpage=edit'.replace('%s', activationKey.id);
         };
 
         $scope.getTemplateForType = function (value) {

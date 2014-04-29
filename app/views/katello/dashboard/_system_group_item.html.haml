@@ -2,17 +2,18 @@
 
   .col_1
     - if updates == :critical
-      %a{:href => "#{system_groups_path}#/system-groups/#{group.id}/actions", :title => "#{_('Critical')}"}
+      %a{:href => "/system-groups/#{group.id}/actions", :title => "#{_('Critical')}"}
         .status_icon.red
     - elsif updates == :warning
-      %a{:href => "#{system_groups_path}#/system-groups/#{group.id}/actions", :title => "#{_('Warning')}"}
+      %a{:href => "/system-groups/#{group.id}/actions", :title => "#{_('Warning')}"}
         .status_icon.yellow
     - else
-      %a{:href => "#{system_groups_path}#/system-groups/#{group.id}/actions", :title => "#{_('Up to date')}"}
+      %a{:href => "/system-groups/#{group.id}/actions", :title => "#{_('Up to date')}"}
         .status_icon.green
 
   .col_2.one-line-ellipsis
-    = link_to(group.name, "#{system_groups_path}#/system-groups/#{group.id}/info")
+    = link_to(group.name, "/system-groups/#{group.id}/info")
 
   .col_3.one-line-ellipsis
-    = link_to(group.systems.length, "#{system_groups_path}#/system-groups/#{group.id}/systems")
+    = link_to(group.systems.length, "/system-groups/#{group.id}/systems")
+

@@ -38,8 +38,8 @@
         <span class="info-label" translate>Guests</span>
         <div class="info-value">
           <ul>
-            <li ng-repeat="guest in contentHost.guests">
-              <a href="#/systems/{{ guest.uuid }}/info">{{ guest.name }}</a>
+            <li ng-repeat="guest in system.guests">
+              <a ui-sref="content-hosts.details.info({contentHostId: guest.uuid})">{{ guest.name }}</a>
             </li>
           </ul>
         </div>
@@ -48,7 +48,7 @@
       <div ng-show="contentHost.host" class="detail">
         <span class="info-label" translate>Host</span>
         <div class="info-value">
-          <a href="#/systems/{{ contentHost.host.uuid }}/info">{{ contentHost.host.name }}</a>
+          <a ui-sref="content-hosts.details.info({contentHostId: system.host.uuid })">{{ system.host.name }}</a>
         </div>
       </div>
 
@@ -214,7 +214,7 @@
         <div alert type="'info'" ng-show="editContentView">
           <p translate ng-show="contentViews.length === 0">
             The host requires being attached to a content view and the environment you have chosen has no content views promoted to it.
-            See the <a href="{{ RootURL }}/content_views/all">content views page</a> to manage and promote a content view.
+            See the <a href="/content_views">content views page</a> to manage and promote a content view.
           </p>
           <p translate ng-show="contentViews.length !== 0">
             You must select a new content view before your change of environment can be saved.

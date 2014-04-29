@@ -39,7 +39,7 @@ angular.module('Bastion.environments', [
 angular.module('Bastion.environments').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('environments', {
         controller: 'EnvironmentsController',
-        url: '/environments',
+        url: '/lifecycle_environments',
         templateUrl: 'environments/views/environments.html'
     });
 }]);
