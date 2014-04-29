@@ -25,12 +25,12 @@ end
 
 # Candlepin attributes
 attributes :entitlementStatus
-attributes :servicelevel, :autoheal
+attributes :autoheal
 attributes :href, :release, :ipv4_address
 attributes :checkin_time, :created
 attributes :installedProducts
 
-
+attributes :serviceLevel => :service_level
 
 node :release_ver do |sys|
   sys.releaseVer.is_a?(Hash) ? sys.releaseVer[:releaseVer] : sys.releaseVer
