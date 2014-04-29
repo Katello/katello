@@ -278,5 +278,4 @@ Katello::Engine.routes.draw do
 
   match '/user_session/set_org' => 'user_sessions#set_org', :via => :post
 
-  match 'about', :to => "application_info#about", :as => "about"
 end

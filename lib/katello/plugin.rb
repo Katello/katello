@@ -136,15 +136,6 @@ Foreman::Plugin.register :katello do
        :parent => :administer_menu,
        :after => :roles
 
-  menu :admin_menu,
-       :content_about,
-       :caption => N_('Content About'),
-       :url_hash => {:controller => 'katello/application_info',
-                     :action => 'about'},
-       :engine => Katello::Engine,
-       :parent => :administer_menu,
-       :after => :about
-
   Foreman::AccessControl.permission(:edit_organizations).actions << 'organizations/download_debug_certificate'
   Foreman::AccessControl.permission(:edit_organizations).actions << 'organizations/repo_discover'
   Foreman::AccessControl.permission(:edit_organizations).actions << 'organizations/cancel_repo_discover'
