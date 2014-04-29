@@ -183,7 +183,14 @@ describe Organization do
        lambda{Organization.find(@organization.id)}.must_raise(ActiveRecord::RecordNotFound)
        KTEnvironment.where(:name =>'Dev-34343').size.must_equal(0)
     end
+  end
 
+  describe "it can retrieve manifest history" do
+    test 'test manifest history should be successful' do 
+      @organization = @organization.reload
+      @organization.expects(:imports).returns([{'foo' => 'bar' },{'foo' => 'bar'}])
+      assert @organization.manifest_history[0].foo == 'bar'
+    end
   end
 end
 end
