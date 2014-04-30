@@ -238,11 +238,6 @@ module Glue::ElasticSearch::Errata
         search.results
       end
 
-      def self.indexed_ids_for_repo(pulp_id)
-        options = {:filters => {:repoids => [pulp_id]}, :fields => [:id], :start => 0, :page_size => 1}
-        options[:page_size] = ::Katello::Errata.legacy_search("", options).total
-        ::Katello::Errata.legacy_search("", options).collect{|e| e.id}
-      end
     end
   end
 end
