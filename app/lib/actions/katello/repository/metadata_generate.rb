@@ -32,6 +32,8 @@ module Actions
             end
           when ::Katello::Repository::PUPPET_TYPE
             Runcible::Models::PuppetInstallDistributor
+          when ::Katello::Repository::FILE_TYPE
+            Runcible::Models::IsoDistributor
           end
         end
 
