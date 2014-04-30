@@ -33,7 +33,7 @@ class Api::V1::SystemsController < Api::V1::ApiController
   before_filter :find_content_view, :only => [:create, :update]
 
   before_filter :authorize, :except => [:activate, :enabled_repos]
-  before_filter :authorize_client, :only => [:enabled_repos]
+  before_filter :authenticate_client, :only => [:enabled_repos]
 
   def organization_id_keys
     [:organization_id, :owner]

@@ -13,7 +13,7 @@
 module Katello
   class Api::V1::CandlepinProxiesController < Api::V1::ApiController
 
-    include Katello::Authentication::RhsmAuthentication
+    include Katello::Authentication::ClientAuthentication
 
     before_filter :add_candlepin_version_header
 
@@ -259,6 +259,13 @@ module Katello
       @system.update_attributes!(attrs.slice(*slice_attrs))
 
       render :json => {:content => _("Facts successfully updated.")}, :status => 200
+    end
+
+    protected
+
+    # to support rhsm client authentication
+    def authenticate
+      set_client_user || super
     end
 
     private

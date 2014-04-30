@@ -17,18 +17,16 @@ module Katello
   module Authentication
     module ClientAuthentication
 
-      def authorize_client
-        if cert_present?
-          set_client_user
-        else
-          deny_access
-        end
+      def authenticate_client
+        set_client_user || deny_access
       end
 
       def set_client_user
-        client_cert = Client::Cert.new(cert_from_request)
-        uuid = client_cert.uuid
-        User.current = CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid)
+        if cert_present?
+          client_cert = Client::Cert.new(cert_from_request)
+          uuid = client_cert.uuid
+          User.current = CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid)
+        end
       end
 
       def cert_present?

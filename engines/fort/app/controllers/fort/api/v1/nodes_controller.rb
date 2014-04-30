@@ -12,7 +12,7 @@
 module Fort
 class Api::V1::NodesController < Katello::Api::V1::ApiController
 
-  include Katello::Authentication::RhsmAuthentication
+  include Katello::Authentication::ClientAuthentication
 
   respond_to :json
 
@@ -118,6 +118,13 @@ class Api::V1::NodesController < Katello::Api::V1::ApiController
     attrs = params[:node].clone
     @node.update_attributes!(attrs)
     respond :resource => @node
+  end
+
+  protected
+
+  # to support rhsm client authentication
+  def authenticate
+    set_client_user || super
   end
 
   private
