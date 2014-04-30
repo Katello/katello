@@ -13,13 +13,11 @@
 module Katello
 class KTEnvironment < Katello::Model
   self.include_root_in_json = false
-  include Authorization::Environment
+  include Authorization::LifecycleEnvironment
   include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
-  include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
   self.table_name = "katello_environments"
   include Ext::LabelFromName
-  include Ext::PermissionTagCleanup
 
   # RAILS3458: before_destroys before associations. see http://tinyurl.com/rails3458
   before_destroy :is_deletable?
@@ -75,6 +73,9 @@ class KTEnvironment < Katello::Model
   after_destroy :unset_users_with_default
 
   ERROR_CLASS_NAME = "Environment"
+
+  scoped_search :on => :name, :complete_value => true
+  scoped_search :on => :organization_id, :complete_value => true
 
   def library?
     self.library
@@ -255,7 +256,7 @@ class KTEnvironment < Katello::Model
   end
 
   def unset_users_with_default
-    users = User.with_default_environment(self.id)
+    users = ::User.with_default_environment(self.id)
     users.each do |u|
       Notify.message _("Your default environment has been removed. Please choose another one."),
                      :user => u, :organization => self.organization
@@ -286,5 +287,12 @@ class KTEnvironment < Katello::Model
   def delete_default_view_version
     self.default_content_view_version.destroy if library?
   end
+
+  private
+
+  def self.humanize_class_name
+   _("Lifecycle Environment")
+  end
+
 end
 end

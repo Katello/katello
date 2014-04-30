@@ -21,8 +21,6 @@ class Provider < Katello::Model
   include Katello::Authorization::Provider
   include AsyncOrchestration
 
-  include Ext::PermissionTagCleanup
-
   REDHAT = 'Red Hat'.encode('utf-8')
   CUSTOM = 'Custom'.encode('utf-8')
   ANONYMOUS = 'Anonymous'.encode('utf-8')

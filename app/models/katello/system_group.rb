@@ -20,8 +20,6 @@ class SystemGroup < Katello::Model
   include Katello::Authorization::SystemGroup
   include Glue::ElasticSearch::SystemGroup if Katello.config.use_elasticsearch
 
-  include Ext::PermissionTagCleanup
-
   has_many :key_system_groups, :class_name => "Katello::KeySystemGroup", :dependent => :destroy
   has_many :activation_keys, :through => :key_system_groups
 

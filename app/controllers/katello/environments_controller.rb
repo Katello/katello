@@ -12,7 +12,6 @@
 
 module Katello
   class EnvironmentsController < Katello::ApplicationController
-
     def rules
       {
           :registerable_paths => lambda{ true }

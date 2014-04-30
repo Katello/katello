@@ -45,10 +45,6 @@ class OrganizationAuthorizationAdminTest < AuthorizationTestBase
     assert @org.readable?
   end
 
-  def test_environments_manageable?
-    assert @org.environments_manageable?
-  end
-
   def test_systems_readable?
     assert @org.systems_readable?
   end
@@ -109,10 +105,6 @@ class OrganizationAuthorizationNoPermsTest < AuthorizationTestBase
 
   def test_readable?
     refute @org.readable?
-  end
-
-  def test_environments_manageable?
-    refute @org.environments_manageable?
   end
 
   def test_systems_readable?

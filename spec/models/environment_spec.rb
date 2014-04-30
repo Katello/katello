@@ -31,9 +31,6 @@ describe KTEnvironment do
 
       all_verb_methods = [:viewable_for_promotions?,
                           :any_operation_readable?,
-                          :changesets_promotable?,
-                          :changesets_readable?,
-                          :changesets_manageable?,
                           :contents_readable?,
                           :systems_readable?,
                           :systems_editable?,
@@ -46,9 +43,6 @@ describe KTEnvironment do
           :register_systems => [:any_operation_readable?, :systems_readable?,:systems_registerable?],
           :update_systems => [:any_operation_readable?, :systems_readable?, :systems_editable? ],
           :delete_systems => [:any_operation_readable?, :systems_readable?, :systems_deletable? ],
-          :read_changesets => [:any_operation_readable?, :changesets_readable?, :viewable_for_promotions?],
-          :manage_changesets => [:any_operation_readable?, :changesets_readable?, :changesets_manageable?, :viewable_for_promotions? ],
-          :promote_changesets => [:any_operation_readable?, :changesets_readable?, :changesets_promotable?, :viewable_for_promotions?],
       }
       permission_matrix.each_pair do |perm, true_ops|
         true_ops.each do |op|
