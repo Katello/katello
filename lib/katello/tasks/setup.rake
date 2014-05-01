@@ -11,7 +11,7 @@ namespace :katello do
       system("sudo rm -rf /var/lib/mongodb/pulp_database*")
       system(service_start.gsub("%s", "mongod"))
       sleep(10)
-      system("sudo /usr/bin/pulp-manage-db")
+      system("sudo -u apache /usr/bin/pulp-manage-db")
       system(service_start.gsub("%s", "qpidd"))
       system(service_start.gsub("%s", "httpd"))
       puts "Pulp database reset."
