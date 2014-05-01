@@ -27,19 +27,6 @@ module Katello
       find_taxonomy
     end
 
-    def rules
-      edit_test   = lambda { @organization.editable? }
-      redhat_provider_test   = lambda { @organization.redhat_provider.readable? }
-
-      {
-        :auto_attach_all_systems => edit_test,
-        :repo_discover => edit_test,
-        :cancel_repo_discover => edit_test,
-        :download_debug_certificate => edit_test,
-        :redhat_provider => redhat_provider_test
-      }
-    end
-
     api :GET, '/organizations', 'List all organizations'
     param_group :search, Api::V2::ApiController
     def index

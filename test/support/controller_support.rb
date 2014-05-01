@@ -88,9 +88,10 @@ module ControllerSupport
 
   def add_role(permission_name)
     permission = Permission.find_by_name(permission_name)
-    role = build(:role, :permissions => [permission])
-    user = build(:user, :roles => [role])
-    user.cached_roles << role
+    role = create(:role, :permissions => [permission])
+    user = users(:restricted)
+    filter = create(:filter, :role => role, :permissions => [permission])
+    user.roles = [role]
     user
   end
 

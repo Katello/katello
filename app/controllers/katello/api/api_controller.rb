@@ -54,7 +54,8 @@ class Api::ApiController < ::Api::BaseController
       'katello/api/v2/repositories',
       'katello/api/v2/products_bulk_actions',
       'katello/api/v2/repositories_bulk_actions',
-      'katello/api/v2/content_uploads'
+      'katello/api/v2/content_uploads',
+      'katello/api/v2/organizations'
     ]
   end
 
