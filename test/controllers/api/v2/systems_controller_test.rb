@@ -48,7 +48,7 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
   end
 
   def test_index
-    get :index, :organization_id => get_organization.label
+    get :index, :organization_id => get_organization.id
 
     assert_response :success
     assert_template 'api/v2/systems/index'

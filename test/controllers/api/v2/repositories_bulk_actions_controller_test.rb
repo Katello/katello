@@ -46,7 +46,7 @@ module Katello
     end
 
     def test_destroy_repositories
-      put :destroy_repositories, {:ids => @repositories.collect(&:id), :organization_id => @organization.label}
+      put :destroy_repositories, {:ids => @repositories.collect(&:id), :organization_id => @organization.id}
 
       assert_response :success
     end
@@ -56,14 +56,14 @@ module Katello
       denied_perms = [@sync_permission, @read_permission, @no_permission]
 
       assert_protected_action(:destroy_repositories, allowed_perms, denied_perms) do
-        put :destroy_repositories, {:ids => @repositories.collect(&:id), :organization_id => @organization.label}
+        put :destroy_repositories, {:ids => @repositories.collect(&:id), :organization_id => @organization.id}
       end
     end
 
     def test_sync
       Repository.any_instance.expects(:sync).times(@repositories.length).returns([{}])
 
-      post :sync_repositories, {:ids => @repositories.collect(&:id), :organization_id => @organization.label}
+      post :sync_repositories, {:ids => @repositories.collect(&:id), :organization_id => @organization.id}
 
       assert_response :success
     end
@@ -73,7 +73,7 @@ module Katello
       denied_perms = [@delete_permission, @read_permission, @no_permission]
 
       assert_protected_action(:sync_repositories, allowed_perms, denied_perms) do
-        post :sync_repositories, {:ids => @repositories.collect(&:id), :organization_id => @organization.label}
+        post :sync_repositories, {:ids => @repositories.collect(&:id), :organization_id => @organization.id}
       end
     end
 
