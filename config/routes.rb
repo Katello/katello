@@ -1,12 +1,5 @@
 Katello::Engine.routes.draw do
 
-  resources :system_groups do
-    collection do
-      get :items
-      get :all
-    end
-  end
-
   resources :content_search do
     collection do
       post :errata
@@ -34,26 +27,7 @@ Katello::Engine.routes.draw do
 
   resources :content_views, :only => [:index] do
     collection do
-      get :all
       get :auto_complete
-    end
-  end
-
-  resources :activation_keys, :only => [:index] do
-    collection do
-      get :all
-    end
-  end
-
-  resources :gpg_keys, :only => [:index] do
-    collection do
-      get :all
-    end
-  end
-
-  resources :sync_plans, :only => [:index] do
-    collection do
-      get :all
     end
   end
 
@@ -74,13 +48,6 @@ Katello::Engine.routes.draw do
   match 'notices' => 'notices#show', :via => :get
   match 'notices' => 'notices#destroy_all', :via => :delete
 
-  resources :subscriptions, :only => [:index] do
-    collection do
-      get :all
-      get :index
-    end
-  end
-
   resources :dashboard, :only => [:index] do
     collection do
       get :sync
@@ -93,12 +60,6 @@ Katello::Engine.routes.draw do
       get :subscriptions
       get :subscriptions_totals
       put :update
-    end
-  end
-
-  resources :systems, :only => [:index] do
-    collection do
-      get :all
     end
   end
 
@@ -163,7 +124,7 @@ Katello::Engine.routes.draw do
     end
   end
 
-  resources :products, :only => [:index] do
+  resources :products, :only => [] do
     member do
       get :available_repositories
       put :toggle_repository
@@ -266,12 +227,6 @@ Katello::Engine.routes.draw do
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
   match '/organizations/:id/default_info/:informable_type' => 'organizations#default_info', :via => :get, :as => :organization_default_info
 
-  resources :environments, :only => [:index] do
-    collection do
-      get :all
-    end
-  end
-
   match '/roles/show_permission' => 'roles#show_permission', :via => :get
   resources :roles do
     put "create_permission" => "roles#create_permission"
@@ -310,5 +265,4 @@ Katello::Engine.routes.draw do
 
   match '/user_session/set_org' => 'user_sessions#set_org', :via => :post
 
-  match 'about', :to => "application_info#about", :as => "about"
 end

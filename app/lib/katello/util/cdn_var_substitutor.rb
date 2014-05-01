@@ -113,16 +113,21 @@ module Util
       if is_substituable(real_path)
         return false
       else
-        begin
-          !! @resource.get(File.join(real_path, "repodata"))
-        rescue Errors::NotFound => e
-          @resource.log :error, e.message
-          return false
+        is_valid = valid_path?(real_path, 'repodata') || valid_path?(real_path, 'PULP_MANIFEST')
+        if !is_valid
+          @resource.log :error, "No valid metadata files found for #{real_path}"
         end
+        return is_valid
       end
     end
 
     protected
+
+    def valid_path?(path, postfix)
+      !! @resource.get(File.join(path, postfix))
+    rescue Errors::NotFound
+      return false
+    end
 
     def gsub_vars(content_url, substitutions)
       substitutions.reduce(content_url) do |url, (key, value)|

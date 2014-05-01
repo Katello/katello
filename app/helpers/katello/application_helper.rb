@@ -245,31 +245,6 @@ module ApplicationHelper
     return link.respond_to?(:html_safe) ? link.html_safe : link
   end
 
-  # If no provider_id is specified, it is assumed to be a Red Hat subscription and the link returned
-  # goes to the subscriptions page. Alternatively, if the distinction between the Red Hat provider and
-  # a custom provider is important, pass in the provider_id and the current org.
-  def subscriptions_pool_link_helper(pool_name, pool_id, provider_id, org)
-    if provider_id == org.redhat_provider.id
-      link_to(pool_name, subscriptions_path(pool_id, :anchor => "/&list_search=id:#{pool_id}&panel=subscription_#{pool_id}"))
-    elsif !provider_id.nil?
-      link_to(pool_name, providers_path(provider_id, :anchor => "/&list_search=id:#{provider_id}&panel=provider_#{provider_id}"))
-    else
-      pool_name
-    end
-  end
-
-  def system_link_helper(uuid)
-    system = System.find_by_uuid!(uuid)
-    if system.readable?
-      #link_to(system.name, root_path + "systems#list_search=id:#{system.id}&panel=system_#{system.id}")
-      link_to(system.name, systems_path(system.id, :anchor => "/&list_search=id:#{system.id}&panel=system_#{system.id}"))
-    else
-      system.name
-    end
-  rescue ActiveRecord::RecordNotFound
-    _('System with uuid %s not found') % host_id
-  end
-
   def distributor_link_helper(distributor_id)
     distributor = Distributor.find(distributor_id)
     if distributor.readable?

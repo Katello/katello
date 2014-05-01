@@ -48,7 +48,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     });
 
     $stateProvider.state('content-hosts.index', {
-        url: '/content-hosts',
+        url: '/content_hosts',
         views: {
             'table': {
                 templateUrl: 'content-hosts/views/content-hosts-table-full.html'
@@ -57,7 +57,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     });
 
     $stateProvider.state('content-hosts.register', {
-        url: '/content-host/register',
+        url: '/content_host/register',
         collapsed: true,
         views: {
             'table': {
@@ -72,7 +72,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
 
     $stateProvider.state("content-hosts.details", {
         abstract: true,
-        url: '/content-hosts/:contentHostId',
+        url: '/content_hosts/:contentHostId',
         collapsed: true,
         views: {
             'table': {
@@ -176,7 +176,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
         }
     })
     .state('content-hosts.bulk-actions.packages', {
-        url: '/content-hosts/bulk-actions/packages',
+        url: '/content_hosts/bulk-actions/packages',
         collapsed: true,
         controller: 'ContentHostsBulkActionPackagesController',
         templateUrl: 'content-hosts/bulk/views/bulk-actions-packages.html'
@@ -189,33 +189,33 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     })
     .state('content-hosts.bulk-actions.errata.list', {
         collapsed: true,
-        url: '/content-hosts/bulk-actions/errata',
+        url: '/content_hosts/bulk-actions/errata',
         templateUrl: 'content-hosts/bulk/views/bulk-actions-errata.html'
     })
     .state('content-hosts.bulk-actions.errata.details', {
         collapsed: true,
-        url: '/content-hosts/bulk-actions/errata/:errataId',
+        url: '/content_hosts/bulk-actions/errata/:errataId',
         templateUrl: 'content-hosts/bulk/views/errata-details.html'
     })
     .state('content-hosts.bulk-actions.errata.content-hosts', {
         collapsed: true,
-        url: '/content-hosts/bulk-actions/errata/:errataId/content-hosts',
+        url: '/content_hosts/bulk-actions/errata/:errataId/content-hosts',
         templateUrl: 'content-hosts/bulk/views/errata-content-hosts.html'
     })
     .state('content-hosts.bulk-actions.groups', {
-        url: '/content-hosts/bulk-actions/groups',
+        url: '/content_hosts/bulk-actions/groups',
         collapsed: true,
         controller: 'ContentHostsBulkActionGroupsController',
         templateUrl: 'content-hosts/bulk/views/bulk-actions-groups.html'
     })
     .state('content-hosts.bulk-actions.subscriptions', {
-        url: '/content-hosts/bulk-actions/bulk-subscriptions',
+        url: '/content_hosts/bulk-actions/bulk-subscriptions',
         collapsed: true,
         controller: 'ContentHostsBulkActionSubscriptionsController',
         templateUrl: 'content-hosts/bulk/views/bulk-actions-subscriptions.html'
     })
     .state('content-hosts.bulk-actions.environment', {
-        url: '/content-hosts/bulk-actions/bulk-environment',
+        url: '/content_hosts/bulk-actions/bulk-environment',
         collapsed: true,
         controller: 'ContentHostsBulkActionEnvironmentController',
         templateUrl: 'content-hosts/bulk/views/bulk-actions-environment.html'

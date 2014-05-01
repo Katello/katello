@@ -40,6 +40,7 @@ angular.module('Bastion').constant('RootURL', '/katello');
  *
  * @requires $httpProvider
  * @requires $urlRouterProvider
+ * @requires $locationProvider
  * @requires $provide
  * @requires BastionConfig
  * @requires RootURL
@@ -49,13 +50,30 @@ angular.module('Bastion').constant('RootURL', '/katello');
  *   to every request and adding Xs to translated strings.
  */
 angular.module('Bastion').config(
-    ['$httpProvider', '$urlRouterProvider', '$provide', 'BastionConfig', 'RootURL',
-    function ($httpProvider, $urlRouterProvider, $provide, BastionConfig, RootURL) {
+    ['$httpProvider', '$urlRouterProvider', '$locationProvider', '$provide', 'BastionConfig', 'RootURL',
+    function ($httpProvider, $urlRouterProvider, $locationProvider, $provide, BastionConfig, RootURL) {
+        var oldBrowserBastionPath = '/bastion#';
+
         $httpProvider.defaults.headers.common = {
             Accept: 'application/json, text/plain, version=2; */*',
             'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
         };
-        $urlRouterProvider.otherwise("/");
+
+        $urlRouterProvider.rule(function ($injector, $location) {
+            var $sniffer = $injector.get('$sniffer'),
+                $window = $injector.get('$window');
+
+            if (!$sniffer.history) {
+                $window.location.href = oldBrowserBastionPath + $location.path();
+            }
+        });
+
+        $urlRouterProvider.otherwise(function ($injector, $location) {
+            var $window = $injector.get('$window');
+            $window.location.href = $location.absUrl().replace(oldBrowserBastionPath, '');
+        });
+
+        $locationProvider.html5Mode(true);
 
         $provide.factory('PrefixInterceptor', ['$q', '$templateCache', function ($q, $templateCache) {
             return {
@@ -113,14 +131,15 @@ angular.module('Bastion').config(
  * @requires gettextCatalog
  * @requires currentLocale
  * @requires $location
+ * @requires $sniffer
  * @requires PageTitle
  * @requires RootURL
  *
  * @description
  *   Set up some common state related functionality and set the current language.
  */
-angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale', '$location', 'PageTitle', 'RootURL',
-    function ($rootScope, $state, $stateParams, gettextCatalog, currentLocale, $location, PageTitle, RootURL) {
+angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale', '$location', '$sniffer', 'PageTitle', 'RootURL',
+    function ($rootScope, $state, $stateParams, gettextCatalog, currentLocale, $location, $sniffer, PageTitle, RootURL) {
         var fromState, fromParams;
 
         $rootScope.$state = $state;

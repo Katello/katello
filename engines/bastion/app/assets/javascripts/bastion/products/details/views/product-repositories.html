@@ -62,7 +62,7 @@
           row-select="repository"
           ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch">
         <td alch-table-cell>
-          <a ng-href="#/products/{{ product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
+          <a ng-href="/products/{{ product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
         </td>
         <td alch-table-cell>{{ repository.content_type }}</td>
         <td alch-table-cell>

@@ -1,0 +1,19 @@
+<div class="col-sm-7">
+  <div class="stats-well">      
+    <h4><%=_("Backend System Status")%></h4>
+    <table class="table table-striped">
+      <tr>
+        <th><%= _("Component") %></th>
+        <th><%= _("Status") %></th>
+        <th><%= _("Message") %></th>
+      </tr>
+      <% Katello::Ping.ping[:services].sort.each do |component, status| %>
+        <tr>
+          <td><%= component %></td>
+          <td><%= status[:status].downcase == 'ok' ? _('OK') : _('FAIL') %></td>
+          <td><%= status[:message] %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>

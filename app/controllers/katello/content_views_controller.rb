@@ -16,22 +16,11 @@ module Katello
     before_filter :authorize
 
     def rules
-      index_rule = lambda { true }
       auto_complete_rule = lambda { ContentView.any_readable?(current_organization) }
 
       {
-        :index => index_rule,
-        :all => index_rule,
         :auto_complete => auto_complete_rule
       }
-    end
-
-    def index
-      render 'bastion/layouts/application', :layout => false
-    end
-
-    def all
-      redirect_to :action => 'index', :anchor => '/content_views'
     end
 
     def auto_complete

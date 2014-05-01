@@ -27,8 +27,6 @@ class ProductsController < Katello::ApplicationController
     edit_test = lambda{@provider.editable?}
 
     {
-      :index => read_test,
-      :all => read_test,
       :auto_complete =>  read_test,
       :available_repositories => edit_test,
       :toggle_repository => edit_test,
@@ -56,14 +54,6 @@ class ProductsController < Katello::ApplicationController
                    end
     task = sync_task(action_class, @product, @content, substitutions)
     render :json => { :task_id => task.id }
-  end
-
-  def index
-    render 'bastion/layouts/application', :layout => false
-  end
-
-  def all
-    redirect_to :action => 'index', :anchor => '/products'
   end
 
   def auto_complete

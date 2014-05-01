@@ -1,0 +1,10 @@
+<div class="col-sm-5">
+  <div class="stats-well">      
+    <h4><%=_("Installed Packages")%></h4>
+    <ul>
+      <% Katello::Ping.packages.sort.each do |package| %>
+      <li><%= package %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>

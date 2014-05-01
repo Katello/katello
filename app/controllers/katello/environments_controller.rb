@@ -11,35 +11,22 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class EnvironmentsController < Katello::ApplicationController
-  respond_to :html, :js
-  before_filter :authorize
-  skip_before_filter :require_org
+  class EnvironmentsController < Katello::ApplicationController
 
-  def rules
-    index_rule = lambda{Organization.any_readable?}
-    {
-      :index => index_rule,
-      :all => index_rule,
-      :registerable_paths => lambda{ true }
-    }
-  end
-
-  def index
-    render 'bastion/layouts/application', :layout => false
-  end
-
-  def all
-    redirect_to action: 'index', :anchor => '/environments'
-  end
-
-  # GET /environments/registerable_paths
-  def registerable_paths
-    paths = environment_paths(library_path_element("systems_readable?"),
-                              environment_path_element("systems_readable?"))
-    respond_to do |format|
-      format.json { render :json => paths }
+    def rules
+      {
+          :registerable_paths => lambda{ true }
+      }
     end
+
+    # GET /environments/registerable_paths
+    def registerable_paths
+      paths = environment_paths(library_path_element("systems_readable?"),
+                                environment_path_element("systems_readable?"))
+      respond_to do |format|
+        format.json { render :json => paths }
+      end
+    end
+
   end
-end
 end
