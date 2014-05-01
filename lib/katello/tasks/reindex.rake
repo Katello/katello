@@ -21,7 +21,7 @@ namespace :katello do
 
     print "Re-indexing Repositories\n"
 
-    Katello::Repository.enabled.each{ |repo| repo.index_content }
+    Katello::Repository.find_each{ |repo| repo.index_content }
 
     print "Re-indexing Pools\n"
     cp_pools = Katello::Resources::Candlepin::Pool.all

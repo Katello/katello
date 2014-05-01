@@ -26,12 +26,12 @@ angular.module('Bastion.tasks', [
 
 /**
  * @ngdoc object
- * @name Bastion.products.config
+ * @name Bastion.tasks.config
  *
  * @requires $stateProvider
  *
  * @description
- *   Used for content hosts level configuration such as setting up the ui state machine.
+ *   Set up the states for tasks.
  */
 angular.module('Bastion.tasks').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('tasks', {
@@ -39,11 +39,11 @@ angular.module('Bastion.tasks').config(['$stateProvider', function ($stateProvid
         templateUrl: 'tasks/views/tasks.html'
     })
     .state('tasks.index', {
-        url: '/tasks',
+        url: '/katello_tasks',
         templateUrl: 'tasks/views/tasks-index.html'
     })
     .state('tasks.details', {
-        url: '/tasks/:taskId',
+        url: '/katello_tasks/:taskId',
         collapsed: true,
         controller: 'TaskDetailsController',
         templateUrl: 'tasks/views/task-details-standalone.html'

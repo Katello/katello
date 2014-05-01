@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.description = ""
 
   gem.files = Dir["{app,vendor,lib,db,ca,config,locale}/**/*"] + ["LICENSE.txt", "README.md"]
-  gem.files += Dir["engines/bastion/{app,vendor,lib}/**/*"]
+  gem.files += Dir["engines/bastion/{app,vendor,lib,config}/**/*"]
   gem.files += Dir["engines/bastion/{README.md,Bastion.gemspec}"]
   gem.files += Dir["engines/fort/{app,config,db,lib}/**/*"]
   gem.files += Dir["engines/bastion/{README.md,fort.gemspec}"]
@@ -56,7 +56,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "anemone"
 
   # UI
-  gem.add_dependency "angular-rails-templates", ">= 0.0.4"
+  gem.add_dependency "angular-rails-templates", "~> 0.0.4"
   gem.add_dependency "simple-navigation", ">= 3.3.4", "< 3.12.0"
   gem.add_dependency "less-rails"
   gem.add_dependency "sass-rails"

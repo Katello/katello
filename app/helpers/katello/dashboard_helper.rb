@@ -23,8 +23,8 @@ module DashboardHelper
   end
 
   def content_hosts_search_status_link(anchor_text, status)
-    href_params = {:systems_path => systems_path, :status => status}
-    href_format = "%{systems_path}#/content-hosts?search=status:%{status}"
+    href_params = {:status => status}
+    href_format = "/content_hosts?search=status:%{status}"
     link_to(anchor_text, href_format % href_params)
   end
 
@@ -161,7 +161,7 @@ module DashboardHelper
   end
 
   def system_path_helper(system)
-    systems_path + "#list_search=id:#{system.id}&panel=system_#{system.id}&panelpage=errata"
+    "/content_hosts/#list_search=id:#{system.id}&panel=system_#{system.id}&panelpage=errata"
   end
 
   def get_checkin(system)

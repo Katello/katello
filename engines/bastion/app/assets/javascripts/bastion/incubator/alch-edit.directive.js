@@ -209,7 +209,9 @@ angular.module('alchemy')
                 model: '=alchEditCheckbox',
                 readonly: '=',
                 handleSave: '&onSave',
-                handleCancel: '&onCancel'
+                handleCancel: '&onCancel',
+                formatter: '@formatter',
+                formatterOptions: '=formatterOptions'
             },
             templateUrl: 'incubator/views/alch-edit-checkbox.html'
         };
