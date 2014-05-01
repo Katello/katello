@@ -12,6 +12,7 @@
 module Katello
 module Glue::ElasticSearch::BackendIndexedModel
   UPDATE_BATCH_SIZE = 200
+  ID_FETCH_BATCH_SIZE = 50
 
   def self.included(base)
     base.send :include, InstanceMethods
@@ -23,6 +24,31 @@ module Glue::ElasticSearch::BackendIndexedModel
   end
 
   module ClassMethods
+
+    def indexed_ids_for_repo(repo_id)
+      search = Tire::Search::Search.new(self.index)
+
+      search.instance_eval do
+        fields [:id]
+        query do
+          all
+        end
+        size 1
+        filter :term, {:repoids => repo_id}
+      end
+
+      total = search.perform.results.total
+      (0..total).step(ID_FETCH_BATCH_SIZE).flat_map do |start|
+        search.instance_eval do
+          fields [:id]
+          size ID_FETCH_BATCH_SIZE
+          from start
+          sort {by :id, 'asc'}
+        end
+
+        search.perform.results.collect{|p| p.id}
+      end
+    end
 
     def index_exists?
       Tire.index(self.index).exists?

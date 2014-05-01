@@ -230,11 +230,6 @@ module Glue::ElasticSearch::PuppetModule
       update_array(puppet_module_ids, 'repoids', [], [repoid])
     end
 
-    def indexed_ids_for_repo(pulp_id)
-      options = {:filters => {:repoids => [pulp_id]}, :fields => [:id], :start => 0, :page_size => 1}
-      options[:page_size] = ::Katello::PuppetModule.legacy_search("", options).total
-      ::Katello::PuppetModule.legacy_search("", options).collect{|e| e.id}
-    end
   end
 end
 end

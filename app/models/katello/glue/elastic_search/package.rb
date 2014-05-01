@@ -225,26 +225,6 @@ module Glue::ElasticSearch::Package
           Tire.index(::Package.index).refresh
         end
       end
-
-      def self.indexed_ids_for_repo(repo_id)
-        search = Tire::Search::Search.new(Katello::Package.index)
-
-        search.instance_eval do
-          fields [:id]
-          query do
-            all
-          end
-          filter :term, {:repoids => repo_id}
-        end
-
-        total = search.perform.results.total
-
-        search.instance_eval do
-          size total
-        end
-
-        search.perform.results.collect{|p| p.id}
-      end
     end
   end
 end
