@@ -61,7 +61,7 @@ module Katello
     api :GET, "/activation_keys/:activation_key_id/system_groups"
     api :GET, "/systems/:system_id/system_groups"
     param_group :search, Api::V2::ApiController
-    param :organization_id, :identifier, :desc => "organization identifier"
+    param :organization_id, :identifier, :desc => "organization identifier", :required => true
     param :name, String, :desc => "system group name to filter by"
     param :activation_key_id, :identifier, :desc => "activation key identifier"
     param :system_id, :identifier, :desc => "system identifier"
