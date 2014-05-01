@@ -22,7 +22,7 @@ class Api::V2::PackageGroupsController < Api::V2::ApiController
   def rules
     readable = lambda do
       (@filter && @filter.content_view.readable?) ||
-      (@repo && @repo.environment.contents_readable? && @repo.product.readable?)
+      (@repo && @repo.environment.contents_readable?)
     end
     {
         :index => readable,

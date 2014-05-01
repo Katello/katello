@@ -30,7 +30,7 @@ describe SyncManagementHelper do
     disable_product_orchestration
     disable_org_orchestration
     Katello.pulp_server.extensions.repository.stubs(:search_by_repository_ids).returns([]) if Katello.config.katello?
-    ProductTestData::PRODUCT_WITH_ATTRS.merge!({ :provider => provider })
+    ProductTestData::PRODUCT_WITH_ATTRS.merge!({ :provider => provider, :organization => provider.organization })
   end
 
   let(:organization) { Organization.create!(:name => 'test_organization', :label => 'test_organization') }

@@ -174,7 +174,7 @@ class KTEnvironment < Katello::Model
   end
 
   def puppet_repositories
-    Repository.readable(self).where(:content_type => Katello::Repository::PUPPET_TYPE)
+    Repository.readable.where(:content_type => Katello::Repository::PUPPET_TYPE)
   end
 
   def as_json(options = {})

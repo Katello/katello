@@ -30,7 +30,6 @@ module Katello
 
     def permissions
       @read_permission = UserPermission.new(:read, :providers, @provider.id, @organization)
-      @create_permission = UserPermission.new(:sync, :organizations, nil, @organization)
       @no_permission = NO_PERMISSION
     end
 
@@ -51,27 +50,11 @@ module Katello
     end
 
     def test_index_protected
-      allowed_perms = [@create_permission, @read_permission]
+      allowed_perms = [@read_permission]
       denied_perms = [@no_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
         get :index, :product_id => @product.cp_id, :organization_id => @organization.label
-      end
-    end
-
-    def test_create
-      Product.any_instance.expects(:sync).returns([{}])
-
-      post :create, :product_id => @product.cp_id, :organization_id => @organization.label
-      assert_response :success
-    end
-
-    def test_create_protected
-      allowed_perms = [@create_permission]
-      denied_perms = [@read_permission, @no_permission]
-
-      assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, :product_id => @product.cp_id, :organization_id => @organization.label
       end
     end
 

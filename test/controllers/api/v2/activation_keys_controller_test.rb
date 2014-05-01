@@ -34,13 +34,12 @@ module Katello
     end
 
     def permissions
-      @resource_type = "Katello::ActivationKey"
       @view_permission = :view_activation_keys
       @create_permission = :create_activation_keys
       @update_permission = :update_activation_keys
       @destroy_permission = :destroy_activation_keys
     end
-    
+
     def setup
       setup_controller_defaults_api
       @request.env['HTTP_ACCEPT'] = 'application/json'
@@ -70,7 +69,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:index, allowed_perms, denied_perms, @resource_type) do
+      assert_protected_action(:index, allowed_perms, denied_perms) do
         get :index, :organization_id => @organization.label
       end
     end
@@ -88,7 +87,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:show, allowed_perms, denied_perms, @resource_type) do
+      assert_protected_action(:show, allowed_perms, denied_perms) do
         get :show, :id => @activation_key.id
       end
     end
@@ -109,7 +108,7 @@ module Katello
       allowed_perms = [@create_permission]
       denied_perms = [@view_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:create, allowed_perms, denied_perms, @resource_type) do
+      assert_protected_action(:create, allowed_perms, denied_perms) do
         post :create, :environment => { :id => @library.id }, :content_view => { :id => @view.id },
              :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'}
       end
@@ -188,7 +187,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:update, allowed_perms, denied_perms, @resource_type) do
+      assert_protected_action(:update, allowed_perms, denied_perms) do
         put :update, :id => @activation_key.id, :organization_id => @organization.id,
             :activation_key => {:name => 'New Name'}
       end
@@ -205,7 +204,7 @@ module Katello
       allowed_perms = [@destroy_permission]
       denied_perms = [@view_permission, @create_permission, @update_permission]
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms, @resource_type) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms) do
         delete :destroy, :organization_id => @organization.id, :id => @activation_key.id
       end
     end

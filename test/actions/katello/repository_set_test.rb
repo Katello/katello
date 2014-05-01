@@ -63,7 +63,6 @@ module ::Actions::Katello::RepositorySet
     end
 
     it 'fails when repository already enabled' do
-      action.world.silence_logger!
       repository_already_enabled!
       lambda do
         plan_action(action, product, content, substitutions)
@@ -86,7 +85,6 @@ module ::Actions::Katello::RepositorySet
     end
 
     it 'fails when repository not enabled' do
-      action.world.silence_logger!
       lambda do
         plan_action(action, product, content, substitutions)
       end.must_raise(::Katello::Errors::NotFound)
@@ -105,9 +103,9 @@ module ::Actions::Katello::RepositorySet
 
     it 'plans' do
       plan_action action, product, content.id
-      assert_run_phase action do |input|
-        input[:product_id].must_equal product.id
-        input[:content_id].must_equal content.id
+      assert_run_phase action do
+        action.input[:product_id].must_equal product.id
+        action.input[:content_id].must_equal content.id
       end
     end
 

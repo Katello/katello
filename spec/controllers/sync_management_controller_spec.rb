@@ -37,8 +37,8 @@ describe SyncManagementController do
 
       @library.stubs(:products).returns(
           OpenStruct.new.tap do |os|
-            def os.readable(org); []; end
-            def os.syncable(org); []; end
+            def os.readable; []; end
+            def os.syncable; []; end
           end
       )
       Provider.stubs(:any_readable?).returns(true)

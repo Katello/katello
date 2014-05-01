@@ -297,7 +297,7 @@ describe System do
     before do
       disable_product_orchestration
       disable_repo_orchestration
-      @product = Product.create!(:name=>"prod1", :label=> "prod1", :cp_id => '12345', :provider => @organization.redhat_provider)
+      @product = Product.create!(:name=>"prod1", :label=> "prod1", :cp_id => '12345', :provider => @organization.redhat_provider, :organization => @organization)
       @environment = create_environment({:name=>"Dev 2", :label=> "Dev_2", :prior => @organization.library, :organization => @organization})
       environment = Katello.config.katello? ? @environment : @organization.library
       @releases = %w[6.1 6.2 6Server]

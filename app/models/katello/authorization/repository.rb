@@ -15,6 +15,8 @@ module Authorization::Repository
   extend ActiveSupport::Concern
 
   included do
+    include Authorizable
+    include Katello::Authorization
 
     def readable?
       product.readable?
@@ -33,59 +35,36 @@ module Authorization::Repository
     end
 
     def syncable?
-      organization.syncable?
+      product.syncable?
     end
 
   end
 
   module ClassMethods
 
-    def creatable?(product)
-      product.editable?
+    def readable
+      where(:product_id => Katello::Product.authorized(:view_products))
     end
 
-    def readable(env)
-      prod_ids = Katello::Product.all_readable(env.organization).collect { |p| p.id }
-      where(product_id: prod_ids, :environment_id => env.id)
+    def deletable
+      where(:product_id => Katello::Product.authorized(:destroy_products))
     end
 
-    def all_syncable(organization)
-      organization.syncable?
-    end
-
-    def all_deletable(repositories)
-      deletable = repositories.collect{|r| r.deletable?}
-      !deletable.include?(false)
-    end
-
-    def any_readable?(organization)
-      Katello::Product.any_readable?(organization)
+    def syncable
+      where(:product_id => Katello::Product.authorized(:sync_products))
     end
 
     def libraries_content_readable(org)
-      repos = Repository.content_readable(org)
+      repos = Repository.readable
       lib_ids = []
       repos.each{|r|  lib_ids << (r.library_instance_id || r.id)}
       where(:id => lib_ids)
     end
 
     def content_readable(org)
-      prod_ids = Katello::Product.readable(org).collect{|p| p.id}
+      prod_ids = Katello::Product.readable.collect{|p| p.id}
       env_ids = KTEnvironment.content_readable(org)
       where(environment_id: env_ids, product_id: prod_ids)
-    end
-
-    def readable_for_product(env, prod)
-      if env.contents_readable?
-        where(environment_id: env.id, product_id: prod.id)
-      else
-        #none readable
-        where("1=0")
-      end
-    end
-
-    def editable_in_library(org)
-      where(environment_id: org.library.id, product_id: Product.editable(org).pluck("#{Katello::Product.table_name}.id"))
     end
 
     def readable_in_org(org, *skip_library)
@@ -97,9 +76,6 @@ module Authorization::Repository
       end
     end
 
-    def any_contents_readable_in_org?(org, skip_library = false)
-      KTEnvironment.any_contents_readable?(org, skip_library)
-    end
   end
 
 end

@@ -12,21 +12,8 @@
 
 module Katello
 class Api::V2::ContentUploadsController < Api::V2::ApiController
-  respond_to :json
+
   before_filter :find_repository
-  before_filter :authorize
-
-  def rules
-    upload_test = lambda { @repo.product.editable? }
-
-    {
-      :create => upload_test,
-      :upload_bits => upload_test,
-      :destroy => upload_test,
-      :import_into_repo => upload_test,
-      :upload_file => upload_test
-    }
-  end
 
   api :POST, "/repositories/:repo_id/content_uploads", "Create an upload request"
   param :repo_id, :identifier, :required => true, :desc => "repository id"
@@ -98,5 +85,6 @@ class Api::V2::ContentUploadsController < Api::V2::ApiController
   def find_repository
     @repo = Repository.find(params[:repository_id])
   end
+
 end
 end

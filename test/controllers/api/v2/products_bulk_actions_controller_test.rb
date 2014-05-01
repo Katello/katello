@@ -29,11 +29,11 @@ module Katello
     end
 
     def permissions
-      @read_permission = UserPermission.new(:read, :providers)
-      @delete_permission = UserPermission.new(:update, :providers, @provider.id, @provider.organization)
-      @update_permission = UserPermission.new(:update, :providers, @provider.id, @provider.organization)
-      @sync_permission = UserPermission.new(:sync, :organizations, nil, @organization)
-      @no_permission = NO_PERMISSION
+      @view_permission = :view_products
+      @create_permission = :create_products
+      @update_permission = :update_products
+      @destroy_permission = :destroy_products
+      @sync_permission = :sync_products
     end
 
     def setup
@@ -53,8 +53,8 @@ module Katello
     end
 
     def test_destroy_products_protected
-      allowed_perms = [@delete_permission, @update_permission]
-      denied_perms = [@sync_permission, @read_permission, @no_permission]
+      allowed_perms = [@destroy_permission]
+      denied_perms = [@update_permission, @create_permission, @sync_permission, @view_permission]
 
       assert_protected_action(:destroy_products, allowed_perms, denied_perms) do
         put :destroy_products, {:ids => @products.collect(&:cp_id), :organization_id => @organization.label}
@@ -71,7 +71,7 @@ module Katello
 
     def test_sync_protected
       allowed_perms = [@sync_permission]
-      denied_perms = [@update_permission, @delete_permission, @read_permission, @no_permission]
+      denied_perms = [@update_permission, @destroy_permission, @view_permission, @create_permission]
 
       assert_protected_action(:sync_products, allowed_perms, denied_perms) do
         put :sync_products, {:ids => @products.collect(&:cp_id), :organization_id => @organization.label}
@@ -88,7 +88,7 @@ module Katello
 
     def test_update_sync_plans_protected
       allowed_perms = [@update_permission]
-      denied_perms = [@sync_permission, @read_permission, @no_permission]
+      denied_perms = [@sync_permission, @create_permission, @destroy_permission, @view_permission]
 
       assert_protected_action(:update_sync_plans, allowed_perms, denied_perms) do
         put :update_sync_plans, {:ids => @products.collect(&:cp_id), :organization_id => @organization.label}

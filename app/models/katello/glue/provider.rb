@@ -328,6 +328,7 @@ module Glue::Provider
 
             Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
               p.provider = self
+              p.organization_id = self.organization.id
             end
             adjusted_eng_products << product_attrs
             if import_logger
