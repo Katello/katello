@@ -26,8 +26,18 @@ module Actions
       private
 
       def external_task=(external_task_data)
-        output[:pulp_task] = external_task_data
-        if output[:pulp_task][:state] == 'error'
+        if external_task_data.is_a?(Hash)
+          if external_task_data['spawned_tasks'].length > 0
+            external_task_data = external_task_data['spawned_tasks'].map do |task|
+              task_resource.poll(task['task_id'])
+            end
+          else
+            external_task_data = [external_task_data]
+          end
+        end
+
+        output[:pulp_task] = external_task_data[0]
+        if output[:pulp_task][:state] == 'error' || output[:pulp_task][:state] == 'canceled'
           message = if output[:pulp_task][:exception]
                       Array(output[:pulp_task][:exception]).join('; ')
                     else
