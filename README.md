@@ -1,4 +1,4 @@
-# Katello [![Build Status](https://travis-ci.org/Katello/katello.png?branch=master)](https://travis-ci.org/Katello/katello)
+# Katello [![Dependency Status](https://gemnasium.com/Katello/katello.svg)](https://gemnasium.com/Katello/katello)
 
 Full documentation is at http://katello.github.io/katello
 
