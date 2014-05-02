@@ -68,8 +68,8 @@ class DashboardController < Katello::ApplicationController
     render :partial => "systems", :locals => {:quantity => quantity}
   end
 
-  def system_groups
-    render :partial => "system_groups", :locals => {:quantity => quantity}
+  def host_collections
+    render :partial => "host_collections", :locals => {:quantity => quantity}
   end
 
   def subscriptions

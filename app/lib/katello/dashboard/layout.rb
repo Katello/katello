@@ -21,7 +21,7 @@ module Dashboard
       content_views
       sync
       promotions
-      system_groups
+      host_collections
       errata
     )
 

@@ -1,0 +1,23 @@
+<span page-title ng-model="hostCollection">{{ 'Content Hosts for: ' | translate }} {{ hostCollection.name }}</span>
+
+<nav>
+  <ul class="nav nav-tabs">
+    <li ng-class="{active: isState('host-collections.details.content-hosts.list')}">
+      <a ui-sref="host-collections.details.content-hosts.list">
+        <span translate>
+          List/Remove
+        </span>
+      </a>
+    </li>
+
+    <li ng-class="{active: stateIncludes('host-collections.details.content-hosts.add')}" ng-show="hostCollection.permissions.editable">
+      <a ui-sref="host-collections.details.content-hosts.add">
+        <span translate>
+          Add
+        </span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<div ui-view></div>

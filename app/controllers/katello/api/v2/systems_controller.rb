@@ -15,19 +15,19 @@ module Katello
 class Api::V2::SystemsController < Api::V2::ApiController
   respond_to :json
 
-  wrap_parameters :include => (System.attribute_names + %w(type facts guest_ids system_group_ids installed_products content_view environment))
+  wrap_parameters :include => (System.attribute_names + %w(type facts guest_ids host_collection_ids installed_products content_view environment))
 
   skip_before_filter :set_default_response_format, :only => :report
 
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
-                                        :available_system_groups, :add_system_groups, :remove_system_groups,
+                                        :available_host_collections, :add_host_collections, :remove_host_collections,
                                         :refresh_subscriptions, :checkin,
                                         :subscription_status, :tasks] # TODO: this should probably be :except
   before_filter :find_environment, :only => [:index, :report]
   before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report]
-  before_filter :find_system_group, :only => [:index]
+  before_filter :find_host_collection, :only => [:index]
   before_filter :find_default_organization_and_or_environment, :only => [:create, :index, :activate]
   before_filter :find_only_environment, :only => [:create]
 
@@ -37,7 +37,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
   before_filter :find_content_view, :only => [:create, :update]
 
-  before_filter :load_search_service, :only => [:index, :available_system_groups, :tasks]
+  before_filter :load_search_service, :only => [:index, :available_host_collections, :tasks]
 
   def organization_id_keys
     [:organization_id, :owner]
@@ -84,9 +84,9 @@ class Api::V2::SystemsController < Api::V2::ApiController
         :tasks                            => lambda { @system.readable? },
         :task_show                        => read_system,
         :enabled_repos                    => consumer_only,
-        :available_system_groups          => edit_system,
-        :add_system_groups                => edit_system,
-        :remove_system_groups             => edit_system,
+        :available_host_collections          => edit_system,
+        :add_host_collections                => edit_system,
+        :remove_host_collections             => edit_system,
         :refresh_subscriptions            => edit_system,
         :checkin                          => edit_system
     }
@@ -108,21 +108,21 @@ class Api::V2::SystemsController < Api::V2::ApiController
   api :GET, "/systems", "List systems"
   api :GET, "/organizations/:organization_id/systems", "List systems in an organization"
   api :GET, "/environments/:environment_id/systems", "List systems in environment"
-  api :GET, "/system_groups/:system_group_id/systems", "List systems in a system group"
+  api :GET, "/host_collections/:host_collection_id/systems", "List systems in a host collection"
   param :name, String, :desc => "Filter systems by name"
   param :pool_id, String, :desc => "Filter systems by subscribed pool"
   param :uuid, String, :desc => "Filter systems by uuid"
   param :organization_id, String, :desc => "Specify the organization", :required => true
   param :environment_id, String, :desc => "Filter by environment"
-  param :system_group_id, String, :desc => "Filter by system group"
+  param :host_collection_id, String, :desc => "Filter by host collection"
   param_group :search, Api::V2::ApiController
   def index
     filters = []
 
     if params[:environment_id]
       filters << {:terms => {:environment_id => [params[:environment_id]] }}
-    elsif params[:system_group_id]
-      filters << {:terms => {:system_group_ids => [params[:system_group_id]] }}
+    elsif params[:host_collection_id]
+      filters << {:terms => {:host_collection_ids => [params[:host_collection_id]] }}
     else
       filters << readable_filters
     end
@@ -139,7 +139,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
 
   api :POST, "/systems", "Register a system"
   api :POST, "/environments/:environment_id/systems", "Register a system in environment"
-  api :POST, "/system_groups/:system_group_id/systems", "Register a system in environment"
+  api :POST, "/host_collections/:host_collection_id/systems", "Register a system in environment"
   param :name, String, :desc => "Name of the system", :required => true, :action_aware => true
   param :description, String, :desc => "Description of the system"
   param :location, String, :desc => "Physical location of the system"
@@ -155,7 +155,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   param :organization_id, String, :desc => "Specify the organization", :required => true
   param :environment_id, String, :desc => "Specify the environment"
   param :content_view_id, String, :desc => "Specify the content view"
-  param :system_group_id, String, :desc => "Specify the system group"
+  param :host_collection_id, String, :desc => "Specify the host collection"
   def create
     @system = System.new(system_params(params).merge(:environment  => @environment,
                                                      :content_view => @content_view))
@@ -188,16 +188,16 @@ class Api::V2::SystemsController < Api::V2::ApiController
   api :GET, "/systems/:id", "Show a system"
   param :id, String, :desc => "UUID of the system", :required => true
   def show
-    @system_groups = @system.system_groups
+    @host_collections = @system.host_collections
     @custom_info = @system.custom_info
     respond
   end
 
-  api :GET, "/systems/:id/available_system_groups", "List system groups the system does not belong to"
+  api :GET, "/systems/:id/available_host_collections", "List host collections the system does not belong to"
   param_group :search, Api::V2::ApiController
-  param :name, String, :desc => "system group name to filter by"
-  def available_system_groups
-    filters = [:terms => {:id => SystemGroup.readable(@system.organization).pluck("#{Katello::SystemGroup.table_name}.id") - @system.system_group_ids}]
+  param :name, String, :desc => "host collection name to filter by"
+  def available_host_collections
+    filters = [:terms => {:id => HostCollection.readable(@system.organization).pluck("#{Katello::HostCollection.table_name}.id") - @system.host_collection_ids}]
     filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
     options = {
@@ -205,8 +205,8 @@ class Api::V2::SystemsController < Api::V2::ApiController
         :load_records? => true
     }
 
-    system_groups = item_search(SystemGroup, params, options)
-    respond_for_index(:collection => system_groups)
+    host_collections = item_search(HostCollection, params, options)
+    respond_for_index(:collection => host_collections)
   end
 
   api :DELETE, "/systems/:id", "Unregister a system"
@@ -341,7 +341,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   param :organization_id, String, :desc => "Specify the organization", :required => true
   param :environment_id, String, :desc => "Specify the environment"
   param :content_view_id, String, :desc => "Specify the content view"
-  param :system_group_id, String, :desc => "Specify the system group"
+  param :host_collection_id, String, :desc => "Specify the host collection"
   param :activation_keys, String, :desc => "comma-separated list of activation-key IDs", :required => true
   def activate
     # Activation keys are userless by definition so use the internal generic user
@@ -359,9 +359,9 @@ class Api::V2::SystemsController < Api::V2::ApiController
       # subscribe system - if anything goes wrong subscriptions are deleted in Candlepin and exception is rethrown
       activation_keys.each do |ak|
         ak.subscribe_system(@system)
-        ak.system_groups.each do |group|
-          group.system_ids = (group.system_ids + [@system.id]).uniq
-          group.save!
+        ak.host_collections.each do |host_collection|
+          host_collection.system_ids = (host_collection.system_ids + [@system.id]).uniq
+          host_collection.save!
         end
       end
 
@@ -438,10 +438,10 @@ class Api::V2::SystemsController < Api::V2::ApiController
     @environment
   end
 
-  def find_system_group
-    return unless params.key?(:system_group_id)
+  def find_host_collection
+    return unless params.key?(:host_collection_id)
 
-    @system_group = SystemGroup.find(params[:system_group_id])
+    @host_collection = HostCollection.find(params[:host_collection_id])
   end
 
   def find_only_environment
@@ -508,7 +508,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
     lambda do
       perms = [(System.any_readable?(@organization) if @organization),
                (System.any_readable?(@environment) if @environment),
-               (System.any_readable?(@system_group) if @system_group)]
+               (System.any_readable?(@host_collection.organization) if @host_collection)]
       perms.compact.inject { |t, v| t && v }
     end
   end
@@ -516,7 +516,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   def system_params(params)
     system_params = params.require(:system).permit(:name, :description, :location, :owner, :type,
                                                    :service_level, {:facts => []},
-                                                   :guest_ids, {:system_group_ids => []})
+                                                   :guest_ids, {:host_collection_ids => []})
 
     if params[:system].key?(:type)
       system_params[:cp_type] = params[:type]

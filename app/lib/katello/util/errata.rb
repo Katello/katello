@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 # The Errata module contains methods that are common for supporting errata
-# in several controllers (e.g. SystemErrataController and SystemGroupErrataController)
+# in several controllers (e.g. SystemErrataController and HostCollectionErrataController)
 module Katello
 module Util
   module Errata

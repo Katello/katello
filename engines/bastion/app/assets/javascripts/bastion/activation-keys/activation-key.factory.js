@@ -31,10 +31,10 @@ angular.module('Bastion.activation-keys').factory('ActivationKey',
             availableSubscriptions: {method: 'GET', params: {action: 'subscriptions', action2: 'available'}},
             removeSubscriptions: {method: 'PUT', isArray: false, params: {action: 'subscriptions'}},
             addSubscriptions: {method: 'POST', isArray: false, params: {action: 'subscriptions'}},
-            systemGroups: {method: 'GET', params: {action: 'system_groups'}},
-            availableSystemGroups: {method: 'GET', params: {action: 'system_groups', action2: 'available'}},
-            removeSystemGroups: {method: 'PUT', isArray: false, params: {action: 'system_groups'}},
-            addSystemGroups: {method: 'POST', isArray: false, params: {action: 'system_groups'}},
+            hostCollections: {method: 'GET', params: {action: 'host_collections'}},
+            availableHostCollections: {method: 'GET', params: {action: 'host_collections', action2: 'available'}},
+            removeHostCollections: {method: 'PUT', isArray: false, params: {action: 'host_collections'}},
+            addHostCollections: {method: 'POST', isArray: false, params: {action: 'host_collections'}},
         });
     }]
 );

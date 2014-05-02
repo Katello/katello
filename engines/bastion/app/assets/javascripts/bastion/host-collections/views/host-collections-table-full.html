@@ -1,0 +1,26 @@
+<table class="table table-striped" ng-class="{'table-mask': table.working}">
+  <thead>
+    <tr alch-table-head row-select>
+      <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
+      <th alch-table-column="content-hosts" sortable>{{ "Content Hosts" | translate }}</th>
+      <th alch-table-column="limit" sortable>{{ "Limit" | translate }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr alch-table-row ng-repeat="hostCollection in table.rows" row-select="hostCollection">
+      <td alch-table-cell>
+        <a ui-sref="host-collections.details.info({hostCollectionId: hostCollection.id})">
+          {{ hostCollection.name }}
+        </a>
+        <i class="icon-chevron-right selected-icon" ng-show="hostCollection.selected"></i>
+      </td>
+      <td alch-table-cell>
+        <a ui-sref="host-collections.details.content-hosts.list({hostCollectionId: hostCollection.id})">
+          {{ hostCollection.total_content_hosts }}
+        </a>
+      </td>
+      <td alch-table-cell>{{ hostCollection.max_content_hosts | unlimitedFilter }}</td>
+    </tr>
+  </tbody>
+</table>

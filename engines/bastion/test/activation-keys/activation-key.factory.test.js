@@ -108,26 +108,26 @@ describe('Factory: ActivationKey', function() {
         });
     });
 
-    it('ActivationKey.availableSystemGroups GET /api/v2/activation_keys/1/system_groups/available', function() {
-        $httpBackend.expectGET('/api/v2/activation_keys/1/system_groups/available').respond(activationKeys.results[0]);
+    it('ActivationKey.availableHostCollections GET /api/v2/activation_keys/1/host_collections/available', function() {
+        $httpBackend.expectGET('/api/v2/activation_keys/1/host_collections/available').respond(activationKeys.results[0]);
 
-        ActivationKey.availableSystemGroups({id: 1}, function(response) {
+        ActivationKey.availableHostCollections({id: 1}, function(response) {
             expect(response).toBeDefined();
         });
     });
 
-    it('ActivationKey.removeSystemGroups PUT /api/v2/activation_keys/1/system_groups', function() {
-        $httpBackend.expectPUT('/api/v2/activation_keys/1/system_groups').respond(activationKeys.results[0]);
+    it('ActivationKey.removeHostCollections PUT /api/v2/activation_keys/1/host_collections', function() {
+        $httpBackend.expectPUT('/api/v2/activation_keys/1/host_collections').respond(activationKeys.results[0]);
 
-        ActivationKey.removeSystemGroups({id: 1}, function(response) {
+        ActivationKey.removeHostCollections({id: 1}, function(response) {
             expect(response).toBeDefined();
         });
     });
 
-    it('ActivationKey.addSystemGroups POST /api/v2/activation_keys/1/system_groups', function() {
-        $httpBackend.expectPOST('/api/v2/activation_keys/1/system_groups').respond(activationKeys.results[0]);
+    it('ActivationKey.addHostCollections POST /api/v2/activation_keys/1/host_collections', function() {
+        $httpBackend.expectPOST('/api/v2/activation_keys/1/host_collections').respond(activationKeys.results[0]);
 
-        ActivationKey.addSystemGroups({id: 1}, function(response) {
+        ActivationKey.addHostCollections({id: 1}, function(response) {
             expect(response).toBeDefined();
         });
     });

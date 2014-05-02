@@ -22,17 +22,17 @@ Katello::Engine.routes.draw do
 
       api_resources :activation_keys, :only => [:index, :create, :show, :update, :destroy] do
         match '/releases' => 'activation_keys#available_releases', :via => :get, :on => :member
+        api_resources :host_collections, :only => [:index]
+        member do
+          match '/host_collections' => 'activation_keys#add_host_collections', :via => :post
+          match '/host_collections' => 'activation_keys#remove_host_collections', :via => :put
+          match '/host_collections/available' => 'activation_keys#available_host_collections', :via => :get
+        end
         api_resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do
             match '/' => 'subscriptions#destroy', :via => :put
             match '/available' => 'subscriptions#available', :via => :get
           end
-        end
-        api_resources :system_groups, :only => [:index]
-        member do
-          match '/system_groups' => 'activation_keys#add_system_groups', :via => :post
-          match '/system_groups' => 'activation_keys#remove_system_groups', :via => :put
-          match '/system_groups/available' => 'activation_keys#available_system_groups', :via => :get
         end
       end
 
@@ -93,6 +93,17 @@ Katello::Engine.routes.draw do
         post :content, :on => :member
       end
 
+      api_resources :host_collections, :only => system_onlies do
+        member do
+          post :copy
+          put :add_systems
+          put :remove_systems
+          put :add_activation_keys
+          put :remove_activation_keys
+        end
+        api_resources :systems, :only => system_onlies
+      end
+
       api_resources :organizations, :only => [:index, :show, :update, :create, :destroy] do
         api_resources :activation_keys, :only => [:index]
         api_resources :content_views, :only => [:index, :create]
@@ -101,6 +112,7 @@ Katello::Engine.routes.draw do
             get :paths
           end
         end
+        api_resources :host_collections, :only => [:index, :create]
         member do
           post :repo_discover
           post :cancel_repo_discover
@@ -114,7 +126,6 @@ Katello::Engine.routes.draw do
             match '/available' => 'subscriptions#available', :via => :get
           end
         end
-        api_resources :system_groups, :only => [:index, :create]
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
         end
@@ -154,24 +165,13 @@ Katello::Engine.routes.draw do
 
       api_resources :subscriptions, :only => [:show]
 
-      api_resources :system_groups, :only => system_onlies do
-        member do
-          post :copy
-          put :add_systems
-          put :remove_systems
-          put :add_activation_keys
-          put :remove_activation_keys
-        end
-        api_resources :systems, :only => system_onlies
-      end
-
       api_resources :systems, :only => system_onlies do
         member do
           get :tasks
           match '/tasks/:id' => 'tasks#show', :via => :get
-          get :available_system_groups, :action => :available_system_groups
-          post :system_groups, :action => :add_system_groups
-          delete :system_groups, :action => :remove_system_groups
+          get :available_host_collections, :action => :available_host_collections
+          post :host_collections, :action => :add_host_collections
+          delete :host_collections, :action => :remove_host_collections
           get :packages, :action => :package_profile
           get :errata
           get :pools
@@ -180,6 +180,7 @@ Katello::Engine.routes.draw do
           put :refresh_subscriptions
         end
         api_resources :activation_keys, :only => [:index]
+        api_resources :host_collections, :only => [:index]
         api_resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do
             match '/' => 'subscriptions#destroy', :via => :put
@@ -187,7 +188,6 @@ Katello::Engine.routes.draw do
             match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
           end
         end
-        api_resources :system_groups, :only => [:index]
       end
 
       ##############################
@@ -228,21 +228,21 @@ Katello::Engine.routes.draw do
         end
       end
 
-      api_resources :system_groups do
+      api_resources :host_collections do
         member do
           get :history
-          match "/history/:job_id" => "system_groups#history_show", :via => :get
+          match "/history/:job_id" => "host_collections#history_show", :via => :get
           delete :destroy_systems
         end
 
-        resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
-        api_resources :errata, :only => [:index, :create], :controller => :system_group_errata
+        resource :packages, :action => [:create, :update, :destroy], :controller => :host_collection_packages
+        api_resources :errata, :only => [:index, :create], :controller => :host_collection_errata
       end
 
       api_resources :systems, :only => [] do
         collection do
-          match '/bulk/add_system_groups' => 'systems_bulk_actions#bulk_add_system_groups', :via => :put
-          match '/bulk/remove_system_groups' => 'systems_bulk_actions#bulk_remove_system_groups', :via => :put
+          match '/bulk/add_host_collections' => 'systems_bulk_actions#bulk_add_host_collections', :via => :put
+          match '/bulk/remove_host_collections' => 'systems_bulk_actions#bulk_remove_host_collections', :via => :put
           match '/bulk/install_content' => 'systems_bulk_actions#install_content', :via => :put
           match '/bulk/applicable_errata' => 'systems_bulk_actions#applicable_errata', :via => :post
           match '/bulk/update_content' => 'systems_bulk_actions#update_content', :via => :put

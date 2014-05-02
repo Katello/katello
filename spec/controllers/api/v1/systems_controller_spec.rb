@@ -51,7 +51,7 @@ describe Api::V1::SystemsController do
 
     System.stubs(:index).returns(stub())
     System.stubs(:prepopulate!).returns(true)
-    System.any_instance.stubs(:update_system_groups)
+    System.any_instance.stubs(:update_host_collections)
 
     Resources::Candlepin::Consumer.stubs(:create).returns({ :uuid => uuid, :owner => { :key => uuid } })
     Resources::Candlepin::Consumer.stubs(:update).returns(true)
@@ -77,8 +77,8 @@ describe Api::V1::SystemsController do
     @cv = @environment_1.content_views.first
     @cve = ContentViewEnvironment.where(:content_view_id => @cv.id, :environment_id => @environment_1.id).first
 
-    @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id)
-    @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)
+    @host_collection_1 = HostCollection.create!(:name => 'Host Collection 1', :organization_id => @organization.id)
+    @host_collection_2 = HostCollection.create!(:name => 'Host Collection 2', :description => "fake description", :organization => @organization)
 
     ContentView.stubs(:readable).returns(stub(:find_by_id => @cv))
   end
@@ -149,9 +149,9 @@ describe Api::V1::SystemsController do
       @activation_key_1 = create_activation_key(:environment   => @environment_1,
                                                 :organization  => @organization,
                                                 :name          => "activation_key_1",
-                                                :system_groups => [@system_group_1], :user => @user)
+                                                :host_collections => [@host_collection_1], :user => @user)
       @activation_key_2 = create_activation_key(:environment   => @environment_1, :organization => @organization, :name => "activation_key_2",
-                                                :system_groups => [@system_group_2])
+                                                :host_collections => [@host_collection_2])
 
       @activation_key_1.stubs(:subscribe_system).returns()
       @activation_key_2.stubs(:subscribe_system).returns()
@@ -196,18 +196,18 @@ describe Api::V1::SystemsController do
         must_respond_with(:success)
       end
 
-      it "should add the system to all system groups associated to activation keys" do
+      it "should add the system to all host collections associated to activation keys" do
         post :activate, @system_data
         must_respond_with(:success)
-        System.last.system_group_ids.must_include(@system_group_1.id)
-        System.last.system_group_ids.must_include(@system_group_2.id)
+        System.last.host_collection_ids.must_include(@host_collection_1.id)
+        System.last.host_collection_ids.must_include(@host_collection_2.id)
       end
 
       it "should set the system's content view to the key's view" do
         @activation_key_3 = create_activation_key(:environment => @environment_1,
                                                   :content_view => @environment_1.default_content_view,
                                                   :organization => @organization, :name => "activation_key_3",
-                                                  :system_groups => [@system_group_2])
+                                                  :host_collections => [@host_collection_2])
         @controller.stubs(:find_activation_keys).returns([@activation_key_3])
         System.any_instance.stubs(:facts).returns(@system_data[:facts])
 
@@ -543,48 +543,48 @@ describe Api::V1::SystemsController do
 
   end
 
-  describe "add system groups to a system" do
+  describe "add host collections to a system" do
     before(:each) do
       @system = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid, :description => "fake description")
       Resources::Candlepin::Consumer.stubs(:get).returns({ :uuid => uuid })
       System.stubs(:first).returns(@system)
     end
 
-    let(:action) { :add_system_groups }
-    let(:req) { post :add_system_groups, :id => @system.uuid }
+    let(:action) { :add_host_collections }
+    let(:req) { post :add_host_collections, :id => @system.uuid }
     let(:authorized_user) { user_with_update_permissions }
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
 
-    it "should update the system groups the system is in" do
-      ids = [@system_group_1.id, @system_group_2.id]
-      post :add_system_groups, :id => @system.uuid, :system => { :system_group_ids => ids }
+    it "should update the host collections the system is in" do
+      ids = [@host_collection_1.id, @host_collection_2.id]
+      post :add_host_collections, :id => @system.uuid, :system => { :host_collection_ids => ids }
       must_respond_with(:success)
-      @system.system_group_ids.must_include(@system_group_1.id)
-      @system.system_group_ids.must_include(@system_group_2.id)
+      @system.host_collection_ids.must_include(@host_collection_1.id)
+      @system.host_collection_ids.must_include(@host_collection_2.id)
     end
 
   end
 
-  describe "remove system groups to a system" do
+  describe "remove host collections to a system" do
     before(:each) do
       @system = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts,
-                               :uuid => uuid, :description => "fake description", :system_group_ids => [@system_group_1.id, @system_group_2.id])
+                               :uuid => uuid, :description => "fake description", :host_collection_ids => [@host_collection_1.id, @host_collection_2.id])
       Resources::Candlepin::Consumer.stubs(:get).returns({ :uuid => uuid })
       System.stubs(:first).returns(@system)
     end
 
-    let(:action) { :add_system_groups }
-    let(:req) { post :add_system_groups, :id => @system.uuid }
+    let(:action) { :add_host_collections }
+    let(:req) { post :add_host_collections, :id => @system.uuid }
     let(:authorized_user) { user_with_update_permissions }
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
 
-    it "should update the system groups the system is in" do
-      ids = [@system_group_1.id, @system_group_2.id]
-      delete :remove_system_groups, :id => @system.uuid, :system => { :system_group_ids => ids }
+    it "should update the host collections the system is in" do
+      ids = [@host_collection_1.id, @host_collection_2.id]
+      delete :remove_host_collections, :id => @system.uuid, :system => { :host_collection_ids => ids }
       must_respond_with(:success)
-      @system.reload.system_group_ids.must_be_empty
+      @system.reload.host_collection_ids.must_be_empty
     end
 
   end

@@ -1,0 +1,19 @@
+.host_collections
+
+  .col_1
+    - if updates == :critical
+      %a{:href => "/host_collections/#{host_collection.id}/actions", :title => "#{_('Critical')}"}
+        .status_icon.red
+    - elsif updates == :warning
+      %a{:href => "/host_collections/#{host_collection.id}/actions", :title => "#{_('Warning')}"}
+        .status_icon.yellow
+    - else
+      %a{:href => "/host_collections/#{host_collection.id}/actions", :title => "#{_('Up to date')}"}
+        .status_icon.green
+
+  .col_2.one-line-ellipsis
+    = link_to(host_collection.name, "/host_collections/#{host_collection.id}/info")
+
+  .col_3.one-line-ellipsis
+    = link_to(host_collection.systems.length, "/host_collections/#{host_collection.id}/content-hosts")
+

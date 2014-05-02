@@ -26,8 +26,8 @@ child :foreman_host => :host do
   end
 end
 
-child :system_groups => :systemGroups do
-  attributes :id, :name, :description, :max_systems, :total_systems
+child :host_collections => :hostCollections do
+  attributes :id, :name, :description, :max_content_hosts, :total_content_hosts
 end
 
 child :custom_info => :customInfo do

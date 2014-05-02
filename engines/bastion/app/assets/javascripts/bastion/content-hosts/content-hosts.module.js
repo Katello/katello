@@ -28,7 +28,7 @@ angular.module('Bastion.content-hosts', [
     'Bastion.subscriptions',
     'Bastion.nodes',
     'Bastion.errata',
-    'Bastion.system-groups'
+    'Bastion.host-collections'
 ]);
 
 /**
@@ -149,22 +149,22 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
         templateUrl: 'content-hosts/details/views/content-host-add-subscriptions.html'
     });
 
-    $stateProvider.state('content-hosts.details.system-groups', {
+    $stateProvider.state('content-hosts.details.host-collections', {
         abstract: true,
         collapsed: true,
-        templateUrl: 'content-hosts/details/views/system-groups.html'
+        templateUrl: 'content-hosts/details/views/host-collections.html'
     })
-    .state('content-hosts.details.system-groups.list', {
-        url: '/system-groups',
+    .state('content-hosts.details.host-collections.list', {
+        url: '/host-collections',
         collapsed: true,
-        controller: 'ContentHostSystemGroupsController',
-        templateUrl: 'content-hosts/details/views/system-groups-table.html'
+        controller: 'ContentHostHostCollectionsController',
+        templateUrl: 'content-hosts/details/views/host-collections-table.html'
     })
-    .state('content-hosts.details.system-groups.add', {
-        url: '/system-groups/add',
+    .state('content-hosts.details.host-collections.add', {
+        url: '/host-collections/add',
         collapsed: true,
-        controller: 'ContentHostAddSystemGroupsController',
-        templateUrl: 'content-hosts/details/views/system-groups-table.html'
+        controller: 'ContentHostAddHostCollectionsController',
+        templateUrl: 'content-hosts/details/views/host-collections-table.html'
     });
 
     $stateProvider.state("content-hosts.bulk-actions", {
@@ -207,11 +207,11 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
         url: '/content_hosts/bulk-actions/errata/:errataId/content-hosts',
         templateUrl: 'content-hosts/bulk/views/errata-content-hosts.html'
     })
-    .state('content-hosts.bulk-actions.groups', {
-        url: '/content_hosts/bulk-actions/groups',
+    .state('content-hosts.bulk-actions.host-collections', {
+        url: '/content_hosts/bulk-actions/host-collections',
         collapsed: true,
-        controller: 'ContentHostsBulkActionGroupsController',
-        templateUrl: 'content-hosts/bulk/views/bulk-actions-groups.html'
+        controller: 'ContentHostsBulkActionHostCollectionsController',
+        templateUrl: 'content-hosts/bulk/views/bulk-actions-host-collections.html'
     })
     .state('content-hosts.bulk-actions.subscriptions', {
         url: '/content_hosts/bulk-actions/bulk-subscriptions',

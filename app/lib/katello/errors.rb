@@ -36,9 +36,9 @@ module Errors
 
   class ContentViewTaskInProgress < StandardError; end
 
-  class SystemGroupEmptyException < StandardError
+  class HostCollectionEmptyException < StandardError
     def message
-      _("System group is empty.")
+      _("Host collection is empty.")
     end
   end
 
