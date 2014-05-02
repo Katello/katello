@@ -5,15 +5,17 @@ namespace :katello do
     service_start = "sudo /sbin/service %s start"
 
     task :pulp do
-      system(service_stop.gsub("%s", "mongod"))
+      SERVICES = %w(httpd pulp_workers pulp_celerybeat pulp_resource_manager)
       system(service_stop.gsub("%s", "qpidd"))
-      system(service_stop.gsub("%s", "httpd"))
+      system(service_start.gsub("%s", "qpidd"))
+      system(service_stop.gsub("%s", "mongod"))
+
+      SERVICES.each{|s| system(service_stop.gsub("%s", s)) }
       system("sudo rm -rf /var/lib/mongodb/pulp_database*")
       system(service_start.gsub("%s", "mongod"))
       sleep(10)
-      system("sudo -u apache /usr/bin/pulp-manage-db")
-      system(service_start.gsub("%s", "qpidd"))
-      system(service_start.gsub("%s", "httpd"))
+      fail "Cannot migrate pulp database" unless system("sudo -u apache /usr/bin/pulp-manage-db")
+      SERVICES.each{|s| system(service_start.gsub("%s", s)) }
       puts "Pulp database reset."
     end
 
