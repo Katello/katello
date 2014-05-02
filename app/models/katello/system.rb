@@ -33,6 +33,7 @@ class System < Katello::Model
   after_rollback :rollback_on_create, :on => :create
 
   belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :systems
+  belongs_to :foreman_host, :class_name => "Host::Managed", :foreign_key => :host_id
 
   has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
   has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy

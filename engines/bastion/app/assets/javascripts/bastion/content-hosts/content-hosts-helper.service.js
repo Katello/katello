@@ -21,6 +21,18 @@
 angular.module('Bastion.content-hosts').service('ContentHostsHelper',
     function () {
 
+        // The color mapping used here is based upon the mapping utilized by when it displays Host status
+        var hostStatusColorMap = {
+            'Pending Installation': 'light-blue',
+            'Alerts disabled': 'gray',
+            'No reports': 'gray',
+            'Out of sync': 'orange',
+            'Error': 'red',
+            'Active': 'light-blue',
+            'Pending': 'orange',
+            'No Change': 'green'
+        };
+
         this.getStatusColor = function (status) {
             var colors = {
                     'valid': 'green',
@@ -31,5 +43,14 @@ angular.module('Bastion.content-hosts').service('ContentHostsHelper',
             return colors[status] ? colors[status] : 'red';
         };
 
+        this.getProvisioningStatusColor = function (status) {
+            var  color;
+            if (status !== undefined) {
+                if ((color = hostStatusColorMap[status]) === undefined) {
+                    throw "Unknown status = " + status;
+                }
+            }
+            return color;
+        };
     }
 );

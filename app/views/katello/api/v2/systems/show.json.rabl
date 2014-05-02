@@ -7,6 +7,25 @@ attributes :name, :description
 attributes :location
 attributes :content_view, :content_view_id
 
+child :foreman_host => :host do
+  attributes :id, :name
+  attributes :host_status => :status
+  attributes :last_report
+
+  child :environment => :puppet_environment do
+    attributes :id, :name
+  end
+  child :operatingsystem do
+    attributes :id, :name, :description
+  end
+  child :model do
+    attributes :id, :name
+  end
+  child :hostgroup do
+    attributes :id, :name
+  end
+end
+
 child :system_groups => :systemGroups do
   attributes :id, :name, :description, :max_systems, :total_systems
 end
