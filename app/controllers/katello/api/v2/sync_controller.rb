@@ -13,16 +13,9 @@
 module Katello
   class Api::V2::SyncController < Api::V2::ApiController
 
-    before_filter :find_optional_organization, :only => [:index, :create, :cancel]
-    before_filter :find_object, :only => [:index, :create, :cancel]
-    before_filter :ensure_library, :only => [:create]
-    before_filter :authorize
-
-    def rules
-      list_test = lambda { Provider.any_readable?(@obj.organization) }
-
-      { :index  => list_test }
-    end
+    before_filter :find_optional_organization, :only => [:index]
+    before_filter :find_object, :only => [:index]
+    before_filter :ensure_library, :only => [:index]
 
     api :GET, "/organizations/:organization_id/products/:product_id/sync", "Get status of repo synchronisation for given product"
     api :GET, "/repositories/:repository_id/sync", "Get status of synchronisation for given repository"
@@ -34,9 +27,7 @@ module Katello
 
     # used in unit tests
     def find_object
-      if params.key?(:provider_id)
-        @obj = find_provider
-      elsif params.key?(:product_id)
+      if params.key?(:product_id)
         @obj = find_product
       elsif params.key?(:repository_id)
         @obj = find_repository
@@ -46,28 +37,22 @@ module Katello
       @obj
     end
 
-    def find_provider
-      @provider = Provider.find(params[:provider_id])
-      fail HttpErrors::BadRequest, N_("Couldn't find provider '%s'") % params[:provider_id] if @provider.nil?
-      @provider
-    end
-
     def find_product
       fail _("Organization required") if @organization.nil?
-      @product = Product.find_by_cp_id(params[:product_id], @organization)
+      @product = Product.syncable.find_by_cp_id(params[:product_id], @organization)
       fail HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
       @product
     end
 
     def find_repository
-      @repository = Repository.find(params[:repository_id])
+      @repository = Repository.syncable.find_by_id(params[:repository_id])
       fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repository.nil?
       @repository
     end
 
     def ensure_library
       unless @repository.nil?
-        fail HttpErrors::NotFound, _("You can synchronize repositories only in library environment'") if !@repository.environment.library?
+        fail HttpErrors::NotFound, _("You can check sync status for repositories only in the library lifecycle environment.'") if !@repository.environment.library?
       end
     end
 
