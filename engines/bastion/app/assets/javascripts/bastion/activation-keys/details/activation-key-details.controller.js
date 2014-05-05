@@ -20,13 +20,15 @@
  * @requires $q
  * @requires translate
  * @requires ActivationKey
+ * @requires CurrentOrganization
+ * @requires Organization
  *
  * @description
  *   Provides the functionality for the activation key details action pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'ActivationKey',
-    function ($scope, $state, $q, translate, ActivationKey) {
+    ['$scope', '$state', '$q', 'translate', 'ActivationKey', 'Organization', 'CurrentOrganization',
+    function ($scope, $state, $q, translate, ActivationKey, Organization, CurrentOrganization) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
         $scope.copyErrorMessages = [];
@@ -78,5 +80,14 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
             });
         };
 
+        $scope.serviceLevels = function () {
+            var deferred = $q.defer();
+
+            Organization.get({id: CurrentOrganization}, function (organization) {
+                deferred.resolve(organization['service_levels']);
+            });
+
+            return deferred.promise;
+        };
     }]
 );

@@ -738,6 +738,15 @@ module Resources
           JSON.parse(self.post(url, {:name => name}.to_json, self.default_headers).body).with_indifferent_access
         end
 
+        def update(id, release_version, service_level)
+          attrs = { :releaseVer => release_version, :serviceLevel => service_level }.delete_if { |k, v| v.nil? }
+          if attrs.empty?
+            return true
+          else
+            JSON.parse(self.put(path(id), attrs.to_json, self.default_headers).body).with_indifferent_access
+          end
+        end
+
         def destroy(id)
           fail(ArgumentError, "activation key id has to be specified") unless id
           self.delete(path(id), self.default_headers).code.to_i

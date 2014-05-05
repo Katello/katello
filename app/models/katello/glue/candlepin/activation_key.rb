@@ -20,6 +20,11 @@ module Glue::Candlepin::ActivationKey
     base.class_eval do
       before_save :save_activation_key_orchestration
       before_destroy :destroy_activation_key_orchestration
+
+      lazy_accessor :service_level,
+                    :initializer => (lambda do |s|
+                                      Resources::Candlepin::ActivationKey.get(cp_id)[0][:serviceLevel] if cp_id
+                                     end)
     end
   end
 
@@ -44,7 +49,7 @@ module Glue::Candlepin::ActivationKey
     end
 
     def set_activation_key
-      Rails.logger.debug _("Creating an activation key in candlepin: #{label}")
+      Rails.logger.debug "Creating an activation key in candlepin: #{label}"
       json = Resources::Candlepin::ActivationKey.create(self.label, self.organization.label)
       self.cp_id = json[:id]
     rescue => e
@@ -52,8 +57,16 @@ module Glue::Candlepin::ActivationKey
       raise e
     end
 
+    def update_activation_key
+      Rails.logger.debug "Updating an activation key in candlepin: #{label}"
+      Resources::Candlepin::ActivationKey.update(self.cp_id, self.release_version, @service_level)
+    rescue => e
+      Rails.logger.error _("Failed to update candlepin activation_key %s") % "#{self.label}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
     def del_activation_key
-      Rails.logger.debug _("Deleting activation_key in candlepin: %s") % self.label
+      Rails.logger.debug "Deleting activation_key in candlepin: %s" % self.label
       Resources::Candlepin::ActivationKey.destroy self.cp_id
       true
     rescue => e
@@ -65,6 +78,8 @@ module Glue::Candlepin::ActivationKey
       case self.orchestration_for
       when :create
         pre_queue.create(:name => "candlepin activation_key: #{self.label}", :priority => 2, :action => [self, :set_activation_key])
+      when :update
+        pre_queue.create(:name => "update candlepin activation_key: #{self.label}", :priority => 2, :action => [self, :update_activation_key])
       end
     end
 

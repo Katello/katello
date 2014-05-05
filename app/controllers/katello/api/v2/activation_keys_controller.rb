@@ -16,12 +16,12 @@ module Katello
     before_filter :verify_presence_of_organization_or_environment, :only => [:index]
     before_filter :find_environment, :only => [:index, :create, :update]
     before_filter :find_optional_organization, :only => [:index, :create]
-    before_filter :find_activation_key, :only => [:show, :update, :destroy,
+    before_filter :find_activation_key, :only => [:show, :update, :destroy, :available_releases,
                                                   :available_system_groups, :add_system_groups, :remove_system_groups]
     before_filter :authorize
     before_filter :load_search_service, :only => [:index, :available_system_groups]
 
-    wrap_parameters :include => (ActivationKey.attribute_names + %w(system_group_ids))
+    wrap_parameters :include => (ActivationKey.attribute_names + %w(system_group_ids service_level))
 
     def rules
       read_test   = lambda do
@@ -35,6 +35,7 @@ module Katello
       {
         :index                => read_test,
         :show                 => read_test,
+        :available_releases   => read_test,
         :create               => manage_test,
         :update               => manage_test,
         :destroy              => manage_test,
@@ -93,6 +94,8 @@ module Katello
     param :environment_id, :identifier, :desc => "environment id", :required => true
     param :content_view_id, :identifier, :desc => "content view id", :required => true
     param :usage_limit, :number, :desc => "maximum number of registered content hosts, or 'unlimited'"
+    param :release_version, String, :desc => "content release version"
+    param :service_level, String, :desc => "service level"
     def update
       @activation_key.update_attributes(activation_key_params)
       respond
@@ -125,6 +128,17 @@ module Katello
       }
 
       respond_for_index(:collection => item_search(SystemGroup, params, options))
+    end
+
+    api :GET, "/activation_keys/:id/releases", "Show release versions available for an activation key"
+    param :id, String, :desc => "ID of the activation key", :required => true
+    def available_releases
+      response = {
+          :results => @activation_key.available_releases,
+          :total => @activation_key.available_releases.size,
+          :subtotal => @activation_key.available_releases.size
+      }
+      respond_for_index :collection => response
     end
 
     api :PUT, "/activation_keys/:id/system_groups"
@@ -190,6 +204,8 @@ module Katello
                                                           :environment_id,
                                                           :organization_id,
                                                           :content_view_id,
+                                                          :release_version,
+                                                          :service_level,
                                                           :system_group_ids => [])
 
       key_params[:environment_id] = params[:environment][:id] if params[:environment].try(:[], :id)

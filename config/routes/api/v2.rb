@@ -21,6 +21,7 @@ Katello::Engine.routes.draw do
       root :to => 'root#resource_list'
 
       api_resources :activation_keys, :only => [:index, :create, :show, :update, :destroy] do
+        match '/releases' => 'activation_keys#available_releases', :via => :get, :on => :member
         api_resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do
             match '/' => 'subscriptions#destroy', :via => :put

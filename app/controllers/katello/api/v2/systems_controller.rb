@@ -514,7 +514,8 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   def system_params(params)
-    system_params = params.require(:system).permit(:name, :description, :location, :owner, :type, {:facts => []},
+    system_params = params.require(:system).permit(:name, :description, :location, :owner, :type,
+                                                   :service_level, {:facts => []},
                                                    :guest_ids, {:system_group_ids => []})
 
     if params[:system].key?(:type)

@@ -21,7 +21,7 @@ module Katello
 
     before_filter :proxy_request_path, :proxy_request_body
     before_filter :set_organization_id
-    before_filter :find_organization, :only => [:rhsm_index, :consumer_activate, :consumer_create]
+    before_filter :find_organization, :only => [:rhsm_index, :consumer_activate]
     before_filter :find_default_organization_and_or_environment, :only => [:consumer_create, :index, :consumer_activate]
     before_filter :find_optional_organization, :only => [:consumer_create, :hypervisors_update, :index, :consumer_activate]
     before_filter :find_only_environment, :only => [:consumer_create]

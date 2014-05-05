@@ -10,7 +10,8 @@ child :environment => :environment do
 end
 attributes :environment_id
 
-attributes :usage_count, :user_id, :usage_limit, :pools, :system_template_id
+attributes :usage_count, :user_id, :usage_limit, :pools, :system_template_id, :release_version,
+           :service_level
 
 node :permissions do |activation_key|
   {

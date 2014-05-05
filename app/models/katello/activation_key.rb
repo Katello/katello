@@ -63,6 +63,14 @@ class ActivationKey < Katello::Model
     system_activation_keys.count
   end
 
+  def available_releases
+    if self.environment
+      self.environment.available_releases
+    else
+      self.organization.library.available_releases
+    end
+  end
+
   # sets up system when registering with this activation key - must be executed in a transaction
   def apply_to_system(system)
     if !usage_limit.nil? && usage_limit != -1 && usage_count >= usage_limit
