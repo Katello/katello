@@ -119,6 +119,7 @@ class ApplicationController < ::ApplicationController
   def converted_controllers
     [
       'bastion/bastion_controller',
+      'katello/sync_management',
     ]
   end
 

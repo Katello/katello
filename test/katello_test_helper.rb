@@ -118,6 +118,7 @@ class ActionController::TestCase
     set_user(User.current, is_api)
     set_default_locale
     setup_engine_routes
+    @controller.stubs(:require_org).returns({})
   end
 
   def set_user(user = nil, is_api = false)
@@ -141,7 +142,6 @@ class ActionController::TestCase
 
   def setup_controller_defaults_api
     setup_controller_defaults(true)
-    @controller.stubs(:require_org).returns({})
   end
 
   alias_method :login_user, :set_user
