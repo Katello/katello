@@ -18,7 +18,7 @@ module Actions
         include Helpers::Presenter
 
         input_format do
-          param :repo_id, Integer
+          param :pulp_id
         end
 
         def invoke_external_task
