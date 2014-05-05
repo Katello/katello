@@ -16,9 +16,9 @@ class ContentSearch::SearchUtils
 
   def self.search_envs(mode)
     if mode != :all
-      KTEnvironment.content_readable(current_organization).where(:id => self.env_ids)
+      LifecycleEnvironment.content_readable(current_organization).where(:id => self.env_ids)
     else
-      KTEnvironment.content_readable(current_organization)
+      LifecycleEnvironment.content_readable(current_organization)
     end
   end
 

@@ -26,7 +26,7 @@ class ContentView < Katello::Model
   belongs_to :organization, :inverse_of => :content_views, :class_name => "::Organization"
 
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment", :dependent => :destroy
-  has_many :environments, :class_name => "Katello::KTEnvironment", :through => :content_view_environments
+  has_many :environments, :class_name => "Katello::LifecycleEnvironment", :through => :content_view_environments
 
   has_many :content_view_versions, :class_name => "Katello::ContentViewVersion", :dependent => :destroy
   alias_method :versions, :content_view_versions
@@ -625,7 +625,7 @@ class ContentView < Katello::Model
     # The id for a default view, will simply be the env id; otherwise, it
     # will be a combination of env id and view id.  The reason being,
     # for a default view, the same candlepin environment will be referenced
-    # by the kt_environment and content_view_environment.
+    # by the lifecycle_environment and content_view_environment.
     self.default ? env.id.to_s : [env.id, self.id].join('-')
   end
 

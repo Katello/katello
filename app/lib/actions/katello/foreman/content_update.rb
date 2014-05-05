@@ -27,7 +27,7 @@ module Actions
         end
 
         def finalize
-          environment  = ::Katello::KTEnvironment.find(input[:environment_id])
+          environment  = ::Katello::LifecycleEnvironment.find(input[:environment_id])
           content_view = ::Katello::ContentView.find(input[:content_view_id])
           ::Katello::Foreman.update_foreman_content(environment.organization,
                                                     environment,

@@ -32,7 +32,7 @@ class LdapValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
     override_config(options)
     @acme_corporation   = get_organization
 
-    @dev                = KTEnvironment.find(environments(:dev).id)
+    @dev                = LifecycleEnvironment.find(environments(:dev).id)
     @user = build(:user, :batman)
   end
 

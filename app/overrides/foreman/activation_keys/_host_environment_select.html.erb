@@ -6,7 +6,7 @@
 <script>
     $(function () {
         function ktUpdateContentViews() {
-            var ktEnvId = $("#kt_environment_id").val();
+            var ktEnvId = $("#lifecycle_environment_id").val();
             var cvSelect = $("#hostgroup_environment_id");
             if(cvSelect.length === 0) {
                 cvSelect = $("#host_environment_id");
@@ -33,12 +33,12 @@
         }
 
         ktUpdateContentViews();
-        $("#kt_environment_id").change(ktUpdateContentViews);
+        $("#lifecycle_environment_id").change(ktUpdateContentViews);
     });
 </script>
 
 <%= field(f, _("Environment"), { :include_blank => true }) do
-  select_tag :kt_environment_id, grouped_env_options
+  select_tag :lifecycle_environment_id, grouped_env_options
 end %>
 
 <%= field(f, _("Content View"), { :include_blank => true }) do

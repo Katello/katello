@@ -17,7 +17,7 @@ class AuthorizationTestBase < ActiveSupport::TestCase
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['Repository', 'KTEnvironment', 'ContentViewEnvironment',
+    models    = ['Repository', 'LifecycleEnvironment', 'ContentViewEnvironment',
                  'Organization', 'System', 'SystemGroup']
     disable_glue_layers(services, models)
   end
@@ -32,8 +32,8 @@ class AuthorizationTestBase < ActiveSupport::TestCase
     @fedora_17_x86_64     = Repository.find(katello_repositories(:fedora_17_x86_64).id)
     @fedora_17_x86_64_dev = Repository.find(katello_repositories(:fedora_17_x86_64_dev).id)
     @fedora               = Product.find(katello_products(:fedora).id)
-    @library              = KTEnvironment.find(katello_environments(:library).id)
-    @dev                  = KTEnvironment.find(katello_environments(:dev).id)
+    @library              = LifecycleEnvironment.find(katello_environments(:library).id)
+    @dev                  = LifecycleEnvironment.find(katello_environments(:dev).id)
     @unassigned_gpg_key   = GpgKey.find(katello_gpg_keys(:unassigned_gpg_key).id)
     @system             = System.find(katello_systems(:simple_server))
   end

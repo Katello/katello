@@ -25,7 +25,7 @@ module Katello
 
     def models
       @organization = get_organization
-      @library = KTEnvironment.find(katello_environments(:library))
+      @library = LifecycleEnvironment.find(katello_environments(:library))
       @content_view = ContentView.find(katello_content_views(:library_dev_view))
     end
 

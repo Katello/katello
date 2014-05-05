@@ -71,7 +71,7 @@ module Authorization::Repository
 
     def content_readable(org)
       prod_ids = Katello::Product.readable(org).collect{|p| p.id}
-      env_ids = KTEnvironment.content_readable(org)
+      env_ids = LifecycleEnvironment.content_readable(org)
       where(environment_id: env_ids, product_id: prod_ids)
     end
 
@@ -91,14 +91,14 @@ module Authorization::Repository
     def readable_in_org(org, *skip_library)
       if (skip_library.empty? || skip_library.first.nil?)
         # 'skip library' not included, so retrieve repos in library in the result
-        where(environment_id: KTEnvironment.content_readable(org))
+        where(environment_id: LifecycleEnvironment.content_readable(org))
       else
-        where(environment_id: KTEnvironment.content_readable(org).non_library)
+        where(environment_id: LifecycleEnvironment.content_readable(org).non_library)
       end
     end
 
     def any_contents_readable_in_org?(org, skip_library = false)
-      KTEnvironment.any_contents_readable?(org, skip_library)
+      LifecycleEnvironment.any_contents_readable?(org, skip_library)
     end
   end
 

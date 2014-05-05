@@ -124,7 +124,7 @@ EOKEY
   end
 
   def disable_env_orchestration
-    disable_foreman_tasks_hooks(KTEnvironment)
+    disable_foreman_tasks_hooks(LifecycleEnvironment)
     Resources::Candlepin::Environment.stubs(:create).returns({})
     Resources::Candlepin::Environment.stubs(:destroy).returns({})
     Resources::Candlepin::Environment.stubs(:find).returns({ :environmentContent => [] })

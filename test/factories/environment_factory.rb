@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :katello_k_t_environment, :aliases => [:katello_environment], :class => Katello::KTEnvironment do
+  factory :katello_k_t_environment, :aliases => [:katello_environment], :class => Katello::LifecycleEnvironment do
     sequence(:name) { |n| "Environment#{n}" }
     sequence(:label) { |n| "environment#{n}" }
     association :organization, :factory => :katello_organization

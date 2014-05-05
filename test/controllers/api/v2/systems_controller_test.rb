@@ -17,7 +17,7 @@ module Katello
 class Api::V2::SystemsControllerTest < ActionController::TestCase
 
   def self.before_suite
-    models = ["System", "KTEnvironment",  "ContentViewEnvironment", "ContentView"]
+    models = ["System", "LifecycleEnvironment",  "ContentViewEnvironment", "ContentView"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
     super
   end

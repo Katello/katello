@@ -17,7 +17,7 @@ module Katello
   class ContentViewErratumFilterRuleValidatorTest < ActiveSupport::TestCase
 
     def self.before_suite
-      models = ["Organization", "KTEnvironment", "User", "ContentView", "ContentViewVersion",
+      models = ["Organization", "LifecycleEnvironment", "User", "ContentView", "ContentViewVersion",
                 "ContentViewEnvironment", "ContentViewFilter",
                 "ContentViewErratumFilter", "ContentViewErratumFilterRule"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)

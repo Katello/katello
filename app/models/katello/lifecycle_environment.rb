@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class KTEnvironment < Katello::Model
+class LifecycleEnvironment < Katello::Model
   self.include_root_in_json = false
   include Authorization::Environment
   include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
@@ -31,10 +31,10 @@ class KTEnvironment < Katello::Model
            :dependent => :destroy, :foreign_key => :environment_id
   # rubocop:disable HasAndBelongsToMany
   # TODO: change these into has_many associations
-  has_and_belongs_to_many :priors, { :class_name => "Katello::KTEnvironment", :foreign_key => :environment_id,
+  has_and_belongs_to_many :priors, { :class_name => "Katello::LifecycleEnvironment", :foreign_key => :environment_id,
                                      :join_table => "katello_environment_priors",
                                      :association_foreign_key => "prior_id", :uniq => true }
-  has_and_belongs_to_many :successors, { :class_name => "Katello::KTEnvironment", :foreign_key => "prior_id",
+  has_and_belongs_to_many :successors, { :class_name => "Katello::LifecycleEnvironment", :foreign_key => "prior_id",
                                          :join_table => "katello_environment_priors",
                                          :association_foreign_key => :environment_id, :readonly => true }
 
@@ -114,7 +114,7 @@ class KTEnvironment < Katello::Model
   def prior=(env_id)
     self.priors.clear
     return if env_id.nil? || env_id == ""
-    prior_env = KTEnvironment.find env_id
+    prior_env = LifecycleEnvironment.find env_id
     self.priors << prior_env unless prior_env.nil?
   end
 
@@ -191,11 +191,11 @@ class KTEnvironment < Katello::Model
 
   # returns list of virtual permission tags for the current user
   def self.list_tags(org_id)
-    KTEnvironment.where(:organization_id => org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+    LifecycleEnvironment.where(:organization_id => org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
   def self.tags(ids)
-    KTEnvironment.where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
+    LifecycleEnvironment.where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
   def package_groups(search_args = {})

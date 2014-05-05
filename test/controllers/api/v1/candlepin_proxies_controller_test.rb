@@ -17,7 +17,7 @@ module Katello
   describe Api::V1::CandlepinProxiesController do
 
     before do
-      models = ["Organization", "KTEnvironment", "User", "ContentViewFilter",
+      models = ["Organization", "LifecycleEnvironment", "User", "ContentViewFilter",
                 "ContentViewEnvironment", "System", "SystemGroup", "ActivationKey"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
       setup_controller_defaults_api

@@ -32,7 +32,7 @@ module ContentViewAuthBase
   module ClassMethods
     def before_suite
       services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['Organization', 'KTEnvironment', 'User']
+      models    = ['Organization', 'LifecycleEnvironment', 'User']
       disable_glue_layers(services, models)
     end
   end

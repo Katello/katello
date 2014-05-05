@@ -16,7 +16,7 @@ $(function() {
         $("#ak-subscriptions-info").hide();
         $("#ak-subscriptions-spinner").show();
 
-        var selectedEnvId = $("#kt_environment_id option:selected").data('katello-env-id'),
+        var selectedEnvId = $("#lifecycle_environment_id option:selected").data('katello-env-id'),
             selectedCvId = $("#hostgroup_environment_id option:selected").data('content_view-id');
 
         // Retrieve the activation keys associated with the current
@@ -66,7 +66,7 @@ $(function() {
     function ktHideParams() {
         var paramsToHide = [ktFindParamContainer(KT_AK_LABEL),
                             ktFindParamContainer('kt_org'),
-                            ktFindParamContainer('kt_env'),
+                            ktFindParamContainer('lifecycle_env'),
                             ktFindParamContainer('kt_cv')];
         $.each(paramsToHide, function (i, paramContainer) {
             if(paramContainer) {
@@ -108,7 +108,7 @@ $(function() {
     function ktEnvToParam() {
         var orgEnvCv = ktSelectedOrgEnvCv() || [];
         ktSetParam('kt_org', orgEnvCv[0]);
-        ktSetParam('kt_env', orgEnvCv[1]);
+        ktSetParam('lifecycle_env', orgEnvCv[1]);
         ktSetParam('kt_cv',  orgEnvCv[2]);
     }
 

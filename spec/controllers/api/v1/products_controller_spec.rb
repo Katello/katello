@@ -180,7 +180,7 @@ describe Api::V1::ProductsController do
     it_should_behave_like "protected action"
 
     it "should find environment" do
-      KTEnvironment.expects(:find_by_id).once.with(@environment.id.to_s).returns([@environment])
+      LifecycleEnvironment.expects(:find_by_id).once.with(@environment.id.to_s).returns([@environment])
       get 'repositories', :organization_id => @organization.label, :environment_id => @environment.id.to_s, :id => @product.id
     end
 

@@ -273,7 +273,7 @@ class UserDefaultEnvTest < UserTestBase
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['User', 'KTEnvironment', 'Repository', 'System', 'ContentViewEnvironment']
+    models    = ['User', 'LifecycleEnvironment', 'Repository', 'System', 'ContentViewEnvironment']
     disable_glue_layers(services, models)
   end
 

@@ -16,7 +16,7 @@ module Katello
 class ContentViewTest < ActiveSupport::TestCase
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment",
+    models = ["Organization", "LifecycleEnvironment", "User", "ContentViewEnvironment",
               "Repository", "ContentView", "ContentViewVersion",
               "System", "ActivationKey"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
@@ -26,8 +26,8 @@ class ContentViewTest < ActiveSupport::TestCase
   def setup
     User.current      = User.find(users(:admin))
     @organization     = get_organization
-    @library          = KTEnvironment.find(katello_environments(:library).id)
-    @dev              = KTEnvironment.find(katello_environments(:dev).id)
+    @library          = LifecycleEnvironment.find(katello_environments(:library).id)
+    @dev              = LifecycleEnvironment.find(katello_environments(:dev).id)
     @default_view     = ContentView.find(katello_content_views(:acme_default).id)
     @library_view     = ContentView.find(katello_content_views(:library_view).id)
     @library_dev_view = ContentView.find(katello_content_views(:library_dev_view).id)

@@ -19,7 +19,7 @@ class UserTestBase < ActiveSupport::TestCase
     configure_runcible
 
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['User', 'System', 'KTEnvironment', 'Repository', 'Organization']
+    models    = ['User', 'System', 'LifecycleEnvironment', 'Repository', 'Organization']
     disable_glue_layers(services, models)
     super
   end
@@ -29,7 +29,7 @@ class UserTestBase < ActiveSupport::TestCase
     @admin              = User.find(users(:admin))
     @acme_corporation   = get_organization
 
-    @dev                = KTEnvironment.find(katello_environments(:dev).id)
+    @dev                = LifecycleEnvironment.find(katello_environments(:dev).id)
   end
 
 end

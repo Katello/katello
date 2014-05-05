@@ -21,7 +21,7 @@ class GluePulpRepoTestBase < ActiveSupport::TestCase
     super
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
-    models    = ['KTEnvironment', 'Repository', 'Package', 'ContentView',
+    models    = ['LifecycleEnvironment', 'Repository', 'Package', 'ContentView',
                  'Organization', 'Product', 'ContentViewEnvironment']
     disable_glue_layers(services, models, true)
 
@@ -357,7 +357,7 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
   end
 
   def test_create_clone
-    staging = KTEnvironment.find(katello_environments(:staging).id)
+    staging = LifecycleEnvironment.find(katello_environments(:staging).id)
     clone = @@fedora_17_x86_64.create_clone(:environment => staging)
 
     assert_kind_of Repository, clone
@@ -367,7 +367,7 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
   end
 
   def test_clone_contents
-    dev = KTEnvironment.find(katello_environments(:dev).id)
+    dev = LifecycleEnvironment.find(katello_environments(:dev).id)
     @@fedora_17_x86_64_dev.relative_path = Repository.clone_repo_path(:repository => @@fedora_17_x86_64,
                                                                       :environment => dev,
                                                                       :content_view => dev.default_content_view)

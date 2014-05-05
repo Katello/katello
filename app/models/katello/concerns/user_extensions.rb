@@ -64,7 +64,7 @@ module Katello
         has_many :search_favorites, :dependent => :destroy, :class_name => "Katello::SearchFavorite"
         has_many :search_histories, :dependent => :destroy, :class_name => "Katello::SearchHistory"
         has_many :activation_keys, :dependent => :destroy, :class_name => "Katello::ActivationKey"
-        belongs_to :default_environment, :class_name => "Katello::KTEnvironment", :inverse_of => :users
+        belongs_to :default_environment, :class_name => "Katello::LifecycleEnvironment", :inverse_of => :users
         serialize :preferences, Hash
 
         validates :default_locale, :inclusion => {:in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ')}
@@ -362,9 +362,9 @@ module Katello
           roles_users.select { |r| r.ldap }.map { |r| r.role }
         end
 
-        # returns the set of users who have kt_environment_id's environment set as their default
-        def self.with_default_environment(kt_environment_id)
-          where(:default_environment_id => kt_environment_id)
+        # returns the set of users who have lifecycle_environment_id's environment set as their default
+        def self.with_default_environment(lifecycle_environment_id)
+          where(:default_environment_id => lifecycle_environment_id)
         end
 
         def create_or_update_search_history(path, search_params)

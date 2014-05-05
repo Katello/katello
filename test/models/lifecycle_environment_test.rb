@@ -14,13 +14,13 @@
 require 'katello_test_helper'
 
 module Katello
-class KTEnvironmentTestBase < ActiveSupport::TestCase
+class LifecycleEnvironmentTestBase < ActiveSupport::TestCase
 
   extend ActiveRecord::TestFixtures
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['Repository', 'KTEnvironment', 'ContentView', 'ContentViewVersion',
+    models    = ['Repository', 'LifecycleEnvironment', 'ContentView', 'ContentViewVersion',
                  'ContentViewEnvironment', 'Organization', 'Product',
                  'Provider']
     disable_glue_layers(services, models, true)
@@ -29,18 +29,18 @@ class KTEnvironmentTestBase < ActiveSupport::TestCase
   def setup
     @acme_corporation     = get_organization
 
-    @library              = KTEnvironment.find(katello_environments(:library).id)
-    @dev                  = KTEnvironment.find(katello_environments(:dev).id)
-    @staging              = KTEnvironment.find(katello_environments(:staging).id)
+    @library              = LifecycleEnvironment.find(katello_environments(:library).id)
+    @dev                  = LifecycleEnvironment.find(katello_environments(:dev).id)
+    @staging              = LifecycleEnvironment.find(katello_environments(:staging).id)
   end
 
 end
 
 
-class KTEnvironmentTest < KTEnvironmentTestBase
+class LifecycleEnvironmentTest < LifecycleEnvironmentTestBase
 
   def test_create_and_validate_default_content_view
-    env = KTEnvironment.create(:organization=>@acme_corporation, :name=>"SomeEnv", :prior=>@library)
+    env = LifecycleEnvironment.create(:organization=>@acme_corporation, :name=>"SomeEnv", :prior=>@library)
     assert_nil env.default_content_view
     assert_nil env.default_content_view_version
   end
@@ -75,7 +75,7 @@ class KTEnvironmentTest < KTEnvironmentTestBase
   end
 
   def test_content_view_label
-    env = @acme_corporation.kt_environments.build(:name => "Test", :label => ContentView::CONTENT_DIR,
+    env = @acme_corporation.lifecycle_environments.build(:name => "Test", :label => ContentView::CONTENT_DIR,
                                                   :prior => @library)
     refute env.save
     assert_equal 1, env.errors.size

@@ -19,7 +19,7 @@ class ContentViewEnvironment < Katello::Model
   include Glue if Katello.config.use_cp
 
   belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_environments
-  belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :content_view_environments
+  belongs_to :environment, :class_name => "Katello::LifecycleEnvironment", :inverse_of => :content_view_environments
   belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",
     :inverse_of => :content_view_environments
 

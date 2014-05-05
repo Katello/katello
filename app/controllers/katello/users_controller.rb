@@ -42,7 +42,7 @@ class UsersController < Katello::ApplicationController
       if @user.id == current_user.id
         env_id = params['env_id'] ? params['env_id']['env_id'].to_i : nil
         if env_id
-          KTEnvironment.find(env_id).systems_registerable?
+          LifecycleEnvironment.find(env_id).systems_registerable?
         else
           true # No env means removing previous default env
         end
@@ -98,7 +98,7 @@ class UsersController < Katello::ApplicationController
     accessible_envs = []
     if current_organization
       @organization   = current_organization
-      accessible_envs = current_organization.kt_environments
+      accessible_envs = current_organization.lifecycle_environments
       setup_environment_selector(current_organization, accessible_envs)
       @environment = first_env_in_path(accessible_envs, true)
     end
@@ -133,7 +133,7 @@ class UsersController < Katello::ApplicationController
     @user = User.new(params[:user])
 
     if default_environment_id
-      @environment  = KTEnvironment.find(default_environment_id)
+      @environment  = LifecycleEnvironment.find(default_environment_id)
       @organization = @environment.organization
       @user.default_environment = @environment
       @user.save!
@@ -219,9 +219,9 @@ class UsersController < Katello::ApplicationController
       @organization = Organization.find(@environment.attributes['organization_id'])
 
       accessible_envs = if current_user.id == @user.id
-                          KTEnvironment.systems_registerable(@organization)
+                          LifecycleEnvironment.systems_registerable(@organization)
                         else
-                          KTEnvironment.where(:organization_id => @organization.id)
+                          LifecycleEnvironment.where(:organization_id => @organization.id)
                         end
       setup_environment_selector(@organization, accessible_envs)
     else

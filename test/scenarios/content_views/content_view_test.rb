@@ -28,7 +28,7 @@
 #  def self.before_suite
 #    loaded_fixtures = load_fixtures
 #
-#    models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment",
+#    models = ["Organization", "LifecycleEnvironment", "User", "ContentViewEnvironment",
 #              "Repository", "ContentView", "ContentViewVersion",
 #              "ComponentContentView", "System", "Product", "ContentViewVersion", "ContentViewDefinitionArchive",
 #              "Filter", "PackageRule", "ErratumRule", "Changeset", "PromotionChangeset"]
@@ -50,7 +50,7 @@
 #
 #    #setup the org and sync the repo
 #    @@org = Organization.create!(:name=>'test_scenario_org', :label=>'test_scenario_org')
-#    @@dev = KTEnvironment.create!(:name=>"Dev", :organization=>@@org, :prior=>@@org.library, :label=>"dev")
+#    @@dev = LifecycleEnvironment.create!(:name=>"Dev", :organization=>@@org, :prior=>@@org.library, :label=>"dev")
 #    provider = Provider.create!(:organization=>@@org, :name=>'publish_test_provider', :provider_type=>Provider::CUSTOM)
 #
 #    @@product = Product.new(:provider=>provider, :name=>'publish_test_product', :label=>'publish_test_product')

@@ -18,7 +18,7 @@ class OrganizationDestroyerTest < ActiveSupport::TestCase
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch']
-    models    = ['Organization', 'KTEnvironment', 'ContentView', 'ContentViewVersion',
+    models    = ['Organization', 'LifecycleEnvironment', 'ContentView', 'ContentViewVersion',
                  'ContentViewEnvironment']
     disable_glue_layers(services, models, true)
   end

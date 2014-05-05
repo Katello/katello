@@ -36,7 +36,7 @@ module OrganizationHelperMethods
 
   def create_environment(attrs)
     User.current.remote_id =  User.current.login
-    env = KTEnvironment.create!(attrs)
+    env = LifecycleEnvironment.create!(attrs)
     if block_given?
       yield env
       env.save!
@@ -90,7 +90,7 @@ module OrganizationHelperMethods
 
   def create_activation_key(attrs)
     env_id = attrs.delete(:environment_id)
-    attrs[:environment] = KTEnvironment.find(env_id) if env_id
+    attrs[:environment] = LifecycleEnvironment.find(env_id) if env_id
     if attrs[:environment] && !attrs[:environment].library? && !attrs[:content_view]
       cv = find_or_create_content_view(attrs[:environment])
       attrs[:content_view] = cv

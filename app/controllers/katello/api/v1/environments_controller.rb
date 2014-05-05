@@ -102,7 +102,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   def index
     query_params.delete(:environment)
     query_params[:organization_id] = @organization.id
-    @environments                  = KTEnvironment.where query_params
+    @environments                  = LifecycleEnvironment.where query_params
 
     # The following is a workaround to handle the fact that rhsm currently requests the
     # environment using the 'name' parameter; however, the value is actually the environment label.
@@ -111,7 +111,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
         query_params[:label] = query_params[:name]
         query_params.delete(:name)
       end
-      @environments = KTEnvironment.where query_params
+      @environments = LifecycleEnvironment.where query_params
     end
 
     unless @organization.readable?
@@ -142,8 +142,8 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   def create
     environment_params         = params[:environment]
     environment_params[:label] = labelize_params(environment_params)
-    @environment               = KTEnvironment.new(environment_params)
-    @organization.kt_environments << @environment
+    @environment               = LifecycleEnvironment.new(environment_params)
+    @organization.lifecycle_environments << @environment
     fail ActiveRecord::RecordInvalid.new(@environment) unless @environment.valid?
     @organization.save!
     respond
@@ -197,7 +197,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   protected
 
   def find_environment
-    @environment = KTEnvironment.find(params[:id])
+    @environment = LifecycleEnvironment.find(params[:id])
     fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:id] if @environment.nil?
     @organization = @environment.organization
     @environment

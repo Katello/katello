@@ -79,7 +79,7 @@ class Api::V2::PuppetModulesController < Api::V2::ApiController
   end
 
   def find_environment
-    @environment = KTEnvironment.find(params[:environment_id]) if params[:environment_id]
+    @environment = LifecycleEnvironment.find(params[:environment_id]) if params[:environment_id]
   end
 
   def find_repository

@@ -20,7 +20,7 @@ module Katello
     include Glue if Katello.config.use_pulp
     include AsyncOrchestration
 
-    belongs_to :environment, :class_name => "Katello::KTEnvironment",
+    belongs_to :environment, :class_name => "Katello::LifecycleEnvironment",
                :inverse_of => :content_view_puppet_environments
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",
                :inverse_of => :content_view_puppet_environments

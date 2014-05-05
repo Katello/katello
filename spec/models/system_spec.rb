@@ -69,9 +69,9 @@ describe System do
 
   describe "system in invalid state should not be valid" do
     before(:each) { @system = System.new }
-    specify { System.new(:name => 'name', :environment => @organization.kt_environments.first, :cp_type => cp_type).wont_be :valid? }
-    specify { System.new(:name => 'name', :environment => @organization.kt_environments.first, :facts => facts).wont_be :valid? }
-    specify { System.new(:cp_type => cp_type, :environment => @organization.kt_environments.first, :facts => facts).wont_be :valid? }
+    specify { System.new(:name => 'name', :environment => @organization.lifecycle_environments.first, :cp_type => cp_type).wont_be :valid? }
+    specify { System.new(:name => 'name', :environment => @organization.lifecycle_environments.first, :facts => facts).wont_be :valid? }
+    specify { System.new(:cp_type => cp_type, :environment => @organization.lifecycle_environments.first, :facts => facts).wont_be :valid? }
   end
 
   it "adds custom info if organization has default custom info set" do

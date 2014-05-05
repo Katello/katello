@@ -43,7 +43,7 @@ class Repository < Katello::Model
   TYPES = [YUM_TYPE, FILE_TYPE, PUPPET_TYPE]
   SELECTABLE_TYPES = [YUM_TYPE, PUPPET_TYPE]
 
-  belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
+  belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::LifecycleEnvironment"
   belongs_to :product, :inverse_of => :repositories
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name => "Katello::Repository", :inverse_of => :library_instances_inverse

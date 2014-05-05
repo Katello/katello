@@ -23,27 +23,27 @@ class EnvironmentAuthorizationAdminTest < AuthorizationTestBase
   end
 
   def test_changesets_readable
-    refute_empty KTEnvironment.changesets_readable(@org)
+    refute_empty LifecycleEnvironment.changesets_readable(@org)
   end
 
   def test_content_readable
-    refute_empty KTEnvironment.content_readable(@org)
+    refute_empty LifecycleEnvironment.content_readable(@org)
   end
 
   def test_systems_readable
-    refute_empty KTEnvironment.systems_readable(@org)
+    refute_empty LifecycleEnvironment.systems_readable(@org)
   end
 
   def test_systems_registerable
-    refute_empty KTEnvironment.systems_registerable(@org)
+    refute_empty LifecycleEnvironment.systems_registerable(@org)
   end
 
   def test_any_viewable_for_promotions?
-    assert KTEnvironment.any_viewable_for_promotions?(@org)
+    assert LifecycleEnvironment.any_viewable_for_promotions?(@org)
   end
 
   def test_any_contents_readable?
-    assert KTEnvironment.any_contents_readable?(@org)
+    assert LifecycleEnvironment.any_contents_readable?(@org)
   end
 
   #instance tests
@@ -102,27 +102,27 @@ class EnvironmentAuthorizationNoPermsTest < AuthorizationTestBase
   end
 
   def test_changesets_readable
-    assert_empty KTEnvironment.changesets_readable(@org)
+    assert_empty LifecycleEnvironment.changesets_readable(@org)
   end
 
   def test_content_readable
-    assert_empty KTEnvironment.content_readable(@org)
+    assert_empty LifecycleEnvironment.content_readable(@org)
   end
 
   def test_systems_readable
-    assert_empty KTEnvironment.systems_readable(@org)
+    assert_empty LifecycleEnvironment.systems_readable(@org)
   end
 
   def test_systems_registerable
-    assert_empty KTEnvironment.systems_registerable(@org)
+    assert_empty LifecycleEnvironment.systems_registerable(@org)
   end
 
   def test_any_viewable_for_promotions?
-    refute KTEnvironment.any_viewable_for_promotions?(@org)
+    refute LifecycleEnvironment.any_viewable_for_promotions?(@org)
   end
 
   def test_any_contents_readable?
-    refute KTEnvironment.any_contents_readable?(@org)
+    refute LifecycleEnvironment.any_contents_readable?(@org)
   end
 
   #instance tests

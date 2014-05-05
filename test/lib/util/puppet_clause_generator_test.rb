@@ -18,7 +18,7 @@ class Util::PuppetClauseGeneratorTest < MiniTest::Rails::ActiveSupport::TestCase
   INCLUDE_ALL_MODULES = {"unit_id" => {"$exists" => true}}
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "User","ContentViewEnvironment",
+    models = ["Organization", "LifecycleEnvironment", "User","ContentViewEnvironment",
               "ContentViewFilter", "ContentView", "ContentViewPackageFilterRule",
               "ContentViewPackageGroupFilterRule", "ContentViewErratumFilterRule"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)

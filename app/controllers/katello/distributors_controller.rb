@@ -51,7 +51,7 @@ class DistributorsController < Katello::ApplicationController
 
     items_test = lambda do
       if params[:env_id]
-        @environment = KTEnvironment.find(params[:env_id])
+        @environment = LifecycleEnvironment.find(params[:env_id])
         @environment && @environment.distributors_readable?
       else
         current_organization && Distributor.any_readable?(current_organization)
@@ -113,7 +113,7 @@ class DistributorsController < Katello::ApplicationController
     @distributor = Distributor.new
     @distributor.facts = {} #this is nil to begin with
     @organization = current_organization
-    accessible_envs = current_organization.kt_environments
+    accessible_envs = current_organization.lifecycle_environments
     setup_environment_selector(current_organization, accessible_envs)
 
     # This controls whether the New Distributor page will display an environment selector or not.
@@ -134,7 +134,7 @@ class DistributorsController < Katello::ApplicationController
     @distributor.name = params["distributor"]["name"]
     @distributor.cp_type = "candlepin"  # The 'candlepin' type is allowed to export a manifest
     @distributor.facts = {'distributor_version' => params[:distributor][:version]}
-    @distributor.environment = KTEnvironment.find(params["distributor"]["environment_id"])
+    @distributor.environment = LifecycleEnvironment.find(params["distributor"]["environment_id"])
     @distributor.content_view = ContentView.find_by_id(params["distributor"].try(:[], "content_view_id"))
     #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
     #find the newly created distributor
@@ -166,7 +166,7 @@ class DistributorsController < Katello::ApplicationController
   end
 
   def environments
-    accesible_envs = KTEnvironment.distributors_readable(current_organization)
+    accesible_envs = LifecycleEnvironment.distributors_readable(current_organization)
 
     @distributors = []
     setup_environment_selector(current_organization, accesible_envs)
@@ -364,8 +364,8 @@ class DistributorsController < Katello::ApplicationController
 
   def find_environment
     if current_organization
-      readable = KTEnvironment.distributors_readable(current_organization)
-      @environment = KTEnvironment.find(params[:env_id]) if params[:env_id]
+      readable = LifecycleEnvironment.distributors_readable(current_organization)
+      @environment = LifecycleEnvironment.find(params[:env_id]) if params[:env_id]
       @environment ||= first_env_in_path(readable, false)
       @environment ||=  current_organization.library
     end
@@ -373,7 +373,7 @@ class DistributorsController < Katello::ApplicationController
 
   def find_environment_in_distributor
     if params.key?(:distributor) && params[:distributor].key?(:environment_id)
-      @environment = KTEnvironment.distributors_readable(current_organization).
+      @environment = LifecycleEnvironment.distributors_readable(current_organization).
                       where(:id => params[:distributor][:environment_id]).first
     end
   end
@@ -403,7 +403,7 @@ class DistributorsController < Katello::ApplicationController
       :actions => Distributor.any_deletable?(@environment, current_organization) ? 'actions' : nil,
       :initial_action => :subscriptions,
       :search_class => Distributor,
-      :disable_create => current_organization.kt_environments.length == 0 ? _("At least one environment is required to create or register distributors in your current organization.") : false
+      :disable_create => current_organization.lifecycle_environments.length == 0 ? _("At least one environment is required to create or register distributors in your current organization.") : false
     }
   end
 
@@ -443,7 +443,7 @@ class DistributorsController < Katello::ApplicationController
   # to filter readable distributors that can be
   # passed to search
   def readable_filters
-    {:environment_id => KTEnvironment.distributors_readable(current_organization).collect{|item| item.id}}
+    {:environment_id => LifecycleEnvironment.distributors_readable(current_organization).collect{|item| item.id}}
   end
 
   def search_filter

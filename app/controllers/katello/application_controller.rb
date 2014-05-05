@@ -437,7 +437,7 @@ class ApplicationController < ::ApplicationController
   # TODO: break up method
   # rubocop:disable MethodLength
   def setup_environment_selector(org, accessible)
-    next_env = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
+    next_env = LifecycleEnvironment.find(params[:next_env_id]) if params[:next_env_id]
 
     @paths = []
     @paths = org.promotion_paths.collect{|tmp_path| [org.library] + tmp_path}

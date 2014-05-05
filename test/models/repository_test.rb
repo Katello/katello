@@ -158,7 +158,7 @@ class RepositoryInstanceTest < RepositoryTestBase
     @acme_corporation   = get_organization
 
     @fedora             = Product.find(katello_products(:fedora).id)
-    @library            = KTEnvironment.find(katello_environments(:library).id)
+    @library            = LifecycleEnvironment.find(katello_environments(:library).id)
 
     repo_id = Repository.repo_id(@fedora.label, @fedora_17_x86_64.label, @library.label,
                                  @acme_corporation.label, @library.default_content_view.label, nil)
@@ -181,7 +181,7 @@ class RepositoryInstanceTest < RepositoryTestBase
 
   def test_clone_repo_path_for_component
     # validate that clone repo path for a component view does not include the component view label
-    library = KTEnvironment.find(katello_environments(:library).id)
+    library = LifecycleEnvironment.find(katello_environments(:library).id)
     cv = ContentView.find(katello_content_views(:composite_view))
     cve = ContentViewEnvironment.where(:environment_id => library,
                                         :content_view_id => cv).first

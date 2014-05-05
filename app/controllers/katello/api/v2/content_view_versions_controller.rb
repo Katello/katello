@@ -76,7 +76,7 @@ module Katello
 
     def find_environment
       return unless params.key?(:environment_id)
-      @environment = KTEnvironment.find(params[:environment_id])
+      @environment = LifecycleEnvironment.find(params[:environment_id])
     end
 
   end
