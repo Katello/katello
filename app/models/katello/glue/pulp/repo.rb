@@ -467,9 +467,8 @@ module Glue::Pulp::Repo
       sync_options[:max_speed] ||= Katello.config.pulp.sync_KBlimit if Katello.config.pulp.sync_KBlimit # set bandwidth limit
       sync_options[:num_threads] ||= Katello.config.pulp.sync_threads if Katello.config.pulp.sync_threads # set threads per sync
       pulp_tasks = Katello.pulp_server.extensions.repository.sync(self.pulp_id, {:override_config => sync_options})
-      pulp_task = pulp_tasks.select{ |i| i['tags'].include?("pulp:action:sync") }.first.with_indifferent_access
 
-      task = PulpSyncStatus.using_pulp_task(pulp_task) do |t|
+      task = PulpSyncStatus.using_pulp_task(pulp_tasks) do |t|
         t.organization = organization
         t.parameters ||= {}
         t.parameters[:options] = options
@@ -831,10 +830,11 @@ module Glue::Pulp::Repo
         end
       end
 
-      Katello.pulp_server.resources.content.import_into_repo(self.pulp_id, unit_type_id,
+      response = Katello.pulp_server.resources.content.import_into_repo(self.pulp_id, unit_type_id,
                                                              upload_id, unit_key,
                                                              {:unit_metadata => unit_metadata}
                                                             )
+      TaskSupport.wait_on_tasks(PulpTaskStatus.using_pulp_task(response))
       Katello.pulp_server.resources.content.delete_upload_request(upload_id)
     end
 

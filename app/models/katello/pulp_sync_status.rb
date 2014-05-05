@@ -21,10 +21,13 @@ class PulpSyncProgress
       #depending on whether this is a history item, or current sync structure may be different
       ht = HashUtil.new
 
-      details = ht.null_safe_get(progress_attrs, nil, %w(progress yum_importer content)) ||
-                ht.null_safe_get(progress_attrs, nil, %w(progress puppet_importer modules)) ||
-                ht.null_safe_get(progress_attrs, nil, %w(progress details packages sync_report)) ||
-                ht.null_safe_get(progress_attrs, nil, %w(progress iso_importer))
+      details = ht.null_safe_get(progress_attrs, nil, %w(progress_report yum_importer content)) ||
+                ht.null_safe_get(progress_attrs, nil, %w(progress_report puppet_importer modules)) ||
+                ht.null_safe_get(progress_attrs, nil, %w(progress_report details packages sync_report)) ||
+                ht.null_safe_get(progress_attrs, nil, %w(progress_report iso_importer))
+
+      #if the task is waiting, it wont have a progress report
+      progress_attrs['progress_report'] = {}
 
       if progress_attrs['progress_report']['iso_importer']
         @total_size  = ht.null_safe_get(details, 0, ['total_bytes'])
