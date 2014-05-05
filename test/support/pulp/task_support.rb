@@ -38,8 +38,6 @@ module TaskSupport
 
   def self.wait_on_tasks(task_list, options={})
     ignore_exception = options.fetch(:ignore_exception, false)
-
-    task_list = [task_list] if !task_list.is_a? Array
     PulpTaskStatus.wait_for_tasks(task_list)
 
   rescue RuntimeError => e

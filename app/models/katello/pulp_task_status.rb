@@ -61,7 +61,10 @@ class PulpTaskStatus < TaskStatus
     if pulp_status.is_a? TaskStatus
       pulp_status
     else
-      task_status = TaskStatus.find_by_uuid(pulp_status[:task_id])
+      task_id = pulp_status[:task_id] || pulp_status[:spawned_tasks].first[:task_id]
+      pulp_status = Katello.pulp_server.resources.task.poll(task_id)
+
+      task_status = TaskStatus.find_by_uuid(task_id)
       task_status = self.new { |t| yield t if block_given? } if task_status.nil?
       PulpTaskStatus.dump_state(pulp_status, task_status)
     end
