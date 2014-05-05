@@ -13,6 +13,7 @@
 module Katello
   class Api::V2::ProductsController < Api::V2::ApiController
 
+    before_filter :find_activation_key, :only => [:index]
     before_filter :find_organization, :only => [:create]
     before_filter :find_product, :only => [:update, :destroy, :show, :sync]
 
@@ -27,7 +28,8 @@ module Katello
     end
 
     api :GET, "/products", N_("List products")
-    api :GET, "/subscriptions/:subscription_id/products", N_("List of subscription products in an organization")
+    api :GET, "/subscriptions/:subscription_id/products", N_("List of subscription products in a subscription")
+    api :GET, "/activation_keys/:activation_key_id/products", N_("List of subscription products in an activation key")
     api :GET, "/organizations/:organization_id/products", N_("List of products in an organization")
     param :organization_id, :number, :desc => N_("Filter products by organization"), :required => true
     param :subscription_id, :identifier, :desc => N_("Filter products by subscription")
@@ -42,6 +44,7 @@ module Katello
 
       ids = Product.readable.pluck(:id)
       ids = filter_by_subscription(ids, params[:subscription_id]) if params[:subscription_id]
+      ids = filter_by_activation_key(ids, @activation_key) if @activation_key
 
       options[:filters] << {:terms => {:id => ids}}
       options[:filters] << {:term => {:name => params[:name].downcase}} if params[:name]
@@ -102,9 +105,21 @@ module Katello
       @product = Product.find_by_id(params[:id]) if params[:id]
     end
 
-    def filter_by_subscription(ids = [], subscription_id)
+    def find_activation_key
+      if params[:activation_key_id]
+        @activation_key = ActivationKey.find_by_id(params[:activation_key_id])
+        fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:activation_key_id] if @activation_key.nil?
+        @organization = @activation_key.organization
+      end
+    end
+
+    def filter_by_subscription(ids, subscription_id)
       @subscription = Pool.find_by_id!(subscription_id)
       ids & @subscription.products.pluck("#{Product.table_name}.id")
+    end
+
+    def filter_by_activation_key(ids = [], activation_key)
+      ids & activation_key.products.map { |product| product.id }
     end
 
     def product_params

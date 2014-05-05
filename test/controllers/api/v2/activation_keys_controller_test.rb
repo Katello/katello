@@ -24,7 +24,10 @@ module Katello
     end
 
     def models
-      @activation_key = katello_activation_keys(:simple_key)
+      ActivationKey.any_instance.stubs(:products).returns([])
+      ActivationKey.any_instance.stubs(:content_overrides).returns([])
+
+      @activation_key = ActivationKey.find(katello_activation_keys(:simple_key))
       @organization = get_organization
       @view = katello_content_views(:library_view)
       @library = @organization.library
@@ -208,5 +211,34 @@ module Katello
       end
     end
 
+    def test_content_override_protected
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission]
+
+      assert_protected_action(:content_override, allowed_perms, denied_perms) do
+        put(:content_override, :id => @activation_key.id, :content_label => 'some-content',
+            :name => 'enabled', :value => 1)
+      end
+    end
+
+    def test_content_override
+      results = JSON.parse(put(:show, :id => @activation_key.id, :content_label => 'some-content',
+                               :name => 'enabled', :value => 1).body)
+
+      assert_equal results['name'], 'Simple Activation Key'
+
+      assert_response :success
+      assert_template 'api/v2/activation_keys/show'
+    end
+
+    def test_content_override_empty
+      results = JSON.parse(put(:show, :id => @activation_key.id, :content_label => 'some-content',
+                               :name => 'enabled').body)
+
+      assert_equal results['name'], 'Simple Activation Key'
+
+      assert_response :success
+      assert_template 'api/v2/activation_keys/show'
+    end
   end
 end
