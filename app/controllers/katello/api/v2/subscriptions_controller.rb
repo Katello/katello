@@ -19,10 +19,6 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   before_filter :find_optional_organization, :only => [:index, :available, :show]
   before_filter :find_organization, :only => [:upload, :delete_manifest, :refresh_manifest]
   before_filter :find_provider
-
-  # Authorize must be before find_subscription since find_subscription reaches out to Candlepin
-  # and needs a current user set
-  before_filter :authorize
   before_filter :find_subscription, :only => [:show]
 
   before_filter :load_search_service, :only => [:index, :available]
@@ -30,34 +26,6 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   resource_description do
     description "Subscriptions management."
     api_version 'v2'
-  end
-
-  def rules
-    read_test = lambda do
-      return @system.readable? if @system
-      return @activation_key.readable? if @activation_key
-      @provider.readable?
-    end
-    available_test = lambda { Organization.any_readable? }
-    modification_test = lambda do
-      return @system.editable? if @system
-      return @activation_key.editable? if @activation_key
-      return @distributor.editable? if @distributor
-      @provider.editable?
-    end
-    edit_test = lambda { @provider.editable? }
-
-    {
-      :index => read_test,
-      :show => read_test,
-      :create => modification_test,
-      :destroy => modification_test,
-      :destroy_all => modification_test,
-      :available => available_test,
-      :upload => edit_test,
-      :delete_manifest => edit_test,
-      :refresh_manifest => edit_test
-    }
   end
 
   api :GET, "/systems/:system_id/subscriptions", "List a system's subscriptions"

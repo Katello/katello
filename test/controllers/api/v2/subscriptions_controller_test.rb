@@ -31,11 +31,11 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
   end
 
   def permissions
-    @read_permission = UserPermission.new(:read, :organizations, @organization.id)
-    @create_permission = UserPermission.new(:register_systems, :organizations, nil, @system.organization)
-    @update_permission = UserPermission.new(:update_systems, :organizations, nil, @system.organization)
-    @edit_permission = UserPermission.new(:update, :organizations)
-    @no_permission = NO_PERMISSION
+    @read_permission = :view_subscriptions
+    @attach_permission = :attach_subscriptions
+    @unattach_permission = :unattach_subscriptions
+    @import_permission = :import_manifest
+    @delete_permission = :delete_manifest
   end
 
   def setup
@@ -71,7 +71,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
 
   def test_index_protected
     allowed_perms = [@read_permission]
-    denied_perms = [@no_permission]
+    denied_perms = [@attach_permission, @unattach_permission, @import_permission, @delete_permission]
 
     assert_protected_action(:index, allowed_perms, denied_perms) do
       get :index, :organization_id => @organization.label
@@ -86,12 +86,30 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
     assert_template 'api/v2/subscriptions/index'
   end
 
+  def test_available_protected
+    allowed_perms = [@read_permission]
+    denied_perms = [@attach_permission, @unattach_permission, @import_permission, @delete_permission]
+
+    assert_protected_action(:available, allowed_perms, denied_perms) do
+      get :available, :system_id => @system.uuid
+    end
+  end
+
   def test_create
     System.any_instance.expects(:subscribe)
     post :create, :system_id => @system.uuid, :subscriptions => [{:id => 'redhat', :quantity => 1}]
 
     assert_response :success
     assert_template 'katello/api/v2/subscriptions/index'
+  end
+
+  def test_create_protected
+    allowed_perms = [@attach_permission]
+    denied_perms = [@read_permission, @unattach_permission, @import_permission, @delete_permission]
+
+    assert_protected_action(:create, allowed_perms, denied_perms) do
+      post :create, :system_id => @system.uuid, :subscriptions => [{:id => 'redhat', :quantity => 1}]
+    end
   end
 
   def test_destroy
@@ -102,12 +120,13 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
     assert_template 'katello/api/v2/subscriptions/index'
   end
 
-  def test_destroy_all
-    System.any_instance.expects(:unsubscribe_all)
-    delete :destroy, :system_id => @system.uuid
+  def test_destroy_protected
+    allowed_perms = [@unattach_permission]
+    denied_perms = [@read_permission, @attach_permission, @import_permission, @delete_permission]
 
-    assert_response :success
-    assert_template 'katello/api/v2/subscriptions/index'
+    assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      delete :destroy, :system_id => @system.uuid, :subscriptions => [:subscription => {:id => 1}]
+    end
   end
 
   def test_blank_upload
@@ -127,8 +146,8 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
   end
 
   def test_upload_protected
-    allowed_perms = [@edit_permission]
-    denied_perms = [@read_permission, @no_permission]
+    allowed_perms = [@import_permission]
+    denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @read_permission]
 
     assert_protected_action(:upload, allowed_perms, denied_perms) do
       post :upload, :organization_id => @organization.label
@@ -148,8 +167,8 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
   end
 
   def test_refresh_protected
-    allowed_perms = [@edit_permission]
-    denied_perms = [@read_permission, @no_permission]
+    allowed_perms = [@import_permission]
+    denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @read_permission]
 
     assert_protected_action(:refresh_manifest, allowed_perms, denied_perms) do
       put :refresh_manifest, :organization_id => @organization.label
@@ -166,8 +185,8 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
   end
 
   def test_delete_protected
-    allowed_perms = [@edit_permission]
-    denied_perms = [@read_permission, @no_permission]
+    allowed_perms = [@delete_permission]
+    denied_perms = [@attach_permission, @unattach_permission, @import_permission, @read_permission]
 
     assert_protected_action(:delete_manifest, allowed_perms, denied_perms) do
       post :delete_manifest, :organization_id => @organization.label
