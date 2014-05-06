@@ -100,13 +100,15 @@ module Glue::Pulp::Consumer
         #   so we have to switch to the hidden user temporarily
         previous_user = ::User.current
         ::User.current = ::User.hidden.first
+
+        #currently bind returns no tasks, see https://bugzilla.redhat.com/show_bug.cgi?id=1094825
         #reject agent bind events, and wait for others
-        events.reject! do |event|
-          all_events = %w(pulp:action:agent_bind pulp:action:agent_unbind pulp:action:delete_binding)
-          !(event['tags'] & all_events).empty?
-        end
-        tasks = PulpTaskStatus.wait_for_tasks(events)
-        tasks.each{|task| Rails.logger.error(task.error) if task.error?}
+        #events.reject! do |event|
+        #  all_events = %w(pulp:action:agent_bind pulp:action:agent_unbind pulp:action:delete_binding)
+        #  !(event['tags'] & all_events).empty?
+        #end
+        #tasks = PulpTaskStatus.wait_for_tasks(events)
+        #tasks.each{|task| Rails.logger.error(task.error) if task.error?}
         return [processed_ids, error_ids]
       rescue => e
         Rails.logger.error "Failed to enable repositories: #{e}, #{e.backtrace.join("\n")}"
