@@ -231,7 +231,7 @@ class Product < Katello::Model
 
   private
 
-  def self.humanize_class_name
+  def self.humanize_class_name(name = nil)
     _("Product")
   end
 

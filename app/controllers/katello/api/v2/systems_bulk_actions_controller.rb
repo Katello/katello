@@ -54,7 +54,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
 
   def rules
     bulk_groups = lambda{ SystemGroup.assert_editable(@system_groups) }
-    registerable = lambda{ @environment.systems_registerable? && @view.subscribable?}
+    registerable = lambda{ @environment.systems_registerable? }
 
     hash = {}
     hash[:bulk_add_system_groups] = bulk_groups

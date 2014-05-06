@@ -80,10 +80,8 @@ module Authorization::System
       end
     end
 
-    def registerable?(env, org, content_view = nil)
-      subscribable = content_view ? content_view.subscribable? : true
-      registerable = (env || org).systems_registerable?
-      subscribable && registerable
+    def registerable?(env, org)
+      (env || org).systems_registerable?
     end
 
     def any_systems_editable?(systems)

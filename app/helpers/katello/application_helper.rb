@@ -281,7 +281,7 @@ module ApplicationHelper
 
   def content_view_select_labels(organization, environment)
     if environment
-      labels = ContentView.readable(organization).
+      labels = ContentView.readable.
           in_environment(environment).collect {|cv| [cv.name, cv.id]}
     else
       labels = []

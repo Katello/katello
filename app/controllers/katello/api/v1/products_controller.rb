@@ -159,8 +159,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
 
   def find_content_view
     if params[:content_view_id]
-      organization = @organization || @environment.organization
-      @content_view = ContentView.readable(organization).find(params[:content_view_id])
+      @content_view = ContentView.readable.find(params[:content_view_id])
     end
   end
 

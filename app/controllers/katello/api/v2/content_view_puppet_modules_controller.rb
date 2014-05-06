@@ -13,21 +13,7 @@
 module Katello
   class Api::V2::ContentViewPuppetModulesController < Api::V2::ApiController
     before_filter :find_content_view
-    before_filter :authorize
     before_filter :find_puppet_module, :only => [:show, :update, :destroy]
-
-    def rules
-      view_readable = lambda { @view.readable? }
-      view_editable = lambda { @view.editable? }
-
-      {
-          :index   => view_readable,
-          :create  => view_editable,
-          :show    => view_readable,
-          :update  => view_editable,
-          :destroy => view_editable
-      }
-    end
 
     api :GET, "/content_views/:content_view_id/content_view_puppet_modules", "List content view puppet modules"
     param :content_view_id, :identifier, :desc => "content view identifier", :required => true
