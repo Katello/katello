@@ -13,10 +13,8 @@
 module Katello
   class Api::V1::CandlepinProxiesController < Api::V1::ApiController
 
-    include Katello::Authentication::RhsmAuthentication
+    include Katello::Authentication::ClientAuthentication
 
-    skip_before_filter :authorize
-    before_filter :authorize_rhsm, :except => [:consumer_activate]
     before_filter :add_candlepin_version_header
 
     before_filter :proxy_request_path, :proxy_request_body
@@ -32,6 +30,7 @@ module Katello
     before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin,
                                           :upload_package_profile, :regenerate_identity_certificates, :facts]
     before_filter :find_user_by_login, :only => [:list_owners]
+    before_filter :authorize, :except => [:consumer_activate, :upload_package_profile]
 
     # TODO: break up method
     # rubocop:disable MethodLength
@@ -104,7 +103,6 @@ module Katello
         :consumer_create        => register_system,
         :consumer_destroy       => consumer_only,
         :consumer_show          => consumer_only,
-        :consumer_activate      => register_system,
         :index                  => index_systems,
         :hypervisors_update     => consumer_only,
         :list_owners            => list_owners_test,
@@ -261,6 +259,13 @@ module Katello
       @system.update_attributes!(attrs.slice(*slice_attrs))
 
       render :json => {:content => _("Facts successfully updated.")}, :status => 200
+    end
+
+    protected
+
+    # to support rhsm client authentication
+    def authenticate
+      set_client_user || super
     end
 
     private

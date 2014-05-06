@@ -16,40 +16,33 @@ require File.expand_path('../../../client/cert.rb', __FILE__)
 module Katello
   module Authentication
     module ClientAuthentication
-      extend ActiveSupport::Concern
 
-      included do
+      def authenticate_client
+        set_client_user || deny_access
+      end
 
-        def authorize_client
-          if cert_present?
-            set_client_user
-          else
-            deny_access
-          end
-        end
-
-        def set_client_user
+      def set_client_user
+        if cert_present?
           client_cert = Client::Cert.new(cert_from_request)
           uuid = client_cert.uuid
           User.current = CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid)
         end
+      end
 
-        def cert_present?
-          ssl_client_cert = cert_from_request
-          !ssl_client_cert.nil? && !ssl_client_cert.empty? && ssl_client_cert != "(null)"
-        end
+      def cert_present?
+        ssl_client_cert = cert_from_request
+        !ssl_client_cert.nil? && !ssl_client_cert.empty? && ssl_client_cert != "(null)"
+      end
 
-        def cert_from_request
-          request.env['SSL_CLIENT_CERT'] ||
-          request.env['HTTP_SSL_CLIENT_CERT'] ||
-          ENV['SSL_CLIENT_CERT'] ||
-          ENV['HTTP_SSL_CLIENT_CERT']
-        end
+      def cert_from_request
+        request.env['SSL_CLIENT_CERT'] ||
+        request.env['HTTP_SSL_CLIENT_CERT'] ||
+        ENV['SSL_CLIENT_CERT'] ||
+        ENV['HTTP_SSL_CLIENT_CERT']
+      end
 
-        def add_candlepin_version_header
-          response.headers["X-CANDLEPIN-VERSION"] = "katello/#{Katello.config.katello_version}"
-        end
-
+      def add_candlepin_version_header
+        response.headers["X-CANDLEPIN-VERSION"] = "katello/#{Katello.config.katello_version}"
       end
 
     end

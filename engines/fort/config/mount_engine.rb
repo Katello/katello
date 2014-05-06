@@ -1,3 +1,3 @@
 Foreman::Application.routes.draw do
-  mount Fort::Engine, :at => "/fort", :as => 'fort'
+  mount Fort::Engine, :at => "/katello", :as => 'fort'
 end
