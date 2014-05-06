@@ -21,8 +21,11 @@
  *   Controls the import of a manifest.
  */
 angular.module('Bastion.subscriptions').controller('ManifestHistoryController',
-    ['$scope', function ($scope) {
-        $scope.manifestStatuses = $scope.manifestHistory();
-        $scope.panel.loading = false;
+    ['$scope', 'Subscription', function ($scope, Subscription) {
+        $scope.histories = Subscription.manifestHistory();
+        $scope.histories.$promise.then(function (result) {
+            $scope.statuses = result;
+            $scope.panel.loading = false;
+        });
     }]
 );

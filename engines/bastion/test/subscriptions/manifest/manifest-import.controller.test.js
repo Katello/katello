@@ -47,17 +47,17 @@ describe('Controller: ManifestImportController', function() {
             translate;
         Organization = $injector.get('Organization');
         Subscription = $injector.get('Subscription');
+        $httpBackend.expectGET('/api/organization/ACME/subscriptions/manifest_history').respond([]);
+        $httpBackend.expectGET('/api/v2/organizations/ACME/redhat_provider').respond({name: "Red Hat"});
         $httpBackend.expectGET('/api/organization/ACME').respond(organization);
         $httpBackend.expectGET('/api/v2/organizations/ACME/redhat_provider').respond({name: "Red Hat"});
 
         $scope = $injector.get('$rootScope').$new();
         $q = $injector.get('$q');
         $scope.redhatProvider = Organization.redhatProvider();
+        $scope.histories = Subscription.manifestHistory();
 
         Task = {registerSearch: function() {}};
-
-        // stub out manifestHistory since it's being tested elsewhere
-        $scope.manifestHistory = function(prov) { return history; };
 
         translate = function(a) { return a };
 
@@ -137,10 +137,15 @@ describe('Controller: ManifestImportController', function() {
         });
     });
 
-    it('should refresh organization info when requested', function() {
+    it('should refresh organization info when requested', function () {
         spyOn(Organization, 'get').andCallThrough();
         $scope.refreshOrganizationInfo();
         expect(Organization.get).toHaveBeenCalled();
-    })
+    });
 
+    it('should truncate the histories', function () {
+        var histories = [{}, {}, {}, {}, {}];
+        var result = $scope.truncateHistories($scope.histories);
+        expect(result.length).toBeLessThan(histories.length);
+    });
 });

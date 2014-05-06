@@ -173,5 +173,20 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
       post :delete_manifest, :organization_id => @organization.label
     end
   end
+
+  def test_manifest_history
+    Organization.any_instance.stubs(:manifest_history).returns(OpenStruct.new({status: 'FAILED', statusMessage: 'failed to create'}))
+    get :manifest_history, :organization_id => @organization.label
+    assert_response :success
+  end
+
+  def test_manifest_history_protected
+    allowed_perms = [@read_permission]
+    denied_perms = [@no_permission]
+
+    assert_protected_action(:manifest_history, allowed_perms, denied_perms) do
+      get :manifest_history, :organization_id => @organization.label
+    end
+  end
 end
 end
