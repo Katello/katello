@@ -95,8 +95,8 @@ class UserOrganizationAccess < AuthorizationTestBase
   def test_access_two_orgs
     assert_equal 0, @user.allowed_organizations.size
 
-    allow(@user.own_role, [:read], :providers, nil, @org)
-    allow(@user.own_role,[:read], :providers, nil, @org2)
+    allow(@user.own_role, [:read], :roles, nil, @org)
+    allow(@user.own_role,[:read], :roles, nil, @org2)
 
     assert_equal 2, @user.allowed_organizations.size
   end

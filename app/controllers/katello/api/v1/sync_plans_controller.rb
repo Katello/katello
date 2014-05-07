@@ -31,7 +31,7 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
   respond_to :json
 
   def rules
-    access_test = lambda { Provider.any_readable?(@organization) }
+    access_test = lambda { true }
 
     {
         :index   => access_test,

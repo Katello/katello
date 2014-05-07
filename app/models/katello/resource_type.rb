@@ -107,7 +107,6 @@ class ResourceType < Katello::Model
         :organizations => {:model => Organization, :name => _("Organizations"), :global => false},
         :environments => {:model => Katello::KTEnvironment, :name => _("Environments"), :global => false},
         :system_groups => {:model => Katello::SystemGroup, :name => _("System Groups"), :global => false},
-        :providers => { :model => Katello::Provider, :name => _("Providers"), :global => false},
         :users => { :model => User, :name => _("Users"), :global => true},
         :roles => { :model => Katello::Role, :name => _("Roles"), :global => true},
         :all => { :model => Katello::DefaultModel, :name => _("All"), :global => false}
@@ -116,7 +115,6 @@ class ResourceType < Katello::Model
     TYPES = {
         :organizations => {:model => Organization, :name => _("Organizations"), :global => false},
         :system_groups => {:model => Katello::SystemGroup, :name => _("System Groups"), :global => false},
-        :providers => { :model => Katello::Provider, :name => _("Providers"), :global => false},
         :users => { :model => User, :name => _("Users"), :global => true},
         :roles => { :model => Katello::Role, :name => _("Roles"), :global => true},
         :all => { :model => Katello::DefaultModel, :name => _("All"), :global => false}

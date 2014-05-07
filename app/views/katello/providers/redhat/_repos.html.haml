@@ -18,6 +18,6 @@
                                           'pulp-id' => result[:pulp_id],
                                           :releasever => result[:substitutions][:releasever],
                                           :basearch => result[:substitutions][:basearch] },
-                               :disabled =>(result[:promoted] || !@provider.editable?), :checked=>(:checked if result[:enabled])}
+                               :disabled => result[:promoted], :checked=>(:checked if result[:enabled])}
         %td
           #{result[:repo_name]}

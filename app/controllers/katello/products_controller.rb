@@ -21,13 +21,8 @@ class ProductsController < Katello::ApplicationController
   include ForemanTasks::Triggers
 
   def rules
-    read_test = lambda {!Product.readable.empty?}
-    edit_test = lambda{@provider.editable?}
-
     {
-      :auto_complete =>  read_test,
-      :available_repositories => edit_test,
-      :toggle_repository => edit_test,
+      :auto_complete =>  lambda {!Product.readable.empty?},
     }
   end
 

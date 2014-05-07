@@ -15,7 +15,6 @@ require 'base64'
 
 module Katello
 class ApplicationController < ::ApplicationController
-  include Katello::Menu
   include Notifications::ControllerHelper
   include Profiling
   include KTLocale
@@ -119,6 +118,8 @@ class ApplicationController < ::ApplicationController
   def converted_controllers
     [
       'bastion/bastion_controller',
+      'katello/products',
+      'katello/providers',
       'katello/sync_management'
     ]
   end

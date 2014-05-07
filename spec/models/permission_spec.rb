@@ -95,7 +95,6 @@ describe Permission do
 
   describe "super_admin" do
     it { @god.allowed_to_in_katello?('create', 'organizations').must_equal(true) }
-    it { @god.allowed_to_in_katello?('create', 'providers').must_equal(true) if Katello.config.katello? }
   end
 
   describe "some_role" do
@@ -256,9 +255,9 @@ describe Permission do
     describe "no_tag_verbs(katello)" do
       before do
         @foo_tag = 0022
-        @res_type_name = :providers
+        @res_type_name = :users
         @res_type = ResourceType.find_or_create_by_name(@res_type_name)
-        @no_tag_verbs = Provider.no_tag_verbs
+        @no_tag_verbs = User.no_tag_verbs
         @verb_name = @no_tag_verbs.first
         @verb = Verb.find_or_create_by_verb(@verb_name)
         @magic_perm = Permission.create!(:name => 'test1000', :role => @some_role, :verbs => [@verb],
