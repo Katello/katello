@@ -30,7 +30,7 @@ module Katello
     before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin,
                                           :upload_package_profile, :regenerate_identity_certificates, :facts]
     before_filter :find_user_by_login, :only => [:list_owners]
-    before_filter :authorize, :except => [:consumer_activate, :upload_package_profile]
+    before_filter :authorize, :except => [:consumer_activate]
 
     # TODO: break up method
     # rubocop:disable MethodLength
@@ -393,11 +393,6 @@ module Katello
       if value
         cve = ContentViewEnvironment.where(key => value).first
         fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % value unless cve
-        if @organization.nil? || !@organization.readable?
-          unless cve.content_view.readable? || User.consumer?
-            fail Errors::SecurityViolation, _("Could not access content view in environment '%s'") % value
-          end
-        end
       end
       cve
     end
