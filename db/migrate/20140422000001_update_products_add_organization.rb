@@ -1,5 +1,7 @@
 class UpdateProductsAddOrganization < ActiveRecord::Migration
-  class Katello::Product < ActiveRecord::Base; end
+  class Katello::Product < ActiveRecord::Base
+    belongs_to :provider
+  end
 
   def up
     add_column :katello_products, :organization_id, :integer, :null => true
@@ -15,6 +17,5 @@ class UpdateProductsAddOrganization < ActiveRecord::Migration
 
   def down
     remove_column :katello_products, :organization_id
-    remove_index :katello_products, :column => :organization_id
   end
 end
