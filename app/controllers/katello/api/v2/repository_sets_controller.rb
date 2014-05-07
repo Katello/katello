@@ -16,8 +16,11 @@ class Api::V2::RepositorySetsController < Api::V2::ApiController
 
   before_filter :find_product
   before_filter :custom_product?
-  before_filter :find_product_content, :except => [:index]
+
+  # :authorize needs to be called before :find_product_content
+  # since the latter calls into candlepin.
   before_filter :authorize
+  before_filter :find_product_content, :except => [:index]
 
   def rules
     edit_product_test = lambda { @organization.redhat_manageable? }
@@ -38,9 +41,12 @@ class Api::V2::RepositorySetsController < Api::V2::ApiController
 
   api :GET, "/products/:product_id/repository_sets", "List repository sets for a product."
   param :product_id, :number, :required => true, :desc => "ID of a product to list repository sets from"
+  param :name, String, :required => false, :desc => "Repository set name to search on"
   def index
     collection = {}
     collection[:results] = @product.productContent
+    # filter on name if it is provided
+    collection[:results] = collection[:results].select {|pc| pc.content.name == params[:name]} if params[:name]
     collection[:subtotal] = collection[:results].size
     collection[:total] = collection[:subtotal]
     respond_for_index :collection => collection
