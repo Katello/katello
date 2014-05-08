@@ -16,7 +16,7 @@ module Katello
 class ActivationKeyTest < ActiveSupport::TestCase
 
   def self.before_suite
-    models = ["ActivationKey", "KTEnvironment", "ContentViewEnvironment", "ContentView"]
+    models = ["ActivationKey", "LifecycleEnvironment", "ContentViewEnvironment", "ContentView"]
     disable_glue_layers([], models, true)
   end
 

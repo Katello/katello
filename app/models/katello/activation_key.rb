@@ -21,7 +21,7 @@ class ActivationKey < Katello::Model
   include Ext::LabelFromName
 
   belongs_to :organization, :inverse_of => :activation_keys
-  belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :activation_keys
+  belongs_to :environment, :class_name => "LifecycleEnvironment", :inverse_of => :activation_keys
   belongs_to :user, :inverse_of => :activation_keys, :class_name => "::User"
   belongs_to :content_view, :inverse_of => :activation_keys
 

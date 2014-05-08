@@ -68,7 +68,7 @@ module Katello
 
       it "should be invalid if environment in another org is specified" do
         org_2 = Organization.create!(:name=>'test_org2', :label=> 'test_org2')
-        env_1_org2 = KTEnvironment.create(:name=>'dev', :label=> 'dev', :prior => org_2.library.id, :organization => org_2)
+        env_1_org2 = LifecycleEnvironment.create(:name=>'dev', :label=> 'dev', :prior => org_2.library.id, :organization => org_2)
         @akey.name = 'invalid key'
         @akey.organization=@organization
         @akey.environment = env_1_org2

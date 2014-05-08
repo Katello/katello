@@ -13,7 +13,7 @@
 require 'katello_test_helper'
 
 module Katello
-describe KTEnvironment do
+describe LifecycleEnvironment do
   include AuthorizationHelperMethods
   include OrchestrationHelper
   include OrganizationHelperMethods
@@ -54,22 +54,22 @@ describe KTEnvironment do
         true_ops.each do |op|
           it "user with #{perm} on environments should be allowed to #{op} (katello)" do #TODO headpin
             User.current = user_with_permissions { |u| u.can(perm, :environments, nil, @organization, :all_tags => true) }
-            KTEnvironment.find(@environment.id).send(op).must_equal(true)
+            LifecycleEnvironment.find(@environment.id).send(op).must_equal(true)
           end
           it "user without perms should not  be allowed (katello)" do
             User.current = user_without_permissions
-            KTEnvironment.find(@environment.id).send(op).wont_equal(true)
+            LifecycleEnvironment.find(@environment.id).send(op).wont_equal(true)
           end
         end
         false_ops = all_verb_methods - true_ops
         false_ops.each do |op|
           it "user with #{perm} on environments should NOT be allowed to #{op} (katello)" do
             User.current = user_with_permissions{ |u| u.can(perm, :environments,nil, @organization, :all_tags => true) }
-            KTEnvironment.find(@environment.id).send(op).wont_equal(true)
+            LifecycleEnvironment.find(@environment.id).send(op).wont_equal(true)
           end
           it "user without perms should not  be allowed (katello)" do
             User.current = user_without_permissions
-            KTEnvironment.find(@environment.id).send(op).wont_equal(true)
+            LifecycleEnvironment.find(@environment.id).send(op).wont_equal(true)
           end
         end
       end
@@ -105,7 +105,7 @@ describe KTEnvironment do
 
     specify { @environment.prior.wont_be :nil? }
     specify { @environment.successor.must_be :nil? }
-    specify { @organization.kt_environments.must_include(@environment) }
+    specify { @organization.lifecycle_environments.must_include(@environment) }
     specify { @environment.organization.must_equal(@organization) }
     specify { @environment.products.size.must_equal(2) }
     specify { @environment.products.must_include(@first_product) }
@@ -113,7 +113,7 @@ describe KTEnvironment do
 
     describe "prior environment can be set" do
       before do
-        @new_env = KTEnvironment.create!({
+        @new_env = LifecycleEnvironment.create!({
           :name=>@environment.name + '-prior',
           :label=> @environment.name + '-prior',
           :prior => @environment.id,
@@ -137,7 +137,7 @@ describe KTEnvironment do
       it "should delete the environment" do
         id = @environment.id
         @environment.destroy
-        lambda { KTEnvironment.find(id)}.must_raise(ActiveRecord::RecordNotFound)
+        lambda { LifecycleEnvironment.find(id)}.must_raise(ActiveRecord::RecordNotFound)
       end
     end
 
@@ -181,16 +181,16 @@ describe KTEnvironment do
 
     describe "create environment with invalid parameters" do
       it "should be invalid to create two envs with the same name within one organization" do
-        @environment2 = KTEnvironment.new({:name => @env_name})
-        @organization.kt_environments << @environment2
+        @environment2 = LifecycleEnvironment.new({:name => @env_name})
+        @organization.lifecycle_environments << @environment2
 
         @environment2.wont_be :valid?
         @environment2.errors[:name].wont_be :empty?
       end
 
       it "should be invalid to create an environment without a prior" do
-        @environment2 = KTEnvironment.new({:name => @env_name})
-        @organization.kt_environments << @environment2
+        @environment2 = LifecycleEnvironment.new({:name => @env_name})
+        @organization.lifecycle_environments << @environment2
 
         @environment2.wont_be :valid?
         @environment2.errors[:prior].wont_be :empty?
@@ -199,10 +199,10 @@ describe KTEnvironment do
 
     describe "environment path" do
       before(:each) do
-        @env1 = KTEnvironment.new({:name => @env_name + '-succ1', :label=>'env-succ1'})
-        @env2 = KTEnvironment.new({:name => @env_name + '-succ2',:label=>'env-succ2'})
-        @organization.kt_environments << @env1
-        @organization.kt_environments << @env2
+        @env1 = LifecycleEnvironment.new({:name => @env_name + '-succ1', :label=>'env-succ1'})
+        @env2 = LifecycleEnvironment.new({:name => @env_name + '-succ2',:label=>'env-succ2'})
+        @organization.lifecycle_environments << @env1
+        @organization.lifecycle_environments << @env2
         @env1.prior = @environment.id
         @env1.save!
         @env2.prior = @env1.id
@@ -221,8 +221,8 @@ describe KTEnvironment do
         @e2 = create_environment({:name=>@env_name + '-succ2', :label=> @env_name + '-succ2',
                   :organization => @organization, :prior => @e1})
 
-        @organization.kt_environments << @e1
-        @organization.kt_environments << @e2
+        @organization.lifecycle_environments << @e1
+        @organization.lifecycle_environments << @e2
       end
 
       specify{ lambda {create_environment({:name=>@env_name + '-succ3', :label=> @env_name + '-succ3',
@@ -231,12 +231,12 @@ describe KTEnvironment do
     end
 
     describe "libraries" do
-      it "should be the only KTEnvironment that can have multiple priors" do
-        @env1 = KTEnvironment.new({:name=>@env_name + '1', :label=> @env_name + '1',
+      it "should be the only LifecycleEnvironment that can have multiple priors" do
+        @env1 = LifecycleEnvironment.new({:name=>@env_name + '1', :label=> @env_name + '1',
                   :organization => @organization, :prior => @organization.library})
-        @env2 = KTEnvironment.new({:name=>@env_name + '2', :label=> @env_name + '2',
+        @env2 = LifecycleEnvironment.new({:name=>@env_name + '2', :label=> @env_name + '2',
                   :organization => @organization, :prior => @organization.library})
-        @env3 = KTEnvironment.new({:name=>@env_name + '3', :label=> @env_name + '3',
+        @env3 = LifecycleEnvironment.new({:name=>@env_name + '3', :label=> @env_name + '3',
                   :organization => @organization, :prior => @organization.library})
 
         @env1.must_be :valid?

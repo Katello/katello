@@ -17,7 +17,7 @@ module Katello
   class StrongParamsTest < ActiveSupport::TestCase
 
     def setup
-      models = ["Organization", "KTEnvironment", "Product"]
+      models = ["Organization", "LifecycleEnvironment", "Product"]
       services = ["Pulp", "ElasticSearch", "Foreman", "Candlepin"]
       disable_glue_layers(services, models)
 

@@ -61,7 +61,7 @@ class Api::V1::ErrataController < Api::V1::ApiController
 
   def find_environment
     if params.key?(:environment_id)
-      @environment = KTEnvironment.find(params[:environment_id])
+      @environment = LifecycleEnvironment.find(params[:environment_id])
       fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     elsif params.key?(:repoid)
       @repo = Repository.find(params[:repoid])

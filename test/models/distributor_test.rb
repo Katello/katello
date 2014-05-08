@@ -16,7 +16,7 @@ module Katello
 class DistributorTest < ActiveSupport::TestCase
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "Distributor"]
+    models = ["Organization", "LifecycleEnvironment", "User", "Distributor"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models, true)
   end

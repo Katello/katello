@@ -160,7 +160,7 @@ describe Api::V1::SyncController do
 
       it "should find repository if :repository_id is specified" do
         found_repository = Repository.new
-        found_repository.stubs(:environment).returns(KTEnvironment.new(:library => true))
+        found_repository.stubs(:environment).returns(LifecycleEnvironment.new(:library => true))
 
         Repository.expects(:find).once.with(repository_id).returns(found_repository)
         @controller.stubs(:params).returns({ :repository_id => repository_id })

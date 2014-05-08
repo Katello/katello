@@ -15,7 +15,7 @@ class ContentViewHistory < Katello::Model
 
   include Glue::ElasticSearch::ContentViewHistory if Katello.config.use_elasticsearch
 
-  belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :content_view_histories,
+  belongs_to :environment, :class_name => "Katello::LifecycleEnvironment", :inverse_of => :content_view_histories,
              :foreign_key => :katello_environment_id
   belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion", :foreign_key => :katello_content_view_version_id
   belongs_to :task, :class_name => "ForemanTasks::Task::DynflowTask", :foreign_key => :task_id

@@ -41,8 +41,8 @@ module Katello
         has_many :providers, :class_name => "Katello::Provider", :dependent => :destroy
         has_many :products, :class_name => "Katello::Product", :through => :providers
         # has_many :environments is already defined in Foreman taxonomy.rb
-        has_many :kt_environments, :class_name => "Katello::KTEnvironment", :dependent => :destroy, :inverse_of => :organization
-        has_one :library, :class_name => "Katello::KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
+        has_many :lifecycle_environments, :class_name => "Katello::LifecycleEnvironment", :dependent => :destroy, :inverse_of => :organization
+        has_one :library, :class_name => "Katello::LifecycleEnvironment", :conditions => {:library => true}, :dependent => :destroy
         has_many :gpg_keys, :class_name => "Katello::GpgKey", :dependent => :destroy, :inverse_of => :organization
         has_many :permissions, :class_name => "Katello::Permission", :dependent => :destroy, :inverse_of => :organization
         has_many :sync_plans, :class_name => "Katello::SyncPlan", :dependent => :destroy, :inverse_of => :organization
@@ -98,16 +98,16 @@ module Katello
         end
 
         def systems
-          System.where(:environment_id => kt_environments)
+          System.where(:environment_id => lifecycle_environments)
         end
 
         def distributors
-          Distributor.where(:environment_id => kt_environments)
+          Distributor.where(:environment_id => lifecycle_environments)
         end
 
         def promotion_paths
           #I'm sure there's a better way to do this
-          self.kt_environments.joins(:priors).where("prior_id = #{self.library.id}").order(:name).collect do |env|
+          self.lifecycle_environments.joins(:priors).where("prior_id = #{self.library.id}").order(:name).collect do |env|
             env.path
           end
         end
@@ -129,7 +129,7 @@ module Katello
         end
 
         def create_library
-          self.library = Katello::KTEnvironment.new(:name => "Library", :label => "Library", :library => true, :organization => self)
+          self.library = Katello::LifecycleEnvironment.new(:name => "Library", :label => "Library", :library => true, :organization => self)
         end
 
         def create_redhat_provider

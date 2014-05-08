@@ -20,7 +20,7 @@ class GlueCandlepinOwnerTestBase < ActiveSupport::TestCase
     @loaded_fixtures = load_fixtures
 
     services  = ['Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['User', 'KTEnvironment', 'Organization']
+    models    = ['User', 'LifecycleEnvironment', 'Organization']
     disable_glue_layers(services, models)
 
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])

@@ -56,7 +56,7 @@ describe Organization do
     specify {@organization.label.must_equal('test_org_label')}
     specify {@organization.library.wont_be_nil}
     specify {@organization.redhat_provider.wont_be_nil}
-    specify {@organization.kt_environments.size.must_equal(1)}
+    specify {@organization.lifecycle_environments.size.must_equal(1)}
     specify {Organization.where(:name => @organization.name).size.must_equal(1)}
     specify {Organization.where(:name => @organization.name).first.must_equal(@organization)}
 
@@ -139,15 +139,15 @@ describe Organization do
       org_id = @organization.id
 
       env_name = "prod"
-      @env = KTEnvironment.new(:name=>env_name, :label=> env_name, :library => false, :prior => @organization.library)
-      @organization.kt_environments << @env
+      @env = LifecycleEnvironment.new(:name=>env_name, :label=> env_name, :library => false, :prior => @organization.library)
+      @organization.lifecycle_environments << @env
       @env.save!
 
       Organization.any_instance.stubs(:being_deleted?).returns(true)
       @organization.reload.destroy
 
       lambda{Organization.find(org_id)}.must_raise(ActiveRecord::RecordNotFound)
-      KTEnvironment.where(:name => env_name).all.must_be_empty
+      LifecycleEnvironment.where(:name => env_name).all.must_be_empty
     end
 
     it "can delete the org and env of a different org exist" do
@@ -155,12 +155,12 @@ describe Organization do
 
       @org2 = Organization.create!(:name=>"foobar", :label=> "foobar")
 
-      @env1 = KTEnvironment.new(:name=>env_name, :label=> env_name, :organization => @organization, :prior => @organization.library)
-      @organization.kt_environments << @env1
+      @env1 = LifecycleEnvironment.new(:name=>env_name, :label=> env_name, :organization => @organization, :prior => @organization.library)
+      @organization.lifecycle_environments << @env1
       @env1.save!
 
-      @env2 = KTEnvironment.new(:name=>env_name, :label=> env_name, :organization => @org2, :prior => @organization.library)
-      @org2.kt_environments << @env2
+      @env2 = LifecycleEnvironment.new(:name=>env_name, :label=> env_name, :organization => @org2, :prior => @organization.library)
+      @org2.lifecycle_environments << @env2
       @env2.save!
 
       id1 = @organization.id
@@ -168,8 +168,8 @@ describe Organization do
       @organization.reload.destroy
       lambda{Organization.find(id1)}.must_raise(ActiveRecord::RecordNotFound)
 
-      KTEnvironment.where(:name => env_name).first.must_equal(@env2)
-      KTEnvironment.where(:name => env_name).size.must_equal(1)
+      LifecycleEnvironment.where(:name => env_name).first.must_equal(@env2)
+      LifecycleEnvironment.where(:name => env_name).size.must_equal(1)
     end
 
     it "can delete an org where there is a full environment path" do
@@ -181,7 +181,7 @@ describe Organization do
        @organization = @organization.reload
        @organization.destroy
        lambda{Organization.find(@organization.id)}.must_raise(ActiveRecord::RecordNotFound)
-       KTEnvironment.where(:name =>'Dev-34343').size.must_equal(0)
+       LifecycleEnvironment.where(:name =>'Dev-34343').size.must_equal(0)
     end
   end
 

@@ -32,7 +32,7 @@ module ContentSearch
     end
 
     def readable_env_ids
-      KTEnvironment.content_readable(current_organization).pluck("#{Katello::KTEnvironment.table_name}.id")
+      LifecycleEnvironment.content_readable(current_organization).pluck("#{Katello::LifecycleEnvironment.table_name}.id")
     end
 
     def search_envs

@@ -36,7 +36,7 @@ describe Api::V1::ErrataController do
     @repo.stubs(:has_distribution?).returns(true)
     Repository.stubs(:find).returns(@repo)
 
-    KTEnvironment.stubs(:find).returns(@organization.library)
+    LifecycleEnvironment.stubs(:find).returns(@organization.library)
     @erratum = {}
     @erratum.stubs(:repoids).returns([@repo.pulp_id])
     Katello::Errata.stubs(:find_by_errata_id => @erratum)

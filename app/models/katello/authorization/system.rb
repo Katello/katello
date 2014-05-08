@@ -22,7 +22,7 @@ module Authorization::System
 
     def readable_search_filters(org)
       {:or => [
-          {:terms => {:environment_id => KTEnvironment.systems_editable(org).collect { |item| item.id } }},
+          {:terms => {:environment_id => LifecycleEnvironment.systems_editable(org).collect { |item| item.id } }},
           {:terms => {:system_group_id => SystemGroup.systems_editable(org).collect { |item| item.id } }},
         ]
       }
@@ -31,9 +31,9 @@ module Authorization::System
     def readable(org)
       fail "scope requires an organization" if org.nil?
       if org.systems_readable?
-        where(:environment_id => org.kt_environment_ids) #list all systems in an org
+        where(:environment_id => org.lifecycle_environment_ids) #list all systems in an org
       else #just list for environments the user can access
-        where_clause = "#{System.table_name}.environment_id in (#{KTEnvironment.systems_readable(org).select(:id).to_sql})"
+        where_clause = "#{System.table_name}.environment_id in (#{LifecycleEnvironment.systems_readable(org).select(:id).to_sql})"
         where_clause += " or "
         where_clause += "#{SystemSystemGroup.table_name}.system_group_id in (#{SystemGroup.systems_readable(org).select(:id).to_sql})"
         joins("left outer join #{SystemSystemGroup.table_name} on #{System.table_name}.id =
@@ -43,9 +43,9 @@ module Authorization::System
 
     def editable(org)
       if org.systems_editable?
-        where(:environment_id => org.kt_environment_ids)
+        where(:environment_id => org.lifecycle_environment_ids)
       else
-        where_clause = "#{System.table_name}.environment_id in (#{KTEnvironment.systems_editable(org).select(:id).to_sql})"
+        where_clause = "#{System.table_name}.environment_id in (#{LifecycleEnvironment.systems_editable(org).select(:id).to_sql})"
         where_clause += " or "
         where_clause += "#{SystemSystemGroup.table_name}.system_group_id in (#{SystemGroup.systems_editable(org).select(:id).to_sql})"
         joins("left outer join #{SystemSystemGroup.table_name} on #{System.table_name}.id =
@@ -55,9 +55,9 @@ module Authorization::System
 
     def deletable(org)
       if org.systems_deletable?
-        where(:environment_id => org.kt_environment_ids)
+        where(:environment_id => org.lifecycle_environment_ids)
       else
-        where_clause = "#{System.table_name}.environment_id in (#{KTEnvironment.systems_deletable(org).select(:id).to_sql})"
+        where_clause = "#{System.table_name}.environment_id in (#{LifecycleEnvironment.systems_deletable(org).select(:id).to_sql})"
         where_clause += " or "
         where_clause += "#{SystemSystemGroup.table_name}.system_group_id in (#{SystemGroup.systems_deletable(org).select(:id).to_sql})"
         joins("left outer join #{SystemSystemGroup.table_name} on #{System.table_name}.id =
@@ -67,7 +67,7 @@ module Authorization::System
 
     def any_readable?(org)
       org.systems_readable? ||
-        KTEnvironment.systems_readable(org).count > 0 ||
+        LifecycleEnvironment.systems_readable(org).count > 0 ||
         SystemGroup.systems_readable(org).count > 0
     end
 

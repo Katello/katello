@@ -31,19 +31,19 @@ module Katello
 
         opts = envs_by_org.sort_by(&:katello_id).reduce({}) do |env_options, env|
           selected = env.id == (@host || @hostgroup).environment_id ? "selected" : ""
-          kt_env_label = env.katello_id.split('/')[1]
-          selected.blank? ? env_options[kt_env_label] ||= selected : env_options[kt_env_label] = selected
+          lifecycle_env_label = env.katello_id.split('/')[1]
+          selected.blank? ? env_options[lifecycle_env_label] ||= selected : env_options[lifecycle_env_label] = selected
           env_options
         end
 
-        opts = opts.sort_by(&:first).map do |kt_env_label, selected|
-          kt_env = Katello::KTEnvironment.joins(:organization).
-              where("#{Katello::KTEnvironment.table_name}.label" => kt_env_label).
+        opts = opts.sort_by(&:first).map do |lifecycle_env_label, selected|
+          lifecycle_env = Katello::LifecycleEnvironment.joins(:organization).
+              where("#{Katello::LifecycleEnvironment.table_name}.label" => lifecycle_env_label).
               where("#{::Organization.table_name}.label" => kt_org_label).first
 
-          %[<option value="#{kt_org_label}/#{kt_env_label}"
-                    class="kt-env" data-katello-env-id="#{kt_env.id}"
-                    #{selected}>#{kt_env_label}</option>]
+          %[<option value="#{kt_org_label}/#{lifecycle_env_label}"
+                    class="kt-env" data-katello-env-id="#{lifecycle_env.id}"
+                    #{selected}>#{lifecycle_env_label}</option>]
 
         end
 
@@ -61,7 +61,7 @@ module Katello
 
         if env.katello_id
           # rubocop:disable UselessAssignment
-          org_label, kt_env_label, content_view_label = env.katello_id.split('/')
+          org_label, lifecycle_env_label, content_view_label = env.katello_id.split('/')
           option_text = content_view_label
         else
           option_text = env.name

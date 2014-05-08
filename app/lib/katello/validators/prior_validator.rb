@@ -20,7 +20,7 @@ module Validators
       # prior to have only one child (unless its the Library)
       has_no_prior = true
       if record.organization
-        has_no_prior = record.organization.kt_environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.library}.empty?
+        has_no_prior = record.organization.lifecycle_environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.library}.empty?
       end
       record.errors[:prior] << _("environment can only have one child") unless has_no_prior
 

@@ -18,7 +18,7 @@ module Util
     # hardcoded model names (uses kp_ prefix)
     def self.table_to_model_hash
       {
-        "kt_environment" => "KTEnvironment"
+        "lifecycle_environment" => "LifecycleEnvironment"
       }
     end
 

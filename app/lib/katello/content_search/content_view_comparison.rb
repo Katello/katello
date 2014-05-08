@@ -35,7 +35,7 @@ module ContentSearch
     def build_columns(cv_envs)
       cv_envs.inject({}) do |result, item|
         view = ContentView.readable(current_organization).find(item[:view_id])
-        env = KTEnvironment.content_readable(current_organization).find(item[:env_id])
+        env = LifecycleEnvironment.content_readable(current_organization).find(item[:env_id])
         cv_version = view.version(env)
         self.repos += cv_version.repos(env)
 
@@ -79,7 +79,7 @@ module ContentSearch
         total = cols.inject(0) do |sum, (key, col)|
           view_id, env_id = key.split("_")
           # find the product in the view and get the # of units
-          env = KTEnvironment.find(env_id)
+          env = LifecycleEnvironment.find(env_id)
           version = ContentView.find(view_id).version(env)
           field = "#{unit_type.to_s}_count".to_sym
           count = version.repos(env).select{|r| r.product == product}.map(&field).inject(:+)

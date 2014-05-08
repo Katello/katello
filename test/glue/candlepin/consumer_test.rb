@@ -26,13 +26,13 @@ class GlueCandlepinConsumerTestBase < ActiveSupport::TestCase
     super
 
     services  = ['Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['System', 'KTEnvironment', 'Organization', 'Product', 'ContentView', 'ContentViewEnvironment', 'ContentViewVersion', "Distributor"]
+    models    = ['System', 'LifecycleEnvironment', 'Organization', 'Product', 'ContentView', 'ContentViewEnvironment', 'ContentViewVersion', "Distributor"]
     disable_glue_layers(services, models)
 
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
     VCR.insert_cassette('glue_candlepin_consumer', :match_requests_on => [:path, :params, :method, :body_json])
 
-    @@dev      = KTEnvironment.find(@loaded_fixtures['katello_environments']['candlepin_dev']['id'])
+    @@dev      = LifecycleEnvironment.find(@loaded_fixtures['katello_environments']['candlepin_dev']['id'])
 
     @@org      = Organization.find(@loaded_fixtures['taxonomies']['organization2']['id'])
     @@org.setup_label_from_name

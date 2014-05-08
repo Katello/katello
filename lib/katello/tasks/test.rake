@@ -58,7 +58,7 @@ namespace :test do
           "#{Katello::Engine.root}/test/models/content_view_erratum_filter_rule_test.rb",
           "#{Katello::Engine.root}/test/models/content_view_package_filter_rule_test.rb",
           "#{Katello::Engine.root}/test/models/content_view_package_group_filter_rule_test.rb",
-          "#{Katello::Engine.root}/test/models/kt_environment_test.rb",
+          "#{Katello::Engine.root}/test/models/lifecycle_environment_test.rb",
           "#{Katello::Engine.root}/test/models/organization_test.rb",
           "#{Katello::Engine.root}/test/models/organization_destroyer_test.rb",
           "#{Katello::Engine.root}/test/models/puppet_module_test.rb",

@@ -16,7 +16,7 @@ module Katello
 class ContentViewPackageFilterRuleTest < ActiveSupport::TestCase
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "ContentView",
+    models = ["Organization", "LifecycleEnvironment", "User", "ContentView",
               "ContentViewEnvironment", "ContentViewFilter",
               "ContentViewPackageFilter", "ContentViewPackageFilterRule"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)

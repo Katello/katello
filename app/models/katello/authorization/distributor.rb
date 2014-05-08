@@ -23,15 +23,15 @@ module Authorization::Distributor
     def readable(org)
       fail "scope requires an organization" if org.nil?
       if org.distributors_readable?
-        where(:environment_id => org.kt_environment_ids) #list all distributors in an org
+        where(:environment_id => org.lifecycle_environment_ids) #list all distributors in an org
       else #just list for environments the user can access
-        where("distributors.environment_id in (#{KTEnvironment.distributors_readable(org).select(:id).to_sql})")
+        where("distributors.environment_id in (#{LifecycleEnvironment.distributors_readable(org).select(:id).to_sql})")
       end
     end
 
     def any_readable?(org)
       org.distributors_readable? ||
-          KTEnvironment.distributors_readable(org).count > 0
+          LifecycleEnvironment.distributors_readable(org).count > 0
     end
 
     # TODO: these two functions are somewhat poorly written and need to be redone

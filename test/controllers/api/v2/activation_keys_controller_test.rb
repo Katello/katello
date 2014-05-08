@@ -17,7 +17,7 @@ module Katello
   class Api::V2::ActivationKeysControllerTest < ActionController::TestCase
 
     def self.before_suite
-      models = ["ActivationKey", "KTEnvironment",
+      models = ["ActivationKey", "LifecycleEnvironment",
                 "ContentView", "ContentViewEnvironment", "ContentViewVersion"]
       disable_glue_layers(["Candlepin", "ElasticSearch"], models)
       super

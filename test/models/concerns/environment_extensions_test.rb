@@ -27,7 +27,7 @@ module Katello
 
       @org = get_organization
       @org.label = @org.label.gsub(' ', '_')
-      @env = KTEnvironment.find(katello_environments(:dev))
+      @env = LifecycleEnvironment.find(katello_environments(:dev))
       @content_view = ContentView.find(katello_content_views(:library_dev_view))
     end
 

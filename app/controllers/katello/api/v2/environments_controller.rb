@@ -53,7 +53,7 @@ module Katello
     before_filter :authorize
     before_filter :load_search_service, :only => [:index]
 
-    wrap_parameters :include => (KTEnvironment.attribute_names + %w(prior new_name))
+    wrap_parameters :include => (LifecycleEnvironment.attribute_names + %w(prior new_name))
 
     def rules
       manage_rule = lambda { @organization.environments_manageable? }
@@ -96,7 +96,7 @@ module Katello
         :filters => filters,
         :load_records? => true
       }
-      respond_for_index(:collection => item_search(KTEnvironment, params, options))
+      respond_for_index(:collection => item_search(LifecycleEnvironment, params, options))
     end
 
     api :GET, "/environments/:id", "Show an environment"
@@ -121,8 +121,8 @@ module Katello
       create_params[:label] = labelize_params(create_params)
       create_params[:organization] = @organization
       create_params[:prior] = @prior
-      @environment = KTEnvironment.create!(create_params)
-      @organization.kt_environments << @environment
+      @environment = LifecycleEnvironment.create!(create_params)
+      @organization.lifecycle_environments << @environment
       @organization.save!
       respond
     end
@@ -164,7 +164,7 @@ module Katello
     # api :GET, "/organizations/:organization_id/environments/systems_registerable", "List environments that systems can be registered to"
     # param :organization_id, :identifier, :desc => "organization identifier"
     def systems_registerable
-      @environments = KTEnvironment.systems_registerable(@organization)
+      @environments = LifecycleEnvironment.systems_registerable(@organization)
       respond_for_index :collection => @environments
     end
 
@@ -183,7 +183,7 @@ module Katello
 
     def find_environment
       identifier = params.require(:id) || params.require(:environment).require(:id)
-      @environment = KTEnvironment.find(identifier)
+      @environment = LifecycleEnvironment.find(identifier)
       fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % identifier.to_s if @environment.nil?
       @organization = @environment.organization
       @environment
@@ -191,7 +191,7 @@ module Katello
 
     def find_prior
       prior = params.require(:environment).require(:prior)
-      @prior = KTEnvironment.find(prior)
+      @prior = LifecycleEnvironment.find(prior)
       fail HttpErrors::NotFound, _("Couldn't find prior-environment '%s'") % prior.to_s if @prior.nil?
       @prior
     end

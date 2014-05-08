@@ -24,7 +24,7 @@ class ProvidersControllerTest < ActionController::TestCase
     login_user(User.find(users(:admin)))
     set_organization(@org)
 
-    models = ["Organization", "KTEnvironment", "Provider", "Product"]
+    models = ["Organization", "LifecycleEnvironment", "Provider", "Product"]
     services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
     disable_glue_layers(services, models)
     Provider.stubs(:display_attributes).returns([])

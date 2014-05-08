@@ -23,7 +23,7 @@ class ContentViewVersion < Katello::Model
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
            :dependent => :destroy
   has_many :environments, :through      => :content_view_environments,
-                          :class_name   => "Katello::KTEnvironment",
+                          :class_name   => "Katello::LifecycleEnvironment",
                           :inverse_of   => :content_view_versions,
                           :after_remove => :remove_environment
 

@@ -15,7 +15,7 @@ class Dashboard::PromotionsWidget < Dashboard::Widget
 
   def accessible?
     Katello.config.katello? && current_organization &&
-        KTEnvironment.any_viewable_for_promotions?(current_organization)
+        LifecycleEnvironment.any_viewable_for_promotions?(current_organization)
   end
 
   def title

@@ -35,7 +35,7 @@ describe Api::V1::ActivationKeysController do
       o.label = "org-1234"
     end
 
-    @environment    = KTEnvironment.new(:organization => @organization)
+    @environment    = LifecycleEnvironment.new(:organization => @organization)
     @activation_key = ActivationKey.new(:name => 'activation key')
   end
 
@@ -56,7 +56,7 @@ describe Api::V1::ActivationKeysController do
 
   context "before_filter :find_environment should retrieve environment" do
     before do
-      KTEnvironment.expects(:find).once.with('123').returns(@environment)
+      LifecycleEnvironment.expects(:find).once.with('123').returns(@environment)
     end
 
     specify { get :index, :environment_id => '123' }
@@ -64,7 +64,7 @@ describe Api::V1::ActivationKeysController do
   end
 
   it "before_filter :find_environment should return 404 if environment wasn't found" do
-    KTEnvironment.stubs(:find).returns(nil)
+    LifecycleEnvironment.stubs(:find).returns(nil)
 
     get :index, :environment_id => 123
     response.status.must_equal 404
@@ -118,7 +118,7 @@ describe Api::V1::ActivationKeysController do
 
   context "create an activation key" do
     before(:each) do
-      KTEnvironment.stubs(:find).returns(@environment)
+      LifecycleEnvironment.stubs(:find).returns(@environment)
       ActivationKey.stubs(:find).returns(@activation_key)
     end
 

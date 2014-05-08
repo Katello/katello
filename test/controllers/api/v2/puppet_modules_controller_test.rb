@@ -16,7 +16,7 @@ module Katello
 class Api::V2::PuppetModulesControllerTest < ActionController::TestCase
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "Repository", "Product", "Provider"]
+    models = ["Organization", "LifecycleEnvironment", "Repository", "Product", "Provider"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models)
     super

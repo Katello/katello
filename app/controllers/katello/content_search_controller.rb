@@ -20,7 +20,7 @@ class ContentSearchController < Katello::ApplicationController
   before_filter :setup_utils
 
   def rules
-    contents_test = lambda{!KTEnvironment.content_readable(current_organization).empty?}
+    contents_test = lambda{!LifecycleEnvironment.content_readable(current_organization).empty?}
     {
         :index => contents_test,
         :products => contents_test,
@@ -486,7 +486,7 @@ class ContentSearchController < Katello::ApplicationController
     mode = process_search_mode
     unless mode == :all
       env_ids = params[:environments]
-      KTEnvironment.content_readable(current_organization).where(:id => env_ids)
+      LifecycleEnvironment.content_readable(current_organization).where(:id => env_ids)
     end
   end
 
@@ -556,7 +556,7 @@ class ContentSearchController < Katello::ApplicationController
     content_rows = []
     product_envs = {}
     product_envs.default = 0
-    accessible_env_ids = KTEnvironment.content_readable(current_organization).pluck("#{Katello::KTEnvironment.table_name}.id")
+    accessible_env_ids = LifecycleEnvironment.content_readable(current_organization).pluck("#{Katello::LifecycleEnvironment.table_name}.id")
     search_mode ||= process_search_mode
     environments ||= process_env_ids
 
@@ -597,7 +597,7 @@ class ContentSearchController < Katello::ApplicationController
   #
   def spanned_repo_content(view, library_repo, content_type, content_search_obj, offset = 0, search_mode = :all, environments = [])
     spanning_repos = library_repo.environmental_instances(view)
-    accessible_env_ids = KTEnvironment.content_readable(current_organization).pluck("#{Katello::KTEnvironment.table_name}.id")
+    accessible_env_ids = LifecycleEnvironment.content_readable(current_organization).pluck("#{Katello::LifecycleEnvironment.table_name}.id")
 
     unless environments.nil? || environments.empty?
       spanning_repos.delete_if do |repo|
@@ -686,7 +686,7 @@ class ContentSearchController < Katello::ApplicationController
   # parent_repo    the library repo instance (or the parent row)
   # spanned_repos  all other instances of repos across all environments
   def spanning_content_rows(view, content_list, id_prefix, parent_repo, spanned_repos)
-    env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
+    env_ids = LifecycleEnvironment.content_readable(current_organization).pluck(:id)
     to_ret = []
     content_list.each do |item|
 

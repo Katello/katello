@@ -203,7 +203,7 @@ class Product < Katello::Model
   end
 
   def environments
-    KTEnvironment.where(:organization_id => organization.id).
+    LifecycleEnvironment.where(:organization_id => organization.id).
       where("library = ? OR id IN (?)", true, repositories.map(&:environment_id))
   end
 

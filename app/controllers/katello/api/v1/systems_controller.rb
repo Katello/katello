@@ -401,7 +401,7 @@ This information is then used for computing the errata available for the system.
 
   def find_only_environment
     if !@environment && @organization && !params.key?(:environment_id)
-      if @organization.kt_environments.empty?
+      if @organization.lifecycle_environments.empty?
         fail HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for system registration.") %
           { :org => @organization.name, :env => "Library" }
       end
@@ -411,14 +411,14 @@ This information is then used for computing the errata available for the system.
       # this scenario, if the org passed in matches the user's default org, use the default env. If not use
       # the single env of the org or throw an error if more than one.
       #
-      if @organization.kt_environments.size > 1
+      if @organization.lifecycle_environments.size > 1
         if current_user.default_environment && current_user.default_environment.organization == @organization
           @environment = current_user.default_environment
         else
           fail HttpErrors::BadRequest, _("Organization %s has more than one environment. Please specify target environment for system registration.") % @organization.name
         end
       else
-        if @environment = @organization.kt_environments.first
+        if @environment = @organization.lifecycle_environments.first
           return
         end
       end
@@ -456,7 +456,7 @@ This information is then used for computing the errata available for the system.
   def find_environment
     return unless params.key?(:environment_id)
 
-    @environment = KTEnvironment.find(params[:environment_id])
+    @environment = LifecycleEnvironment.find(params[:environment_id])
     fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     @organization = @environment.organization
     @environment
@@ -476,7 +476,7 @@ This information is then used for computing the errata available for the system.
         @content_view = cve.content_view
       else
         # assumption here is :content_view_id is passed as a separate attrib
-        @environment = KTEnvironment.find(params[:environment_id])
+        @environment = LifecycleEnvironment.find(params[:environment_id])
         @organization = @environment.organization
         fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
       end
@@ -527,7 +527,7 @@ This information is then used for computing the errata available for the system.
   end
 
   def readable_filters
-    {:terms => {:environment_id => KTEnvironment.systems_readable(@organization).collect { |item| item.id } }}
+    {:terms => {:environment_id => LifecycleEnvironment.systems_readable(@organization).collect { |item| item.id } }}
   end
 
   def find_content_view

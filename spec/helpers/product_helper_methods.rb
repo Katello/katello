@@ -21,7 +21,7 @@ module ProductHelperMethods
   end
 
   def new_test_product_with_library org
-    @library = KTEnvironment.new
+    @library = LifecycleEnvironment.new
     @library.library = true
     @library.organization = org
     @library.name = "Library"

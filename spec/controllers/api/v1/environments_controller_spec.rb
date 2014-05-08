@@ -19,7 +19,7 @@ describe Api::V1::EnvironmentsController do
 
   before(:each) do
     @org                      = Organization.new(:label => "1")
-    @environment              = KTEnvironment.new
+    @environment              = LifecycleEnvironment.new
     @environment.organization = @org
     @controller.stubs(:get_organization).returns(@org)
 
@@ -50,7 +50,7 @@ describe Api::V1::EnvironmentsController do
 
   describe "create an environment" do
     before(:each) do
-      KTEnvironment.expects(:new).once.returns(@environment)
+      LifecycleEnvironment.expects(:new).once.returns(@environment)
       @environment.expects(:valid?).returns(true)
       @org.expects(:save!).once
     end
@@ -78,7 +78,7 @@ describe Api::V1::EnvironmentsController do
     let(:req) { get 'index', { :organization_id => "1", :name => "foo" } }
 
     it 'should call katello environment find api' do
-      KTEnvironment.expects(:where).once.returns([@environment])
+      LifecycleEnvironment.expects(:where).once.returns([@environment])
       req
     end
 
@@ -88,8 +88,8 @@ describe Api::V1::EnvironmentsController do
       end
 
       it 'should return empty set when not found by name' do
-        KTEnvironment.stubs(:where => [])
-        KTEnvironment.expects(:where).once
+        LifecycleEnvironment.stubs(:where => [])
+        LifecycleEnvironment.expects(:where).once
         req
       end
     end
@@ -100,10 +100,10 @@ describe Api::V1::EnvironmentsController do
       end
 
       it ' should try again with label when not found by name' do
-        KTEnvironment.expects(:where).with do |search_query|
+        LifecycleEnvironment.expects(:where).with do |search_query|
           search_query['name'] == 'foo'
         end.once.returns([])
-        KTEnvironment.expects(:where).with do |search_query|
+        LifecycleEnvironment.expects(:where).with do |search_query|
           search_query['label'] == 'foo'
         end.once
         req
@@ -115,7 +115,7 @@ describe Api::V1::EnvironmentsController do
   describe "show a environment" do
 
     before(:each) do
-      KTEnvironment.stubs(:find => @environment)
+      LifecycleEnvironment.stubs(:find => @environment)
     end
 
     let(:action) { :show }
@@ -124,15 +124,15 @@ describe Api::V1::EnvironmentsController do
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
 
-    it 'should call KTEnvironment.first' do
-      KTEnvironment.expects(:find).once().returns(@environment)
+    it 'should call LifecycleEnvironment.first' do
+      LifecycleEnvironment.expects(:find).once().returns(@environment)
       req
     end
   end
 
   describe "delete a environment" do
     before (:each) do
-      KTEnvironment.expects(:find).once().returns(@environment)
+      LifecycleEnvironment.expects(:find).once().returns(@environment)
     end
 
     let(:action) { :destroy }
@@ -165,7 +165,7 @@ describe Api::V1::EnvironmentsController do
   describe "update an environment" do
 
     before(:each) do
-      KTEnvironment.stubs(:find => @environment)
+      LifecycleEnvironment.stubs(:find => @environment)
     end
 
     let(:action) { :update }
@@ -175,7 +175,7 @@ describe Api::V1::EnvironmentsController do
     it_should_behave_like "protected action"
 
     it 'should call KPEnvironment update_attributes' do
-      KTEnvironment.expects(:find).once().returns(@environment)
+      LifecycleEnvironment.expects(:find).once().returns(@environment)
       @environment.expects(:update_attributes!).once.returns(@environment)
       req
     end
@@ -183,7 +183,7 @@ describe Api::V1::EnvironmentsController do
 
   describe "list available releases" do
     before(:each) do
-      KTEnvironment.stubs(:find => @environment)
+      LifecycleEnvironment.stubs(:find => @environment)
     end
 
     let(:action) { :releases }

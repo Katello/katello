@@ -26,7 +26,7 @@ class Distributor < Katello::Model
 
   after_rollback :rollback_on_create, :on => :create
 
-  belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :distributors
+  belongs_to :environment, :class_name => "Katello::LifecycleEnvironment", :inverse_of => :distributors
 
   has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
   has_many :custom_info, :class_name => "Katello::CustomInfo", :as => :informable, :dependent => :destroy

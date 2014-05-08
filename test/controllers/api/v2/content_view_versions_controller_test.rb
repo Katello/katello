@@ -16,7 +16,7 @@ module Katello
   class Api::V2::ContentViewVersionsControllerTest < ActionController::TestCase
 
     def self.before_suite
-      models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion", "KTEnvironment",
+      models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion", "LifecycleEnvironment",
                 "Repository"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
       super
@@ -24,8 +24,8 @@ module Katello
 
     def models
       @organization = get_organization
-      @library = KTEnvironment.find(katello_environments(:library))
-      @dev = KTEnvironment.find(katello_environments(:dev))
+      @library = LifecycleEnvironment.find(katello_environments(:library))
+      @dev = LifecycleEnvironment.find(katello_environments(:dev))
       @content_view = ContentView.find(katello_content_views(:library_dev_view))
     end
 

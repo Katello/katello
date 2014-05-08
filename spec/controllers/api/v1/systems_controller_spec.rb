@@ -280,7 +280,7 @@ describe Api::V1::SystemsController do
     let(:uuid_3) { "ghi" }
 
     before(:each) do
-      @environment_2 = KTEnvironment.new(:name => 'test_2', :label => 'test_2', :prior => @environment_1, :organization => @organization)
+      @environment_2 = LifecycleEnvironment.new(:name => 'test_2', :label => 'test_2', :prior => @environment_1, :organization => @organization)
       @environment_2.save!
 
       @system_1 = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid_1)

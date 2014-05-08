@@ -56,7 +56,7 @@ describe ContentSearchController do
       [:all, :shared, :unique].each do |mode|
         context "#{content_type} #{mode} case" do
           before do
-            @env1 = KTEnvironment.find(@env1.id)
+            @env1 = LifecycleEnvironment.find(@env1.id)
 
             content_view = @cv_library
             @repo = content_view.repos(@organization.library).first

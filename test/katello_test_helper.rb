@@ -67,7 +67,7 @@ module FixtureTestCase
     self.set_fixture_class :katello_content_view_versions => "Katello::ContentViewVersion"
     self.set_fixture_class :katello_distributors => "Katello::Distributor"
     self.set_fixture_class :katello_environment_priors => "Katello::EnvironmentPrior"
-    self.set_fixture_class :katello_environments => "Katello::KTEnvironment"
+    self.set_fixture_class :katello_environments => "Katello::LifecycleEnvironment"
     self.set_fixture_class :katello_gpg_keys => "Katello::GpgKey"
     self.set_fixture_class :katello_help_tips => "Katello::HelpTip"
     self.set_fixture_class :katello_notices => "Katello::Notice"

@@ -17,7 +17,7 @@ module Validators
   class UniqueFieldInOrg < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
       if value
-        others = record.class.where(attribute => value).joins(:environment).where("#{Katello::KTEnvironment.table_name}.organization_id" => record.environment.organization_id)
+        others = record.class.where(attribute => value).joins(:environment).where("#{Katello::LifecycleEnvironment.table_name}.organization_id" => record.environment.organization_id)
         others = others.where("#{record.class.table_name}.id != ?", record.id) if record.persisted?
         record.errors[attribute] << N_("already taken") if others.any?
       end

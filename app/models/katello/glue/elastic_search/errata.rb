@@ -115,7 +115,7 @@ module Glue::ElasticSearch::Errata
         if repoid
           return [Repository.find(repoid)]
         elsif environment_id = filter[:environment_id]
-          env = KTEnvironment.find(environment_id)
+          env = LifecycleEnvironment.find(environment_id)
           if product_id = filter[:product_id]
             products = [env.products.find_by_cp_id!(product_id)]
           else
