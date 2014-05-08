@@ -26,6 +26,8 @@ module Api
         rescue_from ActiveRecord::RecordInvalid, :with => :rescue_from_record_invalid
         rescue_from ActiveRecord::RecordNotFound, :with => :rescue_from_record_not_found
 
+        rescue_from HttpErrors::BadRequest, :with => :rescue_from_unsupported_action_exception
+        rescue_from HttpErrors::NotFound, :with => :rescue_from_not_found
         rescue_from Errors::NotFound, :with => :rescue_from_not_found
         rescue_from Errors::SecurityViolation, :with => :rescue_from_security_violation
         rescue_from Errors::ConflictException, :with => :rescue_from_conflict_exception
