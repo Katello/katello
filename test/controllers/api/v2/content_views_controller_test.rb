@@ -337,9 +337,114 @@ module Katello
                       diff_view_destroy_permission,
                       [:promote_or_remove_content_views_to_environments, :promote_or_remove_content_views]
                      ]
+
       assert_protected_action(:remove, allowed_perms, denied_perms) do
-        put :remove, :id => @library_dev_staging_view.id
+        put :remove, :id => @library_dev_staging_view.id,
+                      :content_view_version_ids => [ @library_dev_staging_view.version(@dev).id,
+                                                     @library_dev_staging_view.version(@staging).id]
       end
     end
+
+
+    def test_remove_protected_envs_with_systems
+      sys = System.find(katello_systems(:simple_server_3))
+      system_edit_permission = {:name => :edit_content_hosts, :search  => "name=\"#{sys.name}\"" }
+
+      sys_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments,
+                                   :search => "name=\"#{sys.environment.name}\"" }
+
+      sys_cv_remove_permission = {:name => :promote_or_remove_content_views,
+                                  :search => "name=\"#{sys.content_view.name}\"" }
+
+      alternate_env = @staging
+      alternate_env_read_permission = {:name => :view_lifecycle_environments,
+                                       :search => "name=\"#{alternate_env.name}\"" }
+
+      alternate_cv = @library_dev_staging_view
+      alternate_cv_read_permission = {:name => :view_content_views,
+                                       :search => "name=\"#{alternate_cv.name}\"" }
+
+      bad_cv = ContentView.find(katello_content_views(:candlepin_default_cv))
+      bad_cv_read_permission = {:name => :view_content_views,
+                                       :search => "name=\"#{bad_cv.name}\"" }
+
+
+      bad_env = KTEnvironment.find(katello_environments(:dev_path1))
+      bad_env_read_permission = {:name => :view_lifecycle_environments,
+                                       :search => "name=\"#{bad_env.name}\"" }
+
+      allowed_perms = [[:edit_content_hosts, :promote_or_remove_content_views, :view_content_views,
+                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
+                       [system_edit_permission, sys_cv_remove_permission, sys_env_remove_permission,
+                         alternate_env_read_permission, alternate_cv_read_permission],
+                      ]
+
+      denied_perms = [[:edit_content_hosts, :promote_or_remove_content_views,
+                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
+                      [system_edit_permission, sys_cv_remove_permission, sys_env_remove_permission,
+                         bad_env_read_permission, alternate_cv_read_permission],
+                      [system_edit_permission, sys_cv_remove_permission, sys_env_remove_permission,
+                         alternate_env_read_permission, bad_cv_read_permission]
+                      ]
+
+      assert_protected_action(:remove, allowed_perms, denied_perms) do
+        put :remove, :id => sys.content_view.id,
+                     :environment_ids => [sys.environment.id],
+                     :system_content_view_id => alternate_cv.id,
+                     :system_environment_id => alternate_env.id
+      end
+    end
+
+
+    def test_remove_protected_envs_with_activation_keys
+      ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key))
+      ak_edit_permission = {:name => :edit_activation_keys, :search  => "name=\"#{ak.name}\"" }
+
+      ak_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments,
+                                   :search => "name=\"#{ak.environment.name}\"" }
+
+      ak_cv_remove_permission = {:name => :promote_or_remove_content_views,
+                                  :search => "name=\"#{ak.content_view.name}\"" }
+
+      alternate_env = @staging
+      alternate_env_read_permission = {:name => :view_lifecycle_environments,
+                                       :search => "name=\"#{alternate_env.name}\"" }
+
+      alternate_cv = @library_dev_staging_view
+      alternate_cv_read_permission = {:name => :view_content_views,
+                                       :search => "name=\"#{alternate_cv.name}\"" }
+
+      bad_cv = ContentView.find(katello_content_views(:candlepin_default_cv))
+      bad_cv_read_permission = {:name => :view_content_views,
+                                       :search => "name=\"#{bad_cv.name}\"" }
+
+
+      bad_env = KTEnvironment.find(katello_environments(:dev_path1))
+      bad_env_read_permission = {:name => :view_lifecycle_environments,
+                                       :search => "name=\"#{bad_env.name}\"" }
+
+      allowed_perms = [[:edit_activation_keys, :promote_or_remove_content_views, :view_content_views,
+                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
+                       [ak_edit_permission, ak_cv_remove_permission, ak_env_remove_permission,
+                         alternate_env_read_permission, alternate_cv_read_permission],
+                      ]
+
+      denied_perms = [[:edit_activation_keys, :promote_or_remove_content_views,
+                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
+                      [ak_edit_permission, ak_cv_remove_permission, ak_env_remove_permission,
+                         bad_env_read_permission, alternate_cv_read_permission],
+                      [ak_edit_permission, ak_cv_remove_permission, ak_env_remove_permission,
+                         alternate_env_read_permission, bad_cv_read_permission]
+                      ]
+
+      assert_protected_action(:remove, allowed_perms, denied_perms) do
+        put :remove, :id => ak.content_view.id,
+                     :environment_ids => [ak.environment.id],
+                     :key_content_view_id => alternate_cv.id,
+                     :key_environment_id => alternate_env.id
+      end
+    end
+
+
   end
 end

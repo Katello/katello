@@ -32,3 +32,10 @@ dev_key:
   updated_at: <%= Time.now %>
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
   environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+
+library_dev_staging_view_key:
+  name: Lib Dev Stating Activation Key
+  description: Here we go again!
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view) %>

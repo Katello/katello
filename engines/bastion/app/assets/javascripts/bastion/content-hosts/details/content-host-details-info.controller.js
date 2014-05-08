@@ -42,7 +42,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         $scope.disableEnvironmentSelection = false;
         $scope.environments = [];
 
-        $scope.environments = Organization.registerableEnvironments({organizationId: CurrentOrganization});
+        $scope.environments = Organization.readableEnvironments({id: CurrentOrganization});
 
         $scope.$on('contentHost.loaded', function () {
             $scope.contentHostFacts = dotNotationToObj($scope.contentHost.facts);

@@ -159,7 +159,8 @@ module Katello
     end
 
     it "test_consumer_create_protected" do
-      assert_protected_action(:consumer_create, :create_content_hosts) do
+      assert_protected_action(:consumer_create, [[:create_content_hosts,
+                    :view_lifecycle_environments, :view_content_views]]) do
         post :consumer_create, :environment_id => @organization.library.content_view_environments.first.cp_id
       end
     end

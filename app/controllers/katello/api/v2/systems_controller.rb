@@ -32,8 +32,8 @@ class Api::V2::SystemsController < Api::V2::ApiController
 
   before_filter :find_environment_and_content_view, :only => [:create]
   before_filter :find_content_view, :only => [:create, :update]
-
   before_filter :load_search_service, :only => [:index, :available_host_collections, :tasks]
+  before_filter :authorize_environment, :only => [:create]
 
   def organization_id_keys
     [:organization_id, :owner]
@@ -379,23 +379,6 @@ class Api::V2::SystemsController < Api::V2::ApiController
     system_params
   end
 
-  def find_activation_keys
-    if ak_names = params[:activation_keys]
-      ak_names        = ak_names.split(",")
-      activation_keys = ak_names.map do |ak_name|
-        activation_key = @organization.activation_keys.find_by_name(ak_name)
-        fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
-        activation_key
-      end
-    else
-      activation_keys = []
-    end
-    if activation_keys.empty?
-      fail HttpErrors::BadRequest, _("At least one activation key must be provided")
-    end
-    activation_keys
-  end
-
   def setup_content_view(cv_id)
     return if @content_view
     organization = @organization
@@ -407,6 +390,10 @@ class Api::V2::SystemsController < Api::V2::ApiController
     else
       @content_view = nil
     end
+  end
+
+  def authorize_environment
+    deny_access unless @environment.readable?
   end
 
 end

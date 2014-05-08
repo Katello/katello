@@ -88,17 +88,6 @@ describe Role do
        Organization.all_editable?().must_equal(true)
      }
    end
-
-   describe "Check the envs(katello)" do
-     let(:environment){create_environment(:name=>"my_env", :label=> "my_env", :organization => organization, :prior => organization.library)}
-     KTEnvironment.read_verbs.each do |verb|
-       specify{user.allowed_to_in_katello?(verb, :environments,environment.id,organization).must_equal(true)}
-       specify{user.allowed_to_in_katello?(verb, :environments).must_equal(false)}
-       specify{global_user.allowed_to_in_katello?(verb, :environments).must_equal(true)}
-     end
-     specify{user.allowed_to_in_katello?("update_systems", :environments,environment.id,organization).must_equal(false)}
-     specify{global_user.allowed_to_in_katello?("update_systems", :environments,environment.id,organization).must_equal(false)}
-   end
  end
 
  describe "Admin permission should be recreated if role exists" do

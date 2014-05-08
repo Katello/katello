@@ -34,49 +34,8 @@ class EnvironmentAuthorizationAdminTest < AuthorizationTestBase
     refute_empty KTEnvironment.promotable
   end
 
-  def test_content_readable
-    refute_empty KTEnvironment.content_readable(@org)
-  end
-
   def test_any_promotable?
     assert KTEnvironment.any_promotable?
-  end
-
-  def test_any_contents_readable?
-    assert KTEnvironment.any_contents_readable?(@org)
-  end
-
-  def test_systems_readable
-    refute_empty KTEnvironment.systems_readable(@org)
-  end
-
-  def test_systems_registerable
-    refute_empty KTEnvironment.systems_registerable(@org)
-  end
-
-  #instance tests
-  def test_viewable_for_promotions?
-    assert @env.viewable_for_promotions?
-  end
-
-  def test_contents_readable?
-    assert @env.contents_readable?
-  end
-
-  def test_systems_readable?
-    assert @env.systems_readable?
-  end
-
-  def test_systems_editable?
-    assert @env.systems_editable?
-  end
-
-  def test_systems_deletable?
-    assert @env.systems_deletable?
-  end
-
-  def test_systems_registerable?
-    assert @env.systems_registerable?
   end
 end
 
@@ -103,51 +62,6 @@ class EnvironmentAuthorizationNoPermsTest < AuthorizationTestBase
 
   def test_any_promotable?
     refute KTEnvironment.any_promotable?
-  end
-
-  def test_content_readable
-    assert_empty KTEnvironment.content_readable(@org)
-  end
-
-  def test_systems_readable
-    assert_empty KTEnvironment.systems_readable(@org)
-  end
-
-  def test_systems_registerable
-    assert_empty KTEnvironment.systems_registerable(@org)
-  end
-
-  def test_any_viewable_for_promotions?
-    refute KTEnvironment.any_viewable_for_promotions?(@org)
-  end
-
-  def test_any_contents_readable?
-    refute KTEnvironment.any_contents_readable?(@org)
-  end
-
-  #instance tests
-  def test_viewable_for_promotions?
-    refute @env.viewable_for_promotions?
-  end
-
-  def test_contents_readable?
-    refute @env.contents_readable?
-  end
-
-  def test_systems_readable?
-    refute @env.systems_readable?
-  end
-
-  def test_systems_editable?
-    refute @env.systems_editable?
-  end
-
-  def test_systems_deletable?
-    refute @env.systems_deletable?
-  end
-
-  def test_systems_registerable?
-    refute @env.systems_registerable?
   end
 end
 

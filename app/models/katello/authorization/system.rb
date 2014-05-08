@@ -18,7 +18,7 @@ module Authorization::System
 
     def readable_search_filters(org)
       {:or => [
-          {:terms => {:environment_id => KTEnvironment.systems_editable(org).collect { |item| item.id } }}
+          {:terms => {:environment_id => KTEnvironment.readable.pluck(:id) }}
         ]
       }
     end
@@ -39,6 +39,14 @@ module Authorization::System
       authorized(:destroy_content_hosts)
     end
 
+    def any_editable?
+      authorized(:edit_content_hosts).count > 0
+    end
+
+    def all_editable?(content_view, environments)
+      systems_query = System.where(:content_view_id => content_view, :environment_id => environments)
+      systems_query.count == systems_query.editable.count
+    end
   end
 
   included do

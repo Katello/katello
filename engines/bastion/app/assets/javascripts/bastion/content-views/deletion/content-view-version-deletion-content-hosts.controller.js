@@ -52,7 +52,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
         $scope.detailsTable = nutupane.table;
         $scope.detailsTable.closeItem = function () {};
 
-        $scope.environments = Organization.registerableEnvironments({organizationId: CurrentOrganization});
+        $scope.environments = Organization.readableEnvironments({id: CurrentOrganization});
         $scope.initEnvironmentWatch($scope);
 
         $scope.selectedEnvironment = $scope.deleteOptions.contentHosts.environment;

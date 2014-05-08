@@ -40,7 +40,7 @@ describe('Controller: NewActivationKeyController', function() {
         paths = [[{name: "Library", id: 1}, {name: "Dev", id: 2}]]
 
         Organization = $injector.get('MockResource').$new();
-        Organization.registerableEnvironments = function (params, callback) {
+        Organization.readableEnvironments = function (params, callback) {
             var response = paths;
 
             if (callback) {

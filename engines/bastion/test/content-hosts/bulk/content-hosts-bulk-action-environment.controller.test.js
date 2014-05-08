@@ -28,7 +28,7 @@ describe('Controller: ContentHostsBulkActionEnvironmentController', function() {
         Organization = $injector.get('MockResource').$new();
         ContentView.queryUnpaged = function(){return {}};
 
-        Organization.registerableEnvironments = function (params, callback) {
+        Organization.readableEnvironments = function (params, callback) {
             var response = paths;
 
             if (callback) {

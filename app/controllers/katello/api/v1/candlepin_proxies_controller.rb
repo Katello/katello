@@ -33,8 +33,8 @@ module Katello
     before_filter :find_optional_organization, :only => [:consumer_create, :hypervisors_update, :consumer_activate]
     before_filter :find_only_environment, :only => [:consumer_create]
     before_filter :find_environment_and_content_view, :only => [:consumer_create]
-    before_filter :find_content_view, :only => [:consumer_create, :facts]
     before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
+    before_filter :authorize_environment_and_cv, :only => [:consumer_create]
 
     rescue_from RestClient::Exception do |e|
       Rails.logger.error pp_exception(e)
@@ -302,34 +302,16 @@ module Katello
       end
     end
 
-    def find_content_view
-      if (content_view_id = (params[:content_view_id] || params[:system].try(:[], :content_view_id)))
-        setup_content_view(content_view_id)
-      end
-    end
-
     def find_environment_and_content_view
       # There are some scenarios (primarily create) where a system may be
       # created using the content_view_environment.cp_id which is the
       # equivalent of "environment_id"-"content_view_id".
       return unless params.key?(:environment_id)
-
-      if params[:environment_id].is_a? String
-        if !params.key?(:content_view_id)
-          cve = get_content_view_environment_by_cp_id(params[:environment_id])
-          @environment = cve.environment
-          @organization = @environment.organization
-          @content_view = cve.content_view
-        else
-          # assumption here is :content_view_id is passed as a separate attrib
-          @environment = KTEnvironment.find(params[:environment_id])
-          @organization = @environment.organization
-          fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
-        end
-        return @environment, @content_view
-      else
-        find_environment
-      end
+      cve = get_content_view_environment_by_cp_id(params[:environment_id])
+      @environment = cve.environment
+      @organization = @environment.organization
+      @content_view = cve.content_view
+      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] unless @environment
     end
 
     def find_hypervisor_environment_and_content_view
@@ -477,6 +459,11 @@ module Katello
         Rails.logger.warn "Unknown proxy route #{request.method} #{request.fullpath}, access denied"
         deny_access
       end
+    end
+
+    def authorize_environment_and_cv
+      deny_access unless @environment.readable?
+      deny_access if @content_view.nil? || !@content_view.readable?
     end
 
   end

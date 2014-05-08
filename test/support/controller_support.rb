@@ -39,7 +39,7 @@ module ControllerSupport
       if params[:authorized]
         msg = "Expected response for #{action} to be a <success>, but was <#{response.status}> instead. \n" +
                  "permission -> #{permission.to_yaml}"
-        assert_response :success, msg
+        assert  (response.status >= 200) && (response.status < 300), msg
       else
         msg = "Security Violation (403) expected for #{action}, got #{response.status} instead. \n" +
                 "permission -> #{permission.to_yaml}"

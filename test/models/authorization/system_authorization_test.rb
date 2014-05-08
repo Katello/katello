@@ -35,14 +35,21 @@ class SystemAuthorizationAdminTest < AuthorizationTestBase
     assert @sys.editable?
   end
 
+  def test_all_editable?
+    sys = System.find(katello_systems(:simple_server_3))
+    assert System.all_editable?(sys.content_view, sys.environment)
+  end
+
   def test_deletable?
     assert @sys.deletable?
   end
 
+  def test_any_editable?
+    assert System.any_editable?
+  end
 end
 
 class SystemAuthorizationNoPermsTest < AuthorizationTestBase
-
   def setup
     super
     User.current = User.find(users('restricted'))
@@ -67,5 +74,34 @@ class SystemAuthorizationNoPermsTest < AuthorizationTestBase
     refute @sys.deletable?
   end
 
+  def test_any_editable?
+    refute System.any_editable?
+  end
+
+  def test_all_editable?
+    sys = System.find(katello_systems(:simple_server_3))
+    refute System.all_editable?(sys.content_view, sys.environment)
+  end
 end
+
+class SystemAuthorizationWithPermsTest < AuthorizationTestBase
+  def setup
+    super
+    User.current = User.find(users('restricted'))
+  end
+
+  def test_all_editable?
+    sys = System.find(katello_systems(:simple_server_3))
+    systems = System.where(:content_view_id => sys.content_view_id, :environment_id => sys.environment)
+
+    clause = systems.map do |system|
+      "name=\"#{system.name}\""
+    end.join(" or ")
+
+    setup_current_user_with_permissions(:name => "edit_content_hosts",
+                                        :search => clause)
+    assert System.all_editable?(sys.content_view, sys.environment)
+  end
+end
+
 end

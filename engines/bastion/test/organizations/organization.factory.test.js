@@ -15,7 +15,7 @@ describe('Factory: Organization', function() {
     var $httpBackend,
         task,
         Organization,
-        organizations;
+        organizations, flushAfterFunction = true;
 
     beforeEach(module('Bastion.organizations', 'Bastion.test-mocks'));
 
@@ -39,7 +39,10 @@ describe('Factory: Organization', function() {
     }));
 
     afterEach(function() {
-        $httpBackend.flush();
+        if (flushAfterFunction) {
+            $httpBackend.flush();
+        };
+
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
     });
@@ -74,5 +77,74 @@ describe('Factory: Organization', function() {
         Organization.get({ id: 'ACME' }, function(response) {
             expect(response.id).toBe(1);
         });
+    });
+
+    it("provides a way to get the organizations's readableEnvironments", function() {
+        var pathIndex, envIndex, readableEnvs,
+            envs = [
+            {
+                "environments": [
+                    {   "id": 1,
+                        "name": "Library",
+                        "prior": null,
+                        "permissions": {
+                            "readable": true,
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "name": "new-env",
+                        "prior": {
+                            "name": "Library",
+                            "id": 1
+                        },
+                        "permissions": {
+                            "readable": true,
+                        }
+                    },
+                ]
+            },
+            {
+                "environments": [
+                    {
+                        "id": 1,
+                        "name": "Library",
+                        "prior": null,
+                        "permissions": {
+                            "readable": true,
+                        }
+                    },
+                    {
+                        "id": 5,
+                        "name": "new-path",
+                        "prior": {
+                            "name": "Library",
+                            "id": 1
+                        },
+                        "permissions": {
+                            "readable": false,
+                        }
+                    }
+                ]
+            }
+        ];
+
+        //testing the transform
+        // from [{environments : [{id, name, permissions: {readable : true}}]}]
+        // to [[{id, name, select: true}]]
+        $httpBackend.expectGET('/api/v2/organizations/ACME/environments/paths').respond(envs);
+        readableEnvs = Organization.readableEnvironments({"id":"ACME"});
+        $httpBackend.flush ();
+        flushAfterFunction = false;
+        expect(readableEnvs.length).toBe(2);
+
+        for (pathIndex = 0; pathIndex < readableEnvs.length; ++pathIndex) {
+            for (envIndex = 0; envIndex < readableEnvs[pathIndex].length; ++envIndex) {
+                expect(readableEnvs[pathIndex][envIndex].id).toBe(envs[pathIndex].environments[envIndex].id);
+                expect(readableEnvs[pathIndex][envIndex].name).toBe(envs[pathIndex].environments[envIndex].name);
+                expect(readableEnvs[pathIndex][envIndex].select).toBe(envs[pathIndex].environments[envIndex].permissions.readable);
+            }
+        }
+
     });
 });

@@ -16,3 +16,10 @@ candlepin_system:
   name:         Candlepin System
   description:  System before creating in candlepin
   environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+
+simple_server_3:
+  name:         Simple Server 3
+  description:  Super administrator with all access.
+  uuid:         010E99C0-3276-11E2-81C1-0800200C9A88
+  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view) %>

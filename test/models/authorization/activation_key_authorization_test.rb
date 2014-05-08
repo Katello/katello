@@ -37,6 +37,14 @@ class ActivationKeyAuthorizationAdminTest < AuthorizationTestBase
     assert @key.deletable?
   end
 
+  def test_any_editable?
+    assert ActivationKey.any_editable?
+  end
+
+  def test_all_editable?
+    ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key))
+    assert ActivationKey.all_editable?(ak.content_view, ak.environment)
+  end
 end
 
 class ActivationKeyAuthorizationNoPermsTest  < AuthorizationTestBase
@@ -59,5 +67,33 @@ class ActivationKeyAuthorizationNoPermsTest  < AuthorizationTestBase
     refute @key.deletable?
   end
 
+  def test_any_editable?
+    refute ActivationKey.any_editable?
+  end
+
+  def test_all_editable?
+    ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key))
+    refute ActivationKey.all_editable?(ak.content_view, ak.environment)
+  end
+end
+
+class ActivationKeyAuthorizationWithPermsTest < AuthorizationTestBase
+  def setup
+    super
+    User.current = User.find(users('restricted'))
+  end
+
+  def test_all_editable?
+    ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key))
+    keys = ActivationKey.where(:content_view_id => ak.content_view_id, :environment_id => ak.environment)
+
+    clause = keys.map do |key|
+      "name=\"#{key.name}\""
+    end.join(" or ")
+
+    setup_current_user_with_permissions(:name => "edit_activation_keys",
+                                        :search => clause)
+    assert ActivationKey.all_editable?(ak.content_view, ak.environment)
+  end
 end
 end
