@@ -315,61 +315,61 @@ describe Api::V1::ActivationKeysController do
     end
   end
 
-  describe "add system groups to an activation key" do
+  describe "add host collections to an activation key" do
     before(:each) do
       @environment    = create_environment(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
       @activation_key = create_activation_key(:name => 'activation key', :environment => @environment, :organization => @organization)
-      @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id)
-      @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)
+      @host_collection_1 = HostCollection.create!(:name => 'Host Collection 1', :organization_id => @organization.id)
+      @host_collection_2 = HostCollection.create!(:name => 'Host Collection 2', :description => "fake description", :organization => @organization)
     end
 
-    let(:action) { :add_system_groups }
-    let(:req) { post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.label }
+    let(:action) { :add_host_collections }
+    let(:req) { post :add_host_collections, :id => @activation_key.id, :organization_id => @organization.label }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"
 
-    it "should update the system groups attached to the activation key" do
-      ids = [@system_group_1.id, @system_group_2.id]
-      post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.label, :activation_key => { :system_group_ids => ids }
+    it "should update the host collections attached to the activation key" do
+      ids = [@host_collection_1.id, @host_collection_2.id]
+      post :add_host_collections, :id => @activation_key.id, :organization_id => @organization.label, :activation_key => { :host_collection_ids => ids }
       must_respond_with(:success)
-      ActivationKey.find(@activation_key.id).system_group_ids.must_include(@system_group_1.id)
-      ActivationKey.find(@activation_key.id).system_group_ids.must_include(@system_group_2.id)
+      ActivationKey.find(@activation_key.id).host_collection_ids.must_include(@host_collection_1.id)
+      ActivationKey.find(@activation_key.id).host_collection_ids.must_include(@host_collection_2.id)
     end
 
-    it "should throw a 404 is passed in a bad system group id" do
+    it "should throw a 404 is passed in a bad host collection id" do
       ids = [90210]
-      post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.id.to_s, :activation_key => { :system_group_ids => ids }
+      post :add_host_collections, :id => @activation_key.id, :organization_id => @organization.id.to_s, :activation_key => { :host_collection_ids => ids }
       response.status.must_equal 404
     end
 
   end
 
-  describe "remove system groups from an activation key" do
+  describe "remove host collections from an activation key" do
     before(:each) do
       @environment    = create_environment(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
       @activation_key = create_activation_key(:name => 'activation key', :environment => @environment, :organization => @organization)
-      @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id)
-      @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)
-      @activation_key.system_group_ids << [@system_group_1.id, @system_group_2.id]
+      @host_collection_1 = HostCollection.create!(:name => 'Host Collection 1', :organization_id => @organization.id)
+      @host_collection_2 = HostCollection.create!(:name => 'Host Collection 2', :description => "fake description", :organization => @organization)
+      @activation_key.host_collection_ids << [@host_collection_1.id, @host_collection_2.id]
       @activation_key.save!
     end
 
-    let(:action) { :remove_system_groups }
-    let(:req) { delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.label }
+    let(:action) { :remove_host_collections }
+    let(:req) { delete :remove_host_collections, :id => @activation_key.id, :organization_id => @organization.label }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"
 
-    it "should update the system groups the system is in" do
-      ids = [@system_group_1.id, @system_group_2.id]
-      delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.label, :system => { :system_group_ids => ids }
-      @activation_key.system_group_ids.must_be_empty
+    it "should update the host collections the system is in" do
+      ids = [@host_collection_1.id, @host_collection_2.id]
+      delete :remove_host_collections, :id => @activation_key.id, :organization_id => @organization.label, :system => { :host_collection_ids => ids }
+      @activation_key.host_collection_ids.must_be_empty
     end
 
-    it "should throw a 404 is passed in a bad system group id" do
+    it "should throw a 404 is passed in a bad host collection id" do
       ids = [90210]
-      delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.label, :activation_key => { :system_group_ids => ids }
+      delete :remove_host_collections, :id => @activation_key.id, :organization_id => @organization.label, :activation_key => { :host_collection_ids => ids }
       response.status.must_equal 404
     end
    end

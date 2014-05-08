@@ -79,9 +79,9 @@ module FixtureTestCase
     self.set_fixture_class :katello_roles_users => "Katello::RoleUser"
     self.set_fixture_class :katello_roles => "Katello::Role"
     self.set_fixture_class :katello_sync_plans => "Katello::SyncPlan"
-    self.set_fixture_class :katello_system_groups => "Katello::SystemGroup"
+    self.set_fixture_class :katello_host_collections => "Katello::HostCollection"
     self.set_fixture_class :katello_systems => "Katello::System"
-    self.set_fixture_class :katello_system_system_groups => "Katello::SystemSystemGroup"
+    self.set_fixture_class :katello_system_host_collections => "Katello::SystemHostCollection"
     self.set_fixture_class :katello_task_statuses => "Katello::TaskStatus"
     self.set_fixture_class :katello_user_notices => "Katello::UserNotice"
 

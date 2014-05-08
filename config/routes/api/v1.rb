@@ -30,11 +30,11 @@ Katello::Engine.routes.draw do
           end
         end
 
-        resources :system_groups, :except => [:new, :edit] do
+        resources :host_collections, :except => [:new, :edit] do
           member do
             get :systems
             get :history
-            match "/history/:job_id" => "system_groups#history_show", :via => :get
+            match "/history/:job_id" => "host_collections#history_show", :via => :get
             post :add_systems
             post :copy
             post :remove_systems
@@ -42,13 +42,13 @@ Katello::Engine.routes.draw do
             put :update_systems
           end
 
-          resources :packages, :only => [:create], :controller => :system_group_packages do
+          resources :packages, :only => [:create], :controller => :host_collection_packages do
             collection do
               put :update
               delete :destroy
             end
           end
-          resources :errata, :only => [:index, :create], :controller => :system_group_errata
+          resources :errata, :only => [:index, :create], :controller => :host_collection_errata
         end
 
         resources :environments do
@@ -84,8 +84,8 @@ Katello::Engine.routes.draw do
           get :releases
           get :subscription_status
           put :enabled_repos
-          post :system_groups, :action => :add_system_groups
-          delete :system_groups, :action => :remove_system_groups
+          post :host_collections, :action => :add_host_collections
+          delete :host_collections, :action => :remove_host_collections
           post :refresh_subscriptions
           put :checkin
         end

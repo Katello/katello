@@ -1,0 +1,46 @@
+<form name="hostCollectionForm" class="form-horizontal" novalidate role="form">
+
+  <div alch-form-group label="{{ 'Name' | translate }}">
+    <input id="name"
+           name="name"
+           ng-model="hostCollection.name"
+           type="text"
+           tabindex="1"
+           autofocus
+           required/>
+  </div>
+
+  <div alch-form-group label="{{ 'Content Host Limit' | translate }}" field="max_content_hosts">
+    <span translate>Unlimited Content Hosts:</span>
+    <input type="checkbox"
+           name="limit"
+           ng-model="unlimited"
+           ng-checked="isUnlimited(hostCollection)"
+           ng-change="unlimitedChanged(hostCollection)"/>
+
+    <div alch-form-group label="{{ 'Limit' | translate }}" ng-hide="isUnlimited(hostCollection)">
+      <input id="max_content_hosts"
+             name="max_content_hosts"
+             class="form-control"
+             ng-model="hostCollection.max_content_hosts"
+             type="number"
+             ng-change="inputChanged(hostCollection)"
+             tabindex="2"/>
+    </div>
+  </div>
+
+  <div alch-form-group label="{{ 'Description' | translate }}">
+    <textarea id="description"
+              name="description"
+              ng-model="hostCollection.description"
+              tabindex="3">
+    </textarea>
+  </div>
+
+  <div alch-form-buttons
+       on-cancel="transitionTo('host-collections.index')"
+       on-save="save(hostCollection)"
+       working="working">
+  </div>
+
+</form>

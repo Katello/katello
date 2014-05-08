@@ -22,8 +22,8 @@ module Glue::ElasticSearch::System
     base.class_eval do
       include Ext::IndexedModel
 
-      add_system_group_hook     lambda { |system_group| reindex_on_association_change(system_group) }
-      remove_system_group_hook  lambda { |system_group| reindex_on_association_change(system_group) }
+      add_host_collection_hook     lambda { |host_collection| reindex_on_association_change(host_collection) }
+      remove_host_collection_hook  lambda { |host_collection| reindex_on_association_change(host_collection) }
 
       # 'index_options' controls what attributes are indexed and stored in ES. From indexed_model.rb
       #  :json  - normal to_json options,  :only or :except allowed
@@ -47,7 +47,7 @@ module Glue::ElasticSearch::System
                                        :uuid,
                                        :created_at,
                                        :lastCheckin,
-                                       :system_group,
+                                       :host_collection,
                                        :installed_products,
                                        "custom_info.KEYNAME",
                                        :content_view,
@@ -116,9 +116,9 @@ module Glue::ElasticSearch::System
         indexes :guests, :type => 'string', :analyzer => :kt_name_analyzer
       end
 
-      # Whenever a system's 'name' field changes, the objects returned by system.system_groups
+      # Whenever a system's 'name' field changes, the objects returned by system.host_collections
       # relation are themselves reindexed.
-      #update_related_indexes :system_groups, :name
+      #update_related_indexes :host_collections, :name
     end
   end
 
@@ -127,8 +127,8 @@ module Glue::ElasticSearch::System
     attrs = {
       :facts => self.facts,
       :organization_id => self.organization.id,
-      :system_group => self.system_groups.collect{|g| g.name},
-      :system_group_ids => self.system_group_ids,
+      :host_collection => self.host_collections.collect{|g| g.name},
+      :host_collection_ids => self.host_collection_ids,
       :installed_products => collect_installed_product_names,
       :sockets => self.sockets,
       :custom_info => collect_custom_info,
@@ -151,11 +151,11 @@ module Glue::ElasticSearch::System
     attrs
   end
 
-  def update_system_groups
+  def update_host_collections
     system_id = self.id #save the system id for the block
-    id_update = "ctx._source.system_group_ids = [#{self.system_group_ids.join(",")}]; "
-    names = self.system_groups.pluck(:name).map{|name| "\"#{name}\""}
-    name_update = "ctx._source.system_group = [#{names.join(",")}];"
+    id_update = "ctx._source.host_collection_ids = [#{self.host_collection_ids.join(",")}]; "
+    names = self.host_collections.pluck(:name).map{|name| "\"#{name}\""}
+    name_update = "ctx._source.host_collection = [#{names.join(",")}];"
     Tire.index System.index.name do
       update System.document_type, system_id, {:script => id_update + name_update }
     end

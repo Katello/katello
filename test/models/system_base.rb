@@ -17,7 +17,8 @@ class SystemTestBase < ActiveSupport::TestCase
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['User', 'SystemGroup', 'KTEnvironment', 'Organization', 'Product', "ContentView", "System", "ContentViewVersion"]
+    models    = ['User', 'HostCollection', 'KTEnvironment', 'Organization',
+                 'Product', "ContentView", "System", "ContentViewVersion"]
     disable_glue_layers(services, models)
 
     configure_runcible

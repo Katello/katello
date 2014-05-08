@@ -25,8 +25,8 @@ class ActivationKey < Katello::Model
   belongs_to :user, :inverse_of => :activation_keys, :class_name => "::User"
   belongs_to :content_view, :inverse_of => :activation_keys
 
-  has_many :key_system_groups, :class_name => "Katello::KeySystemGroup", :dependent => :destroy
-  has_many :system_groups, :through => :key_system_groups
+  has_many :key_host_collections, :class_name => "Katello::KeyHostCollection", :dependent => :destroy
+  has_many :host_collections, :through => :key_host_collections
 
   has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
   has_many :systems, :through => :system_activation_keys

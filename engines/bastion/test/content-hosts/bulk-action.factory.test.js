@@ -15,16 +15,16 @@ describe('Factory: ContentHostBulkAction', function() {
     var $httpBackend,
         ContentHostBulkAction,
         contentHostParams,
-        systemGroupParams;
+        hostCollectionParams;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         var contentHostIds = [1, 2, 3],
-            systemGroupIds = [8, 9];
+            hostCollectionIds = [8, 9];
 
         contentHostParams = {ids: contentHostIds};
-        systemGroupParams = {ids: contentHostIds, system_group_ids: systemGroupIds};
+        hostCollectionParams = {ids: contentHostIds, host_collection_ids: hostCollectionIds};
     }));
 
     beforeEach(inject(function($injector) {
@@ -36,14 +36,14 @@ describe('Factory: ContentHostBulkAction', function() {
         $httpBackend.flush();
     });
 
-    it('provides a way to add system groups to content hosts', function() {
-        $httpBackend.expect('PUT', '/api/v2/systems/bulk/add_system_groups', systemGroupParams).respond();
-        ContentHostBulkAction.addSystemGroups(systemGroupParams);
+    it('provides a way to add host collections to content hosts', function() {
+        $httpBackend.expect('PUT', '/api/v2/systems/bulk/add_host_collections', hostCollectionParams).respond();
+        ContentHostBulkAction.addHostCollections(hostCollectionParams);
     });
 
-    it('provides a way to remove system groups from content hosts', function() {
-        $httpBackend.expect('PUT', '/api/v2/systems/bulk/remove_system_groups', systemGroupParams).respond();
-        ContentHostBulkAction.removeSystemGroups(systemGroupParams);
+    it('provides a way to remove host collections from content hosts', function() {
+        $httpBackend.expect('PUT', '/api/v2/systems/bulk/remove_host_collections', hostCollectionParams).respond();
+        ContentHostBulkAction.removeHostCollections(hostCollectionParams);
     });
 
     it('provides a way to install content on content hosts', function() {

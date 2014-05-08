@@ -19,7 +19,7 @@ node :permissions do |activation_key|
   }
 end
 
-child :system_groups => :system_groups do
+child :host_collections => :host_collections do
   attributes :id
   attributes :name
 end

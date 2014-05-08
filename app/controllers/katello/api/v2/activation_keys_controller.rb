@@ -17,11 +17,11 @@ module Katello
     before_filter :find_environment, :only => [:index, :create, :update]
     before_filter :find_optional_organization, :only => [:index, :create]
     before_filter :find_activation_key, :only => [:show, :update, :destroy, :available_releases,
-                                                  :available_system_groups, :add_system_groups, :remove_system_groups]
+                                                  :available_host_collections, :add_host_collections, :remove_host_collections]
     before_filter :authorize
-    before_filter :load_search_service, :only => [:index, :available_system_groups]
+    before_filter :load_search_service, :only => [:index, :available_host_collections]
 
-    wrap_parameters :include => (ActivationKey.attribute_names + %w(system_group_ids service_level))
+    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level))
 
     def rules
       read_test   = lambda do
@@ -39,9 +39,9 @@ module Katello
         :create               => manage_test,
         :update               => manage_test,
         :destroy              => manage_test,
-        :available_system_groups  => manage_test,
-        :add_system_groups        => manage_test,
-        :remove_system_groups     => manage_test
+        :available_host_collections  => manage_test,
+        :add_host_collections        => manage_test,
+        :remove_host_collections     => manage_test
       }
     end
 
@@ -114,12 +114,12 @@ module Katello
       respond
     end
 
-    api :GET, "/activation_keys/:id/system_groups/available", "List system groups the system does not belong to"
+    api :GET, "/activation_keys/:id/host_collections/available", "List host collections the system does not belong to"
     param_group :search, Api::V2::ApiController
-    param :name, String, :desc => "system group name to filter by"
-    def available_system_groups
-      filters = [:terms => {:id => SystemGroup.readable(@activation_key.organization).pluck("#{Katello::SystemGroup.table_name}.id") -
-                   @activation_key.system_groups.pluck("#{Katello::SystemGroup.table_name}.id")}]
+    param :name, String, :desc => "host collection name to filter by"
+    def available_host_collections
+      filters = [:terms => {:id => HostCollection.readable(@activation_key.organization).pluck("#{Katello::HostCollection.table_name}.id") -
+                   @activation_key.host_collections.pluck("#{Katello::HostCollection.table_name}.id")}]
       filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
       options = {
@@ -127,7 +127,7 @@ module Katello
           :load_records? => true
       }
 
-      respond_for_index(:collection => item_search(SystemGroup, params, options))
+      respond_for_index(:collection => item_search(HostCollection, params, options))
     end
 
     api :GET, "/activation_keys/:id/releases", "Show release versions available for an activation key"
@@ -141,19 +141,19 @@ module Katello
       respond_for_index :collection => response
     end
 
-    api :PUT, "/activation_keys/:id/system_groups"
+    api :PUT, "/activation_keys/:id/host_collections"
     param :id, :identifier, :desc => "ID of the activation key", :required => true
-    def add_system_groups
-      ids = activation_key_params[:system_group_ids]
-      @activation_key.system_group_ids = (@activation_key.system_group_ids + ids).uniq
+    def add_host_collections
+      ids = activation_key_params[:host_collection_ids]
+      @activation_key.host_collection_ids = (@activation_key.host_collection_ids + ids).uniq
       @activation_key.save!
       respond_for_show
     end
 
-    api :DELETE, "/activation_keys/:id/system_groups"
-    def remove_system_groups
-      ids = activation_key_params[:system_group_ids]
-      @activation_key.system_group_ids = (@activation_key.system_group_ids - ids).uniq
+    api :DELETE, "/activation_keys/:id/host_collections"
+    def remove_host_collections
+      ids = activation_key_params[:host_collection_ids]
+      @activation_key.host_collection_ids = (@activation_key.host_collection_ids - ids).uniq
       @activation_key.save!
       respond_for_show
     end
@@ -181,14 +181,14 @@ module Katello
       @pool = Pool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
     end
 
-    def find_system_groups
-      ids = params[:activation_key][:system_group_ids] if params[:activation_key]
-      @system_groups = []
+    def find_host_collections
+      ids = params[:activation_key][:host_collection_ids] if params[:activation_key]
+      @host_collections = []
       if ids
-        ids.each do |group_id|
-          group = SystemGroup.find(group_id)
-          fail HttpErrors::NotFound, _("Couldn't find system group '%s'") % group_id if group.nil?
-          @system_groups << group
+        ids.each do |host_collection_id|
+          host_collection = HostCollection.find(host_collection_id)
+          fail HttpErrors::NotFound, _("Couldn't find host collection '%s'") % host_collection_id if host_collection.nil?
+          @host_collections << host_collection
         end
       end
     end
@@ -206,7 +206,7 @@ module Katello
                                                           :content_view_id,
                                                           :release_version,
                                                           :service_level,
-                                                          :system_group_ids => [])
+                                                          :host_collection_ids => [])
 
       key_params[:environment_id] = params[:environment][:id] if params[:environment].try(:[], :id)
       key_params[:content_view_id] = params[:content_view][:id] if params[:content_view].try(:[], :id)

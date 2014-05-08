@@ -52,8 +52,8 @@
 //= require "bastion/utils/utils.module"
 //= require_tree "./utils"
 
-//= require "bastion/system-groups/system-groups.module.js"
-//= require_tree "./system-groups"
+//= require "bastion/host-collections/host-collections.module.js"
+//= require_tree "./host-collections"
 
 //= require "bastion/content-hosts/content-hosts.module.js"
 //= require_tree "./content-hosts"

@@ -21,7 +21,7 @@ describe('Controller: ContentHostDetailsInfoController', function() {
 
     beforeEach(module(
         'Bastion.content-hosts',
-        'Bastion.system-groups',
+        'Bastion.host-collections',
         'Bastion.test-mocks',
         'content-hosts/details/views/content-host-info.html',
         'content-hosts/views/content-hosts.html',
