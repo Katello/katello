@@ -48,7 +48,7 @@ module Katello
     api :GET, "/activation_keys", "List activation keys"
     api :GET, "/environments/:environment_id/activation_keys"
     api :GET, "/organizations/:organization_id/activation_keys"
-    param :organization_id, :identifier, :desc => "organization identifier", :required => true
+    param :organization_id, :number, :desc => "organization identifier", :required => true
     param :environment_id, :identifier, :desc => "environment identifier"
     param :content_view_id, :identifier, :desc => "content view identifier"
     param :name, String, :desc => "activation key name to filter by"
@@ -69,7 +69,7 @@ module Katello
     end
 
     api :POST, "/activation_keys", "Create an activation key"
-    param :organization_id, :identifier, :desc => "organization identifier", :required => true
+    param :organization_id, :number, :desc => "organization identifier", :required => true
     param :name, String, :desc => "name", :required => true
     param :label, String, :desc => "unique label"
     param :description, String, :desc => "description"
@@ -88,7 +88,7 @@ module Katello
 
     api :PUT, "/activation_keys/:id", "Update an activation key"
     param :id, :identifier, :desc => "ID of the activation key", :required => true
-    param :organization_id, :identifier, :desc => "organization identifier", :required => true
+    param :organization_id, :number, :desc => "organization identifier", :required => true
     param :name, String, :desc => "name", :required => true
     param :description, String, :desc => "description"
     param :environment_id, :identifier, :desc => "environment id", :required => true

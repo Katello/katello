@@ -61,7 +61,7 @@ module Katello
     api :GET, "/activation_keys/:activation_key_id/host_collections"
     api :GET, "/systems/:system_id/host_collections"
     param_group :search, Api::V2::ApiController
-    param :organization_id, :identifier, :desc => "organization identifier", :required => true
+    param :organization_id, :number, :desc => "organization identifier", :required => true
     param :name, String, :desc => "host collection name to filter by"
     param :activation_key_id, :identifier, :desc => "activation key identifier"
     param :system_id, :identifier, :desc => "system identifier"
@@ -79,7 +79,7 @@ module Katello
 
     api :POST, "/host_collections", "Create a host collection"
     api :POST, "/organizations/:organization_id/host_collections", "Create a host collection"
-    param :organization_id, :identifier, :desc => "organization identifier", :required => true
+    param :organization_id, :number, :desc => "organization identifier", :required => true
     param_group :host_collection
     def create
       if host_collection_params[:system_ids].present?

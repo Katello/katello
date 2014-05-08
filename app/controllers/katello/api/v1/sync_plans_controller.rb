@@ -19,7 +19,7 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
       synchronization of the repository with the upstream.
     DOC
 
-    param :organization_id, :identifier, :desc => "oranization identifier", :required => true
+    param :organization_id, :number, :desc => "oranization identifier", :required => true
 
     api_version 'v1'
     api_version 'v2'

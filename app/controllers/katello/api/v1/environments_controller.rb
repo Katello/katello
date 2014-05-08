@@ -85,7 +85,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   end
 
   def_param_group :search_params do
-    param :organization_id, :identifier, :desc => "organization identifier"
+    param :organization_id, :number, :desc => "organization identifier"
     param :library, :bool, :desc => "set true if you want to see only library environment"
     param :name, :identifier, :desc => "filter only environments with this identifier"
   end
@@ -125,13 +125,13 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   api :GET, "/environments/:id", "Show an environment"
   api :GET, "/organizations/:organization_id/environments/:id", "Show an environment"
   param :id, :identifier, :desc => "environment identifier"
-  param :organization_id, :identifier, :desc => "organization identifier"
+  param :organization_id, :number, :desc => "organization identifier"
   def show
     respond
   end
 
   api :POST, "/organizations/:organization_id/environments", "Create an environment in an organization"
-  param :organization_id, :identifier, :desc => "organization identifier"
+  param :organization_id, :number, :desc => "organization identifier"
   param_group :environment
   param :environment, Hash, :required => true do
     param :prior, :identifier, :required => true, :desc => <<-DESC
@@ -161,7 +161,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   api :DELETE, "/environments/:id", "Destroy an environment"
   api :DELETE, "/organizations/:organization_id/environments/:id", "Destroy an environment in an organization"
   param :id, :identifier, :desc => "environment identifier"
-  param :organization_id, :identifier, :desc => "organization identifier"
+  param :organization_id, :number, :desc => "organization identifier"
   def destroy
     if @environment.is_deletable?
       @environment.destroy
@@ -174,7 +174,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
 
   api :GET, "/organizations/:organization_id/environments/:id/repositories", "List repositories available in the environment"
   param :id, :identifier, :desc => "environment identifier"
-  param :organization_id, :identifier, :desc => "organization identifier"
+  param :organization_id, :number, :desc => "organization identifier"
   param :content_view_id, :identifier, :desc => "content view identifier", :required => false
   def repositories
     if !@environment.library? && @content_view.nil?
