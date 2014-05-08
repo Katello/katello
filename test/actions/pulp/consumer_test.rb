@@ -12,77 +12,68 @@
 
 require 'katello_test_helper'
 
-module ::Actions::Pulp::Consumer
+module ::Actions::Pulp
 
-  class TestBase < ActiveSupport::TestCase
+  class ConsumerTest < VCR::TestCase
     include Dynflow::Testing
     include Support::Actions::PulpTask
     include Support::Actions::RemoteAction
 
-    before do
-      stub_remote_user
-    end
-  end
+    let(:uuid) { 'uuid' }
+    let(:name) { 'name' }
+    let(:type) { 'rpm' }
+    let(:args) { %w(vim vi) }
 
-  class CreateTest < TestBase
-    let(:action_class) { ::Actions::Pulp::Consumer::Create }
-    let(:planned_action) do
-      create_and_plan_action action_class, uuid: 'uuid', name: 'name'
+    def setup
+      ::ForemanTasks.sync_task(::Actions::Pulp::Consumer::Create, uuid: uuid, name: name)
     end
 
-    it 'runs' do
-      run_action planned_action do |action|
-        runcible_expects(action, :extensions, :consumer, :create).
-            with('uuid', display_name: 'name')
-      end
-    end
-  end
-
-
-  class ContentTestBase < TestBase
-    let(:planned_action) do
-      create_and_plan_action action_class,
-          consumer_uuid: 'uuid',
-          type:          'rpm',
-          args:          %w(vim vi)
+    def teardown
+      configure_runcible
+      consumer = ::Katello.pulp_server.resources.consumer.delete(uuid)
+    rescue RestClient::ResourceNotFound => e
     end
 
-    let(:action_class) { raise NotImplementedError }
+    def test_create
+      configure_runcible
+      consumer = ::Katello.pulp_server.resources.consumer.retrieve(uuid)
+      refute_nil consumer
+      assert_equal name, consumer[:display_name]
+    end
 
-    def it_runs(invocation_method)
+    def test_install_content
+      action = plan_consumer_action(::Actions::Pulp::Consumer::ContentInstall)
+      it_runs(action, :install_content)
+    end
+
+    def test_update_content
+      action = plan_consumer_action(::Actions::Pulp::Consumer::ContentUpdate)
+      it_runs(action, :update_content)
+    end
+
+    def test_uninstall_content
+      action = plan_consumer_action(::Actions::Pulp::Consumer::ContentUninstall)
+      it_runs(action, :uninstall_content)
+    end
+
+    def plan_consumer_action(action_class)
+      create_and_plan_action(action_class,
+                             consumer_uuid: uuid,
+                             type: type,
+                             args: args
+                            )
+    end
+
+    def it_runs(planned_action, invocation_method)
       action = run_action planned_action do |action|
         runcible_expects(action, :extensions, :consumer, invocation_method).
-            returns(task_base)
+          returns(task_base)
         stub_task_poll action, task_base.merge(task_finished_hash)
       end
 
       action.wont_be :done?
       progress_action_time action
       action.must_be :done?
-    end
-  end
-
-  class ContentInstallTest < ContentTestBase
-    let(:action_class) { ::Actions::Pulp::Consumer::ContentInstall }
-
-    it 'runs' do
-      it_runs :install_content
-    end
-  end
-
-  class ContentUninstallTest < ContentTestBase
-    let(:action_class) { ::Actions::Pulp::Consumer::ContentUninstall }
-
-    it 'runs' do
-      it_runs :uninstall_content
-    end
-  end
-
-  class ContentUpdateTest < ContentTestBase
-    let(:action_class) { ::Actions::Pulp::Consumer::ContentUpdate }
-
-    it 'runs' do
-      it_runs :update_content
     end
   end
 end
