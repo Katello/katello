@@ -136,9 +136,14 @@ Foreman::Plugin.register :katello do
        :parent => :administer_menu,
        :after => :roles
 
-  Foreman::AccessControl.permission(:edit_organizations).actions << 'organizations/download_debug_certificate'
-  Foreman::AccessControl.permission(:edit_organizations).actions << 'organizations/repo_discover'
-  Foreman::AccessControl.permission(:edit_organizations).actions << 'organizations/cancel_repo_discover'
+  begin
+    Foreman::AccessControl.permission(:edit_organizations).actions << 'organizations/download_debug_certificate'
+    Foreman::AccessControl.permission(:edit_organizations).actions << 'organizations/repo_discover'
+    Foreman::AccessControl.permission(:edit_organizations).actions << 'organizations/cancel_repo_discover'
+  rescue Excpetion => exception
+    puts "Failed to initialize organization permissions. Are organizations enabled in config/settings.yaml?"
+    raise exception
+  end
 
   allowed_template_helpers :subscription_manager_configuration_url
 end
