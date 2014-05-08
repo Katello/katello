@@ -152,6 +152,10 @@ module Authorization::Organization
     def redhat_manageable?
       ::User.allowed_to?([:redhat_products], :organizations, nil, self)
     end
+
+    def manifest_importable?
+      authorized(:import_manifest)
+    end
   end
 
 end

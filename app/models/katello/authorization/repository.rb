@@ -31,7 +31,7 @@ module Authorization::Repository
     end
 
     def redhat_deletable?
-      !self.promoted? && self.product.provider.editable?
+      !self.promoted? && self.product.editable?
     end
 
     def syncable?
