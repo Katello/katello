@@ -15,7 +15,6 @@ module Katello
     before_filter :find_content_view_version, :only => [:show, :promote, :destroy]
     before_filter :find_content_view
     before_filter :find_environment, :only => [:promote]
-
     api :GET, "/content_view_versions", "List content view versions"
     api :GET, "/content_views/:content_view_id/content_view_versions", "List content view versions"
     param :content_view_id, :identifier, :desc => "Content view identifier", :required => true

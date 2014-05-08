@@ -14,4 +14,11 @@ node :prior do |env|
 
 end
 
+node :permissions do |env|
+  {
+    :editable => env.editable?,
+    :deletable => env.deletable?
+  }
+end
+
 extends 'katello/api/v2/common/timestamps'

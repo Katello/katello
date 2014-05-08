@@ -62,7 +62,8 @@ class Api::ApiController < ::Api::BaseController
       'katello/api/v2/content_uploads',
       'katello/api/v2/organizations',
       'katello/api/v2/subscriptions',
-      'katello/api/v2/sync'
+      'katello/api/v2/sync',
+      'katello/api/v2/environments'
     ]
   end
 
