@@ -1,0 +1,20 @@
+<table alch-table="table" class="table table-striped table-full" ng-class="{'table-mask': table.working}">
+  <thead>
+    <tr alch-table-head row-select>
+      <th alch-table-column sortable>{{ "Name" | translate }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr alch-table-row
+        ng-repeat="hostCollection in table.rows"
+        row-select="product"
+        active-row="stateIncludes('host-collections.details', {hostCollectionId: hostCollection.id})">
+      <td alch-table-cell>
+        <a ui-sref="host-collections.details.info({hostCollectionId: hostCollection.id})">
+          {{ hostCollection.name }}
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

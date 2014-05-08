@@ -98,14 +98,14 @@ Foreman::Plugin.register :katello do
        :after => :hosts
 
   menu :top_menu,
-       :system_groups,
-       :caption => N_('System Groups'),
-       :url => 'system_groups',
-       :url_hash => {:controller => 'katello/api/v2/system_groups',
+       :host_collections,
+       :caption => N_('Host Collections'),
+       :url => 'host_collections',
+       :url_hash => {:controller => 'katello/api/v2/host_collections',
                      :action => 'index'},
        :engine => Katello::Engine,
        :parent => :hosts_menu,
-       :after => :systems
+       :after => :content_hosts
 
   menu :top_menu,
        :content_dashboard,

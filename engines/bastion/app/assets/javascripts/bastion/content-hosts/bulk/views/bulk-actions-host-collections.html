@@ -1,0 +1,68 @@
+<span page-title>{{ 'Content Host Bulk Host Collections' | translate }}</span>
+
+<div class="alert alert-info" ng-show="hostCollections.action == 'add'">
+  <div translate>
+    Are you sure you want to add the {{ table.numSelected }} content host(s) selected to the host collection(s) chosen?
+  </div>
+  <button class="btn btn-default" ng-click="hostCollections.action = null; hostCollections.working = false" translate>No</button>
+  <button class="btn btn-default" ng-click="performHostCollectionAction()" translate>Yes</button>
+</div>
+
+<div class="alert alert-info" ng-show="hostCollections.action == 'remove'">
+  <div translate>
+    Are you sure you want to remove the {{ table.numSelected }} content host(s) selected from the host collection(s) chosen?
+  </div>
+  <button class="btn btn-default" ng-click="hostCollections.action = null; hostCollections.working = false" translate>No</button>
+  <button class="btn btn-default" ng-click="performHostCollectionAction()" translate>Yes</button>
+</div>
+
+<section>
+  <div data-extend-template="layouts/details-nutupane.html">
+
+    <div data-block="header" translate>
+      Host Collection Membership Management
+    </div>
+
+    <div data-block="actions">
+      <button class="btn btn-default" ng-disable="detailsTable.numSelected == 0"
+              ng-click="hostCollections.action = 'add'; hostCollections.working = true">
+        <i class="icon-plus"></i>
+        {{ "Add To" | translate }}
+      </button>
+
+      <button class="btn btn-default" ng-disable="detailsTable.numSelected == 0"
+              ng-click="hostCollections.action = 'remove'; hostCollections.working = true">
+        <i class="icon-minus"></i>
+        {{ "Remove From" | translate }}
+      </button>
+    </div>
+
+    <table data-block="table"  class="table table-striped" ng-class="{'table-mask': state.working}">
+      <thead>
+        <tr alch-table-head row-select>
+          <th alch-table-column="name">{{ "Name" | translate }}</th>
+          <th alch-table-column="content_hosts">{{ "Content Hosts" | translate }}</th>
+          <th alch-table-column="limit">{{ "Limit" | translate }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr alch-table-row ng-repeat="hostCollection in detailsTable.rows" row-select="hostCollection">
+          <td alch-table-cell>
+            <a class="clickable" ui-sref="host-collections.details.info({hostCollectionId: hostCollection.id})">
+              {{ hostCollection.name }}
+            </a>
+          </td>
+          <td alch-table-cell>
+            <a class="clickable" ui-sref="host-collections.details.content-hosts({hostCollectionId: hostCollection.id})">
+              {{ hostCollection.total_content_hosts }}
+            </a>
+          </td>
+          <td alch-table-cell>{{ hostCollection.max_content_hosts | unlimitedFilter }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</section>

@@ -18,7 +18,7 @@
  * @requires $scope
  * @requires $q
  * @requires $location
- * @requires SystemGroup
+ * @requires HostCollection
  * @requires CurrentOrganization
  * @requires translate
  * @requires Organization
@@ -28,9 +28,9 @@
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionSubscriptionsController',
-    ['$scope', '$q', '$location', 'SystemGroup', 'CurrentOrganization', 'translate',
+    ['$scope', '$q', '$location', 'HostCollection', 'CurrentOrganization', 'translate',
      'Organization', 'Task',
-    function ($scope, $q, $location, SystemGroup, CurrentOrganization, translate,
+    function ($scope, $q, $location, HostCollection, CurrentOrganization, translate,
         Organization, Task) {
 
         $scope.actionParams = {

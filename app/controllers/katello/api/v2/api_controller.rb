@@ -154,7 +154,7 @@ module Katello
     end
 
     def find_default_organization_and_or_environment
-      return if (params.keys & %w{organization_id owner environment_id system_group_id}).any?
+      return if (params.keys & %w{organization_id owner environment_id host_collection_id}).any?
 
       @environment = current_user.default_environment
       if @environment

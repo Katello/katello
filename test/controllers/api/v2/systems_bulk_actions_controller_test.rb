@@ -25,7 +25,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     @read_permission = UserPermission.new(:read_systems, :organizations, nil, @system1.organization)
     @update_permission = UserPermission.new(:update_systems, :organizations, nil, @system1.organization)
     @delete_permission = UserPermission.new(:delete_systems, :organizations, nil, @system1.organization)
-    @update_group_perm = UserPermission.new(:update, :system_groups, [@system_group1.id, @system_group2.id], @system1.organization)
+    @update_host_collection_perm = UserPermission.new(:update, :host_collections, [@host_collection1.id, @host_collection2.id], @system1.organization)
 
     @subscribe_perms = UserPermission.new(:register_systems, :environments, @library.id, @system1.organization) +
         @update_permission
@@ -47,33 +47,33 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     @org = get_organization
     @view = katello_content_views(:library_view)
     @library = @org.library
-    @system_group1 = katello_system_groups(:simple_group)
-    @system_group2 = katello_system_groups(:another_simple_group)
+    @host_collection1 = katello_host_collections(:simple_host_collection)
+    @host_collection2 = katello_host_collections(:another_simple_host_collection)
 
     permissions
 
-    System.any_instance.stubs(:update_system_groups)
+    System.any_instance.stubs(:update_host_collections)
     System.stubs(:find).returns(@systems)
   end
 
-  def test_add_system_group
-    assert_equal 1, @system1.system_groups.count # system initially has simple_group
-    put :bulk_add_system_groups, {:included => {:ids => @system_ids},
-                                  :organization_id => @org.label,
-                                  :system_group_ids => [@system_group1.id, @system_group2.id]}
+  def test_add_host_collection
+    assert_equal 1, @system1.host_collections.count # system initially has simple_host_collection
+    put :bulk_add_host_collections, {:included => {:ids => @system_ids},
+                                     :organization_id => @org.label,
+                                     :host_collection_ids => [@host_collection1.id, @host_collection2.id]}
 
     assert_response :success
-    assert_equal 2, @system1.system_groups.count
+    assert_equal 2, @system1.host_collections.count
   end
 
-  def test_remove_system_group
-    assert_equal 1, @system1.system_groups.count # system initially has simple_group
-    put :bulk_remove_system_groups, {:included => {:ids => @system_ids},
-                                      :organization_id => @org.label,
-                                      :system_group_ids => [@system_group1.id, @system_group2.id]}
+  def test_remove_host_collection
+    assert_equal 1, @system1.host_collections.count # system initially has simple_host_collection
+    put :bulk_remove_host_collections, {:included => {:ids => @system_ids},
+                                         :organization_id => @org.label,
+                                         :host_collection_ids => [@host_collection1.id, @host_collection2.id]}
 
     assert_response :success
-    assert_equal 0, @system1.system_groups.count
+    assert_equal 0, @system1.host_collections.count
   end
 
   def test_install_package
@@ -159,19 +159,19 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
 
   def test_permissions
     good_perms = [@update_permission]
-    good_group_perm = [@update_group_perm + @update_permission]
+    good_host_collection_perm = [@update_host_collection_perm + @update_permission]
     bad_perms = [@read_permission, @delete_permission, @no_permission]
 
-    assert_protected_action(:bulk_add_system_groups, good_group_perm, bad_perms) do
-      put :bulk_add_system_groups,  {:included => {:ids => @system_ids},
+    assert_protected_action(:bulk_add_host_collections, good_host_collection_perm, bad_perms) do
+      put :bulk_add_host_collections,  {:included => {:ids => @system_ids},
                                         :organization_id => @org.label,
-                                        :system_group_ids => [@system_group1.id, @system_group2.id]}
+                                        :host_collection_ids => [@host_collection1.id, @host_collection2.id]}
     end
 
-    assert_protected_action(:bulk_remove_system_groups, good_group_perm, bad_perms) do
-      put :bulk_remove_system_groups,  {:included => {:ids => @system_ids},
+    assert_protected_action(:bulk_remove_host_collections, good_host_collection_perm, bad_perms) do
+      put :bulk_remove_host_collections,  {:included => {:ids => @system_ids},
                                         :organization_id => @org.label,
-                                        :system_group_ids => [@system_group1.id, @system_group2.id]}
+                                        :host_collection_ids => [@host_collection1.id, @host_collection2.id]}
     end
 
     assert_protected_action(:install_content, good_perms, bad_perms) do

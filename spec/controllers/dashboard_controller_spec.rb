@@ -22,7 +22,7 @@ describe DashboardController do
     @controller.stubs(:current_organization).returns(@organization)
 
     Resources::Candlepin::OwnerInfo.stubs(:find).returns({})
-    Katello::SystemGroup.any_instance.stubs(:errata).returns([])
+    Katello::HostCollection.any_instance.stubs(:errata).returns([])
   end
 
   describe "GET 'index'" do
@@ -33,16 +33,16 @@ describe DashboardController do
     end
   end
 
-  describe "GET system_groups" do
+  describe "GET host_collections" do
     it "should be successful" do
       @controller.expects(:render).twice
-      get 'system_groups'
+      get 'host_collections'
       must_respond_with(:success)
     end
 
-    it "should render system groups partial" do
-      get 'system_groups'
-      must_render_template(:partial => "_system_groups")
+    it "should render host collections partial" do
+      get 'host_collections'
+      must_render_template(:partial => "_host_collections")
     end
   end
 

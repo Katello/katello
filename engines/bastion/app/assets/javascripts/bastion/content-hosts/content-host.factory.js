@@ -32,10 +32,10 @@ angular.module('Bastion.content-hosts').factory('ContentHost',
             removeSubscriptions: {method: 'PUT', isArray: false, params: {action: 'subscriptions'}},
             addSubscriptions: {method: 'POST', isArray: false, params: {action: 'subscriptions'}},
             tasks: {method: 'GET', params: {action: 'tasks', paged: true}},
-            availableSystemGroups: {method: 'GET', params: {action: 'available_system_groups'}},
-            systemGroups: {method: 'GET', transformResponse: function (data) {
+            availableHostCollections: {method: 'GET', params: {action: 'available_host_collections'}},
+            hostCollections: {method: 'GET', transformResponse: function (data) {
                 var contentHost = angular.fromJson(data);
-                return {results: contentHost.systemGroups};
+                return {results: contentHost.hostCollections};
             }}
         });
 
@@ -55,9 +55,9 @@ angular.module('Bastion.content-hosts').factory('ContentHostBulkAction',
     ['BastionResource', function (BastionResource) {
 
         return BastionResource('/api/v2/systems/bulk/:action', {}, {
-            addSystemGroups: {method: 'PUT', params: {action: 'add_system_groups'}},
+            addHostCollections: {method: 'PUT', params: {action: 'add_host_collections'}},
             applicableErrata: {method: 'POST', params: {action: 'applicable_errata'}},
-            removeSystemGroups: {method: 'PUT', params: {action: 'remove_system_groups'}},
+            removeHostCollections: {method: 'PUT', params: {action: 'remove_host_collections'}},
             installContent: {method: 'PUT', params: {action: 'install_content'}},
             updateContent: {method: 'PUT', params: {action: 'update_content'}},
             removeContent: {method: 'PUT', params: {action: 'remove_content'}},

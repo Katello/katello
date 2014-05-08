@@ -571,13 +571,13 @@ describe System do
   describe "a user with organization system perms " do
     before :each do
       disable_consumer_group_orchestration
-      @group = SystemGroup.create!(:organization=>@organization, :name=>"test_group")
-      @system.system_groups << @group
+      @host_collection = HostCollection.create!(:organization=>@organization, :name=>"test_host_collection")
+      @system.host_collections << @host_collection
       @system.save!
     end
 
     it "should be readable if user can read systems for organization (katello)" do
-      User.current =  user_with_permissions { |u| u.can(:read_systems, :system_groups, @group.id, @organization) }
+      User.current =  user_with_permissions { |u| u.can(:read_content_hosts, :host_collections, @host_collection.id, @organization) }
       System.readable(@organization).must_include(@system)
       System.any_readable?(@organization).must_equal(true)
       System.registerable?(@environment, @organization).must_equal(false)
@@ -590,7 +590,7 @@ describe System do
     end
 
     it "should be editable if user can edit systems for organization (katello)" do
-      User.current =  user_with_permissions { |u| u.can(:update_systems, :system_groups, @group.id, @organization) }
+      User.current =  user_with_permissions { |u| u.can(:update_content_hosts, :host_collections, @host_collection.id, @organization) }
       System.readable(@organization).must_include(@system)
       System.any_readable?(@organization).must_equal(true)
       System.registerable?(@environment, @organization).must_equal(false)
@@ -603,7 +603,7 @@ describe System do
     end
 
     it "should be deletable if user can delete systems for organization (katello)" do
-      User.current =  user_with_permissions { |u| u.can(:delete_systems, :system_groups, @group.id, @organization) }
+      User.current =  user_with_permissions { |u| u.can(:delete_content_hosts, :host_collections, @host_collection.id, @organization) }
       System.readable(@organization).must_include(@system)
       System.any_readable?(@organization).must_equal(true)
       System.registerable?(@environment, @organization).must_equal(false)
