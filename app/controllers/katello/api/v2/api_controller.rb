@@ -149,7 +149,7 @@ module Katello
     end
 
     def get_organization(org_id)
-      return Organization.without_deleting.find(org_id)
+      return Organization.without_deleting.find_by_id(org_id)
     end
 
     def find_default_organization_and_or_environment

@@ -147,7 +147,7 @@ class ActionController::TestCase
   end
 
   def stub_find_organization(org)
-    Organization.stubs(:without_deleting).returns(stub(:find => org))
+    Organization.stubs(:without_deleting).returns(stub(:find_by_id => org))
   end
 end
 
