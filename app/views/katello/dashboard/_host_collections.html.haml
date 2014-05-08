@@ -1,0 +1,31 @@
+#dashboard_host_collections.widget{"data-quantity"=>quantity}
+  - current = 0
+  - critical, warning, ok = Katello::HostCollection.lists_by_updates_needed(current_organization)
+  - if critical.empty? and warning.empty? and ok.empty?
+    =_("No host collections found." )
+
+  - else
+    .list
+      .block_head.clear
+        .column_head.col_1
+          #{_("Updates")}
+        .column_head.col_2
+          #{_("Name")}
+        .column_head.col_3
+          #{_('Content Hosts')}
+
+      .scroll-pane
+        - for host_collection in critical
+          - current += 1
+          - break if current > quantity
+          = render :partial => "host_collection_item", :locals => {:host_collection => host_collection, :updates => :critical}
+
+        - for host_collection in warning
+          - current += 1
+          - break if current > quantity
+          = render :partial => "host_collection_item", :locals => {:host_collection => host_collection, :updates => :warning}
+
+        - for host_collection in ok
+          - current += 1
+          - break if current > quantity
+          = render :partial => "host_collection_item", :locals => {:host_collection => host_collection, :updates => :ok}

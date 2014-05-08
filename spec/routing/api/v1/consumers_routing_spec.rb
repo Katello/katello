@@ -37,6 +37,14 @@ module Katello
         ({:controller => proxies_controller, :action => "get", :id => "1", :api_version => "v1"}).must_recognize({ :method => "get", :path => "/api/entitlements/1" })
         ({:controller => proxies_controller, :action => "post", :api_version => "v1"}).must_recognize({ :method => "post", :path => "/api/subscriptions" })
         {:controller => proxies_controller, :action => "upload_package_profile", :id => "1", :api_version => "v1"}.must_recognize({ :method => "put", :path => "/api/consumers/1/profile/" })
+        {:controller => proxies_controller, :action => "get", :id => "1", :api_version => "v1"}.must_recognize({ :method => "get", :path => "/api/consumers/1/guestids/" })
+        {:controller => proxies_controller, :action => "get", :id => "1", :guest_id => "1", :api_version => "v1"}.must_recognize({ :method => "get", :path => "/api/consumers/1/guestids/1" })
+        {:controller => proxies_controller, :action => "put", :id => "1", :api_version => "v1"}.must_recognize({ :method => "put", :path => "/api/consumers/1/guestids/" })
+        {:controller => proxies_controller, :action => "put", :id => "1", :guest_id => "1", :api_version => "v1"}.must_recognize({ :method => "put", :path => "/api/consumers/1/guestids/1" })
+        {:controller => proxies_controller, :action => "delete", :id => "1", :guest_id => "1", :api_version => "v1"}.must_recognize({ :method => "delete", :path => "/api/consumers/1/guestids/1" })
+        {:controller => proxies_controller, :action => "get", :id => "1", :api_version => "v1"}.must_recognize({ :method => "get", :path => "/api/consumers/1/content_overrides/" })
+        {:controller => proxies_controller, :action => "put", :id => "1", :api_version => "v1"}.must_recognize({ :method => "put", :path => "/api/consumers/1/content_overrides/" })
+        {:controller => proxies_controller, :action => "delete", :id => "1", :api_version => "v1"}.must_recognize({ :method => "delete", :path => "/api/consumers/1/content_overrides/" })
       end
 
     end

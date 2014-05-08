@@ -12,21 +12,21 @@
  **/
 
 describe('Controller: ContentHostsBulkActionPackagesController', function() {
-    var $scope, $q, translate, ContentHostBulkAction, SystemGroup, Organization,
+    var $scope, $q, translate, ContentHostBulkAction, HostCollection, Organization,
 		Task, CurrentOrganization, selected;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
     beforeEach(function() {
         ContentHostBulkAction = {
-            addSystemGroups: function() {},
-            removeSystemGroups: function() {},
+            addHostCollections: function() {},
+            removeHostCollections: function() {},
             installContent: function() {},
             updateContent: function() {},
             removeContent: function() {},
             removeContentHosts: function() {}
         };
-        SystemGroup = {
+        HostCollection = {
             query: function() {}
         };
         Organization = {
@@ -51,7 +51,7 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
         $controller('ContentHostsBulkActionPackagesController', {$scope: $scope,
             $q: $q,
             ContentHostBulkAction: ContentHostBulkAction,
-            SystemGroup: SystemGroup,
+            HostCollection: HostCollection,
             translate: translate,
             Organization: Organization,
             CurrentOrganization: CurrentOrganization,

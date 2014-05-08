@@ -25,8 +25,8 @@ class ActivationKey < Katello::Model
   belongs_to :user, :inverse_of => :activation_keys, :class_name => "::User"
   belongs_to :content_view, :inverse_of => :activation_keys
 
-  has_many :key_system_groups, :class_name => "Katello::KeySystemGroup", :dependent => :destroy
-  has_many :system_groups, :through => :key_system_groups
+  has_many :key_host_collections, :class_name => "Katello::KeyHostCollection", :dependent => :destroy
+  has_many :host_collections, :through => :key_host_collections
 
   has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
   has_many :systems, :through => :system_activation_keys
@@ -64,6 +64,14 @@ class ActivationKey < Katello::Model
 
   def usage_count
     system_activation_keys.count
+  end
+
+  def available_releases
+    if self.environment
+      self.environment.available_releases
+    else
+      self.organization.library.available_releases
+    end
   end
 
   # sets up system when registering with this activation key - must be executed in a transaction

@@ -2,7 +2,7 @@
   <thead>
     <tr alch-table-head>
       <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
-      <th alch-table-column="limit" sortable>{{ "Limit" | translate }}</th>
+      <th alch-table-column="consumed" sortable>{{ "Consumed" | translate }}</th>
       <th alch-table-column="environment" sortable>{{ "Environment" | translate }}</th>
       <th alch-table-column="contentView" sortable>{{ "Content View" | translate }}</th>
     </tr>
@@ -16,7 +16,7 @@
         </a>
         <i class="icon-chevron-right selected-icon" ng-show="activationKey.selected"></i>
       </td>
-      <td alch-table-cell>{{ activationKey.usage_limit | unlimitedFilter }}</td>
+      <td alch-table-cell>{{ activationKey | activationKeyConsumedFilter }}</td>
       <td alch-table-cell>{{ activationKey.environment.name || "" }}</td>
       <td alch-table-cell>{{ activationKey.content_view.name || "" }}</td>
     </tr>

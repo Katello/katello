@@ -17,7 +17,8 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   before_filter :find_activation_key
   before_filter :find_system
   before_filter :find_optional_organization, :only => [:index, :available, :show]
-  before_filter :find_organization, :only => [:upload, :delete_manifest, :refresh_manifest]
+  before_filter :find_organization, :only => [:upload, :delete_manifest,
+                                              :refresh_manifest, :manifest_history]
   before_filter :find_provider
   before_filter :find_subscription, :only => [:show]
 
@@ -173,6 +174,13 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   def delete_manifest
     task = async_task(::Actions::Katello::Provider::ManifestDelete, @provider)
     respond_for_async :resource => task
+  end
+
+  api :GET, "/organizations/:organization_id/subscriptions/manifest_history", "obtain manifest history for subscriptions"
+  param :organization_id, :identifier, :desc => "Organization ID", :required => true
+  def manifest_history
+    @manifest_history = @organization.manifest_history
+    respond_with_template_collection(params[:action], "subscriptions", {collection: @manifest_history})
   end
 
   protected

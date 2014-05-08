@@ -1,0 +1,62 @@
+<span page-title ng-model="contentHost">{{ 'Content Host' | translate }} {{ contentHost.name }}</span>
+
+<section>
+  <div class="details fl">
+
+    <section ng-show="!contentHost.host">
+      <div translate>No provisioning details are available for this content host.</div>
+    </section>
+
+    <section ng-hide="!contentHost.host">
+
+      <h4 translate>Provisioning Host Details</h4>
+
+      <div class="detail">
+        <span class="info-label" translate>Name</span>
+        <span class="info-value">
+          <a href="/hosts/{{ contentHost.host.name }}">
+            {{ contentHost.host.name }}
+          </a>
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Status</span>
+        <span class="info-value">
+          <i class="icon-circle provisioning-status" ng-class="contentHostTable.getProvisioningStatusColor(contentHost.host.status)"></i>
+          {{ contentHost.host.status | translate }}
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Operating System</span>
+        <span class="info-value">{{ contentHost.host.operatingsystem.description }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Puppet Environment</span>
+        <span class="info-value">{{ contentHost.host.puppet_environment.name }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Last Puppet Report</span>
+        <span class="info-value">{{ contentHost.host.last_report | date:'short' }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Model</span>
+        <span class="info-value">{{ contentHost.host.model.name }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Host Group</span>
+        <span class="info-value">
+          <a href="/hostgroups/{{ contentHost.host.hostgroup.id }}-{{ contentHost.host.hostgroup.name }}/edit">
+            {{ contentHost.host.hostgroup.name }}
+          </a>
+        </span>
+      </div>
+
+    </section>
+  </div>
+</section>

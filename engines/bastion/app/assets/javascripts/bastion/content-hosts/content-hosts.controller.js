@@ -54,6 +54,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
         }
 
         $scope.contentHostTable.getStatusColor = ContentHostsHelper.getStatusColor;
+        $scope.contentHostTable.getProvisioningStatusColor = ContentHostsHelper.getProvisioningStatusColor;
 
         $scope.contentHostTable.closeItem = function () {
             $scope.transitionTo('content-hosts.index');

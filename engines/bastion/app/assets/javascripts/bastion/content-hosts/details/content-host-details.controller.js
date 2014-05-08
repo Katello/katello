@@ -27,8 +27,8 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'ContentHost', 'Organization', 'MenuExpander',
-    function ($scope, $state, $q, translate, ContentHost, Organization, MenuExpander) {
+    ['$scope', '$state', '$q', 'translate', 'ContentHost', 'Organization', 'CurrentOrganization', 'MenuExpander',
+    function ($scope, $state, $q, translate, ContentHost, Organization, CurrentOrganization, MenuExpander) {
 
         $scope.menuExpander = MenuExpander;
         $scope.successMessages = [];
@@ -84,7 +84,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         $scope.serviceLevels = function () {
             var deferred = $q.defer();
 
-            Organization.get(function (organization) {
+            Organization.get({id: CurrentOrganization}, function (organization) {
                 deferred.resolve(organization['service_levels']);
             });
 

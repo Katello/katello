@@ -16,7 +16,9 @@ module Katello
     include Api::V2::Rendering
     include ForemanTasks::Triggers
 
-    before_filter :local_find_taxonomy, :only => %w{repo_discover cancel_repo_discover download_debug_certificate redhat_provider update}
+    before_filter :local_find_taxonomy, :only => %w{repo_discover cancel_repo_discover
+                                                    download_debug_certificate
+                                                    redhat_provider update}
 
     resource_description do
       api_version 'v2'

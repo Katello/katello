@@ -82,6 +82,16 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
             return deferred.promise;
         };
 
+        $scope.clearReleaseVersion = function () {
+            $scope.contentHost['release_ver'] = '';
+            $scope.save($scope.contentHost);
+        };
+
+        $scope.clearServiceLevel = function () {
+            $scope.contentHost['service_level'] = '';
+            $scope.save($scope.contentHost);
+        };
+
         $scope.contentViews = function () {
             var deferred = $q.defer();
 

@@ -39,7 +39,7 @@ BASTION_MODULES = [
     'Bastion.repositories',
     'Bastion.subscriptions',
     'Bastion.sync-plans',
-    'Bastion.system-groups',
+    'Bastion.host-collections',
     'Bastion.content-hosts',
     'Bastion.tasks',
     'Bastion.widgets'
