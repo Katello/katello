@@ -5,17 +5,17 @@ Foreman::Plugin.register :katello do
     menu :top_menu,
          :environments,
          :caption => N_('Lifecycle Environments'),
-         :url_hash => {:controller => 'bastion/bastion',
-                       :action => 'index',
-                       :bastion_page => 'lifecycle_environments'},
-         :engine => Bastion::Engine
+         :url => 'lifecycle_environments',
+         :url_hash => {:controller => 'katello/api/v2/environments',
+                       :action => 'index'},
+         :engine => Katello::Engine
     menu :top_menu,
          :red_hat_subscriptions,
          :caption => N_('Red Hat Subscriptions'),
-         :url_hash => {:controller => 'bastion/bastion',
-                       :action => 'index',
-                       :bastion_page => 'subscriptions'},
-         :engine => Bastion::Engine
+         :url => 'subscriptions',
+         :url_hash => {:controller => 'katello/api/v2/subscriptions',
+                       :action => 'index'},
+         :engine => Katello::Engine
    # TODO
    # Refs http://projects.theforeman.org/issues/4883
    # menu :top_menu,
@@ -26,11 +26,10 @@ Foreman::Plugin.register :katello do
    #      :engine => Katello::Engine
     menu :top_menu,
          :activation_keys,
-         :caption => N_('Activation Keys'),
-         :url_hash => {:controller => 'bastion/bastion',
-                       :action => 'index',
-                       :bastion_page => 'activation_keys'},
-         :engine => Bastion::Engine
+         :url => 'activation_keys',
+         :url_hash => {:controller => 'katello/api/v2/activation_keys',
+                       :action => 'index'},
+         :engine => Katello::Engine
 
     divider :top_menu, :parent => :content_menu
     menu :top_menu,
@@ -43,18 +42,18 @@ Foreman::Plugin.register :katello do
     menu :top_menu,
          :products,
          :caption => N_('Products'),
-         :url_hash => {:controller => 'bastion/bastion',
-                       :action => 'index',
-                       :bastion_page => 'products'},
-         :engine => Bastion::Engine
+         :url => 'products',
+         :url_hash => {:controller => 'katello/api/v2/products',
+                       :action => 'index'},
+         :engine => Katello::Engine
 
     menu :top_menu,
          :gpg_keys,
          :caption => N_('GPG keys'),
-         :url_hash => {:controller => 'bastion/bastion',
-                       :action => 'index',
-                       :bastion_page => 'gpg_keys'},
-         :engine => Bastion::Engine
+         :url => 'gpg_keys',
+         :url_hash => {:controller => 'katello/api/v2/gpg_keys',
+                       :action => 'index'},
+         :engine => Katello::Engine
 
     divider :top_menu, :parent => :content_menu
     menu :top_menu,
@@ -67,19 +66,19 @@ Foreman::Plugin.register :katello do
     menu :top_menu,
          :sync_plans,
          :caption => N_('Sync Plans'),
-         :url_hash => {:controller => 'bastion/bastion',
-                       :action => 'index',
-                       :bastion_page => 'sync_plans'},
-         :engine => Bastion::Engine
+         :url => 'sync_plans',
+         :url_hash => {:controller => 'katello/api/v2/sync_plans',
+                       :action => 'index'},
+         :engine => Katello::Engine
 
     divider :top_menu, :parent => :content_menu
     menu :top_menu,
          :content_views,
          :caption => N_('Content Views'),
-         :url_hash => {:controller => 'bastion/bastion',
-                       :action => 'index',
-                       :bastion_page => 'content_views'},
-         :engine => Bastion::Engine
+         :url => 'content_views',
+         :url_hash => {:controller => 'katello/api/v2/content_views',
+                       :action => 'index'},
+         :engine => Katello::Engine
 
     menu :top_menu,
          :content_search,
@@ -91,21 +90,20 @@ Foreman::Plugin.register :katello do
 
   menu :top_menu,
        :systems,
-       :caption => N_('Content Hosts'),
-       :url_hash => {:controller => 'bastion/bastion',
-                     :action => 'index',
-                     :bastion_page => 'content_hosts'},
-       :engine => Bastion::Engine,
+       :url => 'content_hosts',
+       :url_hash => {:controller => 'katello/api/v2/content_hosts',
+                     :action => 'index'},
+       :engine => Katello::Engine,
        :parent => :hosts_menu,
        :after => :hosts
 
   menu :top_menu,
        :system_groups,
        :caption => N_('System Groups'),
-       :url_hash => {:controller => 'bastion/bastion',
-                     :action => 'index',
-                     :bastion_page => 'system_groups'},
-       :engine => Bastion::Engine,
+       :url => 'system_groups',
+       :url_hash => {:controller => 'katello/api/v2/system_groups',
+                     :action => 'index'},
+       :engine => Katello::Engine,
        :parent => :hosts_menu,
        :after => :systems
 
