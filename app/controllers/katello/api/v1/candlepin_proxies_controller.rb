@@ -57,8 +57,7 @@ module Katello
           (User.consumer? || @organization.readable?)
         when "api_proxy_consumer_certificates_path", "api_proxy_consumer_releases_path", "api_proxy_certificate_serials_path",
             "api_proxy_consumer_entitlements_path", "api_proxy_consumer_entitlements_post_path", "api_proxy_consumer_entitlements_delete_path",
-            "api_proxy_consumer_dryrun_path", "api_proxy_consumer_owners_path", "api_proxy_consumer_compliance_path",
-            "api_proxy_consumer_content_overrides_path"
+            "api_proxy_consumer_dryrun_path", "api_proxy_consumer_owners_path", "api_proxy_consumer_compliance_path"
           User.consumer? && current_user.uuid == params[:id]
         when "api_proxy_consumer_certificates_delete_path"
           User.consumer? && current_user.uuid == params[:consumer_id]
@@ -68,6 +67,15 @@ module Katello
           User.consumer?
         when "api_proxy_subscriptions_post_path"
           User.consumer? && current_user.uuid == params[:consumer_uuid]
+        when "api_proxy_consumer_content_overrides_path", "api_proxy_consumer_content_overrides_put_path",
+             "api_proxy_consumer_content_overrides_delete_path"
+          # These queries are restricted in Candlepin
+          User.consumer?
+        when "api_proxy_consumer_guestids_path", "api_proxy_consumer_guestids_get_guestid_path",
+             "api_proxy_consumer_guestids_put_path", "api_proxy_consumer_guestids_put_guestid_path",
+             "api_proxy_consumer_guestids_delete_guestid_path"
+          # These queries are restricted in Candlepin
+          User.consumer?
         when "api_proxy_deleted_consumers_path"
           current_user.has_superadmin_role?
         else
@@ -140,13 +148,19 @@ module Katello
     end
 
     def delete
-      r = Resources::Candlepin::Proxy.delete(@request_path)
+      r = Resources::Candlepin::Proxy.delete(@request_path, @request_body)
       logger.debug r
       render :json => r
     end
 
     def post
       r = Resources::Candlepin::Proxy.post(@request_path, @request_body)
+      logger.debug r
+      render :json => r
+    end
+
+    def put
+      r = Resources::Candlepin::Proxy.put(@request_path, @request_body)
       logger.debug r
       render :json => r
     end

@@ -231,11 +231,18 @@ Katello::Engine.routes.draw do
       match '/deleted_consumers' => 'candlepin_proxies#get', :via => :get, :as => :proxy_deleted_consumers_path
       match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get, :as => :proxy_entitlements_path
       match '/subscriptions' => 'candlepin_proxies#post', :via => :post, :as => :proxy_subscriptions_post_path
-      match '/consumers/:id/content_overrides' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_content_overrides_path
       match '/consumers/:id/profile/' => 'candlepin_proxies#upload_package_profile', :via => :put
       match '/consumers/:id/packages/' => 'candlepin_proxies#upload_package_profile', :via => :put
       match '/consumers/:id/checkin/' => 'candlepin_proxies#checkin', :via => :put
       match '/consumers/:id' => 'candlepin_proxies#facts', :via => :put
+      match '/consumers/:id/guestids/' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_guestids_path
+      match '/consumers/:id/guestids/:guest_id' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_guestids_get_guestid_path
+      match '/consumers/:id/guestids/' => 'candlepin_proxies#put', :via => :put, :as => :proxy_consumer_guestids_put_path
+      match '/consumers/:id/guestids/:guest_id' => 'candlepin_proxies#put', :via => :put, :as => :proxy_consumer_guestids_put_guestid_path
+      match '/consumers/:id/guestids/:guest_id' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_guestids_delete_guestid_path
+      match '/consumers/:id/content_overrides/' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_content_overrides_path
+      match '/consumers/:id/content_overrides/' => 'candlepin_proxies#put', :via => :put, :as => :proxy_consumer_content_overrides_put_path
+      match '/consumers/:id/content_overrides/' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_content_overrides_delete_path
 
       # development / debugging support
       if Rails.env == "development"
