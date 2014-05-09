@@ -33,10 +33,8 @@ Katello::Engine.routes.draw do
 
   resources :sync_management, :only => [:destroy] do
     collection do
-      get :manage
       get :index
       get :sync_status
-      get :product_status
       post :sync
     end
   end
@@ -63,20 +61,11 @@ Katello::Engine.routes.draw do
     end
   end
 
-  resources :operations, :only => [:index]  do
-  end
-
-  resources :packages, :only => [:show] do
+  resources :packages, :only => [] do
     member do
-      get :changelog
-      get :filelist
-      get :dependencies
       get :details
     end
     collection do
-      get :auto_complete_library
-      get :auto_complete_nvrea_library
-      get :validate_name_library
       get :auto_complete
     end
   end

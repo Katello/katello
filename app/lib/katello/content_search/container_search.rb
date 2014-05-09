@@ -31,8 +31,15 @@ module ContentSearch
       SearchUtils.env_ids
     end
 
-    def readable_env_ids
-      KTEnvironment.content_readable(current_organization).pluck("#{Katello::KTEnvironment.table_name}.id")
+    def readable_env_ids(organization)
+      ids = []
+
+      if Product.readable?
+        ids << organization.library.id if organization.library.readable?
+      end
+
+      ids += KTEnvironment.readable.pluck("#{Katello::KTEnvironment.table_name}.id")
+      ids.uniq
     end
 
     def search_envs

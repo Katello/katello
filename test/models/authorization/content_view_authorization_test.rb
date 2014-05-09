@@ -40,6 +40,22 @@ module Katello
     def test_promotable?
       assert @view.promotable_or_removable?
     end
+
+    def test_readable_repositories
+      refute_empty ContentView.readable_repositories
+    end
+
+    def test_readable_repositories_with_ids
+      refute_empty ContentView.readable_repositories([Repository.first.id])
+    end
+
+    def test_readable_products
+      refute_empty ContentView.readable_products
+    end
+
+    def test_readable_products_with_ids
+      refute_empty ContentView.readable_products([Product.first.id])
+    end
   end
 
   class ContentViewAuthorizationNoPermsTest < AuthorizationTestBase
@@ -75,6 +91,32 @@ module Katello
       setup_current_user_with_permissions(:name => "promote_or_remove_content_views",
                                         :search => "name=\"#{cv.name}\"")
       assert cv.promotable_or_removable?
+    end
+
+    def test_readable_repositories
+      assert_empty ContentView.readable_repositories
+    end
+
+    def test_readable_repositories_with_ids
+      assert_empty ContentView.readable_repositories([Repository.first.id])
+    end
+
+    def test_readable_products
+      assert_empty ContentView.readable_products
+    end
+
+    def test_readable_products_with_ids
+      assert_empty ContentView.readable_products([Product.first.id])
+    end
+
+    def test_readable_products_with_search
+      view = katello_content_views(:library_view)
+      view2 = katello_content_views(:composite_view)
+      setup_current_user_with_permissions(:name => "view_content_views",
+                                          :search => "name=\"#{view.name}\"")
+
+      assert_empty(ContentView.readable_products - view.products)
+      assert_empty(ContentView.readable_products(view2.products.pluck(:id)))
     end
 
   end

@@ -55,6 +55,14 @@ class ProductAuthorizationAdminTest < AuthorizationTestBase
     assert product.deletable?
   end
 
+  def test_readable_repositories
+    refute_empty Product.readable_repositories
+  end
+
+  def test_readable_repositories_with_ids
+    refute_empty Product.readable_repositories([Repository.first.id])
+  end
+
 end
 
 class ProductAuthorizationNoPermsTest < AuthorizationTestBase
@@ -96,6 +104,22 @@ class ProductAuthorizationNoPermsTest < AuthorizationTestBase
 
   def test_deletable?
     refute @prod.deletable?
+  end
+
+  def test_readable_repositories
+    assert_empty Product.readable_repositories
+  end
+
+  def test_readable_repositories_with_ids
+    assert_empty Product.readable_repositories([Repository.first.id])
+  end
+
+  def test_readable_repositories_with_search
+    setup_current_user_with_permissions(:name => "view_products",
+                                        :search => "name=\"#{Repository.first.product.name}\"")
+
+    assert_equal([Repository.first], Product.readable_repositories([Repository.first.id]))
+    assert_empty(Product.readable_repositories([Repository.where('product_id != ?', Katello::Product.readable.pluck(:id)).first]))
   end
 
 end

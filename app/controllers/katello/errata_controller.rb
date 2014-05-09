@@ -12,41 +12,18 @@
 
 module Katello
 class ErrataController < Katello::ApplicationController
+
   before_filter :lookup_errata, except: [:auto_complete]
-  before_filter :find_filter
-  before_filter :authorize
-
-  def rules
-    view = lambda do
-      !Repository.readable_in_org(current_organization).where(
-          :pulp_id => @errata.repoids).empty?
-    end
-
-    auto_complete = lambda do
-      if @def_filter
-        @def_filter.content_view_definition.readable?
-      else
-        false
-      end
-    end
-
-    {
-        :short_details => view,
-        :auto_complete => auto_complete
-    }
-  end
 
   def short_details
     render :partial => "short_details"
   end
 
   def auto_complete
-    if @def_filter
-      repos = @def_filter.products.map { |prod| prod.repos(current_organization.library) }.flatten
-      repos += @def_filter.repositories
-      results = Errata.autocomplete_search("#{params[:term]}*", repos.map(&:pulp_id))
-      results = results.map { |erratum| {label: erratum.id_title, value: erratum.errata_id} }
-    end
+    repo_ids = readable_repos(:pulp_id)
+
+    results = Errata.autocomplete_search("#{params[:term]}*", repo_ids)
+    results = results.map { |erratum| {label: erratum.id_title, value: erratum.errata_id} }
 
     render :json => results
   end
@@ -54,11 +31,16 @@ class ErrataController < Katello::ApplicationController
   private
 
   def lookup_errata
+    repo_ids = readable_repos(:pulp_id)
     @errata = Errata.find(params[:id])
+    deny_access if (@errata.repoids & repo_ids).empty?
   end
 
-  def find_filter
-    @def_filter = Filter.find_by_id(params[:filter_id])
+  def readable_repos(attribute)
+    repos = []
+    repos += Product.readable_repositories.pluck(attribute)
+    repos += ContentView.readable_repositories.pluck(attribute)
+    repos
   end
 
 end

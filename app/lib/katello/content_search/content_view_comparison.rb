@@ -35,7 +35,7 @@ module ContentSearch
     def build_columns(cv_envs)
       cv_envs.inject({}) do |result, item|
         view = ContentView.readable.find(item[:view_id])
-        env = KTEnvironment.content_readable(current_organization).find(item[:env_id])
+        env = KTEnvironment.content_readable.find(item[:env_id])
         cv_version = view.version(env)
         self.repos += cv_version.repos(env)
 

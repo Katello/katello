@@ -120,7 +120,11 @@ class ApplicationController < ::ApplicationController
       'bastion/bastion_controller',
       'katello/products',
       'katello/providers',
-      'katello/sync_management'
+      'katello/sync_management',
+      'katello/content_search',
+      'katello/content_views',
+      'katello/errata',
+      'katello/repositories',
     ]
   end
 
@@ -490,18 +494,26 @@ class ApplicationController < ::ApplicationController
   end
 
   def library_path_element(perms = nil)
-    environment_path_element(perms).call(current_organization.library)
+    if current_organization.library.send(perms)
+      environment_path_element(perms).call(current_organization.library)
+    end
   end
 
   def environment_paths(library, environment_path_element_generator)
     paths = current_organization.promotion_paths
     to_ret = []
     paths.each do |path|
-      path = path.collect{ |e| environment_path_element_generator.call(e) }
-      to_ret << [library] + path
+      path = path.select { |env| env.readable? }
+      path = path.collect { |env| environment_path_element_generator.call(env) if env.readable? }
+
+      if library
+        to_ret << [library] + path
+      else
+        to_ret << path
+      end
     end
 
-    if paths.empty?
+    if paths.empty? && library
       to_ret << [library]
     end
 

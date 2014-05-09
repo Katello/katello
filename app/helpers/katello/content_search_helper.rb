@@ -14,14 +14,17 @@ module Katello
 module ContentSearchHelper
 
   def content_types
-    [
-      [_("Content Views"), "views"],
+    types = [
       [_("Products"), "products"],
       [_("Repositories"), "repos"],
       [_("Packages"), "packages"],
       [_("Errata"), "errata"],
       [_("Puppet Modules"), "puppet_modules"]
     ]
+
+    types.unshift([_("Content Views"), "views"]) if ContentView.readable?
+
+    types
   end
 
   def errata_display(errata)

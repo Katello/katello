@@ -19,6 +19,7 @@ module Authorization::LifecycleEnvironment
   DISTRIBUTORS_READABLE = [:read_distributors, :register_distributors, :update_distributors, :delete_distributors]
 
   module ClassMethods
+
     def readable
       authorized(:view_lifecycle_environments)
     end

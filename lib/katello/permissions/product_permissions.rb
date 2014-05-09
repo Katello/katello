@@ -3,10 +3,28 @@ require 'katello/plugin.rb'
 Foreman::Plugin.find(:katello).security_block :products do
   permission :view_products,
              {
-               'katello/products' => [:all, :index],
+               'katello/products' => [:auto_complete],
                'katello/api/v2/products' => [:index, :show],
-               'katello/api/v2/repositories' => [:index, :show]
-             },
+               'katello/api/v2/repositories' => [:index, :show],
+               'katello/errata' => [:short_details, :auto_complete],
+               'katello/packages' => [:details, :auto_complete],
+               'katello/repositories' => [:auto_complete_library],
+               'katello/content_search' => [:index,
+                                            :products,
+                                            :repos,
+                                            :packages,
+                                            :errata,
+                                            :puppet_modules,
+                                            :packages_items,
+                                            :errata_items,
+                                            :puppet_modules_items,
+                                            :repo_packages,
+                                            :repo_errata,
+                                            :repo_puppet_modules,
+                                            :repo_compare_errata,
+                                            :repo_compare_packages,
+                                            :repo_compare_puppet_modules]
+               },
              :resource_type => 'Katello::Product'
   permission :create_products,
              {

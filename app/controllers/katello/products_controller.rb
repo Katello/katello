@@ -20,12 +20,6 @@ class ProductsController < Katello::ApplicationController
 
   include ForemanTasks::Triggers
 
-  def rules
-    {
-      :auto_complete =>  lambda {!Product.readable.empty?},
-    }
-  end
-
   def section_id
     'contents'
   end
@@ -52,12 +46,20 @@ class ProductsController < Katello::ApplicationController
   def auto_complete
     query = "name_autocomplete:#{params[:term]}"
     org = current_organization
+
+    readable_ids = []
+    readable_ids += Product.readable.pluck(:id) if Product.readable?
+    readable_ids += ContentView.readable_products.pluck(:id)
+    readable_ids.uniq
+
     products = Product.search do
       query do
         string query
       end
       filter :term, {:organization_id => org.id}
+      filter :term, {:id => readable_ids}
     end
+
     render :json => products.collect{|s| {:label => s.name, :value => s.name, :id => s.id}}
   rescue Tire::Search::SearchRequestFailed
     render :json => Util::Support.array_with_total
