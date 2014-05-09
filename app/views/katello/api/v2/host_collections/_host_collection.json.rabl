@@ -11,7 +11,6 @@ node :permissions do |host_collection|
   {
     :deletable => host_collection.deletable?,
     :editable => host_collection.editable?,
-    :content_hosts_readable => host_collection.content_hosts_readable?,
-    :content_hosts_editable => host_collection.content_hosts_editable?
+
   }
 end

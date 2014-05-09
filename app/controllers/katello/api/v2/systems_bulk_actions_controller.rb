@@ -70,7 +70,8 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
       end
     end
 
-    respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
+    respond_for_show :template => 'bulk_action', :resource_name => 'common',
+                     :resource => { 'displayMessages' => display_messages }
   end
 
   api :PUT, "/systems/bulk/remove_host_collections",
@@ -92,7 +93,8 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
       end
     end
 
-    respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
+    respond_for_show :template => 'bulk_action', :resource_name => 'common',
+                     :resource => { 'displayMessages' => display_messages }
   end
 
   api :POST, "/systems/bulk/applicable_errata",
@@ -143,7 +145,8 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   def destroy_systems
     @systems.each{ |system| system.destroy }
     display_message = _("Successfully removed %s content host(s)") % @systems.length
-    respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => [display_message] }
+    respond_for_show :template => 'bulk_action', :resource_name => 'common',
+                     :resource => { 'displayMessages' => [display_message] }
   end
 
   api :PUT, "/systems/bulk/environment_content_view", "Assign the environment and content view to one or more systems"
@@ -158,7 +161,8 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     end
     display_message = _("Successfully reassigned %{count} content host(s) to %{cv} in %{env}.") %
         {:count => @systems.length, :cv => @view.name, :env => @environment.name}
-    respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => [display_message]}
+    respond_for_show :template => 'bulk_action', :resource_name => 'common',
+                     :resource => { 'displayMessages' => [display_message] }
   end
 
   private

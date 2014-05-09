@@ -29,7 +29,6 @@
 angular.module('Bastion.host-collections').controller('HostCollectionAddContentHostsController',
     ['$scope', '$state', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'ContentHost', 'HostCollection',
     function ($scope, $state, $location, translate, Nutupane, CurrentOrganization, ContentHost, HostCollection) {
-
         var addContentHostsPane, params;
 
         params = {
@@ -56,7 +55,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddContentH
         $scope.addContentHostsTable.closeItem = function () {};
 
         $scope.showAddButton = function () {
-            return $scope.addContentHostsTable.numSelected === 0 || $scope.isAdding || !$scope.hostCollection.permissions.editable;
+            return $scope.addContentHostsTable.numSelected === 0 || $scope.isAdding;
         };
 
         $scope.addSelected = function () {
@@ -64,12 +63,18 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddContentH
             selected = _.pluck($scope.addContentHostsTable.getSelected(), 'uuid');
 
             $scope.isAdding = true;
-            HostCollection.addContentHosts({id: $scope.hostCollection.id, 'system_ids': selected}, function () {
-                $scope.successMessages.push(translate("Successfully added %s content hosts.").replace('%s', selected.length));
+            HostCollection.addContentHosts({id: $scope.hostCollection.id, 'system_ids': selected}, function (data) {
+                angular.forEach(data.displayMessages.success, function (success) {
+                    $scope.$parent.successMessages.push(success);
+                });
+
+                angular.forEach(data.displayMessages.error, function (error) {
+                    $scope.$parent.errorMessages.push(error);
+                });
                 $scope.isAdding = false;
                 addContentHostsPane.refresh();
             }, function (response) {
-                $scope.$parent.errorMessages = response.data.displayMessage;
+                $scope.errorMessages = response.data.displayMessage;
                 $scope.isAdding  = false;
             });
         };

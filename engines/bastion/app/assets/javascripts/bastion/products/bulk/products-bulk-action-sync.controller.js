@@ -34,7 +34,8 @@ angular.module('Bastion.products').controller('ProductsBulkActionSyncController'
             $scope.actionParams.ids = $scope.getSelectedProductIds();
 
             success = function (data) {
-                $scope.$parent.successMessages = data["displayMessages"];
+                $scope.$parent.successMessages = data.displayMessages.success;
+                $scope.$parent.errorMessages = data.displayMessages.error;
                 $scope.syncingProducts = false;
             };
 

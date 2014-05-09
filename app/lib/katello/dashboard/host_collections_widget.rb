@@ -15,7 +15,7 @@ class Dashboard::HostCollectionsWidget < Dashboard::Widget
 
   def accessible?
     Katello.config.katello? && current_organization &&
-        HostCollection.any_readable?(current_organization)
+        HostCollection.readable
   end
 
   def title

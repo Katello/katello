@@ -102,7 +102,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     param :name, String, :desc => "host collection name to filter by"
     def available_host_collections
-      filters = [:terms => {:id => HostCollection.readable(@activation_key.organization).pluck("#{Katello::HostCollection.table_name}.id") -
+      filters = [:terms => {:id => HostCollection.readable.pluck("#{Katello::HostCollection.table_name}.id") -
                    @activation_key.host_collections.pluck("#{Katello::HostCollection.table_name}.id")}]
       filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
