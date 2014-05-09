@@ -44,7 +44,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   end
 
   def test_index
-    get :index, :organization_id => @organization.label
+    get :index, :organization_id => @organization.id
 
     assert_response :success
     assert_template 'api/v2/products/index'
@@ -61,7 +61,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     denied_perms = [@no_permission]
 
     assert_protected_action(:index, allowed_perms, denied_perms) do
-      get :index, :organization_id => @organization.label
+      get :index, :organization_id => @organization.id
     end
   end
 
@@ -81,7 +81,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
       prod.provider = @provider
     end
 
-    post :create, :product => product_params, :organization_id => @organization.label
+    post :create, :product => product_params, :organization_id => @organization.id
 
     assert_response :success
     assert_template %w(katello/api/v2/common/create katello/api/v2/layouts/resource)
@@ -91,7 +91,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     anonymous_provider = Katello::Provider.find(katello_providers(:anonymous))
     Organization.any_instance.expects(:anonymous_provider).returns(anonymous_provider)
 
-    post :create, :organization_id => @organization.label
+    post :create, :organization_id => @organization.id
     assert_response :bad_request
   end
 
@@ -102,7 +102,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     allowed_perms = [@create_permission]
     denied_perms = [@read_permission, @no_permission]
     assert_protected_action(:create, allowed_perms, denied_perms) do
-      post :create, :product => {}, :organization_id => @organization.label
+      post :create, :product => {}, :organization_id => @organization.id
     end
   end
 

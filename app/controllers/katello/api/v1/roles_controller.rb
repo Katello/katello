@@ -81,7 +81,7 @@ class Api::V1::RolesController < Api::V1::ApiController
   end
 
   api :GET, "/roles/available_verbs", "List all available verbs that can be set to roles"
-  param :organization_id, :identifier, :desc => "With this option specified the listed tags are scoped to the organization."
+  param :organization_id, :number, :desc => "With this option specified the listed tags are scoped to the organization."
   def available_verbs
     details = {}
 

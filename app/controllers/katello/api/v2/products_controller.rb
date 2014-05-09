@@ -45,7 +45,7 @@ module Katello
     api :GET, "/products", "List products"
     api :GET, "/subscriptions/:subscription_id/products", "List of subscription products in an organization"
     api :GET, "/organizations/:organization_id/products", "List of products in an organization"
-    param :organization_id, :identifier, :desc => "Filter products by organization", :required => true
+    param :organization_id, :number, :desc => "Filter products by organization", :required => true
     param :subscription_id, :identifier, :desc => "Filter products by subscription"
     param :name, String, :desc => "Filter products by name"
     param :enabled, :bool, :desc => "Filter products by enabled or disabled"
@@ -64,7 +64,7 @@ module Katello
     end
 
     api :POST, "/products", "Create a product"
-    param :organization_id, :identifier, "ID of the organization", :required => true
+    param :organization_id, :number, "ID of the organization", :required => true
     param_group :product
     param :name, String, :desc => "Product name", :required => true
     param :label, String, :required => false
