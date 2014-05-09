@@ -5,9 +5,7 @@ namespace :katello do
     service_start = "sudo /sbin/service %s start"
 
     task :pulp do
-      SERVICES = %w(httpd pulp_workers pulp_celerybeat pulp_resource_manager)
-      system(service_stop.gsub("%s", "qpidd"))
-      system(service_start.gsub("%s", "qpidd"))
+      SERVICES = %w(httpd pulp_workers pulp_resource_manager)
       system(service_stop.gsub("%s", "mongod"))
 
       SERVICES.each{|s| system(service_stop.gsub("%s", s)) }
