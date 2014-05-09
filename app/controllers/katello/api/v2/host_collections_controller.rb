@@ -23,6 +23,8 @@ module Katello
     before_filter :authorize
     before_filter :load_search_service, :only => [:index, :systems]
 
+    wrap_parameters :include => (HostCollection.attribute_names + %w(system_ids))
+
     def rules
       any_readable         = lambda { @organization && HostCollection.any_readable?(@organization) }
       read_perm            = lambda { @host_collection.readable? }
@@ -82,10 +84,6 @@ module Katello
     param :organization_id, :number, :desc => "organization identifier", :required => true
     param_group :host_collection
     def create
-      if host_collection_params[:system_ids].present?
-        params[:host_collection][:system_ids] = system_ids_to_uuids(params[:host_collection][:system_ids])
-      end
-
       @host_collection = HostCollection.new(host_collection_params)
       @host_collection.organization = @organization
       @host_collection.save!
@@ -96,16 +94,12 @@ module Katello
     param :id, :identifier, :desc => "Id of the host collection", :required => true
     param_group :host_collection
     def update
-      if host_collection_params[:system_ids].present?
-        params[:host_collection][:system_ids] = system_ids_to_uuids(params[:host_collection][:system_ids])
-      end
-
       @host_collection.update_attributes(host_collection_params)
       respond
     end
 
     # TODO: switch to systems controller index w/ @adprice pull-request
-    api :GET, "/host_collections/:id/systems", "List systems in the host collection"
+    api :GET, "/host_collections/:id/systems", "List content hosts in the host collection"
     param :id, :identifier, :desc => "Id of the host collection", :required => true
     def systems
       options = {
@@ -254,7 +248,8 @@ module Katello
     end
 
     def host_collection_params
-      params.require(:host_collection).permit(:name, :description, :max_content_hosts, :system_ids)
+      attrs = [:name, :description, :max_content_hosts, { :system_ids => [] }]
+      params.require(:host_collection).permit(*attrs)
     end
 
     def find_system
