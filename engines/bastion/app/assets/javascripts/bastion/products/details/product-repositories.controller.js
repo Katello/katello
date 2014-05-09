@@ -75,7 +75,8 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
         }
 
         function success(response) {
-            $scope.successMessages = response.displayMessages;
+            $scope.successMessages = response.displayMessages.success;
+            $scope.errorMessages = response.displayMessages.error;
         }
 
         function error(response) {

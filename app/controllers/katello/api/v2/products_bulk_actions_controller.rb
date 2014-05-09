@@ -28,7 +28,8 @@ module Katello
         :authorized => deletable_products
       )
 
-      respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => messages }
+      respond_for_show :template => 'bulk_action', :resource_name => 'common',
+                       :resource => { 'displayMessages' => messages }
     end
 
     api :PUT, "/products/bulk/sync", N_("Sync one or more products")
@@ -44,7 +45,8 @@ module Katello
         :authorized => syncable_products
       )
 
-      respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => messages }
+      respond_for_show :template => 'bulk_action', :resource_name => 'common',
+                       :resource => { 'displayMessages' => messages }
     end
 
     api :PUT, "/products/bulk/sync_plan", N_("Sync one or more products")
@@ -64,7 +66,8 @@ module Katello
         :authorized => editable_products
       )
 
-      respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => messages }
+      respond_for_show :template => 'bulk_action', :resource_name => 'common',
+                       :resource => { 'displayMessages' => messages }
     end
 
     private

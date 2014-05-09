@@ -56,9 +56,7 @@ describe('Controller: ActivationKeyAddHostCollectionsController', function() {
                     "id": 14,
                     "permissions": {
                         "deletable": true,
-                        "editable": true,
-                        "content_hosts_readable": true,
-                        "content_hosts_editable": true
+                        "editable": true
                     }
                 }
             ]

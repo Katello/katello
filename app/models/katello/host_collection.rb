@@ -43,6 +43,9 @@ class HostCollection < Katello::Model
   UNLIMITED_SYSTEMS = -1
   validate :validate_max_content_hosts
 
+  scoped_search :on => :name, :complete_value => true
+  scoped_search :on => :organization_id, :complete_value => true
+
   def validate_max_content_hosts
     if new_record? || max_content_hosts_changed?
       if (max_content_hosts != UNLIMITED_SYSTEMS) && (systems.length > 0 && (systems.length > max_content_hosts))
@@ -143,7 +146,7 @@ class HostCollection < Katello::Model
   #   ok: those collections that are completely up to date
   def self.lists_by_updates_needed(organization)
     host_collections_hash = {}
-    host_collections = HostCollection.readable(organization)
+    host_collections = HostCollection.readable
 
     # determine the state (critical/warning/ok) for each host collection
     host_collections.each do |host_collection|
@@ -187,6 +190,10 @@ class HostCollection < Katello::Model
     job = Job.create!(:pulp_id => pulp_job.first[:task_group_id], :job_owner => self)
     job.create_tasks(self.org, pulp_job, job_type, parameters_type => parameters)
     job
+  end
+
+  def self.humanize_class_name(name = nil)
+    _("Host Collections")
   end
 
 end

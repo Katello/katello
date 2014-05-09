@@ -40,7 +40,10 @@ angular.module('Bastion.test-mocks').factory('MockResource', function () {
         var Resource, mockResource, successResponse, errorResponse;
 
         successResponse ={
-            displayMessages: ['success']
+            displayMessages: {
+                success: ['success'],
+                error: ['error']
+            }
         };
 
         errorResponse = {

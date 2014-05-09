@@ -58,20 +58,18 @@ describe('Factory: HostCollection', function() {
     });
 
     it('provides a way to add content hosts', function() {
-        var contentHosts = [{id: 1}, {id: 2}];
+        var contentHosts = {test: 'this'};
         $httpBackend.expectPUT('/api/host_collections/0/add_systems').respond(contentHosts);
         HostCollection.addContentHosts({'host_collection': {'system_ids': [1,2]} , id: 0}, function(response) {
-            expect(response).toBeDefined();
-            expect(response.length).toBe(contentHosts.length);
+            expect(response.test).toBe('this');
         });
     });
 
     it('provides a way to remove content hosts', function() {
-        var contentHosts = [{id: 1}, {id: 2}];
+        var contentHosts = {test: 'this'};
         $httpBackend.expectPUT('/api/host_collections/0/remove_systems').respond(contentHosts);
         HostCollection.removeContentHosts({'host_collection': {'system_ids': [1,2]} , id: 0}, function(response) {
-            expect(response).toBeDefined();
-            expect(response.length).toBe(contentHosts.length);
+            expect(response.test).toBe('this');
         });
     });
 
