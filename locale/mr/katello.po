@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-25 14:50-0400\n"
+"POT-Creation-Date: 2014-05-09 16:22-0400\n"
 "PO-Revision-Date: 2013-02-13 15:20+0000\n"
 "Last-Translator: Miroslav Suchý <msuchy@redhat.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,10 +31,6 @@ msgstr "आधिपासूनच मार्गावर असणारे 
 #, fuzzy
 msgid " items selected."
 msgstr "संकुल फिल्टर %s नष्ट केले."
-
-#, fuzzy
-msgid "\"Creating an activation key in candlepin: #{label}\""
-msgstr "कँडलपिनमध्ये मालक निर्माण करत आहे: %s"
 
 msgid "\"Missing values for #{parameter_missing_exception.param}.\""
 msgstr ""
@@ -408,9 +404,6 @@ msgstr "%s निर्माण करतेवेळी लेबल पुर
 msgid "A request has been received by Katello server '%{url}' to retrieve the logins for email '%{email}'. The following is a list of those logins:"
 msgstr ""
 
-msgid "About"
-msgstr "विषयी"
-
 msgid "Abstract async task"
 msgstr ""
 
@@ -480,6 +473,10 @@ msgstr "वातावरणात चेंजसेट व्यवस्थ�
 msgid "Administer GPG Keys"
 msgstr "GPG किज् व्यवस्थापीत करा"
 
+#, fuzzy
+msgid "Administer Host Collections"
+msgstr "रोल्स् व्यवस्थापीत करा"
+
 msgid "Administer Organization"
 msgstr "संस्था व्यवस्थापीत करा"
 
@@ -492,9 +489,6 @@ msgstr "प्रोव्हाइडर्स् व्यवस्थाप�
 
 msgid "Administer Roles"
 msgstr "रोल्स् व्यवस्थापीत करा"
-
-msgid "Administer System Groups"
-msgstr "सिस्टम गट प्रशाशित करा"
 
 msgid "Administer Users"
 msgstr "वापरकर्ते व्यवस्थापीत करा"
@@ -540,14 +534,6 @@ msgstr "कँडलपिनमधील मालक %s करीता सर
 #, fuzzy
 msgid "All repositories"
 msgstr "Red Hat रेपॉजिटरिज्"
-
-#, fuzzy
-msgid "Application"
-msgstr "ॲप्लिकेशन"
-
-#, fuzzy
-msgid "Application Information"
-msgstr "प्रणाली माहिती"
 
 msgid "Applied"
 msgstr ""
@@ -691,10 +677,6 @@ msgstr ""
 msgid "AuthSource|Tls"
 msgstr ""
 
-#, fuzzy
-msgid "Authentication"
-msgstr "ओळख पटवा"
-
 msgid "Author"
 msgstr ""
 
@@ -743,6 +725,10 @@ msgstr ""
 
 msgid "Back to Results"
 msgstr ""
+
+#, fuzzy
+msgid "Backend System Status"
+msgstr "सिंक स्थिती"
 
 msgid "Before removing this provider, all promoted repositories must first be deleted from their respective environments using a deletion changeset: "
 msgstr ""
@@ -796,7 +782,8 @@ msgstr "CDN लोड करतेवेळी त्रुटी: %s करी�
 msgid "CDN loading error: access forbidden to %s"
 msgstr "CDN लोडिंग त्रुटी: %s करीता प्रवेश बंद"
 
-msgid "Can't copy System Groups to a different org: '%{org1}' != '%{org2}'"
+#, fuzzy
+msgid "Can't copy host collections to a different org: '%{org1}' != '%{org2}'"
 msgstr "सिस्टम गटाला वेगळ्या ऑर्गकरीता प्रत बनवणे अशक्य: '%{org1}' != '%{org2}'"
 
 #, fuzzy
@@ -973,6 +960,10 @@ msgid "Collapse All"
 msgstr ""
 
 #, fuzzy
+msgid "Collection membership modification is not allowed for host collections(s): %s"
+msgstr "गट: %s करीता प्रणाली गट सदस्यता संपादित करणे स्वीकार्य नाही"
+
+#, fuzzy
 msgid "Compare Selected"
 msgstr "साचा '%s' काढून टाकले"
 
@@ -1062,10 +1053,6 @@ msgstr "Red Hat उत्पादन सुधारित करण्या�
 
 #, fuzzy
 msgid "Content"
-msgstr "कंटेंट"
-
-#, fuzzy
-msgid "Content About"
 msgstr "कंटेंट"
 
 msgid "Content Available From"
@@ -1190,6 +1177,10 @@ msgstr "फिल्टर '%s' आढळले नाही"
 msgid "Couldn't find gpg key '%s'"
 msgstr "GPG कि '%s' शोधणे अशक्य"
 
+#, fuzzy
+msgid "Couldn't find host collection '%s'"
+msgstr "वापरकर्ता रोल '%s' शोधणे अशक्य"
+
 msgid "Couldn't find organization '%s'"
 msgstr "संस्था '%s' शोधणे अशक्य"
 
@@ -1222,9 +1213,6 @@ msgstr "सिंक प्लॅन '%{plan}' शोधणे अशक्य, 
 
 msgid "Couldn't find system '%s'"
 msgstr "प्रणाली '%s' शोधणे अशक्य"
-
-msgid "Couldn't find system group '%s'"
-msgstr "प्रणाली गट '%s' शोधणे अशक्य"
 
 msgid "Couldn't find user '%s'"
 msgstr "वापरकर्ता '%s' शोधणे अशक्य"
@@ -1342,12 +1330,20 @@ msgstr "रोल्स् नष्ट करा"
 msgid "Delete All"
 msgstr "रोल्स् नष्ट करा"
 
+#, fuzzy
+msgid "Delete Content Hosts in Host Collection"
+msgstr "वातावरणातून अंतर्भुत माहिती नष्ट करा"
+
 msgid "Delete Content from Environment"
 msgstr "वातावरणातून अंतर्भुत माहिती नष्ट करा"
 
 #, fuzzy
 msgid "Delete Distributors"
 msgstr "वितरण नीवडा"
+
+#, fuzzy
+msgid "Delete Host Collection"
+msgstr "प्रणाली नष्ट करा"
 
 #, fuzzy
 msgid "Delete Manifest"
@@ -1364,15 +1360,9 @@ msgstr "प्रोव्हाइडर [ %s ] नष्ट केले"
 msgid "Delete Roles"
 msgstr "रोल्स् नष्ट करा"
 
-msgid "Delete System Group"
-msgstr "प्रणाली गट नष्ट करा"
-
 #, fuzzy
 msgid "Delete Systems"
 msgstr "प्रणाली गट नष्ट करा"
-
-msgid "Delete Systems in System Group"
-msgstr "प्रणाली गटात प्रणालींना नष्ट करा"
 
 #, fuzzy
 msgid "Delete Users"
@@ -1399,6 +1389,14 @@ msgid "Deleted environment '%s'"
 msgstr "वातावरण '%s' नष्ट केले"
 
 #, fuzzy
+msgid "Deleted host collection '%s'"
+msgstr "भूमिका '%s' नष्ट केले"
+
+#, fuzzy
+msgid "Deleted host collection '%{s}' and it's %{n} systems."
+msgstr "प्रणाली गट '%{s}' व त्याचे %{n} प्रणाली नष्ट केले."
+
+#, fuzzy
 msgid "Deleted organization '%s'"
 msgstr "संस्था नीवडा"
 
@@ -1421,18 +1419,8 @@ msgstr "सिंक प्लॅन '%s' नष्ट केले"
 msgid "Deleted system '%s'"
 msgstr "प्रणाली '%s' नष्ट केले"
 
-msgid "Deleted system group '%s'"
-msgstr "प्रणाली गट '%s' नष्ट केले"
-
-msgid "Deleted system group '%{s}' and it's %{n} systems."
-msgstr "प्रणाली गट '%{s}' व त्याचे %{n} प्रणाली नष्ट केले."
-
 msgid "Deleted user '%s'"
 msgstr "वापरकर्ता '%s' नष्ट केले"
-
-#, fuzzy
-msgid "Deleting activation_key in candlepin: %s"
-msgstr "कँडलपिनमध्ये मालक नष्ट करत आहे: %s"
 
 msgid "Deleting environment in candlepin: %s"
 msgstr "कँडलपिन: %s मधील वातावरण नष्ट करत आहे"
@@ -1470,9 +1458,6 @@ msgstr "सर्व्हिस स्तर पसंती आढळली �
 
 msgid "Difference:"
 msgstr ""
-
-msgid "Directory"
-msgstr "डिरेक्ट्री"
 
 msgid "Disable"
 msgstr ""
@@ -1645,16 +1630,6 @@ msgstr "वातावरण %s कडे सक्सेर आहे. मा�
 msgid "Environment %s has a successor. Only the last environment on a path can be deleted."
 msgstr "वातावरण %s कडे सक्सेर आहे. मार्गवरील फक्त शेवटचे वातावरण नष्ट करणे शक्य आहे."
 
-#, fuzzy
-msgid "Environment '%s' was created."
-msgstr "वातावरण '%s' सुधारित केले."
-
-msgid "Environment '%s' was deleted."
-msgstr "वातावरण '%s' नष्ट केले."
-
-msgid "Environment '%s' was updated."
-msgstr "वातावरण '%s' सुधारित केले."
-
 msgid "Environment cannot be in its own promotion path"
 msgstr "वातावरण स्वतःच्या प्रमोशन मार्गावर असू शकत नाही"
 
@@ -1822,6 +1797,10 @@ msgstr "संस्था '%s' नष्ट करण्यास अपयश�
 msgid "Failed to publish content view '%s'."
 msgstr "प्रोव्हाइडर '%s' आढळले नाही"
 
+#, fuzzy
+msgid "Failed to update candlepin activation_key %s"
+msgstr "कँडलपिन वातावरण %s नष्ट करण्यास अपयशी"
+
 msgid "Feature"
 msgstr ""
 
@@ -1928,10 +1907,6 @@ msgid "Good"
 msgstr ""
 
 #, fuzzy
-msgid "Group membership modification is not allowed for system group(s): %s"
-msgstr "गट: %s करीता प्रणाली गट सदस्यता संपादित करणे स्वीकार्य नाही"
-
-#, fuzzy
 msgid "Guest"
 msgstr "अतिथी"
 
@@ -1940,6 +1915,19 @@ msgstr "इतिहास"
 
 msgid "Host"
 msgstr "यजमान"
+
+msgid "Host Collection Info"
+msgstr ""
+
+#, fuzzy
+msgid "Host Collections"
+msgstr "वितरणे"
+
+msgid "Host collection '%{name}' exceeds maximum usage limit of '%{limit}'"
+msgstr ""
+
+msgid "Host collection is empty."
+msgstr ""
 
 #, fuzzy
 msgid "Host config group"
@@ -2066,6 +2054,9 @@ msgstr ""
 
 msgid "ID: %s doesn't exist "
 msgstr "ID: %s अस्तित्वात नाही "
+
+msgid "IRC"
+msgstr ""
 
 msgid "ISOs"
 msgstr ""
@@ -2223,6 +2214,9 @@ msgstr ""
 msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
 msgstr "अवैध वर्ब '%{verb}'. स्रोत प्रकार '%{resource_type}' %{possible_verbs} पैकी एक असू शकते"
 
+msgid "Issue tracker"
+msgstr ""
+
 msgid "Issued"
 msgstr ""
 
@@ -2233,12 +2227,17 @@ msgid "Katello Logins"
 msgstr "कटेलो लॉगिंस्"
 
 #, fuzzy
-msgid "Katello reference documentation"
-msgstr "क्लाउडफॉर्म्स् दस्तऐवजीकरण"
+msgid "Katello Support"
+msgstr "आयात करा"
 
-#, fuzzy
-msgid "Katello user documentation"
-msgstr "क्लाउडफॉर्म्स् दस्तऐवजीकरण"
+msgid "Katello can be found on the same freenode channels used by Foreman."
+msgstr ""
+
+msgid "Katello uses the Foreman Redmine to report and track bugs and feature requests, which can be found here:"
+msgstr ""
+
+msgid "Katello uses the same mailing lists as Foreman but requests that Katello specific inquiries begin the subject line with [Katello]."
+msgstr ""
 
 #, fuzzy
 msgid "Katello/model"
@@ -2576,6 +2575,9 @@ msgstr ""
 msgid "LookupValue|Value"
 msgstr ""
 
+msgid "Mailing lists"
+msgstr ""
+
 #, fuzzy
 msgid "Make this your default organization."
 msgstr "यास पूर्वनिर्धारित संस्था करा."
@@ -2595,7 +2597,7 @@ msgid "Manifest subscriptions unchanged from previous"
 msgstr ""
 
 #, fuzzy
-msgid "Maximum number of content hosts exceeded for system group(s): %s"
+msgid "Maximum number of content hosts exceeded for host collection(s): %s"
 msgstr "प्रणाली गट कमाल प्रणालींची संख्या गट: %s करीता वाढविले"
 
 msgid "May not add a type or date range rule to a filter that has existing rules."
@@ -2653,6 +2655,9 @@ msgstr ""
 msgid "Model|Vendor class"
 msgstr ""
 
+msgid "Modify Content Hosts in Host Collection"
+msgstr ""
+
 #, fuzzy
 msgid "Modify Distributors"
 msgstr "वितरणे"
@@ -2660,6 +2665,10 @@ msgstr "वितरणे"
 #, fuzzy
 msgid "Modify Distributors in Environment"
 msgstr "वातावरणात प्रणाली संपादित करा"
+
+#, fuzzy
+msgid "Modify Host Collection details and content host membership"
+msgstr "प्रणाली गट व प्रणाली सदस्यता संपादित करा"
 
 msgid "Modify Organization and Administer Environments"
 msgstr "संस्था संपादित करा व वातावरण व्यवस्थापीत करा"
@@ -2671,17 +2680,11 @@ msgstr "प्रोव्हाइडर्स् संपादित कर�
 msgid "Modify Roles"
 msgstr "वापरकर्ते संपादित करा"
 
-msgid "Modify System Group details and system membership"
-msgstr "प्रणाली गट व प्रणाली सदस्यता संपादित करा"
-
 msgid "Modify Systems"
 msgstr "प्रणाली संपादित करा"
 
 msgid "Modify Systems in Environment"
 msgstr "वातावरणात प्रणाली संपादित करा"
-
-msgid "Modify Systems in System Group"
-msgstr "प्रणाली गटमध्ये प्रणाली संपादित करा"
 
 msgid "Modify Users"
 msgstr "वापरकर्ते संपादित करा"
@@ -2792,7 +2795,7 @@ msgstr "कंटेंट"
 msgid "No Default"
 msgstr "प्रणाली टेम्पलेटस्"
 
-msgid "No Red Hat products currently exist, please import a manifest <a href='%s/all'>here</a> to receive Red Hat content."
+msgid "No Red Hat products currently exist, please import a manifest <a href='/subscriptions'>here</a> to receive Red Hat content."
 msgstr ""
 
 #, fuzzy
@@ -2822,6 +2825,10 @@ msgstr "शोध अटिंसह इव्हेंटस् जुळत �
 
 msgid "No file uploaded"
 msgstr ""
+
+#, fuzzy
+msgid "No host collections found."
+msgstr "आढळले नाही"
 
 msgid "No manifest file uploaded"
 msgstr ""
@@ -2876,10 +2883,6 @@ msgstr "वितरणे"
 #, fuzzy
 msgid "No synchronization is currently running"
 msgstr "सध्या %s चे सिंक्रोनाइजेशन सुरू नाही"
-
-#, fuzzy
-msgid "No system groups found."
-msgstr "आढळले नाही"
 
 msgid "No system registration default set for this user."
 msgstr "ह्या वापरकर्त्यासाठी पूर्वनिर्धारित प्रणाली नोंदणी आढळली नाही."
@@ -3498,6 +3501,9 @@ msgstr "ॲक्टिवेशन किज् परवानगी वाच
 msgid "Read Changesets in Environment"
 msgstr "वातावरणात चेंजसेटस् वाचा"
 
+msgid "Read Content Hoss in Host Collection"
+msgstr ""
+
 #, fuzzy
 msgid "Read Content Views"
 msgstr "वातावरण वाचा"
@@ -3524,6 +3530,9 @@ msgstr "रोल्स् परवानगी वाचा"
 msgid "Read Everything"
 msgstr "सर्व वाचा"
 
+msgid "Read Host Collection"
+msgstr ""
+
 msgid "Read Organization"
 msgstr "संस्था वाचा"
 
@@ -3546,17 +3555,11 @@ msgstr "रोल्स् वाचा"
 msgid "Read Roles permission"
 msgstr "रोल्स् परवानगी वाचा"
 
-msgid "Read System Group"
-msgstr "प्रणाली गट वाचा"
-
 msgid "Read Systems"
 msgstr "प्रणाली वाचा"
 
 msgid "Read Systems in Environment"
 msgstr "वातावरणात प्रणाली वाचा"
-
-msgid "Read Systems in System Group"
-msgstr "प्रणाली गटमध्ये प्रणाली वाचा"
 
 #, fuzzy
 msgid "Read Users"
@@ -3647,10 +3650,6 @@ msgstr "प्रणालींची नोंदणी करा"
 
 msgid "Reload data"
 msgstr ""
-
-#, fuzzy
-msgid "Removal of the environment failed. If you continue having trouble with this, please contact an Administrator."
-msgstr "या कार्यकरीता विनंतीमध्ये अवैध घटके पाठवले. कृपया प्रणाली प्रशासकाशी संपर्क करा."
 
 #, fuzzy
 msgid "Removal of the user failed. If you continue having trouble with this, please contact an Administrator."
@@ -4227,7 +4226,7 @@ msgid "Successful for distributor(s): "
 msgstr "प्रणालीकरीता यशस्वी: "
 
 #, fuzzy
-msgid "Successfully added %{count} content host(s) to system group %{group}."
+msgid "Successfully added %{count} content host(s) to host collection %{host_collection}."
 msgstr "यशस्वीरित्या प्रणालींना '%s' करीता समाविष्ट केले."
 
 msgid "Successfully changed sync plan for %s product(s)"
@@ -4260,8 +4259,9 @@ msgstr "यशस्वीरित्या चेंजसेट '%s' नष�
 msgid "Successfully removed %s repositories"
 msgstr "यशस्वीरित्या चेंजसेट '%s' नष्ट केले."
 
-msgid "Successfully removed %{count} content host(s) from system group %{group}."
-msgstr ""
+#, fuzzy
+msgid "Successfully removed %{count} content host(s) from host collection %{host_collection}."
+msgstr "यशस्वीरित्या प्रणालींना '%s' करीता समाविष्ट केले."
 
 msgid "Successfully removed organization '%s'."
 msgstr "यशस्वीरित्या संस्था '%s' काढून टाकले."
@@ -4289,10 +4289,6 @@ msgstr "सर्वोच्च ॲडमिन परवानगी"
 #, fuzzy
 msgid "Super administrator with all access."
 msgstr "संपूर्ण प्रवेशसह सर्वोच्च प्रशासक."
-
-#, fuzzy
-msgid "Support"
-msgstr "आयात करा"
 
 #, fuzzy
 msgid "Sync Canceled"
@@ -4341,33 +4337,8 @@ msgstr "सिंक्रोनाइजेशन"
 msgid "System Default Info"
 msgstr "प्रणाली माहिती"
 
-msgid "System Group Info"
-msgstr "प्रणाली गट माहिती"
-
-#, fuzzy
-msgid "System Groups"
-msgstr "प्रणाली गट वाचा"
-
 msgid "System Info"
 msgstr "प्रणाली माहिती"
-
-#, fuzzy
-msgid "System Information"
-msgstr "प्रणाली माहिती"
-
-#, fuzzy
-msgid "System Status"
-msgstr "सिंक स्थिती"
-
-msgid "System group '%{name}' exceeds maximum usage limit of '%{limit}'"
-msgstr ""
-
-msgid "System group is empty."
-msgstr "प्रणाली गट रिकामे आहे."
-
-#, fuzzy
-msgid "System with uuid %s not found"
-msgstr "id '%s' सह एराटम आढळले नाही"
 
 msgid "Systems"
 msgstr "प्रणाली"
@@ -4519,9 +4490,6 @@ msgid "Title"
 msgstr ""
 
 msgid "Title: "
-msgstr ""
-
-msgid "To submit a new bug please visit %s."
 msgstr ""
 
 msgid "To view the details of an item on the left, simply click on a single row.<br/><br/>To select multiple rows, hold the Control Key and click multiple rows.<br/><br/>If you don't need this help anymore, please click the close button in the top right of this box."
@@ -4910,7 +4878,8 @@ msgstr ""
 msgid "You can synchronize repositories only in library environment'"
 msgstr "रेपॉजिटरिज्ला फक्त लाइब्ररि वातावरणात सिंक्रोनाइज करणे शक्य आहे"
 
-msgid "You cannot have more than %{max_systems} system(s) associated with system group '%{group}'."
+#, fuzzy
+msgid "You cannot have more than %{max_content_hosts} content host(s) associated with host collection '%{host_collection}'."
 msgstr "एकापेक्षा जास्त %{max_systems} प्रणाली असणे अशक्य, प्रणाली गट '%{group}' सह संबंधित."
 
 #, fuzzy
@@ -5105,10 +5074,14 @@ msgstr "संकुले प्रतिष्ठापीत करत आह
 msgid "is invalid"
 msgstr "अवैध आहे"
 
+msgid "issue tracker"
+msgstr ""
+
 msgid "katello-jobs service not running"
 msgstr "katello-jobs सर्व्हिस बंद आहे"
 
-msgid "may not be less than the number of systems associated with the system group."
+#, fuzzy
+msgid "may not be less than the number of content hosts associated with the host collection."
 msgstr "प्रणाली गटासह संबंधित प्रणालींची संख्या कमी असणे अशक्य."
 
 msgid "may not be set to 0."
@@ -5187,9 +5160,6 @@ msgstr "प्रणाली"
 msgid "the %s Bugzilla"
 msgstr "%s बगजिला"
 
-msgid "the CloudForms Documentation"
-msgstr "क्लाउडफॉर्म्स् दस्तऐवजीकरण"
-
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "खालील गुणधर्मांना Red Hat प्रोव्हाइडरकरीता: [ %s ] करीता सुधारित करणे अशक्य"
 
@@ -5215,6 +5185,10 @@ msgstr "आवृत्ती"
 #, fuzzy
 #~ msgid " Changesets"
 #~ msgstr "चेंजसेटस्"
+
+#, fuzzy
+#~ msgid "\"Creating an activation key in candlepin: #{label}\""
+#~ msgstr "कँडलपिनमध्ये मालक निर्माण करत आहे: %s"
 
 #, fuzzy
 #~ msgid "%d products may have missing repositories"
@@ -5336,6 +5310,9 @@ msgstr "आवृत्ती"
 #~ msgid "API Key"
 #~ msgstr "GPG कि"
 
+#~ msgid "About"
+#~ msgstr "विषयी"
+
 #, fuzzy
 #~ msgid "Action"
 #~ msgstr "ॲप्लिकेशन"
@@ -5434,6 +5411,9 @@ msgstr "आवृत्ती"
 #~ msgid "Administer Package Filters"
 #~ msgstr "संकुल फिल्टर व्यवस्थापीत करा"
 
+#~ msgid "Administer System Groups"
+#~ msgstr "सिस्टम गट प्रशाशित करा"
+
 #~ msgid "Administer System Templates"
 #~ msgstr "प्रणाली टेम्प्लेटस् व्यवस्थापीत करा"
 
@@ -5505,6 +5485,14 @@ msgstr "आवृत्ती"
 #~ msgstr "प्रणाली वाचा"
 
 #, fuzzy
+#~ msgid "Application"
+#~ msgstr "ॲप्लिकेशन"
+
+#, fuzzy
+#~ msgid "Application Information"
+#~ msgstr "प्रणाली माहिती"
+
+#, fuzzy
 #~ msgid "Apply Deletion Changeset"
 #~ msgstr "+ नवीन चेंजसेट"
 
@@ -5549,6 +5537,10 @@ msgstr "आवृत्ती"
 #, fuzzy
 #~ msgid "Audit Comment"
 #~ msgstr "वातावरण"
+
+#, fuzzy
+#~ msgid "Authentication"
+#~ msgstr "ओळख पटवा"
 
 #~ msgid "Auto-attach Off, No Service Level Preference"
 #~ msgstr "स्वय-जोड बंद, सेवा स्तर पसंती नाही"
@@ -5659,6 +5651,10 @@ msgstr "आवृत्ती"
 #~ msgstr "चेंजसेटस्"
 
 #, fuzzy
+#~ msgid "Content About"
+#~ msgstr "कंटेंट"
+
+#, fuzzy
 #~ msgid "Content view definition '%s' was created."
 #~ msgstr "प्रोव्हाइडर '%s' निर्माण केले."
 
@@ -5688,6 +5684,9 @@ msgstr "आवृत्ती"
 
 #~ msgid "Couldn't find pool '%{pool}' in activation_key '%{ak}'"
 #~ msgstr "पूल '%{pool}' शोधणे अशक्य, activation_key '%{ak}' मध्ये"
+
+#~ msgid "Couldn't find system group '%s'"
+#~ msgstr "प्रणाली गट '%s' शोधणे अशक्य"
 
 #~ msgid "Couldn't find template '%s'"
 #~ msgstr "साचा '%s' शोधणे अशक्य"
@@ -5724,16 +5723,14 @@ msgstr "आवृत्ती"
 #~ msgid "Delete %s?"
 #~ msgstr "रोल्स् नष्ट करा"
 
-#, fuzzy
-#~ msgid "Delete Content View Definitions"
-#~ msgstr "वातावरणातून अंतर्भुत माहिती नष्ट करा"
-
-#, fuzzy
-#~ msgid "Delete Hosts"
-#~ msgstr "प्रणाली नष्ट करा"
-
 #~ msgid "Delete Package Filters"
 #~ msgstr "संकुल फिल्टर्स् नष्ट करा "
+
+#~ msgid "Delete System Group"
+#~ msgstr "प्रणाली गट नष्ट करा"
+
+#~ msgid "Delete Systems in System Group"
+#~ msgstr "प्रणाली गटात प्रणालींना नष्ट करा"
 
 #, fuzzy
 #~ msgid "Delete autosign entry for %s"
@@ -5767,9 +5764,19 @@ msgstr "आवृत्ती"
 #~ msgid "Deleted environment %{env} and %{pcs}"
 #~ msgstr "वातावरण '%s' नष्ट केले"
 
+#~ msgid "Deleted system group '%s'"
+#~ msgstr "प्रणाली गट '%s' नष्ट केले"
+
+#, fuzzy
+#~ msgid "Deleting activation_key in candlepin: %s"
+#~ msgstr "कँडलपिनमध्ये मालक नष्ट करत आहे: %s"
+
 #, fuzzy
 #~ msgid "Dependency of "
 #~ msgstr "अवलंबने"
+
+#~ msgid "Directory"
+#~ msgstr "डिरेक्ट्री"
 
 #~ msgid "Disable/enable is not supported for custom repositories."
 #~ msgstr "पसंतीच्या रेपॉजिटरिज्करीता बंद करणे/सुरू करणे समर्थीत नाही."
@@ -5905,6 +5912,16 @@ msgstr "आवृत्ती"
 #, fuzzy
 #~ msgid "Enter Package or Group Name(s)..."
 #~ msgstr "संकुल गट समाविष्ट करत आहे..."
+
+#, fuzzy
+#~ msgid "Environment '%s' was created."
+#~ msgstr "वातावरण '%s' सुधारित केले."
+
+#~ msgid "Environment '%s' was deleted."
+#~ msgstr "वातावरण '%s' नष्ट केले."
+
+#~ msgid "Environment '%s' was updated."
+#~ msgstr "वातावरण '%s' सुधारित केले."
 
 #, fuzzy
 #~ msgid "Environment Promotion Paths"
@@ -6190,6 +6207,14 @@ msgstr "आवृत्ती"
 #~ msgid "It is not allowed to update a Red Hat repository."
 #~ msgstr "Red Hat रेपॉजिटरि सुधारित करण्यास परवानगी नाही."
 
+#, fuzzy
+#~ msgid "Katello reference documentation"
+#~ msgstr "क्लाउडफॉर्म्स् दस्तऐवजीकरण"
+
+#, fuzzy
+#~ msgid "Katello user documentation"
+#~ msgstr "क्लाउडफॉर्म्स् दस्तऐवजीकरण"
+
 #~ msgid "Key"
 #~ msgstr "कि"
 
@@ -6284,6 +6309,9 @@ msgstr "आवृत्ती"
 
 #~ msgid "Modify Package Filters"
 #~ msgstr "संकुल फिल्टरे संपादित करा"
+
+#~ msgid "Modify Systems in System Group"
+#~ msgstr "प्रणाली गटमध्ये प्रणाली संपादित करा"
 
 #~ msgid "Must be unique within an environment"
 #~ msgstr "वातावरण अंतर्गत एकमेव असायला हवे"
@@ -6495,6 +6523,10 @@ msgstr "आवृत्ती"
 #, fuzzy
 #~ msgid "No repositories exist in this changeset."
 #~ msgstr "चेंजसेटमध्ये रेपॉजिटरि '%s' आढळले नाही"
+
+#, fuzzy
+#~ msgid "No system groups found."
+#~ msgstr "आढळले नाही"
 
 #, fuzzy
 #~ msgid "No template found"
@@ -6794,14 +6826,24 @@ msgstr "आवृत्ती"
 #~ msgid "Read Package Filters"
 #~ msgstr "संकुल फिल्टर्स् वाचा"
 
+#~ msgid "Read System Group"
+#~ msgstr "प्रणाली गट वाचा"
+
 #~ msgid "Read System Templates"
 #~ msgstr "प्रणाली टेम्पलेटस् वाचा"
 
 #~ msgid "Read System Templates permission"
 #~ msgstr "प्रणाली टेम्पलेट परवानगी वाचा"
 
+#~ msgid "Read Systems in System Group"
+#~ msgstr "प्रणाली गटमध्ये प्रणाली वाचा"
+
 #~ msgid "Registered / Last Checked In"
 #~ msgstr "नोंदणी केली / शेवटच्यावेळी चेक इन केले"
+
+#, fuzzy
+#~ msgid "Removal of the environment failed. If you continue having trouble with this, please contact an Administrator."
+#~ msgstr "या कार्यकरीता विनंतीमध्ये अवैध घटके पाठवले. कृपया प्रणाली प्रशासकाशी संपर्क करा."
 
 #, fuzzy
 #~ msgid "Remove Activation Key"
@@ -7161,6 +7203,17 @@ msgstr "आवृत्ती"
 #~ msgid "System Group %{new_group} created successfully as a copy of system group %{group}."
 #~ msgstr "सिस्टम गट %{new_group} यशस्वीरित्या निर्माण केले, प्रणाली गट %{group} याच्या प्रत नुरूप."
 
+#~ msgid "System Group Info"
+#~ msgstr "प्रणाली गट माहिती"
+
+#, fuzzy
+#~ msgid "System Groups"
+#~ msgstr "प्रणाली गट वाचा"
+
+#, fuzzy
+#~ msgid "System Information"
+#~ msgstr "प्रणाली माहिती"
+
 #, fuzzy
 #~ msgid "System Limit"
 #~ msgstr "प्रणाली"
@@ -7172,8 +7225,15 @@ msgstr "आवृत्ती"
 #~ msgid "System Type"
 #~ msgstr "प्रणाली टेम्पलेटस्"
 
+#~ msgid "System group is empty."
+#~ msgstr "प्रणाली गट रिकामे आहे."
+
 #~ msgid "System subscriptions updated."
 #~ msgstr "प्रणाली सबस्क्रिप्शन्स् सुधारित केले."
+
+#, fuzzy
+#~ msgid "System with uuid %s not found"
+#~ msgstr "id '%s' सह एराटम आढळले नाही"
 
 #~ msgid "System's environment not compatible with the group '%s'."
 #~ msgstr "प्रणालीचे वातावरण गट '%s' सह सहत्व नाही."
@@ -7623,6 +7683,9 @@ msgstr "आवृत्ती"
 #, fuzzy
 #~ msgid "status"
 #~ msgstr "सिंक स्थिती"
+
+#~ msgid "the CloudForms Documentation"
+#~ msgstr "क्लाउडफॉर्म्स् दस्तऐवजीकरण"
 
 #, fuzzy
 #~ msgid "unable to find recipients"

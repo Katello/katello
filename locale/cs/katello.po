@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-25 14:50-0400\n"
+"POT-Creation-Date: 2014-05-09 16:22-0400\n"
 "PO-Revision-Date: 2013-01-22 13:28+0000\n"
 "Last-Translator: lzap <lzap@seznam.cz>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,9 +32,6 @@ msgstr ""
 #, fuzzy
 msgid " items selected."
 msgstr "prostředí vyžadováno"
-
-msgid "\"Creating an activation key in candlepin: #{label}\""
-msgstr ""
 
 msgid "\"Missing values for #{parameter_missing_exception.param}.\""
 msgstr ""
@@ -365,9 +362,6 @@ msgstr ""
 msgid "A request has been received by Katello server '%{url}' to retrieve the logins for email '%{email}'. The following is a list of those logins:"
 msgstr ""
 
-msgid "About"
-msgstr "O"
-
 msgid "Abstract async task"
 msgstr ""
 
@@ -437,6 +431,10 @@ msgstr "prostředí"
 msgid "Administer GPG Keys"
 msgstr "Spravovat GPG klíče"
 
+#, fuzzy
+msgid "Administer Host Collections"
+msgstr "Spravovat role"
+
 msgid "Administer Organization"
 msgstr "Spravovat organizace"
 
@@ -449,9 +447,6 @@ msgstr "Spravovat "
 
 msgid "Administer Roles"
 msgstr "Spravovat role"
-
-msgid "Administer System Groups"
-msgstr "Spravovat systémové skupiny"
 
 msgid "Administer Users"
 msgstr "Správa uživatelů"
@@ -497,14 +492,6 @@ msgstr ""
 #, fuzzy
 msgid "All repositories"
 msgstr "Repozitáře"
-
-#, fuzzy
-msgid "Application"
-msgstr "organizace"
-
-#, fuzzy
-msgid "Application Information"
-msgstr "Globální oprávnění"
 
 msgid "Applied"
 msgstr ""
@@ -648,10 +635,6 @@ msgstr ""
 msgid "AuthSource|Tls"
 msgstr ""
 
-#, fuzzy
-msgid "Authentication"
-msgstr "Aktivační klíče"
-
 msgid "Author"
 msgstr ""
 
@@ -696,6 +679,10 @@ msgstr ""
 
 msgid "Back to Results"
 msgstr ""
+
+#, fuzzy
+msgid "Backend System Status"
+msgstr "Systém"
 
 msgid "Before removing this provider, all promoted repositories must first be deleted from their respective environments using a deletion changeset: "
 msgstr ""
@@ -748,7 +735,7 @@ msgstr ""
 msgid "CDN loading error: access forbidden to %s"
 msgstr ""
 
-msgid "Can't copy System Groups to a different org: '%{org1}' != '%{org2}'"
+msgid "Can't copy host collections to a different org: '%{org1}' != '%{org2}'"
 msgstr ""
 
 #, fuzzy
@@ -916,6 +903,9 @@ msgstr ""
 msgid "Collapse All"
 msgstr ""
 
+msgid "Collection membership modification is not allowed for host collections(s): %s"
+msgstr ""
+
 msgid "Compare Selected"
 msgstr ""
 
@@ -1003,10 +993,6 @@ msgstr ""
 
 #, fuzzy
 msgid "Content"
-msgstr "Vyhledat obsah"
-
-#, fuzzy
-msgid "Content About"
 msgstr "Vyhledat obsah"
 
 msgid "Content Available From"
@@ -1120,6 +1106,10 @@ msgid "Couldn't find gpg key '%s'"
 msgstr ""
 
 #, fuzzy
+msgid "Couldn't find host collection '%s'"
+msgstr "Smazat organizaci"
+
+#, fuzzy
 msgid "Couldn't find organization '%s'"
 msgstr "Smazat organizaci"
 
@@ -1150,9 +1140,6 @@ msgid "Couldn't find sync plan '%{plan}' in organization '%{org}'"
 msgstr ""
 
 msgid "Couldn't find system '%s'"
-msgstr ""
-
-msgid "Couldn't find system group '%s'"
 msgstr ""
 
 msgid "Couldn't find user '%s'"
@@ -1269,12 +1256,19 @@ msgid "Delete All"
 msgstr "Smazat role"
 
 #, fuzzy
+msgid "Delete Content Hosts in Host Collection"
+msgstr "prostředí"
+
+#, fuzzy
 msgid "Delete Content from Environment"
 msgstr "prostředí"
 
 #, fuzzy
 msgid "Delete Distributors"
 msgstr "Vybrat distribuci"
+
+msgid "Delete Host Collection"
+msgstr ""
 
 #, fuzzy
 msgid "Delete Manifest"
@@ -1293,15 +1287,8 @@ msgid "Delete Roles"
 msgstr "Smazat systémy"
 
 #, fuzzy
-msgid "Delete System Group"
-msgstr "Spravovat systémové skupiny"
-
-#, fuzzy
 msgid "Delete Systems"
 msgstr "Smazat systémy"
-
-msgid "Delete Systems in System Group"
-msgstr ""
 
 #, fuzzy
 msgid "Delete Users"
@@ -1326,6 +1313,13 @@ msgstr "Vybrat distribuci"
 #, fuzzy
 msgid "Deleted environment '%s'"
 msgstr "prostředí"
+
+#, fuzzy
+msgid "Deleted host collection '%s'"
+msgstr "Vybrat organizaci"
+
+msgid "Deleted host collection '%{s}' and it's %{n} systems."
+msgstr ""
 
 #, fuzzy
 msgid "Deleted organization '%s'"
@@ -1356,18 +1350,8 @@ msgid "Deleted system '%s'"
 msgstr "Vybrat distribuci"
 
 #, fuzzy
-msgid "Deleted system group '%s'"
-msgstr "Vybrat distribuci"
-
-msgid "Deleted system group '%{s}' and it's %{n} systems."
-msgstr ""
-
-#, fuzzy
 msgid "Deleted user '%s'"
 msgstr "Vybrat distribuci"
-
-msgid "Deleting activation_key in candlepin: %s"
-msgstr ""
 
 #, fuzzy
 msgid "Deleting environment in candlepin: %s"
@@ -1404,10 +1388,6 @@ msgstr ""
 
 msgid "Difference:"
 msgstr ""
-
-#, fuzzy
-msgid "Directory"
-msgstr "Historie"
 
 msgid "Disable"
 msgstr ""
@@ -1576,18 +1556,6 @@ msgstr ""
 msgid "Environment %s has a successor. Only the last environment on a path can be deleted."
 msgstr ""
 
-#, fuzzy
-msgid "Environment '%s' was created."
-msgstr "Poskytovatel '%s' byl vytvořen."
-
-#, fuzzy
-msgid "Environment '%s' was deleted."
-msgstr "Poskytovatel '%s' byl smazán."
-
-#, fuzzy
-msgid "Environment '%s' was updated."
-msgstr "Poskytovatel '%s' byl aktualizován."
-
 msgid "Environment cannot be in its own promotion path"
 msgstr ""
 
@@ -1753,6 +1721,10 @@ msgstr ""
 msgid "Failed to publish content view '%s'."
 msgstr ""
 
+#, fuzzy
+msgid "Failed to update candlepin activation_key %s"
+msgstr "prostředí"
+
 msgid "Feature"
 msgstr ""
 
@@ -1857,9 +1829,6 @@ msgstr ""
 msgid "Good"
 msgstr ""
 
-msgid "Group membership modification is not allowed for system group(s): %s"
-msgstr ""
-
 #, fuzzy
 msgid "Guest"
 msgstr "Host"
@@ -1869,6 +1838,19 @@ msgstr "Historie"
 
 msgid "Host"
 msgstr "Hostitel"
+
+msgid "Host Collection Info"
+msgstr ""
+
+#, fuzzy
+msgid "Host Collections"
+msgstr "organizace"
+
+msgid "Host collection '%{name}' exceeds maximum usage limit of '%{limit}'"
+msgstr ""
+
+msgid "Host collection is empty."
+msgstr ""
 
 #, fuzzy
 msgid "Host config group"
@@ -1994,6 +1976,9 @@ msgid "ID:"
 msgstr ""
 
 msgid "ID: %s doesn't exist "
+msgstr ""
+
+msgid "IRC"
 msgstr ""
 
 msgid "ISOs"
@@ -2145,6 +2130,9 @@ msgstr ""
 msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
 msgstr ""
 
+msgid "Issue tracker"
+msgstr ""
+
 msgid "Issued"
 msgstr ""
 
@@ -2154,13 +2142,17 @@ msgstr ""
 msgid "Katello Logins"
 msgstr ""
 
-#, fuzzy
-msgid "Katello reference documentation"
-msgstr "Dokumentace CloudForms"
+msgid "Katello Support"
+msgstr ""
 
-#, fuzzy
-msgid "Katello user documentation"
-msgstr "Dokumentace CloudForms"
+msgid "Katello can be found on the same freenode channels used by Foreman."
+msgstr ""
+
+msgid "Katello uses the Foreman Redmine to report and track bugs and feature requests, which can be found here:"
+msgstr ""
+
+msgid "Katello uses the same mailing lists as Foreman but requests that Katello specific inquiries begin the subject line with [Katello]."
+msgstr ""
 
 msgid "Katello/model"
 msgstr ""
@@ -2496,6 +2488,9 @@ msgstr ""
 msgid "LookupValue|Value"
 msgstr ""
 
+msgid "Mailing lists"
+msgstr ""
+
 #, fuzzy
 msgid "Make this your default organization."
 msgstr "Smazat organizaci"
@@ -2514,7 +2509,7 @@ msgstr ""
 msgid "Manifest subscriptions unchanged from previous"
 msgstr ""
 
-msgid "Maximum number of content hosts exceeded for system group(s): %s"
+msgid "Maximum number of content hosts exceeded for host collection(s): %s"
 msgstr ""
 
 msgid "May not add a type or date range rule to a filter that has existing rules."
@@ -2572,6 +2567,9 @@ msgstr ""
 msgid "Model|Vendor class"
 msgstr ""
 
+msgid "Modify Content Hosts in Host Collection"
+msgstr ""
+
 #, fuzzy
 msgid "Modify Distributors"
 msgstr "Vybrat distribuci"
@@ -2579,6 +2577,9 @@ msgstr "Vybrat distribuci"
 #, fuzzy
 msgid "Modify Distributors in Environment"
 msgstr "Vybrat distribuci"
+
+msgid "Modify Host Collection details and content host membership"
+msgstr ""
 
 msgid "Modify Organization and Administer Environments"
 msgstr ""
@@ -2590,9 +2591,6 @@ msgstr ""
 msgid "Modify Roles"
 msgstr "Spravovat role"
 
-msgid "Modify System Group details and system membership"
-msgstr ""
-
 #, fuzzy
 msgid "Modify Systems"
 msgstr "Vybrat distribuci"
@@ -2600,10 +2598,6 @@ msgstr "Vybrat distribuci"
 #, fuzzy
 msgid "Modify Systems in Environment"
 msgstr "prostředí"
-
-#, fuzzy
-msgid "Modify Systems in System Group"
-msgstr "Spravovat systémové skupiny"
 
 #, fuzzy
 msgid "Modify Users"
@@ -2714,7 +2708,7 @@ msgstr "Vyhledat obsah"
 msgid "No Default"
 msgstr "Systém"
 
-msgid "No Red Hat products currently exist, please import a manifest <a href='%s/all'>here</a> to receive Red Hat content."
+msgid "No Red Hat products currently exist, please import a manifest <a href='/subscriptions'>here</a> to receive Red Hat content."
 msgstr ""
 
 msgid "No Service Level Preference"
@@ -2743,6 +2737,10 @@ msgstr "Žádné události které odpovídají zadaným kritériím."
 
 msgid "No file uploaded"
 msgstr ""
+
+#, fuzzy
+msgid "No host collections found."
+msgstr "Vyhledat obsah"
 
 msgid "No manifest file uploaded"
 msgstr ""
@@ -2795,10 +2793,6 @@ msgstr "Žádné nové instalační balíčky"
 
 msgid "No synchronization is currently running"
 msgstr ""
-
-#, fuzzy
-msgid "No system groups found."
-msgstr "Žádné šablony"
 
 #, fuzzy
 msgid "No system registration default set for this user."
@@ -3421,6 +3415,9 @@ msgstr "Číst aktivační klíče"
 msgid "Read Changesets in Environment"
 msgstr "prostředí"
 
+msgid "Read Content Hoss in Host Collection"
+msgstr ""
+
 #, fuzzy
 msgid "Read Content Views"
 msgstr "Vyhledat obsah"
@@ -3446,6 +3443,9 @@ msgid "Read Environments permission"
 msgstr "Vybrat distribuci"
 
 msgid "Read Everything"
+msgstr ""
+
+msgid "Read Host Collection"
 msgstr ""
 
 #, fuzzy
@@ -3477,20 +3477,12 @@ msgid "Read Roles permission"
 msgstr "Globální oprávnění"
 
 #, fuzzy
-msgid "Read System Group"
-msgstr "Spravovat systémové skupiny"
-
-#, fuzzy
 msgid "Read Systems"
 msgstr "Smazat systémy"
 
 #, fuzzy
 msgid "Read Systems in Environment"
 msgstr "prostředí"
-
-#, fuzzy
-msgid "Read Systems in System Group"
-msgstr "Spravovat systémové skupiny"
 
 #, fuzzy
 msgid "Read Users"
@@ -3579,9 +3571,6 @@ msgid "Registered"
 msgstr ""
 
 msgid "Reload data"
-msgstr ""
-
-msgid "Removal of the environment failed. If you continue having trouble with this, please contact an Administrator."
 msgstr ""
 
 msgid "Removal of the user failed. If you continue having trouble with this, please contact an Administrator."
@@ -4146,7 +4135,7 @@ msgstr ""
 msgid "Successful for distributor(s): "
 msgstr "Vybrat distribuci"
 
-msgid "Successfully added %{count} content host(s) to system group %{group}."
+msgid "Successfully added %{count} content host(s) to host collection %{host_collection}."
 msgstr ""
 
 msgid "Successfully changed sync plan for %s product(s)"
@@ -4179,8 +4168,9 @@ msgstr "úspěšně vytvořen."
 msgid "Successfully removed %s repositories"
 msgstr "úspěšně vytvořen."
 
-msgid "Successfully removed %{count} content host(s) from system group %{group}."
-msgstr ""
+#, fuzzy
+msgid "Successfully removed %{count} content host(s) from host collection %{host_collection}."
+msgstr "úspěšně vytvořen."
 
 #, fuzzy
 msgid "Successfully removed organization '%s'."
@@ -4210,9 +4200,6 @@ msgstr "Globální oprávnění"
 #, fuzzy
 msgid "Super administrator with all access."
 msgstr "Super Admin se všemi přístupy."
-
-msgid "Support"
-msgstr ""
 
 #, fuzzy
 msgid "Sync Canceled"
@@ -4261,32 +4248,9 @@ msgstr ""
 msgid "System Default Info"
 msgstr ""
 
-msgid "System Group Info"
-msgstr ""
-
-#, fuzzy
-msgid "System Groups"
-msgstr "Skupiny balíčků"
-
 #, fuzzy
 msgid "System Info"
 msgstr "Systém"
-
-msgid "System Information"
-msgstr ""
-
-#, fuzzy
-msgid "System Status"
-msgstr "Systém"
-
-msgid "System group '%{name}' exceeds maximum usage limit of '%{limit}'"
-msgstr ""
-
-msgid "System group is empty."
-msgstr ""
-
-msgid "System with uuid %s not found"
-msgstr ""
 
 #, fuzzy
 msgid "Systems"
@@ -4434,9 +4398,6 @@ msgid "Title"
 msgstr ""
 
 msgid "Title: "
-msgstr ""
-
-msgid "To submit a new bug please visit %s."
 msgstr ""
 
 msgid "To view the details of an item on the left, simply click on a single row.<br/><br/>To select multiple rows, hold the Control Key and click multiple rows.<br/><br/>If you don't need this help anymore, please click the close button in the top right of this box."
@@ -4813,7 +4774,7 @@ msgstr ""
 msgid "You can synchronize repositories only in library environment'"
 msgstr "Repozitáře můžete synchronizovat pouze v prostředí knihovny'"
 
-msgid "You cannot have more than %{max_systems} system(s) associated with system group '%{group}'."
+msgid "You cannot have more than %{max_content_hosts} content host(s) associated with host collection '%{host_collection}'."
 msgstr ""
 
 msgid "You cannot set an organization's parent. This feature is disabled."
@@ -5008,10 +4969,13 @@ msgstr "všechny balíčky"
 msgid "is invalid"
 msgstr ""
 
+msgid "issue tracker"
+msgstr ""
+
 msgid "katello-jobs service not running"
 msgstr "katello služba není spuštěna"
 
-msgid "may not be less than the number of systems associated with the system group."
+msgid "may not be less than the number of content hosts associated with the host collection."
 msgstr ""
 
 msgid "may not be set to 0."
@@ -5094,9 +5058,6 @@ msgstr "Systém"
 
 msgid "the %s Bugzilla"
 msgstr ""
-
-msgid "the CloudForms Documentation"
-msgstr "Dokumentace CloudForms"
 
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr ""
@@ -5185,6 +5146,9 @@ msgstr "Globální oprávnění"
 #~ msgid "API Key"
 #~ msgstr "GPG klíč"
 
+#~ msgid "About"
+#~ msgstr "O"
+
 #, fuzzy
 #~ msgid "Action"
 #~ msgstr "organizace"
@@ -5214,6 +5178,9 @@ msgstr "Globální oprávnění"
 
 #~ msgid "Administer Package Filters"
 #~ msgstr "Spravovat filtry balíků"
+
+#~ msgid "Administer System Groups"
+#~ msgstr "Spravovat systémové skupiny"
 
 #~ msgid "Administer System Templates"
 #~ msgstr "Správa systému šablon"
@@ -5258,6 +5225,14 @@ msgstr "Globální oprávnění"
 #~ msgstr "Organizace"
 
 #, fuzzy
+#~ msgid "Application"
+#~ msgstr "organizace"
+
+#, fuzzy
+#~ msgid "Application Information"
+#~ msgstr "Globální oprávnění"
+
+#, fuzzy
 #~ msgid "Apply Selected Plan to Selected Products"
 #~ msgstr "Vberat plány vztahující se na vybrané produkty"
 
@@ -5282,6 +5257,10 @@ msgstr "Globální oprávnění"
 #, fuzzy
 #~ msgid "Audit Comment"
 #~ msgstr "prostředí"
+
+#, fuzzy
+#~ msgid "Authentication"
+#~ msgstr "Aktivační klíče"
 
 #, fuzzy
 #~ msgid "Bookmark this search"
@@ -5316,6 +5295,10 @@ msgstr "Globální oprávnění"
 #~ msgstr "Repozitáře"
 
 #, fuzzy
+#~ msgid "Content About"
+#~ msgstr "Vyhledat obsah"
+
+#, fuzzy
 #~ msgid "Content view definition '%s' was created."
 #~ msgstr "Poskytovatel '%s' byl vytvořen."
 
@@ -5332,12 +5315,24 @@ msgstr "Globální oprávnění"
 #~ msgstr "Smazat role"
 
 #, fuzzy
+#~ msgid "Delete System Group"
+#~ msgstr "Spravovat systémové skupiny"
+
+#, fuzzy
 #~ msgid "Delete autosign entry for %s"
 #~ msgstr "Smazán poskytovatel [%s]"
 
 #, fuzzy
 #~ msgid "Delete filter?"
 #~ msgstr "Smazat role"
+
+#, fuzzy
+#~ msgid "Deleted system group '%s'"
+#~ msgstr "Vybrat distribuci"
+
+#, fuzzy
+#~ msgid "Directory"
+#~ msgstr "Historie"
 
 #, fuzzy
 #~ msgid "Documentation"
@@ -5410,6 +5405,18 @@ msgstr "Globální oprávnění"
 #, fuzzy
 #~ msgid "Empty environment"
 #~ msgstr "prostředí"
+
+#, fuzzy
+#~ msgid "Environment '%s' was created."
+#~ msgstr "Poskytovatel '%s' byl vytvořen."
+
+#, fuzzy
+#~ msgid "Environment '%s' was deleted."
+#~ msgstr "Poskytovatel '%s' byl smazán."
+
+#, fuzzy
+#~ msgid "Environment '%s' was updated."
+#~ msgstr "Poskytovatel '%s' byl aktualizován."
 
 #, fuzzy
 #~ msgid "Environment(s): %E"
@@ -5486,6 +5493,14 @@ msgstr "Globální oprávnění"
 #~ msgstr "Není dovoleno vytvářet produkty Red Hat poskytovatele."
 
 #, fuzzy
+#~ msgid "Katello reference documentation"
+#~ msgstr "Dokumentace CloudForms"
+
+#, fuzzy
+#~ msgid "Katello user documentation"
+#~ msgstr "Dokumentace CloudForms"
+
+#, fuzzy
 #~ msgid "Latest Events"
 #~ msgstr "Systém"
 
@@ -5512,6 +5527,10 @@ msgstr "Globální oprávnění"
 #, fuzzy
 #~ msgid "Managed IP"
 #~ msgstr "všechny balíčky"
+
+#, fuzzy
+#~ msgid "Modify Systems in System Group"
+#~ msgstr "Spravovat systémové skupiny"
 
 #, fuzzy
 #~ msgid "Network interfaces"
@@ -5622,6 +5641,10 @@ msgstr "Globální oprávnění"
 #~ msgstr "Produkty"
 
 #, fuzzy
+#~ msgid "No system groups found."
+#~ msgstr "Žádné šablony"
+
+#, fuzzy
 #~ msgid "OS Distribution"
 #~ msgstr "Vybrat distribuci"
 
@@ -5691,6 +5714,14 @@ msgstr "Globální oprávnění"
 #, fuzzy
 #~ msgid "Puppet Environments"
 #~ msgstr "prostředí"
+
+#, fuzzy
+#~ msgid "Read System Group"
+#~ msgstr "Spravovat systémové skupiny"
+
+#, fuzzy
+#~ msgid "Read Systems in System Group"
+#~ msgstr "Spravovat systémové skupiny"
 
 #, fuzzy
 #~ msgid "Remove Activation Key"
@@ -5829,6 +5860,10 @@ msgstr "Globální oprávnění"
 
 #~ msgid "System '%s' was updated."
 #~ msgstr "Systém '%s' byl aktualizován."
+
+#, fuzzy
+#~ msgid "System Groups"
+#~ msgstr "Skupiny balíčků"
 
 #, fuzzy
 #~ msgid "System Limit"
@@ -5980,6 +6015,9 @@ msgstr "Globální oprávnění"
 #, fuzzy
 #~ msgid "status"
 #~ msgstr "Systém"
+
+#~ msgid "the CloudForms Documentation"
+#~ msgstr "Dokumentace CloudForms"
 
 #, fuzzy
 #~ msgid "unknown permission for %s"
