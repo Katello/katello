@@ -15,7 +15,7 @@ module UsersHelper
 
   def organization_select(org_id = nil, optional = true, no_org_choice = nil)
     if current_user.id == @user.id
-      orgs = current_user.allowed_organizations.reject do |org|
+      orgs = current_user.organizations.reject do |org|
         !org.any_systems_registerable?
       end
     else

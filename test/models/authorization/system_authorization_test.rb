@@ -24,19 +24,7 @@ class SystemAuthorizationAdminTest < AuthorizationTestBase
   end
 
   def test_readable
-    refute_empty System.readable(@org)
-  end
-
-  def test_registerable?
-    assert System.registerable?(@env, @org)
-  end
-
-  def test_any_deletable?
-    assert System.any_deletable?(@env, @org)
-  end
-
-  def test_any_readable?
-    assert System.any_readable?(@org)
+    refute_empty System.readable
   end
 
   def test_readable?
@@ -64,19 +52,7 @@ class SystemAuthorizationNoPermsTest < AuthorizationTestBase
   end
 
   def test_readable
-    assert_empty System.readable(@org)
-  end
-
-  def test_registerable?
-    refute System.registerable?(@env, @org)
-  end
-
-  def test_any_deletable?
-    refute System.any_deletable?(@env, @org)
-  end
-
-  def test_any_readable?
-    refute System.any_readable?(@org)
+    assert_empty System.readable
   end
 
   def test_readable?

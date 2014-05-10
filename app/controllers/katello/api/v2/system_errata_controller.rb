@@ -14,14 +14,6 @@ module Katello
 class Api::V2::SystemErrataController < Api::V2::ApiController
 
   before_filter :find_system
-  before_filter :authorize
-
-  def rules
-    {
-      :apply => lambda { @system.editable? || User.consumer? },
-      :show => lambda { @system.readable? }
-    }
-  end
 
   api :PUT, "/systems/:system_id/errata/", "Schedule errata for installation"
   param :errata_ids, Array,  :desc => "List of Errata ids to install"

@@ -25,9 +25,10 @@ class Api::V2::SystemErrataControllerTest < ActionController::TestCase
   end
 
   def permissions
-    @read_permission = UserPermission.new(:read_systems, :organizations, nil, @system.organization)
-    @update_permission = UserPermission.new(:update_systems, :organizations, nil, @system.organization)
-    @no_permission = NO_PERMISSION
+    @view_permission = :view_content_hosts
+    @create_permission = :create_content_hosts
+    @update_permission = :edit_content_hosts
+    @destroy_permission = :destroy_content_hosts
   end
 
   def setup
@@ -49,9 +50,9 @@ class Api::V2::SystemErrataControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  def test_permissions
+  def test_apply_protected
     good_perms = [@update_permission]
-    bad_perms = [@read_permission, @no_permission ]
+    bad_perms = [@view_permission, @create_permission, @destroy_permission]
 
     assert_protected_action(:apply, good_perms, bad_perms) do
       put :apply, :system_id => @system.uuid, :errata=> ["foo*"]

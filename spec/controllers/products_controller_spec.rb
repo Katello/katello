@@ -26,7 +26,7 @@ describe ProductsController do
 
   before do
     setup_controller_defaults
-    @organization = new_test_org
+    @organization = get_organization
   end
 
   describe "get auto_complete_product" do

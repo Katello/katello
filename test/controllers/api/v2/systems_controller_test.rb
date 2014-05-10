@@ -25,14 +25,14 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
   def models
     @system = katello_systems(:simple_server)
     @host_collections = katello_host_collections
+    @organization = get_organization
   end
 
   def permissions
-    @read_permission = UserPermission.new(:read_systems, :organizations, nil, @system.organization)
-    @create_permission = UserPermission.new(:register_systems, :organizations, nil, @system.organization)
-    @update_permission = UserPermission.new(:update_systems, :organizations, nil, @system.organization)
-    @edit_permission = UserPermission.new(:edit_systems, :organizations, nil, @system.organization)
-    @no_permission = NO_PERMISSION
+    @view_permission = :view_content_hosts
+    @create_permission = :create_content_hosts
+    @update_permission = :edit_content_hosts
+    @destroy_permission = :destroy_content_hosts
   end
 
   def setup
@@ -48,10 +48,19 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
   end
 
   def test_index
-    get :index, :organization_id => get_organization.label
+    get :index, :organization_id => @organization.label
 
     assert_response :success
     assert_template 'api/v2/systems/index'
+  end
+
+  def test_index_protected
+    allowed_perms = [@view_permission]
+    denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+    assert_protected_action(:index, allowed_perms, denied_perms) do
+      get :index, :organization_id => @organization.label
+    end
   end
 
   def test_show
@@ -61,6 +70,15 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
     assert_template 'api/v2/systems/show'
   end
 
+  def test_show_protected
+    allowed_perms = [@view_permission]
+    denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+    assert_protected_action(:show, allowed_perms, denied_perms) do
+      get :show, :id => @system.uuid
+    end
+  end
+
   def test_refresh_subscriptions
     put :refresh_subscriptions, :id => @system.uuid
 
@@ -68,8 +86,16 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
     assert_template 'api/v2/systems/show'
   end
 
+  def test_refresh_subscriptions_protected
+    allowed_perms = [@update_permission]
+    denied_perms = [@create_permission, @view_permission, @destroy_permission]
+
+    assert_protected_action(:show, allowed_perms, denied_perms) do
+      put :refresh_subscriptions, :id => @system.uuid
+    end
+  end
+
   def test_tasks
-    skip "Getting failure in Jenkins. See github issue #3381"
     items = mock()
     items.stubs(:retrieve).returns([], 0)
     items.stubs(:total_items).returns([])
@@ -82,11 +108,29 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
     assert_template 'api/v2/systems/tasks'
   end
 
+  def test_tasks_protected
+    allowed_perms = [@view_permission]
+    denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+    assert_protected_action(:tasks, allowed_perms, denied_perms) do
+      get :tasks, :id => @system.uuid
+    end
+  end
+
   def test_available_host_collections
     get :available_host_collections, :id => @system.uuid
 
     assert_response :success
     assert_template 'api/v2/systems/available_host_collections'
+  end
+
+  def test_available_host_collections_protected
+    allowed_perms = [@view_permission]
+    denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+    assert_protected_action(:available_host_collections, allowed_perms, denied_perms) do
+      get :available_host_collections, :id => @system.uuid
+    end
   end
 
 end
