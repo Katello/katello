@@ -21,9 +21,9 @@ module Katello
     end
 
     def_param_group :product do
-      param :description, String, :desc => "Product description"
-      param :gpg_key_id, :number, :desc => "Identifier of the GPG key"
-      param :sync_plan_id, :number, :desc => "Plan numeric identifier", :allow_nil => true
+      param :description, String, :desc => N_("Product description")
+      param :gpg_key_id, :number, :desc => N_("Identifier of the GPG key")
+      param :sync_plan_id, :number, :desc => N_("Plan numeric identifier"), :allow_nil => true
     end
 
     def rules
@@ -42,13 +42,13 @@ module Katello
       }
     end
 
-    api :GET, "/products", "List products"
-    api :GET, "/subscriptions/:subscription_id/products", "List of subscription products in an organization"
-    api :GET, "/organizations/:organization_id/products", "List of products in an organization"
-    param :organization_id, :number, :desc => "Filter products by organization", :required => true
-    param :subscription_id, :identifier, :desc => "Filter products by subscription"
-    param :name, String, :desc => "Filter products by name"
-    param :enabled, :bool, :desc => "Filter products by enabled or disabled"
+    api :GET, "/products", N_("List products")
+    api :GET, "/subscriptions/:subscription_id/products", N_("List of subscription products in an organization")
+    api :GET, "/organizations/:organization_id/products", N_("List of products in an organization")
+    param :organization_id, :number, :desc => N_("Filter products by organization"), :required => true
+    param :subscription_id, :identifier, :desc => N_("Filter products by subscription")
+    param :name, String, :desc => N_("Filter products by name")
+    param :enabled, :bool, :desc => N_("Filter products by enabled or disabled")
     param_group :search, Api::V2::ApiController
     def index
       options = {
@@ -63,10 +63,10 @@ module Katello
       respond(:collection => item_search(Product, params, options))
     end
 
-    api :POST, "/products", "Create a product"
-    param :organization_id, :number, "ID of the organization", :required => true
+    api :POST, "/products", N_("Create a product")
+    param :organization_id, :number, N_("ID of the organization"), :required => true
     param_group :product
-    param :name, String, :desc => "Product name", :required => true
+    param :name, String, :desc => N_("Product name"), :required => true
     param :label, String, :required => false
     def create
       params[:product][:label] = labelize_params(product_params) if product_params
@@ -76,16 +76,16 @@ module Katello
       respond(:resource => product)
     end
 
-    api :GET, "/products/:id", "Show a product"
-    param :id, :number, :desc => "product numeric identifier", :required => true
+    api :GET, "/products/:id", N_("Show a product")
+    param :id, :number, :desc => N_("product numeric identifier"), :required => true
     def show
       respond_for_show(:resource => @product)
     end
 
-    api :PUT, "/products/:id", "Updates a product"
-    param :id, :number, :desc => "product numeric identifier", :required => true, :allow_nil => false
+    api :PUT, "/products/:id", N_("Updates a product")
+    param :id, :number, :desc => N_("product numeric identifier"), :required => true, :allow_nil => false
     param_group :product
-    param :name, String, :desc => "Product name"
+    param :name, String, :desc => N_("Product name")
     def update
       reset_gpg_keys = (product_params[:gpg_key_id] != @product.gpg_key_id)
       @product.reset_repo_gpgs! if reset_gpg_keys
@@ -94,8 +94,8 @@ module Katello
       respond(:resource => @product.reload)
     end
 
-    api :DELETE, "/products/:id", "Destroy a product"
-    param :id, :number, :desc => "product numeric identifier"
+    api :DELETE, "/products/:id", N_("Destroy a product")
+    param :id, :number, :desc => N_("product numeric identifier")
     def destroy
       @product.destroy
 

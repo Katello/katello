@@ -59,23 +59,23 @@ class Api::V1::DistributorsController < Api::V1::ApiController
 
   def_param_group :distributors do
     param :distributor, Hash, :required => true, :action_aware => true do
-      param :name, String, :desc => "Name of the distributor", :required => true, :action_aware => true
-      param :facts, Hash, :desc => "Key-value hash of distributor-specific facts"
-      param :installedProducts, Array, :desc => "List of products installed on the distributor"
-      param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
-      param :releaseVer, String, :desc => "Release of the os. The $releasever variable in repo url will be replaced with this value"
-      param :location, String, :desc => "Physical of the distributor"
-      param :capabilities, Array, :desc => "List of subscription capabilities"
+      param :name, String, :desc => N_("Name of the distributor"), :required => true, :action_aware => true
+      param :facts, Hash, :desc => N_("Key-value hash of distributor-specific facts")
+      param :installedProducts, Array, :desc => N_("List of products installed on the distributor")
+      param :serviceLevel, String, :allow_nil => true, :desc => N_("A service level for auto-healing process, e.g. SELF-SUPPORT")
+      param :releaseVer, String, :desc => N_("Release of the os. The $releasever variable in repo url will be replaced with this value")
+      param :location, String, :desc => N_("Physical of the distributor")
+      param :capabilities, Array, :desc => N_("List of subscription capabilities")
     end
   end
 
   # this method is called from katello cli client and it does not work with activation keys
   # for activation keys there is method activate (see custom routes)
-  api :POST, "/environments/:environment_id/distributors", "Register a distributor in environment"
+  api :POST, "/environments/:environment_id/distributors", N_("Register a distributor in environment")
   param_group :distributors
   param :distributor, Hash, :required => true, :action_aware => true do
-    param :type, String, :desc => "Type of the distributor, it should always be 'distributor'", :required => true
-    param :version, String, :desc => "Version of the distributor. Defaults to the latest if not given."
+    param :type, String, :desc => N_("Type of the distributor, it should always be 'distributor'"), :required => true
+    param :version, String, :desc => N_("Version of the distributor. Defaults to the latest if not given.")
   end
   def create
     distributor_params = params[:distributor]
@@ -88,9 +88,9 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     respond
   end
 
-  api :PUT, "/distributors/:id", "Update distributor information"
+  api :PUT, "/distributors/:id", N_("Update distributor information")
   param_group :distributors
-  param :capabilities, Array, :desc => "For backwards capability with Red Hat hosted candlepin - List of subscription capabilities"
+  param :capabilities, Array, :desc => N_("For backwards capability with Red Hat hosted candlepin - List of subscription capabilities")
   def update
     distributor_params = params[:distributor]
     distributor_params = params.slice(:capabilities) if distributor_params.nil?
@@ -100,10 +100,10 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     respond
   end
 
-  api :GET, "/environments/:environment_id/distributors", "List distributors in environment"
-  api :GET, "/organizations/:organization_id/distributors", "List distributors in organization"
-  param :name, String, :desc => "Filter distributors by name"
-  param :pool_id, String, :desc => "Filter distributors by subscribed pool"
+  api :GET, "/environments/:environment_id/distributors", N_("List distributors in environment")
+  api :GET, "/organizations/:organization_id/distributors", N_("List distributors in organization")
+  param :name, String, :desc => N_("Filter distributors by name")
+  param :pool_id, String, :desc => N_("Filter distributors by subscribed pool")
   def index
     # expected parameters
     expected_params = params.slice(:name, :uuid)
@@ -115,14 +115,14 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     respond
   end
 
-  api :GET, "/distributors/:id", "Show a distributor"
-  param :id, String, :desc => "UUID of the distributor", :required => true
+  api :GET, "/distributors/:id", N_("Show a distributor")
+  param :id, String, :desc => N_("UUID of the distributor"), :required => true
   def show
     respond
   end
 
-  api :GET, "/distributors/:id/export", "Export distributor's manifest"
-  param :id, String, :desc => "UUID of the distributor", :required => true
+  api :GET, "/distributors/:id/export", N_("Export distributor's manifest")
+  param :id, String, :desc => N_("UUID of the distributor"), :required => true
   def export
     filename = params[:filename]
     filename = 'manifest.zip' if filename.nil? || filename == ''
@@ -133,15 +133,15 @@ class Api::V1::DistributorsController < Api::V1::ApiController
               :type     => 'application/xml'
   end
 
-  api :DELETE, "/distributors/:id", "Unregister a distributor"
-  param :id, String, :desc => "UUID of the distributor", :required => true
+  api :DELETE, "/distributors/:id", N_("Unregister a distributor")
+  param :id, String, :desc => N_("UUID of the distributor"), :required => true
   def destroy
     @distributor.destroy
     respond :message => _("Deleted distributor '%s'") % params[:id]
   end
 
-  api :GET, "/distributors/:id/pools", "List pools a distributor is subscribed to"
-  param :id, String, :desc => "UUID of the distributor", :required => true
+  api :GET, "/distributors/:id/pools", N_("List pools a distributor is subscribed to")
+  param :id, String, :desc => N_("UUID of the distributor"), :required => true
   def pools
     match_distributor = params.key?(:match_distributor) ? params[:match_distributor].to_bool : false
     match_installed   = params.key?(:match_installed) ? params[:match_installed].to_bool : false
@@ -152,9 +152,9 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     respond_for_index :collection => { :pools => cp_pools }
   end
 
-  api :GET, "/organizations/:organization_id/distributors/tasks", "List async tasks for the distributor"
-  param :distributor_name, String, :desc => "Name of the distributor"
-  param :distributor_uuid, String, :desc => "UUID of the distributor"
+  api :GET, "/organizations/:organization_id/distributors/tasks", N_("List async tasks for the distributor")
+  param :distributor_name, String, :desc => N_("Name of the distributor")
+  param :distributor_uuid, String, :desc => N_("UUID of the distributor")
   def tasks
     query = TaskStatus.joins(:distributor).where(:"task_statuses.organization_id" => @organization.id)
     if @environment
@@ -173,14 +173,14 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     respond_for_index :collection => @tasks
   end
 
-  api :GET, "/distributors/tasks/:id", "Show details of the async task"
-  param :id, String, :desc => "UUID of the task", :required => true
+  api :GET, "/distributors/tasks/:id", N_("Show details of the async task")
+  param :id, String, :desc => N_("UUID of the task"), :required => true
   def task_show
     @task.refresh
     respond_for_show :resource => @task
   end
 
-  api :GET, "/distributor_versions", "Show the list of available distributor versions"
+  api :GET, "/distributor_versions", N_("Show the list of available distributor versions")
   def versions
     respond_for_index :collection => Distributor.available_versions
   end

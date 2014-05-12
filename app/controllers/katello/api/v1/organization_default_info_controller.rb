@@ -33,11 +33,11 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
   end
 
   def_param_group :informable_identifier do
-    param :informable_type, String, :desc => "name of the resource", :required => true
-    param :informable_id, :identifier, :desc => "resource identifier", :required => true
+    param :informable_type, String, :desc => N_("name of the resource"), :required => true
+    param :informable_id, :identifier, :desc => N_("resource identifier"), :required => true
   end
 
-  api :POST, '/organizations/:organization_id/default_info/:informable_type', "Create default info"
+  api :POST, '/organizations/:organization_id/default_info/:informable_type', N_("Create default info")
   param_group :informable_identifier
   param :keyname, String, :required => true
   def create
@@ -56,9 +56,9 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
     }.to_json
   end
 
-  api :DELETE, "/organizations/:organization_id/default_info/:informable_type/:informable_id/:keyname", "Delete default info"
+  api :DELETE, "/organizations/:organization_id/default_info/:informable_type/:informable_id/:keyname", N_("Delete default info")
   param_group :informable_identifier
-  param :keyname, String, :desc => "Custom info key", :required => true
+  param :keyname, String, :desc => N_("Custom info key"), :required => true
   def destroy
     inf_type = params[:informable_type]
     @organization.default_info[inf_type].delete(params[:keyname])
@@ -70,9 +70,9 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
     }.to_json
   end
 
-  api :POST, '/organizations/:organization_id/default_info/:informable_type/apply', "Apply existing default info on all informable resources"
+  api :POST, '/organizations/:organization_id/default_info/:informable_type/apply', N_("Apply existing default info on all informable resources")
   param_group :informable_identifier
-  param :async, :bool, :required => false, :desc => "directive to run this asynchronously or not"
+  param :async, :bool, :required => false, :desc => N_("directive to run this asynchronously or not")
   def apply_to_all
     params[:async] = true if params[:async].nil?
 

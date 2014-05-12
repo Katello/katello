@@ -21,11 +21,11 @@ class Api::V2::OrganizationDefaultInfoController < Api::V1::OrganizationDefaultI
   end
 
   def_param_group :informable_identifier do
-    param :informable_type, String, :desc => "name of the resource", :required => true
-    param :informable_id, :identifier, :desc => "resource identifier", :required => true
+    param :informable_type, String, :desc => N_("name of the resource"), :required => true
+    param :informable_id, :identifier, :desc => N_("resource identifier"), :required => true
   end
 
-  api :POST, '/organizations/:organization_id/default_info/:informable_type', "Create default info"
+  api :POST, '/organizations/:organization_id/default_info/:informable_type', N_("Create default info")
   param_group :informable_identifier
   param :default_info, Hash, :required => true do
     param :keyname, String, :required => true

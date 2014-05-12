@@ -23,15 +23,15 @@ class Api::V2::SystemErrataController < Api::V2::ApiController
     }
   end
 
-  api :PUT, "/systems/:system_id/errata/", "Schedule errata for installation"
-  param :errata_ids, Array,  :desc => "List of Errata ids to install"
+  api :PUT, "/systems/:system_id/errata/", N_("Schedule errata for installation")
+  param :errata_ids, Array, :desc => N_("List of Errata ids to install")
   def apply
     task = async_task(::Actions::Katello::System::Erratum::Install, @system, params[:errata_ids])
     respond_for_async :resource => task
   end
 
-  api :GET, "/systems/:system_id/errata/:id", "Retrieve a single errata for a system"
-  param :id, String, :desc => "Errata id of the erratum (RHSA-2012:108)", :required => true
+  api :GET, "/systems/:system_id/errata/:id", N_("Retrieve a single errata for a system")
+  param :id, String, :desc => N_("Errata id of the erratum (RHSA-2012:108)"), :required => true
   def show
     errata = Errata.find_by_errata_id(params[:id])
     respond_for_show :resource => errata

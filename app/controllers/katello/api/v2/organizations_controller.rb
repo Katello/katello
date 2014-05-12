@@ -42,23 +42,23 @@ module Katello
       }
     end
 
-    api :GET, '/organizations', 'List all organizations'
+    api :GET, '/organizations', N_('List all organizations')
     param_group :search, Api::V2::ApiController
     def index
       @render_template = 'katello/api/v2/organizations/index'
       super
     end
 
-    api :GET, '/organizations/:id', 'Show organization'
+    api :GET, '/organizations/:id', N_('Show organization')
     def show
       @render_template = 'katello/api/v2/organizations/show'
       super
     end
 
-    api :PUT, '/organizations/:id', 'Update organization'
+    api :PUT, '/organizations/:id', N_('Update organization')
     param_group :resource, ::Api::V2::TaxonomiesController
-    param :description, String, :desc => "description"
-    param :redhat_repository_url, String, :desc => "Redhat CDN url"
+    param :description, String, :desc => N_("description")
+    param :redhat_repository_url, String, :desc => N_("Redhat CDN url")
     def update
       if params.key?(:redhat_repository_url)
         @organization.redhat_provider.update_attributes!(:repository_url => params[:redhat_repository_url])
@@ -66,38 +66,38 @@ module Katello
       super
     end
 
-    api :POST, '/organizations', 'Create organization'
-    param :name, String, :desc => "name", :required => true
-    param :label, String, :desc => "unique label"
-    param :description, String, :desc => "description"
+    api :POST, '/organizations', N_('Create organization')
+    param :name, String, :desc => N_("name"), :required => true
+    param :label, String, :desc => N_("unique label")
+    param :description, String, :desc => N_("description")
     def create
       super
     end
 
-    api :DELETE, '/organizations/:id', 'Delete an organization'
+    api :DELETE, '/organizations/:id', N_('Delete an organization')
     def destroy
       process_response @organization.destroy, _("Deleted organization '%s'") % params[:id]
     end
 
-    api :PUT, "/organizations/:id/repo_discover", "Discover Repositories"
-    param :id, String, :desc => "organization id, label, or name"
-    param :url, String, :desc => "base url to perform repo discovery on"
+    api :PUT, "/organizations/:id/repo_discover", N_("Discover Repositories")
+    param :id, String, :desc => N_("organization id, label, or name")
+    param :url, String, :desc => N_("base url to perform repo discovery on")
     def repo_discover
       fail _("url not defined.") if params[:url].blank?
       task = async_task(::Actions::Katello::Repository::Discover, params[:url])
       respond_for_async :resource => task
     end
 
-    api :PUT, "/organizations/:label/cancel_repo_discover", "Cancel repository discovery"
-    param :label, String, :desc => "Organization label"
-    param :url, String, :desc => "base url to perform repo discovery on"
+    api :PUT, "/organizations/:label/cancel_repo_discover", N_("Cancel repository discovery")
+    param :label, String, :desc => N_("Organization label")
+    param :url, String, :desc => N_("base url to perform repo discovery on")
     def cancel_repo_discover
       # TODO: implement task canceling
       render :json => { message: "not implemented" }
     end
 
-    api :GET, "/organizations/:label/download_debug_certificate", "Download a debug certificate"
-    param :label, String, :desc => "Organization label"
+    api :GET, "/organizations/:label/download_debug_certificate", N_("Download a debug certificate")
+    param :label, String, :desc => N_("Organization label")
     def download_debug_certificate
       pem = @organization.debug_cert
       data = "#{ pem[:key] }\n\n#{ pem[:cert] }"
@@ -106,13 +106,13 @@ module Katello
                 :type => "application/text"
     end
 
-    api :POST, "/organizations/:id/autoattach_subscriptions", "Auto-attach available subscriptions to all systems within an organization. Asynchronous operation."
+    api :POST, "/organizations/:id/autoattach_subscriptions", N_("Auto-attach available subscriptions to all systems within an organization. Asynchronous operation.")
     def autoattach_subscriptions
       async_job = @organization.auto_attach_all_systems
       respond_for_async :resource => async_job
     end
 
-    api :GET, '/organizations/:id/redhat_provider', 'List all :resource_id'
+    api :GET, '/organizations/:id/redhat_provider', N_('List all :resource_id')
     def redhat_provider
       respond_for_show(:resource => @organization.redhat_provider,
                        :resource_name => "providers")
