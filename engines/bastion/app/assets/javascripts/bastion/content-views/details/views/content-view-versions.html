@@ -38,7 +38,7 @@
           </span>
         </td>
         <td alch-table-cell>
-          <li ng-repeat="environment in version.environments">
+          <li ng-repeat="environment in version.environments" ng-if="environment.permissions.readable">
             {{ environment.name }}
           </li>
         </td>
@@ -57,7 +57,7 @@
         </td>
         <td alch-table-cell>{{ version.user }}</td>
         <td class="col-sm-2">
-          <a ui-sref="content-views.details.promotion({contentViewId: contentView.id, versionId: version.id})">
+          <a ui-sref="content-views.details.promotion({contentViewId: contentView.id, versionId: version.id})" ng-show="contentView.permissions.promotable_or_removable">
             <button class="btn btn-default">
               <i class="icon-share-alt"></i>
               <span translate>
@@ -65,7 +65,7 @@
               </span>
             </button>
           </a>
-          <a ui-sref="content-views.details.version-deletion.environments({contentViewId: contentView.id, versionId: version.id})">
+          <a ui-sref="content-views.details.version-deletion.environments({contentViewId: contentView.id, versionId: version.id})" ng-show="version.permissions.deletable">
             <button class="btn btn-default">
               <i class="icon-trash"></i>
               <span translate>

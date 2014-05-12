@@ -30,7 +30,6 @@ describe KTEnvironment do
     describe "check on operations" do
 
       all_verb_methods = [:viewable_for_promotions?,
-                          :any_operation_readable?,
                           :contents_readable?,
                           :systems_readable?,
                           :systems_editable?,
@@ -38,11 +37,11 @@ describe KTEnvironment do
                           :systems_registerable?]
 
       permission_matrix = {
-          :read_contents =>  [:any_operation_readable?, :contents_readable?, :viewable_for_promotions?],
-          :read_systems => [:any_operation_readable?, :systems_readable?],
-          :register_systems => [:any_operation_readable?, :systems_readable?,:systems_registerable?],
-          :update_systems => [:any_operation_readable?, :systems_readable?, :systems_editable? ],
-          :delete_systems => [:any_operation_readable?, :systems_readable?, :systems_deletable? ],
+          :read_contents =>  [ :contents_readable?, :viewable_for_promotions?],
+          :read_systems => [ :systems_readable?],
+          :register_systems => [:systems_readable?,:systems_registerable?],
+          :update_systems => [:systems_readable?, :systems_editable? ],
+          :delete_systems => [:systems_readable?, :systems_deletable? ],
       }
       permission_matrix.each_pair do |perm, true_ops|
         true_ops.each do |op|

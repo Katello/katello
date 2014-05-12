@@ -36,6 +36,10 @@ module Katello
     def test_key_deletable?
       assert @view.deletable?
     end
+
+    def test_promotable?
+      assert @view.promotable_or_removable?
+    end
   end
 
   class ContentViewAuthorizationNoPermsTest < AuthorizationTestBase
@@ -60,6 +64,17 @@ module Katello
 
     def test_key_deletable?
       refute @view.deletable?
+    end
+
+    def test_promotable?
+      refute @view.promotable_or_removable?
+    end
+
+    def test_promotable_perm
+      cv = katello_content_views(:library_dev_staging_view)
+      setup_current_user_with_permissions(:name => "promote_or_remove_content_views",
+                                        :search => "name=\"#{cv.name}\"")
+      assert cv.promotable_or_removable?
     end
 
   end

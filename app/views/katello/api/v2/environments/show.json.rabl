@@ -18,7 +18,8 @@ node :permissions do |env|
   {
     :readable => env.readable?,
     :editable => env.editable?,
-    :deletable => env.deletable?
+    :deletable => env.deletable?,
+    :promotable_or_removable => env.promotable_or_removable?
   }
 end
 

@@ -158,7 +158,11 @@ module Authorization::Organization
     end
 
     def readable_promotion_paths
-      permissible_promotion_paths(KTEnvironment.readable)
+       permissible_promotion_paths(KTEnvironment.readable)
+    end
+
+    def promotable_promotion_paths
+      permissible_promotion_paths(KTEnvironment.promotable)
     end
 
     def permissible_promotion_paths(permissible_environments)

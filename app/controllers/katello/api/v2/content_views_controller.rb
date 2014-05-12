@@ -14,9 +14,13 @@ module Katello
   class Api::V2::ContentViewsController < Api::V2::ApiController
     before_filter :find_content_view, :except => [:index, :create]
     before_filter :find_organization, :only => [:index, :create]
-    before_filter :find_environment, :only => [:index, :remove_from_environment]
     before_filter :load_search_service, :only => [:index, :history, :available_puppet_modules,
                                                   :available_puppet_module_names]
+    before_filter :find_environment, :only => [:index, :remove_from_environment]
+    before_filter :authorize_remove_from_environment, :only => [:remove_from_environment]
+    before_filter :authorize_remove, :only => [:remove]
+    before_filter :authorize_destroy, :only => [:destroy]
+
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids component_ids))
 
     resource_description do
@@ -204,6 +208,29 @@ module Katello
     def find_environment
       return if !params.key?(:environment_id) && params[:action] == "index"
       @environment = KTEnvironment.find(params[:environment_id])
+    end
+
+    def authorize_remove_from_environment
+      deny_access unless @view.promotable_or_removable?
+      deny_access unless @environment.promotable_or_removable?
+    end
+
+    def authorize_remove
+      env_ids = params[:environment_ids]
+      if env_ids.blank?
+        # If we are not removing from the environments
+        # but just deleting from the archives then you need content view delete.
+        deny_access unless @view.deletable?
+      else
+        # If we are removing from the environments
+        # then we need to be sure that cv has the "remove" permission
+        # and also ensure that the environments have the remove permission
+        deny_access unless KTEnvironment.promotable.where(:id => env_ids).count == env_ids.size && @view.promotable_or_removable?
+      end
+    end
+
+    def authorize_destroy
+      deny_access unless @view.deletable?
     end
   end
 end

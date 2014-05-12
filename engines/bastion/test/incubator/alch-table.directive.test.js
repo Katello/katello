@@ -33,6 +33,10 @@ describe('Directive: alchTable', function() {
         },{
             name: 'Pilsner',
             style: 'lager'
+        },{
+            name: 'Quadrupel',
+            style: 'beer',
+            unselectable: true
         }]
     });
 
@@ -115,7 +119,7 @@ describe('Directive: alchTable', function() {
             expect(scope.table.allSelected()).toEqual(false);
         });
 
-        it("should select all rows", function() {
+        it("should select all selectable rows", function() {
             tableController.selectAll(true);
 
             expect(scope.table.numSelected).toEqual(2);

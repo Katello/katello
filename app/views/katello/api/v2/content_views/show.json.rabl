@@ -17,6 +17,12 @@ end
 
 child :environments => :environments do
   attributes :id, :name, :label
+  node :permissions do |env|
+  {
+    :readable => env.readable?
+  }
+  end
+
 end
 
 child :repositories => :repositories do
@@ -33,6 +39,13 @@ child :versions => :versions do
   attributes :id, :version
   attributes :created_at => :published
   attributes :environment_ids
+end
+
+node :permissions do |cv|
+{
+  :promotable_or_removable => cv.promotable_or_removable? && Katello::KTEnvironment.any_promotable?,
+  :deletable => cv.deletable?
+}
 end
 
 child :components => :components do

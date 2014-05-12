@@ -18,7 +18,7 @@
           <span translate>Clone View</span>
         </a>
 
-        <button class="btn btn-default" ui-sref="content-views.details.deletion">
+        <button class="btn btn-default" ui-sref="content-views.details.deletion" ng-show="contentView.permissions.deletable">
           <i class="icon-trash"></i>
           {{ "Remove View" | translate }}
         </button>
