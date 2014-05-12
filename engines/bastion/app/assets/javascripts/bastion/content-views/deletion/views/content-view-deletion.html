@@ -24,7 +24,7 @@
           <td>{{ version.version }}</td>
           <td>{{ environmentNames(version).join(', ') }}</td>
           <td>
-            <a ui-sref="content-views.details.version-deletion.environments({contentViewId: contentView.id, versionId: version.id})">
+            <a ui-sref="content-views.details.version-deletion.environments({contentViewId: contentView.id, versionId: version.id})" ng-show="version.permissions.deletable">
               <button class="btn btn-default">
                 <i class="icon-trash"></i>
                 <span translate>Remove Version</span>

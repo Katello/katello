@@ -14,9 +14,12 @@ module Katello
   class Api::V2::ContentViewsController < Api::V2::ApiController
     before_filter :find_content_view, :except => [:index, :create]
     before_filter :find_organization, :only => [:index, :create]
-    before_filter :find_environment, :only => [:index, :remove_from_environment]
     before_filter :load_search_service, :only => [:index, :history, :available_puppet_modules,
                                                   :available_puppet_module_names]
+    before_filter :find_environment, :only => [:index, :remove_from_environment]
+    before_filter :check_env_removable_permission, :only => [:remove_from_environment]
+    before_filter :check_envs_removable_permission, :only => [:remove]
+
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids component_ids))
 
     resource_description do
@@ -204,6 +207,15 @@ module Katello
     def find_environment
       return if !params.key?(:environment_id) && params[:action] == "index"
       @environment = KTEnvironment.find(params[:environment_id])
+    end
+
+    def check_env_removable_permission
+      deny_access unless @environment.promotable?
+    end
+
+    def check_envs_removable_permission
+      env_ids = params[:environment_ids]
+      deny_access unless KTEnvironment.promotable.where(:id => env_ids).count == env_ids.size
     end
   end
 end

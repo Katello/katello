@@ -23,6 +23,14 @@ module Authorization::LifecycleEnvironment
       authorized(:view_lifecycle_environments)
     end
 
+    def promotable
+      authorized(:promote_or_remove_content_views_to_environment)
+    end
+
+    def any_promotable?
+      promotable.count > 0
+    end
+
     def creatable?
       ::User.current.can?(:create_lifecycle_environments)
     end
@@ -156,9 +164,8 @@ module Authorization::LifecycleEnvironment
       authorized?(:destroy_lifecycle_environments)
     end
 
-    def viewable_for_promotions?
-      return false if !Katello.config.katello?
-      ::User.allowed_to?(CONTENTS_READABLE, :environments, self.id, self.organization)
+    def promotable?
+      authorized?(:promote_or_remove_content_views_to_environment)
     end
 
     def any_operation_readable?

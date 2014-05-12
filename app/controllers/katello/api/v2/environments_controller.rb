@@ -140,8 +140,19 @@ module Katello
 
     api :GET, "/organizations/:organization_id/environments/paths", N_("List environment paths")
     param :organization_id, :number, :desc => N_("organization identifier")
+    param :permission_type, String, :desc => <<-DESC
+      The associated permission type. One of (readable | promotable)
+      Default: readable
+    DESC
     def paths
-      paths = @organization.readable_promotion_paths.inject([]) do |result, path|
+      env_paths = case params[:permission_type]
+                  when "promotable"
+                    @organization.promotable_promotion_paths
+                  else
+                    @organization.readable_promotion_paths
+                  end
+
+      paths = env_paths.inject([]) do |result, path|
         result << { :environments => [@organization.library] + path }
       end
       paths = [{ :environments => [@organization.library] }] if paths.empty?
