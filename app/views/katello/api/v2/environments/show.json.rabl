@@ -16,6 +16,7 @@ end
 
 node :permissions do |env|
   {
+    :readable => env.readable?,
     :editable => env.editable?,
     :deletable => env.deletable?
   }

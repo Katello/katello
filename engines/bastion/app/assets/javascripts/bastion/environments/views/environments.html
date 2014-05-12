@@ -38,14 +38,16 @@
 
             <td class="path-selector">
               <ul class="path-list">
-                <li class="path-list-item" ng-repeat="env in row.environments">
-                  <label ng-click="selectEnvironment(env)"
+                <li class="path-list-item" ng-repeat="env in row.environments" ng-class="{ 'disabled-item': !env.permissions.readable}">
+                  <label ng-click="env.permissions.readable && selectEnvironment(env)"
                          ng-class="{active: workingOn === env}"
-                         class="path-list-item-label">
+                         class="path-list-item-label"
+                         ng-disabled="!env.permissions.readable">
                     <div>
                       {{ env.name }}
                     </div>
                   </label>
+
                 </li>
                 <li class="path-list-item" ng-show="row.permissions.creatable">
                   <label ng-click="initiateCreateEnvironment()" class="path-list-item-label">

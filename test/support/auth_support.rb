@@ -48,6 +48,14 @@ module AuthorizationSupportMethods
     role.save!
   end
 
+  def add_role(permission_name, search = nil)
+    role = FactoryGirl.create(:role)
+    role.add_permissions!([permission_name], :search => search)
+    user = users(:restricted)
+    user.roles = [role]
+    user
+  end
+
   class UserPermissionsGenerator
     def initialize(user)
       @user = user

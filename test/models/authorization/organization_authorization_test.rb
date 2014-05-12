@@ -14,18 +14,20 @@ require 'models/authorization/authorization_base'
 
 module Katello
 class OrganizationAuthorizationAdminTest < AuthorizationTestBase
-
   def setup
     super
     User.current = User.find(users('admin'))
     @org = @acme_corporation
+  end
+  def test_promotion_paths
+    assert_equal(@org.promotion_paths, @org.readable_promotion_paths)
   end
 
   def test_class_readable
     refute_empty Organization.readable
   end
 
-  def def_class_creatable?
+  def test_creatable?
     assert Organization.creatable?
   end
 
@@ -135,5 +137,16 @@ class OrganizationAuthorizationNoPermsTest < AuthorizationTestBase
     refute @org.redhat_manageable?
   end
 
+  def test_read_promotion_paths
+    assert_empty @org.readable_promotion_paths
+  end
+
+  def test_read_promotion_paths_one
+    environment = katello_environments(:staging_path1)
+    add_role("view_lifecycle_environments", "name=\"#{environment.name}\"")
+
+    refute_equal(@org.promotion_paths, @org.readable_promotion_paths)
+    assert_equal(1, @org.readable_promotion_paths.size)
+  end
 end
 end

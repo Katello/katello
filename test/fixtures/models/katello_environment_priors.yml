@@ -9,3 +9,27 @@ staging_library_prior:
 candlepin_dev_library_prior:
   prior_id: <%= ActiveRecord::Fixtures.identify(:candlepin_library) %>
   environment_id: <%= ActiveRecord::Fixtures.identify(:candlepin_dev) %>
+
+dev_path1_prior:
+  prior_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:dev_path1) %>
+
+qa_path1_prior:
+  prior_id: <%= ActiveRecord::Fixtures.identify(:dev_path1) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:qa_path1) %>
+
+staging_path1_prior:
+  prior_id: <%= ActiveRecord::Fixtures.identify(:qa_path1) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:staging_path1) %>
+
+dev_path2_prior:
+  prior_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:dev_path2) %>
+
+qa_path2_prior:
+  prior_id: <%= ActiveRecord::Fixtures.identify(:dev_path2) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:qa_path2) %>
+
+staging_path2_prior:
+  prior_id: <%= ActiveRecord::Fixtures.identify(:qa_path2) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:staging_path2) %>

@@ -74,6 +74,7 @@ module Katello
 
     def test_create_protected
       Organization.any_instance.stubs(:save!).returns(@organization)
+      KTEnvironment.expects(:readable).returns(KTEnvironment)
       allowed_perms = [@create_permission]
       denied_perms = [@view_permission, @update_permission, @destroy_permission, @no_permission]
 
