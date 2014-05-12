@@ -62,7 +62,9 @@ module Katello
     param :name, String, :desc => N_("filter only environments containing this name")
     def index
       filters = []
+      ids = KTEnvironment.readable.pluck(:id)
 
+      filters << {:terms => {:id => ids}}
       filters << {:terms => {:organization_id => [@organization.id]}}
       # See http://projects.theforeman.org/issues/4405
       filters << {:terms => {:name => [params[:name].downcase]}} if params[:name]
@@ -139,7 +141,7 @@ module Katello
     api :GET, "/organizations/:organization_id/environments/paths", N_("List environment paths")
     param :organization_id, :number, :desc => N_("organization identifier")
     def paths
-      paths = @organization.promotion_paths.inject([]) do |result, path|
+      paths = @organization.readable_promotion_paths.inject([]) do |result, path|
         result << { :environments => [@organization.library] + path }
       end
       paths = [{ :environments => [@organization.library] }] if paths.empty?
@@ -175,7 +177,7 @@ module Katello
 
     def find_prior
       prior = params.require(:environment).require(:prior)
-      @prior = KTEnvironment.find(prior)
+      @prior = KTEnvironment.readable.find(prior)
       fail HttpErrors::NotFound, _("Couldn't find prior-environment '%s'") % prior.to_s if @prior.nil?
       @prior
     end
