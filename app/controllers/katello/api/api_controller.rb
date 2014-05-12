@@ -63,7 +63,12 @@ class Api::ApiController < ::Api::BaseController
       'katello/api/v2/organizations',
       'katello/api/v2/subscriptions',
       'katello/api/v2/sync',
-      'katello/api/v2/environments'
+      'katello/api/v2/environments',
+      'katello/api/v2/systems',
+      'katello/api/v2/system_packages',
+      'katello/api/v2/system_errata',
+      'katello/api/v2/systems_bulk_actions',
+      'katello/api/v1/candlepin_proxies'
     ]
   end
 

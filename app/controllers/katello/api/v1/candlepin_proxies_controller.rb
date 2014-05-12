@@ -15,6 +15,10 @@ module Katello
 
     include Katello::Authentication::ClientAuthentication
 
+    skip_before_filter :authorize, :except => [:consumer_create, :rhsm_index]
+    before_filter :authenticate, :only => [:list_owners]
+    before_filter :authenticate_client, :except => [:list_owners, :consumer_create, :rhsm_index, :consumer_activate]
+
     before_filter :add_candlepin_version_header
 
     before_filter :proxy_request_path, :proxy_request_body
@@ -29,94 +33,6 @@ module Katello
     before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
     before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin,
                                           :upload_package_profile, :regenerate_identity_certificates, :facts]
-    before_filter :find_user_by_login, :only => [:list_owners]
-    before_filter :authorize, :except => [:consumer_activate]
-
-    # TODO: break up method
-    # rubocop:disable MethodLength
-    def rules
-
-      proxy_test = lambda do
-        route, _, params = Engine.routes.router.recognize(request) do |rte, match, parameters|
-          break rte, match, parameters if rte.name
-        end
-
-        # route names are defined in routes.rb (:as => :name)
-        case route.name
-        when "api_proxy_consumer_deletionrecord_delete_path"
-          User.consumer? || Organization.all_editable?
-        when "api_proxy_owner_pools_path"
-          find_optional_organization
-          if params[:consumer]
-            (User.consumer? || @organization.readable?) && current_user.uuid == params[:consumer]
-          else
-            (User.consumer? || @organization.readable?)
-          end
-        when "api_proxy_owner_servicelevels_path"
-          find_optional_organization
-          (User.consumer? || @organization.readable?)
-        when "api_proxy_consumer_certificates_path", "api_proxy_consumer_releases_path", "api_proxy_certificate_serials_path",
-            "api_proxy_consumer_entitlements_path", "api_proxy_consumer_entitlements_post_path", "api_proxy_consumer_entitlements_delete_path",
-            "api_proxy_consumer_dryrun_path", "api_proxy_consumer_owners_path", "api_proxy_consumer_compliance_path"
-          User.consumer? && current_user.uuid == params[:id]
-        when "api_proxy_consumer_certificates_delete_path"
-          User.consumer? && current_user.uuid == params[:consumer_id]
-        when "api_proxy_pools_path"
-          User.consumer? && current_user.uuid == params[:consumer]
-        when "api_proxy_entitlements_path"
-          User.consumer?
-        when "api_proxy_subscriptions_post_path"
-          User.consumer? && current_user.uuid == params[:consumer_uuid]
-        when "api_proxy_consumer_content_overrides_path", "api_proxy_consumer_content_overrides_put_path",
-             "api_proxy_consumer_content_overrides_delete_path"
-          # These queries are restricted in Candlepin
-          User.consumer?
-        when "api_proxy_consumer_guestids_path", "api_proxy_consumer_guestids_get_guestid_path",
-             "api_proxy_consumer_guestids_put_path", "api_proxy_consumer_guestids_put_guestid_path",
-             "api_proxy_consumer_guestids_delete_guestid_path"
-          # These queries are restricted in Candlepin
-          User.consumer?
-        when "api_proxy_deleted_consumers_path"
-          current_user.has_superadmin_role?
-        else
-          Rails.logger.warn "Unknown proxy route #{request.method} #{request.fullpath}, access denied"
-          false
-        end
-      end
-      # After a system registers, it immediately uploads its packages. Although newer subscription-managers send
-      # certificate (User.consumer? == true), some do not. In this case, confirm that the user has permission to
-      # register systems in the system's organization and environment.
-      upload_system_packages = lambda do
-        @system.editable? ||
-          System.registerable?(@system.environment, @system.organization) ||
-          User.consumer?
-      end
-      consumer_only          = lambda { User.consumer? }
-      list_owners_test = lambda { @user.id == User.current.id } #user can see only his/her owners
-      register_system        = lambda { System.registerable?(@environment, @organization, @content_view) }
-      index_systems          = lambda { System.any_readable?(@organization) }
-      edit_system            = lambda do
-        @system.editable? || User.consumer?
-      end
-
-      {
-        :get    => proxy_test,
-        :post   => proxy_test,
-        :put    => proxy_test,
-        :delete => proxy_test,
-        :upload_package_profile => upload_system_packages,
-        :consumer_checkin       => consumer_only,
-        :regenerate_identity_certificates => consumer_only,
-        :consumer_create        => register_system,
-        :consumer_destroy       => consumer_only,
-        :consumer_show          => consumer_only,
-        :index                  => index_systems,
-        :hypervisors_update     => consumer_only,
-        :list_owners            => list_owners_test,
-        :rhsm_index             => lambda {true},
-        :facts                  => edit_system
-      }
-    end
 
     rescue_from RestClient::Exception do |e|
       Rails.logger.error pp_exception(e)
@@ -202,19 +118,13 @@ module Katello
     #api :PUT, "/consumers/:id/profile", "Update installed packages"
     #param :id, String, :desc => "UUID of the consumer", :required => true
     def upload_package_profile
-      allowed = rules[:upload_package_profile].call
-      if allowed
-        fail HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.key?(:_json)
-        @system.upload_package_profile(params[:_json])
-        render :json => Resources::Candlepin::Consumer.get(@system.uuid)
-      else
-        Rails.logger.warn(_("Consumer %s not allowed to upload package profile.") % params[:id])
-        respond_for_update :resource => {}
-      end
+      fail HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.key?(:_json)
+      @system.upload_package_profile(params[:_json])
+      render :json => Resources::Candlepin::Consumer.get(@system.uuid)
     end
 
     def list_owners
-      orgs = @user.allowed_organizations
+      orgs = User.current.organizations
       # rhsm expects owner (Candlepin format)
       # rubocop:disable SymbolName
       respond_for_index :collection => orgs.map { |o| { :key => o.label, :displayName => o.name } }
@@ -274,13 +184,6 @@ module Katello
       render :json => {:content => _("Facts successfully updated.")}, :status => 200
     end
 
-    protected
-
-    # to support rhsm client authentication
-    def authenticate
-      set_client_user || super
-    end
-
     private
 
     def set_organization_id
@@ -295,12 +198,6 @@ module Katello
         fail HttpErrors::NotFound, _("Couldn't find consumer '%s'") % params[:id]
       end
       @system
-    end
-
-    def find_user_by_login
-      @user = User.find_by_login(params[:login])
-      fail HttpErrors::NotFound, _("Couldn't find user '%s'") % params[:login] if @user.nil?
-      @user
     end
 
     def find_default_organization_and_or_environment
@@ -419,12 +316,14 @@ module Katello
           where("#{Organization.table_name}.id = ?", @organization.id)
       environments = environments.where("#{Katello::ContentViewEnvironment.table_name}.label = ?", label) if label
 
-      # remove any content view environments that aren't readable
-      unless @organization.readable?
-        environments.delete_if do |env|
+      environments.delete_if do |env|
+        if env.content_view.default
+          !env.environment.readable?
+        else
           !env.content_view.readable?
         end
       end
+
       environments
     end
 
@@ -442,6 +341,10 @@ module Katello
 
     def logger
       ::Logging.logger['cp_proxy']
+    end
+
+    def add_candlepin_version_header
+      response.headers["X-CANDLEPIN-VERSION"] = "katello/#{Katello.config.katello_version}"
     end
 
   end

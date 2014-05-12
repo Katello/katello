@@ -22,15 +22,10 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
   end
 
   def permissions
-    @read_permission = UserPermission.new(:read_systems, :organizations, nil, @system1.organization)
-    @update_permission = UserPermission.new(:update_systems, :organizations, nil, @system1.organization)
-    @delete_permission = UserPermission.new(:delete_systems, :organizations, nil, @system1.organization)
-    @update_host_collection_perm = UserPermission.new(:update, :host_collections, [@host_collection1.id, @host_collection2.id], @system1.organization)
-
-    @subscribe_perms = UserPermission.new(:register_systems, :environments, @library.id, @system1.organization) +
-        @update_permission
-
-    @no_permission = NO_PERMISSION
+    @view_permission = :view_content_hosts
+    @create_permission = :create_content_hosts
+    @update_permission = :edit_content_hosts
+    @destroy_permission = :destroy_content_hosts
   end
 
   def setup
@@ -159,16 +154,15 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
 
   def test_permissions
     good_perms = [@update_permission]
-    good_host_collection_perm = [@update_host_collection_perm + @update_permission]
-    bad_perms = [@read_permission, @delete_permission, @no_permission]
+    bad_perms = [@view_permission, @destroy_permission, @create_permission]
 
-    assert_protected_action(:bulk_add_host_collections, good_host_collection_perm, bad_perms) do
+    assert_protected_action(:bulk_add_host_collections, good_perms, bad_perms) do
       put :bulk_add_host_collections,  {:included => {:ids => @system_ids},
                                         :organization_id => @org.label,
                                         :host_collection_ids => [@host_collection1.id, @host_collection2.id]}
     end
 
-    assert_protected_action(:bulk_remove_host_collections, good_host_collection_perm, bad_perms) do
+    assert_protected_action(:bulk_remove_host_collections, good_perms, bad_perms) do
       put :bulk_remove_host_collections,  {:included => {:ids => @system_ids},
                                         :organization_id => @org.label,
                                         :host_collection_ids => [@host_collection1.id, @host_collection2.id]}
@@ -189,8 +183,8 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
           :content_type => 'package', :content => ['foo']
     end
 
-    good_perms = [@delete_permission]
-    bad_perms = [@read_permission, @update_permission, @no_permission]
+    good_perms = [@destroy_permission]
+    bad_perms = [@view_permission, @update_permission, @create_permission]
 
     assert_protected_action(:destroy_systems, good_perms, bad_perms) do
       put :destroy_systems, :included => {:ids => @system_ids}, :organization_id => @org.label
@@ -198,8 +192,8 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
   end
 
   def test_environment_content_view_permission
-    good_perms = [@subscribe_perms]
-    bad_perms = [@read_permission, @update_permission, @delete_permission, @no_permission]
+    good_perms = [@update_permission]
+    bad_perms = [@view_permission, @destroy_permission, @create_permission]
 
     assert_protected_action(:environment_content_view, good_perms, bad_perms) do
       put :environment_content_view, :included => {:ids => @system_ids}, :organization_id => @org.label,

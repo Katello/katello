@@ -63,7 +63,7 @@ class Api::V1::UsersController < Api::V1::ApiController
 
   api :GET, "/users/:id", "Show a user"
   def show
-    @user[:allowed_organizations] = @user.allowed_organizations
+    @user[:allowed_organizations] = @user.organizations
     @user[:roles] = @user.katello_roles
     respond
   end
@@ -155,7 +155,7 @@ class Api::V1::UsersController < Api::V1::ApiController
 
   # rhsm
   def list_owners
-    orgs = @user.allowed_organizations
+    orgs = @user.organizations
     # rhsm expects owner (Candlepin format)
     # rubocop:disable SymbolName
     respond_for_index :collection => orgs.map { |o| { :key => o.label, :displayName => o.name } }
