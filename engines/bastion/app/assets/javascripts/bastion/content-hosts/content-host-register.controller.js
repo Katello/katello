@@ -18,6 +18,7 @@
  * @requires $scope
  * @requires $location
  * @requires Node
+ * @requires Organization
  * @requires CurrentOrganization
  * @requires BastionConfig
  *
@@ -25,10 +26,10 @@
  *     Provides values to populate the code commands for registering a content host.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostRegisterController',
-    ['$scope', '$location', 'Node', 'CurrentOrganization', 'BastionConfig',
-    function ($scope, $location, Node, CurrentOrganization, BastionConfig) {
+    ['$scope', '$location', 'Node', 'Organization', 'CurrentOrganization', 'BastionConfig',
+    function ($scope, $location, Node, Organization, CurrentOrganization, BastionConfig) {
 
-        $scope.organization = CurrentOrganization;
+        $scope.organization = Organization.get({id: CurrentOrganization});
         $scope.baseURL = 'http://' + $location.host();
         $scope.consumerCertRPM = BastionConfig.consumerCertRPM;
 
