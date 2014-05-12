@@ -70,7 +70,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
     filters << {:terms => {:uuid => uuids}}
 
     if params[:organization_id]
-      environment_ids = Organization.find(params[:organization_id]).kt_environments.pluck(:id)
+      environment_ids = @environment ? [@environment.id] : Organization.find(params[:organization_id]).kt_environments.pluck(:id)
       filters << {:terms => {:environment_id => environment_ids}}
     elsif params[:environment_id]
       filters << {:terms => {:environment_id => [params[:environment_id]] }}
@@ -80,6 +80,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
 
     filters << {:terms => {:uuid => System.all_by_pool_uuid(params['pool_id']) }} if params['pool_id']
     filters << {:terms => {:uuid => [params['uuid']] }} if params['uuid']
+    filters << {:terms => {:name => [params['name']] }} if params['name']
 
     options = {
         :filters       => filters,
