@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-25 14:50-0400\n"
+"POT-Creation-Date: 2014-05-09 16:22-0400\n"
 "PO-Revision-Date: 2013-02-05 14:11+0000\n"
 "Last-Translator: Miroslav Suchý <msuchy@redhat.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,10 +31,6 @@ msgstr "環境無法設置為已在其路徑上的環境"
 #, fuzzy
 msgid " items selected."
 msgstr "已刪除套件篩選器 %s。"
-
-#, fuzzy
-msgid "\"Creating an activation key in candlepin: #{label}\""
-msgstr "在 candlepin 中建立使用者：%s"
 
 msgid "\"Missing values for #{parameter_missing_exception.param}.\""
 msgstr ""
@@ -408,9 +404,6 @@ msgstr "建立 %s 時並未提供標籤；因此已自動指定了一個標籤�
 msgid "A request has been received by Katello server '%{url}' to retrieve the logins for email '%{email}'. The following is a list of those logins:"
 msgstr ""
 
-msgid "About"
-msgstr "相關資訊"
-
 msgid "Abstract async task"
 msgstr ""
 
@@ -480,6 +473,10 @@ msgstr "管理環境中的變更集"
 msgid "Administer GPG Keys"
 msgstr "管理 GPG 金鑰"
 
+#, fuzzy
+msgid "Administer Host Collections"
+msgstr "管理角色"
+
 msgid "Administer Organization"
 msgstr "管理組織"
 
@@ -492,9 +489,6 @@ msgstr "管理供應方"
 
 msgid "Administer Roles"
 msgstr "管理角色"
-
-msgid "Administer System Groups"
-msgstr "管理系統群組"
 
 msgid "Administer Users"
 msgstr "管理使用者"
@@ -540,14 +534,6 @@ msgstr "candlepin 中屬於使用者 %s 的所有供應方"
 #, fuzzy
 msgid "All repositories"
 msgstr "Red Hat Repositories"
-
-#, fuzzy
-msgid "Application"
-msgstr "應用程式"
-
-#, fuzzy
-msgid "Application Information"
-msgstr "系統資訊"
 
 msgid "Applied"
 msgstr ""
@@ -691,10 +677,6 @@ msgstr ""
 msgid "AuthSource|Tls"
 msgstr ""
 
-#, fuzzy
-msgid "Authentication"
-msgstr "認證"
-
 msgid "Author"
 msgstr ""
 
@@ -743,6 +725,10 @@ msgstr ""
 
 msgid "Back to Results"
 msgstr ""
+
+#, fuzzy
+msgid "Backend System Status"
+msgstr "同步的狀態"
 
 msgid "Before removing this provider, all promoted repositories must first be deleted from their respective environments using a deletion changeset: "
 msgstr ""
@@ -796,7 +782,8 @@ msgstr "CDN 載入錯誤：拒絕存取 %s"
 msgid "CDN loading error: access forbidden to %s"
 msgstr "CDN 載入錯誤：%s 被禁止存取"
 
-msgid "Can't copy System Groups to a different org: '%{org1}' != '%{org2}'"
+#, fuzzy
+msgid "Can't copy host collections to a different org: '%{org1}' != '%{org2}'"
 msgstr "無法將系統群組複製至不同的組織：「%{org1}」!=「%{org2}」"
 
 #, fuzzy
@@ -973,6 +960,10 @@ msgid "Collapse All"
 msgstr ""
 
 #, fuzzy
+msgid "Collection membership modification is not allowed for host collections(s): %s"
+msgstr "不允許修改這些群組的系統群組成員：%s"
+
+#, fuzzy
 msgid "Compare Selected"
 msgstr "已移除了範本「%s」"
 
@@ -1062,10 +1053,6 @@ msgstr "不允許更新 Red Hat 產品。"
 
 #, fuzzy
 msgid "Content"
-msgstr "內容"
-
-#, fuzzy
-msgid "Content About"
 msgstr "內容"
 
 msgid "Content Available From"
@@ -1190,6 +1177,10 @@ msgstr "找不到篩選器「%s」"
 msgid "Couldn't find gpg key '%s'"
 msgstr "找不到 GPG 金鑰「%s」"
 
+#, fuzzy
+msgid "Couldn't find host collection '%s'"
+msgstr "找不到使用者角色「%s」"
+
 msgid "Couldn't find organization '%s'"
 msgstr "找不到組織「%s」"
 
@@ -1222,9 +1213,6 @@ msgstr "在「%{org}」組織中找不到同步計劃「%{plan}」"
 
 msgid "Couldn't find system '%s'"
 msgstr "找不到系統「%s」"
-
-msgid "Couldn't find system group '%s'"
-msgstr "找不到系統群組「%s」"
 
 msgid "Couldn't find user '%s'"
 msgstr "找不到使用者「%s」"
@@ -1342,12 +1330,20 @@ msgstr "刪除角色"
 msgid "Delete All"
 msgstr "刪除角色"
 
+#, fuzzy
+msgid "Delete Content Hosts in Host Collection"
+msgstr "由環境中刪除內容"
+
 msgid "Delete Content from Environment"
 msgstr "由環境中刪除內容"
 
 #, fuzzy
 msgid "Delete Distributors"
 msgstr "選擇散佈版本"
+
+#, fuzzy
+msgid "Delete Host Collection"
+msgstr "刪除系統"
 
 #, fuzzy
 msgid "Delete Manifest"
@@ -1364,15 +1360,9 @@ msgstr "已刪除的供應者 [ %s ]"
 msgid "Delete Roles"
 msgstr "刪除角色"
 
-msgid "Delete System Group"
-msgstr "刪除系統群組"
-
 #, fuzzy
 msgid "Delete Systems"
 msgstr "刪除系統群組"
-
-msgid "Delete Systems in System Group"
-msgstr "刪除系統群組中的系統"
 
 #, fuzzy
 msgid "Delete Users"
@@ -1399,6 +1389,14 @@ msgid "Deleted environment '%s'"
 msgstr "已刪除了環境「%s」"
 
 #, fuzzy
+msgid "Deleted host collection '%s'"
+msgstr "已刪除了角色「%s」"
+
+#, fuzzy
+msgid "Deleted host collection '%{s}' and it's %{n} systems."
+msgstr "已刪除了系統群組 '%{s}' 以及其中的 %{n} 部系統。"
+
+#, fuzzy
 msgid "Deleted organization '%s'"
 msgstr "選擇組織"
 
@@ -1421,18 +1419,8 @@ msgstr "已刪除了同步計劃「%s」"
 msgid "Deleted system '%s'"
 msgstr "已刪除了系統「%s」"
 
-msgid "Deleted system group '%s'"
-msgstr "已刪除了系統群組「%s」"
-
-msgid "Deleted system group '%{s}' and it's %{n} systems."
-msgstr "已刪除了系統群組 '%{s}' 以及其中的 %{n} 部系統。"
-
 msgid "Deleted user '%s'"
 msgstr "已刪除了使用者「%s」"
-
-#, fuzzy
-msgid "Deleting activation_key in candlepin: %s"
-msgstr "刪除 candlepin 裡的使用者：%s"
 
 msgid "Deleting environment in candlepin: %s"
 msgstr "正在刪除 candlepin 中的環境：%s"
@@ -1470,9 +1458,6 @@ msgstr "無服務等級偏好設定"
 
 msgid "Difference:"
 msgstr ""
-
-msgid "Directory"
-msgstr "目錄"
 
 msgid "Disable"
 msgstr ""
@@ -1645,16 +1630,6 @@ msgstr "環境 %s 擁有繼承者。僅有路徑上最後的環境能被刪除�
 msgid "Environment %s has a successor. Only the last environment on a path can be deleted."
 msgstr "環境 %s 擁有繼承者。僅有路徑上最後的環境能被刪除。"
 
-#, fuzzy
-msgid "Environment '%s' was created."
-msgstr "已更新環境「%s」。"
-
-msgid "Environment '%s' was deleted."
-msgstr "已刪除環境「%s」。"
-
-msgid "Environment '%s' was updated."
-msgstr "已更新環境「%s」。"
-
 msgid "Environment cannot be in its own promotion path"
 msgstr "環境不能位於自己的發送路徑上"
 
@@ -1822,6 +1797,10 @@ msgstr "刪除組織「%s」失敗。請檢查提示，已得知更多詳細資�
 msgid "Failed to publish content view '%s'."
 msgstr "找不到供應者「%s」"
 
+#, fuzzy
+msgid "Failed to update candlepin activation_key %s"
+msgstr "刪除 candlepin 環境 %s 失敗"
+
 msgid "Feature"
 msgstr ""
 
@@ -1928,10 +1907,6 @@ msgid "Good"
 msgstr ""
 
 #, fuzzy
-msgid "Group membership modification is not allowed for system group(s): %s"
-msgstr "不允許修改這些群組的系統群組成員：%s"
-
-#, fuzzy
 msgid "Guest"
 msgstr "客座端"
 
@@ -1940,6 +1915,19 @@ msgstr "紀錄"
 
 msgid "Host"
 msgstr "主機"
+
+msgid "Host Collection Info"
+msgstr ""
+
+#, fuzzy
+msgid "Host Collections"
+msgstr "發行版"
+
+msgid "Host collection '%{name}' exceeds maximum usage limit of '%{limit}'"
+msgstr ""
+
+msgid "Host collection is empty."
+msgstr ""
 
 #, fuzzy
 msgid "Host config group"
@@ -2066,6 +2054,9 @@ msgstr ""
 
 msgid "ID: %s doesn't exist "
 msgstr "ID：%s 不存在"
+
+msgid "IRC"
+msgstr ""
 
 msgid "ISOs"
 msgstr ""
@@ -2223,6 +2214,9 @@ msgstr ""
 msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
 msgstr "無效的動詞「%{verb}」。資源類型「%{resource_type}」的動詞可以是「%{possible_verbs}」之一"
 
+msgid "Issue tracker"
+msgstr ""
+
 msgid "Issued"
 msgstr ""
 
@@ -2233,12 +2227,17 @@ msgid "Katello Logins"
 msgstr "Katello 使用者名稱"
 
 #, fuzzy
-msgid "Katello reference documentation"
-msgstr "CloudForms 文件"
+msgid "Katello Support"
+msgstr "匯入"
 
-#, fuzzy
-msgid "Katello user documentation"
-msgstr "CloudForms 文件"
+msgid "Katello can be found on the same freenode channels used by Foreman."
+msgstr ""
+
+msgid "Katello uses the Foreman Redmine to report and track bugs and feature requests, which can be found here:"
+msgstr ""
+
+msgid "Katello uses the same mailing lists as Foreman but requests that Katello specific inquiries begin the subject line with [Katello]."
+msgstr ""
 
 #, fuzzy
 msgid "Katello/model"
@@ -2576,6 +2575,9 @@ msgstr ""
 msgid "LookupValue|Value"
 msgstr ""
 
+msgid "Mailing lists"
+msgstr ""
+
 #, fuzzy
 msgid "Make this your default organization."
 msgstr "將此作為我的預設組織。"
@@ -2595,7 +2597,7 @@ msgid "Manifest subscriptions unchanged from previous"
 msgstr ""
 
 #, fuzzy
-msgid "Maximum number of content hosts exceeded for system group(s): %s"
+msgid "Maximum number of content hosts exceeded for host collection(s): %s"
 msgstr "這些群組已達系統群組的系統數量最大上限：%s"
 
 msgid "May not add a type or date range rule to a filter that has existing rules."
@@ -2653,6 +2655,9 @@ msgstr ""
 msgid "Model|Vendor class"
 msgstr ""
 
+msgid "Modify Content Hosts in Host Collection"
+msgstr ""
+
 #, fuzzy
 msgid "Modify Distributors"
 msgstr "發行版"
@@ -2660,6 +2665,10 @@ msgstr "發行版"
 #, fuzzy
 msgid "Modify Distributors in Environment"
 msgstr "修改環境中的系統"
+
+#, fuzzy
+msgid "Modify Host Collection details and content host membership"
+msgstr "修改系統群組詳細資訊以及系統成員"
 
 msgid "Modify Organization and Administer Environments"
 msgstr "修改組織與管理者環境"
@@ -2671,17 +2680,11 @@ msgstr "修改供應方與管理者產品"
 msgid "Modify Roles"
 msgstr "修改使用者"
 
-msgid "Modify System Group details and system membership"
-msgstr "修改系統群組詳細資訊以及系統成員"
-
 msgid "Modify Systems"
 msgstr "修改系統"
 
 msgid "Modify Systems in Environment"
 msgstr "修改環境中的系統"
-
-msgid "Modify Systems in System Group"
-msgstr "修改系統群組中的系統"
 
 msgid "Modify Users"
 msgstr "修改使用者"
@@ -2792,7 +2795,7 @@ msgstr "內容"
 msgid "No Default"
 msgstr "系統範本"
 
-msgid "No Red Hat products currently exist, please import a manifest <a href='%s/all'>here</a> to receive Red Hat content."
+msgid "No Red Hat products currently exist, please import a manifest <a href='/subscriptions'>here</a> to receive Red Hat content."
 msgstr ""
 
 #, fuzzy
@@ -2822,6 +2825,10 @@ msgstr "沒有符合搜尋條件的事件。"
 
 msgid "No file uploaded"
 msgstr ""
+
+#, fuzzy
+msgid "No host collections found."
+msgstr "找不到"
 
 msgid "No manifest file uploaded"
 msgstr ""
@@ -2876,10 +2883,6 @@ msgstr "發行版"
 #, fuzzy
 msgid "No synchronization is currently running"
 msgstr "%s 目前沒有正在進行的同步程序"
-
-#, fuzzy
-msgid "No system groups found."
-msgstr "找不到"
 
 msgid "No system registration default set for this user."
 msgstr "尚未為此使用者設定系統註冊預設值。"
@@ -3498,6 +3501,9 @@ msgstr "讀取啟動金鑰的存取權限"
 msgid "Read Changesets in Environment"
 msgstr "讀取環境中的變更集"
 
+msgid "Read Content Hoss in Host Collection"
+msgstr ""
+
 #, fuzzy
 msgid "Read Content Views"
 msgstr "讀取環境"
@@ -3524,6 +3530,9 @@ msgstr "讀取角色的存取權限"
 msgid "Read Everything"
 msgstr "讀取所有東西"
 
+msgid "Read Host Collection"
+msgstr ""
+
 msgid "Read Organization"
 msgstr "讀取組織"
 
@@ -3546,17 +3555,11 @@ msgstr "讀取角色"
 msgid "Read Roles permission"
 msgstr "讀取角色的存取權限"
 
-msgid "Read System Group"
-msgstr "讀取系統群組"
-
 msgid "Read Systems"
 msgstr "讀取系統"
 
 msgid "Read Systems in Environment"
 msgstr "讀取環境中的系統"
-
-msgid "Read Systems in System Group"
-msgstr "讀取系統群組中的系統"
 
 #, fuzzy
 msgid "Read Users"
@@ -3647,10 +3650,6 @@ msgstr "註冊系統"
 
 msgid "Reload data"
 msgstr ""
-
-#, fuzzy
-msgid "Removal of the environment failed. If you continue having trouble with this, please contact an Administrator."
-msgstr "此作業的請求中傳送了無效的參數。請聯絡系統管理員。"
 
 #, fuzzy
 msgid "Removal of the user failed. If you continue having trouble with this, please contact an Administrator."
@@ -4227,7 +4226,7 @@ msgid "Successful for distributor(s): "
 msgstr "這些系統已成功： "
 
 #, fuzzy
-msgid "Successfully added %{count} content host(s) to system group %{group}."
+msgid "Successfully added %{count} content host(s) to host collection %{host_collection}."
 msgstr "已成功將系統加入群組 '%s'。"
 
 msgid "Successfully changed sync plan for %s product(s)"
@@ -4260,8 +4259,9 @@ msgstr "已成功刪除了變更集 '%s'。"
 msgid "Successfully removed %s repositories"
 msgstr "已成功刪除了變更集 '%s'。"
 
-msgid "Successfully removed %{count} content host(s) from system group %{group}."
-msgstr ""
+#, fuzzy
+msgid "Successfully removed %{count} content host(s) from host collection %{host_collection}."
+msgstr "已成功將系統加入群組 '%s'。"
 
 msgid "Successfully removed organization '%s'."
 msgstr "已成功移除組織 '%s'。"
@@ -4289,10 +4289,6 @@ msgstr "管理使用者權限"
 #, fuzzy
 msgid "Super administrator with all access."
 msgstr "擁有所有存取權限的管理使用者。"
-
-#, fuzzy
-msgid "Support"
-msgstr "匯入"
 
 #, fuzzy
 msgid "Sync Canceled"
@@ -4341,33 +4337,8 @@ msgstr "同步"
 msgid "System Default Info"
 msgstr "系統資訊"
 
-msgid "System Group Info"
-msgstr "系統群組資訊"
-
-#, fuzzy
-msgid "System Groups"
-msgstr "讀取系統群組"
-
 msgid "System Info"
 msgstr "系統資訊"
-
-#, fuzzy
-msgid "System Information"
-msgstr "系統資訊"
-
-#, fuzzy
-msgid "System Status"
-msgstr "同步的狀態"
-
-msgid "System group '%{name}' exceeds maximum usage limit of '%{limit}'"
-msgstr ""
-
-msgid "System group is empty."
-msgstr "系統群組是空的。"
-
-#, fuzzy
-msgid "System with uuid %s not found"
-msgstr "找不到 id 為「%s」的勘誤"
 
 msgid "Systems"
 msgstr "系統"
@@ -4519,9 +4490,6 @@ msgid "Title"
 msgstr ""
 
 msgid "Title: "
-msgstr ""
-
-msgid "To submit a new bug please visit %s."
 msgstr ""
 
 msgid "To view the details of an item on the left, simply click on a single row.<br/><br/>To select multiple rows, hold the Control Key and click multiple rows.<br/><br/>If you don't need this help anymore, please click the close button in the top right of this box."
@@ -4910,7 +4878,8 @@ msgstr ""
 msgid "You can synchronize repositories only in library environment'"
 msgstr "您只可以在 library 環境中同步軟體庫"
 
-msgid "You cannot have more than %{max_systems} system(s) associated with system group '%{group}'."
+#, fuzzy
+msgid "You cannot have more than %{max_content_hosts} content host(s) associated with host collection '%{host_collection}'."
 msgstr "您不能讓超過 %{max_systems} 台系統與系統群組 '%{group}' 相關連。"
 
 #, fuzzy
@@ -5105,10 +5074,14 @@ msgstr "正在安裝套件..."
 msgid "is invalid"
 msgstr "無效"
 
+msgid "issue tracker"
+msgstr ""
+
 msgid "katello-jobs service not running"
 msgstr "katello-jobs 服務非執行中"
 
-msgid "may not be less than the number of systems associated with the system group."
+#, fuzzy
+msgid "may not be less than the number of content hosts associated with the host collection."
 msgstr "不可少於與系統群組相聯的系統數量。"
 
 msgid "may not be set to 0."
@@ -5187,9 +5160,6 @@ msgstr "系統"
 msgid "the %s Bugzilla"
 msgstr "%s Bugzilla"
 
-msgid "the CloudForms Documentation"
-msgstr "CloudForms 文件"
-
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Red Hat 供應者的以下屬性可以更新：[ %s ]"
 
@@ -5215,6 +5185,10 @@ msgstr "版本"
 #, fuzzy
 #~ msgid " Changesets"
 #~ msgstr "變更集"
+
+#, fuzzy
+#~ msgid "\"Creating an activation key in candlepin: #{label}\""
+#~ msgstr "在 candlepin 中建立使用者：%s"
 
 #, fuzzy
 #~ msgid "%d products may have missing repositories"
@@ -5332,6 +5306,9 @@ msgstr "版本"
 #~ msgid "API Key"
 #~ msgstr "GPG 金鑰"
 
+#~ msgid "About"
+#~ msgstr "相關資訊"
+
 #, fuzzy
 #~ msgid "Action"
 #~ msgstr "應用程式"
@@ -5430,6 +5407,9 @@ msgstr "版本"
 #~ msgid "Administer Package Filters"
 #~ msgstr "管理套件篩選器"
 
+#~ msgid "Administer System Groups"
+#~ msgstr "管理系統群組"
+
 #~ msgid "Administer System Templates"
 #~ msgstr "管理系統範本"
 
@@ -5501,6 +5481,14 @@ msgstr "版本"
 #~ msgstr "讀取系統"
 
 #, fuzzy
+#~ msgid "Application"
+#~ msgstr "應用程式"
+
+#, fuzzy
+#~ msgid "Application Information"
+#~ msgstr "系統資訊"
+
+#, fuzzy
 #~ msgid "Apply Deletion Changeset"
 #~ msgstr "+ 新變更集"
 
@@ -5545,6 +5533,10 @@ msgstr "版本"
 #, fuzzy
 #~ msgid "Audit Comment"
 #~ msgstr "環境"
+
+#, fuzzy
+#~ msgid "Authentication"
+#~ msgstr "認證"
 
 #~ msgid "Auto-attach Off, No Service Level Preference"
 #~ msgstr "自動連接關閉中，無服務等級偏好設定"
@@ -5655,6 +5647,10 @@ msgstr "版本"
 #~ msgstr "變更集"
 
 #, fuzzy
+#~ msgid "Content About"
+#~ msgstr "內容"
+
+#, fuzzy
 #~ msgid "Content view definition '%s' was created."
 #~ msgstr "已建立供應方「%s」。"
 
@@ -5684,6 +5680,9 @@ msgstr "版本"
 
 #~ msgid "Couldn't find pool '%{pool}' in activation_key '%{ak}'"
 #~ msgstr "在 activation_key「%{ak}」中找不到集區「%{pool}」"
+
+#~ msgid "Couldn't find system group '%s'"
+#~ msgstr "找不到系統群組「%s」"
 
 #~ msgid "Couldn't find template '%s'"
 #~ msgstr "找不到範本「%s」"
@@ -5720,16 +5719,14 @@ msgstr "版本"
 #~ msgid "Delete %s?"
 #~ msgstr "刪除角色"
 
-#, fuzzy
-#~ msgid "Delete Content View Definitions"
-#~ msgstr "由環境中刪除內容"
-
-#, fuzzy
-#~ msgid "Delete Hosts"
-#~ msgstr "刪除系統"
-
 #~ msgid "Delete Package Filters"
 #~ msgstr "刪除套件篩選器"
+
+#~ msgid "Delete System Group"
+#~ msgstr "刪除系統群組"
+
+#~ msgid "Delete Systems in System Group"
+#~ msgstr "刪除系統群組中的系統"
 
 #, fuzzy
 #~ msgid "Delete autosign entry for %s"
@@ -5763,9 +5760,19 @@ msgstr "版本"
 #~ msgid "Deleted environment %{env} and %{pcs}"
 #~ msgstr "已刪除了環境「%s」"
 
+#~ msgid "Deleted system group '%s'"
+#~ msgstr "已刪除了系統群組「%s」"
+
+#, fuzzy
+#~ msgid "Deleting activation_key in candlepin: %s"
+#~ msgstr "刪除 candlepin 裡的使用者：%s"
+
 #, fuzzy
 #~ msgid "Dependency of "
 #~ msgstr "相依性"
+
+#~ msgid "Directory"
+#~ msgstr "目錄"
 
 #~ msgid "Disable/enable is not supported for custom repositories."
 #~ msgstr "自訂軟體庫不支援停用/啟用。"
@@ -5908,6 +5915,16 @@ msgstr "版本"
 #, fuzzy
 #~ msgid "Enter Package or Group Name(s)..."
 #~ msgstr "正在新增套件群組..."
+
+#, fuzzy
+#~ msgid "Environment '%s' was created."
+#~ msgstr "已更新環境「%s」。"
+
+#~ msgid "Environment '%s' was deleted."
+#~ msgstr "已刪除環境「%s」。"
+
+#~ msgid "Environment '%s' was updated."
+#~ msgstr "已更新環境「%s」。"
 
 #, fuzzy
 #~ msgid "Environment Promotion Paths"
@@ -6193,6 +6210,14 @@ msgstr "版本"
 #~ msgid "It is not allowed to update a Red Hat repository."
 #~ msgstr "不允許更新 Red Hat 軟體庫。"
 
+#, fuzzy
+#~ msgid "Katello reference documentation"
+#~ msgstr "CloudForms 文件"
+
+#, fuzzy
+#~ msgid "Katello user documentation"
+#~ msgstr "CloudForms 文件"
+
 #~ msgid "Key"
 #~ msgstr "金鑰"
 
@@ -6287,6 +6312,9 @@ msgstr "版本"
 
 #~ msgid "Modify Package Filters"
 #~ msgstr "修改套件篩選器"
+
+#~ msgid "Modify Systems in System Group"
+#~ msgstr "修改系統群組中的系統"
 
 #~ msgid "Must be unique within an environment"
 #~ msgstr "在環境中必須是獨一無二的"
@@ -6498,6 +6526,10 @@ msgstr "版本"
 #, fuzzy
 #~ msgid "No repositories exist in this changeset."
 #~ msgstr "在變更集中找不到軟體庫「%s」"
+
+#, fuzzy
+#~ msgid "No system groups found."
+#~ msgstr "找不到"
 
 #, fuzzy
 #~ msgid "No template found"
@@ -6800,14 +6832,24 @@ msgstr "版本"
 #~ msgid "Read Package Filters"
 #~ msgstr "讀取套件篩選器"
 
+#~ msgid "Read System Group"
+#~ msgstr "讀取系統群組"
+
 #~ msgid "Read System Templates"
 #~ msgstr "讀取系統範本"
 
 #~ msgid "Read System Templates permission"
 #~ msgstr "讀取系統範本的存取權限"
 
+#~ msgid "Read Systems in System Group"
+#~ msgstr "讀取系統群組中的系統"
+
 #~ msgid "Registered / Last Checked In"
 #~ msgstr "已註冊 / 上次登入"
+
+#, fuzzy
+#~ msgid "Removal of the environment failed. If you continue having trouble with this, please contact an Administrator."
+#~ msgstr "此作業的請求中傳送了無效的參數。請聯絡系統管理員。"
 
 #, fuzzy
 #~ msgid "Remove Activation Key"
@@ -7175,6 +7217,17 @@ msgstr "版本"
 #~ msgid "System Group %{new_group} created successfully as a copy of system group %{group}."
 #~ msgstr "系統群組 %{new_group} 已成功建立為系統群組 %{group} 的備份。"
 
+#~ msgid "System Group Info"
+#~ msgstr "系統群組資訊"
+
+#, fuzzy
+#~ msgid "System Groups"
+#~ msgstr "讀取系統群組"
+
+#, fuzzy
+#~ msgid "System Information"
+#~ msgstr "系統資訊"
+
 #, fuzzy
 #~ msgid "System Limit"
 #~ msgstr "系統"
@@ -7186,8 +7239,15 @@ msgstr "版本"
 #~ msgid "System Type"
 #~ msgstr "系統範本"
 
+#~ msgid "System group is empty."
+#~ msgstr "系統群組是空的。"
+
 #~ msgid "System subscriptions updated."
 #~ msgstr "已更新系統訂閱。"
+
+#, fuzzy
+#~ msgid "System with uuid %s not found"
+#~ msgstr "找不到 id 為「%s」的勘誤"
 
 #~ msgid "System's environment not compatible with the group '%s'."
 #~ msgstr "系統的環境與群組「%s」不相容。"
@@ -7637,6 +7697,9 @@ msgstr "版本"
 #, fuzzy
 #~ msgid "status"
 #~ msgstr "同步的狀態"
+
+#~ msgid "the CloudForms Documentation"
+#~ msgstr "CloudForms 文件"
 
 #, fuzzy
 #~ msgid "unable to find recipients"
