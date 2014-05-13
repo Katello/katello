@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
+require 'support/pulp/repository_support'
 
 module ::Actions::Pulp::Repository
 
@@ -18,15 +19,15 @@ module ::Actions::Pulp::Repository
     include Dynflow::Testing
     include Support::Actions::PulpTask
     include Support::Actions::RemoteAction
+  end
+
+  class SyncProgressTest < TestBase
+
+    let(:action_class) { ::Actions::Pulp::Repository::Sync }
 
     before do
       stub_remote_user
     end
-  end
-
-  class SyncTest < TestBase
-
-    let(:action_class) { ::Actions::Pulp::Repository::Sync }
 
     it 'runs' do
       action        = create_action action_class
@@ -54,6 +55,28 @@ module ::Actions::Pulp::Repository
       action.external_task.must_equal task3
       action.run_progress.must_equal 1
       action.must_be :done?
+    end
+  end
+
+  class SyncTest < VCR::TestCase
+    include Dynflow::Testing
+    include Support::Actions::PulpTask
+    include Support::Actions::RemoteAction
+
+    let(:action_class) { ::Actions::Pulp::Repository::Sync }
+    let(:repo) { katello_repositories(:fedora_17_x86_64) }
+
+    def setup
+      ::Katello::RepositorySupport.create_repo(repo.id)
+    end
+
+    def teardown
+      ::Katello::RepositorySupport.destroy_repo
+    end
+
+    def test_sync
+      response = ::ForemanTasks.sync_task(action_class, pulp_id: repo.pulp_id)
+      assert_equal 8, repo.packages.length
     end
   end
 end

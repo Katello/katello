@@ -54,7 +54,7 @@ class GlueCandlepinOwnerTestSLA < GlueCandlepinOwnerTestBase
     e = assert_raises(RestClient::BadRequest) do
       @@org.service_level = 'Premium'
     end
-    refute_nil JSON.parse(expected)["displayMessage"]
+    refute_nil JSON.parse(e.response)['displayMessage']
     assert_equal nil, @@org.service_level
 
     # Should be able to set clear the default

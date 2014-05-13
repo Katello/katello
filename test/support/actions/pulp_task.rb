@@ -14,7 +14,7 @@ module Support
     module PulpTask
       def task_progress_hash(left, total)
         { 'task_id'  => '76fb4115-2ec4-4945-815b-0f9d216b4183',
-          'progress' => {
+          'progress_report' => {
               'yum_importer' => {
                   'content' => {
                       'size_total' => total,
@@ -26,7 +26,7 @@ module Support
       end
 
       def task_base(id = '76fb4115-2ec4-4945-815b-0f9d216b4183')
-        { 'task_id' => id }
+        { 'task_id' => id, 'spawned_tasks' => [] }
       end
 
       def stub_task_poll(action, *returns)
