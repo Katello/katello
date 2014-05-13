@@ -834,7 +834,8 @@ module Glue::Pulp::Repo
                                                              upload_id, unit_key,
                                                              {:unit_metadata => unit_metadata}
                                                             )
-      TaskSupport.wait_on_tasks(PulpTaskStatus.using_pulp_task(response))
+      task = PulpTaskStatus.using_pulp_task(response)
+      PulpTaskStatus.wait_for_tasks([task])
       Katello.pulp_server.resources.content.delete_upload_request(upload_id)
     end
 
