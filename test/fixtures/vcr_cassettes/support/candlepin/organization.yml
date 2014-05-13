@@ -12,7 +12,7 @@ http_interactions:
       Accept-Encoding: 
       - gzip, deflate
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="y7ITEYZXLV3WgeQ8Jq5tHdBVjyEbV08nfPAfnrnn2A", oauth_signature="Wo%2BI%2FhBSxfEtnIsHbNfKEMA%2Bs94%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1389012962", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="B7eEf3yFzxDDbtoDaYe2IhzdumWqLAeuYGbyNtR0A", oauth_signature="HrSymS5557jRkOFjhk%2Bzx7igt0g%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399924018", oauth_version="1.0"
       Accept-Language: 
       - en
       Content-Type: 
@@ -30,19 +30,21 @@ http_interactions:
     headers: 
       Server: 
       - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid: 
+      - d0afb9ec-2be4-48c5-a0be-f6fbfd22f64b
       X-Candlepin-Version: 
-      - 0.8.29-1
+      - 0.9.11-1
       Content-Type: 
       - application/json
       Transfer-Encoding: 
       - chunked
       Date: 
-      - Mon, 06 Jan 2014 12:56:02 GMT
+      - Mon, 12 May 2014 19:46:58 GMT
     body: 
       encoding: US-ASCII
-      string: "{\"created\":\"2014-01-06T12:56:02.341+0000\",\"updated\":\"2014-01-06T12:56:02.341+0000\",\"parentOwner\":null,\"id\":\"8a8d01d8434909830143679fcc250412\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":null,\"upstreamConsumer\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\"}"
+      string: "{\"parentOwner\":null,\"id\":\"ff80808145f13c1a0145f1f94be50003\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":null,\"upstreamConsumer\":null,\"logLevel\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\",\"created\":\"2014-05-12T19:46:58.149+0000\",\"updated\":\"2014-05-12T19:46:58.149+0000\"}"
     http_version: 
-  recorded_at: Mon, 06 Jan 2014 12:56:02 GMT
+  recorded_at: Mon, 12 May 2014 19:46:58 GMT
 - request: 
     method: delete
     uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
@@ -55,7 +57,7 @@ http_interactions:
       Accept-Encoding: 
       - gzip, deflate
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="O6NoByfmI5XW2mKKnAB1Zvb8KKQU7KCVYWVl69Y8E", oauth_signature="kr4fi%2F1YjuGWmwo7RLVi8DxPN7Y%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1389012963", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="QM2TL7hq2VButYXMSV1ecrsFtv6G5asIydeGjgPvIIw", oauth_signature="tTjRqK3h6FfboZU0NHzuxAw8X2Y%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399924020", oauth_version="1.0"
       Cp-User: 
       - admin
       User-Agent: 
@@ -67,13 +69,15 @@ http_interactions:
     headers: 
       Server: 
       - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid: 
+      - de755838-bb54-43ae-8f8a-8042de9d53aa
       X-Candlepin-Version: 
-      - 0.8.29-1
+      - 0.9.11-1
       Date: 
-      - Mon, 06 Jan 2014 12:56:03 GMT
+      - Mon, 12 May 2014 19:47:00 GMT
     body: 
       encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Mon, 06 Jan 2014 12:56:03 GMT
-recorded_with: VCR 2.8.0
+  recorded_at: Mon, 12 May 2014 19:47:00 GMT
+recorded_with: VCR 2.9.0

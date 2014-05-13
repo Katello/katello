@@ -21,12 +21,15 @@ class PulpSyncProgress
       #depending on whether this is a history item, or current sync structure may be different
       ht = HashUtil.new
 
-      details = ht.null_safe_get(progress_attrs, nil, %w(progress yum_importer content)) ||
-                ht.null_safe_get(progress_attrs, nil, %w(progress puppet_importer modules)) ||
-                ht.null_safe_get(progress_attrs, nil, %w(progress details packages sync_report)) ||
-                ht.null_safe_get(progress_attrs, nil, %w(progress iso_importer))
+      details = ht.null_safe_get(progress_attrs, nil, %w(progress_report yum_importer content)) ||
+                ht.null_safe_get(progress_attrs, nil, %w(progress_report puppet_importer modules)) ||
+                ht.null_safe_get(progress_attrs, nil, %w(progress_report details packages sync_report)) ||
+                ht.null_safe_get(progress_attrs, nil, %w(progress_report iso_importer))
 
-      if progress_attrs['progress']['iso_importer']
+      #if the task is waiting, it wont have a progress report
+      progress_attrs['progress_report'] ||= {}
+
+      if progress_attrs['progress_report']['iso_importer']
         @total_size  = ht.null_safe_get(details, 0, ['total_bytes'])
         @size_left   = @total_size - ht.null_safe_get(details, 0, ['finished_bytes'])
         @total_count = ht.null_safe_get(details, 0, ['num_isos'])
@@ -36,7 +39,7 @@ class PulpSyncProgress
         @total_size  = ht.null_safe_get(details, 0, ['size_total'])
         @size_left   = ht.null_safe_get(details, 0, ['size_left'])
 
-        if progress_attrs['progress']['puppet_importer']
+        if progress_attrs['progress_report']['puppet_importer']
           @total_count   = ht.null_safe_get(details, 0, ['total_count'])
           finished_count = ht.null_safe_get(details, 0, ['finished_count'])
           @items_left    = @total_count - finished_count
@@ -46,7 +49,7 @@ class PulpSyncProgress
         end
       end
 
-      @error_details = errors(progress_attrs['progress'])
+      @error_details = errors(progress_attrs['progress_report'])
       @step = ht.null_safe_get(progress_attrs, 0, ['step'])
     end
   end

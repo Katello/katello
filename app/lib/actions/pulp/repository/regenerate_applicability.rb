@@ -24,6 +24,10 @@ module Actions
         end
 
         def external_task=(external_task_data)
+          if external_task_data['spawned_tasks'].length > 0
+            external_task_data = {:task_id => external_task_data['spawned_tasks'].first['task_id']}
+          end
+
           #ignore errors, see issue #4875
           output[:pulp_task] = external_task_data
         end

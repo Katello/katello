@@ -18,7 +18,7 @@ module Actions
         include Helpers::Presenter
 
         input_format do
-          param :repo_id, Integer
+          param :pulp_id
         end
 
         def invoke_external_task
@@ -35,12 +35,7 @@ module Actions
 
           output[:pulp_tasks] = pulp_tasks =
               pulp_resources.repository.sync(input[:pulp_id], { override_config: sync_options })
-
-          # TODO: would be better polling for the whole task group to make sure
-          # we're really finished at the end.
-          # Look at it once we have more Pulp actions rewritten so that we can find
-          # a common pattern.
-          pulp_tasks.find { |task| task['tags'].include?('pulp:action:sync') }
+          pulp_tasks
         end
 
         def run_progress
@@ -116,7 +111,7 @@ module Actions
           end
 
           def task_progress
-            action.external_task[:progress]
+            action.external_task[:progress_report]
           end
 
           def task_progress_details

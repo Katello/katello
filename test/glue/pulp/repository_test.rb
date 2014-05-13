@@ -40,8 +40,26 @@ class GluePulpRepoTestBase < ActiveSupport::TestCase
     GluePulpRepoTestBase.delete_repo(repo)
   end
 
-end
+  def create_repo(repo)
+    GluePulpRepoTestBase.create_repo(repo)
+  end
 
+  def self.create_repo(repository)
+    ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Create,
+                            content_type: repository.content_type,
+                            pulp_id: repository.pulp_id,
+                            name: repository.name,
+                            feed: repository.feed,
+                            ssl_ca_cert: repository.feed_ca,
+                            ssl_client_cert: repository.feed_cert,
+                            ssl_client_key: repository.feed_key,
+                            unprotected: repository.unprotected,
+                            checksum_type: repository.checksum_type,
+                            path: repository.relative_path,
+                            with_importer: true)
+  end
+
+end
 
 class GluePulpRepoTestCreateDestroy < GluePulpRepoTestBase
 
@@ -56,7 +74,7 @@ class GluePulpRepoTestCreateDestroy < GluePulpRepoTestBase
   end
 
   def test_create_pulp_repo
-    assert @fedora_17_x86_64.create_pulp_repo
+    assert create_repo(@fedora_17_x86_64)
     delete_repo(@fedora_17_x86_64)
   end
 
@@ -67,7 +85,7 @@ class GluePulpRepoTest < GluePulpRepoTestBase
   def self.before_suite
     super
     VCR.insert_cassette('pulp/repository/repository')
-    @@fedora_17_x86_64.create_pulp_repo
+    self.create_repo(@@fedora_17_x86_64)
   end
 
   def self.after_suite
@@ -116,7 +134,6 @@ class GluePulpRepoTest < GluePulpRepoTestBase
     task_list = @fedora_17_x86_64.sync
     refute_empty    task_list
     assert_kind_of  PulpSyncStatus, task_list.first
-
     TaskSupport.wait_on_tasks(task_list)
   end
 
@@ -133,7 +150,7 @@ class GluePulpRepoAfterSyncTest < GluePulpRepoTestBase
   def self.before_suite
     super
     VCR.insert_cassette('pulp/repository/after_sync')
-    @@fedora_17_x86_64.create_pulp_repo
+    create_repo(@@fedora_17_x86_64)
   end
 
   def self.after_suite
@@ -167,7 +184,7 @@ class GluePulpChangeFeedTest < GluePulpRepoTestBase
   def self.before_suite
     super
     VCR.insert_cassette('pulp/repository/feed_change')
-    @@fedora_17_x86_64.create_pulp_repo
+    create_repo(@@fedora_17_x86_64)
   end
 
   def self.after_suite
@@ -194,7 +211,7 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
     @@p_forge = Repository.find(@loaded_fixtures['katello_repositories']['p_forge']['id'])
     @@p_forge.relative_path = '/test_path/'
     @@p_forge.feed = "http://davidd.fedorapeople.org/repos/random_puppet/"
-    @@p_forge.create_pulp_repo
+    create_repo(@@p_forge)
   end
 
   def self.after_suite
@@ -219,10 +236,10 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
 
     @filepath = File.join(Katello::Engine.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
     @p_forge.upload_content([@filepath])
+
     assert_includes @p_forge.puppet_modules.map(&:name), "ntp"
   end
 end
-
 
 
 class GluePulpRepoContentsTest < GluePulpRepoTestBase
