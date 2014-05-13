@@ -63,7 +63,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
 
   def test_index
     Provider.any_instance.stubs(:index_subscriptions).returns(true)
-    get :index, :organization_id => @organization.label
+    get :index, :organization_id => @organization.id
 
     assert_response :success
     assert_template 'api/v2/subscriptions/index'
@@ -74,7 +74,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
     denied_perms = [@attach_permission, @unattach_permission, @import_permission, @delete_permission]
 
     assert_protected_action(:index, allowed_perms, denied_perms) do
-      get :index, :organization_id => @organization.label
+      get :index, :organization_id => @organization.id
     end
   end
 
@@ -130,7 +130,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
   end
 
   def test_blank_upload
-    post :upload, :organization_id => @organization.label
+    post :upload, :organization_id => @organization.id
     assert_response 400
   end
 
@@ -141,7 +141,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
     end
     test_document = File.join(Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
     manifest = Rack::Test::UploadedFile.new(test_document, '')
-    post :upload, :organization_id => @organization.label, :content => manifest
+    post :upload, :organization_id => @organization.id, :content => manifest
     assert_response :success
   end
 
@@ -150,7 +150,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
     denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @read_permission]
 
     assert_protected_action(:upload, allowed_perms, denied_perms) do
-      post :upload, :organization_id => @organization.label
+      post :upload, :organization_id => @organization.id
     end
   end
 
@@ -162,7 +162,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
       assert_equal(@organization.redhat_provider.id, provider.id)
       assert_equal("JarJarBinks", upstream)
     end
-    put :refresh_manifest, :organization_id => @organization.label
+    put :refresh_manifest, :organization_id => @organization.id
     assert_response :success
   end
 
@@ -171,7 +171,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
     denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @read_permission]
 
     assert_protected_action(:refresh_manifest, allowed_perms, denied_perms) do
-      put :refresh_manifest, :organization_id => @organization.label
+      put :refresh_manifest, :organization_id => @organization.id
     end
   end
 
@@ -180,7 +180,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
     assert_async_task(::Actions::Katello::Provider::ManifestDelete) do |provider|
       assert_equal(@organization.redhat_provider.id, provider.id)
     end
-    post :delete_manifest, :organization_id => @organization.label
+    post :delete_manifest, :organization_id => @organization.id
     assert_response :success
   end
 
@@ -189,13 +189,13 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
     denied_perms = [@attach_permission, @unattach_permission, @import_permission, @read_permission]
 
     assert_protected_action(:delete_manifest, allowed_perms, denied_perms) do
-      post :delete_manifest, :organization_id => @organization.label
+      post :delete_manifest, :organization_id => @organization.id
     end
   end
 
   def test_manifest_history
     Organization.any_instance.stubs(:manifest_history).returns(OpenStruct.new({status: 'FAILED', statusMessage: 'failed to create'}))
-    get :manifest_history, :organization_id => @organization.label
+    get :manifest_history, :organization_id => @organization.id
     assert_response :success
   end
 
@@ -204,7 +204,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
     denied_perms = [@attach_permission, @unattach_permission, @import_permission, @delete_permission]
 
     assert_protected_action(:manifest_history, allowed_perms, denied_perms) do
-      get :manifest_history, :organization_id => @organization.label
+      get :manifest_history, :organization_id => @organization.id
     end
   end
 end

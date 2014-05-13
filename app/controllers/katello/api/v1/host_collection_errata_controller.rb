@@ -17,7 +17,7 @@ class Api::V1::HostCollectionErrataController < Api::V1::ApiController
       methods for handling erratas on host collection level
     DOC
 
-    param :organization_id, :identifier, :desc => "oranization identifier", :required => true
+    param :organization_id, :number, :desc => "oranization identifier", :required => true
     param :host_collection_id, :identifier, :desc => "host_collection identifier", :required => true
 
     api_version 'v1'

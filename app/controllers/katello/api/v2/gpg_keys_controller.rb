@@ -31,7 +31,7 @@ module Katello
     end
 
     api :GET, "/gpg_keys", "List gpg keys"
-    param :organization_id, :identifier, :desc => "organization identifier", :required => true
+    param :organization_id, :number, :desc => "organization identifier", :required => true
     param_group :search, Api::V2::ApiController
     def index
       options = sort_params
@@ -47,7 +47,7 @@ module Katello
     end
 
     api :POST, "/gpg_keys", "Create a gpg key"
-    param :organization_id, :identifier, :desc => "organization identifier", :required => true
+    param :organization_id, :number, :desc => "organization identifier", :required => true
     param_group :gpg_key, :as => :create
     def create
       filepath = params.try(:[], :file_path).try(:path)

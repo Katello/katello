@@ -59,7 +59,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   param :name, String, :desc => "Filter systems by name"
   param :pool_id, String, :desc => "Filter systems by subscribed pool"
   param :uuid, String, :desc => "Filter systems by uuid"
-  param :organization_id, String, :desc => "Specify the organization", :required => true
+  param :organization_id, :number, :desc => "Specify the organization", :required => true
   param :environment_id, String, :desc => "Filter by environment"
   param :host_collection_id, String, :desc => "Filter by host collection"
   param_group :search, Api::V2::ApiController
@@ -100,7 +100,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   param :release_ver, String, :desc => "Release version of the system"
   param :service_level, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT", :action_aware => true
   param :last_checkin, String, :desc => "Last check-in time of this system"
-  param :organization_id, String, :desc => "Specify the organization", :required => true
+  param :organization_id, :number, :desc => "Specify the organization", :required => true
   param :environment_id, String, :desc => "Specify the environment"
   param :content_view_id, String, :desc => "Specify the content view"
   param :host_collection_id, String, :desc => "Specify the host collection"

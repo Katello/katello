@@ -26,7 +26,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
   end
 
   api :GET, "/organizations/:organization_id/sync_plans", "List sync plans"
-  param :organization_id, :identifier, :desc => "Filter sync plans by organization name or label", :required => true
+  param :organization_id, :number, :desc => "Filter sync plans by organization name or label", :required => true
   param :name, String, :desc => "filter by name"
   param :sync_date, String, :desc => "filter by sync date"
   param :interval, SyncPlan::TYPES, :desc => "filter by interval"
@@ -52,14 +52,14 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
 
   api :GET, "/organizations/:organization_id/sync_plans/:id", "Show a sync plan"
   api :GET, "/sync_plans/:id", "Show a sync plan"
-  param :organization_id, :identifier, :desc => "Filter sync plans by organization name or label"
+  param :organization_id, :number, :desc => "Filter sync plans by organization name or label"
   param :id, :number, :desc => "sync plan numeric identifier", :required => true
   def show
     respond_for_show(:resource => @sync_plan)
   end
 
   api :POST, "/organizations/:organization_id/sync_plans", "Create a sync plan"
-  param :organization_id, :identifier, :desc => "Filter sync plans by organization name or label", :required => true
+  param :organization_id, :number, :desc => "Filter sync plans by organization name or label", :required => true
   param_group :sync_plan
   def create
     sync_date = sync_plan_params[:sync_date].to_time
@@ -77,7 +77,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
 
   api :PUT, "/organizations/:organization_id/sync_plans/:id", "Update a sync plan"
   api :PUT, "/sync_plans/:id", "Update a sync plan"
-  param :organization_id, :identifier, :desc => "Filter sync plans by organization name or label"
+  param :organization_id, :number, :desc => "Filter sync plans by organization name or label"
   param :id, :number, :desc => "sync plan numeric identifier", :required => true
   param_group :sync_plan
   def update
@@ -96,7 +96,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
 
   api :DELETE, "/organizations/:organization_id/sync_plans/:id", "Destroy a sync plan"
   api :DELETE, "/sync_plans/:id", "Destroy a sync plan"
-  param :organization_id, :identifier, :desc => "Filter sync plans by organization name or label"
+  param :organization_id, :number, :desc => "Filter sync plans by organization name or label"
   param :id, :number, :desc => "sync plan numeric identifier"
   def destroy
     @sync_plan.destroy

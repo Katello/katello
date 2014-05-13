@@ -50,7 +50,7 @@ module Katello
     def test_create
       Organization.any_instance.stubs(:save!).returns(@organization)
       post :create,
-        :organization_id => @organization.label,
+        :organization_id => @organization.id,
         :environment => {
           :name => 'dev env',
           :label => 'dev_env',
@@ -64,7 +64,7 @@ module Katello
     def test_create_fail
       Organization.any_instance.stubs(:save!).returns(@organization)
       post :create,
-        :organization_id => @organization.label,
+        :organization_id => @organization.id,
         :environment => {
           :description => 'This environment is for development.'
         }
@@ -79,7 +79,7 @@ module Katello
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
         post :create,
-          :organization_id => @organization.label,
+          :organization_id => @organization.id,
           :environment => {
             :name => 'dev env',
             :label => 'dev_env',
@@ -91,7 +91,7 @@ module Katello
 
     def test_update
       put :update,
-        :organization_id => @organization.label,
+        :organization_id => @organization.id,
         :id => @staging.id,
         :environment => {
           :new_name => 'New Name'
@@ -107,7 +107,7 @@ module Katello
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         put :update,
-          :organization_id => @organization.label,
+          :organization_id => @organization.id,
           :id => @staging.id,
           :environment => {
             :new_name => 'New Name'
@@ -116,7 +116,7 @@ module Katello
     end
 
     def test_destroy
-      delete :destroy, :organization_id => @organization.label,
+      delete :destroy, :organization_id => @organization.id,
                        :id => @staging.id
 
       assert_response :success
@@ -127,13 +127,13 @@ module Katello
       denied_perms = [@view_permission, @update_permission, @create_permission, @no_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        delete :destroy, :organization_id => @organization.label,
+        delete :destroy, :organization_id => @organization.id,
                          :id => @staging.id
       end
     end
 
     def test_paths
-      get :paths, :organization_id => @organization.label
+      get :paths, :organization_id => @organization.id
 
       assert_response :success
       assert_template 'api/v2/environments/paths'
@@ -144,7 +144,7 @@ module Katello
       denied_perms = [@destroy_permission, @update_permission, @create_permission, @no_permission]
 
       assert_protected_action(:paths, allowed_perms, denied_perms) do
-        get :paths, :organization_id => @organization.label
+        get :paths, :organization_id => @organization.id
       end
     end
 

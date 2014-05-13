@@ -14,7 +14,7 @@
   %script{ :type => "text/javascript" }
     :plain
       angular.module('Bastion').value('currentLocale', '#{I18n.locale}');
-      angular.module('Bastion').value('CurrentOrganization', "#{current_organization.label if current_organization}");
+      angular.module('Bastion').value('CurrentOrganization', "#{current_organization.id if current_organization}");
       angular.module('Bastion').value('CurrentUser', "#{current_user.id if current_user}");
       angular.module('Bastion').constant('BastionConfig', {
           consumerCertRPM: "#{Katello.config.consumer_cert_rpm}",

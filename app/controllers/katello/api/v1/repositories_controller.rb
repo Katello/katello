@@ -51,7 +51,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
 
   api :POST, "/repositories", "Create a repository"
   param :name, String, :required => true
-  param :organization_id, :identifier, :required => true, :desc => "id of an organization the repository will be contained in"
+  param :organization_id, :number, :required => true, :desc => "id of an organization the repository will be contained in"
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
   param :url, :undef, :required => true, :desc => "repository source url"
   param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the new repository"

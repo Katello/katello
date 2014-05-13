@@ -34,7 +34,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   api :GET, "/activation_keys/:activation_key_id/subscriptions", "List an activation key's subscriptions"
   param :system_id, String, :desc => "UUID of the system", :required => false
   param :activation_key_id, String, :desc => "Activation key ID", :required => false
-  param :organization_id, :identifier, :desc => "Organization ID", :required => false
+  param :organization_id, :number, :desc => "Organization ID", :required => false
   def index
     subscriptions = if @system
                       index_system
@@ -135,7 +135,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
 
   api :POST, "/organizations/:organization_id/subscriptions/upload", "Upload a subscription manifest"
   api :POST, "/subscriptions/upload", "Upload a subscription manifest"
-  param :organization_id, :identifier, :desc => "Organization id", :required => true
+  param :organization_id, :number, :desc => "Organization id", :required => true
   param :content, File, :desc => "Subscription manifest file", :required => true
   param :repository_url, String, :desc => "repository url", :required => false
   def upload
@@ -160,7 +160,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   end
 
   api :PUT, "/organizations/:organization_id/subscriptions/refresh_manifest", "Refresh previously imported manifest for Red Hat provider"
-  param :organization_id, :identifier, :desc => "Organization id", :required => true
+  param :organization_id, :number, :desc => "Organization id", :required => true
   def refresh_manifest
     details  = @provider.organization.owner_details
     upstream = details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
@@ -170,14 +170,14 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   end
 
   api :POST, "/organizations/:organization_id/subscriptions/delete_manifest", "Delete manifest from Red Hat provider"
-  param :organization_id, :identifier, :desc => "Organization id", :required => true
+  param :organization_id, :number, :desc => "Organization id", :required => true
   def delete_manifest
     task = async_task(::Actions::Katello::Provider::ManifestDelete, @provider)
     respond_for_async :resource => task
   end
 
   api :GET, "/organizations/:organization_id/subscriptions/manifest_history", "obtain manifest history for subscriptions"
-  param :organization_id, :identifier, :desc => "Organization ID", :required => true
+  param :organization_id, :number, :desc => "Organization ID", :required => true
   def manifest_history
     @manifest_history = @organization.manifest_history
     respond_with_template_collection(params[:action], "subscriptions", {collection: @manifest_history})

@@ -50,7 +50,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   end
 
   def test_index
-    get :index, :organization_id => @organization.label
+    get :index, :organization_id => @organization.id
 
     assert_response :success
     assert_template 'api/v2/repositories/index'
@@ -61,7 +61,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
     assert_protected_action(:index, allowed_perms, denied_perms) do
-      get :index, :organization_id => @organization.label
+      get :index, :organization_id => @organization.id
     end
   end
 

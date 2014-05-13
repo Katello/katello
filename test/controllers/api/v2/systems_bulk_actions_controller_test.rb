@@ -54,7 +54,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
   def test_add_host_collection
     assert_equal 1, @system1.host_collections.count # system initially has simple_host_collection
     put :bulk_add_host_collections, {:included => {:ids => @system_ids},
-                                     :organization_id => @org.label,
+                                     :organization_id => @org.id,
                                      :host_collection_ids => [@host_collection1.id, @host_collection2.id]}
 
     assert_response :success
@@ -64,8 +64,8 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
   def test_remove_host_collection
     assert_equal 1, @system1.host_collections.count # system initially has simple_host_collection
     put :bulk_remove_host_collections, {:included => {:ids => @system_ids},
-                                         :organization_id => @org.label,
-                                         :host_collection_ids => [@host_collection1.id, @host_collection2.id]}
+                                        :organization_id => @org.id,
+                                        :host_collection_ids => [@host_collection1.id, @host_collection2.id]}
 
     assert_response :success
     assert_equal 0, @system1.host_collections.count
@@ -74,7 +74,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
   def test_install_package
     BulkActions.any_instance.expects(:install_packages).once.returns(Job.new)
 
-    put :install_content,  :included => {:ids => @system_ids}, :organization_id => @org.label,
+    put :install_content,  :included => {:ids => @system_ids}, :organization_id => @org.id,
         :content_type => 'package', :content => ['foo']
 
     assert_response :success
@@ -83,7 +83,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
   def test_update_package
     BulkActions.any_instance.expects(:update_packages).once.returns(Job.new)
 
-    put :update_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
+    put :update_content, :included => {:ids => @system_ids}, :organization_id => @org.id,
         :content_type => 'package', :content => ['foo']
 
     assert_response :success
@@ -92,7 +92,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
   def test_remove_package
     BulkActions.any_instance.expects(:uninstall_packages).once.returns(Job.new)
 
-    put :remove_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
+    put :remove_content, :included => {:ids => @system_ids}, :organization_id => @org.id,
         :content_type => 'package', :content => ['foo']
 
     assert_response :success
@@ -101,7 +101,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
   def test_install_package_group
     BulkActions.any_instance.expects(:install_package_groups).once.returns(Job.new)
 
-    put :install_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
+    put :install_content, :included => {:ids => @system_ids}, :organization_id => @org.id,
         :content_type => 'package_group', :content => ['foo group']
 
     assert_response :success
@@ -110,7 +110,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
   def test_update_package_group
     BulkActions.any_instance.expects(:update_package_groups).once.returns(Job.new)
 
-    put :update_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
+    put :update_content, :included => {:ids => @system_ids}, :organization_id => @org.id,
         :content_type => 'package_group', :content => ['foo group']
 
     assert_response :success
@@ -119,7 +119,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
   def test_remove_package_group
     BulkActions.any_instance.expects(:uninstall_package_groups).once.returns(Job.new)
 
-    put :remove_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
+    put :remove_content, :included => {:ids => @system_ids}, :organization_id => @org.id,
         :content_type => 'package_group', :content => ['foo group']
 
     assert_response :success
@@ -128,14 +128,14 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
   def test_install_errata
     BulkActions.any_instance.expects(:install_errata).once.returns(Job.new)
 
-    put :install_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
+    put :install_content, :included => {:ids => @system_ids}, :organization_id => @org.id,
         :content_type => 'errata', :content => ['RHSA-2013:0123']
 
     assert_response :success
   end
 
   def test_destroy_systems
-    put :destroy_systems, :included => {:ids => @system_ids}, :organization_id => @org.label
+    put :destroy_systems, :included => {:ids => @system_ids}, :organization_id => @org.id
 
     assert_response :success
     assert_nil System.find_by_id(@system1.id)
@@ -143,7 +143,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
   end
 
   def test_content_view_environment
-    put :environment_content_view, :included => {:ids => @system_ids}, :organization_id => @org.label,
+    put :environment_content_view, :included => {:ids => @system_ids}, :organization_id => @org.id,
         :environment_id => @library.id, :content_view_id => @view.id
 
     assert_response :success
@@ -158,28 +158,28 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
 
     assert_protected_action(:bulk_add_host_collections, good_perms, bad_perms) do
       put :bulk_add_host_collections,  {:included => {:ids => @system_ids},
-                                        :organization_id => @org.label,
+                                        :organization_id => @org.id,
                                         :host_collection_ids => [@host_collection1.id, @host_collection2.id]}
     end
 
     assert_protected_action(:bulk_remove_host_collections, good_perms, bad_perms) do
       put :bulk_remove_host_collections,  {:included => {:ids => @system_ids},
-                                        :organization_id => @org.label,
+                                        :organization_id => @org.id,
                                         :host_collection_ids => [@host_collection1.id, @host_collection2.id]}
     end
 
     assert_protected_action(:install_content, good_perms, bad_perms) do
-      put :install_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
+      put :install_content, :included => {:ids => @system_ids}, :organization_id => @org.id,
           :content_type => 'package', :content => ['foo']
     end
 
     assert_protected_action(:update_content, good_perms, bad_perms) do
-      put :update_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
+      put :update_content, :included => {:ids => @system_ids}, :organization_id => @org.id,
           :content_type => 'package', :content => ['foo']
     end
 
     assert_protected_action(:remove_content, good_perms, bad_perms) do
-      put :remove_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
+      put :remove_content, :included => {:ids => @system_ids}, :organization_id => @org.id,
           :content_type => 'package', :content => ['foo']
     end
 
@@ -187,7 +187,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     bad_perms = [@view_permission, @update_permission, @create_permission]
 
     assert_protected_action(:destroy_systems, good_perms, bad_perms) do
-      put :destroy_systems, :included => {:ids => @system_ids}, :organization_id => @org.label
+      put :destroy_systems, :included => {:ids => @system_ids}, :organization_id => @org.id
     end
   end
 
@@ -196,7 +196,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     bad_perms = [@view_permission, @destroy_permission, @create_permission]
 
     assert_protected_action(:environment_content_view, good_perms, bad_perms) do
-      put :environment_content_view, :included => {:ids => @system_ids}, :organization_id => @org.label,
+      put :environment_content_view, :included => {:ids => @system_ids}, :organization_id => @org.id,
           :environment_id => @library.id, :content_view_id => @view.id
     end
   end

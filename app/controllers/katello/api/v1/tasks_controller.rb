@@ -38,7 +38,7 @@ class Api::V1::TasksController < Api::V1::ApiController
   end
 
   api :GET, "/organizations/:organization_id/tasks", "List tasks of given organization"
-  param :organization_id, :identifier, :desc => "organization identifier", :required => true
+  param :organization_id, :number, :desc => "organization identifier", :required => true
   param :status, String, :desc => "Filter tasks by status"
   def index
     query_string = params[:status] ? "status:#{params[:status]}" : ''

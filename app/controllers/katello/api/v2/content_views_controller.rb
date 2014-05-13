@@ -31,7 +31,7 @@ module Katello
 
     api :GET, "/organizations/:organization_id/content_views", "List content views"
     api :GET, "/content_views", "List content views"
-    param :organization_id, :identifier, :desc => "organization identifier", :required => true
+    param :organization_id, :number, :desc => "organization identifier", :required => true
     param :environment_id, :identifier, :desc => "environment identifier"
     param :nondefault, :bool, :desc => "Filter out default content views"
     def index
@@ -49,7 +49,7 @@ module Katello
 
     api :POST, "/organizations/:organization_id/content_views", "Create a content view"
     api :POST, "/content_views", "Create a content view"
-    param :organization_id, :identifier, :desc => "Organization identifier", :required => true
+    param :organization_id, :number, :desc => "Organization identifier", :required => true
     param :name, String, :desc => "Name of the content view", :required => true
     param :label, String, :desc => "Content view label"
     param :composite, :bool, :desc => "Composite content view"
