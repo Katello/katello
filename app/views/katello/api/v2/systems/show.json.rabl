@@ -7,8 +7,27 @@ attributes :name, :description
 attributes :location
 attributes :content_view, :content_view_id
 
-child :system_groups => :systemGroups do
-  attributes :id, :name, :description, :max_systems, :total_systems
+child :foreman_host => :host do
+  attributes :id, :name
+  attributes :host_status => :status
+  attributes :last_report
+
+  child :environment => :puppet_environment do
+    attributes :id, :name
+  end
+  child :operatingsystem do
+    attributes :id, :name, :description
+  end
+  child :model do
+    attributes :id, :name
+  end
+  child :hostgroup do
+    attributes :id, :name
+  end
+end
+
+child :host_collections => :hostCollections do
+  attributes :id, :name, :description, :max_content_hosts, :total_content_hosts
 end
 
 child :custom_info => :customInfo do
@@ -25,12 +44,12 @@ end
 
 # Candlepin attributes
 attributes :entitlementStatus
-attributes :servicelevel, :autoheal
+attributes :autoheal
 attributes :href, :release, :ipv4_address
 attributes :checkin_time, :created
 attributes :installedProducts
 
-
+attributes :serviceLevel => :service_level
 
 node :release_ver do |sys|
   sys.releaseVer.is_a?(Hash) ? sys.releaseVer[:releaseVer] : sys.releaseVer

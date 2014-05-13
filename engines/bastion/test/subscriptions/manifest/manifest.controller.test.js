@@ -21,47 +21,11 @@ describe('Controller: ManifestController', function() {
 
         translate = function(a) { return a };
         $scope = $rootScope.$new();
+        Subscription = $injector.get('Subscription');
         $controller('ManifestController', {
             $scope: $scope,
             translate: translate,
-
+            Subscription: Subscription
         });
     }));
-
-
-    it("should provide a method to get history for a provider", function() {
-        var provider,
-            history;
-
-        provider = {
-            name: "Red Hat",
-            id: 1,
-            owner_imports: [
-                {
-                    statusMessage: "metamorphosis by kafka",
-                    created: "1915-10-25"
-                },
-                {
-                    webAppPrefix: "dickens",
-                    upstreamName: "bleakhouse",
-                    created: "1852-03-03"
-                }
-            ]
-        };
-
-        history = provider.owner_imports.slice(0);
-        history.push({
-            statusMessage: "Manifest from bleakhouse.",
-            created: "1852-03-03"
-        });
-
-        $scope.redhatProvider = provider;
-
-        expect($scope.manifestHistory(provider)).toEqual(history);
-        expect($scope.manifestHistory(provider).length).toBe(3);
-        expect($scope.manifestHistory(provider)[0]).toBe(history[0]);
-        expect($scope.manifestHistory(provider)[1]).toBe(history[1]);
-        expect($scope.manifestHistory(provider)[2].statusMessage).toBe(history[2].statusMessage);
-        expect($scope.manifestHistory(provider)[2].created).toBe(history[2].created);
-    });
 });

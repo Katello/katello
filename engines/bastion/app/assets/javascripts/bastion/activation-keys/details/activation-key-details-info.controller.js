@@ -18,6 +18,7 @@
  * @requires $scope
  * @requires $q
  * @requires translate
+ * @requires ActivationKey
  * @requires ContentView
  * @requires Organization
  * @requires CurrentOrganization
@@ -26,8 +27,8 @@
  *   Provides the functionality for the activation key info details action pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoController',
-    ['$scope', '$q', 'translate', 'ContentView', 'Organization', 'CurrentOrganization',
-        function ($scope, $q, translate, ContentView, Organization, CurrentOrganization) {
+    ['$scope', '$q', 'translate', 'ActivationKey', 'ContentView', 'Organization', 'CurrentOrganization',
+        function ($scope, $q, translate, ActivationKey, ContentView, Organization, CurrentOrganization) {
 
         $scope.editContentView = false;
         $scope.disableEnvironmentSelection = false;
@@ -62,6 +63,26 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
                 $scope.originalEnvironment = activationKey.environment;
             });
             $scope.disableEnvironmentSelection = false;
+        };
+
+        $scope.releaseVersions = function () {
+            var deferred = $q.defer();
+
+            ActivationKey.releaseVersions({ id: $scope.activationKey.id }, function (response) {
+                deferred.resolve(response.results);
+            });
+
+            return deferred.promise;
+        };
+
+        $scope.clearReleaseVersion = function () {
+            $scope.activationKey['release_version'] = '';
+            $scope.save($scope.activationKey);
+        };
+
+        $scope.clearServiceLevel = function () {
+            $scope.activationKey['service_level'] = '';
+            $scope.save($scope.activationKey);
         };
 
         $scope.contentViews = function () {

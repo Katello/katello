@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-25 14:50-0400\n"
+"POT-Creation-Date: 2014-05-09 16:22-0400\n"
 "PO-Revision-Date: 2013-02-13 15:19+0000\n"
 "Last-Translator: Miroslav Suchý <msuchy@redhat.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,10 +31,6 @@ msgstr "환경은 이미 경로에 있는 환경에 설정할 수 없음 "
 #, fuzzy
 msgid " items selected."
 msgstr "패키지 필터 %s가 삭제되었습니다. "
-
-#, fuzzy
-msgid "\"Creating an activation key in candlepin: #{label}\""
-msgstr "candlepin에 소유자 생성 중: %s"
 
 msgid "\"Missing values for #{parameter_missing_exception.param}.\""
 msgstr ""
@@ -408,9 +404,6 @@ msgstr "%s 생성 시 레이블이 지정되지 않았습니다; 따라서 '%s'�
 msgid "A request has been received by Katello server '%{url}' to retrieve the logins for email '%{email}'. The following is a list of those logins:"
 msgstr ""
 
-msgid "About"
-msgstr "정보 "
-
 msgid "Abstract async task"
 msgstr ""
 
@@ -480,6 +473,10 @@ msgstr "환경에 있는 관리자 변경 집합 "
 msgid "Administer GPG Keys"
 msgstr "관리자 GPG 키 "
 
+#, fuzzy
+msgid "Administer Host Collections"
+msgstr "관리자 역할 "
+
 msgid "Administer Organization"
 msgstr "관리자 조직 "
 
@@ -492,9 +489,6 @@ msgstr "관리자 공급자 "
 
 msgid "Administer Roles"
 msgstr "관리자 역할 "
-
-msgid "Administer System Groups"
-msgstr "관리자 시스템 그룹"
 
 msgid "Administer Users"
 msgstr "관리자 사용자 "
@@ -540,14 +534,6 @@ msgstr "candlepin에 있는 소유자 %s에 대한 모든 공급자 "
 #, fuzzy
 msgid "All repositories"
 msgstr "Red Hat 리포지터리 "
-
-#, fuzzy
-msgid "Application"
-msgstr "조직 "
-
-#, fuzzy
-msgid "Application Information"
-msgstr "시스템 정보 "
 
 msgid "Applied"
 msgstr ""
@@ -692,10 +678,6 @@ msgstr ""
 msgid "AuthSource|Tls"
 msgstr ""
 
-#, fuzzy
-msgid "Authentication"
-msgstr "활성키 "
-
 msgid "Author"
 msgstr ""
 
@@ -744,6 +726,10 @@ msgstr ""
 
 msgid "Back to Results"
 msgstr ""
+
+#, fuzzy
+msgid "Backend System Status"
+msgstr "동기화 상태 "
 
 msgid "Before removing this provider, all promoted repositories must first be deleted from their respective environments using a deletion changeset: "
 msgstr ""
@@ -797,7 +783,8 @@ msgstr "CDN 로딩 중 오류 발생: %s로 액세스 거부됨 "
 msgid "CDN loading error: access forbidden to %s"
 msgstr "CDN 로딩 중 오류 발생: %s로 액세스 금지됨 "
 
-msgid "Can't copy System Groups to a different org: '%{org1}' != '%{org2}'"
+#, fuzzy
+msgid "Can't copy host collections to a different org: '%{org1}' != '%{org2}'"
 msgstr "시스템 그룹을 다른 조직에 복사할 수 없음: '%{org1}' != '%{org2}'"
 
 #, fuzzy
@@ -975,6 +962,10 @@ msgid "Collapse All"
 msgstr ""
 
 #, fuzzy
+msgid "Collection membership modification is not allowed for host collections(s): %s"
+msgstr "그룹의 경우 시스템 그룹 구성원을 변경할 수 없습니다: %s"
+
+#, fuzzy
 msgid "Compare Selected"
 msgstr "템플릿 '%s'을 제거했습니다 "
 
@@ -1064,10 +1055,6 @@ msgstr "Red Hat 제품을 업데이트할 수 없습니다. "
 
 #, fuzzy
 msgid "Content"
-msgstr "컨텐츠 "
-
-#, fuzzy
-msgid "Content About"
 msgstr "컨텐츠 "
 
 msgid "Content Available From"
@@ -1192,6 +1179,10 @@ msgstr "필터 '%s'를 찾을 수 없음 "
 msgid "Couldn't find gpg key '%s'"
 msgstr "GPG 키 '%s'를 찾을 수 없음 "
 
+#, fuzzy
+msgid "Couldn't find host collection '%s'"
+msgstr "사용자 역할 '%s'을 찾을 수 없음 "
+
 msgid "Couldn't find organization '%s'"
 msgstr "조직 '%s'을 찾을 수 없음 "
 
@@ -1224,9 +1215,6 @@ msgstr "조직 '%{org}'에서 동기화 계획 '%{plan}'을 찾을 수 없음 "
 
 msgid "Couldn't find system '%s'"
 msgstr "시스템 '%s'을 찾을 수 없음 "
-
-msgid "Couldn't find system group '%s'"
-msgstr "시스템 그룹 '%s'을 찾을 수 없음 "
 
 msgid "Couldn't find user '%s'"
 msgstr "사용자 '%s'를 찾을 수 없음 "
@@ -1344,12 +1332,20 @@ msgstr "역할 삭제 "
 msgid "Delete All"
 msgstr "역할 삭제 "
 
+#, fuzzy
+msgid "Delete Content Hosts in Host Collection"
+msgstr "환경에서 컨텐츠 삭제 "
+
 msgid "Delete Content from Environment"
 msgstr "환경에서 컨텐츠 삭제 "
 
 #, fuzzy
 msgid "Delete Distributors"
 msgstr "선택한 배포판 "
+
+#, fuzzy
+msgid "Delete Host Collection"
+msgstr "시스템 삭제 "
 
 #, fuzzy
 msgid "Delete Manifest"
@@ -1366,15 +1362,9 @@ msgstr "삭제된 공급자 [ %s ] "
 msgid "Delete Roles"
 msgstr "역할 삭제 "
 
-msgid "Delete System Group"
-msgstr "시스템 그룹 삭제 "
-
 #, fuzzy
 msgid "Delete Systems"
 msgstr "시스템 그룹 삭제 "
-
-msgid "Delete Systems in System Group"
-msgstr "시스템 그룹에 있는 시스템 삭제 "
 
 #, fuzzy
 msgid "Delete Users"
@@ -1401,6 +1391,14 @@ msgid "Deleted environment '%s'"
 msgstr "환경 '%s'을 삭제했습니다 "
 
 #, fuzzy
+msgid "Deleted host collection '%s'"
+msgstr "역할 '%s'을 삭제했습니다 "
+
+#, fuzzy
+msgid "Deleted host collection '%{s}' and it's %{n} systems."
+msgstr "시스템 그룹 '%{s}' 및 시스템 그룹의 %{n} 시스템을 삭제했습니다. "
+
+#, fuzzy
 msgid "Deleted organization '%s'"
 msgstr "조직 선택 "
 
@@ -1423,18 +1421,8 @@ msgstr "동기화 계획 '%s'을 삭제했습니다 "
 msgid "Deleted system '%s'"
 msgstr "시스템 '%s'을 삭제했습니다 "
 
-msgid "Deleted system group '%s'"
-msgstr "시스템 그룹 '%s'을 삭제했습니다 "
-
-msgid "Deleted system group '%{s}' and it's %{n} systems."
-msgstr "시스템 그룹 '%{s}' 및 시스템 그룹의 %{n} 시스템을 삭제했습니다. "
-
 msgid "Deleted user '%s'"
 msgstr "사용자 '%s'를 삭제했습니다 "
-
-#, fuzzy
-msgid "Deleting activation_key in candlepin: %s"
-msgstr "candlepin에 있는 소유자 삭제 중: %s"
 
 msgid "Deleting environment in candlepin: %s"
 msgstr "candlepin의 환경을 삭제 중: %s"
@@ -1472,10 +1460,6 @@ msgstr "서비스 레벨 설정이 없음 "
 
 msgid "Difference:"
 msgstr ""
-
-#, fuzzy
-msgid "Directory"
-msgstr "기록 "
 
 msgid "Disable"
 msgstr ""
@@ -1648,16 +1632,6 @@ msgstr "환경 %s 이후에 다른 환경이 있습니다. 경로에 있는 마�
 msgid "Environment %s has a successor. Only the last environment on a path can be deleted."
 msgstr "환경 %s 이후에 다른 환경이 있습니다. 경로에 있는 마지막 환경만을 삭제할 수 있습니다 "
 
-#, fuzzy
-msgid "Environment '%s' was created."
-msgstr "환경 '%s'이 업데이트되었습니다. "
-
-msgid "Environment '%s' was deleted."
-msgstr "환경 '%s'이 삭제되었습니다. "
-
-msgid "Environment '%s' was updated."
-msgstr "환경 '%s'이 업데이트되었습니다. "
-
 msgid "Environment cannot be in its own promotion path"
 msgstr "환경은 자체 승격 경로에 존재할 수 없음 "
 
@@ -1825,6 +1799,10 @@ msgstr "조직 '%s' 삭제에 실패했습니다. 보다 자세한 정보는 알
 msgid "Failed to publish content view '%s'."
 msgstr "공급자 '%s'을 찾을 수 없음 "
 
+#, fuzzy
+msgid "Failed to update candlepin activation_key %s"
+msgstr "candlepin 환경 %s 삭제 실패 "
+
 msgid "Feature"
 msgstr ""
 
@@ -1931,10 +1909,6 @@ msgid "Good"
 msgstr ""
 
 #, fuzzy
-msgid "Group membership modification is not allowed for system group(s): %s"
-msgstr "그룹의 경우 시스템 그룹 구성원을 변경할 수 없습니다: %s"
-
-#, fuzzy
 msgid "Guest"
 msgstr "게스트 "
 
@@ -1943,6 +1917,19 @@ msgstr "기록 "
 
 msgid "Host"
 msgstr "호스트 "
+
+msgid "Host Collection Info"
+msgstr ""
+
+#, fuzzy
+msgid "Host Collections"
+msgstr "배포판 "
+
+msgid "Host collection '%{name}' exceeds maximum usage limit of '%{limit}'"
+msgstr ""
+
+msgid "Host collection is empty."
+msgstr ""
 
 #, fuzzy
 msgid "Host config group"
@@ -2069,6 +2056,9 @@ msgstr ""
 
 msgid "ID: %s doesn't exist "
 msgstr "ID: %s이 존재하지 않습니다 "
+
+msgid "IRC"
+msgstr ""
 
 msgid "ISOs"
 msgstr ""
@@ -2226,6 +2216,9 @@ msgstr ""
 msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
 msgstr "잘못된 verb '%{verb}'. 리소스 유형 '%{resource_type}'에 대한 verb는 %{possible_verbs} 중 하나가 될 수 있습니다"
 
+msgid "Issue tracker"
+msgstr ""
+
 msgid "Issued"
 msgstr ""
 
@@ -2236,12 +2229,17 @@ msgid "Katello Logins"
 msgstr "Katello 로그인 "
 
 #, fuzzy
-msgid "Katello reference documentation"
-msgstr "CloudForms 문서 "
+msgid "Katello Support"
+msgstr "가져오기 "
 
-#, fuzzy
-msgid "Katello user documentation"
-msgstr "CloudForms 문서 "
+msgid "Katello can be found on the same freenode channels used by Foreman."
+msgstr ""
+
+msgid "Katello uses the Foreman Redmine to report and track bugs and feature requests, which can be found here:"
+msgstr ""
+
+msgid "Katello uses the same mailing lists as Foreman but requests that Katello specific inquiries begin the subject line with [Katello]."
+msgstr ""
 
 #, fuzzy
 msgid "Katello/model"
@@ -2578,6 +2576,9 @@ msgstr ""
 msgid "LookupValue|Value"
 msgstr ""
 
+msgid "Mailing lists"
+msgstr ""
+
 #, fuzzy
 msgid "Make this your default organization."
 msgstr "이 조직을 내 기본 조직으로 합니다."
@@ -2597,7 +2598,7 @@ msgid "Manifest subscriptions unchanged from previous"
 msgstr ""
 
 #, fuzzy
-msgid "Maximum number of content hosts exceeded for system group(s): %s"
+msgid "Maximum number of content hosts exceeded for host collection(s): %s"
 msgstr "그룹의 경우 시스템 그룹의 최대 시스템 수를 초과했습니다: %s"
 
 msgid "May not add a type or date range rule to a filter that has existing rules."
@@ -2655,6 +2656,9 @@ msgstr ""
 msgid "Model|Vendor class"
 msgstr ""
 
+msgid "Modify Content Hosts in Host Collection"
+msgstr ""
+
 #, fuzzy
 msgid "Modify Distributors"
 msgstr "배포판 "
@@ -2662,6 +2666,10 @@ msgstr "배포판 "
 #, fuzzy
 msgid "Modify Distributors in Environment"
 msgstr "환경에 있는 시스템 수정 "
+
+#, fuzzy
+msgid "Modify Host Collection details and content host membership"
+msgstr "시스템 그룹 정보 및 시스템 구성원 수정 "
 
 msgid "Modify Organization and Administer Environments"
 msgstr "조직 및 관리자 환경 수정 "
@@ -2673,17 +2681,11 @@ msgstr "공급자 및 관리자 제품 수정 "
 msgid "Modify Roles"
 msgstr "사용자 수정 "
 
-msgid "Modify System Group details and system membership"
-msgstr "시스템 그룹 정보 및 시스템 구성원 수정 "
-
 msgid "Modify Systems"
 msgstr "시스템 수정 "
 
 msgid "Modify Systems in Environment"
 msgstr "환경에 있는 시스템 수정 "
-
-msgid "Modify Systems in System Group"
-msgstr "시스템 그룹에 있는 시스템 수정 "
 
 msgid "Modify Users"
 msgstr "사용자 수정 "
@@ -2795,7 +2797,7 @@ msgstr "컨텐츠 "
 msgid "No Default"
 msgstr "시스템 템플릿 "
 
-msgid "No Red Hat products currently exist, please import a manifest <a href='%s/all'>here</a> to receive Red Hat content."
+msgid "No Red Hat products currently exist, please import a manifest <a href='/subscriptions'>here</a> to receive Red Hat content."
 msgstr ""
 
 #, fuzzy
@@ -2825,6 +2827,10 @@ msgstr "검색 조건에 일치하는 이벤트가 없음. "
 
 msgid "No file uploaded"
 msgstr ""
+
+#, fuzzy
+msgid "No host collections found."
+msgstr "찾을 수 없음 "
 
 msgid "No manifest file uploaded"
 msgstr ""
@@ -2879,10 +2885,6 @@ msgstr "배포판 "
 #, fuzzy
 msgid "No synchronization is currently running"
 msgstr "현재 %s의 동기화는 실행되고 있지 않습니다 "
-
-#, fuzzy
-msgid "No system groups found."
-msgstr "찾을 수 없음 "
 
 msgid "No system registration default set for this user."
 msgstr "이 사용자에 대해 설정된 시스템 등록 기본값이 없습니다."
@@ -3503,6 +3505,9 @@ msgstr "활성키 권한 보기"
 msgid "Read Changesets in Environment"
 msgstr "환경에 있는 관리자 변경 집합 "
 
+msgid "Read Content Hoss in Host Collection"
+msgstr ""
+
 #, fuzzy
 msgid "Read Content Views"
 msgstr "환경 보기"
@@ -3529,6 +3534,9 @@ msgstr "역할 권한 보기"
 msgid "Read Everything"
 msgstr "모두 보기"
 
+msgid "Read Host Collection"
+msgstr ""
+
 msgid "Read Organization"
 msgstr "조직 보기"
 
@@ -3551,17 +3559,11 @@ msgstr "역할 보기"
 msgid "Read Roles permission"
 msgstr "역할 권한 보기"
 
-msgid "Read System Group"
-msgstr "시스템 그룹 보기"
-
 msgid "Read Systems"
 msgstr "시스템 보기"
 
 msgid "Read Systems in Environment"
 msgstr "환경에 있는 시스템 보기"
-
-msgid "Read Systems in System Group"
-msgstr "시스템 그룹에 있는 시스템 보기"
 
 #, fuzzy
 msgid "Read Users"
@@ -3652,10 +3654,6 @@ msgstr "시스템 등록 "
 
 msgid "Reload data"
 msgstr ""
-
-#, fuzzy
-msgid "Removal of the environment failed. If you continue having trouble with this, please contact an Administrator."
-msgstr "잘못된 매개 변수가 이 작업에 대한 요청에 전송되었습니다. 시스템 관리자에게 문의하십시오. "
 
 #, fuzzy
 msgid "Removal of the user failed. If you continue having trouble with this, please contact an Administrator."
@@ -4234,7 +4232,7 @@ msgid "Successful for distributor(s): "
 msgstr "다음 시스템에 대해 성공했습니다: "
 
 #, fuzzy
-msgid "Successfully added %{count} content host(s) to system group %{group}."
+msgid "Successfully added %{count} content host(s) to host collection %{host_collection}."
 msgstr "시스템을 그룹 '%s'에 성공적으로 추가했습니다."
 
 msgid "Successfully changed sync plan for %s product(s)"
@@ -4267,8 +4265,9 @@ msgstr "변경 집합 '%s'이 성공적으로 삭제되었습니다. "
 msgid "Successfully removed %s repositories"
 msgstr "변경 집합 '%s'이 성공적으로 삭제되었습니다. "
 
-msgid "Successfully removed %{count} content host(s) from system group %{group}."
-msgstr ""
+#, fuzzy
+msgid "Successfully removed %{count} content host(s) from host collection %{host_collection}."
+msgstr "시스템을 그룹 '%s'에 성공적으로 추가했습니다."
 
 msgid "Successfully removed organization '%s'."
 msgstr "조직 '%s'이 성공적으로 제거되었습니다. "
@@ -4296,10 +4295,6 @@ msgstr "슈퍼 관리 권한 "
 #, fuzzy
 msgid "Super administrator with all access."
 msgstr "모든 액세스를 갖는 슈퍼 관리자 "
-
-#, fuzzy
-msgid "Support"
-msgstr "가져오기 "
 
 #, fuzzy
 msgid "Sync Canceled"
@@ -4348,33 +4343,8 @@ msgstr "동기화 "
 msgid "System Default Info"
 msgstr "시스템 정보 "
 
-msgid "System Group Info"
-msgstr "시스템 그룹 정보 "
-
-#, fuzzy
-msgid "System Groups"
-msgstr "시스템 그룹 보기"
-
 msgid "System Info"
 msgstr "시스템 정보 "
-
-#, fuzzy
-msgid "System Information"
-msgstr "시스템 정보 "
-
-#, fuzzy
-msgid "System Status"
-msgstr "동기화 상태 "
-
-msgid "System group '%{name}' exceeds maximum usage limit of '%{limit}'"
-msgstr ""
-
-msgid "System group is empty."
-msgstr "시스템 그룹이 비어있습니다."
-
-#, fuzzy
-msgid "System with uuid %s not found"
-msgstr "id '%s'인 에라타를 찾을 수 없습니다 "
 
 msgid "Systems"
 msgstr "시스템 "
@@ -4526,9 +4496,6 @@ msgid "Title"
 msgstr ""
 
 msgid "Title: "
-msgstr ""
-
-msgid "To submit a new bug please visit %s."
 msgstr ""
 
 msgid "To view the details of an item on the left, simply click on a single row.<br/><br/>To select multiple rows, hold the Control Key and click multiple rows.<br/><br/>If you don't need this help anymore, please click the close button in the top right of this box."
@@ -4917,7 +4884,8 @@ msgstr ""
 msgid "You can synchronize repositories only in library environment'"
 msgstr "라이브러리 환경에 있는 리포지터리만 동기화할 수 있습니다 "
 
-msgid "You cannot have more than %{max_systems} system(s) associated with system group '%{group}'."
+#, fuzzy
+msgid "You cannot have more than %{max_content_hosts} content host(s) associated with host collection '%{host_collection}'."
 msgstr "%{max_systems}개 이상의 시스템을 시스템 그룹 '%{group}'에 연결할 수 없습니다."
 
 #, fuzzy
@@ -5112,10 +5080,14 @@ msgstr "패키지 설치 중..."
 msgid "is invalid"
 msgstr "유효하지 않음 "
 
+msgid "issue tracker"
+msgstr ""
+
 msgid "katello-jobs service not running"
 msgstr "katello-jobs 서비스가 실행되고 있지 않음 "
 
-msgid "may not be less than the number of systems associated with the system group."
+#, fuzzy
+msgid "may not be less than the number of content hosts associated with the host collection."
 msgstr "시스템 그룹에 연결된 시스템 수 보다 적게 할 수 없습니다."
 
 msgid "may not be set to 0."
@@ -5195,9 +5167,6 @@ msgstr "시스템 "
 msgid "the %s Bugzilla"
 msgstr "%s Bugzilla"
 
-msgid "the CloudForms Documentation"
-msgstr "CloudForms 문서 "
-
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "다음 속성은 Red Hat 공급자 [ %s ]에 대해 업데이트될 수 없습니다 "
 
@@ -5223,6 +5192,10 @@ msgstr "권한 "
 #, fuzzy
 #~ msgid " Changesets"
 #~ msgstr "변경 집합 "
+
+#, fuzzy
+#~ msgid "\"Creating an activation key in candlepin: #{label}\""
+#~ msgstr "candlepin에 소유자 생성 중: %s"
 
 #, fuzzy
 #~ msgid "%d products may have missing repositories"
@@ -5340,6 +5313,9 @@ msgstr "권한 "
 #~ msgid "API Key"
 #~ msgstr "GPG 키 "
 
+#~ msgid "About"
+#~ msgstr "정보 "
+
 #, fuzzy
 #~ msgid "Action"
 #~ msgstr "조직 "
@@ -5438,6 +5414,9 @@ msgstr "권한 "
 #~ msgid "Administer Package Filters"
 #~ msgstr "관리자 패키지 필터 "
 
+#~ msgid "Administer System Groups"
+#~ msgstr "관리자 시스템 그룹"
+
 #~ msgid "Administer System Templates"
 #~ msgstr "관리자 시스템 템플릿 "
 
@@ -5509,6 +5488,14 @@ msgstr "권한 "
 #~ msgstr "시스템 보기"
 
 #, fuzzy
+#~ msgid "Application"
+#~ msgstr "조직 "
+
+#, fuzzy
+#~ msgid "Application Information"
+#~ msgstr "시스템 정보 "
+
+#, fuzzy
 #~ msgid "Apply Deletion Changeset"
 #~ msgstr "+새 변경 집합 "
 
@@ -5553,6 +5540,10 @@ msgstr "권한 "
 #, fuzzy
 #~ msgid "Audit Comment"
 #~ msgstr "환경 "
+
+#, fuzzy
+#~ msgid "Authentication"
+#~ msgstr "활성키 "
 
 #, fuzzy
 #~ msgid "Availability zone"
@@ -5654,6 +5645,10 @@ msgstr "권한 "
 #~ msgstr "변경 집합 "
 
 #, fuzzy
+#~ msgid "Content About"
+#~ msgstr "컨텐츠 "
+
+#, fuzzy
 #~ msgid "Content view definition '%s' was created."
 #~ msgstr "공급자 '%s'가 생성되었습니다. "
 
@@ -5683,6 +5678,9 @@ msgstr "권한 "
 
 #~ msgid "Couldn't find pool '%{pool}' in activation_key '%{ak}'"
 #~ msgstr "활성키 '%{ak}'에서 풀 '%{pool}'을 찾을 수 없음 "
+
+#~ msgid "Couldn't find system group '%s'"
+#~ msgstr "시스템 그룹 '%s'을 찾을 수 없음 "
 
 #~ msgid "Couldn't find template '%s'"
 #~ msgstr "템플릿 '%s'을 찾을 수 없음 "
@@ -5719,16 +5717,14 @@ msgstr "권한 "
 #~ msgid "Delete %s?"
 #~ msgstr "역할 삭제 "
 
-#, fuzzy
-#~ msgid "Delete Content View Definitions"
-#~ msgstr "환경에서 컨텐츠 삭제 "
-
-#, fuzzy
-#~ msgid "Delete Hosts"
-#~ msgstr "시스템 삭제 "
-
 #~ msgid "Delete Package Filters"
 #~ msgstr "패키지 필터 삭제 "
+
+#~ msgid "Delete System Group"
+#~ msgstr "시스템 그룹 삭제 "
+
+#~ msgid "Delete Systems in System Group"
+#~ msgstr "시스템 그룹에 있는 시스템 삭제 "
 
 #, fuzzy
 #~ msgid "Delete autosign entry for %s"
@@ -5762,9 +5758,20 @@ msgstr "권한 "
 #~ msgid "Deleted environment %{env} and %{pcs}"
 #~ msgstr "환경 '%s'을 삭제했습니다 "
 
+#~ msgid "Deleted system group '%s'"
+#~ msgstr "시스템 그룹 '%s'을 삭제했습니다 "
+
+#, fuzzy
+#~ msgid "Deleting activation_key in candlepin: %s"
+#~ msgstr "candlepin에 있는 소유자 삭제 중: %s"
+
 #, fuzzy
 #~ msgid "Dependency of "
 #~ msgstr "종속성 "
+
+#, fuzzy
+#~ msgid "Directory"
+#~ msgstr "기록 "
 
 #~ msgid "Disable/enable is not supported for custom repositories."
 #~ msgstr "비활성화/활성화는 사용자 정의 리포지터리에 대해 지원되지 않습니다. "
@@ -5907,6 +5914,16 @@ msgstr "권한 "
 #, fuzzy
 #~ msgid "Enter Package or Group Name(s)..."
 #~ msgstr "패키지 그룹 추가 중..."
+
+#, fuzzy
+#~ msgid "Environment '%s' was created."
+#~ msgstr "환경 '%s'이 업데이트되었습니다. "
+
+#~ msgid "Environment '%s' was deleted."
+#~ msgstr "환경 '%s'이 삭제되었습니다. "
+
+#~ msgid "Environment '%s' was updated."
+#~ msgstr "환경 '%s'이 업데이트되었습니다. "
 
 #, fuzzy
 #~ msgid "Environment Promotion Paths"
@@ -6192,6 +6209,14 @@ msgstr "권한 "
 #~ msgid "It is not allowed to update a Red Hat repository."
 #~ msgstr "Red Hat 리포지터리를 업데이트할 수 없습니다. "
 
+#, fuzzy
+#~ msgid "Katello reference documentation"
+#~ msgstr "CloudForms 문서 "
+
+#, fuzzy
+#~ msgid "Katello user documentation"
+#~ msgstr "CloudForms 문서 "
+
 #~ msgid "Key"
 #~ msgstr "키 "
 
@@ -6282,6 +6307,9 @@ msgstr "권한 "
 
 #~ msgid "Modify Package Filters"
 #~ msgstr "패키지 필터 수정 "
+
+#~ msgid "Modify Systems in System Group"
+#~ msgstr "시스템 그룹에 있는 시스템 수정 "
 
 #~ msgid "Must be unique within an environment"
 #~ msgstr "환경에서 고유해야 함 "
@@ -6476,6 +6504,10 @@ msgstr "권한 "
 #, fuzzy
 #~ msgid "No repositories exist in this changeset."
 #~ msgstr "변경 집합에서 리포지터리 '%s'를 찾을 수 없습니다 "
+
+#, fuzzy
+#~ msgid "No system groups found."
+#~ msgstr "찾을 수 없음 "
 
 #, fuzzy
 #~ msgid "No template found"
@@ -6764,14 +6796,24 @@ msgstr "권한 "
 #~ msgid "Read Package Filters"
 #~ msgstr "패키지 필터 보기"
 
+#~ msgid "Read System Group"
+#~ msgstr "시스템 그룹 보기"
+
 #~ msgid "Read System Templates"
 #~ msgstr "시스템 템플릿 보기"
 
 #~ msgid "Read System Templates permission"
 #~ msgstr "시스템 템플릿 권한 보기"
 
+#~ msgid "Read Systems in System Group"
+#~ msgstr "시스템 그룹에 있는 시스템 보기"
+
 #~ msgid "Registered / Last Checked In"
 #~ msgstr "등록됨 / 마지막 접속 날짜 "
+
+#, fuzzy
+#~ msgid "Removal of the environment failed. If you continue having trouble with this, please contact an Administrator."
+#~ msgstr "잘못된 매개 변수가 이 작업에 대한 요청에 전송되었습니다. 시스템 관리자에게 문의하십시오. "
 
 #, fuzzy
 #~ msgid "Remove Activation Key"
@@ -7136,6 +7178,17 @@ msgstr "권한 "
 #~ msgid "System Group %{new_group} created successfully as a copy of system group %{group}."
 #~ msgstr "시스템 그룹 %{new_group}이 시스템 그룹 %{group}의 사본으로 성공적으로 생성되었습니다."
 
+#~ msgid "System Group Info"
+#~ msgstr "시스템 그룹 정보 "
+
+#, fuzzy
+#~ msgid "System Groups"
+#~ msgstr "시스템 그룹 보기"
+
+#, fuzzy
+#~ msgid "System Information"
+#~ msgstr "시스템 정보 "
+
 #, fuzzy
 #~ msgid "System Limit"
 #~ msgstr "시스템 "
@@ -7147,8 +7200,15 @@ msgstr "권한 "
 #~ msgid "System Type"
 #~ msgstr "시스템 템플릿 "
 
+#~ msgid "System group is empty."
+#~ msgstr "시스템 그룹이 비어있습니다."
+
 #~ msgid "System subscriptions updated."
 #~ msgstr "시스템 서브스크립션이 업데이트되었습니다. "
+
+#, fuzzy
+#~ msgid "System with uuid %s not found"
+#~ msgstr "id '%s'인 에라타를 찾을 수 없습니다 "
 
 #~ msgid "System's environment not compatible with the group '%s'."
 #~ msgstr "시스템 환경은 그룹 '%s'과 호환하지 않습니다."
@@ -7584,6 +7644,9 @@ msgstr "권한 "
 #, fuzzy
 #~ msgid "status"
 #~ msgstr "동기화 상태 "
+
+#~ msgid "the CloudForms Documentation"
+#~ msgstr "CloudForms 문서 "
 
 #, fuzzy
 #~ msgid "unable to find recipients"

@@ -42,7 +42,7 @@ class Api::V2::GpgKeysControllerTest < ActionController::TestCase
   end
 
   def test_index
-    get :index, :organization_id => @organization.label
+    get :index, :organization_id => @organization.id
 
     assert_response :success
     assert_template 'api/v2/gpg_keys/index'
@@ -53,7 +53,7 @@ class Api::V2::GpgKeysControllerTest < ActionController::TestCase
     denied_perms = [@no_permission]
 
     assert_protected_action(:index, allowed_perms, denied_perms) do
-      get :index, :organization_id => @organization.label
+      get :index, :organization_id => @organization.id
     end
   end
 

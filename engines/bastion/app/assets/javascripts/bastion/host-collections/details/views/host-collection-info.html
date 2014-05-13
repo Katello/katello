@@ -1,0 +1,64 @@
+<span page-title ng-model="hostCollection">{{ 'Host Collection: ' | translate }} {{ hostCollection.name }}</span>
+
+<section>
+
+  <div class="details fl">
+    <section>
+      <div class="detail">
+        <span class="info-label" translate>Name</span>
+        <span class="info-value"
+              alch-edit-text="hostCollection.name"
+              readonly="hostCollection.readonly"
+              on-save="save(hostCollection)">
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Description</span>
+        <span class="info-value"
+              alch-edit-textarea="hostCollection.description"
+              readonly="hostCollection.readonly"
+              on-save="save(hostCollection)">
+        </span>
+      </div>
+
+      <div class="detail">
+
+        <span class="info-label" translate>Content Host Limit</span>
+
+        <span class="info-value"
+              alch-edit-custom="hostCollection.max_content_hosts"
+              readonly="hostCollection.readonly"
+              formatter="defaultNumberString"
+              formatter-options="limitTranslations"
+              on-save="save(hostCollection)">
+
+          <div class="form input">
+            <div>
+              <span translate>
+                Unlimited Content Hosts:
+              </span>
+              <input type='checkbox'
+                   ng-model="unlimited"
+                   ng-checked="isUnlimited(hostCollection)"
+                   ng-change="unlimitedChanged()"/>
+            </div>
+            <div ng-hide="isUnlimited(hostCollection)" >
+              <span translate>
+                Limit:
+              </span>
+              <input ng-model="hostCollection.max_content_hosts"
+                     name="max_content_hosts"
+                     type="number"
+                     tabindex="2"/>
+              <span class="note error" ng-show="hostCollection.max_content_hosts.$invalid">
+                <ul><li ng-repeat="message in hostCollection.max_content_hosts.$error.messages">{{ message }}</li></ul>
+              </span>
+            </div>
+          </div>
+
+        </span>
+      </div>
+    </section>
+  </div>
+</section>

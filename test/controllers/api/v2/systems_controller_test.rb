@@ -24,7 +24,7 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
 
   def models
     @system = katello_systems(:simple_server)
-    @system_groups = katello_system_groups
+    @host_collections = katello_host_collections
   end
 
   def permissions
@@ -48,7 +48,7 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
   end
 
   def test_index
-    get :index, :organization_id => get_organization.label
+    get :index, :organization_id => get_organization.id
 
     assert_response :success
     assert_template 'api/v2/systems/index'
@@ -82,11 +82,11 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
     assert_template 'api/v2/systems/tasks'
   end
 
-  def test_available_system_groups
-    get :available_system_groups, :id => @system.uuid
+  def test_available_host_collections
+    get :available_host_collections, :id => @system.uuid
 
     assert_response :success
-    assert_template 'api/v2/systems/available_system_groups'
+    assert_template 'api/v2/systems/available_host_collections'
   end
 
 end

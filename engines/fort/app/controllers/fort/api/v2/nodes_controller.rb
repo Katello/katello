@@ -13,6 +13,8 @@
 module Fort
 class Api::V2::NodesController < Katello::Api::V2::ApiController
 
+  include Katello::Authentication::ClientAuthentication
+
   before_filter :authorize
   before_filter :find_node, :only => [:destroy, :get, :update, :show, :sync]
   before_filter :find_environment, :only => [:sync]
@@ -136,6 +138,13 @@ class Api::V2::NodesController < Katello::Api::V2::ApiController
     @node.environments = environments
     @node.save!
     respond_for_show :resource => @node
+  end
+
+  protected
+
+  # to support rhsm client authentication
+  def authenticate
+    set_client_user || super
   end
 
   private

@@ -28,12 +28,12 @@ class Api::V1::SystemsController < Api::V1::ApiController
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
-                                        :add_system_groups, :remove_system_groups, :refresh_subscriptions, :checkin,
-                                        :subscription_status]
+                                        :add_host_collections, :remove_host_collections, :refresh_subscriptions,
+                                        :checkin, :subscription_status]
   before_filter :find_content_view, :only => [:create, :update]
 
   before_filter :authorize, :except => [:activate, :enabled_repos]
-  before_filter :authorize_client, :only => [:enabled_repos]
+  before_filter :authenticate_client, :only => [:enabled_repos]
 
   def organization_id_keys
     [:organization_id, :owner]
@@ -74,8 +74,8 @@ class Api::V1::SystemsController < Api::V1::ApiController
         :tasks                            => index_systems,
         :task_show                        => read_system,
         :enabled_repos                    => edit_system,
-        :add_system_groups                => edit_system,
-        :remove_system_groups             => edit_system,
+        :add_host_collections             => edit_system,
+        :remove_host_collections          => edit_system,
         :refresh_subscriptions            => edit_system,
         :checkin                          => edit_system
     }
@@ -137,9 +137,9 @@ DESC
       # subscribe system - if anything goes wrong subscriptions are deleted in Candlepin and exception is rethrown
       activation_keys.each do |ak|
         ak.subscribe_system(@system)
-        ak.system_groups.each do |group|
-          group.system_ids = (group.system_ids + [@system.id]).uniq
-          group.save!
+        ak.host_collections.each do |host_collection|
+          host_collection.system_ids = (host_collection.system_ids + [@system.id]).uniq
+          host_collection.save!
         end
       end
 
@@ -368,24 +368,24 @@ This information is then used for computing the errata available for the system.
     respond_for_show :resource => result
   end
 
-  api :POST, "/systems/:id/system_groups", "Add a system to groups"
+  api :POST, "/systems/:id/host_collections", "Add a system to host collections"
   param :system, Hash, :required => true do
-    param :system_group_ids, Array, :desc => "List of group ids to add the system to", :required => true
+    param :host_collection_ids, Array, :desc => "List of host collection ids to add the system to", :required => true
   end
-  def add_system_groups
-    ids                      = params[:system][:system_group_ids]
-    @system.system_group_ids = (@system.system_group_ids + ids).uniq
+  def add_host_collections
+    ids                         = params[:system][:host_collection_ids]
+    @system.host_collection_ids = (@system.host_collection_ids + ids).uniq
     @system.save!
     respond_for_create
   end
 
-  api :DELETE, "/systems/:id/system_groups", "Remove a system from groups"
+  api :DELETE, "/systems/:id/host_collections", "Remove a system from host collections"
   param :system, Hash, :required => true do
-    param :system_group_ids, Array, :desc => "List of group ids to add the system to", :required => true
+    param :host_collection_ids, Array, :desc => "List of host collection ids to add the system to", :required => true
   end
-  def remove_system_groups
-    ids                      = params[:system][:system_group_ids].map(&:to_i)
-    @system.system_group_ids = (@system.system_group_ids - ids).uniq
+  def remove_host_collections
+    ids                         = params[:system][:host_collection_ids].map(&:to_i)
+    @system.host_collection_ids = (@system.host_collection_ids - ids).uniq
     @system.save!
     respond_for_show
   end

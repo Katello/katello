@@ -13,4 +13,9 @@
 require File.expand_path("fort/engine", File.dirname(__FILE__))
 
 module Fort
+
+  # To make Rails autoloading happy and prevent using ::Api instead
+  # of Fort::Api in the controllers
+  module Api
+  end
 end

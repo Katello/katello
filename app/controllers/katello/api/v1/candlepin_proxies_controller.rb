@@ -13,15 +13,13 @@
 module Katello
   class Api::V1::CandlepinProxiesController < Api::V1::ApiController
 
-    include Katello::Authentication::RhsmAuthentication
+    include Katello::Authentication::ClientAuthentication
 
-    skip_before_filter :authorize
-    before_filter :authorize_rhsm, :except => [:consumer_activate]
     before_filter :add_candlepin_version_header
 
     before_filter :proxy_request_path, :proxy_request_body
     before_filter :set_organization_id
-    before_filter :find_organization, :only => [:rhsm_index, :consumer_activate, :consumer_create]
+    before_filter :find_organization, :only => [:rhsm_index, :consumer_activate]
     before_filter :find_default_organization_and_or_environment, :only => [:consumer_create, :index, :consumer_activate]
     before_filter :find_optional_organization, :only => [:consumer_create, :hypervisors_update, :index, :consumer_activate]
     before_filter :find_only_environment, :only => [:consumer_create]
@@ -32,6 +30,7 @@ module Katello
     before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin,
                                           :upload_package_profile, :regenerate_identity_certificates, :facts]
     before_filter :find_user_by_login, :only => [:list_owners]
+    before_filter :authorize, :except => [:consumer_activate]
 
     # TODO: break up method
     # rubocop:disable MethodLength
@@ -58,8 +57,7 @@ module Katello
           (User.consumer? || @organization.readable?)
         when "api_proxy_consumer_certificates_path", "api_proxy_consumer_releases_path", "api_proxy_certificate_serials_path",
             "api_proxy_consumer_entitlements_path", "api_proxy_consumer_entitlements_post_path", "api_proxy_consumer_entitlements_delete_path",
-            "api_proxy_consumer_dryrun_path", "api_proxy_consumer_owners_path", "api_proxy_consumer_compliance_path",
-            "api_proxy_consumer_content_overrides_path"
+            "api_proxy_consumer_dryrun_path", "api_proxy_consumer_owners_path", "api_proxy_consumer_compliance_path"
           User.consumer? && current_user.uuid == params[:id]
         when "api_proxy_consumer_certificates_delete_path"
           User.consumer? && current_user.uuid == params[:consumer_id]
@@ -69,6 +67,15 @@ module Katello
           User.consumer?
         when "api_proxy_subscriptions_post_path"
           User.consumer? && current_user.uuid == params[:consumer_uuid]
+        when "api_proxy_consumer_content_overrides_path", "api_proxy_consumer_content_overrides_put_path",
+             "api_proxy_consumer_content_overrides_delete_path"
+          # These queries are restricted in Candlepin
+          User.consumer?
+        when "api_proxy_consumer_guestids_path", "api_proxy_consumer_guestids_get_guestid_path",
+             "api_proxy_consumer_guestids_put_path", "api_proxy_consumer_guestids_put_guestid_path",
+             "api_proxy_consumer_guestids_delete_guestid_path"
+          # These queries are restricted in Candlepin
+          User.consumer?
         when "api_proxy_deleted_consumers_path"
           current_user.has_superadmin_role?
         else
@@ -104,7 +111,6 @@ module Katello
         :consumer_create        => register_system,
         :consumer_destroy       => consumer_only,
         :consumer_show          => consumer_only,
-        :consumer_activate      => register_system,
         :index                  => index_systems,
         :hypervisors_update     => consumer_only,
         :list_owners            => list_owners_test,
@@ -142,13 +148,19 @@ module Katello
     end
 
     def delete
-      r = Resources::Candlepin::Proxy.delete(@request_path)
+      r = Resources::Candlepin::Proxy.delete(@request_path, @request_body)
       logger.debug r
       render :json => r
     end
 
     def post
       r = Resources::Candlepin::Proxy.post(@request_path, @request_body)
+      logger.debug r
+      render :json => r
+    end
+
+    def put
+      r = Resources::Candlepin::Proxy.put(@request_path, @request_body)
       logger.debug r
       render :json => r
     end
@@ -263,7 +275,18 @@ module Katello
       render :json => {:content => _("Facts successfully updated.")}, :status => 200
     end
 
+    protected
+
+    # to support rhsm client authentication
+    def authenticate
+      set_client_user || super
+    end
+
     private
+
+    def get_organization(org_id)
+      return Organization.without_deleting.having_name_or_label(org_id).first
+    end
 
     def set_organization_id
       params[:organization_id] = params[:owner] if params[:owner]
@@ -388,11 +411,6 @@ module Katello
       if value
         cve = ContentViewEnvironment.where(key => value).first
         fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % value unless cve
-        if @organization.nil? || !@organization.readable?
-          unless cve.content_view.readable? || User.consumer?
-            fail Errors::SecurityViolation, _("Could not access content view in environment '%s'") % value
-          end
-        end
       end
       cve
     end

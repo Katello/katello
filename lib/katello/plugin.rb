@@ -100,11 +100,11 @@ Foreman::Plugin.register :katello do
        :after => :hosts
 
   menu :top_menu,
-       :system_groups,
-       :caption => N_('System Groups'),
+       :host_collections,
+       :caption => N_('Host Collections'),
        :url_hash => {:controller => 'bastion/bastion',
                      :action => 'index',
-                     :bastion_page => 'system_groups'},
+                     :bastion_page => 'host_collections'},
        :engine => Bastion::Engine,
        :parent => :hosts_menu,
        :after => :systems

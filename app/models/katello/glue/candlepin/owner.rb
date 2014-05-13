@@ -129,6 +129,9 @@ module Glue::Candlepin::Owner
       Resources::Candlepin::Owner.auto_attach(self.label)
     end
 
+    def imports
+      Resources::Candlepin::Owner.imports(self.label)
+    end
   end
 
 end

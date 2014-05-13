@@ -36,6 +36,13 @@ angular.module('Bastion.subscriptions').factory('Subscription', ['BastionResourc
                     method: 'PUT',
                     url: '/api/v2/organizations/:org/subscriptions/refresh_manifest',
                     params: {'org': CurrentOrganization}
+                },
+
+                manifestHistory: {
+                    method: 'GET',
+                    url:  '/api/v2/organizations/:org/subscriptions/:action',
+                    params: {action: 'manifest_history'},
+                    isArray: true
                 }
             });
     }]

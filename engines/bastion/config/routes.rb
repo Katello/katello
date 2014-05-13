@@ -10,7 +10,7 @@ Bastion::Engine.routes.draw do
         products
         subscriptions
         sync_plans
-        system_groups
+        host_collections
         katello_tasks
       ]
     end

@@ -1,0 +1,36 @@
+<span page-title ng-model="hostCollection">{{ 'Actions for: ' | translate }} {{ hostCollection.name }}</span>
+
+<section class="nutupane-sub-section" >
+
+  <span translate>
+    The following actions can be performed on content hosts in this host collection:
+  </span>
+
+  <ul class="bullet">
+    <li>
+      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.packages') }}?select_all=true&search=host_collection:'{{ hostCollection.name }}'">
+        Package Installation, Removal, and Update
+      </a>
+    </li>
+
+
+    <li>
+      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.errata.list') }}?select_all=true&search=host_collection:'{{ hostCollection.name }}'">
+        Errata Installation
+      </a>
+    </li>
+
+    <li>
+      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.host-collections') }}?select_all=true&search=host_collection:'{{ hostCollection.name }}'">
+        Host Collection Membership
+      </a>
+    </li>
+
+    <li>
+      <p translate>
+        Change assigned Environment or Content View
+      </p>
+    </li>
+
+  </ul>
+</section>

@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: ContentHostsBulkActionErrataController', function() {
-    var $scope, $q, translate, ContentHostBulkAction, SystemGroup, selectedErrata,
+    var $scope, $q, translate, ContentHostBulkAction, HostCollection, selectedErrata,
          selectedContentHosts, CurrentOrganization, Nutupane;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
@@ -50,7 +50,7 @@ describe('Controller: ContentHostsBulkActionErrataController', function() {
         $controller('ContentHostsBulkActionErrataController', {$scope: $scope,
             $q: $q,
             ContentHostBulkAction: ContentHostBulkAction,
-            SystemGroup: SystemGroup,
+            HostCollection: HostCollection,
             Nutupane: Nutupane,
             translate: translate,
             CurrentOrganization: CurrentOrganization

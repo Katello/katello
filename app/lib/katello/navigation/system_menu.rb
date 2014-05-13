@@ -15,7 +15,7 @@ module Navigation
     def self.included(base)
       base.class_eval do
         helper_method :systems_navigation
-        helper_method :system_groups_navigation
+        helper_method :host_collections_navigation
       end
     end
     def menu_systems
@@ -25,7 +25,7 @@ module Navigation
               :options => {:class => 'systems top_level', "data-menu" => "systems"},
               :items => [menu_systems_org_list, menu_systems_environments_list]
       }
-      menu[:items] << menu_system_groups
+      menu[:items] << menu_host_collections
       menu
     end
 
@@ -47,11 +47,11 @@ module Navigation
       }
     end
 
-    def menu_system_groups
-      {:key => :system_groups,
-       :name => _("System Groups"),
-       :url => system_groups_path,
-       :if => lambda {current_organization && SystemGroup.any_readable?(current_organization)},
+    def menu_host_collections
+      {:key => :host_collections,
+       :name => _("Host Collections"),
+       :url => host_collections_path,
+       :if => lambda {current_organization && HostCollection.any_readable?(current_organization)},
        :options => {:class => 'systems second_level', "data-menu" => "systems"}
       }
     end
@@ -78,9 +78,9 @@ module Navigation
           :options => {:class => "panel_link menu_parent"},
           :items => systems_content_subnav
         },
-        { :key => :systems_system_groups,
-          :name => _("System Groups"),
-          :url => lambda{system_groups_system_path(@system.id)},
+        { :key => :systems_host_collections,
+          :name => _("Host Collections"),
+          :url => lambda{host_collections_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class => "panel_link"}
         }
@@ -141,63 +141,63 @@ module Navigation
       menu
     end
 
-    def system_groups_navigation
+    def host_collections_navigation
       menu = [
-       { :key => :system_group_details,
+       { :key => :host_collection_details,
          :name => _("Details"),
-         :url => lambda{edit_system_group_path(@group.id)},
-         :if => lambda{@group},
+         :url => lambda{edit_host_collection_path(@host_collection.id)},
+         :if => lambda{@host_collection},
          :options => {:class => "panel_link menu_parent"},
-         :items => system_groups_subnav
+         :items => host_collections_subnav
         },
        {
-          :key => :system_groups_systems,
+          :key => :host_collections_systems,
           :name => _('Systems'),
-          :url => lambda{systems_system_group_path(@group.id)},
-          :if => lambda{@group},
+          :url => lambda{systems_host_collection_path(@host_collection.id)},
+          :if => lambda{@host_collection},
           :options => {:class => "panel_link"}
         }
       ]
-      menu << { :key => :system_group_content,
+      menu << { :key => :host_collection_content,
                 :name => _("Content"),
-                :url => lambda{system_group_path(@group.id)},
-                :if => lambda{@group},
+                :url => lambda{host_collection_path(@host_collection.id)},
+                :if => lambda{@host_collection},
                 :options => {:class => "panel_link menu_parent"},
-                :items => system_groups_content_subnav
+                :items => host_collections_content_subnav
         } if Katello.config.katello?
       menu
     end
 
-    def system_groups_subnav
+    def host_collections_subnav
       menu = [
-        { :key => :system_group_info,
-          :name => _("System Group Info"),
-          :url => lambda{edit_system_group_path(@group.id)},
-          :if => lambda{@group},
+        { :key => :host_collection_info,
+          :name => _("Host Collection Info"),
+          :url => lambda{edit_host_collection_path(@host_collection.id)},
+          :if => lambda{@host_collection},
           :options => {:class => "third_level panel_link"},
         }
       ]
-      menu << { :key => :system_group_events,
+      menu << { :key => :host_collection_events,
                 :name => _("Events History"),
-                :url => lambda{system_group_events_path(@group.id)},
-                :if => lambda{@group},
+                :url => lambda{host_collection_events_path(@host_collection.id)},
+                :if => lambda{@host_collection},
                 :options => {:class => "third_level panel_link"}
         } if Katello.config.katello?
       menu
     end
 
-    def system_groups_content_subnav
+    def host_collections_content_subnav
       [
-        { :key => :system_groups_packages,
+        { :key => :host_collections_packages,
           :name => _("Packages"),
-          :url => lambda{system_group_packages_path(@group.id)},
-          :if => lambda{@group},
+          :url => lambda{host_collection_packages_path(@host_collection.id)},
+          :if => lambda{@host_collection},
           :options => {:class => "third_level panel_link"},
         },
-        { :key => :system_group_errata,
+        { :key => :host_collection_errata,
           :name => _("Errata"),
-          :url => lambda{system_group_errata_path(@group.id)},
-          :if => lambda{@group},
+          :url => lambda{host_collection_errata_path(@host_collection.id)},
+          :if => lambda{@host_collection},
           :options => {:class => "third_level panel_link"},
         }
       ]

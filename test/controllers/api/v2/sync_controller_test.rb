@@ -46,7 +46,7 @@ module Katello
     def test_index
       Product.any_instance.expects(:sync_status).returns([{}])
 
-      get :index, :product_id => @product.cp_id, :organization_id => @organization.label
+      get :index, :product_id => @product.cp_id, :organization_id => @organization.id
       assert_response :success
     end
 
@@ -55,14 +55,14 @@ module Katello
       denied_perms = [@no_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
-        get :index, :product_id => @product.cp_id, :organization_id => @organization.label
+        get :index, :product_id => @product.cp_id, :organization_id => @organization.id
       end
     end
 
     def test_create
       Product.any_instance.expects(:sync).returns([{}])
 
-      post :create, :product_id => @product.cp_id, :organization_id => @organization.label
+      post :create, :product_id => @product.cp_id, :organization_id => @organization.id
       assert_response :success
     end
 
@@ -71,7 +71,7 @@ module Katello
       denied_perms = [@read_permission, @no_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, :product_id => @product.cp_id, :organization_id => @organization.label
+        post :create, :product_id => @product.cp_id, :organization_id => @organization.id
       end
     end
 

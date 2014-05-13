@@ -27,7 +27,7 @@ describe('Controller: ContentHostSubscriptionsController', function() {
         'Bastion.content-hosts',
         'Bastion.subscriptions',
         'Bastion.test-mocks',
-        'content-hosts/details/views/system-groups.html',
+        'content-hosts/details/views/host-collections.html',
         'content-hosts/views/content-hosts.html',
         'content-hosts/views/content-hosts-table-full.html'
     ));
@@ -90,7 +90,7 @@ describe('Controller: ContentHostSubscriptionsController', function() {
         expect($scope.subscriptionsTable).toBeDefined();
     });
 
-    it("allows removing system groups from the content host", function() {
+    it("allows removing host collections from the content host", function() {
 
         var expected = {uuid: 12345, subscriptions: [{id: 2}]};
         spyOn(ContentHost, 'removeSubscriptions');

@@ -376,19 +376,19 @@ describe Permission do
       end
     end
 
-    describe "after system group deletion" do
+    describe "after host collection deletion" do
       before do
         disable_consumer_group_orchestration
 
-        @group = SystemGroup.create!(:name=>"TestSystemGroup", :organization=>@organization)
-        @group2 = SystemGroup.create!(:name=>"TestSystemGroup2", :organization=>@organization)
-        Permission.create!(:name => 'test1001', :role => @some_role, :tag_values=> [@group.id, @group2.id],
-                           :resource_type=> ResourceType.find_or_create_by_name('system_groups'), :organization => @organization)
+        @host_collection = HostCollection.create!(:name=>"TestHostCollection", :organization=>@organization)
+        @host_collection2 = HostCollection.create!(:name=>"TestHostCollection2", :organization=>@organization)
+        Permission.create!(:name => 'test1001', :role => @some_role, :tag_values=> [@host_collection.id, @host_collection2.id],
+                           :resource_type=> ResourceType.find_or_create_by_name('host_collections'), :organization => @organization)
       end
 
-      it "should result in removal of system-group-specific tags(katello)" do #TODO headpin
-        @group.destroy
-        Permission.find_by_name('test1001').tag_values.must_equal([@group2.id])
+      it "should result in removal of host-collection--specific tags(katello)" do #TODO headpin
+        @host_collection.destroy
+        Permission.find_by_name('test1001').tag_values.must_equal([@host_collection2.id])
       end
     end
   end

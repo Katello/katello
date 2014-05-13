@@ -19,7 +19,7 @@
  * @requires $q
  * @requires $location
  * @requires ContentHostBulkAction
- * @requires SystemGroup
+ * @requires HostCollection
  * @requires Nutupane
  * @requires CurrentOrganization
  * @requires Erratum
@@ -29,8 +29,8 @@
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionErrataController',
-    ['$scope', '$q', '$location', 'ContentHostBulkAction', 'SystemGroup', 'Nutupane', 'CurrentOrganization', 'Erratum', 'translate',
-    function ($scope, $q, $location, ContentHostBulkAction, SystemGroup, Nutupane, CurrentOrganization, Erratum, translate) {
+    ['$scope', '$q', '$location', 'ContentHostBulkAction', 'HostCollection', 'Nutupane', 'CurrentOrganization', 'Erratum', 'translate',
+    function ($scope, $q, $location, ContentHostBulkAction, HostCollection, Nutupane, CurrentOrganization, Erratum, translate) {
 
         var nutupane;
 

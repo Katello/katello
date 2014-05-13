@@ -14,7 +14,7 @@ module Katello
 class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
 
   before_filter :find_organization
-  before_filter :find_groups, :only => [:bulk_add_system_groups, :bulk_remove_system_groups]
+  before_filter :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
   before_filter :find_environment, :only => [:environment_content_view]
   before_filter :find_content_view, :only => [:environment_content_view]
   before_filter :authorize
@@ -53,12 +53,12 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   end
 
   def rules
-    bulk_groups = lambda{ SystemGroup.assert_editable(@system_groups) }
+    bulk_host_collections = lambda{ HostCollection.assert_editable(@host_collections) }
     registerable = lambda{ @environment.systems_registerable? && @view.subscribable?}
 
     hash = {}
-    hash[:bulk_add_system_groups] = bulk_groups
-    hash[:bulk_remove_system_groups] = bulk_groups
+    hash[:bulk_add_host_collections] = bulk_host_collections
+    hash[:bulk_remove_host_collections] = bulk_host_collections
     #the actions do validation upon system lookup.  See find_*_systems filters
     hash[:applicable_errata] = lambda{true}
     hash[:install_content] = lambda{true}
@@ -69,44 +69,44 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     hash
   end
 
-  api :PUT, "/systems/bulk/add_system_groups",
-      "Add one or more system groups to one or more systems"
+  api :PUT, "/systems/bulk/add_host_collections",
+      "Add one or more host collections to one or more content hosts"
   param_group :bulk_params
-  param :system_group_ids, Array, :desc => "List of system group ids", :required => true
-  def bulk_add_system_groups
-    unless params[:system_group_ids].blank?
+  param :host_collection_ids, Array, :desc => "List of host collection ids", :required => true
+  def bulk_add_host_collections
+    unless params[:host_collection_ids].blank?
       display_messages = []
 
-      @system_groups.each do |group|
-        pre_group_count = group.system_ids.count
-        group.system_ids =  (group.system_ids + @systems.collect { |s| s.id }).uniq
-        group.save!
+      @host_collections.each do |host_collection|
+        pre_host_collection_count = host_collection.system_ids.count
+        host_collection.system_ids =  (host_collection.system_ids + @systems.collect { |s| s.id }).uniq
+        host_collection.save!
 
-        final_count = group.system_ids.count - pre_group_count
-        display_messages << _("Successfully added %{count} content host(s) to system group %{group}.") %
-            {:count => final_count, :group => group.name }
+        final_count = host_collection.system_ids.count - pre_host_collection_count
+        display_messages << _("Successfully added %{count} content host(s) to host collection %{host_collection}.") %
+            {:count => final_count, :host_collection => host_collection.name }
       end
     end
 
     respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
   end
 
-  api :PUT, "/systems/bulk/remove_system_groups",
-      "Remove one or more system groups to one or more systems"
+  api :PUT, "/systems/bulk/remove_host_collections",
+      "Remove one or more host collections from one or more content hosts"
   param_group :bulk_params
-  param :system_group_ids, Array, :desc => "List of system group ids", :required => true
-  def bulk_remove_system_groups
+  param :host_collection_ids, Array, :desc => "List of host collection ids", :required => true
+  def bulk_remove_host_collections
     display_messages = []
 
-    unless params[:system_group_ids].blank?
-      @system_groups.each do |group|
-        pre_group_count = group.system_ids.count
-        group.system_ids =  (group.system_ids - @systems.collect { |s| s.id }).uniq
-        group.save!
+    unless params[:host_collection_ids].blank?
+      @host_collections.each do |host_collection|
+        pre_host_collection_count = host_collection.system_ids.count
+        host_collection.system_ids =  (host_collection.system_ids - @systems.collect { |s| s.id }).uniq
+        host_collection.save!
 
-        final_count = pre_group_count - group.system_ids.count
-        display_messages << _("Successfully removed %{count} content host(s) from system group %{group}.") %
-            {:count => final_count, :group => group.name }
+        final_count = pre_host_collection_count - host_collection.system_ids.count
+        display_messages << _("Successfully removed %{count} content host(s) from host collection %{host_collection}.") %
+            {:count => final_count, :host_collection => host_collection.name }
       end
     end
 
@@ -181,8 +181,8 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
 
   private
 
-  def find_groups
-    @system_groups = SystemGroup.where(:id => params[:system_group_ids])
+  def find_host_collections
+    @host_collections = HostCollection.where(:id => params[:host_collection_ids])
   end
 
   def find_readable_systems
@@ -232,19 +232,19 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     item_search(System, {:search => search}, options)[:results].collect{|i| i.id}
   end
 
-  def validate_group_membership_limit
-    max_systems_exceeded = []
+  def validate_host_collection_membership_limit
+    max_content_hosts_exceeded = []
     system_ids = @systems.collect{|i| i.id}
 
-    @system_groups.each do |system_group|
-      computed_count = (system_group.system_ids + system_ids).uniq.length
-      if system_group.max_systems != SystemGroup::UNLIMITED_SYSTEMS && computed_count > system_group.max_systems
-        max_systems_exceeded.push(system_group.name)
+    @host_collections.each do |host_collection|
+      computed_count = (host_collection.system_ids + system_ids).uniq.length
+      if host_collection.max_content_hosts != HostCollection::UNLIMITED_SYSTEMS && computed_count > host_collection.max_content_hosts
+        max_content_hosts_exceeded.push(host_collection.name)
       end
     end
 
-    if !max_systems_exceeded.empty?
-      fail HttpErrors::BadRequest, _("Maximum number of content hosts exceeded for system group(s): %s") % max_systems_exceeded.join(', ')
+    if !max_content_hosts_exceeded.empty?
+      fail HttpErrors::BadRequest, _("Maximum number of content hosts exceeded for host collection(s): %s") % max_content_hosts_exceeded.join(', ')
     end
   end
 

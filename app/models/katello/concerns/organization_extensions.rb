@@ -46,7 +46,7 @@ module Katello
         has_many :gpg_keys, :class_name => "Katello::GpgKey", :dependent => :destroy, :inverse_of => :organization
         has_many :permissions, :class_name => "Katello::Permission", :dependent => :destroy, :inverse_of => :organization
         has_many :sync_plans, :class_name => "Katello::SyncPlan", :dependent => :destroy, :inverse_of => :organization
-        has_many :system_groups, :class_name => "Katello::SystemGroup", :dependent => :destroy, :inverse_of => :organization
+        has_many :host_collections, :class_name => "Katello::HostCollection", :dependent => :destroy, :inverse_of => :organization
         has_many :content_views, :class_name => "Katello::ContentView", :dependent => :destroy, :inverse_of => :organization
         has_many :task_statuses, :class_name => "Katello::TaskStatus", :dependent => :destroy, :as => :task_owner
 
@@ -118,6 +118,10 @@ module Katello
 
         def anonymous_provider
           self.providers.anonymous.first
+        end
+
+        def manifest_history
+          imports.map{ |i| OpenStruct.new(i) }
         end
 
         def repo_discovery_task
