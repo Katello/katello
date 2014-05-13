@@ -5,14 +5,14 @@ Foreman::Plugin.register :katello do
     menu :top_menu,
          :environments,
          :caption => N_('Lifecycle Environments'),
-         :url => 'lifecycle_environments',
+         :url => '/lifecycle_environments',
          :url_hash => {:controller => 'katello/api/v2/environments',
                        :action => 'index'},
          :engine => Katello::Engine
     menu :top_menu,
          :red_hat_subscriptions,
          :caption => N_('Red Hat Subscriptions'),
-         :url => 'subscriptions',
+         :url => '/subscriptions',
          :url_hash => {:controller => 'katello/api/v2/subscriptions',
                        :action => 'index'},
          :engine => Katello::Engine
@@ -26,7 +26,7 @@ Foreman::Plugin.register :katello do
    #      :engine => Katello::Engine
     menu :top_menu,
          :activation_keys,
-         :url => 'activation_keys',
+         :url => '/activation_keys',
          :url_hash => {:controller => 'katello/api/v2/activation_keys',
                        :action => 'index'},
          :engine => Katello::Engine
@@ -42,7 +42,7 @@ Foreman::Plugin.register :katello do
     menu :top_menu,
          :products,
          :caption => N_('Products'),
-         :url => 'products',
+         :url => '/products',
          :url_hash => {:controller => 'katello/api/v2/products',
                        :action => 'index'},
          :engine => Katello::Engine
@@ -50,7 +50,7 @@ Foreman::Plugin.register :katello do
     menu :top_menu,
          :gpg_keys,
          :caption => N_('GPG keys'),
-         :url => 'gpg_keys',
+         :url => '/gpg_keys',
          :url_hash => {:controller => 'katello/api/v2/gpg_keys',
                        :action => 'index'},
          :engine => Katello::Engine
@@ -66,7 +66,7 @@ Foreman::Plugin.register :katello do
     menu :top_menu,
          :sync_plans,
          :caption => N_('Sync Plans'),
-         :url => 'sync_plans',
+         :url => '/sync_plans',
          :url_hash => {:controller => 'katello/api/v2/sync_plans',
                        :action => 'index'},
          :engine => Katello::Engine
@@ -75,7 +75,7 @@ Foreman::Plugin.register :katello do
     menu :top_menu,
          :content_views,
          :caption => N_('Content Views'),
-         :url => 'content_views',
+         :url => '/content_views',
          :url_hash => {:controller => 'katello/api/v2/content_views',
                        :action => 'index'},
          :engine => Katello::Engine
@@ -91,7 +91,7 @@ Foreman::Plugin.register :katello do
   menu :top_menu,
        :content_hosts,
        :caption => N_('Content Hosts'),
-       :url => 'content_hosts',
+       :url => '/content_hosts',
        :url_hash => {:controller => 'katello/api/v2/content_hosts',
                      :action => 'index'},
        :engine => Katello::Engine,
@@ -101,7 +101,7 @@ Foreman::Plugin.register :katello do
   menu :top_menu,
        :host_collections,
        :caption => N_('Host Collections'),
-       :url => 'host_collections',
+       :url => '/host_collections',
        :url_hash => {:controller => 'katello/api/v2/host_collections',
                      :action => 'index'},
        :engine => Katello::Engine,
