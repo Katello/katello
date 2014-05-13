@@ -36,7 +36,7 @@ module Katello
           # update was caused by loging into the system: no need to run
           # orchestration for that, as it causes locking troubles and might
           # lead to performance issues as well
-          unless (changes.keys - ["last_login_on", "updated_at"]).empty?
+          unless (changes.keys - %w(last_login_on updated_at)).empty?
             sync_action!
             ::Actions::Katello::User::Update
           end
