@@ -37,7 +37,7 @@ class Api::V2::TasksController < Api::V2::ApiController
   end
 
   api :GET, "/organizations/:organization_id/tasks", "List tasks of given organization"
-  param :organization_id, :identifier, :desc => "organization identifier", :required => true
+  param :organization_id, :number, :desc => "organization identifier", :required => true
   def index
     respond :collection => TaskStatus.where(:organization_id => @organization.id)
   end

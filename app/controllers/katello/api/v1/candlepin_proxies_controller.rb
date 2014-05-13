@@ -186,6 +186,10 @@ module Katello
 
     private
 
+    def get_organization(org_id)
+      return Organization.without_deleting.having_name_or_label(org_id).first
+    end
+
     def set_organization_id
       params[:organization_id] = params[:owner] if params[:owner]
     end

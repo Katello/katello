@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-25 14:50-0400\n"
+"POT-Creation-Date: 2014-05-09 16:22-0400\n"
 "PO-Revision-Date: 2013-03-02 00:00+0000\n"
 "Last-Translator: Tomoyuki KATO <tomo@dream.daynight.jp>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,10 +32,6 @@ msgstr " 環境はそのパスにある環境に設定できません"
 #, fuzzy
 msgid " items selected."
 msgstr "パッケージフィルター '%s' を削除しました。"
-
-#, fuzzy
-msgid "\"Creating an activation key in candlepin: #{label}\""
-msgstr "candlepin 内に所有者を作成中です: %s"
 
 msgid "\"Missing values for #{parameter_missing_exception.param}.\""
 msgstr ""
@@ -409,9 +405,6 @@ msgstr "%s の作成時にラベルが指定されていなかったため、'%s
 msgid "A request has been received by Katello server '%{url}' to retrieve the logins for email '%{email}'. The following is a list of those logins:"
 msgstr ""
 
-msgid "About"
-msgstr "情報"
-
 msgid "Abstract async task"
 msgstr ""
 
@@ -481,6 +474,10 @@ msgstr "環境内の変更セットを管理"
 msgid "Administer GPG Keys"
 msgstr "GPG キーの管理"
 
+#, fuzzy
+msgid "Administer Host Collections"
+msgstr "ロールの管理"
+
 msgid "Administer Organization"
 msgstr "組織の管理"
 
@@ -493,9 +490,6 @@ msgstr "プロバイダーの管理"
 
 msgid "Administer Roles"
 msgstr "ロールの管理"
-
-msgid "Administer System Groups"
-msgstr "システムグループの管理"
 
 msgid "Administer Users"
 msgstr "ユーザーの管理"
@@ -541,14 +535,6 @@ msgstr "caldlepin 内の所有者が %s のすべてのプロバイダー"
 #, fuzzy
 msgid "All repositories"
 msgstr "Red Hat リポジトリ"
-
-#, fuzzy
-msgid "Application"
-msgstr "アプリケーション"
-
-#, fuzzy
-msgid "Application Information"
-msgstr "システム情報"
 
 msgid "Applied"
 msgstr ""
@@ -692,10 +678,6 @@ msgstr ""
 msgid "AuthSource|Tls"
 msgstr ""
 
-#, fuzzy
-msgid "Authentication"
-msgstr "認証"
-
 msgid "Author"
 msgstr ""
 
@@ -744,6 +726,10 @@ msgstr ""
 
 msgid "Back to Results"
 msgstr ""
+
+#, fuzzy
+msgid "Backend System Status"
+msgstr "同期の状態"
 
 msgid "Before removing this provider, all promoted repositories must first be deleted from their respective environments using a deletion changeset: "
 msgstr ""
@@ -797,7 +783,8 @@ msgstr "CDN のロード中にエラー発生: %s へのアクセスが拒否さ
 msgid "CDN loading error: access forbidden to %s"
 msgstr "CDN のロード中にエラー発生: %s へのアクセスは許可されていません"
 
-msgid "Can't copy System Groups to a different org: '%{org1}' != '%{org2}'"
+#, fuzzy
+msgid "Can't copy host collections to a different org: '%{org1}' != '%{org2}'"
 msgstr "システムグループを別の組織にコピーできません: '%{org1}' != '%{org2}'"
 
 #, fuzzy
@@ -974,6 +961,10 @@ msgid "Collapse All"
 msgstr ""
 
 #, fuzzy
+msgid "Collection membership modification is not allowed for host collections(s): %s"
+msgstr "グループに対してシステムグループメンバーシップの変更を行うことはできません: %s"
+
+#, fuzzy
 msgid "Compare Selected"
 msgstr "テンプレート '%s' が削除されました"
 
@@ -1063,10 +1054,6 @@ msgstr "Red Hat 製品を更新することはできません。"
 
 #, fuzzy
 msgid "Content"
-msgstr "コンテンツ"
-
-#, fuzzy
-msgid "Content About"
 msgstr "コンテンツ"
 
 msgid "Content Available From"
@@ -1191,6 +1178,10 @@ msgstr "フィルター '%s' が見つかりませんでした"
 msgid "Couldn't find gpg key '%s'"
 msgstr "GPG キー '%s' が見つかりませんでした"
 
+#, fuzzy
+msgid "Couldn't find host collection '%s'"
+msgstr "ユーザーロール '%s' が見つかりませんでした"
+
 msgid "Couldn't find organization '%s'"
 msgstr "組織 '%s' が見つかりませんでした"
 
@@ -1223,9 +1214,6 @@ msgstr "同期プラン '%{plan}' は組織 '%{org}' 内で見つかりません
 
 msgid "Couldn't find system '%s'"
 msgstr "システム '%s' が見つかりませんでした"
-
-msgid "Couldn't find system group '%s'"
-msgstr "システムグループ '%s' が見つかりませんでした"
 
 msgid "Couldn't find user '%s'"
 msgstr "ユーザー '%s' が見つかりませんでした"
@@ -1343,12 +1331,20 @@ msgstr "ロールを削除"
 msgid "Delete All"
 msgstr "ロールを削除"
 
+#, fuzzy
+msgid "Delete Content Hosts in Host Collection"
+msgstr "環境からコンテンツを削除"
+
 msgid "Delete Content from Environment"
 msgstr "環境からコンテンツを削除"
 
 #, fuzzy
 msgid "Delete Distributors"
 msgstr "選択済みのディストリビューション"
+
+#, fuzzy
+msgid "Delete Host Collection"
+msgstr "システムを削除"
 
 #, fuzzy
 msgid "Delete Manifest"
@@ -1365,15 +1361,9 @@ msgstr "プロバイダー [ %s ] が削除されました。"
 msgid "Delete Roles"
 msgstr "ロールを削除"
 
-msgid "Delete System Group"
-msgstr "システムグループを削除"
-
 #, fuzzy
 msgid "Delete Systems"
 msgstr "システムグループを削除"
-
-msgid "Delete Systems in System Group"
-msgstr "システムグループ内のシステムを削除"
 
 #, fuzzy
 msgid "Delete Users"
@@ -1400,6 +1390,14 @@ msgid "Deleted environment '%s'"
 msgstr "環境 '%s' を削除しました"
 
 #, fuzzy
+msgid "Deleted host collection '%s'"
+msgstr "ロール '%s' を削除しました"
+
+#, fuzzy
+msgid "Deleted host collection '%{s}' and it's %{n} systems."
+msgstr "システムグループ '%{s}' とそのグループ内の %{n} システムを削除しました。"
+
+#, fuzzy
 msgid "Deleted organization '%s'"
 msgstr "組織を選択"
 
@@ -1422,18 +1420,8 @@ msgstr "同期プラン '%s' を削除しました"
 msgid "Deleted system '%s'"
 msgstr "システム '%s' を削除しました"
 
-msgid "Deleted system group '%s'"
-msgstr "システムグループ '%s' を削除しました"
-
-msgid "Deleted system group '%{s}' and it's %{n} systems."
-msgstr "システムグループ '%{s}' とそのグループ内の %{n} システムを削除しました。"
-
 msgid "Deleted user '%s'"
 msgstr "ユーザー '%s' を削除しました"
-
-#, fuzzy
-msgid "Deleting activation_key in candlepin: %s"
-msgstr "candlepin 内の所有者を削除中: %s"
 
 msgid "Deleting environment in candlepin: %s"
 msgstr "candlepin 内の環境を削除中: %s"
@@ -1471,9 +1459,6 @@ msgstr "サービスレベルは設定されていません"
 
 msgid "Difference:"
 msgstr ""
-
-msgid "Directory"
-msgstr "ディレクトリ"
 
 msgid "Disable"
 msgstr ""
@@ -1646,16 +1631,6 @@ msgstr "環境 %s より後に別の環境があります。一つのパス上�
 msgid "Environment %s has a successor. Only the last environment on a path can be deleted."
 msgstr "環境 %s より後に別の環境があります。一つのパス上で削除できるのは最後の環境のみです。"
 
-#, fuzzy
-msgid "Environment '%s' was created."
-msgstr "環境 '%s' を更新されました。"
-
-msgid "Environment '%s' was deleted."
-msgstr "環境 '%s' を削除されました。"
-
-msgid "Environment '%s' was updated."
-msgstr "環境 '%s' を更新されました。"
-
 msgid "Environment cannot be in its own promotion path"
 msgstr "環境はそれ自身のプロモーションパスに存在することはできません。"
 
@@ -1823,6 +1798,10 @@ msgstr "組織 '%s' の削除の削除に失敗しました。通知の詳細を
 msgid "Failed to publish content view '%s'."
 msgstr "プロバイダー '%s' が見つかりませんでした"
 
+#, fuzzy
+msgid "Failed to update candlepin activation_key %s"
+msgstr "candlepin の環境 %s の削除に失敗しました。"
+
 msgid "Feature"
 msgstr ""
 
@@ -1929,10 +1908,6 @@ msgid "Good"
 msgstr ""
 
 #, fuzzy
-msgid "Group membership modification is not allowed for system group(s): %s"
-msgstr "グループに対してシステムグループメンバーシップの変更を行うことはできません: %s"
-
-#, fuzzy
 msgid "Guest"
 msgstr "ゲスト"
 
@@ -1941,6 +1916,19 @@ msgstr "履歴"
 
 msgid "Host"
 msgstr "ホスト"
+
+msgid "Host Collection Info"
+msgstr ""
+
+#, fuzzy
+msgid "Host Collections"
+msgstr "ディストリビューション"
+
+msgid "Host collection '%{name}' exceeds maximum usage limit of '%{limit}'"
+msgstr ""
+
+msgid "Host collection is empty."
+msgstr ""
 
 #, fuzzy
 msgid "Host config group"
@@ -2067,6 +2055,9 @@ msgstr ""
 
 msgid "ID: %s doesn't exist "
 msgstr "ID: %s が存在しません"
+
+msgid "IRC"
+msgstr ""
 
 msgid "ISOs"
 msgstr ""
@@ -2224,6 +2215,9 @@ msgstr ""
 msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
 msgstr "無効な動作 '%{verb}'。リソースタイプ '%{resource_type}' の動作は、%{possible_verbs} のうちいずれかです。"
 
+msgid "Issue tracker"
+msgstr ""
+
 msgid "Issued"
 msgstr ""
 
@@ -2234,12 +2228,17 @@ msgid "Katello Logins"
 msgstr "Katello ログイン"
 
 #, fuzzy
-msgid "Katello reference documentation"
-msgstr "CloudForms ドキュメンテーション"
+msgid "Katello Support"
+msgstr "インポート"
 
-#, fuzzy
-msgid "Katello user documentation"
-msgstr "CloudForms ドキュメンテーション"
+msgid "Katello can be found on the same freenode channels used by Foreman."
+msgstr ""
+
+msgid "Katello uses the Foreman Redmine to report and track bugs and feature requests, which can be found here:"
+msgstr ""
+
+msgid "Katello uses the same mailing lists as Foreman but requests that Katello specific inquiries begin the subject line with [Katello]."
+msgstr ""
 
 #, fuzzy
 msgid "Katello/model"
@@ -2577,6 +2576,9 @@ msgstr ""
 msgid "LookupValue|Value"
 msgstr ""
 
+msgid "Mailing lists"
+msgstr ""
+
 #, fuzzy
 msgid "Make this your default organization."
 msgstr "この組織を自分のデフォルトの組織にします。"
@@ -2596,7 +2598,7 @@ msgid "Manifest subscriptions unchanged from previous"
 msgstr ""
 
 #, fuzzy
-msgid "Maximum number of content hosts exceeded for system group(s): %s"
+msgid "Maximum number of content hosts exceeded for host collection(s): %s"
 msgstr "グループに対してシステムグループのシステム数が最大値を越えました: %s"
 
 msgid "May not add a type or date range rule to a filter that has existing rules."
@@ -2654,6 +2656,9 @@ msgstr ""
 msgid "Model|Vendor class"
 msgstr ""
 
+msgid "Modify Content Hosts in Host Collection"
+msgstr ""
+
 #, fuzzy
 msgid "Modify Distributors"
 msgstr "ディストリビューション"
@@ -2661,6 +2666,10 @@ msgstr "ディストリビューション"
 #, fuzzy
 msgid "Modify Distributors in Environment"
 msgstr "環境内のシステムを変更"
+
+#, fuzzy
+msgid "Modify Host Collection details and content host membership"
+msgstr "システムグループの詳細とシステムのメンバーシップを変更"
 
 msgid "Modify Organization and Administer Environments"
 msgstr "組織の変更と環境の管理"
@@ -2672,17 +2681,11 @@ msgstr "プロバイダーの変更と製品の管理"
 msgid "Modify Roles"
 msgstr "ユーザーを変更"
 
-msgid "Modify System Group details and system membership"
-msgstr "システムグループの詳細とシステムのメンバーシップを変更"
-
 msgid "Modify Systems"
 msgstr "システムを変更"
 
 msgid "Modify Systems in Environment"
 msgstr "環境内のシステムを変更"
-
-msgid "Modify Systems in System Group"
-msgstr "システムグループ内のシステムを変更"
 
 msgid "Modify Users"
 msgstr "ユーザーを変更"
@@ -2793,7 +2796,7 @@ msgstr "コンテンツ"
 msgid "No Default"
 msgstr "システムテンプレート"
 
-msgid "No Red Hat products currently exist, please import a manifest <a href='%s/all'>here</a> to receive Red Hat content."
+msgid "No Red Hat products currently exist, please import a manifest <a href='/subscriptions'>here</a> to receive Red Hat content."
 msgstr ""
 
 #, fuzzy
@@ -2823,6 +2826,10 @@ msgstr "検索条件に一致するイベントはありません。"
 
 msgid "No file uploaded"
 msgstr ""
+
+#, fuzzy
+msgid "No host collections found."
+msgstr "見つかりません"
 
 msgid "No manifest file uploaded"
 msgstr ""
@@ -2877,10 +2884,6 @@ msgstr "ディストリビューション"
 #, fuzzy
 msgid "No synchronization is currently running"
 msgstr "現在 %s の同期は実行していません"
-
-#, fuzzy
-msgid "No system groups found."
-msgstr "見つかりません"
 
 msgid "No system registration default set for this user."
 msgstr "このユーザーには設定されているシステム登録のデフォルトがありません。"
@@ -3499,6 +3502,9 @@ msgstr "アクティベーションキーのパーミッションを読み込み
 msgid "Read Changesets in Environment"
 msgstr "環境内の変更セットの読み込み"
 
+msgid "Read Content Hoss in Host Collection"
+msgstr ""
+
 #, fuzzy
 msgid "Read Content Views"
 msgstr "環境の読み込み"
@@ -3525,6 +3531,9 @@ msgstr "ロールのパーミッションを読み込み"
 msgid "Read Everything"
 msgstr "すべて読み込む"
 
+msgid "Read Host Collection"
+msgstr ""
+
 msgid "Read Organization"
 msgstr "組織の読み込み"
 
@@ -3547,17 +3556,11 @@ msgstr "ロールの読み込み"
 msgid "Read Roles permission"
 msgstr "ロールのパーミッションを読み込み"
 
-msgid "Read System Group"
-msgstr "システムグループの読み込み"
-
 msgid "Read Systems"
 msgstr "システムの読み込み"
 
 msgid "Read Systems in Environment"
 msgstr "環境内のシステムを読み込み"
-
-msgid "Read Systems in System Group"
-msgstr "システムグループ内のシステムを読み込み"
 
 #, fuzzy
 msgid "Read Users"
@@ -3648,10 +3651,6 @@ msgstr "システムの登録"
 
 msgid "Reload data"
 msgstr ""
-
-#, fuzzy
-msgid "Removal of the environment failed. If you continue having trouble with this, please contact an Administrator."
-msgstr "無効なパラメータがこの動作の要求に送信されました。 システム管理者に連絡してください。"
 
 #, fuzzy
 msgid "Removal of the user failed. If you continue having trouble with this, please contact an Administrator."
@@ -4235,7 +4234,7 @@ msgid "Successful for distributor(s): "
 msgstr "次のシステムに対して成功しました: "
 
 #, fuzzy
-msgid "Successfully added %{count} content host(s) to system group %{group}."
+msgid "Successfully added %{count} content host(s) to host collection %{host_collection}."
 msgstr "システムがグループ '%s' に正常に追加されました。"
 
 msgid "Successfully changed sync plan for %s product(s)"
@@ -4268,8 +4267,9 @@ msgstr "変更セット '%s' が正常に削除されました。"
 msgid "Successfully removed %s repositories"
 msgstr "変更セット '%s' が正常に削除されました。"
 
-msgid "Successfully removed %{count} content host(s) from system group %{group}."
-msgstr ""
+#, fuzzy
+msgid "Successfully removed %{count} content host(s) from host collection %{host_collection}."
+msgstr "システムがグループ '%s' に正常に追加されました。"
 
 msgid "Successfully removed organization '%s'."
 msgstr "組織 '%s' が正常に削除されました。"
@@ -4297,10 +4297,6 @@ msgstr "スーパーアドミニストレーターのパーミッション"
 #, fuzzy
 msgid "Super administrator with all access."
 msgstr "すべてのアクセスを有するスーパーアドミニストレーターです。"
-
-#, fuzzy
-msgid "Support"
-msgstr "インポート"
 
 #, fuzzy
 msgid "Sync Canceled"
@@ -4349,33 +4345,8 @@ msgstr "同期"
 msgid "System Default Info"
 msgstr "システム情報"
 
-msgid "System Group Info"
-msgstr "システムグループ情報"
-
-#, fuzzy
-msgid "System Groups"
-msgstr "システムグループの読み込み"
-
 msgid "System Info"
 msgstr "システム情報"
-
-#, fuzzy
-msgid "System Information"
-msgstr "システム情報"
-
-#, fuzzy
-msgid "System Status"
-msgstr "同期の状態"
-
-msgid "System group '%{name}' exceeds maximum usage limit of '%{limit}'"
-msgstr ""
-
-msgid "System group is empty."
-msgstr "システムグループが空です。"
-
-#, fuzzy
-msgid "System with uuid %s not found"
-msgstr "ID が '%s' のエラータが見つかりません"
 
 msgid "Systems"
 msgstr "システム"
@@ -4527,9 +4498,6 @@ msgid "Title"
 msgstr ""
 
 msgid "Title: "
-msgstr ""
-
-msgid "To submit a new bug please visit %s."
 msgstr ""
 
 msgid "To view the details of an item on the left, simply click on a single row.<br/><br/>To select multiple rows, hold the Control Key and click multiple rows.<br/><br/>If you don't need this help anymore, please click the close button in the top right of this box."
@@ -4917,7 +4885,8 @@ msgstr ""
 msgid "You can synchronize repositories only in library environment'"
 msgstr "ライブラリ環境にあるリポジトリのみを同期できます。"
 
-msgid "You cannot have more than %{max_systems} system(s) associated with system group '%{group}'."
+#, fuzzy
+msgid "You cannot have more than %{max_content_hosts} content host(s) associated with host collection '%{host_collection}'."
 msgstr "%{max_systems} 以上のシステムをシステムグループ '%{group}' に関連付けることはできません。"
 
 #, fuzzy
@@ -5112,10 +5081,14 @@ msgstr "パッケージをインストールしています..."
 msgid "is invalid"
 msgstr "は無効です"
 
+msgid "issue tracker"
+msgstr ""
+
 msgid "katello-jobs service not running"
 msgstr "katello-jobs サービスは実行していません"
 
-msgid "may not be less than the number of systems associated with the system group."
+#, fuzzy
+msgid "may not be less than the number of content hosts associated with the host collection."
 msgstr "システムグループに関連付けるシステム数より少なくすることはできません。"
 
 msgid "may not be set to 0."
@@ -5194,9 +5167,6 @@ msgstr "システム"
 msgid "the %s Bugzilla"
 msgstr "%s Bugzilla"
 
-msgid "the CloudForms Documentation"
-msgstr "CloudForms ドキュメンテーション"
-
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Red Hat プロバイダーに対し、次の属性は更新できません: [ %s ]"
 
@@ -5222,6 +5192,10 @@ msgstr "バージョン"
 #, fuzzy
 #~ msgid " Changesets"
 #~ msgstr "変更セット"
+
+#, fuzzy
+#~ msgid "\"Creating an activation key in candlepin: #{label}\""
+#~ msgstr "candlepin 内に所有者を作成中です: %s"
 
 #, fuzzy
 #~ msgid "%d products may have missing repositories"
@@ -5345,6 +5319,9 @@ msgstr "バージョン"
 #~ msgid "API Key"
 #~ msgstr "GPG キー"
 
+#~ msgid "About"
+#~ msgstr "情報"
+
 #, fuzzy
 #~ msgid "Action"
 #~ msgstr "アプリケーション"
@@ -5443,6 +5420,9 @@ msgstr "バージョン"
 #~ msgid "Administer Package Filters"
 #~ msgstr "パッケージフィルターの管理"
 
+#~ msgid "Administer System Groups"
+#~ msgstr "システムグループの管理"
+
 #~ msgid "Administer System Templates"
 #~ msgstr "システムテンプレートの管理"
 
@@ -5514,6 +5494,14 @@ msgstr "バージョン"
 #~ msgstr "システムの読み込み"
 
 #, fuzzy
+#~ msgid "Application"
+#~ msgstr "アプリケーション"
+
+#, fuzzy
+#~ msgid "Application Information"
+#~ msgstr "システム情報"
+
+#, fuzzy
 #~ msgid "Apply Deletion Changeset"
 #~ msgstr "+ 新規の変更セット"
 
@@ -5562,6 +5550,10 @@ msgstr "バージョン"
 #, fuzzy
 #~ msgid "Audit Comment"
 #~ msgstr "環境"
+
+#, fuzzy
+#~ msgid "Authentication"
+#~ msgstr "認証"
 
 #~ msgid "Auto-attach Off, No Service Level Preference"
 #~ msgstr "自動割り当てオフ、サービスレベル設定なし"
@@ -5672,6 +5664,10 @@ msgstr "バージョン"
 #~ msgstr "変更セット"
 
 #, fuzzy
+#~ msgid "Content About"
+#~ msgstr "コンテンツ"
+
+#, fuzzy
 #~ msgid "Content view definition '%s' was created."
 #~ msgstr "プロバイダー '%s' が作成されました。"
 
@@ -5701,6 +5697,9 @@ msgstr "バージョン"
 
 #~ msgid "Couldn't find pool '%{pool}' in activation_key '%{ak}'"
 #~ msgstr "アクティベーションキー '%{ak}' 内にプール '%{pool}' は見つかりませんでした"
+
+#~ msgid "Couldn't find system group '%s'"
+#~ msgstr "システムグループ '%s' が見つかりませんでした"
 
 #~ msgid "Couldn't find template '%s'"
 #~ msgstr "テンプレート '%s' が見つかりませんでした"
@@ -5737,16 +5736,14 @@ msgstr "バージョン"
 #~ msgid "Delete %s?"
 #~ msgstr "ロールを削除"
 
-#, fuzzy
-#~ msgid "Delete Content View Definitions"
-#~ msgstr "環境からコンテンツを削除"
-
-#, fuzzy
-#~ msgid "Delete Hosts"
-#~ msgstr "システムを削除"
-
 #~ msgid "Delete Package Filters"
 #~ msgstr "パッケージフィルターを削除"
+
+#~ msgid "Delete System Group"
+#~ msgstr "システムグループを削除"
+
+#~ msgid "Delete Systems in System Group"
+#~ msgstr "システムグループ内のシステムを削除"
 
 #, fuzzy
 #~ msgid "Delete autosign entry for %s"
@@ -5780,9 +5777,19 @@ msgstr "バージョン"
 #~ msgid "Deleted environment %{env} and %{pcs}"
 #~ msgstr "環境 '%s' を削除しました"
 
+#~ msgid "Deleted system group '%s'"
+#~ msgstr "システムグループ '%s' を削除しました"
+
+#, fuzzy
+#~ msgid "Deleting activation_key in candlepin: %s"
+#~ msgstr "candlepin 内の所有者を削除中: %s"
+
 #, fuzzy
 #~ msgid "Dependency of "
 #~ msgstr "依存関係"
+
+#~ msgid "Directory"
+#~ msgstr "ディレクトリ"
 
 #~ msgid "Disable/enable is not supported for custom repositories."
 #~ msgstr "カスタムリポジトリでは、無効/有効はサポートされていません。"
@@ -5925,6 +5932,16 @@ msgstr "バージョン"
 #, fuzzy
 #~ msgid "Enter Package or Group Name(s)..."
 #~ msgstr "パッケージグループを追加しています..."
+
+#, fuzzy
+#~ msgid "Environment '%s' was created."
+#~ msgstr "環境 '%s' を更新されました。"
+
+#~ msgid "Environment '%s' was deleted."
+#~ msgstr "環境 '%s' を削除されました。"
+
+#~ msgid "Environment '%s' was updated."
+#~ msgstr "環境 '%s' を更新されました。"
 
 #, fuzzy
 #~ msgid "Environment Promotion Paths"
@@ -6210,6 +6227,14 @@ msgstr "バージョン"
 #~ msgid "It is not allowed to update a Red Hat repository."
 #~ msgstr "Red Hat リポジトリを更新することはできません。"
 
+#, fuzzy
+#~ msgid "Katello reference documentation"
+#~ msgstr "CloudForms ドキュメンテーション"
+
+#, fuzzy
+#~ msgid "Katello user documentation"
+#~ msgstr "CloudForms ドキュメンテーション"
+
 #~ msgid "Key"
 #~ msgstr "キー"
 
@@ -6304,6 +6329,9 @@ msgstr "バージョン"
 
 #~ msgid "Modify Package Filters"
 #~ msgstr "パッケージフィルターを変更"
+
+#~ msgid "Modify Systems in System Group"
+#~ msgstr "システムグループ内のシステムを変更"
 
 #~ msgid "Must be unique within an environment"
 #~ msgstr "環境内で一意でなければなりません"
@@ -6523,6 +6551,10 @@ msgstr "バージョン"
 #, fuzzy
 #~ msgid "No subnets"
 #~ msgstr "サブネット"
+
+#, fuzzy
+#~ msgid "No system groups found."
+#~ msgstr "見つかりません"
 
 #, fuzzy
 #~ msgid "No template found"
@@ -6825,14 +6857,24 @@ msgstr "バージョン"
 #~ msgid "Read Package Filters"
 #~ msgstr "パッケージフィルターの読み込み"
 
+#~ msgid "Read System Group"
+#~ msgstr "システムグループの読み込み"
+
 #~ msgid "Read System Templates"
 #~ msgstr "システムテンプレートの読み込み"
 
 #~ msgid "Read System Templates permission"
 #~ msgstr "システムテンプレートのパーミッションを読み込み"
 
+#~ msgid "Read Systems in System Group"
+#~ msgstr "システムグループ内のシステムを読み込み"
+
 #~ msgid "Registered / Last Checked In"
 #~ msgstr "登録済み /最終チェックイン"
+
+#, fuzzy
+#~ msgid "Removal of the environment failed. If you continue having trouble with this, please contact an Administrator."
+#~ msgstr "無効なパラメータがこの動作の要求に送信されました。 システム管理者に連絡してください。"
 
 #, fuzzy
 #~ msgid "Remove Activation Key"
@@ -7207,6 +7249,17 @@ msgstr "バージョン"
 #~ msgid "System Group %{new_group} created successfully as a copy of system group %{group}."
 #~ msgstr "システムグループ %{new_group} がシステムグループ %{group} のコピーとして正常に作成されました。"
 
+#~ msgid "System Group Info"
+#~ msgstr "システムグループ情報"
+
+#, fuzzy
+#~ msgid "System Groups"
+#~ msgstr "システムグループの読み込み"
+
+#, fuzzy
+#~ msgid "System Information"
+#~ msgstr "システム情報"
+
 #, fuzzy
 #~ msgid "System Limit"
 #~ msgstr "システム"
@@ -7218,8 +7271,15 @@ msgstr "バージョン"
 #~ msgid "System Type"
 #~ msgstr "システムテンプレート"
 
+#~ msgid "System group is empty."
+#~ msgstr "システムグループが空です。"
+
 #~ msgid "System subscriptions updated."
 #~ msgstr "システムのサブスクリプションが更新されました。"
+
+#, fuzzy
+#~ msgid "System with uuid %s not found"
+#~ msgstr "ID が '%s' のエラータが見つかりません"
 
 #~ msgid "System's environment not compatible with the group '%s'."
 #~ msgstr "システムの環境はグループ '%s' との互換性がありません。"
@@ -7673,6 +7733,9 @@ msgstr "バージョン"
 #, fuzzy
 #~ msgid "status"
 #~ msgstr "同期の状態"
+
+#~ msgid "the CloudForms Documentation"
+#~ msgstr "CloudForms ドキュメンテーション"
 
 #, fuzzy
 #~ msgid "unable to find recipients"

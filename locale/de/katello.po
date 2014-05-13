@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-25 14:50-0400\n"
+"POT-Creation-Date: 2014-05-09 16:22-0400\n"
 "PO-Revision-Date: 2013-02-13 15:18+0000\n"
 "Last-Translator: Miroslav Suchý <msuchy@redhat.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,10 +31,6 @@ msgstr "Umgebung kann nicht auf Umgebung auf deren Pfad gesetzt werden"
 #, fuzzy
 msgid " items selected."
 msgstr "Paketfilter %s gelöscht."
-
-#, fuzzy
-msgid "\"Creating an activation key in candlepin: #{label}\""
-msgstr "Erstellen eines Besitzers in Candlepin: %s"
 
 msgid "\"Missing values for #{parameter_missing_exception.param}.\""
 msgstr ""
@@ -408,9 +404,6 @@ msgstr "Während der %s-Erstellung wurde kein Label angegeben, aus diesem Grund 
 msgid "A request has been received by Katello server '%{url}' to retrieve the logins for email '%{email}'. The following is a list of those logins:"
 msgstr ""
 
-msgid "About"
-msgstr "Info"
-
 msgid "Abstract async task"
 msgstr ""
 
@@ -480,6 +473,10 @@ msgstr "Änderungssätze in Umgebung verwalten"
 msgid "Administer GPG Keys"
 msgstr "GPG-Schlüssel verwalten"
 
+#, fuzzy
+msgid "Administer Host Collections"
+msgstr "Rollen verwalten"
+
 msgid "Administer Organization"
 msgstr "Organisation verwalten"
 
@@ -492,9 +489,6 @@ msgstr "Provider verwalten"
 
 msgid "Administer Roles"
 msgstr "Rollen verwalten"
-
-msgid "Administer System Groups"
-msgstr "Systemgruppen verwalten"
 
 msgid "Administer Users"
 msgstr "Benutzer verwalten"
@@ -540,14 +534,6 @@ msgstr "Alle Providers für Besitzer %s in Candlepin"
 #, fuzzy
 msgid "All repositories"
 msgstr "Red Hat Repositorys"
-
-#, fuzzy
-msgid "Application"
-msgstr "Applikation"
-
-#, fuzzy
-msgid "Application Information"
-msgstr "Systeminfo"
 
 msgid "Applied"
 msgstr ""
@@ -691,10 +677,6 @@ msgstr ""
 msgid "AuthSource|Tls"
 msgstr ""
 
-#, fuzzy
-msgid "Authentication"
-msgstr "Authentifikation"
-
 msgid "Author"
 msgstr ""
 
@@ -743,6 +725,10 @@ msgstr ""
 
 msgid "Back to Results"
 msgstr ""
+
+#, fuzzy
+msgid "Backend System Status"
+msgstr "Sync-Status"
 
 msgid "Before removing this provider, all promoted repositories must first be deleted from their respective environments using a deletion changeset: "
 msgstr ""
@@ -796,7 +782,8 @@ msgstr "CDN Ladefehler: Zugriff auf %s verweigert"
 msgid "CDN loading error: access forbidden to %s"
 msgstr "CDN Ladefehler: Zugriff auf %s verweigert"
 
-msgid "Can't copy System Groups to a different org: '%{org1}' != '%{org2}'"
+#, fuzzy
+msgid "Can't copy host collections to a different org: '%{org1}' != '%{org2}'"
 msgstr "Systemgruppen können nicht in eine andere Organisation kopiert werden: '%{org1}' != '%{org2}'"
 
 #, fuzzy
@@ -973,6 +960,10 @@ msgid "Collapse All"
 msgstr ""
 
 #, fuzzy
+msgid "Collection membership modification is not allowed for host collections(s): %s"
+msgstr "Änderung der Systemgruppenmitgliedschaft nicht zulässig für Gruppe(n): %s"
+
+#, fuzzy
 msgid "Compare Selected"
 msgstr "Vorlage '%s' entfernt"
 
@@ -1062,10 +1053,6 @@ msgstr "Es ist nicht zulässig, ein Red Hat Produkt zu aktualisieren."
 
 #, fuzzy
 msgid "Content"
-msgstr "Inhalt"
-
-#, fuzzy
-msgid "Content About"
 msgstr "Inhalt"
 
 msgid "Content Available From"
@@ -1190,6 +1177,10 @@ msgstr "Filter '%s' konnte nicht gefunden werden."
 msgid "Couldn't find gpg key '%s'"
 msgstr "GPG-Schlüssel '%s' konnte nicht gefunden werden"
 
+#, fuzzy
+msgid "Couldn't find host collection '%s'"
+msgstr "Benutzerrolle '%s' konnte nicht gefunden werden."
+
 msgid "Couldn't find organization '%s'"
 msgstr "Organisation '%s' konnte nicht gefunden werden."
 
@@ -1222,9 +1213,6 @@ msgstr "Synchronisationsplan '%{plan}' konnte nicht in Organisation '%{org}' gef
 
 msgid "Couldn't find system '%s'"
 msgstr "System '%s' konnte nicht gefunden werden."
-
-msgid "Couldn't find system group '%s'"
-msgstr "Systemgruppe '%s' konnte nicht gefunden werden."
 
 msgid "Couldn't find user '%s'"
 msgstr "Benutzer '%s' konnte nicht gefunden werden."
@@ -1342,12 +1330,20 @@ msgstr "Rollen löschen"
 msgid "Delete All"
 msgstr "Rollen löschen"
 
+#, fuzzy
+msgid "Delete Content Hosts in Host Collection"
+msgstr "Inhalt aus Umgebung löschen"
+
 msgid "Delete Content from Environment"
 msgstr "Inhalt aus Umgebung löschen"
 
 #, fuzzy
 msgid "Delete Distributors"
 msgstr "Distribution wählen"
+
+#, fuzzy
+msgid "Delete Host Collection"
+msgstr "Systeme löschen"
 
 #, fuzzy
 msgid "Delete Manifest"
@@ -1364,15 +1360,9 @@ msgstr "Gelöschter Provider [ %s ]"
 msgid "Delete Roles"
 msgstr "Rollen löschen"
 
-msgid "Delete System Group"
-msgstr "Systemgruppe löschen"
-
 #, fuzzy
 msgid "Delete Systems"
 msgstr "Systemgruppe löschen"
-
-msgid "Delete Systems in System Group"
-msgstr "Systeme in Systemgruppen löschen"
 
 #, fuzzy
 msgid "Delete Users"
@@ -1399,6 +1389,14 @@ msgid "Deleted environment '%s'"
 msgstr "Umgebung '%s' gelöscht"
 
 #, fuzzy
+msgid "Deleted host collection '%s'"
+msgstr "Rolle '%s' gelöscht"
+
+#, fuzzy
+msgid "Deleted host collection '%{s}' and it's %{n} systems."
+msgstr "Systemgruppen '%{s}' und deren %{n} Systeme gelöscht."
+
+#, fuzzy
 msgid "Deleted organization '%s'"
 msgstr "Organisation wählen"
 
@@ -1421,18 +1419,8 @@ msgstr "Sync-Plan '%s' gelöscht"
 msgid "Deleted system '%s'"
 msgstr "System '%s' gelöscht"
 
-msgid "Deleted system group '%s'"
-msgstr "Systemgruppe '%s' gelöscht"
-
-msgid "Deleted system group '%{s}' and it's %{n} systems."
-msgstr "Systemgruppen '%{s}' und deren %{n} Systeme gelöscht."
-
 msgid "Deleted user '%s'"
 msgstr "Benutzer '%s' gelöscht"
-
-#, fuzzy
-msgid "Deleting activation_key in candlepin: %s"
-msgstr "Löschen eines Besitzers in Candlepin: %s"
 
 msgid "Deleting environment in candlepin: %s"
 msgstr "Löschen einer Umgebung in Candlepin: %s"
@@ -1470,10 +1458,6 @@ msgstr "Keine Service-Level-Einstellung"
 
 msgid "Difference:"
 msgstr ""
-
-#, fuzzy
-msgid "Directory"
-msgstr "Chronik"
 
 msgid "Disable"
 msgstr ""
@@ -1646,16 +1630,6 @@ msgstr "Umgebung %s hat einen Nachfolger. Nur die letzte Umgebung auf einem Pfad
 msgid "Environment %s has a successor. Only the last environment on a path can be deleted."
 msgstr "Umgebung %s hat einen Nachfolger. Nur die letzte Umgebung auf einem Pfad kann gelöscht werden."
 
-#, fuzzy
-msgid "Environment '%s' was created."
-msgstr "Umgebung '%s' wurde aktualisiert."
-
-msgid "Environment '%s' was deleted."
-msgstr "Umgebung '%s' wurde gelöscht."
-
-msgid "Environment '%s' was updated."
-msgstr "Umgebung '%s' wurde aktualisiert."
-
 msgid "Environment cannot be in its own promotion path"
 msgstr "Umgebung kann nicht in ihrem eigenen Übertragungspfad liegen"
 
@@ -1823,6 +1797,10 @@ msgstr "Löschen der Organisation '%s' fehlgeschlagen. Siehe Notizen für weiter
 msgid "Failed to publish content view '%s'."
 msgstr "Provider '%s' konnte nicht gefunden werden."
 
+#, fuzzy
+msgid "Failed to update candlepin activation_key %s"
+msgstr "Löschen der Candlepin-Umgebung %s fehlgeschlagen"
+
 msgid "Feature"
 msgstr ""
 
@@ -1929,10 +1907,6 @@ msgid "Good"
 msgstr ""
 
 #, fuzzy
-msgid "Group membership modification is not allowed for system group(s): %s"
-msgstr "Änderung der Systemgruppenmitgliedschaft nicht zulässig für Gruppe(n): %s"
-
-#, fuzzy
 msgid "Guest"
 msgstr "Gast"
 
@@ -1941,6 +1915,19 @@ msgstr "Chronik"
 
 msgid "Host"
 msgstr "Host"
+
+msgid "Host Collection Info"
+msgstr ""
+
+#, fuzzy
+msgid "Host Collections"
+msgstr "Distributionen"
+
+msgid "Host collection '%{name}' exceeds maximum usage limit of '%{limit}'"
+msgstr ""
+
+msgid "Host collection is empty."
+msgstr ""
 
 #, fuzzy
 msgid "Host config group"
@@ -2067,6 +2054,9 @@ msgstr ""
 
 msgid "ID: %s doesn't exist "
 msgstr "ID: %s existiert nicht"
+
+msgid "IRC"
+msgstr ""
 
 msgid "ISOs"
 msgstr ""
@@ -2224,6 +2214,9 @@ msgstr ""
 msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
 msgstr "Ungültiges Verb '%{verb}'. Gültige Verben für Ressourcentype n'%{resource_type}' sind %{possible_verbs}"
 
+msgid "Issue tracker"
+msgstr ""
+
 msgid "Issued"
 msgstr ""
 
@@ -2234,12 +2227,17 @@ msgid "Katello Logins"
 msgstr "Katello-Anmeldungen"
 
 #, fuzzy
-msgid "Katello reference documentation"
-msgstr "CloudForms-Dokumentation"
+msgid "Katello Support"
+msgstr "Import"
 
-#, fuzzy
-msgid "Katello user documentation"
-msgstr "CloudForms-Dokumentation"
+msgid "Katello can be found on the same freenode channels used by Foreman."
+msgstr ""
+
+msgid "Katello uses the Foreman Redmine to report and track bugs and feature requests, which can be found here:"
+msgstr ""
+
+msgid "Katello uses the same mailing lists as Foreman but requests that Katello specific inquiries begin the subject line with [Katello]."
+msgstr ""
 
 #, fuzzy
 msgid "Katello/model"
@@ -2576,6 +2574,9 @@ msgstr ""
 msgid "LookupValue|Value"
 msgstr ""
 
+msgid "Mailing lists"
+msgstr ""
+
 #, fuzzy
 msgid "Make this your default organization."
 msgstr "Als meine Standardorganisation festlegen."
@@ -2595,7 +2596,7 @@ msgid "Manifest subscriptions unchanged from previous"
 msgstr ""
 
 #, fuzzy
-msgid "Maximum number of content hosts exceeded for system group(s): %s"
+msgid "Maximum number of content hosts exceeded for host collection(s): %s"
 msgstr "Systemgruppen-Höchstanzahl von Systemen überschritten für Gruppe(n): %s"
 
 msgid "May not add a type or date range rule to a filter that has existing rules."
@@ -2653,6 +2654,9 @@ msgstr ""
 msgid "Model|Vendor class"
 msgstr ""
 
+msgid "Modify Content Hosts in Host Collection"
+msgstr ""
+
 #, fuzzy
 msgid "Modify Distributors"
 msgstr "Distributionen"
@@ -2660,6 +2664,10 @@ msgstr "Distributionen"
 #, fuzzy
 msgid "Modify Distributors in Environment"
 msgstr "Systeme in Umgebung ändern"
+
+#, fuzzy
+msgid "Modify Host Collection details and content host membership"
+msgstr "Systemgruppendetails und Systemmitgliedschaft bearbeiten"
 
 msgid "Modify Organization and Administer Environments"
 msgstr "Organisation ändern und Umgebungen verwalten"
@@ -2671,17 +2679,11 @@ msgstr "Provider ändern und Produkte verwalten"
 msgid "Modify Roles"
 msgstr "Benutzer ändern"
 
-msgid "Modify System Group details and system membership"
-msgstr "Systemgruppendetails und Systemmitgliedschaft bearbeiten"
-
 msgid "Modify Systems"
 msgstr "Systeme ändern"
 
 msgid "Modify Systems in Environment"
 msgstr "Systeme in Umgebung ändern"
-
-msgid "Modify Systems in System Group"
-msgstr "Systeme in Systemgruppe ändern"
 
 msgid "Modify Users"
 msgstr "Benutzer ändern"
@@ -2793,7 +2795,7 @@ msgstr "Inhalt"
 msgid "No Default"
 msgstr "Systemvorlagen"
 
-msgid "No Red Hat products currently exist, please import a manifest <a href='%s/all'>here</a> to receive Red Hat content."
+msgid "No Red Hat products currently exist, please import a manifest <a href='/subscriptions'>here</a> to receive Red Hat content."
 msgstr ""
 
 #, fuzzy
@@ -2823,6 +2825,10 @@ msgstr "Keine Ereignisse gefunden für Ihre Suchkriterien"
 
 msgid "No file uploaded"
 msgstr ""
+
+#, fuzzy
+msgid "No host collections found."
+msgstr "Nicht gefunden"
 
 msgid "No manifest file uploaded"
 msgstr ""
@@ -2877,10 +2883,6 @@ msgstr "Distributionen"
 #, fuzzy
 msgid "No synchronization is currently running"
 msgstr "Derzeit läuft keine Synchronisation von %s"
-
-#, fuzzy
-msgid "No system groups found."
-msgstr "Nicht gefunden"
 
 msgid "No system registration default set for this user."
 msgstr "Kein Standard zur Systemregistrierung für diesen Benutzer festgelegt."
@@ -3500,6 +3502,9 @@ msgstr "Aktivierungsschlüssel-Berechtigung ansehen"
 msgid "Read Changesets in Environment"
 msgstr "Änderungssätze in Umgebungen ansehen"
 
+msgid "Read Content Hoss in Host Collection"
+msgstr ""
+
 #, fuzzy
 msgid "Read Content Views"
 msgstr "Umgebungen ansehen"
@@ -3526,6 +3531,9 @@ msgstr "Rollenberechtigungen ansehen"
 msgid "Read Everything"
 msgstr "Alles ansehen"
 
+msgid "Read Host Collection"
+msgstr ""
+
 msgid "Read Organization"
 msgstr "Organisation ansehen"
 
@@ -3548,17 +3556,11 @@ msgstr "Rollen ansehen"
 msgid "Read Roles permission"
 msgstr "Rollenberechtigungen ansehen"
 
-msgid "Read System Group"
-msgstr "Systemgruppen ansehen"
-
 msgid "Read Systems"
 msgstr "Systeme ansehen"
 
 msgid "Read Systems in Environment"
 msgstr "Systeme in Umgebung ansehen"
-
-msgid "Read Systems in System Group"
-msgstr "Systeme in Systemgruppe ansehen"
 
 #, fuzzy
 msgid "Read Users"
@@ -3649,10 +3651,6 @@ msgstr "Systeme registrieren"
 
 msgid "Reload data"
 msgstr ""
-
-#, fuzzy
-msgid "Removal of the environment failed. If you continue having trouble with this, please contact an Administrator."
-msgstr "Ungültige Parameter in der Anfrage für diese Operation gesendet. Bitte setzen Sie sich bitte mit einem Systemadministrator in Verbindung."
 
 #, fuzzy
 msgid "Removal of the user failed. If you continue having trouble with this, please contact an Administrator."
@@ -4231,7 +4229,7 @@ msgid "Successful for distributor(s): "
 msgstr "Erfolgreich für System(e): "
 
 #, fuzzy
-msgid "Successfully added %{count} content host(s) to system group %{group}."
+msgid "Successfully added %{count} content host(s) to host collection %{host_collection}."
 msgstr "System(e) erfolgreich zu Gruppe '%s' hinzugefügt."
 
 msgid "Successfully changed sync plan for %s product(s)"
@@ -4264,8 +4262,9 @@ msgstr "Änderungssatz '%s' erfolgreich gelöscht."
 msgid "Successfully removed %s repositories"
 msgstr "Änderungssatz '%s' erfolgreich gelöscht."
 
-msgid "Successfully removed %{count} content host(s) from system group %{group}."
-msgstr ""
+#, fuzzy
+msgid "Successfully removed %{count} content host(s) from host collection %{host_collection}."
+msgstr "System(e) erfolgreich zu Gruppe '%s' hinzugefügt."
 
 msgid "Successfully removed organization '%s'."
 msgstr "Organisation '%s' erfolgreich entfernt."
@@ -4293,10 +4292,6 @@ msgstr "Super-Admin-Berechtigung"
 #, fuzzy
 msgid "Super administrator with all access."
 msgstr "Super-Administrator mit umfassendem Zugriff."
-
-#, fuzzy
-msgid "Support"
-msgstr "Import"
 
 #, fuzzy
 msgid "Sync Canceled"
@@ -4345,33 +4340,8 @@ msgstr "Synchronisation"
 msgid "System Default Info"
 msgstr "Systeminfo"
 
-msgid "System Group Info"
-msgstr "Systemgruppeninformation"
-
-#, fuzzy
-msgid "System Groups"
-msgstr "Systemgruppen ansehen"
-
 msgid "System Info"
 msgstr "Systeminfo"
-
-#, fuzzy
-msgid "System Information"
-msgstr "Systeminfo"
-
-#, fuzzy
-msgid "System Status"
-msgstr "Sync-Status"
-
-msgid "System group '%{name}' exceeds maximum usage limit of '%{limit}'"
-msgstr ""
-
-msgid "System group is empty."
-msgstr "Systemgruppe ist leer."
-
-#, fuzzy
-msgid "System with uuid %s not found"
-msgstr "Erratum mit ID '%s' nicht gefunden"
 
 msgid "Systems"
 msgstr "Systeme"
@@ -4523,9 +4493,6 @@ msgid "Title"
 msgstr ""
 
 msgid "Title: "
-msgstr ""
-
-msgid "To submit a new bug please visit %s."
 msgstr ""
 
 msgid "To view the details of an item on the left, simply click on a single row.<br/><br/>To select multiple rows, hold the Control Key and click multiple rows.<br/><br/>If you don't need this help anymore, please click the close button in the top right of this box."
@@ -4914,7 +4881,8 @@ msgstr ""
 msgid "You can synchronize repositories only in library environment'"
 msgstr "Sie können Repositorys nur in der Bibliothek-Umgebung synchronisieren"
 
-msgid "You cannot have more than %{max_systems} system(s) associated with system group '%{group}'."
+#, fuzzy
+msgid "You cannot have more than %{max_content_hosts} content host(s) associated with host collection '%{host_collection}'."
 msgstr "Sie können nicht mehr als %{max_systems} System(e) mit der Systemgruppe '%{group}' verknüpfen."
 
 #, fuzzy
@@ -5109,10 +5077,14 @@ msgstr "Pakete werden installiert ..."
 msgid "is invalid"
 msgstr "ist ungültig"
 
+msgid "issue tracker"
+msgstr ""
+
 msgid "katello-jobs service not running"
 msgstr "katello-jobs Dienst wird nicht ausgeführt "
 
-msgid "may not be less than the number of systems associated with the system group."
+#, fuzzy
+msgid "may not be less than the number of content hosts associated with the host collection."
 msgstr "darf nicht niedriger als die Zahl der Systeme sein, die mit der Systemgruppe verknüpft sind."
 
 msgid "may not be set to 0."
@@ -5192,9 +5164,6 @@ msgstr "Systeme"
 msgid "the %s Bugzilla"
 msgstr "%s Bugzilla"
 
-msgid "the CloudForms Documentation"
-msgstr "CloudForms-Dokumentation"
-
 msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Die folgenden Parameter können nicht für den Red Hat Provider aktualisiert werden: [ %s ]"
 
@@ -5220,6 +5189,10 @@ msgstr "Berechtigungen"
 #, fuzzy
 #~ msgid " Changesets"
 #~ msgstr "Änderungssätze"
+
+#, fuzzy
+#~ msgid "\"Creating an activation key in candlepin: #{label}\""
+#~ msgstr "Erstellen eines Besitzers in Candlepin: %s"
 
 #, fuzzy
 #~ msgid "%d products may have missing repositories"
@@ -5341,6 +5314,9 @@ msgstr "Berechtigungen"
 #~ msgid "API Key"
 #~ msgstr "GPG-Schlüssel"
 
+#~ msgid "About"
+#~ msgstr "Info"
+
 #, fuzzy
 #~ msgid "Action"
 #~ msgstr "Applikation"
@@ -5439,6 +5415,9 @@ msgstr "Berechtigungen"
 #~ msgid "Administer Package Filters"
 #~ msgstr "Paketfilter verwalten"
 
+#~ msgid "Administer System Groups"
+#~ msgstr "Systemgruppen verwalten"
+
 #~ msgid "Administer System Templates"
 #~ msgstr "Systemvorlagen verwalten"
 
@@ -5510,6 +5489,14 @@ msgstr "Berechtigungen"
 #~ msgstr "Systeme ansehen"
 
 #, fuzzy
+#~ msgid "Application"
+#~ msgstr "Applikation"
+
+#, fuzzy
+#~ msgid "Application Information"
+#~ msgstr "Systeminfo"
+
+#, fuzzy
 #~ msgid "Apply Deletion Changeset"
 #~ msgstr "+ Neuer Änderungssatz"
 
@@ -5554,6 +5541,10 @@ msgstr "Berechtigungen"
 #, fuzzy
 #~ msgid "Audit Comment"
 #~ msgstr "Umgebung"
+
+#, fuzzy
+#~ msgid "Authentication"
+#~ msgstr "Authentifikation"
 
 #~ msgid "Auto-attach Off, No Service Level Preference"
 #~ msgstr "Auto-Verknüpfung deaktiviert, keine Service-Level-Einstellung"
@@ -5664,6 +5655,10 @@ msgstr "Berechtigungen"
 #~ msgstr "Änderungssätze"
 
 #, fuzzy
+#~ msgid "Content About"
+#~ msgstr "Inhalt"
+
+#, fuzzy
 #~ msgid "Content view definition '%s' was created."
 #~ msgstr "Provider '%s' wurde erstellt."
 
@@ -5693,6 +5688,9 @@ msgstr "Berechtigungen"
 
 #~ msgid "Couldn't find pool '%{pool}' in activation_key '%{ak}'"
 #~ msgstr "Pool '%{pool}' konnte nicht in activation_key '%{ak}' gefunden werden."
+
+#~ msgid "Couldn't find system group '%s'"
+#~ msgstr "Systemgruppe '%s' konnte nicht gefunden werden."
 
 #~ msgid "Couldn't find template '%s'"
 #~ msgstr "Vorlage '%s' konnte nicht gefunden werden."
@@ -5729,16 +5727,14 @@ msgstr "Berechtigungen"
 #~ msgid "Delete %s?"
 #~ msgstr "Rollen löschen"
 
-#, fuzzy
-#~ msgid "Delete Content View Definitions"
-#~ msgstr "Inhalt aus Umgebung löschen"
-
-#, fuzzy
-#~ msgid "Delete Hosts"
-#~ msgstr "Systeme löschen"
-
 #~ msgid "Delete Package Filters"
 #~ msgstr "Paketfilter löschen"
+
+#~ msgid "Delete System Group"
+#~ msgstr "Systemgruppe löschen"
+
+#~ msgid "Delete Systems in System Group"
+#~ msgstr "Systeme in Systemgruppen löschen"
 
 #, fuzzy
 #~ msgid "Delete autosign entry for %s"
@@ -5772,9 +5768,20 @@ msgstr "Berechtigungen"
 #~ msgid "Deleted environment %{env} and %{pcs}"
 #~ msgstr "Umgebung '%s' gelöscht"
 
+#~ msgid "Deleted system group '%s'"
+#~ msgstr "Systemgruppe '%s' gelöscht"
+
+#, fuzzy
+#~ msgid "Deleting activation_key in candlepin: %s"
+#~ msgstr "Löschen eines Besitzers in Candlepin: %s"
+
 #, fuzzy
 #~ msgid "Dependency of "
 #~ msgstr "Abhängigkeiten"
+
+#, fuzzy
+#~ msgid "Directory"
+#~ msgstr "Chronik"
 
 #~ msgid "Disable/enable is not supported for custom repositories."
 #~ msgstr "Deaktivieren/Aktivieren wird für angepasste Repositorys nicht unterstützt."
@@ -5917,6 +5924,16 @@ msgstr "Berechtigungen"
 #, fuzzy
 #~ msgid "Enter Package or Group Name(s)..."
 #~ msgstr "Paketgruppe wird hinzugefügt ..."
+
+#, fuzzy
+#~ msgid "Environment '%s' was created."
+#~ msgstr "Umgebung '%s' wurde aktualisiert."
+
+#~ msgid "Environment '%s' was deleted."
+#~ msgstr "Umgebung '%s' wurde gelöscht."
+
+#~ msgid "Environment '%s' was updated."
+#~ msgstr "Umgebung '%s' wurde aktualisiert."
 
 #, fuzzy
 #~ msgid "Environment Promotion Paths"
@@ -6202,6 +6219,14 @@ msgstr "Berechtigungen"
 #~ msgid "It is not allowed to update a Red Hat repository."
 #~ msgstr "Es ist nicht zulässig, ein Red Hat Repository zu aktualisieren."
 
+#, fuzzy
+#~ msgid "Katello reference documentation"
+#~ msgstr "CloudForms-Dokumentation"
+
+#, fuzzy
+#~ msgid "Katello user documentation"
+#~ msgstr "CloudForms-Dokumentation"
+
 #~ msgid "Key"
 #~ msgstr "Schlüssel"
 
@@ -6296,6 +6321,9 @@ msgstr "Berechtigungen"
 
 #~ msgid "Modify Package Filters"
 #~ msgstr "Paketfilter ändern"
+
+#~ msgid "Modify Systems in System Group"
+#~ msgstr "Systeme in Systemgruppe ändern"
 
 #~ msgid "Must be unique within an environment"
 #~ msgstr "Muss innerhalb einer Umgebung eindeutig sein"
@@ -6498,6 +6526,10 @@ msgstr "Berechtigungen"
 #, fuzzy
 #~ msgid "No repositories exist in this changeset."
 #~ msgstr "Repository '%s' nicht im Änderungssatz gefunden."
+
+#, fuzzy
+#~ msgid "No system groups found."
+#~ msgstr "Nicht gefunden"
 
 #, fuzzy
 #~ msgid "No template found"
@@ -6786,14 +6818,24 @@ msgstr "Berechtigungen"
 #~ msgid "Read Package Filters"
 #~ msgstr "Paketfilter ansehen"
 
+#~ msgid "Read System Group"
+#~ msgstr "Systemgruppen ansehen"
+
 #~ msgid "Read System Templates"
 #~ msgstr "Systemvorlagen ansehen"
 
 #~ msgid "Read System Templates permission"
 #~ msgstr "Systemvorlagenberechtigungen ansehen"
 
+#~ msgid "Read Systems in System Group"
+#~ msgstr "Systeme in Systemgruppe ansehen"
+
 #~ msgid "Registered / Last Checked In"
 #~ msgstr "Registriert / Zuletzt angemeldet"
+
+#, fuzzy
+#~ msgid "Removal of the environment failed. If you continue having trouble with this, please contact an Administrator."
+#~ msgstr "Ungültige Parameter in der Anfrage für diese Operation gesendet. Bitte setzen Sie sich bitte mit einem Systemadministrator in Verbindung."
 
 #, fuzzy
 #~ msgid "Remove Activation Key"
@@ -7158,6 +7200,17 @@ msgstr "Berechtigungen"
 #~ msgid "System Group %{new_group} created successfully as a copy of system group %{group}."
 #~ msgstr "Systemgruppe %{new_group} erfolgreich erstellt als Kopie von Systemgruppe %{group}."
 
+#~ msgid "System Group Info"
+#~ msgstr "Systemgruppeninformation"
+
+#, fuzzy
+#~ msgid "System Groups"
+#~ msgstr "Systemgruppen ansehen"
+
+#, fuzzy
+#~ msgid "System Information"
+#~ msgstr "Systeminfo"
+
 #, fuzzy
 #~ msgid "System Limit"
 #~ msgstr "System"
@@ -7169,8 +7222,15 @@ msgstr "Berechtigungen"
 #~ msgid "System Type"
 #~ msgstr "Systemvorlagen"
 
+#~ msgid "System group is empty."
+#~ msgstr "Systemgruppe ist leer."
+
 #~ msgid "System subscriptions updated."
 #~ msgstr "Systemsubskriptionen aktualisiert."
+
+#, fuzzy
+#~ msgid "System with uuid %s not found"
+#~ msgstr "Erratum mit ID '%s' nicht gefunden"
 
 #~ msgid "System's environment not compatible with the group '%s'."
 #~ msgstr "Umgebung des Systems nicht kompatibel mit der Gruppe '%s'."
@@ -7610,6 +7670,9 @@ msgstr "Berechtigungen"
 #, fuzzy
 #~ msgid "status"
 #~ msgstr "Sync-Status"
+
+#~ msgid "the CloudForms Documentation"
+#~ msgstr "CloudForms-Dokumentation"
 
 #, fuzzy
 #~ msgid "unable to find recipients"

@@ -51,7 +51,7 @@ module Katello
     end
 
     def test_index
-      get :index, :organization_id => @organization.label
+      get :index, :organization_id => @organization.id
 
       assert_response :success
       assert_template 'api/v2/content_views/index'
@@ -68,13 +68,13 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
-        get :index, :organization_id => @organization.label
+        get :index, :organization_id => @organization.id
       end
     end
 
     def test_create
       post :create, :name => "My View", :label => "My_View", :description => "Cool",
-        :organization_id => @organization.label
+        :organization_id => @organization.id
 
       assert_response :success
       assert_template %w(katello/api/v2/content_views/show)
@@ -91,7 +91,7 @@ module Katello
       denied_perms = [@view_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, :name => "Test", :organization_id => @organization.label
+        post :create, :name => "Test", :organization_id => @organization.id
       end
     end
 
