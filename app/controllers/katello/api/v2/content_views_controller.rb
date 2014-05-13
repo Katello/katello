@@ -38,7 +38,9 @@ module Katello
       options = sort_params
       options[:load_records?] = true
 
-      ids = ContentView.readable.pluck(:id)
+      readable_cvs = ContentView.readable
+      readable_cvs = readable_cvs.in_environment(@environment) if @environment
+      ids = readable_cvs.pluck(:id)
 
       options[:filters] = [{:terms => {:id => ids}}]
 
