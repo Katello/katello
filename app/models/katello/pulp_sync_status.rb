@@ -27,7 +27,7 @@ class PulpSyncProgress
                 ht.null_safe_get(progress_attrs, nil, %w(progress_report iso_importer))
 
       #if the task is waiting, it wont have a progress report
-      progress_attrs['progress_report'] = {}
+      progress_attrs['progress_report'] ||= {}
 
       if progress_attrs['progress_report']['iso_importer']
         @total_size  = ht.null_safe_get(details, 0, ['total_bytes'])
