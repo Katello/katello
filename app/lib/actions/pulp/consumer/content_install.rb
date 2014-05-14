@@ -16,6 +16,7 @@ module Actions
       class ContentInstall < Pulp::AbstractAsyncTask
 
         include Helpers::Presenter
+        include Actions::Pulp::ExpectOneTask
 
         input_format do
           param :consumer_uuid, String

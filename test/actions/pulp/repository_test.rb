@@ -34,25 +34,25 @@ module ::Actions::Pulp::Repository
       task1         = task_base.merge( 'tags'    => ['pulp:action:sync'])
       task2         = task1.merge(task_progress_hash 6, 8)
       task3         = task1.merge(task_progress_hash 0, 8).merge(task_finished_hash)
-      pulp_response = [task1, { 'task_id' => 'other' }]
+      pulp_response =  { 'spawned_tasks' => [{'task_id' => 'other' }]}
 
       plan_action action, pulp_id: 'pulp-id'
       action = run_action action do |action|
         runcible_expects(action, :resources, :repository, :sync).
             returns(pulp_response)
-        stub_task_poll action, task2, task3
+        stub_task_poll action, task1, task2, task3
       end
 
-      action.external_task.must_equal(task1)
+      action.external_task[0].must_equal(task1)
       action.run_progress.must_equal 0.01
 
       progress_action_time action
-      action.external_task.must_equal task2
+      action.external_task[0].must_equal task2
       action.run_progress.must_equal 0.25
       action.wont_be :done?
 
       progress_action_time action
-      action.external_task.must_equal task3
+      action.external_task[0].must_equal task3
       action.run_progress.must_equal 1
       action.must_be :done?
     end
