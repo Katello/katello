@@ -44,7 +44,7 @@ module MiniTest::Expectations
 end
 
 def load_permissions
-  Dir["#{File.expand_path("#{Katello::Engine.root}/app/policies/katello/permissions", __FILE__)}/*.rb"].each do |file|
+  Dir["#{File.expand_path("#{Katello::Engine.root}/lib/katello/permissions", __FILE__)}/*.rb"].each do |file|
     load file
   end
 end
