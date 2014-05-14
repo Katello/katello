@@ -62,7 +62,7 @@ module Actions
           end
 
           def progress
-            if action.external_task && size_total > 0
+            if sync_task && size_total > 0
               size_done.to_f / size_total
             else
               0.01
@@ -102,8 +102,12 @@ module Actions
             end
           end
 
+          def sync_task
+            action.external_task.select{ |task| task['tags'].include?("pulp:action:sync") }.first
+          end
+
           def task_result
-            action.external_task[:result]
+            sync_task[:result]
           end
 
           def task_result_details
@@ -111,7 +115,7 @@ module Actions
           end
 
           def task_progress
-            action.external_task[:progress_report]
+            sync_task[:progress_report]
           end
 
           def task_progress_details
