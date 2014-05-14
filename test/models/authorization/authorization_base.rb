@@ -18,7 +18,7 @@ class AuthorizationTestBase < ActiveSupport::TestCase
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
     models    = ['Repository', 'KTEnvironment', 'ContentViewEnvironment',
-                 'Organization', 'System', 'SystemGroup']
+                 'Organization', 'System', 'HostCollection']
     disable_glue_layers(services, models)
   end
 
@@ -35,7 +35,7 @@ class AuthorizationTestBase < ActiveSupport::TestCase
     @library              = KTEnvironment.find(katello_environments(:library).id)
     @dev                  = KTEnvironment.find(katello_environments(:dev).id)
     @unassigned_gpg_key   = GpgKey.find(katello_gpg_keys(:unassigned_gpg_key).id)
-    @system             = System.find(katello_systems(:simple_server))
+    @system               = System.find(katello_systems(:simple_server))
   end
 
 end

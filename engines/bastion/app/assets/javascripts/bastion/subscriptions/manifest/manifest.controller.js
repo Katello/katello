@@ -17,31 +17,13 @@
  *
  * @requires $scope
  * @requires translate
+ * @requires ManifestHistoryService
  *
  * @description
  *   Controls the managment of manifests for use by sub-controllers.
  */
 angular.module('Bastion.subscriptions').controller('ManifestController',
-    ['$scope', 'translate',
-    function ($scope, translate) {
-
+    ['$scope', function ($scope) {
         $scope.panel = {loading: true};
-
-        $scope.manifestHistory = function () {
-            var statuses = [];
-
-            angular.forEach($scope.redhatProvider['owner_imports'], function (value) {
-                statuses.push(value);
-
-                if (value['webAppPrefix'] !== undefined) {
-                    var message = translate("Manifest from %s.").replace('%s', value['upstreamName']);
-                    statuses.push({statusMessage: message, created: value.created});
-                }
-
-            });
-
-            return statuses;
-        };
-
     }]
 );

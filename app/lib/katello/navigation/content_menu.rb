@@ -195,10 +195,10 @@ module Navigation
           :options => {:class => "panel_link"}
         },
         { :key => :system_mgmt,
-          :name => _("System Groups"),
+          :name => _("Host Collections"),
           :items => lambda{ak_systems_subnav},
           :if => lambda{@activation_key},
-          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
+          :url => lambda{host_collections_activation_key_path(@activation_key.id)},
           :options => {:class => 'panel_link menu_parent'}
         }
       ]
@@ -207,9 +207,9 @@ module Navigation
 
     def ak_systems_subnav
       [
-        { :key => :activation_keys_menu_system_groups,
-          :name => _("System Groups"),
-          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
+        { :key => :activation_keys_menu_host_collections,
+          :name => _("Host Collections"),
+          :url => lambda{host_collections_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class => "third_level panel_link"}
         },

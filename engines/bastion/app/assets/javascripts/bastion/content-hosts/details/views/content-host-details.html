@@ -32,16 +32,22 @@
           Details
         </a>
       </li>
+      <li ng-class="{active: isState('content-hosts.details.provisioning')}">
+        <a translate
+           ui-sref="content-hosts.details.provisioning">
+          Provisioning Details
+        </a>
+      </li>
       <li ng-class="{active: isState('content-hosts.details.subscriptions.list')}">
         <a translate
            ui-sref="content-hosts.details.subscriptions.list">
           Subscriptions
         </a>
       </li>
-      <li ng-class="{active: $state.includes('content-hosts.details.system-groups')}">
+      <li ng-class="{active: $state.includes('content-hosts.details.host-collections')}">
         <a translate
-           ui-sref="content-hosts.details.system-groups.list">
-          System Groups
+           ui-sref="content-hosts.details.host-collections.list">
+          Host Collections
         </a>
       </li>
       <li ng-class="{active: stateIncludes('content-hosts.details.tasks')}">

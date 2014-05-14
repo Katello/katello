@@ -24,7 +24,7 @@ angular.module('Bastion.activation-keys', [
     'Bastion',
     'Bastion.utils',
     'Bastion.widgets',
-    'Bastion.system-groups'
+    'Bastion.host-collections'
 ]);
 
 angular.module('Bastion.activation-keys').config(['$stateProvider', function ($stateProvider) {
@@ -93,22 +93,22 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
         templateUrl: 'activation-keys/details/views/activation-key-add-subscriptions.html'
     });
 
-    $stateProvider.state('activation-keys.details.system-groups', {
+    $stateProvider.state('activation-keys.details.host-collections', {
         abstract: true,
         collapsed: true,
-        templateUrl: 'activation-keys/details/views/activation-key-system-groups.html'
+        templateUrl: 'activation-keys/details/views/activation-key-host-collections.html'
     })
-    .state('activation-keys.details.system-groups.list', {
-        url: '/system-groups',
+    .state('activation-keys.details.host-collections.list', {
+        url: '/host-collections',
         collapsed: true,
-        controller: 'ActivationKeySystemGroupsController',
-        templateUrl: 'activation-keys/details/views/activation-key-system-groups-table.html'
+        controller: 'ActivationKeyHostCollectionsController',
+        templateUrl: 'activation-keys/details/views/activation-key-host-collections-table.html'
     })
-    .state('activation-keys.details.system-groups.add', {
-        url: '/system-groups/add',
+    .state('activation-keys.details.host-collections.add', {
+        url: '/host-collections/add',
         collapsed: true,
-        controller: 'ActivationKeyAddSystemGroupsController',
-        templateUrl: 'activation-keys/details/views/activation-key-system-groups-table.html'
+        controller: 'ActivationKeyAddHostCollectionsController',
+        templateUrl: 'activation-keys/details/views/activation-key-host-collections-table.html'
     });
 
 }]);

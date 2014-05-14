@@ -75,7 +75,7 @@ module Ext::IndexedModel
         self.class_index_options = options
       end
 
-      # If this object (e.g. system_group) is updated or deleted and another model (e.g. system) has an
+      # If this object (e.g. host_collection) is updated or deleted and another model (e.g. system) has an
       # association (e.g. has_many) to it, we need to update the related indexes on that model (e.g system)
       #   relation - the association for the other model
       #   attribute - the attribute on the current model, which if changes needs to trigger the index update
@@ -85,7 +85,7 @@ module Ext::IndexedModel
         after_destroy lambda{|record| reindex_relation}
       end
 
-      # If this model (e.g. system_group) has an association (e.g. has_many) to another model (e.g. system)
+      # If this model (e.g. host_collection) has an association (e.g. has_many) to another model (e.g. system)
       # and objects (e.g. systems) are added or removed for that association, we need to update the related
       # indexes on that model.
       def self.update_association_indexes
@@ -107,10 +107,10 @@ module Ext::IndexedModel
       end
 
       def save_indexed_relation(relation)
-        # If an object (e.g. system_group) is being deleted and another object (e.g. system) has a model
+        # If an object (e.g. host_collection) is being deleted and another object (e.g. system) has a model
         # relationship (e.g. has_many :through) with it, we need to update the indexes on that other model.
         # Unfortunately, in order to do that, the update needs to be performed after this object is destroyed
-        # (i.e. after_destroy); however, at that point, the object (e.g. system_group) no longer references
+        # (i.e. after_destroy); however, at that point, the object (e.g. host_collection) no longer references
         # the other (e.g. system).
         #
         # Temporarily save a list of the related objects that need indexes updated, for use in the 'after_destroy'.

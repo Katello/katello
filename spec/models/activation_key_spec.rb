@@ -107,15 +107,15 @@ module Katello
       end
     end
 
-    describe "adding systems groups" do
+    describe "adding host collections" do
       before(:each) do
-        @group = SystemGroup.create!(:name=>"TestSystemGroup", :organization=>@organization)
+        @host_collection = HostCollection.create!(:name=>"TestHostCollection", :organization=>@organization)
       end
 
-      it "should add groups" do
-        @akey.system_groups << @group
+      it "should add host collections" do
+        @akey.host_collections << @host_collection
         @akey.save!
-        ActivationKey.find(@akey.id).system_groups.must_include @group
+        ActivationKey.find(@akey.id).host_collections.must_include @host_collection
       end
     end
 

@@ -30,11 +30,11 @@ Katello::Engine.routes.draw do
           end
         end
 
-        resources :system_groups, :except => [:new, :edit] do
+        resources :host_collections, :except => [:new, :edit] do
           member do
             get :systems
             get :history
-            match "/history/:job_id" => "system_groups#history_show", :via => :get
+            match "/history/:job_id" => "host_collections#history_show", :via => :get
             post :add_systems
             post :copy
             post :remove_systems
@@ -42,13 +42,13 @@ Katello::Engine.routes.draw do
             put :update_systems
           end
 
-          resources :packages, :only => [:create], :controller => :system_group_packages do
+          resources :packages, :only => [:create], :controller => :host_collection_packages do
             collection do
               put :update
               delete :destroy
             end
           end
-          resources :errata, :only => [:index, :create], :controller => :system_group_errata
+          resources :errata, :only => [:index, :create], :controller => :host_collection_errata
         end
 
         resources :environments do
@@ -84,8 +84,8 @@ Katello::Engine.routes.draw do
           get :releases
           get :subscription_status
           put :enabled_repos
-          post :system_groups, :action => :add_system_groups
-          delete :system_groups, :action => :remove_system_groups
+          post :host_collections, :action => :add_host_collections
+          delete :host_collections, :action => :remove_host_collections
           post :refresh_subscriptions
           put :checkin
         end
@@ -231,11 +231,18 @@ Katello::Engine.routes.draw do
       match '/deleted_consumers' => 'candlepin_proxies#get', :via => :get, :as => :proxy_deleted_consumers_path
       match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get, :as => :proxy_entitlements_path
       match '/subscriptions' => 'candlepin_proxies#post', :via => :post, :as => :proxy_subscriptions_post_path
-      match '/consumers/:id/content_overrides' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_content_overrides_path
       match '/consumers/:id/profile/' => 'candlepin_proxies#upload_package_profile', :via => :put
       match '/consumers/:id/packages/' => 'candlepin_proxies#upload_package_profile', :via => :put
       match '/consumers/:id/checkin/' => 'candlepin_proxies#checkin', :via => :put
       match '/consumers/:id' => 'candlepin_proxies#facts', :via => :put
+      match '/consumers/:id/guestids/' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_guestids_path
+      match '/consumers/:id/guestids/:guest_id' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_guestids_get_guestid_path
+      match '/consumers/:id/guestids/' => 'candlepin_proxies#put', :via => :put, :as => :proxy_consumer_guestids_put_path
+      match '/consumers/:id/guestids/:guest_id' => 'candlepin_proxies#put', :via => :put, :as => :proxy_consumer_guestids_put_guestid_path
+      match '/consumers/:id/guestids/:guest_id' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_guestids_delete_guestid_path
+      match '/consumers/:id/content_overrides/' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_content_overrides_path
+      match '/consumers/:id/content_overrides/' => 'candlepin_proxies#put', :via => :put, :as => :proxy_consumer_content_overrides_put_path
+      match '/consumers/:id/content_overrides/' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_content_overrides_delete_path
 
       # development / debugging support
       if Rails.env == "development"

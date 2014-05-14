@@ -18,7 +18,7 @@ module Actions
           activation_keys ||= []
 
           set_environment_and_content_view(system, activation_keys)
-          set_system_groups(system, activation_keys)
+          set_host_collections(system, activation_keys)
           set_association(system, activation_keys)
         end
 
@@ -40,17 +40,17 @@ module Actions
           end
         end
 
-        def set_system_groups(system, activation_keys)
-          system_group_ids = activation_keys.flat_map(&:system_group_ids).compact.uniq
+        def set_host_collections(system, activation_keys)
+          host_collection_ids = activation_keys.flat_map(&:host_collection_ids).compact.uniq
 
-          system_group_ids.each do |system_group_id|
-            system_group = ::Katello::SystemGroup.find(system_group_id)
-            if system_group.max_systems >= 0 && system_group.systems.length >= system_group.max_systems
-              fail _("System group '%{name}' exceeds maximum usage limit of '%{limit}'") %
-                       {:limit => system_group.max_systems, :name => system_group.name}
+          host_collection_ids.each do |host_collection_id|
+            host_collection = ::Katello::HostCollection.find(host_collection_id)
+            if host_collection.max_content_hosts >= 0 && host_collection.systems.length >= host_collection.max_content_hosts
+              fail _("Host collection '%{name}' exceeds maximum usage limit of '%{limit}'") %
+                       {:limit => host_collection.max_content_hosts, :name => host_collection.name}
             end
           end
-          system.system_group_ids = system_group_ids
+          system.host_collection_ids = host_collection_ids
         end
       end
     end

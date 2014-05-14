@@ -73,7 +73,11 @@
           </tr>
           <tr alch-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
             <td alch-table-cell>{{ subscription | subscriptionAttachAmountFilter }}</td>
-            <td alch-table-cell>{{ subscription | subscriptionConsumedFilter }}</td>
+            <td alch-table-cell>
+              <a ui-sref="subscriptions.details.info({subscriptionId: subscription.subscription_id})">
+                {{ subscription | subscriptionConsumedFilter }}
+              </a>
+            </td>
             <td alch-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
             <td alch-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
             <td alch-table-cell>{{ subscription.service_level }}</td>

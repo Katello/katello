@@ -33,6 +33,8 @@ class Api::V1::RootController < Api::V1::ApiController
     # provide some fake paths that does not exist (but rhsm is checking it's existance)
     api_root_routes << { :href => '/api/packages/', :rel => 'packages' }
     api_root_routes << { :href => '/api/status/', :rel => 'status' }
+    api_root_routes << { :href => '/api/guestids', :rel => 'guestids'}
+    api_root_routes << { :href => '/api/content_overrides', :rel => 'content_overrides'}
 
     # katello only APIs
     katello_only = ["/api/templates/",

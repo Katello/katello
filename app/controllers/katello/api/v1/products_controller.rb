@@ -55,14 +55,14 @@ class Api::V1::ProductsController < Api::V1::ApiController
   end
 
   api :GET, "/organizations/:organization_id/products/:id", "Show a product"
-  param :organization_id, :identifier, :desc => "organization identifier"
+  param :organization_id, :number, :desc => "organization identifier"
   param :id, :number, :desc => "product numeric identifier"
   def show
     respond
   end
 
   api :PUT, "/organizations/:organization_id/products/:id", "Update a product"
-  param :organization_id, :identifier, :desc => "organization identifier"
+  param :organization_id, :number, :desc => "organization identifier"
   param :id, :number, :desc => "product numeric identifier"
   param_group :product
   param :product, Hash do
@@ -80,7 +80,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
 
   api :GET, "/environments/:environment_id/products", "List products in an environment"
   api :GET, "/organizations/:organization_id/products", "List all products in an organization"
-  param :organization_id, :identifier, :desc => "organization identifier"
+  param :organization_id, :number, :desc => "organization identifier"
   param :name, :identifier, :desc => "product identifier"
   param :include_marketing, :bool, :desc => "include marketing products in results"
   def index
@@ -93,7 +93,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
   end
 
   api :DELETE, "/organizations/:organization_id/products/:id", "Destroy a product"
-  param :organization_id, :identifier, :desc => "organization identifier"
+  param :organization_id, :number, :desc => "organization identifier"
   param :id, :number, :desc => "product numeric identifier"
   def destroy
     @product.destroy
@@ -103,7 +103,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
   api :GET, "/environments/:environment_id/products/:id/repositories"
   api :GET, "/organizations/:organization_id/products/:id/repositories"
   api :GET, "/organizations/:organization_id/products/:id/repositories"
-  param :organization_id, :identifier, :desc => "organization identifier"
+  param :organization_id, :number, :desc => "organization identifier"
   param :environment_id, :identifier, :desc => "environment identifier"
   param :id, :number, :desc => "product numeric identifier"
   param :name, :identifier, :desc => "repository identifier"
@@ -119,7 +119,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
   end
 
   api :POST, "/organizations/:organization_id/products/:id/sync_plan", "Assign sync plan to product"
-  param :organization_id, :identifier, :desc => "organization identifier"
+  param :organization_id, :number, :desc => "organization identifier"
   param :id, :number, :desc => "product numeric identifier"
   param :plan_id, :number, :desc => "Plan numeric identifier"
   def set_sync_plan
@@ -129,7 +129,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
   end
 
   api :DELETE, "/organizations/:organization_id/products/:id/sync_plan", "Delete assignment sync plan and product"
-  param :organization_id, :identifier, :desc => "organization identifier"
+  param :organization_id, :number, :desc => "organization identifier"
   param :id, :number, :desc => "product numeric identifier"
   param :plan_id, :number, :desc => "Plan numeric identifier"
   def remove_sync_plan

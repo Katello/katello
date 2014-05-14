@@ -59,4 +59,10 @@ describe('Factory: Subscription', function() {
         });
     });
 
+    it('provides a way to get a manifest history', function() {
+        $httpBackend.expectGET('/api/v2/organizations/ACME/subscriptions/manifest_history?').respond([]);
+        Subscription.manifestHistory(function(result){
+            expect(result).not.toBeUndefined();
+        });
+    });
 });

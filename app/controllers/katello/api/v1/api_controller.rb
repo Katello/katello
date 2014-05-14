@@ -76,8 +76,7 @@ class Api::V1::ApiController < Api::ApiController
   private
 
   def get_organization(org_id)
-    # name/label is always unique
-    return Organization.without_deleting.having_name_or_label(org_id).first
+    return Organization.without_deleting.find_by_id(org_id)
   end
 
   def organization_id

@@ -56,7 +56,7 @@ Katello::Engine.routes.draw do
       get :content_views
       get :promotions
       get :systems
-      get :system_groups
+      get :host_collections
       get :subscriptions
       get :subscriptions_totals
       put :update

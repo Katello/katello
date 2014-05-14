@@ -19,7 +19,7 @@ class Api::V1::SyncController < Api::V1::ApiController
       individualy by id, by product or by provider
     DOC
 
-    param :organization_id, :identifier, :desc => "oranization identifier", :required => true
+    param :organization_id, :number, :desc => "oranization identifier", :required => true
     param :product_id, :identifier, :desc => "product identifier", :required => true
     param :provider_id, :identifier, :desc => "provider identifier", :required => true
     param :repository_id, :identifier, :desc => "repository identifier", :required => true

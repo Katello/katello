@@ -16,7 +16,7 @@ class System < Katello::Model
   self.include_root_in_json = false
 
   include Hooks
-  define_hooks :add_system_group_hook, :remove_system_group_hook,
+  define_hooks :add_host_collection_hook, :remove_host_collection_hook,
                :as_json_hook
 
   include ForemanTasks::Concerns::ActionSubject
@@ -28,20 +28,21 @@ class System < Katello::Model
   include AsyncOrchestration
 
   attr_accessible :name, :uuid, :description, :location, :environment, :content_view,
-                  :environment_id, :content_view_id, :system_group_ids
+                  :environment_id, :content_view_id, :host_collection_ids
 
   after_rollback :rollback_on_create, :on => :create
 
   belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :systems
+  belongs_to :foreman_host, :class_name => "Host::Managed", :foreign_key => :host_id
 
   has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
   has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
   has_many :activation_keys, :through => :system_activation_keys
-  has_many :system_system_groups, :class_name => "Katello::SystemSystemGroup", :dependent => :destroy
-  has_many :system_groups, {:through      => :system_system_groups,
-                            :after_add    => :add_system_group,
-                            :after_remove => :remove_system_group
-                           }
+  has_many :system_host_collections, :class_name => "Katello::SystemHostCollection", :dependent => :destroy
+  has_many :host_collections, {:through      => :system_host_collections,
+                               :after_add    => :add_host_collection,
+                               :after_remove => :remove_host_collection
+                              }
   has_many :custom_info, :class_name => "Katello::CustomInfo", :as => :informable, :dependent => :destroy
   belongs_to :content_view, :inverse_of => :systems
 
@@ -62,12 +63,12 @@ class System < Katello::Model
   scope :in_environment, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
 
-  def add_system_group(system_group)
-    run_hook(:add_system_group_hook, system_group)
+  def add_host_collection(host_collection)
+    run_hook(:add_host_collection_hook, host_collection)
   end
 
-  def remove_system_group(system_group)
-    run_hook(:remove_system_group_hook, system_group)
+  def remove_host_collection(host_collection)
+    run_hook(:remove_host_collection_hook, host_collection)
   end
 
   class << self

@@ -18,7 +18,7 @@ module Katello
 
     before do
       models = ["Organization", "KTEnvironment", "User", "ContentViewFilter",
-                "ContentViewEnvironment", "System", "SystemGroup", "ActivationKey"]
+                "ContentViewEnvironment", "System", "HostCollection", "ActivationKey"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
       setup_controller_defaults_api
       login_user(User.find(users(:admin)))

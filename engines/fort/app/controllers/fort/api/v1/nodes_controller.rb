@@ -12,6 +12,8 @@
 module Fort
 class Api::V1::NodesController < Katello::Api::V1::ApiController
 
+  include Katello::Authentication::ClientAuthentication
+
   respond_to :json
 
   before_filter :authorize
@@ -66,7 +68,7 @@ class Api::V1::NodesController < Katello::Api::V1::ApiController
     system = Katello::System.find_by_uuid!(params[:uuid])
     @node = Node.find_by_system_id(system.id)
     unless @node
-      fail HttpErrors::NotFound, _("System %s is not a registered node") % params[:uuid]
+      fail Katello::HttpErrors::NotFound, _("System %s is not a registered node") % params[:uuid]
     end
     respond_for_show
   end
@@ -116,6 +118,13 @@ class Api::V1::NodesController < Katello::Api::V1::ApiController
     attrs = params[:node].clone
     @node.update_attributes!(attrs)
     respond :resource => @node
+  end
+
+  protected
+
+  # to support rhsm client authentication
+  def authenticate
+    set_client_user || super
   end
 
   private

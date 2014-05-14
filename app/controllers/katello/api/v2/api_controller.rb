@@ -149,12 +149,11 @@ module Katello
     end
 
     def get_organization(org_id)
-      # name/label is always unique
-      return Organization.without_deleting.having_name_or_label(org_id.to_s).first
+      return Organization.without_deleting.find_by_id(org_id)
     end
 
     def find_default_organization_and_or_environment
-      return if (params.keys & %w{organization_id owner environment_id system_group_id}).any?
+      return if (params.keys & %w{organization_id owner environment_id host_collection_id}).any?
 
       @environment = current_user.default_environment
       if @environment

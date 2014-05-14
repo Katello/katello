@@ -29,9 +29,11 @@ module Resources
         client.post body, {:accept => :json, :content_type => :json}.merge(User.cp_oauth_header)
       end
 
-      def self.delete(path)
+      def self.delete(path, body = nil)
         logger.debug "Sending DELETE request to Candlepin: #{path}"
         client = CandlepinResource.rest_client(Net::HTTP::Delete, :delete, path_with_cp_prefix(path))
+        # Some candlepin calls will set the body in DELETE requests.
+        client.options[:payload] = body unless body.nil?
         client.delete({:accept => :json, :content_type => :json}.merge(User.cp_oauth_header))
       end
 
@@ -39,6 +41,12 @@ module Resources
         logger.debug "Sending GET request to Candlepin: #{path}"
         client = CandlepinResource.rest_client(Net::HTTP::Get, :get, path_with_cp_prefix(path))
         client.get({:accept => :json}.merge(User.cp_oauth_header))
+      end
+
+      def self.put(path, body)
+        logger.debug "Sending PUT request to Candlepin: #{path}"
+        client = CandlepinResource.rest_client(Net::HTTP::Put, :put, path_with_cp_prefix(path))
+        client.put body, {:accept => :json, :content_type => :json}.merge(User.cp_oauth_header)
       end
 
       def self.path_with_cp_prefix(path)
@@ -736,6 +744,15 @@ module Resources
         def create(name, owner_key)
           url = "/candlepin/owners/#{owner_key}/activation_keys"
           JSON.parse(self.post(url, {:name => name}.to_json, self.default_headers).body).with_indifferent_access
+        end
+
+        def update(id, release_version, service_level)
+          attrs = { :releaseVer => release_version, :serviceLevel => service_level }.delete_if { |k, v| v.nil? }
+          if attrs.empty?
+            return true
+          else
+            JSON.parse(self.put(path(id), attrs.to_json, self.default_headers).body).with_indifferent_access
+          end
         end
 
         def destroy(id)
