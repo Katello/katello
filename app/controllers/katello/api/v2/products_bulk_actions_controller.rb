@@ -30,8 +30,8 @@ module Katello
       hash
     end
 
-    api :PUT, "/products/bulk/destroy", "Destroy one or more products"
-    param :ids, Array, :desc => "List of product ids", :required => true
+    api :PUT, "/products/bulk/destroy", N_("Destroy one or more products")
+    param :ids, Array, :desc => N_("List of product ids"), :required => true
     def destroy_products
       display_messages = []
 
@@ -40,8 +40,8 @@ module Katello
       respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
     end
 
-    api :PUT, "/products/bulk/sync", "Sync one or more products"
-    param :ids, Array, :desc => "List of product ids", :required => true
+    api :PUT, "/products/bulk/sync", N_("Sync one or more products")
+    param :ids, Array, :desc => N_("List of product ids"), :required => true
     def sync_products
       display_messages = []
 
@@ -50,9 +50,9 @@ module Katello
       respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
     end
 
-    api :PUT, "/products/bulk/sync_plan", "Sync one or more products"
-    param :ids, Array, :desc => "List of product ids", :required => true
-    param :plan_id, :number, :desc => "Sync plan identifier to attach", :required => true
+    api :PUT, "/products/bulk/sync_plan", N_("Sync one or more products")
+    param :ids, Array, :desc => N_("List of product ids"), :required => true
+    param :plan_id, :number, :desc => N_("Sync plan identifier to attach"), :required => true
     def update_sync_plans
       display_messages = []
 

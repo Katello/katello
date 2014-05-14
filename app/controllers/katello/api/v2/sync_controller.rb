@@ -28,16 +28,16 @@ module Katello
       }
     end
 
-    api :GET, "/providers/:provider_id/sync", "Get status of repo synchronisation for given provider"
-    api :GET, "/organizations/:organization_id/products/:product_id/sync", "Get status of repo synchronisation for given product"
-    api :GET, "/repositories/:repository_id/sync", "Get status of synchronisation for given repository"
+    api :GET, "/providers/:provider_id/sync", N_("Get status of repo synchronisation for given provider")
+    api :GET, "/organizations/:organization_id/products/:product_id/sync", N_("Get status of repo synchronisation for given product")
+    api :GET, "/repositories/:repository_id/sync", N_("Get status of synchronisation for given repository")
     def index
       respond_for_async(:resource => @obj.sync_status)
     end
 
-    api :POST, "/providers/:provider_id/sync", "Synchronize all provider's repositories"
-    api :POST, "organizations/:organization_id/products/:product_id/sync", "Synchronise all repositories for given product"
-    api :POST, "/repositories/:repository_id/sync", "Synchronise repository"
+    api :POST, "/providers/:provider_id/sync", N_("Synchronize all provider's repositories")
+    api :POST, "organizations/:organization_id/products/:product_id/sync", N_("Synchronise all repositories for given product")
+    api :POST, "/repositories/:repository_id/sync", N_("Synchronise repository")
     def create
       respond_for_async(:resource => @obj.sync)
     end

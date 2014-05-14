@@ -26,13 +26,13 @@ class Api::V1::DistributionsController < Api::V1::ApiController
     }
   end
 
-  api :GET, "/repositories/:repository_id/distributions", "List distributions"
+  api :GET, "/repositories/:repository_id/distributions", N_("List distributions")
   def index
     respond :collection => @repo.distributions
   end
 
-  api :GET, "/repositories/:repository_id/distributions/:id", "Show a distribution"
-  param :repository_id, :number, :desc => "repository numeric id"
+  api :GET, "/repositories/:repository_id/distributions/:id", N_("Show a distribution")
+  param :repository_id, :number, :desc => N_("repository numeric id")
   def show
     dist = Distribution.find(params[:id])
     respond :resource => dist

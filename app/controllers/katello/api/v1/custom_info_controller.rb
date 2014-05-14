@@ -32,11 +32,11 @@ class Api::V1::CustomInfoController < Api::V1::ApiController
   end
 
   def_param_group :informable_identifier do
-    param :informable_type, String, :desc => "name of the resource", :required => true
-    param :informable_id, :identifier, :desc => "resource identifier", :required => true
+    param :informable_type, String, :desc => N_("name of the resource"), :required => true
+    param :informable_id, :identifier, :desc => N_("resource identifier"), :required => true
   end
 
-  api :POST, "/custom_info/:informable_type/:informable_id", "Create custom info"
+  api :POST, "/custom_info/:informable_type/:informable_id", N_("Create custom info")
   param_group :informable_identifier
   param :keyname, String, :required => true
   param :value, String, :required => true
@@ -44,22 +44,22 @@ class Api::V1::CustomInfoController < Api::V1::ApiController
     respond :resource => @informable.custom_info.create!(package_args(params))
   end
 
-  api :GET, "/custom_info/:informable_type/:informable_id", "List custom info"
+  api :GET, "/custom_info/:informable_type/:informable_id", N_("List custom info")
   param_group :informable_identifier
   def index
     respond :collection => @informable.custom_info
   end
 
-  api :GET, "/custom_info/:informable_type/:informable_id/:keyname", "Show custom info"
+  api :GET, "/custom_info/:informable_type/:informable_id/:keyname", N_("Show custom info")
   param_group :informable_identifier
-  param :keyname, String, :desc => "Custom info key", :required => true
+  param :keyname, String, :desc => N_("Custom info key"), :required => true
   def show
     respond :resource => @single_custom_info
   end
 
-  api :PUT, "/custom_info/:informable_type/:informable_id/:keyname", "Update custom info"
+  api :PUT, "/custom_info/:informable_type/:informable_id/:keyname", N_("Update custom info")
   param_group :informable_identifier
-  param :keyname, String, :desc => "Custom info key", :required => true
+  param :keyname, String, :desc => N_("Custom info key"), :required => true
   param :value, String, :required => true
   def update
     value = params[:value]
@@ -69,9 +69,9 @@ class Api::V1::CustomInfoController < Api::V1::ApiController
     respond :resource => @single_custom_info.value
   end
 
-  api :DELETE, "/custom_info/:informable_type/:informable_id/:keyname", "Delete custom info"
+  api :DELETE, "/custom_info/:informable_type/:informable_id/:keyname", N_("Delete custom info")
   param_group :informable_identifier
-  param :keyname, String, :desc => "Custom info key", :required => true
+  param :keyname, String, :desc => N_("Custom info key"), :required => true
   def destroy
     @single_custom_info.destroy
     respond :message => _("Deleted custom info '%s'") % params[:keyname], :resource => @single_custom_info

@@ -15,8 +15,8 @@ class Api::V1::ErrataController < Api::V1::ApiController
   respond_to :json
 
   resource_description do
-    error :code => 401, :desc => "Unauthorized"
-    error :code => 404, :desc => "Not found"
+    error :code => 401, :desc => N_("Unauthorized")
+    error :code => 404, :desc => N_("Not found")
 
     api_version 'v1'
   end
@@ -35,15 +35,15 @@ class Api::V1::ErrataController < Api::V1::ApiController
     }
   end
 
-  api :GET, "/errata", "List errata"
-  api :GET, "/repositories/:repository_id/errata", "List errata"
-  description "Either :repoid or :product_id is required."
-  error :code => 400, :desc => "Repo id or environment must be provided"
-  param :environment_id, :number, :desc => "Id of environment containing the errata."
-  param :product_id, :number, :desc => "The product which contains the errata."
-  param :repoid, :number, :desc => "Id of repository containing the errata."
-  param :severity, String, :desc => "Severity of errata. Usually one of: Critical, Important, Moderate, Low. Case insensitive."
-  param :type, String, :desc => "Type of errata. Usually one of: security, bugfix, enhancement. Case insensitive."
+  api :GET, "/errata", N_("List errata")
+  api :GET, "/repositories/:repository_id/errata", N_("List errata")
+  description N_("Either :repoid or :product_id is required.")
+  error :code => 400, :desc => N_("Repo id or environment must be provided")
+  param :environment_id, :number, :desc => N_("Id of environment containing the errata.")
+  param :product_id, :number, :desc => N_("The product which contains the errata.")
+  param :repoid, :number, :desc => N_("Id of repository containing the errata.")
+  param :severity, String, :desc => N_("Severity of errata. Usually one of: Critical, Important, Moderate, Low. Case insensitive.")
+  param :type, String, :desc => N_("Type of errata. Usually one of: security, bugfix, enhancement. Case insensitive.")
   def index
     filter = params.symbolize_keys.slice(:repoid, :repository_id, :product_id, :environment_id, :type, :severity)
     unless filter[:repoid] || filter[:repository_id] || filter[:environment_id]
@@ -52,7 +52,7 @@ class Api::V1::ErrataController < Api::V1::ApiController
     render :json => Errata.filter(filter)
   end
 
-  api :GET, "/repositories/:repository_id/errata/:id", "Show an erratum"
+  api :GET, "/repositories/:repository_id/errata/:id", N_("Show an erratum")
   def show
     render :json => @erratum
   end

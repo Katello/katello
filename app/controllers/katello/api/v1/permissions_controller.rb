@@ -41,30 +41,30 @@ class Api::V1::PermissionsController < Api::V1::ApiController
     }
   end
 
-  api :GET, "/roles/:role_id/permissions", "List permissions for a role"
-  param :name, String, :desc => "filter by name"
-  param :description, String, :desc => "filter by description"
-  param :all_verbs, :bool, :desc => "filter by all_verbs flag"
-  param :all_tags, :bool, :desc => "filter by all_flags flag"
+  api :GET, "/roles/:role_id/permissions", N_("List permissions for a role")
+  param :name, String, :desc => N_("filter by name")
+  param :description, String, :desc => N_("filter by description")
+  param :all_verbs, :bool, :desc => N_("filter by all_verbs flag")
+  param :all_tags, :bool, :desc => N_("filter by all_flags flag")
   def index
     queries = query_params.empty? ? {} : {:permissions => query_params}
     respond :collection => @role.permissions.where(queries)
   end
 
-  api :GET, "/roles/:role_id/permissions/:id", "Show a permission"
+  api :GET, "/roles/:role_id/permissions/:id", N_("Show a permission")
   def show
     respond
   end
 
-  api :POST, "/roles/:role_id/permissions", "Create a roles permission"
+  api :POST, "/roles/:role_id/permissions", N_("Create a roles permission")
   param :description, String, :allow_nil => true
   param :name, String, :required => true
   param :organization_id, :identifier
-  param :tags, Array, :desc => "array of tag ids"
-  param :type, String, :desc => "name of a resource or 'all'", :required => true
-  param :verbs, Array, :desc => "array of permission verbs"
-  param :all_tags, :bool, :desc => "True if the permission should use all tags"
-  param :all_verbs, :bool, :desc => "True if the permission should use all verbs"
+  param :tags, Array, :desc => N_("array of tag ids")
+  param :type, String, :desc => N_("name of a resource or 'all'"), :required => true
+  param :verbs, Array, :desc => N_("array of permission verbs")
+  param :all_tags, :bool, :desc => N_("True if the permission should use all tags")
+  param :all_verbs, :bool, :desc => N_("True if the permission should use all verbs")
   def create
     new_params = {
         :name         => params[:name],
@@ -89,7 +89,7 @@ class Api::V1::PermissionsController < Api::V1::ApiController
     render :json => @permission.to_json
   end
 
-  api :DELETE, "/roles/:role_id/permissions/:id", "Destroy a roles permission"
+  api :DELETE, "/roles/:role_id/permissions/:id", N_("Destroy a roles permission")
   def destroy
     @permission.destroy
     respond :message => _("Deleted permission '%s'") % params[:id]

@@ -27,8 +27,8 @@ module Katello
       hash
     end
 
-    api :PUT, "/repositories/bulk/destroy", "Destroy one or more repositories"
-    param :ids, Array, :desc => "List of repository ids", :required => true
+    api :PUT, "/repositories/bulk/destroy", N_("Destroy one or more repositories")
+    param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def destroy_repositories
       display_messages = []
 
@@ -40,8 +40,8 @@ module Katello
       respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
     end
 
-    api :POST, "/repositories/bulk/sync", "Synchronise repository"
-    param :ids, Array, :desc => "List of repository ids", :required => true
+    api :POST, "/repositories/bulk/sync", N_("Synchronise repository")
+    param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def sync_repositories
       display_messages = []
 

@@ -85,19 +85,19 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   end
 
   def_param_group :search_params do
-    param :organization_id, :number, :desc => "organization identifier"
-    param :library, :bool, :desc => "set true if you want to see only library environment"
-    param :name, :identifier, :desc => "filter only environments with this identifier"
+    param :organization_id, :number, :desc => N_("organization identifier")
+    param :library, :bool, :desc => N_("set true if you want to see only library environment")
+    param :name, :identifier, :desc => N_("filter only environments with this identifier")
   end
 
   def_param_group :environment do
     param :environment, Hash, :required => true, :action_aware => true do
-      param :name, :identifier, :desc => "name of the environment (identifier)", :required => true
+      param :name, :identifier, :desc => N_("name of the environment (identifier)"), :required => true
       param :description, String
     end
   end
 
-  api :GET, "/organizations/:organization_id/environments", "List environments in an organization"
+  api :GET, "/organizations/:organization_id/environments", N_("List environments in an organization")
   param_group :search_params
   def index
     query_params.delete(:environment)
@@ -122,16 +122,16 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     respond
   end
 
-  api :GET, "/environments/:id", "Show an environment"
-  api :GET, "/organizations/:organization_id/environments/:id", "Show an environment"
-  param :id, :identifier, :desc => "environment identifier"
-  param :organization_id, :number, :desc => "organization identifier"
+  api :GET, "/environments/:id", N_("Show an environment")
+  api :GET, "/organizations/:organization_id/environments/:id", N_("Show an environment")
+  param :id, :identifier, :desc => N_("environment identifier")
+  param :organization_id, :number, :desc => N_("organization identifier")
   def show
     respond
   end
 
-  api :POST, "/organizations/:organization_id/environments", "Create an environment in an organization"
-  param :organization_id, :number, :desc => "organization identifier"
+  api :POST, "/organizations/:organization_id/environments", N_("Create an environment in an organization")
+  param :organization_id, :number, :desc => N_("organization identifier")
   param_group :environment
   param :environment, Hash, :required => true do
     param :prior, :identifier, :required => true, :desc => <<-DESC
@@ -149,8 +149,8 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     respond
   end
 
-  api :PUT, "/environments/:id", "Update an environment"
-  api :PUT, "/organizations/:organization_id/environments/:id", "Update an environment in an organization"
+  api :PUT, "/environments/:id", N_("Update an environment")
+  api :PUT, "/organizations/:organization_id/environments/:id", N_("Update an environment in an organization")
   param_group :environment
   def update
     fail HttpErrors::BadRequest, _("Can't update the '%s' environment") % "Library" if @environment.library?
@@ -158,10 +158,10 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     respond
   end
 
-  api :DELETE, "/environments/:id", "Destroy an environment"
-  api :DELETE, "/organizations/:organization_id/environments/:id", "Destroy an environment in an organization"
-  param :id, :identifier, :desc => "environment identifier"
-  param :organization_id, :number, :desc => "organization identifier"
+  api :DELETE, "/environments/:id", N_("Destroy an environment")
+  api :DELETE, "/organizations/:organization_id/environments/:id", N_("Destroy an environment in an organization")
+  param :id, :identifier, :desc => N_("environment identifier")
+  param :organization_id, :number, :desc => N_("organization identifier")
   def destroy
     if @environment.is_deletable?
       @environment.destroy
@@ -172,10 +172,10 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     end
   end
 
-  api :GET, "/organizations/:organization_id/environments/:id/repositories", "List repositories available in the environment"
-  param :id, :identifier, :desc => "environment identifier"
-  param :organization_id, :number, :desc => "organization identifier"
-  param :content_view_id, :identifier, :desc => "content view identifier", :required => false
+  api :GET, "/organizations/:organization_id/environments/:id/repositories", N_("List repositories available in the environment")
+  param :id, :identifier, :desc => N_("environment identifier")
+  param :organization_id, :number, :desc => N_("organization identifier")
+  param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => false
   def repositories
     if !@environment.library? && @content_view.nil?
       fail HttpErrors::BadRequest,
@@ -188,8 +188,8 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     respond_for_index :collection => @repositories
   end
 
-  api :GET, "/environments/:id/releases", "List available releases for given environment"
-  param :id, :identifier, :desc => "environment identifier"
+  api :GET, "/environments/:id/releases", N_("List available releases for given environment")
+  param :id, :identifier, :desc => N_("environment identifier")
   def releases
     respond_for_index :collection => { :releases => @environment.available_releases }
   end

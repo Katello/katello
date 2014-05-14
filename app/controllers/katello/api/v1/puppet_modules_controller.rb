@@ -28,15 +28,15 @@ class Api::V1::PuppetModulesController < Api::V1::ApiController
     }
   end
 
-  api :GET, "/repositories/:repository_id/puppet_modules", "List puppet modules"
-  param :repository_id, :number, :desc => "repository numeric identifier"
+  api :GET, "/repositories/:repository_id/puppet_modules", N_("List puppet modules")
+  param :repository_id, :number, :desc => N_("repository numeric identifier")
   def index
     respond :collection => @repo.puppet_modules
   end
 
   api :GET, "/repositories/:repository_id/puppet_modules/search"
-  param :repository_id, :number, :desc => "repository numeric identifier"
-  param :search, String, :desc => "search expression"
+  param :repository_id, :number, :desc => N_("repository numeric identifier")
+  param :search, String, :desc => N_("search expression")
   def search
     puppet_modules = PuppetModule.search(params[:search],
                                          :repoids => @repo.pulp_id,
@@ -46,9 +46,9 @@ class Api::V1::PuppetModulesController < Api::V1::ApiController
     respond_for_index :collection => puppet_modules.to_a
   end
 
-  api :GET, "/repositories/:repository_id/puppet_modules/:id", "Show a puppet module"
-  param :repository_id, :number, :desc => "repository numeric identifier"
-  param :id, String, :desc => "puppet module id"
+  api :GET, "/repositories/:repository_id/puppet_modules/:id", N_("Show a puppet module")
+  param :repository_id, :number, :desc => N_("repository numeric identifier")
+  param :id, String, :desc => N_("puppet module id")
   def show
     respond
   end

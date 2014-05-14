@@ -79,11 +79,11 @@ module Katello
       }
     end
 
-    api :GET, "/environments", "List environments in an organization"
-    api :GET, "/organizations/:organization_id/environments", "List environments in an organization"
-    param :organization_id, :number, :desc => "organization identifier", :required => true
-    param :library, [true, false], :desc => "set true if you want to see only library environments"
-    param :name, String, :desc => "filter only environments containing this name"
+    api :GET, "/environments", N_("List environments in an organization")
+    api :GET, "/organizations/:organization_id/environments", N_("List environments in an organization")
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+    param :library, [true, false], :desc => N_("set true if you want to see only library environments")
+    param :name, String, :desc => N_("filter only environments containing this name")
     def index
       filters = []
 
@@ -99,19 +99,19 @@ module Katello
       respond_for_index(:collection => item_search(KTEnvironment, params, options))
     end
 
-    api :GET, "/environments/:id", "Show an environment"
-    api :GET, "/organizations/:organization_id/environments/:environment_id", "Show an environment"
-    param :id, :number, :desc => "ID of the environment", :required => true
-    param :organization_id, :number, :desc => "ID of the organization"
+    api :GET, "/environments/:id", N_("Show an environment")
+    api :GET, "/organizations/:organization_id/environments/:environment_id", N_("Show an environment")
+    param :id, :number, :desc => N_("ID of the environment"), :required => true
+    param :organization_id, :number, :desc => N_("ID of the organization")
     def show
       respond
     end
 
-    api :POST, "/environments", "Create an environment"
-    api :POST, "/organizations/:organization_id/environments", "Create an environment in an organization"
-    param :organization_id, :number, :desc => "name of organization", :required => true
-    param :name, String, :desc => "name of the environment", :required => true
-    param :description, String, :desc => "description of the environment"
+    api :POST, "/environments", N_("Create an environment")
+    api :POST, "/organizations/:organization_id/environments", N_("Create an environment in an organization")
+    param :organization_id, :number, :desc => N_("name of organization"), :required => true
+    param :name, String, :desc => N_("name of the environment"), :required => true
+    param :description, String, :desc => N_("description of the environment")
     param :prior, String, :required => true, :desc => <<-DESC
       Name of an environment that is prior to the new environment in the chain. It has to be
       either 'Library' or an environment at the end of a chain.
@@ -127,12 +127,12 @@ module Katello
       respond
     end
 
-    api :PUT, "/environments/:id", "Update an environment"
-    api :PUT, "/organizations/:organization_id/environments/:id", "Update an environment in an organization"
-    param :id, :number, :desc => "ID of the environment", :required => true
-    param :organization_id, :number, :desc => "name of the organization"
-    param :new_name, String, :desc => "new name to be given to the environment"
-    param :description, String, :desc => "description of the environment"
+    api :PUT, "/environments/:id", N_("Update an environment")
+    api :PUT, "/organizations/:organization_id/environments/:id", N_("Update an environment in an organization")
+    param :id, :number, :desc => N_("ID of the environment"), :required => true
+    param :organization_id, :number, :desc => N_("name of the organization")
+    param :new_name, String, :desc => N_("new name to be given to the environment")
+    param :description, String, :desc => N_("description of the environment")
     param :prior, String, :desc => <<-DESC
       Name of an environment that is prior to the new environment in the chain. It has to be
       either 'Library' or an environment at the end of a chain.
@@ -146,10 +146,10 @@ module Katello
       respond
     end
 
-    api :DELETE, "/environments/:id", "Destroy an environment"
-    api :DELETE, "/organizations/:organization_id/environments/:id", "Destroy an environment in an organization"
-    param :id, :number, :desc => "ID of the environment", :required => true
-    param :organization_id, :number, :desc => "organization identifier"
+    api :DELETE, "/environments/:id", N_("Destroy an environment")
+    api :DELETE, "/organizations/:organization_id/environments/:id", N_("Destroy an environment in an organization")
+    param :id, :number, :desc => N_("ID of the environment"), :required => true
+    param :organization_id, :number, :desc => N_("organization identifier")
     def destroy
       if @environment.is_deletable?
         @environment.destroy
@@ -161,15 +161,15 @@ module Katello
     end
 
     # TODO
-    # api :GET, "/organizations/:organization_id/environments/systems_registerable", "List environments that systems can be registered to"
-    # param :organization_id, :number, :desc => "organization identifier"
+    # api :GET, "/organizations/:organization_id/environments/systems_registerable", N_("List environments that systems can be registered to")
+    # param :organization_id, :number, :desc => N_("organization identifier")
     def systems_registerable
       @environments = KTEnvironment.systems_registerable(@organization)
       respond_for_index :collection => @environments
     end
 
-    api :GET, "/organizations/:organization_id/environments/paths", "List environment paths"
-    param :organization_id, :number, :desc => "organization identifier"
+    api :GET, "/organizations/:organization_id/environments/paths", N_("List environment paths")
+    param :organization_id, :number, :desc => N_("organization identifier")
     def paths
       paths = @organization.promotion_paths.inject([]) do |result, path|
         result << { :environments => [@organization.library] + path }

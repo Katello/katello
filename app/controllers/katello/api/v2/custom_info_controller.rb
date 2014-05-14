@@ -21,8 +21,8 @@ class Api::V2::CustomInfoController < Api::V1::CustomInfoController
   end
 
   def_param_group :informable_identifier do
-    param :informable_type, String, :desc => "name of the resource", :required => true
-    param :informable_id, :identifier, :desc => "resource identifier", :required => true
+    param :informable_type, String, :desc => N_("name of the resource"), :required => true
+    param :informable_id, :identifier, :desc => N_("resource identifier"), :required => true
   end
 
   def_param_group :custom_info do
@@ -32,9 +32,9 @@ class Api::V2::CustomInfoController < Api::V1::CustomInfoController
     end
   end
 
-  api :POST, "/custom_info/:informable_type/:informable_id", "Create custom info"
-  param :informable_type, String, :desc => "name of the resource", :required => true
-  param :informable_id, :identifier, :desc => "resource identifier", :required => true
+  api :POST, "/custom_info/:informable_type/:informable_id", N_("Create custom info")
+  param :informable_type, String, :desc => N_("name of the resource"), :required => true
+  param :informable_id, :identifier, :desc => N_("resource identifier"), :required => true
   param :custom_info, Hash, :required => true, :action_aware => true do
     param :keyname, String, :required => true
     param :value, String, :required => true
@@ -43,9 +43,9 @@ class Api::V2::CustomInfoController < Api::V1::CustomInfoController
     respond :resource => @informable.custom_info.create!(params[:custom_info])
   end
 
-  api :PUT, "/custom_info/:informable_type/:informable_id/:keyname", "Update custom info"
+  api :PUT, "/custom_info/:informable_type/:informable_id/:keyname", N_("Update custom info")
   param_group :informable_identifier
-  param :keyname, String, :desc => "Custom info key", :required => true
+  param :keyname, String, :desc => N_("Custom info key"), :required => true
   param :custom_info, Hash, :required => true, :action_aware => true do
     param :value, String, :required => true
   end

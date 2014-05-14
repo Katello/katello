@@ -27,23 +27,23 @@ class Api::V1::PackagesController < Api::V1::ApiController
     }
   end
 
-  api :GET, "/repositories/:repository_id/packages", "List packages"
-  param :repository_id, :number, :desc => "environment numeric identifier"
+  api :GET, "/repositories/:repository_id/packages", N_("List packages")
+  param :repository_id, :number, :desc => N_("environment numeric identifier")
   def index
     respond :collection => @repo.packages
   end
 
   api :GET, "/repositories/:repository_id/packages/search"
-  param :repository_id, :number, :desc => "environment numeric identifier"
-  param :search, String, :desc => "search expression"
+  param :repository_id, :number, :desc => N_("environment numeric identifier")
+  param :search, String, :desc => N_("search expression")
   def search
     packages = Package.legacy_search(params[:search], 0, 0, [@repo.pulp_id])
     respond_for_index :collection => packages.to_a
   end
 
-  api :GET, "/repositories/:repository_id/packages/:id", "Show a package"
-  param :repository_id, :number, :desc => "environment numeric identifier"
-  param :id, String, :desc => "package id"
+  api :GET, "/repositories/:repository_id/packages/:id", N_("Show a package")
+  param :repository_id, :number, :desc => N_("environment numeric identifier")
+  param :id, String, :desc => N_("package id")
   def show
     respond
   end
