@@ -54,6 +54,7 @@ class Api::ApiController < ::Api::BaseController
       'katello/api/v2/content_view_puppet_modules',
       'katello/api/v2/content_view_versions',
       'katello/api/v2/gpg_keys',
+      'katello/api/v2/host_collections',
       'katello/api/v2/sync_plans',
       'katello/api/v2/products',
       'katello/api/v2/repositories',
@@ -138,12 +139,12 @@ class Api::ApiController < ::Api::BaseController
   def format_bulk_action_messages(args = {})
     models     = args.fetch(:models)
     authorized = args.fetch(:authorized)
-    messages   = []
+    messages   = {:success => [], :error => []}
 
     unauthorized = models - authorized
 
-    messages << args.fetch(:success) % authorized.length if authorized.present?
-    messages << args.fetch(:error) % unauthorized if unauthorized.present?
+    messages[:success] << args.fetch(:success) % authorized.length if authorized.present?
+    messages[:error] << args.fetch(:error) % unauthorized if unauthorized.present?
 
     messages
   end

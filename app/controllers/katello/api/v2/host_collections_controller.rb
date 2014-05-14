@@ -20,30 +20,9 @@ module Katello
     before_filter :find_system
     before_filter :find_optional_organization, :only => [:index]
     before_filter :find_organization, :only => [:create]
-    before_filter :authorize
     before_filter :load_search_service, :only => [:index, :systems]
 
     wrap_parameters :include => (HostCollection.attribute_names + %w(system_ids))
-
-    def rules
-      any_readable         = lambda { @organization && HostCollection.any_readable?(@organization) }
-      read_perm            = lambda { @host_collection.readable? }
-      edit_perm            = lambda { @host_collection.editable? }
-      create_perm          = lambda { HostCollection.creatable?(@organization) }
-      destroy_perm         = lambda { @host_collection.deletable? }
-      { :index           => any_readable,
-        :show            => read_perm,
-        :systems         => read_perm,
-        :create          => create_perm,
-        :copy            => create_perm,
-        :update          => edit_perm,
-        :destroy         => destroy_perm,
-        :add_systems     => edit_perm,
-        :remove_systems  => edit_perm,
-        :add_activation_keys    => edit_perm,
-        :remove_activation_keys => edit_perm
-      }
-    end
 
     def_param_group :host_collection do
       param :name, String, :required => true, :desc => "Host Collection name"
@@ -114,11 +93,21 @@ module Katello
     param :system_ids, Array, :desc => "Array of system ids"
     def add_systems
       ids = system_uuids_to_ids(params[:system_ids])
-      @systems = System.readable(@host_collection.organization).where(:id => ids)
-      @host_collection.system_ids = (@host_collection.system_ids + @systems.collect { |s| s.id }).uniq
+      @systems = System.where(:id => ids)
+      @editable_systems = @systems.editable
+      @host_collection.system_ids = (@host_collection.system_ids + @editable_systems.collect { |s| s.id }).uniq
       @host_collection.save!
       System.index.refresh
-      respond_for_index(:collection => @host_collection.systems, :template => :delta_systems)
+
+      messages = format_bulk_action_messages(
+          :success    => _("Successfully added %s Content Host(s)."),
+          :error      => _("You were not allowed to add %s"),
+          :models     => @systems,
+          :authorized => @editable_systems
+      )
+
+      respond_for_show :template => 'bulk_action', :resource_name => 'common',
+                       :resource => { 'displayMessages' => messages }
     end
 
     api :PUT, "/host_collections/:id/remove_systems", "Remove systems from the host collection"
@@ -126,11 +115,21 @@ module Katello
     param :system_ids, Array, :desc => "Array of system ids"
     def remove_systems
       ids = system_uuids_to_ids(params[:system_ids])
-      system_ids = System.readable(@host_collection.organization).where(:id => ids).collect { |s| s.id }
-      @host_collection.system_ids = (@host_collection.system_ids - system_ids).uniq
+      @systems = System.where(:id => ids)
+      @editable_systems = @systems.editable
+      @host_collection.system_ids = (@host_collection.system_ids - @editable_systems.collect { |s| s.id }).uniq
       @host_collection.save!
       System.index.refresh
-      respond_for_index(:collection => @host_collection.systems, :template => :delta_systems)
+
+      messages = format_bulk_action_messages(
+          :success    => _("Successfully removed %s Content Host(s)."),
+          :error      => _("You were not allowed to sync %s"),
+          :models     => @systems,
+          :authorized => @editable_systems
+      )
+
+      respond_for_show :template => 'bulk_action', :resource_name => 'common',
+                       :resource => { 'displayMessages' => messages }
     end
 
     api :PUT, "/host_collections/:id/add_activation_keys", "Add activation keys to the host collection"
@@ -224,7 +223,7 @@ module Katello
     end
 
     def filter_organization
-      filters = [:terms => {:id => HostCollection.readable(@organization).pluck("#{Katello::HostCollection.table_name}.id")}]
+      filters = [:terms => {:id => HostCollection.readable.pluck("#{Katello::HostCollection.table_name}.id")}]
       filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
       options = {

@@ -69,7 +69,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionHostCo
 
             success = function (data) {
                 deferred.resolve(data);
-                $scope.setState(false, data["displayMessages"], []);
+                $scope.setState(false, data.displayMessages.success, data.displayMessages.error);
                 hostCollectionNutupane.refresh();
             };
 

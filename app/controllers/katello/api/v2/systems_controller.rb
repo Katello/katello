@@ -66,8 +66,8 @@ class Api::V2::SystemsController < Api::V2::ApiController
   def index
     filters = []
 
-    uuids = System.readable.pluck(:uuid)
-    filters << {:terms => {:uuid => uuids}}
+    #uuids = System.readable.pluck(:uuid)
+    #filters << {:terms => {:uuid => uuids}}
 
     if params[:environment_id]
       filters << {:terms => {:environment_id => [params[:environment_id]] }}
@@ -145,7 +145,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   param_group :search, Api::V2::ApiController
   param :name, String, :desc => "host collection name to filter by"
   def available_host_collections
-    filters = [:terms => {:id => HostCollection.readable(@system.organization).pluck("#{Katello::HostCollection.table_name}.id") - @system.host_collection_ids}]
+    filters = [:terms => {:id => HostCollection.readable.pluck("#{Katello::HostCollection.table_name}.id") - @system.host_collection_ids}]
     filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
     options = {

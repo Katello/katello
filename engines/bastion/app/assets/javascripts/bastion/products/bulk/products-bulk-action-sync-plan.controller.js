@@ -35,7 +35,8 @@ angular.module('Bastion.products').controller('ProductsBulkActionSyncPlanControl
         syncPlanNutupane.query();
 
         function success(response) {
-            $scope.$parent.successMessages = response.displayMessages;
+            $scope.$parent.successMessages = response.displayMessages.success;
+            $scope.$parent.errorMessages = response.displayMessages.error;
             $scope.updatingSyncPlans = false;
         }
 
