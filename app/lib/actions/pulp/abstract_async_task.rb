@@ -15,6 +15,39 @@ module Actions
     class AbstractAsyncTask < Pulp::Abstract
       include Actions::Base::Polling
 
+      # A call report (documented http://pulp-dev-guide.readthedocs.org/en/latest/conventions/sync-v-async.html)
+      # Looks like:  {
+      #     "result": {},
+      #     "error": {},
+      #     "spawned_tasks": [{"_href": "/pulp/api/v2/tasks/7744e2df-39b9-46f0-bb10-feffa2f7014b/",
+      #                    "task_id": "7744e2df-39b9-46f0-bb10-feffa2f7014b" }]
+      #     }
+      #
+      #
+
+      # A Task (documented http://pulp-dev-guide.readthedocs.org/en/latest/integration/rest-api/dispatch/task.html#task-management)
+      # Looks like:
+      # {
+      #  "_href": "/pulp/api/v2/tasks/0fe4fcab-a040-11e1-a71c-00508d977dff/",
+      #  "state": "running",
+      #  "queue": "reserved_resource_worker-0@your.domain.com",
+      #  "task_id": "0fe4fcab-a040-11e1-a71c-00508d977dff",
+      #  "task_type": "pulp.server.tasks.repository.sync_with_auto_publish",
+      #  "progress_report": {}, # contents depend on the operation
+      #  "result": null,
+      #  "start_time": "2012-05-17T16:48:00Z",
+      #  "finish_time": null,
+      #  "exception": null,
+      #  "traceback": null,
+      #  "tags": [
+      #    "pulp:repository:f16",
+      #    "pulp:action:sync"
+      #  ],
+      #  "spawned_tasks": [{"href": "/pulp/api/v2/tasks/7744e2df-39b9-46f0-bb10-feffa2f7014b/",
+      #                     "task_id": "7744e2df-39b9-46f0-bb10-feffa2f7014b" }],
+      #  "error": null
+      #}
+
       def done?
         !!external_task[:finish_time]
       end
@@ -37,7 +70,7 @@ module Actions
         end
 
         output[:pulp_task] = external_task_data[0]
-        if output[:pulp_task][:state] == 'error' || output[:pulp_task][:state] == 'canceled'
+        if output[:pulp_task][:state] == 'error'
           message = if output[:pulp_task][:exception]
                       Array(output[:pulp_task][:exception]).join('; ')
                     else
