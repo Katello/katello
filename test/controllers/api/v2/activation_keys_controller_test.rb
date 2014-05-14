@@ -197,7 +197,6 @@ module Katello
       delete :destroy, :organization_id => @organization.id, :id => @activation_key.id
 
       assert_response :success
-      assert_template 'api/v2/activation_keys/show'
     end
 
     def test_destroy_protected
