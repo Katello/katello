@@ -18,7 +18,8 @@ module Katello
     module ClientAuthentication
 
       def authenticate_client
-        set_client_user || deny_access
+        set_client_user
+        User.current.present?
       end
 
       def set_client_user

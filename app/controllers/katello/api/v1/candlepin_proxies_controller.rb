@@ -15,9 +15,13 @@ module Katello
 
     include Katello::Authentication::ClientAuthentication
 
+    before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin,
+                                          :upload_package_profile, :regenerate_identity_certificates, :facts]
     skip_before_filter :authorize, :except => [:consumer_create, :rhsm_index]
-    before_filter :authenticate, :only => [:list_owners]
-    before_filter :authenticate_client, :except => [:list_owners, :consumer_create, :rhsm_index, :consumer_activate]
+    before_filter :authenticate, :only => [:list_owner]
+    before_filter :authorize_client, :except => [:list_owners, :consumer_create, :rhsm_index,
+                                                 :consumer_activate, :get, :post, :put, :delete]
+    before_filter :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
 
     before_filter :add_candlepin_version_header
 
@@ -31,8 +35,6 @@ module Katello
     before_filter :find_environment_and_content_view, :only => [:consumer_create]
     before_filter :find_content_view, :only => [:consumer_create, :facts]
     before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
-    before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin,
-                                          :upload_package_profile, :regenerate_identity_certificates, :facts]
 
     rescue_from RestClient::Exception do |e|
       Rails.logger.error pp_exception(e)
@@ -349,6 +351,62 @@ module Katello
 
     def add_candlepin_version_header
       response.headers["X-CANDLEPIN-VERSION"] = "katello/#{Katello.config.katello_version}"
+    end
+
+    def authorize_client
+      authorized = authenticate_client && User.consumer?
+      authorized = (User.current.uuid == @system.uuid) if @system
+      deny_access if !authorized
+    end
+
+    # rubocop:disable MethodLength
+    def authorize_proxy_routes
+      deny_access if !(authenticate || authenticate_client)
+
+      route, _, params = Engine.routes.router.recognize(request) do |rte, match, parameters|
+        break rte, match, parameters if rte.name
+      end
+
+      # route names are defined in routes.rb (:as => :name)
+      case route.name
+      when "api_proxy_consumer_deletionrecord_delete_path"
+        User.consumer? || Organization.deletable?
+      when "api_proxy_owner_pools_path"
+        find_optional_organization
+        if params[:consumer]
+          User.consumer? && current_user.uuid == params[:consumer]
+        else
+          User.consumer? || ::User.current.can?(:view_organizations, self)
+        end
+      when "api_proxy_owner_servicelevels_path"
+        find_optional_organization
+        (User.consumer? || ::User.current.can?(:view_organizations, self))
+      when "api_proxy_consumer_certificates_path", "api_proxy_consumer_releases_path", "api_proxy_certificate_serials_path",
+           "api_proxy_consumer_entitlements_path", "api_proxy_consumer_entitlements_post_path",
+           "api_proxy_consumer_entitlements_delete_path",
+           "api_proxy_consumer_dryrun_path", "api_proxy_consumer_owners_path",
+           "api_proxy_consumer_compliance_path"
+        User.consumer? && current_user.uuid == params[:id]
+      when "api_proxy_consumer_certificates_delete_path"
+        User.consumer? && current_user.uuid == params[:consumer_id]
+      when "api_proxy_pools_path"
+        User.consumer? && current_user.uuid == params[:consumer]
+      when "api_proxy_subscriptions_post_path"
+        User.consumer? && current_user.uuid == params[:consumer_uuid]
+      when "api_proxy_consumer_content_overrides_path", "api_proxy_consumer_content_overrides_put_path",
+           "api_proxy_consumer_content_overrides_delete_path",
+           "api_proxy_consumer_guestids_path", "api_proxy_consumer_guestids_get_guestid_path",
+           "api_proxy_consumer_guestids_put_path", "api_proxy_consumer_guestids_put_guestid_path",
+           "api_proxy_consumer_guestids_delete_guestid_path",
+           "api_proxy_entitlements_path"
+        # These queries are restricted in Candlepin
+        User.consumer?
+      when "api_proxy_deleted_consumers_path"
+        current_user.admin?
+      else
+        Rails.logger.warn "Unknown proxy route #{request.method} #{request.fullpath}, access denied"
+        deny_access
+      end
     end
 
   end
