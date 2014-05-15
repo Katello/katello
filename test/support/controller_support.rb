@@ -85,16 +85,6 @@ module ControllerSupport
     user.own_role.permissions.delete_all
     user
   end
-
-  def add_role(permission_name)
-    permission = Permission.find_by_name(permission_name)
-    role = create(:role, :permissions => [permission])
-    user = users(:restricted)
-    filter = create(:filter, :role => role, :permissions => [permission])
-    user.roles = [role]
-    user
-  end
-
 end
 
 UserPermission = Struct.new(:verbs, :resource_type, :tags, :org, :options) do
