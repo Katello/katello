@@ -89,7 +89,7 @@ module Katello
     param :id, :identifier, :desc => "ID of the activation key", :required => true
     def destroy
       @activation_key.destroy
-      respond_for_show(:resource => @activation_key)
+      respond
     end
 
     api :GET, "/activation_keys/:id", "Show an activation key"
