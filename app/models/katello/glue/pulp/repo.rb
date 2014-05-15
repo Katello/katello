@@ -259,6 +259,12 @@ module Glue::Pulp::Repo
       Katello.pulp_server.extensions.repository.errata_ids(self.pulp_id)
     end
 
+    def distribution_ids
+      Katello.pulp_server.extensions.repository.distributions(self.pulp_id).collect do |distribution|
+        distribution['_id']
+      end
+    end
+
     # remove errata and groups from this repo
     # that have no packages
     def purge_empty_groups_errata
@@ -337,7 +343,12 @@ module Glue::Pulp::Repo
 
     def distributions
       if @repo_distributions.nil?
-        self.distributions = Katello.pulp_server.extensions.repository.distributions(self.pulp_id)
+
+        tmp_distributions = []
+        self.distribution_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+          tmp_distributions.concat(Katello.pulp_server.extensions.distribution.find_all_by_unit_ids(sub_list))
+        end
+        self.distributions = tmp_distributions
       end
       @repo_distributions
     end
