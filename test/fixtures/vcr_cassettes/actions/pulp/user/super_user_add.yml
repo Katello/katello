@@ -2,10 +2,10 @@
 http_interactions: 
 - request: 
     method: post
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/users/
+    uri: https://centos.installer/pulp/api/v2/users/
     body: 
       encoding: US-ASCII
-      string: "{\"login\":\"user_id\",\"name\":\"user_id\",\"password\":\"Vkxw1Tv8EYW0lJn4\"}"
+      string: "{\"login\":\"user_id\",\"name\":\"user_id\",\"password\":\"bZguWmKi9JFurnKS\"}"
     headers: 
       Accept: 
       - application/json
@@ -14,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="VyBtQNZgu4Iw3pL1ccDKGsuxXJOMCn113Zkx864UYE", oauth_signature="4Q%2BI3dvV5h67Oxq5v%2F7AXdGJbfo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399918993", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="09BKWgWjeOU7OaAladTf4UAmr74sJUyKtFErDaaF2o", oauth_signature="sqPjqQ4iJqzEjN%2BOM5am%2BoSHlJY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185680", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -27,33 +27,25 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Mon, 12 May 2014 18:23:13 GMT
+      - Thu, 15 May 2014 20:28:00 GMT
       Server: 
-      - Apache/2.2.15 (Red Hat)
+      - Apache/2.2.15 (CentOS)
       Location: 
       - user_id
-      Vary: 
-      - Accept-Encoding
-      Content-Encoding: 
-      - gzip
       Content-Length: 
-      - "135"
+      - "187"
       Connection: 
       - close
       Content-Type: 
       - application/json
     body: 
-      encoding: ASCII-8BIT
-      string: !binary |
-        H4sIAAAAAAAAA6tWis9MUbJSqFZSyQczlEyNzQ0NDS0NTc3SEpMsTEwSLVOT
-        jZIt0pRqdRSU8hJzU0GKSotTi0AagUJF+TmpxUCx6FggJz6vGCZdDJLMyU/P
-        zEPTQMAakCkZRalpIEX6BaU5BfqJBZn6ZUb6YEP1oQbpK9UCANv35w67AAAA
-
+      encoding: US-ASCII
+      string: "{\"_id\": {\"$oid\": \"5375235086d9a9321c14a5c5\"}, \"name\": \"user_id\", \"roles\": [], \"_ns\": \"users\", \"login\": \"user_id\", \"id\": \"5375235086d9a9321c14a5c5\", \"_href\": \"/pulp/api/v2/users/user_id/\"}"
     http_version: 
-  recorded_at: Mon, 12 May 2014 18:23:13 GMT
+  recorded_at: Thu, 15 May 2014 20:28:00 GMT
 - request: 
     method: post
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/roles/super-users/users/
+    uri: https://centos.installer/pulp/api/v2/roles/super-users/users/
     body: 
       encoding: US-ASCII
       string: "{\"login\":\"user_id\"}"
@@ -65,7 +57,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Cn0JMOehyzHRY8We1iuVmAF3abmoi6bDJ4GVgpTPo3M", oauth_signature="5eXIcxbZsb%2FFl1gIgKsuuJTyYtU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399918993", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="grBDlLoL4BWoLrEGCiaOQ5uk6VXPiWhqfsDUosyE58", oauth_signature="FAEa6%2Fl1i744CpEmn5vr2y9igoQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185680", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -78,29 +70,23 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Mon, 12 May 2014 18:23:13 GMT
+      - Thu, 15 May 2014 20:28:00 GMT
       Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Encoding: 
-      - gzip
+      - Apache/2.2.15 (CentOS)
       Content-Length: 
-      - "24"
+      - "4"
       Connection: 
       - close
       Content-Type: 
       - application/json
     body: 
-      encoding: ASCII-8BIT
-      string: !binary |
-        H4sIAAAAAAAAA8srzckBAE/8yyUEAAAA
-
+      encoding: US-ASCII
+      string: "null"
     http_version: 
-  recorded_at: Mon, 12 May 2014 18:23:13 GMT
+  recorded_at: Thu, 15 May 2014 20:28:00 GMT
 - request: 
     method: delete
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/users/user_id/
+    uri: https://centos.installer/pulp/api/v2/users/user_id/
     body: 
       encoding: US-ASCII
       string: ""
@@ -112,7 +98,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="GYULE1GXDGf3FYZfjV8mPxdSYAwCs6fu9sOxkASE", oauth_signature="EkNXtSQgGyq96FIERr1Bi12e9bE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399918993", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="NYm1McoiR2HhFugtbbq9lNFY1Ckyoem7HC95LdPuE", oauth_signature="ShtZhGj2ueMb9QWw0Ady8DgfTJg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185680", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -123,24 +109,18 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Mon, 12 May 2014 18:23:13 GMT
+      - Thu, 15 May 2014 20:28:00 GMT
       Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Encoding: 
-      - gzip
+      - Apache/2.2.15 (CentOS)
       Content-Length: 
-      - "24"
+      - "4"
       Connection: 
       - close
       Content-Type: 
       - application/json
     body: 
-      encoding: ASCII-8BIT
-      string: !binary |
-        H4sIAAAAAAAAA8srzckBAE/8yyUEAAAA
-
+      encoding: US-ASCII
+      string: "null"
     http_version: 
-  recorded_at: Mon, 12 May 2014 18:23:13 GMT
+  recorded_at: Thu, 15 May 2014 20:28:00 GMT
 recorded_with: VCR 2.9.0
