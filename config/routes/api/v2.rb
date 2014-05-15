@@ -9,7 +9,7 @@ Katello::Engine.routes.draw do
 
   namespace :api do
 
-    scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 2) do
+    scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 2, :default => true) do
 
       ##############################
       # re-routes alphabetical
@@ -86,7 +86,7 @@ Katello::Engine.routes.draw do
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
         end
-        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
+        scope :constraints => Katello::RegisterWithActivationKeyConstraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
       end
@@ -133,7 +133,7 @@ Katello::Engine.routes.draw do
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
         end
-        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
+        scope :constraints => Katello::RegisterWithActivationKeyConstraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
       end
@@ -209,7 +209,7 @@ Katello::Engine.routes.draw do
           end
         end
         api_resources :tasks, :only => [:index, :show]
-        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
+        scope :constraints => Katello::RegisterWithActivationKeyConstraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
         api_resources :systems, :only => [:create] do
@@ -370,6 +370,7 @@ Katello::Engine.routes.draw do
       api_resources :sync_plans, :only => [:show, :update, :destroy]
       api_resources :tasks, :only => [:show]
       api_resources :about, :only => [:index]
+      api_resources :crls, :only => [:index]
 
       # api custom information
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
@@ -381,19 +382,10 @@ Katello::Engine.routes.draw do
       # subscription-manager support
       match '/users/:login/owners' => 'users#list_owners', :via => :get
 
-    end # module v2
-
-    # routes that didn't change in v2 and point to v1
-    scope :module => :v1, :constraints => ApiConstraints.new(:version => 2) do
-
-      api_resources :crls, :only => [:index]
-
-      # subscription-manager support
-      scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
-        match '/consumers' => 'systems#activate', :via => :post
+      scope :constraints => Katello::RegisterWithActivationKeyConstraint.new do
+        match '/consumers' => 'candlepin_proxies#consumer_activate', :via => :post
       end
       match '/hypervisors' => 'systems#hypervisors_update', :via => :post
-      api_resources :consumers, :controller => 'systems'
       match '/owners/:organization_id/environments' => 'environments#rhsm_index', :via => :get
       match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_pools_path
       match '/owners/:organization_id/servicelevels' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_servicelevels_path
@@ -421,7 +413,6 @@ Katello::Engine.routes.draw do
       if Rails.env == "development"
         match 'status/memory' => 'status#memory', :via => :get
       end
-
     end # module v2
 
   end # '/api' namespace

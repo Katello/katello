@@ -14,7 +14,7 @@
 require "katello_test_helper"
 
 module Katello
-  describe Api::V1::CandlepinProxiesController do
+  describe Api::V2::CandlepinProxiesController do
 
     before do
       models = ["Organization", "KTEnvironment", "User", "ContentViewFilter",

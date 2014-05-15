@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-  class Api::V1::CandlepinProxiesController < Api::V1::ApiController
+  class Api::V2::CandlepinProxiesController < Api::V2::ApiController
 
     include Katello::Authentication::ClientAuthentication
 

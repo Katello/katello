@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::HostCollectionPackagesController < Api::V1::HostCollectionPackagesController
+class Api::V2::HostCollectionPackagesController < Api::V2::ApiController
 
   include Api::V2::Rendering
 

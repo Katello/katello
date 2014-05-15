@@ -27,11 +27,7 @@ shared_examples_for "protected action" do
       login_user_by_described_class(authorized_user) if defined?  authorized_user
       before_success if defined?(before_success)
 
-      if @controller.kind_of? Katello::Api::V1::ApiController
-        @controller.expects(:respond_for_exception).never.with { |e, options| options.try(:[], :status).must_equal(:forbidden) }
-      else
-        @controller.expects(:render_403).never
-      end
+      @controller.expects(:render_403).never
 
       req
       on_success if defined?(on_success)
@@ -56,11 +52,7 @@ shared_examples_for "protected action" do
         session.delete(:current_organization_id)
         login_user_by_described_class(unauthorized_user) if defined?  unauthorized_user
         before_failure if defined?(before_failure)
-        if @controller.kind_of? Katello::Api::V1::ApiController
-          @controller.expects(:respond_for_exception).with { |e, options| options.try(:[], :status).must_equal(:forbidden) }
-        else
-          @controller.expects(:render_403)
-        end
+        @controller.expects(:render_403)
 
         req
         on_failure if defined?(on_failure)
