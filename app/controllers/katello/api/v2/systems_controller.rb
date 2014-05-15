@@ -165,6 +165,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   api :PUT, "/systems/:id", N_("Update system information")
+  param :id, String, :desc => N_("UUID of the system"), :required => true
   param :name, String, :desc => N_("Name of the system"), :required => true, :action_aware => true
   param :description, String, :desc => N_("Description of the system")
   param :location, String, :desc => N_("Physical location of the system")
