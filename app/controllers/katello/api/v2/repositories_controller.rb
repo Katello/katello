@@ -32,21 +32,21 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   def_param_group :repo do
     param :name, String, :required => true
     param :label, String, :required => false
-    param :product_id, :number, :required => true, :desc => "Product the repository belongs to"
-    param :url, String, :required => true, :desc => "repository source url"
-    param :gpg_key_id, :number, :desc => "id of the gpg key that will be assigned to the new repository"
-    param :unprotected, :bool, :desc => "true if this repository can be published via HTTP"
-    param :content_type, String, :desc => "type of repo (either 'yum' or 'puppet', defaults to 'yum')"
+    param :product_id, :number, :required => true, :desc => N_("Product the repository belongs to")
+    param :url, String, :required => true, :desc => N_("repository source url")
+    param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
+    param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
+    param :content_type, String, :desc => N_("type of repo (either 'yum' or 'puppet', defaults to 'yum')")
   end
 
-  api :GET, "/repositories", "List of enabled repositories"
-  api :GET, "/content_views/:id/repositories", "List of repositories for a content view"
-  param :organization_id, :number, :required => true, :desc => "ID of an organization to show repositories in"
-  param :product_id, :number, :desc => "ID of a product to show repositories of"
-  param :environment_id, :number, :desc => "ID of an environment to show repositories in"
-  param :content_view_id, :number, :desc => "ID of a content view to show repositories in"
-  param :library, :bool, :desc => "show repositories in Library and the default content view"
-  param :content_type, String, :desc => "limit to only repositories of this time"
+  api :GET, "/repositories", N_("List of enabled repositories")
+  api :GET, "/content_views/:id/repositories", N_("List of repositories for a content view")
+  param :organization_id, :number, :required => true, :desc => N_("ID of an organization to show repositories in")
+  param :product_id, :number, :desc => N_("ID of a product to show repositories of")
+  param :environment_id, :number, :desc => N_("ID of an environment to show repositories in")
+  param :content_view_id, :number, :desc => N_("ID of a content view to show repositories in")
+  param :library, :bool, :desc => N_("show repositories in Library and the default content view")
+  param :content_type, String, :desc => N_("limit to only repositories of this time")
   param_group :search, Api::V2::ApiController
   def index
     options = sort_params
@@ -68,7 +68,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     respond :collection => item_search(Repository, params, options)
   end
 
-  api :POST, "/repositories", "Create a custom repository"
+  api :POST, "/repositories", N_("Create a custom repository")
   param_group :repo
   def create
     params[:label] = labelize_params(params)
@@ -85,24 +85,24 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     respond_for_show(:resource => repository)
   end
 
-  api :GET, "/repositories/:id", "Show a custom repository"
-  param :id, :identifier, :required => true, :desc => "repository ID"
+  api :GET, "/repositories/:id", N_("Show a custom repository")
+  param :id, :identifier, :required => true, :desc => N_("repository ID")
   def show
     respond_for_show(:resource => @repository)
   end
 
-  api :POST, "/repositories/:id/sync", "Sync a repository"
-  param :id, :identifier, :required => true, :desc => "repository ID"
+  api :POST, "/repositories/:id/sync", N_("Sync a repository")
+  param :id, :identifier, :required => true, :desc => N_("repository ID")
   def sync
     task = async_task(::Actions::Katello::Repository::Sync, @repository)
     respond_for_async :resource => task
   end
 
-  api :PUT, "/repositories/:id", "Update a custom repository"
-  param :id, :identifier, :required => true, :desc => "repository ID"
-  param :gpg_key_id, :number, :desc => "ID of a gpg key that will be assigned to this repository"
-  param :unprotected, :bool, :desc => "true if this repository can be published via HTTP"
-  param :url, String, :desc => "the feed url of the original repository "
+  api :PUT, "/repositories/:id", N_("Update a custom repository")
+  param :id, :identifier, :required => true, :desc => N_("repository ID")
+  param :gpg_key_id, :number, :desc => N_("ID of a gpg key that will be assigned to this repository")
+  param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
+  param :url, String, :desc => N_("the feed url of the original repository ")
   def update
     repo_params = repository_params
     repo_params[:url] = nil if repository_params[:url].blank?
@@ -110,7 +110,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     respond_for_show(:resource => @repository)
   end
 
-  api :DELETE, "/repositories/:id", "Destroy a custom repository"
+  api :DELETE, "/repositories/:id", N_("Destroy a custom repository")
   param :id, :identifier, :required => true
   def destroy
     trigger(::Actions::Katello::Repository::Destroy, @repository)
@@ -119,8 +119,8 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   end
 
   api :POST, "/repositories/sync_complete"
-  desc "URL for post sync notification from pulp"
-  param 'token', String, :desc => "shared secret token", :required => true
+  desc N_("URL for post sync notification from pulp")
+  param 'token', String, :desc => N_("shared secret token"), :required => true
   param 'payload', Hash, :required => true do
     param 'repo_id', String, :required => true
   end

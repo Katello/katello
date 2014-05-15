@@ -14,8 +14,8 @@ module Katello
 class Api::V2::ErrataController < Api::V2::ApiController
 
   resource_description do
-    error :code => 401, :desc => "Unauthorized"
-    error :code => 404, :desc => "Not found"
+    error :code => 401, :desc => N_("Unauthorized")
+    error :code => 404, :desc => N_("Not found")
 
     api_version 'v2'
   end
@@ -39,14 +39,14 @@ class Api::V2::ErrataController < Api::V2::ApiController
     }
   end
 
-  api :GET, "/errata", "List errata"
-  api :GET, "/content_views/:content_view_id/filters/:filter_id/errata", "List errata"
-  api :GET, "/content_view_filters/:content_view_filter_id/errata", "List errata"
-  api :GET, "/repositories/:repository_id/errata", "List errata"
-  param :content_view_id, :identifier, :desc => "content view identifier"
-  param :filter_id, :identifier, :desc => "content view filter identifier"
-  param :content_view_filter_id, :identifier, :desc => "content view filter identifier"
-  param :repository_id, :number, :desc => "repository identifier", :required => true
+  api :GET, "/errata", N_("List errata")
+  api :GET, "/content_views/:content_view_id/filters/:filter_id/errata", N_("List errata")
+  api :GET, "/content_view_filters/:content_view_filter_id/errata", N_("List errata")
+  api :GET, "/repositories/:repository_id/errata", N_("List errata")
+  param :content_view_id, :identifier, :desc => N_("content view identifier")
+  param :filter_id, :identifier, :desc => N_("content view filter identifier")
+  param :content_view_filter_id, :identifier, :desc => N_("content view filter identifier")
+  param :repository_id, :number, :desc => N_("repository identifier"), :required => true
   def index
     collection = if @repo && !@repo.puppet?
                    filter_by_repoids [@repo.pulp_id]
@@ -59,10 +59,10 @@ class Api::V2::ErrataController < Api::V2::ApiController
     respond(:collection => collection)
   end
 
-  api :GET, "/errata/:id", "Show an erratum"
-  api :GET, "/repositories/:repository_id/errata/:id", "Show an erratum"
-  param :repository_id, :number, :desc => "repository identifier"
-  param :id, String, :desc => "erratum identifier", :required => true
+  api :GET, "/errata/:id", N_("Show an erratum")
+  api :GET, "/repositories/:repository_id/errata/:id", N_("Show an erratum")
+  param :repository_id, :number, :desc => N_("repository identifier")
+  param :id, String, :desc => N_("erratum identifier"), :required => true
   def show
     respond :resource => @erratum
   end

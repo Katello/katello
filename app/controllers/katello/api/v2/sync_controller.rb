@@ -17,8 +17,8 @@ module Katello
     before_filter :find_object, :only => [:index]
     before_filter :ensure_library, :only => [:index]
 
-    api :GET, "/organizations/:organization_id/products/:product_id/sync", "Get status of repo synchronisation for given product"
-    api :GET, "/repositories/:repository_id/sync", "Get status of synchronisation for given repository"
+    api :GET, "/organizations/:organization_id/products/:product_id/sync", N_("Get status of repo synchronisation for given product")
+    api :GET, "/repositories/:repository_id/sync", N_("Get status of synchronisation for given repository")
     def index
       respond_for_async(:resource => @obj.sync_status)
     end

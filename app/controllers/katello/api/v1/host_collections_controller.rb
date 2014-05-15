@@ -59,15 +59,15 @@ class Api::V1::HostCollectionsController < Api::V1::ApiController
 
   def_param_group :host_collection do
     param :host_collection, Hash, :required => true, :action_aware => true do
-      param :name, String, :required => true, :desc => "Host collection name"
+      param :name, String, :required => true, :desc => N_("Host collection name")
       param :description, String
-      param :max_content_hosts, Integer, :desc => "Maximum number of content hosts in the host collection"
+      param :max_content_hosts, Integer, :desc => N_("Maximum number of content hosts in the host collection")
     end
   end
 
-  api :GET, "/organizations/:organization_id/host_collections", "List host collections"
-  param :organization_id, :number, :desc => "organization identifier", :required => true
-  param :name, String, :desc => "Host collection name to filter by"
+  api :GET, "/organizations/:organization_id/host_collections", N_("List host collections")
+  param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+  param :name, String, :desc => N_("Host collection name to filter by")
   def index
     query_string = params[:search]
 
@@ -98,16 +98,16 @@ class Api::V1::HostCollectionsController < Api::V1::ApiController
     respond :collection => host_collections
   end
 
-  api :GET, "/organizations/:organization_id/host_collections/:id", "Show a host collection"
-  param :organization_id, :number, :desc => "organization identifier", :required => true
-  param :id, :identifier, :desc => "Id of the host collection", :required => true
+  api :GET, "/organizations/:organization_id/host_collections/:id", N_("Show a host collection")
+  param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+  param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
   def show
     respond
   end
 
-  api :PUT, "/organizations/:organization_id/host_collections/:id", "Update a host collection"
-  param :organization_id, :number, :desc => "organization identifier", :required => true
-  param :id, :identifier, :desc => "Id of the host collection", :required => true
+  api :PUT, "/organizations/:organization_id/host_collections/:id", N_("Update a host collection")
+  param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+  param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
   param_group :host_collection
   def update
     host_collection_param = params[:host_collection]
@@ -119,18 +119,18 @@ class Api::V1::HostCollectionsController < Api::V1::ApiController
     respond
   end
 
-  api :GET, "/organizations/:organization_id/host_collections/:id/content_hosts", "List content hosts in the host collection"
-  param :organization_id, :number, :desc => "organization identifier", :required => true
-  param :id, :identifier, :desc => "Id of the host collection", :required => true
+  api :GET, "/organizations/:organization_id/host_collections/:id/content_hosts", N_("List content hosts in the host collection")
+  param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+  param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
   def content_hosts
     respond_for_index :collection => @host_collection.systems.collect { |sys| { :id => sys.uuid, :name => sys.name } }
   end
 
-  api :POST, "/organizations/:organization_id/host_collections/:id/add_content_hosts", "Add content hosts to the host collection"
-  param :organization_id, :number, :desc => "organization identifier", :required => true
-  param :id, :identifier, :desc => "Id of the host collection", :required => true
+  api :POST, "/organizations/:organization_id/host_collections/:id/add_content_hosts", N_("Add content hosts to the host collection")
+  param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+  param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
   param :host_collection, Hash, :required => true do
-    param :system_ids, Array, :desc => "Array of content host ids"
+    param :system_ids, Array, :desc => N_("Array of content host ids")
   end
 
   def add_content_hosts
@@ -141,11 +141,11 @@ class Api::V1::HostCollectionsController < Api::V1::ApiController
     systems
   end
 
-  api :POST, "/organizations/:organization_id/host_collections/:id/remove_content_hosts", "Remove content hosts from the host collection"
-  param :organization_id, :number, :desc => "organization identifier", :required => true
-  param :id, :identifier, :desc => "Id of the host collection", :required => true
+  api :POST, "/organizations/:organization_id/host_collections/:id/remove_content_hosts", N_("Remove content hosts from the host collection")
+  param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+  param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
   param :host_collection, Hash, :required => true do
-    param :system_ids, Array, :desc => "Array of system ids"
+    param :system_ids, Array, :desc => N_("Array of system ids")
   end
   def remove_content_hosts
     ids                         = system_uuids_to_ids(params[:host_collection][:system_ids])
@@ -155,25 +155,25 @@ class Api::V1::HostCollectionsController < Api::V1::ApiController
     systems
   end
 
-  api :GET, "/organizations/:organization_id/host_collections/:id/history", "History of jobs performed on a host collection"
-  param :organization_id, :number, :desc => "organization identifier", :required => true
-  param :id, :identifier, :desc => "Id of the host collection", :required => true
+  api :GET, "/organizations/:organization_id/host_collections/:id/history", N_("History of jobs performed on a host collection")
+  param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+  param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
   def history
     jobs = @host_collection.refreshed_jobs
     respond_for_index :collection => jobs
   end
 
-  api :GET, "/organizations/:organization_id/host_collections/:id/history", "History of a job performed on a host collection"
-  param :organization_id, :number, :desc => "organization identifier", :required => true
-  param :id, :identifier, :desc => "Id of the host collection", :required => true
-  param :job_id, :identifier, :desc => "Id of a job for filtering"
+  api :GET, "/organizations/:organization_id/host_collections/:id/history", N_("History of a job performed on a host collection")
+  param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+  param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
+  param :job_id, :identifier, :desc => N_("Id of a job for filtering")
   def history_show
     job = @host_collection.refreshed_jobs.where(:id => params[:job_id]).first
     respond_for_show :resource => job
   end
 
-  api :POST, "/organizations/:organization_id/host_collections", "Create a host collection"
-  param :organization_id, :number, :desc => "organization identifier", :required => true
+  api :POST, "/organizations/:organization_id/host_collections", N_("Create a host collection")
+  param :organization_id, :number, :desc => N_("organization identifier"), :required => true
   param_group :host_collection
   def create
     host_collection_param = params[:host_collection]
@@ -186,13 +186,13 @@ class Api::V1::HostCollectionsController < Api::V1::ApiController
     respond
   end
 
-  api :POST, "/organizations/:organization_id/host_collections/:id/copy", "Make copy of a host collection"
-  param :organization_id, :number, :desc => "organization identifier", :required => true
-  param :id, :identifier, :desc => "Id of the host collection", :required => true
+  api :POST, "/organizations/:organization_id/host_collections/:id/copy", N_("Make copy of a host collection")
+  param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+  param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
   param :host_collection, Hash, :required => true, :action_aware => true do
-    param :new_name, String, :required => true, :desc => "Host collection name"
+    param :new_name, String, :required => true, :desc => N_("Host collection name")
     param :description, String
-    param :max_content_hosts, Integer, :desc => "Maximum number of content hosts in the host collection"
+    param :max_content_hosts, Integer, :desc => N_("Maximum number of content hosts in the host collection")
   end
   def copy
     if @organization.id != @host_collection.organization.id
@@ -222,18 +222,18 @@ class Api::V1::HostCollectionsController < Api::V1::ApiController
     respond_for_create :resource => new_host_collection
   end
 
-  api :DELETE, "/organizations/:organization_id/host_collections/:id", "Destroy a host collection"
-  param :organization_id, :number, :desc => "organization identifier", :required => true
-  param :id, :identifier, :desc => "Id of the host collection", :required => true
+  api :DELETE, "/organizations/:organization_id/host_collections/:id", N_("Destroy a host collection")
+  param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+  param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
   def destroy
     @host_collection.destroy
     respond :message => _("Deleted host collection '%s'") % params[:id]
   end
 
   api :DELETE, "/organizations/:organization_id/host_collections/:id/destroy_content_hosts",
-      "Destroy a host collection and its systems"
-  param :organization_id, :number, :desc => "organization identifier", :required => true
-  param :id, :identifier, :desc => "Id of the host collection", :required => true
+      N_("Destroy a host collection and its systems")
+  param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+  param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
   def destroy_content_hosts
     # this will destroy both the systems contained within the host collection as well as the host collection itself
     system_names = []
@@ -248,12 +248,12 @@ class Api::V1::HostCollectionsController < Api::V1::ApiController
   end
 
   api :PUT, "/organizations/:organization_id/host_collections/:id/update_content_hosts",
-      "Update systems within a host collection"
-  param :organization_id, :number, :desc => "organization identifier", :required => true
-  param :id, :identifier, :desc => "Id of the host collection", :required => true
+      N_("Update systems within a host collection")
+  param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+  param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
   param :host_collection, Hash do
-    param :content_view_id, :identifier, "id of the content view to set systems to"
-    param :environment_id, :identifier, "id of the enviornment to set systems to"
+    param :content_view_id, :identifier, N_("id of the content view to set systems to")
+    param :environment_id, :identifier, N_("id of the enviornment to set systems to")
   end
   def update_content_hosts
     unless params[:host_collection].blank?

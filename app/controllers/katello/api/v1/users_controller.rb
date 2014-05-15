@@ -53,22 +53,22 @@ class Api::V1::UsersController < Api::V1::ApiController
     param :disabled, :bool, :action_aware => true
   end
 
-  api :GET, "/users", "List users"
-  param :email, String, :desc => "filter by email"
-  param :disabled, :bool, :desc => "filter by disabled flag"
-  param :login, String, :desc => "filter by login"
+  api :GET, "/users", N_("List users")
+  param :email, String, :desc => N_("filter by email")
+  param :disabled, :bool, :desc => N_("filter by disabled flag")
+  param :login, String, :desc => N_("filter by login")
   def index
     respond :collection => User.readable.where(query_params)
   end
 
-  api :GET, "/users/:id", "Show a user"
+  api :GET, "/users/:id", N_("Show a user")
   def show
     @user[:allowed_organizations] = @user.organizations
     @user[:roles] = @user.katello_roles
     respond
   end
 
-  api :POST, "/users", "Create an user"
+  api :POST, "/users", N_("Create an user")
   param :login, String, :required => true
   param_group :user
   def create
@@ -90,7 +90,7 @@ class Api::V1::UsersController < Api::V1::ApiController
     respond
   end
 
-  api :PUT, "/users/:id", "Update an user"
+  api :PUT, "/users/:id", N_("Update an user")
   param_group :user
   def update
     user_params = params[:user].reject { |k, _| k == 'default_organization_id' }
@@ -117,26 +117,26 @@ class Api::V1::UsersController < Api::V1::ApiController
     respond
   end
 
-  api :DELETE, "/users/:id", "Destroy an user"
+  api :DELETE, "/users/:id", N_("Destroy an user")
   def destroy
     @user.destroy
     respond :message => _("Deleted user '%s'") % params[:id]
   end
 
-  api :GET, "/users/:user_id/roles", "List roles assigned to a user"
+  api :GET, "/users/:user_id/roles", N_("List roles assigned to a user")
   #TODO: create rabl
   def list_roles
     @user.set_ldap_roles if Katello.config.ldap_roles
     respond_for_index :collection => @user.roles.non_self
   end
 
-  api :GET, "/users/sync_ldap_roles", "Synchronises roles for all users with LDAP groups"
+  api :GET, "/users/sync_ldap_roles", N_("Synchronises roles for all users with LDAP groups")
   def sync_ldap_roles
     User.all.each { |user| user.set_ldap_roles }
     respond_for_status :message => _("Roles for all users were synchronised with LDAP groups")
   end
 
-  api :POST, "/users/:user_id/roles", "Assign a role to a user"
+  api :POST, "/users/:user_id/roles", N_("Assign a role to a user")
   param :role_id, Integer
   def add_role
     role = Role.find(params[:role_id])
@@ -145,7 +145,7 @@ class Api::V1::UsersController < Api::V1::ApiController
     respond_for_status :message => _("User '%{login}' assigned to role '%{rolename}'") % { :login => @user.login, :rolename => role.name }
   end
 
-  api :DELETE, "/users/:user_id/roles/:id", "Remove user's role"
+  api :DELETE, "/users/:user_id/roles/:id", N_("Remove user's role")
   def remove_role
     role = Role.find(params[:id])
     @user.roles.delete(role)

@@ -29,12 +29,12 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     api_version 'v2'
   end
 
-  api :GET, "/systems/:system_id/subscriptions", "List a system's subscriptions"
-  api :GET, "/organizations/:organization_id/subscriptions", "List organization subscriptions"
-  api :GET, "/activation_keys/:activation_key_id/subscriptions", "List an activation key's subscriptions"
-  param :system_id, String, :desc => "UUID of the system", :required => false
-  param :activation_key_id, String, :desc => "Activation key ID", :required => false
-  param :organization_id, :number, :desc => "Organization ID", :required => false
+  api :GET, "/systems/:system_id/subscriptions", N_("List a system's subscriptions")
+  api :GET, "/organizations/:organization_id/subscriptions", N_("List organization subscriptions")
+  api :GET, "/activation_keys/:activation_key_id/subscriptions", N_("List an activation key's subscriptions")
+  param :system_id, String, :desc => N_("UUID of the system"), :required => false
+  param :activation_key_id, String, :desc => N_("Activation key ID"), :required => false
+  param :organization_id, :number, :desc => N_("Organization ID"), :required => false
   def index
     subscriptions = if @system
                       index_system
@@ -47,10 +47,10 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     respond_for_index(:collection => subscriptions)
   end
 
-  api :GET, "/organizations/:organization_id/subscriptions/:id", "Show a subscription"
-  api :GET, "/subscriptions/:id", "Show a subscription"
-  param :organization_id, :number, :desc => "Organization identifier"
-  param :id, :number, :desc => "Subscription identifier", :required => true
+  api :GET, "/organizations/:organization_id/subscriptions/:id", N_("Show a subscription")
+  api :GET, "/subscriptions/:id", N_("Show a subscription")
+  param :organization_id, :number, :desc => N_("Organization identifier")
+  param :id, :number, :desc => N_("Subscription identifier"), :required => true
   def show
     respond :resource => @subscription
   end
@@ -67,16 +67,16 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     respond_for_index(:collection => subscriptions, :template => 'index')
   end
 
-  api :POST, "/subscriptions/:id", "Add a subscription to a resource"
-  api :POST, "/systems/:system_id/subscriptions", "Add a subscription to a system"
-  api :POST, "/activation_keys/:activation_key_id/subscriptions", "Add a subscription to an activation key"
-  param :id, String, :desc => "Subscription Pool uuid", :required => false
-  param :system_id, String, :desc => "UUID of the system", :required => false
-  param :activation_key_id, String, :desc => "ID of the activation key", :required => false
-  param :quantity, :number, :desc => "Quantity of this subscriptions to add", :required => false
-  param :subscriptions, Array, :desc => "Array of subscriptions to add", :required => false do
-    param :id, String, :desc => "Subscription Pool uuid", :required => true
-    param :quantity, :number, :desc => "Quantity of this subscriptions to add", :required => true
+  api :POST, "/subscriptions/:id", N_("Add a subscription to a resource")
+  api :POST, "/systems/:system_id/subscriptions", N_("Add a subscription to a system")
+  api :POST, "/activation_keys/:activation_key_id/subscriptions", N_("Add a subscription to an activation key")
+  param :id, String, :desc => N_("Subscription Pool uuid"), :required => false
+  param :system_id, String, :desc => N_("UUID of the system"), :required => false
+  param :activation_key_id, String, :desc => N_("ID of the activation key"), :required => false
+  param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => false
+  param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
+    param :id, String, :desc => N_("Subscription Pool uuid"), :required => true
+    param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
   end
   def create
     object = @system || @activation_key || @distributor
@@ -100,14 +100,14 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     respond_for_index(:collection => subscriptions, :template => 'index')
   end
 
-  api :DELETE, "/subscriptions/:id", "Unattach a subscription"
-  api :DELETE, "/systems/:system_id/subscriptions/:id", "Unattach a subscription"
-  api :DELETE, "/activation_keys/:activation_key_id/subscriptions/:id", "Unattach a subscription"
-  param :id, String, :desc => "Subscription ID", :required => false
-  param :system_id, String, :desc => "UUID of the system"
-  param :activation_key_id, String, :desc => "activation key ID"
-  param :subscriptions, Array, :desc => "Array of subscriptions to add", :required => false do
-    param :id, String, :desc => "Subscription Pool uuid", :required => true
+  api :DELETE, "/subscriptions/:id", N_("Unattach a subscription")
+  api :DELETE, "/systems/:system_id/subscriptions/:id", N_("Unattach a subscription")
+  api :DELETE, "/activation_keys/:activation_key_id/subscriptions/:id", N_("Unattach a subscription")
+  param :id, String, :desc => N_("Subscription ID"), :required => false
+  param :system_id, String, :desc => N_("UUID of the system")
+  param :activation_key_id, String, :desc => N_("activation key ID")
+  param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
+    param :id, String, :desc => N_("Subscription Pool uuid"), :required => true
   end
   def destroy
     object = @system || @activation_key || @distributor
@@ -133,11 +133,11 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     respond_for_index(:collection => subscriptions, :template => 'index')
   end
 
-  api :POST, "/organizations/:organization_id/subscriptions/upload", "Upload a subscription manifest"
-  api :POST, "/subscriptions/upload", "Upload a subscription manifest"
-  param :organization_id, :number, :desc => "Organization id", :required => true
-  param :content, File, :desc => "Subscription manifest file", :required => true
-  param :repository_url, String, :desc => "repository url", :required => false
+  api :POST, "/organizations/:organization_id/subscriptions/upload", N_("Upload a subscription manifest")
+  api :POST, "/subscriptions/upload", N_("Upload a subscription manifest")
+  param :organization_id, :number, :desc => N_("Organization id"), :required => true
+  param :content, File, :desc => N_("Subscription manifest file"), :required => true
+  param :repository_url, String, :desc => N_("repository url"), :required => false
   def upload
     fail HttpErrors::BadRequest, _("No manifest file uploaded") if params[:content].blank?
 
@@ -159,8 +159,8 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     respond_for_async :resource => task
   end
 
-  api :PUT, "/organizations/:organization_id/subscriptions/refresh_manifest", "Refresh previously imported manifest for Red Hat provider"
-  param :organization_id, :number, :desc => "Organization id", :required => true
+  api :PUT, "/organizations/:organization_id/subscriptions/refresh_manifest", N_("Refresh previously imported manifest for Red Hat provider")
+  param :organization_id, :number, :desc => N_("Organization id"), :required => true
   def refresh_manifest
     details  = @provider.organization.owner_details
     upstream = details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
@@ -169,15 +169,15 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     respond_for_async :resource => task
   end
 
-  api :POST, "/organizations/:organization_id/subscriptions/delete_manifest", "Delete manifest from Red Hat provider"
-  param :organization_id, :number, :desc => "Organization id", :required => true
+  api :POST, "/organizations/:organization_id/subscriptions/delete_manifest", N_("Delete manifest from Red Hat provider")
+  param :organization_id, :number, :desc => N_("Organization id"), :required => true
   def delete_manifest
     task = async_task(::Actions::Katello::Provider::ManifestDelete, @provider)
     respond_for_async :resource => task
   end
 
-  api :GET, "/organizations/:organization_id/subscriptions/manifest_history", "obtain manifest history for subscriptions"
-  param :organization_id, :number, :desc => "Organization ID", :required => true
+  api :GET, "/organizations/:organization_id/subscriptions/manifest_history", N_("obtain manifest history for subscriptions")
+  param :organization_id, :number, :desc => N_("Organization ID"), :required => true
   def manifest_history
     @manifest_history = @organization.manifest_history
     respond_with_template_collection(params[:action], "subscriptions", {collection: @manifest_history})
@@ -257,11 +257,11 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     return subscriptions
   end
 
-  api :GET, "/systems/:system_id/subscriptions/available", "List available subscriptions"
-  param :system_id, String, :desc => "UUID of the system", :required => true
-  param :match_system, :bool, :desc => "Return subscriptions that match system"
-  param :match_installed, :bool, :desc => "Return subscriptions that match installed"
-  param :no_overlap, :bool, :desc => "Return subscriptions that don't overlap"
+  api :GET, "/systems/:system_id/subscriptions/available", N_("List available subscriptions")
+  param :system_id, String, :desc => N_("UUID of the system"), :required => true
+  param :match_system, :bool, :desc => N_("Return subscriptions that match system")
+  param :match_installed, :bool, :desc => N_("Return subscriptions that match installed")
+  param :no_overlap, :bool, :desc => N_("Return subscriptions that don't overlap")
   def available_system
     params[:match_system] = params[:match_system].to_bool if params[:match_system]
     params[:match_installed] = params[:match_installed].to_bool if params[:match_installed]

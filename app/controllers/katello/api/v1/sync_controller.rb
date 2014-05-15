@@ -19,10 +19,10 @@ class Api::V1::SyncController < Api::V1::ApiController
       individualy by id, by product or by provider
     DOC
 
-    param :organization_id, :number, :desc => "oranization identifier", :required => true
-    param :product_id, :identifier, :desc => "product identifier", :required => true
-    param :provider_id, :identifier, :desc => "provider identifier", :required => true
-    param :repository_id, :identifier, :desc => "repository identifier", :required => true
+    param :organization_id, :number, :desc => N_("oranization identifier"), :required => true
+    param :product_id, :identifier, :desc => N_("product identifier"), :required => true
+    param :provider_id, :identifier, :desc => N_("provider identifier"), :required => true
+    param :repository_id, :identifier, :desc => N_("repository identifier"), :required => true
 
     api_version 'v1'
     api_version 'v2'
@@ -45,23 +45,23 @@ class Api::V1::SyncController < Api::V1::ApiController
     }
   end
 
-  api :GET, "/providers/:provider_id/sync", "Get status of repo synchronisation for given provider"
-  api :GET, "/organizations/:organization_id/products/:product_id/sync", "Get status of repo synchronisation for given product"
-  api :GET, "/repositories/:repository_id/sync", "Get status of synchronisation for given repository"
+  api :GET, "/providers/:provider_id/sync", N_("Get status of repo synchronisation for given provider")
+  api :GET, "/organizations/:organization_id/products/:product_id/sync", N_("Get status of repo synchronisation for given product")
+  api :GET, "/repositories/:repository_id/sync", N_("Get status of synchronisation for given repository")
   def index
     respond_for_show :resource => @obj.sync_status
   end
 
-  api :POST, "/providers/:provider_id/sync", "Synchronize all provider's repositories"
-  api :POST, "organizations/:organization_id/products/:product_id/sync", "Synchronise all repositories for given product"
-  api :POST, "/repositories/:repository_id/sync", "Synchronise repository"
+  api :POST, "/providers/:provider_id/sync", N_("Synchronize all provider's repositories")
+  api :POST, "organizations/:organization_id/products/:product_id/sync", N_("Synchronise all repositories for given product")
+  api :POST, "/repositories/:repository_id/sync", N_("Synchronise repository")
   def create
     respond_for_index :collection => @obj.sync, :status => 202
   end
 
-  api :DELETE, "/providers/:provider_id/sync", "Cancel running synchronisation for given provider"
-  api :DELETE, "/organizations/:organization_id/products/:product_id/sync", "Cancel running synchronisations for given product"
-  api :DELETE, "/repositories/:repository_id/sync", "Cancel running synchronisation"
+  api :DELETE, "/providers/:provider_id/sync", N_("Cancel running synchronisation for given provider")
+  api :DELETE, "/organizations/:organization_id/products/:product_id/sync", N_("Cancel running synchronisations for given product")
+  api :DELETE, "/repositories/:repository_id/sync", N_("Cancel running synchronisation")
   def cancel
     if @obj.sync_state.to_s == PulpSyncStatus::Status::RUNNING.to_s
       @obj.cancel_sync
