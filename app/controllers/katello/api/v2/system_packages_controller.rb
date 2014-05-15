@@ -16,17 +16,6 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
   before_filter :require_packages_or_groups, :only => [:install, :remove]
   before_filter :require_packages_only, :only => [:upgrade]
   before_filter :find_system
-  before_filter :authorize
-
-  def rules
-    edit_system = lambda { @system.editable? || User.consumer? }
-    {
-      :install => edit_system,
-      :upgrade  => edit_system,
-      :upgrade_all  => edit_system,
-      :remove  => edit_system
-    }
-  end
 
   def_param_group :packages_or_groups do
     param :packages, Array, :desc => N_("List of package names"), :required => false

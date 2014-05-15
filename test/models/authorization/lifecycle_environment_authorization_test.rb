@@ -22,10 +22,6 @@ class EnvironmentAuthorizationAdminTest < AuthorizationTestBase
     @org = @acme_corporation
   end
 
-  def test_changesets_readable
-    refute_empty KTEnvironment.changesets_readable(@org)
-  end
-
   def test_content_readable
     refute_empty KTEnvironment.content_readable(@org)
   end
@@ -53,22 +49,6 @@ class EnvironmentAuthorizationAdminTest < AuthorizationTestBase
 
   def test_any_operation_readable?
     assert @env.any_operation_readable?
-  end
-
-  def test_changesets_promotable?
-    assert @env.changesets_promotable?
-  end
-
-  def test_changesets_deletable?
-    assert @env.changesets_deletable?
-  end
-
-  def test_changesets_readable?
-    assert @env.changesets_readable?
-  end
-
-  def test_changesets_manageable?
-    assert @env.changesets_manageable?
   end
 
   def test_contents_readable?
@@ -101,10 +81,6 @@ class EnvironmentAuthorizationNoPermsTest < AuthorizationTestBase
     @org = @acme_corporation
   end
 
-  def test_changesets_readable
-    assert_empty KTEnvironment.changesets_readable(@org)
-  end
-
   def test_content_readable
     assert_empty KTEnvironment.content_readable(@org)
   end
@@ -132,22 +108,6 @@ class EnvironmentAuthorizationNoPermsTest < AuthorizationTestBase
 
   def test_any_operation_readable?
     refute @env.any_operation_readable?
-  end
-
-  def test_changesets_promotable?
-    refute @env.changesets_promotable?
-  end
-
-  def test_changesets_deletable?
-    refute @env.changesets_deletable?
-  end
-
-  def test_changesets_readable?
-    refute @env.changesets_readable?
-  end
-
-  def test_changesets_manageable?
-    refute @env.changesets_manageable?
   end
 
   def test_contents_readable?

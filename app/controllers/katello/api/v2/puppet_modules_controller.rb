@@ -22,7 +22,7 @@ class Api::V2::PuppetModulesController < Api::V2::ApiController
     readable = lambda do
       (@view && @view.readable?) ||
       (@environment && @environment.contents_readable?) ||
-      (@repo && @repo.environment.contents_readable? && @repo.product.readable?)
+      (@repo && @repo.environment.contents_readable?)
     end
 
     {

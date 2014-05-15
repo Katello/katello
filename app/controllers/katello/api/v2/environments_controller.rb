@@ -49,35 +49,11 @@ module Katello
     before_filter :find_organization, :only => [:index, :create, :paths]
     before_filter :find_optional_organization, :only => [:show, :update, :destroy]
     before_filter :find_prior, :only => [:create]
-    before_filter :find_environment, :only => [:show, :update, :destroy]
-    before_filter :authorize
+    before_filter :find_environment, :only => [:show, :update, :destroy, :repositories]
+    before_filter :find_content_view, :only => [:repositories]
     before_filter :load_search_service, :only => [:index]
 
     wrap_parameters :include => (KTEnvironment.attribute_names + %w(prior new_name))
-
-    def rules
-      manage_rule = lambda { @organization.environments_manageable? }
-      view_rule   = lambda { @organization.readable? }
-
-      repositories_rule = lambda do
-        view_readable = @content_view ? @content_view.readable? : true
-        @organization.readable? && view_readable
-      end
-
-      index_rule = lambda { true }
-
-      {
-        :index        => index_rule,
-        :rhsm_index   => index_rule,
-        :show         => view_rule,
-        :create       => manage_rule,
-        :update       => manage_rule,
-        :destroy      => manage_rule,
-        :repositories => repositories_rule,
-        :releases     => view_rule,
-        :paths        => view_rule
-      }
-    end
 
     api :GET, "/environments", N_("List environments in an organization")
     api :GET, "/organizations/:organization_id/environments", N_("List environments in an organization")
@@ -160,14 +136,6 @@ module Katello
       end
     end
 
-    # TODO
-    # api :GET, "/organizations/:organization_id/environments/systems_registerable", N_("List environments that systems can be registered to")
-    # param :organization_id, :number, :desc => N_("organization identifier")
-    def systems_registerable
-      @environments = KTEnvironment.systems_registerable(@organization)
-      respond_for_index :collection => @environments
-    end
-
     api :GET, "/organizations/:organization_id/environments/paths", N_("List environment paths")
     param :organization_id, :number, :desc => N_("organization identifier")
     def paths
@@ -177,6 +145,22 @@ module Katello
       paths = [{ :environments => [@organization.library] }] if paths.empty?
 
       respond_for_index(:collection => paths, :template => :paths)
+    end
+
+    api :GET, "/organizations/:organization_id/environments/:id/repositories", "List repositories available in the environment"
+    param :id, :identifier, :desc => "environment identifier"
+    param :organization_id, String, :desc => "organization identifier"
+    param :content_view_id, :identifier, :desc => "content view identifier", :required => false
+    def repositories
+      if !@environment.library? && @content_view.nil?
+        fail HttpErrors::BadRequest,
+              _("Cannot retrieve repos from non-library environment '%s' without a content view.") % @environment.name
+      end
+
+      @repositories = @environment.products.readable(@organization).flat_map do |p|
+        p.repos(@environment, @content_view)
+      end
+      respond_for_index :collection => @repositories
     end
 
     protected
@@ -201,6 +185,10 @@ module Katello
       attrs.push(:label, :prior) if params[:action] == "create"
       parms = params.require(:environment).permit(*attrs)
       parms
+    end
+
+    def find_content_view
+      @content_view = ContentView.readable.find_by_id(params[:content_view_id])
     end
   end
 

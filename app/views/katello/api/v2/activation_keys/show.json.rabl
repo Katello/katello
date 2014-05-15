@@ -12,10 +12,12 @@ attributes :environment_id
 
 attributes :usage_count, :user_id, :usage_limit, :pools, :system_template_id, :release_version,
            :service_level
+attributes :get_key_pools => :pools
 
 node :permissions do |activation_key|
   {
-    :editable => activation_key.class.manageable?(activation_key.organization)
+    :editable => activation_key.editable?,
+    :deletable => activation_key.deletable?
   }
 end
 

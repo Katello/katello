@@ -40,7 +40,7 @@ class DistributorsController < Katello::ApplicationController
     register_distributor = lambda do
       if current_organization
         if params.key?(:distributor) && !params[:distributor][:content_view_id].blank?
-          content_view = ContentView.readable(current_organization).
+          content_view = ContentView.readable.
             find_by_id(params[:distributor][:content_view_id])
           Distributor.registerable?(@environment, current_organization, content_view) if content_view
         else
@@ -59,13 +59,10 @@ class DistributorsController < Katello::ApplicationController
     end
 
     edit_distributor = lambda do
-      subscribable = true
       if params.key?(:distributor) && !params[:distributor][:content_view_id].blank?
-        content_view = ContentView.readable(current_organization).
-          find_by_id(params[:distributor][:content_view_id])
-        subscribable = content_view ? content_view.subscribable? : false
+        ContentView.readable.find_by_id(params[:distributor][:content_view_id])
       end
-      subscribable && Distributor.find(params[:id]).editable?
+      Distributor.find(params[:id]).editable?
     end
 
     {

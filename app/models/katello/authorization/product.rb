@@ -16,88 +16,44 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
-        scope :readable, lambda{|org| all_readable(org).with_repos(org.library)}
-        scope :editable, lambda {|org| all_editable(org).with_repos(org.library)}
-        scope :syncable, lambda {|org| sync_items(org).with_repos(org.library)}
+        include Authorizable
+        include Katello::Authorization
 
         def readable?
-          Katello::Product.all_readable(self.organization).where(:id => id).count > 0
+          authorized?(:view_products)
         end
 
         def syncable?
-          Katello::Product.syncable(self.organization).where(:id => id).count > 0
+          authorized?(:sync_products)
         end
 
         def editable?
-          self.provider.editable?
+          authorized?(:update_products)
         end
 
         def deletable?
           promoted_repos = repositories.select { |repo| repo.promoted? }
-          editable? && promoted_repos.empty?
+          authorized?(:destroy_products) && promoted_repos.empty?
         end
 
       end # included
 
       module ClassMethods
-        def with_repos(env)
-          query = Katello::Repository.in_environment(env.id).select(:product_id)
-          joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => env.organization).
-              where("(#{Katello::Provider.table_name}.provider_type ='#{Katello::Provider::CUSTOM}') OR \
-              (#{Katello::Provider.table_name}.provider_type ='#{Katello::Provider::ANONYMOUS}') OR \
-              (#{Katello::Provider.table_name}.provider_type ='#{Katello::Provider::REDHAT}' AND \
-              #{Katello::Product.table_name}.id in (#{query.to_sql}))")
+
+        def readable
+          authorized(:view_products)
         end
 
-        def all_readable_in_library(org)
-          all_readable(org).with_repos(org.library)
+        def editable
+          authorized(:update_products)
         end
 
-        def all_readable(org)
-          Katello::Product.where(:provider_id => Katello::Provider.readable(org).pluck(:id))
+        def deletable
+          authorized(:destroy_products)
         end
 
-        def all_editable(org)
-          Katello::Product.where(:provider_id => Katello::Provider.editable(org).where(:provider_type => Katello::Provider::CUSTOM).pluck(:id))
-        end
-
-        def assert_deletable(products)
-          invalid_perms = products.select{ |product| !product.deletable? }.collect{ |product| product.name }
-
-          unless invalid_perms.empty?
-            fail Errors::SecurityViolation, _("Product deletion is not allowed for product(s): %s") % invalid_perms.join(', ')
-          end
-          true
-        end
-
-        def assert_syncable(products)
-          invalid_perms = products.select{ |product| !product.syncable? }.collect{ |product| product.name }
-
-          unless invalid_perms.empty?
-            fail Errors::SecurityViolation, _("Product syncing is not allowed for product(s): %s") % invalid_perms.join(', ')
-          end
-          true
-        end
-
-        def assert_editable(products)
-          invalid_perms = products.select{ |product| !product.editable? }.collect{ |product| product.name }
-
-          unless invalid_perms.empty?
-            fail Errors::SecurityViolation, _("Product modification is not allowed for product(s): %s") % invalid_perms.join(', ')
-          end
-          true
-        end
-
-        def creatable?(provider)
-          provider.editable?
-        end
-
-        def any_readable?(org)
-          Katello::Provider.any_readable?(org)
-        end
-
-        def sync_items(org)
-          org.syncable? ? (joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => org)) : where("0=1")
+        def syncable
+          authorized(:sync_products)
         end
 
       end # ClassMethods

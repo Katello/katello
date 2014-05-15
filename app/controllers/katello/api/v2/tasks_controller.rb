@@ -24,7 +24,7 @@ class Api::V2::TasksController < Api::V2::ApiController
       if @task && User.current == @task.user
         true
       elsif @organization
-        Provider.any_readable?(@organization) || @organization.systems_readable?
+        @organization.systems_readable?
       else
         false
       end

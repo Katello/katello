@@ -13,16 +13,6 @@
 module Katello
   class ContentViewsController < Katello::ApplicationController
 
-    before_filter :authorize
-
-    def rules
-      auto_complete_rule = lambda { ContentView.any_readable?(current_organization) }
-
-      {
-        :auto_complete => auto_complete_rule
-      }
-    end
-
     def auto_complete
       query = "name_autocomplete:#{params[:term]}"
       org = current_organization

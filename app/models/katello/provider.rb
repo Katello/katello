@@ -18,10 +18,7 @@ class Provider < Katello::Model
   include Glue::ElasticSearch::Provider if Katello.config.use_elasticsearch
   include Glue::Provider
   include Glue
-  include Katello::Authorization::Provider
   include AsyncOrchestration
-
-  include Ext::PermissionTagCleanup
 
   REDHAT = 'Red Hat'.encode('utf-8')
   CUSTOM = 'Custom'.encode('utf-8')

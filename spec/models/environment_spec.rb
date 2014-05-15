@@ -31,9 +31,6 @@ describe KTEnvironment do
 
       all_verb_methods = [:viewable_for_promotions?,
                           :any_operation_readable?,
-                          :changesets_promotable?,
-                          :changesets_readable?,
-                          :changesets_manageable?,
                           :contents_readable?,
                           :systems_readable?,
                           :systems_editable?,
@@ -46,9 +43,6 @@ describe KTEnvironment do
           :register_systems => [:any_operation_readable?, :systems_readable?,:systems_registerable?],
           :update_systems => [:any_operation_readable?, :systems_readable?, :systems_editable? ],
           :delete_systems => [:any_operation_readable?, :systems_readable?, :systems_deletable? ],
-          :read_changesets => [:any_operation_readable?, :changesets_readable?, :viewable_for_promotions?],
-          :manage_changesets => [:any_operation_readable?, :changesets_readable?, :changesets_manageable?, :viewable_for_promotions? ],
-          :promote_changesets => [:any_operation_readable?, :changesets_readable?, :changesets_promotable?, :viewable_for_promotions?],
       }
       permission_matrix.each_pair do |perm, true_ops|
         true_ops.each do |op|
@@ -92,10 +86,10 @@ describe KTEnvironment do
       @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization')
       @provider = @organization.redhat_provider
 
-      @first_product = Product.create!(:name =>"prod1", :label=>"prod1", :cp_id => '12345', :provider => @provider)
-      @second_product = Product.create!(:name =>"prod2", :label=> "prod2", :cp_id => '67890', :provider => @provider)
-      @third_product = Product.create!(:name =>"prod3", :label=> "prrod3",:cp_id => '45678', :provider => @provider)
-      @fourth_product = Product.create!(:name =>"prod4", :label => "prod4", :cp_id => '32683', :provider => @provider)
+      @first_product = Product.create!(:name =>"prod1", :label=>"prod1", :cp_id => '12345', :provider => @provider, :organization => @organization)
+      @second_product = Product.create!(:name =>"prod2", :label=> "prod2", :cp_id => '67890', :provider => @provider, :organization => @organization)
+      @third_product = Product.create!(:name =>"prod3", :label=> "prrod3",:cp_id => '45678', :provider => @provider, :organization => @organization)
+      @fourth_product = Product.create!(:name =>"prod4", :label => "prod4", :cp_id => '32683', :provider => @provider, :organization => @organization)
       @environment = create_environment({:name=>@env_name, :organization => @organization, :label=> @env_name, :prior => @organization.library})
       FactoryGirl.create(:katello_repository, product: @first_product, environment: @environment,
                              content_view_version_id: @environment.content_view_versions.first.id)

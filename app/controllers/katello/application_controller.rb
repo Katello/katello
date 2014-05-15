@@ -15,7 +15,6 @@ require 'base64'
 
 module Katello
 class ApplicationController < ::ApplicationController
-  include Katello::Menu
   include Notifications::ControllerHelper
   include Profiling
   include KTLocale
@@ -109,7 +108,20 @@ class ApplicationController < ::ApplicationController
 
   # Override Foreman authorized method to call the Katello authorize check
   def authorized
-    authorize_katello
+    if converted_controllers.include?(request.params['controller'])
+      super
+    else
+      authorize_katello
+    end
+  end
+
+  def converted_controllers
+    [
+      'bastion/bastion_controller',
+      'katello/products',
+      'katello/providers',
+      'katello/sync_management'
+    ]
   end
 
   before_filter :verify_ldap

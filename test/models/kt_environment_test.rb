@@ -63,7 +63,7 @@ class KTEnvironmentTest < KTEnvironmentTestBase
 
   def test_products_are_unique
     provider = create(:katello_provider, organization: @acme_corporation)
-    product = create(:katello_product, provider: provider)
+    product = create(:katello_product, provider: provider, organization: @acme_corporation)
     2.times do
       create(:katello_repository, product: product, environment: @library,
              content_view_version: @library.default_content_view_version)

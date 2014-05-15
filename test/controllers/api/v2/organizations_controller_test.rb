@@ -22,6 +22,13 @@ module Katello
       super
     end
 
+    def permissions
+      @read_permission = :view_organizations
+      @create_permission = :create_organizations
+      @update_permission = :edit_organizations
+      @delete_permission = :destroy_organizations
+    end
+
     def models
       @organization = get_organization
     end
@@ -31,6 +38,7 @@ module Katello
       login_user(User.find(users(:admin)))
       @request.env['HTTP_ACCEPT'] = 'application/json'
       models
+      permissions
     end
 
     def test_index
@@ -42,6 +50,15 @@ module Katello
       assert_equal results.keys.sort, ['page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total']
     end
 
+    def test_index_protected
+      allowed_perms = [@read_permission]
+      denied_perms = [@create_permission, @delete_permission, @update_permission]
+
+      assert_protected_action(:index, allowed_perms, denied_perms) do
+        get :index
+      end
+    end
+
     def test_show
       results = JSON.parse(get(:show, :id => @organization.id).body)
 
@@ -51,11 +68,29 @@ module Katello
       assert_template 'api/v2/organizations/show'
     end
 
+    def test_show_protected
+      allowed_perms = [@read_permission]
+      denied_perms = [@create_permission, @delete_permission, @update_permission]
+
+      assert_protected_action(:show, allowed_perms, denied_perms) do
+        get :show, :id => @organization.id
+      end
+    end
+
     def test_delete
       Organization.any_instance.stubs(:destroy).returns(true)
       delete(:destroy, :id => @organization.id)
 
       assert_response :success
+    end
+
+    def test_delete_protected
+      allowed_perms = [@delete_permission]
+      denied_perms = [@create_permission, @read_permission, @update_permission]
+
+      assert_protected_action(:destroy, allowed_perms, denied_perms) do
+        delete :destroy, :id => @organization.id
+      end
     end
 
     def test_update_redhat_repo_url
@@ -74,6 +109,15 @@ module Katello
       Organization.any_instance.expects(:redhat_provider).returns(redhat_provider)
       put(:update, :id => @organization.id, :redhat_repository_url => url)
       assert_response :success
+    end
+
+    def test_update_protected
+      allowed_perms = [@update_permission]
+      denied_perms = [@create_permission, @read_permission, @delete_permission]
+
+      assert_protected_action(:update, allowed_perms, denied_perms) do
+        put :update, :id => @organization.id, :organization => {:name => 'NewName'}
+      end
     end
 
   end

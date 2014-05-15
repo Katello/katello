@@ -37,7 +37,7 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
         :destroy           => subscribe,
         :destroy_all       => subscribe,
         :destroy_by_serial => subscribe,
-        :organization_index => lambda { @organization.redhat_provider.readable? }
+        :organization_index => lambda { @organization.manifest_importable? }
     }
   end
 

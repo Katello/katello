@@ -15,8 +15,8 @@ class ContentView < Katello::Model
   self.include_root_in_json = false
 
   include Ext::LabelFromName
-  include Authorization::ContentView
   include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
+  include Katello::Authorization::ContentView
   include AsyncOrchestration
   include Glue::Event
   include ForemanTasks::Concerns::ActionSubject
@@ -69,6 +69,9 @@ class ContentView < Katello::Model
   scope :default, where(:default => true)
   scope :non_default, where(:default => false)
   scope :composite, where(:composite => true)
+
+  scoped_search :on => :name, :complete_value => true
+  scoped_search :on => :organization_id, :complete_value => true
 
   def self.in_environment(env)
     joins(:content_view_environments).
@@ -250,7 +253,7 @@ class ContentView < Katello::Model
 
   # rubocop:disable MethodLength
   def publish(options = { })
-    fail "Cannot publish content view without a logged in user." if User.current.nil?
+    fail "Cannot publish content view without a logged in user." if ::User.current.nil?
     options = { :async => true, :notify => false }.merge(options)
 
     version = create_new_version
@@ -549,7 +552,7 @@ class ContentView < Katello::Model
   end
 
   def check_ready_to_publish!
-    fail _("User must be logged in.") if User.current.nil?
+    fail _("User must be logged in.") if ::User.current.nil?
     fail _("Cannot publish default content view") if default?
   end
 
@@ -710,5 +713,10 @@ class ContentView < Katello::Model
   def related_resources
     self.organization
   end
+
+  def self.humanize_class_name(name = nil)
+    _("Content Views")
+  end
+
 end
 end

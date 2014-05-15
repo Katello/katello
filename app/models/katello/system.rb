@@ -63,6 +63,14 @@ class System < Katello::Model
   scope :in_environment, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
 
+  scoped_search :on => :name, :complete_value => true
+  scoped_search :on => :organization_id, :complete_value => true, :ext_method => :search_by_environment
+
+  def self.search_by_environment(key, operator, value)
+    conditions = "environment_id IN (#{::Organization.find(value).kt_environments.pluck(:id).join(',')})"
+    {:conditions => conditions}
+  end
+
   def add_host_collection(host_collection)
     run_hook(:add_host_collection_hook, host_collection)
   end
@@ -257,33 +265,38 @@ class System < Katello::Model
 
   private
 
-    def refresh_running_tasks
-      ids = self.task_statuses.where(:state => [:waiting, :running]).pluck(:id)
-      TaskStatus.refresh(ids)
-    end
+  def refresh_running_tasks
+    ids = self.task_statuses.where(:state => [:waiting, :running]).pluck(:id)
+    TaskStatus.refresh(ids)
+  end
 
-    def save_task_status(pulp_task, task_type, parameters_type, parameters)
-      TaskStatus.make(self, pulp_task, task_type, parameters_type => parameters)
-    end
+  def save_task_status(pulp_task, task_type, parameters_type, parameters)
+    TaskStatus.make(self, pulp_task, task_type, parameters_type => parameters)
+  end
 
-    def fill_defaults
-      self.description = _("Initial Registration Params") unless self.description
-      self.location = _("None") unless self.location
-    end
+  def fill_defaults
+    self.description = _("Initial Registration Params") unless self.description
+    self.location = _("None") unless self.location
+  end
 
-    def set_default_content_view
-      self.content_view = self.environment.try(:default_content_view) unless self.content_view
-    end
+  def set_default_content_view
+    self.content_view = self.environment.try(:default_content_view) unless self.content_view
+  end
 
-    # rubocop:disable SymbolName
-    def collect_installed_product_names
-      self.installedProducts ? self.installedProducts.map { |p| p[:productName] } : []
-    end
+  # rubocop:disable SymbolName
+  def collect_installed_product_names
+    self.installedProducts ? self.installedProducts.map { |p| p[:productName] } : []
+  end
 
-    def collect_custom_info
-      hash = {}
-      self.custom_info.each { |c| hash[c.keyname] = c.value } if self.custom_info
-      hash
-    end
+  def collect_custom_info
+    hash = {}
+    self.custom_info.each { |c| hash[c.keyname] = c.value } if self.custom_info
+    hash
+  end
+
+  def self.humanize_class_name(name = nil)
+    _('Content Host')
+  end
+
 end
 end

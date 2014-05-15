@@ -17,8 +17,6 @@ module Katello
     before_filter :find_environment, :only => [:index, :remove_from_environment]
     before_filter :load_search_service, :only => [:index, :history, :available_puppet_modules,
                                                   :available_puppet_module_names]
-    before_filter :authorize
-
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids component_ids))
 
     resource_description do
@@ -31,29 +29,6 @@ module Katello
       param :component_ids, Array, :desc => N_("List of component content view version ids for composite views")
     end
 
-    def rules
-      index_rule   = lambda { ContentView.any_readable?(@organization) }
-      view_rule    = lambda { @view.readable? }
-      create_rule  = lambda { ContentView.creatable?(@organization) }
-      edit_rule    = lambda { @view.editable? }
-      publish_rule = lambda { @view.publishable? }
-      promote_rule = lambda {@environment.changesets_promotable? && @view.promotable?}
-
-      {
-        :index                         => index_rule,
-        :show                          => view_rule,
-        :create                        => create_rule,
-        :update                        => edit_rule,
-        :publish                       => publish_rule,
-        :available_puppet_modules      => view_rule,
-        :history                       => view_rule,
-        :available_puppet_module_names => view_rule,
-        :remove_from_environment       => promote_rule,
-        :remove                        => edit_rule,
-        :destroy                       => edit_rule
-      }
-    end
-
     api :GET, "/organizations/:organization_id/content_views", N_("List content views")
     api :GET, "/content_views", N_("List content views")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
@@ -63,12 +38,10 @@ module Katello
       options = sort_params
       options[:load_records?] = true
 
-      ids = if @environment
-              # TODO: move environment to an ES filter
-              ContentView.readable(@organization).in_environment(@environment).pluck("#{ContentView.table_name}.id")
-            else
-              ContentView.readable(@organization).pluck(:id)
-            end
+      readable_cvs = ContentView.readable
+      readable_cvs = readable_cvs.in_environment(@environment) if @environment
+      ids = readable_cvs.pluck(:id)
+
       options[:filters] = [{:terms => {:id => ids}}]
 
       options[:filters] << {:term => {:default => false}} if params[:nondefault]
@@ -122,7 +95,7 @@ module Katello
     def available_puppet_modules
       current_ids = @view.content_view_puppet_modules.map(&:uuid).reject{|p| p.nil?}
 
-      repo_ids = @view.organization.library.puppet_repositories.readable(@view.organization.library).pluck(:pulp_id)
+      repo_ids = @view.organization.library.puppet_repositories.pluck(:pulp_id)
       search_filters = [{ :terms => { :repoids => repo_ids }}]
 
       if !current_ids.empty?
@@ -142,8 +115,7 @@ module Katello
     param :id, :identifier, :desc => N_("content view numeric identifier"), :required => true
     def available_puppet_module_names
       current_names = @view.content_view_puppet_modules.map(&:name).reject{|p| p.nil?}
-      repo_ids = @view.organization.library.puppet_repositories.readable(
-          @view.organization.library).pluck(:pulp_id)
+      repo_ids = @view.organization.library.puppet_repositories.pluck(:pulp_id)
       search_filters = [{ :terms => { :repoids => repo_ids } }]
 
       if !current_names.empty?

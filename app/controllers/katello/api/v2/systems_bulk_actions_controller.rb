@@ -17,7 +17,6 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   before_filter :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
   before_filter :find_environment, :only => [:environment_content_view]
   before_filter :find_content_view, :only => [:environment_content_view]
-  before_filter :authorize
 
   before_filter :find_editable_systems, :except => [:destroy_systems, :applicable_errata]
   before_filter :find_deletable_systems, :only => [:destroy_systems]
@@ -50,23 +49,6 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     param :exclude, Hash, :required => true, :action_aware => true do
       param :ids, Array, :required => false, :desc => N_("List of system ids to exclude and not run an action on")
     end
-  end
-
-  def rules
-    bulk_host_collections = lambda{ HostCollection.assert_editable(@host_collections) }
-    registerable = lambda{ @environment.systems_registerable? && @view.subscribable?}
-
-    hash = {}
-    hash[:bulk_add_host_collections] = bulk_host_collections
-    hash[:bulk_remove_host_collections] = bulk_host_collections
-    #the actions do validation upon system lookup.  See find_*_systems filters
-    hash[:applicable_errata] = lambda{true}
-    hash[:install_content] = lambda{true}
-    hash[:update_content] = lambda{true}
-    hash[:remove_content] = lambda{true}
-    hash[:destroy_systems] = lambda{true}
-    hash[:environment_content_view] = registerable
-    hash
   end
 
   api :PUT, "/systems/bulk/add_host_collections",
@@ -203,13 +185,13 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     params[:excluded] ||= {}
     @systems = []
     unless params[:included][:ids].blank?
-      @systems = System.send(perm_method, @organization).where(:id => params[:included][:ids])
+      @systems = System.send(perm_method).where(:id => params[:included][:ids])
       @systems.where('id not in (?)', params[:excluded]) unless params[:excluded][:ids].blank?
     end
 
     if params[:included][:search]
       ids = find_system_ids_by_search(params[:included][:search])
-      search_systems = System.send(perm_method, @organization).where(:id => ids)
+      search_systems = System.send(perm_method).where(:id => ids)
       search_systems = search_systems.where('id not in (?)', params[:excluded][:ids]) unless params[:excluded][:ids].blank?
       @systems = @systems + search_systems
     end

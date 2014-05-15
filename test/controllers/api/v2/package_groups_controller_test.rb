@@ -28,9 +28,8 @@ class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
 
   def permissions
     @env_read_permission = UserPermission.new(:read_contents, :environments)
-    @prod_read_permission = UserPermission.new(:read, :providers)
-    @read_permission = @env_read_permission + @prod_read_permission
-    @unauth_perms = [NO_PERMISSION, @env_read_permission, @prod_read_permission]
+    @read_permission = [@env_read_permission]
+    @unauth_perms = [NO_PERMISSION]
   end
 
   def setup

@@ -16,24 +16,8 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   before_filter :find_content_view
   before_filter :find_filter, :except => [:index, :create]
   before_filter :load_search_service, :only => [:index, :available_errata, :available_package_groups]
-  before_filter :authorize
 
   wrap_parameters :include => (ContentViewFilter.attribute_names + %w(repository_ids))
-
-  def rules
-    view_readable = lambda { @view.readable? }
-    view_editable = lambda { @view.editable? }
-
-    {
-        :index                    => view_readable,
-        :create                   => view_editable,
-        :show                     => view_readable,
-        :update                   => view_editable,
-        :destroy                  => view_editable,
-        :available_errata         => view_readable,
-        :available_package_groups => view_readable
-    }
-  end
 
   api :GET, "/content_views/:content_view_id/filters", N_("List filters")
   api :GET, "/content_view_filters", N_("List filters")

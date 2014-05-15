@@ -23,28 +23,6 @@ module Katello
 
     wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level))
 
-    def rules
-      read_test   = lambda do
-        ActivationKey.readable?(@organization) ||
-          (ActivationKey.readable?(@environment.organization) unless @environment.nil?)
-      end
-      manage_test = lambda do
-        ActivationKey.manageable?(@organization) ||
-          (ActivationKey.manageable?(@environment.organization) unless @environment.nil?)
-      end
-      {
-        :index                => read_test,
-        :show                 => read_test,
-        :available_releases   => read_test,
-        :create               => manage_test,
-        :update               => manage_test,
-        :destroy              => manage_test,
-        :available_host_collections  => manage_test,
-        :add_host_collections        => manage_test,
-        :remove_host_collections     => manage_test
-      }
-    end
-
     api :GET, "/activation_keys", N_("List activation keys")
     api :GET, "/environments/:environment_id/activation_keys"
     api :GET, "/organizations/:organization_id/activation_keys"
@@ -54,11 +32,17 @@ module Katello
     param :name, String, :desc => N_("activation key name to filter by")
     param_group :search, Api::V2::ApiController
     def index
-      query_string = ActivationKey.readable(@organization)
-      query_string = query_string.where(:environment_id => params[:environment_id]) if params[:environment_id]
-      query_string = query_string.where(:content_view_id => params[:content_view_id]) if params[:content_view_id]
+      filters = [{:term => {:organization_id => @organization.id} }]
 
-      filters = [:terms => { :id => query_string.pluck(:id) }]
+      if params[:environment_id]
+        filters << {:terms => {:environment_id => [params[:environment_id]] }}
+      end
+      if params[:content_view_id]
+        filters << {:terms => {:content_view_id => [params[:content_view_id]] }}
+      end
+
+      ids = ActivationKey.readable.pluck(:id)
+      filters = [:terms => { :id => ids }]
       filters << {:term => { :name => params[:name].downcase} } if params[:name]
 
       options = {
@@ -98,7 +82,7 @@ module Katello
     param :service_level, String, :desc => N_("service level")
     def update
       @activation_key.update_attributes(activation_key_params)
-      respond
+      respond_for_show(:resource => @activation_key)
     end
 
     api :DELETE, "/activation_keys/:id", N_("Destroy an activation key")

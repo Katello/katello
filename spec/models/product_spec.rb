@@ -45,9 +45,9 @@ describe Product, :katello => true do
 
     ProductTestData::SIMPLE_PRODUCT.merge!({:provider => @provider})
     ProductTestData::SIMPLE_PRODUCT_WITH_INVALID_NAME.merge!({:provider => @provider})
-    ProductTestData::PRODUCT_WITH_ATTRS.merge!({:provider => @provider})
-    ProductTestData::PRODUCT_WITH_CONTENT.merge!({:provider => @provider})
-    ProductTestData::PRODUCT_WITH_CP_CONTENT.merge!({:provider => @provider})
+    ProductTestData::PRODUCT_WITH_ATTRS.merge!({:provider => @provider, :organization => @organization})
+    ProductTestData::PRODUCT_WITH_CONTENT.merge!({:provider => @provider, :organiation => @organization})
+    ProductTestData::PRODUCT_WITH_CP_CONTENT.merge!({:provider => @provider, :organization => @organization})
   end
 
   describe "lazily-loaded attributes" do
@@ -59,7 +59,8 @@ describe Product, :katello => true do
         :name => ProductTestData::PRODUCT_NAME,
         :id => ProductTestData::PRODUCT_ID,
         :productContent => [],
-        :provider => @provider
+        :provider => @provider,
+        :organization => @organization
       })
     end
 
@@ -172,6 +173,7 @@ describe Product, :katello => true do
         let(:eng_product_after_import) do
           product = Product.new(ProductTestData::PRODUCT_WITH_CP_CONTENT.merge("id" => "20", "name" => "Red Hat Enterprise Server 6")) do |p|
             p.provider = @provider
+            p.organization = @organization
           end
           product.orchestration_for = :import_from_cp_ar_setup
           product.save!
@@ -192,44 +194,6 @@ describe Product, :katello => true do
     end
   end
 
-  describe "product permission tests" do
-    before (:each) do
-      disable_product_orchestration
-      disable_repo_orchestration
-
-      User.current = superadmin
-      @product = Product.new({:name=>"prod", :label=> "prod"})
-      @product.provider = @organization.redhat_provider
-      @product.stubs(:arch).returns('noarch')
-      @product.save!
-      Repository.any_instance.stubs(:create_pulp_repo).returns({})
-    end
-
-    describe "Red Hat without enabled repos" do
-      specify {Product.readable(@organization).must_be_empty}
-      specify {Product.all_readable(@organization).must_equal([@product]) }
-      specify {Product.editable(@organization).must_be_empty}
-      specify {Product.syncable(@organization).must_be_empty}
-    end
-
-    describe "Red Hat repo with enabled repos" do
-      before do
-        @repo = Repository.create!(:product => @product,
-                                   :environment => @organization.library,
-                                   :name => "testrepo",
-                                   :label => "testrepo_label", :pulp_id=>"1010",
-                                   :content_id=>'123', :relative_path=>"/foo/",
-                                   :content_view_version=>@organization.library.default_content_view_version,
-                                   :feed => 'https://localhost')
-        @repo.stubs(:promoted?).returns(false)
-        @repo.stubs(:update_content).returns(Candlepin::Content.new)
-      end
-
-      specify { Product.readable(@organization).must_equal([@product]) }
-      specify { Product.syncable(@organization).must_equal([@product]) }
-    end
-  end
-
   describe "product reset repo gpgs test" do
     before do
       disable_product_orchestration
@@ -242,6 +206,7 @@ describe Product, :katello => true do
                               :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
       @product = Product.new({:name=>"prod#{suffix}", :label=> "prod#{suffix}"})
       @product.provider = @provider
+      @product.organization = @organization
       @product.stubs(:arch).returns('noarch')
       @product.save!
 
@@ -326,7 +291,7 @@ describe Product, :katello => true do
 
   it 'should be destroyable' do
     disable_repo_orchestration
-    product = create(:katello_product, :fedora, provider: create(:katello_provider, organization: @organization))
+    product = create(:katello_product, :fedora, provider: create(:katello_provider), organization: @organization)
     assert product.destroy
   end
 end

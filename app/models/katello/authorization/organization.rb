@@ -105,10 +105,6 @@ module Authorization::Organization
       ::User.allowed_to?(READ_PERM_VERBS, :organizations, nil, self)
     end
 
-    def environments_manageable?
-      ::User.allowed_to?([:update, :create], :organizations, nil, self)
-    end
-
     def systems_readable?
       ::User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
     end
@@ -155,6 +151,10 @@ module Authorization::Organization
 
     def redhat_manageable?
       ::User.allowed_to?([:redhat_products], :organizations, nil, self)
+    end
+
+    def manifest_importable?
+      authorized(:import_manifest)
     end
   end
 

@@ -54,11 +54,11 @@ describe('Controller: EnvironmentsController', function () {
         expect($scope.environmentsTable.rows.length).toBe(2);
     });
 
-    it('should correctly determine if the path is readonly', function () {
-        $scope.environmentsTable = {rows: [{permissions: {readonly: false}}]};
-        expect($scope.readonly()).toBe(false);
+    it('should correctly determine if the path is creatable', function () {
+        $scope.environmentsTable = {rows: [{permissions: {creatable: true}}]};
+        expect($scope.creatable()).toBe(true);
 
-        $scope.environmentsTable = {rows: [{permissions: {readonly: true}}]};
-        expect($scope.readonly()).toBe(true);
+        $scope.environmentsTable = {rows: [{permissions: {creatable: false}}]};
+        expect($scope.creatable()).toBe(false);
     });
 });

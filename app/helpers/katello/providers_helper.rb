@@ -60,21 +60,6 @@ module ProvidersHelper
     @product_map
   end
 
-  def can_enable_repo?
-    @provider_editable ||= @provider.editable?
-    @provider_editable
-  end
-
-  def can_upload_rh_manifest?
-    @provider_editable ||= @provider.editable?
-    @provider_editable
-  end
-
-  def can_edit_rh_provider?
-    @provider_editable ||= @provider.editable?
-    @provider_editable
-  end
-
   # make the structure plain setting it's attributes according to the tree (namely id and class)
   def normalize(children, parent_set = [], data = [], item_type = nil)
     children.sort { |a, b| a[:name] <=> b[:name] }.each do |child|

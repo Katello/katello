@@ -22,7 +22,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   before_filter :find_gpg_key, :only => [:create, :update]
   before_filter :error_on_rh_product, :only => [:create]
   before_filter :error_on_rh_repo, :only => [:update, :destroy]
-  before_filter :authorize
 
   skip_before_filter :authorize, :only => [:sync_complete]
   skip_before_filter :require_org, :only => [:sync_complete]
@@ -38,23 +37,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
     param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
     param :content_type, String, :desc => N_("type of repo (either 'yum' or 'puppet', defaults to 'yum')")
-  end
-
-  def rules
-    index_test  = lambda { Repository.any_readable?(@organization) }
-    create_test = lambda { Repository.creatable?(@product) }
-    read_test   = lambda { @repository.readable? }
-    edit_test   = lambda { @repository.editable? }
-    sync_test   = lambda { @repository.syncable? }
-    {
-      :index    => index_test,
-      :create   => create_test,
-      :show     => read_test,
-      :sync     => edit_test,
-      :update   => edit_test,
-      :destroy  => edit_test,
-      :sync     => sync_test
-    }
   end
 
   api :GET, "/repositories", N_("List of enabled repositories")
@@ -74,17 +56,16 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     if @product
       options[:filters] << {:term => {:product_id => @product.id}}
     else
-      product_ids = Product.all_readable_in_library(@organization).pluck("#{Product.table_name}.id")
-      options[:filters] << {:terms => {:product_id => product_ids}}
+      ids = Repository.readable.pluck(:id)
     end
 
+    options[:filters] << {:terms => {:id => ids}} if ids
     options[:filters] << {:term => {:environment_id => params[:environment_id]}} if params[:environment_id]
     options[:filters] << {:term => {:content_view_ids => params[:content_view_id]}} if params[:content_view_id]
     options[:filters] << {:term => {:content_view_version_id => @organization.default_content_view.versions.first.id}} if params[:library]
     options[:filters] << {:term => {:content_type => params[:content_type]}} if params[:content_type]
 
     respond :collection => item_search(Repository, params, options)
-
   end
 
   api :POST, "/repositories", N_("Create a custom repository")
@@ -180,7 +161,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
   def find_gpg_key
     if params[:gpg_key_id]
-      @gpg_key = GpgKey.where(:organization_id => @organization, :id => params[:gpg_key_id]).first
+      @gpg_key = GpgKey.readable.find(:id => params[:gpg_key_id])
       fail HttpErrors::NotFound, _("Couldn't find gpg key '%s'") % params[:gpg_key_id] if @gpg_key.nil?
     end
   end

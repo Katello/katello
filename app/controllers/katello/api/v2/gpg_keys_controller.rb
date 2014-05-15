@@ -13,29 +13,13 @@
 module Katello
   class Api::V2::GpgKeysController < Api::V2::ApiController
 
-    before_filter :find_organization, :only => [:index, :create]
-    before_filter :find_gpg_key, :only => [:show, :update, :destroy, :content]
     before_filter :authorize
+    before_filter :find_organization, :only => [:create]
+    before_filter :find_gpg_key, :only => [:show, :update, :destroy, :content]
 
     def_param_group :gpg_key do
       param :name, :identifier, :action_aware => true, :required => true, :desc => N_("identifier of the gpg key")
       param :content, String, :action_aware => true, :required => true, :desc => N_("public key block in DER encoding")
-    end
-
-    def rules
-      index_test  = lambda { GpgKey.any_readable?(@organization) }
-      create_test = lambda { GpgKey.createable?(@organization) }
-      read_test   = lambda { @gpg_key.readable? }
-      manage_test = lambda { @gpg_key.manageable? }
-
-      {
-        :index => index_test,
-        :create => create_test,
-        :show => read_test,
-        :update  => manage_test,
-        :destroy => manage_test,
-        :content => manage_test
-      }
     end
 
     resource_description do
@@ -53,7 +37,7 @@ module Katello
       options = sort_params
       options[:load_records?] = true
 
-      ids = GpgKey.readable(@organization).pluck(:id)
+      ids = GpgKey.readable.pluck(:id)
 
       options[:filters] = [
         {:terms => {:id => ids}}

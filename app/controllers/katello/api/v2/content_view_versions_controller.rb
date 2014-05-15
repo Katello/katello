@@ -15,19 +15,6 @@ module Katello
     before_filter :find_content_view_version, :only => [:show, :promote, :destroy]
     before_filter :find_content_view
     before_filter :find_environment, :only => [:promote]
-    before_filter :authorize
-
-    def rules
-      read_rule = lambda { @view.readable? }
-      edit_rule = lambda { @view.editable? }
-      promote_rule = lambda {@environment.changesets_promotable? && @view.promotable?}
-      {
-        :index   => read_rule,
-        :show    => read_rule,
-        :promote => promote_rule,
-        :destroy => edit_rule
-      }
-    end
 
     api :GET, "/content_view_versions", N_("List content view versions")
     api :GET, "/content_views/:content_view_id/content_view_versions", N_("List content view versions")

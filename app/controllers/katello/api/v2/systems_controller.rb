@@ -19,77 +19,24 @@ class Api::V2::SystemsController < Api::V2::ApiController
 
   skip_before_filter :set_default_response_format, :only => :report
 
-  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
-                                        :upload_package_profile, :errata, :package_profile, :subscribe,
-                                        :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
-                                        :available_host_collections, :add_host_collections, :remove_host_collections,
-                                        :refresh_subscriptions, :checkin,
-                                        :subscription_status, :tasks] # TODO: this should probably be :except
+  before_filter :find_system, :only => [:destroy, :show, :update,
+                                        :package_profile, :errata,
+                                        :pools, :enabled_repos, :releases,
+                                        :available_host_collections,
+                                        :refresh_subscriptions, :tasks] # TODO: this should probably be :except
   before_filter :find_environment, :only => [:index, :report]
-  before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report]
+  before_filter :find_optional_organization, :only => [:create, :index, :activate, :report]
   before_filter :find_host_collection, :only => [:index]
   before_filter :find_default_organization_and_or_environment, :only => [:create, :index, :activate]
   before_filter :find_only_environment, :only => [:create]
 
-  before_filter :authorize, :except => [:activate, :upload_package_profile]
-
   before_filter :find_environment_and_content_view, :only => [:create]
-  before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
   before_filter :find_content_view, :only => [:create, :update]
 
   before_filter :load_search_service, :only => [:index, :available_host_collections, :tasks]
 
   def organization_id_keys
     [:organization_id, :owner]
-  end
-
-  # TODO: break up this method
-  # rubocop:disable MethodLength
-  def rules
-    index_systems          = index_systems_perms_check
-    register_system        = lambda { System.registerable?(@environment, @organization, @content_view) }
-    consumer_only          = lambda { User.consumer? }
-    edit_system            = lambda do
-      subscribable = @content_view ? @content_view.subscribable? : true
-      subscribable && (@system.editable? || User.consumer?)
-    end
-    read_system            = lambda { @system.readable? || User.consumer? }
-    delete_system          = lambda { @system.deletable? || User.consumer? }
-
-    # After a system registers, it immediately uploads its packages. Although newer subscription-managers send
-    # certificate (User.consumer? == true), some do not. In this case, confirm that the user has permission to
-    # register systems in the system's organization and environment.
-   upload_system_packages = lambda { @system.editable? || System.registerable?(@system.environment, @system.organization) || User.consumer? }
-
-    {
-        :new                              => register_system,
-        :create                           => register_system,
-        :hypervisors_update               => consumer_only,
-        :regenerate_identity_certificates => edit_system,
-        :update                           => edit_system,
-        :index                            => index_systems,
-        :show                             => read_system,
-        :subscription_status              => read_system,
-        :destroy                          => delete_system,
-        :package_profile                  => read_system,
-        :errata                           => read_system,
-        :upload_package_profile           => upload_system_packages,
-        :report                           => index_systems,
-        :subscribe                        => edit_system,
-        :unsubscribe                      => edit_system,
-        :subscriptions                    => read_system,
-        :pools                            => read_system,
-        :releases                         => read_system,
-        :activate                         => register_system,
-        :tasks                            => lambda { @system.readable? },
-        :task_show                        => read_system,
-        :enabled_repos                    => consumer_only,
-        :available_host_collections          => edit_system,
-        :add_host_collections                => edit_system,
-        :remove_host_collections             => edit_system,
-        :refresh_subscriptions            => edit_system,
-        :checkin                          => edit_system
-    }
   end
 
   def_param_group :system do
@@ -119,12 +66,16 @@ class Api::V2::SystemsController < Api::V2::ApiController
   def index
     filters = []
 
-    if params[:environment_id]
+    uuids = System.readable.pluck(:uuid)
+    filters << {:terms => {:uuid => uuids}}
+
+    if params[:organization_id]
+      environment_ids = Organization.find(params[:organization_id]).kt_environments.pluck(:id)
+      filters << {:terms => {:environment_id => environment_ids}}
+    elsif params[:environment_id]
       filters << {:terms => {:environment_id => [params[:environment_id]] }}
     elsif params[:host_collection_id]
       filters << {:terms => {:host_collection_ids => [params[:host_collection_id]] }}
-    else
-      filters << readable_filters
     end
 
     filters << {:terms => {:uuid => System.all_by_pool_uuid(params['pool_id']) }} if params['pool_id']
@@ -267,7 +218,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   api :GET, "/environments/:environment_id/systems/report", N_("Get system reports for the environment")
   api :GET, "/organizations/:organization_id/systems/report", N_("Get system reports for the organization")
   def report # rubocop:disable MethodLength
-    data = @environment.nil? ? @organization.systems.readable(@organization) : @environment.systems.readable(@organization)
+    data = @environment.nil? ? @organization.systems.readable : @environment.systems.readable
 
     data = data.flatten.map do |r|
       r.reportable_data(
@@ -323,51 +274,6 @@ class Api::V2::SystemsController < Api::V2::ApiController
                  :total => @system.available_releases.size,
                  :subtotal => @system.available_releases.size }
     respond_for_index :collection => response
-  end
-
-  # used for registering with activation keys
-  api :POST, "/organizations/:organization_id/systems", N_("Register a system with activation key")
-  param :name, String, :desc => N_("Name of the system"), :required => true, :action_aware => true
-  param :description, String, :desc => N_("Description of the system")
-  param :location, String, :desc => N_("Physical location of the system")
-  param :facts, Hash, :desc => N_("Key-value hash of system-specific facts"), :action_aware => true, :required => true do
-    param :fact, String, :desc => N_("Any number of facts about this system")
-  end
-  param :type, String, :desc => N_("Type of the system, it should always be 'system'"), :required => true, :action_aware => true
-  param :guest_ids, Array, :desc => N_("IDs of the guests running on this system")
-  param :installed_products, Array, :desc => N_("List of products installed on the system"), :action_aware => true
-  param :release_ver, String, :desc => N_("Release version of the system")
-  param :service_level, String, :allow_nil => true, :desc => N_("A service level for auto-healing process, e.g. SELF-SUPPORT"), :action_aware => true
-  param :last_checkin, String, :desc => N_("Last check-in time of this system")
-  param :organization_id, :number, :desc => N_("Specify the organization"), :required => true
-  param :environment_id, String, :desc => N_("Specify the environment")
-  param :content_view_id, String, :desc => N_("Specify the content view")
-  param :host_collection_id, String, :desc => N_("Specify the host collection")
-  param :activation_keys, String, :desc => N_("comma-separated list of activation-key IDs"), :required => true
-  def activate
-    # Activation keys are userless by definition so use the internal generic user
-    # Set it before calling find_activation_keys to allow communication with candlepin
-    User.current    = User.hidden.first
-    activation_keys = find_activation_keys
-    ActiveRecord::Base.transaction do
-      # create new system entry
-      @system = System.new(system_params)
-
-      # register system - we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
-      activation_keys.reverse_each { |ak| ak.apply_to_system(@system) }
-      @system.save!
-
-      # subscribe system - if anything goes wrong subscriptions are deleted in Candlepin and exception is rethrown
-      activation_keys.each do |ak|
-        ak.subscribe_system(@system)
-        ak.host_collections.each do |host_collection|
-          host_collection.system_ids = (host_collection.system_ids + [@system.id]).uniq
-          host_collection.save!
-        end
-      end
-
-      respond_for_create
-    end
   end
 
   api :PUT, "/systems/:id/enabled_repos", N_("Update the information about enabled repositories")
@@ -501,19 +407,6 @@ class Api::V2::SystemsController < Api::V2::ApiController
     end
   end
 
-  def readable_filters
-    {:terms => {:environment_id => KTEnvironment.systems_readable(@organization).collect { |item| item.id } }}
-  end
-
-  def index_systems_perms_check
-    lambda do
-      perms = [(System.any_readable?(@organization) if @organization),
-               (System.any_readable?(@environment) if @environment),
-               (System.any_readable?(@host_collection.organization) if @host_collection)]
-      perms.compact.inject { |t, v| t && v }
-    end
-  end
-
   def system_params(params)
     system_params = params.require(:system).permit(:name, :description, :location, :owner, :type,
                                                    :service_level, {:facts => []},
@@ -573,7 +466,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
     organization ||= @system.organization if @system
     organization ||= @environment.organization if @environment
     if cv_id && organization
-      @content_view = ContentView.readable(organization).find_by_id(cv_id)
+      @content_view = ContentView.readable.find_by_id(cv_id)
       fail HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
     else
       @content_view = nil

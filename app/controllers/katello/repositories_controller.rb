@@ -20,19 +20,10 @@ class RepositoriesController < Katello::ApplicationController
   before_filter :find_repository, :except => [:auto_complete_library]
 
   def rules
-    read_any_test = lambda{Provider.any_readable?(current_organization)}
-    org_edit = lambda{current_organization.redhat_manageable?}
+    read_any_test = lambda{ true }
     {
-      :enable_repo => org_edit,
       :auto_complete_library => read_any_test
     }
-  end
-
-  def enable_repo
-    @repository.enabled = params[:repo] == "1"
-    @repository.save!
-    product_content = @repository.product.product_content_by_id(@repository.content_id)
-    render :json => {:id => @repository.id, :can_disable_repo_set => product_content.can_disable?}
   end
 
   def auto_complete_library
@@ -40,7 +31,7 @@ class RepositoriesController < Katello::ApplicationController
     term = Util::Search.filter_input params[:term]
     name = 'name:' + term
     name_query = name + ' OR ' + name + '*'
-    ids = Repository.readable(current_organization.library).collect{|r| r.id}
+    ids = Repository.readable.collect{|r| r.id}
     repos = Repository.search do
       query {string name_query}
       filter "and", [

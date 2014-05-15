@@ -36,7 +36,7 @@ class Api::V1::SyncController < Api::V1::ApiController
   before_filter :authorize
 
   def rules
-    list_test = lambda { Provider.any_readable?(@obj.organization) }
+    list_test = lambda { true }
     sync_test = lambda { @obj.organization.syncable? }
 
     { :index  => list_test,

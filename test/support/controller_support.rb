@@ -20,10 +20,12 @@ module ControllerSupport
 
     permissions.each do |permission|
       # TODO: allow user to be passed in via params and clear permissions between iterations
-      user = no_permission_user
 
-      if permission
+      if permission.is_a?(UserPermission) || permission.is_a?(Proc) || permission.is_a?(UserPermissionSet)
+        user = no_permission_user
         permission.call(Katello::AuthorizationSupportMethods::UserPermissionsGenerator.new(user))
+      else
+        user = add_role(permission)
       end
 
       action = params[:action]
@@ -34,11 +36,22 @@ module ControllerSupport
       req.call
 
       if params[:authorized]
-        msg = "Expected response for #{action} to be a <success>, but was <#{response.status}> instead. \n" +
-          "#{user.own_role.summary}"
+        if !user.own_role.nil?
+          msg = "Expected response for #{action} to be a <success>, but was <#{response.status}> instead. \n" +
+            "#{user.own_role.summary}"
+        else
+          msg = "Expected response for #{action} to be a <success>, but was <#{response.status}> instead. \n" +
+            "#{user.roles}"
+        end
+
         assert_response :success, msg
       else
-        msg = "Security Violation (403) expected for #{action}, got #{response.status} instead. \n#{user.own_role.summary}"
+        if !user.own_role.nil?
+          msg = "Security Violation (403) expected for #{action}, got #{response.status} instead. \n#{user.own_role.summary}"
+        else
+          msg = "Security Violation (403) expected for #{action}, got #{response.status} instead. \n#{user.roles}"
+        end
+
         assert_equal 403, response.status, msg
       end
     end
@@ -72,6 +85,16 @@ module ControllerSupport
     user.own_role.permissions.delete_all
     user
   end
+
+  def add_role(permission_name)
+    permission = Permission.find_by_name(permission_name)
+    role = create(:role, :permissions => [permission])
+    user = users(:restricted)
+    filter = create(:filter, :role => role, :permissions => [permission])
+    user.roles = [role]
+    user
+  end
+
 end
 
 UserPermission = Struct.new(:verbs, :resource_type, :tags, :org, :options) do

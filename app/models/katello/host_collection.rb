@@ -20,8 +20,6 @@ class HostCollection < Katello::Model
   include Katello::Authorization::HostCollection
   include Glue::ElasticSearch::HostCollection if Katello.config.use_elasticsearch
 
-  include Ext::PermissionTagCleanup
-
   has_many :key_host_collections, :class_name => "Katello::KeyHostCollection", :dependent => :destroy
   has_many :activation_keys, :through => :key_host_collections
 

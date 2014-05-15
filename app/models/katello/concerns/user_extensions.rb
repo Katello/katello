@@ -170,15 +170,6 @@ module Katello
           User.current.is_a? CpConsumerUser
         end
 
-        def allowed_organizations
-          #test for all orgs
-          perms = Permission.joins(:role).joins("INNER JOIN #{Katello::RolesUser.table_name} ON #{Katello::RolesUser.table_name}.role_id = #{Katello::Role.table_name}.id").
-              where("#{Katello::RolesUser.table_name}.user_id = ?", self.id).where(:organization_id => nil).count
-          return Organization.without_deleting.all if perms > 0
-
-          Organization.without_deleting.joins(:permissions => {:role => :users}).where(:users => {:id => self.id}).uniq
-        end
-
         def disable_helptip(key)
           return if !self.helptips_enabled? #don't update helptips if user has it disabled
           return if !Katello::HelpTip.where(:key => key, :user_id => self.id).empty?
@@ -266,7 +257,7 @@ module Katello
           org_id = self.preferences_hash[:user][:default_org] rescue nil
           if org_id && !org_id.nil? && org_id != "nil"
             org = Organization.find_by_id(org_id)
-            return org if allowed_organizations.include?(org)
+            return org if self.organizations.include?(org)
           else
             return nil
           end

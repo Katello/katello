@@ -17,27 +17,12 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
   before_filter :find_organization, :only => [:create, :index]
   before_filter :find_plan, :only => [:update, :show, :destroy, :available_products, :add_products, :remove_products]
   before_filter :load_search_service, :only => [:index, :available_products]
-  before_filter :authorize
 
   def_param_group :sync_plan do
     param :name, String, :desc => N_("sync plan name"), :required => true, :action_aware => true
     param :interval, SyncPlan::TYPES, :desc => N_("how often synchronization should run"), :required => true, :action_aware => true
     param :sync_date, String, :desc => N_("start datetime of synchronization"), :required => true, :action_aware => true
     param :description, String, :desc => N_("sync plan description")
-  end
-
-  def rules
-    access_test = lambda { Provider.any_readable?(@organization) }
-    {
-        :index   => access_test,
-        :show    => access_test,
-        :create  => access_test,
-        :update  => access_test,
-        :destroy => access_test,
-        :available_products => access_test,
-        :add_products => access_test,
-        :remove_products => access_test
-    }
   end
 
   api :GET, "/organizations/:organization_id/sync_plans", N_("List sync plans")
@@ -53,6 +38,9 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
     elsif params[:interval]
       filters << {:terms => {:interval => [params[:interval]] }}
     end
+
+    ids = SyncPlan.readable.pluck(:id)
+    filters << {:terms => {:id => ids }}
 
     options = {
         :filters => filters,
@@ -119,7 +107,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
   param_group :search, Api::V2::ApiController
   param :name, String, :desc => N_("product name to filter by")
   def available_products
-    enabled_product_ids = Product.all_readable(@sync_plan.organization).select{|p| p.enabled?}.collect(&:id)
+    enabled_product_ids = Product.where(:organization_id => @organization).readable.select{|p| p.enabled?}.collect(&:id)
 
     filters = [:terms => {:id => enabled_product_ids - @sync_plan.product_ids}]
     filters << {:term => {:name => params[:name].downcase}} if params[:name]
@@ -138,7 +126,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
   param :product_ids, Array, :desc => N_("List of product ids to add to the sync plan"), :required => true
   def add_products
     ids = params[:product_ids]
-    @products  = Product.readable(@organization).where(:id => ids)
+    @products  = Product.where(:id => ids).editable
     @sync_plan.product_ids = (@sync_plan.product_ids + @products.collect { |p| p.id }).uniq
     @sync_plan.save!
     respond_for_show
@@ -149,7 +137,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
   param :product_ids, Array, :desc => N_("List of product ids to remove from the sync plan"), :required => true
   def remove_products
     ids = params[:product_ids]
-    @products  = Product.readable(@organization).where(:id => ids)
+    @products  = Product.where(:id => ids).editable
     @sync_plan.product_ids = (@sync_plan.product_ids - @products.collect { |p| p.id }).uniq
     @sync_plan.save!
     respond_for_show
@@ -158,7 +146,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
   protected
 
   def find_plan
-    @sync_plan = SyncPlan.find(params[:id])
+    @sync_plan = SyncPlan.find_by_id(params[:id])
     fail HttpErrors::NotFound, _("Couldn't find sync plan '%{plan}' in organization '%{org}'") % { :plan => params[:id], :org => params[:organization_id] } if @sync_plan.nil?
     @organization ||= @sync_plan.organization
     @sync_plan

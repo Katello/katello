@@ -19,6 +19,7 @@ class SyncPlan < Katello::Model
   include Glue
 
   include Glue::ElasticSearch::SyncPlan if Katello.config.use_elasticsearch
+  include Katello::Authorization::SyncPlan
 
   NONE = 'none'
   HOURLY = 'hourly'
@@ -37,9 +38,10 @@ class SyncPlan < Katello::Model
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
-  scope :readable, lambda { |org| Provider.any_readable?(org) ? where(:organization_id => org.id) : where("0 = 1") }
-
   before_save :reassign_sync_plan_to_products
+
+  scoped_search :on => :name, :complete_value => true
+  scoped_search :on => :organization_id, :complete_value => true
 
   def reassign_sync_plan_to_products
     # triggers orchestration in products
@@ -121,6 +123,12 @@ class SyncPlan < Katello::Model
     end
 
     next_sync
+  end
+
+  private
+
+  def self.humanize_class_name(name = nil)
+    _("Sync Plans")
   end
 
 end
