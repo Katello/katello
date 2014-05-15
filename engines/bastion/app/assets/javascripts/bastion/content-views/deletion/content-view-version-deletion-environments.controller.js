@@ -24,9 +24,9 @@
 angular.module('Bastion.content-views').controller('ContentViewVersionDeletionEnvironmentsController',
     ['$scope',
     function ($scope) {
-
         $scope.environmentsTable = {rows: {}};
         $scope.version.$promise.then(function () {
+            var numSelected = 0;
             $scope.environmentsTable.rows = $scope.version.environments;
             if ($scope.version.environments.length === 0) {
                 $scope.deleteOptions.deleteArchive = true;
@@ -34,15 +34,29 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionEn
                 if ($scope.deleteOptions.environments.length === 0) {
                     //select all by default
                     angular.forEach($scope.environmentsTable.rows, function (row) {
-                        row.selected = true;
+                        if(row.permissions.promotable_or_deletable) {
+                            row.selected = true;
+                            numSelected = numSelected + 1;
+                        }
+                        else {
+                            row.selected = false;
+                            row.unselectable = true;
+                        }
                     });
-                    $scope.environmentsTable.numSelected = $scope.environmentsTable.rows.length;
+                    $scope.environmentsTable.numSelected = numSelected;
                 } else {
                     //set existing selections
                     angular.forEach($scope.environmentsTable.rows, function (row) {
-                        row.selected = _.findWhere($scope.deleteOptions.environments, {id: row.id}) !== undefined;
+                        if(row.permissions.promotable_or_deletable) {
+                            row.selected = _.findWhere($scope.deleteOptions.environments, {id: row.id}) !== undefined;
+                            numSelected = numSelected + 1;
+                        }
+                        else {
+                            row.selected = false;
+                            row.unselectable = true;
+                        }
                     });
-                    $scope.environmentsTable.numSelected = $scope.deleteOptions.environments.length;
+                    $scope.environmentsTable.numSelected = numSelected;
                 }
             }
         });

@@ -117,6 +117,10 @@ class ContentViewVersion < Katello::Model
       .order("#{Katello::ContentViewEnvironment.table_name}.environment_id")
   end
 
+  def is_deletable?
+    self.content_view.promotable? && (KTEnvironment.promotable.where(:id => environments).count > 0)
+  end
+
   def deletable?(from_env)
     !System.exists?(:environment_id => from_env, :content_view_id => self.content_view) ||
         self.content_view.versions.in_environment(from_env).count > 1

@@ -30,7 +30,7 @@ Foreman::Plugin.find(:katello).security_block :content_views do
              :resource_type => 'Katello::ContentView'
   permission :destroy_content_views,
              {
-                 'katello/api/v2/content_views' => [:destroy, :remove],
+                 'katello/api/v2/content_views' => [:destroy],
                  'katello/api/v2/content_view_filters' => [:destroy],
                  'katello/api/v2/content_view_filter_rules' => [:destroy],
                  'katello/api/v2/content_view_puppet_modules' => [:destroy],
@@ -40,6 +40,13 @@ Foreman::Plugin.find(:katello).security_block :content_views do
   permission :publish_content_views,
              {
                  'katello/api/v2/content_views' => [:publish],
+             },
+             :resource_type => 'Katello::ContentView'
+
+  permission :promote_or_remove_content_views,
+             {
+                 'katello/api/v2/content_view_versions' => [:promote, :destroy],
+                 'katello/api/v2/content_views' => [:remove_from_environment, :remove]
              },
              :resource_type => 'Katello::ContentView'
 end

@@ -80,15 +80,17 @@ angular.module('alchemy')
         };
 
         this.selectAll = $scope.table.selectAll = function (selected) {
-            var table = $scope.table;
+            var table = $scope.table,
+                numSelected = 0;
 
             self.selection.allSelected = selected;
-
-            $scope.table.numSelected = self.selection.allSelected ? table.rows.length : 0;
-
             angular.forEach(table.rows, function (row) {
-                row.selected = self.selection.allSelected;
+                if (!row.unselectable) {
+                    row.selected = self.selection.allSelected;
+                    numSelected = numSelected + 1;
+                }
             });
+            $scope.table.numSelected = numSelected;
         };
 
     }])
@@ -184,6 +186,7 @@ angular.module('alchemy')
             return '<td class="row-select">' +
                       '<input type="checkbox"' +
                               'ng-model="' + model + '.selected"' +
+                              'ng-disabled="' + model + '.unselectable"' +
                               'ng-change="itemSelected(' + model + ')">' +
                    '</td>';
         };
@@ -230,6 +233,10 @@ angular.module('alchemy')
 
                     if (attrs.rowSelect) {
                         scope.model = $parse(attrs.rowSelect)(scope);
+
+                        if ($parse(attrs.rowSelectIf)(scope)) {
+                            scope.model.unselectable = true;
+                        }
 
                         scope.$watch('model.selected', function (selected) {
                             if (selected) {

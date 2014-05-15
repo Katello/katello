@@ -14,6 +14,7 @@ require 'katello_test_helper'
 
 module Katello
 class AuthorizationTestBase < ActiveSupport::TestCase
+  include Katello::AuthorizationSupportMethods
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']

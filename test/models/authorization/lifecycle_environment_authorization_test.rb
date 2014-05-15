@@ -22,6 +22,10 @@ class EnvironmentAuthorizationAdminTest < AuthorizationTestBase
     @org = @acme_corporation
   end
 
+  def test_readable
+    refute_empty KTEnvironment.readable
+  end
+
   def test_content_readable
     refute_empty KTEnvironment.content_readable(@org)
   end
@@ -79,6 +83,10 @@ class EnvironmentAuthorizationNoPermsTest < AuthorizationTestBase
     User.current = User.find(users('restricted'))
     @env = @dev
     @org = @acme_corporation
+  end
+
+  def test_readable
+    assert_empty KTEnvironment.readable
   end
 
   def test_content_readable
