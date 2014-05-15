@@ -64,7 +64,12 @@ class System < Katello::Model
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
 
   scoped_search :on => :name, :complete_value => true
-  scoped_search :on => :organization_id, :complete_value => true
+  scoped_search :on => :organization_id, :complete_value => true, :ext_method => :search_by_environment
+
+  def self.search_by_environment(key, operator, value)
+    conditions = "environment_id IN (#{::Organization.find(value).kt_environments.pluck(:id).join(',')})"
+    {:conditions => conditions}
+  end
 
   def add_host_collection(host_collection)
     run_hook(:add_host_collection_hook, host_collection)

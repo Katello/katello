@@ -355,7 +355,7 @@ module Katello
 
     def authorize_client
       authorized = authenticate_client && User.consumer?
-      authorized = (User.current.uuid == @system.uuid) if @system
+      authorized = (User.current.uuid == @system.uuid) if @system && User.current
       deny_access if !authorized
     end
 

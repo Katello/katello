@@ -92,7 +92,7 @@ Foreman::Plugin.register :katello do
        :content_hosts,
        :caption => N_('Content Hosts'),
        :url => '/content_hosts',
-       :url_hash => {:controller => 'katello/api/v2/content_hosts',
+       :url_hash => {:controller => 'katello/api/v2/systems',
                      :action => 'index'},
        :engine => Katello::Engine,
        :parent => :hosts_menu,
