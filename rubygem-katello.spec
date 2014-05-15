@@ -81,6 +81,7 @@ Requires: pulp-katello-plugins
 Requires: pulp-nodes-parent
 Requires: pulp-puppet-plugins
 Requires: pulp-rpm-plugins
+Requires: pulp-puppet-tools
 Requires: pulp-selinux
 Requires: pulp-server
 Requires: mongodb
@@ -88,9 +89,8 @@ Requires: mongodb-server
 
 #Qpid Requirements
 Requires: qpid-cpp-client
-Requires: qpid-cpp-client-ssl
 Requires: qpid-cpp-server
-Requires: qpid-cpp-server-ssl
+Requires: qpid-tools
 
 Requires: candlepin-selinux
 Requires: createrepo >= 0.9.9-18%{?dist}
