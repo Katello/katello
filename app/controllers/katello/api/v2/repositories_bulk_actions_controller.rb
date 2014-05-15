@@ -15,8 +15,8 @@ module Katello
 
     before_filter :find_repositories
 
-    api :PUT, "/repositories/bulk/destroy", "Destroy one or more repositories"
-    param :ids, Array, :desc => "List of repository ids", :required => true
+    api :PUT, "/repositories/bulk/destroy", N_("Destroy one or more repositories")
+    param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def destroy_repositories
       deletable_repositories = @repositories.deletable
 
@@ -34,8 +34,8 @@ module Katello
       respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => messages }
     end
 
-    api :POST, "/repositories/bulk/sync", "Synchronise repository"
-    param :ids, Array, :desc => "List of repository ids", :required => true
+    api :POST, "/repositories/bulk/sync", N_("Synchronise repository")
+    param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def sync_repositories
       syncable_repositories = @repositories.syncable
       syncable_repositories.each(&:sync)

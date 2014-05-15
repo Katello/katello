@@ -49,24 +49,24 @@ class Api::V1::RolesController < Api::V1::ApiController
     end
   end
 
-  api :GET, "/roles", "List roles"
+  api :GET, "/roles", N_("List roles")
   param :name, String
   def index
     respond :collection => (Role.readable.non_self.where query_params)
   end
 
-  api :GET, "/roles/:id", "Show a role"
+  api :GET, "/roles/:id", N_("Show a role")
   def show
     respond
   end
 
-  api :POST, "/roles", "Create a role"
+  api :POST, "/roles", N_("Create a role")
   param_group :role
   def create
     respond :resource => Role.create!(params[:role])
   end
 
-  api :PUT, "/roles/:id", "Update a role"
+  api :PUT, "/roles/:id", N_("Update a role")
   param_group :role
   def update
     @role.update_attributes!(params[:role])
@@ -74,14 +74,14 @@ class Api::V1::RolesController < Api::V1::ApiController
     respond
   end
 
-  api :DELETE, "/roles/:id", "Destroy a role"
+  api :DELETE, "/roles/:id", N_("Destroy a role")
   def destroy
     @role.destroy
     respond :message => _("Deleted role '%s'") % params[:id]
   end
 
-  api :GET, "/roles/available_verbs", "List all available verbs that can be set to roles"
-  param :organization_id, :number, :desc => "With this option specified the listed tags are scoped to the organization."
+  api :GET, "/roles/available_verbs", N_("List all available verbs that can be set to roles")
+  param :organization_id, :number, :desc => N_("With this option specified the listed tags are scoped to the organization.")
   def available_verbs
     details = {}
 

@@ -43,18 +43,18 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
 
   def_param_group :bulk_params do
     param :include, Hash, :required => true, :action_aware => true do
-      param :search, String, :required => false, :desc => "Search string for systems to perform an action on"
-      param :ids, Array, :required => false, :desc => "List of system ids to perform an action on"
+      param :search, String, :required => false, :desc => N_("Search string for systems to perform an action on")
+      param :ids, Array, :required => false, :desc => N_("List of system ids to perform an action on")
     end
     param :exclude, Hash, :required => true, :action_aware => true do
-      param :ids, Array, :required => false, :desc => "List of system ids to exclude and not run an action on"
+      param :ids, Array, :required => false, :desc => N_("List of system ids to exclude and not run an action on")
     end
   end
 
   api :PUT, "/systems/bulk/add_host_collections",
-      "Add one or more host collections to one or more content hosts"
+      N_("Add one or more host collections to one or more content hosts")
   param_group :bulk_params
-  param :host_collection_ids, Array, :desc => "List of host collection ids", :required => true
+  param :host_collection_ids, Array, :desc => N_("List of host collection ids"), :required => true
   def bulk_add_host_collections
     unless params[:host_collection_ids].blank?
       display_messages = []
@@ -74,9 +74,9 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   end
 
   api :PUT, "/systems/bulk/remove_host_collections",
-      "Remove one or more host collections from one or more content hosts"
+      N_("Remove one or more host collections from one or more content hosts")
   param_group :bulk_params
-  param :host_collection_ids, Array, :desc => "List of host collection ids", :required => true
+  param :host_collection_ids, Array, :desc => N_("List of host collection ids"), :required => true
   def bulk_remove_host_collections
     display_messages = []
 
@@ -96,7 +96,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   end
 
   api :POST, "/systems/bulk/applicable_errata",
-      "Fetch applicable errata for a system."
+      N_("Fetch applicable errata for a system.")
   param_group :bulk_params
   def applicable_errata
     @search_service = nil #reload search service after systems are loaded
@@ -108,37 +108,37 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     respond_for_index(:collection => results)
   end
 
-  api :PUT, "/systems/bulk/install_content", "Install content on one or more systems"
+  api :PUT, "/systems/bulk/install_content", N_("Install content on one or more systems")
   param_group :bulk_params
   param :content_type, String,
-        :desc => "The type of content.  The following types are supported: 'package', 'package_group' and 'errata'.",
+        :desc => N_("The type of content.  The following types are supported: 'package', 'package_group' and 'errata'."),
         :required => true
-  param :content, Array, :desc => "List of content (e.g. package names, package group names or errata ids)", :required => true
+  param :content, Array, :desc => N_("List of content (e.g. package names, package group names or errata ids)"), :required => true
   def install_content
     content_action
   end
 
-  api :PUT, "/systems/bulk/update_content", "Update content on one or more systems"
+  api :PUT, "/systems/bulk/update_content", N_("Update content on one or more systems")
   param_group :bulk_params
   param :content_type, String,
-        :desc => "The type of content.  The following types are supported: 'package' and 'package_group.",
+        :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),
         :required => true
-  param :content, Array, :desc => "List of content (e.g. package or package group names)", :required => true
+  param :content, Array, :desc => N_("List of content (e.g. package or package group names)"), :required => true
   def update_content
     content_action
   end
 
-  api :PUT, "/systems/bulk/remove_content", "Remove content on one or more systems"
+  api :PUT, "/systems/bulk/remove_content", N_("Remove content on one or more systems")
   param_group :bulk_params
   param :content_type, String,
-        :desc => "The type of content.  The following types are supported: 'package' and 'package_group.",
+        :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),
         :required => true
-  param :content, Array, :desc => "List of content (e.g. package or package group names)", :required => true
+  param :content, Array, :desc => N_("List of content (e.g. package or package group names)"), :required => true
   def remove_content
     content_action
   end
 
-  api :PUT, "/systems/bulk/destroy", "Destroy one or more systems"
+  api :PUT, "/systems/bulk/destroy", N_("Destroy one or more systems")
   param_group :bulk_params
   def destroy_systems
     @systems.each{ |system| system.destroy }
@@ -146,7 +146,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => [display_message] }
   end
 
-  api :PUT, "/systems/bulk/environment_content_view", "Assign the environment and content view to one or more systems"
+  api :PUT, "/systems/bulk/environment_content_view", N_("Assign the environment and content view to one or more systems")
   param_group :bulk_params
   param :environment_id, Integer
   param :content_view_id, Integer

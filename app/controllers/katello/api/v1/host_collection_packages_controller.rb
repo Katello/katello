@@ -16,8 +16,8 @@ class Api::V1::HostCollectionPackagesController < Api::V1::ApiController
       methods for handling packages on host collection level
     DOC
 
-    param :organization_id, :number, :desc => "oranization identifier", :required => true
-    param :host_collection_id, :identifier, :desc => "host_collection identifier", :required => true
+    param :organization_id, :number, :desc => N_("oranization identifier"), :required => true
+    param :host_collection_id, :identifier, :desc => N_("host_collection identifier"), :required => true
 
     api_version 'v1'
     api_version 'v2'
@@ -39,7 +39,7 @@ class Api::V1::HostCollectionPackagesController < Api::V1::ApiController
     }
   end
 
-  api :POST, "/organizations/:organization_id/host_collections/:host_collection_id/packages", "Install packages remotely"
+  api :POST, "/organizations/:organization_id/host_collections/:host_collection_id/packages", N_("Install packages remotely")
   param_group :packages_or_groups, Api::V1::SystemPackagesController
   def create
     if params[:packages]
@@ -55,7 +55,7 @@ class Api::V1::HostCollectionPackagesController < Api::V1::ApiController
     end
   end
 
-  api :PUT, "/organizations/:organization_id/host_collections/:host_collection_id/packages", "Update packages remotely"
+  api :PUT, "/organizations/:organization_id/host_collections/:host_collection_id/packages", N_("Update packages remotely")
   param_group :packages_or_groups, Api::V1::SystemPackagesController
   def update
     if params[:packages]
@@ -72,7 +72,7 @@ class Api::V1::HostCollectionPackagesController < Api::V1::ApiController
     end
   end
 
-  api :DELETE, "/organizations/:organization_id/host_collections/:host_collection_id/packages", "Uninstall packages remotely"
+  api :DELETE, "/organizations/:organization_id/host_collections/:host_collection_id/packages", N_("Uninstall packages remotely")
   param_group :packages_or_groups, Api::V1::SystemPackagesController
   def destroy
     if params[:packages]

@@ -20,9 +20,9 @@ class Api::V2::RoleLdapGroupsController < Api::V1::RoleLdapGroupsController
     api_base_url "#{Katello.config.url_prefix}/api"
   end
 
-  api :POST, "/roles/:role_id/ldap_groups", "Add group to list of LDAP groups associated with the role"
+  api :POST, "/roles/:role_id/ldap_groups", N_("Add group to list of LDAP groups associated with the role")
   param :ldap_group, Hash, :required => true, :action_aware => true do
-    param :name, String, :desc => "name of the LDAP group", :required => true
+    param :name, String, :desc => N_("name of the LDAP group"), :required => true
   end
   def create
     @role.add_ldap_group(params[:ldap_group][:name])

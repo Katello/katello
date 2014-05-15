@@ -15,8 +15,8 @@ module Katello
 
     before_filter :find_products
 
-    api :PUT, "/products/bulk/destroy", "Destroy one or more products"
-    param :ids, Array, :desc => "List of product ids", :required => true
+    api :PUT, "/products/bulk/destroy", N_("Destroy one or more products")
+    param :ids, Array, :desc => N_("List of product ids"), :required => true
     def destroy_products
       deletable_products = @products.deletable
       deletable_products.each(&:destroy)
@@ -31,8 +31,8 @@ module Katello
       respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => messages }
     end
 
-    api :PUT, "/products/bulk/sync", "Sync one or more products"
-    param :ids, Array, :desc => "List of product ids", :required => true
+    api :PUT, "/products/bulk/sync", N_("Sync one or more products")
+    param :ids, Array, :desc => N_("List of product ids"), :required => true
     def sync_products
       syncable_products = @products.syncable
       syncable_products.each(&:sync)
@@ -47,9 +47,9 @@ module Katello
       respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => messages }
     end
 
-    api :PUT, "/products/bulk/sync_plan", "Sync one or more products"
-    param :ids, Array, :desc => "List of product ids", :required => true
-    param :plan_id, :number, :desc => "Sync plan identifier to attach", :required => true
+    api :PUT, "/products/bulk/sync_plan", N_("Sync one or more products")
+    param :ids, Array, :desc => N_("List of product ids"), :required => true
+    param :plan_id, :number, :desc => N_("Sync plan identifier to attach"), :required => true
     def update_sync_plans
       editable_products = @products.editable
       editable_products.each do |product|

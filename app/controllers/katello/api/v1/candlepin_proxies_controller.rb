@@ -82,13 +82,13 @@ module Katello
       render :json => r
     end
 
-    #api :GET, "/consumers/:id", "Show a system"
-    #param :id, String, :desc => "UUID of the consumer", :required => true
+    #api :GET, "/consumers/:id", N_("Show a system")
+    #param :id, String, :desc => N_("UUID of the consumer"), :required => true
     def consumer_show
       render :json => Resources::Candlepin::Consumer.get(@system.uuid)
     end
 
-    #api :GET, "/owners/:organization_id/environments", "List environments for RHSM"
+    #api :GET, "/owners/:organization_id/environments", N_("List environments for RHSM")
     def rhsm_index
       @all_environments = get_content_view_environments(query_params[:name]).collect do |env|
         {
@@ -102,23 +102,23 @@ module Katello
       respond_for_index :collection => @all_environments
     end
 
-    #api :POST, "/hypervisors", "Update the hypervisors information for environment"
+    #api :POST, "/hypervisors", N_("Update the hypervisors information for environment")
     #desc 'See virt-who tool for more details.'
     def hypervisors_update
       cp_response, _ = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action, :format))
       render :json => cp_response
     end
 
-    #api :PUT, "/consumers/:id/checkin/", "Update consumer check-in time"
-    #param :date, String, :desc => "check-in time"
+    #api :PUT, "/consumers/:id/checkin/", N_("Update consumer check-in time")
+    #param :date, String, :desc => N_("check-in time")
     def consumer_checkin
       @system.checkin(params[:date])
       render :json => Resources::Candlepin::Consumer.get(@system.uuid)
     end
 
-    #api :PUT, "/consumers/:id/packages", "Update installed packages"
-    #api :PUT, "/consumers/:id/profile", "Update installed packages"
-    #param :id, String, :desc => "UUID of the consumer", :required => true
+    #api :PUT, "/consumers/:id/packages", N_("Update installed packages")
+    #api :PUT, "/consumers/:id/profile", N_("Update installed packages")
+    #param :id, String, :desc => N_("UUID of the consumer"), :required => true
     def upload_package_profile
       fail HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.key?(:_json)
       @system.upload_package_profile(params[:_json])
@@ -132,15 +132,15 @@ module Katello
       respond_for_index :collection => orgs.map { |o| { :key => o.label, :displayName => o.name } }
     end
 
-    #api :POST, "/consumers/:id", "Regenerate consumer identity"
-    #param :id, String, :desc => "UUID of the consumer"
+    #api :POST, "/consumers/:id", N_("Regenerate consumer identity")
+    #param :id, String, :desc => N_("UUID of the consumer")
     #desc 'Schedules the consumer identity certificate regeneration'
     def regenerate_identity_certificates
       @system.regenerate_identity_certificates
       render :json => Resources::Candlepin::Consumer.get(@system.uuid)
     end
 
-    #api :POST, "/environments/:environment_id/consumers", "Register a consumer in environment"
+    #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")
     def consumer_create
       @system = System.new(system_params.merge(:environment  => @environment,
                                                :content_view => @content_view,
@@ -150,15 +150,15 @@ module Katello
       render :json => Resources::Candlepin::Consumer.get(@system.uuid)
     end
 
-    #api :DELETE, "/consumers/:id", "Unregister a consumer"
-    #param :id, String, :desc => "UUID of the consumer", :required => true
+    #api :DELETE, "/consumers/:id", N_("Unregister a consumer")
+    #param :id, String, :desc => N_("UUID of the consumer"), :required => true
     def consumer_destroy
       @system.destroy
       render :text => _("Deleted consumer '%s'") % params[:id], :status => 204
     end
 
     # used for registering with activation keys
-    #api :POST, "/consumers", "Register a system with activation key (compatibility)"
+    #api :POST, "/consumers", N_("Register a system with activation key (compatibility)")
     #param :activation_keys, String, :required => true
     def consumer_activate
       # Activation keys are userless by definition so use the internal generic user

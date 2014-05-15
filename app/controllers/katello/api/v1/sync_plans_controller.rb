@@ -19,7 +19,7 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
       synchronization of the repository with the upstream.
     DOC
 
-    param :organization_id, :number, :desc => "oranization identifier", :required => true
+    param :organization_id, :number, :desc => N_("oranization identifier"), :required => true
 
     api_version 'v1'
     api_version 'v2'
@@ -51,29 +51,29 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
 
   def_param_group :sync_plan do
     param :sync_plan, Hash, :required => true, :action_aware => true do
-      param :name, String, :desc => "sync plan name", :required => true
-      param :interval, SyncPlan::TYPES, :desc => "how often synchronization should run"
-      param :sync_date, String, :desc => "start datetime of synchronization"
-      param :description, String, :desc => "sync plan description"
+      param :name, String, :desc => N_("sync plan name"), :required => true
+      param :interval, SyncPlan::TYPES, :desc => N_("how often synchronization should run")
+      param :sync_date, String, :desc => N_("start datetime of synchronization")
+      param :description, String, :desc => N_("sync plan description")
     end
   end
 
-  api :GET, "/organizations/:organization_id/sync_plans", "List sync plans"
-  param :name, String, :desc => "filter by name"
-  param :sync_date, String, :desc => "filter by sync date"
-  param :interval, SyncPlan::TYPES, :desc => "filter by interval"
+  api :GET, "/organizations/:organization_id/sync_plans", N_("List sync plans")
+  param :name, String, :desc => N_("filter by name")
+  param :sync_date, String, :desc => N_("filter by sync date")
+  param :interval, SyncPlan::TYPES, :desc => N_("filter by interval")
   def index
     query_params.delete :organization_id
     respond :collection => @organization.sync_plans.where(query_params)
   end
 
-  api :GET, "/organizations/:organization_id/sync_plans/:id", "Show a sync plan"
-  param :id, :number, :desc => "sync plan numeric identifier", :required => true
+  api :GET, "/organizations/:organization_id/sync_plans/:id", N_("Show a sync plan")
+  param :id, :number, :desc => N_("sync plan numeric identifier"), :required => true
   def show
     respond :resource => @plan
   end
 
-  api :POST, "/organizations/:organization_id/sync_plans", "Create a sync plan"
+  api :POST, "/organizations/:organization_id/sync_plans", N_("Create a sync plan")
   param_group :sync_plan
   def create
     sync_date = params[:sync_plan][:sync_date].to_time
@@ -86,8 +86,8 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
     respond :resource => SyncPlan.create!(params[:sync_plan])
   end
 
-  api :PUT, "/organizations/:organization_id/sync_plans/:id", "Update a sync plan"
-  param :id, :number, :desc => "sync plan numeric identifier", :required => true
+  api :PUT, "/organizations/:organization_id/sync_plans/:id", N_("Update a sync plan")
+  param :id, :number, :desc => N_("sync plan numeric identifier"), :required => true
   param_group :sync_plan
   def update
     sync_date = params[:sync_plan].try(:[], :sync_date).try(:to_time)
@@ -102,8 +102,8 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
     respond :resource => @plan
   end
 
-  api :DELETE, "/organizations/:organization_id/sync_plans/:id", "Destroy a sync plan"
-  param :id, :number, :desc => "sync plan numeric identifier"
+  api :DELETE, "/organizations/:organization_id/sync_plans/:id", N_("Destroy a sync plan")
+  param :id, :number, :desc => N_("sync plan numeric identifier")
   def destroy
     @plan.destroy
     respond :message => _("Deleted sync plan '%s'") % params[:id], :resource => @plan

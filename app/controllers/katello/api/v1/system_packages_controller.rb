@@ -13,7 +13,7 @@ module Katello
 class Api::V1::SystemPackagesController < Api::V1::ApiController
 
   resource_description do
-    param :system_id, :identifier, :desc => "system identifier", :required => true
+    param :system_id, :identifier, :desc => N_("system identifier"), :required => true
 
     api_version 'v1'
     api_version 'v2'
@@ -37,12 +37,12 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
   end
 
   def_param_group :packages_or_groups do
-    param :packages, Array, :desc => "List of package names", :required => false
-    param :groups, Array, :desc => "List of package group names", :required => false
+    param :packages, Array, :desc => N_("List of package names"), :required => false
+    param :groups, Array, :desc => N_("List of package group names"), :required => false
   end
 
   # install packages remotely
-  api :POST, "/systems/:system_id/packages", "Install packages remotely"
+  api :POST, "/systems/:system_id/packages", N_("Install packages remotely")
   param_group :packages_or_groups
   def create
     if params[:packages]
@@ -59,8 +59,8 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
   end
 
   # update packages remotely
-  api :PUT, "/systems/:system_id/packages", "Update packages remotely"
-  param :packages, Array, :desc => "list of packages names"
+  api :PUT, "/systems/:system_id/packages", N_("Update packages remotely")
+  param :packages, Array, :desc => N_("list of packages names")
   def update
     if params[:packages]
       params[:packages] = [] if params[:packages] == 'all'
@@ -71,7 +71,7 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
   end
 
   # uninstall packages remotely
-  api :DELETE, "/systems/:system_id/packages", "Uninstall packages remotely"
+  api :DELETE, "/systems/:system_id/packages", N_("Uninstall packages remotely")
   param_group :packages_or_groups
   def destroy
     if params[:packages]

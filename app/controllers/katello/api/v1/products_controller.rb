@@ -49,24 +49,24 @@ class Api::V1::ProductsController < Api::V1::ApiController
 
   def_param_group :product do
     param :product, Hash, :required => true, :action_aware => true do
-      param :gpg_key_name, :identifier, :desc => "identifier of the gpg key"
-      param :description, String, :desc => "Product description"
+      param :gpg_key_name, :identifier, :desc => N_("identifier of the gpg key")
+      param :description, String, :desc => N_("Product description")
     end
   end
 
-  api :GET, "/organizations/:organization_id/products/:id", "Show a product"
-  param :organization_id, :number, :desc => "organization identifier"
-  param :id, :number, :desc => "product numeric identifier"
+  api :GET, "/organizations/:organization_id/products/:id", N_("Show a product")
+  param :organization_id, :number, :desc => N_("organization identifier")
+  param :id, :number, :desc => N_("product numeric identifier")
   def show
     respond
   end
 
-  api :PUT, "/organizations/:organization_id/products/:id", "Update a product"
-  param :organization_id, :number, :desc => "organization identifier"
-  param :id, :number, :desc => "product numeric identifier"
+  api :PUT, "/organizations/:organization_id/products/:id", N_("Update a product")
+  param :organization_id, :number, :desc => N_("organization identifier")
+  param :id, :number, :desc => N_("product numeric identifier")
   param_group :product
   param :product, Hash do
-    param :recursive, :bool, :desc => "set to true to recursive update gpg key"
+    param :recursive, :bool, :desc => N_("set to true to recursive update gpg key")
   end
   def update
     fail HttpErrors::BadRequest, _("Red Hat products cannot be updated.") if @product.redhat?
@@ -78,11 +78,11 @@ class Api::V1::ProductsController < Api::V1::ApiController
     respond
   end
 
-  api :GET, "/environments/:environment_id/products", "List products in an environment"
-  api :GET, "/organizations/:organization_id/products", "List all products in an organization"
-  param :organization_id, :number, :desc => "organization identifier"
-  param :name, :identifier, :desc => "product identifier"
-  param :include_marketing, :bool, :desc => "include marketing products in results"
+  api :GET, "/environments/:environment_id/products", N_("List products in an environment")
+  api :GET, "/organizations/:organization_id/products", N_("List all products in an organization")
+  param :organization_id, :number, :desc => N_("organization identifier")
+  param :name, :identifier, :desc => N_("product identifier")
+  param :include_marketing, :bool, :desc => N_("include marketing products in results")
   def index
     query_params.delete(:organization_id)
     query_params.delete(:environment_id)
@@ -92,9 +92,9 @@ class Api::V1::ProductsController < Api::V1::ApiController
     respond :collection => products.select("products.*, providers.name AS provider_name").joins(:provider).where(query_params).all
   end
 
-  api :DELETE, "/organizations/:organization_id/products/:id", "Destroy a product"
-  param :organization_id, :number, :desc => "organization identifier"
-  param :id, :number, :desc => "product numeric identifier"
+  api :DELETE, "/organizations/:organization_id/products/:id", N_("Destroy a product")
+  param :organization_id, :number, :desc => N_("organization identifier")
+  param :id, :number, :desc => N_("product numeric identifier")
   def destroy
     @product.destroy
     respond :message => _("Deleted product '%s'") % params[:id]
@@ -103,11 +103,11 @@ class Api::V1::ProductsController < Api::V1::ApiController
   api :GET, "/environments/:environment_id/products/:id/repositories"
   api :GET, "/organizations/:organization_id/products/:id/repositories"
   api :GET, "/organizations/:organization_id/products/:id/repositories"
-  param :organization_id, :number, :desc => "organization identifier"
-  param :environment_id, :identifier, :desc => "environment identifier"
-  param :id, :number, :desc => "product numeric identifier"
-  param :name, :identifier, :desc => "repository identifier"
-  param :content_view_id, :identifier, :desc => "find repos in content view instead of default content view"
+  param :organization_id, :number, :desc => N_("organization identifier")
+  param :environment_id, :identifier, :desc => N_("environment identifier")
+  param :id, :number, :desc => N_("product numeric identifier")
+  param :name, :identifier, :desc => N_("repository identifier")
+  param :content_view_id, :identifier, :desc => N_("find repos in content view instead of default content view")
   def repositories
     if !@environment.library? && @content_view.nil?
       fail HttpErrors::BadRequest,
@@ -118,20 +118,20 @@ class Api::V1::ProductsController < Api::V1::ApiController
         where(query_params.slice(:name))
   end
 
-  api :POST, "/organizations/:organization_id/products/:id/sync_plan", "Assign sync plan to product"
-  param :organization_id, :number, :desc => "organization identifier"
-  param :id, :number, :desc => "product numeric identifier"
-  param :plan_id, :number, :desc => "Plan numeric identifier"
+  api :POST, "/organizations/:organization_id/products/:id/sync_plan", N_("Assign sync plan to product")
+  param :organization_id, :number, :desc => N_("organization identifier")
+  param :id, :number, :desc => N_("product numeric identifier")
+  param :plan_id, :number, :desc => N_("Plan numeric identifier")
   def set_sync_plan
     @product.sync_plan = SyncPlan.find(params[:plan_id])
     @product.save!
     respond_for_status :message => _("Synchronization plan assigned.")
   end
 
-  api :DELETE, "/organizations/:organization_id/products/:id/sync_plan", "Delete assignment sync plan and product"
-  param :organization_id, :number, :desc => "organization identifier"
-  param :id, :number, :desc => "product numeric identifier"
-  param :plan_id, :number, :desc => "Plan numeric identifier"
+  api :DELETE, "/organizations/:organization_id/products/:id/sync_plan", N_("Delete assignment sync plan and product")
+  param :organization_id, :number, :desc => N_("organization identifier")
+  param :id, :number, :desc => N_("product numeric identifier")
+  param :plan_id, :number, :desc => N_("Plan numeric identifier")
   def remove_sync_plan
     @product.sync_plan = nil
     @product.save!
