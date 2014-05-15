@@ -11,12 +11,56 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::PackagesController < Api::V1::PackagesController
+class Api::V2::PackagesController < Api::V2::ApiController
 
-  include Api::V2::Rendering
   resource_description do
     api_version 'v2'
-    api_base_url "#{Katello.config.url_prefix}/api"
+  end
+
+  before_filter :find_repository
+  before_filter :find_package, :only => [:show]
+  before_filter :authorize
+
+  def rules
+    readable = lambda { @repo.environment.contents_readable? && @repo.product.readable? }
+    {
+        :index  => readable,
+        :show   => readable,
+    }
+  end
+
+  api :GET, "/repositories/:repository_id/packages", "List packages"
+  param :repository_id, :identifier, :desc => "Repository id to list packages for"
+  param_group :search, Api::V2::ApiController
+  def index
+    options = {
+      :filters => [{:term => {:repoids => [@repo.pulp_id]}}],
+    }
+    params[:sort_by] = 'nvra'
+
+    items = item_search(Package, params, options)
+    items[:results] = items[:results].map{|pkg| Package.new(pkg.as_json)}
+    respond(:collection => items)
+  end
+
+  api :GET, "/repositories/:repository_id/packages/:id", "Show a package"
+  param :id, String, :desc => "package id"
+  def show
+    respond :resource => @package
+  end
+
+  private
+
+  def find_repository
+    @repo = Repository.find(params[:repository_id])
+    fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
+  end
+
+  def find_package
+    @package = Package.find(params[:id])
+    fail HttpErrors::NotFound, _("Package with id '%s' not found") % params[:id] if @package.nil?
+    # and check ownership of it
+    fail HttpErrors::NotFound, _("Package '%s' not found within the repository") % params[:id] unless @package.repoids.include? @repo.pulp_id
   end
 
 end

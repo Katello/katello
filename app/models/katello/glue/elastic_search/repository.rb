@@ -118,6 +118,17 @@ module Glue::ElasticSearch::Repository
       end
     end
 
+    def index_distributions
+      Katello::Distribution.create_index
+
+      distributions = self.distributions.collect{ |distribution| distribution.as_json.merge(distribution.index_options) }
+      distributions.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
+        Tire.index Katello::Distribution.index do
+          import sublist
+        end if !sublist.empty?
+      end
+    end
+
     def indexed_puppet_module_ids
       Katello::PuppetModule.indexed_ids_for_repo(pulp_id)
     end
@@ -142,6 +153,7 @@ module Glue::ElasticSearch::Repository
       self.index_errata
       self.index_package_groups
       self.index_puppet_modules
+      self.index_distributions
       true
     end
   end
