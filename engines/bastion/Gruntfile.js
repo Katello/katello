@@ -132,7 +132,7 @@ module.exports = function (grunt) {
                 reporters: ['progress', 'coverage'],
                 preprocessors: {
                     'app/assets/javascripts/bastion/**/*.html': ['ng-html2js'],
-                    'app/assets/javascripts/bsation/**/*.js': ['coverage']
+                    'app/assets/javascripts/bastion/**/*.js': ['coverage']
                 },
                 coverageReporter: {
                     type: 'cobertura',
