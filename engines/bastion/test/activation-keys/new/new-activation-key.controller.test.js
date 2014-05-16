@@ -142,13 +142,6 @@ describe('Controller: NewActivationKeyController', function() {
         expect($scope.activationKey.usage_limit).toBe(-1);
     });
 
-    it('should labelize activation key name', function() {
-        spyOn(FormUtils, 'labelize');
-        $scope.activationKey.name = 'new name';
-        $scope.$apply();
-        expect(FormUtils.labelize).toHaveBeenCalled();
-    });
-
     it("should fetch content views", function () {
         $httpBackend.expectGET('/organizations/default_label?name=Test+Resource').respond('changed_name');
         spyOn(ContentView, 'queryUnpaged');

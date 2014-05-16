@@ -40,13 +40,6 @@ angular.module('Bastion.activation-keys').controller('NewActivationKeyController
 
         $scope.environments = Organization.registerableEnvironments({organizationId: CurrentOrganization});
 
-        $scope.$watch('activationKey.name', function () {
-            if ($scope.activationKeyForm.name) {
-                $scope.activationKeyForm.name.$setValidity('server', true);
-                FormUtils.labelize($scope.activationKey);
-            }
-        });
-
         $scope.$watch('activationKey.environment', function (environment) {
             if (environment) {
                 $scope.editContentView = true;

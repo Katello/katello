@@ -1,6 +1,7 @@
 object @activation_key
 
-extends 'katello/api/v2/common/identifier'
+attributes :id, :name
+attributes :description
 
 extends 'katello/api/v2/common/org_reference'
 

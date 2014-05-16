@@ -56,7 +56,6 @@ module Katello
     api :POST, "/activation_keys", N_("Create an activation key")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
     param :name, String, :desc => N_("name"), :required => true
-    param :label, String, :desc => N_("unique label")
     param :description, String, :desc => N_("description")
     param :environment, Hash, :desc => N_("environment")
     param :environment_id, :identifier, :desc => N_("environment id")
@@ -64,6 +63,7 @@ module Katello
     param :usage_limit, :number, :desc => N_("maximum number of registered content hosts, or 'unlimited'")
     def create
       @activation_key = ActivationKey.create!(activation_key_params) do |activation_key|
+        activation_key.label ||= labelize_params(params[:activation_key])
         activation_key.environment = @environment if @environment
         activation_key.organization = @organization
         activation_key.user = current_user
