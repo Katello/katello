@@ -5,7 +5,7 @@ http_interactions:
     uri: https://centos.installer/pulp/api/v2/repositories/
     body: 
       encoding: US-ASCII
-      string: "{\"id\":\"4\",\"display_name\":\"P Forge\",\"importer_type_id\":\"puppet_importer\",\"importer_config\":{\"feed\":\"http://davidd.fedorapeople.org/repos/random_puppet/\"},\"notes\":{\"_repo-type\":\"puppet-repo\"},\"distributors\":[{\"distributor_type\":\"puppet_install_distributor\",\"distributor_config\":{\"install_path\":\"/test_path/\",\"auto_publish\":true},\"auto_publish\":true,\"distributor_id\":\"4\"},{\"distributor_type\":\"nodes_http_distributor\",\"distributor_config\":{},\"auto_publish\":true,\"distributor_id\":\"4_nodes\"}]}"
+      string: "{\"id\":\"4\",\"display_name\":\"P Forge\",\"importer_type_id\":\"puppet_importer\",\"importer_config\":{\"feed\":\"http://davidd.fedorapeople.org/repos/random_puppet/\"},\"notes\":{\"_repo-type\":\"puppet-repo\"},\"distributors\":[{\"distributor_type_id\":\"puppet_install_distributor\",\"distributor_config\":{\"install_path\":\"/test_path/\",\"auto_publish\":true},\"auto_publish\":true,\"distributor_id\":\"4\"},{\"distributor_type_id\":\"nodes_http_distributor\",\"distributor_config\":{},\"auto_publish\":true,\"distributor_id\":\"4_nodes\"}]}"
     headers: 
       Accept: 
       - application/json
@@ -14,11 +14,11 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="CXRzQuRrKbaB8KGXWhR1l5LeAzacObsifC8i0a6ljQ", oauth_signature="s5oYJuD9k5bfL0E6YzGN5XAG0Ew%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399308587", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="iND8gGvuLFQBv7EtUtE69eioYsNYk1gLceNdOkblRiE", oauth_signature="pVL7Hr1gE%2Bf6FTo9RmuXSCLMMio%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185925", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
-      - "487"
+      - "493"
       User-Agent: 
       - Ruby
   response: 
@@ -27,7 +27,7 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Mon, 05 May 2014 16:49:47 GMT
+      - Thu, 15 May 2014 20:32:05 GMT
       Server: 
       - Apache/2.2.15 (CentOS)
       Location: 
@@ -40,9 +40,9 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"scratchpad\": {}, \"display_name\": \"P Forge\", \"description\": null, \"_ns\": \"repos\", \"notes\": {\"_repo-type\": \"puppet-repo\"}, \"content_unit_counts\": {}, \"_id\": {\"$oid\": \"5367c12b86d9a90f9a41ab7f\"}, \"id\": \"4\", \"_href\": \"/pulp/api/v2/repositories/4/\"}"
+      string: "{\"scratchpad\": {}, \"display_name\": \"P Forge\", \"description\": null, \"_ns\": \"repos\", \"notes\": {\"_repo-type\": \"puppet-repo\"}, \"content_unit_counts\": {}, \"_id\": {\"$oid\": \"5375244586d9a9321d8e0f2b\"}, \"id\": \"4\", \"_href\": \"/pulp/api/v2/repositories/4/\"}"
     http_version: 
-  recorded_at: Mon, 05 May 2014 16:49:47 GMT
+  recorded_at: Thu, 15 May 2014 20:32:05 GMT
 - request: 
     method: get
     uri: https://centos.installer/pulp/api/v2/repositories/4/?details=true
@@ -57,7 +57,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="X4c5TqVwK9n8NnnNTPjOjzx3VeKHmQ48r7IzG7ycC4", oauth_signature="bXD31XheVhRFNN14UG%2BoROEPfW8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399308587", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="4QAdBWdVJVAD9IHidEmQ9WEDzwNXf3xgVSmFwC0cIU", oauth_signature="STzxnCTa2KxQbsZDfnyunUOkHt0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185925", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -68,7 +68,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Mon, 05 May 2014 16:49:47 GMT
+      - Thu, 15 May 2014 20:32:05 GMT
       Server: 
       - Apache/2.2.15 (CentOS)
       Content-Length: 
@@ -79,9 +79,9 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"scratchpad\": {}, \"display_name\": \"P Forge\", \"description\": null, \"distributors\": [{\"repo_id\": \"4\", \"_ns\": \"repo_distributors\", \"last_publish\": null, \"auto_publish\": true, \"scheduled_publishes\": [], \"distributor_type_id\": \"nodes_http_distributor\", \"_id\": {\"$oid\": \"5367c12b86d9a90f9a41ab82\"}, \"config\": {}, \"id\": \"4_nodes\"}, {\"repo_id\": \"4\", \"_ns\": \"repo_distributors\", \"last_publish\": null, \"auto_publish\": true, \"scheduled_publishes\": [], \"distributor_type_id\": \"puppet_install_distributor\", \"_id\": {\"$oid\": \"5367c12b86d9a90f9a41ab81\"}, \"config\": {\"install_path\": \"/test_path/\", \"auto_publish\": true}, \"id\": \"4\"}], \"_ns\": \"repos\", \"notes\": {\"_repo-type\": \"puppet-repo\"}, \"content_unit_counts\": {}, \"importers\": [{\"repo_id\": \"4\", \"_ns\": \"repo_importers\", \"importer_type_id\": \"puppet_importer\", \"last_sync\": null, \"scheduled_syncs\": [], \"_id\": {\"$oid\": \"5367c12b86d9a90f9a41ab80\"}, \"config\": {\"feed\": \"http://davidd.fedorapeople.org/repos/random_puppet/\"}, \"id\": \"puppet_importer\"}], \"_id\": {\"$oid\": \"5367c12b86d9a90f9a41ab7f\"}, \"id\": \"4\", \"_href\": \"/pulp/api/v2/repositories/4/\"}"
+      string: "{\"scratchpad\": {}, \"display_name\": \"P Forge\", \"description\": null, \"distributors\": [{\"repo_id\": \"4\", \"_ns\": \"repo_distributors\", \"last_publish\": null, \"auto_publish\": true, \"scheduled_publishes\": [], \"distributor_type_id\": \"nodes_http_distributor\", \"_id\": {\"$oid\": \"5375244586d9a9321d8e0f2e\"}, \"config\": {}, \"id\": \"4_nodes\"}, {\"repo_id\": \"4\", \"_ns\": \"repo_distributors\", \"last_publish\": null, \"auto_publish\": true, \"scheduled_publishes\": [], \"distributor_type_id\": \"puppet_install_distributor\", \"_id\": {\"$oid\": \"5375244586d9a9321d8e0f2d\"}, \"config\": {\"install_path\": \"/test_path/\", \"auto_publish\": true}, \"id\": \"4\"}], \"_ns\": \"repos\", \"notes\": {\"_repo-type\": \"puppet-repo\"}, \"content_unit_counts\": {}, \"importers\": [{\"repo_id\": \"4\", \"_ns\": \"repo_importers\", \"importer_type_id\": \"puppet_importer\", \"last_sync\": null, \"scheduled_syncs\": [], \"_id\": {\"$oid\": \"5375244586d9a9321d8e0f2c\"}, \"config\": {\"feed\": \"http://davidd.fedorapeople.org/repos/random_puppet/\"}, \"id\": \"puppet_importer\"}], \"_id\": {\"$oid\": \"5375244586d9a9321d8e0f2b\"}, \"id\": \"4\", \"_href\": \"/pulp/api/v2/repositories/4/\"}"
     http_version: 
-  recorded_at: Mon, 05 May 2014 16:49:47 GMT
+  recorded_at: Thu, 15 May 2014 20:32:05 GMT
 - request: 
     method: post
     uri: https://centos.installer/pulp/api/v2/content/uploads/
@@ -96,7 +96,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="2aqDwfGvc4ku6C0d8Kg0rhKFuHfUve7ytUUTW7ZGPYY", oauth_signature="Umwu3ET4c%2FUB0xk8TNF6ZvGgah4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399308587", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="H2zpeopdaSIizoD0PJJwvblot59zvsxcZlNbc1fnrks", oauth_signature="0145%2BmUbqc8yhLNrY%2FHQjZIjCrA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185925", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -107,11 +107,11 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Mon, 05 May 2014 16:49:47 GMT
+      - Thu, 15 May 2014 20:32:05 GMT
       Server: 
       - Apache/2.2.15 (CentOS)
       Location: 
-      - /pulp/api/v2/content/uploads/0067bb7e-c8ad-4052-b129-fcd32e429ca6/
+      - /pulp/api/v2/content/uploads/3db539db-ccb5-42db-a8e7-fb25103b2e23/
       Content-Length: 
       - "132"
       Connection: 
@@ -120,12 +120,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"upload_id\": \"0067bb7e-c8ad-4052-b129-fcd32e429ca6\", \"_href\": \"/pulp/api/v2/content/uploads/0067bb7e-c8ad-4052-b129-fcd32e429ca6/\"}"
+      string: "{\"upload_id\": \"3db539db-ccb5-42db-a8e7-fb25103b2e23\", \"_href\": \"/pulp/api/v2/content/uploads/3db539db-ccb5-42db-a8e7-fb25103b2e23/\"}"
     http_version: 
-  recorded_at: Mon, 05 May 2014 16:49:47 GMT
+  recorded_at: Thu, 15 May 2014 20:32:05 GMT
 - request: 
     method: put
-    uri: https://centos.installer/pulp/api/v2/content/uploads/0067bb7e-c8ad-4052-b129-fcd32e429ca6/0//
+    uri: https://centos.installer/pulp/api/v2/content/uploads/3db539db-ccb5-42db-a8e7-fb25103b2e23/0//
     body: 
       encoding: ASCII-8BIT
       string: !binary |
@@ -491,7 +491,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="ewYzDKv9PDvk1rKaV09HChyBv7hpLIsaSWf7WYY8", oauth_signature="o6FjJ1SWfqWIEmsz%2F5obJIG99wI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399308587", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="jxw23LfyS3YKmj3nAfVgUChBxBblzVr2YTB5omIZNzo", oauth_signature="%2BUNmSlj0KbxDFpaAkVcRn1%2FmiAA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185925", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -504,7 +504,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Mon, 05 May 2014 16:49:47 GMT
+      - Thu, 15 May 2014 20:32:05 GMT
       Server: 
       - Apache/2.2.15 (CentOS)
       Content-Length: 
@@ -517,13 +517,13 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Mon, 05 May 2014 16:49:47 GMT
+  recorded_at: Thu, 15 May 2014 20:32:05 GMT
 - request: 
     method: post
     uri: https://centos.installer/pulp/api/v2/repositories/4/actions/import_upload//
     body: 
       encoding: US-ASCII
-      string: "{\"repo_id\":\"4\",\"unit_type_id\":\"puppet_module\",\"upload_id\":\"0067bb7e-c8ad-4052-b129-fcd32e429ca6\",\"unit_key\":{\"name\":\"ntp\",\"author\":\"puppetlabs\",\"version\":\"2.0.1\"},\"unit_metadata\":{\"description\":\"NTP Module for Debian, Ubuntu, CentOS, RHEL, OEL, Fedora, FreeBSD, ArchLinux and Gentoo.\",\"license\":\"Apache Version 2.0\",\"project_page\":\"http://github.com/puppetlabs/puppetlabs-ntp\",\"source\":\"git://github.com/puppetlabs/puppetlabs-ntp\",\"summary\":\"NTP Module\",\"tag_list\":[]}}"
+      string: "{\"repo_id\":\"4\",\"unit_type_id\":\"puppet_module\",\"upload_id\":\"3db539db-ccb5-42db-a8e7-fb25103b2e23\",\"unit_key\":{\"name\":\"ntp\",\"author\":\"puppetlabs\",\"version\":\"2.0.1\"},\"unit_metadata\":{\"description\":\"NTP Module for Debian, Ubuntu, CentOS, RHEL, OEL, Fedora, FreeBSD, ArchLinux and Gentoo.\",\"license\":\"Apache Version 2.0\",\"project_page\":\"http://github.com/puppetlabs/puppetlabs-ntp\",\"source\":\"git://github.com/puppetlabs/puppetlabs-ntp\",\"summary\":\"NTP Module\",\"tag_list\":[]}}"
     headers: 
       Accept: 
       - application/json
@@ -532,7 +532,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Gt72fM9SHpZ550dQVL2SWORKzysUMpriYLam2ycqW74", oauth_signature="8eWPJOxt9cc8gGUHJolTyvXey0U%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399308587", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="cXACO0NMJc0y9aCqaiE9PR6D7ywHpVB366qdNHVapj8", oauth_signature="KMbiXve5mCaN9jXDvWCNxntg4qM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185925", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -545,7 +545,7 @@ http_interactions:
       message: Accepted
     headers: 
       Date: 
-      - Mon, 05 May 2014 16:49:47 GMT
+      - Thu, 15 May 2014 20:32:05 GMT
       Server: 
       - Apache/2.2.15 (CentOS)
       Content-Encoding: 
@@ -558,12 +558,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/bd4f32a1-a0c4-4a7f-b646-bf29df950526/\", \"task_id\": \"bd4f32a1-a0c4-4a7f-b646-bf29df950526\"}], \"result\": null, \"error\": null}"
+      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/267a3023-fbcb-441f-937f-fcab22346b8e/\", \"task_id\": \"267a3023-fbcb-441f-937f-fcab22346b8e\"}], \"result\": null, \"error\": null}"
     http_version: 
-  recorded_at: Mon, 05 May 2014 16:49:47 GMT
+  recorded_at: Thu, 15 May 2014 20:32:05 GMT
 - request: 
     method: get
-    uri: https://centos.installer/pulp/api/v2/tasks/bd4f32a1-a0c4-4a7f-b646-bf29df950526/
+    uri: https://centos.installer/pulp/api/v2/tasks/267a3023-fbcb-441f-937f-fcab22346b8e/
     body: 
       encoding: US-ASCII
       string: ""
@@ -575,7 +575,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="AiZuRI52in27kuFKRNHqvIstp4Ddf3D1kL7pl63bA", oauth_signature="QcjXd7k5IQD%2Be3UylrKkrxIQjU0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399308587", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="GLVQhWGfXJDnPkARTkBUlb0N6LfUWrVWor3q9sViLFo", oauth_signature="wTde%2Fp6kqLUW8lmk%2BNM%2Bqrq6dcU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185925", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -586,23 +586,23 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Mon, 05 May 2014 16:49:47 GMT
+      - Thu, 15 May 2014 20:32:05 GMT
       Server: 
       - Apache/2.2.15 (CentOS)
       Content-Length: 
-      - "433"
+      - "580"
       Connection: 
       - close
       Content-Type: 
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"task_type\": \"pulp.server.managers.content.upload.import_uploaded_unit\", \"_href\": \"/pulp/api/v2/tasks/bd4f32a1-a0c4-4a7f-b646-bf29df950526/\", \"task_id\": \"bd4f32a1-a0c4-4a7f-b646-bf29df950526\", \"tags\": [\"pulp:repository:4\", \"pulp:action:import_upload\"], \"start_time\": \"2014-05-05T16:49:47Z\", \"spawned_tasks\": [], \"queue\": \"reserved_resource_worker-1@centos.installer\", \"state\": \"running\", \"_id\": {\"$oid\": \"5367c12bc552ed9bd4e4dad9\"}}"
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.content.upload.import_uploaded_unit\", \"_href\": \"/pulp/api/v2/tasks/267a3023-fbcb-441f-937f-fcab22346b8e/\", \"task_id\": \"267a3023-fbcb-441f-937f-fcab22346b8e\", \"tags\": [\"pulp:repository:4\", \"pulp:action:import_upload\"], \"finish_time\": null, \"start_time\": \"2014-05-15T20:32:05Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@centos.installer\", \"state\": \"running\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"537524453c307ec505e8614b\"}, \"id\": \"5375244586d9a9321e2b9365\"}"
     http_version: 
-  recorded_at: Mon, 05 May 2014 16:49:47 GMT
+  recorded_at: Thu, 15 May 2014 20:32:05 GMT
 - request: 
-    method: delete
-    uri: https://centos.installer/pulp/api/v2/content/uploads/0067bb7e-c8ad-4052-b129-fcd32e429ca6//
+    method: get
+    uri: https://centos.installer/pulp/api/v2/tasks/267a3023-fbcb-441f-937f-fcab22346b8e/
     body: 
       encoding: US-ASCII
       string: ""
@@ -614,7 +614,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="nwJFFTaBBe5esZrvT4O1aHGlSVLxcNuIr71cmv0pak", oauth_signature="L8DaZBmv1ydRS5Q1aErJxptqivQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399308587", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="n9vLM2V6cdAUqNXljPIIYMRIvVKtxOQqSxfq1Cr2U", oauth_signature="y1iJg%2FFjjhTTJz0GPl%2FgY5zLrns%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185925", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -625,7 +625,85 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Mon, 05 May 2014 16:49:48 GMT
+      - Thu, 15 May 2014 20:32:05 GMT
+      Server: 
+      - Apache/2.2.15 (CentOS)
+      Content-Length: 
+      - "580"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.content.upload.import_uploaded_unit\", \"_href\": \"/pulp/api/v2/tasks/267a3023-fbcb-441f-937f-fcab22346b8e/\", \"task_id\": \"267a3023-fbcb-441f-937f-fcab22346b8e\", \"tags\": [\"pulp:repository:4\", \"pulp:action:import_upload\"], \"finish_time\": null, \"start_time\": \"2014-05-15T20:32:05Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@centos.installer\", \"state\": \"running\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"537524453c307ec505e8614b\"}, \"id\": \"5375244586d9a9321e2b9365\"}"
+    http_version: 
+  recorded_at: Thu, 15 May 2014 20:32:05 GMT
+- request: 
+    method: get
+    uri: https://centos.installer/pulp/api/v2/tasks/267a3023-fbcb-441f-937f-fcab22346b8e/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="z0iCskmX3OhS8YXdbtPZzfz9pAfnqEVmCIfuV6D6qM", oauth_signature="sd4kvdIpg5XezY4L8cvGkZZEM7k%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185926", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Thu, 15 May 2014 20:32:06 GMT
+      Server: 
+      - Apache/2.2.15 (CentOS)
+      Content-Length: 
+      - "669"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.content.upload.import_uploaded_unit\", \"_href\": \"/pulp/api/v2/tasks/267a3023-fbcb-441f-937f-fcab22346b8e/\", \"task_id\": \"267a3023-fbcb-441f-937f-fcab22346b8e\", \"tags\": [\"pulp:repository:4\", \"pulp:action:import_upload\"], \"finish_time\": \"2014-05-15T20:32:05Z\", \"_ns\": \"task_status\", \"start_time\": \"2014-05-15T20:32:05Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@centos.installer\", \"state\": \"finished\", \"result\": {\"details\": {}, \"success_flag\": true, \"summary\": \"\"}, \"error\": null, \"_id\": {\"$oid\": \"537524453c307ec505e8614b\"}, \"id\": \"5375244586d9a9321e2b9365\"}"
+    http_version: 
+  recorded_at: Thu, 15 May 2014 20:32:06 GMT
+- request: 
+    method: delete
+    uri: https://centos.installer/pulp/api/v2/content/uploads/3db539db-ccb5-42db-a8e7-fb25103b2e23//
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="VAb2KCFr1U0703GbCrjx4NvODQ018vmu7BsVdGwL8", oauth_signature="qRZZNjnTy4aFuLTXY8nQJF6%2BzKE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185927", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Thu, 15 May 2014 20:32:07 GMT
       Server: 
       - Apache/2.2.15 (CentOS)
       Content-Length: 
@@ -638,7 +716,7 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Mon, 05 May 2014 16:49:48 GMT
+  recorded_at: Thu, 15 May 2014 20:32:07 GMT
 - request: 
     method: post
     uri: https://centos.installer/pulp/api/v2/repositories/4/search/units/
@@ -653,7 +731,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="3JMedVRkQmHPCoTvJUGBDDRspYT0hfmzJpQ2s7DEsk", oauth_signature="QSskHG1mz6PvvsuVQ0cUI8KA4U0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399308588", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="SBZjrTSXg6P4fgXEJ4bDDwRwhwMbA2X2klFztoKs", oauth_signature="%2B7TXmXTGlbbN1aHJKfw28Fuobt0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185927", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -666,7 +744,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Mon, 05 May 2014 16:49:48 GMT
+      - Thu, 15 May 2014 20:32:07 GMT
       Server: 
       - Apache/2.2.15 (CentOS)
       Content-Length: 
@@ -677,15 +755,15 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "[{\"metadata\": {\"_id\": \"f63b4be7-a08c-449a-9ef2-23bac381d3b8\", \"_content_type_id\": \"puppet_module\"}, \"_id\": {\"$oid\": \"5367c12c86d9a910c84ab71e\"}, \"unit_id\": \"f63b4be7-a08c-449a-9ef2-23bac381d3b8\", \"unit_type_id\": \"puppet_module\"}]"
+      string: "[{\"metadata\": {\"_id\": \"aedede22-3fe2-4a99-abed-c0d8c406ccf4\", \"_content_type_id\": \"puppet_module\"}, \"_id\": {\"$oid\": \"5375244586d9a932edcb27df\"}, \"unit_id\": \"aedede22-3fe2-4a99-abed-c0d8c406ccf4\", \"unit_type_id\": \"puppet_module\"}]"
     http_version: 
-  recorded_at: Mon, 05 May 2014 16:49:48 GMT
+  recorded_at: Thu, 15 May 2014 20:32:07 GMT
 - request: 
     method: post
     uri: https://centos.installer/pulp/api/v2/content/units/puppet_module/search/
     body: 
       encoding: US-ASCII
-      string: "{\"criteria\":{\"filters\":{\"_id\":{\"$in\":[\"f63b4be7-a08c-449a-9ef2-23bac381d3b8\"]}}},\"include_repos\":true}"
+      string: "{\"criteria\":{\"filters\":{\"_id\":{\"$in\":[\"aedede22-3fe2-4a99-abed-c0d8c406ccf4\"]}}},\"include_repos\":true}"
     headers: 
       Accept: 
       - application/json
@@ -694,7 +772,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="sq1O1bFiRj0IY0l9ZlgtWPMj0u0ncHv2XBaxk6jw", oauth_signature="Hc08UF4LkXhcnm1fE%2Bxf50UTRUg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399308588", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="6caQVldyT6VoLwDtWWrGBnyyoPFQK1UUrGPD0sM9fo", oauth_signature="d49wgPTo78ftBrZ9IEhv%2FyPsUmY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185927", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -707,7 +785,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Mon, 05 May 2014 16:49:48 GMT
+      - Thu, 15 May 2014 20:32:07 GMT
       Server: 
       - Apache/2.2.15 (CentOS)
       Content-Length: 
@@ -718,9 +796,9 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "[{\"repository_memberships\": [\"4\"], \"_storage_path\": \"/var/lib/pulp/content/puppet_module/puppetlabs-ntp-2.0.1.tar.gz\", \"tag_list\": [], \"description\": \"NTP Module for Debian, Ubuntu, CentOS, RHEL, OEL, Fedora, FreeBSD, ArchLinux and Gentoo.\", \"license\": \"Apache Version 2.0\", \"author\": \"puppetlabs\", \"checksum\": \"247f5dcdb73413b77eb36bc02aa2b9865f3eed2e0386daeb3ed5c67dd68241ea\", \"_last_updated\": \"2014-05-05T16:49:48Z\", \"project_page\": \"http://github.com/puppetlabs/puppetlabs-ntp\", \"summary\": \"NTP Module\", \"_href\": \"/pulp/api/v2/content/units/puppet_module/f63b4be7-a08c-449a-9ef2-23bac381d3b8/\", \"source\": \"git://github.com/puppetlabs/puppetlabs-ntp\", \"dependencies\": [{\"name\": \"puppetlabs/stdlib\", \"version_requirement\": \">= 0.1.6\"}], \"version\": \"2.0.1\", \"_content_type_id\": \"puppet_module\", \"checksums\": [[\"manifests/config.pp\", \"8d9afb6e4327277c96c5617ad687043a\"], [\"spec/system/basic_spec.rb\", \"f0fa6706b1011be24759dc06ccbd91e2\"], [\"Gemfile\", \"779e8b104b94622ac8c7d1d7bcf32c5a\"], [\"LICENSE\", \"f0b6fdc310531526f257378d7bad0044\"], [\"tests/init.pp\", \"d398e7687ec1d893ef23d1b7d2afc094\"], [\"spec/system/restrict_spec.rb\", \"eb9d8deb680830f78e0041bb3c7d2326\"], [\"manifests/params.pp\", \"2fe94c599d794811d950bd48879439d7\"], [\"manifests/init.pp\", \"8883844f75084d31b4e5a9a50c900d87\"], [\"spec/system/ntp_config_spec.rb\", \"d60bc7ba907c080d891245d6f13da307\"], [\".bundle/config\", \"7f1c988748783d2a8d455376eed1470c\"], [\"spec/system/ntp_install_spec.rb\", \"9b3796bb71472daa3a52aa01b0592656\"], [\"spec/unit/puppet/type/README.markdown\", \"de26a7643813abd6c2e7e28071b1ef94\"], [\".fixtures.yml\", \"909729694bab62c1e36001512b68a8fd\"], [\"spec/spec_helper.rb\", \"0db89c9a486df193c0e40095422e19dc\"], [\"spec/system/class_spec.rb\", \"83dcabc0e04432b52939ae8a5df992ca\"], [\"spec/system/ntp_service_spec.rb\", \"fbeec08f5489ce8ef82f2225f7107b9e\"], [\"templates/ntp.conf.erb\", \"262e0a58bcd88d0cb65369081db30b32\"], [\"CONTRIBUTING.md\", \"2ef1d6f4417dde9af6c7f46f5c8a864b\"], [\"spec/spec.opts\", \"a600ded995d948e393fbe2320ba8e51c\"], [\"spec/unit/puppet/provider/README.markdown\", \"e52668944ee6af2fb5d5b9e798342645\"], [\"CHANGELOG\", \"1ef0e3fa661bd1b8cb8e1233343dd81c\"], [\"README.markdown\", \"74a9a19e7866998e5a594845b15b0e57\"], [\"Gemfile.lock\", \"1abd1da36ca6957b6d456ddd75e2a665\"], [\"Rakefile\", \"0428ea3759a4692c91604396c406a9c1\"], [\"spec/system/preferred_servers_spec.rb\", \"379fe9b56c10903178f03d4d87002a14\"], [\"spec/classes/ntp_spec.rb\", \"ec9345d2bb9976c012b117b8c7f8f052\"], [\"manifests/service.pp\", \"350238b50e9cb896d270a2c76a64334f\"], [\"spec/fixtures/modules/my_ntp/templates/ntp.conf.erb\", \"566e373728e9b13eda516115ff0a9fb0\"], [\"Modulefile\", \"c806ff020129ab4a367a502be3f1be75\"], [\".nodeset.yml\", \"8d1b7762d4125ce53379966a1daf355c\"], [\"manifests/install.pp\", \"ac33c5733f4321a9af7a4735265c1986\"], [\".travis.yml\", \"193ec2b14cc9644c88f4249422580da2\"], [\"spec/spec_helper_system.rb\", \"4c85f6e43892c45ce75ade44a32f45f8\"]], \"checksum_type\": \"sha256\", \"_id\": \"f63b4be7-a08c-449a-9ef2-23bac381d3b8\", \"children\": {}, \"types\": [], \"name\": \"ntp\"}]"
+      string: "[{\"repository_memberships\": [\"4\"], \"_storage_path\": \"/var/lib/pulp/content/puppet_module/puppetlabs-ntp-2.0.1.tar.gz\", \"tag_list\": [], \"description\": \"NTP Module for Debian, Ubuntu, CentOS, RHEL, OEL, Fedora, FreeBSD, ArchLinux and Gentoo.\", \"license\": \"Apache Version 2.0\", \"author\": \"puppetlabs\", \"checksum\": \"247f5dcdb73413b77eb36bc02aa2b9865f3eed2e0386daeb3ed5c67dd68241ea\", \"_last_updated\": \"2014-05-15T20:32:05Z\", \"project_page\": \"http://github.com/puppetlabs/puppetlabs-ntp\", \"summary\": \"NTP Module\", \"_href\": \"/pulp/api/v2/content/units/puppet_module/aedede22-3fe2-4a99-abed-c0d8c406ccf4/\", \"source\": \"git://github.com/puppetlabs/puppetlabs-ntp\", \"dependencies\": [{\"name\": \"puppetlabs/stdlib\", \"version_requirement\": \">= 0.1.6\"}], \"version\": \"2.0.1\", \"_content_type_id\": \"puppet_module\", \"checksums\": [[\"manifests/config.pp\", \"8d9afb6e4327277c96c5617ad687043a\"], [\"spec/system/basic_spec.rb\", \"f0fa6706b1011be24759dc06ccbd91e2\"], [\"Gemfile\", \"779e8b104b94622ac8c7d1d7bcf32c5a\"], [\"LICENSE\", \"f0b6fdc310531526f257378d7bad0044\"], [\"tests/init.pp\", \"d398e7687ec1d893ef23d1b7d2afc094\"], [\"spec/system/restrict_spec.rb\", \"eb9d8deb680830f78e0041bb3c7d2326\"], [\"manifests/params.pp\", \"2fe94c599d794811d950bd48879439d7\"], [\"manifests/init.pp\", \"8883844f75084d31b4e5a9a50c900d87\"], [\"spec/system/ntp_config_spec.rb\", \"d60bc7ba907c080d891245d6f13da307\"], [\".bundle/config\", \"7f1c988748783d2a8d455376eed1470c\"], [\"spec/system/ntp_install_spec.rb\", \"9b3796bb71472daa3a52aa01b0592656\"], [\"spec/unit/puppet/type/README.markdown\", \"de26a7643813abd6c2e7e28071b1ef94\"], [\".fixtures.yml\", \"909729694bab62c1e36001512b68a8fd\"], [\"spec/spec_helper.rb\", \"0db89c9a486df193c0e40095422e19dc\"], [\"spec/system/class_spec.rb\", \"83dcabc0e04432b52939ae8a5df992ca\"], [\"spec/system/ntp_service_spec.rb\", \"fbeec08f5489ce8ef82f2225f7107b9e\"], [\"templates/ntp.conf.erb\", \"262e0a58bcd88d0cb65369081db30b32\"], [\"CONTRIBUTING.md\", \"2ef1d6f4417dde9af6c7f46f5c8a864b\"], [\"spec/spec.opts\", \"a600ded995d948e393fbe2320ba8e51c\"], [\"spec/unit/puppet/provider/README.markdown\", \"e52668944ee6af2fb5d5b9e798342645\"], [\"CHANGELOG\", \"1ef0e3fa661bd1b8cb8e1233343dd81c\"], [\"README.markdown\", \"74a9a19e7866998e5a594845b15b0e57\"], [\"Gemfile.lock\", \"1abd1da36ca6957b6d456ddd75e2a665\"], [\"Rakefile\", \"0428ea3759a4692c91604396c406a9c1\"], [\"spec/system/preferred_servers_spec.rb\", \"379fe9b56c10903178f03d4d87002a14\"], [\"spec/classes/ntp_spec.rb\", \"ec9345d2bb9976c012b117b8c7f8f052\"], [\"manifests/service.pp\", \"350238b50e9cb896d270a2c76a64334f\"], [\"spec/fixtures/modules/my_ntp/templates/ntp.conf.erb\", \"566e373728e9b13eda516115ff0a9fb0\"], [\"Modulefile\", \"c806ff020129ab4a367a502be3f1be75\"], [\".nodeset.yml\", \"8d1b7762d4125ce53379966a1daf355c\"], [\"manifests/install.pp\", \"ac33c5733f4321a9af7a4735265c1986\"], [\".travis.yml\", \"193ec2b14cc9644c88f4249422580da2\"], [\"spec/spec_helper_system.rb\", \"4c85f6e43892c45ce75ade44a32f45f8\"]], \"checksum_type\": \"sha256\", \"_id\": \"aedede22-3fe2-4a99-abed-c0d8c406ccf4\", \"children\": {}, \"types\": [], \"name\": \"ntp\"}]"
     http_version: 
-  recorded_at: Mon, 05 May 2014 16:49:48 GMT
+  recorded_at: Thu, 15 May 2014 20:32:07 GMT
 - request: 
     method: delete
     uri: https://centos.installer/pulp/api/v2/repositories/4/
@@ -735,7 +813,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="Yq7C9AuQsAbAhQB235Ky7CfwNQ9ksc6gbEj4aw8wJQ", oauth_signature="pydHnCqbcTt9R39utddvL3VOTvw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399308588", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="BgbYzwrXKPAipprZ5smmnUuSMM81IseW88bE16z6uc", oauth_signature="%2Byfbe%2FxgL8Ad9nc9dfPbEey6leg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185928", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -746,7 +824,7 @@ http_interactions:
       message: Accepted
     headers: 
       Date: 
-      - Mon, 05 May 2014 16:49:48 GMT
+      - Thu, 15 May 2014 20:32:08 GMT
       Server: 
       - Apache/2.2.15 (CentOS)
       Content-Encoding: 
@@ -759,12 +837,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/f9bb21ca-5d52-41bc-9788-ddceac365043/\", \"task_id\": \"f9bb21ca-5d52-41bc-9788-ddceac365043\"}], \"result\": null, \"error\": null}"
+      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/1b51a4fe-00a0-4608-8c44-9045a72b9266/\", \"task_id\": \"1b51a4fe-00a0-4608-8c44-9045a72b9266\"}], \"result\": null, \"error\": null}"
     http_version: 
-  recorded_at: Mon, 05 May 2014 16:49:49 GMT
+  recorded_at: Thu, 15 May 2014 20:32:08 GMT
 - request: 
     method: get
-    uri: https://centos.installer/pulp/api/v2/tasks/f9bb21ca-5d52-41bc-9788-ddceac365043/
+    uri: https://centos.installer/pulp/api/v2/tasks/1b51a4fe-00a0-4608-8c44-9045a72b9266/
     body: 
       encoding: US-ASCII
       string: ""
@@ -776,7 +854,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="tUFpa6KkALEcDntGLtrkuWQJp7bWGmXFaBIC7EdIoB4", oauth_signature="QKA50CdblDZZITImWr9OoQZhMUU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399308589", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="4fnIbYezhE0RDANEKTIYuHB5uYciCJUFi32qV1cvG0", oauth_signature="JoFxcNXLbH7%2F%2FnoZlJ7u6vSS2mc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185928", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -787,18 +865,18 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Mon, 05 May 2014 16:49:49 GMT
+      - Thu, 15 May 2014 20:32:08 GMT
       Server: 
       - Apache/2.2.15 (CentOS)
       Content-Length: 
-      - "483"
+      - "593"
       Connection: 
       - close
       Content-Type: 
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/f9bb21ca-5d52-41bc-9788-ddceac365043/\", \"task_id\": \"f9bb21ca-5d52-41bc-9788-ddceac365043\", \"tags\": [\"pulp:repository:4\", \"pulp:action:delete\"], \"finish_time\": \"2014-05-05T16:49:49Z\", \"_ns\": \"task_status\", \"start_time\": \"2014-05-05T16:49:49Z\", \"spawned_tasks\": [], \"queue\": \"reserved_resource_worker-1@centos.installer\", \"state\": \"finished\", \"result\": null, \"_id\": {\"$oid\": \"5367c12dc552ed9bd4e4dada\"}}"
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/1b51a4fe-00a0-4608-8c44-9045a72b9266/\", \"task_id\": \"1b51a4fe-00a0-4608-8c44-9045a72b9266\", \"tags\": [\"pulp:repository:4\", \"pulp:action:delete\"], \"finish_time\": \"2014-05-15T20:32:08Z\", \"_ns\": \"task_status\", \"start_time\": \"2014-05-15T20:32:08Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@centos.installer\", \"state\": \"finished\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"537524483c307ec505e8614c\"}, \"id\": \"5375244886d9a9321c14a635\"}"
     http_version: 
-  recorded_at: Mon, 05 May 2014 16:49:49 GMT
+  recorded_at: Thu, 15 May 2014 20:32:08 GMT
 recorded_with: VCR 2.9.0

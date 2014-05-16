@@ -2,7 +2,7 @@
 http_interactions: 
 - request: 
     method: post
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/consumers/
+    uri: https://centos.installer/pulp/api/v2/consumers/
     body: 
       encoding: US-ASCII
       string: "{\"id\":\"uuid\",\"display_name\":\"name\"}"
@@ -14,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="sU4Uzuc6WBxu3qVbxD3e7v8WHZsJtbHRfCYYWVM5AY", oauth_signature="aVwRoScdlKYfBcTez3CvMqd1Zsc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399909941", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="iutPspsU58T6f4XaMIYNpZXld9Ost29jDFMV4KnGmlE", oauth_signature="nW0LT3KREGuSB3EGDLnJ7MeQ%2Bdc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185676", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -27,66 +27,25 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Mon, 12 May 2014 15:52:21 GMT
+      - Thu, 15 May 2014 20:27:56 GMT
       Server: 
-      - Apache/2.2.15 (Red Hat)
+      - Apache/2.2.15 (CentOS)
       Location: 
       - /pulp/api/v2/consumers/uuid/
-      Vary: 
-      - Accept-Encoding
-      Content-Encoding: 
-      - gzip
       Content-Length: 
-      - "1599"
+      - "2041"
       Connection: 
       - close
       Content-Type: 
       - application/json
     body: 
-      encoding: ASCII-8BIT
-      string: !binary |
-        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
-        +mkaqqH1u9+U/7uwP3/8Fy64AC19CAAA
-
+      encoding: US-ASCII
+      string: "{\"consumer\": {\"display_name\": \"name\", \"description\": null, \"_ns\": \"consumers\", \"notes\": {}, \"rsa_pub\": null, \"capabilities\": {}, \"_id\": {\"$oid\": \"5375234c86d9a9321c14a5a4\"}, \"id\": \"uuid\", \"_href\": {\"_href\": \"/pulp/api/v2/consumers/uuid/\"}}, \"certificate\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICXQIBAAKBgQC2zmk9xc6d4CjwCgUTQU2vk8qBcZO+GJAw3kEr7jYbyuUxh4uV\\njh86ql1MJO8G249AVTgNd5SXBYEUKE/MjA0HVmTR4xxzI17m7clB3ZIQoQSPBN24\\n9SLGk+cBrbmu8VMoqdMhlLrocIN4Y+aeRi/b66fWkEQfhNrFUgVxf4CrgwIDAQAB\\nAoGAAOgTI4hIlwXWjiIulkLbpMRB29R5XBb5GBTyE8qxn/+olU9LxOkYhIz1u3vv\\nZ4RNOI9zoLV4Giuf0T7F7oi/Q8jmxkjvItv5VjTrac9hExaLeQ7j2GqQZb9BMXfh\\n+uiYvjsSPxilh0XsynUIofgvqLgOOykLw7lh49qiOblmcGkCQQDkrWXvcrP+cbFa\\nbKU/exzUzzgvi2/ijR2xtYvp9A+RfEsivQWxVIdDRMTJTcB2lq3U4d7x72aqPOT1\\nYM9FGT8fAkEAzKXyFscN06PPwuwvSq9lhnMXiDQco6quq+OyW3GA/N1NhrXg5UVc\\nF+1ErW5UG4JpZAGpazCrWPOMdDYTKbvbHQJBALQ/4ZuOZEZpw4wtG0wgdKdh9z2y\\nwSxoY0GSgoiUsjjRKkBlkjknEb96U0sBmHVha//jUmKNe/UwLqEj//zNW60CQHKG\\nm8hrdS1viyGGk6C0L5jiZ9TtdOmS51WCg5nxF0JrhqtQtZ8ZBcTOH5T/HUqX3Or+\\nkxVNk1agVYXjjS3Z13ECQQDbt56jBaAJldb6Z2eGV+v5go8vCYJW451LyiVGZjez\\nevEcblShiR3RVPKgc3yKc2TudNvzvLjo/hzNVqfX4tkW\\n-----END RSA PRIVATE KEY-----\\n-----BEGIN CERTIFICATE-----\\nMIICVDCCATwCAgLpMA0GCSqGSIb3DQEBBQUAMCoxGTAXBgNVBAMMEGNlbnRvcy5p\\nbnN0YWxsZXIxDTALBgNVBAoMBFBVTFAwHhcNMTQwNTE1MjAyNzU2WhcNMjQwNTEy\\nMjAyNzU2WjA5MQ0wCwYDVQQDEwR1dWlkMSgwJgYKCZImiZPyLGQBARMYNTM3NTIz\\nNGM4NmQ5YTkzMjFjMTRhNWE0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC2\\nzmk9xc6d4CjwCgUTQU2vk8qBcZO+GJAw3kEr7jYbyuUxh4uVjh86ql1MJO8G249A\\nVTgNd5SXBYEUKE/MjA0HVmTR4xxzI17m7clB3ZIQoQSPBN249SLGk+cBrbmu8VMo\\nqdMhlLrocIN4Y+aeRi/b66fWkEQfhNrFUgVxf4CrgwIDAQABMA0GCSqGSIb3DQEB\\nBQUAA4IBAQBYCxeFBAYMFEw57ID4ft8hHDsjCa51xzmKMYhN2te6/ouYJBsBC5HI\\nvNoCHwYlM1itkx8Zj/2IDCjRPURPWtA8H2Z0YBgA78UC1IyF6JDXm2RSorqyknJ8\\ncEWJlYQJmjMp8s/QgtPAi4/PRY7zXqLoEHndEZLltrokX6p+0FjxkBl5ruxHCO/B\\n1kfDeKTty50xEm8Zu8UNm+fq8HuV5sKm+WMzGuCCZ32dqKRUmUOId+adYAT/juCy\\naLLmlej7Tr3CVLjpeXxHNRrllDJxcGGuqWCkKd511QD+klX+K/fMTragV3Joru5O\\np2CmZ2IBOoRMCbHMQFYsHKX13kaLUNSx\\n-----END CERTIFICATE-----\"}"
     http_version: 
-  recorded_at: Mon, 12 May 2014 15:52:21 GMT
+  recorded_at: Thu, 15 May 2014 20:27:56 GMT
 - request: 
     method: delete
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/consumers/uuid/
+    uri: https://centos.installer/pulp/api/v2/consumers/uuid/
     body: 
       encoding: US-ASCII
       string: ""
@@ -98,7 +57,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="EQ3qY2WLKNaBk0vElsQU0kUN9pMTyClX6O03kU4H8", oauth_signature="f7vXLYpYGENT41eNs53S5weFVVA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1399909941", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="p1XJUPQdHtDl9JY1f2lpGkCduKBrlOMfXgxXg7XhQ4", oauth_signature="XzTe%2BhdUBkZwhqwdGrvASyGh7%2B4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185676", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -109,24 +68,18 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Mon, 12 May 2014 15:52:21 GMT
+      - Thu, 15 May 2014 20:27:56 GMT
       Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Encoding: 
-      - gzip
+      - Apache/2.2.15 (CentOS)
       Content-Length: 
-      - "24"
+      - "4"
       Connection: 
       - close
       Content-Type: 
       - application/json
     body: 
-      encoding: ASCII-8BIT
-      string: !binary |
-        H4sIAAAAAAAAA8srzckBAE/8yyUEAAAA
-
+      encoding: US-ASCII
+      string: "null"
     http_version: 
-  recorded_at: Mon, 12 May 2014 15:52:21 GMT
+  recorded_at: Thu, 15 May 2014 20:27:56 GMT
 recorded_with: VCR 2.9.0

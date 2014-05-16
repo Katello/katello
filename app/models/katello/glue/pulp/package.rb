@@ -51,6 +51,10 @@ module Glue::Pulp::Package
       Util::Package.build_nvrea(self.as_json.with_indifferent_access, false)
     end
 
+    def nvra
+      Util::Package.build_nvra(self.as_json.with_indifferent_access)
+    end
+
     def sortable_version
       Util::Package.sortable_version(self.version)
     end

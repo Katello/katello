@@ -24,6 +24,8 @@ module Glue::ElasticSearch::Package
         {
           "_type" => self.class.search_type,
           "nvrea_sort" => nvrea.downcase,
+          "nvra_sort" => nvra.downcase,
+          "nvra" => nvra,
           "nvrea" => nvrea,
           "nvrea_autocomplete" => nvrea,
           "sortable_version" => sortable_version,

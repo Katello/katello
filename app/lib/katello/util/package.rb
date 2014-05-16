@@ -75,6 +75,13 @@ module Util
       nvrea
     end
 
+    def self.build_nvra(package)
+      nvra = package[:name] + '-' + package[:version] + '-' + package[:release]
+      nvra = nvra + '.' + package[:arch] if !package[:arch].nil?
+      nvra = nvra + '.' + package[:suffix] if !package[:suffix].nil?
+      nvra
+    end
+
     def self.find_latest_packages(packages)
       latest_pack = nil
       selected_packs = []
