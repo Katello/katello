@@ -1,33 +1,52 @@
-<div class="details pull-left">
-  <section>
+<div alert type="'info'">
+  {{ "Below are the product's repository content sets currently available for this subscription. For Red Hat subscriptions, additional content can be made available through the" | translate}}
+  <a ng-href="/katello/providers/redhat_provider" translate>Red Hat Repositories page</a>.
+</div>
 
+<div class="loading-mask loading-mask-panel" ng-show="displayArea.working">
+  <i class="icon-spinner icon-spin"></i>
+  {{ "Loading..." | translate }}
+</div>
+
+<div class="details details-full pull-left">
+  <section>
     <div ng-show="products.length < 1" translate>
-      No provided products.
+      No repository content provided through this subscription.
     </div>
 
-    <div ng-repeat="product in products">
-      <h4>{{ product.name }}</h4>
+    <div ng-repeat="product in products" ng-hide="product.available_content.length < 1"
+         ng-controller="SubscriptionProductDetailsController">
+      <i ng-class="{'icon-plus': !expanded, 'icon-minus': expanded}"
+         class="expand-icon" ng-click="expanded = !expanded"></i>
+      <b>{{ product.name }}</b>
 
-      <div class="product-content" ng-repeat="content in product.productContent">
-
-        <div class="detail">
-          <span class="info-label" translate>Content Download URL</span>
-          <span class="info-value">{{ content.content.contentUrl }}</span>
+      <div ng-show="expanded">
+        <div ng-show="details.available_content.length < 1" translate>
+          No repository content.
         </div>
 
-        <div class="detail">
-          <span class="info-label" translate>GPG Key URL</span>
-          <span class="info-value">{{ content.content.gpgUrl }}</span>
-        </div>
+        <div ng-repeat="content in product.available_content">
+          <h4><u>{{ content.content.name }}</u></h4>
 
-        <div class="detail">
-          <span class="info-label" translate>Repo Type</span>
-          <span class="info-value">{{ content.content.type }}</span>
-        </div>
+          <div class="detail">
+            <span class="info-label" translate>Content Download URL</span>
+            <span class="info-value">{{ content.content.contentUrl }}</span>
+          </div>
 
-        <div class="detail">
-          <span class="info-label" translate>Enabled by Default</span>
-          <span class="info-value">{{ content.enabled }}</span>
+          <div class="detail">
+            <span class="info-label" translate>GPG Key URL</span>
+            <span class="info-value">{{ content.content.gpgUrl }}</span>
+          </div>
+
+          <div class="detail">
+            <span class="info-label" translate>Repo Type</span>
+            <span class="info-value">{{ content.content.type }}</span>
+          </div>
+
+          <div class="detail">
+            <span class="info-label" translate>Enabled by Default</span>
+            <span class="info-value">{{ content.enabled }}</span>
+          </div>
         </div>
       </div>
     </div>

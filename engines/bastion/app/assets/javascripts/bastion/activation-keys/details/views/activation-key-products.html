@@ -1,0 +1,48 @@
+<div alert type="'info'">
+  {{ "Below are the repository content sets currently available for this activation key through its subscriptions. For Red Hat subscriptions, additional content can be made available through the" | translate}}
+  <a ng-href="/katello/providers/redhat_provider" translate>Red Hat Repositories page</a>.
+  {{ "Changing default settings for content hosts that register with this activation key requires subscription-manager version 1.10 or newer to be installed on that host." }}
+</div>
+
+<div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+<div class="loading-mask loading-mask-panel" ng-show="displayArea.working">
+  <i class="icon-spinner icon-spin"></i>
+  {{ "Loading..." | translate }}
+</div>
+
+<div class="details details-full pull-left">
+  <section>
+    <div ng-hide="displayArea.isAvailableContent" translate>
+      No repository content provided through subscriptions.
+    </div>
+
+    <div ng-repeat="product in products" ng-hide="product.available_content.length < 1"
+         ng-controller="ActivationKeyProductDetailsController" ng-init="productDetails(product)">
+      <i ng-class="{'icon-plus': !expanded, 'icon-minus': expanded}" class="expand-icon"
+         ng-click="expanded = !expanded"></i>
+      <b>{{ product.name }}</b>
+
+      <div ng-show="expanded">
+        <div ng-show="details.available_content.length < 1" translate>
+          No repository content.
+        </div>
+
+        <div ng-repeat="content in product.available_content">
+          <h4><u>{{ content.content.name }}</u></h4>
+
+          <div class="detail">
+            <span class="info-label" translate>Enabled by Default</span>
+            <span class="info-value"
+                  alch-edit-select="content.enabledText"
+                  readonly="activationKey.readonly"
+                  selector="content.overrideEnabled"
+                  options="overrideEnableChoices(content)"
+                  on-save="saveContentOverride(content)">
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -25,8 +25,9 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   def models
     @organization = get_organization
     @provider = Provider.find(katello_providers(:anonymous))
-    @product = katello_products(:empty_product)
+    @product = Product.find(katello_products(:empty_product))
     @product.stubs(:redhat?).returns(false)
+    Product.any_instance.stubs('productContent').returns([])
   end
 
   def permissions

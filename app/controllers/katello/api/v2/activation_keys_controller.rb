@@ -17,11 +17,12 @@ module Katello
     before_filter :find_environment, :only => [:index, :create, :update]
     before_filter :find_optional_organization, :only => [:index, :create]
     before_filter :find_activation_key, :only => [:show, :update, :destroy, :available_releases,
-                                                  :available_host_collections, :add_host_collections, :remove_host_collections]
+                                                  :available_host_collections, :add_host_collections, :remove_host_collections,
+                                                  :content_override]
     before_filter :authorize
     before_filter :load_search_service, :only => [:index, :available_host_collections]
 
-    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level))
+    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level content_view_environment))
 
     api :GET, "/activation_keys", N_("List activation keys")
     api :GET, "/environments/:environment_id/activation_keys"
@@ -142,6 +143,13 @@ module Katello
       respond_for_show
     end
 
+    def content_override
+      content_override = params[:content_override]
+      @activation_key.set_content_override(content_override[:content_label],
+                                           content_override[:name], content_override[:value]) if content_override
+      respond_for_show
+    end
+
     private
 
     def find_environment
@@ -190,6 +198,7 @@ module Katello
                                                           :content_view_id,
                                                           :release_version,
                                                           :service_level,
+                                                          :content_overrides => [],
                                                           :host_collection_ids => [])
 
       key_params[:environment_id] = params[:environment][:id] if params[:environment].try(:[], :id)

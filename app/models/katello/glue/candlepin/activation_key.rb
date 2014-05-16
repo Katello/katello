@@ -94,6 +94,15 @@ module Glue::Candlepin::ActivationKey
     def unsubscribe(pool_id)
       Resources::Candlepin::ActivationKey.remove_pools self.cp_id, pool_id
     end
+
+    def set_content_override(content_label, name, value = nil)
+      Resources::Candlepin::ActivationKey.update_content_override(self.cp_id, content_label, name, value)
+    end
+
+    def content_overrides
+      Resources::Candlepin::ActivationKey.content_overrides(self.cp_id)
+    end
+
   end
 end
 end

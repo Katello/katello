@@ -75,6 +75,12 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
         controller: 'ActivationKeyDetailsInfoController',
         templateUrl: 'activation-keys/details/views/activation-key-info.html'
     })
+    .state('activation-keys.details.products', {
+        url: '/products',
+        collapsed: true,
+        controller: 'ActivationKeyProductsController',
+        templateUrl: 'activation-keys/details/views/activation-key-products.html'
+    })
     .state('activation-keys.details.subscriptions', {
         abstract: true,
         collapsed: true,

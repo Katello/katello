@@ -9,8 +9,10 @@ attributes :provider_id
 attributes :sync_plan_id
 attributes :sync_status
 attributes :gpg_key_id
-attributes :productContent
 attributes :redhat? => :redhat
+
+attributes :productContent => :product_content
+attributes :available_content
 
 node :repository_count do |product|
   if product.library_repositories.to_a.any?
