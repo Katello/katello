@@ -44,7 +44,8 @@ class Api::V2::PackagesController < Api::V2::ApiController
   end
 
   api :GET, "/repositories/:repository_id/packages/:id", "Show a package"
-  param :id, String, :desc => "package id"
+  param :repository_id, :number, :desc => "Repository id"
+  param :id, String, :desc => "Package id"
   def show
     respond :resource => @package
   end

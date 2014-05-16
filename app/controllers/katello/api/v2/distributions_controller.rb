@@ -39,6 +39,7 @@ class Api::V2::DistributionsController < Api::V2::ApiController
 
   api :GET, "/repositories/:repository_id/distributions/:id", "Show a distribution"
   param :repository_id, :number, :desc => "repository numeric id"
+  param :id, String, :desc => "distribution id"
   def show
     respond :resource => @distribution
   end

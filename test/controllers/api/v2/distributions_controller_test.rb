@@ -66,7 +66,7 @@ class Api::V2::DistributionsControllerTest < ActionController::TestCase
     assert_template %w(katello/api/v2/distributions/show)
   end
 
-  def test_show_group_not_found
+  def test_show_not_found
     Distribution.expects(:find).once.returns(nil)
     get :show, :repository_id => @repo.id, :id => "ks-Test Family-TestVariant-16-x86_64"
     assert_response 404
