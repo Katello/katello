@@ -204,7 +204,7 @@ class ContentSearchController < Katello::ApplicationController
   #similar to :packages, but only returns package rows with an offset for a specific repo
   def packages_items
     repo = Repository.libraries_content_readable(current_organization).where(:id => params[:repo_id]).first
-    view = ContentView.readable(current_organization).where(:id => params[:view_id]).first
+    view = ContentView.readable.where(:id => params[:view_id]).first
     offset = params[:offset].try(:to_i) || 0
 
     pkgs = spanned_repo_content(view, repo, 'package', process_params(:packages),
@@ -254,7 +254,7 @@ class ContentSearchController < Katello::ApplicationController
 
   #similar to :errata, but only returns errata rows with an offset for a specific repo
   def errata_items
-    view = ContentView.readable(current_organization).where(:id => params[:view_id]).first
+    view = ContentView.readable.where(:id => params[:view_id]).first
     repo = Repository.libraries_content_readable(current_organization).where(:id => params[:repo_id]).first
     offset = params[:offset].try(:to_i) || 0
 
@@ -271,7 +271,7 @@ class ContentSearchController < Katello::ApplicationController
 
   #similar to :puppet_modules, but only returns puppet modules rows with an offset for a specific repo
   def puppet_modules_items
-    view = ContentView.readable(current_organization).where(:id => params[:view_id]).first
+    view = ContentView.readable.where(:id => params[:view_id]).first
     repo = Repository.libraries_content_readable(current_organization).where(:id => params[:repo_id]).first
     offset = params[:offset].try(:to_i) || 0
 
@@ -457,7 +457,7 @@ class ContentSearchController < Katello::ApplicationController
   def find_repos
     @repos = []
     params[:repos].values.each do |item|
-      view = ContentView.readable(current_organization).where(:id => item[:view_id]).first
+      view = ContentView.readable.where(:id => item[:view_id]).first
       library_instance = Repository.find(item[:repo_id])
       @repos += library_instance.environmental_instances(view).select{ |r| r.environment_id.to_s == item[:env_id] }
     end
@@ -524,7 +524,7 @@ class ContentSearchController < Katello::ApplicationController
   end
 
   def collect_views(view_ids)
-    views = ContentView.readable(current_organization)
+    views = ContentView.readable
     views = views.where(:id => view_ids) if view_ids.blank?
     views
   end
@@ -726,9 +726,9 @@ class ContentSearchController < Katello::ApplicationController
 
   def process_views(view_ids)
     if view_ids.blank?
-      ContentView.readable(current_organization)
+      ContentView.readable
     else
-      ContentView.readable(current_organization).where(:id => view_ids)
+      ContentView.readable.where(:id => view_ids)
     end
   end
 

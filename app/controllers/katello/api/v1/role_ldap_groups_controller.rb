@@ -26,23 +26,23 @@ class Api::V1::RoleLdapGroupsController < Api::V1::ApiController
     }
   end
 
-  api :POST, "/roles/:role_id/ldap_groups", "Add group to list of LDAP groups associated with the role"
-  param :name, String, :desc => "name of the LDAP group"
+  api :POST, "/roles/:role_id/ldap_groups", N_("Add group to list of LDAP groups associated with the role")
+  param :name, String, :desc => N_("name of the LDAP group")
   def create
     @role.add_ldap_group(params[:name])
     respond_for_status :message => _("Added LDAP group '%s'") % params[:name], :format => :text
   end
 
-  api :DELETE, "/roles/:role_id/ldap_groups/:id", "Remove group from the list of LDAP groups associated with the role"
-  param :role_id, :identifier, :desc => "role identifier"
-  param :id, String, :desc => "ldap group (name)"
+  api :DELETE, "/roles/:role_id/ldap_groups/:id", N_("Remove group from the list of LDAP groups associated with the role")
+  param :role_id, :identifier, :desc => N_("role identifier")
+  param :id, String, :desc => N_("ldap group (name)")
   def destroy
     @role.remove_ldap_group(params[:id])
     respond :message => _("Removed LDAP group '%s'") % params[:id], :resource => false
   end
 
-  api :GET, "/roles/:role_id/ldap_groups", "List LDAP groups associated with the role"
-  param :role_id, :identifier, :desc => "role identifier"
+  api :GET, "/roles/:role_id/ldap_groups", N_("List LDAP groups associated with the role")
+  param :role_id, :identifier, :desc => N_("role identifier")
   def index
     respond :collection => @role.ldap_group_roles.where(query_params)
   end

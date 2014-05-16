@@ -20,8 +20,8 @@ class Api::V1::AboutController < Api::V1::ApiController
     }
   end
 
-  api :GET, "/about", "Shows status of system and it's subcomponents"
-  description "This service is only available for authenticated users"
+  api :GET, "/about", N_("Shows status of system and it's subcomponents")
+  description N_("This service is only available for authenticated users")
   def index
     @packages = Ping.packages
     @system_info = {  "Application" => Katello.config.app_name,

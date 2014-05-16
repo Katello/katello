@@ -15,42 +15,25 @@ module Authorization::GpgKey
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def readable(org)
-      if org.readable? || org.gpg_keys_manageable? || Provider.any_readable?(org)
-        where(:organization_id => org.id)
-      else
-        where("0 = 1")
-      end
-    end
-
-    def manageable(org)
-      if org.gpg_keys_manageable?
-        where(:organization_id => org.id)
-      else
-        where("0 = 1")
-      end
-    end
-
-    def createable?(organization)
-      organization.gpg_keys_manageable?
-    end
-
-    def any_readable?(organization)
-      organization.readable? || organization.gpg_keys_manageable? || Provider.any_readable?(organization)
+    def readable
+      authorized(:view_gpg_keys)
     end
   end
 
   included do
-    def readable?
-      GpgKey.any_readable?(organization)
-    end
+    include Authorizable
+    include Katello::Authorization
 
-    def manageable?
-      organization.gpg_keys_manageable?
+    def readable?
+      authorized?(:view_gpg_keys)
     end
 
     def editable?
-      organization.gpg_keys_manageable?
+      authorized?(:update_gpg_keys)
+    end
+
+    def deleteable?
+      authorized?(:destroy_gpg_keys)
     end
   end
 

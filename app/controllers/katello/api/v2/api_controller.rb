@@ -34,19 +34,19 @@ module Katello
     end
 
     def_param_group :search do
-      param :search, String, :desc => "Search string"
-      param :page, :number, :desc => "Page number, starting at 1"
-      param :per_page,  :number, :desc => "Number of results per page to return"
-      param :order, String, :desc => "Sort field and order, eg. 'name DESC'"
-      param :full_results, :bool, :desc => "Whether or not to show all results"
-      param :sort, Hash, :desc => "Hash version of 'order' param" do
-        param :by, String, :desc => "Field to sort the results on"
-        param :order, String, :desc => "How to order the sorted results (e.g. ASC for ascending)"
+      param :search, String, :desc => N_("Search string")
+      param :page, :number, :desc => N_("Page number, starting at 1")
+      param :per_page,  :number, :desc => N_("Number of results per page to return")
+      param :order, String, :desc => N_("Sort field and order, eg. 'name DESC'")
+      param :full_results, :bool, :desc => N_("Whether or not to show all results")
+      param :sort, Hash, :desc => N_("Hash version of 'order' param") do
+        param :by, String, :desc => N_("Field to sort the results on")
+        param :order, String, :desc => N_("How to order the sorted results (e.g. ASC for ascending)")
       end
     end
 
-    param :object_root, String, :desc => "root-node of single-resource responses (optional)"
-    param :root_name, String, :desc => "root-node of collection contained in responses (default: 'results')"
+    param :object_root, String, :desc => N_("root-node of single-resource responses (optional)")
+    param :root_name, String, :desc => N_("root-node of collection contained in responses (default: 'results')")
 
     def item_search(item_class, params, options)
       fail "@search_service search not defined" if @search_service.nil?
@@ -117,7 +117,7 @@ module Katello
     end
 
     def find_organization
-      @organization = find_optional_organization
+      @organization = Organization.current || find_optional_organization
       fail HttpErrors::NotFound, _("One of parameters [ %s ] required but not specified.") %
           organization_id_keys.join(", ") if @organization.nil?
       @organization

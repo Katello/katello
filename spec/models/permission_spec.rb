@@ -95,7 +95,6 @@ describe Permission do
 
   describe "super_admin" do
     it { @god.allowed_to_in_katello?('create', 'organizations').must_equal(true) }
-    it { @god.allowed_to_in_katello?('create', 'providers').must_equal(true) if Katello.config.katello? }
   end
 
   describe "some_role" do
@@ -256,9 +255,9 @@ describe Permission do
     describe "no_tag_verbs(katello)" do
       before do
         @foo_tag = 0022
-        @res_type_name = :providers
+        @res_type_name = :users
         @res_type = ResourceType.find_or_create_by_name(@res_type_name)
-        @no_tag_verbs = Provider.no_tag_verbs
+        @no_tag_verbs = User.no_tag_verbs
         @verb_name = @no_tag_verbs.first
         @verb = Verb.find_or_create_by_verb(@verb_name)
         @magic_perm = Permission.create!(:name => 'test1000', :role => @some_role, :verbs => [@verb],
@@ -320,78 +319,5 @@ describe Permission do
 
     end
   end
-
-  describe "cleanup" do
-    before do
-      disable_org_orchestration
-      @organization = Organization.create!(:name=>'test_organization_1', :label=> 'test_organization_1')
-    end
-
-    describe "after organization deletion" do
-      before do
-        @organization2 = Organization.create!(:name=>'test_organization_2', :label=> 'test_organization_2')
-        Permission.create!(:name => 'test1001', :role => @some_role, :tag_values=> [@organization.id, @organization2.id],
-                                         :resource_type=> ResourceType.find_or_create_by_name('organizations'), :organization => @organization)
-      end
-
-      specify "should result in removal of organization-specific tags" do
-        Organization.any_instance.stubs(:being_deleted?).returns(true)
-        @organization2.destroy
-        Permission.find_by_name('test1001').tag_values.must_equal([@organization.id])
-      end
-    end
-
-    describe "after environment deletion(katello)" do
-      before do
-        disable_env_orchestration
-        @environment = create_environment(
-            {:name=>"test1000", :label=> "test100", :organization => @organization, :prior => @organization.library})
-        @environment2 = create_environment(
-            {:name=>"test1001", :label=> "test101", :organization => @organization, :prior => @organization.library})
-
-        p = Permission.new(:name => 'test1001', :role => @some_role, :tag_values=> [@environment.id, @environment2.id],
-           :resource_type=> ResourceType.find_or_create_by_name!('environments'), :organization => @organization)
-        p.save!
-      end
-
-      specify "should result in removal of environment-specific tags" do
-        @environment.destroy
-        Permission.find_by_name('test1001').tag_values.must_equal([@environment2.id])
-      end
-    end
-
-    describe "after provider deletion" do
-      before do
-        @provider = Provider.create!({:name => 'test1000', :repository_url => 'https://something.net',
-          :provider_type => Provider::CUSTOM, :organization => @organization})
-        @provider2 = Provider.create!({:name => 'test1001', :repository_url => 'https://something2.net',
-                                      :provider_type => Provider::CUSTOM, :organization => @organization})
-        Permission.create!(:name => 'test1001', :role => @some_role, :tag_values=> [@provider.id, @provider2.id],
-                                   :resource_type=> ResourceType.find_or_create_by_name!('providers'), :organization => @organization)
-      end
-
-      specify "should result in removal of provider-specific tags" do
-        @provider.destroy
-        Permission.find_by_name('test1001').tag_values.must_equal([@provider2.id])
-      end
-    end
-
-    describe "after host collection deletion" do
-      before do
-        disable_consumer_group_orchestration
-
-        @host_collection = HostCollection.create!(:name=>"TestHostCollection", :organization=>@organization)
-        @host_collection2 = HostCollection.create!(:name=>"TestHostCollection2", :organization=>@organization)
-        Permission.create!(:name => 'test1001', :role => @some_role, :tag_values=> [@host_collection.id, @host_collection2.id],
-                           :resource_type=> ResourceType.find_or_create_by_name('host_collections'), :organization => @organization)
-      end
-
-      it "should result in removal of host-collection--specific tags(katello)" do #TODO headpin
-        @host_collection.destroy
-        Permission.find_by_name('test1001').tag_values.must_equal([@host_collection2.id])
-      end
-    end
-  end
-
 end
 end

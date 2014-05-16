@@ -24,7 +24,7 @@ class Api::V2::TasksController < Api::V2::ApiController
       if @task && User.current == @task.user
         true
       elsif @organization
-        Provider.any_readable?(@organization) || @organization.systems_readable?
+        @organization.systems_readable?
       else
         false
       end
@@ -36,14 +36,14 @@ class Api::V2::TasksController < Api::V2::ApiController
     }
   end
 
-  api :GET, "/organizations/:organization_id/tasks", "List tasks of given organization"
-  param :organization_id, :number, :desc => "organization identifier", :required => true
+  api :GET, "/organizations/:organization_id/tasks", N_("List tasks of given organization")
+  param :organization_id, :number, :desc => N_("organization identifier"), :required => true
   def index
     respond :collection => TaskStatus.where(:organization_id => @organization.id)
   end
 
-  api :GET, "/tasks/:id", "Show a task info"
-  param :id, :identifier, :desc => "task identifier", :required => true
+  api :GET, "/tasks/:id", N_("Show a task info")
+  param :id, :identifier, :desc => N_("task identifier"), :required => true
   def show
     @task.refresh
     respond_for_show

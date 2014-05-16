@@ -17,6 +17,7 @@ module Actions
         def plan(product, organization)
           product.disable_auto_reindex!
           product.provider = organization.anonymous_provider
+          product.organization = organization
 
           cp_create = plan_action(::Actions::Candlepin::Product::Create,
                                   :name => product.name,

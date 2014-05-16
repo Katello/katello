@@ -11,22 +11,21 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class EnvironmentsController < Katello::ApplicationController
-
-  def rules
-    {
-      :registerable_paths => lambda{ true }
-    }
-  end
-
-  # GET /environments/registerable_paths
-  def registerable_paths
-    paths = environment_paths(library_path_element("systems_readable?"),
-                              environment_path_element("systems_readable?"))
-    respond_to do |format|
-      format.json { render :json => paths }
+  class EnvironmentsController < Katello::ApplicationController
+    def rules
+      {
+          :registerable_paths => lambda{ true }
+      }
     end
-  end
 
-end
+    # GET /environments/registerable_paths
+    def registerable_paths
+      paths = environment_paths(library_path_element("systems_readable?"),
+                                environment_path_element("systems_readable?"))
+      respond_to do |format|
+        format.json { render :json => paths }
+      end
+    end
+
+  end
 end

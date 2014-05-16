@@ -22,27 +22,19 @@ class GpgKeyAuthorizationAdminTest < AuthorizationTestBase
   end
 
   def test_readable
-    refute_empty GpgKey.readable(@acme_corporation)
+    refute_empty GpgKey.readable
   end
 
-  def test_manageable
-    refute_empty GpgKey.manageable(@acme_corporation)
-  end
-
-  def test_createable?
-    assert GpgKey.createable?(@acme_corporation)
-  end
-
-  def test_any_readable?
-    assert GpgKey.any_readable?(@acme_corporation)
-  end
-
-  def test_key_readable
+  def test_key_readable?
     assert @key.readable?
   end
 
-  def test_key_manageable?
-     assert @key.manageable?
+  def test_key_editable?
+    assert @key.editable?
+  end
+
+  def test_key_deleteable?
+    assert @key.deleteable?
   end
 end
 
@@ -55,27 +47,19 @@ class GpgKeyAuthorizationNoPermsTest < AuthorizationTestBase
   end
 
   def test_readable
-    assert_empty GpgKey.readable(@acme_corporation)
+    assert_empty GpgKey.readable
   end
 
-  def test_manageable
-    assert_empty GpgKey.manageable(@acme_corporation)
-  end
-
-  def test_createable?
-    refute GpgKey.createable?(@acme_corporation)
-  end
-
-  def test_any_readable?
-    refute GpgKey.any_readable?(@acme_corporation)
-  end
-
-  def test_key_readable
+  def test_key_readable?
     refute @key.readable?
   end
 
-  def test_key_manageable?
-     refute @key.manageable?
+  def test_key_editable?
+    refute @key.editable?
+  end
+
+  def test_key_deleteable?
+    refute @key.deleteable?
   end
 
 end

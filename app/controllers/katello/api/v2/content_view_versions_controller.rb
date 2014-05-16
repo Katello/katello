@@ -15,23 +15,10 @@ module Katello
     before_filter :find_content_view_version, :only => [:show, :promote, :destroy]
     before_filter :find_content_view
     before_filter :find_environment, :only => [:promote]
-    before_filter :authorize
 
-    def rules
-      read_rule = lambda { @view.readable? }
-      edit_rule = lambda { @view.editable? }
-      promote_rule = lambda {@environment.changesets_promotable? && @view.promotable?}
-      {
-        :index   => read_rule,
-        :show    => read_rule,
-        :promote => promote_rule,
-        :destroy => edit_rule
-      }
-    end
-
-    api :GET, "/content_view_versions", "List content view versions"
-    api :GET, "/content_views/:content_view_id/content_view_versions", "List content view versions"
-    param :content_view_id, :identifier, :desc => "Content view identifier", :required => true
+    api :GET, "/content_view_versions", N_("List content view versions")
+    api :GET, "/content_views/:content_view_id/content_view_versions", N_("List content view versions")
+    param :content_view_id, :identifier, :desc => N_("Content view identifier"), :required => true
     def index
       collection = {:results  => @view.versions.order('version desc'),
                     :subtotal => @view.versions.count,
@@ -40,22 +27,22 @@ module Katello
       respond(:collection => collection)
     end
 
-    api :GET, "/content_view_versions/:id", "Show content view version"
-    param :id, :identifier, :desc => "Content view version identifier", :required => true
+    api :GET, "/content_view_versions/:id", N_("Show content view version")
+    param :id, :identifier, :desc => N_("Content view version identifier"), :required => true
     def show
       respond :resource => @version
     end
 
-    api :POST, "/content_view_versions/:id/promote", "Promote a content view version"
-    param :id, :identifier, :desc => "Content view version identifier", :required => true
+    api :POST, "/content_view_versions/:id/promote", N_("Promote a content view version")
+    param :id, :identifier, :desc => N_("Content view version identifier"), :required => true
     param :environment_id, :identifier
     def promote
       task = async_task(::Actions::Katello::ContentView::Promote, @version, @environment)
       respond_for_async :resource => task
     end
 
-    api :DELETE, "/content_view_versions/:id", "Remove content view version"
-    param :id, :identifier, :desc => "Content view version identifier", :required => true
+    api :DELETE, "/content_view_versions/:id", N_("Remove content view version")
+    param :id, :identifier, :desc => N_("Content view version identifier"), :required => true
     def destroy
       task = async_task(::Actions::Katello::ContentViewVersion::Destroy, @version)
       respond_for_async :resource => task

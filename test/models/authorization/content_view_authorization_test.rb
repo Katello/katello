@@ -10,105 +10,57 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'katello_test_helper'
-require 'support/auth_support'
+require 'models/authorization/authorization_base'
 
 module Katello
-module ContentViewAuthBase
-  def self.included(base)
-    base.class_eval do
-      include AuthorizationSupportMethods
+  class ContentViewAuthorizationAdminTest < AuthorizationTestBase
+
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @view = ContentView.find(katello_content_views('acme_default'))
     end
-    base.extend ClassMethods
-  end
 
-  def setup
-    @admin       = User.find(users(:admin))
-    @no_perms    = User.find(users(:restricted))
-    @org         = get_organization
-    @view        = FactoryGirl.build(:katello_content_view, :organization => @org)
-  end
+    def test_readable
+      refute_empty ContentView.readable
+    end
 
-  module ClassMethods
-    def before_suite
-      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['Organization', 'KTEnvironment', 'User']
-      disable_glue_layers(services, models)
+    def test_key_readable?
+      assert @view.readable?
+    end
+
+    def test_key_editable?
+      assert @view.editable?
+    end
+
+    def test_key_deletable?
+      assert @view.deletable?
     end
   end
-end
 
-class ContentViewAuthorizationAdminTest < ActiveSupport::TestCase
-  include ContentViewAuthBase
+  class ContentViewAuthorizationNoPermsTest < AuthorizationTestBase
 
-  def setup
-    super
-    User.current = @admin
+    def setup
+      super
+      User.current = User.find(users('restricted'))
+      @view = ContentView.find(katello_content_views('acme_default'))
+    end
+
+    def test_readable
+      assert_empty ContentView.readable
+    end
+
+    def test_key_readable?
+      refute @view.readable?
+    end
+
+    def test_key_editable?
+      refute @view.editable?
+    end
+
+    def test_key_deletable?
+      refute @view.deletable?
+    end
+
   end
-
-  def test_readable
-    count =  ContentView.readable(@org).count
-    @view.save!
-    assert ContentView.any_readable?(@org)
-    assert @view.readable?
-    assert_includes ContentView.readable(@org), @view
-    assert_equal ContentView.readable(@org).count, count+1
-  end
-
-  def test_promotable
-    assert @view.promotable?
-  end
-
-  def test_subscribe
-    assert @view.subscribable?
-  end
-
-end
-
-class ContentViewAuthorizationNoAuthTest < ActiveSupport::TestCase
-  include ContentViewAuthBase
-
-  def setup
-    super
-    User.current = @no_perms
-  end
-
-  def test_readable
-    refute ContentView.any_readable?(@org)
-    assert_empty ContentView.readable(@org)
-    refute @view.readable?
-  end
-
-  def test_promotable?
-    refute @view.promotable?
-  end
-
-  def test_subscribable?
-    refute @view.subscribable?
-  end
-end
-
-class ContentViewAuthorizationSinglePermTest < ActiveSupport::TestCase
-  include ContentViewAuthBase
-
-  def setup
-    super
-    User.current = @no_perms
-  end
-
-  def test_promotable
-    allow User.current.own_role, [:promote], :content_views
-    assert @view.promotable?
-    assert @view.readable?
-    refute @view.subscribable?
-  end
-
-  def test_readable
-    allow User.current.own_role, [:read], :content_views
-    assert ContentView.any_readable?(@org)
-    refute @view.promotable?
-    @view.save!
-    refute_empty ContentView.readable(@org)
-  end
-end
 end

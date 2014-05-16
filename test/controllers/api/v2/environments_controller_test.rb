@@ -29,8 +29,12 @@ module Katello
     end
 
     def permissions
-      @manage_permission = UserPermission.new(:update, :organizations, nil, @organization)
-      @read_permission = UserPermission.new(:read, :organizations, nil, @organization)
+      @resource_type = "Katello::KTEnvironment"
+      @view_permission = :view_lifecycle_environments
+      @create_permission = :create_lifecycle_environments
+      @update_permission = :update_lifecycle_environments
+      @destroy_permission = :destroy_lifecycle_environments
+
       @no_permission = NO_PERMISSION
     end
 
@@ -70,8 +74,8 @@ module Katello
 
     def test_create_protected
       Organization.any_instance.stubs(:save!).returns(@organization)
-      allowed_perms = [@manage_permission]
-      denied_perms = [@read_permission, @no_permission]
+      allowed_perms = [@create_permission]
+      denied_perms = [@view_permission, @update_permission, @destroy_permission, @no_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
         post :create,
@@ -98,8 +102,8 @@ module Katello
     end
 
     def test_update_protected
-      allowed_perms = [@manage_permission]
-      denied_perms = [@no_permission, @read_permission]
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission, @no_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         put :update,
@@ -119,8 +123,8 @@ module Katello
     end
 
     def test_destroy_protected
-      allowed_perms = [@manage_permission]
-      denied_perms = [@no_permission, @read_permission]
+      allowed_perms = [@destroy_permission]
+      denied_perms = [@view_permission, @update_permission, @create_permission, @no_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         delete :destroy, :organization_id => @organization.id,
@@ -136,8 +140,8 @@ module Katello
     end
 
     def test_paths_protected
-      allowed_perms = [@manage_permission, @read_permission]
-      denied_perms = [@no_permission]
+      allowed_perms = [@view_permission]
+      denied_perms = [@destroy_permission, @update_permission, @create_permission, @no_permission]
 
       assert_protected_action(:paths, allowed_perms, denied_perms) do
         get :paths, :organization_id => @organization.id

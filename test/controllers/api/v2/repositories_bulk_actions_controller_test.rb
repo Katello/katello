@@ -29,10 +29,11 @@ module Katello
     end
 
     def permissions
-      @read_permission = UserPermission.new(:read, :providers)
-      @delete_permission = UserPermission.new(:update, :providers, @provider.id, @provider.organization)
-      @sync_permission = UserPermission.new(:sync, :organizations, nil, @organization)
-      @no_permission = NO_PERMISSION
+      @read_permission = :view_products
+      @create_permission = :create_products
+      @update_permission = :update_products
+      @destroy_permission = :destroy_products
+      @sync_permission = :sync_products
     end
 
     def setup
@@ -52,8 +53,8 @@ module Katello
     end
 
     def test_destroy_repositories_protected
-      allowed_perms = [@delete_permission]
-      denied_perms = [@sync_permission, @read_permission, @no_permission]
+      allowed_perms = [@destroy_permission]
+      denied_perms = [@sync_permission, @read_permission, @create_permission, @update_permission]
 
       assert_protected_action(:destroy_repositories, allowed_perms, denied_perms) do
         put :destroy_repositories, {:ids => @repositories.collect(&:id), :organization_id => @organization.id}
@@ -70,7 +71,7 @@ module Katello
 
     def test_sync_protected
       allowed_perms = [@sync_permission]
-      denied_perms = [@delete_permission, @read_permission, @no_permission]
+      denied_perms = [@destroy_permission, @read_permission, @create_permission, @update_permission]
 
       assert_protected_action(:sync_repositories, allowed_perms, denied_perms) do
         post :sync_repositories, {:ids => @repositories.collect(&:id), :organization_id => @organization.id}

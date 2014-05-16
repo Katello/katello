@@ -40,6 +40,7 @@ describe ContentSearchController do
       @product = Product.new({:name=>"prod", :label=> "prod"})
 
       @product.provider = @provider
+      @product.organization = @organization
       @product.stubs(:arch).returns('noarch')
       @product.save!
       @repo_library = new_test_repo(@organization.library, @product, "repo", "#{@organization.name}/Library/prod/repo")

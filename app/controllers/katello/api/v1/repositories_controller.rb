@@ -49,13 +49,13 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     }
   end
 
-  api :POST, "/repositories", "Create a repository"
+  api :POST, "/repositories", N_("Create a repository")
   param :name, String, :required => true
-  param :organization_id, :number, :required => true, :desc => "id of an organization the repository will be contained in"
-  param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
-  param :url, :undef, :required => true, :desc => "repository source url"
-  param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the new repository"
-  param :content_type, String, :desc => "type of repo (either 'yum' or 'puppet', defaults to 'yum')"
+  param :organization_id, :number, :required => true, :desc => N_("id of an organization the repository will be contained in")
+  param :product_id, :number, :required => true, :desc => N_("id of a product the repository will be contained in")
+  param :url, :undef, :required => true, :desc => N_("repository source url")
+  param :gpg_key_name, String, :desc => N_("name of a gpg key that will be assigned to the new repository")
+  param :content_type, String, :desc => N_("type of repo (either 'yum' or 'puppet', defaults to 'yum')")
   see "v1#gpg_keys#index"
   def create
     fail HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
@@ -71,17 +71,17 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     respond :resource => content
   end
 
-  api :GET, "/repositories/:id", "Show a repository"
-  param :id, :identifier, :required => true, :desc => "repository id"
+  api :GET, "/repositories/:id", N_("Show a repository")
+  param :id, :identifier, :required => true, :desc => N_("repository id")
   def show
     respond
   end
 
-  api :PUT, "/repositories/:id", "Update a repository"
-  param :id, :identifier, :required => true, :desc => "repository id"
+  api :PUT, "/repositories/:id", N_("Update a repository")
+  param :id, :identifier, :required => true, :desc => N_("repository id")
   param :repository, Hash, :required => true do
-    param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the repository"
-    param :url, String, :desc => "repository source url"
+    param :gpg_key_name, String, :desc => N_("name of a gpg key that will be assigned to the repository")
+    param :url, String, :desc => N_("repository source url")
   end
   def update
     fail HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
@@ -91,7 +91,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     respond
   end
 
-  api :DELETE, "/repositories/:id", "Destroy a repository"
+  api :DELETE, "/repositories/:id", N_("Destroy a repository")
   param :id, :identifier, :required => true
   def destroy
     #
@@ -106,7 +106,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     end
   end
 
-  api :GET, "/repositories/:id/package_groups", "List all package groups in a repository"
+  api :GET, "/repositories/:id/package_groups", N_("List all package groups in a repository")
   param :id, :identifier, :required => true
   def package_groups
     #translate group_id to id in search params (conflict with repo id used for routing)
@@ -116,7 +116,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     respond_for_index :collection => @repository.package_groups_search(search_attrs)
   end
 
-  api :GET, "/repositories/:id/package_group_categories", "List all package group categories in a repository"
+  api :GET, "/repositories/:id/package_group_categories", N_("List all package group categories in a repository")
   param :id, :identifier, :required => true
   def package_group_categories
     #translate category_id to id in search params (conflict with repo id used for routing)
@@ -129,7 +129,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   # returns the content of a repo gpg key, used directly by yum
   # we don't want to authenticate, authorize etc, trying to distinquse between a yum request and normal api request
   # might not always be 100% bullet proof, and its more important that yum can fetch the key.
-  api :GET, "/repositories/:id/gpg_key_content", "Return the content of a repo gpg key, used directly by yum"
+  api :GET, "/repositories/:id/gpg_key_content", N_("Return the content of a repo gpg key, used directly by yum")
   param :id, :identifier, :required => true
   def gpg_key_content
     if @repository.gpg_key && @repository.gpg_key.content.present?

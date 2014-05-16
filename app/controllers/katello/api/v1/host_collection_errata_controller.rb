@@ -17,8 +17,8 @@ class Api::V1::HostCollectionErrataController < Api::V1::ApiController
       methods for handling erratas on host collection level
     DOC
 
-    param :organization_id, :number, :desc => "oranization identifier", :required => true
-    param :host_collection_id, :identifier, :desc => "host_collection identifier", :required => true
+    param :organization_id, :number, :desc => N_("oranization identifier"), :required => true
+    param :host_collection_id, :identifier, :desc => N_("host_collection identifier"), :required => true
 
     api_version 'v1'
     api_version 'v2'
@@ -39,8 +39,8 @@ class Api::V1::HostCollectionErrataController < Api::V1::ApiController
     }
   end
 
-  api :GET, "/organizations/:organization_id/host_collections/:host_collection_id/errata", "Get list of errata associated with the host collection"
-  param :type, %w(bugfix enhancement security), :desc => "Filter errata by type", :required => false
+  api :GET, "/organizations/:organization_id/host_collections/:host_collection_id/errata", N_("Get list of errata associated with the host collection")
+  param :type, %w(bugfix enhancement security), :desc => N_("Filter errata by type"), :required => false
   # TODO: when errata are enabled there has to be created rabl template for errata
   def index
     filter_type = params[:filter_type]
@@ -66,8 +66,8 @@ class Api::V1::HostCollectionErrataController < Api::V1::ApiController
     respond :collection => errata
   end
 
-  api :POST, "/organizations/:organization_id/host_collections/:host_collection_id/errata", "Install errata remotely"
-  param :errata_ids, Array, :desc => "List of errata ids to install", :required => true
+  api :POST, "/organizations/:organization_id/host_collections/:host_collection_id/errata", N_("Install errata remotely")
+  param :errata_ids, Array, :desc => N_("List of errata ids to install"), :required => true
   def create
     if params[:errata_ids]
       job = @host_collection.install_errata(params[:errata_ids])

@@ -156,33 +156,8 @@ Katello::Engine.routes.draw do
   resources :providers do
     collection do
       get :auto_complete_search
-    end
-
-    resources :products do
-      get :default_label, :on => :collection
-
-      resources :repositories, :only => [:new, :create, :edit, :destroy] do
-        get :default_label, :on => :collection
-        member do
-          put :update_gpg_key, :as => :update_repo_gpg_key
-        end
-      end
-    end
-    collection do
-      get :items
       get :redhat_provider
       get :redhat_provider_tab
-      post :redhat_provider, :action => :update_redhat_provider
-    end
-    member do
-      get :repo_discovery
-      get :discovered_repos
-      get :new_discovered_repos
-      post :discover
-      post :cancel_discovery
-      get :products_repos
-      get :manifest_progress
-      get :schedule
     end
   end
 
@@ -206,8 +181,6 @@ Katello::Engine.routes.draw do
     end
   end
 
-  match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
-
   resources :organizations do
     collection do
       get :auto_complete_search
@@ -216,24 +189,13 @@ Katello::Engine.routes.draw do
     end
     member do
       get :show
-      get :environments_partial
       get :events
       get :download_debug_certificate
       get :apply_default_info_status
     end
-    resources :environments do
-      get :default_label, :on => :collection
-      member do
-        get :products
-        get :content_views
-      end
+    resources :environments, :only => [] do
       collection do
         get :registerable_paths
-      end
-      resources :content_view_versions, :only => [:show] do
-        member do
-          get :content
-        end
       end
     end
   end

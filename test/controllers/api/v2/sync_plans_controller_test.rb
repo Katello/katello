@@ -29,10 +29,14 @@ module Katello
     end
 
     def permissions
-      @read_permission = UserPermission.new(:read, :providers)
-      @create_permission = UserPermission.new(:create, :providers)
-      @update_permission = UserPermission.new(:update, :providers)
-      @no_permission = NO_PERMISSION
+      @resource_type = "Katello::SyncPlan"
+      @view_permission = :view_sync_plans
+      @create_permission = :create_sync_plans
+      @update_permission = :update_sync_plans
+      @destroy_permission = :destroy_sync_plans
+
+      @read_products_permission = :view_products
+      @update_products_permission = :update_products
     end
 
     def setup
@@ -52,8 +56,8 @@ module Katello
     end
 
     def test_index_protected
-      allowed_perms = [@read_permission, @update_permission]
-      denied_perms = [@no_permission]
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
         get :index, :organization_id => @organization.id
@@ -81,7 +85,7 @@ module Katello
 
     def test_create_protected
       allowed_perms = [@create_permission]
-      denied_perms = [@no_permission]
+      denied_perms = [@view_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
         post :create, :organization_id => @organization.id,
@@ -101,8 +105,8 @@ module Katello
     end
 
     def test_update_protected
-      allowed_perms = [@update_permission, @create_permission]
-      denied_perms = [@no_permission]
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         put :update, :id => @sync_plan.id, :organization_id => @organization.id,
@@ -118,8 +122,8 @@ module Katello
     end
 
     def test_destroy_protected
-      allowed_perms = [@update_permission, @create_permission]
-      denied_perms = [@no_permission]
+      allowed_perms = [@destroy_permission]
+      denied_perms = [@view_permission, @create_permission, @update_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         delete :destroy, :organization_id => @organization.id, :id => @sync_plan.id
@@ -134,8 +138,8 @@ module Katello
     end
 
     def test_available_products_protected
-      allowed_perms = [@update_permission, @create_permission]
-      denied_perms = [@no_permission]
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:available_products, allowed_perms, denied_perms) do
         get :available_products, :id => @sync_plan.id, :organization_id => @organization.id
@@ -151,8 +155,8 @@ module Katello
     end
 
     def test_add_products_protected
-      allowed_perms = [@update_permission, @create_permission]
-      denied_perms = [@no_permission]
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:add_products, allowed_perms, denied_perms) do
         put :add_products, :id => @sync_plan.id, :organization_id => @organization.id,
@@ -169,8 +173,8 @@ module Katello
     end
 
     def test_remove_products_protected
-      allowed_perms = [@update_permission, @create_permission]
-      denied_perms = [@no_permission]
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:remove_products, allowed_perms, denied_perms) do
         put :remove_products, :id => @sync_plan.id, :organization_id => @organization.id,

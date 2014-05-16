@@ -51,9 +51,6 @@ Katello::Engine.routes.draw do
           resources :errata, :only => [:index, :create], :controller => :host_collection_errata
         end
 
-        resources :environments do
-          get :repositories, :on => :member
-        end
         resources :sync_plans
         resources :tasks, :only => [:index]
 
@@ -151,20 +148,6 @@ Katello::Engine.routes.draw do
           get :package_group_categories
           get :gpg_key_content
           post :enable
-        end
-      end
-
-      resources :environments, :only => [:show, :update, :destroy] do
-        resources :systems, :only => [:create, :index] do
-          get :report, :on => :collection
-        end
-        resources :distributors, :only => [:create, :index]
-        resources :products, :only => [:index] do
-          get :repositories, :on => :member
-        end
-
-        member do
-          get :releases
         end
       end
 

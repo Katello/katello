@@ -30,9 +30,11 @@ module Katello
     end
 
     def permissions
-      @edit_permission = UserPermission.new(:update, :providers)
-      @read_permission = UserPermission.new(:read, :providers)
-      @no_permission = NO_PERMISSION
+      @read_permission = :view_products
+      @create_permission = :create_products
+      @update_permission = :update_products
+      @destroy_permission = :destroy_products
+      @sync_permission = :sync_products
     end
 
     def setup
@@ -51,8 +53,8 @@ module Katello
     end
 
     def test_create_upload_request_protected
-      allowed_perms = [@edit_permission]
-      denied_perms = [@read_permission, @no_permission]
+      allowed_perms = [@update_permission]
+      denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
         post :create, :repository_id => @repo.id
@@ -67,8 +69,8 @@ module Katello
     end
 
     def test_upload_bits_protected
-      allowed_perms = [@edit_permission]
-      denied_perms = [@read_permission, @no_permission]
+      allowed_perms = [@update_permission]
+      denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:upload_bits, allowed_perms, denied_perms) do
         put :upload_bits, :id => "1" , :offset => "0", :content => "/tmp/my_file.rpm", :repository_id => @repo.id
@@ -87,8 +89,8 @@ module Katello
     end
 
     def test_import_into_repo_protected
-      allowed_perms = [@edit_permission]
-      denied_perms = [@read_permission, @no_permission]
+      allowed_perms = [@update_permission]
+      denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:import_into_repo, allowed_perms, denied_perms) do
         post :import_into_repo, :id => "1", :unit_type_id => "rpm", :unit_key => {}, :unit_metadata => {},
@@ -104,8 +106,8 @@ module Katello
     end
 
     def test_delete_request_protected
-      allowed_perms = [@edit_permission]
-      denied_perms = [@no_permission, @read_permission]
+      allowed_perms = [@update_permission]
+      denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         delete :destroy, :id => "1", :repository_id => @repo.id
@@ -123,8 +125,8 @@ module Katello
     end
 
     def test_upload_file_protected
-      allowed_perms = [@edit_permission]
-      denied_perms = [@read_permission, @no_permission]
+      allowed_perms = [@update_permission]
+      denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:upload_file, allowed_perms, denied_perms) do
         post :upload_file, :repository_id => @repo.id
