@@ -32,13 +32,13 @@ module Katello
         indexes :errata_id, :type => 'string', :analyzer => :snowball
         indexes :errata_id_sort, :type => 'string', :index => :not_analyzed
       end
-
-      def extended_index_attrs
-        {
-          :content_view_filter_id => self.content_view_filter_id
-        }
-      end
-
     end
+
+    def extended_index_attrs
+      {
+        :content_view_filter_id => self.content_view_filter_id
+      }
+    end
+
   end
 end

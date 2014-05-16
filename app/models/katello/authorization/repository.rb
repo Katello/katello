@@ -14,30 +14,27 @@ module Katello
 module Authorization::Repository
   extend ActiveSupport::Concern
 
-  included do
-    include Authorizable
-    include Katello::Authorization
+  include Authorizable
+  include Katello::Authorization
 
-    def readable?
-      product.readable?
-    end
+  def readable?
+    product.readable?
+  end
 
-    def editable?
-      product.editable?
-    end
+  def editable?
+    product.editable?
+  end
 
-    def deletable?
-      product.editable? && !promoted?
-    end
+  def deletable?
+    product.editable? && !promoted?
+  end
 
-    def redhat_deletable?
-      !self.promoted? && self.product.editable?
-    end
+  def redhat_deletable?
+    !self.promoted? && self.product.editable?
+  end
 
-    def syncable?
-      product.syncable?
-    end
-
+  def syncable?
+    product.syncable?
   end
 
   module ClassMethods

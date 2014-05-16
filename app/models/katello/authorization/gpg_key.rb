@@ -14,26 +14,24 @@ module Katello
 module Authorization::GpgKey
   extend ActiveSupport::Concern
 
+  include Authorizable
+  include Katello::Authorization
+
+  def readable?
+    authorized?(:view_gpg_keys)
+  end
+
+  def editable?
+    authorized?(:edit_gpg_keys)
+  end
+
+  def deletable?
+    authorized?(:destroy_gpg_keys)
+  end
+
   module ClassMethods
     def readable
       authorized(:view_gpg_keys)
-    end
-  end
-
-  included do
-    include Authorizable
-    include Katello::Authorization
-
-    def readable?
-      authorized?(:view_gpg_keys)
-    end
-
-    def editable?
-      authorized?(:edit_gpg_keys)
-    end
-
-    def deletable?
-      authorized?(:destroy_gpg_keys)
     end
   end
 

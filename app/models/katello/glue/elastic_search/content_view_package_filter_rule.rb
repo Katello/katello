@@ -32,14 +32,14 @@ module Katello
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :name_sort, :type => 'string', :index => :not_analyzed
       end
-
-      def extended_index_attrs
-        {
-          :name_sort => name.downcase,
-          :content_view_filter_id => self.content_view_filter_id
-        }
-      end
-
     end
+
+    def extended_index_attrs
+      {
+        :name_sort => name.downcase,
+        :content_view_filter_id => self.content_view_filter_id
+      }
+    end
+
   end
 end

@@ -14,6 +14,18 @@ module Katello
 module Authorization::Distributor
   extend ActiveSupport::Concern
 
+  def readable?
+    environment.distributors_readable?
+  end
+
+  def editable?
+    environment.distributors_editable?
+  end
+
+  def deletable?
+    environment.distributors_deletable?
+  end
+
   module ClassMethods
     # returns list of virtual permission tags for the current user
     def list_tags
@@ -45,20 +57,6 @@ module Authorization::Distributor
 
     def registerable?(env, org)
       (env || org).distributors_registerable?
-    end
-  end
-
-  included do
-    def readable?
-      environment.distributors_readable?
-    end
-
-    def editable?
-      environment.distributors_editable?
-    end
-
-    def deletable?
-      environment.distributors_deletable?
     end
   end
 

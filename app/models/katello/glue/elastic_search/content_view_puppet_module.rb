@@ -28,14 +28,15 @@ module Katello
         indexes :uuid, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :content_view, :type => 'string', :analyzer => :kt_name_analyzer
       end
-
-      def extended_index_attrs
-        {
-            :name_sort => name.try(:downcase),
-            :name_autocomplete => self.name,
-            :content_view => self.content_view.name
-        }
-      end
     end
+
+    def extended_index_attrs
+      {
+          :name_sort => name.try(:downcase),
+          :name_autocomplete => self.name,
+          :content_view => self.content_view.name
+      }
+    end
+
   end
 end

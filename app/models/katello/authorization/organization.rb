@@ -14,10 +14,101 @@ module Katello
 module Authorization::Organization
   extend ActiveSupport::Concern
 
+  include Authorizable
+  include Katello::Authorization
+
   SYSTEMS_READABLE = [:read_systems, :register_systems, :update_systems, :delete_systems]
   DISTRIBUTORS_READABLE = [:read_distributors, :register_distributors, :update_distributors, :delete_distributors]
   READ_PERM_VERBS = [:read, :create, :update, :delete]
   SYNC_PERM_VERBS = [:sync]
+
+  included do
+    scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
+  end
+
+  def editable?
+    ::User.allowed_to?([:update, :create], :organizations, nil, self)
+  end
+
+  def deletable?
+    ::User.allowed_to?([:delete, :create], :organizations)
+  end
+
+  def readable?
+    ::User.allowed_to?(READ_PERM_VERBS, :organizations, nil, self)
+  end
+
+  def systems_readable?
+    ::User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
+  end
+
+  def systems_editable?
+    ::User.allowed_to?([:update_systems], :organizations, nil, self)
+  end
+
+  def systems_deletable?
+    ::User.allowed_to?([:delete_systems], :organizations, nil, self)
+  end
+
+  def systems_registerable?
+    ::User.allowed_to?([:register_systems], :organizations, nil, self)
+  end
+
+  def any_systems_registerable?
+    systems_registerable? || ::User.allowed_to?([:register_systems], :environments, environment_ids, self, true)
+  end
+
+  def distributors_readable?
+    ::User.allowed_to?(DISTRIBUTORS_READABLE, :organizations, nil, self)
+  end
+
+  def distributors_deletable?
+    ::User.allowed_to?([:delete_distributors], :organizations, nil, self)
+  end
+
+  def distributors_registerable?
+    ::User.allowed_to?([:register_distributors], :organizations, nil, self)
+  end
+
+  def any_distributors_registerable?
+    distributors_registerable? || ::User.allowed_to?([:register_distributors], :environments, environment_ids, self, true)
+  end
+
+  def gpg_keys_manageable?
+    ::User.allowed_to?([:gpg], :organizations, nil, self)
+  end
+
+  def syncable?
+    ::User.allowed_to?(SYNC_PERM_VERBS, :organizations, nil, self)
+  end
+
+  def redhat_manageable?
+    ::User.allowed_to?([:redhat_products], :organizations, nil, self)
+  end
+
+  def manifest_importable?
+    authorized(:import_manifest)
+  end
+
+  def readable_promotion_paths
+     permissible_promotion_paths(KTEnvironment.readable)
+  end
+
+  def promotable_promotion_paths
+    permissible_promotion_paths(KTEnvironment.promotable)
+  end
+
+  def permissible_promotion_paths(permissible_environments)
+    promotion_paths.select do |promotion_path|
+      # if at least one environment in the path is permissible
+      # the path is deemed permissible.
+      (promotion_path - permissible_environments).size != promotion_path.size
+    end
+  end
+
+  def subscriptions_readable?
+    User.current.can?(:view_subscriptions)
+  end
 
   module ClassMethods
     def creatable?
@@ -86,97 +177,6 @@ module Authorization::Organization
       if !::User.allowed_all_tags?(verbs, resource)
         where("#{Organization.table_name}.id in (#{::User.allowed_tags_sql(verbs, resource)})")
       end
-    end
-  end
-
-  included do
-    include Authorizable
-    include Katello::Authorization
-
-    scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
-
-    def editable?
-      ::User.allowed_to?([:update, :create], :organizations, nil, self)
-    end
-
-    def deletable?
-      ::User.allowed_to?([:delete, :create], :organizations)
-    end
-
-    def readable?
-      ::User.allowed_to?(READ_PERM_VERBS, :organizations, nil, self)
-    end
-
-    def systems_readable?
-      ::User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
-    end
-
-    def systems_editable?
-      ::User.allowed_to?([:update_systems], :organizations, nil, self)
-    end
-
-    def systems_deletable?
-      ::User.allowed_to?([:delete_systems], :organizations, nil, self)
-    end
-
-    def systems_registerable?
-      ::User.allowed_to?([:register_systems], :organizations, nil, self)
-    end
-
-    def any_systems_registerable?
-      systems_registerable? || ::User.allowed_to?([:register_systems], :environments, environment_ids, self, true)
-    end
-
-    def distributors_readable?
-      ::User.allowed_to?(DISTRIBUTORS_READABLE, :organizations, nil, self)
-    end
-
-    def distributors_deletable?
-      ::User.allowed_to?([:delete_distributors], :organizations, nil, self)
-    end
-
-    def distributors_registerable?
-      ::User.allowed_to?([:register_distributors], :organizations, nil, self)
-    end
-
-    def any_distributors_registerable?
-      distributors_registerable? || ::User.allowed_to?([:register_distributors], :environments, environment_ids, self, true)
-    end
-
-    def gpg_keys_manageable?
-      ::User.allowed_to?([:gpg], :organizations, nil, self)
-    end
-
-    def syncable?
-      ::User.allowed_to?(SYNC_PERM_VERBS, :organizations, nil, self)
-    end
-
-    def redhat_manageable?
-      ::User.allowed_to?([:redhat_products], :organizations, nil, self)
-    end
-
-    def manifest_importable?
-      authorized(:import_manifest)
-    end
-
-    def readable_promotion_paths
-       permissible_promotion_paths(KTEnvironment.readable)
-    end
-
-    def promotable_promotion_paths
-      permissible_promotion_paths(KTEnvironment.promotable)
-    end
-
-    def permissible_promotion_paths(permissible_environments)
-      promotion_paths.select do |promotion_path|
-        # if at least one environment in the path is permissible
-        # the path is deemed permissible.
-        (promotion_path - permissible_environments).size != promotion_path.size
-      end
-    end
-
-    def subscriptions_readable?
-      User.current.can?(:view_subscriptions)
     end
   end
 
