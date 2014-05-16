@@ -31,7 +31,8 @@ module ProductTestData
     :cp_id => 1,
     :productContent => [],
     :attrs => [],
-    :multiplier => 1
+    :multiplier => 1,
+    :organization_id => 1
   }.with_indifferent_access
 
   SIMPLE_PRODUCT_WITH_INVALID_NAME = HashWithIndifferentAccess.new({

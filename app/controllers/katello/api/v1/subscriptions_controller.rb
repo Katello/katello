@@ -15,7 +15,7 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
 
   def_param_group :system do
     description "Systems subscriptions management."
-    param :system_id, :identifier, :desc => "System uuid", :required => true
+    param :system_id, :identifier, :desc => N_("System uuid"), :required => true
 
     api_version 'v1'
     api_version 'v2'
@@ -37,18 +37,18 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
         :destroy           => subscribe,
         :destroy_all       => subscribe,
         :destroy_by_serial => subscribe,
-        :organization_index => lambda { @organization.redhat_provider.readable? }
+        :organization_index => lambda { @organization.manifest_importable? }
     }
   end
 
-  api :GET, "/systems/:system_id/subscriptions", "List subscriptions"
+  api :GET, "/systems/:system_id/subscriptions", N_("List subscriptions")
   param_group :system
   def index
     respond :collection => { :entitlements => @system.consumed_entitlements }
   end
 
-  api :GET, "/subscriptions", "List subscriptions"
-  #params :search, String, :desc => "Filter subscriptions by advanced search query"
+  api :GET, "/subscriptions", N_("List subscriptions")
+  #params :search, String, :desc => N_("Filter subscriptions by advanced search query")
   def organization_index
 
     query_string = params[:search]
@@ -91,10 +91,10 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
     respond_for_index(:collection => subscriptions)
   end
 
-  api :POST, "/systems/:system_id/subscriptions", "Create a subscription"
+  api :POST, "/systems/:system_id/subscriptions", N_("Create a subscription")
   param_group :system
-  param :pool, String, :desc => "Subscription Pool uuid", :required => true
-  param :quantity, :number, :desc => "Number of subscription to use", :required => true
+  param :pool, String, :desc => N_("Subscription Pool uuid"), :required => true
+  param :quantity, :number, :desc => N_("Number of subscription to use"), :required => true
   def create
     expected_params = params.with_indifferent_access.slice(:pool, :quantity)
     fail HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
@@ -102,8 +102,8 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
     respond :resource => @system
   end
 
-  api :DELETE, "/systems/:system_id/subscriptions/:id", "Delete a subscription"
-  param :id, :number, :desc => "Entitlement id"
+  api :DELETE, "/systems/:system_id/subscriptions/:id", N_("Delete a subscription")
+  param :id, :number, :desc => N_("Entitlement id")
   param_group :system
   def destroy
     expected_params = params.with_indifferent_access.slice(:id)
@@ -112,15 +112,15 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
     respond_for_show :resource => @system
   end
 
-  api :DELETE, "/systems/:system_id/subscriptions", "Delete all system subscriptions"
+  api :DELETE, "/systems/:system_id/subscriptions", N_("Delete all system subscriptions")
   param_group :system
   def destroy_all
     @system.unsubscribe_all
     respond_for_show :resource => @system
   end
 
-  api :DELETE, "/systems/:system_id/subscriptions/serials/:serial_id", "Delete a subscription by serial id"
-  param :serial_id, String, :desc => "Subscription serial id"
+  api :DELETE, "/systems/:system_id/subscriptions/serials/:serial_id", N_("Delete a subscription by serial id")
+  param :serial_id, String, :desc => N_("Subscription serial id")
   param_group :system
   def destroy_by_serial
     expected_params = params.with_indifferent_access.slice(:serial_id)

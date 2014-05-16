@@ -13,48 +13,48 @@
 module Katello
   class Api::V2::RepositoriesBulkActionsController < Api::V2::ApiController
 
-    before_filter :find_organization
     before_filter :find_repositories
-    before_filter :authorize
 
-    def rules
-      all_deletable = lambda{ Repository.all_deletable(@repositories) }
-      all_syncable = lambda{ Repository.all_syncable(@organization) }
-      hash = {
-          :destroy_repositories => all_deletable,
-          :sync_repositories => all_syncable
-      }
-      hash
-    end
-
-    api :PUT, "/repositories/bulk/destroy", "Destroy one or more repositories"
-    param :ids, Array, :desc => "List of repository ids", :required => true
+    api :PUT, "/repositories/bulk/destroy", N_("Destroy one or more repositories")
+    param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def destroy_repositories
-      display_messages = []
+      deletable_repositories = @repositories.deletable
 
-      @repositories.each do |repository|
+      deletable_repositories.each do |repository|
         trigger(::Actions::Katello::Repository::Destroy, repository)
       end
 
-      display_messages << _("Successfully removed %s repositories") % @repositories.length
-      respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
+      messages = format_bulk_action_messages(
+        :success    => _("Successfully removed %s repositories"),
+        :error      => _("You were not allowed to delete %s"),
+        :models     => @repositories,
+        :authorized => deletable_repositories
+      )
+
+      respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => messages }
     end
 
-    api :POST, "/repositories/bulk/sync", "Synchronise repository"
-    param :ids, Array, :desc => "List of repository ids", :required => true
+    api :POST, "/repositories/bulk/sync", N_("Synchronise repository")
+    param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def sync_repositories
-      display_messages = []
+      syncable_repositories = @repositories.syncable
+      syncable_repositories.each(&:sync)
 
-      @repositories.each{ |repository| repository.sync }
-      display_messages << _("Successfully started sync for %s repositories, you are free to leave this page.") % @repositories.length
-      respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
+      messages = format_bulk_action_messages(
+        :success    => _("Successfully started sync for %s repositories, you are free to leave this page."),
+        :error      => _("You were not allowed to sync %s"),
+        :models     => @repositories,
+        :authorized => syncable_repositories
+      )
+
+      respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => messages }
     end
 
     private
 
     def find_repositories
       params.require(:ids)
-      @repositories = params[:ids].map { |id| Repository.find(id) }
+      @repositories = Repository.where(:id => params[:ids])
     end
 
   end

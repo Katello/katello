@@ -16,8 +16,8 @@ module Katello
     skip_before_filter :authorize # ok - anyone authenticated can ask for status
     skip_before_filter :require_user, :only => [:server_status]
 
-    api :GET, "/ping", "Shows status of system and it's subcomponents"
-    description "This service is only available for authenticated users"
+    api :GET, "/ping", N_("Shows status of system and it's subcomponents")
+    description N_("This service is only available for authenticated users")
     def index
       resource = Hash[Ping.ping.collect { |k, v| [{:status => :result, :services => :status}[k], v] }]
       resource[:status].each_key do |key|
@@ -26,8 +26,8 @@ module Katello
       respond_for_show :resource => resource
     end
 
-    api :GET, "/status", "Shows version information"
-    description "This service is also available for unauthenticated users"
+    api :GET, "/status", N_("Shows version information")
+    description N_("This service is also available for unauthenticated users")
     def server_status
       # rubocop:disable SymbolName
       status = { :release    => Katello.config.app_name,
@@ -38,8 +38,8 @@ module Katello
       respond_for_show :resource => status
     end
 
-    api :GET, "/version", "Shows name and version information"
-    description "This service is only available for authenticated users"
+    api :GET, "/version", N_("Shows name and version information")
+    description N_("This service is only available for authenticated users")
     def version
       respond_for_show :resource => { :name => Katello.config.app_mode, :version => Katello.config.katello_version }
     end

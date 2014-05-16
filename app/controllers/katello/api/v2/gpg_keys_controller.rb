@@ -13,29 +13,13 @@
 module Katello
   class Api::V2::GpgKeysController < Api::V2::ApiController
 
-    before_filter :find_organization, :only => [:index, :create]
-    before_filter :find_gpg_key, :only => [:show, :update, :destroy, :content]
     before_filter :authorize
+    before_filter :find_organization, :only => [:create]
+    before_filter :find_gpg_key, :only => [:show, :update, :destroy, :content]
 
     def_param_group :gpg_key do
-      param :name, :identifier, :action_aware => true, :required => true, :desc => "identifier of the gpg key"
-      param :content, String, :action_aware => true, :required => true, :desc => "public key block in DER encoding"
-    end
-
-    def rules
-      index_test  = lambda { GpgKey.any_readable?(@organization) }
-      create_test = lambda { GpgKey.createable?(@organization) }
-      read_test   = lambda { @gpg_key.readable? }
-      manage_test = lambda { @gpg_key.manageable? }
-
-      {
-        :index => index_test,
-        :create => create_test,
-        :show => read_test,
-        :update  => manage_test,
-        :destroy => manage_test,
-        :content => manage_test
-      }
+      param :name, :identifier, :action_aware => true, :required => true, :desc => N_("identifier of the gpg key")
+      param :content, String, :action_aware => true, :required => true, :desc => N_("public key block in DER encoding")
     end
 
     resource_description do
@@ -46,14 +30,14 @@ module Katello
       api_version "v2"
     end
 
-    api :GET, "/gpg_keys", "List gpg keys"
-    param :organization_id, :number, :desc => "organization identifier", :required => true
+    api :GET, "/gpg_keys", N_("List gpg keys")
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
     param_group :search, Api::V2::ApiController
     def index
       options = sort_params
       options[:load_records?] = true
 
-      ids = GpgKey.readable(@organization).pluck(:id)
+      ids = GpgKey.readable.pluck(:id)
 
       options[:filters] = [
         {:terms => {:id => ids}}
@@ -62,8 +46,8 @@ module Katello
       respond_for_index(:collection => item_search(GpgKey, params, options))
     end
 
-    api :POST, "/gpg_keys", "Create a gpg key"
-    param :organization_id, :number, :desc => "organization identifier", :required => true
+    api :POST, "/gpg_keys", N_("Create a gpg key")
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
     param_group :gpg_key, :as => :create
     def create
       filepath = params.try(:[], :file_path).try(:path)
@@ -79,30 +63,30 @@ module Katello
       respond_for_show(:resource => gpg_key)
     end
 
-    api :GET, "/gpg_keys/:id", "Show a gpg key"
-    param :id, :identifier, :desc => "gpg key numeric identifier", :required => true
+    api :GET, "/gpg_keys/:id", N_("Show a gpg key")
+    param :id, :identifier, :desc => N_("gpg key numeric identifier"), :required => true
     def show
       respond_for_show(:resource => @gpg_key)
     end
 
-    api :PUT, "/gpg_keys/:id", "Update a repository"
-    param :id, :identifier, :desc => "gpg key numeric identifier", :required => true
+    api :PUT, "/gpg_keys/:id", N_("Update a repository")
+    param :id, :identifier, :desc => N_("gpg key numeric identifier"), :required => true
     param_group :gpg_key
     def update
       @gpg_key.update_attributes!(gpg_key_params)
       respond_for_show({:resource => @gpg_key})
     end
 
-    api :DELETE, "/gpg_keys/:id", "Destroy a gpg key"
-    param :id, :number, :desc => "gpg key numeric identifier", :required => true
+    api :DELETE, "/gpg_keys/:id", N_("Destroy a gpg key")
+    param :id, :number, :desc => N_("gpg key numeric identifier"), :required => true
     def destroy
       @gpg_key.destroy
       respond_for_destroy
     end
 
-    api :POST, "/gpg_keys/:id/content", "Upload gpg key contents"
-    param :id, :number, :desc => "gpg key numeric identifier", :required => true
-    param :content, File, :required => true, :desc => "file contents", :required => true
+    api :POST, "/gpg_keys/:id/content", N_("Upload gpg key contents")
+    param :id, :number, :desc => N_("gpg key numeric identifier"), :required => true
+    param :content, File, :required => true, :desc => N_("file contents"), :required => true
     def content
       filepath = params.try(:[], :content).try(:path)
 

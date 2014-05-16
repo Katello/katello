@@ -32,14 +32,6 @@ class SyncManagementController < Katello::ApplicationController
     @@status_values = {}
   end
 
-  before_filter :find_provider, :except => [:index, :sync, :sync_status, :manage]
-  before_filter :find_providers, :only => [:sync, :sync_status]
-  before_filter :authorize
-
-  def menu_definition
-    {:manage => :admin_menu}.with_indifferent_access
-  end
-
   def section_id
     'contents'
   end
@@ -48,27 +40,9 @@ class SyncManagementController < Katello::ApplicationController
     _('Sync Status')
   end
 
-  def rules
-
-    list_test = lambda{current_organization && Provider.any_readable?(current_organization) }
-    sync_read_test = lambda do
-      @providers.each { |prov| return false if !prov.readable? }
-      return true
-    end
-    sync_test = lambda {current_organization && current_organization.syncable?}
-
-    { :index => list_test,
-      :manage => list_test,
-      :sync_status => sync_read_test,
-      :product_status => sync_read_test,
-      :sync => sync_test,
-      :destroy => sync_test
-    }
-  end
-
   def index
     org = current_organization
-    @products = org.library.products.readable(org)
+    @products = org.library.products.readable
     redhat_products, custom_products = @products.partition(&:redhat?)
     redhat_products.sort_by { |p| p.name.downcase }
     custom_products.sort_by { |p| p.name.downcase }
@@ -81,38 +55,16 @@ class SyncManagementController < Katello::ApplicationController
     @products.each { |product| get_product_info(product) }
   end
 
-  def manage
-    @products     = []
-    @sproducts    = []
-    @product_map  = []
-    @product_size = {}
-    @repo_status  = {}
-    @show_org     = true
-
-    User.current.allowed_organizations.each do |org|
-      products = org.library.products.readable(org)
-      next if products.blank?
-      @sproducts.concat products.select(&:syncable_content?)
-      @product_map.concat collect_repos(products, org.library)
-      products.each { |product| get_product_info(product) }
-      @products.concat products
-    end
-
-    @sync_plans = SyncPlan.all
-  end
-
   def sync
     ids = sync_repos(params[:repoids]) || {}
-    respond_with(ids) do |format|
-      format.js { render :json => ids.to_json, :status => :ok }
-    end
+    render :json => ids.to_json
   end
 
   def sync_status
     collected = []
-    params[:repoids].each do |id|
+    repos = Repository.where(:id => params[:repoids]).readable
+    repos.each do |repo|
       begin
-        repo = Repository.find(id)
         progress = format_sync_progress(repo.sync_status, repo)
         collected.push(progress)
       rescue ActiveRecord::RecordNotFound => e
@@ -121,9 +73,7 @@ class SyncManagementController < Katello::ApplicationController
       end
     end
 
-    respond_with(collected) do |format|
-      format.js { render :json => collected.to_json, :status => :ok }
-    end
+    render :json => collected.to_json
   end
 
   def destroy
@@ -132,20 +82,6 @@ class SyncManagementController < Katello::ApplicationController
   end
 
   private
-
-  def find_provider
-    Repository.find(params[:repo] || params[:id]).product.provider
-  end
-
-  def find_providers
-    ids = params[:repoids]
-    ids = [params[:repoids]] if !params[:repoids].is_a? Array
-    @providers = []
-    ids.each do |id|
-      repo = Repository.find(id)
-      @providers << repo.product.provider
-    end
-  end
 
   def format_sync_progress(sync_status, repo)
     progress = sync_status.progress
@@ -197,11 +133,11 @@ class SyncManagementController < Katello::ApplicationController
   def sync_repos(repos)
     repos = [repos] if !repos.is_a? Array
     collected = []
-    repos.each do |id|
-      repo = Repository.find(id)
+    repos = Repository.where(:id => repos).syncable
+    repos.each do |repo|
       begin
         resp = repo.sync(:notify => true).first
-        collected.push(:id => id, :product_id => repo.product.id, :state => resp[:state])
+        collected.push(:id => repo.id, :product_id => repo.product.id, :state => resp[:state])
       rescue RestClient::Conflict
         notify.error N_("There is already an active sync process for the '%s' repository. Please try again later") %
                         repo.name

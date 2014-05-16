@@ -30,10 +30,11 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   end
 
   def permissions
-    @read_permission = UserPermission.new(:read, :providers)
-    @create_permission = UserPermission.new(:create, :providers)
-    @update_permission = UserPermission.new(:update, :providers)
-    @no_permission = NO_PERMISSION
+    @read_permission = :view_products
+    @create_permission = :create_products
+    @update_permission = :update_products
+    @delete_permission = :destroy_products
+    @sync_permission = :sync_products
   end
 
   def setup
@@ -50,15 +51,9 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     assert_template 'api/v2/products/index'
   end
 
-  def test_index_fail_without_organization_id
-    get :index
-
-    assert_response :not_found
-  end
-
   def test_index_protected
     allowed_perms = [@read_permission]
-    denied_perms = [@no_permission]
+    denied_perms = [@create_permission, @delete_permission, @update_permission]
 
     assert_protected_action(:index, allowed_perms, denied_perms) do
       get :index, :organization_id => @organization.id
@@ -67,9 +62,6 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
 
 
   def test_create
-    anonymous_provider = Provider.find(katello_providers(:anonymous))
-    Organization.any_instance.expects(:anonymous_provider).at_least_once.returns(anonymous_provider)
-
     product_params = {
       :name => 'fedora product',
       :description => 'this is my cool new product.'
@@ -88,10 +80,8 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   end
 
   def test_create_fail_without_product
-    anonymous_provider = Katello::Provider.find(katello_providers(:anonymous))
-    Organization.any_instance.expects(:anonymous_provider).returns(anonymous_provider)
-
     post :create, :organization_id => @organization.id
+
     assert_response :bad_request
   end
 
@@ -100,7 +90,8 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     Organization.any_instance.stubs(:anonymous_provider).returns(anonymous_provider)
 
     allowed_perms = [@create_permission]
-    denied_perms = [@read_permission, @no_permission]
+    denied_perms = [@read_permission, @update_permission, @delete_permission]
+
     assert_protected_action(:create, allowed_perms, denied_perms) do
       post :create, :product => {}, :organization_id => @organization.id
     end
@@ -124,8 +115,8 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   end
 
   def test_show_protected
-    allowed_perms = [@read_permission, @update_permission, @create_permission]
-    denied_perms = [@no_permission]
+    allowed_perms = [@read_permission]
+    denied_perms = [@update_permission, @create_permission, @delete_permission]
 
     assert_protected_action(:show, allowed_perms, denied_perms) do
       get :show, :id => @product.id
@@ -179,7 +170,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
 
   def test_update_protected
     allowed_perms = [@update_permission]
-    denied_perms = [@read_permission, @no_permission]
+    denied_perms = [@read_permission, @delete_permission, @create_permission]
 
     assert_protected_action(:update, allowed_perms, denied_perms) do
       put :update, :id => @product.id, :name => 'New Name'
@@ -193,11 +184,29 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   end
 
   def test_destroy_protected
-    allowed_perms = [@update_permission, @create_permission]
-    denied_perms = [@no_permission, @read_permission]
+    allowed_perms = [@delete_permission]
+    denied_perms = [@create_permission, @read_permission, @update_permission]
 
     assert_protected_action(:destroy, allowed_perms, denied_perms) do
       delete :destroy, :id => @product.id
+    end
+  end
+
+  def test_sync
+    Product.any_instance.expects(:sync).returns({})
+
+    post :sync, :id => @product.id
+
+    assert_response :success
+  end
+
+  def test_sync_protected
+    allowed_perms = [@sync_permission]
+    denied_perms = [@read_permission, @update_permission, @delete_permission, @create_permission]
+
+    Product.any_instance.expects(:sync).returns({})
+    assert_protected_action(:update, allowed_perms, denied_perms) do
+      post :sync, :id => @product.id
     end
   end
 end

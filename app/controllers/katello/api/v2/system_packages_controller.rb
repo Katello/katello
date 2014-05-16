@@ -16,24 +16,13 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
   before_filter :require_packages_or_groups, :only => [:install, :remove]
   before_filter :require_packages_only, :only => [:upgrade]
   before_filter :find_system
-  before_filter :authorize
-
-  def rules
-    edit_system = lambda { @system.editable? || User.consumer? }
-    {
-      :install => edit_system,
-      :upgrade  => edit_system,
-      :upgrade_all  => edit_system,
-      :remove  => edit_system
-    }
-  end
 
   def_param_group :packages_or_groups do
-    param :packages, Array, :desc => "List of package names", :required => false
-    param :groups, Array, :desc => "List of package group names", :required => false
+    param :packages, Array, :desc => N_("List of package names"), :required => false
+    param :groups, Array, :desc => N_("List of package group names"), :required => false
   end
 
-  api :POST, "/systems/:system_id/packages/install", "Install packages remotely"
+  api :POST, "/systems/:system_id/packages/install", N_("Install packages remotely")
   param_group :packages_or_groups
   def install
     if params[:packages]
@@ -52,8 +41,8 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
   end
 
   # update packages remotely
-  api :PUT, "/systems/:system_id/packages/upgrade", "Update packages remotely"
-  param :packages, Array, :desc => "list of packages names"
+  api :PUT, "/systems/:system_id/packages/upgrade", N_("Update packages remotely")
+  param :packages, Array, :desc => N_("list of packages names")
   def upgrade
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
@@ -62,13 +51,13 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
     end
   end
 
-  api :PUT, "/systems/:system_id/packages/upgrade_all", "Update packages remotely"
+  api :PUT, "/systems/:system_id/packages/upgrade_all", N_("Update packages remotely")
   def upgrade_all
     task     = async_task(::Actions::Katello::System::Package::Update, @system, [])
     respond_for_async :resource => task
   end
 
-  api :POST, "/systems/:system_id/packages/remove", "Uninstall packages remotely"
+  api :POST, "/systems/:system_id/packages/remove", N_("Uninstall packages remotely")
   param_group :packages_or_groups
   def remove
     if params[:packages]

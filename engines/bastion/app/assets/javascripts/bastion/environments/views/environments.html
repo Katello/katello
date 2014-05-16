@@ -11,7 +11,7 @@
 
     <button class="fr btn btn-primary"
             ng-click="initiateCreatePath()"
-            ng-hide="readonly()">
+            ng-show="creatable()">
       <i class="icon-plus"></i>
       {{ "New Environment Path" | translate }}
     </button>
@@ -47,14 +47,14 @@
                     </div>
                   </label>
                 </li>
-                <li class="path-list-item" ng-hide="row.permissions.readonly">
+                <li class="path-list-item" ng-show="row.permissions.creatable">
                   <label ng-click="initiateCreateEnvironment()" class="path-list-item-label">
                     <i class="icon-plus"></i>
                   </label>
                 </li>
               </ul>
 
-              <section ng-show="row.showCreate && !row.permissions.readonly">
+              <section ng-show="row.showCreate && row.permissions.creatable">
                 <header class="details-header">
                   <h2 class="fl" translate>Create Environment</h2>
 
@@ -116,7 +116,7 @@
                          modal-body='Are you sure you want to remove environment "{{ workingOn.environment.name }}"?'></div>
 
                     <button class="btn btn-default"
-                            ng-show="isLastEnvironment(workingOn.environment) && !row.permissions.readonly"
+                            ng-show="isLastEnvironment(workingOn.environment) && workingOn.environment.permissions.deletable"
                             ng-click="openModal()"
                             translate>
                       Remove Environment
@@ -133,7 +133,7 @@
                     <span class="info-label" translate>Name</span>
                     <span class="info-value"
                           alch-edit-text="workingOn.environment.name"
-                          readonly="row.permissions.readonly"
+                          readonly="!workingOn.environment.permissions.editable"
                           on-save="update(workingOn.environment)">
                     </span>
                   </div>
@@ -147,7 +147,7 @@
                     <span class="info-label" translate>Description</span>
                     <span class="info-value"
                           alch-edit-textarea="workingOn.environment.description"
-                          readonly="row.permissions.readonly"
+                          readonly="!workingOn.environment.permissions.editable"
                           on-save="update(workingOn.environment)">
                     </span>
                   </div>

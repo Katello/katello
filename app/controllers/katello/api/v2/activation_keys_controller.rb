@@ -23,42 +23,26 @@ module Katello
 
     wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level))
 
-    def rules
-      read_test   = lambda do
-        ActivationKey.readable?(@organization) ||
-          (ActivationKey.readable?(@environment.organization) unless @environment.nil?)
-      end
-      manage_test = lambda do
-        ActivationKey.manageable?(@organization) ||
-          (ActivationKey.manageable?(@environment.organization) unless @environment.nil?)
-      end
-      {
-        :index                => read_test,
-        :show                 => read_test,
-        :available_releases   => read_test,
-        :create               => manage_test,
-        :update               => manage_test,
-        :destroy              => manage_test,
-        :available_host_collections  => manage_test,
-        :add_host_collections        => manage_test,
-        :remove_host_collections     => manage_test
-      }
-    end
-
-    api :GET, "/activation_keys", "List activation keys"
+    api :GET, "/activation_keys", N_("List activation keys")
     api :GET, "/environments/:environment_id/activation_keys"
     api :GET, "/organizations/:organization_id/activation_keys"
-    param :organization_id, :number, :desc => "organization identifier", :required => true
-    param :environment_id, :identifier, :desc => "environment identifier"
-    param :content_view_id, :identifier, :desc => "content view identifier"
-    param :name, String, :desc => "activation key name to filter by"
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+    param :environment_id, :identifier, :desc => N_("environment identifier")
+    param :content_view_id, :identifier, :desc => N_("content view identifier")
+    param :name, String, :desc => N_("activation key name to filter by")
     param_group :search, Api::V2::ApiController
     def index
-      query_string = ActivationKey.readable(@organization)
-      query_string = query_string.where(:environment_id => params[:environment_id]) if params[:environment_id]
-      query_string = query_string.where(:content_view_id => params[:content_view_id]) if params[:content_view_id]
+      filters = [{:term => {:organization_id => @organization.id} }]
 
-      filters = [:terms => { :id => query_string.pluck(:id) }]
+      if params[:environment_id]
+        filters << {:terms => {:environment_id => [params[:environment_id]] }}
+      end
+      if params[:content_view_id]
+        filters << {:terms => {:content_view_id => [params[:content_view_id]] }}
+      end
+
+      ids = ActivationKey.readable.pluck(:id)
+      filters = [:terms => { :id => ids }]
       filters << {:term => { :name => params[:name].downcase} } if params[:name]
 
       options = {
@@ -68,15 +52,15 @@ module Katello
       respond_for_index(:collection => item_search(ActivationKey, params, options))
     end
 
-    api :POST, "/activation_keys", "Create an activation key"
-    param :organization_id, :number, :desc => "organization identifier", :required => true
-    param :name, String, :desc => "name", :required => true
-    param :label, String, :desc => "unique label"
-    param :description, String, :desc => "description"
-    param :environment, Hash, :desc => "environment"
-    param :environment_id, :identifier, :desc => "environment id"
-    param :content_view_id, :identifier, :desc => "content view id"
-    param :usage_limit, :number, :desc => "maximum number of registered content hosts, or 'unlimited'"
+    api :POST, "/activation_keys", N_("Create an activation key")
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+    param :name, String, :desc => N_("name"), :required => true
+    param :label, String, :desc => N_("unique label")
+    param :description, String, :desc => N_("description")
+    param :environment, Hash, :desc => N_("environment")
+    param :environment_id, :identifier, :desc => N_("environment id")
+    param :content_view_id, :identifier, :desc => N_("content view id")
+    param :usage_limit, :number, :desc => N_("maximum number of registered content hosts, or 'unlimited'")
     def create
       @activation_key = ActivationKey.create!(activation_key_params) do |activation_key|
         activation_key.environment = @environment if @environment
@@ -86,37 +70,37 @@ module Katello
       respond
     end
 
-    api :PUT, "/activation_keys/:id", "Update an activation key"
-    param :id, :identifier, :desc => "ID of the activation key", :required => true
-    param :organization_id, :number, :desc => "organization identifier", :required => true
-    param :name, String, :desc => "name", :required => true
-    param :description, String, :desc => "description"
-    param :environment_id, :identifier, :desc => "environment id", :required => true
-    param :content_view_id, :identifier, :desc => "content view id", :required => true
-    param :usage_limit, :number, :desc => "maximum number of registered content hosts, or 'unlimited'"
-    param :release_version, String, :desc => "content release version"
-    param :service_level, String, :desc => "service level"
+    api :PUT, "/activation_keys/:id", N_("Update an activation key")
+    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+    param :name, String, :desc => N_("name"), :required => true
+    param :description, String, :desc => N_("description")
+    param :environment_id, :identifier, :desc => N_("environment id"), :required => true
+    param :content_view_id, :identifier, :desc => N_("content view id"), :required => true
+    param :usage_limit, :number, :desc => N_("maximum number of registered content hosts, or 'unlimited'")
+    param :release_version, String, :desc => N_("content release version")
+    param :service_level, String, :desc => N_("service level")
     def update
       @activation_key.update_attributes(activation_key_params)
-      respond
+      respond_for_show(:resource => @activation_key)
     end
 
-    api :DELETE, "/activation_keys/:id", "Destroy an activation key"
-    param :id, :identifier, :desc => "ID of the activation key", :required => true
+    api :DELETE, "/activation_keys/:id", N_("Destroy an activation key")
+    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
     def destroy
       @activation_key.destroy
       respond
     end
 
-    api :GET, "/activation_keys/:id", "Show an activation key"
-    param :id, :identifier, :desc => "ID of the activation key", :required => true
+    api :GET, "/activation_keys/:id", N_("Show an activation key")
+    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
     def show
       respond
     end
 
-    api :GET, "/activation_keys/:id/host_collections/available", "List host collections the system does not belong to"
+    api :GET, "/activation_keys/:id/host_collections/available", N_("List host collections the system does not belong to")
     param_group :search, Api::V2::ApiController
-    param :name, String, :desc => "host collection name to filter by"
+    param :name, String, :desc => N_("host collection name to filter by")
     def available_host_collections
       filters = [:terms => {:id => HostCollection.readable(@activation_key.organization).pluck("#{Katello::HostCollection.table_name}.id") -
                    @activation_key.host_collections.pluck("#{Katello::HostCollection.table_name}.id")}]
@@ -130,8 +114,8 @@ module Katello
       respond_for_index(:collection => item_search(HostCollection, params, options))
     end
 
-    api :GET, "/activation_keys/:id/releases", "Show release versions available for an activation key"
-    param :id, String, :desc => "ID of the activation key", :required => true
+    api :GET, "/activation_keys/:id/releases", N_("Show release versions available for an activation key")
+    param :id, String, :desc => N_("ID of the activation key"), :required => true
     def available_releases
       response = {
           :results => @activation_key.available_releases,
@@ -142,7 +126,7 @@ module Katello
     end
 
     api :PUT, "/activation_keys/:id/host_collections"
-    param :id, :identifier, :desc => "ID of the activation key", :required => true
+    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
     def add_host_collections
       ids = activation_key_params[:host_collection_ids]
       @activation_key.host_collection_ids = (@activation_key.host_collection_ids + ids).uniq

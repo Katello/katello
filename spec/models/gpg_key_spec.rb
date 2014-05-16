@@ -26,42 +26,6 @@ describe GpgKey, :katello => true do
     end
   end
 
-  describe "permission checks" do
-
-    let(:gpg) {GpgKey.create!(:name => "Gpg key", :organization => organization, :content => File.open("#{Katello::Engine.root}/spec/assets/gpg_test_key").read )}
-
-    describe "check on read operations" do
-      [[:gpg, :organizations],[:read, :organizations],[:read, :providers]].each do |(perm, resource)|
-        it "user with #{perm} on #{resource} should be allowed to work with gpg" do
-          User.current = user_with_permissions{|u| u.can(perm, resource,nil, organization, :all_tags => true)}
-          GpgKey.find(gpg.id).must_be :readable?
-          GpgKey.readable(organization).wont_be :empty?
-          GpgKey.readable(organization).must_equal([gpg])
-        end
-      end
-      it "user without perms should not  be allowed to work with gpg" do
-        User.current = user_without_permissions
-        GpgKey.find(gpg.id).wont_be :readable?
-        GpgKey.readable(organization).must_be :empty?
-      end
-    end
-
-    describe "check on write operations" do
-      it "user with #{:gpg} on #{:org} should be allowed to work with gpg" do
-        User.current = user_with_permissions{|u| u.can(:gpg, :organizations,nil, organization, :all_tags => true)}
-        GpgKey.find(gpg.id).must_be :manageable?
-        GpgKey.manageable(organization).must_equal([gpg])
-      end
-
-      it "user without perms should not  be allowed to work with gpg" do
-        User.current = user_without_permissions
-        GpgKey.find(gpg.id).wont_be :manageable?
-        GpgKey.manageable(organization).must_be :empty?
-      end
-    end
-
-  end
-
   describe "create gpg key" do
     before(:each) do
       new_test_org_model
@@ -76,7 +40,7 @@ describe GpgKey, :katello => true do
     it 'should be destroyable' do
       gpg_key = GpgKey.create!(:name => "Gpg Key 1", :content => @test_gpg_content, :organization => @organization)
       disable_product_orchestration
-      create(:katello_product, :fedora, provider: create(:katello_provider, organization: organization)).tap do |product|
+      create(:katello_product, :fedora, provider: create(:katello_provider), organization: organization).tap do |product|
         product.gpg_key = gpg_key
         product.save!
       end

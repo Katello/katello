@@ -143,11 +143,6 @@ module ApplicationHelper
     options[:path_widget_class] = "" if options[:path_widget_class].nil?
     options[:path_entries_class] = "grid_10" if options[:path_entries_class].nil?
 
-    # allow user to include additional data attributes (urls) to retrieve other elements from the env, such as
-    # products and content views
-    options[:url_products_proc] = nil if options[:url_products_proc].nil?
-    options[:url_content_views_proc] = nil if options[:url_content_views_proc].nil?
-
     render :partial => "/katello/common/env_select", :locals => options
   end
 
@@ -197,19 +192,6 @@ module ApplicationHelper
   def editable_class(editable = false)
     return "editable edit_panel_element multiline" if editable
     "multiline"
-  end
-
-  #returns a proc to generate a url for the env_selector
-  def url_products_proc
-    lambda do |args|
-      products_organization_environment_path(args[:organization].label, args[:environment].id)
-    end
-  end
-
-  def url_content_views_proc
-    lambda do |args|
-      content_views_organization_environment_path(args[:organization].label, args[:environment].id)
-    end
   end
 
   # These 2 methods copied from scoped_search {https://github.com/wvanbergen/scoped_search}
@@ -299,7 +281,7 @@ module ApplicationHelper
 
   def content_view_select_labels(organization, environment)
     if environment
-      labels = ContentView.readable(organization).
+      labels = ContentView.readable.
           in_environment(environment).collect {|cv| [cv.name, cv.id]}
     else
       labels = []

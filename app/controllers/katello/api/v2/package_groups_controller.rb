@@ -22,7 +22,7 @@ class Api::V2::PackageGroupsController < Api::V2::ApiController
   def rules
     readable = lambda do
       (@filter && @filter.content_view.readable?) ||
-      (@repo && @repo.environment.contents_readable? && @repo.product.readable?)
+      (@repo && @repo.environment.contents_readable?)
     end
     {
         :index => readable,
@@ -30,14 +30,14 @@ class Api::V2::PackageGroupsController < Api::V2::ApiController
     }
   end
 
-  api :GET, "/package_groups", "List package groups"
-  api :GET, "/content_views/:content_view_id/filters/:filter_id/package_groups", "List package groups"
-  api :GET, "/content_view_filters/:content_view_filter_id/package_groups", "List package groups"
-  api :GET, "/repositories/:repository_id/package_groups", "List package groups"
-  param :content_view_id, :identifier, :desc => "content view identifier"
-  param :filter_id, :identifier, :desc => "content view filter identifier"
-  param :content_view_filter_id, :identifier, :desc => "content view filter identifier"
-  param :repository_id, :identifier, :desc => "repository identifier", :required => true
+  api :GET, "/package_groups", N_("List package groups")
+  api :GET, "/content_views/:content_view_id/filters/:filter_id/package_groups", N_("List package groups")
+  api :GET, "/content_view_filters/:content_view_filter_id/package_groups", N_("List package groups")
+  api :GET, "/repositories/:repository_id/package_groups", N_("List package groups")
+  param :content_view_id, :identifier, :desc => N_("content view identifier")
+  param :filter_id, :identifier, :desc => N_("content view filter identifier")
+  param :content_view_filter_id, :identifier, :desc => N_("content view filter identifier")
+  param :repository_id, :identifier, :desc => N_("repository identifier"), :required => true
   def index
     collection = if @repo && !@repo.puppet?
                    filter_by_repo_id @repo.pulp_id
@@ -50,10 +50,10 @@ class Api::V2::PackageGroupsController < Api::V2::ApiController
     respond(:collection => collection)
   end
 
-  api :GET, "/package_groups/:id", "Show a package group"
-  api :GET, "/repositories/:repository_id/package_groups/:id", "Show a package group"
-  param :repository_id, :identifier, :desc => "repository identifier", :required => true
-  param :id, String, :desc => "package group identifier", :required => true
+  api :GET, "/package_groups/:id", N_("Show a package group")
+  api :GET, "/repositories/:repository_id/package_groups/:id", N_("Show a package group")
+  param :repository_id, :identifier, :desc => N_("repository identifier"), :required => true
+  param :id, String, :desc => N_("package group identifier"), :required => true
   def show
     respond :resource => @package_group
   end

@@ -35,7 +35,6 @@ module Katello
       app.config.paths['db/migrate'] += Katello::Engine.paths['db/migrate'].existent
       app.config.autoload_paths += Dir["#{config.root}/app/lib"]
       app.config.autoload_paths += Dir["#{config.root}/app/services/katello"]
-      app.config.autoload_paths += Dir["#{config.root}/app/services/rhsm"]
       app.config.autoload_paths += Dir["#{config.root}/app/views/foreman"]
     end
 
@@ -110,6 +109,7 @@ module Katello
 
     initializer 'katello.register_plugin', :after => :disable_dependency_loading do
       require 'katello/plugin'
+      require 'katello/permissions'
     end
 
     rake_tasks do

@@ -29,10 +29,10 @@ module Katello
     end
 
     def permissions
-      @update_permission = UserPermission.new(:update, :content_views)
-      @create_permission = UserPermission.new(:create, :content_views)
-      @read_permission = UserPermission.new(:read, :content_views)
-      @no_permission = NO_PERMISSION
+      @view_permission = :view_content_views
+      @create_permission = :create_content_views
+      @update_permission = :update_content_views
+      @destroy_permission = :destroy_content_views
     end
 
     def setup
@@ -52,8 +52,8 @@ module Katello
     end
 
     def test_index_protected
-      allowed_perms = [@read_permission]
-      denied_perms = [@no_permission]
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
         get :index, :content_view_id => @content_view.id
@@ -72,8 +72,8 @@ module Katello
     end
 
     def test_create_protected
-      allowed_perms = [@create_permission, @update_permission]
-      denied_perms = [@read_permission, @no_permission]
+      allowed_perms = [@create_permission]
+      denied_perms = [@view_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
         post :create, :name => "Test", :content_view_id => @content_view.id
@@ -88,8 +88,8 @@ module Katello
     end
 
     def test_show_protected
-      allowed_perms = [@read_permission]
-      denied_perms = [@no_permission]
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:show, allowed_perms, denied_perms) do
         get :show, :content_view_id => @filter.content_view_id, :id => @filter.id
@@ -117,8 +117,8 @@ module Katello
     end
 
     def test_update_protected
-      allowed_perms = [@create_permission, @update_permission]
-      denied_perms = [@no_permission, @read_permission]
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
         put :update, :content_view_id => @filter.content_view_id, :id => @filter.id, :name => "new name"
@@ -137,8 +137,8 @@ module Katello
     end
 
     def test_destroy_protected
-      allowed_perms = [@create_permission, @update_permission]
-      denied_perms = [@read_permission, @no_permission]
+      allowed_perms = [@destroy_permission]
+      denied_perms = [@view_permission, @create_permission, @update_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         delete :destroy, :content_view_id => @filter.content_view_id, :id => @filter.id
@@ -155,8 +155,8 @@ module Katello
 
     def test_available_errata_protected
       @filter = katello_content_view_filters(:populated_erratum_filter)
-      allowed_perms = [@read_permission]
-      denied_perms = [@no_permission]
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:available_errata, allowed_perms, denied_perms) do
         get :available_errata, :content_view_id => @filter.content_view_id, :id => @filter.id
@@ -173,8 +173,8 @@ module Katello
 
     def test_available_package_groups_protected
       @filter = katello_content_view_filters(:populated_package_group_filter)
-      allowed_perms = [@read_permission]
-      denied_perms = [@no_permission]
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:available_package_groups, allowed_perms, denied_perms) do
         get :available_package_groups, :content_view_id => @filter.content_view_id, :id => @filter.id

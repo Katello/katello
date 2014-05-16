@@ -26,16 +26,16 @@ module Katello
     def models
       @content_view = katello_content_views(:library_view)
       @puppet_module = katello_content_view_puppet_modules(:library_view_module_by_name)
-    end
-
-    def permissions
-      @update_permission = UserPermission.new(:update, :content_views)
-      @create_permission = UserPermission.new(:create, :content_views)
-      @read_permission = UserPermission.new(:read, :content_views)
-      @no_permission = NO_PERMISSION
       PuppetModule.stubs(:find).returns(@puppet_module)
       @puppet_module.stubs(:repositories).returns([])
       PuppetModule.stubs(:exists?).returns(true)
+    end
+
+    def permissions
+      @view_permission = :view_content_views
+      @create_permission = :create_content_views
+      @update_permission = :update_content_views
+      @destroy_permission = :destroy_content_views
     end
 
     def setup
@@ -55,8 +55,8 @@ module Katello
     end
 
     def test_index_protected
-      allowed_perms = [@read_permission]
-      denied_perms = [@no_permission]
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
         get :index, :content_view_id => @content_view.id
@@ -75,8 +75,8 @@ module Katello
     end
 
     def test_create_protected
-      allowed_perms = [@create_permission, @update_permission]
-      denied_perms = [@read_permission, @no_permission]
+      allowed_perms = [@create_permission]
+      denied_perms = [@view_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
         post :create, :name => "Test", :content_view_id => @content_view.id
@@ -91,8 +91,8 @@ module Katello
     end
 
     def test_show_protected
-      allowed_perms = [@read_permission]
-      denied_perms = [@no_permission]
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:show, allowed_perms, denied_perms) do
         get :show, :content_view_id => @content_view.id, :id => @puppet_module.id
@@ -108,8 +108,8 @@ module Katello
     end
 
     def test_update_protected
-      allowed_perms = [@create_permission, @update_permission]
-      denied_perms = [@no_permission, @read_permission]
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
         put :update, :content_view_id => @content_view.id, :id => @puppet_module.id, :name => "myNewFavoriteModule"
@@ -124,8 +124,8 @@ module Katello
     end
 
     def test_destroy_protected
-      allowed_perms = [@create_permission, @update_permission]
-      denied_perms = [@read_permission, @no_permission]
+      allowed_perms = [@destroy_permission]
+      denied_perms = [@view_permission, @create_permission, @update_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         delete :destroy, :content_view_id => @content_view.id, :id => @puppet_module.id

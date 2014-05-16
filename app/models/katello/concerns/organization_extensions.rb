@@ -30,11 +30,8 @@ module Katello
         end
 
         include AsyncOrchestration
-        include Ext::PermissionTagCleanup
-
         include Katello::Authorization::Organization
         include Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
-
         include Ext::LabelFromName
 
         has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :destroy

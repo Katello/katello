@@ -16,28 +16,12 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   before_filter :find_content_view
   before_filter :find_filter, :except => [:index, :create]
   before_filter :load_search_service, :only => [:index, :available_errata, :available_package_groups]
-  before_filter :authorize
 
   wrap_parameters :include => (ContentViewFilter.attribute_names + %w(repository_ids))
 
-  def rules
-    view_readable = lambda { @view.readable? }
-    view_editable = lambda { @view.editable? }
-
-    {
-        :index                    => view_readable,
-        :create                   => view_editable,
-        :show                     => view_readable,
-        :update                   => view_editable,
-        :destroy                  => view_editable,
-        :available_errata         => view_readable,
-        :available_package_groups => view_readable
-    }
-  end
-
-  api :GET, "/content_views/:content_view_id/filters", "List filters"
-  api :GET, "/content_view_filters", "List filters"
-  param :content_view_id, :identifier, :desc => "content view identifier", :required => true
+  api :GET, "/content_views/:content_view_id/filters", N_("List filters")
+  api :GET, "/content_view_filters", N_("List filters")
+  param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
   def index
     options = sort_params
     options[:load_records?] = true
@@ -47,53 +31,53 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
     respond(:collection => item_search(ContentViewFilter, params, options))
   end
 
-  api :POST, "/content_views/:content_view_id/filters", "Create a filter for a content view"
-  api :POST, "/content_view_filters", "Create a filter for a content view"
-  param :content_view_id, :identifier, :desc => "content view identifier", :required => true
-  param :name, String, :desc => "name of the filter", :required => true
-  param :type, String, :desc => "type of filter (e.g. rpm, package_group, erratum)", :required => true
-  param :inclusion, :bool, :desc => "specifies if content should be included or excluded, default: inclusion=false"
-  param :repository_ids, Array, :desc => "list of repository ids"
+  api :POST, "/content_views/:content_view_id/filters", N_("Create a filter for a content view")
+  api :POST, "/content_view_filters", N_("Create a filter for a content view")
+  param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
+  param :name, String, :desc => N_("name of the filter"), :required => true
+  param :type, String, :desc => N_("type of filter (e.g. rpm, package_group, erratum)"), :required => true
+  param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")
+  param :repository_ids, Array, :desc => N_("list of repository ids")
   def create
     filter = ContentViewFilter.create_for(params[:type], filter_params.merge(:content_view => @view))
     respond :resource => filter
   end
 
-  api :GET, "/content_views/:content_view_id/filters/:id", "Show filter info"
-  api :GET, "/content_view_filters/:id", "Show filter info"
-  param :content_view_id, :identifier, :desc => "content view identifier"
-  param :id, :identifier, :desc => "filter identifier", :required => true
+  api :GET, "/content_views/:content_view_id/filters/:id", N_("Show filter info")
+  api :GET, "/content_view_filters/:id", N_("Show filter info")
+  param :content_view_id, :identifier, :desc => N_("content view identifier")
+  param :id, :identifier, :desc => N_("filter identifier"), :required => true
   def show
     respond :resource => @filter
   end
 
-  api :PUT, "/content_views/:content_view_id/filters/:id", "Update a filter"
-  api :PUT, "/content_view_filters/:id", "Update a filter"
-  param :content_view_id, :identifier, :desc => "content view identifier"
-  param :id, :identifier, :desc => "filter identifier", :required => true
-  param :name, String, :desc => "new name for the filter"
-  param :inclusion, :bool, :desc => "specifies if content should be included or excluded, default: inclusion=false"
-  param :repository_ids, Array, :desc => "list of repository ids"
+  api :PUT, "/content_views/:content_view_id/filters/:id", N_("Update a filter")
+  api :PUT, "/content_view_filters/:id", N_("Update a filter")
+  param :content_view_id, :identifier, :desc => N_("content view identifier")
+  param :id, :identifier, :desc => N_("filter identifier"), :required => true
+  param :name, String, :desc => N_("new name for the filter")
+  param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")
+  param :repository_ids, Array, :desc => N_("list of repository ids")
   def update
     @filter.update_attributes!(filter_params)
     respond :resource => @filter
   end
 
-  api :DELETE, "/content_views/:content_view_id/filters/:id", "Delete a filter"
-  api :DELETE, "/content_view_filters/:id", "Delete a filter"
-  param :content_view_id, :identifier, :desc => "content view identifier"
-  param :id, :identifier, :desc => "filter identifier", :required => true
+  api :DELETE, "/content_views/:content_view_id/filters/:id", N_("Delete a filter")
+  api :DELETE, "/content_view_filters/:id", N_("Delete a filter")
+  param :content_view_id, :identifier, :desc => N_("content view identifier")
+  param :id, :identifier, :desc => N_("filter identifier"), :required => true
   def destroy
     @filter.destroy
     respond_for_show :resource => @filter
   end
 
   api :GET, "/content_views/:content_view_id/filters/:id/available_errata",
-      "Get errata that are available to be added to the filter"
+      N_("Get errata that are available to be added to the filter")
   api :GET, "/content_view_filters/:id/available_errata",
-      "Get errata that are available to be added to the filter"
-  param :content_view_id, :identifier, :desc => "content view identifier"
-  param :id, :identifier, :desc => "filter identifier", :required => true
+      N_("Get errata that are available to be added to the filter")
+  param :content_view_id, :identifier, :desc => N_("content view identifier")
+  param :id, :identifier, :desc => N_("filter identifier"), :required => true
   def available_errata
     current_errata_ids = @filter.erratum_rules.map(&:errata_id)
     repo_ids = @filter.applicable_repos.pluck(:pulp_id)
@@ -113,11 +97,11 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   end
 
   api :GET, "/content_views/:content_view_id/filters/:id/available_package_groups",
-      "Get package groups that are available to be added to the filter"
+      N_("Get package groups that are available to be added to the filter")
   api :GET, "/content_view_filters/:id/available_package_groups",
-      "Get package groups that are available to be added to the filter"
-  param :content_view_id, :identifier, :desc => "content view identifier"
-  param :id, :identifier, :desc => "filter identifier", :required => true
+      N_("Get package groups that are available to be added to the filter")
+  param :content_view_id, :identifier, :desc => N_("content view identifier")
+  param :id, :identifier, :desc => N_("filter identifier"), :required => true
   def available_package_groups
     current_ids = @filter.package_group_rules.map(&:name)
     repo_ids = @filter.applicable_repos.pluck(:pulp_id)

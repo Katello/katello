@@ -24,14 +24,12 @@ module Katello
 
     def models
       @product = katello_products(:fedora)
-      @provider = katello_providers(:fedora_hosted)
+      @repository = katello_repositories(:fedora_17_x86_64)
       @organization = get_organization
     end
 
     def permissions
-      @read_permission = UserPermission.new(:read, :providers, @provider.id, @organization)
-      @create_permission = UserPermission.new(:sync, :organizations, nil, @organization)
-      @no_permission = NO_PERMISSION
+      @sync_permission = :sync_products
     end
 
     def setup
@@ -50,28 +48,21 @@ module Katello
       assert_response :success
     end
 
-    def test_index_protected
-      allowed_perms = [@create_permission, @read_permission]
-      denied_perms = [@no_permission]
+    def test_index_product_protected
+      allowed_perms = [@sync_permission]
+      denied_perms = []
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
         get :index, :product_id => @product.cp_id, :organization_id => @organization.id
       end
     end
 
-    def test_create
-      Product.any_instance.expects(:sync).returns([{}])
+    def test_index_repository_protected
+      allowed_perms = [@sync_permission]
+      denied_perms = []
 
-      post :create, :product_id => @product.cp_id, :organization_id => @organization.id
-      assert_response :success
-    end
-
-    def test_create_protected
-      allowed_perms = [@create_permission]
-      denied_perms = [@read_permission, @no_permission]
-
-      assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, :product_id => @product.cp_id, :organization_id => @organization.id
+      assert_protected_action(:index, allowed_perms, denied_perms) do
+        get :index, :repository_id => @repository.id
       end
     end
 

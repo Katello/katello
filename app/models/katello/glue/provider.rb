@@ -328,6 +328,7 @@ module Glue::Provider
 
             Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
               p.provider = self
+              p.organization_id = self.organization.id
             end
             adjusted_eng_products << product_attrs
             if import_logger
@@ -350,6 +351,7 @@ module Glue::Provider
             where(:cp_id => engineering_product_ids).pluck("#{Katello::Product.table_name}.id")
           Glue::Candlepin::Product.import_marketing_from_cp(Resources::Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
             p.provider = self
+            p.organization_id = self.organization.id
           end
           product_in_katello_ids << marketing_product_id
         end

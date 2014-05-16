@@ -43,15 +43,11 @@ class RepositoryAuthorizationAdminTest < AuthorizationTestBase
   end
 
   def test_readable
-    refute_empty Repository.readable(@library)
+    refute_empty Repository.readable
   end
 
-  def test_creatable?
-    assert Repository.creatable?(@fedora)
-  end
-
-  def test_any_readable?
-    assert Repository.any_readable?(@acme_corporation)
+  def test_deletable
+    refute_empty Repository.deletable
   end
 
   def test_libraries_content_readable
@@ -62,20 +58,8 @@ class RepositoryAuthorizationAdminTest < AuthorizationTestBase
     refute_empty Repository.content_readable(@acme_corporation)
   end
 
-  def test_readable_for_product
-    refute_empty Repository.readable_for_product(@library, @fedora)
-  end
-
-  def test_editable_in_library
-    refute_empty Repository.editable_in_library(@acme_corporation)
-  end
-
   def test_readable_in_org
     refute_empty Repository.readable_in_org(@acme_corporation)
-  end
-
-  def test_any_contents_readable_in_org?
-    assert Repository.any_contents_readable_in_org?(@acme_corporation)
   end
 
 end
@@ -104,15 +88,11 @@ class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
   end
 
   def test_readable
-    assert_empty Repository.readable(@library)
+    assert_empty Repository.readable
   end
 
-  def test_creatable?
-    refute Repository.creatable?(@fedora)
-  end
-
-  def test_any_readable?
-    refute Repository.any_readable?(@acme_corporation)
+  def test_deletable
+    assert_empty Repository.deletable
   end
 
   def test_libraries_content_readable
@@ -123,20 +103,8 @@ class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
     assert_empty Repository.content_readable(@acme_corporation)
   end
 
-  def test_readable_for_product
-    assert_empty Repository.readable_for_product(@library, @fedora)
-  end
-
-  def test_editable_in_library
-    assert_empty Repository.editable_in_library(@acme_corporation)
-  end
-
   def test_readable_in_org
     assert_empty Repository.readable_in_org(@acme_corporation)
-  end
-
-  def test_any_contents_readable_in_org?
-    refute Repository.any_contents_readable_in_org?(@acme_corporation)
   end
 
 end

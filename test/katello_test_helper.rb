@@ -43,6 +43,12 @@ module MiniTest::Expectations
   infect_an_assertion :assert_recognizes, :must_recognize, :do_not_flip
 end
 
+def load_permissions
+  Dir["#{File.expand_path("#{Katello::Engine.root}/lib/katello/permissions", __FILE__)}/*.rb"].each do |file|
+    load file
+  end
+end
+
 module FixtureTestCase
   extend ActiveSupport::Concern
 
@@ -88,6 +94,8 @@ module FixtureTestCase
     load_fixtures
     self.fixture_path = "#{Katello::Engine.root}/test/fixtures/models"
     fixtures(:all)
+
+    load_permissions
   end
 
   module ClassMethods
@@ -114,6 +122,7 @@ class ActionController::TestCase
     set_user(User.current, is_api)
     set_default_locale
     setup_engine_routes
+    @controller.stubs(:require_org).returns({})
   end
 
   def set_user(user = nil, is_api = false)
@@ -123,7 +132,7 @@ class ActionController::TestCase
     end
 
     user ||= users(:admin)
-    user = User.find(user)
+    user = User.find(user) if user.id
     User.current = user
     User.current.stubs(:remote_id).returns(User.current.login)
     if permissions
@@ -137,7 +146,6 @@ class ActionController::TestCase
 
   def setup_controller_defaults_api
     setup_controller_defaults(true)
-    @controller.stubs(:require_org).returns({})
   end
 
   alias_method :login_user, :set_user

@@ -80,7 +80,7 @@ module DashboardHelper
 
   def content_view_history(num = quantity)
      ContentViewHistory.joins(:content_view_version => :content_view).where(
-         "#{ContentView.table_name}.id" => ContentView.readable(current_organization)).limit(num)
+         "#{ContentView.table_name}.id" => ContentView.readable).limit(num)
   end
 
   def history_class(cs)

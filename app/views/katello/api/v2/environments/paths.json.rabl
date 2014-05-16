@@ -6,6 +6,6 @@ end
 
 node :permissions do |env|
   {
-    :readonly => !@organization.environments_manageable?
+    :creatable => Katello::KTEnvironment.creatable?
   }
 end

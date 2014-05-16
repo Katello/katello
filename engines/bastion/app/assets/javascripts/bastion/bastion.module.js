@@ -21,7 +21,7 @@
  */
 angular.module('Bastion', [
     'ui.router',
-    'gettext',
+    'Bastion.i18n',
     'Bastion.widgets'
 ]);
 
@@ -91,17 +91,28 @@ angular.module('Bastion').config(
             };
         }]);
 
-        $provide.factory('UnauthorizedInterceptor', ['$q', '$window', function ($q, $window) {
-            return {
-                responseError: function (response) {
-                    if (response.status === 401) {
-                        $window.location.href = '/users/login';
-                    } else {
-                        return $q.reject(response);
+        $provide.factory('UnauthorizedInterceptor', ['$q', '$window', 'translate',
+            function ($q, $window, translate) {
+                return {
+                    responseError: function (response) {
+                        var message;
+
+                        if (response.status === 401) {
+                            $window.location.href = '/users/login';
+                        } else if (response.status === 403) {
+                            // Add unauthorized display message to response
+                            message = translate('You are not authorized to perform this action.');
+                            response.data.errors = [message];
+                            response.data.displayMessage = message;
+                            return $q.reject(response);
+                        } else
+                        {
+                            return $q.reject(response);
+                        }
                     }
-                }
-            };
-        }]);
+                };
+            }]
+        );
 
         // Add Xs around translated strings if the config value mark_translated is set.
         if (BastionConfig.markTranslated) {

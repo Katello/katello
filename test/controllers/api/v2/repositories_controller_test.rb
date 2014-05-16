@@ -32,12 +32,11 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   end
 
   def permissions
-    @read_permission = UserPermission.new(:read, :providers)
-    @create_permission = UserPermission.new(:create, :providers)
-    @update_permission = UserPermission.new(:update, :providers)
-    @delete_permission = UserPermission.new(:delete, :providers)
-    @sync_permission = UserPermission.new(:sync, :organizations, nil, @organization)
-    @no_permission = NO_PERMISSION
+    @read_permission = :view_products
+    @create_permission = :create_products
+    @update_permission = :update_products
+    @destroy_permission = :destroy_products
+    @sync_permission = :sync_products
   end
 
   def setup
@@ -58,8 +57,8 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   end
 
   def test_index_protected
-    allowed_perms = [@read_permission, @create_permission, @update_permission, @delete_permission]
-    denied_perms = [@no_permission]
+    allowed_perms = [@read_permission]
+    denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
     assert_protected_action(:index, allowed_perms, denied_perms) do
       get :index, :organization_id => @organization.id
@@ -155,7 +154,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
 
   def test_create_protected
     allowed_perms = [@create_permission]
-    denied_perms = [@read_permission, @no_permission]
+    denied_perms = [@read_permission, @update_permission, @destroy_permission]
 
     assert_protected_action(:create, allowed_perms, denied_perms) do
       post :create, :product_id => @product.id
@@ -170,8 +169,8 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   end
 
   def test_show_protected
-    allowed_perms = [@read_permission, @create_permission, @update_permission, @delete_permission]
-    denied_perms = [@no_permission]
+    allowed_perms = [@read_permission]
+    denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
     assert_protected_action(:show, allowed_perms, denied_perms) do
       get :show, :id => @repository.id
@@ -194,8 +193,8 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   end
 
   def test_update_protected
-    allowed_perms = [@create_permission, @update_permission]
-    denied_perms = [@no_permission, @delete_permission]
+    allowed_perms = [@update_permission]
+    denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
     assert_protected_action(:update, allowed_perms, denied_perms) do
       put :update, :id => @repository.id
@@ -209,8 +208,8 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   end
 
   def test_destroy_protected
-    allowed_perms = [@create_permission, @update_permission]
-    denied_perms = [@read_permission, @no_permission]
+    allowed_perms = [@destroy_permission]
+    denied_perms = [@read_permission, @create_permission, @update_permission]
 
     assert_protected_action(:destroy, allowed_perms, denied_perms) do
       delete :destroy, :id => @repository.id
@@ -248,9 +247,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
 
   def test_sync_protected
     allowed_perms = [@sync_permission]
-    denied_perms = [@create_permission, @read_permission,
-                    @no_permission, @delete_permission,
-                    @update_permission]
+    denied_perms = [@create_permission, @read_permission, @destroy_permission, @update_permission]
 
     assert_protected_action(:sync, allowed_perms, denied_perms) do
       post :sync, :id => @repository.id

@@ -12,49 +12,36 @@
 
 module Katello
 class Api::V2::ContentUploadsController < Api::V2::ApiController
-  respond_to :json
+
   before_filter :find_repository
-  before_filter :authorize
 
-  def rules
-    upload_test = lambda { @repo.product.editable? }
-
-    {
-      :create => upload_test,
-      :upload_bits => upload_test,
-      :destroy => upload_test,
-      :import_into_repo => upload_test,
-      :upload_file => upload_test
-    }
-  end
-
-  api :POST, "/repositories/:repo_id/content_uploads", "Create an upload request"
-  param :repo_id, :identifier, :required => true, :desc => "repository id"
+  api :POST, "/repositories/:repo_id/content_uploads", N_("Create an upload request")
+  param :repo_id, :identifier, :required => true, :desc => N_("repository id")
   def create
     respond :resource => pulp_content.create_upload_request
   end
 
-  api :PUT, "/repositories/:repo_id/content_uploads/:id/upload_bits", "Upload bits"
-  param :repo_id, :identifier, :required => true, :desc => "repository id"
-  param :id, :identifier, :required => true, :desc => "upload request id"
-  param :offset, :number, :required => true, :desc => "the offset at which Pulp will store the file contents"
-  param :content, File, :required => true, :desc => "file contents"
+  api :PUT, "/repositories/:repo_id/content_uploads/:id/upload_bits", N_("Upload bits")
+  param :repo_id, :identifier, :required => true, :desc => N_("repository id")
+  param :id, :identifier, :required => true, :desc => N_("upload request id")
+  param :offset, :number, :required => true, :desc => N_("the offset at which Pulp will store the file contents")
+  param :content, File, :required => true, :desc => N_("file contents")
   def upload_bits
     pulp_content.upload_bits(params[:id], params[:offset], params[:content])
     render :nothing => true
   end
 
-  api :DELETE, "/repositories/:repo_id/content_uploads/:id", "Delete an upload request"
-  param :repo_id, :identifier, :required => true, :desc => "repository id"
-  param :id, :identifier, :required => true, :desc => "upload request id"
+  api :DELETE, "/repositories/:repo_id/content_uploads/:id", N_("Delete an upload request")
+  param :repo_id, :identifier, :required => true, :desc => N_("repository id")
+  param :id, :identifier, :required => true, :desc => N_("upload request id")
   def destroy
     pulp_content.delete_upload_request(params[:id])
     render :nothing => true
   end
 
-  api :POST, "/repositories/:repo_id/content_uploads/import_into_repo", "Import into a repository"
-  param :repo_id, :identifier, :required => true, :desc => "repository id"
-  param :uploads, Array, :required => true, :desc => "array of uploads to import"
+  api :POST, "/repositories/:repo_id/content_uploads/import_into_repo", N_("Import into a repository")
+  param :repo_id, :identifier, :required => true, :desc => N_("repository id")
+  param :uploads, Array, :required => true, :desc => N_("array of uploads to import")
   def import_into_repo
     params[:uploads].each do |upload|
       pulp_content.import_into_repo(@repo.pulp_id, @repo.unit_type_id,
@@ -66,9 +53,9 @@ class Api::V2::ContentUploadsController < Api::V2::ApiController
     render :nothing => true
   end
 
-  api :POST, "/repositories/:id/content_uploads/file", "Upload content into the repository"
+  api :POST, "/repositories/:id/content_uploads/file", N_("Upload content into the repository")
   param :id, :identifier, :required => true
-  param :content, File, :required => true, :desc => "file contents"
+  param :content, File, :required => true, :desc => N_("file contents")
   def upload_file
     filepaths = params.try(:[], :content).try(:map, &:path)
 
@@ -98,5 +85,6 @@ class Api::V2::ContentUploadsController < Api::V2::ApiController
   def find_repository
     @repo = Repository.find(params[:repository_id])
   end
+
 end
 end

@@ -20,16 +20,16 @@ class Api::V2::PermissionsController < Api::V1::PermissionsController
     api_base_url "#{Katello.config.url_prefix}/api"
   end
 
-  api :POST, "/roles/:role_id/permissions", "Create a roles permission"
+  api :POST, "/roles/:role_id/permissions", N_("Create a roles permission")
   param :permission, Hash, :required => true do
     param :description, String, :allow_nil => true
     param :name, String, :required => true
     param :organization_id, :identifier
-    param :tags, Array, :desc => "array of tag ids"
-    param :type, String, :desc => "name of a resource or 'all'", :required => true
-    param :verbs, Array, :desc => "array of permission verbs"
-    param :all_tags, :bool, :desc => "True if the permission should use all tags"
-    param :all_verbs, :bool, :desc => "True if the permission should use all verbs"
+    param :tags, Array, :desc => N_("array of tag ids")
+    param :type, String, :desc => N_("name of a resource or 'all'"), :required => true
+    param :verbs, Array, :desc => N_("array of permission verbs")
+    param :all_tags, :bool, :desc => N_("True if the permission should use all tags")
+    param :all_verbs, :bool, :desc => N_("True if the permission should use all verbs")
   end
   def create
     perm_attrs = params[:permission].permit(:name, :description, :organization_id, :type)

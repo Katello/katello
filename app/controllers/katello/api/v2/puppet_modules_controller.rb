@@ -22,7 +22,7 @@ class Api::V2::PuppetModulesController < Api::V2::ApiController
     readable = lambda do
       (@view && @view.readable?) ||
       (@environment && @environment.contents_readable?) ||
-      (@repo && @repo.environment.contents_readable? && @repo.product.readable?)
+      (@repo && @repo.environment.contents_readable?)
     end
 
     {
@@ -31,13 +31,13 @@ class Api::V2::PuppetModulesController < Api::V2::ApiController
     }
   end
 
-  api :GET, "/puppet_modules", "List puppet modules"
-  api :GET, "/content_views/:content_view_id/puppet_modules", "List puppet modules"
-  api :GET, "/environments/:environment_id/puppet_modules", "List puppet modules"
-  api :GET, "/repositories/:repository_id/puppet_modules", "List puppet modules"
-  param :content_view_id, :identifier, :desc => "content view identifier"
-  param :environment_id, :identifier, :desc => "environment identifier"
-  param :repository_id, :identifier, :desc => "repository identifier", :required => true
+  api :GET, "/puppet_modules", N_("List puppet modules")
+  api :GET, "/content_views/:content_view_id/puppet_modules", N_("List puppet modules")
+  api :GET, "/environments/:environment_id/puppet_modules", N_("List puppet modules")
+  api :GET, "/repositories/:repository_id/puppet_modules", N_("List puppet modules")
+  param :content_view_id, :identifier, :desc => N_("content view identifier")
+  param :environment_id, :identifier, :desc => N_("environment identifier")
+  param :repository_id, :identifier, :desc => N_("repository identifier"), :required => true
   def index
     collection = if @repo && @repo.puppet?
                    filter_by_repoids [@repo.pulp_id]
@@ -52,10 +52,10 @@ class Api::V2::PuppetModulesController < Api::V2::ApiController
     respond(:collection => collection)
   end
 
-  api :GET, "/puppet_modules/:id", "Show a puppet module"
-  api :GET, "/repositories/:repository_id/puppet_modules/:id", "Show a puppet module"
-  param :repository_id, :identifier, :desc => "repository identifier", :required => true
-  param :id, String, :desc => "puppet module identifier", :required => true
+  api :GET, "/puppet_modules/:id", N_("Show a puppet module")
+  api :GET, "/repositories/:repository_id/puppet_modules/:id", N_("Show a puppet module")
+  param :repository_id, :identifier, :desc => N_("repository identifier"), :required => true
+  param :id, String, :desc => N_("puppet module identifier"), :required => true
   def show
     respond :resource => @puppet_module
   end
