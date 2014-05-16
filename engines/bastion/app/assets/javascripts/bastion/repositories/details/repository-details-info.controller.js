@@ -41,7 +41,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
         });
 
         $scope.repository.$promise.then(function () {
-            $scope.uploadURL = $scope.RootURL + '/api/repositories/' + $scope.repository.id + '/content_uploads/file';
+            $scope.uploadURL = $scope.RootURL + '/api/v2/repositories/' + $scope.repository.id + '/content_uploads/file';
         });
 
         $scope.gpgKeys = function () {
