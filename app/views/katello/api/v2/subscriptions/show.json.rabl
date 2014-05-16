@@ -34,7 +34,7 @@ end
 
 node :systems, :if => (params[:action] == "show") do |subscription|
   current_organization = subscription.organization
-  subscription.systems.readable(current_organization).map { |sys| {id: sys.id, name: sys.name} }
+  subscription.systems.readable.map { |sys| {id: sys.id, name: sys.name} }
 end
 
 # TODO: what should replace this since activerecord relation is gone?
