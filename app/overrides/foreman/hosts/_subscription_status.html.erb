@@ -1,0 +1,24 @@
+<style>
+  .circle{ border-radius: 50%; width: 10px; height: 10px; display: inline-block; margin-right: 10px;}
+  .circle:after { content: " "; }
+  .circle.valid { background: #57a81c; }
+  .circle.partial { background: #fc3; }
+  .circle.invalid { background: #9e292b; }
+</style>
+
+<tr>
+  <td><%= _("Subscription status") %></td>
+  <td>
+    <% system = Katello::System.find_by_host_id(@host.id) %>
+    <% if (system  && compliance_status = system.compliance['status']) %>
+      <i class=<%= "circle #{compliance_status}" %> ></i>
+      <%= link_to(
+            compliance_status,
+            "/content_hosts/#{system.uuid}/subscriptions",
+            :title => _("Host subscription details"))
+      %>
+    <% else %>
+      <%= _("Not available") %>
+    <% end %>
+  </td>
+</tr>
