@@ -39,6 +39,7 @@ module ControllerSupport
         assert_response :success, msg
       else
         msg = "Security Violation (403) expected for #{action}, got #{response.status} instead. \n#{user.own_role.summary}"
+        debugger if response.status == 500
         assert_equal 403, response.status, msg
       end
     end

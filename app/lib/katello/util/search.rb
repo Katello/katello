@@ -67,6 +67,7 @@ module Util
        Katello::Errata,
        Katello::Pool,
        Katello::PuppetModule,
+       Katello::Distribution,
        Katello::PackageGroup]
     end
 

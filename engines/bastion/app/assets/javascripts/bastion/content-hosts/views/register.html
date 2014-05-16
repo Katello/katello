@@ -21,7 +21,7 @@
 
   <p translate>Use Subscription Manager to register.</p>
 
-  <pre><code>subscription-manager register --org="{{ organization }}"</code></pre>
+  <pre><code>subscription-manager register --org="{{ organization.label }}"</code></pre>
 
   <div ng-show="nodes.results.length > 0">
     <p>
@@ -31,7 +31,7 @@
               ng-options="node.hostname for node in nodes.results">
       </select>
 
-      <pre><code>subscription-manager register --org="{{ organization }}" --baseurl="https://{{  selectedNode.hostname }}/pulp/repos"</code></pre>
+      <pre><code>subscription-manager register --org="{{ organization.label }}" --baseurl="https://{{  selectedNode.hostname }}/pulp/repos"</code></pre>
     </p>
   </div>
 </section>

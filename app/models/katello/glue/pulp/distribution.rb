@@ -16,7 +16,7 @@ module Glue::Pulp::Distribution
     base.send :include, InstanceMethods
 
     base.class_eval do
-      attr_accessor :_id, :id, :description, :files, :family, :variant, :version, :url, :arch
+      attr_accessor :_id, :id, :description, :files, :family, :variant, :version, :url, :arch, :repoids
 
       def self.find(id)
         Katello::Distribution.new(Katello.pulp_server.extensions.distribution.find(id))
@@ -27,6 +27,7 @@ module Glue::Pulp::Distribution
   module InstanceMethods
 
     def initialize(attrs = {}, options = {})
+      attrs[:repoids] = attrs.delete(:repository_memberships)
       generate_instance_variables(attrs)
     end
 
