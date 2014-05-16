@@ -102,9 +102,9 @@ module Katello
       @product = Product.find_by_id(params[:id]) if params[:id]
     end
 
-    def filter_by_subscription(ids = [], subscription_id = nil)
-      @subscription = Pool.find_by_organization_and_id!(@organization, subscription_id)
-      ids + @subscription.products.pluck("#{Product.table_name}.id")
+    def filter_by_subscription(ids = [], subscription_id)
+      @subscription = Pool.find_by_id!(subscription_id)
+      ids & @subscription.products.pluck("#{Product.table_name}.id")
     end
 
     def product_params
