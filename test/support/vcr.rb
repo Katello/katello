@@ -9,6 +9,25 @@ module VCR
     "#{Katello::Engine.root}/test/fixtures/vcr_cassettes"
   end
 
+  # test class that will automatically run each method in a cassette
+  class TestCase < ::ActiveSupport::TestCase
+    @@matches = [:method, :path, :params, :body_json]
+
+    def cassette_name
+      test_name = self.__name__.downcase.gsub("test_", "")
+      self_class = self.class.name.split("::")[-1].underscore.gsub("_test", "")
+      class_path = self.class.name.split("::")[0...-1].map(&:underscore).join("/")
+      "#{class_path}/#{self_class}/#{test_name}"
+    end
+
+    def run_with_vcr(args)
+      VCR.insert_cassette(cassette_name, :match_requests_on => @@matches)
+      to_ret = run_without_vcr(args)
+      VCR.eject_cassette
+      to_ret
+    end
+    alias_method_chain :run, :vcr
+  end
 end
 
 def configure_vcr

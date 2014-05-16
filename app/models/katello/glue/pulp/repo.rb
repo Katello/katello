@@ -259,6 +259,12 @@ module Glue::Pulp::Repo
       Katello.pulp_server.extensions.repository.errata_ids(self.pulp_id)
     end
 
+    def distribution_ids
+      Katello.pulp_server.extensions.repository.distributions(self.pulp_id).collect do |distribution|
+        distribution['_id']
+      end
+    end
+
     # remove errata and groups from this repo
     # that have no packages
     def purge_empty_groups_errata
@@ -337,7 +343,13 @@ module Glue::Pulp::Repo
 
     def distributions
       if @repo_distributions.nil?
-        self.distributions = Katello.pulp_server.extensions.repository.distributions(self.pulp_id)
+        # we fetch ids and then fetch distributions by id, because repo distributions do not contain
+        # all the info needed, e.g. repoids
+        tmp_distributions = []
+        self.distribution_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+          tmp_distributions.concat(Katello.pulp_server.extensions.distribution.find_all_by_unit_ids(sub_list))
+        end
+        self.distributions = tmp_distributions
       end
       @repo_distributions
     end
@@ -467,9 +479,8 @@ module Glue::Pulp::Repo
       sync_options[:max_speed] ||= Katello.config.pulp.sync_KBlimit if Katello.config.pulp.sync_KBlimit # set bandwidth limit
       sync_options[:num_threads] ||= Katello.config.pulp.sync_threads if Katello.config.pulp.sync_threads # set threads per sync
       pulp_tasks = Katello.pulp_server.extensions.repository.sync(self.pulp_id, {:override_config => sync_options})
-      pulp_task = pulp_tasks.select{ |i| i['tags'].include?("pulp:action:sync") }.first.with_indifferent_access
 
-      task = PulpSyncStatus.using_pulp_task(pulp_task) do |t|
+      task = PulpSyncStatus.using_pulp_task(pulp_tasks) do |t|
         t.organization = organization
         t.parameters ||= {}
         t.parameters[:options] = options
@@ -831,10 +842,12 @@ module Glue::Pulp::Repo
         end
       end
 
-      Katello.pulp_server.resources.content.import_into_repo(self.pulp_id, unit_type_id,
+      response = Katello.pulp_server.resources.content.import_into_repo(self.pulp_id, unit_type_id,
                                                              upload_id, unit_key,
                                                              {:unit_metadata => unit_metadata}
                                                             )
+      task = PulpTaskStatus.using_pulp_task(response)
+      PulpTaskStatus.wait_for_tasks([task])
       Katello.pulp_server.resources.content.delete_upload_request(upload_id)
     end
 

@@ -12,42 +12,43 @@
 
 require 'katello_test_helper'
 
-module ::Actions::Pulp::User
-  class TestBase < ActiveSupport::TestCase
-    include Dynflow::Testing
-    include Support::Actions::RemoteAction
+class Actions::Pulp::UserTest < VCR::TestCase
+  include Dynflow::Testing
+  include Support::Actions::RemoteAction
 
-    before do
-      stub_remote_user
-    end
+  @@matches = [:method, :path, :params]
 
-    describe 'Create' do
-      it 'runs' do
-        planned_action = create_and_plan_action ::Actions::Pulp::User::Create,
-                                                remote_id: 'user_id'
+  def setup
+    planned_action = create_and_plan_action ::Actions::Pulp::User::Create,
+      remote_id: 'user_id'
 
-        run_action planned_action do |action|
-          runcible_expects(action, :resources, :user, :create)
-        end
-      end
-    end
-
-    describe 'Superuser' do
-
-      { ::Actions::Pulp::Superuser::Add    => :add,
-        ::Actions::Pulp::Superuser::Remove => :remove
-      }.each do |action, method|
-        describe action.to_s.demodulize do
-          specify do
-            planned_action = create_and_plan_action action,
-                                                    remote_id: 'user_id'
-            run_action planned_action do |action|
-              runcible_expects(action, :resources, :role, method)
-            end
-          end
-        end
-      end
-    end
+    response = run_action planned_action
+    assert_equal :success, response.state
   end
 
+  def teardown
+    configure_runcible
+    ::Katello.pulp_server.resources.user.delete('user_id')
+  rescue RestClient::ResourceNotFound => e
+  end
+
+  def test_create
+    configure_runcible
+    user = ::Katello.pulp_server.resources.user.retrieve('user_id')
+    refute_nil user
+    assert_equal 'user_id', user[:login]
+  end
+
+  [::Actions::Pulp::Superuser::Add,
+   ::Actions::Pulp::Superuser::Remove
+  ].each do |action|
+    method = action.to_s.demodulize.downcase
+    define_method("test_super_user_#{method}") do
+      planned_action = create_and_plan_action action,
+        remote_id: 'user_id'
+
+      response = run_action planned_action
+      assert_equal :success, response.state
+    end
+  end
 end

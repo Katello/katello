@@ -13,5 +13,6 @@
 module Katello
 class Distribution
   include Glue::Pulp::Distribution if Katello.config.use_pulp
+  include Glue::ElasticSearch::Distribution if Katello.config.use_elasticsearch
 end
 end

@@ -50,8 +50,10 @@ describe PulpTaskStatus, :katello => true do
     end
 
     describe "TaskStatus should have correct attributes for a completed task" do
-      before { @t = PulpTaskStatus.using_pulp_task(pulp_task_without_error) }
-
+      before do
+        Katello.pulp_server.resources.task.stubs(:poll).returns(pulp_task_without_error)
+        @t = PulpTaskStatus.using_pulp_task(pulp_task_with_error)
+      end
       specify { @t.uuid.must_equal(pulp_task_without_error[:task_id]) }
       specify { @t.state.must_equal(pulp_task_without_error[:state]) }
       specify { @t.start_time.must_equal(pulp_task_without_error[:start_time]) }
@@ -60,7 +62,10 @@ describe PulpTaskStatus, :katello => true do
     end
 
     describe "TaskStatus should have correct attributes for a failed task" do
-      before { @t = PulpTaskStatus.using_pulp_task(pulp_task_with_error) }
+      before do
+        Katello.pulp_server.resources.task.stubs(:poll).returns(pulp_task_with_error)
+        @t = PulpTaskStatus.using_pulp_task(pulp_task_with_error)
+      end
       specify { @t.result.must_equal({:errors => [pulp_task_with_error[:exception], pulp_task_with_error[:traceback]]}) }
     end
 
@@ -68,6 +73,7 @@ describe PulpTaskStatus, :katello => true do
       before(:each) do
         disable_org_orchestration
         @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
+        Katello.pulp_server.resources.task.stubs(:poll).returns(pulp_task_without_error)
         @t = PulpTaskStatus.using_pulp_task(pulp_task_without_error) do |t|
           t.organization = @organization
           t.user = users(:one)

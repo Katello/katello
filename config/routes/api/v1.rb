@@ -130,11 +130,7 @@ Katello::Engine.routes.draw do
         resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end
-        resources :packages do
-          get :search, :on => :collection
-        end
         resources :errata, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z\-\+%_.:]+/}
-        resources :distributions, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z \-\+%_.]+/}
         resources :puppet_modules, :only => [:index, :show] do
           get :search, :on => :collection
         end

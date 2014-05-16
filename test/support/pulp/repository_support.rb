@@ -41,14 +41,27 @@ module RepositorySupport
     @repo = Repository.find(repo_id)
     @repo.relative_path = '/test_path/'
     @repo.feed = @repo.content_type == 'puppet' ? @puppet_repo_url : @repo_url
-    @repo.create_pulp_repo
-  ensure
+
+    ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Create,
+                             content_type: @repo.content_type,
+                             pulp_id: @repo.pulp_id,
+                             name: @repo.name,
+                             feed: @repo.feed,
+                             ssl_ca_cert: @repo.feed_ca,
+                             ssl_client_cert: @repo.feed_cert,
+                             ssl_client_key: @repo.feed_key,
+                             unprotected: @repo.unprotected,
+                             checksum_type: @repo.checksum_type,
+                             path: @repo.relative_path,
+                             with_importer: true
+                            )
     return @repo
   end
 
   def self.sync_repo
-    tasks = @repo.sync
-    TaskSupport.wait_on_tasks(tasks)
+    ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync,
+                             pulp_id: @repo.pulp_id
+                            )
   end
 
   def self.destroy_repo

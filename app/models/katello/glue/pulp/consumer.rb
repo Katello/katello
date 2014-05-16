@@ -94,26 +94,7 @@ module Glue::Pulp::Consumer
           error_ids << repoid
         end
       end
-
-      begin
-        #the consumer user does not have access to check tasks in pulp
-        #   so we have to switch to the hidden user temporarily
-        previous_user = ::User.current
-        ::User.current = ::User.hidden.first
-        #reject agent bind events, and wait for others
-        events.reject! do |event|
-          all_events = %w(pulp:action:agent_bind pulp:action:agent_unbind pulp:action:delete_binding)
-          !(event['tags'] & all_events).empty?
-        end
-        tasks = PulpTaskStatus.wait_for_tasks(events)
-        tasks.each{|task| Rails.logger.error(task.error) if task.error?}
-        return [processed_ids, error_ids]
-      rescue => e
-        Rails.logger.error "Failed to enable repositories: #{e}, #{e.backtrace.join("\n")}"
-        raise e
-      ensure
-        ::User.current = previous_user
-      end
+      [processed_ids, error_ids]
     end
 
     def errata

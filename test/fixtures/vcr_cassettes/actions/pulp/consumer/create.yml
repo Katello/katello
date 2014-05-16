@@ -1,0 +1,124 @@
+--- 
+http_interactions: 
+- request: 
+    method: post
+    uri: https://centos.installer/pulp/api/v2/consumers/
+    body: 
+      encoding: US-ASCII
+      string: "{\"id\":\"uuid\",\"display_name\":\"name\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="2CWZLmNUHoEFh2mmX3vwCHGsvvgO1hOb6qgzdvVZMs", oauth_signature="yl8oMSWSo2fvQCMJ4r497zwKuCY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185674", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "35"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Date: 
+      - Thu, 15 May 2014 20:27:54 GMT
+      Server: 
+      - Apache/2.2.15 (CentOS)
+      Location: 
+      - /pulp/api/v2/consumers/uuid/
+      Content-Length: 
+      - "2041"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"consumer\": {\"display_name\": \"name\", \"description\": null, \"_ns\": \"consumers\", \"notes\": {}, \"rsa_pub\": null, \"capabilities\": {}, \"_id\": {\"$oid\": \"5375234a86d9a9321c14a58b\"}, \"id\": \"uuid\", \"_href\": {\"_href\": \"/pulp/api/v2/consumers/uuid/\"}}, \"certificate\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICWwIBAAKBgQC6IPf21HtgviHXTgNhGxAOyTjMldUNUMDC/pkcP4nmgDssp9Fa\\nteUHCZ6emtYa7Nyj2eqb4wHVhruea7Bs2cg0tTpvDQagq+WSHsrIYsr/F0RW/EHw\\nkOtacsPXrzGel7y28SYVzGiPkp/RFZJOVCh7Za54K8Bh6kYSmn8QeaVMtQIDAQAB\\nAoGAIDZAc7lGOPHuzWI094NFfimY6N8tZgaJtbV2LgtZBElA9HN+qeI85sDlcLF/\\nSF2hucGm9p+M27VblwkwGUZ/fUOVH8s9uKTUKSgTjekvEWWxTyFdSWub8bbyrdgq\\nAKxnrvc0X/qdlND2oS5ZmPsBYVBI7OHn5kI8cfn5UL2aOOkCQQD3FBgVaTHWJUpi\\nyBf99wM6XGdeoJl8dyC4ipgMU/LKtlmNGcyI5M5WFecwOs4vHuhYiIF0CakqDATw\\nTQ7O3HiLAkEAwNl6H+R9LX0nivhln0PJjr/U1NRVNXeUzcLeVhU40Kxdr8+iQuSB\\nwS2j51sJaGGMg2oxKF7Tm3cgKd9s/nS3vwJAEVPDbJz39cCfutW1eQX9n/Yi+avh\\nl6zzCn4Ns6+fcz/ef9qzUVZacgcPM36sPvm36Z2JFo4m4t/86K0+wJsNiQJADQAc\\nLX43uhNP0RyBrUTil47zCA3wWJRhIaXbWy4/EEIuZqW2qI/C94TeIcCPV8wLrug/\\nvBr4ZOiY8HmxXU38/QJATyo6Z0OC+KRBT6pBk4tXWYsJa6EVzV4yq9uGxS0o4vnI\\naK3YYB7BICCiJUhSyJ7B8DnB+QvWYT8JTt1saukvwg==\\n-----END RSA PRIVATE KEY-----\\n-----BEGIN CERTIFICATE-----\\nMIICVDCCATwCAgLmMA0GCSqGSIb3DQEBBQUAMCoxGTAXBgNVBAMMEGNlbnRvcy5p\\nbnN0YWxsZXIxDTALBgNVBAoMBFBVTFAwHhcNMTQwNTE1MjAyNzU0WhcNMjQwNTEy\\nMjAyNzU0WjA5MQ0wCwYDVQQDEwR1dWlkMSgwJgYKCZImiZPyLGQBARMYNTM3NTIz\\nNGE4NmQ5YTkzMjFjMTRhNThiMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6\\nIPf21HtgviHXTgNhGxAOyTjMldUNUMDC/pkcP4nmgDssp9FateUHCZ6emtYa7Nyj\\n2eqb4wHVhruea7Bs2cg0tTpvDQagq+WSHsrIYsr/F0RW/EHwkOtacsPXrzGel7y2\\n8SYVzGiPkp/RFZJOVCh7Za54K8Bh6kYSmn8QeaVMtQIDAQABMA0GCSqGSIb3DQEB\\nBQUAA4IBAQBILizP9Rxq5tleuyqGCO/0bxLCM4XCIIOdc8No56kAEEsRSOqjJGKY\\n5cE+keUHz74wGhrPBvjd4/eisAH2JlYknvom52CjOfNa9mrLl4qXTJZIowbHmh8W\\nEcDIMFxIGoA/0WTEb3SAzLlkQYK2YjUIGQAxua2HhZc9l2KVwUYv84M1S/iHK9U8\\nQgugP3iW3t4mOc8oGWM434BC0poxVz7MamU+rJJ8bgfEJ1NMClfB97VlwswrM/c4\\nxgru0PgPcSJAAmprRANviE/A1d2dtt6DStxfaaS58sRfmMvhIuCNiy/uRXWFrTWq\\nm7fg2GexWcDv9yNzH/HEfarGb3meWQ4g\\n-----END CERTIFICATE-----\"}"
+    http_version: 
+  recorded_at: Thu, 15 May 2014 20:27:54 GMT
+- request: 
+    method: get
+    uri: https://centos.installer/pulp/api/v2/consumers/uuid/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="A5DAwWctH6z9Bz4ZCdHQyRDxC6pTzInwBSsrXxpY", oauth_signature="SR4%2B6I2RYPMS%2B7CY6zqsp9d0LzA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185674", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Thu, 15 May 2014 20:27:54 GMT
+      Server: 
+      - Apache/2.2.15 (CentOS)
+      Content-Length: 
+      - "215"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"display_name\": \"name\", \"description\": null, \"_ns\": \"consumers\", \"notes\": {}, \"rsa_pub\": null, \"capabilities\": {}, \"_id\": {\"$oid\": \"5375234a86d9a9321c14a58b\"}, \"id\": \"uuid\", \"_href\": \"/pulp/api/v2/consumers/uuid/\"}"
+    http_version: 
+  recorded_at: Thu, 15 May 2014 20:27:54 GMT
+- request: 
+    method: delete
+    uri: https://centos.installer/pulp/api/v2/consumers/uuid/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="obLjobudWx6ykvzL4fNud0XaErYyq64CjlcBTAG7DMA", oauth_signature="pFHJ5acuahJfF%2FeVB0o0QadXmtA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185674", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Thu, 15 May 2014 20:27:54 GMT
+      Server: 
+      - Apache/2.2.15 (CentOS)
+      Content-Length: 
+      - "4"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "null"
+    http_version: 
+  recorded_at: Thu, 15 May 2014 20:27:54 GMT
+recorded_with: VCR 2.9.0

@@ -158,65 +158,46 @@ class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
   end
 
   def test_install_package
-    task = @@simple_server.install_package(['elephant'])
-    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
+    tasks = @@simple_server.install_package(['elephant'])
 
-    assert_includes task['tags'], 'pulp:action:unit_install'
+    assert tasks[:spawned_tasks].first['task_id']
   end
 
   def test_uninstall_package
-    task = @@simple_server.install_package(['cheetah'])
-    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
+    tasks = @@simple_server.uninstall_package(['cheetah'])
 
-    task = @@simple_server.uninstall_package(['cheetah'])
-    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
-
-    assert_includes task['tags'], 'pulp:action:unit_uninstall'
+    assert tasks[:spawned_tasks].first['task_id']
   end
 
   def test_update_package
-    task = @@simple_server.install_package(['cheetah'])
-    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
+    tasks = @@simple_server.update_package(['cheetah'])
 
-    task = @@simple_server.update_package(['cheetah'])
-    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
-
-    assert_includes task['tags'], 'pulp:action:unit_update'
+    assert tasks[:spawned_tasks].first['task_id']
   end
 
   def test_update_all_packages
-    task = @@simple_server.install_package(['cheetah'])
-    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
+    tasks = @@simple_server.update_package([])
 
-    task = @@simple_server.update_package([])
-    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
-
-    assert_includes task['tags'], 'pulp:action:unit_update'
+    assert tasks[:spawned_tasks].first['task_id']
   end
 
   def test_install_package_group
-    task = @@simple_server.install_package_group(['mammls'])
-    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
+    tasks = @@simple_server.install_package_group(['mammls'])
 
-    assert_includes task['tags'], 'pulp:action:unit_install'
+    assert tasks[:spawned_tasks].first['task_id']
   end
 
   def test_uninstall_package_group
-    task = @@simple_server.install_package_group(['mammals'])
-    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
+    tasks = @@simple_server.uninstall_package_group(['mammals'])
 
-    task = @@simple_server.uninstall_package_group(['mammals'])
-    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
-
-    assert_includes task['tags'], 'pulp:action:unit_uninstall'
+    assert tasks[:spawned_tasks].first['task_id']
   end
 
   def test_install_consumer_errata
-    erratum_id = RepositorySupport.repo.errata.select{ |errata| errata.errata_id == 'RHEA-2010:0002' }.first.id
-    task = @@simple_server.install_consumer_errata([erratum_id])
-    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
+    erratum_id = RepositorySupport.repo.errata.select{ |errata| errata.errata_id == 'RHEA-2010:0002' }.first.errata_id
+    tasks = @@simple_server.install_consumer_errata([erratum_id])
 
-    assert_includes task['tags'], 'pulp:action:unit_install'
+    assert tasks[:spawned_tasks].first['task_id']
   end
 
 end
