@@ -65,19 +65,19 @@ module Katello
     end
 
     def delete
-      r = Resources::Candlepin::Proxy.delete(@request_path, @request_body)
+      r = Resources::Candlepin::Proxy.delete(@request_path, @request_body.read)
       logger.debug r
       render :json => r
     end
 
     def post
-      r = Resources::Candlepin::Proxy.post(@request_path, @request_body)
+      r = Resources::Candlepin::Proxy.post(@request_path, @request_body.read)
       logger.debug r
       render :json => r
     end
 
     def put
-      r = Resources::Candlepin::Proxy.put(@request_path, @request_body)
+      r = Resources::Candlepin::Proxy.put(@request_path, @request_body.read)
       logger.debug r
       render :json => r
     end
