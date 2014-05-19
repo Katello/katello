@@ -102,8 +102,6 @@ Katello::Engine.routes.draw do
           post :copy
           put :add_systems
           put :remove_systems
-          put :add_activation_keys
-          put :remove_activation_keys
         end
         api_resources :systems, :only => system_onlies
       end
@@ -239,8 +237,6 @@ Katello::Engine.routes.draw do
 
       api_resources :host_collections do
         member do
-          get :history
-          match "/history/:job_id" => "host_collections#history_show", :via => :get
           delete :destroy_systems
         end
 

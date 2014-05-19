@@ -31,7 +31,8 @@ module Katello
         :authorized => deletable_repositories
       )
 
-      respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => messages }
+      respond_for_show :template => 'bulk_action', :resource_name => 'common',
+                       :resource => { 'displayMessages' => messages }
     end
 
     api :POST, "/repositories/bulk/sync", N_("Synchronise repository")
@@ -47,7 +48,8 @@ module Katello
         :authorized => syncable_repositories
       )
 
-      respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => messages }
+      respond_for_show :template => 'bulk_action', :resource_name => 'common',
+                       :resource => { 'displayMessages' => messages }
     end
 
     private

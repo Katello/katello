@@ -20,30 +20,9 @@ module Katello
     before_filter :find_system
     before_filter :find_optional_organization, :only => [:index]
     before_filter :find_organization, :only => [:create]
-    before_filter :authorize
     before_filter :load_search_service, :only => [:index, :systems]
 
     wrap_parameters :include => (HostCollection.attribute_names + %w(system_ids))
-
-    def rules
-      any_readable         = lambda { @organization && HostCollection.any_readable?(@organization) }
-      read_perm            = lambda { @host_collection.readable? }
-      edit_perm            = lambda { @host_collection.editable? }
-      create_perm          = lambda { HostCollection.creatable?(@organization) }
-      destroy_perm         = lambda { @host_collection.deletable? }
-      { :index           => any_readable,
-        :show            => read_perm,
-        :systems         => read_perm,
-        :create          => create_perm,
-        :copy            => create_perm,
-        :update          => edit_perm,
-        :destroy         => destroy_perm,
-        :add_systems     => edit_perm,
-        :remove_systems  => edit_perm,
-        :add_activation_keys    => edit_perm,
-        :remove_activation_keys => edit_perm
-      }
-    end
 
     def_param_group :host_collection do
       param :name, String, :required => true, :desc => N_("Host Collection name")
@@ -114,11 +93,21 @@ module Katello
     param :system_ids, Array, :desc => N_("Array of system ids")
     def add_systems
       ids = system_uuids_to_ids(params[:system_ids])
-      @systems = System.readable(@host_collection.organization).where(:id => ids)
-      @host_collection.system_ids = (@host_collection.system_ids + @systems.collect { |s| s.id }).uniq
+      @systems = System.editable.where(:id => ids)
+      @editable_systems = @systems.editable
+      @host_collection.system_ids = (@host_collection.system_ids + @editable_systems.collect { |s| s.id }).uniq
       @host_collection.save!
       System.index.refresh
-      respond_for_index(:collection => @host_collection.systems, :template => :delta_systems)
+
+      messages = format_bulk_action_messages(
+          :success    => _("Successfully added %s Content Host(s)."),
+          :error      => _("You were not allowed to add %s"),
+          :models     => @systems,
+          :authorized => @editable_systems
+      )
+
+      respond_for_show :template => 'bulk_action', :resource_name => 'common',
+                       :resource => { 'displayMessages' => messages }
     end
 
     api :PUT, "/host_collections/:id/remove_systems", N_("Remove systems from the host collection")
@@ -126,65 +115,28 @@ module Katello
     param :system_ids, Array, :desc => N_("Array of system ids")
     def remove_systems
       ids = system_uuids_to_ids(params[:system_ids])
-      system_ids = System.readable(@host_collection.organization).where(:id => ids).collect { |s| s.id }
-      @host_collection.system_ids = (@host_collection.system_ids - system_ids).uniq
+      @systems = System.editable.where(:id => ids)
+      @editable_systems = @systems.editable
+      @host_collection.system_ids = (@host_collection.system_ids - @editable_systems.collect { |s| s.id }).uniq
       @host_collection.save!
       System.index.refresh
-      respond_for_index(:collection => @host_collection.systems, :template => :delta_systems)
-    end
 
-    api :PUT, "/host_collections/:id/add_activation_keys", N_("Add activation keys to the host collection")
-    param :id, :identifier, :desc => N_("ID of the host collection"), :required => true
-    param :activation_key_ids, Array, :desc => N_("Array of activation key IDs")
-    def add_activation_keys
-      ids = params[:activation_key_ids]
-      @activation_keys = ActivationKey.readable(@host_collection.organization).where(:id => ids)
-      @host_collection.activation_key_ids = (@host_collection.activation_key_ids + @activation_keys.collect { |activation_key| activation_key.id }).uniq
-      @host_collection.save!
-      ActivationKey.index.refresh
-      respond_for_index(:collection => @host_collection.activation_keys, :template => :delta_activation_keys)
-    end
+      messages = format_bulk_action_messages(
+          :success    => _("Successfully removed %s Content Host(s)."),
+          :error      => _("You were not allowed to sync %s"),
+          :models     => @systems,
+          :authorized => @editable_systems
+      )
 
-    api :PUT, "/host_collections/:id/remove_activation_keys", N_("Remove activation keys from the host collection")
-    param :id, :identifier, :desc => N_("ID of the activation key host collection"), :required => true
-    param :activation_key_ids, Array, :desc => N_("Array of activation key IDs")
-    def remove_activation_keys
-      ids = params[:activation_key_ids]
-      activation_key_ids = ActivationKey.readable(@host_collection.organization).where(:id => ids).collect { |s| s.id }
-      @host_collection.activation_key_ids = (@host_collection.activation_key_ids - activation_key_ids).uniq
-      @host_collection.save!
-      ActivationKey.index.refresh
-      respond_for_index(:collection => @host_collection.activation_keys, :template => :delta_activation_keys)
-    end
-
-    api :GET, "/host_collections/:id/history", N_("History of jobs performed on a host collection")
-    param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
-    # TODO: v2 update
-    def history
-      super
-    end
-
-    api :GET, "/host_collections/:id/history", N_("History of a job performed on a host collection")
-    param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
-    param :job_id, :identifier, :desc => N_("Id of a job for filtering")
-    # TODO: v2 update
-    def history_show
-      super
+      respond_for_show :template => 'bulk_action', :resource_name => 'common',
+                       :resource => { 'displayMessages' => messages }
     end
 
     api :DELETE, "/host_collections/:id", N_("Destroy a host collection")
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
-    # TODO: v2 update
     def destroy
       @host_collection.destroy
       respond_for_destroy
-    end
-
-    api :DELETE, "/host_collections/:id/destroy_systems", N_("Destroy a host collection nad contained systems")
-    param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
-    # TODO: v2 update
-    def destroy_systems
-      super
     end
 
     api :POST, "/host_collections/:id/copy", N_("Make copy of a host collection")
@@ -224,7 +176,7 @@ module Katello
     end
 
     def filter_organization
-      filters = [:terms => {:id => HostCollection.readable(@organization).pluck("#{Katello::HostCollection.table_name}.id")}]
+      filters = [:terms => {:id => HostCollection.readable.pluck("#{Katello::HostCollection.table_name}.id")}]
       filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
       options = {

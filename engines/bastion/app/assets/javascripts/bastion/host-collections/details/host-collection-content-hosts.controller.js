@@ -46,10 +46,18 @@ angular.module('Bastion.host-collections').controller('HostCollectionContentHost
             var selected = _.pluck($scope.contentHostsTable.getSelected(), 'uuid');
 
             $scope.isRemoving = true;
-            HostCollection.removeContentHosts({id: $scope.hostCollection.id, 'system_ids': selected}, function () {
+            HostCollection.removeContentHosts({id: $scope.hostCollection.id, 'system_ids': selected}, function (data) {
                 contentHostsPane.table.selectAll(false);
                 contentHostsPane.refresh();
-                $scope.successMessages.push(translate("Successfully removed %s content hosts.").replace('%s', selected.length));
+
+                angular.forEach(data.displayMessages.success, function (success) {
+                    $scope.$parent.successMessages.push(success);
+                });
+
+                angular.forEach(data.displayMessages.error, function (error) {
+                    $scope.$parent.errorMessages.push(error);
+                });
+
                 $scope.isRemoving = false;
             }, function (response) {
                 $scope.isRemoving = false;

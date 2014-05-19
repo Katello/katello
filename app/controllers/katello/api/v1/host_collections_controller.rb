@@ -71,7 +71,7 @@ class Api::V1::HostCollectionsController < Api::V1::ApiController
   def index
     query_string = params[:search]
 
-    filters = [:terms => {:id => HostCollection.readable(@organization).pluck(:id)}]
+    filters = [:terms => {:id => HostCollection.readable.pluck(:id)}]
     #downcase filtered analyzed field
     filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
