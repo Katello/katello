@@ -112,7 +112,6 @@ Requires: %{?scl_prefix}rubygem-json
 Requires: %{?scl_prefix}rubygem-oauth
 Requires: %{?scl_prefix}rubygem-rest-client
 Requires: %{?scl_prefix}rubygem-net-ldap
-Requires: %{?scl_prefix}rubygem-ldap_fluff >= 0.2.2
 Requires: %{?scl_prefix}rubygem-foreigner => 1.4.2
 Requires: %{?scl_prefix}rubygem-foreigner < 1.5
 Requires: %{?scl_prefix}rubygem-daemons >= 1.1.4
@@ -147,7 +146,6 @@ Requires: %{?scl_prefix}rubygem-strong_parameters
 BuildRequires: foreman >= 1.3.0
 BuildRequires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
 BuildRequires: %{?scl_prefix}rubygem-net-ldap
-BuildRequires: %{?scl_prefix}rubygem-ldap_fluff >= 0.2.2
 BuildRequires: %{?scl_prefix}rubygem-sqlite3
 BuildRequires: %{?scl_prefix}rubygem-tire => 0.6.2
 BuildRequires: %{?scl_prefix}rubygem-tire < 0.7
