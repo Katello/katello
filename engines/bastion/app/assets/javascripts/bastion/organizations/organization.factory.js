@@ -33,7 +33,8 @@ angular.module('Bastion.organizations').factory('Organization',
                 paths: {
                     method: 'GET',
                     url: '/api/v2/organizations/:id/environments/paths',
-                    isArray: true
+                    isArray: true,
+                    params: {'permission_type': '@permission_type'}
                 },
                 registerableEnvironments: {
                     method: 'GET',

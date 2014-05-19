@@ -45,6 +45,9 @@ module Katello
         authorized?(:destroy_content_views)
       end
 
+      def promotable_or_removable?
+        authorized?(:promote_or_remove_content_views)
+      end
     end
 
   end

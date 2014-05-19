@@ -21,7 +21,7 @@ describe('Controller: ContentViewDeletionController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller');
 
-        versions = [{version: 1, environments:[{name: "name"}]}, {version: 2, environments: []}];
+        versions = [{version: 1, environments:[{name: "name", permissions: {readable: true}}]}, {version: 2, environments: []}];
         ContentView = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();

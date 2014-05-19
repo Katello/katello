@@ -18,11 +18,24 @@ child :composite_content_views do
   attributes :id, :name, :label
 end
 
+node :permissions do |cvv|
+  {
+    :deletable => cvv.removable?
+  }
+end
+
 extends 'katello/api/v2/common/timestamps'
 
 version = @object || @resource
 child :environments => :environments do
   attributes :id, :name, :label
+
+  node :permissions do |env|
+  {
+    :readable => env.readable?,
+    :promotable_or_removable => env.promotable_or_removable?
+  }
+  end
 
   node :system_count do |env|
     Katello::System.in_environment(env).where(:content_view_id => version.content_view_id).count

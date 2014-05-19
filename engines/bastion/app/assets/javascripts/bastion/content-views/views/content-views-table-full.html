@@ -29,7 +29,7 @@
       </td>
       <td alch-table-cell>
         <span ng-show="contentView.environments.length !== 0"
-              ng-repeat="environment in contentView.environments">
+              ng-repeat="environment in contentView.environments" ng-if="environment.permissions.readable">
           {{ environment.name }}<span ng-if="!$last">, </span>
         </span>
         <span ng-show="contentView.environments.length === 0" translate>
