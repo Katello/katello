@@ -28,12 +28,12 @@ class System < Katello::Model
   include AsyncOrchestration
 
   attr_accessible :name, :uuid, :description, :location, :environment, :content_view,
-                  :environment_id, :content_view_id, :host_collection_ids
+                  :environment_id, :content_view_id, :host_collection_ids, :host_id
 
   after_rollback :rollback_on_create, :on => :create
 
   belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :systems
-  belongs_to :foreman_host, :class_name => "Host::Managed", :foreign_key => :host_id
+  belongs_to :foreman_host, :class_name => "Host::Base", :foreign_key => :host_id
 
   has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
   has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy

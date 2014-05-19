@@ -1,7 +1,6 @@
-<% system = Katello::System.find_by_host_id(@host.id) %>
 <%= link_to(
         _('Content'),
-        "/content_hosts/#{system.uuid}/info",
+        "/content_hosts/#{@host.content_host.uuid}/info",
         :title => _("Host content and subscription details"),
-        :class => 'btn btn-default') if system
+        :class => 'btn btn-default') if @host.content_host
 %>
