@@ -17,7 +17,7 @@ module Katello
     class << self
 
       OK_RETURN_CODE = 'ok'
-      PACKAGES = %w(katello candlepin pulp thumbslug qpid ldap_fluff elasticsearch)
+      PACKAGES = %w(katello candlepin pulp thumbslug qpid elasticsearch)
 
       #
       # Calls "status" services in all backend engines.

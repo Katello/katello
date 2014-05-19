@@ -29,7 +29,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "ruby-openid"
 
   gem.add_dependency "net-ldap"
-  gem.add_dependency "ldap_fluff", ">= 0.2.2"
   gem.add_dependency "foreigner", "~> 1.4.2"
   gem.add_dependency "daemons", ">= 1.1.4"
   gem.add_dependency "uuidtools"
