@@ -50,18 +50,6 @@ class RepositoryAuthorizationAdminTest < AuthorizationTestBase
     refute_empty Repository.deletable
   end
 
-  def test_libraries_content_readable
-    refute_empty Repository.libraries_content_readable(@acme_corporation)
-  end
-
-  def test_content_readable
-    refute_empty Repository.content_readable(@acme_corporation)
-  end
-
-  def test_readable_in_org
-    refute_empty Repository.readable_in_org(@acme_corporation)
-  end
-
 end
 
 class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
@@ -93,18 +81,6 @@ class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
 
   def test_deletable
     assert_empty Repository.deletable
-  end
-
-  def test_libraries_content_readable
-    assert_empty Repository.libraries_content_readable(@acme_corporation)
-  end
-
-  def test_content_readable
-    assert_empty Repository.content_readable(@acme_corporation)
-  end
-
-  def test_readable_in_org
-    assert_empty Repository.readable_in_org(@acme_corporation)
   end
 
 end

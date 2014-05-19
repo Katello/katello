@@ -19,21 +19,7 @@ module Authorization::ContentViewVersion
       view_ids = ContentView.readable.collect{|v| v.id}
       joins(:content_view).where("#{Katello::ContentView.table_name}.id" => view_ids)
     end
-
-    def promotable(org)
-      items(org, [:promote])
-    end
-
-    def items(org, verbs)
-      fail "scope requires an organization" if org.nil?
-      resource = :content_views
-
-      if ::User.allowed_all_tags?(verbs, resource, org)
-        joins(:content_view).where("#{Katello::ContentView.table_name}.organization_id" => org.id)
-      else
-        joins(:content_view).where("#{Katello::ContentView.table_name}.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
-      end
-    end
   end
+
 end
 end

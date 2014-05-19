@@ -50,8 +50,6 @@ class KTEnvironment < Katello::Model
   has_many :content_view_histories, :class_name => "Katello::ContentViewHistory", :dependent => :destroy,
            :inverse_of => :environment, :foreign_key => :katello_environment_id
 
-  has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
-
   scope :completer_scope, lambda { |options = nil| where('organization_id = ?', options[:organization_id]) if options[:organization_id].present? }
   scope :non_library, where(library: false)
   scope :library, where(library: true)
@@ -82,7 +80,6 @@ class KTEnvironment < Katello::Model
         end)
 
   after_create :add_to_default_capsule
-  after_destroy :unset_users_with_default
 
   ERROR_CLASS_NAME = "Environment"
 
@@ -208,15 +205,6 @@ class KTEnvironment < Katello::Model
     "environment_#{id}_#{item}"
   end
 
-  # returns list of virtual permission tags for the current user
-  def self.list_tags(org_id)
-    KTEnvironment.where(:organization_id => org_id).collect { |m| VirtualTag.new(m.id, m.name) }
-  end
-
-  def self.tags(ids)
-    KTEnvironment.where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
-  end
-
   def package_groups(search_args = {})
     groups = []
     self.products.each do |prod|
@@ -275,14 +263,6 @@ class KTEnvironment < Katello::Model
 
   def add_to_default_capsule
     CapsuleContent.default_capsule.try(:add_lifecycle_environment, self)
-  end
-
-  def unset_users_with_default
-    users = ::User.with_default_environment(self.id)
-    users.each do |u|
-      Notify.message _("Your default environment has been removed. Please choose another one."),
-                     :user => u, :organization => self.organization
-    end
   end
 
   # Katello, which understands repository content and promotion, provides release versions based upon

@@ -14,7 +14,7 @@ require 'katello_test_helper'
 
 module Katello
 describe Api::V1::UebercertsController do
-  include AuthorizationHelperMethods
+
   OWNER_KEY = "some_org"
 
   let(:org) { Organization.new(:label => OWNER_KEY) }
@@ -24,18 +24,11 @@ describe Api::V1::UebercertsController do
   end
 
   describe "rules" do
-    let(:authorized_user) do
-      user_with_permissions { |u| u.can(:read, :organizations, nil, @organization) }
-    end
-    let(:unauthorized_user) do
-      user_without_permissions
-    end
     describe "show" do
       let(:action) { :show }
       let(:req) do
         get :show, :organization_id => OWNER_KEY
       end
-      it_should_behave_like "protected action"
     end
   end
 

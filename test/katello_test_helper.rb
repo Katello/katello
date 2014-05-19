@@ -5,20 +5,16 @@ require "mocha/setup"
 require 'set'
 
 require "#{Katello::Engine.root}/test/support/minitest/spec/shared_examples"
-require "#{Katello::Engine.root}/spec/helpers/login_helper_methods"
+require "#{Katello::Engine.root}/spec/models/model_spec_helper"
 require "#{Katello::Engine.root}/spec/helpers/locale_helper_methods"
-require "#{Katello::Engine.root}/spec/helpers/authorization_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/organization_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/system_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/product_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/repository_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/search_helper_methods"
-require "#{Katello::Engine.root}/spec/models/model_spec_helper"
-require "#{Katello::Engine.root}/spec/support/shared_examples/protected_action_shared_examples"
 require "#{Katello::Engine.root}/spec/support/custom_matchers"
 require "#{Katello::Engine.root}/test/support/vcr"
 require "#{Katello::Engine.root}/test/support/runcible"
-require "#{Katello::Engine.root}/test/support/auth_support"
 require "#{Katello::Engine.root}/test/support/controller_support"
 require "#{Katello::Engine.root}/test/support/search_service"
 require "#{Katello::Engine.root}/test/support/capsule_support"
@@ -79,13 +75,9 @@ module FixtureTestCase
     self.set_fixture_class :katello_gpg_keys => "Katello::GpgKey"
     self.set_fixture_class :katello_help_tips => "Katello::HelpTip"
     self.set_fixture_class :katello_notices => "Katello::Notice"
-    self.set_fixture_class :katello_permissions => "Katello::Permission"
     self.set_fixture_class :katello_products => "Katello::Product"
     self.set_fixture_class :katello_providers => "Katello::Provider"
     self.set_fixture_class :katello_repositories => "Katello::Repository"
-    self.set_fixture_class :katello_resource_types => "Katello::ResourceType"
-    self.set_fixture_class :katello_roles_users => "Katello::RoleUser"
-    self.set_fixture_class :katello_roles => "Katello::Role"
     self.set_fixture_class :katello_sync_plans => "Katello::SyncPlan"
     self.set_fixture_class :katello_host_collections => "Katello::HostCollection"
     self.set_fixture_class :katello_systems => "Katello::System"
@@ -128,18 +120,11 @@ class ActionController::TestCase
   end
 
   def set_user(user = nil, is_api = false)
-    if user.is_a?(UserPermission) || user.is_a?(UserPermissionSet)
-      permissions = user
-      user = users(:restricted)
-    end
-
     user ||= users(:admin)
     user = User.find(user) if user.id
     User.current = user
     User.current.stubs(:remote_id).returns(User.current.login)
-    if permissions
-      permissions.call(Katello::AuthorizationSupportMethods::UserPermissionsGenerator.new(user))
-    end
+
     unless is_api
       session[:user] = user.id
       session[:expires_at] = 5.minutes.from_now

@@ -16,6 +16,8 @@ require 'helpers/product_test_data'
 module Katello
 describe Pool do
 
+  include OrchestrationHelper
+
   describe "Find pool by organization and id" do
     let(:pool_id) { ProductTestData::POOLS[:id] }
     before do

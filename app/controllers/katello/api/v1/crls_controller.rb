@@ -16,7 +16,7 @@ class Api::V1::CrlsController < Api::V1::ApiController
   before_filter :authorize
 
   def rules
-    superadmin_test = lambda { current_user.has_superadmin_role? }
+    superadmin_test = lambda { current_user.admin? }
     { :index => superadmin_test }
   end
 

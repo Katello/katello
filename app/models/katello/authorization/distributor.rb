@@ -27,10 +27,6 @@ module Authorization::Distributor
   end
 
   module ClassMethods
-    # returns list of virtual permission tags for the current user
-    def list_tags
-      select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
-    end
 
     def readable(org)
       fail "scope requires an organization" if org.nil?

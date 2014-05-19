@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'strong_parameters'
+
 module Katello
   class Api::V2::ApiController < Api::ApiController
 
@@ -19,7 +21,6 @@ module Katello
 
     # support for session (thread-local) variables must be the last filter in this class
     include Foreman::ThreadSession::Cleaner
-    include AuthorizationRules
 
     before_filter :load_search_service, :only => [:index]
     before_filter :turn_on_strong_params
@@ -151,11 +152,11 @@ module Katello
     def find_default_organization_and_or_environment
       return if (params.keys & %w{organization_id owner environment_id host_collection_id}).any?
 
-      @environment = current_user.default_environment
-      if @environment
-        @organization = @environment.organization
+      if current_user.default_organization.present?
+        @organization = current_user.default_organization
+        @environment = @organization.library
       else
-        fail HttpErrors::NotFound, _("You have not set a default organization and environment on the user %s.") % current_user.login
+        fail HttpErrors::NotFound, _("You have not set a default organization on the user %s.") % current_user.login
       end
     end
 

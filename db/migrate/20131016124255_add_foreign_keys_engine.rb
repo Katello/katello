@@ -64,18 +64,8 @@ class AddForeignKeysEngine < ActiveRecord::Migration
     add_foreign_key "katello_key_system_groups", "katello_activation_keys", :name => "key_system_groups_activation_key_id_fk", :column => 'activation_key_id'
     add_foreign_key "katello_key_system_groups", "katello_system_groups", :name => "key_system_groups_system_group_id_fk", :column => 'system_group_id'
 
-    add_foreign_key "katello_ldap_group_roles", "katello_roles", :name => "ldap_group_roles_role_id_fk", :column => 'role_id'
-
     add_foreign_key "katello_marketing_engineering_products", "katello_products", :name => "marketing_engineering_products_engineering_product_id_fk", :column => "engineering_product_id"
     add_foreign_key "katello_marketing_engineering_products", "katello_products", :name => "marketing_engineering_products_marketing_product_id_fk", :column => "marketing_product_id"
-
-    add_foreign_key "katello_permission_tags", "katello_permissions", :name => "permission_tags_permission_id_fk", :column => 'permission_id'
-
-    add_foreign_key "katello_permissions", "katello_resource_types", :name => "permissions_resource_type_id_fk", :column => 'resource_type_id'
-    add_foreign_key "katello_permissions", "katello_roles", :name => "permissions_role_id_fk", :column => 'role_id'
-
-    add_foreign_key "katello_permissions_verbs", "katello_permissions", :name => "permissions_verbs_permission_id_fk", :column => 'permission_id'
-    add_foreign_key "katello_permissions_verbs", "katello_verbs", :name => "permissions_verbs_verb_id_fk", :column => 'verb_id'
 
     add_foreign_key "katello_products", "katello_gpg_keys", :name => "products_gpg_key_id_fk", :column => 'gpg_key_id'
     add_foreign_key "katello_products", "katello_providers", :name => "products_provider_id_fk", :column => 'provider_id'
@@ -87,9 +77,6 @@ class AddForeignKeysEngine < ActiveRecord::Migration
     add_foreign_key "katello_repositories", "katello_content_view_versions", :name => "repositories_content_view_version_id_fk", :column => 'content_view_version_id'
     add_foreign_key "katello_repositories", "katello_gpg_keys", :name => "repositories_gpg_key_id_fk", :column => 'gpg_key_id'
     add_foreign_key "katello_repositories", "katello_repositories", :name => "repositories_library_instance_id_fk", :column => "library_instance_id"
-
-    add_foreign_key "katello_roles_users", "katello_roles", :name => "roles_users_role_id_fk", :column => 'role_id'
-    add_foreign_key "katello_roles_users", "users", :name => "roles_users_user_id_fk", :column => 'user_id'
 
     add_foreign_key "katello_search_favorites", "users", :name => "search_favorites_user_id_fk", :column => 'user_id'
 
@@ -108,8 +95,6 @@ class AddForeignKeysEngine < ActiveRecord::Migration
 
     add_foreign_key "katello_user_notices", "katello_notices", :name => "user_notices_notice_id_fk", :column => 'notice_id'
     add_foreign_key "katello_user_notices", "users", :name => "user_notices_user_id_fk", :column => 'user_id'
-
-    add_foreign_key "users", "katello_environments", :name => "users_default_environment_id_fk", :column => "default_environment_id"
   end
 
 end

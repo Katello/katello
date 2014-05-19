@@ -18,7 +18,7 @@ describe Api::V1::CustomInfoController do
   include SystemHelperMethods
 
   include LocaleHelperMethods
-  include AuthorizationHelperMethods
+
   include OrganizationHelperMethods
 
 

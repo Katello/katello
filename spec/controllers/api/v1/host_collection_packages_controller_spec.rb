@@ -14,12 +14,9 @@ require 'katello_test_helper'
 
 module Katello
 describe Api::V1::HostCollectionPackagesController do
-  include AuthorizationHelperMethods
+
   include OrchestrationHelper
   include OrganizationHelperMethods
-
-  let(:user_with_update_permissions) { user_with_permissions { |u| u.can(:update_systems, :host_collections, @host_collection.id, @organization) } }
-  let(:user_without_update_permissions) { user_without_permissions }
 
   let(:package_groups) { %w[@Editors FTP Server] }
   let(:packages) { %w[zsh bash] }
@@ -45,10 +42,6 @@ describe Api::V1::HostCollectionPackagesController do
     let(:action) { :create }
     let(:req) { post :create, :organization_id => @organization.name, :host_collection_id => @host_collection.id, :packages => packages }
     subject { req }
-    let(:authorized_user) { user_with_update_permissions }
-    let(:unauthorized_user) { user_without_update_permissions }
-
-    it_should_behave_like "protected action"
 
     it "should call model to install packages" do
       @host_collection.expects(:install_packages)
@@ -87,9 +80,6 @@ describe Api::V1::HostCollectionPackagesController do
     let(:action) { :destroy }
     let(:req) { delete :destroy, :organization_id => @organization.name, :host_collection_id => @host_collection.id, :packages => packages }
     subject { req }
-    let(:authorized_user) { user_with_update_permissions }
-    let(:unauthorized_user) { user_without_update_permissions }
-    it_should_behave_like "protected action"
 
     it "should call model to remove packages" do
       @host_collection.expects(:uninstall_packages)
@@ -128,9 +118,6 @@ describe Api::V1::HostCollectionPackagesController do
     let(:action) { :create }
     let(:req) { put :update, :organization_id => @organization.name, :host_collection_id => @host_collection.id, :packages => packages }
     subject { req }
-    let(:authorized_user) { user_with_update_permissions }
-    let(:unauthorized_user) { user_without_update_permissions }
-    it_should_behave_like "protected action"
 
     it "should call model to update packages" do
       @host_collection.expects(:update_packages)

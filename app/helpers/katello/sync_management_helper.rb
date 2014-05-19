@@ -35,11 +35,11 @@ module SyncManagementHelper
   end
 
   def syncable?(product)
-    current_organization.syncable? && !product.orphaned? && product.syncable_content?
+    product.syncable? && !product.orphaned? && product.syncable_content?
   end
 
   def any_syncable?
-    current_organization.syncable? && current_organization.syncable_content?
+    Product.syncable? && current_organization.syncable_content?
   end
 
   def error_state?(status)

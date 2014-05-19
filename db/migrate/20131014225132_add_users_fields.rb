@@ -7,7 +7,6 @@ class AddUsersFields < ActiveRecord::Migration
     add_column :users, :disabled, :boolean, :default => false
     add_column :users, :preferences, :text
     add_column :users, :remote_id, :string
-    add_column :users, :default_environment_id, :integer
   end
 
 end

@@ -299,16 +299,6 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_key_system_groups", ["activation_key_id"], :name => "index_key_system_groups_on_activation_key_id"
     add_index "katello_key_system_groups", ["system_group_id"], :name => "index_key_system_groups_on_system_group_id"
 
-    create_table "katello_ldap_group_roles", :force => true do |t|
-      t.string   "ldap_group"
-      t.integer  "role_id"
-      t.datetime "created_at", :null => false
-      t.datetime "updated_at", :null => false
-    end
-
-    add_index "katello_ldap_group_roles", ["ldap_group", "role_id"], :name => "index_ldap_group_roles_on_ldap_group_and_role_id", :unique => true
-    add_index "katello_ldap_group_roles", ["role_id"], :name => "index_ldap_group_roles_on_role_id"
-
     create_table "katello_marketing_engineering_products", :force => true do |t|
       t.integer "marketing_product_id"
       t.integer "engineering_product_id"
@@ -329,41 +319,6 @@ class KatelloTables < ActiveRecord::Migration
     end
 
     add_index "katello_notices", ["organization_id"], :name => "index_notices_on_organization_id"
-
-    create_table "katello_permission_tags", :force => true do |t|
-      t.integer  "permission_id"
-      t.integer  "tag_id"
-      t.datetime "created_at",    :null => false
-      t.datetime "updated_at",    :null => false
-    end
-
-    add_index "katello_permission_tags", ["permission_id"], :name => "index_permission_tags_on_permission_id"
-    add_index "katello_permission_tags", ["tag_id"], :name => "index_permission_tags_on_tag_id"
-
-    create_table "katello_permissions", :force => true do |t|
-      t.integer  "role_id"
-      t.integer  "resource_type_id"
-      t.integer  "organization_id"
-      t.boolean  "all_tags",         :default => false
-      t.boolean  "all_verbs",        :default => false
-      t.datetime "created_at",                          :null => false
-      t.datetime "updated_at",                          :null => false
-      t.string   "name",             :default => ""
-      t.text     "description",      :default => ""
-    end
-
-    add_index "katello_permissions", ["name", "organization_id", "role_id"], :name => "index_permissions_on_name_and_organization_id_and_role_id", :unique => true
-    add_index "katello_permissions", ["organization_id"], :name => "index_permissions_on_organization_id"
-    add_index "katello_permissions", ["resource_type_id"], :name => "index_permissions_on_resource_type_id"
-    add_index "katello_permissions", ["role_id"], :name => "index_permissions_on_role_id"
-
-    create_table "katello_permissions_verbs", :id => false, :force => true do |t|
-      t.integer "permission_id"
-      t.integer "verb_id"
-    end
-
-    add_index "katello_permissions_verbs", ["permission_id"], :name => "index_permissions_verbs_on_permission_id"
-    add_index "katello_permissions_verbs", ["verb_id"], :name => "index_permissions_verbs_on_verb_id"
 
     create_table "katello_pools", :force => true do |t|
       t.string   "cp_id",      :null => false
@@ -441,33 +396,6 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_repositories", ["library_instance_id"], :name => "index_repositories_on_library_instance_id"
     add_index "katello_repositories", ["product_id"], :name => "index_repositories_on_product_id"
     add_index "katello_repositories", ["pulp_id"], :name => "index_repositories_on_pulp_id"
-
-    create_table "katello_resource_types", :force => true do |t|
-      t.string   "name"
-      t.datetime "created_at", :null => false
-      t.datetime "updated_at", :null => false
-    end
-
-    create_table "katello_roles", :force => true do |t|
-      t.string   "name"
-      t.datetime "created_at",                     :null => false
-      t.datetime "updated_at",                     :null => false
-      t.text     "description"
-      t.boolean  "locked",      :default => false
-      t.string   "type"
-    end
-
-    add_index "katello_roles", ["name"], :name => "index_roles_on_name", :unique => true
-
-    create_table "katello_roles_users", :force => true do |t|
-      t.integer "role_id"
-      t.integer "user_id"
-      t.boolean "ldap"
-    end
-
-    add_index "katello_roles_users", ["role_id"], :name => "index_roles_users_on_role_id"
-    add_index "katello_roles_users", ["user_id", "role_id"], :name => "index_roles_users_on_user_id_and_role_id", :unique => true
-    add_index "katello_roles_users", ["user_id"], :name => "index_roles_users_on_user_id"
 
     create_table "katello_search_favorites", :force => true do |t|
       t.string   "params"
@@ -578,12 +506,6 @@ class KatelloTables < ActiveRecord::Migration
 
     add_index "katello_user_notices", ["notice_id"], :name => "index_user_notices_on_notice_id"
     add_index "katello_user_notices", ["user_id"], :name => "index_user_notices_on_user_id"
-
-    create_table "katello_verbs", :force => true do |t|
-      t.string   "verb"
-      t.datetime "created_at", :null => false
-      t.datetime "updated_at", :null => false
-    end
   end
 
   ######### DOWN ############
@@ -616,19 +538,12 @@ class KatelloTables < ActiveRecord::Migration
     drop_table "katello_jobs"
     drop_table "katello_key_pools"
     drop_table "katello_key_system_groups"
-    drop_table "katello_ldap_group_roles"
     drop_table "katello_marketing_engineering_products"
     drop_table "katello_notices"
-    drop_table "katello_permission_tags"
-    drop_table "katello_permissions"
-    drop_table "katello_permissions_verbs"
     drop_table "katello_pools"
     drop_table "katello_products"
     drop_table "katello_providers"
     drop_table "katello_repositories"
-    drop_table "katello_resource_types"
-    drop_table "katello_roles"
-    drop_table "katello_roles_users"
     drop_table "katello_search_favorites"
     drop_table "katello_search_histories"
     drop_table "katello_sync_plans"
@@ -638,7 +553,6 @@ class KatelloTables < ActiveRecord::Migration
     drop_table "katello_systems"
     drop_table "katello_task_statuses"
     drop_table "katello_user_notices"
-    drop_table "katello_verbs"
   end
 
 

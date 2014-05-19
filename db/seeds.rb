@@ -16,24 +16,6 @@ def format_errors(model = nil)
   model.errors.full_messages.join(';')
 end
 
-# create basic roles
-superadmin_role = Katello::Role.make_super_admin_role
-
-# create read *everything* role and assign permissions to it
-reader_role = Katello::Role.make_readonly_role('Read Everything')
-fail "Unable to create reader role: #{format_errors reader_role}" if reader_role.nil? || reader_role.errors.size > 0
-reader_role.update_attributes(:locked => true)
-
-# update the Foreman 'admin' to be Katello super admin
-::User.current = user_admin = ::User.anonymous_api_admin
-fail "Foreman admin does not exist" unless user_admin
-# create a self role for user_admin, this is normally created during admin creation;
-# however, for the initial migrate/seed, it needs to be done manually
-user_admin.katello_roles.find_or_create_own_role(user_admin)
-user_admin.katello_roles << superadmin_role unless user_admin.katello_roles.include?(superadmin_role)
-user_admin.save!
-fail "Unable to update admin user: #{format_errors(user_admin)}" if user_admin.errors.size > 0
-
 unless hidden_user = ::User.hidden.first
   ::User.current = ::User.anonymous_api_admin
   login = "hidden-#{Password.generate_random_string(6)}".downcase
@@ -42,8 +24,7 @@ unless hidden_user = ::User.hidden.first
                            :password => Password.generate_random_string(25),
                            :mail => "#{Password.generate_random_string(10)}@localhost",
                            :remote_id => login,
-                           :hidden => true,
-                           :katello_roles => [])
+                           :hidden => true)
   hidden_user.save!
   fail "Unable to create hidden user: #{format_errors hidden_user}" if hidden_user.nil? || hidden_user.errors.size > 0
 end

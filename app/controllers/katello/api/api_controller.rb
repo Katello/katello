@@ -17,7 +17,6 @@ class Api::ApiController < ::Api::BaseController
   include ForemanTasks::Triggers
 
   respond_to :json
-  before_filter :verify_ldap
   before_filter :turn_off_strong_params
 
   # override warden current_user (returns nil because there is no user in that scope)
@@ -36,57 +35,8 @@ class Api::ApiController < ::Api::BaseController
 
   protected
 
-  # Override Foreman authorized method to call the Katello authorize check
-  def authorized
-    if converted_controllers.include?(request.params['controller'])
-      super
-    else
-      authorize_katello
-    end
-  end
-
-  # rubocop:disable MethodLength
-  def converted_controllers
-    [
-      'katello/api/v2/activation_keys',
-      'katello/api/v2/capsule_content',
-      'katello/api/v2/content_views',
-      'katello/api/v2/content_view_filters',
-      'katello/api/v2/content_view_filter_rules',
-      'katello/api/v2/content_view_puppet_modules',
-      'katello/api/v2/content_view_versions',
-      'katello/api/v2/gpg_keys',
-      'katello/api/v2/host_collections',
-      'katello/api/v2/sync_plans',
-      'katello/api/v2/products',
-      'katello/api/v2/repositories',
-      'katello/api/v2/products_bulk_actions',
-      'katello/api/v2/repositories_bulk_actions',
-      'katello/api/v2/content_uploads',
-      'katello/api/v2/organizations',
-      'katello/api/v2/subscriptions',
-      'katello/api/v2/sync',
-      'katello/api/v2/environments',
-      'katello/api/v2/systems',
-      'katello/api/v2/system_packages',
-      'katello/api/v2/system_errata',
-      'katello/api/v2/systems_bulk_actions',
-      'katello/api/v1/candlepin_proxies',
-      'katello/api/v2/packages',
-      'katello/api/v2/distributions',
-      'katello/api/v2/package_groups',
-      'katello/api/v2/errata',
-      'katello/api/v2/puppet_modules',
-      'katello/api/v2/repository_sets',
-      'katello/api/v2/tasks',
-    ]
-  end
-
-  def verify_ldap
-    if !request.authorization.blank?
-      u = current_user
-      u.verify_ldap_roles if (Katello.config.ldap_roles && !u.nil?)
-    end
+  def turn_off_strong_params
+    Thread.current[:strong_parameters] = false
   end
 
   def request_from_katello_cli?

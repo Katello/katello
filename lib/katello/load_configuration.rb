@@ -33,7 +33,7 @@ module Katello
 
       :validation               => lambda do |*_|
         has_keys(*%w(app_name candlepin notification available_locales
-                     use_cp simple_search_tokens database headpin? host ldap_roles validate_ldap
+                     use_cp simple_search_tokens database headpin? host
                      cloud_forms use_pulp cdn_proxy use_ssl warden katello? url_prefix foreman
                      search use_foreman password_reset_expiration redhat_repository_url port
                      elastic_url rest_client_timeout elastic_index
@@ -65,8 +65,8 @@ module Katello
           is_not_empty :thumbslug_url
         end
 
-        are_booleans :use_cp, :use_foreman, :use_pulp, :use_elasticsearch, :use_ssl, :ldap_roles,
-                     :validate_ldap, :gravatar, :exception_paranoia, :hide_exceptions
+        are_booleans :use_cp, :use_foreman, :use_pulp, :use_elasticsearch, :use_ssl,
+                     :exception_paranoia, :hide_exceptions
 
       end,
 

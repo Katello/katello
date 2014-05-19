@@ -14,7 +14,6 @@ require "katello_test_helper"
 
 module Katello
   describe ActivationKey do
-    include AuthorizationHelperMethods
     include OrchestrationHelper
     include SystemHelperMethods
 

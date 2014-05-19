@@ -24,8 +24,6 @@ common:
   app_name: # set a name if you want to override default
   gravatar: false # set to true/false for enabling disabling gravatar
   warden: database
-  ldap_roles: false
-  validate_ldap: false
   rest_client_timeout: 30
   gpg_strict_validation: false
 
@@ -95,12 +93,6 @@ common:
   #
   notification:
     polling_seconds: 120
-
-  # authentication
-  sso:
-    enable: true
-    provider_url: https://localhost/signo
-    logout_path: /logout
 
   # Setup your UI search configuration.
   search:
@@ -255,8 +247,6 @@ common:
         enabled: true
       action:
         enabled: true
-      roles:
-        enabled: false
       # tire is a special case, all logs coming from it are debug level however they count depends
       # on root level configuration, e.g. root debug level will print most info from tire
       # unfortunately there is currently no better way

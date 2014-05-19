@@ -18,16 +18,6 @@ class UserNotice < Katello::Model
   # FIXME, this will delete notice also for other users
   belongs_to :notice, :dependent => :destroy, :inverse_of => :user_notices
 
-  def check_permissions(operation)
-    # anybody can create user_notice relationships
-    return true if operation == :create
-    # only notice owner can update or destroy
-    if operation == :update || operation == :destroy
-      return true if user.id && User.current && user.id == User.current.id
-    end
-    false
-  end
-
   def read!
     update_attributes! :viewed => true
   end

@@ -14,7 +14,7 @@ require 'katello_test_helper'
 
 module Katello
 describe KTEnvironment do
-  include AuthorizationHelperMethods
+
   include OrchestrationHelper
   include OrganizationHelperMethods
 
