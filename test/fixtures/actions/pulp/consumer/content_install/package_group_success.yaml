@@ -1,65 +1,65 @@
 ---
-pulp_task:
-  task_group_id: 
-  exception: 
-  traceback: 
-  _href: /pulp/api/v2/tasks/5ef38b1c-ec24-4ddd-8a6c-9cbc9ccc9b9d/
-  task_id: 5ef38b1c-ec24-4ddd-8a6c-9cbc9ccc9b9d
-  call_request_tags:
-  - pulp:consumer:887114ec-8344-44a7-9ecf-902ee6bf4e98
-  - pulp:action:unit_install
-  reasons: []
-  start_time: '2014-04-11T15:56:48Z'
-  tags:
-  - pulp:consumer:887114ec-8344-44a7-9ecf-902ee6bf4e98
-  - pulp:action:unit_install
-  state: finished
-  finish_time: '2014-04-11T15:56:52Z'
-  dependency_failures: {}
-  schedule_id: 
-  progress:
-    steps:
-    - - Refresh Repository Metadata
-      - true
-    - - Downloading Packages
-      - true
-    - - Check Package Signatures
-      - true
-    - - Running Test Transaction
-      - true
-    - - Running Transaction
-      - true
-    details: {}
-  call_request_group_id: 
-  call_request_id: 5ef38b1c-ec24-4ddd-8a6c-9cbc9ccc9b9d
-  principal_login: admin
-  response: accepted
-  result:
-    details:
-      package_group:
+pulp_tasks:
+   -  task_group_id:
+      exception:
+      traceback:
+      _href: /pulp/api/v2/tasks/5ef38b1c-ec24-4ddd-8a6c-9cbc9ccc9b9d/
+      task_id: 5ef38b1c-ec24-4ddd-8a6c-9cbc9ccc9b9d
+      call_request_tags:
+      - pulp:consumer:887114ec-8344-44a7-9ecf-902ee6bf4e98
+      - pulp:action:unit_install
+      reasons: []
+      start_time: '2014-04-11T15:56:48Z'
+      tags:
+      - pulp:consumer:887114ec-8344-44a7-9ecf-902ee6bf4e98
+      - pulp:action:unit_install
+      state: finished
+      finish_time: '2014-04-11T15:56:52Z'
+      dependency_failures: {}
+      schedule_id:
+      progress_report:
+        steps:
+        - - Refresh Repository Metadata
+          - true
+        - - Downloading Packages
+          - true
+        - - Check Package Signatures
+          - true
+        - - Running Test Transaction
+          - true
+        - - Running Transaction
+          - true
+        details: {}
+      call_request_group_id:
+      call_request_id: 5ef38b1c-ec24-4ddd-8a6c-9cbc9ccc9b9d
+      principal_login: admin
+      response: accepted
+      result:
         details:
-          resolved:
-          - name: amanda-client
-            qname: amanda-client-2.6.1p2-8.el6.x86_64
-            epoch: '0'
-            version: 2.6.1p2
-            release: 8.el6
-            arch: x86_64
-            repoid: ACME_Corporation_rhel6_5_rhel6_5
-          deps:
-          - name: amanda
-            qname: amanda-2.6.1p2-8.el6.x86_64
-            epoch: '0'
-            version: 2.6.1p2
-            release: 8.el6
-            arch: x86_64
-            repoid: ACME_Corporation_rhel6_5_rhel6_5
+          package_group:
+            details:
+              resolved:
+              - name: amanda-client
+                qname: amanda-client-2.6.1p2-8.el6.x86_64
+                epoch: '0'
+                version: 2.6.1p2
+                release: 8.el6
+                arch: x86_64
+                repoid: ACME_Corporation_rhel6_5_rhel6_5
+              deps:
+              - name: amanda
+                qname: amanda-2.6.1p2-8.el6.x86_64
+                epoch: '0'
+                version: 2.6.1p2
+                release: 8.el6
+                arch: x86_64
+                repoid: ACME_Corporation_rhel6_5_rhel6_5
+            succeeded: true
+        num_changes: 2
         succeeded: true
-    num_changes: 2
-    succeeded: true
-    reboot:
-      scheduled: false
-      details: {}
+        reboot:
+          scheduled: false
+          details: {}
 poll_attempts:
   total: 7
   failed: 0

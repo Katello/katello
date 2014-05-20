@@ -142,7 +142,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
 
     repo.async(:organization => repo.environment.organization).after_sync(task_id)
-    render :nothing => true
+    render :json => {}
   end
 
   protected

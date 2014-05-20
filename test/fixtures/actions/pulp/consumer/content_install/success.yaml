@@ -1,24 +1,24 @@
 --- 
-  pulp_task: 
-    task_group_id: 
-    exception: 
-    traceback: 
+pulp_tasks:
+  - task_group_id:
+    exception:
+    traceback:
     "_href": /pulp/api/v2/tasks/a681d1ba-9211-4eb2-a2df-d3ec909d23eb/
     task_id: a681d1ba-9211-4eb2-a2df-d3ec909d23eb
-    call_request_tags: 
+    call_request_tags:
       - "pulp:consumer:87c20448-fef4-4809-a0ca-729fdb61c8ee"
       - "pulp:action:unit_install"
     reasons: []
     start_time: "2014-01-27T10:07:02Z"
-    tags: 
+    tags:
       - "pulp:consumer:87c20448-fef4-4809-a0ca-729fdb61c8ee"
       - "pulp:action:unit_install"
     state: finished
     finish_time: "2014-01-27T10:07:15Z"
     dependency_failures: {}
-    schedule_id: 
-    progress: 
-      steps: 
+    schedule_id:
+    progress_report:
+      steps:
         - - "Refresh Repository Metadata"
           - true
         - - "Downloading Packages"
@@ -30,15 +30,15 @@
         - - "Running Transaction"
           - true
       details: {}
-    call_request_group_id: 
+    call_request_group_id:
     call_request_id: a681d1ba-9211-4eb2-a2df-d3ec909d23eb
     principal_login: admin
     response: accepted
-    result: 
-      details: 
-        rpm: 
-          details: 
-            resolved: 
+    result:
+      details:
+        rpm:
+          details:
+            resolved:
               - name: emacs
                 qname: "1:emacs-23.1-21.el6_2.3.x86_64"
                 epoch: "1"
@@ -47,7 +47,7 @@
                 arch: x86_64
                 repoid: eng-Server
             errors: {}
-            deps: 
+            deps:
               - name: libXmu
                 qname: libXmu-1.1.1-2.el6.x86_64
                 epoch: "0"
@@ -72,6 +72,6 @@
           succeeded: true
       num_changes: 4
       succeeded: true
-      reboot: 
+      reboot:
         scheduled: false
         details: {}

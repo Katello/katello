@@ -12,18 +12,14 @@
 
 module Actions
   module Pulp
-    module Repository
-      class RegenerateApplicability < Pulp::AbstractAsyncTask
+    module ExpectOneTask
 
-        input_format do
-          param :pulp_id
-        end
-
-        def invoke_external_task
-          pulp_extensions.repository.regenerate_applicability_by_ids([input[:pulp_id]])
-        end
-
+      def external_task=(external_task_data)
+        external_task_data = [external_task_data] unless external_task_data.is_a?(Array)
+        fail "Not expecting more than one task" if external_task_data.length  > 1
+        super(external_task_data)
       end
+
     end
   end
 end

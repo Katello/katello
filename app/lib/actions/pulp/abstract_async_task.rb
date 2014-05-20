@@ -49,39 +49,51 @@ module Actions
       #}
 
       def done?
-        !!external_task[:finish_time]
+        external_task.all?{ |task| !!task[:finish_time] }
       end
 
       def external_task
-        output[:pulp_task]
+        output[:pulp_tasks]
       end
 
       private
 
       def external_task=(external_task_data)
-        if external_task_data.is_a?(Hash)
-          if external_task_data['spawned_tasks'].length > 0
-            external_task_data = external_task_data['spawned_tasks'].map do |task|
-              task_resource.poll(task['task_id'])
-            end
-          else
-            external_task_data = [external_task_data]
+        external_task_data = [external_task_data] if external_task_data.is_a?(Hash)
+
+        new_tasks = []
+        external_task_data.each do |task|
+          if task['spawned_tasks'].length > 0
+            spawned_ids = task['spawned_tasks'].map{|spawned| spawned['task_id']}
+            new_tasks.concat(get_new_tasks(external_task_data, spawned_ids))
           end
         end
 
-        output[:pulp_task] = external_task_data[0]
-        if output[:pulp_task][:state] == 'error'
-          message = if output[:pulp_task][:exception]
-                      Array(output[:pulp_task][:exception]).join('; ')
-                    else
-                      "Pulp task error"
-                    end
-          error! message
+        #Combine new tasks and remove call reports
+        output[:pulp_tasks] = external_task_data.reject{ |task| task['task_id'].nil?} + new_tasks
+        output[:pulp_tasks].each do |pulp_task|
+          if pulp_task[:state] == 'error'
+            message = if pulp_task[:exception]
+                        Array(pulp_task[:exception]).join('; ')
+                      else
+                        "Pulp task error"
+                      end
+            error! message
+          end
+        end
+      end
+
+      def get_new_tasks(current_list, spawned_task_ids)
+        (spawned_task_ids - current_list.map{ |task| task['task_id'] }).map do |task_id|
+          task_resource.poll(task_id)
         end
       end
 
       def poll_external_task
-        task_resource.poll(external_task[:task_id])
+        external_task.map do |task|
+          task_resource.poll(task[:task_id])
+        end
+
       end
 
       def task_resource
