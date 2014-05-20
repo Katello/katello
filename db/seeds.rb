@@ -80,3 +80,9 @@ ConfigTemplate.where(:name => "subscription_manager_registration").first_or_crea
     :template => File.read("#{Katello::Engine.root}/app/views/foreman/unattended/snippets/_subscription_manager_registration.erb"))
 
 Katello::Util::Search.backend_search_classes.each{|c| c.create_index}
+
+# Proxy features
+feature = Feature.find_or_create_by_name('Pulp')
+if feature.nil? || feature.errors.any?
+  raise "Unable to create proxy feature: #{format_errors feature}"
+end

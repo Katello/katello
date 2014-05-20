@@ -94,6 +94,11 @@ module Katello
       ::Operatingsystem.send :include, Katello::Concerns::OperatingsystemExtensions
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
+      begin
+      ::SmartProxy.send :include, Katello::Concerns::SmartProxyExtensions
+      rescue ActiveRecord::StatementInvalid
+        Rails.logger.info('Database was not initialized yet: skipping smart proxy katello extension')
+      end
 
       # Service extensions
       require "#{Katello::Engine.root}/app/services/katello/puppet_class_importer_extensions"

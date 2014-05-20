@@ -10,29 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Actions
-  module Fort
-    class NodeMetadataGenerate < ::Actions::Pulp::Abstract
+module Katello
+class CapsuleLifecycleEnvironment < Katello::Model
+  validates :lifecycle_environment_id,
+            :uniqueness => { :scope => :capsule_id,
+                             :message => _("is already attached to the capsule") }
 
-      def self.subscribe
-        Actions::Katello::Repository::NodeMetadataGenerate
-      end
-
-      def plan(*args)
-        plan_self(trigger.input.merge(trigger_output: trigger.output))
-      end
-
-      def run
-        repo = ::Katello::Repository.find(input['id'])
-        if repo.environment
-          Node.with_environment(repo.environment).each do |node|
-            node.sync(:repository => repo)
-          end
-        end
-      end
-
-    end
-
-  end
-
+  belongs_to :capsule, :class_name => "::SmartProxy"
+  belongs_to :lifecycle_environment, :class_name => "Katello::KTEnvironment"
+end
 end

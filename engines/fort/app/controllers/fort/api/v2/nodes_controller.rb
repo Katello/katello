@@ -83,7 +83,7 @@ class Api::V2::NodesController < Katello::Api::V2::ApiController
     system = Katello::System.find_by_uuid!(params[:uuid])
     @node = Node.find_by_system_id(system.id)
     unless @node
-      fail HttpErrors::NotFound, _("System %s is not a registered node") % params[:uuid]
+      fail ::Katello::HttpErrors::NotFound, _("System %s is not a registered node") % params[:uuid]
     end
     respond_for_show :resource => @node
   end
@@ -124,14 +124,21 @@ class Api::V2::NodesController < Katello::Api::V2::ApiController
   param :id, :identifier, :required => true, :desc => "node id"
   param :environment_id, :identifier, :desc => "Limit sync to a single environment"
   def sync
-    task = @node.sync(:environment => @environment)
+    if @environment
+      repositories = @node.relevant_repositories(@environment)
+    else
+      repositories = nil
+    end
+    task = async_task(::Actions::Fort::Sync, @node, repositories)
     respond_for_async :resource => task
   end
 
   api :PUT, "/nodes/:id", "Update a Katello Node"
   param :id, :identifier, :required => true, :desc => "node id"
-  param :system_id, :identifier, :required => true, :desc => "Associated system id"
-  param :environment_ids, Array, :desc => "List of environment ids the node should be associated with"
+  param :node, Hash do
+    param :system_id, :identifier, :required => true, :desc => "Associated system id"
+    param :environment_ids, Array, :desc => "List of environment ids the node should be associated with"
+  end
   def update
     environments = Katello::KTEnvironment.find(params[:node][:environment_ids])
     @node.update_attributes!(node_params[:node])

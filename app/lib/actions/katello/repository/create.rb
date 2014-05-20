@@ -39,6 +39,14 @@ module Actions
                         path: path,
                         with_importer: true)
 
+            if repository.environment
+              concurrence do
+                ::Katello::CapsuleContent.with_environment(repository.environment).each do |capsule_content|
+                  plan_action(CapsuleContent::AddRepository, capsule_content, repository)
+                end
+              end
+            end
+
             # when creating a clone, the following actions are handled by the
             # publish/promote process
             unless clone

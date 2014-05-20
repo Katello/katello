@@ -11,31 +11,20 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Fort
+  module Katello
+    module CapsuleContent
+      class AddLifecycleEnvironment < ::Actions::EntryAction
 
-    class RepositoryCreate < ::Actions::Pulp::Abstract
+        def plan(capsule_content, environment)
+          capsule_content.add_lifecycle_environment(environment)
 
-      def self.subscribe
-        ::Katello::Actions::RepositoryCreate
-      end
-
-      def plan(repo)
-        plan_self('id' => repo.id)
-      end
-
-      input_format do
-        param :id, Integer
-      end
-
-      def run
-        repo = ::Katello::Repository.find(input['id'])
-        Node.with_environment(repo.environment).each do |node|
-          node.update_environments
+          bound_repos = ::Katello::Repository.in_environment(environment)
+          bound_repos.each do |repo|
+            plan_action(CapsuleContent::AddRepository, capsule_content, repo)
+          end
         end
+
       end
-
     end
-
   end
-
 end
