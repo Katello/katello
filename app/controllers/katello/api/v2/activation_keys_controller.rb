@@ -33,18 +33,12 @@ module Katello
     param :name, String, :desc => N_("activation key name to filter by")
     param_group :search, Api::V2::ApiController
     def index
-      filters = [{:term => {:organization_id => @organization.id} }]
-
-      if params[:environment_id]
-        filters << {:terms => {:environment_id => [params[:environment_id]] }}
-      end
-      if params[:content_view_id]
-        filters << {:terms => {:content_view_id => [params[:content_view_id]] }}
-      end
-
       ids = ActivationKey.readable.pluck(:id)
       filters = [:terms => { :id => ids }]
-      filters << {:term => { :name => params[:name].downcase} } if params[:name]
+      filters << { :term => {:organization_id => @organization.id} }
+      filters << { :terms => {:environment_id => [params[:environment_id]] } } if params[:environment_id]
+      filters << { :terms => {:content_view_id => [params[:content_view_id]] } } if params[:content_view_id]
+      filters << { :term => { :name => params[:name].downcase } } if params[:name]
 
       options = {
           :filters       => filters,
