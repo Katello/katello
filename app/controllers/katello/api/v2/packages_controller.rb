@@ -13,21 +13,8 @@
 module Katello
 class Api::V2::PackagesController < Api::V2::ApiController
 
-  resource_description do
-    api_version 'v2'
-  end
-
   before_filter :find_repository
   before_filter :find_package, :only => [:show]
-  before_filter :authorize
-
-  def rules
-    readable = lambda { @repo.environment.contents_readable? && @repo.product.readable? }
-    {
-        :index  => readable,
-        :show   => readable,
-    }
-  end
 
   api :GET, "/repositories/:repository_id/packages", "List packages"
   param :repository_id, :identifier, :desc => "Repository id to list packages for"

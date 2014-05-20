@@ -27,10 +27,12 @@ class Api::V2::DistributionsControllerTest < ActionController::TestCase
   end
 
   def permissions
-    @env_read_permission = UserPermission.new(:read_contents, :environments)
-    @prod_read_permission = UserPermission.new(:read, :providers)
-    @read_permission = @env_read_permission + @prod_read_permission
-    @unauth_perms = [NO_PERMISSION, @env_read_permission, @prod_read_permission]
+    @read_permission = :view_products
+    @create_permission = :create_products
+    @update_permission = :edit_products
+    @destroy_permission = :destroy_products
+    @sync_permission = :sync_products
+    @unauth_permissions = [@create_permission, @update_permission, @destroy_permission, @sync_permission]
   end
 
   def setup
@@ -50,8 +52,7 @@ class Api::V2::DistributionsControllerTest < ActionController::TestCase
   end
 
   def test_index_protected
-    skip "Needs migrating to new authorization system"
-    assert_protected_action(:index, @read_permission, @unauth_perms) do
+    assert_protected_action(:index, @read_permission, @unauth_permissions) do
       get :index, :repository_id => @repo.id
     end
   end
@@ -74,12 +75,11 @@ class Api::V2::DistributionsControllerTest < ActionController::TestCase
   end
 
   def test_show_protected
-    skip "Needs migrating to new authorization system"
     distribution = stub
     distribution.stubs(:repoids).returns([@repo.pulp_id])
     Distribution.stubs(:find).with("ks-Test Family-TestVariant-16-x86_64").returns(distribution)
 
-    assert_protected_action(:show, @read_permission, @unauth_perms) do
+    assert_protected_action(:show, @read_permission, @unauth_permissions) do
       get :show, :repository_id => @repo.id, :id => "ks-Test Family-TestVariant-16-x86_64"
     end
   end

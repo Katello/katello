@@ -15,15 +15,6 @@ class Api::V2::DistributionsController < Api::V2::ApiController
 
   before_filter :find_repository
   before_filter :find_distribution, :only => [:show]
-  before_filter :authorize
-
-  def rules
-    readable = lambda { @repo.environment.contents_readable? && @repo.product.readable? }
-    {
-        :index => readable,
-        :show  => readable,
-    }
-  end
 
   api :GET, "/repositories/:repository_id/distributions", "List distributions"
   param :repository_id, :identifier, :desc => "Repository id to list packages for"

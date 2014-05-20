@@ -13,31 +13,10 @@
 module Katello
 class Api::V2::ErrataController < Api::V2::ApiController
 
-  resource_description do
-    error :code => 401, :desc => N_("Unauthorized")
-    error :code => 404, :desc => N_("Not found")
-
-    api_version 'v2'
-  end
-
-  before_filter :find_optional_organization, :only => [:show]
   before_filter :find_repository, :only => [:index, :show]
   before_filter :find_content_view, :only => [:index]
   before_filter :find_filter, :only => [:index]
-  before_filter :authorize
   before_filter :find_erratum, :only => [:show]
-
-  def rules
-    readable = lambda do
-      (@organization && Repository.any_readable?(@organization)) ||
-      (@filter && @filter.content_view.readable?) ||
-      (@repo && @repo.environment.contents_readable? && @repo.product.readable?)
-    end
-    {
-        :index => readable,
-        :show  => readable,
-    }
-  end
 
   api :GET, "/errata", N_("List errata")
   api :GET, "/content_views/:content_view_id/filters/:filter_id/errata", N_("List errata")
