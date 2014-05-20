@@ -183,7 +183,6 @@ Katello::Engine.routes.draw do
           get :errata
           get :pools
           get :releases
-          put :enabled_repos
           put :refresh_subscriptions
         end
         api_resources :activation_keys, :only => [:index]

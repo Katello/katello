@@ -80,7 +80,6 @@ Katello::Engine.routes.draw do
           get :pools
           get :releases
           get :subscription_status
-          put :enabled_repos
           post :host_collections, :action => :add_host_collections
           delete :host_collections, :action => :remove_host_collections
           post :refresh_subscriptions
@@ -222,6 +221,7 @@ Katello::Engine.routes.draw do
       match '/consumers/:id/content_overrides/' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_content_overrides_path
       match '/consumers/:id/content_overrides/' => 'candlepin_proxies#put', :via => :put, :as => :proxy_consumer_content_overrides_put_path
       match '/consumers/:id/content_overrides/' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_content_overrides_delete_path
+      match '/systems/:id/enabled_repos' => 'candlepin_proxies#enabled_repos', :via => :put
 
       # development / debugging support
       if Rails.env == "development"
