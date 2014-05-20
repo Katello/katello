@@ -31,16 +31,10 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
   param :sync_date, String, :desc => N_("filter by sync date")
   param :interval, SyncPlan::TYPES, :desc => N_("filter by interval")
   def index
-    filters = [{:term => {:organization_id => @organization.id} }]
-
-    if params[:sync_date]
-      filters << {:terms => {:sync_date => [params[:sync_date]] }}
-    elsif params[:interval]
-      filters << {:terms => {:interval => [params[:interval]] }}
-    end
-
-    ids = SyncPlan.readable.pluck(:id)
-    filters << {:terms => {:id => ids }}
+    ids = SyncPlan.readable.where(:organization_id => @organization.id).pluck(:id)
+    filters = [:terms => {:id => ids }]
+    filters << {:terms => {:sync_date => [params[:sync_date]] }} if params[:sync_date]
+    filters << {:terms => {:interval => [params[:interval]] }} if params[:interval]
 
     options = {
         :filters => filters,

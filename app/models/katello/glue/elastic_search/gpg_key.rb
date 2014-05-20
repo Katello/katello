@@ -17,6 +17,7 @@ module Glue::ElasticSearch::GpgKey
 
     base.class_eval do
       index_options :extended_json => :extended_index_attrs,
+                    :json => {:only => [:id, :name, :organization_id]},
                     :display_attrs => [:name, :content]
 
       mapping do

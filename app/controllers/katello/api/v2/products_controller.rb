@@ -14,7 +14,7 @@ module Katello
   class Api::V2::ProductsController < Api::V2::ApiController
 
     before_filter :find_activation_key, :only => [:index]
-    before_filter :find_organization, :only => [:create]
+    before_filter :find_organization, :only => [:create, :index]
     before_filter :find_product, :only => [:update, :destroy, :show, :sync]
 
     resource_description do
@@ -42,7 +42,7 @@ module Katello
         :load_records? => true
       }
 
-      ids = Product.readable.pluck(:id)
+      ids = Product.readable.where(:organization_id => @organization.id).pluck(:id)
       ids = filter_by_subscription(ids, params[:subscription_id]) if params[:subscription_id]
       ids = filter_by_activation_key(ids, @activation_key) if @activation_key
 
