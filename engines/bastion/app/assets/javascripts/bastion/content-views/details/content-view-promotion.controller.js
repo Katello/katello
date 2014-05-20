@@ -32,7 +32,7 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
 
         $scope.promotion = {};
 
-        $scope.availableEnvironments =  Organization.paths({id: CurrentOrganization});
+        $scope.availableEnvironments =  Organization.paths({id: CurrentOrganization, 'permission_type': 'promotable'});
 
         $scope.enabledCheck = function (env) {
             var enabled = false,
@@ -41,8 +41,9 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
             if (!env.prior) {
                 env.prior = {};
             }
-
-            if (envIds.indexOf(env.id) !== -1) {
+            if (!env.permissions['promotable_or_removable']) {
+                enabled = false;
+            } else if (envIds.indexOf(env.id) !== -1) {
                 //if version is already promoted to the environment
                 enabled = false;
             } else if (env.library) {

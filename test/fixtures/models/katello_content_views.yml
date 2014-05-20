@@ -37,6 +37,14 @@ library_dev_view:
   updated_at: <%= Time.now %>
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
+library_dev_staging_view:
+  name:           Published Library - dev - staging view
+  label:          published_dev_staging_view
+  default:        false
+  next_version:   4
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
 candlepin_default_cv:
   name:           candlepin Default ContentView

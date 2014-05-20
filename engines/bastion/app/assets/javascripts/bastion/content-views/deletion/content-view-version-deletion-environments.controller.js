@@ -24,26 +24,36 @@
 angular.module('Bastion.content-views').controller('ContentViewVersionDeletionEnvironmentsController',
     ['$scope',
     function ($scope) {
-
         $scope.environmentsTable = {rows: {}};
         $scope.version.$promise.then(function () {
+            var numSelections;
             $scope.environmentsTable.rows = $scope.version.environments;
             if ($scope.version.environments.length === 0) {
                 $scope.deleteOptions.deleteArchive = true;
             } else {
+                angular.forEach($scope.environmentsTable.rows, function (row) {
+                    row.unselectable = !row.permissions['promotable_or_removable'];
+                });
+
                 if ($scope.deleteOptions.environments.length === 0) {
                     //select all by default
                     angular.forEach($scope.environmentsTable.rows, function (row) {
-                        row.selected = true;
+                        row.selected = !row.unselectable;
                     });
-                    $scope.environmentsTable.numSelected = $scope.environmentsTable.rows.length;
                 } else {
                     //set existing selections
                     angular.forEach($scope.environmentsTable.rows, function (row) {
-                        row.selected = _.findWhere($scope.deleteOptions.environments, {id: row.id}) !== undefined;
+                        row.selected = _.findWhere($scope.deleteOptions.environments,
+                                                    {unselectable: false, id: row.id}) !== undefined;
+
                     });
-                    $scope.environmentsTable.numSelected = $scope.deleteOptions.environments.length;
                 }
+
+                numSelections = _.countBy($scope.environmentsTable.rows, function (row) {
+                    return row.selected ? 'selected': 'unselected';
+                });
+
+                $scope.environmentsTable.numSelected = numSelections["selected"];
             }
         });
 

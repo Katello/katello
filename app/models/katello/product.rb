@@ -215,6 +215,10 @@ class Product < Katello::Model
     repositories.any?(&:feed?)
   end
 
+  def available_content
+    self.productContent.find_all { |content| self.repositories.where(:content_id => content.content.id).any? }
+  end
+
   def related_resources
     self.provider
   end

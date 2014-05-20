@@ -222,7 +222,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
 
   def index_activation_key
     @organization = @activation_key.organization
-    subs = activation_key_subscriptions(@activation_key.get_key_pools)
+    subs = @activation_key.subscriptions
     # TODO: pluck id and call elasticsearch?
     subscriptions = {
         :results => subs,
@@ -281,10 +281,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
 
   def available_activation_key
     @organization = @activation_key.organization
-    all_pools = @activation_key.get_pools
-    key_pool_ids = @activation_key.get_key_pools.collect {|pool| pool[:id]}
-    pools = all_pools.collect {|pool| pool if !key_pool_ids.include? pool[:id]}.compact
-    subs = activation_key_subscriptions(pools)
+    subs = @activation_key.available_subscriptions
     subscriptions = {
         :results => subs,
         :subtotal => subs.count,
@@ -322,22 +319,5 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     return subscriptions
   end
 
-  def activation_key_subscriptions(cp_pools)
-    if cp_pools
-      pools = cp_pools.collect{|cp_pool| Pool.find_pool(cp_pool['id'], cp_pool)}
-
-      subscriptions = pools.collect do |pool|
-        product = Product.where(:cp_id => pool.product_id).first
-        next if product.nil?
-        pool.provider_id = product.provider_id
-        pool
-      end
-      subscriptions.compact!
-    else
-      subscriptions = []
-    end
-
-    return subscriptions
-  end
 end
 end

@@ -17,11 +17,12 @@ module Katello
     before_filter :find_environment, :only => [:index, :create, :update]
     before_filter :find_optional_organization, :only => [:index, :create]
     before_filter :find_activation_key, :only => [:show, :update, :destroy, :available_releases,
-                                                  :available_host_collections, :add_host_collections, :remove_host_collections]
+                                                  :available_host_collections, :add_host_collections, :remove_host_collections,
+                                                  :content_override]
     before_filter :authorize
     before_filter :load_search_service, :only => [:index, :available_host_collections]
 
-    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level))
+    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level content_view_environment))
 
     api :GET, "/activation_keys", N_("List activation keys")
     api :GET, "/environments/:environment_id/activation_keys"
@@ -55,7 +56,6 @@ module Katello
     api :POST, "/activation_keys", N_("Create an activation key")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
     param :name, String, :desc => N_("name"), :required => true
-    param :label, String, :desc => N_("unique label")
     param :description, String, :desc => N_("description")
     param :environment, Hash, :desc => N_("environment")
     param :environment_id, :identifier, :desc => N_("environment id")
@@ -63,6 +63,7 @@ module Katello
     param :usage_limit, :number, :desc => N_("maximum number of registered content hosts, or 'unlimited'")
     def create
       @activation_key = ActivationKey.create!(activation_key_params) do |activation_key|
+        activation_key.label ||= labelize_params(params[:activation_key])
         activation_key.environment = @environment if @environment
         activation_key.organization = @organization
         activation_key.user = current_user
@@ -102,7 +103,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     param :name, String, :desc => N_("host collection name to filter by")
     def available_host_collections
-      filters = [:terms => {:id => HostCollection.readable(@activation_key.organization).pluck("#{Katello::HostCollection.table_name}.id") -
+      filters = [:terms => {:id => HostCollection.readable.pluck("#{Katello::HostCollection.table_name}.id") -
                    @activation_key.host_collections.pluck("#{Katello::HostCollection.table_name}.id")}]
       filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
@@ -139,6 +140,13 @@ module Katello
       ids = activation_key_params[:host_collection_ids]
       @activation_key.host_collection_ids = (@activation_key.host_collection_ids - ids).uniq
       @activation_key.save!
+      respond_for_show
+    end
+
+    def content_override
+      content_override = params[:content_override]
+      @activation_key.set_content_override(content_override[:content_label],
+                                           content_override[:name], content_override[:value]) if content_override
       respond_for_show
     end
 
@@ -190,6 +198,7 @@ module Katello
                                                           :content_view_id,
                                                           :release_version,
                                                           :service_level,
+                                                          :content_overrides => [],
                                                           :host_collection_ids => [])
 
       key_params[:environment_id] = params[:environment][:id] if params[:environment].try(:[], :id)

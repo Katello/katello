@@ -74,6 +74,50 @@ class ActivationKey < Katello::Model
     end
   end
 
+  # For efficiency, sometimes the candlepin pool objects have already been fetched so allow
+  # them to be passed in directly. By default, a call to candlepin will be made
+  def subscriptions(cp_pools = nil)
+    cp_pools ||= self.get_key_pools
+
+    pools = cp_pools.collect { |cp_pool| Pool.find_pool(cp_pool['id'], cp_pool) }
+
+    subscriptions = pools.collect do |pool|
+      product = Product.where(:cp_id => pool.product_id).first
+      next if product.nil?
+      pool.provider_id = product.provider_id
+      pool
+    end
+    subscriptions.compact
+  end
+
+  def available_subscriptions
+    all_pools = self.get_pools
+    key_pool_ids = self.get_key_pools.collect { |pool| pool[:id] }
+    pools = all_pools.reject { |pool| pool key_pool_ids.include? pool[:id] }
+    self.subscriptions(pools)
+  end
+
+  def products
+    all_products = []
+
+    cp_pools = self.get_key_pools
+    if cp_pools
+      pools = cp_pools.collect{|cp_pool| Pool.find_pool(cp_pool['id'], cp_pool)}
+
+      pools.each do |pool|
+        Product.where(:cp_id => pool.product_id).each do |product|
+          if product.is_a? Katello::MarketingProduct
+            all_products += product.engineering_products
+          else
+            all_products << product
+          end
+        end
+      end
+    end
+
+    all_products
+  end
+
   # sets up system when registering with this activation key - must be executed in a transaction
   def apply_to_system(system)
     if !usage_limit.nil? && usage_limit != -1 && usage_count >= usage_limit

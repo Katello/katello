@@ -55,7 +55,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionEnviro
             $scope.setState(true, [], []);
 
             ContentHostBulkAction.environmentContentView(actionParams(), function (response) {
-                $scope.setState(false, response.displayMessages, []);
+                $scope.setState(false, response.displayMessages.success, response.displayMessages.error);
             }, function (data) {
                 $scope.setState(false, [], data.errors);
             });

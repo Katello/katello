@@ -1,6 +1,7 @@
 object @activation_key
 
-extends 'katello/api/v2/common/identifier'
+attributes :id, :name
+attributes :description
 
 extends 'katello/api/v2/common/org_reference'
 
@@ -14,6 +15,8 @@ attributes :usage_count, :user_id, :usage_limit, :pools, :system_template_id, :r
            :service_level
 attributes :get_key_pools => :pools
 
+attributes :products
+
 node :permissions do |activation_key|
   {
     :editable => activation_key.editable?,
@@ -25,5 +28,7 @@ child :host_collections => :host_collections do
   attributes :id
   attributes :name
 end
+
+attributes :content_overrides
 
 extends 'katello/api/v2/common/timestamps'

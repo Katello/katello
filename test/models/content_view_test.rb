@@ -256,7 +256,6 @@ class ContentViewTest < ActiveSupport::TestCase
                                  :content_view => @library_dev_view)
     end
     @library_dev_view.add_environment(@library_dev_view.organization.library, ContentViewVersion.last)
-
     assert_equal 2, @library_dev_view.environments.length
   end
 

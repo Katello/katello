@@ -12,7 +12,7 @@
       <i class="icon-warning-sign"></i>
       <span translate>This version will be removed from:</span>
       <ul class="bullet">
-        <li ng-repeat="env in deleteOptions.environments">{{ env.name }}</li>
+        <li ng-repeat="env in deleteOptions.environments" ng-if="env.permissions.readable">{{ env.name }}</li>
       </ul>
     </div>
 

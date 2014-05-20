@@ -25,7 +25,8 @@ module ControllerSupport
         user = no_permission_user
         permission.call(Katello::AuthorizationSupportMethods::UserPermissionsGenerator.new(user))
       else
-        user = add_role(permission)
+        user = User.find(users(:restricted))
+        setup_user_with_permissions(permission, user)
       end
 
       action = params[:action]
@@ -36,22 +37,12 @@ module ControllerSupport
       req.call
 
       if params[:authorized]
-        if !user.own_role.nil?
-          msg = "Expected response for #{action} to be a <success>, but was <#{response.status}> instead. \n" +
-            "#{user.own_role.summary}"
-        else
-          msg = "Expected response for #{action} to be a <success>, but was <#{response.status}> instead. \n" +
-            "#{user.roles}"
-        end
-
+        msg = "Expected response for #{action} to be a <success>, but was <#{response.status}> instead. \n" +
+                 "permission -> #{permission.to_yaml}"
         assert_response :success, msg
       else
-        if !user.own_role.nil?
-          msg = "Security Violation (403) expected for #{action}, got #{response.status} instead. \n#{user.own_role.summary}"
-        else
-          msg = "Security Violation (403) expected for #{action}, got #{response.status} instead. \n#{user.roles}"
-        end
-
+        msg = "Security Violation (403) expected for #{action}, got #{response.status} instead. \n" +
+                "permission -> #{permission.to_yaml}"
         assert_equal 403, response.status, msg
       end
     end
@@ -85,16 +76,6 @@ module ControllerSupport
     user.own_role.permissions.delete_all
     user
   end
-
-  def add_role(permission_name)
-    permission = Permission.find_by_name(permission_name)
-    role = create(:role, :permissions => [permission])
-    user = users(:restricted)
-    filter = create(:filter, :role => role, :permissions => [permission])
-    user.roles = [role]
-    user
-  end
-
 end
 
 UserPermission = Struct.new(:verbs, :resource_type, :tags, :org, :options) do

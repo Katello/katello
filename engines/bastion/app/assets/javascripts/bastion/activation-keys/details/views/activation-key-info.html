@@ -14,20 +14,6 @@
       </div>
 
       <div class="detail">
-        <span class="info-label" translate>Label</span>
-        <span class="info-value">{{ activationKey.label }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Description</span>
-        <span class="info-value"
-              alch-edit-textarea="activationKey.description"
-              readonly="activationKey.readonly"
-              on-save="save(activationKey)">
-        </span>
-      </div>
-
-      <div class="detail">
 
         <span class="info-label" translate>System Limit</span>
 
@@ -115,7 +101,7 @@
         <span class="info-value"
               alch-edit-select="activationKey.content_view.name"
               readonly="activationKey.readonly"
-              selector="activationKey.content_view_id"
+              selector="activationKey.content_view.id"
               options="contentViews()"
               on-cancel="cancelContentViewUpdate()"
               on-save="saveContentView(activationKey)"

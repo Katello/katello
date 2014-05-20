@@ -18,8 +18,7 @@ module Authorization::System
 
     def readable_search_filters(org)
       {:or => [
-          {:terms => {:environment_id => KTEnvironment.systems_editable(org).collect { |item| item.id } }},
-          {:terms => {:host_collection_id => HostCollection.content_hosts_editable(org).collect { |item| item.id } }},
+          {:terms => {:environment_id => KTEnvironment.systems_editable(org).collect { |item| item.id } }}
         ]
       }
     end

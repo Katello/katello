@@ -21,6 +21,9 @@ Katello::Engine.routes.draw do
       root :to => 'root#resource_list'
 
       api_resources :activation_keys, :only => [:index, :create, :show, :update, :destroy] do
+        member do
+          match '/content_override' => 'activation_keys#content_override', :via => :put
+        end
         match '/releases' => 'activation_keys#available_releases', :via => :get, :on => :member
         api_resources :host_collections, :only => [:index]
         member do
@@ -28,6 +31,7 @@ Katello::Engine.routes.draw do
           match '/host_collections' => 'activation_keys#remove_host_collections', :via => :put
           match '/host_collections/available' => 'activation_keys#available_host_collections', :via => :get
         end
+        api_resources :products, :only => [:index]
         api_resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do
             match '/' => 'subscriptions#destroy', :via => :put
@@ -98,8 +102,6 @@ Katello::Engine.routes.draw do
           post :copy
           put :add_systems
           put :remove_systems
-          put :add_activation_keys
-          put :remove_activation_keys
         end
         api_resources :systems, :only => system_onlies
       end
@@ -235,8 +237,6 @@ Katello::Engine.routes.draw do
 
       api_resources :host_collections do
         member do
-          get :history
-          match "/history/:job_id" => "host_collections#history_show", :via => :get
           delete :destroy_systems
         end
 

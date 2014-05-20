@@ -132,4 +132,17 @@ describe('Factory: ActivationKey', function() {
         });
     });
 
+    it('ActivationKey.contentOverride PUT /api/v2/activation_keys/1/content_override', function() {
+        $httpBackend.expectPUT('/api/v2/activation_keys/1/content_override').respond(activationKeys.results[0]);
+
+        ActivationKey.contentOverride({id: 1},
+                        {'content_override': { 'content_label': 'my-repository-label',
+                                               name: "enabled",
+                                               value: 1}
+                        },
+                        function(response) {
+                            expect(response).toBeDefined();
+                        });
+    });
+
 });

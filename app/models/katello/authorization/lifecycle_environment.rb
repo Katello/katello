@@ -19,6 +19,18 @@ module Authorization::LifecycleEnvironment
   DISTRIBUTORS_READABLE = [:read_distributors, :register_distributors, :update_distributors, :delete_distributors]
 
   module ClassMethods
+    def readable
+      authorized(:view_lifecycle_environments)
+    end
+
+    def promotable
+      authorized(:promote_or_remove_content_views_to_environments)
+    end
+
+    def any_promotable?
+      promotable.count > 0
+    end
+
     def creatable?
       ::User.current.can?(:create_lifecycle_environments)
     end
@@ -152,16 +164,13 @@ module Authorization::LifecycleEnvironment
       authorized?(:destroy_lifecycle_environments)
     end
 
+    def promotable_or_removable?
+      authorized?(:promote_or_remove_content_views_to_environments)
+    end
+
     def viewable_for_promotions?
       return false if !Katello.config.katello?
       ::User.allowed_to?(CONTENTS_READABLE, :environments, self.id, self.organization)
-    end
-
-    def any_operation_readable?
-      return false if !Katello.config.katello?
-      ::User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) ||
-          self.organization.systems_readable? || self.organization.any_systems_registerable? ||
-          self.organization.distributors_readable? || self.organization.any_distributors_registerable?
     end
 
     def contents_readable?

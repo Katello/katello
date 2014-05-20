@@ -15,6 +15,8 @@ module Katello
     before_filter :find_content_view_version, :only => [:show, :promote, :destroy]
     before_filter :find_content_view
     before_filter :find_environment, :only => [:promote]
+    before_filter :authorize_promotable, :only => [:promote]
+    before_filter :authorize_destroy, :only => [:destroy]
 
     api :GET, "/content_view_versions", N_("List content view versions")
     api :GET, "/content_views/:content_view_id/content_view_versions", N_("List content view versions")
@@ -66,5 +68,13 @@ module Katello
       @environment = KTEnvironment.find(params[:environment_id])
     end
 
+    def authorize_promotable
+      deny_access unless @environment.promotable_or_removable?
+      deny_access unless @version.content_view.promotable_or_removable?
+    end
+
+    def authorize_destroy
+      deny_access unless @version.content_view.deletable?
+    end
   end
 end

@@ -28,13 +28,15 @@ attributes :arch, :virt_only
 attributes :sockets, :cores, :ram
 attributes :instance_multiplier, :stacking_id, :multi_entitlement
 
-node :provided_products, :if => lambda { |sub| sub && !sub.provided_products.blank? } do |subscription|
-  subscription.provided_products.map { |product| {id: product[:id], name: product[:productName]} }
+node :provided_products, :if => lambda { |sub| sub && !sub.products.blank? } do |subscription|
+  subscription.products.map do |product|
+    {id: product[:id], name: product[:name]}
+  end
 end
 
 node :systems, :if => (params[:action] == "show") do |subscription|
   current_organization = subscription.organization
-  subscription.systems.readable(current_organization).map { |sys| {id: sys.id, name: sys.name} }
+  subscription.systems.readable.map { |sys| {id: sys.id, name: sys.name} }
 end
 
 # TODO: what should replace this since activerecord relation is gone?

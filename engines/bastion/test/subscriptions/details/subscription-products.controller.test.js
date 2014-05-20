@@ -38,6 +38,7 @@ describe('Controller: SubscriptionProductsController', function() {
 
     it('should attach a products resource onto the scope', function() {
         expect($scope.products).toBeDefined();
+        expect($scope.displayArea.working).toBe(false);
     });
 
 });

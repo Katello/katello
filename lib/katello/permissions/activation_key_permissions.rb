@@ -14,7 +14,7 @@ Foreman::Plugin.find(:katello).security_block :activation_keys do
              :resource_type => 'Katello::ActivationKey'
   permission :update_activation_keys,
              {
-                 'katello/api/v2/activation_keys' => [:update],
+                 'katello/api/v2/activation_keys' => [:update, :content_override],
              },
              :resource_type => 'Katello::ActivationKey'
   permission :destroy_activation_keys,

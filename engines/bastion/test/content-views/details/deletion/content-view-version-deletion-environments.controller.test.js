@@ -19,7 +19,7 @@ describe('Controller: ContentViewVersionDeletionEnvironmentsController', functio
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller');
 
-        environments = [{name: 'dev'}];
+        environments = [{name: 'dev', permissions: {promotable_or_removable: true} }];
         version = {id: 1, environments: environments};
 
         $scope = $injector.get('$rootScope').$new();

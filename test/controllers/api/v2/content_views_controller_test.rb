@@ -26,14 +26,15 @@ module Katello
     def models
       @organization = get_organization
       @library = KTEnvironment.find(katello_environments(:library))
-      @content_view = ContentView.find(katello_content_views(:library_dev_view))
+      @dev = KTEnvironment.find(katello_environments(:dev))
+      @staging = KTEnvironment.find(katello_environments(:staging))
+      @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view))
     end
 
     def permissions
       @view_permission = :view_content_views
       @create_permission = :create_content_views
       @update_permission = :update_content_views
-      @destroy_permission = :destroy_content_views
       @publish_permission = :publish_content_views
     end
 
@@ -65,7 +66,7 @@ module Katello
 
     def test_index_protected
       allowed_perms = [@view_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+      denied_perms = [@create_permission, @update_permission, :destroy_content_views]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
         get :index, :organization_id => @organization.id
@@ -88,7 +89,7 @@ module Katello
 
     def test_create_protected
       allowed_perms = [@create_permission]
-      denied_perms = [@view_permission, @update_permission, @destroy_permission]
+      denied_perms = [@view_permission, @update_permission, :destroy_content_views]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
         post :create, :name => "Test", :organization_id => @organization.id
@@ -96,7 +97,7 @@ module Katello
     end
 
     def test_show
-      get :show, :id => @content_view.id
+      get :show, :id => @library_dev_staging_view.id
 
       assert_response :success
       assert_template 'api/v2/content_views/show'
@@ -104,23 +105,23 @@ module Katello
 
     def test_show_protected
       allowed_perms = [@view_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+      denied_perms = [@create_permission, @update_permission, :destroy_content_views]
 
       assert_protected_action(:show, allowed_perms, denied_perms) do
-        get :show, :id => @content_view.id
+        get :show, :id => @library_dev_staging_view.id
       end
     end
 
     def test_update
-      put :update, :id => @content_view, :name => "My View"
+      put :update, :id => @library_dev_staging_view, :name => "My View"
 
-      assert_equal "My View", @content_view.reload.name
+      assert_equal "My View", @library_dev_staging_view.reload.name
       assert_response :success
       assert_template 'api/v2/common/update'
     end
 
     def test_history
-      get :history, :id => @content_view
+      get :history, :id => @library_dev_staging_view
 
       assert_response :success
       assert_template 'katello/api/v2/content_views/../content_view_histories/index'
@@ -128,31 +129,31 @@ module Katello
 
     def test_history_protected
       allowed_perms = [@view_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+      denied_perms = [@create_permission, @update_permission, :destroy_content_views]
 
       assert_protected_action(:history, allowed_perms, denied_perms) do
-        get :history, :id => @content_view.id
+        get :history, :id => @library_dev_staging_view.id
       end
     end
 
     def test_update_puppet_repositories
       repository = katello_repositories(:p_forge)
-      refute_includes @content_view.repositories(true).map(&:id), repository.id
-      put :update, :id => @content_view.id, :repository_ids => [repository.id]
+      refute_includes @library_dev_staging_view.repositories(true).map(&:id), repository.id
+      put :update, :id => @library_dev_staging_view.id, :repository_ids => [repository.id]
       assert_response 422 # cannot add puppet repos to cv
     end
 
     def test_update_repositories
       repository = katello_repositories(:fedora_17_unpublished)
-      refute_includes @content_view.repositories(true).map(&:id), repository.id
-      put :update, :id => @content_view.id, :repository_ids => [repository.id]
+      refute_includes @library_dev_staging_view.repositories(true).map(&:id), repository.id
+      put :update, :id => @library_dev_staging_view.id, :repository_ids => [repository.id]
       assert_response :success
-      assert_includes @content_view.repositories(true).map(&:id), repository.id
+      assert_includes @library_dev_staging_view.repositories(true).map(&:id), repository.id
     end
 
     def test_update_components
       ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
-      version = @content_view.versions.first
+      version = @library_dev_staging_view.versions.first
       composite = ContentView.find(katello_content_views(:composite_view))
       refute_includes composite.components(true).map(&:id), version.id
       put :update, :id => composite.id, :component_ids => [version.id]
@@ -171,7 +172,7 @@ module Katello
     end
 
     def test_remove_components
-      version = @content_view.versions.first
+      version = @library_dev_staging_view.versions.first
       composite = ContentView.find(katello_content_views(:composite_view))
       composite.components = [version]
       refute_empty composite.components(true)
@@ -181,15 +182,15 @@ module Katello
 
     def test_update_protected
       allowed_perms = [@update_permission]
-      denied_perms = [@view_permission, @create_permission, @destroy_permission]
+      denied_perms = [@view_permission, @create_permission, :destroy_content_views]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
-        put :update, :id => @content_view.id, :name => "new name"
+        put :update, :id => @library_dev_staging_view.id, :name => "new name"
       end
     end
 
     def test_available_puppet_modules
-      get :available_puppet_modules, :id => @content_view.id
+      get :available_puppet_modules, :id => @library_dev_staging_view.id
 
       assert_response :success
       assert_template 'katello/api/v2/content_views/puppet_modules'
@@ -197,17 +198,17 @@ module Katello
 
     def test_available_puppet_modules_protected
       allowed_perms = [@view_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+      denied_perms = [@create_permission, @update_permission, :destroy_content_views]
 
       assert_protected_action(:available_puppet_modules, allowed_perms, denied_perms) do
-        get :available_puppet_modules, :id => @content_view.id
+        get :available_puppet_modules, :id => @library_dev_staging_view.id
       end
     end
 
     def test_available_puppet_module_names
       Support::SearchService::FakeSearchService.any_instance.stubs(:facets).returns({'facet_search' => {'terms' => []}})
 
-      get :available_puppet_module_names, :id => @content_view.id
+      get :available_puppet_module_names, :id => @library_dev_staging_view.id
 
       assert_response :success
       assert_template 'katello/api/v2/content_views/../puppet_modules/names'
@@ -215,10 +216,10 @@ module Katello
 
     def test_available_puppet_module_names_protected
       allowed_perms = [@view_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+      denied_perms = [@create_permission, @update_permission, :destroy_content_views]
 
       assert_protected_action(:available_puppet_module_names, allowed_perms, denied_perms) do
-        get :available_puppet_module_names, :id => @content_view.id
+        get :available_puppet_module_names, :id => @library_dev_staging_view.id
       end
     end
 
@@ -239,11 +240,98 @@ module Katello
     end
 
     def test_destroy_protected
-      allowed_perms = [@destroy_permission]
-      denied_perms = [@view_permission, @create_permission, @update_permission]
+      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv))
+      diff_view_destroy_permission = {:name => :destroy_content_views, :search => "name=\"#{diff_view.name}\"" }
+
+      allowed_perms = [:destroy_content_views]
+      denied_perms = [@view_permission, @create_permission, @update_permission, diff_view_destroy_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        delete :destroy, :id => @content_view.id
+        delete :destroy, :id => @library_dev_staging_view.id
+      end
+    end
+
+    def test_remove_from_environment_protected
+      dev_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments, :search => "name=\"#{@dev.name}\"" }
+      library_dev_staging_view_remove_permission = {:name => :promote_or_remove_content_views, :search => "name=\"#{@library_dev_staging_view.name}\"" }
+
+      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv))
+      diff_env = @staging
+      diff_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments, :search => "name=\"#{diff_env.name}\"" }
+      diff_view_remove_permission = {:name => :promote_or_remove_content_views, :search => "name=\"#{diff_view.name}\"" }
+
+      allowed_perms = [[:promote_or_remove_content_views_to_environments, :promote_or_remove_content_views],
+                       [dev_env_remove_permission, library_dev_staging_view_remove_permission],
+                       [dev_env_remove_permission, :promote_or_remove_content_views],
+                       [:promote_or_remove_content_views_to_environments, library_dev_staging_view_remove_permission]
+                      ]
+      denied_perms = [@view_permission,
+                      @create_permission,
+                      @update_permission,
+                      :destroy_content_views,
+                      :promote_or_remove_content_views_to_environments,
+                      :promote_or_remove_content_views,
+                      [diff_env_remove_permission, :promote_or_remove_content_views],
+                      [:promote_or_remove_content_views_to_environments, diff_view_remove_permission],
+                     ]
+
+      assert_protected_action(:remove_from_environment, allowed_perms, denied_perms) do
+        delete :remove_from_environment, :id => @library_dev_staging_view.id, :environment_id => @dev.id
+      end
+    end
+
+    def test_remove_protected
+      input_envs_remove_permission = {:name => :promote_or_remove_content_views_to_environments, :search => "name=\"#{@dev.name}\" or name=\"#{@staging.name}\"" }
+      single_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments, :search => "name=\"#{@dev.name}\"" }
+
+      library_dev_staging_view_remove_permission = {:name => :promote_or_remove_content_views, :search => "name=\"#{@library_dev_staging_view.name}\"" }
+
+      library_dev_staging_view_destroy_permission = {:name => :destroy_content_views, :search => "name=\"#{@library_dev_staging_view.name}\"" }
+
+      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv))
+      diff_env = KTEnvironment.find(katello_environments(:dev_path1))
+
+      diff_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments, :search => "name=\"#{diff_env.name}\"" }
+      diff_view_remove_permission = {:name => :promote_or_remove_content_views, :search => "name=\"#{diff_view.name}\"" }
+
+      allowed_perms = [[:promote_or_remove_content_views_to_environments, :promote_or_remove_content_views],
+                       [:promote_or_remove_content_views_to_environments, :promote_or_remove_content_views, :destroy_content_views],
+                       [input_envs_remove_permission, library_dev_staging_view_remove_permission],
+                       [input_envs_remove_permission, library_dev_staging_view_remove_permission, library_dev_staging_view_destroy_permission],
+                       [input_envs_remove_permission, :promote_or_remove_content_views],
+                       [:promote_or_remove_content_views_to_environments, library_dev_staging_view_remove_permission]
+                      ]
+      denied_perms = [@view_permission,
+                      @create_permission,
+                      @update_permission,
+                      :destroy_content_views,
+                      :promote_or_remove_content_views_to_environments,
+                      :promote_or_remove_content_views,
+                      [diff_env_remove_permission, :promote_or_remove_content_views],
+                      [single_env_remove_permission, :promote_or_remove_content_views],
+                      [:promote_or_remove_content_views_to_environments, diff_view_remove_permission],
+                     ]
+      assert_protected_action(:remove, allowed_perms, denied_perms) do
+        put :remove, :id => @library_dev_staging_view.id, :environment_ids => [@dev.id, @staging.id]
+      end
+    end
+
+    def test_remove_protected_with_no_environment_ids
+      library_dev_staging_view_destroy_permission = {:name => :destroy_content_views, :search => "name=\"#{@library_dev_staging_view.name}\"" }
+
+      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv))
+      diff_view_destroy_permission = {:name => :destroy_content_views, :search => "name=\"#{diff_view.name}\"" }
+
+      allowed_perms = [:destroy_content_views, library_dev_staging_view_destroy_permission]
+
+      denied_perms = [@view_permission,
+                      @create_permission,
+                      @update_permission,
+                      diff_view_destroy_permission,
+                      [:promote_or_remove_content_views_to_environments, :promote_or_remove_content_views]
+                     ]
+      assert_protected_action(:remove, allowed_perms, denied_perms) do
+        put :remove, :id => @library_dev_staging_view.id
       end
     end
   end

@@ -10,34 +10,16 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'ldap_fluff'
+module Actions
+  module Pulp
+    module ExpectOneTask
 
-module Katello
-class Ldap
+      def external_task=(external_task_data)
+        external_task_data = [external_task_data] unless external_task_data.is_a?(Array)
+        fail "Not expecting more than one task" if external_task_data.length  > 1
+        super(external_task_data)
+      end
 
-  def self.ldap
-    LdapFluff.new(Katello.config.ldap_fluff_config)
+    end
   end
-
-  def self.valid_ldap_authentication?(uid, password)
-    ldap.authenticate? uid, password
-  end
-
-  def self.ldap_groups(uid)
-    ldap.group_list(uid)
-  end
-
-  def self.is_in_groups(uid, grouplist)
-    ldap.is_in_groups?(uid, grouplist)
-  end
-
-  def self.valid_user?(uid)
-    ldap.valid_user?(uid)
-  end
-
-  def self.valid_group?(gid)
-    ldap.valid_group?(gid)
-  end
-
-end
 end

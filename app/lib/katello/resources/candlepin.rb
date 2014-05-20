@@ -785,6 +785,26 @@ module Resources
           JSON.parse(pool).with_indifferent_access
         end
 
+        def content_overrides(id)
+          result = Candlepin::CandlepinResource.get(join_path(path(id), 'content_overrides'), self.default_headers).body
+          Util::Data.array_with_indifferent_access(JSON.parse(result))
+        end
+
+        def update_content_override(id, content_label, name, value = nil)
+          attrs = [{ :contentLabel => content_label, :name => name }]
+          if value
+            attrs[0][:value] = value
+            result = Candlepin::CandlepinResource.put(join_path(path(id), 'content_overrides'),
+                                                      attrs.to_json, self.default_headers)
+          else
+            client = Candlepin::CandlepinResource.rest_client(Net::HTTP::Delete, :delete,
+                                                              join_path(path(id), 'content_overrides'))
+            client.options[:payload] = attrs.to_json
+            result = client.delete({:accept => :json, :content_type => :json}.merge(User.cp_oauth_header))
+          end
+          Util::Data.array_with_indifferent_access(JSON.parse(result))
+        end
+
         def path(id = nil)
           "/candlepin/activation_keys/#{id}"
         end

@@ -27,8 +27,11 @@
 angular.module('Bastion.subscriptions').controller('SubscriptionProductsController',
     ['$scope', '$state', 'Subscription', 'Product', 'CurrentOrganization', function ($scope, $state, Subscription, Product, CurrentOrganization) {
 
+        $scope.displayArea = { working: true };
+
         Product.queryUnpaged({'organization_id': CurrentOrganization, 'subscription_id': $scope.$stateParams.subscriptionId}, function (response) {
             $scope.products = response.results;
+            $scope.displayArea.working = false;
         });
 
     }]

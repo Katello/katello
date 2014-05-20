@@ -67,7 +67,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionContro
                     $scope.removeRow(row.id);
 
                 });
-                $scope.setState(false, data.displayMessages, []);
+                $scope.setState(false, data.displayMessages.success, data.displayMessages.error);
             };
 
             error = function (error) {

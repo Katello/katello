@@ -22,4 +22,6 @@ Foreman::Plugin.find(:katello).security_block :lifecycle_environments do
                 'katello/api/v2/environments' => [:destroy],
              },
              :resource_type => 'Katello::KTEnvironment'
+
+   permission :promote_or_remove_content_views_to_environments, {}, :resource_type => 'Katello::KTEnvironment'
 end

@@ -65,19 +65,19 @@ module Katello
     end
 
     def delete
-      r = Resources::Candlepin::Proxy.delete(@request_path, @request_body)
+      r = Resources::Candlepin::Proxy.delete(@request_path, @request_body.read)
       logger.debug r
       render :json => r
     end
 
     def post
-      r = Resources::Candlepin::Proxy.post(@request_path, @request_body)
+      r = Resources::Candlepin::Proxy.post(@request_path, @request_body.read)
       logger.debug r
       render :json => r
     end
 
     def put
-      r = Resources::Candlepin::Proxy.put(@request_path, @request_body)
+      r = Resources::Candlepin::Proxy.put(@request_path, @request_body.read)
       logger.debug r
       render :json => r
     end
@@ -287,7 +287,6 @@ module Katello
         ak_names        = ak_names.split(",")
         activation_keys = ak_names.map do |ak_name|
           activation_key = @organization.activation_keys.find_by_name(ak_name)
-          activation_key = @organization.activation_keys.find_by_label(ak_name) unless activation_key
           fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
           activation_key
         end
