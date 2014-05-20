@@ -33,9 +33,6 @@ require "delayed_job"
 require File.expand_path("../engines/bastion/lib/bastion", File.dirname(__FILE__))
 require "monkeys/string_to_bool"
 
-# ENGINE: Re-enable after fixing migrations in Katello proper
-#require File.expand_path("../engines/fort/lib/fort", File.dirname(__FILE__))
-
 module Katello
 
   require "katello/app_config"
@@ -45,5 +42,3 @@ module Katello
   require 'katello/middleware/silenced_logger.rb'
 
 end
-
-require File.expand_path("../engines/fort/lib/fort", File.dirname(__FILE__))
