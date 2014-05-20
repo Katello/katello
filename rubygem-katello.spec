@@ -86,6 +86,7 @@ Requires: pulp-selinux
 Requires: pulp-server
 Requires: mongodb
 Requires: mongodb-server
+Requires: cyrus-sasl-plain
 
 #Qpid Requirements
 Requires: qpid-cpp-client
