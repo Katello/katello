@@ -11,18 +11,21 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V1::CrlsController < Api::V1::ApiController
+class Api::V2::StatusController < Api::V2::ApiController
 
-  before_filter :authorize
+  skip_before_filter :require_user
+  skip_before_filter :authorize # ok - authenticated users are able to call this
 
-  def rules
-    superadmin_test = lambda { current_user.has_superadmin_role? }
-    { :index => superadmin_test }
-  end
-
-  api :GET, "/crls", N_("Regenerate X.509 CRL immediately and return them")
-  def index
-    render :text => Resources::Candlepin::Proxy.get('/crl')
+  api :GET, "/status/memory", N_("Counts objects in memory for debug purposes. Can take a while!")
+  def memory
+    User.as :admin do
+      objs = Hash.new(0)
+      ObjectSpace.each_object do |o|
+        objs[o.class] += 1
+      end
+      output = objs.sort_by { |c, n| n }.last(30)
+      render :text => PP.pp(output, "")
+    end
   end
 
 end

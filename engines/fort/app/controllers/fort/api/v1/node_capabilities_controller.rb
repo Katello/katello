@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Fort
-class Api::V1::NodeCapabilitiesController < Katello::Api::V1::ApiController
+class Api::V1::NodeCapabilitiesController < Katello::Api::V2::ApiController
 
   before_filter :authorize
   before_filter :find_node
