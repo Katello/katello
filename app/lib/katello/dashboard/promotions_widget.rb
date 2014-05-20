@@ -14,8 +14,10 @@ module Katello
 class Dashboard::PromotionsWidget < Dashboard::Widget
 
   def accessible?
-    Katello.config.katello? && current_organization &&
-        KTEnvironment.any_viewable_for_promotions?(current_organization)
+    User.current.admin? ||
+     (current_organization &&
+      User.current.organizations.include?(current_organization) &&
+      ContentView.readable?)
   end
 
   def title

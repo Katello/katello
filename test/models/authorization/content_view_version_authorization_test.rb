@@ -20,7 +20,7 @@ class ContentViewVersionAuthorizationAdminTest < AuthorizationTestBase
   end
 
   def test_readable
-    refute_empty ContentViewVersion.readable(@acme_corporation)
+    refute_empty ContentViewVersion.readable
   end
 end
 
@@ -31,7 +31,7 @@ class ContentViewVersionAuthorizationNonAuthUserTest < AuthorizationTestBase
   end
 
   def test_readable
-    assert_empty ContentViewVersion.readable(@acme_corporation)
+    assert_empty ContentViewVersion.readable
   end
 end
 end

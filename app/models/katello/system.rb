@@ -71,6 +71,10 @@ class System < Katello::Model
     {:conditions => conditions}
   end
 
+  def self.in_organization(organization)
+    where(:environment_id => organization.kt_environments.pluck(:id))
+  end
+
   def add_host_collection(host_collection)
     run_hook(:add_host_collection_hook, host_collection)
   end

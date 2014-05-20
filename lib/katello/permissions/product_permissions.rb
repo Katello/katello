@@ -56,7 +56,8 @@ Foreman::Plugin.find(:katello).security_block :products do
                'katello/api/v2/products_bulk_actions' => [:sync_products],
                'katello/api/v2/repositories_bulk_actions' => [:sync_repositories],
                'katello/api/v2/sync' => [:index],
-               'katello/sync_management' => [:index, :sync_status, :product_status, :sync, :destroy]
+               'katello/sync_management' => [:index, :sync_status, :product_status, :sync, :destroy],
+               'katello/dashboard' => [:sync]
              },
              :resource_type => 'Katello::Product'
 end

@@ -3,7 +3,8 @@ require 'katello/plugin.rb'
 Foreman::Plugin.find(:katello).security_block :host_collections do
   permission :view_host_collections,
              {
-                 'katello/api/v2/host_collections' => [:index, :show]
+                 'katello/api/v2/host_collections' => [:index, :show],
+                 'katello/dashboard' => [:host_collections]
              },
              :resource_type => 'Katello::HostCollection'
   permission :create_host_collections,

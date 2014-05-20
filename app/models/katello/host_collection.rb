@@ -146,7 +146,7 @@ class HostCollection < Katello::Model
   #   ok: those collections that are completely up to date
   def self.lists_by_updates_needed(organization)
     host_collections_hash = {}
-    host_collections = HostCollection.readable
+    host_collections = HostCollection.where(:organization_id => organization.id).readable
 
     # determine the state (critical/warning/ok) for each host collection
     host_collections.each do |host_collection|

@@ -15,8 +15,13 @@ module Katello
     extend ActiveSupport::Concern
 
     module ClassMethods
+
       def readable
         authorized(:view_host_collections)
+      end
+
+      def readable?
+        User.current.can?(:view_host_collections)
       end
 
       def creatable

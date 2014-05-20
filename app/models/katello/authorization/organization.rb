@@ -90,6 +90,8 @@ module Authorization::Organization
   end
 
   included do
+    include Authorizable
+    include Katello::Authorization
 
     scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
 
@@ -171,6 +173,10 @@ module Authorization::Organization
         # the path is deemed permissible.
         (promotion_path - permissible_environments).size != promotion_path.size
       end
+    end
+
+    def subscriptions_readable?
+      User.current.can?(:view_subscriptions)
     end
   end
 

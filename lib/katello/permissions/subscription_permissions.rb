@@ -3,7 +3,8 @@ require 'katello/plugin.rb'
 Foreman::Plugin.find(:katello).security_block :subscriptions do
   permission :view_subscriptions,
              {
-               'katello/api/v2/subscriptions' => [:index, :show, :available, :manifest_history]
+               'katello/api/v2/subscriptions' => [:index, :show, :available, :manifest_history],
+               'katello/dashboard' => [:subscriptions, :subscriptions_totals]
              },
              :resource_type => 'Organization'
 

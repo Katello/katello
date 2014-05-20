@@ -53,7 +53,6 @@ Katello::Engine.routes.draw do
       get :errata
       get :content_views
       get :promotions
-      get :systems
       get :host_collections
       get :subscriptions
       get :subscriptions_totals

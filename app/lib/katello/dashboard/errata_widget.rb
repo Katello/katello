@@ -14,8 +14,10 @@ module Katello
 class Dashboard::ErrataWidget < Dashboard::Widget
 
   def accessible?
-    Katello.config.katello? && current_organization &&
-        System.any_readable?(current_organization)
+    User.current.admin? ||
+     (current_organization &&
+      User.current.organizations.include?(current_organization) &&
+      System.readable?)
   end
 
   def title

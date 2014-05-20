@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Authorization::User
+module Authorization::UserAuthorization
   extend ActiveSupport::Concern
 
   READ_PERM_VERBS = [:read, :update, :create, :delete]
