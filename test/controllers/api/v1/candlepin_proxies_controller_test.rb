@@ -19,7 +19,7 @@ module Katello
     before do
       models = ["Organization", "KTEnvironment", "User", "ContentViewFilter",
                 "ContentViewEnvironment", "System", "HostCollection", "ActivationKey"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+      disable_glue_layers(["Candlepin", "ElasticSearch"], models)
       setup_controller_defaults_api
       login_user(User.find(users(:admin)))
       @system = katello_systems(:simple_server)
@@ -42,5 +42,80 @@ module Katello
         assert_response 400
       end
     end
+
+    describe "update enabled_repos", :katello => true do
+      before do
+        User.stubs(:consumer?).returns(true)
+        System.stubs(:first).returns(@system)
+        uuid = @system.uuid
+        User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid))
+        Repository.stubs(:where).with(:relative_path=>'foo').returns([OpenStruct.new({ :pulp_id => 'a' })])
+        Repository.stubs(:where).with(:relative_path=>'bar').returns([OpenStruct.new({ :pulp_id => 'b' })])
+        System.any_instance.stubs(:generate_applicability)
+      end
+      let(:enabled_repos) {
+        {
+            "repos" => [
+                {
+                    "baseurl" => ["https://hostname/pulp/repos/foo"],
+                },
+                {
+                    "baseurl" => ["https://hostname/pulp/repos/bar"],
+                },
+            ]
+        }
+      }
+      let(:enabled_repos_empty) { { "repos" => [] } }
+
+      it "should not bind any" do
+        Katello.pulp_server.extensions.consumer.expects(:retrieve_bindings).with(@system.uuid).returns(
+            [{ 'repo_id' => 'a', 'type_id' =>'yum_distributor' }, { 'repo_id' => 'b', 'type_id' => 'yum_distributor'}])
+
+        put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
+        assert_equal 200, response.status
+      end
+
+      it "should bind one" do
+        Katello.pulp_server.extensions.consumer.expects(:retrieve_bindings).with(@system.uuid).returns(
+            [{ 'repo_id' => 'a', 'type_id' => 'yum_distributor' }])
+        Katello.pulp_server.extensions.consumer.expects(:bind_all).with(@system.uuid, 'b', "yum_distributor", {:notify_agent=>false}).returns([])
+        put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
+        assert_equal 200, response.status
+      end
+
+      it "should bind two" do
+        Katello.pulp_server.extensions.consumer.expects(:retrieve_bindings).with(@system.uuid).returns({})
+        Katello.pulp_server.extensions.consumer.expects(:bind_all).with(@system.uuid, 'a', "yum_distributor", {:notify_agent=>false}).returns([])
+        Katello.pulp_server.extensions.consumer.expects(:bind_all).with(@system.uuid, 'b', "yum_distributor", {:notify_agent=>false}).returns([])
+        put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
+        assert_equal 200, response.status
+      end
+
+      it "should bind one and unbind one" do
+        Katello.pulp_server.extensions.consumer.expects(:retrieve_bindings).with(@system.uuid).returns(
+            [{ 'repo_id' => 'b', 'type_id' =>'yum_distributor' }, { 'repo_id' => 'c', 'type_id' =>'yum_distributor' }])
+        Katello.pulp_server.extensions.consumer.expects(:bind_all).with(@system.uuid, 'a', "yum_distributor", {:notify_agent=>false}).returns([])
+        Katello.pulp_server.extensions.consumer.expects(:unbind_all).with(@system.uuid, 'c', 'yum_distributor').returns([])
+        put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
+        assert_equal 200, response.status
+      end
+
+      it "should unbind two" do
+
+        Katello.pulp_server.extensions.consumer.expects(:retrieve_bindings).with(@system.uuid).returns(
+            [{ 'repo_id' => 'a', 'type_id' =>'yum_distributor' }, { 'repo_id' => 'b', 'type_id' =>'yum_distributor' }])
+        Katello.pulp_server.extensions.consumer.expects(:unbind_all).with(@system.uuid, 'a', 'yum_distributor').returns([])
+        Katello.pulp_server.extensions.consumer.expects(:unbind_all).with(@system.uuid, 'b', 'yum_distributor').returns([])
+        put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos_empty
+        assert_equal 200, response.status
+      end
+
+      it "should do nothing" do
+        Katello.pulp_server.extensions.consumer.expects(:retrieve_bindings).with(@system.uuid).returns({})
+        put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos_empty
+        assert_equal 200, response.status
+      end
+    end
+
   end
 end

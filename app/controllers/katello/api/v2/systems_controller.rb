@@ -276,56 +276,6 @@ class Api::V2::SystemsController < Api::V2::ApiController
     respond_for_index :collection => response
   end
 
-  api :PUT, "/systems/:id/enabled_repos", N_("Update the information about enabled repositories")
-  desc <<-DESC
-    Used by katello-agent to keep the information about enabled repositories up to date.
-    This information is then used for computing the errata available for the system.
-  DESC
-  param :enabled_repos, Hash, :required => true do
-    param :repos, Array, :required => true do
-      param :baseurl, Array, :desc => N_("List of enabled repo urls for the repo (Only first is used.)"), :required => false
-    end
-  end
-  param :id, String, :desc => N_("UUID of the system"), :required => true
-  def enabled_repos
-    repos_params = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
-    repos_params = repos_params['repos'] || []
-
-    unknown_paths = []
-    repos = []
-    repos_params.each do |repo|
-      if !repo['baseurl'].blank?
-        path = URI(repo['baseurl'].first).path
-        possible_repos = Repository.where(:relative_path => path.gsub('/pulp/repos/', ''))
-        if possible_repos.empty?
-          unknown_paths << path
-          logger.warn("System #{@system.name} (#{@system.id}) requested binding to unknown repo #{path}")
-        else
-          repos << possible_repos.first
-          logger.warn("System #{@system.name} (#{@system.id}) requested binding to path #{path} matching" +
-                       "#{possible_repos.size} repositories.") if possible_repos.size > 1
-        end
-      else
-        logger.warn("System #{@system.name} (#{@system.id}) attempted to bind to unspecific repo (#{repo}).")
-      end
-    end
-
-    pulp_ids = repos.collect{|r| r.pulp_id}
-    processed_ids, error_ids = @system.enable_yum_repos(pulp_ids)
-
-    result                  = {}
-    result[:processed_ids]  = processed_ids
-    result[:error_ids]      = error_ids
-    result[:unknown_labels] = unknown_paths
-    if error_ids.present? || unknown_paths.present?
-      result[:result] = "error"
-    else
-      result[:result] = "ok"
-    end
-
-    respond_for_show :resource => result
-  end
-
   private
 
   def find_system
