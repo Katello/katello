@@ -20,7 +20,7 @@ module Katello
         after_destroy :delete_related_index
 
         index_options :extended_json => :extended_index_attrs,
-          :json => {:only => [:name, :description, :organization_id]},
+          :json => {:only => [:id, :name, :description, :organization_id]},
           :display_attrs => [:name, :description]
 
         mapping do
