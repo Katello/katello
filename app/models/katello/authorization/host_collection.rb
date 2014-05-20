@@ -29,7 +29,7 @@ module Katello
       end
 
       def editable
-        authorized(:update_host_collections)
+        authorized(:edit_host_collections)
       end
 
       def deletable
@@ -51,7 +51,7 @@ module Katello
       end
 
       def editable?
-        authorized?(:update_host_collections)
+        authorized?(:edit_host_collections)
       end
 
       def deletable?

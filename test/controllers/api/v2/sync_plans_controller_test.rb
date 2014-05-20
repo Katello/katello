@@ -32,11 +32,11 @@ module Katello
       @resource_type = "Katello::SyncPlan"
       @view_permission = :view_sync_plans
       @create_permission = :create_sync_plans
-      @update_permission = :update_sync_plans
+      @update_permission = :edit_sync_plans
       @destroy_permission = :destroy_sync_plans
 
       @read_products_permission = :view_products
-      @update_products_permission = :update_products
+      @update_products_permission = :edit_products
     end
 
     def setup

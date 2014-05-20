@@ -28,7 +28,7 @@ module Katello
         end
 
         def editable?
-          authorized?(:update_products)
+          authorized?(:edit_products)
         end
 
         def deletable?
@@ -45,7 +45,7 @@ module Katello
         end
 
         def editable
-          authorized(:update_products)
+          authorized(:edit_products)
         end
 
         def deletable

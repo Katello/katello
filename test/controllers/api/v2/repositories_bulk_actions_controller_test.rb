@@ -31,7 +31,7 @@ module Katello
     def permissions
       @read_permission = :view_products
       @create_permission = :create_products
-      @update_permission = :update_products
+      @update_permission = :edit_products
       @destroy_permission = :destroy_products
       @sync_permission = :sync_products
     end

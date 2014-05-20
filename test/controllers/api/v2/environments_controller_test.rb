@@ -32,7 +32,7 @@ module Katello
       @resource_type = "Katello::KTEnvironment"
       @view_permission = :view_lifecycle_environments
       @create_permission = :create_lifecycle_environments
-      @update_permission = :update_lifecycle_environments
+      @update_permission = :edit_lifecycle_environments
       @destroy_permission = :destroy_lifecycle_environments
 
       @no_permission = NO_PERMISSION

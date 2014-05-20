@@ -29,7 +29,7 @@ module Authorization::GpgKey
     end
 
     def editable?
-      authorized?(:update_gpg_keys)
+      authorized?(:edit_gpg_keys)
     end
 
     def deleteable?

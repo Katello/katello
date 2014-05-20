@@ -20,7 +20,7 @@ module Katello
       end
 
       def editable
-        authorized(:update_activation_keys)
+        authorized(:edit_activation_keys)
       end
 
     end
@@ -34,7 +34,7 @@ module Katello
       end
 
       def editable?
-        authorized?(:update_activation_keys)
+        authorized?(:edit_activation_keys)
       end
 
       def deletable?

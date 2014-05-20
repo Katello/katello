@@ -162,7 +162,7 @@ module Authorization::LifecycleEnvironment
     end
 
     def editable?
-      authorized?(:update_lifecycle_environments)
+      authorized?(:edit_lifecycle_environments)
     end
 
     def deletable?

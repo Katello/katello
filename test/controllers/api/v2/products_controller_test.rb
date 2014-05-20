@@ -33,7 +33,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   def permissions
     @read_permission = :view_products
     @create_permission = :create_products
-    @update_permission = :update_products
+    @update_permission = :edit_products
     @delete_permission = :destroy_products
     @sync_permission = :sync_products
   end

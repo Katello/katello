@@ -31,7 +31,7 @@ module Katello
     def permissions
       @view_permission = :view_content_views
       @create_permission = :create_content_views
-      @update_permission = :update_content_views
+      @update_permission = :edit_content_views
       @destroy_permission = :destroy_content_views
     end
 
