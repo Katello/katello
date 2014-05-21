@@ -39,7 +39,7 @@ module Katello
     def permissions
       @view_permission = :view_activation_keys
       @create_permission = :create_activation_keys
-      @update_permission = :update_activation_keys
+      @update_permission = :edit_activation_keys
       @destroy_permission = :destroy_activation_keys
     end
 

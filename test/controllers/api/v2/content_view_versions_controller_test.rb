@@ -32,7 +32,7 @@ module Katello
     def permissions
       @view_permission = :view_content_views
       @create_permission = :create_content_views
-      @update_permission = :update_content_views
+      @update_permission = :edit_content_views
       @destroy_permission = :destroy_content_views
       @env_promote_permission = :promote_or_remove_content_views_to_environments
       @cv_promote_permission = :promote_or_remove_content_views

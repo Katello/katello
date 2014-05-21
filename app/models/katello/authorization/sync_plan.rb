@@ -29,7 +29,7 @@ module Katello
       end
 
       def editable?
-        authorized?(:update_sync_plans)
+        authorized?(:edit_sync_plans)
       end
 
       def deleteable?

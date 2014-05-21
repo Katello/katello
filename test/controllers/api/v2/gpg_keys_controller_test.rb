@@ -30,7 +30,7 @@ class Api::V2::GpgKeysControllerTest < ActionController::TestCase
     @resource_type = "Katello::GpgKey"
     @view_permission = :view_gpg_keys
     @create_permission = :create_gpg_keys
-    @update_permission = :update_gpg_keys
+    @update_permission = :edit_gpg_keys
     @destroy_permission = :destroy_gpg_keys
   end
 

@@ -3,23 +3,23 @@ require 'katello/plugin.rb'
 Foreman::Plugin.find(:katello).security_block :gpg_keys do
   permission :view_gpg_keys,
              {
-               'katello/gpg_keys' => [:all, :index],
-               'katello/api/v2/gpg_keys' => [:index, :show]
+              'katello/gpg_keys' => [:all, :index],
+              'katello/api/v2/gpg_keys' => [:index, :show]
              },
              :resource_type => 'Katello::GpgKey'
   permission :create_gpg_keys,
              {
-               'katello/api/v2/gpg_keys' => [:create],
+              'katello/api/v2/gpg_keys' => [:create],
              },
              :resource_type => 'Katello::GpgKey'
-  permission :update_gpg_keys,
+  permission :edit_gpg_keys,
              {
-               'katello/api/v2/gpg_keys' => [:update, :content],
+              'katello/api/v2/gpg_keys' => [:update, :content],
              },
              :resource_type => 'Katello::GpgKey'
   permission :destroy_gpg_keys,
              {
-               'katello/api/v2/gpg_keys' => [:destroy],
+              'katello/api/v2/gpg_keys' => [:destroy],
              },
              :resource_type => 'Katello::GpgKey'
 end

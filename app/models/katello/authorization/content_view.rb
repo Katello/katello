@@ -25,7 +25,7 @@ module Katello
       end
 
       def editable
-        authorized(:update_content_views)
+        authorized(:edit_content_views)
       end
 
       def deletable
@@ -65,7 +65,7 @@ module Katello
       end
 
       def editable?
-        authorized?(:update_content_views)
+        authorized?(:edit_content_views)
       end
 
       def deletable?
