@@ -33,22 +33,6 @@ module Katello
       param :environment_id, Integer, :desc => 'Id of the lifecycle environment', :required => true
     end
 
-
-    api :GET, '/capsules/:id/content'
-    param :id, Integer, :desc => 'Id of the capsule', :required => true
-    def show
-      # TODO: render sync status: out of sync, sync in progress, up to date
-      fail NotImplementedError
-    end
-
-
-    api :POST, '/capsules/:id/content/synchronize', 'Synchronize the content to the capsule'
-    param :id, Integer, :desc => 'Id of the capsule', :required => true
-    param :environment_ids, Array, 'Ids of the environments to be synchronized. If not specified, all the environments attached to the capsule will be synchronized'
-    def synchronize
-      fail NotImplementedError
-    end
-
     api :GET, '/capsules/:id/content/lifecycle_environments', 'List the lifecycle environments attached to the capsule'
     param_group :lifecycle_environments
     def lifecycle_environments

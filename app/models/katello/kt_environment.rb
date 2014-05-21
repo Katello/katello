@@ -75,10 +75,10 @@ class KTEnvironment < Katello::Model
 
   scope(:not_in_capsule,
         lambda do |capsule|
-          select("DISTINCT katello_environments.*").
-          joins('LEFT OUTER JOIN katello_capsule_lifecycle_environments ON ( "katello_capsule_lifecycle_environments"."lifecycle_environment_id" = "katello_environments"."id")').
-              where('"katello_capsule_lifecycle_environments"."capsule_id" IS NULL
-                     OR "katello_capsule_lifecycle_environments"."capsule_id" != ?', capsule.id)
+          select("DISTINCT #{KTEnvironment.table_name}.*").
+              joins(%{LEFT OUTER JOIN #{CapsuleLifecycleEnvironment.table_name} ON ( "#{CapsuleLifecycleEnvironment.table_name}"."lifecycle_environment_id" = "#{KTEnvironment.table_name}"."id")}).
+              where(%{"#{CapsuleLifecycleEnvironment.table_name}"."capsule_id" IS NULL
+                     OR "#{CapsuleLifecycleEnvironment.table_name}"."capsule_id" != ?}, capsule.id)
         end)
 
   after_destroy :unset_users_with_default
