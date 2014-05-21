@@ -191,29 +191,6 @@ Katello::Engine.routes.draw do
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
   match '/organizations/:id/default_info/:informable_type' => 'organizations#default_info', :via => :get, :as => :organization_default_info
 
-  match '/roles/show_permission' => 'roles#show_permission', :via => :get
-  resources :roles do
-    put "create_permission" => "roles#create_permission"
-
-    resources :permission, :only => {} do
-      delete "destroy_permission" => "roles#destroy_permission", :as => "destroy"
-      post "update_permission" => "roles#update_permission", :as => "update"
-    end
-    collection do
-      get :auto_complete_search
-      get :items
-    end
-    resources :ldap_groups, :only => [] do
-      member do
-        delete "destroy" => "roles#destroy_ldap_group", :as => "destroy"
-      end
-      collection do
-        post "create" => "roles#create_ldap_group", :as => "create"
-      end
-    end
-  end
-  match '/roles/:organization_id/resource_type/verbs_and_scopes' => 'roles#verbs_and_scopes', :via => :get, :as => 'verbs_and_scopes'
-
   resources :search, :only => {} do
     get 'show', :on => :collection
 

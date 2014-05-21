@@ -126,14 +126,5 @@ Foreman::Plugin.register :katello do
        :parent => :administer_menu,
        :after => :organizations
 
-  menu :admin_menu,
-       :content_roles,
-       :caption => N_('Content Roles'),
-       :url_hash => {:controller => 'katello/roles',
-                     :action => 'index'},
-       :engine => Katello::Engine,
-       :parent => :administer_menu,
-       :after => :roles
-
   allowed_template_helpers :subscription_manager_configuration_url
 end
