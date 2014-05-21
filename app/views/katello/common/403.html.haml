@@ -1,8 +1,10 @@
 .grid_16
-  %h1 #{_("403 - Permission denied")}
-
-  %p #{_("You are not authorised to perform this action.")}
-  %p #{_("Please request the required privileges from an administrator.")}
+  %h1 #{_("403 - Permission Denied")}
+  -if current_organization
+    %p #{_("You are not authorised to perform this action.")}
+    %p #{_("Please request the required privileges from an administrator.")}
+  - else
+    %p #{_("Please choose an organization using the selector located at the far left of the menu.")}
 
   %p
     = link_to _("Back"), main_app.root_path
