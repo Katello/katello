@@ -9,7 +9,7 @@ Katello::Engine.routes.draw do
 
   namespace :api do
 
-    scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 2) do
+    scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 2, :default => true) do
 
       ##############################
       # re-routes alphabetical
@@ -86,7 +86,7 @@ Katello::Engine.routes.draw do
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
         end
-        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
+        scope :constraints => Katello::RegisterWithActivationKeyConstraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
       end
@@ -133,7 +133,7 @@ Katello::Engine.routes.draw do
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
         end
-        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
+        scope :constraints => Katello::RegisterWithActivationKeyConstraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
       end
@@ -208,7 +208,7 @@ Katello::Engine.routes.draw do
           end
         end
         api_resources :tasks, :only => [:index, :show]
-        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
+        scope :constraints => Katello::RegisterWithActivationKeyConstraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
         api_resources :systems, :only => [:create] do
@@ -383,45 +383,60 @@ Katello::Engine.routes.draw do
     end # module v2
 
     # routes that didn't change in v2 and point to v1
-    scope :module => :v1, :constraints => ApiConstraints.new(:version => 2) do
+    scope "(:api_version)", :module => :v1, :defaults => {:api_version => 'v2'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 2, :default => true) do
 
       api_resources :crls, :only => [:index]
 
       # subscription-manager support
-      scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
-        match '/consumers' => 'systems#activate', :via => :post
+      scope :constraints => Katello::RegisterWithActivationKeyConstraint.new do
+        match '/consumers' => 'candlepin_proxies#consumer_activate', :via => :post
       end
-      match '/hypervisors' => 'systems#hypervisors_update', :via => :post
-      api_resources :consumers, :controller => 'systems'
-      match '/owners/:organization_id/environments' => 'environments#rhsm_index', :via => :get
+      match '/consumers' => 'candlepin_proxies#consumer_create', :via => :post
+      match '/hypervisors' => 'candlepin_proxies#hypervisors_update', :via => :post
+      match '/owners/:organization_id/environments' => 'candlepin_proxies#rhsm_index', :via => :get
       match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_pools_path
       match '/owners/:organization_id/servicelevels' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_servicelevels_path
-      match '/environments/:environment_id/consumers' => 'systems#index', :via => :get #TODO: does this need to stay or be moved over to v2 controller also (e.g. - systems#index_v1_compat)?
-      match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
-      match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
+      match '/environments/:environment_id/consumers' => 'candlepin_proxies#consumer_create', :via => :post
+      match '/consumers/:id' => 'candlepin_proxies#consumer_show', :via => :get
+      match '/consumers/:id' => 'candlepin_proxies#regenerate_identity_certificates', :via => :post
+      match '/consumers/:id' => 'candlepin_proxies#consumer_destroy', :via => :delete
+      match '/users/:login/owners' => 'candlepin_proxies#list_owners', :via => :get, :constraints => {:login => /\S+/}
       match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_certificates_path
       match '/consumers/:id/release' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_releases_path
+      match '/consumers/:id/compliance' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_compliance_path
       match '/consumers/:id/certificates/serials' => 'candlepin_proxies#get', :via => :get, :as => :proxy_certificate_serials_path
       match '/consumers/:id/entitlements' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_entitlements_path
       match '/consumers/:id/entitlements' => 'candlepin_proxies#post', :via => :post, :as => :proxy_consumer_entitlements_post_path
       match '/consumers/:id/entitlements' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_entitlements_delete_path
       match '/consumers/:id/entitlements/dry-run' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_dryrun_path
       match '/consumers/:id/owner' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_owners_path
+      match '/consumers/:id/export' => 'candlepin_proxies#export', :via => :get, :as => :proxy_consumer_export_path
       match '/consumers/:consumer_id/certificates/:id' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_certificates_delete_path
       match '/consumers/:id/deletionrecord' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_deletionrecord_delete_path
       match '/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_pools_path
       match '/deleted_consumers' => 'candlepin_proxies#get', :via => :get, :as => :proxy_deleted_consumers_path
       match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get, :as => :proxy_entitlements_path
       match '/subscriptions' => 'candlepin_proxies#post', :via => :post, :as => :proxy_subscriptions_post_path
-      match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
-      match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
+      match '/consumers/:id/profile/' => 'candlepin_proxies#upload_package_profile', :via => :put
+      match '/consumers/:id/packages/' => 'candlepin_proxies#upload_package_profile', :via => :put
+      match '/consumers/:id/checkin/' => 'candlepin_proxies#checkin', :via => :put
+      match '/consumers/:id' => 'candlepin_proxies#facts', :via => :put
+      match '/consumers/:id/guestids/' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_guestids_path
+      match '/consumers/:id/guestids/:guest_id' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_guestids_get_guestid_path
+      match '/consumers/:id/guestids/' => 'candlepin_proxies#put', :via => :put, :as => :proxy_consumer_guestids_put_path
+      match '/consumers/:id/guestids/:guest_id' => 'candlepin_proxies#put', :via => :put, :as => :proxy_consumer_guestids_put_guestid_path
+      match '/consumers/:id/guestids/:guest_id' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_guestids_delete_guestid_path
+      match '/consumers/:id/content_overrides/' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_content_overrides_path
+      match '/consumers/:id/content_overrides/' => 'candlepin_proxies#put', :via => :put, :as => :proxy_consumer_content_overrides_put_path
+      match '/consumers/:id/content_overrides/' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_content_overrides_delete_path
+      match '/systems/:id/enabled_repos' => 'candlepin_proxies#enabled_repos', :via => :put
 
       # development / debugging support
       if Rails.env == "development"
         match 'status/memory' => 'status#memory', :via => :get
       end
 
-    end # module v2
+    end # module v1
 
   end # '/api' namespace
 end
