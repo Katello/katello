@@ -58,6 +58,13 @@ module Katello
       assert_template 'api/v2/content_views/index'
     end
 
+    def test_index_in_environment
+      get :index, :organization_id => @organization.id, :environment_id => @dev.id
+
+      assert_response :success
+      assert_template 'api/v2/content_views/index'
+    end
+
     def test_index_fail_without_organization_id
       get :index
 

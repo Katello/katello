@@ -44,7 +44,7 @@ module Katello
 
       readable_cvs = ContentView.readable
       readable_cvs = readable_cvs.in_environment(@environment) if @environment
-      ids = readable_cvs.pluck(:id)
+      ids = readable_cvs.pluck("#{Katello::ContentView.table_name}.id")
 
       options[:filters] = [{:terms => {:id => ids}}]
 
