@@ -24,8 +24,8 @@ module Actions
 
             ::Katello::CapsuleContent.with_environment(repo.environment).each do |capsule_content|
               plan_action(Pulp::Consumer::SyncNode,
-                          uuid: capsule_content.consumer_uuid,
-                          repository_ids: [repo.pulp_id])
+                          consumer_uuid: capsule_content.consumer_uuid,
+                          repo_ids: [repo.pulp_id])
             end
           end
         end

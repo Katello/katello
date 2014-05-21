@@ -1,4 +1,3 @@
-# encoding: utf-8
 #
 # Copyright 2014 Red Hat, Inc.
 #
@@ -12,8 +11,24 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Support
-  require File.expand_path('../support/auth_support', __FILE__)
-  require File.expand_path('../support/warden_support', __FILE__)
-  require File.expand_path('../support/controller_support', __FILE__)
-  require File.expand_path('../support/search_service', __FILE__)
+module CapsuleSupport
+
+  def pulp_feature
+    @pulp_feture ||= Feature.create(name: "Pulp")
+  end
+
+  def proxy_with_pulp
+    @proxy_with_pulp ||= smart_proxies(:four).tap do |proxy|
+      unless proxy.features.include?(pulp_feature)
+        proxy.features << pulp_feature
+      end
+    end
+  end
+
+  def capsule_content
+    @capsule_content ||= Katello::CapsuleContent.new(proxy_with_pulp)
+  end
+
 end
+end
+

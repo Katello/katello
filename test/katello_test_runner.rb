@@ -30,6 +30,7 @@ module KatelloMiniTestRunner
 
     def _run_suite(suite, type)
       begin
+        ResourceTypeBackup.initiate
         User.current = nil  #reset User.current
         suite.before_suite if suite.respond_to?(:before_suite)
         super(suite, type)
@@ -44,11 +45,14 @@ module KatelloMiniTestRunner
 end
 
 class ResourceTypeBackup
-  @@types_backup = Katello::ResourceType::TYPES.clone
+
+  def self.initiate
+    @types_backup ||= Katello::ResourceType::TYPES.clone
+  end
 
   def self.restore
     Katello::ResourceType::TYPES.clear
-    Katello::ResourceType::TYPES.merge!(@@types_backup)
+    Katello::ResourceType::TYPES.merge!(@types_backup)
   end
 end
 

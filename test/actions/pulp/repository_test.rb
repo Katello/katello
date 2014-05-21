@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
-require 'support/pulp/repository_support'
 
 module ::Actions::Pulp::Repository
 
@@ -58,10 +57,11 @@ module ::Actions::Pulp::Repository
     end
   end
 
-  class SyncTest < VCR::TestCase
+  class SyncTest < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::PulpTask
     include Support::Actions::RemoteAction
+    include VCR::TestCase
 
     let(:action_class) { ::Actions::Pulp::Repository::Sync }
     let(:repo) { katello_repositories(:fedora_17_x86_64) }

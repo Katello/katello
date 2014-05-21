@@ -22,7 +22,7 @@ module Actions
           end
 
           plan_action(Pulp::Consumer::UnbindDistributor,
-                      uuid: capsule_content.consumer_uuid,
+                      consumer_uuid: capsule_content.consumer_uuid,
                       repo_id: repository.pulp_id,
                       distributor_id: distributor['id'])
         end

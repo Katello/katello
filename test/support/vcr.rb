@@ -10,8 +10,12 @@ module VCR
   end
 
   # test class that will automatically run each method in a cassette
-  class TestCase < ::ActiveSupport::TestCase
-    @@matches = [:method, :path, :params, :body_json]
+  module TestCase
+    extend ActiveSupport::Concern
+
+    def vcr_matches
+      [:method, :path, :params, :body_json]
+    end
 
     def cassette_name
       test_name = self.__name__.downcase.gsub("test_", "")
@@ -21,12 +25,15 @@ module VCR
     end
 
     def run_with_vcr(args)
-      VCR.insert_cassette(cassette_name, :match_requests_on => @@matches)
+      VCR.insert_cassette(cassette_name, :match_requests_on => vcr_matches)
       to_ret = run_without_vcr(args)
       VCR.eject_cassette
       to_ret
     end
-    alias_method_chain :run, :vcr
+
+    included do
+      alias_method_chain :run, :vcr
+    end
   end
 end
 

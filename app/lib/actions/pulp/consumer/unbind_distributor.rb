@@ -16,13 +16,13 @@ module Actions
       class UnbindDistributor < Pulp::AbstractAsyncTask
 
         input_format do
-          param :uuid, String
+          param :consumer_uuid, String
           param :repo_id, String
           param :distributor_id, String
         end
 
         def invoke_external_task
-          pulp_resources.consumer.unbind(input[:uuid],
+          pulp_resources.consumer.unbind(input[:consumer_uuid],
                                          input[:repo_id],
                                          input[:distributor_id])
         end
