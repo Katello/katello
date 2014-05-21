@@ -29,7 +29,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "ruby-openid"
 
   gem.add_dependency "net-ldap"
-  gem.add_dependency "foreigner", "~> 1.4.2"
   gem.add_dependency "daemons", ">= 1.1.4"
   gem.add_dependency "uuidtools"
   gem.add_dependency "rabl"
@@ -55,7 +54,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "anemone"
 
   # UI
-  gem.add_dependency "angular-rails-templates", "~> 0.0.4"
+  gem.add_dependency "angular-rails-templates"
   gem.add_dependency "simple-navigation", ">= 3.3.4", "< 3.12.0"
   gem.add_dependency "less-rails"
   gem.add_dependency "sass-rails"
