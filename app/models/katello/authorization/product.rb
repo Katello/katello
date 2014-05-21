@@ -56,6 +56,23 @@ module Katello
           authorized(:sync_products)
         end
 
+        def readable?
+          ::User.current.can?(:view_products)
+        end
+
+        def readable_repositories(repo_ids = nil)
+          query = Katello::Repository
+
+          if repo_ids
+            query = query.where(:id => repo_ids)
+          end
+
+          query.joins(:product)
+               .joins(:content_view_version)
+               .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => Katello::ContentView.default.pluck(:id))
+               .where(:product_id => Katello::Product.readable.pluck(:id))
+        end
+
       end # ClassMethods
 
     end # Product

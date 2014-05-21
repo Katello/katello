@@ -12,58 +12,14 @@
 
 module Katello
 class PackagesController < Katello::ApplicationController
+
   before_filter :lookup_package, except: [:auto_complete]
-  before_filter :find_filter, only: [:auto_complete]
-  before_filter :authorize
-
-  def rules
-
-    view = lambda do
-      !Repository.readable_in_org(current_organization).where(
-          :pulp_id => @package.repoids).empty?
-    end
-
-    auto_complete = lambda do
-      if @def_filter
-        @def_filter.content_view_definition.readable?
-      else
-        false
-      end
-    end
-
-    {
-      :auto_complete => auto_complete,
-      :show => view,
-      :filelist => view,
-      :changelog => view,
-      :dependencies => view,
-      :details => view
-    }
-  end
 
   def auto_complete
-    if @def_filter
-      repoids = @def_filter.repos(current_organization.library).map(&:pulp_id)
-      results = Package.autocomplete_name("#{params[:term]}*", repoids)
-    end
+    repo_ids = readable_repos(:pulp_id)
+    results = Package.autocomplete_name("#{params[:term]}*", repo_ids)
 
     render :json => results
-  end
-
-  def show
-    render :partial => "show"
-  end
-
-  def filelist
-    render :partial => "filelist"
-  end
-
-  def changelog
-    render :partial => "changelog"
-  end
-
-  def dependencies
-    render :partial => "dependencies"
   end
 
   def details
@@ -73,13 +29,18 @@ class PackagesController < Katello::ApplicationController
   private
 
   def lookup_package
-    @package_id = params[:id]
-    @package = Package.find @package_id
-    fail _("Unable to find package %s") % @package_id if @package.nil?
+    repo_ids = readable_repos(:pulp_id)
+    package_id = params[:id]
+    @package = Package.find(package_id)
+    fail _("Unable to find package %s") % package_id if @package.nil?
+    deny_access if (@package.repoids & repo_ids).empty?
   end
 
-  def find_filter
-    @def_filter = Filter.find_by_id(params[:filter_id])
+  def readable_repos(attribute)
+    repos = []
+    repos += Product.readable_repositories.pluck(attribute)
+    repos += ContentView.readable_repositories.pluck(attribute)
+    repos
   end
 
 end

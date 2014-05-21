@@ -445,10 +445,12 @@ KT.comparison_grid.models.rows = function(){
 
                 var parent = get_parent(id);
 
-                if( parent['child_ids'] === undefined ){
-                    parent['child_ids'] = [id];
-                } else {
-                    parent['child_ids'].push(id);
+                if (parent) {
+                    if( parent['child_ids'] === undefined ){
+                        parent['child_ids'] = [id];
+                    } else {
+                        parent['child_ids'].push(id);
+                    }
                 }
             } else {
                 rows[id] = { 'id' : id, 'name' : name, 'cells' : cells, 'comparable' : comparable, 'data_type' : data_type, 'value' : value };

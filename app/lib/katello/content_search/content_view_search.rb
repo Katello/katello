@@ -14,7 +14,7 @@ module Katello
 module ContentSearch
 
   class ContentViewSearch < ContainerSearch
-    attr_accessor :views
+    attr_accessor :views, :organization
 
     def initialize(options)
       super
@@ -25,7 +25,7 @@ module ContentSearch
       filtered_views.collect do |view|
         cols = {}
         view.environments.collect do |env|
-          if readable_env_ids.include?(env.id)
+          if readable_env_ids(organization).include?(env.id)
             if view.default?
               display = ""
             else

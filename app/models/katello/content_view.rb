@@ -131,11 +131,11 @@ class ContentView < Katello::Model
      (self.repositories.collect{|r| r.product}).uniq
    end
 
-  def repos(env)
+  def repos(env = nil)
     if env
       repo_ids = versions.flat_map { |version| version.repositories.in_environment(env) }.map(&:id)
     else
-      repo_ids = []
+      repo_ids = versions.flat_map { |version| version.repositories }.map(&:id)
     end
     Repository.where(:id => repo_ids)
   end
@@ -197,7 +197,7 @@ class ContentView < Katello::Model
     end
   end
 
-  def products(env)
+  def products(env = nil)
     repos = repos(env)
     Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => repos.map(&:id)).uniq
   end

@@ -19,6 +19,8 @@ namespace :katello do
         pulp_fail = true
       rescue  RestClient::Gone => e
         pulp_fail = true
+      rescue  RestClient::Conflict => e
+        pulp_fail = true
       end
 
       if cp_fail || pulp_fail

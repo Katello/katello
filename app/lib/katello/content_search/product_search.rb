@@ -14,7 +14,7 @@ module Katello
 module ContentSearch
 
   class ProductSearch < ContainerSearch
-    attr_accessor :products, :views
+    attr_accessor :products, :views, :organization
 
     def initialize(options)
       super
@@ -27,10 +27,10 @@ module ContentSearch
         filtered_products(view).each do |prod|
           cols = {}
           prod.environments_for_view(view).each do |env|
-            cols[env.id] = if readable_env_ids.include?(env.id)
-                             Cell.new(:hover => lambda{container_hover_html(prod, env, view)},
+            if readable_env_ids(organization).include?(env.id)
+              cols[env.id] = Cell.new(:hover => lambda{container_hover_html(prod, env, view)},
                                       :hover_details => lambda{container_hover_html(prod, env, view, true)})
-                           end
+            end
           end
           rows << Row.new(:id => "view_#{view.id}_product_#{prod.id}",
                           :name => prod.name,

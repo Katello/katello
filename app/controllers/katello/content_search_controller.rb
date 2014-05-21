@@ -19,34 +19,6 @@ class ContentSearchController < Katello::ApplicationController
   before_filter :find_repos, :only => [:repo_compare_packages, :repo_compare_errata, :repo_compare_puppet_modules]
   before_filter :setup_utils
 
-  def rules
-    contents_test = lambda{!KTEnvironment.content_readable(current_organization).empty?}
-    {
-        :index => contents_test,
-        :products => contents_test,
-        :repos => contents_test,
-        :my_environments => contents_test,
-        :packages => contents_test,
-        :errata => contents_test,
-        :puppet_modules => contents_test,
-        :packages_items => contents_test,
-        :errata_items => contents_test,
-        :puppet_modules_items => contents_test,
-        :view_packages => contents_test,
-        :view_puppet_modules => contents_test,
-        :repo_packages => contents_test,
-        :repo_errata => contents_test,
-        :repo_puppet_modules => contents_test,
-        :repo_compare_errata => contents_test,
-        :repo_compare_packages => contents_test,
-        :repo_compare_puppet_modules => contents_test,
-        :view_compare_errata => contents_test,
-        :view_compare_packages => contents_test,
-        :view_compare_puppet_modules => contents_test,
-        :views => contents_test
-    }
-  end
-
   def section_id
     "content_search"
   end
@@ -56,20 +28,22 @@ class ContentSearchController < Katello::ApplicationController
   end
 
   def index
-    render :index, :locals => { :environments => environment_paths(library_path_element("contents_readable?"),
-                                                                   environment_path_element("contents_readable?")) }
+    render :index, :locals => { :environments => environment_paths(library_path_element("readable?"),
+                                                                   environment_path_element("readable?")) }
   end
 
   def products
     views = process_views(process_params(:views))
     products = process_products(process_params(:products))
     view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
-                                                       :views => views)
+                                                       :views => views,
+                                                       :organization => current_organization)
 
     product_search = ContentSearch::ProductSearch.new(:name => _('Products'),
                                                       :products => products,
                                                       :views => views,
-                                                      :mode => @mode
+                                                      :mode => @mode,
+                                                      :organization => current_organization
                                                      )
     render :json => { :rows => (view_search.rows + product_search.rows), :name => _("Products") }
   end
@@ -78,6 +52,7 @@ class ContentSearchController < Katello::ApplicationController
     views = process_views(process_params :views)
     view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
                                                        :views => views,
+                                                       :organization => current_organization,
                                                        :mode => @mode,
                                                        :comparable => true)
     render :json => view_search
@@ -91,9 +66,11 @@ class ContentSearchController < Katello::ApplicationController
 
     products = repos.collect(&:product).uniq
     product_search = ContentSearch::ProductSearch.new(:products => products,
-                                                      :views => views)
+                                                      :views => views,
+                                                      :organization => current_organization)
     view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
-                                                       :views => views)
+                                                       :views => views,
+                                                       :organization => current_organization)
     rows = view_search.rows + product_search.rows
 
     view_search.views.each do |view|
@@ -115,7 +92,10 @@ class ContentSearchController < Katello::ApplicationController
     #construct a structure   view => { product => [repos] } for each view
     view_product_repo_map = view_product_repo_map(views, repos)
 
-    view_hash = ContentSearch::ContentViewSearch.new(:name => _("Content View"), :views => views).row_object_hash
+    view_hash = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
+                                                     :views => views,
+                                                     :organization => current_organization)
+    view_hash = view_hash.row_object_hash
 
     rows = []
     view_product_repo_map.each do |view, product_repo_map|
@@ -155,7 +135,10 @@ class ContentSearchController < Katello::ApplicationController
     #construct a structure   view => { product => [repos] } for each view
     view_product_repo_map = view_product_repo_map(views, repos)
 
-    view_hash = ContentSearch::ContentViewSearch.new(:name => _("Content View"), :views => views).row_object_hash
+    view_hash = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
+                                                     :views => views,
+                                                     :organization => current_organization)
+    view_hash = view_hash.row_object_hash
 
     rows = []
     view_product_repo_map.each do |view, product_repo_map|
@@ -183,7 +166,10 @@ class ContentSearchController < Katello::ApplicationController
     #construct a structure   view => { product => [repos] } for each view
     view_product_repo_map = view_product_repo_map(views, repos)
 
-    view_hash = ContentSearch::ContentViewSearch.new(:name => _("Content View"), :views => views).row_object_hash
+    view_hash = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
+                                                     :views => views,
+                                                     :organization => current_organization)
+    view_hash = view_hash.row_object_hash
 
     rows = []
     view_product_repo_map.each do |view, product_repo_map|
@@ -725,34 +711,53 @@ class ContentSearchController < Katello::ApplicationController
   end
 
   def process_views(view_ids)
+    views = []
+
     if view_ids.blank?
-      ContentView.readable
+      views = ContentView.readable.where(:default => false)
+      views << current_organization.default_content_view if Product.readable?
     else
-      ContentView.readable.where(:id => view_ids)
+      views = ContentView.readable.where(:id => view_ids)
     end
+
+    views
   end
 
   def process_products(product_ids)
+    products = []
+
     if product_ids.blank?
-      current_organization.products.readable(current_organization).engineering
+      products += current_organization.products.readable.engineering
+      products += ContentView.readable_products
     else
-      current_organization.products.readable(current_organization).engineering.where(:id => product_ids)
+      products += current_organization.products.readable.engineering.where(:id => product_ids)
+      products += ContentView.readable_products(product_ids)
     end
+
+    products
   end
 
   def process_repos(repo_ids, product_ids)
-    # is this neccessary?
-    unless product_ids.blank?
-      product_ids = Product.readable(current_organization).where(:id => product_ids).pluck("#{Katello::Product.table_name}.id")
+    if product_ids.present?
+      product_ids = Product.readable.where(:id => product_ids).pluck("#{Katello::Product.table_name}.id")
     end
 
     # repos were searched by string
-    unless repo_ids.is_a? Array
+    if repo_ids.is_a? Array
+      ids = ContentView.readable_repositories(repo_ids).pluck(:id)
+      ids += Product.readable_repositories(repo_ids).pluck(:id)
+      repo_ids = ids
+    else
       search_string = repo_ids
-      repo_ids      = Repository.non_archived.libraries_content_readable(current_organization).pluck("#{Katello::Repository.table_name}.id")
+
+      repo_ids = []
+      repo_ids += ContentView.readable_repositories.pluck(:library_instance_id).uniq
+      repo_ids += Product.readable_repositories.pluck(:id)
     end
 
+    repo_ids.uniq!
     repo_search(search_string, repo_ids, product_ids)
   end
+
 end
 end

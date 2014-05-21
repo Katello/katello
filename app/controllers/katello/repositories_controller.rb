@@ -12,26 +12,20 @@
 
 module Katello
 class RepositoriesController < Katello::ApplicationController
-  include KatelloUrlHelper
 
   respond_to :html, :js
-
-  before_filter :authorize
-  before_filter :find_repository, :except => [:auto_complete_library]
-
-  def rules
-    read_any_test = lambda{ true }
-    {
-      :auto_complete_library => read_any_test
-    }
-  end
 
   def auto_complete_library
     # retrieve and return a list (array) of repo names in library that contain the 'term' that was passed in
     term = Util::Search.filter_input params[:term]
     name = 'name:' + term
     name_query = name + ' OR ' + name + '*'
-    ids = Repository.readable.collect{|r| r.id}
+
+    ids = []
+    ids += Product.readable_repositories.pluck(:id) if Product.readable?
+    ids += ContentView.readable_repositories.pluck(:library_instance_id)
+    ids.uniq!
+
     repos = Repository.search do
       query {string name_query}
       filter "and", [
@@ -46,10 +40,5 @@ class RepositoriesController < Katello::ApplicationController
     end)
   end
 
-  protected
-
-  def find_repository
-    @repository = Repository.find(params[:id])
-  end
 end
 end
