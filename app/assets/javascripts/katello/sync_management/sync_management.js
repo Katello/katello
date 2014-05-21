@@ -42,9 +42,8 @@ $(document).ready(function() {
 
     $('#sync_product_form').bind("ajax:success",
       function(evt, data, status, xhr){
-       var syncs = $.parseJSON(data);
        var ids = [];
-       $.each(syncs, function(index, item){
+       $.each(data, function(index, item){
           ids.push(item.id);
           KT.content.draw_syncing(item.id, 0);
           KT.content.updateProduct(item.product_id, false, 0);
