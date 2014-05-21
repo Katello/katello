@@ -24,7 +24,7 @@ if [ -x /etc/init.d/tomcat6 -o -x /lib/systemd/system/tomcat6.service ]; then
   TOMCAT="tomcat6"
 fi
 
-SERVICES="$TOMCAT httpd mongod qpidd elasticsearch katello-jobs"
+SERVICES="$TOMCAT mongod qpidd elasticsearch pulp_resource_manager pulp_workers pulp_celerybeat httpd katello-jobs"
 if [ -f /etc/katello/service-list ] ; then
   . /etc/katello/service-list
 fi
