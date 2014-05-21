@@ -176,7 +176,9 @@ module Katello
     end
 
     def filter_organization
-      filters = [:terms => {:id => HostCollection.readable.pluck("#{Katello::HostCollection.table_name}.id")}]
+      find_organization
+      ids = HostCollection.readable.where(:organization_id => @organization.id).pluck("#{Katello::HostCollection.table_name}.id")
+      filters = [:terms => {:id => ids}]
       filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
       options = {

@@ -93,7 +93,7 @@ class ActivationKey < Katello::Model
   def available_subscriptions
     all_pools = self.get_pools
     key_pool_ids = self.get_key_pools.collect { |pool| pool[:id] }
-    pools = all_pools.reject { |pool| pool key_pool_ids.include? pool[:id] }
+    pools = all_pools.reject { |pool| key_pool_ids.include? pool[:id] }
     self.subscriptions(pools)
   end
 

@@ -42,7 +42,7 @@ module Katello
       options = sort_params
       options[:load_records?] = true
 
-      readable_cvs = ContentView.readable
+      readable_cvs = ContentView.readable.where(:organization_id => @organization.id)
       readable_cvs = readable_cvs.in_environment(@environment) if @environment
       ids = readable_cvs.pluck("#{Katello::ContentView.table_name}.id")
 

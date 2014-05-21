@@ -56,7 +56,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     if @product
       options[:filters] << {:term => {:product_id => @product.id}}
     else
-      ids = Repository.readable.pluck(:id)
+      ids = Repository.where(:product_id => Product.readable.where(:organization_id => @organization.id)).pluck(:id)
     end
 
     options[:filters] << {:terms => {:id => ids}} if ids
