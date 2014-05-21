@@ -27,6 +27,10 @@ module Authorization::System
       authorized(:view_content_hosts)
     end
 
+    def readable?
+      User.current.can?(:view_content_hosts)
+    end
+
     def editable
       authorized(:edit_content_hosts)
     end

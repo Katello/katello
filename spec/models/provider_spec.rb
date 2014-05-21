@@ -44,7 +44,6 @@ describe Provider do
     @organization = Organization.new(:name =>"org10020",:label =>"org10020")
     @organization.save!
     @organization.redhat_provider.delete
-    @organization = Organization.last
   end
 
   describe "import_product_from_cp creates product with correct attributes" do
@@ -110,16 +109,11 @@ describe Provider do
           Glue::Candlepin::Product.stubs(:import_from_cp => [], :import_marketing_from_cp => true)
           Resources::Candlepin::Product.stubs(:destroy).returns(true)
           @provider.stubs(:index_subscriptions).returns([])
-          @rh_product = Product.create!({:label=>"prod",:name=> "rh_product", :productContent => [], :provider => @provider, :organization => @organization})
-          @custom_provider = Provider.create!({
-            :name => 'test_provider',
-            :repository_url => 'https://something.net',
-            :provider_type => Provider::CUSTOM,
-            :organization => @organization
-          })
+          @rh_product = Product.create!({:label=>"prod", :cp_id => 102033, :name=> "rh_product", :productContent => [], :provider => @provider, :organization => @organization})
+          @custom_provider = Provider.where(:organization_id => @organization.id, :provider_type => Provider::ANONYMOUS).first
           # cp_id gets set based on Product.create in Candlepin so we need a stub to return something besides 1
           Resources::Candlepin::Product.stubs(:create).returns({:id => 2})
-          @custom_product = Product.create!({:label=> "custom-prod",:name=> "custom_product", :productContent => [], :provider => @custom_provider, :organization => @organization})
+          @custom_product = Product.create!({:label=> "custom-prod", :name=> "custom_product", :productContent => [], :provider => @custom_provider, :organization => @organization})
         end
 
         it "should be removed from the Katello products"  do

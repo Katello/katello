@@ -14,8 +14,10 @@ module Katello
 class Dashboard::HostCollectionsWidget < Dashboard::Widget
 
   def accessible?
-    Katello.config.katello? && current_organization &&
-        HostCollection.readable
+    User.current.admin? ||
+     (current_organization &&
+      User.current.organizations.include?(current_organization) &&
+      HostCollection.readable?)
   end
 
   def title

@@ -28,6 +28,10 @@ module Authorization::LifecycleEnvironment
       authorized(:promote_or_remove_content_views_to_environments)
     end
 
+    def promotable?
+      User.current.can?(:promote_or_remove_content_views_to_environments)
+    end
+
     def any_promotable?
       promotable.count > 0
     end

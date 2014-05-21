@@ -286,7 +286,7 @@ end
 def restore_glue_layers
   if defined?(@@disable_glue_models_backup) && @@disable_glue_models_backup.any?
     @@disable_glue_models_backup.each do |target_module, constant, value|
-      target_module.const_set(constant, value)
+      Kernel::silence_warnings { target_module.const_set(constant, value) }
     end
     constants_updated
     @@disable_glue_models_backup.clear

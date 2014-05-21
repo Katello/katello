@@ -37,12 +37,17 @@ module DashboardHelper
   end
 
   def content_view_versions(num = quantity)
-    return ContentViewVersion.readable(current_organization).non_default_view.joins(:task_status).
-      order("#{Katello::TaskStatus.table_name}.updated_at DESC").limit(num)
+    versions = ContentViewVersion
+               .readable
+               .non_default_view
+               .joins(:task_status)
+               .order("#{Katello::TaskStatus.table_name}.updated_at DESC").limit(num)
+
+    versions.select { |version| version.organization == current_organization }
   end
 
   def content_view_name(version)
-    if version.content_view.content_view_definition.readable?
+    if version.content_view.readable?
       link_to(version.content_view.name, content_view_path_helper(version))
     else
       version.content_view.name
@@ -79,8 +84,11 @@ module DashboardHelper
   end
 
   def content_view_history(num = quantity)
-     ContentViewHistory.joins(:content_view_version => :content_view).where(
-         "#{ContentView.table_name}.id" => ContentView.readable).limit(num)
+    content_views = ContentView.where(:organization_id => current_organization.id).readable
+    ContentViewHistory
+      .joins(:content_view_version => :content_view)
+      .where("#{ContentView.table_name}.id" => content_views)
+      .limit(num)
   end
 
   def history_class(cs)
@@ -101,15 +109,11 @@ module DashboardHelper
     end
   end
 
-  def systems_list(num = quantity)
-    System.readable(current_organization).limit(num)
-  end
-
   def products_synced(num = quantity)
     syncing_products = []
     synced_products = []
 
-    Product.readable(current_organization).each do |prod|
+    Product.where(:organization_id => current_organization.id).syncable.each do |prod|
       if !prod.sync_status.start_time.nil?
         syncing_products << prod
       else

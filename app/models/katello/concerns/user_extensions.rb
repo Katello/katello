@@ -50,8 +50,8 @@ module Katello
         include Ext::IndexedModel
 
         include AsyncOrchestration
-        include Katello::Authorization::User
         include Authorization::Enforcement
+        include Katello::Authorization::UserAuthorization
         include Util::ThreadSession::UserModel
 
         scope :hidden, where(:hidden => true)

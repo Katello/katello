@@ -73,6 +73,10 @@ module Katello
                .where(:product_id => Katello::Product.readable.pluck(:id))
         end
 
+        def syncable?
+          ::User.current.can?(:sync_products)
+        end
+
       end # ClassMethods
 
     end # Product

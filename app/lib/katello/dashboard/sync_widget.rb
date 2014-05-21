@@ -14,8 +14,10 @@ module Katello
 class Dashboard::SyncWidget < Dashboard::Widget
 
   def accessible?
-    Katello.config.katello? && current_organization &&
-        current_organization.syncable?
+    User.current.admin? ||
+     (current_organization &&
+      User.current.organizations.include?(current_organization) &&
+      Product.syncable?)
   end
 
   def title

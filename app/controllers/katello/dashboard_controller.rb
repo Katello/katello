@@ -15,8 +15,6 @@ class DashboardController < Katello::ApplicationController
 
   helper ErrataHelper
 
-  skip_before_filter :authorize, :require_org
-
   before_filter :update_preferences_quantity , :except => [:index, :section_id]
   #before_filter :update_preferences_age , :except => [:index, :section_id]
 
@@ -47,7 +45,7 @@ class DashboardController < Katello::ApplicationController
     # retrieve the list of repos that are readable by the user,
     # but since a system cannot be registered to Library,
     # skip repos in Library
-    system_uuids = System.readable(current_organization).pluck(:uuid)
+    system_uuids = System.in_organization(current_organization).readable.pluck(:uuid)
     errata = Errata.applicable_for_consumers(system_uuids)
 
     errata = errata.sort_by{|e| (e.applicable_consumers || []).length }.reverse[0...quantity]
@@ -62,10 +60,6 @@ class DashboardController < Katello::ApplicationController
 
   def promotions
     render :partial => "promotions", :locals => {:quantity => quantity}
-  end
-
-  def systems
-    render :partial => "systems", :locals => {:quantity => quantity}
   end
 
   def host_collections
