@@ -39,5 +39,9 @@ module Katello
       :smart_proxy
     end
 
+    def authorized
+      User.current.allowed_to?(params.slice(:action, :id).merge(controller: 'api/v2/smart_proxies'))
+    end
+
   end
 end

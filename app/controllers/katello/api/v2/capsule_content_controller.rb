@@ -13,9 +13,6 @@
 module Katello
   class Api::V2::CapsuleContentController < Api::V2::ApiController
 
-    before_filter :authenticate
-    skip_before_filter :authorize
-
     resource_description do
       api_base_url "#{Katello.config.url_prefix}/api"
     end
@@ -36,13 +33,13 @@ module Katello
     api :GET, '/capsules/:id/content/lifecycle_environments', 'List the lifecycle environments attached to the capsule'
     param_group :lifecycle_environments
     def lifecycle_environments
-      @lifecycle_environments = capsule_content.lifecycle_environments(params[:organization_id])
+      @lifecycle_environments = capsule_content.lifecycle_environments(params[:organization_id]).readable
     end
 
     api :GET, '/capsules/:id/content/available_lifecycle_environments', 'List the lifecycle environments not attached to the capsule'
     param_group :lifecycle_environments
     def available_lifecycle_environments
-      @lifecycle_environments = capsule_content.available_lifecycle_environments(params[:organization_id])
+      @lifecycle_environments = capsule_content.available_lifecycle_environments(params[:organization_id]).readable
       render 'katello/api/v2/capsule_content/lifecycle_environments'
     end
 
@@ -74,18 +71,15 @@ module Katello
     protected
 
     def find_capsule
-      # TODO: scope by authorization
-      @capsule = SmartProxy.find(params[:id])
+      @capsule = SmartProxy.authorized(:manage_capsule_content).find(params[:id])
     end
 
     def find_environment
-      # TODO: scope by authorization
-      @environment = Katello::KTEnvironment.find(params[:environment_id])
+      @environment = Katello::KTEnvironment.readable.find(params[:environment_id])
     end
 
     def capsule_content
       CapsuleContent.new(@capsule)
     end
-
   end
 end
