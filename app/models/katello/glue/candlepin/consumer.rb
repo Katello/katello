@@ -37,22 +37,26 @@ module Glue::Candlepin::Consumer
                                          convert_from_cp_fields(consumer_json)
                                        end
                                      end)
-      lazy_accessor :entitlements, :initializer => lambda {|s| Resources::Candlepin::Consumer.entitlements(uuid) }
-      lazy_accessor :pools, :initializer => lambda {|s| entitlements.collect { |ent| Resources::Candlepin::Pool.find ent["pool"]["id"]} }
-      lazy_accessor :available_pools, :initializer => lambda {|s| Resources::Candlepin::Consumer.available_pools(uuid, false) }
-      lazy_accessor :all_available_pools, :initializer => lambda {|s| Resources::Candlepin::Consumer.available_pools(uuid, true) }
+      lazy_accessor :entitlements, :initializer => lambda {|s| Resources::Candlepin::Consumer.entitlements(uuid) if uuid }
+      lazy_accessor :pools, :initializer => lambda {|s| entitlements.collect { |ent| Resources::Candlepin::Pool.find ent["pool"]["id"]} if uuid }
+      lazy_accessor :available_pools, :initializer => lambda {|s| Resources::Candlepin::Consumer.available_pools(uuid, false) if uuid }
+      lazy_accessor :all_available_pools, :initializer => lambda {|s| Resources::Candlepin::Consumer.available_pools(uuid, true) if uuid }
       lazy_accessor :host, :initializer => (lambda do |s|
-                                              host_attributes = Resources::Candlepin::Consumer.host(self.uuid)
-                                              (System.find_by_uuid(host_attributes['uuid']) || System.new(host_attributes)) if host_attributes
+                                              if uuid
+                                                host_attributes = Resources::Candlepin::Consumer.host(self.uuid)
+                                                (System.find_by_uuid(host_attributes['uuid']) || System.new(host_attributes)) if host_attributes
+                                              end
                                             end)
       lazy_accessor :guests, :initializer => (lambda do |s|
-                                                guests_attributes = Resources::Candlepin::Consumer.guests(self.uuid)
-                                                guests_attributes.map do |attr|
-                                                  System.find_by_uuid(attr['uuid']) || System.new(attr)
+                                                if uuid
+                                                  guests_attributes = Resources::Candlepin::Consumer.guests(self.uuid)
+                                                  guests_attributes.map do |attr|
+                                                    System.find_by_uuid(attr['uuid']) || System.new(attr)
+                                                  end
                                                 end
                                               end)
-      lazy_accessor :compliance, :initializer => lambda {|s| Resources::Candlepin::Consumer.compliance(uuid) }
-      lazy_accessor :events, :initializer => lambda {|s| Resources::Candlepin::Consumer.events(uuid) }
+      lazy_accessor :compliance, :initializer => lambda {|s| Resources::Candlepin::Consumer.compliance(uuid) if uuid }
+      lazy_accessor :events, :initializer => lambda {|s| Resources::Candlepin::Consumer.events(uuid) if uuid }
 
       validates :cp_type, :inclusion => {:in => %w(system hypervisor candlepin)},
                           :if => :new_record?
@@ -106,6 +110,7 @@ module Glue::Candlepin::Consumer
     end
 
     def update_candlepin_consumer
+      return unless self.uuid
       Rails.logger.debug "Updating consumer in candlepin: #{name}"
       Resources::Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal,
                                             @releaseVer, self.serviceLevel, self.cp_environment_id, @capabilities, @lastCheckin)
@@ -228,6 +233,7 @@ module Glue::Candlepin::Consumer
     end
 
     def save_candlepin_orchestration
+      return unless self.uuid
       case orchestration_for
       when :hypervisor
         # it's already saved = do nothing
@@ -237,11 +243,13 @@ module Glue::Candlepin::Consumer
     end
 
     def destroy_candlepin_orchestration
+      return unless self.uuid
       pre_queue.create(:name => "delete candlepin consumer: #{self.name}", :priority => 3, :action => [self, :del_candlepin_consumer])
     end
 
     # A rollback occurred while attempting to create the consumer; therefore, perform necessary cleanup.
     def rollback_on_candlepin_create
+      return unless self.uuid
       del_candlepin_consumer
     end
 

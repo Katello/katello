@@ -126,6 +126,7 @@ module Glue::Pulp::Consumer
     end
 
     def del_pulp_consumer
+      return unless self.uuid
       Rails.logger.debug "Deleting consumer in pulp: #{self.name}"
       Katello.pulp_server.extensions.consumer.delete(self.uuid)
     rescue => e
@@ -134,6 +135,7 @@ module Glue::Pulp::Consumer
     end
 
     def destroy_pulp_orchestration
+      return true unless self.uuid
       return true if self.is_a? Hypervisor
       pre_queue.create(:name => "delete pulp consumer: #{self.name}", :priority => 3, :action => [self, :del_pulp_consumer])
     end
@@ -234,6 +236,7 @@ module Glue::Pulp::Consumer
     end
 
     def save_pulp_orchestration
+      return true unless self.uuid
       return true if self.is_a? Hypervisor
       case orchestration_for
       when :update
