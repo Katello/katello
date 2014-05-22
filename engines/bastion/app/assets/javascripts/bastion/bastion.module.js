@@ -142,16 +142,16 @@ angular.module('Bastion').config(
  * @requires gettextCatalog
  * @requires currentLocale
  * @requires $location
- * @requires $sniffer
+ * @requires $window
  * @requires PageTitle
  * @requires RootURL
  *
  * @description
  *   Set up some common state related functionality and set the current language.
  */
-angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale', '$location', '$sniffer', 'PageTitle', 'RootURL',
-    function ($rootScope, $state, $stateParams, gettextCatalog, currentLocale, $location, $sniffer, PageTitle, RootURL) {
-        var fromState, fromParams;
+angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale', '$location', '$window', 'PageTitle', 'RootURL',
+    function ($rootScope, $state, $stateParams, gettextCatalog, currentLocale, $location, $window, PageTitle, RootURL) {
+        var fromState, fromParams, orgSwitcherRegex;
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -204,5 +204,14 @@ angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextC
                 }
             }
         );
+
+        // Prevent angular from handling org/location switcher URLs
+        orgSwitcherRegex = new RegExp("/(organizations|locations)/.+/select");
+        $rootScope.$on('$locationChangeStart', function (event, newUrl) {
+            if (newUrl.match(orgSwitcherRegex)) {
+                event.preventDefault();
+                $window.location.href = newUrl;
+            }
+        });
     }
 ]);
