@@ -381,6 +381,10 @@ class Repository < Katello::Model
     self.product
   end
 
+  def node_syncable?
+    environment && !(environment.library? && content_view.default? && puppet?)
+  end
+
   protected
 
   def assert_deletable

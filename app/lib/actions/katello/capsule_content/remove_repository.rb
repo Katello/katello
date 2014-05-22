@@ -17,13 +17,13 @@ module Actions
 
         def plan(capsule_content, repository)
           distributor = repository.find_node_distributor
-          unless distributor
-            fail "Could not find node distributor for repository %s" % repository.pulp_id
+          if distributor
+            plan_action(Pulp::Consumer::UnbindNodeDistributor,
+                                  consumer_uuid: capsule_content.consumer_uuid,
+                                  repo_id: repository.pulp_id)
+          else
+            Rails.logger.error("Could not find node distributor for repository %s" % repository.pulp_id)
           end
-
-          plan_action(Pulp::Consumer::UnbindNodeDistributor,
-                      consumer_uuid: capsule_content.consumer_uuid,
-                      repo_id: repository.pulp_id)
         end
 
       end

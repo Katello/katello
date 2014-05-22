@@ -16,10 +16,12 @@ module Actions
       class AddRepository < ::Actions::EntryAction
 
         def plan(capsule_content, repository)
-          plan_action(Pulp::Consumer::BindNodeDistributor,
-                      consumer_uuid: capsule_content.consumer_uuid,
-                      repo_id: repository.pulp_id,
-                      bind_options: bind_options)
+          if repository.node_syncable?
+            plan_action(Pulp::Consumer::BindNodeDistributor,
+                        consumer_uuid: capsule_content.consumer_uuid,
+                        repo_id: repository.pulp_id,
+                        bind_options: bind_options)
+          end
         end
 
         private
