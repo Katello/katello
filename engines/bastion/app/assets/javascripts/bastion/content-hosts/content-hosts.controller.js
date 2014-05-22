@@ -62,10 +62,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
 
         $scope.table = $scope.contentHostTable;
 
-        $scope.removeContentHost = function (contentHost) {
+        $scope.unregisterContentHost = function (contentHost) {
             contentHost.$remove(function () {
                 $scope.removeRow(contentHost.id);
-                $scope.successMessages.push(translate('Content Host  %s has been deleted.').replace('%s', contentHost.name));
+                $scope.successMessages.push(translate('Content Host %s has been deleted.').replace('%s', contentHost.name));
                 $scope.transitionTo('content-hosts.index');
             });
         };

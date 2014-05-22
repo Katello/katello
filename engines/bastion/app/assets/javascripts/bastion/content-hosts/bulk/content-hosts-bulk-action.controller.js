@@ -31,7 +31,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionContro
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
-        $scope.removeContentHosts = {
+        $scope.unregisterContentHosts = {
             confirm: false,
             workingMode: false
         };
@@ -52,10 +52,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionContro
             ids: []
         };
 
-        $scope.performRemoveContentHosts = function () {
+        $scope.performUnregisterContentHosts = function () {
             var params, success, error, deferred = $q.defer();
 
-            $scope.removeContentHosts.confirm = false;
+            $scope.unregisterContentHosts.confirm = false;
             $scope.state.working = true;
 
             params = $scope.nutupane.getAllSelectedResults();
@@ -75,7 +75,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionContro
                 $scope.setState(false, [], error.data["errors"]);
             };
 
-            ContentHostBulkAction.removeContentHosts(params, success, error);
+            ContentHostBulkAction.unregisterContentHosts(params, success, error);
 
             return deferred.promise;
         };

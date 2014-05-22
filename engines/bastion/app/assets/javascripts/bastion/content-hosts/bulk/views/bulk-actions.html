@@ -10,7 +10,7 @@
               ng-disabled="contentHost.readonly || removingContentHosts"
               ng-click="openModal()"
               ng-hide="removingContentHosts">
-        Remove Content Hosts
+        Unregister Content Hosts
       </button>
 
       <span ng-show="removingContentHosts">
@@ -23,9 +23,9 @@
         {{ "Close" | translate }}
       </button>
 
-      <div alch-modal="performRemoveContentHosts()" model="table"
-           modal-header='Remove {{ contentHostTable.numSelected  }} Content Hosts?'
-           modal-body='Are you sure you want to remove the {{ contentHostTable.numSelected }} content host(s) selected?'></div>
+      <div alch-modal="performUnregisterContentHosts()" model="table"
+           modal-header='Unregister {{ contentHostTable.numSelected  }} Content Hosts?'
+           modal-body='Are you sure you want to unregister the {{ contentHostTable.numSelected }} content host(s) selected?'></div>
 
     </div>
   </header>

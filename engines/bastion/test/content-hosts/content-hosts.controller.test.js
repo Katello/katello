@@ -53,7 +53,7 @@ describe('Controller: ContentHostsController', function() {
         expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.index');
     });
 
-    it("provides a way to delete content hosts.", function() {
+    it("provides a way to unregister content hosts.", function() {
         var testContentHost = {
             uuid: 'abcde',
             name: 'test',
@@ -64,10 +64,10 @@ describe('Controller: ContentHostsController', function() {
 
         spyOn($scope, "transitionTo");
 
-        $scope.removeContentHost(testContentHost);
+        $scope.unregisterContentHost(testContentHost);
 
         expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.index');
-        expect($scope.successMessages[0]).toBe('Content Host  test has been deleted.');
+        expect($scope.successMessages[0]).toBe('Content Host test has been deleted.');
 
     });
 });
