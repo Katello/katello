@@ -125,10 +125,9 @@ module ::Actions::Katello::CapsuleContent
 
     it 'plans' do
       action = create_and_plan_action(action_class, capsule_content, repository)
-      assert_action_planed_with(action, ::Actions::Pulp::Consumer::BindDistributor) do |(input)|
+      assert_action_planed_with(action, ::Actions::Pulp::Consumer::BindNodeDistributor) do |(input)|
         input.must_equal({ consumer_uuid: @capsule_system.uuid,
                            repo_id: repository.pulp_id,
-                           distributor_id: "#{repository.pulp_id}_nodes",
                            bind_options:
                            { notify_agent: false, binding_config: { strategy: 'mirror' }}})
       end
@@ -140,10 +139,9 @@ module ::Actions::Katello::CapsuleContent
 
     it 'plans' do
       action = create_and_plan_action(action_class, capsule_content, repository)
-      assert_action_planed_with(action, ::Actions::Pulp::Consumer::UnbindDistributor) do |(input)|
+      assert_action_planed_with(action, ::Actions::Pulp::Consumer::UnbindNodeDistributor) do |(input)|
         input.must_equal({ consumer_uuid: @capsule_system.uuid,
-                           repo_id: repository.pulp_id,
-                           distributor_id: "#{repository.pulp_id}_nodes"})
+                           repo_id: repository.pulp_id })
       end
     end
   end

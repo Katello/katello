@@ -16,15 +16,9 @@ module Actions
       class AddRepository < ::Actions::EntryAction
 
         def plan(capsule_content, repository)
-          distributor = repository.find_node_distributor
-          unless distributor
-            fail "Could not find node distributor for repository %s" % repository.pulp_id
-          end
-
-          plan_action(Pulp::Consumer::BindDistributor,
+          plan_action(Pulp::Consumer::BindNodeDistributor,
                       consumer_uuid: capsule_content.consumer_uuid,
                       repo_id: repository.pulp_id,
-                      distributor_id: distributor['id'],
                       bind_options: bind_options)
         end
 

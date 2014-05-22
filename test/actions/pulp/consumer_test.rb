@@ -14,7 +14,7 @@ require 'katello_test_helper'
 
 module ::Actions::Pulp
 
-  class ConsumerTest < ::ActiveSupport::TestCase
+  class ConsumerTestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::PulpTask
     include Support::Actions::RemoteAction
@@ -34,6 +34,22 @@ module ::Actions::Pulp
       consumer = ::Katello.pulp_server.resources.consumer.delete(uuid)
     rescue RestClient::ResourceNotFound => e
     end
+
+    def it_runs(planned_action, *invocation_method)
+      action = run_action planned_action do |action|
+        expectation = runcible_expects(action, *invocation_method)
+        yield expectation, action if block_given?
+        expectation.returns(task_base)
+        stub_task_poll action, task_base.merge(task_finished_hash)
+      end
+
+      action.wont_be :done?
+      progress_action_time action
+      action.must_be :done?
+    end
+  end
+
+  class ConsumerTest < ConsumerTestBase
 
     def test_create
       configure_runcible
@@ -55,27 +71,6 @@ module ::Actions::Pulp
     def test_uninstall_content
       action = plan_consumer_action(::Actions::Pulp::Consumer::ContentUninstall)
       it_runs(action, :extensions, :consumer, :uninstall_content)
-    end
-
-    def test_bind_distributor
-      action = create_and_plan_action(::Actions::Pulp::Consumer::BindDistributor,
-                                      consumer_uuid: uuid,
-                                      repo_id: 'repo-123',
-                                      distributor_id: 'repo-123_nodes',
-                                      bind_options: {})
-      it_runs(action, :resources, :consumer, :bind) do |stub|
-        stub.with(uuid, 'repo-123', 'repo-123_nodes', {})
-      end
-    end
-
-    def test_unbind_distributor
-      action = create_and_plan_action(::Actions::Pulp::Consumer::UnbindDistributor,
-                                      consumer_uuid: uuid,
-                                      repo_id: 'repo-123',
-                                      distributor_id: 'repo-123_nodes')
-      it_runs(action, :resources, :consumer, :unbind) do |stub|
-        stub.with(uuid, 'repo-123', 'repo-123_nodes')
-      end
     end
 
     def test_sync_node
@@ -108,18 +103,42 @@ module ::Actions::Pulp
                              type: type,
                              args: args)
     end
+  end
 
-    def it_runs(planned_action, *invocation_method)
-      action = run_action planned_action do |action|
-        expectation = runcible_expects(action, *invocation_method)
-        yield expectation if block_given?
-        expectation.returns(task_base)
-        stub_task_poll action, task_base.merge(task_finished_hash)
-      end
+  class NodeBindingsTest < ConsumerTestBase
 
-      action.wont_be :done?
-      progress_action_time action
-      action.must_be :done?
+    let(:repository) do
+      katello_repositories(:fedora_17_x86_64_dev)
     end
+
+    def setup
+      ::Katello::RepositorySupport.create_repo(repository.id)
+    end
+
+    def teardown
+      ::Katello::RepositorySupport.destroy_repo
+    end
+
+
+    def test_bind_node_distributor
+      action = create_and_plan_action(::Actions::Pulp::Consumer::BindNodeDistributor,
+                                      consumer_uuid: uuid,
+                                      repo_id: repository.pulp_id,
+                                      bind_options: {})
+
+      it_runs(action, :resources, :consumer, :bind) do |stub|
+        stub.with(uuid, repository.pulp_id, "#{repository.pulp_id}_nodes", {})
+      end
+    end
+
+    def test_unbind_node_distributor
+      action = create_and_plan_action(::Actions::Pulp::Consumer::UnbindNodeDistributor,
+                                      consumer_uuid: uuid,
+                                      repo_id: repository.pulp_id)
+      it_runs(action, :resources, :consumer, :unbind) do |stub|
+        stub.with(uuid, repository.pulp_id, "#{repository.pulp_id}_nodes")
+      end
+    end
+
   end
 end

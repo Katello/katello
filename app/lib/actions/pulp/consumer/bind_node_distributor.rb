@@ -11,19 +11,21 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Katello
-    module CapsuleContent
-      class RemoveRepository < ::Actions::EntryAction
+  module Pulp
+    module Consumer
+      class BindNodeDistributor < AbstractNodeDistributorTask
 
-        def plan(capsule_content, repository)
-          distributor = repository.find_node_distributor
-          unless distributor
-            fail "Could not find node distributor for repository %s" % repository.pulp_id
-          end
+        input_format do
+          param :consumer_uuid, String
+          param :repo_id, String
+          param :bind_options, Hash
+        end
 
-          plan_action(Pulp::Consumer::UnbindNodeDistributor,
-                      consumer_uuid: capsule_content.consumer_uuid,
-                      repo_id: repository.pulp_id)
+        def invoke_external_task
+          pulp_resources.consumer.bind(input[:consumer_uuid],
+                                       input[:repo_id],
+                                       distributor['id'],
+                                       input[:bind_options])
         end
 
       end
