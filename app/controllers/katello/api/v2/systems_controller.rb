@@ -56,9 +56,9 @@ class Api::V2::SystemsController < Api::V2::ApiController
   api :GET, "/organizations/:organization_id/systems", N_("List systems in an organization")
   api :GET, "/environments/:environment_id/systems", N_("List systems in environment")
   api :GET, "/host_collections/:host_collection_id/systems", N_("List systems in a host collection")
-  param :name, String, :desc => N_("Filter systems by name")
-  param :pool_id, String, :desc => N_("Filter systems by subscribed pool")
-  param :uuid, String, :desc => N_("Filter systems by uuid")
+  param :name, String, :desc => N_("Filter content host by name")
+  param :pool_id, String, :desc => N_("Filter content host by subscribed pool")
+  param :uuid, String, :desc => N_("Filter content host by uuid")
   param :organization_id, :number, :desc => N_("Specify the organization"), :required => true
   param :environment_id, String, :desc => N_("Filter by environment")
   param :host_collection_id, String, :desc => N_("Filter by host collection")
@@ -88,7 +88,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
     respond_for_index(:collection => item_search(System, params, options))
   end
 
-  api :POST, "/systems", N_("Register a system")
+  api :POST, "/systems", N_("Register a content host")
   api :POST, "/environments/:environment_id/systems", N_("Register a system in environment")
   api :POST, "/host_collections/:host_collection_id/systems", N_("Register a system in environment")
   param :name, String, :desc => N_("Name of the system"), :required => true, :action_aware => true
@@ -115,8 +115,8 @@ class Api::V2::SystemsController < Api::V2::ApiController
     respond_for_create
   end
 
-  api :PUT, "/systems/:id", N_("Update system information")
-  param :id, String, :desc => N_("UUID of the system"), :required => true
+  api :PUT, "/systems/:id", N_("Update content host information")
+  param :id, String, :desc => N_("UUID of the Content Host"), :required => true
   param :name, String, :desc => N_("Name of the system"), :required => true, :action_aware => true
   param :description, String, :desc => N_("Description of the system")
   param :location, String, :desc => N_("Physical location of the system")
@@ -138,7 +138,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   api :GET, "/systems/:id", N_("Show a system")
-  param :id, String, :desc => N_("UUID of the system"), :required => true
+  param :id, String, :desc => N_("UUID of the Content Host"), :required => true
   def show
     @host_collections = @system.host_collections
     @custom_info = @system.custom_info
@@ -162,14 +162,14 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   api :DELETE, "/systems/:id", N_("Unregister a system")
-  param :id, String, :desc => N_("UUID of the system"), :required => true
+  param :id, String, :desc => N_("UUID of the Content Host"), :required => true
   def destroy
     @system.destroy
     respond :message => _("Deleted system '%s'") % params[:id], :status => 204
   end
 
   api :GET, "/systems/:id/packages", N_("List packages installed on the system")
-  param :id, String, :desc => N_("UUID of the system"), :required => true
+  param :id, String, :desc => N_("UUID of the Content Host"), :required => true
   def package_profile
     packages = @system.simple_packages.sort { |a, b| a.name.downcase <=> b.name.downcase }
     response = {
@@ -181,14 +181,14 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   api :PUT, "/systems/:id/refresh_subscriptions", N_("Trigger a refresh of subscriptions, auto-attaching if enabled")
-  param :id, String, :desc => N_("UUID of the system"), :required => true
+  param :id, String, :desc => N_("UUID of the Content Host"), :required => true
   def refresh_subscriptions
     @system.refresh_subscriptions
     respond_for_show(:resource => @system)
   end
 
   api :GET, "/systems/:id/errata", N_("List errata available for the system")
-  param :id, String, :desc => N_("UUID of the system"), :required => true
+  param :id, String, :desc => N_("UUID of the Content Host"), :required => true
   def errata
     errata = @system.errata
     response = {
@@ -201,7 +201,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   api :GET, "/systems/:id/tasks", N_("List async tasks for the system")
-  param :id, String, :desc => N_("UUID of the system"), :required => true
+  param :id, String, :desc => N_("UUID of the Content Host"), :required => true
   def tasks
     @system.refresh_tasks
 
@@ -247,7 +247,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   api :GET, "/systems/:id/pools", N_("List pools a system is subscribed to")
-  param :id, String, :desc => N_("UUID of the system"), :required => true
+  param :id, String, :desc => N_("UUID of the Content Host"), :required => true
   param :match_system, [true, false], :desc => N_("Match pools to system")
   param :match_installed, [true, false], :desc => N_("Match pools to installed")
   param :no_overlap, [true, false], :desc => N_("allow overlap")
@@ -265,7 +265,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   api :GET, "/systems/:id/releases", N_("Show releases available for the system")
-  param :id, String, :desc => N_("UUID of the system"), :required => true
+  param :id, String, :desc => N_("UUID of the Content Host"), :required => true
   desc <<-DESC
     A hint for choosing the right value for the releaseVer param
   DESC
