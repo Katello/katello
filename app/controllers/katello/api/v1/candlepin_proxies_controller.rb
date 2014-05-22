@@ -126,7 +126,7 @@ module Katello
     end
 
     def list_owners
-      orgs = User.current.organizations
+      orgs = User.current.allowed_organizations
       # rhsm expects owner (Candlepin format)
       # rubocop:disable SymbolName
       respond_for_index :collection => orgs.map { |o| { :key => o.label, :displayName => o.name } }

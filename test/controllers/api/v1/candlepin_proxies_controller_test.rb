@@ -117,5 +117,24 @@ module Katello
       end
     end
 
+    describe "list owners" do
+
+      it 'should return organizations admin user is assigned to' do
+        User.current = User.find(users(:admin))
+        get :list_owners, :login => User.current.login
+
+        assert_empty (JSON.parse(response.body).collect { |org| org['displayName'] } - Organization.pluck(:name))
+      end
+
+      it 'should return organizations user is assigned to' do
+        User.current = User.find(users(:restricted))
+        User.current.organizations << taxonomies(:organization1)
+
+        get :list_owners, :login => User.current.login
+        assert_equal JSON.parse(response.body).first['displayName'], taxonomies(:organization1).name
+      end
+
+    end
+
   end
 end

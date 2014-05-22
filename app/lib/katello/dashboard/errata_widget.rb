@@ -16,7 +16,7 @@ class Dashboard::ErrataWidget < Dashboard::Widget
   def accessible?
     User.current.admin? ||
      (current_organization &&
-      User.current.organizations.include?(current_organization) &&
+      User.current.allowed_organizations.include?(current_organization) &&
       System.readable?)
   end
 
