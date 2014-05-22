@@ -11,14 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::RolesController < Api::V1::RolesController
+  class Api::V2::RolesController < ::Api::V2::RolesController
 
-  include Api::V2::Rendering
-
-  resource_description do
-    api_version 'v2'
-    api_base_url "#{Katello.config.url_prefix}/api"
   end
-
-end
 end
