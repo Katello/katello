@@ -61,10 +61,16 @@ angular.module('Bastion').config(
 
         $urlRouterProvider.rule(function ($injector, $location) {
             var $sniffer = $injector.get('$sniffer'),
-                $window = $injector.get('$window');
+                $window = $injector.get('$window'),
+                path = $location.path();
 
             if (!$sniffer.history) {
                 $window.location.href = oldBrowserBastionPath + $location.path();
+            }
+
+            // removing trailing slash to prevent endless redirect
+            if (path[path.length - 1] === '/') {
+                return path.slice(0, -1);
             }
         });
 
