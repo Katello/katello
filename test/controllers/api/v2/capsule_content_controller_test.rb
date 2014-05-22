@@ -23,6 +23,14 @@ class Api::V2::CapsuleContentControllerTest < ActionController::TestCase
     setup_controller_defaults_api
   end
 
+  def allowed_perms
+    [:manage_capsule_content]
+  end
+
+  def denied_perms
+    []
+  end
+
   def environment
     @environment ||= katello_environments(:library)
   end
@@ -32,9 +40,21 @@ class Api::V2::CapsuleContentControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  def test_lifecycle_environments_protected
+    assert_protected_action(:lifecycle_environments, allowed_perms, denied_perms) do
+      get :lifecycle_environments, :id => proxy_with_pulp.id
+    end
+  end
+
   def test_available_lifecycle_environments
     get :available_lifecycle_environments, :id => proxy_with_pulp.id
     assert_response :success
+  end
+
+  def test_available_lifecycle_environments_protected
+    assert_protected_action(:available_lifecycle_environments, allowed_perms, denied_perms) do
+      get :available_lifecycle_environments, :id => proxy_with_pulp.id
+    end
   end
 
   def test_add_lifecycle_environment
@@ -47,6 +67,12 @@ class Api::V2::CapsuleContentControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  def test_add_lifecycle_environment_protected
+    assert_protected_action(:add_lifecycle_environment, [[:manage_capsule_content, :view_lifecycle_environments]], denied_perms) do
+      post :add_lifecycle_environment, :id => proxy_with_pulp.id, :environment_id => environment.id
+    end
+  end
+
   def test_remove_lifecycle_environment
     capsule_content.add_lifecycle_environment(environment)
 
@@ -55,8 +81,14 @@ class Api::V2::CapsuleContentControllerTest < ActionController::TestCase
       caps_environment.id.must_equal environment.id
     end
 
-    post :remove_lifecycle_environment, :id => proxy_with_pulp.id, :environment_id => environment.id
+    delete :remove_lifecycle_environment, :id => proxy_with_pulp.id, :environment_id => environment.id
     assert_response :success
+  end
+
+  def test_remove_lifecycle_environment_protected
+    assert_protected_action(:remove_lifecycle_environment, [[:manage_capsule_content, :view_lifecycle_environments]], denied_perms) do
+      delete :remove_lifecycle_environment, :id => proxy_with_pulp.id, :environment_id => environment.id
+    end
   end
 
   def test_sync
@@ -67,6 +99,12 @@ class Api::V2::CapsuleContentControllerTest < ActionController::TestCase
 
     post :sync, :id => proxy_with_pulp.id, :environment_id => environment.id
     assert_response :success
+  end
+
+  def test_sync_protected
+    assert_protected_action(:sync, allowed_perms, denied_perms) do
+      post :sync, :id => proxy_with_pulp.id, :environment_id => environment.id
+    end
   end
 
 end
