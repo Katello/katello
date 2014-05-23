@@ -223,7 +223,7 @@ class ApplicationController < ::ApplicationController
       begin
         if @current_org.nil? && current_user
           o = Organization.find(session[:current_organization_id])
-          if current_user.organizations.include?(o)
+          if current_user.allowed_organizations.include?(o)
             @current_org = o
           else
             fail ActiveRecord::RecordNotFound.new _("Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'.") % {:user => User.current.login, :org => o.name}

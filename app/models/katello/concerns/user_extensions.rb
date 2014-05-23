@@ -380,6 +380,10 @@ module Katello
           true
         end
 
+        def allowed_organizations
+          admin? ? Organization.all : self.organizations
+        end
+
         protected
 
         def can_be_deleted?
