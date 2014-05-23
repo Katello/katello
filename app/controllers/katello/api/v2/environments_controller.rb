@@ -66,8 +66,7 @@ module Katello
 
       filters << {:terms => {:id => ids}}
       filters << {:terms => {:organization_id => [@organization.id]}}
-      # See http://projects.theforeman.org/issues/4405
-      filters << {:terms => {:name => [params[:name].downcase]}} if params[:name]
+      filters << {:terms => {:name => [params[:name]]}} if params[:name]
       filters << {:terms => {:library => [params[:library]]}} if params[:library].present?
 
       options = {
