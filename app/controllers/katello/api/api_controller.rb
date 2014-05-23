@@ -77,7 +77,8 @@ class Api::ApiController < ::Api::BaseController
       'katello/api/v2/package_groups',
       'katello/api/v2/errata',
       'katello/api/v2/puppet_modules',
-      'katello/api/v2/repository_sets'
+      'katello/api/v2/repository_sets',
+      'katello/api/v2/tasks',
     ]
   end
 
