@@ -17,8 +17,7 @@ module Katello
 
     before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin, :enabled_repos,
                                           :upload_package_profile, :regenerate_identity_certificates, :facts]
-    skip_before_filter :authorize, :except => [:consumer_create, :rhsm_index]
-    before_filter :authenticate, :only => [:list_owner]
+    skip_before_filter :authorize, :except => [:consumer_create, :rhsm_index, :list_owners]
     before_filter :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
     before_filter :authorize_client, :except => [:list_owners, :consumer_create, :rhsm_index,
                                                  :consumer_activate, :get, :post, :put, :delete]

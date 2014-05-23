@@ -127,13 +127,23 @@ module Katello
       end
 
       it 'should return organizations user is assigned to' do
-        User.current = User.find(users(:restricted))
-        User.current.organizations << taxonomies(:organization1)
+        setup_current_user_with_permissions(:my_organizations)
 
         get :list_owners, :login => User.current.login
-        assert_equal JSON.parse(response.body).first['displayName'], taxonomies(:organization1).name
+        assert_equal JSON.parse(response.body).first['displayName'], taxonomies(:empty_organization).name
       end
 
+      it "should protect list owners with authentication" do
+        get :list_owners, :login => User.current.login
+        assert_response 200
+      end
+
+      it "should prevent listing owners for unauthenticated requests" do
+        User.current = nil
+        session[:user] = nil
+        get :list_owners, :login => 100
+        assert_response 401
+      end
     end
 
   end
