@@ -70,6 +70,17 @@ class KTEnvironment < Katello::Model
   validates_with Validators::PriorValidator
   validates_with Validators::PathDescendentsValidator
 
+  has_many :capsule_lifecycle_environments, :foreign_key => :lifecycle_environment_id,
+           :dependent => :destroy
+
+  scope(:not_in_capsule,
+        lambda do |capsule|
+          select("DISTINCT #{KTEnvironment.table_name}.*").
+              joins(%{LEFT OUTER JOIN #{CapsuleLifecycleEnvironment.table_name} ON ( "#{CapsuleLifecycleEnvironment.table_name}"."lifecycle_environment_id" = "#{KTEnvironment.table_name}"."id")}).
+              where(%{"#{CapsuleLifecycleEnvironment.table_name}"."capsule_id" IS NULL
+                     OR "#{CapsuleLifecycleEnvironment.table_name}"."capsule_id" != ?}, capsule.id)
+        end)
+
   after_destroy :unset_users_with_default
 
   ERROR_CLASS_NAME = "Environment"

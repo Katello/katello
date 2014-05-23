@@ -16,17 +16,18 @@ module Actions
       class NodeMetadataGenerate < Actions::Base
 
         def plan(repo)
-          plan_self('id' => repo.id)
-        end
+          return unless repo.environment
+          sequence do
+            plan_action(Pulp::Repository::DistributorPublish,
+                        pulp_id: repo.pulp_id,
+                        distributor_type_id: Runcible::Models::NodesHttpDistributor.type_id)
 
-        input_format do
-          param :id, Integer
-        end
-
-        def run
-          # We define the run method for the subscribed actions
-          # to be able to run after the action
-          # TODO: remove after fixing in Dynflow
+            ::Katello::CapsuleContent.with_environment(repo.environment).each do |capsule_content|
+              plan_action(Pulp::Consumer::SyncNode,
+                          consumer_uuid: capsule_content.consumer_uuid,
+                          repo_ids: [repo.pulp_id])
+            end
+          end
         end
 
       end

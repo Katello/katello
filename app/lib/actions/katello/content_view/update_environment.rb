@@ -29,6 +29,7 @@ module Actions
           unless content_view.default?
             plan_action(Katello::Foreman::ContentUpdate, environment, content_view)
           end
+          plan_action(CapsuleContent::UpdateWithoutContent, environment)
         end
 
       end

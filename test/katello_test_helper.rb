@@ -21,6 +21,8 @@ require "#{Katello::Engine.root}/test/support/runcible"
 require "#{Katello::Engine.root}/test/support/auth_support"
 require "#{Katello::Engine.root}/test/support/controller_support"
 require "#{Katello::Engine.root}/test/support/search_service"
+require "#{Katello::Engine.root}/test/support/capsule_support"
+require "#{Katello::Engine.root}/test/support/pulp/repository_support"
 
 require 'dynflow/testing'
 Mocha::Mock.send :include, Dynflow::Testing::Mimic

@@ -25,7 +25,10 @@ module Actions
           action_subject(repo)
           sequence do
             plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
-            plan_action(ElasticSearch::Repository::IndexContent, id: repo.id)
+            concurrence do
+              plan_action(Katello::Repository::NodeMetadataGenerate, repo)
+              plan_action(ElasticSearch::Repository::IndexContent, id: repo.id)
+            end
             plan_action(ElasticSearch::Reindex, repo)
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view)
           end

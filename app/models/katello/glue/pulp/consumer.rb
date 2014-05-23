@@ -188,19 +188,6 @@ module Glue::Pulp::Consumer
       raise e
     end
 
-    def sync_pulp_node(repoids = nil)
-      if repoids.nil?
-        Rails.logger.debug "Scheduling full node update for consumer #{self.name}"
-        Katello.pulp_server.extensions.consumer.update_content(self.uuid, 'node',  nil, {})
-      else
-        Rails.logger.debug "Scheduling partial node update for consumer #{self.name}"
-        Katello.pulp_server.extensions.consumer.update_content(self.uuid, 'repository',  repoids, {})
-      end
-    rescue => e
-      Rails.logger.error "Failed to schedule node update for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
     def install_package_group(groups)
       Rails.logger.debug "Scheduling package group install for consumer #{self.name}"
       Katello.pulp_server.extensions.consumer.install_content(self.uuid, 'package_group', groups, {"importkeys" => true})

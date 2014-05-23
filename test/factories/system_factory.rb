@@ -6,8 +6,16 @@ FactoryGirl.define do
     end
 
     trait :alabama do
-      name     "Alabama"
+      name     'Alabama'
     end
 
+    trait :capsule do
+      name     'capsule'
+      uuid     '1234-1234-1234-1234'
+      cp_type  'system'
+      facts({ 'ip' => '192.168.0.1' })
+    end
   end
 end
+
+

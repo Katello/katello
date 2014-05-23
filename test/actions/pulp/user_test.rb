@@ -12,11 +12,14 @@
 
 require 'katello_test_helper'
 
-class Actions::Pulp::UserTest < VCR::TestCase
+class Actions::Pulp::UserTest < ActiveSupport::TestCase
   include Dynflow::Testing
   include Support::Actions::RemoteAction
+  include VCR::TestCase
 
-  @@matches = [:method, :path, :params]
+  def vcr_matches
+    [:method, :path, :params]
+  end
 
   def setup
     planned_action = create_and_plan_action ::Actions::Pulp::User::Create,

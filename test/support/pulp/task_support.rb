@@ -10,17 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-class PulpTaskStatus
-  def self.any_task_running_with_vcr(async_tasks)
-    VCR.live? ? any_task_running_without_vcr(async_tasks) : false
-  end
-
-  class << self
-    alias_method_chain :any_task_running, :vcr
-  end
-end
-end
 
 module Katello
 module ConsumerSupport
@@ -50,6 +39,23 @@ module TaskSupport
     puts e
     puts e.backtrace
   end
+
+  module TaskRunningWithVcr
+    extend ActiveSupport::Concern
+
+    included do
+      singleton_class.alias_method_chain :any_task_running, :vcr
+    end
+
+    module ClassMethods
+      def any_task_running_with_vcr(async_tasks)
+        VCR.live? ? any_task_running_without_vcr(async_tasks) : false
+      end
+    end
+
+  end
+
+  Katello::PulpTaskStatus.send(:include, TaskRunningWithVcr)
 
 end
 end
