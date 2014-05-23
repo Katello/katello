@@ -75,7 +75,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddContentH
                 $scope.isAdding = false;
                 addContentHostsPane.refresh();
             }, function (response) {
-                $scope.errorMessages = response.data.displayMessage;
+                $scope.$parent.errorMessages.push(response.data.displayMessage);
                 $scope.isAdding  = false;
             });
         };
