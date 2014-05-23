@@ -752,7 +752,7 @@ class ContentSearchController < Katello::ApplicationController
 
       repo_ids = []
       repo_ids += ContentView.readable_repositories.pluck(:library_instance_id).uniq
-      repo_ids += Product.readable_repositories.pluck(:id)
+      repo_ids += Product.readable_repositories.pluck("#{Katello::Repository.table_name}.id")
     end
 
     repo_ids.uniq!
