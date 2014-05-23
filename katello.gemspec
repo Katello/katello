@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   gem.email       = ["katello-devel@redhat.com"]
   gem.homepage    = "http://www.katello.org"
   gem.summary     = ""
-  gem.description = ""
+  gem.description = "Content and Subscription Management plugin for Foreman"
 
   gem.files = Dir["{app,vendor,lib,db,ca,config,locale}/**/*"] + ["LICENSE.txt", "README.md"]
   gem.files += Dir["engines/bastion/{app,vendor,lib,config}/**/*"]
