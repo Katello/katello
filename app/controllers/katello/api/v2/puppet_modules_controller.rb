@@ -12,24 +12,11 @@
 
 module Katello
 class Api::V2::PuppetModulesController < Api::V2::ApiController
+
   before_filter :find_repository
   before_filter :find_content_view, :only => [:index]
   before_filter :find_environment, :only => [:index]
-  before_filter :authorize
   before_filter :find_puppet_module, :only => [:show]
-
-  def rules
-    readable = lambda do
-      (@view && @view.readable?) ||
-      (@environment && @environment.contents_readable?) ||
-      (@repo && @repo.environment.contents_readable?)
-    end
-
-    {
-        :index  => readable,
-        :show   => readable,
-    }
-  end
 
   api :GET, "/puppet_modules", N_("List puppet modules")
   api :GET, "/content_views/:content_view_id/puppet_modules", N_("List puppet modules")

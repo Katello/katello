@@ -28,9 +28,14 @@ class Api::V2::PuppetModulesControllerTest < ActionController::TestCase
   end
 
   def permissions
-    @env_read_permission = UserPermission.new(:read_contents, :environments)
-    @read_permission = [@env_read_permission]
-    @unauth_perms = [NO_PERMISSION]
+    @read_permission = :view_products
+    @create_permission = :create_products
+    @update_permission = :edit_products
+    @destroy_permission = :destroy_products
+    @sync_permission = :sync_products
+
+    @auth_permissions = [@read_permission, :view_content_views]
+    @unauth_permissions = [@create_permission, @update_permission, @destroy_permission, @sync_permission]
   end
 
   def setup
@@ -57,7 +62,7 @@ class Api::V2::PuppetModulesControllerTest < ActionController::TestCase
   end
 
   def test_index_protected
-    assert_protected_action(:index, @read_permission, @unauth_perms) do
+    assert_protected_action(:index, @auth_permissions, @unauth_permissions) do
       get :index, :repository_id => @repo.id
     end
   end
@@ -71,9 +76,11 @@ class Api::V2::PuppetModulesControllerTest < ActionController::TestCase
   end
 
   def test_show_protected
-    PuppetModule.expects(:find).once.returns(mock({:repoids => [@repo.pulp_id]}))
+    puppet_module = stub
+    puppet_module.stubs(:repoids).returns([@repo.pulp_id])
+    PuppetModule.stubs(:find).with("abc-123").returns(puppet_module)
 
-    assert_protected_action(:show, @read_permission, @unauth_perms) do
+    assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
       get :show, :repository_id => @repo.id, :id => "abc-123"
     end
   end

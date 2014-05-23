@@ -16,24 +16,7 @@ class Api::V2::RepositorySetsController < Api::V2::ApiController
 
   before_filter :find_product
   before_filter :custom_product?
-
-  # :authorize needs to be called before :find_product_content
-  # since the latter calls into candlepin.
-  before_filter :authorize
   before_filter :find_product_content, :except => [:index]
-
-  def rules
-    edit_product_test = lambda { @organization.redhat_manageable? }
-    read_test         = lambda { @product.readable? }
-
-    {
-        :enable                 => edit_product_test,
-        :disable                => edit_product_test,
-        :index                  => read_test,
-        :show                   => read_test,
-        :available_repositories => read_test
-    }
-  end
 
   resource_description do
     api_version "v2"

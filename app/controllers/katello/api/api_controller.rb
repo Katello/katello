@@ -45,6 +45,7 @@ class Api::ApiController < ::Api::BaseController
     end
   end
 
+  # rubocop:disable MethodLength
   def converted_controllers
     [
       'katello/api/v2/activation_keys',
@@ -70,7 +71,13 @@ class Api::ApiController < ::Api::BaseController
       'katello/api/v2/system_packages',
       'katello/api/v2/system_errata',
       'katello/api/v2/systems_bulk_actions',
-      'katello/api/v1/candlepin_proxies'
+      'katello/api/v1/candlepin_proxies',
+      'katello/api/v2/packages',
+      'katello/api/v2/distributions',
+      'katello/api/v2/package_groups',
+      'katello/api/v2/errata',
+      'katello/api/v2/puppet_modules',
+      'katello/api/v2/repository_sets'
     ]
   end
 

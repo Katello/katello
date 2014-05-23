@@ -13,10 +13,10 @@
 require "katello_test_helper"
 
 module Katello
-class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
+class Api::V2::ErrataControllerTest < ActionController::TestCase
 
   def before_suite
-    models = ["Organization", "KTEnvironment", "PackageGroup", "Repository", "Product", "Provider"]
+    models = ["Organization", "KTEnvironment", "Errata", "Repository", "Product", "Provider"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models)
     super
@@ -50,7 +50,7 @@ class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
     get :index, :repository_id => @repo.id
 
     assert_response :success
-    assert_template %w(katello/api/v2/package_groups/index)
+    assert_template %w(katello/api/v2/errata/index)
   end
 
   def test_index_protected
@@ -60,26 +60,32 @@ class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
   end
 
   def test_show
-    PackageGroup.expects(:find).once.returns(mock({}))
-    get :show, :repository_id => @repo.id, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f"
+    errata = stub
+    errata.stubs(:repoids).returns([@repo.pulp_id])
+    Errata.expects(:find).once.with("RHSA-2010").returns(errata)
+    get :show, :repository_id => @repo.id, :id => "RHSA-2010"
 
     assert_response :success
-    assert_template %w(katello/api/v2/package_groups/show)
+    assert_template %w(katello/api/v2/errata/show)
   end
 
   def test_show_group_not_found
-    PackageGroup.expects(:find).once.returns(nil)
-    get :show, :repository_id => @repo.id, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f"
+    errata = stub
+    errata.stubs(:repoids).returns([@repo.pulp_id])
+    Errata.expects(:find).once.with("RHSA-2010").returns(nil)
+    Errata.expects(:find_by_errata_id).returns(nil)
+
+    get :show, :repository_id => @repo.id, :id => "RHSA-2010"
     assert_response 404
   end
 
   def test_show_protected
-    pckage_group = stub
-    pckage_group.stubs(:repoids).returns([@repo.pulp_id])
-    PackageGroup.stubs(:find).with("3805853f-5cae-4a4a-8549-0ec86410f58f").returns(pckage_group)
+    errata = stub
+    errata.stubs(:repoids).returns([@repo.pulp_id])
+    Errata.stubs(:find).with("RHSA-2010").returns(errata)
 
     assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
-      get :show, :repository_id => @repo.id, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f"
+      get :show, :repository_id => @repo.id, :id => "RHSA-2010"
     end
   end
 

@@ -16,19 +16,7 @@ class Api::V2::PackageGroupsController < Api::V2::ApiController
   before_filter :find_repository
   before_filter :find_content_view, :only => [:index]
   before_filter :find_filter, :only => [:index]
-  before_filter :authorize
   before_filter :find_package_group, :only => [:show]
-
-  def rules
-    readable = lambda do
-      (@filter && @filter.content_view.readable?) ||
-      (@repo && @repo.environment.contents_readable?)
-    end
-    {
-        :index => readable,
-        :show  => readable
-    }
-  end
 
   api :GET, "/package_groups", N_("List package groups")
   api :GET, "/content_views/:content_view_id/filters/:filter_id/package_groups", N_("List package groups")
