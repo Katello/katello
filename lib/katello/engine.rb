@@ -31,6 +31,14 @@ module Katello
       ForemanTasks.dynflow.config.eager_load_paths.concat(action_paths)
     end
 
+    initializer "katello.set_dynflow_middlewares", :after => 'foreman_tasks.initialize_dynflow' do |app|
+      # We don't enable this in test env, as it adds the new field into the actions input
+      # that we are not interested in tests
+      unless Rails.env.test?
+        ForemanTasks.dynflow.world.middleware.use ::Actions::Middleware::KeepLocale
+      end
+    end
+
     initializer "katello.load_app_instance_data" do |app|
       app.config.paths['db/migrate'] += Katello::Engine.paths['db/migrate'].existent
       app.config.autoload_paths += Dir["#{config.root}/app/lib"]
