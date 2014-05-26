@@ -16,13 +16,14 @@ module Katello
     include Katello::Authentication::ClientAuthentication
 
     before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin, :enabled_repos,
-                                          :upload_package_profile, :regenerate_identity_certificates, :facts]
+                                          :upload_package_profile, :regenerate_identity_certificates, :facts,
+                                          :available_releases]
     before_filter :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
     before_filter :authorize_client_or_user, :only => [:upload_package_profile, :regenerate_identity_certificates,
                                                        :hypervisors_update]
     before_filter :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
     before_filter :authorize_client, :only => [:consumer_show, :consumer_destroy, :consumer_checkin,
-                                               :enabled_repos, :facts]
+                                               :enabled_repos, :facts, :available_releases]
 
     before_filter :add_candlepin_version_header
 
@@ -123,6 +124,10 @@ module Katello
       fail HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.key?(:_json)
       @system.upload_package_profile(params[:_json])
       render :json => Resources::Candlepin::Consumer.get(@system.uuid)
+    end
+
+    def available_releases
+      render :json => @system.available_releases
     end
 
     def list_owners

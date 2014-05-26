@@ -444,6 +444,7 @@ Katello::Engine.routes.draw do
       match '/consumers/:id/content_overrides/' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_content_overrides_path
       match '/consumers/:id/content_overrides/' => 'candlepin_proxies#put', :via => :put, :as => :proxy_consumer_content_overrides_put_path
       match '/consumers/:id/content_overrides/' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_content_overrides_delete_path
+      match '/consumers/:id/available_releases' => 'candlepin_proxies#available_releases', :via => :get
       match '/systems/:id/enabled_repos' => 'candlepin_proxies#enabled_repos', :via => :put
 
       # development / debugging support

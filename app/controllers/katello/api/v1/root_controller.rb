@@ -35,6 +35,7 @@ class Api::V1::RootController < Api::V1::ApiController
     api_root_routes << { :href => '/api/status/', :rel => 'status' }
     api_root_routes << { :href => '/api/guestids', :rel => 'guestids'}
     api_root_routes << { :href => '/api/content_overrides', :rel => 'content_overrides'}
+    api_root_routes << { :href => '/api/available_releases', :rel => 'available_releases'}
 
     # katello only APIs
     katello_only = ["/api/templates/",

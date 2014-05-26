@@ -45,6 +45,7 @@ module Katello
         {:controller => proxies_controller, :action => "get", :id => "1", :api_version => "v2"}.must_recognize({ :method => "get", :path => "/api/consumers/1/content_overrides/" })
         {:controller => proxies_controller, :action => "put", :id => "1", :api_version => "v2"}.must_recognize({ :method => "put", :path => "/api/consumers/1/content_overrides/" })
         {:controller => proxies_controller, :action => "delete", :id => "1", :api_version => "v2"}.must_recognize({ :method => "delete", :path => "/api/consumers/1/content_overrides/" })
+        {:controller => proxies_controller, :action => "available_releases", :id => "1", :api_version => "v2"}.must_recognize({ :method => "get", :path => "/api/consumers/1/available_releases" })
       end
 
     end

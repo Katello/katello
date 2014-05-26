@@ -184,5 +184,29 @@ module Katello
       end
     end
 
+    describe "available releases" do
+
+      it "can be listed by matching consumer" do
+        # Stub out the current user to simulate consumer auth.
+        uuid = @system.uuid
+        User.stubs(:consumer?).returns(true)
+        User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid))
+
+        get :available_releases, :id => @system.uuid
+        assert_response 200      
+      end
+
+      it "forbidden with invalid consumer" do
+        # Stub out the current user to simulate consumer auth.
+        uuid = 4444
+        User.stubs(:consumer?).returns(true)
+        User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid))
+        # Getting the available releases for a different consumer
+        # should not be allowed.
+        get :available_releases, :id => @system.uuid
+        assert_response 403
+      end
+    end
+
   end
 end
