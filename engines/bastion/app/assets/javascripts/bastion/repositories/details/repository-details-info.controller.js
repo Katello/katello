@@ -41,7 +41,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
         });
 
         $scope.repository.$promise.then(function () {
-            $scope.uploadURL = $scope.RootURL + '/api/v2/repositories/' + $scope.repository.id + '/content_uploads/file';
+            $scope.uploadURL = $scope.RootURL + '/api/v2/repositories/' + $scope.repository.id + '/upload_content';
         });
 
         $scope.gpgKeys = function () {
@@ -88,7 +88,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 }
 
                 if (returnData !== null && returnData['status'] === 'success') {
-                    $scope.uploadSuccessMessages = [translate('Puppet module successfully uploaded')];
+                    $scope.uploadSuccessMessages = [translate('Content successfully uploaded')];
                     $scope.repository.$get();
                 } else {
                     $scope.uploadErrorMessages = [translate('Error during upload: ') + returnData.displayMessage];

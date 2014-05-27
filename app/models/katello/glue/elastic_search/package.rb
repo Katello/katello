@@ -226,7 +226,7 @@ module Glue::ElasticSearch::Package
           Tire.index Package.index do
             import pkgs
           end
-          Tire.index(::Package.index).refresh
+          Tire.index(Package.index).refresh
         end
       end
     end

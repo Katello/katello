@@ -782,20 +782,28 @@ module Glue::Pulp::Repo
     end
 
     def upload_content(filepaths)
-      files = []
+      filepaths.map { |path| build_content_upload(path) }.each do |file|
+        upload_content_file(file[:filepath])
+      end
+    end
 
+    def build_content_upload(filepath)
       case content_type
-      when "puppet"
-        filepaths.each do |filepath|
-          unit_key, unit_metadata = Katello::PuppetModule.generate_unit_data(filepath)
-          files << {:filepath => filepath, :unit_key => unit_key, :unit_metadata => unit_metadata}
-        end
+      when Repository::PUPPET_TYPE
+        {:filepath => filepath, :unit_key => {}, :unit_metadata => {}}
+      when Repository::YUM_TYPE
+        {:filepath => filepath, :unit_key => {}, :unit_metadata => {}}
       else
         fail _("Uploads not supported for content type '%s'.") % content_type
       end
+    end
 
-      files.each {|file| upload_single_file(file[:unit_key], file[:unit_metadata], file[:filepath])}
-      self.trigger_contents_changed(:index_units => files.map{|file| file[:unit_key]}, :wait => false, :reindex => false)
+    def import_upload(upload_id)
+      response = Katello.pulp_server.resources.content.import_into_repo(pulp_id, unit_type_id, upload_id, {}, {:unit_metadata => {}})
+      task = PulpTaskStatus.using_pulp_task(response)
+      PulpTaskStatus.wait_for_tasks([task])
+
+      _handle_upload_import_result(task)
     end
 
     def unit_type_id
@@ -831,7 +839,7 @@ module Glue::Pulp::Repo
 
     protected
 
-    def upload_single_file(unit_key, unit_metadata, filepath)
+    def upload_content_file(filepath)
       upload_id = Katello.pulp_server.resources.content.create_upload_request["upload_id"]
 
       File.open(filepath, "rb") do |file|
@@ -842,13 +850,9 @@ module Glue::Pulp::Repo
         end
       end
 
-      response = Katello.pulp_server.resources.content.import_into_repo(self.pulp_id, unit_type_id,
-                                                             upload_id, unit_key,
-                                                             {:unit_metadata => unit_metadata}
-                                                            )
-      task = PulpTaskStatus.using_pulp_task(response)
-      PulpTaskStatus.wait_for_tasks([task])
-      Katello.pulp_server.resources.content.delete_upload_request(upload_id)
+      import_upload(upload_id)
+    ensure
+      Katello.pulp_server.resources.content.delete_upload_request(upload_id) if upload_id
     end
 
     def _get_most_recent_sync_status
@@ -870,6 +874,21 @@ module Glue::Pulp::Repo
       end
     end
 
+    def _handle_upload_import_result(task)
+      if task.result["success_flag"]
+        # reindex content created within the past 5 minutes
+        recent_range = 5.minutes.ago.iso8601
+        filter = {:association => {:created => {"$gt" => recent_range}}}
+        trigger_contents_changed(:wait => false, :reindex => false,
+                                 :index_units => [filter])
+      else
+        if (errors = task.result["details"]["errors"])
+          fail Katello::Errors::InvalidRepositoryContent, _("File upload failed: %s.") % errors.join(",")
+        else
+          fail Katello::Errors::InvalidRepositoryContent, _("File upload failed. Please check the file and try again.")
+        end
+      end
+    end
   end
 
   def full_path

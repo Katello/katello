@@ -13,7 +13,9 @@
 module Katello
 module Errors
 
-  class InvalidPuppetModuleError < Exception; end
+  class InvalidRepositoryContent < Exception; end
+
+  class InvalidPuppetModuleError < InvalidRepositoryContent; end
 
   class NotFound < StandardError; end
 

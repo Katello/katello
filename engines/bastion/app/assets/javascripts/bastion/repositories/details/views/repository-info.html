@@ -173,8 +173,9 @@
     </table>
   </section>
 
-  <section class="well" ng-show="repository.content_type == 'puppet'">
-    <h5 translate>Upload Puppet Module</h5>
+  <section class="well">
+    <h5 translate ng-show="repository.content_type == 'puppet'">Upload Puppet Module</h5>
+    <h5 translate ng-show="repository.content_type == 'yum'">Upload Package</h5>
 
     <div alch-alert success-messages="uploadSuccessMessages" error-messages="uploadErrorMessages"></div>
 
