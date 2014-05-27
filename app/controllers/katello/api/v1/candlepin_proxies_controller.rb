@@ -216,8 +216,13 @@ module Katello
       User.current    = User.hidden.first
       activation_keys = find_activation_keys
 
-      @system = System.new(system_params)
-      sync_task(::Actions::Katello::System::Create, @system, activation_keys)
+      @system = System.create(system_params)
+      begin
+        sync_task(::Actions::Katello::System::Create, @system, activation_keys)
+      rescue => error
+        @system.destroy
+        raise(HttpErrors::BadRequest, _("Registration failed: %s ") % error.message)
+      end
       @system.reload
 
       render :json => Resources::Candlepin::Consumer.get(@system.uuid)
