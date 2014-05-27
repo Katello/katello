@@ -192,9 +192,13 @@ module Katello
 
     #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")
     def consumer_create
+      foreman_host = find_foreman_host
+
       @system = System.new(system_params.merge(:environment  => @environment,
                                                :content_view => @content_view,
-                                               :serviceLevel => params[:service_level]))
+                                               :serviceLevel => params[:service_level],
+                                               :host_id      => foreman_host.try(:id)))
+
       sync_task(::Actions::Katello::System::Create, @system)
       @system.reload
       render :json => Resources::Candlepin::Consumer.get(@system.uuid)
@@ -215,8 +219,9 @@ module Katello
       # Set it before calling find_activation_keys to allow communication with candlepin
       User.current    = User.hidden.first
       activation_keys = find_activation_keys
+      foreman_host    = find_foreman_host
 
-      @system = System.new(system_params)
+      @system = System.new(system_params.merge(:host_id => foreman_host.try(:id)))
       sync_task(::Actions::Katello::System::Create, @system, activation_keys)
       @system.reload
 
@@ -347,6 +352,13 @@ module Katello
         fail HttpErrors::BadRequest, _("At least one activation key must be provided")
       end
       activation_keys
+    end
+
+    def find_foreman_host
+      if params[:facts].present? && params[:facts]['network.hostname'].present?
+        foreman_host = Host.where(:name => params[:facts]['network.hostname'], :organization_id => @organization).first
+      end
+      foreman_host
     end
 
     def get_content_view_environment_by_label(label)

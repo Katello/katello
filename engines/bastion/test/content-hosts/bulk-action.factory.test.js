@@ -61,8 +61,8 @@ describe('Factory: ContentHostBulkAction', function() {
         ContentHostBulkAction.removeContent(contentHostParams);
     });
 
-    it('provides a way to remove content hosts', function() {
+    it('provides a way to unregister content hosts', function() {
         $httpBackend.expect('PUT', '/api/v2/systems/bulk/destroy', contentHostParams).respond();
-        ContentHostBulkAction.removeContentHosts(contentHostParams);
+        ContentHostBulkAction.unregisterContentHosts(contentHostParams);
     });
 });

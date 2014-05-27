@@ -24,7 +24,7 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
             installContent: function() {},
             updateContent: function() {},
             removeContent: function() {},
-            removeContentHosts: function() {}
+            unregisterContentHosts: function() {}
         };
         HostCollection = {
             query: function() {}

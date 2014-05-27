@@ -24,7 +24,7 @@ describe('Controller: ContentHostsBulkActionController', function() {
             installContent: function() {},
             updateContent: function() {},
             removeContent: function() {},
-            removeContentHosts: function() {}
+            unregisterContentHosts: function() {}
         };
         HostCollection = {
             query: function() {}
@@ -58,11 +58,11 @@ describe('Controller: ContentHostsBulkActionController', function() {
             Task: Task});
     }));
 
-    it("can a remove multiple content hosts", function() {
-        spyOn(ContentHostBulkAction, 'removeContentHosts');
-        $scope.performRemoveContentHosts();
+    it("can unregister multiple content hosts", function() {
+        spyOn(ContentHostBulkAction, 'unregisterContentHosts');
+        $scope.performUnregisterContentHosts();
 
-        expect(ContentHostBulkAction.removeContentHosts).toHaveBeenCalledWith(_.extend(selected, {'organization_id': 'foo'}),
+        expect(ContentHostBulkAction.unregisterContentHosts).toHaveBeenCalledWith(_.extend(selected, {'organization_id': 'foo'}),
             jasmine.any(Function), jasmine.any(Function)
         );
     });

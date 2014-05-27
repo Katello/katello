@@ -12,11 +12,11 @@
 
     <div class="fr">
 
-      <div alch-modal="removeContentHost(contentHost)" model="contentHost"
-           modal-header='Remove Content Host "{{contentHost.name}}"?'
-           modal-body='Are you sure you want to remove content host "{{ contentHost.name }}"?'></div>
+      <div alch-modal="unregisterContentHost(contentHost)" model="contentHost"
+           modal-header='Unregister Content Host "{{contentHost.name}}"?'
+           modal-body='Are you sure you want to unregister content host "{{ contentHost.name }}"?'></div>
 
-      <button class="btn btn-default" ng-disabled="contentHost.readonly" ng-click="openModal()" translate>Remove Content Host</button>
+      <button class="btn btn-default" ng-disabled="contentHost.readonly" ng-click="openModal()" translate>Unregister Content Host</button>
       <button class="btn btn-default" ui-sref="content-hosts.index">
         <i class="icon-remove"></i>
         {{ "Close" | translate }}
