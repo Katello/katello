@@ -2,6 +2,10 @@
 
 <div class="details details-full">
 
+  <div class="loading-mask loading-mask-panel icon-3x" ng-show="loadingVersions">
+    <i class="icon-spinner icon-spin"></i>
+    {{ "Loading..." | translate }}
+  </div>
   <div class="details-header">
     <input type="text"
            class="form-control filter-input"
