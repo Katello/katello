@@ -53,7 +53,11 @@ module AuthorizationSupportMethods
   def create_role_with_permissions(permissions)
     role = FactoryGirl.create(:role)
     permissions.each do |perm|
-      role.add_permissions!([perm[:name]], :search => perm[:search])
+      begin
+        role.add_permissions!([perm[:name]], :search => perm[:search])
+      rescue ArgumentError => e
+        fail("Permissions not found: #{perm[:name]}")
+      end
     end
     role
   end
