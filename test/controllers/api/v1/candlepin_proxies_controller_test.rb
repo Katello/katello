@@ -146,5 +146,43 @@ module Katello
       end
     end
 
+    it "test_list_owners_protected" do
+      assert_protected_action(:list_owners, :my_organizations) do
+        get :list_owners, :login => User.current.login
+      end
+    end
+
+    it "test_rhsm_index_protected" do
+      assert_protected_action(:rhsm_index, :view_lifecycle_environments) do
+        get :rhsm_index, :organization_id => @organization.label
+      end
+    end
+
+    it "test_consumer_create_protected" do
+      assert_protected_action(:consumer_create, :create_content_hosts) do
+        post :consumer_create, :environment_id => @organization.library.content_view_environments.first.cp_id
+      end
+    end
+
+    it "test_upload_package_profile_protected" do
+      Resources::Candlepin::Consumer.stubs(:get)
+      assert_protected_action(:upload_package_profile, :edit_content_hosts) do
+        put :upload_package_profile, :id => @system.uuid
+      end
+    end
+
+    it "test_regenerate_identity_certificates_protected" do
+      Resources::Candlepin::Consumer.stubs(:get)
+      assert_protected_action(:regenerate_identity_certificates, :edit_content_hosts) do
+        post :regenerate_identity_certificates, :id => @system.uuid
+      end
+    end
+
+    it "test_hypervisors_update" do
+      assert_protected_action(:hypervisors_update, :edit_content_hosts) do
+        post :hypervisors_update, :env => @organization.library.content_view_environments.first.label
+      end
+    end
+
   end
 end

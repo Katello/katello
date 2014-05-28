@@ -17,20 +17,21 @@ module Katello
 
     before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin, :enabled_repos,
                                           :upload_package_profile, :regenerate_identity_certificates, :facts]
-    skip_before_filter :authorize, :except => [:consumer_create, :rhsm_index, :list_owners]
+    before_filter :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
+    before_filter :authorize_client_or_user, :only => [:upload_package_profile, :regenerate_identity_certificates,
+                                                       :hypervisors_update]
     before_filter :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
-    before_filter :authorize_client, :except => [:list_owners, :consumer_create, :rhsm_index,
-                                                 :consumer_activate, :get, :post, :put, :delete]
+    before_filter :authorize_client, :only => [:consumer_show, :consumer_destroy, :consumer_checkin,
+                                               :enabled_repos, :facts]
 
     before_filter :add_candlepin_version_header
 
     before_filter :proxy_request_path, :proxy_request_body
     before_filter :set_organization_id
     before_filter :find_organization, :only => [:rhsm_index, :consumer_activate]
-    before_filter :find_default_organization_and_or_environment, :only => [:consumer_create, :index, :consumer_activate]
-    before_filter :find_optional_organization, :only => [:consumer_create, :hypervisors_update, :index, :consumer_activate]
+    before_filter :find_default_organization_and_or_environment, :only => [:consumer_create, :consumer_activate]
+    before_filter :find_optional_organization, :only => [:consumer_create, :hypervisors_update, :consumer_activate]
     before_filter :find_only_environment, :only => [:consumer_create]
-    before_filter :find_environment, :only => [:index]
     before_filter :find_environment_and_content_view, :only => [:consumer_create]
     before_filter :find_content_view, :only => [:consumer_create, :facts]
     before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
@@ -414,10 +415,18 @@ module Katello
       response.headers["X-CANDLEPIN-VERSION"] = "katello/#{Katello.config.katello_version}"
     end
 
+    def authorize_client_or_user
+      client_authorized? || authorize
+    end
+
     def authorize_client
+      deny_access if !client_authorized?
+    end
+
+    def client_authorized?
       authorized = authenticate_client && User.consumer?
-      authorized = (User.current.uuid == @system.uuid) if @system && User.current
-      deny_access if !authorized
+      authorized = (User.current.uuid == @system.uuid) if @system && User.consumer?
+      authorized
     end
 
     # rubocop:disable MethodLength
