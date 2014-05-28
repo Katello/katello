@@ -54,6 +54,9 @@
             <span><i class="icon-plus-sign-alt inline-icon"></i>{{ version.errata_counts.enhancement || 0 }}</span>
             <span>)</span>
           </div>
+          <div translate>
+            {{ version.puppet_modules.length || 0 }} Puppet Modules
+          </div>
         </td>
         <td alch-table-cell>{{ version.user }}</td>
         <td class="col-sm-2">
