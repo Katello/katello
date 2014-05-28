@@ -23,22 +23,27 @@ module Actions
           activation_key_plan = plan_action(Katello::System::ActivationKeys, system, activation_keys)
           return if activation_key_plan.error
 
-          cp_create = plan_action(Candlepin::Consumer::Create,
-                                  cp_environment_id:   system.cp_environment_id,
-                                  organization_label:  system.organization.label,
-                                  name:                system.name,
-                                  cp_type:             system.cp_type,
-                                  facts:               system.facts,
-                                  installed_products:  system.installedProducts,
-                                  autoheal:            system.autoheal,
-                                  release_ver:         system.release,
-                                  service_level:       system.serviceLevel,
-                                  uuid:                system.uuid,
-                                  capabilities:        system.capabilities,
-                                  activation_keys:     activation_keys)
+          # we need to prepare the input for consumer create before we call save!
+          # as the before filters do some magic with the attributes
+          consumer_create_input = { cp_environment_id:   system.cp_environment_id,
+                                    organization_label:  system.organization.label,
+                                    name:                system.name,
+                                    cp_type:             system.cp_type,
+                                    facts:               system.facts,
+                                    installed_products:  system.installedProducts,
+                                    autoheal:            system.autoheal,
+                                    release_ver:         system.release,
+                                    service_level:       system.serviceLevel,
+                                    uuid:                system.uuid,
+                                    capabilities:        system.capabilities,
+                                    activation_keys:     activation_keys }
           system.save!
-          action_subject system, uuid: cp_create.output[:response][:uuid]
-          plan_self
+          action_subject system
+
+          cp_create = plan_action(Candlepin::Consumer::Create, consumer_create_input)
+          return if cp_create.error
+
+          plan_self(uuid: cp_create.output[:response][:uuid])
           plan_action(Pulp::Consumer::Create,
                       uuid: cp_create.output[:response][:uuid],
                       name: system.name)
