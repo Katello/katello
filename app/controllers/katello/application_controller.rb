@@ -124,6 +124,8 @@ class ApplicationController < ::ApplicationController
       'katello/content_search',
       'katello/content_views',
       'katello/errata',
+      'katello/packages',
+      'katello/puppet_modules',
       'katello/repositories',
       'katello/dashboard'
     ]
