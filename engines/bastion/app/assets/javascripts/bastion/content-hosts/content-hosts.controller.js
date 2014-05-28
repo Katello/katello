@@ -50,7 +50,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
         nutupane.enableSelectAllResults();
 
         if ($location.search()['select_all']) {
-            nutupane.table.selectAllResults(true);
+            nutupane.table.initialSelectAll = true;
         }
 
         $scope.contentHostTable.getStatusColor = ContentHostsHelper.getStatusColor;
