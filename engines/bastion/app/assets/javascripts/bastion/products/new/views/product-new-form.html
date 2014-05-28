@@ -25,6 +25,7 @@
             ng-model="product.gpg_key_id"
             ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys"
             tabindex="4">
+      <option value=""></option>
     </select>
   </div>
 
@@ -34,6 +35,7 @@
             ng-model="product.sync_plan_id"
             ng-options="syncPlan.id as syncPlan.name for syncPlan in syncPlans"
             tabindex="5">
+      <option value=""></option>
     </select>
     <a ui-sref="products.new.sync-plan" translate>+ New Sync Plan</a>
   </div>
