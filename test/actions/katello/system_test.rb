@@ -38,8 +38,6 @@ module ::Actions::Katello::System
       system.expects(:save!)
       action.stubs(:action_subject).with do |subject, params|
         subject.must_equal(system)
-        params[:uuid].must_be_kind_of Dynflow::ExecutionPlan::OutputReference
-        params[:uuid].subkeys.must_equal %w[response uuid]
       end
       #::Actions::Katello::System::ActivationKeys.any_instance.stubs(:error).returns(nil)
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:error).returns(nil)
