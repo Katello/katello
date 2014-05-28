@@ -31,6 +31,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
     ['$scope', '$q', 'translate', 'CustomInfo', 'ContentHost', 'ContentView', 'Organization', 'CurrentOrganization',
         function ($scope, $q, translate, CustomInfo, ContentHost, ContentView, Organization, CurrentOrganization) {
 
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
+
         var customInfoErrorHandler = function (response) {
             $scope.errorMessages = response.data.errors;
         };
@@ -118,6 +121,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         $scope.addCustomInfo = function (info) {
             var success = function () {
                     $scope.contentHost.customInfo.push(info);
+                    $scope.successMessages = [translate("Successfully saved custom info.")];
                 };
 
             return CustomInfo.save({
@@ -135,6 +139,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
                     $scope.contentHost.customInfo = _.filter($scope.contentHost.customInfo, function (keyValue) {
                         return keyValue !== info;
                     }, this);
+                    $scope.successMessages = [translate("Successfully removed custom info.")];
                 };
 
             return CustomInfo.delete({
