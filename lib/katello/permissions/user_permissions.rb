@@ -7,3 +7,7 @@ Foreman::Plugin.find(:katello).security_block :user do
              },
              :public => true
 end
+
+Foreman::AccessControl.permission(:my_account).actions << [
+  'katello/api/v2/tasks/show'
+]

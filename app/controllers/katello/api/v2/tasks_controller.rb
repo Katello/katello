@@ -13,33 +13,13 @@
 module Katello
 class Api::V2::TasksController < Api::V2::ApiController
 
+  before_filter :find_organization, :only => [:index]
   before_filter :find_task, :only => [:show]
-  before_filter :authorize
-
-  def rules
-    # tasks are used in: synchronization, promotion, packages updating, organizatino deletion
-    test = lambda do
-      # at the end of organization deletion, there is no organization, so we
-      # check if the user has the rights to see the task.
-      if @task && User.current == @task.user
-        true
-      elsif @organization
-        @organization.systems_readable?
-      else
-        false
-      end
-
-    end
-    {
-      :index  => test,
-      :show  => test,
-    }
-  end
 
   api :GET, "/organizations/:organization_id/tasks", N_("List tasks of given organization")
   param :organization_id, :number, :desc => N_("organization identifier"), :required => true
   def index
-    respond :collection => TaskStatus.where(:organization_id => @organization.id)
+    respond :collection => {:results => TaskStatus.where(:organization_id => @organization.id)}
   end
 
   api :GET, "/tasks/:id", N_("Show a task info")
@@ -54,6 +34,7 @@ class Api::V2::TasksController < Api::V2::ApiController
   def find_task
     @task = TaskStatus.find_by_id!(params[:id])
     @organization = @task.organization
+    deny_access if @task.user != User.current
   end
 
 end
