@@ -75,7 +75,7 @@ module Katello
     param :release_version, String, :desc => N_("content release version")
     param :service_level, String, :desc => N_("service level")
     def update
-      @activation_key.update_attributes!(activation_key_params)
+      @activation_key.update_attributes!(activation_key_params.reject { | k| !(params[:activation_key].include?(k)) })
       respond_for_show(:resource => @activation_key)
     end
 
