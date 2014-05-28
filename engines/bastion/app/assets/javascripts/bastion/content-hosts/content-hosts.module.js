@@ -227,7 +227,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     });
 
     $stateProvider.state('content-hosts.details.packages', {
-        url: '/packages/',
+        url: '/packages',
         collapsed: true,
         controller: 'ContentHostPackagesController',
         templateUrl: 'content-hosts/content/views/content-host-packages.html'
@@ -241,12 +241,12 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
         template: '<div ui-view></div>'
     })
     .state('content-hosts.details.errata.index', {
-        url: '/errata/',
+        url: '/errata',
         collapsed: true,
         templateUrl: 'content-hosts/content/views/content-host-errata.html'
     })
     .state('content-hosts.details.errata.details', {
-        url: '/errata/:errataId/',
+        url: '/errata/:errataId',
         collapsed: true,
         templateUrl: 'content-hosts/content/views/errata-details.html'
     });
