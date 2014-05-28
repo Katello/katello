@@ -62,6 +62,7 @@ class System < Katello::Model
 
   scope :in_environment, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
+  scope :by_uuids, lambda { |uuids| where(:uuid => uuids)}
 
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :organization_id, :complete_value => true, :ext_method => :search_by_environment
@@ -73,6 +74,13 @@ class System < Katello::Model
 
   def self.in_organization(organization)
     where(:environment_id => organization.kt_environments.pluck(:id))
+  end
+
+  def self.uuids_to_ids(uuids)
+    systems = by_uuids(uuids)
+    ids_not_found = Set.new(uuids).subtract(systems.pluck(:uuid))
+    fail Errors::NotFound.new(_("Systems [%s] not found.") % ids_not_found.to_a.join(',')) unless ids_not_found.blank?
+    systems.pluck(:id)
   end
 
   def add_host_collection(host_collection)

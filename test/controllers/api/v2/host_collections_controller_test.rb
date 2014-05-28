@@ -65,13 +65,26 @@ module Katello
 
     def test_create
       post :create, :organization_id => @organization,
-        :host_collection => {:name => 'Collection A', :description => 'Collection A, World Cup 2014'}
+        :host_collection => {:name => 'Collection A', :description => 'Collection A, World Cup 2014',
+          :system_ids => [@system.id]}
 
       results = JSON.parse(response.body)
       assert_equal results['name'], 'Collection A'
       assert_equal results['max_content_hosts'], -1
       assert_equal results['organization_id'], @organization.id
       assert_equal results['description'], 'Collection A, World Cup 2014'
+      assert_equal results['system_ids'], [@system.id]
+
+      assert_response :success
+      assert_template 'api/v2/host_collections/create'
+    end
+
+    def test_create_with_system_uuid
+      post :create, :organization_id => @organization, :system_uuids => [@system.uuid],
+        :host_collection => {:name => 'Collection A', :description => 'Collection A, World Cup 2014'}
+
+      results = JSON.parse(response.body)
+      assert_equal results['system_ids'], [@system.id]
 
       assert_response :success
       assert_template 'api/v2/host_collections/create'
