@@ -280,7 +280,7 @@ KT.content_search = function(paths_in){
         paths = paths_in;
 
         if( KT.permissions.current_organization.editable ){
-            footer = $('<a/>', { "href" : KT.routes.organizations_path({ anchor : 'panel=organization_' + KT.permissions.current_organization['id'] + '&panelpage=edit' })});
+            footer = $('<a/>', { "href" : "/lifecycle_environments"});
             footer.append($('<i/>', { "class" : "gears_icon", "data-change_on_hover" : "dark" }));
             footer.append($('<span/>').html(katelloI18n.manage_environments));
             footer = footer[0].outerHTML;
