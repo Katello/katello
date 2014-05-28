@@ -35,7 +35,9 @@ module Katello
       # We don't enable this in test env, as it adds the new field into the actions input
       # that we are not interested in tests
       unless Rails.env.test?
-        ForemanTasks.dynflow.world.middleware.use ::Actions::Middleware::KeepLocale
+        ForemanTasks.dynflow.config.on_init do |world|
+          world.middleware.use ::Actions::Middleware::KeepLocale
+        end
       end
     end
 
