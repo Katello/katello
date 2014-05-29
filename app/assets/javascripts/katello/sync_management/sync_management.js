@@ -146,7 +146,7 @@ KT.content_actions = (function(){
                    // Only stop when we reach 100% and the finish_time is done sometimes they are not both complete
                    if (!repo.is_running && (repo.raw_state !== 'waiting')) {
                         removeSyncing(repo.id);
-                        KT.content.finishRepo(repo.id, repo.state, repo.duration, repo.raw_state);
+                        KT.content.finishRepo(repo.id, repo.state, repo.duration, repo.raw_state, repo.error_details);
                         KT.content.updateRepo(repo.id, repo.start_time, repo.duration, repo.progress.progress, repo.display_size, repo.packages, repo.size);
                         KT.content.updateProduct(repo.product_id, false, false, true);
                         notices.checkNotices();
@@ -202,13 +202,20 @@ KT.content = (function(){
             var repo = $("#repo-" + repo_id);
             update_item(repo, starttime, duration, progress, display_size, packages, size );
         },
-        finishRepo = function(repo_id, state, duration, raw_state){
+        finishRepo = function(repo_id, state, duration, raw_state, error_details){
             var element = $("#repo-" + repo_id);
+            var messages = [];
             element.find(".result .result-info").html(state);
             fadeUpdate(element.find(".duration"), duration);
 
             if (raw_state === 'error') {
                 element.find('.result .info-tipsy').removeClass('hidden');
+
+                KT.utils.forEach(error_details['messages'], function (message) {
+                    messages.push('<li>' + message + '</li>');
+                });
+
+                element.find('.result .info-tipsy ul').html(messages.join(''));
             }
         },
         update_item = function(element, starttime, duration, progress, display_size, packages, size) {
