@@ -57,11 +57,11 @@ angular.module('Bastion.content-views').controller('ErrataFilterListController',
 
         function success(rule) {
             nutupane.removeRow(rule['errata_id'], 'errata_id');
-            $scope.successMessages = [translate('Errata successfully added.')];
+            $scope.$parent.successMessages = [translate('Errata successfully removed.')];
         }
 
         function failure(response) {
-            $scope.errorMessages = [response.data.displayMessage];
+            $scope.$parent.errorMessages = [response.data.displayMessage];
         }
 
         function findRules(errataIds) {
