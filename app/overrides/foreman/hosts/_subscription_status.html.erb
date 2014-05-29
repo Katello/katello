@@ -9,11 +9,12 @@
 <tr>
   <td><%= _("Subscription status") %></td>
   <td>
-    <% if (@host.content_host && compliance_status = @host.content_host.compliance['status']) %>
+    <% content_host = Katello::System.where(:host_id => @host.id).first %>
+    <% if (content_host && compliance_status = content_host.compliance['status']) %>
       <i class=<%= "circle #{compliance_status}" %> ></i>
       <%= link_to(
             compliance_status,
-            "/content_hosts/#{@host.content_host.uuid}/subscriptions",
+            "/content_hosts/#{content_host.uuid}/subscriptions",
             :title => _("Host subscription details"))
       %>
     <% else %>
