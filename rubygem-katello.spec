@@ -91,6 +91,7 @@ Requires: cyrus-sasl-plain
 #Qpid Requirements
 Requires: qpid-cpp-client
 Requires: qpid-cpp-server
+Requires: qpid-cpp-server-store
 Requires: qpid-tools >= 0.22
 
 Requires: candlepin-selinux
