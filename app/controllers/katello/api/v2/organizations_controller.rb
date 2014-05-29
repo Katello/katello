@@ -62,12 +62,13 @@ module Katello
     end
 
     api :DELETE, '/organizations/:id', N_('Delete an organization')
+    param :id, :number, :desc => N_("Organization ID"), :required => true
     def destroy
       process_response @organization.destroy, _("Deleted organization '%s'") % params[:id]
     end
 
     api :PUT, "/organizations/:id/repo_discover", N_("Discover Repositories")
-    param :id, String, :desc => N_("organization id, label, or name")
+    param :id, :number, :desc => N_("Organization ID"), :required => true
     param :url, String, :desc => N_("base url to perform repo discovery on")
     def repo_discover
       fail _("url not defined.") if params[:url].blank?
