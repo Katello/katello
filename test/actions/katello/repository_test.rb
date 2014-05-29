@@ -21,6 +21,7 @@ module ::Actions::Katello::Repository
 
     let(:action) { create_action action_class }
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
+    let(:custom_repository) { katello_repositories(:fedora_17_x86_64) }
   end
 
   class CreateTest < TestBase
@@ -64,6 +65,16 @@ module ::Actions::Katello::Repository
           returns(mock('discovery', run: nil))
 
       run_action action_planned
+    end
+  end
+
+  class RemovePackagesTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::RemovePackages }
+
+    it 'plans' do
+      uuids = ['troy', 'and', 'abed', 'in_the_morning']
+      action.expects(:action_subject).with(custom_repository)
+      plan_action action, custom_repository, uuids
     end
   end
 

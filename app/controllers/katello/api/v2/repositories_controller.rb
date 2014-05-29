@@ -17,7 +17,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   before_filter :find_product, :only => [:index]
   before_filter :find_product_for_create, :only => [:create]
   before_filter :find_organization_from_product, :only => [:create]
-  before_filter :find_repository, :only => [:show, :update, :destroy, :sync]
+  before_filter :find_repository, :only => [:show, :update, :destroy, :sync, :remove_packages]
   before_filter :find_organization_from_repo, :only => [:update]
   before_filter :find_gpg_key, :only => [:create, :update]
   before_filter :error_on_rh_product, :only => [:create]
@@ -143,6 +143,15 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
     repo.async(:organization => repo.environment.organization).after_sync(task_id)
     render :json => {}
+  end
+
+  api :POST, "/repositories/:id/remove_packages"
+  desc "Remove rpms from a repository"
+  param :id, :identifier, :required => true, :desc => "repository ID"
+  param 'uuids', Array, :required => true, :desc => "Array of package uuids to remove"
+  def remove_packages
+    fail _("No package uuids provided") if params[:uuids].blank?
+    respond_for_async :resource => sync_task(::Actions::Katello::Repository::RemovePackages, @repository, params[:uuids])
   end
 
   protected

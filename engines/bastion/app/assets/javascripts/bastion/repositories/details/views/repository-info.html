@@ -1,11 +1,18 @@
 <span page-title ng-model="repository">{{ 'Repository:' | translate }} {{ repository.name }}</span>
 <div>
-  <a ng-href="/products/{{ repository.product.id }}/repositories">
+  <a ui-sref="products.details.repositories.index({productId: product.id})">
     <i class="icon-double-angle-left"></i>
     {{ "Back to Repository List" | translate }}
   </a>
 
   <div class="fr">
+
+    <button class="btn btn-default"
+            ui-sref="products.details.repositories.manage-packages({productId: product.id, repositoryId: repository.id})"
+            ng-hide="repository.content_type !== 'yum' || product.redhat || product.readonly">
+      <span translate>Manage Packages</span>
+    </button>
+
     <button class="btn btn-default"
             ng-click="syncRepository(repository); working = true"
             ng-disabled="syncInProgress(repository.sync_state)">

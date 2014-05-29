@@ -1,0 +1,60 @@
+<span page-title ng-model="repository">{{ 'Manage Packages for Repository:' | translate }} {{ repository.name }}</span>
+
+<a ui-sref="products.details.repositories.info({productId: product.id, repositoryId: repository.id})">
+  <i class="icon-double-angle-left"></i>
+  {{ "Back to Repository Details" | translate }}
+</a>
+
+<div data-extend-template="layouts/details-nutupane.html">
+
+  <div data-block="pane-loading"></div>
+
+  <div data-block="messages">
+    <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+    <div class="alert alert-success" ng-hide="generationTaskId === undefined">
+      <button type="button" class="close" ng-click="generationTaskId = undefined">×</button>
+      <p translate>
+        Yum metadata generation has been initiated in the background.  Click <a href="{{ taskUrl() }}">Here</a> to monitor the progress.
+      </p>
+    </div>
+  </div>
+
+  <div data-block="header">
+    <h3 translate>Packages in {{ repository.name }}</h3>
+  </div>
+
+  <div data-block="actions">
+    <button class="btn btn-default" ng-click="removePackages()" ng-disabled="detailsTable.working">
+      <i class="icon-trash" ng-hide="detailsTable.working"></i>
+      <i class="icon-spinner icon-spin" ng-show="detailsTable.working"></i>
+      <span translate>Remove Packages</span>
+    </button>
+  </div>
+
+  <div data-block="table">
+    <table class="table table-striped table-bordered" >
+
+      <div data-block="pane-loading" class="loading-mask loading-mask-panel" ng-show="detailsTable.working">
+        <i class="icon-spinner icon-spin"></i>
+        {{ "Loading..." | translate }}
+      </div>
+
+      <thead ng-hide="detailsTable.working">
+        <tr alch-table-head row-select>
+          <th alch-table-column>{{ "Name" | translate }}</th>
+        </tr>
+      </thead>
+
+      <tbody ng-hide="detailsTable.working">
+        <tr alch-table-row ng-repeat="package in detailsTable.rows" row-select="package">
+          <td alch-table-cell>
+            {{ package.nvrea }}
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+</div>
