@@ -15,6 +15,8 @@ module Actions
     class AbstractAsyncTask < Pulp::Abstract
       include Actions::Base::Polling
 
+      FINISHED_STATES = %w{finished error canceled skipped}
+
       # A call report (documented http://pulp-dev-guide.readthedocs.org/en/latest/conventions/sync-v-async.html)
       # Looks like:  {
       #     "result": {},
@@ -49,7 +51,7 @@ module Actions
       #}
 
       def done?
-        external_task.all?{ |task| !!task[:finish_time] }
+        external_task.all?{ |task| !!task[:finish_time] || !!FINISHED_STATES.include?(task[:state]) }
       end
 
       def external_task
