@@ -118,6 +118,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   private
 
   def find_content_view
+    fail HttpErrors::NotFound, _("One of parameters [ %s ] required but not specified.") % "content_view_id" unless params[:content_view_id]
     @view = ContentView.find(params[:content_view_id]) if params[:content_view_id]
   end
 
