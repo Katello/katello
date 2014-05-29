@@ -823,7 +823,7 @@ KT.comparison_grid.templates = (function(i18n) {
 
             if( data['in_column'] ){
                 if( data['display'] !== undefined ){
-                    display = '<div class="grid_cell_data">' + data['display'] + '</div>';
+                    display = '<div class="grid_cell_data three-line-ellipsis">' + data['display'] + '</div>';
                 } else {
                     display = $('<i/>', { 'class' : "icon-circle" });
                 }
