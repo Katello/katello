@@ -20,7 +20,7 @@ module Katello
 
     def test_list_owners_username
       assert_routing "/api/users/admin@mail.com/owners", :controller => "katello/api/v1/candlepin_proxies",
-        :action => "list_owners", :login => "admin@mail.com", :api_version => "v1"
+        :action => "list_owners", :login => "admin@mail.com", :api_version => "v2"
     end
   end
 end
