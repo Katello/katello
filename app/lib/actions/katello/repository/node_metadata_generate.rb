@@ -18,9 +18,11 @@ module Actions
         def plan(repo)
           return unless repo.environment
           sequence do
-            plan_action(Pulp::Repository::DistributorPublish,
-                        pulp_id: repo.pulp_id,
-                        distributor_type_id: Runcible::Models::NodesHttpDistributor.type_id)
+            unless repo.puppet? && repo.content_view.default?
+              plan_action(Pulp::Repository::DistributorPublish,
+                          pulp_id: repo.pulp_id,
+                          distributor_type_id: Runcible::Models::NodesHttpDistributor.type_id)
+            end
 
             ::Katello::CapsuleContent.with_environment(repo.environment).each do |capsule_content|
               plan_action(Pulp::Consumer::SyncNode,
