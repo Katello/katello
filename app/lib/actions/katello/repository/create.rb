@@ -41,8 +41,10 @@ module Actions
 
             if repository.environment
               concurrence do
-                ::Katello::CapsuleContent.with_environment(repository.environment).each do |capsule_content|
-                  plan_action(CapsuleContent::AddRepository, capsule_content, repository)
+                if repository.node_syncable?
+                  ::Katello::CapsuleContent.with_environment(repository.environment).each do |capsule_content|
+                    plan_action(CapsuleContent::AddRepository, capsule_content, repository)
+                  end
                 end
               end
             end

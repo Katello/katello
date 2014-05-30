@@ -18,6 +18,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
     include Dynflow::Testing
     include Support::Actions::Fixtures
     include FactoryGirl::Syntax::Methods
+    include Support::CapsuleSupport
 
     let(:puppet_env) { katello_content_view_puppet_environments(:library_view_puppet_environment) }
   end
@@ -79,6 +80,16 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
       assert_action_planed_with action, ::Actions::Katello::Repository::MetadataGenerate, dev_puppet_env
       assert_action_planed_with action, ::Actions::ElasticSearch::ContentViewPuppetEnvironment::IndexContent,
                                 id: dev_puppet_env.id
+    end
+
+    it 'plans capsule related actions' do
+      capsule_content.add_lifecycle_environment(dev)
+      plan_action action, puppet_env.content_view_version, dev
+      assert_action_planed_with action, ::Actions::Katello::CapsuleContent::AddRepository do |(current_capsule_content, repo)|
+        current_capsule_content.capsule.id == capsule_content.capsule.id &&
+            dev_puppet_env == repo
+      end
+      assert_action_planed_with action, ::Actions::Katello::Repository::NodeMetadataGenerate, dev_puppet_env
     end
 
     it 'plans without existing puppet environment' do

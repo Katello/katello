@@ -37,6 +37,13 @@ module Actions
             concurrence do
               plan_action(Katello::Repository::MetadataGenerate, clone)
               plan_action(ElasticSearch::ContentViewPuppetEnvironment::IndexContent, id: clone.id)
+              sequence do
+                ::Katello::CapsuleContent.with_environment(environment).each do |capsule_content|
+                  plan_action(CapsuleContent::AddRepository, capsule_content, clone)
+                end
+
+                plan_action(Katello::Repository::NodeMetadataGenerate, clone)
+              end
             end
           end
         end

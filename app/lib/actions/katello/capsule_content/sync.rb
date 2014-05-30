@@ -17,7 +17,7 @@ module Actions
 
         def plan(capsule_content, environment = nil)
           repository_ids = if environment
-                             ::Katello::Repository.in_environment(environment).pluck(:pulp_id)
+                             capsule_content.pulp_repos(environment).map(&:pulp_id)
                            end
 
           plan_action(Pulp::Consumer::SyncNode,

@@ -18,9 +18,8 @@ module Actions
         def plan(capsule_content, environment)
           capsule_content.remove_lifecycle_environment(environment)
 
-          bound_repos = ::Katello::Repository.in_environment(environment)
-          bound_repos.each do |repo|
-            plan_action(CapsuleContent::RemoveRepository, capsule_content, repo)
+          capsule_content.pulp_repos(environment).each do |pulp_repo|
+            plan_action(CapsuleContent::RemoveRepository, capsule_content, pulp_repo)
           end
         end
 
