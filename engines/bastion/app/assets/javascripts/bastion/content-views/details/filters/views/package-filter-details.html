@@ -6,6 +6,20 @@
            ng-model="packageFilter"/>
   </div>
 
+  <div>
+    <input type="checkbox"
+           ng-model="filter.original_packages"
+           ng-change="updateFilter(filter)"/>
+
+    <span ng-show="filter.inclusion" translate>
+      Include all packages with no errata.
+    </span>
+
+    <span ng-show="!filter.inclusion" translate>
+      Exclude all packages with no errata.
+    </span>
+  </div>
+
   <button class="btn btn-default fr" ng-click="removeRules(filter)">
     <i class="icon-trash"></i>
     <span translate>Remove Packages</span>

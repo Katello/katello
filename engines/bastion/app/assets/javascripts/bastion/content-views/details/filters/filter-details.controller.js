@@ -26,5 +26,9 @@ angular.module('Bastion.content-views').controller('FilterDetailsController',
 
         $scope.filter = Filter.get({'content_view_id': $scope.$stateParams.contentViewId, filterId: $scope.$stateParams.filterId});
 
+        $scope.updateFilter = function (filter) {
+            filter.$update();
+        };
+
     }]
 );

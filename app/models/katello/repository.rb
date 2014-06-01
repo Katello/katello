@@ -256,6 +256,53 @@ class Repository < Katello::Model
                        version)
   end
 
+  def packages_without_errata
+    filenames = errata_filenames
+    packages_without_filenames(filenames)
+  end
+
+  def errata_filenames
+    repo = self
+    bulk_size = Katello.config.pulp.bulk_load_size
+    initial_list = Errata.search do
+      size 1
+      fields ['pkglist.packages.filename']
+      filter :term, {:repoids => repo.pulp_id}
+    end
+
+    found_errata = (0..initial_list.total).step(bulk_size).flat_map do |offset|
+      Errata.search do
+        size bulk_size
+        fields ['pkglist.packages.filename']
+        filter :term, {:repoids => repo.pulp_id}
+        from offset
+      end
+    end
+
+    found_errata.map{|e| e['pkglist.packages.filename']}.flatten.uniq
+  end
+
+  def packages_without_filenames(filenames)
+    repo = self
+    bulk_size = Katello.config.pulp.bulk_load_size
+    filters = [{:term => {:repoids => repo.pulp_id}}, {:not => { :terms => {:filename => filenames} } }]
+
+    initial_list = Package.search do
+      size 1
+      fields ['id']
+      filter :and, filters
+    end
+
+    (0..initial_list.total).step(bulk_size).flat_map do |offset|
+      Package.search do
+        size bulk_size
+        fields %w(id filename)
+        filter :and, filters
+        from offset
+      end
+    end
+  end
+
   def trigger_contents_changed(options)
     Repository.trigger_contents_changed([self], options)
     index_units = options.fetch(:index_units, nil) if Katello.config.use_elasticsearch
