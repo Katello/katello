@@ -25,6 +25,34 @@ module Glue::ElasticSearch::BackendIndexedModel
 
   module ClassMethods
 
+    def index_all
+      self.create_index
+
+      total = 0
+      pkgs = fetch_all(total, Katello.config.pulp.bulk_load_size)
+      until pkgs.empty? #we can't know how many there are, so we have to keep looping until we get nothing
+        Tire.index(self.index) do
+          import pkgs
+        end
+
+        total += pkgs.length
+        pkgs = fetch_all(total, Katello.config.pulp.bulk_load_size)
+      end
+      total
+    end
+
+    def fetch_all(offset, page_size)
+      fields = self::PULP_INDEXED_FIELDS if self.constants.include?(:PULP_INDEXED_FIELDS)
+      criteria = {:limit => page_size, :skip => offset}
+      criteria[:fields] = fields if fields
+
+      obj_hashes =  Katello.pulp_server.resources.unit.search(self::CONTENT_TYPE, criteria, :include_repos => true)
+      obj_hashes.map do |item|
+        obj = self.new(item)
+        obj.as_json.merge(obj.index_options)
+      end
+    end
+
     def indexed_ids_for_repo(repo_id)
       search = Tire::Search::Search.new(self.index)
 

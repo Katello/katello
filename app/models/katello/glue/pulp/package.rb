@@ -16,6 +16,11 @@ module Glue::Pulp::Package
   #fields we use to trim down our unit association calls to pulp
   PULP_SELECT_FIELDS = %w(name epoch version release arch checksumtype checksum)
 
+  PULP_INDEXED_FIELDS = %w(name version release arch suffix epoch
+                           download_url checksum checksumtype license group
+                           children vendor filename relativepath description
+                           size buildhost _id _content_type_id _href
+                           _storage_path _type _last_updated)
   def self.included(base)
     base.send :include, InstanceMethods
 
