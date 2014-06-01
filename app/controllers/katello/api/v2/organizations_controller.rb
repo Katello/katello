@@ -43,7 +43,13 @@ module Katello
     end
 
     api :PUT, '/organizations/:id', N_('Update organization')
-    param_group :resource, ::Api::V2::TaxonomiesController
+    # The organization param hash below is redefined from foreman's ::Api::V2::TaxonomiesController
+    # resource param_group instead of reusing the param_group :resource scoped from TaxonomiesController.
+    # This is because name substitutions of the param group's name from :resource to :organization are limited
+    # to the inclusion of a modules.
+    param :organization, Hash, :action_aware => true do
+      param :name, String, :required => true
+    end
     param :description, String, :desc => N_("description")
     param :redhat_repository_url, String, :desc => N_("Redhat CDN url")
     def update
