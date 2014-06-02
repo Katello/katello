@@ -61,9 +61,10 @@ module Katello
     api :POST, "/host_collections", N_("Create a host collection")
     api :POST, "/organizations/:organization_id/host_collections", N_("Create a host collection")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+    param :system_uuids, Array, :required => false, :desc => N_("List of system uuids to replace the content hosts in host collection")
     param_group :host_collection
     def create
-      @host_collection = HostCollection.new(host_collection_params)
+      @host_collection = HostCollection.new(host_collection_params_with_system_uuids)
       @host_collection.organization = @organization
       @host_collection.save!
       respond
@@ -71,9 +72,10 @@ module Katello
 
     api :PUT, "/host_collections/:id", N_("Update a host collection")
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
+    param :system_uuids, Array, :required => false, :desc => N_("List of system uuids to be in the host collection")
     param_group :host_collection
     def update
-      @host_collection.update_attributes!(host_collection_params)
+      @host_collection.update_attributes!(host_collection_params_with_system_uuids)
       respond
     end
 
@@ -92,7 +94,7 @@ module Katello
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
     param :system_ids, Array, :desc => N_("Array of system ids")
     def add_systems
-      ids = system_uuids_to_ids(params[:system_ids])
+      ids = System.uuids_to_ids(params[:system_ids])
       @systems = System.editable.where(:id => ids)
       @editable_systems = @systems.editable
       @host_collection.system_ids = (@host_collection.system_ids + @editable_systems.collect { |s| s.id }).uniq
@@ -114,7 +116,7 @@ module Katello
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
     param :system_ids, Array, :desc => N_("Array of system ids")
     def remove_systems
-      ids = system_uuids_to_ids(params[:system_ids])
+      ids = System.uuids_to_ids(params[:system_ids])
       @systems = System.editable.where(:id => ids)
       @editable_systems = @systems.editable
       @host_collection.system_ids = (@host_collection.system_ids - @editable_systems.collect { |s| s.id }).uniq
@@ -195,15 +197,18 @@ module Katello
       fail HttpErrors::NotFound, _("Couldn't find host collection '%s'") % params[:id] if @host_collection.nil?
     end
 
-    def system_uuids_to_ids(ids)
-      system_ids = System.where(:uuid => ids).collect { |s| s.id }
-      fail Errors::NotFound.new(_("Systems [%s] not found.") % ids.join(',')) if system_ids.blank?
-      system_ids
-    end
-
     def host_collection_params
       attrs = [:name, :description, :max_content_hosts, { :system_ids => [] }]
-      params.require(:host_collection).permit(*attrs)
+      params.fetch(:host_collection).permit(*attrs)
+    end
+
+    def host_collection_params_with_system_uuids
+      result = host_collection_params
+      if params['system_uuids']
+        systems_from_uuid = System.uuids_to_ids(params['system_uuids'])
+        result['system_ids'] = result['system_ids'] ?  result['system_ids'] + systems_from_uuid : systems_from_uuid
+      end
+      result
     end
 
     def find_system

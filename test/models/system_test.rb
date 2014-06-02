@@ -22,6 +22,27 @@ class SystemClassTest < SystemTestBase
     assert_equal 'Simple Server', system_json['name']
     assert_equal 'Dev', system_json['environment']['name']
   end
+
+  def test_uuids_to_ids
+    @alabama = build(:katello_system, :alabama, :name => 'alabama man', :description => 'Alabama system', :environment => @dev, :uuid => 'alabama')
+    @westeros = build(:katello_system, :name => 'westeros', :description => 'Westeros system', :environment => @dev, :uuid => 'westeros')
+    assert @alabama.save
+    assert @westeros.save
+    actual_ids = System.uuids_to_ids([@alabama, @westeros].map(&:uuid))
+    expected_ids = [@alabama, @westeros].map(&:id)
+    assert_equal(expected_ids.size, actual_ids.size)
+    assert_equal(expected_ids.to_set, actual_ids.to_set)
+  end
+
+  def test_uuids_to_ids_raises_not_found
+    @alabama = build(:katello_system, :alabama, :name => 'alabama man', :description => 'Alabama system', :environment => @dev, :uuid => 'alabama')
+    @westeros = build(:katello_system, :name => 'westeros', :description => 'Westeros system', :environment => @dev, :uuid => 'westeros')
+    assert @alabama.save
+    assert @westeros.save
+    assert_raises Errors::NotFound do
+      System.uuids_to_ids([@alabama, @westeros].map(&:uuid) + ['non_existent_uuid'])
+    end
+  end
 end
 
 class SystemCreateTest < SystemTestBase
