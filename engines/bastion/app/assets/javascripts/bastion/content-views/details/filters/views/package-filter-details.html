@@ -3,7 +3,7 @@
     <input type="text"
            class="form-control filter-input"
            placeholder="{{ 'Filter' | translate }}"
-           ng-model="repositorySearch"/>
+           ng-model="packageFilter"/>
   </div>
 
   <button class="btn btn-default fr" ng-click="removeRules(filter)">
@@ -70,7 +70,7 @@
     </td>
   </tr>
 
-  <tr ng-repeat="rule in filter.rules" row-select="rule">
+  <tr ng-repeat="rule in filter.rules | filter:packageFilter" row-select="rule">
     <td class="row-select">
       <input type="checkbox" ng-model="rule.selected"/>
     </td>

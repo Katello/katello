@@ -43,6 +43,8 @@ angular.module('Bastion.content-views').controller('FiltersController',
             angular.forEach(filterIds, removeFilter);
         };
 
+        nutupane.table.closeItem = function () {};
+
         $scope.getFilterState = function (filter) {
             var state;
 

@@ -37,6 +37,7 @@ angular.module('Bastion.content-views').controller('PackageGroupFilterListContro
         );
 
         $scope.detailsTable = nutupane.table;
+        nutupane.table.closeItem = function () {};
 
         $scope.removePackageGroups = function () {
             var packageGroupNames = nutupane.getAllSelectedResults('name').included.ids,
