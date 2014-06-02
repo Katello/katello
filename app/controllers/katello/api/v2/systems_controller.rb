@@ -80,6 +80,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
 
     filters << {:terms => {:uuid => System.all_by_pool_uuid(params['pool_id']) }} if params['pool_id']
     filters << {:terms => {:uuid => [params['uuid']] }} if params['uuid']
+    filters << {:term => {:name => params['name'] }} if params['name']
 
     options = {
         :filters       => filters,
