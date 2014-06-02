@@ -392,9 +392,6 @@ Katello::Engine.routes.draw do
       match '/custom_info/:informable_type/:informable_id/*keyname' => 'custom_info#update', :via => :put, :as => :update_custom_info
       match '/custom_info/:informable_type/:informable_id/*keyname' => 'custom_info#destroy', :via => :delete, :as => :destroy_custom_info
 
-      # subscription-manager support
-      match '/users/:login/owners' => 'users#list_owners', :via => :get
-
     end # module v2
 
     # routes that didn't change in v2 and point to v1
