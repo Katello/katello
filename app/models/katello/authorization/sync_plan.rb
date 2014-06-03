@@ -32,7 +32,7 @@ module Katello
         authorized?(:edit_sync_plans)
       end
 
-      def deleteable?
+      def deletable?
         authorized?(:destroy_sync_plans)
       end
     end

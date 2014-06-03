@@ -41,8 +41,9 @@
 
       <button class="btn btn-default fr"
               translate
+              ng-hide="denied('edit_content_hosts', contentHost)"
               ng-click="confirm = true"
-              ng-disabled="confirm || table.numSelected == 0 || state.working || selected.environment === undefined || selected.contentView === undefined ">
+              ng-disabled="disableAssignButton(confirm)">
         Assign
       </button>
 

@@ -26,6 +26,7 @@ BASTION_MODULES = [
     'ui.bootstrap',
     'ui.bootstrap.tpls',
     'Bastion.activation-keys',
+    'Bastion.auth',
     'Bastion.content-views',
     'Bastion.content-views.versions',
     'Bastion.custom-info',

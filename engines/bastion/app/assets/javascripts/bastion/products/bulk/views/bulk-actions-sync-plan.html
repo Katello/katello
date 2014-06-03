@@ -12,11 +12,13 @@
   <span class="pull-right">
 
     <button class="btn btn-default"
-        ui-sref="products.bulk-actions.sync-plan.new"
-        translate>
+            ng-hide="denied('create_sync_plans')"
+            ui-sref="products.bulk-actions.sync-plan.new"
+            translate>
       Create Sync Plan
     </button>
     <button class="btn btn-default"
+            ng-hide="denied('edit_products')"
             ng-click="removeSyncPlan()">
       <i class="icon-spinner icon-spin" ng-show="updatingSyncPlans && !syncPlanTable.chosenRow"></i>
       <span ng-show="updatingSyncPlans && !syncPlanTable.chosenRow" translate>Unattaching...</span>
@@ -24,6 +26,7 @@
       <span ng-hide="updatingSyncPlans && !syncPlanTable.chosenRow" translate>Unattach Sync Plan</span>
     </button>
     <button class="btn btn-primary"
+            ng-hide="denied('edit_products')"
             ng-click="updateSyncPlan()"
             ng-disabled="!syncPlanTable.chosenRow">
       <i class="icon-spinner icon-spin" ng-show="updatingSyncPlans && syncPlanTable.chosenRow"></i>

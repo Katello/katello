@@ -1,5 +1,5 @@
 <span page-title ng-model="contentHost">{{ 'Packages for: ' | translate }} {{ contentHost.name }}</span>
-<section ng-hide="contentHost.readonly">
+<section ng-hide="denied('edit_content_hosts', contentHost)">
   <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
   <h4 translate>Package Actions</h4>
   <section>
@@ -22,7 +22,10 @@
                ng-model="packageAction.term"/>
 
         <span class="input-group-btn">
-          <button class="btn btn-default" translate>Perform</button>
+          <button class="btn btn-default"
+                  ng-hide="denied('edit_content_hosts', contentHost)"
+                  translate>
+            Perform</button>
         </span>
       </div>
     </form>
@@ -41,8 +44,10 @@
     </form>
     <span class="nutupane-info" translate>Showing {{ currentPackagesTable.resource.total }} Packages</span>
 
-    <div class="fr" ng-hide="contentHost.readonly">
-       <button class="btn btn-primary" translate ng-click="updateAll()">
+    <div class="fr" ng-hide="denied('edit_content_hosts', contentHost)">
+       <button class="btn btn-primary"
+               translate
+               ng-click="updateAll()">
          Update All
        </button>
     </div>

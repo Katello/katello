@@ -12,6 +12,7 @@
   <span class="pull-right">
 
       <button class="btn btn-default"
+              ng-hide="denied('delete_products', product)"
               ng-disabled="removingRepositories || repositoriesTable.numSelected == 0"
               ng-click="openModal()">
         <span ng-show="removingRepositories">
@@ -31,6 +32,7 @@
 
     <button class="btn btn-default"
             ng-click="syncSelectedRepositories()"
+            ng-hide="denied('sync_products', product)"
             ng-disabled="repositoriesTable.numSelected == 0">
       <i class="icon-spinner icon-spin" ng-show="syncInProgress"></i>
       <span ng-show="syncInProgress" translate>Syncing...</span>
@@ -39,6 +41,7 @@
     </button>
     <button class="btn btn-primary"
             translate
+            ng-hide="denied('edit_products', product)"
             ng-disabled="isReadOnly(product)"
             ui-sref="products.details.repositories.new({productId: product.id})">
       Create Repository

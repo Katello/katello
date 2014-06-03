@@ -40,9 +40,6 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
 
             if (!env.prior) {
                 env.prior = {};
-            }
-            if (!env.permissions['promotable_or_removable']) {
-                enabled = false;
             } else if (envIds.indexOf(env.id) !== -1) {
                 //if version is already promoted to the environment
                 enabled = false;

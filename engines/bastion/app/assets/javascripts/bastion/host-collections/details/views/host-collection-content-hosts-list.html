@@ -33,7 +33,7 @@
         </a>
       </div>
 
-      <div ng-hide="hostCollection.readonly" class="nutupane-actions fr">
+      <div ng-hide="denied('edit_content_hosts')" class="nutupane-actions fr">
          <button class="btn btn-primary"
                  translate
                  ng-disabled="contentHostsTable.getSelected().length == 0 || isRemoving"

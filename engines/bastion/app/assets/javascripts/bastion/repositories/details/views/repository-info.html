@@ -15,6 +15,7 @@
 
     <button class="btn btn-default"
             ng-click="syncRepository(repository); working = true"
+            ng-hide="denied('sync_products', product)"
             ng-disabled="syncInProgress(repository.sync_state)">
       <i class="icon-refresh"></i>
       <span translate>Sync Now</span>
@@ -26,7 +27,7 @@
 
     <button class="btn btn-default"
             ng-click="openModal()"
-            ng-disabled="!repository.permissions.deletable">
+            ng-hide="denied('delete_products', product)">
       {{ "Remove Repository" | translate }}
     </button>
   </div>
@@ -57,7 +58,7 @@
       <span class="info-value"
             alch-edit-text="repository.url"
             on-save="save(repository)"
-            readonly="repository.readonly">
+            readonly="repository.readonly || denied('edit_products', product)">
       </span>
     </div>
 
@@ -72,7 +73,7 @@
             alch-edit-checkbox="repository.unprotected"
             formatter="booleanToYesNo"
             on-save="save(repository)"
-            readonly="repository.readonly">
+            readonly="repository.readonly || denied('edit_products', product)">
       </span>
 
     </div>
@@ -88,7 +89,7 @@
       <span class="info-label" translate>GPG Key</span>
       <span class="info-value"
             alch-edit-select="repository.gpg_key.name"
-            readonly="repository.readonly"
+            readonly="repository.readonly || denied('edit_products', product)"
             selector="repository.gpg_key_id"
             options="gpgKeys()"
             on-save="save(repository)">
@@ -173,7 +174,7 @@
     </table>
   </section>
 
-  <section class="well">
+  <section class="well" ng-show="permitted('edit_products', product)">
     <h5 translate ng-show="repository.content_type == 'puppet'">Upload Puppet Module</h5>
     <h5 translate ng-show="repository.content_type == 'yum'">Upload Package</h5>
 
@@ -187,13 +188,15 @@
 
       <div class="control-group">
         <div class="input">
-          <input type="file" name="content[]" multiple/>
+          <input type="file" name="content[]" ng-hide="denied('edit_products', product)" multiple/>
         </div>
       </div>
 
       <div class="control-group">
         <div class="control-button">
-          <button class="primary" upload-submit ng-click="progress.uploading = true">
+          <button class="primary"
+		        ng-hide="denied('edit_products', product)"
+	          upload-submit ng-click="progress.uploading = true">
             <i class="icon-spinner icon-spin" ng-show="progress.uploading"></i>
             <span ng-show="progress.uploading" translate>Uploading...</span>
             <span ng-hide="progress.uploading" translate>Upload</span>

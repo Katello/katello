@@ -1,7 +1,7 @@
 <span page-title ng-model="activationKey">{{ 'Subscriptions for Activation Key:' | translate }} {{ activationKey.name }}</span>
 
 <nav>
-  <ul class="nav nav-tabs">
+  <ul class="nav nav-tabs" ng-show="permitted('edit_activation_keys', activationKey)">
     <li ng-class="{active: isState('activation-keys.details.subscriptions.list')}">
       <a ui-sref="activation-keys.details.subscriptions.list">
         <!-- TODO: other pages too - label "List" vs. "List/Remove" based on edit permissions -->

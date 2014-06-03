@@ -16,10 +16,10 @@ end
 
 node :permissions do |env|
   {
-    :readable => env.readable?,
-    :editable => env.editable?,
-    :deletable => env.deletable?,
-    :promotable_or_removable => env.promotable_or_removable?
+    :view_lifecycle_environments => env.readable?,
+    :edit_lifecycle_environments => env.editable?,
+    :destroy_lifecycle_environments => env.deletable?,
+    :promote_or_remove_content_views_to_environments => env.promotable_or_removable?
   }
 end
 

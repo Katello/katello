@@ -16,14 +16,13 @@
            modal-header='Remove Product "{{product.name}}"?'
            modal-body='Are you sure you want to remove product "{{ product.name }}"?'></div>
 
-      <i class="icon-question-sign" ng-show="!product.permissions.deletable"
+      <i class="icon-question-sign" ng-show="denied('delete_products', product)"
          tooltip="{{ 'You cannot remove this product because it was published to a content view or because you do not have permission.' | translate }}"
          tooltip-append-to-body="true">
       </i>
       <button class="btn btn-default"
-              ng-hide="isReadOnly(product)"
-              ng-click="openModal()"
-              ng-disabled="!product.permissions.deletable">
+              ng-hide="denied('delete_products', product)"
+              ng-click="openModal()">
         <i class="icon-trash"></i>
         {{ "Remove Product" | translate }}
       </button>

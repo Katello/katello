@@ -11,7 +11,7 @@
              ng-disabled="discovery.pending"/>
 
       <span class="input-group-btn input-group-lg">
-        <button ng-show="!discovery.pending"
+        <button ng-show="!discovery.pending && permitted('edit_products')"
                ng-disabled="!discovery.url"
                translate
                type="submit"
@@ -21,7 +21,7 @@
 
         <button type="button"
                 ng-disabled="discovery.working"
-                ng-show="discovery.pending"
+                ng-show="discovery.pending && permitted('edit_products')"
                 ng-click="cancelDiscovery()"
                 class="btn btn-primary btn-lg">
           <i class="icon-spinner icon-spin" ng-show="discovery.pending"></i>
@@ -49,6 +49,7 @@
       <div ng-hide="system.readonly" class="fr">
          <button class="btn btn-primary"
                  translate
+                 ng-hide="denied('create_products')"
                  ng-disabled="discoveryTable.getSelected().length == 0"
                  ng-click="setupSelected()">
            Create Selected

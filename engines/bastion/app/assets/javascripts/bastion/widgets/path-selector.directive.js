@@ -29,6 +29,7 @@ angular.module('Bastion.widgets').directive('pathSelector',
         scope: {
             paths: '=pathSelector',
             mode: '@',
+            disabled: '=',
             disableTrigger: '=',
             enabledCheck: '&',
             pathAttribute: '@'
@@ -74,7 +75,9 @@ angular.module('Bastion.widgets').directive('pathSelector',
 
             scope.checkEnabled = function (item) {
                 var enabled = true;
-                if (item.disabled) {
+                if (scope.disabled) {
+                    enabled = false;
+                } else if (item.disabled) {
                     enabled = false;
                 } else if (attrs.enabledCheck) {
                     enabled = scope.enabledCheck({item: item});

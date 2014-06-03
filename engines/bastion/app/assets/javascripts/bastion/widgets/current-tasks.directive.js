@@ -61,7 +61,7 @@ angular.module('Bastion.widgets').directive('currentTasks',
                 });
             }],
             link: function (scope) {
-                Task.registerSearch({ 'active_only': true, 'type': 'user', 'user_id': CurrentUser}, scope.updateTasks);
+                Task.registerSearch({ 'active_only': true, 'type': 'user', 'user_id': CurrentUser.id}, scope.updateTasks);
             }
         };
     }]);

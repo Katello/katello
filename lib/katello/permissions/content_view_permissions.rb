@@ -44,26 +44,20 @@ Foreman::Plugin.find(:katello).security_block :content_views do
              :resource_type => 'Katello::ContentView'
   permission :create_content_views,
              {
-              'katello/api/v2/content_views' => [:create],
-              'katello/api/v2/content_view_filters' => [:create],
-              'katello/api/v2/content_view_filter_rules' => [:create],
-              'katello/api/v2/content_view_puppet_modules' => [:create],
+              'katello/api/v2/content_views' => [:create]
              },
              :resource_type => 'Katello::ContentView'
   permission :edit_content_views,
              {
               'katello/api/v2/content_views' => [:update],
-              'katello/api/v2/content_view_filters' => [:update],
-              'katello/api/v2/content_view_filter_rules' => [:update],
-              'katello/api/v2/content_view_puppet_modules' => [:update],
+              'katello/api/v2/content_view_filters' => [:create, :update, :destroy],
+              'katello/api/v2/content_view_filter_rules' => [:create, :update, :destroy],
+              'katello/api/v2/content_view_puppet_modules' => [:create, :update, :destroy]
              },
              :resource_type => 'Katello::ContentView'
   permission :destroy_content_views,
              {
               'katello/api/v2/content_views' => [:destroy, :remove],
-              'katello/api/v2/content_view_filters' => [:destroy],
-              'katello/api/v2/content_view_filter_rules' => [:destroy],
-              'katello/api/v2/content_view_puppet_modules' => [:destroy],
               'katello/api/v2/content_view_versions' => [:destroy]
              },
              :resource_type => 'Katello::ContentView'

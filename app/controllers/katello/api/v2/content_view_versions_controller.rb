@@ -69,8 +69,7 @@ module Katello
     end
 
     def authorize_promotable
-      deny_access unless @environment.promotable_or_removable?
-      deny_access unless @version.content_view.promotable_or_removable?
+      deny_access unless @environment.promotable_or_removable? && @version.content_view.promotable_or_removable?
     end
 
     def authorize_destroy

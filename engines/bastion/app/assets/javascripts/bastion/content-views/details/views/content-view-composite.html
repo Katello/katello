@@ -1,7 +1,7 @@
 <div class="details details-full">
 
   <nav>
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" ng-show="permitted('edit_content_views', contentView)">
       <li ng-class="{active: isState('content-views.details.composite-content-views.list')}">
         <a ui-sref="content-views.details.composite-content-views.list">
           <span translate>

@@ -15,7 +15,8 @@
     :plain
       angular.module('Bastion').value('currentLocale', '#{I18n.locale}');
       angular.module('Bastion').value('CurrentOrganization', "#{current_organization.id if current_organization}");
-      angular.module('Bastion').value('CurrentUser', "#{current_user.id if current_user}");
+      angular.module('Bastion').value('Permissions', angular.fromJson('#{ current_user.roles.collect { |role| role.permissions }.flatten.to_json }'));
+      angular.module('Bastion').value('CurrentUser', angular.fromJson('#{current_user.to_json}').user);
       angular.module('Bastion').constant('BastionConfig', {
           consumerCertRPM: "#{Katello.config.consumer_cert_rpm}",
           markTranslated: #{SETTINGS[:mark_translated] || false}

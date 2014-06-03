@@ -11,7 +11,7 @@
       <span class="info-value"
             alch-edit-text="syncPlan.name"
             on-save="save(syncPlan)"
-            readonly="syncPlan.readonly">
+            readonly="denied('edit_sync_plans', syncPlan)">
       </span>
     </div>
 
@@ -20,7 +20,7 @@
       <span class="info-value"
             alch-edit-textarea="syncPlan.description"
             on-save="save(syncPlan)"
-            readonly="syncPlan.readonly">
+            readonly="denied('edit_sync_plans', syncPlan)">
       </span>
     </div>
 
@@ -38,6 +38,7 @@
       <span class="info-label" translate>Interval</span>
       <span class="info-value"
             alch-edit-select="syncPlan.interval"
+            readonly="denied('edit_sync_plans', syncPlan)"
             selector="syncPlan.interval"
             options="intervals"
             options-format="value for value in options"

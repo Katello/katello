@@ -10,7 +10,7 @@
       <span class="info-value"
             alch-edit-text="product.name"
             on-save="save(product)"
-            readonly="isReadOnly(product)">
+            readonly="isReadOnly(product) || denied('edit_products', product)">
       </span>
     </div>
 
@@ -23,7 +23,7 @@
       <span class="info-label" translate>GPG Key</span>
       <span class="info-value"
             alch-edit-select="product.gpg_key.name"
-            readonly="isReadOnly(product)"
+            readonly="isReadOnly(product) || denied('edit_products', product)"
             selector="product.gpg_key_id"
             options="gpgKeys()"
             on-save="save(product)">
@@ -35,8 +35,8 @@
       <span class="info-value"
             alch-edit-textarea="product.description"
             on-save="save(product)"
-            readonly="isReadOnly(product)">
-      </span>
+            readonly="isReadOnly(product) || denied('edit_products', product)">
+       </span>
     </div>
 
   </section>
@@ -57,7 +57,7 @@
             selector="product.sync_plan_id"
             on-save="save(product)"
             deletable="product.sync_plan_id != null"
-            readonly="product.readonly"
+            readonly="denied('edit_products', product)"
             on-delete="product.sync_plan_id = null; save(product)">
       </span>
     </div>
@@ -86,13 +86,15 @@
 
     <div class="detail">
       <button class="btn btn-default"
+              ng-hide="denied('create_sync_plans')"
               ui-sref="products.details.info.new-sync-plan">
         <i class="icon-plus"></i>
         <span translate>New Sync Plan</span>
       </button>
 
       <button class="btn btn-default"
-              ng-click="syncProduct()">
+              ng-click="syncProduct()"
+              ng-hide="denied('sync_products', product)">
         <i class="icon-spinner icon-spin" ng-show="productSyncing"></i>
         <span ng-show="productSyncing" translate>Syncing...</span>
         <i ng-hide="productSyncing" class="icon-refresh"></i>

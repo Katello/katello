@@ -51,7 +51,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
         });
 
         $scope.disableRemoveButton = function () {
-            return $scope.subscriptionsTable.numSelected === 0 || $scope.isRemoving || !$scope.contentHost.permissions.editable;
+            return $scope.subscriptionsTable.numSelected === 0 || $scope.isRemoving;
         };
 
         $scope.removeSelected = function () {

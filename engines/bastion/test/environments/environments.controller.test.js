@@ -53,12 +53,4 @@ describe('Controller: EnvironmentsController', function () {
         $scope.initiateCreatePath();
         expect($scope.environmentsTable.rows.length).toBe(2);
     });
-
-    it('should correctly determine if the path is creatable', function () {
-        $scope.environmentsTable = {rows: [{permissions: {creatable: true}}]};
-        expect($scope.creatable()).toBe(true);
-
-        $scope.environmentsTable = {rows: [{permissions: {creatable: false}}]};
-        expect($scope.creatable()).toBe(false);
-    });
 });

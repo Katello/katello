@@ -16,7 +16,9 @@
            modal-header='Unregister Content Host "{{contentHost.name}}"?'
            modal-body='Are you sure you want to unregister content host "{{ contentHost.name }}"?'></div>
 
-      <button class="btn btn-default" ng-disabled="contentHost.readonly" ng-click="openModal()" translate>Unregister Content Host</button>
+      <button class="btn btn-default"
+              ng-hide="denied('destroy_content_hosts', contentHost)"
+              ng-click="openModal()" translate>Unregister Content Host</button>
       <button class="btn btn-default" ui-sref="content-hosts.index">
         <i class="icon-remove"></i>
         {{ "Close" | translate }}

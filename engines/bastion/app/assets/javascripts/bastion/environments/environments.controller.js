@@ -44,13 +44,5 @@ angular.module('Bastion.environments').controller('EnvironmentsController',
                 $scope.environmentsTable.rows[0].pathId = 0;
                 $scope.environmentsTable.rows[0].showCreate = true;
             };
-
-            $scope.creatable = function () {
-                if ($scope.environmentsTable.rows.length > 0) {
-                    return $scope.environmentsTable.rows[0].permissions.creatable;
-                } else {
-                    return false;
-                }
-            };
         }]
 );

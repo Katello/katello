@@ -1,6 +1,10 @@
 <span page-title ng-model="contentHost">{{ 'Subscriptions for: ' | translate }} {{ contentHost.name }}</span>
 
-<button class="btn btn-primary fr" ng-click="autoAttachSubscriptions()">{{ "Run Auto-Attach" | translate }}</button>
+<button class="btn btn-primary fr"
+        ng-hide="denied('edit_content_hosts', contentHost)"
+        ng-click="autoAttachSubscriptions()">
+{{ "Run Auto-Attach" | translate }}
+</button>
 
 <section class="details">
   <h4 translate>Subscription Details</h4>
@@ -26,6 +30,7 @@
     <span class="info-value"
           alch-edit-checkbox="contentHost.autoheal"
           formatter="booleanToYesNo"
+          readonly="denied('edit_content_hosts', contentHost)"
           on-save="save(contentHost)">
     </span>
   </div>
@@ -33,7 +38,7 @@
     <span class="info-label" translate>Service Level</span>
         <span class="info-value"
               alch-edit-select="contentHost.serviceLevel"
-              readonly="contentHost.readonly"
+              readonly="denied('edit_content_hosts', contentHost)"
               selector="contentHost.serviceLevel"
               options="serviceLevels()"
               options-format="option for option in options"
@@ -43,7 +48,7 @@
 </section>
 
 <nav>
-  <ul class="nav nav-tabs">
+  <ul class="nav nav-tabs" ng-show="permitted('edit_content_hosts', contentHost)">
     <li ng-class="{active: isState('content-hosts.details.subscriptions.list')}">
       <a ui-sref="content-hosts.details.subscriptions.list">
         <!-- TODO: other pages too - label "List" vs. "List/Remove" based on edit permissions -->

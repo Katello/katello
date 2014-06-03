@@ -5,6 +5,7 @@
     <h4 translate>Content Host Subscriptions</h4>
     <button class="btn"
             translate
+            ng-hide="denied('edit_content_hosts', contentHost)"
             ng-click="subscription.confirm = true"
             ng-disabled="subscription.workingMode">
       Auto-attach available subscriptions to all content hosts

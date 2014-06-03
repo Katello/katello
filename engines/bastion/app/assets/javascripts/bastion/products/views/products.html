@@ -7,17 +7,21 @@
   </div>
 
   <div data-block="actions">
-    <button class="btn btn-default" ui-sref="products.bulk-actions.sync">
+    <button class="btn btn-default"
+            ng-show="permitted('edit_products') || permitted('destroy_products')"
+            ui-sref="products.bulk-actions.sync">
       <i class="icon-group leading-icon"></i>
       {{ "Bulk Actions" | translate }}
     </button>
 
-    <button class="btn btn-default" ui-sref="products.discovery.scan">
+    <button class="btn btn-default"
+            ng-hide="denied('edit_products')"
+            ui-sref="products.discovery.scan">
       <i class="icon-screenshot"></i>
       {{ "Repo Discovery" | translate }}
     </button>
 
-    <button class="btn btn-primary" ui-sref="products.new.form">
+    <button class="btn btn-primary" ui-sref="products.new.form" ng-hide="denied('create_products')">
       <i class="icon-plus"></i>
       {{ "New Product" | translate }}
     </button>
