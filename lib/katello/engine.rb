@@ -31,7 +31,7 @@ module Katello
       ForemanTasks.dynflow.config.eager_load_paths.concat(action_paths)
     end
 
-    initializer "katello.set_dynflow_middlewares", :after => 'foreman_tasks.initialize_dynflow' do |app|
+    initializer "katello.set_dynflow_middlewares", :before => 'foreman_tasks.initialize_dynflow' do |app|
       # We don't enable this in test env, as it adds the new field into the actions input
       # that we are not interested in tests
       unless Rails.env.test?
