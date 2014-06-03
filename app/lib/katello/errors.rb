@@ -13,7 +13,7 @@
 module Katello
 module Errors
 
-  class InvalidRepositoryContent < Exception; end
+  class InvalidRepositoryContent < StandardError; end
 
   class InvalidPuppetModuleError < InvalidRepositoryContent; end
 
@@ -85,5 +85,21 @@ module Errors
       self.conflicts = conflicts
     end
   end
+
+  class CandlepinError < StandardError
+
+    # Return a CandlepinError with the displayMessage
+    # as the message set it
+    def self.from_exception(exception)
+      error_data = MultiJson.load(exception.response)
+      if display_message = error_data["displayMessage"]
+        self.new(display_message).tap { |e| exception.set_backtrace(e.backtrace) }
+      end
+    rescue StandardError
+      return nil
+    end
+
+  end
+
 end
 end

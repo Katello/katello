@@ -15,6 +15,8 @@ module Actions
     module Provider
       class ManifestRefresh < Actions::AbstractAsyncTask
 
+        middleware.use Actions::Middleware::PropagateCandlepinErrors
+
         def plan(provider, upstream)
           action_subject provider
           plan_self :upstream => upstream
