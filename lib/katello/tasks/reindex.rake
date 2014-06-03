@@ -5,7 +5,7 @@ namespace :katello do
     Dir.glob(Katello::Engine.root.to_s + '/app/models/katello/*.rb').each { |file| require file }
 
     Katello::Util::Search.active_record_search_classes.each do |model|
-      print "Re-indexing #{model.name}\n"
+      puts "Re-indexing #{model.name}"
       model.create_elasticsearch_index
       sub_classes = model.subclasses
 
@@ -19,11 +19,13 @@ namespace :katello do
       model.index.import(objects) if objects.count > 0
     end
 
-    print "Re-indexing Repositories\n"
 
-    Katello::Repository.find_each{ |repo| repo.index_content }
+    Katello::Util::Search.pulp_backend_search_classes.each do |object_class|
+      puts "Re-indexing #{object_class.name}"
+      object_class.index_all
+    end
 
-    print "Re-indexing Pools\n"
+    puts "Re-indexing Pools"
     cp_pools = Katello::Resources::Candlepin::Pool.all
     if cp_pools
       # Pool objects
