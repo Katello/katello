@@ -35,6 +35,10 @@ module Katello
       Repository::PUPPET_TYPE
     end
 
+    def puppet?
+      true
+    end
+
     def organization
       if self.environment
         self.environment.organization
