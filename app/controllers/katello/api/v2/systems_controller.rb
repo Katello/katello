@@ -200,20 +200,6 @@ class Api::V2::SystemsController < Api::V2::ApiController
     respond_for_index :collection => response
   end
 
-  api :GET, "/systems/:id/tasks", N_("List async tasks for the content host")
-  param :id, String, :desc => N_("UUID of the content host"), :required => true
-  def tasks
-    @system.refresh_tasks
-
-    filters = [{:terms => {:task_owner_id => [@system.id]}},
-               {:terms => {:task_owner_type => ["System"]}}]
-
-    options = { :filters       => filters,
-                :load_records? => true }
-
-    respond_for_index(:collection => item_search(TaskStatus, params, options))
-  end
-
   # TODO: break this mehtod up
   api :GET, "/environments/:environment_id/systems/report", N_("Get content host reports for the environment")
   api :GET, "/organizations/:organization_id/systems/report", N_("Get content host reports for the organization")

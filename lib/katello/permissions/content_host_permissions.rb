@@ -4,8 +4,7 @@ Foreman::Plugin.find(:katello).security_block :content_hosts do
   permission :view_content_hosts,
              {
               'katello/api/v2/systems' => [:index, :show, :errata, :package_profile,
-                                           :report, :pools, :releases, :tasks,
-                                           :available_host_collections],
+                                           :report, :pools, :releases, :available_host_collections],
               'katello/api/v2/system_errata' => [:show],
               'katello/api/v2/systems_bulk_actions' => [:applicable_errata],
               'katello/api/v2/host_collections' => [:systems],
