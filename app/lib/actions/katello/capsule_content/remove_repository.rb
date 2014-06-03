@@ -15,14 +15,16 @@ module Actions
     module CapsuleContent
       class RemoveRepository < ::Actions::EntryAction
 
-        def plan(capsule_content, repository)
-          distributor = repository.find_node_distributor
+        # @param capsule_content [::Katello::CapsuleContent]
+        # @param pulp_repo [::Katello::Glue::Pulp::Repo]
+        def plan(capsule_content, pulp_repo)
+          distributor = pulp_repo.find_node_distributor
           if distributor
             plan_action(Pulp::Consumer::UnbindNodeDistributor,
                                   consumer_uuid: capsule_content.consumer_uuid,
-                                  repo_id: repository.pulp_id)
+                                  repo_id: pulp_repo.pulp_id)
           else
-            Rails.logger.error("Could not find node distributor for repository %s" % repository.pulp_id)
+            Rails.logger.error("Could not find node distributor for repository %s" % pulp_repo.pulp_id)
           end
         end
 

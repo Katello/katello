@@ -14,6 +14,14 @@ module Katello
       scope
     end
 
+    def pulp_repos(environment)
+      yum_repos = Katello::Repository.in_environment(environment).find_all do |repo|
+        repo.node_syncable?
+      end
+      puppet_environments = Katello::ContentViewPuppetEnvironment.in_environment(environment)
+      yum_repos + puppet_environments
+    end
+
     def add_lifecycle_environment(environment)
       @capsule.lifecycle_environments << environment
     end

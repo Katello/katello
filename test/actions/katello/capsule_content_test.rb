@@ -89,7 +89,7 @@ module ::Actions::Katello::CapsuleContent
     it 'allows limiting scope of the syncing to one environment' do
       action = create_and_plan_action(action_class, capsule_content, environment)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncNode) do |(input)|
-        input[:repo_ids].size.must_equal 2
+        input[:repo_ids].size.must_equal 3
       end
     end
   end
