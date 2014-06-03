@@ -12,15 +12,17 @@
  **/
 
 describe('Controller: PackageFilterController', function() {
-    var $scope, Rule;
+    var $scope, Rule, Package;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
-            Filter = $injector.get('MockResource').$new();
+            Filter = $injector.get('MockResource').$new(),
+            $q = $injector.get('$q');
 
         Rule = $injector.get('MockResource').$new();
+        Package = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {
@@ -29,6 +31,13 @@ describe('Controller: PackageFilterController', function() {
         };
         $scope.filter = Filter.get({id: 1});
         $scope.filter.rules = [];
+        $scope.contentView = {'repository_ids': []};
+
+        Package.autocomplete = function () {
+            return {
+                $promise: $q.defer().promise
+            };
+        };
 
         translate = function (string) {
             return string;
@@ -37,7 +46,8 @@ describe('Controller: PackageFilterController', function() {
         $controller('PackageFilterController', {
             $scope: $scope,
             translate: translate,
-            Rule: Rule
+            Rule: Rule,
+            Package: Package
         });
     }));
 
@@ -128,6 +138,16 @@ describe('Controller: PackageFilterController', function() {
 
         result = $scope.valid(rule);
         expect(result).toBe(false);
+    });
+
+    it("should provide a method to retrieve autocomplete results", function () {
+        var autocomplete;
+
+        spyOn(Package, 'autocomplete').andCallThrough();
+        autocomplete = $scope.fetchAutocomplete('gir');
+
+        expect(autocomplete.then).toBeDefined();
+        expect(Package.autocomplete).toHaveBeenCalled();
     });
 
 });

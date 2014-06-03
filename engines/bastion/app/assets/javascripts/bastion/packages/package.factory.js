@@ -22,6 +22,19 @@
  */
 angular.module('Bastion.packages').factory('Package',
     ['BastionResource', 'CurrentOrganization', function (BastionResource) {
-        return BastionResource('/api/v2/packages/:id', {'id': '@id'});
+
+        return BastionResource('/api/v2/packages/:id',
+            {'id': '@id'},
+            {
+                autocomplete: {
+                    method: 'GET',
+                    url: '/packages/auto_complete',
+                    transformResponse: function (data) {
+                        data = angular.fromJson(data);
+                        return {results: data};
+                    }
+                }
+            });
+
     }]
 );

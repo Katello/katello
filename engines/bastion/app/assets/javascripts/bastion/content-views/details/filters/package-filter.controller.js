@@ -22,7 +22,7 @@
  * @description
  */
 angular.module('Bastion.content-views').controller('PackageFilterController',
-    ['$scope', 'translate', 'Rule', function ($scope, translate, Rule) {
+    ['$scope', 'translate', 'Rule', 'Package', function ($scope, translate, Rule, Package) {
 
         $scope.rule = {
             type: 'all',
@@ -85,6 +85,17 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
                 if (rule.selected) {
                     removeRule(rule);
                 }
+            });
+        };
+
+        $scope.fetchAutocomplete = function (term) {
+            var repositoryIds = $scope.contentView['repository_ids'],
+                promise;
+
+            promise = Package.autocomplete({repoids: repositoryIds, term: term}).$promise;
+
+            return promise.then(function (data) {
+                return data.results;
             });
         };
 
