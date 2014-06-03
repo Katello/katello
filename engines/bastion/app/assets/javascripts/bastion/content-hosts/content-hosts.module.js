@@ -113,24 +113,6 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
         templateUrl: 'tasks/views/task-details.html'
     });
 
-    $stateProvider.state('content-hosts.details.events', {
-        abstract: true,
-        collapsed: true,
-        controller: 'ContentHostEventsController',
-        template: '<div ui-view></div>'
-    })
-    .state('content-hosts.details.events.index', {
-        url: '/events',
-        collapsed: true,
-        templateUrl: 'content-hosts/details/views/content-host-events.html'
-    })
-    .state('content-hosts.details.events.details', {
-        url: '/events/:eventId',
-        collapsed: true,
-        controller: 'ContentHostEventDetailsController',
-        templateUrl: 'content-hosts/details/views/content-host-event-details.html'
-    });
-
     $stateProvider.state('content-hosts.details.subscriptions', {
         abstract: true,
         collapsed: true,

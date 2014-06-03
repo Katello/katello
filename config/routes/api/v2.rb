@@ -188,8 +188,6 @@ Katello::Engine.routes.draw do
 
       api_resources :systems, :only => system_onlies do
         member do
-          get :tasks
-          match '/tasks/:id' => 'tasks#show', :via => :get
           get :available_host_collections, :action => :available_host_collections
           post :host_collections, :action => :add_host_collections
           delete :host_collections, :action => :remove_host_collections

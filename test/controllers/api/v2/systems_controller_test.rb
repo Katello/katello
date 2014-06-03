@@ -95,28 +95,6 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_tasks
-    items = mock()
-    items.stubs(:retrieve).returns([], 0)
-    items.stubs(:total_items).returns([])
-    Glue::ElasticSearch::Items.stubs(:new).returns(items)
-    System.any_instance.expects(:import_candlepin_tasks)
-
-    get :tasks, :id => @system.uuid
-
-    assert_response :success
-    assert_template 'api/v2/systems/tasks'
-  end
-
-  def test_tasks_protected
-    allowed_perms = [@view_permission]
-    denied_perms = [@create_permission, @update_permission, @destroy_permission]
-
-    assert_protected_action(:tasks, allowed_perms, denied_perms) do
-      get :tasks, :id => @system.uuid
-    end
-  end
-
   def test_available_host_collections
     get :available_host_collections, :id => @system.uuid
 
