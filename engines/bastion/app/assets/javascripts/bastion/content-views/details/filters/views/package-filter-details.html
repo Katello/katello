@@ -27,7 +27,10 @@
   <tr>
     <td></td><!-- Empty cell since the first row is special -->
     <td>
-      <input type="text" class="form-control" ng-model="rule.name"/>
+      <input type="text"
+             class="form-control"
+             typeahead="package for package in fetchAutocomplete($viewValue)"
+             ng-model="rule.name"/>
     </td>
     <td>
         <span class="col-sm-12" ng-class="{ 'col-sm-7': rule.type != 'all'}">
