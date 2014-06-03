@@ -62,7 +62,9 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     options[:filters] << {:terms => {:id => ids}} if ids
     options[:filters] << {:term => {:environment_id => params[:environment_id]}} if params[:environment_id]
     options[:filters] << {:term => {:content_view_ids => params[:content_view_id]}} if params[:content_view_id]
-    options[:filters] << {:term => {:content_view_version_id => @organization.default_content_view.versions.first.id}} if params[:library]
+    if params[:library] || params[:environment_id].nil?
+      options[:filters] << {:term => {:content_view_version_id => @organization.default_content_view.versions.first.id}}
+    end
     options[:filters] << {:term => {:content_type => params[:content_type]}} if params[:content_type]
 
     respond :collection => item_search(Repository, params, options)
