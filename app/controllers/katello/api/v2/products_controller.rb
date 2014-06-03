@@ -16,6 +16,8 @@ module Katello
     before_filter :find_activation_key, :only => [:index]
     before_filter :find_organization, :only => [:create, :index]
     before_filter :find_product, :only => [:update, :destroy, :show, :sync]
+    before_filter :find_organization_from_product, :only => [:update]
+    before_filter :authorize_gpg_key, :only => [:update, :create]
 
     resource_description do
       api_version "v2"
@@ -41,7 +43,6 @@ module Katello
         :filters => [],
         :load_records? => true
       }
-
       ids = Product.readable.where(:organization_id => @organization.id).pluck(:id)
       ids = filter_by_subscription(ids, params[:subscription_id]) if params[:subscription_id]
       ids = filter_by_activation_key(ids, @activation_key) if @activation_key
@@ -120,6 +121,18 @@ module Katello
 
     def filter_by_activation_key(ids = [], activation_key)
       ids & activation_key.products.map { |product| product.id }
+    end
+
+    def find_organization_from_product
+      @organization = @product.organization
+    end
+
+    def authorize_gpg_key
+      gpg_key_id = product_params[:gpg_key_id]
+      if gpg_key_id
+        gpg_key = GpgKey.readable.where(:id => gpg_key_id, :organization_id => @organization).first
+        fail HttpErrors::NotFound, _("Couldn't find gpg key '%s'") % gpg_key_id if gpg_key.nil?
+      end
     end
 
     def product_params

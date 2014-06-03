@@ -94,7 +94,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     denied_perms = [@read_permission, @update_permission, @delete_permission]
 
     assert_protected_action(:create, allowed_perms, denied_perms) do
-      post :create, :product => {}, :organization_id => @organization.id
+      post :create, :product => {:name => "foo"}, :organization_id => @organization.id
     end
   end
 
@@ -174,7 +174,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     denied_perms = [@read_permission, @delete_permission, @create_permission]
 
     assert_protected_action(:update, allowed_perms, denied_perms) do
-      put :update, :id => @product.id, :name => 'New Name'
+      put :update, :id => @product.id, :product => {:name => 'New Name'}
     end
   end
 
