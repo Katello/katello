@@ -96,6 +96,7 @@ install -p -m0644 etc/service-list %{buildroot}%{_sysconfdir}/%{name}/
 #create symlinks for important scripts
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_sbindir}
+mkdir -p %{buildroot}/usr/share/foreman/script/foreman-debug.d/
 ln -sv %{homedir}/script/katello-jobs %{buildroot}%{_bindir}/katello-jobs
 ln -sv %{homedir}/script/katello-debug.sh %{buildroot}/usr/share/foreman/script/foreman-debug.d/katello-debug.sh
 ln -sv %{homedir}/script/katello-remove %{buildroot}%{_bindir}/katello-remove
@@ -128,6 +129,7 @@ usermod -a -G katello-shared tomcat
 %ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
 
 %{homedir}/script
+/usr/share/foreman/script/foreman-debug.d/katello-debug.sh
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{_mandir}/man8/katello-service.8*
 %{_sbindir}/service-wait
