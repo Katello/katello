@@ -77,7 +77,7 @@ Requires(preun): chkconfig
 Requires(preun): initscripts
 
 #Pulp Requirements
-Requires: pulp-katello-plugins
+Requires: pulp-katello
 Requires: pulp-nodes-parent
 Requires: pulp-puppet-plugins
 Requires: pulp-rpm-plugins
@@ -87,11 +87,6 @@ Requires: pulp-server
 Requires: mongodb
 Requires: mongodb-server
 Requires: cyrus-sasl-plain
-
-#Qpid Requirements
-Requires: qpid-cpp-client
-Requires: qpid-cpp-server
-Requires: qpid-tools
 
 Requires: candlepin-selinux
 Requires: createrepo >= 0.9.9-18%{?dist}
