@@ -15,7 +15,8 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
-        has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id, :dependent => :destroy
+        has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
+                :dependent => :destroy, :inverse_of => :foreman_host
       end
     end
   end
