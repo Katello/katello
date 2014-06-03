@@ -14,17 +14,15 @@
     <span translate>Unlimited Content Hosts:</span>
     <input type="checkbox"
            name="limit"
-           ng-model="unlimited"
-           ng-checked="isUnlimited(hostCollection)"
-           ng-change="unlimitedChanged(hostCollection)"/>
+           ng-model="hostCollection.unlimited"/>
 
-    <div alch-form-group label="{{ 'Limit' | translate }}" ng-hide="isUnlimited(hostCollection)">
+    <div alch-form-group label="{{ 'Limit' | translate }}" ng-hide="hostCollection.unlimited">
       <input id="max_content_hosts"
              name="max_content_hosts"
              class="form-control"
              ng-model="hostCollection.max_content_hosts"
              type="number"
-             ng-change="inputChanged(hostCollection)"
+             min="1"
              tabindex="2"/>
     </div>
   </div>
