@@ -170,7 +170,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
   def find_gpg_key
     if params[:gpg_key_id]
-      @gpg_key = GpgKey.readable.find(:id => params[:gpg_key_id])
+      @gpg_key = GpgKey.readable.where(:id => params[:gpg_key_id], :organization_id => @organization).first
       fail HttpErrors::NotFound, _("Couldn't find gpg key '%s'") % params[:gpg_key_id] if @gpg_key.nil?
     end
   end
