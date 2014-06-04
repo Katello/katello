@@ -138,6 +138,8 @@ class HttpResource
       client = rest_client(Net::HTTP::Delete, :delete, a_path)
       result = process_response(client.delete(headers))
       result
+    rescue RestClient::ResourceNotFound => e
+      e.response
     rescue RestClient::Exception => e
       raise_rest_client_exception e, a_path, "DELETE"
     rescue Errno::ECONNREFUSED
