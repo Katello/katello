@@ -45,18 +45,36 @@ describe('Controller: HostCollectionFormController', function() {
         expect($scope.hostCollection).toBeDefined();
     });
 
-    it('should save a new host collection resource', function() {
-        var hostCollection = $scope.hostCollection;
+    describe('should save a new host collection resource', function() {
+        var hostCollection;
 
-        spyOn($scope.table, 'addRow');
-        spyOn($scope, 'transitionTo');
-        spyOn(hostCollection, '$save').andCallThrough();
-        $scope.save(hostCollection);
+        beforeEach(function () {
+            hostCollection = $scope.hostCollection;
+            spyOn($scope.table, 'addRow');
+            spyOn($scope, 'transitionTo');
+            spyOn(hostCollection, '$save').andCallThrough();
+        });
 
-        expect(hostCollection.$save).toHaveBeenCalled();
-        expect($scope.table.addRow).toHaveBeenCalled();
-        expect($scope.transitionTo).toHaveBeenCalledWith('host-collections.details.info',
-                                                         {hostCollectionId: $scope.hostCollection.id})
+        afterEach(function () {
+            expect(hostCollection.$save).toHaveBeenCalled();
+            expect($scope.table.addRow).toHaveBeenCalled();
+            expect($scope.transitionTo).toHaveBeenCalledWith('host-collections.details.info',
+                {hostCollectionId: $scope.hostCollection.id})
+        });
+
+        it('with unlimited hosts', function () {
+            hostCollection['max_content_hosts'] = 3;
+            hostCollection.unlimited = true;
+            $scope.save(hostCollection);
+            expect(hostCollection['max_content_hosts']).toBe(-1);
+        });
+
+        it ('with a host limit', function () {
+            hostCollection['max_content_hosts'] = 3;
+            hostCollection.unlimited = false;
+            $scope.save(hostCollection);
+            expect(hostCollection['max_content_hosts']).toBe(3);
+        });
     });
 
     it('should fail to save a new host collection resource', function() {
@@ -70,47 +88,4 @@ describe('Controller: HostCollectionFormController', function() {
         expect($scope.hostCollectionForm['name'].$invalid).toBe(true);
         expect($scope.hostCollectionForm['name'].$error.messages).toBeDefined();
     });
-
-    it('should correctly determine unlimited', function() {
-        $scope.hostCollection.max_content_hosts = -1;
-        expect($scope.isUnlimited($scope.hostCollection)).toBe(true);
-    });
-
-    it('should correctly determine limited', function() {
-        $scope.hostCollection.max_content_hosts = 0;
-        expect($scope.isUnlimited($scope.hostCollection)).toBe(false);
-    });
-
-    it('should set unlimited to true if input changes if actually unlimited', function(){
-        $scope.unlimited = false;
-        $scope.hostCollection.max_content_hosts = -1;
-       $scope.inputChanged($scope.hostCollection);
-       expect($scope.unlimited).toBe(true);
-    });
-
-    it('should not set unlimited to true if input changes if not unlimited', function(){
-       $scope.unlimited = false;
-       $scope.hostCollection.max_content_hosts = 1;
-       $scope.inputChanged($scope.hostCollection);
-       expect($scope.unlimited).toBe(false);
-    });
-
-    it('should set max_content_hosts to 1 if unlimited unchecked', function(){
-        $scope.unlimited = true;
-        $scope.hostCollection.max_content_hosts = -1;
-        $scope.unlimitedChanged($scope.hostCollection);
-
-        expect($scope.unlimited).toBe(false);
-        expect($scope.hostCollection.max_content_hosts).toBe(1);
-    });
-
-    it('should set max_content_hosts to -1 if unlimited checked', function(){
-        $scope.unlimited = false;
-        $scope.hostCollection.max_content_hosts = 0;
-        $scope.unlimitedChanged($scope.hostCollection);
-
-        expect($scope.unlimited).toBe(true);
-        expect($scope.hostCollection.max_content_hosts).toBe(-1);
-    });
-
 });

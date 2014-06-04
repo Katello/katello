@@ -30,33 +30,15 @@ angular.module('Bastion.host-collections').controller('HostCollectionFormControl
         $scope.hostCollection = $scope.hostCollection || new HostCollection();
 
         $scope.save = function (hostCollection) {
+            if (hostCollection.unlimited) {
+                hostCollection['max_content_hosts'] = -1;
+            }
             hostCollection['organization_id'] = CurrentOrganization;
             hostCollection.$save(success, error);
         };
 
-        $scope.unlimited = true;
-        $scope.hostCollection['max_content_hosts'] = -1;
-
-        $scope.isUnlimited = function (hostCollection) {
-            return hostCollection['max_content_hosts'] === -1;
-        };
-
-        $scope.inputChanged = function (hostCollection) {
-            if ($scope.isUnlimited(hostCollection)) {
-                $scope.unlimited = true;
-            }
-        };
-
-        $scope.unlimitedChanged = function (hostCollection) {
-            if ($scope.isUnlimited(hostCollection)) {
-                $scope.unlimited = false;
-                hostCollection['max_content_hosts'] = 1;
-            }
-            else {
-                $scope.unlimited = true;
-                hostCollection['max_content_hosts'] = -1;
-            }
-        };
+        $scope.hostCollection.unlimited = true;
+        $scope.hostCollection['max_content_hosts'] = 1;
 
         function success(response) {
             $scope.table.addRow(response);
