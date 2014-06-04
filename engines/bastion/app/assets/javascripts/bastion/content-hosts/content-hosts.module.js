@@ -208,7 +208,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
         templateUrl: 'content-hosts/bulk/views/errata-content-hosts.html'
     })
     .state('content-hosts.bulk-actions.host-collections', {
-        url: '/content_hosts/bulk-actions/host-collections',
+        url: '/content_hosts/bulk-actions/bulk-host-collections',
         collapsed: true,
         controller: 'ContentHostsBulkActionHostCollectionsController',
         templateUrl: 'content-hosts/bulk/views/bulk-actions-host-collections.html'
