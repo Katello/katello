@@ -44,7 +44,7 @@ describe('Controller: ContentHostDetailsInfoController', function() {
             callback.apply(this, [['RHEL6']]);
         };
 
-        Organization.registerableEnvironments = function(params, callback) {
+        Organization.readableEnvironments = function(params, callback) {
             var response = [[{name: 'Library', id: 1}]];
 
             if (callback) {

@@ -6,6 +6,18 @@
 
   <div data-extend-template="content-views/deletion/views/version-deletion-breadcrumb.html"></div>
 
+  <div class="details details-full">
+    <div alert warning alert-warning ng-hide="allSelectable()">
+      <i class="icon-warning-sign"></i>
+       <span translate> This Version cannot be deleted from some of the Lifecycle Environments due to one of the reasons below.</span>
+       <ul>
+         <li translate> No "Promote/Remove" permissions on the Lifecycle Environment.</li>
+         <li translate> No "Edit" permissions on some of the Content Hosts in that Lifecycle Environment.</li>
+         <li translate> No "Edit" permissions on some of the Activation Keys in that Lifecycle Environment.</li>
+       </ul>
+    </div>
+  </div>
+
   <p translate>
     Select the Lifecycle Environments you would like to remove Version {{ version.version }} from:
   </p>
@@ -30,8 +42,8 @@
           row-select="environment"
           ng-repeat="environment in environmentsTable.rows">
         <td>{{ environment.name }}</td>
-        <td>{{ environment.system_count }}</td>
-        <td>{{ environment.activation_key_count }}</td>
+        <td>{{ environment.system_count }} <span class="note warning" ng-hide="environment.permissions.all_systems_editable" translate>  (Not all Content Hosts editable )</span></td>
+        <td>{{ environment.activation_key_count }} <span class="note warning"  ng-hide="environment.permissions.all_keys_editable" translate>  (Not all Activation Keys editable )</span></td>
       </tr>
     </tbody>
 
@@ -56,7 +68,7 @@
         </button>
       </a>
 
-      <button class="btn btn-primary" ng-click="processSelection()" ng-disabled="selectionEmpty()" translate>
+      <button class="btn btn-primary" ng-click="processSelection()" ng-disabled="!anySelectable() || selectionEmpty()" translate>
         Next
       </button>
     </div>

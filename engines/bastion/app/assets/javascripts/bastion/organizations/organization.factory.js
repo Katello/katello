@@ -33,13 +33,25 @@ angular.module('Bastion.organizations').factory('Organization',
                 paths: {
                     method: 'GET',
                     url: '/api/v2/organizations/:id/environments/paths',
-                    isArray: true,
-                    params: {'permission_type': '@permission_type'}
-                },
-                registerableEnvironments: {
-                    method: 'GET',
-                    url: '/organizations/:organizationId/environments/registerable_paths',
                     isArray: true
+                },
+                readableEnvironments: {
+                    method: 'GET',
+                    url: '/api/v2/organizations/:id/environments/paths',
+                    isArray: true,
+                    transformResponse: function (data) {
+                        // transform [{environments : [{id, name, permissions: {readable : true}}]}]
+                        // to [[{id, name, select: true}]]
+                        return _.map(angular.fromJson(data), function (path) {
+                            return _.map(path["environments"], function (env) {
+                                return {
+                                    id: env.id,
+                                    name: env.name,
+                                    select: env.permissions["readable"]
+                                };
+                            });
+                        });
+                    }
                 },
                 redhatProvider: {
                     method: 'GET',

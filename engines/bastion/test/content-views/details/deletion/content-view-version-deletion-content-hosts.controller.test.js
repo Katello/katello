@@ -26,7 +26,7 @@ describe('Controller: ContentViewVersionDeletionContentHostsController', functio
 
         CurrentOrganization = "FOO";
         Organization =  $injector.get('MockResource').$new();
-        Organization.registerableEnvironments = function() {return []};
+        Organization.readableEnvironments = function() {return []};
         Nutupane = function () {
             this.table = {};
         };
@@ -38,7 +38,7 @@ describe('Controller: ContentViewVersionDeletionContentHostsController', functio
         $scope.validateEnvironmentSelection = function() {};
         $scope.deleteOptions = {contentHosts: {}};
 
-        spyOn(Organization, 'registerableEnvironments').andCallThrough();
+        spyOn(Organization, 'readableEnvironments').andCallThrough();
         spyOn($scope, 'validateEnvironmentSelection').andCallThrough();
         spyOn($scope, 'initEnvironmentWatch').andCallThrough();
 
@@ -53,8 +53,8 @@ describe('Controller: ContentViewVersionDeletionContentHostsController', functio
     }));
 
     it("loads registerable environments on load", function() {
-        expect(Organization.registerableEnvironments).toHaveBeenCalledWith(
-            {organizationId: CurrentOrganization});
+        expect(Organization.readableEnvironments).toHaveBeenCalledWith(
+            {id: CurrentOrganization});
     });
 
     it('should validate environments', function() {

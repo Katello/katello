@@ -66,7 +66,7 @@ library_dev_staging_view_library:
   cp_id:          10
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
@@ -76,7 +76,7 @@ library_dev_staging_view_dev:
   cp_id:          11
   environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
@@ -86,7 +86,7 @@ library_dev_staging_view_staging:
   cp_id:          12
   environment_id: <%= ActiveRecord::Fixtures.identify(:staging) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 

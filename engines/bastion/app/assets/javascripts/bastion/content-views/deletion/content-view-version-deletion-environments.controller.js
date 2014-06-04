@@ -32,7 +32,9 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionEn
                 $scope.deleteOptions.deleteArchive = true;
             } else {
                 angular.forEach($scope.environmentsTable.rows, function (row) {
-                    row.unselectable = !row.permissions['promotable_or_removable'];
+                    row.unselectable = !row.permissions['promotable_or_removable'] ||
+                                         !row.permissions['all_systems_editable'] ||
+                                         !row.permissions['all_keys_editable'];
                 });
 
                 if ($scope.deleteOptions.environments.length === 0) {
@@ -63,6 +65,14 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionEn
 
         $scope.selectionEmpty = function () {
             return !$scope.deleteOptions.deleteArchive && $scope.environmentsTable.numSelected === 0;
+        };
+
+        $scope.anySelectable = function () {
+            return _.findWhere($scope.environmentsTable.rows, {unselectable: false}) !== undefined;
+        };
+
+        $scope.allSelectable = function () {
+            return _.findWhere($scope.environmentsTable.rows, {unselectable: true}) === undefined;
         };
 
         $scope.processSelection = function () {

@@ -1,5 +1,4 @@
 object @resource
-
 extends 'katello/api/v2/common/identifier'
 extends 'katello/api/v2/common/org_reference'
 
@@ -19,10 +18,9 @@ child :environments => :environments do
   attributes :id, :name, :label
   node :permissions do |env|
   {
-    :readable => env.readable?
+    :readable => env.readable?,
   }
   end
-
 end
 
 child :repositories => :repositories do
@@ -44,7 +42,8 @@ end
 node :permissions do |cv|
 {
   :promotable_or_removable => cv.promotable_or_removable? && Katello::KTEnvironment.any_promotable?,
-  :deletable => cv.deletable?
+  :deletable => cv.deletable?,
+  :readable => cv.readable?
 }
 end
 

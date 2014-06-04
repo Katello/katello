@@ -105,7 +105,6 @@ class ResourceType < Katello::Model
   if Katello.config.katello?
     TYPES = {
         :organizations => {:model => Organization, :name => _("Organizations"), :global => false},
-        :environments => {:model => Katello::KTEnvironment, :name => _("Environments"), :global => false},
         :users => { :model => User, :name => _("Users"), :global => true},
         :roles => { :model => Katello::Role, :name => _("Roles"), :global => true},
         :all => { :model => Katello::DefaultModel, :name => _("All"), :global => false}

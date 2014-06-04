@@ -38,7 +38,7 @@ angular.module('Bastion.activation-keys').controller('NewActivationKeyController
         $scope.editContentView = false;
         $scope.environments = [];
 
-        $scope.environments = Organization.registerableEnvironments({organizationId: CurrentOrganization});
+        $scope.environments = Organization.readableEnvironments({id: CurrentOrganization});
 
         $scope.$watch('activationKey.environment', function (environment) {
             if (environment) {

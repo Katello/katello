@@ -34,7 +34,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionEnviro
             contentView: undefined
         };
 
-        $scope.environments = Organization.registerableEnvironments({organizationId: CurrentOrganization});
+        $scope.environments = Organization.readableEnvironments({id: CurrentOrganization});
 
         $scope.$watch('selected.environment', function (environment) {
             if (environment) {

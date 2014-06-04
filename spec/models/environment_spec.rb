@@ -18,57 +18,6 @@ describe KTEnvironment do
   include OrchestrationHelper
   include OrganizationHelperMethods
 
-  describe "perm tests" do
-
-    before do
-      disable_product_orchestration
-      disable_org_orchestration
-      @organization = get_organization
-      @environment = katello_environments(:dev)
-    end
-
-    describe "check on operations" do
-
-      all_verb_methods = [:viewable_for_promotions?,
-                          :contents_readable?,
-                          :systems_readable?,
-                          :systems_editable?,
-                          :systems_deletable?,
-                          :systems_registerable?]
-
-      permission_matrix = {
-          :read_contents =>  [ :contents_readable?, :viewable_for_promotions?],
-          :read_systems => [ :systems_readable?],
-          :register_systems => [:systems_readable?,:systems_registerable?],
-          :update_systems => [:systems_readable?, :systems_editable? ],
-          :delete_systems => [:systems_readable?, :systems_deletable? ],
-      }
-      permission_matrix.each_pair do |perm, true_ops|
-        true_ops.each do |op|
-          it "user with #{perm} on environments should be allowed to #{op} (katello)" do #TODO headpin
-            User.current = user_with_permissions { |u| u.can(perm, :environments, nil, @organization, :all_tags => true) }
-            KTEnvironment.find(@environment.id).send(op).must_equal(true)
-          end
-          it "user without perms should not  be allowed (katello)" do
-            User.current = user_without_permissions
-            KTEnvironment.find(@environment.id).send(op).wont_equal(true)
-          end
-        end
-        false_ops = all_verb_methods - true_ops
-        false_ops.each do |op|
-          it "user with #{perm} on environments should NOT be allowed to #{op} (katello)" do
-            User.current = user_with_permissions{ |u| u.can(perm, :environments,nil, @organization, :all_tags => true) }
-            KTEnvironment.find(@environment.id).send(op).wont_equal(true)
-          end
-          it "user without perms should not  be allowed (katello)" do
-            User.current = user_without_permissions
-            KTEnvironment.find(@environment.id).send(op).wont_equal(true)
-          end
-        end
-      end
-    end
-  end
-
   describe "main" do
     before(:each) do
 

@@ -145,8 +145,7 @@ module Katello
       Default: readable
     DESC
     def paths
-      env_paths = case params[:permission_type]
-                  when "promotable"
+      env_paths = if params[:permission_type] == "promotable"
                     @organization.promotable_promotion_paths
                   else
                     @organization.readable_promotion_paths

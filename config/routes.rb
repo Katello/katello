@@ -181,11 +181,6 @@ Katello::Engine.routes.draw do
       get :download_debug_certificate
       get :apply_default_info_status
     end
-    resources :environments, :only => [] do
-      collection do
-        get :registerable_paths
-      end
-    end
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
   match '/organizations/:id/default_info/:informable_type' => 'organizations#default_info', :via => :get, :as => :organization_default_info

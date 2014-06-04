@@ -23,6 +23,14 @@ module Katello
         authorized(:edit_activation_keys)
       end
 
+      def any_editable?
+        editable.count > 0
+      end
+
+      def all_editable?(content_view, environments)
+        key_query = ActivationKey.where(:content_view_id => content_view, :environment_id => environments)
+        key_query.count == key_query.editable.count
+      end
     end
 
     included do
