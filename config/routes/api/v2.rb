@@ -196,9 +196,11 @@ Katello::Engine.routes.draw do
           get :pools
           get :releases
           put :refresh_subscriptions
+          put :content_override
         end
         api_resources :activation_keys, :only => [:index]
         api_resources :host_collections, :only => [:index]
+        api_resources :products, :only => [:index]
         api_resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do
             match '/' => 'subscriptions#destroy', :via => :put

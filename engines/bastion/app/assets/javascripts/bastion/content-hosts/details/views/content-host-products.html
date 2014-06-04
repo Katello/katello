@@ -1,7 +1,7 @@
 <div alert type="'info'">
-  {{ "Below are the repository content sets currently available for this activation key through its subscriptions. For Red Hat subscriptions, additional content can be made available through the" | translate}}
+  {{ "Below are the repository content sets currently available for this content host through its subscriptions. For Red Hat subscriptions, additional content can be made available through the" | translate}}
   <a ng-href="/katello/providers/redhat_provider" translate>Red Hat Repositories page</a>.
-  {{ "Changing default settings for content hosts that register with this activation key requires subscription-manager version 1.10 or newer to be installed on that host." | translate }}
+  {{ "Changing default settings requires subscription-manager version 1.10 or newer to be installed on this host." | translate }}
 </div>
 
 <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
@@ -14,14 +14,15 @@
 <div class="details details-full pull-left">
   <section>
     <div ng-hide="displayArea.isAvailableContent" translate>
-      No repository content provided through subscriptions.
+      This Content Host is not attached to any subscriptions that provide content
     </div>
 
     <div ng-repeat="product in products" ng-hide="product.available_content.length < 1"
-         ng-controller="ActivationKeyProductDetailsController" ng-init="productDetails(product)">
+         ng-controller="ContentHostProductDetailsController" ng-init="productDetails(product)">
       <i ng-class="{'icon-plus': !expanded, 'icon-minus': expanded}" class="expand-icon"
-         ng-click="expanded = !expanded"></i>
-      <b>{{ product.name }}</b>
+         ng-click="expanded = !expanded">
+        <b>{{ product.name }}</b>
+      </i>
 
       <div class="row" ng-show="expanded">
         <div class="col-md-11 col-md-offset-1" ng-show="details.available_content.length < 1"
@@ -36,7 +37,7 @@
             <span class="col-sm-4" translate>Enabled by Default</span>
             <span class="col-sm-3"
                   alch-edit-select="content.enabledText"
-                  readonly="activationKey.readonly"
+                  readonly="contentHost.readonly"
                   selector="content.overrideEnabled"
                   options="overrideEnableChoices(content)"
                   on-save="saveContentOverride(content)">

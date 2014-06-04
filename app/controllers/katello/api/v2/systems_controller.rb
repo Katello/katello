@@ -23,7 +23,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
                                         :package_profile, :errata,
                                         :pools, :enabled_repos, :releases,
                                         :available_host_collections,
-                                        :refresh_subscriptions, :tasks] # TODO: this should probably be :except
+                                        :refresh_subscriptions, :tasks, :content_override]
   before_filter :find_environment, :only => [:index, :report]
   before_filter :find_optional_organization, :only => [:create, :index, :activate, :report]
   before_filter :find_host_collection, :only => [:index]
@@ -260,6 +260,13 @@ class Api::V2::SystemsController < Api::V2::ApiController
                  :total => @system.available_releases.size,
                  :subtotal => @system.available_releases.size }
     respond_for_index :collection => response
+  end
+
+  def content_override
+    content_override = params[:content_override]
+    @system.set_content_override(content_override[:content_label],
+                                 content_override[:name], content_override[:value]) if content_override
+    respond_for_show
   end
 
   private

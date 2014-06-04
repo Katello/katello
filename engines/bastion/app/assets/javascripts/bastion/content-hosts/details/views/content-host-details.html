@@ -68,6 +68,12 @@
           Errata
         </a>
       </li>
+      <li ng-class="{active: isState('content-hosts.details.products')}">
+        <a translate
+           ui-sref="content-hosts.details.products">
+          Product Content
+        </a>
+      </li>
       <li ng-repeat="menuItem in menuExpander.getMenu('contentHost')">
         <a href="{{ menuItem.url }}">
           {{ menuItem.label }}

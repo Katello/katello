@@ -14,6 +14,7 @@ module Katello
   class Api::V2::ProductsController < Api::V2::ApiController
 
     before_filter :find_activation_key, :only => [:index]
+    before_filter :find_system, :only => [:index]
     before_filter :find_organization, :only => [:create, :index]
     before_filter :find_product, :only => [:update, :destroy, :show, :sync]
     before_filter :find_organization_from_product, :only => [:update]
@@ -46,6 +47,7 @@ module Katello
       ids = Product.readable.where(:organization_id => @organization.id).pluck(:id)
       ids = filter_by_subscription(ids, params[:subscription_id]) if params[:subscription_id]
       ids = filter_by_activation_key(ids, @activation_key) if @activation_key
+      ids = filter_by_system(ids, @system) if @system
 
       options[:filters] << {:terms => {:id => ids}}
       options[:filters] << {:term => {:name => params[:name].downcase}} if params[:name]
@@ -114,6 +116,14 @@ module Katello
       end
     end
 
+    def find_system
+      if params[:system_id]
+        @system = System.find_by_uuid(params[:system_id])
+        fail HttpErrors::NotFound, _("Couldn't find content host '%s'") % params[:system_id] if @system.nil?
+        @organization = @system.organization
+      end
+    end
+
     def filter_by_subscription(ids, subscription_id)
       @subscription = Pool.find_by_id!(subscription_id)
       ids & @subscription.products.pluck("#{Product.table_name}.id")
@@ -133,6 +143,10 @@ module Katello
         gpg_key = GpgKey.readable.where(:id => gpg_key_id, :organization_id => @organization).first
         fail HttpErrors::NotFound, _("Couldn't find gpg key '%s'") % gpg_key_id if gpg_key.nil?
       end
+    end
+
+    def filter_by_system(ids = [], system)
+      ids & system.products.map { |product| product.id }
     end
 
     def product_params
