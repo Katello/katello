@@ -54,6 +54,13 @@ module ::Actions::Katello::CapsuleContent
         create_and_plan_action(action_class, capsule_content, environment)
       end
     end
+
+    it 'fails when trying to add the environment to default capsule' do
+      Katello::CapsuleContent.any_instance.stubs(:default_capsule?).returns(true)
+      assert_raises(RuntimeError) do
+        create_and_plan_action(action_class, capsule_content, environment)
+      end
+    end
   end
 
   class RemoveLifecycleEnvironmentTest < TestBase
@@ -70,6 +77,13 @@ module ::Actions::Katello::CapsuleContent
 
     it 'fails when trying to remove environment that is not in the capsule' do
       assert_raises(ActiveRecord::RecordNotFound) do
+        create_and_plan_action(action_class, capsule_content, environment)
+      end
+    end
+
+    it 'fails when trying to remove environment from the default capsule' do
+      Katello::CapsuleContent.any_instance.stubs(:default_capsule?).returns(true)
+      assert_raises(RuntimeError) do
         create_and_plan_action(action_class, capsule_content, environment)
       end
     end
@@ -90,6 +104,12 @@ module ::Actions::Katello::CapsuleContent
       action = create_and_plan_action(action_class, capsule_content, environment)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncNode) do |(input)|
         input[:repo_ids].size.must_equal 3
+      end
+    end
+    it 'fails when trying to sync to the default capsule' do
+      Katello::CapsuleContent.any_instance.stubs(:default_capsule?).returns(true)
+      assert_raises(RuntimeError) do
+        create_and_plan_action(action_class, capsule_content, environment)
       end
     end
   end

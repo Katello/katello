@@ -44,12 +44,26 @@ module Katello
       @consumer_uuid ||= System.where(name: @capsule.name).first!.uuid
     end
 
-    def self.with_environment(environment)
-      SmartProxy.joins(:capsule_lifecycle_environments).
-          where(katello_capsule_lifecycle_environments:
-                { lifecycle_environment_id: environment.id }).map do |proxy|
-        self.new(proxy)
+    def default_capsule?
+      @capsule.default_capsule?
+    end
+
+    def self.with_environment(environment, include_default = false)
+      scope = SmartProxy.joins(:capsule_lifecycle_environments).
+          where(katello_capsule_lifecycle_environments: { lifecycle_environment_id: environment.id })
+
+      unless include_default
+        server_fqdn = Facter.value(:fqdn) || SETTINGS[:fqdn]
+        scope = scope.where("#{ SmartProxy.table_name }.name not in (?)", server_fqdn)
       end
+
+      scope.map { |proxy| self.new(proxy) }
+    end
+
+    def self.default_capsule
+      server_fqdn = Facter.value(:fqdn) || SETTINGS[:fqdn]
+      proxy = SmartProxy.where(name: server_fqdn).first
+      self.new(proxy) if proxy
     end
   end
 end

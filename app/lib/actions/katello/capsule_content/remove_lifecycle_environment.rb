@@ -16,6 +16,8 @@ module Actions
       class RemoveLifecycleEnvironment < ::Actions::EntryAction
 
         def plan(capsule_content, environment)
+          fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
+
           capsule_content.remove_lifecycle_environment(environment)
 
           capsule_content.pulp_repos(environment).each do |pulp_repo|
