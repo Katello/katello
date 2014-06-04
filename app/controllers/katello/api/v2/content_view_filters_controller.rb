@@ -22,10 +22,12 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   api :GET, "/content_views/:content_view_id/filters", N_("List filters")
   api :GET, "/content_view_filters", N_("List filters")
   param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
+  param :name, String, :desc => N_("Filter content view filters by name")
   def index
     options = sort_params
     options[:load_records?] = true
     options[:filters] = [{ :terms => { :id => @view.filter_ids } }]
+    options[:filters] << {:term => {:name => params[:name].downcase}} if params[:name]
 
     @search_service.model = ContentViewFilter
     respond(:collection => item_search(ContentViewFilter, params, options))
