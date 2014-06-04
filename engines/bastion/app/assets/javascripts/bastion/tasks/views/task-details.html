@@ -55,15 +55,16 @@
        <div ng-class="{ active: (task.state === 'pending' || task.state === 'running') }" class="progress progress-striped">
          <span progressbar animate="false" value="task.progressbar.value" type="{{task.progressbar.type}}"></span>
        </div>
-    </section>
 
-    <div class="divider"></div>
+       <div class="detail" ng-show="task.humanized.output.length > 0">
+         <span class="info-label" translate>Details</span>
+         <pre>{{ task.humanized.output }}</pre>
+       </div>
 
-    <section>
-      <div class="detail" ng-show="task.humanized.output.length > 0">
-        <span class="info-label" translate>Details</span>
-        <pre>{{ task.humanized.output }}</pre>
-      </div>
+       <a href="/foreman_tasks/tasks/{{task.id}}">
+         {{ "More Details" | translate }}
+       </a>
+
     </section>
   </div>
 </div>

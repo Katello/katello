@@ -50,6 +50,13 @@ module Actions
       #  "error": null
       #}
 
+      def run(event = nil)
+        # do nothing when the action is being skipped
+        unless event == Dynflow::Action::Skip
+          super
+        end
+      end
+
       def done?
         external_task.all?{ |task| !!task[:finish_time] || !!FINISHED_STATES.include?(task[:state]) }
       end
@@ -74,13 +81,8 @@ module Actions
         #Combine new tasks and remove call reports
         output[:pulp_tasks] = external_task_data.reject{ |task| task['task_id'].nil?} + new_tasks
         output[:pulp_tasks].each do |pulp_task|
-          if pulp_task[:state] == 'error'
-            message = if pulp_task[:exception]
-                        Array(pulp_task[:exception]).join('; ')
-                      else
-                        "Pulp task error"
-                      end
-            error! message
+          if pulp_exception = ::Katello::Errors::PulpError.from_task(pulp_task)
+            fail pulp_exception
           end
         end
       end

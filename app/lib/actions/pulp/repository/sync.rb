@@ -50,6 +50,13 @@ module Actions
           Sync::Presenter.new(self)
         end
 
+        def rescue_strategy_for_self
+          # There are various reasons the syncing fails, not all of them are
+          # fatal: when fail on syncing, we continue with the task ending up
+          # in the warning state, but not locking further syncs
+          Dynflow::Action::Rescue::Skip
+        end
+
         class Presenter < Helpers::Presenter::Base
 
           # TODO: in Rails 4.0, the logic is possible to use from ActiveSupport
