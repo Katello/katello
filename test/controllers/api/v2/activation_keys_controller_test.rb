@@ -240,5 +240,14 @@ module Katello
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
     end
+
+    def test_failed_validator
+      results = JSON.parse(post(:create, :organization_id => @organization.id,
+                           :activation_key => { :usage_limit => 0 }).body)
+
+      assert_response 422
+      assert_includes results['errors']['name'], 'cannot be blank'
+    end
+
   end
 end
