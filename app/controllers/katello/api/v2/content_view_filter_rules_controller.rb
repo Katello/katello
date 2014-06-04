@@ -88,7 +88,7 @@ module Katello
     end
 
     def rule_params
-      params.require(:content_view_filter_rule).permit(:name, :version, :min_version, :max_version,
+      params.fetch(:content_view_filter_rule, {}).permit(:name, :version, :min_version, :max_version,
                                                        :errata_id, :start_date, :end_date, :types => [])
     end
 
