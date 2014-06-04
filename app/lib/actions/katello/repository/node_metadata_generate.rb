@@ -23,11 +23,12 @@ module Actions
                           pulp_id: repo.pulp_id,
                           distributor_type_id: Runcible::Models::NodesHttpDistributor.type_id)
             end
-
-            ::Katello::CapsuleContent.with_environment(repo.environment).each do |capsule_content|
-              plan_action(Pulp::Consumer::SyncNode,
-                          consumer_uuid: capsule_content.consumer_uuid,
-                          repo_ids: [repo.pulp_id])
+            concurrence do
+              ::Katello::CapsuleContent.with_environment(repo.environment).each do |capsule_content|
+                plan_action(Pulp::Consumer::SyncNode,
+                            consumer_uuid: capsule_content.consumer_uuid,
+                            repo_ids: [repo.pulp_id])
+              end
             end
           end
         end

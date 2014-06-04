@@ -39,12 +39,22 @@ module Actions
             end
 
             plan_action(ContentView::UpdateEnvironment, version.content_view, environment)
-            plan_self(history_id: history.id, environment_id: environment.id, environment_name: environment.name)
+            plan_self(history_id: history.id, environment_id: environment.id, user_id: ::User.current.id,
+                      environment_name: environment.name, content_view_id: version.content_view.id)
           end
         end
 
         def humanized_name
           _("Promotion")
+        end
+
+        def run
+          ::User.current = ::User.find(input[:user_id])
+          ForemanTasks.async_task(ContentView::NodeMetadataGenerate,
+                                  ::Katello::ContentView.find(input[:content_view_id]),
+                                  ::Katello::KTEnvironment.find(input[:environment_id]))
+        ensure
+          ::User.current = nil
         end
 
         def finalize

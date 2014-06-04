@@ -27,10 +27,7 @@ module Actions
               plan_action(Repository::Clear, clone)
             end
             plan_action(Repository::CloneContent, repository, clone, [], false)
-            concurrence do
-              plan_action(Katello::Repository::NodeMetadataGenerate, clone)
-              plan_action(Pulp::Repository::RegenerateApplicability, pulp_id: clone.pulp_id)
-            end
+            plan_action(Pulp::Repository::RegenerateApplicability, pulp_id: clone.pulp_id)
           end
         end
 
