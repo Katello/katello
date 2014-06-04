@@ -19,7 +19,6 @@ module Glue::Pulp::Repos
     base.send :include, InstanceMethods
     base.class_eval do
       before_save :save_repos_orchestration
-      before_destroy :destroy_repos_orchestration
     end
   end
 
@@ -318,13 +317,6 @@ module Glue::Pulp::Repos
       end
     end
 
-    def del_repos
-      #destroy all repos in all environments
-      Rails.logger.debug "deleting all repositories in product #{self.label}"
-      self.repositories.destroy_all
-      true
-    end
-
     def custom_repos_create_orchestration
       pre_queue.create(:name => "create pulp repositories for product: #{self.label}",      :priority => 1, :action => [self, :set_repos])
     end
@@ -339,10 +331,6 @@ module Glue::Pulp::Repos
       when :promote
         # do nothing, as repos have already been promoted (see promote_repos method)
       end
-    end
-
-    def destroy_repos_orchestration
-      pre_queue.create(:name => "delete pulp repositories for product: #{self.label}", :priority => 6, :action => [self, :del_repos])
     end
 
     protected

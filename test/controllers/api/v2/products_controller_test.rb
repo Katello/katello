@@ -15,6 +15,7 @@ require "katello_test_helper"
 
 module Katello
 class Api::V2::ProductsControllerTest < ActionController::TestCase
+  include Support::ForemanTasks::Task
 
   def self.before_suite
     models = ["Product"]
@@ -179,6 +180,10 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   end
 
   def test_destroy
+    assert_async_task ::Actions::Katello::Product::Destroy do |prod|
+      prod.id.must_equal @product.id
+    end
+
     delete :destroy, :id => @product.id
 
     assert_response :success

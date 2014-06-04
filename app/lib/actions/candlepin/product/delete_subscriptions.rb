@@ -10,16 +10,18 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-  class Model < ActiveRecord::Base
-    self.abstract_class = true
+module Actions
+  module Candlepin
+    module Product
+      class DeleteSubscriptions < Candlepin::AbstractAsyncTask
+        input_format do
+          param :organization_label
+          param :cp_id
+        end
 
-    # remove once foreman has strong_parameters or Rails 4
-    include Katello::ForbiddenAttributesProtection
-
-    def destroy!
-      unless destroy
-        fail self.errors.full_messages.join('; ')
+        def invoke_external_task
+          ::Katello::Resources::Candlepin::Product.delete_subscriptions(input[:organization_label], input[:cp_id])
+        end
       end
     end
   end

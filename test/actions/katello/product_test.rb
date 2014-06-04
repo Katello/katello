@@ -26,7 +26,7 @@ module Katello
       @repository = FactoryGirl.build('katello_repository', product: @product, content_id: 'foobar')
     end
 
-    describe 'Destroy' do
+    describe 'Content Destroy' do
       let(:action_class) { ::Actions::Katello::Product::ContentDestroy }
       let(:candlepin_destroy_class) { ::Actions::Candlepin::Product::ContentDestroy }
       let(:candlepin_remove_class) { ::Actions::Candlepin::Product::ContentRemove }
@@ -67,7 +67,6 @@ module Katello
         refute_action_planed action, candlepin_destroy_class
       end
     end
-
   end
 end
 
@@ -112,5 +111,40 @@ module ::Actions::Katello::Product
       assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, product)
     end
   end
+
+  class DestroyTest < TestBase
+    let( :action_class ) { ::Actions::Katello::Product::Destroy }
+    let(:candlepin_destroy_class) { ::Actions::Candlepin::Product::Destroy }
+    let(:candlepin_delete_pools_class) { ::Actions::Candlepin::Product::DeletePools }
+    let(:candlepin_delete_subscriptions_class) { ::Actions::Candlepin::Product::DeleteSubscriptions }
+
+    let( :product ) do
+      katello_products( :fedora )
+    end
+
+    it 'plans' do
+      action.stubs(:action_subject).with do |subject, params|
+        subject.must_equal(product)
+      end
+
+      repo = "fooo"
+      ::Katello::Product.any_instance.expects(:repositories).returns([repo])
+      product.expects(:destroy!)
+
+      plan_action(action, product)
+      assert_action_planed_with(action, candlepin_destroy_class, cp_id: product.cp_id )
+      assert_action_planed_with(action, ::Actions::Katello::Repository::Destroy, repo )
+
+      assert_action_planed_with(action,
+                                candlepin_delete_pools_class,
+                                cp_id: product.cp_id,
+                                organization_label: product.organization.label)
+
+      assert_action_planed_with(action, candlepin_delete_subscriptions_class,
+                                cp_id: product.cp_id, organization_label: product.organization.label)
+
+    end
+  end
+
 end
 
