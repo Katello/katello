@@ -55,5 +55,10 @@ class ProvidersController < Katello::ApplicationController
   def search_filter
     @filter = {:organization_id => current_organization}
   end
+
+  def title
+    _('Repositories')
+  end
+
 end
 end
