@@ -80,16 +80,16 @@
           </td>
           <td alch-table-cell>{{ repository.content_type }}</td>
           <td alch-table-cell>
-              <span ng-show="repository.feed">
+              <span ng-show="repository.url">
                 <span ng-show="repository.last_sync == null" translate>
                   Not Synced
                 </span>
                 <span ng-hide="repository.last_sync == null">
-                  <a href="sync_management">{{ repository.sync_state | capitalize}}</a>
+                  <a href="/katello/sync_management">{{ repository.sync_state | capitalize}}</a>
                   ({{ repository.last_sync | date:"short" }})
                 </span>
               </span>
-            <span ng-hide="repository.feed" translate>N/A</span>
+            <span ng-hide="repository.url" translate>N/A</span>
           </td>
           <td alch-table-cell>
               <span ng-show="repository.content_type == 'puppet'">
