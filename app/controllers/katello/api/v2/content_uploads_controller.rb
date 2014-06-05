@@ -12,68 +12,30 @@
 
 module Katello
 class Api::V2::ContentUploadsController < Api::V2::ApiController
-
   before_filter :find_repository
 
-  api :POST, "/repositories/:repo_id/content_uploads", N_("Create an upload request")
-  param :repo_id, :identifier, :required => true, :desc => N_("repository id")
+  api :POST, "/repositories/:repository_id/content_uploads", N_("Create an upload request")
+  param :repository_id, :identifier, :required => true, :desc => N_("repository id")
   def create
-    respond :resource => pulp_content.create_upload_request
+    render :json => pulp_content.create_upload_request
   end
 
-  api :PUT, "/repositories/:repo_id/content_uploads/:id/upload_bits", N_("Upload bits")
-  param :repo_id, :identifier, :required => true, :desc => N_("repository id")
-  param :id, :identifier, :required => true, :desc => N_("upload request id")
-  param :offset, :number, :required => true, :desc => N_("the offset at which Pulp will store the file contents")
-  param :content, File, :required => true, :desc => N_("file contents")
-  def upload_bits
+  api :PUT, "/repositories/:repository_id/content_uploads/:id", N_("Upload a chunk of the file's content")
+  param :repository_id, :identifier, :required => true, :desc => N_("Repository id")
+  param :id, :identifier, :required => true, :desc => N_("Upload request id")
+  param :offset, :number, :required => true, :desc => N_("The offset in the file where the content starts")
+  param :content, File, :required => true, :desc => N_("The actual file contents")
+  def update
     pulp_content.upload_bits(params[:id], params[:offset], params[:content])
     render :nothing => true
   end
 
-  api :DELETE, "/repositories/:repo_id/content_uploads/:id", N_("Delete an upload request")
-  param :repo_id, :identifier, :required => true, :desc => N_("repository id")
-  param :id, :identifier, :required => true, :desc => N_("upload request id")
+  api :DELETE, "/repositories/:repository_id/content_uploads/:id", N_("Delete an upload request")
+  param :repository_id, :identifier, :required => true, :desc => N_("Repository id")
+  param :id, :identifier, :required => true, :desc => N_("Upload request id")
   def destroy
     pulp_content.delete_upload_request(params[:id])
     render :nothing => true
-  end
-
-  api :POST, "/repositories/:repo_id/content_uploads/import_into_repo", N_("Import into a repository")
-  param :repo_id, :identifier, :required => true, :desc => N_("repository id")
-  param :uploads, Array, :required => true, :desc => N_("array of uploads to import")
-  def import_into_repo
-    params[:uploads].each do |upload|
-      pulp_content.import_into_repo(@repo.pulp_id, @repo.unit_type_id,
-        upload[:id], upload[:unit_key], {:unit_metadata => upload[:metadata]})
-    end
-
-    unit_keys = params[:uploads].map { |upload| upload[:unit_key] }
-    @repo.trigger_contents_changed(:wait => false, :index_units => unit_keys, :reindex => false)
-    render :nothing => true
-  end
-
-  api :POST, "/repositories/:id/content_uploads/file", N_("Upload content into the repository")
-  param :id, :identifier, :required => true
-  param :content, File, :required => true, :desc => N_("file contents")
-  def upload_file
-    filepaths = params.try(:[], :content).try(:map, &:path)
-
-    if !filepaths.blank?
-      @repo.upload_content(filepaths)
-      render :json => {:status => "success"}
-    else
-      fail HttpErrors::BadRequest, _("No file uploaded")
-    end
-
-  rescue Katello::Errors::InvalidPuppetModuleError => error
-    respond_for_exception(
-      error,
-      :status => :unprocessable_entity,
-      :text => error.message,
-      :errors => [error.message],
-      :with_logging => true
-    )
   end
 
   private
@@ -83,7 +45,7 @@ class Api::V2::ContentUploadsController < Api::V2::ApiController
   end
 
   def find_repository
-    @repo = Repository.find(params[:repository_id])
+    @repository = Repository.find(params[:repository_id])
   end
 
 end

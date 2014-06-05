@@ -61,40 +61,19 @@ module Katello
       end
     end
 
-    def test_upload_bits
+    def test_update
       mock_pulp_server(:upload_bits => true)
-      put :upload_bits, :id => "1" , :offset => "0", :content => "/tmp/my_file.rpm", :repository_id => @repo.id
+      put :update, :id => "1" , :offset => "0", :content => "/tmp/my_file.rpm", :repository_id => @repo.id
 
       assert_response :success
     end
 
-    def test_upload_bits_protected
+    def test_update_protected
       allowed_perms = [@update_permission]
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:upload_bits, allowed_perms, denied_perms) do
-        put :upload_bits, :id => "1" , :offset => "0", :content => "/tmp/my_file.rpm", :repository_id => @repo.id
-      end
-    end
-
-    def test_import_into_repo
-      mock_pulp_server(:import_into_repo => true)
-      Repository.any_instance.expects(:trigger_contents_changed).returns([])
-      Repository.any_instance.expects(:unit_type_id).returns("rpm")
-
-      post :import_into_repo, :id => "1", :repository_id => @repo.id,
-           :uploads => [{:unit_type_id => "rpm", :unit_key => {}, :unit_metadata => {}}]
-
-      assert_response :success
-    end
-
-    def test_import_into_repo_protected
-      allowed_perms = [@update_permission]
-      denied_perms = [@read_permission, @create_permission, @destroy_permission]
-
-      assert_protected_action(:import_into_repo, allowed_perms, denied_perms) do
-        post :import_into_repo, :id => "1", :unit_type_id => "rpm", :unit_key => {}, :unit_metadata => {},
-             :repository_id => @repo.id
+      assert_protected_action(:update, allowed_perms, denied_perms) do
+        put :update, :id => "1", :offset => "0", :content => "/tmp/my_file.rpm", :repository_id => @repo.id
       end
     end
 
@@ -111,25 +90,6 @@ module Katello
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         delete :destroy, :id => "1", :repository_id => @repo.id
-      end
-    end
-
-    def test_upload_file
-      test_document = File.join(Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
-      puppet_module = Rack::Test::UploadedFile.new(test_document, '')
-      Repository.any_instance.stubs(:upload_content)
-
-      post :upload_file, :id => "1", :repository_id => @repo.id, :content => [puppet_module]
-
-      assert_response :success
-    end
-
-    def test_upload_file_protected
-      allowed_perms = [@update_permission]
-      denied_perms = [@read_permission, @create_permission, @destroy_permission]
-
-      assert_protected_action(:upload_file, allowed_perms, denied_perms) do
-        post :upload_file, :repository_id => @repo.id
       end
     end
 

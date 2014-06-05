@@ -271,5 +271,43 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     end
   end
 
+  def test_upload_content
+    test_document = File.join(Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
+    puppet_module = Rack::Test::UploadedFile.new(test_document, '')
+    Repository.any_instance.stubs(:upload_content)
+
+    post :upload_content, :id => @repository.id, :content => [puppet_module]
+
+    assert_response :success
+  end
+
+  def test_upload_content_protected
+    allowed_perms = [@update_permission]
+    denied_perms = [@read_permission, @create_permission, @destroy_permission]
+
+    assert_protected_action(:upload_content, allowed_perms, denied_perms) do
+      post :upload_content, :id => @repository.id
+    end
+  end
+
+  def test_import_uploads
+    Repository.any_instance.expects(:import_upload).with([1]).reutrns(true)
+    Repository.any_instance.expects(:trigger_contents_changed).returns([])
+    Repository.any_instance.expects(:unit_type_id).returns("rpm")
+
+    put :import_uploads, :id => @repository.id, :upload_ids => [1]
+
+    assert_response :success
+  end
+
+  def test_import_uploads
+    allowed_perms = [@update_permission]
+    denied_perms = [@read_permission, @create_permission, @destroy_permission]
+
+    assert_protected_action(:import_uploads, allowed_perms, denied_perms) do
+      put :import_uploads, :id => @repository.id, :upload_ids => [1]
+    end
+  end
+
 end
 end

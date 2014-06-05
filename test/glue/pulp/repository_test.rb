@@ -231,7 +231,7 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
 
   def test_upload_puppet_module
     Repository.any_instance.expects(:trigger_contents_changed).with() do |options|
-      options[:wait] == false && options[:reindex] == false && options[:index_units].size > 0
+      options[:wait] == false && options[:reindex] == false
     end
 
     @filepath = File.join(Katello::Engine.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
@@ -349,7 +349,7 @@ class GluePulpRepoContentsTest < GluePulpRepoTestBase
     Package.expects(:index_packages).with([pkg['_id']])
 
     unit = {:checksumtype => pkg['checksumtype'], :checksum => pkg['checksum'] }
-    @@fedora_17_x86_64.trigger_contents_changed(:publish => true, :reindex => false, :index_units => [unit])
+    @@fedora_17_x86_64.trigger_contents_changed(:publish => true, :reindex => false, :index_units => [{:unit => unit}])
   end
 
 end

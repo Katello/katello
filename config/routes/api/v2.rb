@@ -314,21 +314,16 @@ Katello::Engine.routes.draw do
           get :search, :on => :collection
         end
 
-        api_resources :content_uploads, :controller => :content_uploads, :only => [:create, :destroy] do
-          member do
-            put :upload_bits
-          end
-          collection do
-            post :file, :to => 'content_uploads#upload_file'
-            post :import_into_repo
-          end
-        end
+        api_resources :content_uploads, :controller => :content_uploads, :only => [:create, :destroy, :update]
+
         member do
           get :package_groups
           get :package_group_categories
           get :gpg_key_content
           put :remove_packages
           post :sync
+          post :upload_content
+          put :import_uploads
         end
       end
 

@@ -41,9 +41,9 @@ Foreman::Plugin.find(:katello).security_block :products do
   permission :edit_products,
              {
               'katello/api/v2/products' => [:update],
-              'katello/api/v2/repositories' => [:update, :remove_packages],
+              'katello/api/v2/repositories' => [:update, :remove_packages, :import_uploads, :upload_content],
               'katello/api/v2/products_bulk_actions' => [:update_sync_plans],
-              'katello/api/v2/content_uploads' => [:create, :upload_bits, :import_into_repo, :upload_file, :destroy],
+              'katello/api/v2/content_uploads' => [:create, :update, :destroy],
               'katello/api/v2/organizations' => [:repo_discover, :cancel_repo_discover]
              },
              :resource_type => 'Katello::Product'

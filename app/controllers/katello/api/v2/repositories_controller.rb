@@ -17,7 +17,9 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   before_filter :find_product, :only => [:index]
   before_filter :find_product_for_create, :only => [:create]
   before_filter :find_organization_from_product, :only => [:create]
-  before_filter :find_repository, :only => [:show, :update, :destroy, :sync, :remove_packages]
+  before_filter :find_repository, :only => [:show, :update, :destroy, :sync,
+                                            :remove_packages, :upload_content,
+                                            :import_uploads]
   before_filter :find_organization_from_repo, :only => [:update]
   before_filter :find_gpg_key, :only => [:create, :update]
   before_filter :error_on_rh_product, :only => [:create]
@@ -154,6 +156,44 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   def remove_packages
     fail _("No package uuids provided") if params[:uuids].blank?
     respond_for_async :resource => sync_task(::Actions::Katello::Repository::RemovePackages, @repository, params[:uuids])
+  end
+
+  api :POST, "/repositories/:id/upload_content", N_("Upload content into the repository")
+  param :id, :identifier, :required => true, :desc => N_("repository ID")
+  param :content, File, :required => true, :desc => N_("Content files to upload. Can be a single file or array of files.")
+  def upload_content
+    filepaths = Array.wrap(params[:content]).compact.map(&:path)
+
+    if !filepaths.blank?
+      @repository.upload_content(filepaths)
+      render :json => {:status => "success"}
+    else
+      fail HttpErrors::BadRequest, _("No file uploaded")
+    end
+
+  rescue Katello::Errors::InvalidRepositoryContent => error
+    respond_for_exception(
+      error,
+      :status => :unprocessable_entity,
+      :text => error.message,
+      :errors => [error.message],
+      :with_logging => true
+    )
+  end
+
+  api :PUT, "/repositories/:id/import_uploads", N_("Import uploads into a repository")
+  param :id, :identifier, :required => true, :desc => N_("Repository id")
+  param :upload_ids, Array, :required => true, :desc => N_("Array of upload ids to import")
+  def import_uploads
+    params[:upload_ids].each do |upload_id|
+      begin
+        @repository.import_upload(upload_id)
+      rescue Katello::Errors::InvalidRepositoryContent => e
+        raise HttpErrors::BadRequest, e.message
+      end
+    end
+
+    render :nothing => true
   end
 
   protected
