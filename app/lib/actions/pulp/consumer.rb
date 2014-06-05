@@ -17,7 +17,9 @@ module Actions
         def humanized_output
           if task_result_packages
             ret = []
-            if task_result_packages.any?
+            if task_result_packages.is_a?(String)
+              ret << task_result_packages
+            elsif task_result_packages.any?
               ret.concat(task_result_packages.map { |package| package[:qname] })
             else
               ret << humanized_no_package
@@ -51,15 +53,35 @@ module Actions
               task_result_details[:package_group][:details]
         end
 
+        def task_rpm_succeeded?
+          task_result_details &&
+              task_result_details[:rpm] &&
+              task_result_details[:rpm][:succeeded] == true
+        end
+
+        def task_package_group_succeeded?
+          task_result_details &&
+              task_result_details[:package_group] &&
+              task_result_details[:package_group][:succeeded] == true
+        end
+
         def task_errors
           task_rpm_details && task_rpm_details[:errors]
         end
 
         def task_result_packages
           if task_rpm_details
-            task_rpm_details[:resolved] + task_rpm_details[:deps]
+            if task_rpm_succeeded?
+              task_rpm_details[:resolved] + task_rpm_details[:deps]
+            else
+              task_rpm_details[:message]
+            end
           elsif task_package_group_details
-            task_package_group_details[:resolved] + task_package_group_details[:deps]
+            if task_package_group_succeeded?
+              task_package_group_details[:resolved] + task_package_group_details[:deps]
+            else
+              task_package_group_details[:message]
+            end
           end
         end
 
