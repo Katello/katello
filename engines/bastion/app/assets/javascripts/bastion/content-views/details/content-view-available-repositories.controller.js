@@ -40,14 +40,9 @@ angular.module('Bastion.content-views').controller('ContentViewAvailableReposito
             'content_type': 'yum',
             'enabled': true
         });
-        nutupane.searchTransform = function (term) {
-            var addition = "NOT ( content_view_ids:" + $scope.$stateParams.contentViewId + " )";
 
-            if (term !== "" || term !== undefined) {
-                addition = term +  " " + addition;
-            }
-
-            return addition;
+        nutupane.searchTransform = function () {
+            return "NOT ( content_view_ids:" + $scope.$stateParams.contentViewId + " )";
         };
 
         $scope.repositoriesTable = nutupane.table;
