@@ -23,6 +23,9 @@
 angular.module('Bastion.content-views').controller('ErrataFilterController',
     ['$scope', function ($scope) {
 
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
+
         $scope.rule = {
             errataType: 'all',
             'start_date': null,
