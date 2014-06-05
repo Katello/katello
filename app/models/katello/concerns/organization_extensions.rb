@@ -62,6 +62,7 @@ module Katello
         before_create :create_library
         before_create :create_redhat_provider
         after_initialize :initialize_default_info
+        after_create :associate_default_capsule
 
         validates :name, :uniqueness => true, :presence => true
         validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -131,6 +132,11 @@ module Katello
 
         def create_redhat_provider
           self.providers << Katello::Provider.new(:name => "Red Hat", :provider_type => Katello::Provider::REDHAT)
+        end
+
+        def associate_default_capsule
+          capsule_content = Katello::CapsuleContent.default_capsule
+          capsule_content.capsule.organizations << self if capsule_content
         end
 
         def create_anonymous_provider

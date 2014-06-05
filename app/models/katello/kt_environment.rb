@@ -81,6 +81,7 @@ class KTEnvironment < Katello::Model
                      OR "#{CapsuleLifecycleEnvironment.table_name}"."capsule_id" != ?}, capsule.id)
         end)
 
+  after_create :add_to_default_capsule
   after_destroy :unset_users_with_default
 
   ERROR_CLASS_NAME = "Environment"
@@ -264,6 +265,10 @@ class KTEnvironment < Katello::Model
       prod.get_distribution(self, id)
     end
     distribution.flatten(1)
+  end
+
+  def add_to_default_capsule
+    CapsuleContent.default_capsule.try(:add_lifecycle_environment, self)
   end
 
   def unset_users_with_default

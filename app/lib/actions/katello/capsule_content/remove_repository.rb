@@ -18,6 +18,8 @@ module Actions
         # @param capsule_content [::Katello::CapsuleContent]
         # @param pulp_repo [::Katello::Glue::Pulp::Repo]
         def plan(capsule_content, pulp_repo)
+          fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
+
           distributor = pulp_repo.find_node_distributor
           if distributor
             plan_action(Pulp::Consumer::UnbindNodeDistributor,

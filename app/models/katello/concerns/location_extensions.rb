@@ -10,23 +10,16 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Actions
-  module Katello
-    module CapsuleContent
-      class Sync < ::Actions::EntryAction
+module Katello
+  module Concerns
+    module LocationExtensions
+      extend ActiveSupport::Concern
 
-        def plan(capsule_content, environment = nil)
-          fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
-
-          repository_ids = if environment
-                             capsule_content.pulp_repos(environment).map(&:pulp_id)
-                           end
-
-          plan_action(Pulp::Consumer::SyncNode,
-                      consumer_uuid: capsule_content.consumer_uuid,
-                      repo_ids: repository_ids)
+      module ClassMethods
+        def default_location
+          # In the future, we should have a better way to identify the 'default' location
+          Location.where(:name => "Default").first
         end
-
       end
     end
   end
