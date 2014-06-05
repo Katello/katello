@@ -14,6 +14,7 @@ module Actions
   module Pulp
     class AbstractAsyncTask < Pulp::Abstract
       include Actions::Base::Polling
+      include ::Dynflow::Action::Cancellable
 
       FINISHED_STATES = %w{finished error canceled skipped}
 
@@ -63,6 +64,15 @@ module Actions
 
       def external_task
         output[:pulp_tasks]
+      end
+
+      def cancel!
+        output[:pulp_tasks].each do |pulp_task|
+          task_resource.cancel(pulp_task['task_id'])
+        end
+        # We suspend the action and the polling will take care of finding
+        # out if the cancleling was successful
+        suspend
       end
 
       private
