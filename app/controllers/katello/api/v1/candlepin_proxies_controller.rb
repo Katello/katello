@@ -29,13 +29,8 @@ module Katello
 
     before_filter :proxy_request_path, :proxy_request_body
     before_filter :set_organization_id
-    before_filter :find_organization, :only => [:rhsm_index, :consumer_activate]
-    before_filter :find_default_organization_and_or_environment, :only => [:consumer_create, :consumer_activate]
-    before_filter :find_optional_organization, :only => [:consumer_create, :hypervisors_update, :consumer_activate]
-    before_filter :find_only_environment, :only => [:consumer_create]
-    before_filter :find_environment_and_content_view, :only => [:consumer_create]
+    before_filter :find_optional_organization, :only => [:hypervisors_update]
     before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
-    before_filter :authorize_environment_and_cv, :only => [:consumer_create]
 
     rescue_from RestClient::Exception do |e|
       Rails.logger.error pp_exception(e)
@@ -91,7 +86,8 @@ module Katello
 
     #api :GET, "/owners/:organization_id/environments", N_("List environments for RHSM")
     def rhsm_index
-      @all_environments = get_content_view_environments(query_params[:name]).collect do |env|
+      organization = find_organization
+      @all_environments = get_content_view_environments(query_params[:name], organization).collect do |env|
         {
           :id  => env.cp_id,
           :name => env.label,
@@ -199,9 +195,10 @@ module Katello
     #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")
     def consumer_create
       foreman_host = find_foreman_host
+      content_view_environment = find_content_view_environment
 
-      @system = System.new(system_params.merge(:environment  => @environment,
-                                               :content_view => @content_view,
+      @system = System.new(system_params.merge(:environment  => content_view_environment.environment,
+                                               :content_view => content_view_environment.content_view,
                                                :serviceLevel => params[:service_level],
                                                :host_id      => foreman_host.try(:id)))
 
@@ -249,8 +246,8 @@ module Katello
 
     private
 
-    def get_organization(org_id)
-      return Organization.without_deleting.having_name_or_label(org_id).first
+    def deny_access
+      fail HttpErrors::Forbidden, 'Access denied'
     end
 
     def set_organization_id
@@ -267,56 +264,21 @@ module Katello
       @system
     end
 
-    def find_default_organization_and_or_environment
-      # This has to grab the first default org associated with this user AND
-      # the environment that goes with him.
-      return if params.key?(:organization_id) || params.key?(:owner) || params.key?(:environment_id)
+    def find_content_view_environment
+      environment = nil
 
-      #At this point we know that they didn't supply an org or environment, so we can look up the default
-      @environment = current_user.default_environment
-      if @environment
-        @organization = @environment.organization
+      if params.key?(:environment_id)
+        environment = get_content_view_environment_by_cp_id(params[:environment_id])
+      elsif params.key?(:organization_id) && !params.key?(:environment_id)
+        organization = find_organization
+        environment = organization.library.content_view_environment
+      elsif User.current.default_organization.present?
+        environment = User.current.default_organization.library.content_view_environment
       else
-        fail HttpErrors::NotFound, _("You have not set a default organization and environment on the user %s.") % current_user.login
+        fail HttpErrors::NotFound, _("User '%s' did not specify an organization ID and does not have a default organization.") % current_user.login
       end
-    end
 
-    def find_only_environment
-      if !@environment && @organization && !params.key?(:environment_id)
-        if @organization.kt_environments.empty?
-          fail HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for system registration.") %
-            { :org => @organization.name, :env => "Library" }
-        end
-
-        # Some subscription-managers will call /users/$user/owners to retrieve the orgs that a user belongs to.
-        # Then, If there is just one org, that will be passed to the POST /api/consumers as the owner. To handle
-        # this scenario, if the org passed in matches the user's default org, use the default env. If not use
-        # the single env of the org or throw an error if more than one.
-        #
-        if @organization.kt_environments.size > 1
-          if current_user.default_environment && current_user.default_environment.organization == @organization
-            @environment = current_user.default_environment
-          else
-            fail HttpErrors::BadRequest, _("Organization %s has more than one environment. Please specify target environment for system registration.") % @organization.name
-          end
-        else
-          if @environment = @organization.kt_environments.first
-            return
-          end
-        end
-      end
-    end
-
-    def find_environment_and_content_view
-      # There are some scenarios (primarily create) where a system may be
-      # created using the content_view_environment.cp_id which is the
-      # equivalent of "environment_id"-"content_view_id".
-      return unless params.key?(:environment_id)
-      cve = get_content_view_environment_by_cp_id(params[:environment_id])
-      @environment = cve.environment
-      @organization = @environment.organization
-      @content_view = cve.content_view
-      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] unless @environment
+      environment
     end
 
     def find_hypervisor_environment_and_content_view
@@ -325,11 +287,33 @@ module Katello
       @content_view = cve.content_view
     end
 
+    def find_organization
+      organization = nil
+
+      if params.key?(:organization_id)
+        organization = Organization.find_by_label(params[:organization_id])
+      end
+
+      if organization.nil?
+        message = _("Couldn't find Organization '%s'.")
+        fail HttpErrors::NotFound, message % params[:organization_id]
+      end
+
+      if User.current && !User.current.allowed_organizations.include?(organization)
+        message = _("User '%{user}' does not belong to Organization '%{organization}'.")
+        fail HttpErrors::NotFound, message % {:user => current_user.login, :organization => params[:organization_id]}
+      end
+
+      organization
+    end
+
     def find_activation_keys
+      organization = find_organization
+
       if ak_names = params[:activation_keys]
         ak_names        = ak_names.split(",")
         activation_keys = ak_names.map do |ak_name|
-          activation_key = @organization.activation_keys.find_by_name(ak_name)
+          activation_key = organization.activation_keys.find_by_name(ak_name)
           fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
           activation_key
         end
@@ -358,6 +342,7 @@ module Katello
       if value
         cve = ContentViewEnvironment.where(key => value).first
         fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % value unless cve
+        deny_access if !cve.readable?
       end
       cve
     end
@@ -366,9 +351,11 @@ module Katello
       get_content_view_environment("cp_id", id)
     end
 
-    def get_content_view_environments(label = nil)
+    def get_content_view_environments(label = nil, organization = nil)
+      organization ||= @organization
+
       environments = ContentViewEnvironment.joins(:content_view => :organization).
-          where("#{Organization.table_name}.id = ?", @organization.id)
+          where("#{Organization.table_name}.id = ?", organization.id)
       environments = environments.where("#{Katello::ContentViewEnvironment.table_name}.label = ?", label) if label
 
       environments.delete_if do |env|
@@ -396,10 +383,6 @@ module Katello
 
     def logger
       ::Logging.logger['cp_proxy']
-    end
-
-    def add_candlepin_version_header
-      response.headers["X-CANDLEPIN-VERSION"] = "katello/#{Katello.config.katello_version}"
     end
 
     def authorize_client_or_user
@@ -464,11 +447,6 @@ module Katello
         Rails.logger.warn "Unknown proxy route #{request.method} #{request.fullpath}, access denied"
         deny_access
       end
-    end
-
-    def authorize_environment_and_cv
-      deny_access unless @environment.readable?
-      deny_access if @content_view.nil? || !@content_view.readable?
     end
 
   end
