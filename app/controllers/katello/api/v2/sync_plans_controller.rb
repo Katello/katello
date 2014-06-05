@@ -104,7 +104,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
     enabled_product_ids = Product.where(:organization_id => @organization).readable.select{|p| p.enabled?}.collect(&:id)
 
     filters = [:terms => {:id => enabled_product_ids - @sync_plan.product_ids}]
-    filters << {:term => {:name => params[:name].downcase}} if params[:name]
+    filters << {:term => {:name => params[:name]}} if params[:name]
 
     options = {
         :filters       => filters,

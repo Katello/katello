@@ -20,8 +20,7 @@ module Util
       {
         "kt_name_analyzer" => {
           "type"      => "custom",
-          "tokenizer" => "keyword",
-          "filter"    => %w(lowercase)
+          "tokenizer" => "keyword"
         },
         "autcomplete_name_analyzer" => {
             "type"      => "custom",

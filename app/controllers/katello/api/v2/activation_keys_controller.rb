@@ -38,7 +38,7 @@ module Katello
       filters << { :term => {:organization_id => @organization.id} }
       filters << { :terms => {:environment_id => [params[:environment_id]] } } if params[:environment_id]
       filters << { :terms => {:content_view_id => [params[:content_view_id]] } } if params[:content_view_id]
-      filters << { :term => { :name => params[:name].downcase } } if params[:name]
+      filters << { :term => { :name => params[:name] } } if params[:name]
 
       options = {
           :filters       => filters,
@@ -99,7 +99,7 @@ module Katello
     def available_host_collections
       filters = [:terms => {:id => HostCollection.readable.pluck("#{Katello::HostCollection.table_name}.id") -
                    @activation_key.host_collections.pluck("#{Katello::HostCollection.table_name}.id")}]
-      filters << {:term => {:name => params[:name].downcase}} if params[:name]
+      filters << {:term => {:name => params[:name]}} if params[:name]
 
       options = {
           :filters       => filters,

@@ -1,65 +1,65 @@
---- 
-http_interactions: 
-- request: 
+---
+http_interactions:
+- request:
     method: delete
     uri: http://localhost:9200/katello_test_package
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "31"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"ok\":true,\"acknowledged\":true}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:38 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:28 GMT
+- request:
     method: post
     uri: http://localhost:9200/katello_test_package
-    body: 
+    body:
       encoding: UTF-8
-      string: "{\"settings\":{\"index\":{\"analysis\":{\"filter\":{\"ngram_filter\":{\"type\":\"edgeNGram\",\"side\":\"front\",\"min_gram\":1,\"max_gram\":30}},\"analyzer\":{\"kt_name_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"keyword\",\"filter\":[\"lowercase\"]},\"autcomplete_name_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"keyword\",\"filter\":[\"standard\",\"lowercase\",\"ngram_filter\"]}}}}},\"mappings\":{\"package\":{\"properties\":{\"id\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"name\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"name_autocomplete\":{\"type\":\"string\",\"analyzer\":\"autcomplete_name_analyzer\"},\"nvrea_autocomplete\":{\"type\":\"string\",\"analyzer\":\"autcomplete_name_analyzer\"},\"nvrea\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"nvrea_sort\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"nvra\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"nvra_sort\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"repoids\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"sortable_version\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"sortable_release\":{\"type\":\"string\",\"index\":\"not_analyzed\"}}}}}"
-    headers: 
-      Accept: 
+      string: "{\"settings\":{\"index\":{\"analysis\":{\"filter\":{\"ngram_filter\":{\"type\":\"edgeNGram\",\"side\":\"front\",\"min_gram\":1,\"max_gram\":30}},\"analyzer\":{\"kt_name_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"keyword\"},\"autcomplete_name_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"keyword\",\"filter\":[\"standard\",\"lowercase\",\"ngram_filter\"]}}}}},\"mappings\":{\"package\":{\"properties\":{\"id\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"name\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"name_autocomplete\":{\"type\":\"string\",\"analyzer\":\"autcomplete_name_analyzer\"},\"nvrea_autocomplete\":{\"type\":\"string\",\"analyzer\":\"autcomplete_name_analyzer\"},\"nvrea\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"nvrea_sort\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"repoids\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"sortable_version\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"sortable_release\":{\"type\":\"string\",\"index\":\"not_analyzed\"}}}}}"
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
-      - "1023"
-      User-Agent: 
+      Content-Length:
+      - "892"
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "31"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"ok\":true,\"acknowledged\":true}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:38 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:28 GMT
+- request:
     method: post
     uri: http://localhost:9200/katello_test_package/_bulk
-    body: 
+    body:
       encoding: UTF-8
       string: |
         {"index":{"_index":"katello_test_package","_type":"package","_id":"abc123-1"}}
@@ -79,91 +79,91 @@ http_interactions:
         {"index":{"_index":"katello_test_package","_type":"package","_id":"abc123-8"}}
         {"name":"abc123-8","id":"abc123-8","_id":"abc123-8","_type":"package","version":"0.9.10","epoch":"0","release":"1.0","repoids":["abcrepo"],"sortable_version":"01-0.01-9.02-10","sortable_release":"01-1.01-0"}
 
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
+      Content-Length:
       - "2284"
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
-      - "837"
-    body: 
+      Content-Length:
+      - "836"
+    body:
       encoding: US-ASCII
-      string: "{\"took\":71,\"items\":[{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_version\":1,\"ok\":true}}]}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:38 GMT
-- request: 
+      string: "{\"took\":3,\"items\":[{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_version\":1,\"ok\":true}}]}"
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:28 GMT
+- request:
     method: post
     uri: http://localhost:9200/katello_test_package/_refresh
-    body: 
+    body:
       encoding: ASCII-8BIT
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
+      Content-Length:
       - "0"
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "59"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"ok\":true,\"_shards\":{\"total\":6,\"successful\":3,\"failed\":0}}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:28 GMT
+- request:
     method: head
     uri: http://localhost:9200/katello_test_package
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - text/plain; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "0"
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:28 GMT
+- request:
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
-    body: 
+    body:
       encoding: UTF-8
-      string: |-
+      string: |
         {
           "query":{
             "query_string":{
@@ -224,62 +224,63 @@ http_interactions:
             "filename"
           ]
         }
-    headers: 
-      Accept: 
+
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
-      - "933"
-      User-Agent: 
+      Content-Length:
+      - "934"
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "1163"
-    body: 
+    body:
       encoding: US-ASCII
-      string: "{\"took\":6,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":7,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-3\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-3\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-1\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-1\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-7\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-7\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-5\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-5\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-8\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-8\"}}]}}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+      string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":7,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-3\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-3\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-1\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-1\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-7\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-7\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-5\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-5\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-8\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-8\"}}]}}"
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:28 GMT
+- request:
     method: head
     uri: http://localhost:9200/katello_test_package
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - text/plain; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "0"
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:28 GMT
+- request:
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
-    body: 
+    body:
       encoding: UTF-8
-      string: |-
+      string: |
         {
           "query":{
             "query_string":{
@@ -340,33 +341,34 @@ http_interactions:
             "filename"
           ]
         }
-    headers: 
-      Accept: 
+
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
-      - "933"
-      User-Agent: 
+      Content-Length:
+      - "934"
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "269"
-    body: 
+    body:
       encoding: US-ASCII
-      string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":1,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-8\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-8\"}}]}}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+      string: "{\"took\":0,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":1,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-8\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-8\"}}]}}"
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:28 GMT
+- request:
     method: post
     uri: http://localhost:9200/katello_test_package/_bulk
-    body: 
+    body:
       encoding: UTF-8
       string: |
         {"index":{"_index":"katello_test_package","_type":"package","_id":"abc123-1"}}
@@ -386,91 +388,91 @@ http_interactions:
         {"index":{"_index":"katello_test_package","_type":"package","_id":"abc123-8"}}
         {"name":"abc123-8","id":"abc123-8","_id":"abc123-8","_type":"package","version":"0.9.10","epoch":"0","release":"1.0","repoids":["abcrepo"],"sortable_version":"01-0.01-9.02-10","sortable_release":"01-1.01-0"}
 
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
+      Content-Length:
       - "2284"
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "836"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"took\":1,\"items\":[{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_version\":2,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_version\":2,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_version\":2,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_version\":2,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_version\":2,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_version\":2,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_version\":2,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_version\":2,\"ok\":true}}]}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: post
     uri: http://localhost:9200/katello_test_package/_refresh
-    body: 
+    body:
       encoding: ASCII-8BIT
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
+      Content-Length:
       - "0"
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "59"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"ok\":true,\"_shards\":{\"total\":6,\"successful\":3,\"failed\":0}}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: head
     uri: http://localhost:9200/katello_test_package
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - text/plain; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "0"
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
-    body: 
+    body:
       encoding: UTF-8
-      string: |-
+      string: |
         {
           "query":{
             "query_string":{
@@ -515,62 +517,63 @@ http_interactions:
             "filename"
           ]
         }
-    headers: 
-      Accept: 
+
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
-      - "615"
-      User-Agent: 
+      Content-Length:
+      - "616"
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "418"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":2,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}}]}}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: head
     uri: http://localhost:9200/katello_test_package
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - text/plain; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "0"
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
-    body: 
+    body:
       encoding: UTF-8
-      string: |-
+      string: |
         {
           "query":{
             "query_string":{
@@ -615,62 +618,63 @@ http_interactions:
             "filename"
           ]
         }
-    headers: 
-      Accept: 
+
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
-      - "605"
-      User-Agent: 
+      Content-Length:
+      - "606"
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "1163"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":7,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-3\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-3\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-1\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-1\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-7\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-7\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-2\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-2\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-5\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-5\"}}]}}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: head
     uri: http://localhost:9200/katello_test_package
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - text/plain; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "0"
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
-    body: 
+    body:
       encoding: UTF-8
-      string: |-
+      string: |
         {
           "query":{
             "query_string":{
@@ -731,62 +735,63 @@ http_interactions:
             "filename"
           ]
         }
-    headers: 
-      Accept: 
+
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
-      - "976"
-      User-Agent: 
+      Content-Length:
+      - "977"
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "418"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":2,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}}]}}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: head
     uri: http://localhost:9200/katello_test_package
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - text/plain; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "0"
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
-    body: 
+    body:
       encoding: UTF-8
-      string: |-
+      string: |
         {
           "query":{
             "query_string":{
@@ -847,33 +852,34 @@ http_interactions:
             "filename"
           ]
         }
-    headers: 
-      Accept: 
+
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
-      - "980"
-      User-Agent: 
+      Content-Length:
+      - "981"
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "865"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":5,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-1\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-1\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-2\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-2\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-5\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-5\"}}]}}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: post
     uri: http://localhost:9200/katello_test_package/_bulk
-    body: 
+    body:
       encoding: UTF-8
       string: |
         {"index":{"_index":"katello_test_package","_type":"package","_id":"abc123-1"}}
@@ -893,91 +899,91 @@ http_interactions:
         {"index":{"_index":"katello_test_package","_type":"package","_id":"abc123-8"}}
         {"name":"abc123-8","id":"abc123-8","_id":"abc123-8","_type":"package","version":"0.9.10","epoch":"0","release":"1.0","repoids":["abcrepo"],"sortable_version":"01-0.01-9.02-10","sortable_release":"01-1.01-0"}
 
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
+      Content-Length:
       - "2284"
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "836"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"took\":2,\"items\":[{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_version\":3,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_version\":3,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_version\":3,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_version\":3,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_version\":3,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_version\":3,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_version\":3,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_version\":3,\"ok\":true}}]}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: post
     uri: http://localhost:9200/katello_test_package/_refresh
-    body: 
+    body:
       encoding: ASCII-8BIT
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
+      Content-Length:
       - "0"
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "59"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"ok\":true,\"_shards\":{\"total\":6,\"successful\":3,\"failed\":0}}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: head
     uri: http://localhost:9200/katello_test_package
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - text/plain; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "0"
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
-    body: 
+    body:
       encoding: UTF-8
-      string: |-
+      string: |
         {
           "query":{
             "query_string":{
@@ -1007,33 +1013,34 @@ http_interactions:
             "filename"
           ]
         }
-    headers: 
-      Accept: 
+
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
-      - "354"
-      User-Agent: 
+      Content-Length:
+      - "355"
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "1312"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"took\":0,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":8,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-3\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-3\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-1\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-1\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-7\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-7\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-2\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-2\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-5\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-5\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-8\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-8\"}}]}}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: post
     uri: http://localhost:9200/katello_test_package/_bulk
-    body: 
+    body:
       encoding: UTF-8
       string: |
         {"index":{"_index":"katello_test_package","_type":"package","_id":"abc123-1"}}
@@ -1053,91 +1060,91 @@ http_interactions:
         {"index":{"_index":"katello_test_package","_type":"package","_id":"abc123-8"}}
         {"name":"abc123-8","id":"abc123-8","_id":"abc123-8","_type":"package","version":"0.9.10","epoch":"0","release":"1.0","repoids":["abcrepo"],"sortable_version":"01-0.01-9.02-10","sortable_release":"01-1.01-0"}
 
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
+      Content-Length:
       - "2284"
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "836"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"took\":1,\"items\":[{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_version\":4,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_version\":4,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_version\":4,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_version\":4,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_version\":4,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_version\":4,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_version\":4,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_version\":4,\"ok\":true}}]}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: post
     uri: http://localhost:9200/katello_test_package/_refresh
-    body: 
+    body:
       encoding: ASCII-8BIT
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
+      Content-Length:
       - "0"
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "59"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"ok\":true,\"_shards\":{\"total\":6,\"successful\":3,\"failed\":0}}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: head
     uri: http://localhost:9200/katello_test_package
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - text/plain; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "0"
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
-    body: 
+    body:
       encoding: UTF-8
-      string: |-
+      string: |
         {
           "query":{
             "query_string":{
@@ -1209,62 +1216,63 @@ http_interactions:
             "filename"
           ]
         }
-    headers: 
-      Accept: 
+
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
-      - "1124"
-      User-Agent: 
+      Content-Length:
+      - "1125"
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "1312"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":8,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-3\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-3\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-1\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-1\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-7\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-7\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-2\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-2\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-5\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-5\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-8\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-8\"}}]}}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: head
     uri: http://localhost:9200/katello_test_package
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - text/plain; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "0"
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
-    body: 
+    body:
       encoding: UTF-8
-      string: |-
+      string: |
         {
           "query":{
             "query_string":{
@@ -1336,62 +1344,63 @@ http_interactions:
             "filename"
           ]
         }
-    headers: 
-      Accept: 
+
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
-      - "1172"
-      User-Agent: 
+      Content-Length:
+      - "1173"
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "122"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":0,\"max_score\":null,\"hits\":[]}}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: head
     uri: http://localhost:9200/katello_test_package
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    headers: 
-      Accept: 
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - text/plain; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "0"
-    body: 
+    body:
       encoding: US-ASCII
       string: ""
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-- request: 
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+- request:
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
-    body: 
+    body:
       encoding: UTF-8
-      string: |-
+      string: |
         {
           "query":{
             "query_string":{
@@ -1479,27 +1488,28 @@ http_interactions:
             "filename"
           ]
         }
-    headers: 
-      Accept: 
+
+    headers:
+      Accept:
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Length: 
-      - "1523"
-      User-Agent: 
+      Content-Length:
+      - "1524"
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Content-Type: 
+    headers:
+      Content-Type:
       - application/json; charset=UTF-8
-      Content-Length: 
+      Content-Length:
       - "567"
-    body: 
+    body:
       encoding: US-ASCII
       string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":3,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-1\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-1\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-2\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-2\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-5\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-5\"}}]}}"
-    http_version: 
-  recorded_at: Tue, 20 May 2014 02:47:39 GMT
-recorded_with: VCR 2.9.0
+    http_version:
+  recorded_at: Wed, 04 Jun 2014 23:41:29 GMT
+recorded_with: VCR 2.9.2
