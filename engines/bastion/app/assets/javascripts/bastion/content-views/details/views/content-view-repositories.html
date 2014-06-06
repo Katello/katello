@@ -94,16 +94,16 @@
             </td>
             <td alch-table-cell>{{ repository.product.name }}</td>
             <td alch-table-cell>
-              <span ng-show="repository.feed">
+              <span ng-show="repository.url">
                 {{ repository.last_sync | date:"short" }}
               </span>
-              <span ng-hide="repository.feed" translate>N/A</span>
+              <span ng-hide="repository.url" translate>N/A</span>
             </td>
             <td alch-table-cell>
-              <span ng-show="repository.feed">
-                <a href="sync_management">{{ repository.sync_state }}</a>
+              <span ng-show="repository.url">
+                <a href="/katello/sync_management">{{ repository.sync_state | capitalize }}</a>
               </span>
-              <span ng-hide="repository.feed" translate>N/A</span>
+              <span ng-hide="repository.url" translate>N/A</span>
             </td>
             <td alch-table-cell>
               <div>
