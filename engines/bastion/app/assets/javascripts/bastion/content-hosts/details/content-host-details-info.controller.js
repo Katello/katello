@@ -114,7 +114,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
             }, {
                 'custom_info': info
             },
-            function () {},
+            function () {
+                $scope.successMessages = [translate("Successfully updated custom info.")];
+            },
             customInfoErrorHandler);
         };
 
