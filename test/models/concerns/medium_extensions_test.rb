@@ -53,8 +53,8 @@ module Katello
     end
 
     def test_normalize_name
-      name = Medium.normalize_name('Red Hat Enterprise Linux OS')
-      assert_equal name, 'RedHat OS'
+      name = Medium.normalize_name('Red_Hat_Enterprise_Linux_6_Server')
+      assert_equal name, 'Red_Hat_6_Server'
 
       name = Medium.normalize_name('MyLinux OS')
       assert_equal name, 'MyLinux OS'
