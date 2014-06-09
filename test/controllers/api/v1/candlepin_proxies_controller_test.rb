@@ -38,7 +38,7 @@ module Katello
       end
 
       it "should fail with known organization and no activation_keys" do
-        post('consumer_activate', :owner => @organization.name, :activation_keys => '')
+        post('consumer_activate', :owner => @organization.label, :activation_keys => '')
         assert_response 400
       end
     end
@@ -180,7 +180,8 @@ module Katello
     end
 
     it "test_hypervisors_update" do
-      assert_protected_action(:hypervisors_update, :edit_content_hosts) do
+      perms = [[:edit_content_hosts, :view_content_views, :view_lifecycle_environments]]
+      assert_protected_action(:hypervisors_update, perms) do
         post :hypervisors_update, :env => @organization.library.content_view_environments.first.label
       end
     end
@@ -194,7 +195,7 @@ module Katello
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid))
 
         get :available_releases, :id => @system.uuid
-        assert_response 200      
+        assert_response 200
       end
 
       it "forbidden with invalid consumer" do

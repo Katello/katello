@@ -17,6 +17,7 @@ class ContentViewEnvironment < Katello::Model
   include ForemanTasks::Concerns::ActionSubject
   include Glue::Candlepin::Environment if Katello.config.use_cp
   include Glue if Katello.config.use_cp
+  include Authorization::ContentViewEnvironment
 
   belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_environments
   belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :content_view_environments
