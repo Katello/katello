@@ -76,4 +76,8 @@ describe('Controller: ContentViewCompositeContentViewsListController', function(
         expect($scope.contentView['component_ids'].length).toBe(1);
         expect($scope.contentView['component_ids'][0]).toBe(3);
     });
+
+    it("provides a method to get the version string for the version selector", function () {
+        expect($scope.getVersionString({version: 3})).toBe("Version 3");
+    });
 });

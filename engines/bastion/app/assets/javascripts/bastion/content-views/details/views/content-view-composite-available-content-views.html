@@ -47,7 +47,7 @@
                   ng-model="contentView.versionId"
                   ng-options="cvv.id as cvv.version for cvv in contentView.versions">
           </select>
-          <span ng-show="contentView.versions.length === 1" ng-model="contentView.version">1</span>
+          <span ng-show="contentView.versions.length === 1" ng-model="contentView.version" translate>Version 1</span>
         </td>
         <td alch-table-cell>
           <span ng-show="contentView.environments.length !== 0"
