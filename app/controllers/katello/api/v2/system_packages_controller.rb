@@ -83,7 +83,7 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
   end
 
   def valid_package_name?(package_name)
-    package_name =~ /^[a-zA-Z\-\.\_\+\,]+$/
+    package_name =~ /^[a-zA-Z0-9\-\.\_\+\,]+$/
   end
 
   def validate_package_list_format(packages)
