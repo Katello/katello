@@ -64,4 +64,18 @@ describe('Factory: ContentHost', function() {
             expect(data).toEqual(availableSubscriptions);
         });
     });
+
+    it('ContentHost.contentOverride PUT /api/v2/content_hosts/1/content_override', function() {
+        $httpBackend.expectPUT('/api/v2/content_hosts/1/content_override').respond(contentHostsCollection.results[0]);
+
+        ContentHost.contentOverride({id: 1},
+                        {'content_override': { 'content_label': 'my-repository-label',
+                                               name: "enabled",
+                                               value: 1}
+                        },
+                        function(response) {
+                            expect(response).toBeDefined();
+                        });
+    });
+
 });

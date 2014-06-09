@@ -7,6 +7,9 @@ attributes :name, :description
 attributes :location
 attributes :content_view, :content_view_id
 
+attributes :products
+attributes :content_overrides
+
 child :foreman_host => :host do
   attributes :id, :name
   attributes :host_status => :status

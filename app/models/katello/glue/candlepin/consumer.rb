@@ -459,6 +459,14 @@ module Glue::Candlepin::Consumer
       end
     end
 
+    def set_content_override(content_label, name, value = nil)
+      Resources::Candlepin::Consumer.update_content_override(self.uuid, content_label, name, value)
+    end
+
+    def content_overrides
+      Resources::Candlepin::Consumer.content_overrides(self.uuid)
+    end
+
     def compliant?
       self.compliance['compliant']
     end
@@ -501,6 +509,23 @@ module Glue::Candlepin::Consumer
       found = candlepin_systems.find { |system| system['uuid'] == self.uuid }
       prepopulate(found.with_indifferent_access) if found
       !found.nil?
+    end
+
+    def products
+      all_products = []
+
+      self.entitlements.each do |entitlement|
+        pool = Katello::Pool.find_pool(entitlement['pool']['id'])
+        Katello::Product.where(:cp_id => pool.product_id).each do |product|
+          if product.is_a? Katello::MarketingProduct
+            all_products += product.engineering_products
+          else
+            all_products << product
+          end
+        end
+      end
+
+      return all_products
     end
 
   end
@@ -552,6 +577,7 @@ module Glue::Candlepin::Consumer
       end if consumers_attrs[:unchanged]
       return consumers_attrs, created
     end
+
   end
 
 end

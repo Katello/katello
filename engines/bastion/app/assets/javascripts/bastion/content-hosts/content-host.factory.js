@@ -28,6 +28,7 @@ angular.module('Bastion.content-hosts').factory('ContentHost',
             update: {method: 'PUT'},
             releaseVersions: {method: 'GET', params: {action: 'releases'}},
             subscriptions: {method: 'GET', params: {action: 'subscriptions'}},
+            products: {method: 'GET', params: {action: 'products'}},
             available: {method: 'GET', params: {action: 'subscriptions', action2: 'available'}},
             removeSubscriptions: {method: 'PUT', isArray: false, params: {action: 'subscriptions'}},
             addSubscriptions: {method: 'POST', isArray: false, params: {action: 'subscriptions'}},
@@ -36,7 +37,8 @@ angular.module('Bastion.content-hosts').factory('ContentHost',
             hostCollections: {method: 'GET', transformResponse: function (data) {
                 var contentHost = angular.fromJson(data);
                 return {results: contentHost.hostCollections};
-            }}
+            }},
+            contentOverride: {method: 'PUT', isArray: false, params: {action: 'content_override'}}
         });
 
     }]
