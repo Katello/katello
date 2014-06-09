@@ -61,11 +61,12 @@ module Katello
       super
     end
 
-    api :DELETE, '/organizations/:id', N_('Delete an organization')
-    param :id, :number, :desc => N_("Organization ID"), :required => true
-    def destroy
-      process_response @organization.destroy, _("Deleted organization '%s'") % params[:id]
-    end
+    # TODO: ORG_DESTROY - renable once we support organization destroying
+    #api :DELETE, '/organizations/:id', N_('Delete an organization')
+    #param :id, :number, :desc => N_("Organization ID"), :required => true
+    #def destroy
+      #process_response @organization.destroy, _("Deleted organization '%s'") % params[:id]
+    #end
 
     api :PUT, "/organizations/:id/repo_discover", N_("Discover Repositories")
     param :id, :number, :desc => N_("Organization ID"), :required => true

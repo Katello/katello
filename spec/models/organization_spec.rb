@@ -123,6 +123,8 @@ describe Organization do
 
   describe "delete an organization" do
     before do
+      # TODO: ORG_DESTROY - fix or enable these tests after org destroy is reenabled
+      skip "Organization destroy is currently disabled"
       Resources::Candlepin::Owner.expects(:destroy).at_least_once.returns({})
     end
 
