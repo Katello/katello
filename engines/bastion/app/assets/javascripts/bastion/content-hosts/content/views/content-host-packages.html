@@ -1,5 +1,6 @@
 <span page-title ng-model="contentHost">{{ 'Packages for: ' | translate }} {{ contentHost.name }}</span>
 <section ng-hide="contentHost.readonly">
+  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
   <h4 translate>Package Actions</h4>
   <section>
     <form ng-submit="performPackageAction()" role="form" class="row">

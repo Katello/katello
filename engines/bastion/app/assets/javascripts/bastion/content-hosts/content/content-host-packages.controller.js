@@ -17,7 +17,6 @@
  *
  * @requires $scope
  * @requires ContentHostPackage
- * @requires ContentHostTask
  * @requires translate
  * @requires Nutupane
  *
@@ -25,8 +24,8 @@
  *   Provides the functionality for the content host packages list and actions.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostPackagesController',
-    ['$scope', 'ContentHostPackage', 'ContentHostTask', 'translate', 'Nutupane',
-    function ($scope, ContentHostPackage, ContentHostTask, translate, Nutupane) {
+    ['$scope', 'ContentHostPackage', 'translate', 'Nutupane',
+    function ($scope, ContentHostPackage, translate, Nutupane) {
         var packagesNutupane, packageActions, openEventInfo;
 
         openEventInfo = function (event) {
@@ -39,10 +38,15 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
             }
         };
 
+        var errorHandler = function (response) {
+            $scope.errorMessages = response.data.errors;
+        };
+
         $scope.packageAction = {actionType: 'packageInstall'}; //default to packageInstall
+        $scope.errorMessages = [];
 
         $scope.updateAll = function () {
-            ContentHostPackage.updateAll({uuid: $scope.contentHost.uuid}, openEventInfo);
+            ContentHostPackage.updateAll({uuid: $scope.contentHost.uuid}, openEventInfo, errorHandler);
         };
 
         $scope.performPackageAction = function () {
@@ -54,19 +58,19 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
 
         packageActions = {
             packageInstall: function (termList) {
-                ContentHostPackage.install({uuid: $scope.contentHost.uuid, packages: termList}, openEventInfo);
+                ContentHostPackage.install({uuid: $scope.contentHost.uuid, packages: termList}, openEventInfo, errorHandler);
             },
             packageUpdate: function (termList) {
-                ContentHostPackage.update({uuid: $scope.contentHost.uuid, packages: termList}, openEventInfo);
+                ContentHostPackage.update({uuid: $scope.contentHost.uuid, packages: termList}, openEventInfo, errorHandler);
             },
             packageRemove: function (termList) {
-                ContentHostPackage.remove({uuid: $scope.contentHost.uuid, packages: termList}, openEventInfo);
+                ContentHostPackage.remove({uuid: $scope.contentHost.uuid, packages: termList}, openEventInfo, errorHandler);
             },
             groupInstall: function (termList) {
-                ContentHostPackage.install({uuid: $scope.contentHost.uuid, groups: termList}, openEventInfo);
+                ContentHostPackage.install({uuid: $scope.contentHost.uuid, groups: termList}, openEventInfo, errorHandler);
             },
             groupRemove: function (termList) {
-                ContentHostPackage.remove({uuid: $scope.contentHost.uuid, groups: termList}, openEventInfo);
+                ContentHostPackage.remove({uuid: $scope.contentHost.uuid, groups: termList}, openEventInfo, errorHandler);
             }
         };
 
@@ -84,21 +88,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
                 uuid: $scope.contentHost.uuid,
                 packages: [{name: pkg.name, version: pkg.version,
                             arch: pkg.arch, release: pkg.release}]
-            },
-            function (scheduledTask) {
-                pkg.removeTask = scheduledTask;
-                scheduledTask.contentHostId = $scope.$stateParams.contentHostId;
-                ContentHostTask.poll(scheduledTask, function (polledTask) {
-                    pkg.removeTask = polledTask;
-                });
-            },
-            function (data) {
-                var message = translate("Error starting task ");
-                if (data.data.displayMessage) {
-                    message += ":" + data.data.displayMessage;
-                }
-                pkg.removeTask = {'human_readable_result': message, failed: true};
-            });
+            }, openEventInfo, errorHandler);
         };
     }
 ]);
