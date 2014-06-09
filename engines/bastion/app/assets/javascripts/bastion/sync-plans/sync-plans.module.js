@@ -49,7 +49,7 @@ angular.module('Bastion.sync-plans').config(['$stateProvider', function ($stateP
     })
 
     .state('sync-plans.new', {
-        url: '/new',
+        url: '/sync_plans/new',
         collapsed: true,
 
         views: {
