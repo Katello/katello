@@ -76,6 +76,42 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  def test_index_with_system_id_only
+    Api::V2::SystemsController.any_instance.expects(:item_search).with do |model, params, options|
+      terms = options[:filters].inject({}){|all_terms, filter| all_terms.merge(filter[:terms]) }
+      terms[:environment_id] ==  @system.environment.id.to_s
+    end.returns({})
+
+    get :index, :environment_id => @system.environment.id
+
+    assert_response :success
+    assert_template 'api/v2/systems/index'
+  end
+
+  def test_index_with_org_id_only
+    Api::V2::SystemsController.any_instance.expects(:item_search).with do |model, params, options|
+      terms = options[:filters].inject({}){|all_terms, filter| all_terms.merge(filter[:terms]) }
+      terms[:environment_id] == @organization.kt_environments.pluck(:id)
+    end.returns({})
+
+    get :index, :organization_id=> @organization.id
+
+    assert_response :success
+    assert_template 'api/v2/systems/index'
+  end
+
+  def test_index_with_system_id_and_org_id
+    Api::V2::SystemsController.any_instance.expects(:item_search).with do |model, params, options|
+      terms = options[:filters].inject({}){|all_terms, filter| all_terms.merge(filter[:terms]) }
+      terms[:environment_id] == [@system.environment.id]
+    end.returns({})
+
+    get :index, :organization_id => @organization.id, :environment_id => @system.environment.id
+
+    assert_response :success
+    assert_template 'api/v2/systems/index'
+  end
+
   def test_show
     get :show, :id => @system.uuid
 
