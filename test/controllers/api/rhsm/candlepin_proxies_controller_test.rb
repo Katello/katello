@@ -14,7 +14,7 @@
 require "katello_test_helper"
 
 module Katello
-  describe Api::V1::CandlepinProxiesController do
+  describe Api::Rhsm::CandlepinProxiesController do
 
     before do
       models = ["Organization", "KTEnvironment", "User", "ContentViewFilter",
@@ -158,7 +158,6 @@ module Katello
     end
 
     describe "list owners" do
-
       it 'should return organizations admin user is assigned to' do
         User.current = User.find(users(:admin))
         get :list_owners, :login => User.current.login

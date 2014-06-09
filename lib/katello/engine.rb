@@ -57,6 +57,7 @@ module Katello
 
     initializer "katello.paths" do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/v2.rb"
+      app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/rhsm.rb"
     end
 
     initializer "katello.helpers" do |app|
