@@ -38,12 +38,12 @@
  </div>
 
  <div alch-form-group label="{{ 'Start Time' | translate }} ({{ syncPlan.startTime | date:'Z' }} GMT)">
-   <input type="time" timepicker show-meridian="false"
+   <timepicker type="time" show-meridian="false"
           id="startTime"
           name="startTime"
           ng-model="syncPlan.startTime"
-          tabindex="5"
-          required/>
+          tabindex="5">
+   </timepicker>
  </div>
 
  <div alch-form-buttons

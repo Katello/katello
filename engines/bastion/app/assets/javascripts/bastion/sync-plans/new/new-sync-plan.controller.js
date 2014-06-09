@@ -24,13 +24,11 @@
  */
 angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
     ['$scope', 'translate', 'SyncPlan', function ($scope, translate, SyncPlan) {
-        var now = new Date();
         $scope.intervals = [translate('none'), translate('hourly'), translate('daily'), translate('weekly')];
         $scope.successMessages = [];
 
         $scope.syncPlan = new SyncPlan();
-        $scope.syncPlan.startDate = now;
-        $scope.syncPlan.startTime = now;
+        $scope.syncPlan.startDate = new Date();
         $scope.syncPlan.interval = $scope.intervals[0];
 
         function success(syncPlan) {
@@ -53,7 +51,13 @@ angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
         }
 
         $scope.createSyncPlan = function (syncPlan) {
-            syncPlan['sync_date'] = [syncPlan.startDate, syncPlan.startTime].join(' ');
+            var syncDate = new Date(syncPlan.startDate),
+                syncTime = new Date(syncPlan.startTime || new Date());
+            syncDate.setHours(syncTime.getHours());
+            syncDate.setMinutes(syncTime.getMinutes());
+            syncDate.setSeconds(0);
+
+            syncPlan['sync_date'] = syncDate.toString();
             syncPlan.$save(success, error);
         };
     }]
