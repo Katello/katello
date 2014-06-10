@@ -52,7 +52,7 @@ class KTEnvironment < Katello::Model
 
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
 
-  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
+  scope :completer_scope, lambda { |options=nil| where('organization_id = ?', options[:organization_id]) if options[:organization_id].present? }
   scope :non_library, where(library: false)
   scope :library, where(library: true)
 
@@ -118,6 +118,12 @@ class KTEnvironment < Katello::Model
 
   def to_s
     display_name
+  end
+
+  # for multiselect helper in foreman
+  def to_label
+    return "#{name} (#{organization.title})" if organization && ::Organization.current.nil?
+    name
   end
 
   def prior
