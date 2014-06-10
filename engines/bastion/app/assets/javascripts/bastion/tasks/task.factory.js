@@ -57,7 +57,8 @@ angular.module('Bastion.tasks').factory('Task',
         }
 
         function taskProgressbar(task) {
-            var type = task.result === 'error' ? 'danger' : 'success';
+            var mapping = { 'error': 'danger', 'warning': 'warning', 'default': 'success' };
+            var type = mapping[task.result] || mapping['default'];
             return { value: task.progress * 100, type: type };
         }
 
