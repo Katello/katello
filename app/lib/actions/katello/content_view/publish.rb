@@ -45,12 +45,22 @@ module Actions
             end
 
             plan_action(ContentView::UpdateEnvironment, content_view, library)
-            plan_self(history_id: history.id)
+            plan_self(history_id: history.id, content_view_id: content_view.id,
+                      environment_id: library.id, user_id: ::User.current.id)
           end
         end
 
         def humanized_name
           _("Publish")
+        end
+
+        def run
+          ::User.current = ::User.find(input[:user_id])
+          ForemanTasks.async_task(ContentView::NodeMetadataGenerate,
+                                  ::Katello::ContentView.find(input[:content_view_id]),
+                                  ::Katello::KTEnvironment.find(input[:environment_id]))
+        ensure
+          ::User.current = nil
         end
 
         def finalize
