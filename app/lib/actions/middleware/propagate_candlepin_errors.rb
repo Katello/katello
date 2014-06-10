@@ -11,16 +11,30 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  class AbstractAsyncTask < Actions::EntryAction
-    middleware.use Actions::Middleware::RemoteAction
+  module Middleware
 
-    def humanized_output
-      ""
+    class PropagateCandlepinErrors < Dynflow::Middleware
+
+      def plan(*args)
+        propagate_candlepin_errors { pass(*args) }
+      end
+
+      def run(*args)
+        propagate_candlepin_errors { pass(*args) }
+      end
+
+      def finalize
+        propagate_candlepin_errors { pass(*args) }
+      end
+
+      private
+
+      def propagate_candlepin_errors
+        yield
+      rescue RestClient::ExceptionWithResponse => e
+        raise(::Katello::Errors::CandlepinError.from_exception(e) || e)
+      end
+
     end
-
-    def rescue_strategy
-      Dynflow::Action::Rescue::Skip
-    end
-
   end
 end

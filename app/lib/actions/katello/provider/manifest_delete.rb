@@ -15,6 +15,8 @@ module Actions
     module Provider
       class ManifestDelete < Actions::AbstractAsyncTask
 
+        middleware.use Actions::Middleware::PropagateCandlepinErrors
+
         def plan(provider)
           action_subject provider
           plan_self
