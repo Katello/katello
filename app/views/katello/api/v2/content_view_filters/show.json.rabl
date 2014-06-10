@@ -13,6 +13,10 @@ child :repositories => :repositories do
   extends 'katello/api/v2/repositories/show'
 end
 
+if @resource.respond_to?(:package_rules)
+  attributes :original_packages
+end
+
 node :rules do |filter|
   if filter.respond_to?(:package_rules)
     filter.package_rules.map do |rule|

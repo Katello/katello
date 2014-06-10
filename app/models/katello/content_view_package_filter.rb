@@ -30,7 +30,16 @@ class ContentViewPackageFilter < ContentViewFilter
       Package.legacy_search(rule.name, 0, repo.package_count, [repo.pulp_id], [:nvrea_sort, "asc"],
                      :all, 'name', filter).map(&:filename).compact
     end
+
+    if self.original_packages
+      package_filenames.concat(repo.packages_without_errata.map(&:filename))
+    end
+
     { 'filename' => { "$in" => package_filenames } } unless package_filenames.empty?
+  end
+
+  def original_packages=(value)
+    write_attribute(:original_packages, value)
   end
 
   protected

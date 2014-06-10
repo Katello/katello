@@ -150,6 +150,10 @@ class ContentViewFilter < Katello::Model
     end
   end
 
+  def original_packages=(include_original)
+    fail "setting original_packages not supported for #{self.class.name}"
+  end
+
   protected
 
   def validate_repos
