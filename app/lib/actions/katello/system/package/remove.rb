@@ -31,7 +31,21 @@ module Actions
           end
 
           def humanized_input
-            [input[:packages].join(', ')] + super
+            [humanized_package_names.join(', ')] + super
+          end
+
+          def humanized_package_names
+            input[:packages].inject([]) do |result, package|
+              if package.is_a?(Hash)
+                new_name = package.include?(:name) ? package[:name] : ""
+                new_name += '-' + package[:version] if package.include?(:version)
+                new_name += '.' + package[:release] if package.include?(:release)
+                new_name += '.' + package[:arch] if package.include?(:arch)
+                result << new_name
+              else
+                result << package
+              end
+            end
           end
 
           def presenter

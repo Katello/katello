@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: ContentHostPackagesController', function() {
-    var $scope, Nutupane, ContentHostTask, ContentHostPackage, mockContentHost, mockTask, translate, ContentHost;
+    var $scope, Nutupane, ContentHostPackage, mockContentHost, mockTask, translate, ContentHost;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
@@ -26,10 +26,6 @@ describe('Controller: ContentHostPackagesController', function() {
         };
         ContentHost = {
             tasks: function() {return []}
-        };
-        ContentHostTask = {
-            get: function() {},
-            poll: function(task, returnFunction) {}
         };
         ContentHostPackage = {
             get: function() {return []},
@@ -58,7 +54,6 @@ describe('Controller: ContentHostPackagesController', function() {
 
         $controller('ContentHostPackagesController', {$scope: $scope,
                                                ContentHostPackage: ContentHostPackage,
-                                               ContentHostTask: ContentHostTask,
                                                translate:translate,
                                                Nutupane: Nutupane});
     }));
@@ -91,7 +86,7 @@ describe('Controller: ContentHostPackagesController', function() {
         $scope.packageAction.term = "foo";
         $scope.performPackageAction();
         expect(ContentHostPackage.update).toHaveBeenCalledWith({uuid: mockContentHost.uuid, packages: ["foo"]},
-                                                          jasmine.any(Function));
+                                                          jasmine.any(Function), jasmine.any(Function));
     });
 
     it("performs a package update with multiple packages", function() {
@@ -100,7 +95,7 @@ describe('Controller: ContentHostPackagesController', function() {
         $scope.packageAction.term = "foo, bar";
         $scope.performPackageAction();
         expect(ContentHostPackage.update).toHaveBeenCalledWith({uuid: mockContentHost.uuid, packages: ["foo", "bar"]},
-                                                          jasmine.any(Function));
+                                                          jasmine.any(Function), jasmine.any(Function));
     });
 
     it("performs a package group install", function() {
@@ -109,7 +104,7 @@ describe('Controller: ContentHostPackagesController', function() {
         $scope.packageAction.term = "bigGroup";
         $scope.performPackageAction();
         expect(ContentHostPackage.install).toHaveBeenCalledWith({uuid: mockContentHost.uuid, groups: ["bigGroup"]},
-                                                          jasmine.any(Function));
+                                                          jasmine.any(Function), jasmine.any(Function));
     });
 
     it("performs a selected package removal", function() {
@@ -118,18 +113,16 @@ describe('Controller: ContentHostPackagesController', function() {
         mockPackageClone = {name: 'foo', version: '3', release: '14', arch: 'noarch'};
 
         spyOn(ContentHostPackage, 'remove').andCallThrough();
-        spyOn(ContentHostTask, 'poll');
         $scope.currentPackagesTable.removePackage(mockPackage);
         expect(ContentHostPackage.remove).toHaveBeenCalledWith({uuid: mockContentHost.uuid, packages: [mockPackageClone]},
-                                                          jasmine.any(Function),
-                                                          jasmine.any(Function));
-        expect(ContentHostTask.poll).toHaveBeenCalledWith(mockTask, jasmine.any(Function));
+                                                          jasmine.any(Function), jasmine.any(Function));
     });
 
     it("provides a way to upgrade all packages", function() {
         spyOn(ContentHostPackage, "updateAll");
         $scope.updateAll();
-        expect(ContentHostPackage.updateAll).toHaveBeenCalledWith({uuid: mockContentHost.uuid}, jasmine.any(Function));
+        expect(ContentHostPackage.updateAll).toHaveBeenCalledWith({uuid: mockContentHost.uuid}, jasmine.any(Function),
+            jasmine.any(Function));
     });
 
 });
