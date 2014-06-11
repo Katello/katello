@@ -60,10 +60,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
 
             $scope.isRemoving = true;
             ContentHost.removeSubscriptions({uuid: $scope.contentHost.uuid, 'subscriptions': selected}, function () {
-                subscriptionsPane.table.selectAll(false);
-                subscriptionsPane.refresh();
-                $scope.successMessages.push(translate("Successfully removed %s subscriptions.").replace('%s', selected.length));
-                $scope.isRemoving = false;
+                ContentHost.get({id: $scope.$stateParams.contentHostId}, function (host) {
+                    $scope.$parent.contentHost = host;
+                    subscriptionsPane.table.selectAll(false);
+                    subscriptionsPane.refresh();
+                    $scope.successMessages.push(translate("Successfully removed %s subscriptions.").replace('%s', selected.length));
+                    $scope.isRemoving = false;
+                });
             }, function (response) {
                 $scope.isRemoving = false;
                 $scope.errorMessages.push(translate("An error occurred removing the subscriptions.") + response.data.displayMessage);
