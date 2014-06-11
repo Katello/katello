@@ -60,20 +60,13 @@ module Katello
           if repo.content_view && !repo.content_view.default?
             parts << repo.content_view.label
           end
-          parts = [parts.compact.join('/')]
-
-          parts << distribution.family
-          parts << distribution.variant
-          parts << distribution.version
-          parts << distribution.arch
-
-          name = parts.reject(&:blank?).join(' ')
-          return normalize_name(name)
+          parts << repo.label
+          return normalize_name(parts.compact.join('/'))
         end
 
         # Foreman and Puppet uses RedHat name for Red Hat Enterprise Linux
         def normalize_name(name)
-          name.sub('Red Hat Enterprise Linux', 'RedHat')
+          name.sub('Red_Hat_Enterprise_Linux', 'Red_Hat')
         end
 
         # takes repo uri from Katello and makes installation media url
