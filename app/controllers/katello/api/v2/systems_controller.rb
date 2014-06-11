@@ -329,7 +329,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
 
     if params[:environment_id].is_a? String
       if !params.key?(:content_view_id)
-        cve = get_content_view_environment_by_cp_id(params[:environment_id])
+        cve = ContentViewEnvironment.find_by_cp_id!(params[:environment_id])
         @environment = cve.environment
         @organization = @environment.organization
         @content_view = cve.content_view

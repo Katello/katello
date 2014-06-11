@@ -26,6 +26,7 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
     @system = katello_systems(:simple_server)
     @host_collections = katello_host_collections
     @organization = get_organization
+    @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_dev_view_library))
   end
 
   def permissions
@@ -39,6 +40,7 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
     setup_controller_defaults_api
     login_user(User.find(users(:admin)))
     @request.env['HTTP_ACCEPT'] = 'application/json'
+    @request.env['CONTENT_TYPE'] = 'application/json'
     System.any_instance.stubs(:releaseVer).returns(1)
     System.any_instance.stubs(:refresh_subscriptions).returns(true)
     @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
@@ -61,6 +63,16 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
     assert_protected_action(:index, allowed_perms, denied_perms) do
       get :index, :organization_id => @organization.id
     end
+  end
+
+  def test_create
+    @controller.stubs(:sync_task).returns(true)
+    System.stubs(:new).returns(@system)
+    cp_id = @content_view_environment.cp_id
+    ContentViewEnvironment.expects(:find_by_cp_id!).with(cp_id).returns(@content_view_environment)
+    post :create, :name => "needs more tests", :environment_id => cp_id.to_s,
+      :organization_id => @organization_id
+    assert_response :success
   end
 
   def test_show
