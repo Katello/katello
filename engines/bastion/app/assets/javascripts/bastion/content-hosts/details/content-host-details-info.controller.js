@@ -44,7 +44,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
 
         $scope.environments = Organization.readableEnvironments({id: CurrentOrganization});
 
-        $scope.$on('contentHost.loaded', function () {
+        $scope.contentHost.$promise.then(function () {
             $scope.contentHostFacts = dotNotationToObj($scope.contentHost.facts);
             populateExcludedFacts();
             $scope.originalEnvironment = $scope.contentHost.environment;

@@ -72,17 +72,6 @@ describe('Controller: ContentHostDetailsInfoController', function() {
             return deferred.promise;
         };
 
-        $controller('ContentHostDetailsInfoController', {
-            $scope: $scope,
-            $q: $q,
-            translate: translate,
-            CustomInfo: CustomInfo,
-            ContentHost: ContentHost,
-            ContentView: ContentView,
-            Organization: Organization,
-            CurrentOrganization: 'ACME_Corporation'
-        });
-
         $scope.contentHost = new ContentHost({
             uuid: 2,
             facts: {
@@ -95,7 +84,18 @@ describe('Controller: ContentHostDetailsInfoController', function() {
                 id: 1
             }
         });
-        $scope.$broadcast('contentHost.loaded');
+        $scope.contentHost.$promise = {then: function (callback) { callback(); }};
+
+        $controller('ContentHostDetailsInfoController', {
+            $scope: $scope,
+            $q: $q,
+            translate: translate,
+            CustomInfo: CustomInfo,
+            ContentHost: ContentHost,
+            ContentView: ContentView,
+            Organization: Organization,
+            CurrentOrganization: 'ACME_Corporation'
+        });
     }));
 
     it("gets the available release versions and puts them on the $scope", function() {
