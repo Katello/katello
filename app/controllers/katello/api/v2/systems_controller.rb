@@ -66,7 +66,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   def index
     filters = []
 
-    uuids = System.readable.pluck(:uuid)
+    uuids = System.readable.pluck(:uuid).compact
     filters << {:terms => {:uuid => uuids}}
 
     if params[:organization_id]
