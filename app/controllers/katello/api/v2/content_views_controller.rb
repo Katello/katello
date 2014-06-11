@@ -38,6 +38,7 @@ module Katello
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
     param :environment_id, :identifier, :desc => N_("environment identifier")
     param :nondefault, :bool, :desc => N_("Filter out default content views")
+    param :name, String, :desc => N_("Name of the content view"), :required => false
     def index
       options = sort_params
       options[:load_records?] = true
@@ -49,6 +50,7 @@ module Katello
       options[:filters] = [{:terms => {:id => ids}}]
 
       options[:filters] << {:term => {:default => false}} if params[:nondefault]
+      options[:filters] << {:term => {:name => params[:name]}} if params[:name]
 
       respond(:collection => item_search(ContentView, params, options))
     end
