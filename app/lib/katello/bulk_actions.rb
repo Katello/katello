@@ -23,24 +23,21 @@ class BulkActions
 
   def install_errata(errata_ids)
     perform_bulk_action do |consumer_group|
-      pulp_job = consumer_group.install_consumer_errata(errata_ids)
-      save_job(pulp_job, :errata_install, :errata_ids, errata_ids)
+      consumer_group.install_consumer_errata(errata_ids)
     end
   end
 
   def install_packages(packages)
     fail Errors::HostCollectionEmptyException if self.systems.empty?
     perform_bulk_action do |consumer_group|
-      pulp_job = consumer_group.install_package(packages)
-      save_job(pulp_job, :package_install, :packages, packages)
+      consumer_group.install_package(packages)
     end
   end
 
   def uninstall_packages(packages)
     fail Errors::HostCollectionEmptyException if self.systems.empty?
     perform_bulk_action do |consumer_group|
-      pulp_job = consumer_group.uninstall_package(packages)
-      save_job(pulp_job, :package_remove, :packages, packages)
+      consumer_group.uninstall_package(packages)
     end
   end
 
@@ -48,32 +45,28 @@ class BulkActions
     # if no packages are provided, a full system update will be performed (e.g ''yum update' equivalent)
     fail Errors::HostCollectionEmptyException if self.systems.empty?
     perform_bulk_action do |consumer_group|
-      pulp_job = consumer_group.update_package(packages)
-      save_job(pulp_job, :package_update, :packages, packages)
+      consumer_group.update_package(packages)
     end
   end
 
   def install_package_groups(groups)
     fail Errors::HostCollectionEmptyException if self.systems.empty?
     perform_bulk_action do |consumer_group|
-      pulp_job = consumer_group.install_package_group(groups)
-      save_job(pulp_job, :package_group_install, :groups, groups)
+      consumer_group.install_package_group(groups)
     end
   end
 
   def update_package_groups(groups)
     fail Errors::HostCollectionEmptyException if self.systems.empty?
     perform_bulk_action do |consumer_group|
-      pulp_job = consumer_group.install_package_group(groups)
-      save_job(pulp_job, :package_group_update, :groups, groups)
+      consumer_group.install_package_group(groups)
     end
   end
 
   def uninstall_package_groups(groups)
     fail Errors::HostCollectionEmptyException if self.systems.empty?
     perform_bulk_action do |consumer_group|
-      pulp_job = consumer_group.uninstall_package_group(groups)
-      save_job(pulp_job, :package_group_remove, :groups, groups)
+      consumer_group.uninstall_package_group(groups)
     end
   end
 
@@ -88,12 +81,6 @@ class BulkActions
     yield(group)
   ensure
     group.del_pulp_consumer_group
-  end
-
-  def save_job(pulp_job, job_type, parameters_type, parameters)
-    job = Job.create!(:pulp_id => pulp_job.first[:task_group_id], :job_owner => self.user)
-    job.create_tasks(self.organization, pulp_job, job_type, parameters_type => parameters)
-    job
   end
 
 end
