@@ -22,7 +22,7 @@ node :repository_count do |product|
   end
 end
 
-child :repositories => :library_repositories do
+child :library_repositories => :repositories do |repo|
     extends 'katello/api/v2/repositories/show'
 end
 
