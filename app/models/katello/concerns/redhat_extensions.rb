@@ -13,7 +13,7 @@
 
 module Katello
   module Concerns
-    module OperatingsystemExtensions
+    module RedhatExtensions
       extend ActiveSupport::Concern
 
       included do
@@ -33,7 +33,7 @@ module Katello
           os_name = construct_name(distribution.family)
           major, minor = distribution.version.split('.')
 
-          os = Operatingsystem.where(:name => os_name, :major => major, :minor => minor).first
+          os = ::Redhat.where(:name => os_name, :major => major, :minor => minor).first
           os = create_operating_system(os_name, major, minor) unless os
 
           return os
@@ -44,17 +44,17 @@ module Katello
               'name' => name,
               'major' => major.to_s,
               'minor' => minor.to_s,
-              'family' => Operatingsystem::OS['foreman_os_family']
+              'family' => ::Redhat::OS['foreman_os_family']
           }
 
           provisioning_template_name = if name == 'RedHat'
-                                         Operatingsystem::OS['foreman_os_rhel_provisioning_template']
+                                         ::Redhat::OS['foreman_os_rhel_provisioning_template']
                                        else
-                                         Operatingsystem::OS['foreman_os_provisioning_template']
+                                         ::Redhat::OS['foreman_os_provisioning_template']
                                        end
 
           templates_to_add = [ConfigTemplate.find_by_name(provisioning_template_name),
-                              ConfigTemplate.find_by_name(Operatingsystem::OS['foreman_os_pxe_template'])].compact
+                              ConfigTemplate.find_by_name(::Redhat::OS['foreman_os_pxe_template'])].compact
 
           params['os_default_templates_attributes'] = templates_to_add.map do |template|
             {
@@ -63,11 +63,11 @@ module Katello
             }
           end
 
-          if ptable = Ptable.find_by_name(Operatingsystem::OS['foreman_os_ptable'])
+          if ptable = Ptable.find_by_name(::Redhat::OS['foreman_os_ptable'])
             params['ptable_ids'] = [ptable.id]
           end
 
-          os = Operatingsystem.create!(params)
+          os = ::Redhat.create!(params)
 
           templates_to_add.each do |template|
             template.operatingsystems << os

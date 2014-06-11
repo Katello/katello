@@ -14,7 +14,7 @@
 require 'katello_test_helper'
 
 module Katello
-  class OperatingsystemExtensionsTest < ActiveSupport::TestCase
+  class RedhatExtensionsTest < ActiveSupport::TestCase
 
     def self.before_suite
       models = ["User"]
@@ -26,35 +26,35 @@ module Katello
       @my_distro = OpenStruct.new(:name => 'RedHat', :family => 'Red Hat Enterprise Linux', :version => '9.0')
 
       @config_template = ConfigTemplate.find(config_templates(:pxe_default))
-      @config_template.name = Operatingsystem::OS['foreman_os_rhel_provisioning_template']
+      @config_template.name = ::Redhat::OS['foreman_os_rhel_provisioning_template']
       @config_template.save
 
       @ptable = Ptable.find(ptables(:one))
-      @ptable.name =Operatingsystem::OS['foreman_os_ptable']
+      @ptable.name = ::Redhat::OS['foreman_os_ptable']
       @ptable.save
     end
 
     def test_find_or_create_operating_system
-      assert_nil Operatingsystem.where(:name => @my_distro.name).first
-      refute_nil Operatingsystem.find_or_create_operating_system(@my_distro)
+      assert_nil ::Redhat.where(:name => @my_distro.name).first
+      refute_nil ::Redhat.find_or_create_operating_system(@my_distro)
     end
 
     def test_create_operating_system
-      assert_nil Operatingsystem.where(:name => @my_distro.name).first
+      assert_nil ::Redhat.where(:name => @my_distro.name).first
 
-      os = Operatingsystem.create_operating_system(@my_distro.name, '9', '0')
+      os = ::Redhat.create_operating_system(@my_distro.name, '9', '0')
 
       refute_nil os
       assert_equal os.name, @my_distro.name
       assert_equal os.major, '9'
       assert_equal os.minor, '0'
       assert os.ptables.include?(@ptable)
-      assert @config_template.operatingsystems.include?(Operatingsystem.find(os.id))
+      assert @config_template.operatingsystems.include?(::Redhat.find(os.id))
     end
 
     def test_construct_name
-      assert_equal Operatingsystem.construct_name('Red Hat Enterprise Linux'), 'RedHat'
-      assert_equal Operatingsystem.construct_name('My Custom Linux'), 'My_Custom_Linux'
+      assert_equal ::Redhat.construct_name('Red Hat Enterprise Linux'), 'RedHat'
+      assert_equal ::Redhat.construct_name('My Custom Linux'), 'My_Custom_Linux'
     end
   end
 end
