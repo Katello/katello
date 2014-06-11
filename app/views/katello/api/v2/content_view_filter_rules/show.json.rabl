@@ -3,6 +3,7 @@ object @resource
 extends 'katello/api/v2/common/identifier'
 
 attributes :content_view_filter_id
+attributes :uuid, :if => lambda { |rule| rule.respond_to?(:uuid) && !rule.uuid.blank? }
 attributes :version, :if => lambda { |rule| rule.respond_to?(:version) && !rule.version.blank? }
 attributes :min_version, :if => lambda { |rule| rule.respond_to?(:min_version) && !rule.min_version.blank? }
 attributes :max_version, :if => lambda { |rule| rule.respond_to?(:max_version) && !rule.max_version.blank? }

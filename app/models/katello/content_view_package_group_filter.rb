@@ -20,8 +20,8 @@ class ContentViewPackageGroupFilter < ContentViewFilter
            :class_name => "Katello::ContentViewPackageGroupFilterRule"
 
   def generate_clauses(repo)
-    package_group_ids = package_group_rules.reject{ |rule| rule.name.blank? }.flat_map do |rule|
-      PackageGroup.legacy_search(rule.name, 0, 0, [repo.pulp_id]).map(&:package_group_id).compact
+    package_group_ids = package_group_rules.reject{ |rule| rule.uuid.blank? }.flat_map do |rule|
+      PackageGroup.legacy_search(rule.uuid, 0, 0, [repo.pulp_id], [:name_sort, "asc"], 'id').map(&:package_group_id).compact
     end
     { "id" => { "$in" => package_group_ids } } unless package_group_ids.empty?
   end

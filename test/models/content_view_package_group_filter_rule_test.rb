@@ -32,17 +32,17 @@ class ContentViewPackageGroupFilterRuleTest < ActiveSupport::TestCase
     refute_empty ContentViewPackageGroupFilterRule.where(:id => @rule)
   end
 
-  def test_without_name
+  def test_without_uuid
     assert_raises(ActiveRecord::RecordInvalid) do
-      @rule.name = nil
+      @rule.uuid = nil
       @rule.save!
     end
   end
 
-  def test_with_duplicate_name
+  def test_with_duplicate_uuid
     @rule.save!
     attrs = FactoryGirl.attributes_for(:katello_content_view_package_group_filter_rule,
-                                       :name => @rule.name)
+                                       :uuid => @rule.uuid)
 
     assert_raises(ActiveRecord::RecordInvalid) do
       ContentViewPackageGroupFilterRule.create!(attrs)

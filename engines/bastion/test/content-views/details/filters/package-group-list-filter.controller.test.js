@@ -24,7 +24,7 @@ describe('Controller: PackageGroupFilterListController', function() {
             Nutupane = function() {
                 this.table = {};
                 this.getAllSelectedResults = function () {
-                    return {included: {ids: ['packageGroup']}};
+                    return {included: {ids: ['9d288c85-1d40-4545-b88d-a11ac30cea93']}};
                 };
                 this.removeRow = function (item, field) {
                     return true;
@@ -34,7 +34,7 @@ describe('Controller: PackageGroupFilterListController', function() {
         $scope = $injector.get('$rootScope').$new();
         $scope.filter = Filter({id: 1});
         $scope.filter.rules = [
-            {id: 1, name: 'packageGroup'}
+            {id: 1, name: 'packageGroup', uuid: '9d288c85-1d40-4545-b88d-a11ac30cea93'}
         ];
 
         Rule = $injector.get('MockResource').$new();
@@ -44,7 +44,7 @@ describe('Controller: PackageGroupFilterListController', function() {
             translate: translate,
             Filter: Filter,
             Rule: Rule,
-            Nutupane: Nutupane,
+            Nutupane: Nutupane
         });
     }));
 
@@ -52,7 +52,7 @@ describe('Controller: PackageGroupFilterListController', function() {
         expect($scope.detailsTable).toBeDefined();
     });
 
-    it("should provide a method to remove errata to the filter", function () {
+    it("should provide a method to remove package groups from the filter", function () {
         $scope.removePackageGroups($scope.filter);
 
         expect($scope.successMessages.length).toBe(1);

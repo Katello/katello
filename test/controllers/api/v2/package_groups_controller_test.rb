@@ -60,7 +60,8 @@ class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
   end
 
   def test_show
-    PackageGroup.expects(:find).once.returns(mock({}))
+    Repository.stubs(:where).returns([])
+    PackageGroup.expects(:find).once.returns(OpenStruct.new({ :repo_id => @repo.pulp_id }))
     get :show, :repository_id => @repo.id, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f"
 
     assert_response :success

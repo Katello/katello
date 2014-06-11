@@ -22,6 +22,8 @@
       <thead>
         <tr alch-table-head row-select>
           <th alch-table-column>{{ "Name" | translate }}</th>
+          <th alch-table-column>{{ "Product" | translate }}</th>
+          <th alch-table-column>{{ "Repository" | translate }}</th>
           <th alch-table-column>{{ "Description" | translate }}</th>
         </tr>
       </thead>
@@ -29,6 +31,8 @@
       <tbody>
         <tr alch-table-row ng-repeat="packageGroup in detailsTable.rows" row-select="packageGroup">
           <td alch-table-cell>{{ packageGroup.name }}</td>
+          <td alch-table-cell>{{ packageGroup.repository.product.name }}</td>
+          <td alch-table-cell>{{ packageGroup.repository.name }}</td>
           <td alch-table-cell>{{ packageGroup.description }}</td>
         </tr>
       </tbody>
