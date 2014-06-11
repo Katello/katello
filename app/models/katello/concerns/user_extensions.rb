@@ -381,7 +381,7 @@ module Katello
         end
 
         def allowed_organizations
-          admin? ? Organization.all : self.organizations
+          (admin? || hidden) ? Organization.all : self.organizations
         end
 
         protected
