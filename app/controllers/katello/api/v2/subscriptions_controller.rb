@@ -29,12 +29,12 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     api_version 'v2'
   end
 
-  api :GET, "/systems/:system_id/subscriptions", N_("List a system's subscriptions")
   api :GET, "/organizations/:organization_id/subscriptions", N_("List organization subscriptions")
+  api :GET, "/systems/:system_id/subscriptions", N_("List a system's subscriptions")
   api :GET, "/activation_keys/:activation_key_id/subscriptions", N_("List an activation key's subscriptions")
+  param :organization_id, :number, :desc => N_("Organization ID"), :required => true
   param :system_id, String, :desc => N_("UUID of the system"), :required => false
   param :activation_key_id, String, :desc => N_("Activation key ID"), :required => false
-  param :organization_id, :number, :desc => N_("Organization ID"), :required => false
   def index
     subscriptions = if @system
                       index_system
