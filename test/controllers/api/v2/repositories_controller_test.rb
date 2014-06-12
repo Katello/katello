@@ -309,5 +309,20 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     end
   end
 
+  def test_gpg_key_content
+    get :gpg_key_content, :id => @repository.id
+
+    assert_response :success
+    assert_equal @repository.gpg_key.content, response.body
+  end
+
+  def test_no_gpg_key_content
+    @repository.gpg_key = nil
+    @repository.save
+    get :gpg_key_content, :id => @repository.id
+
+    assert_response 404
+  end
+
 end
 end

@@ -19,13 +19,13 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   before_filter :find_organization_from_product, :only => [:create]
   before_filter :find_repository, :only => [:show, :update, :destroy, :sync,
                                             :remove_packages, :upload_content,
-                                            :import_uploads]
+                                            :import_uploads, :gpg_key_content]
   before_filter :find_organization_from_repo, :only => [:update]
   before_filter :find_gpg_key, :only => [:create, :update]
   before_filter :error_on_rh_product, :only => [:create]
   before_filter :error_on_rh_repo, :only => [:update, :destroy]
 
-  skip_before_filter :authorize, :only => [:sync_complete]
+  skip_before_filter :authorize, :only => [:sync_complete, :gpg_key_content]
   skip_before_filter :require_org, :only => [:sync_complete]
   skip_before_filter :require_user, :only => [:sync_complete]
 
@@ -194,6 +194,19 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     end
 
     render :nothing => true
+  end
+
+  # returns the content of a repo gpg key, used directly by yum
+  # we don't want to authenticate, authorize etc, trying to distinguish between a yum request and normal api request
+  # might not always be 100% bullet proof, and its more important that yum can fetch the key.
+  api :GET, "/repositories/:id/gpg_key_content", N_("Return the content of a repo gpg key, used directly by yum")
+  param :id, :identifier, :required => true
+  def gpg_key_content
+    if @repository.gpg_key && @repository.gpg_key.content.present?
+      render(:text => @repository.gpg_key.content, :layout => false)
+    else
+      head(404)
+    end
   end
 
   protected
