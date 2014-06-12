@@ -32,6 +32,7 @@ module Katello
 
     api :GET, "/gpg_keys", N_("List gpg keys")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+    param :name, String, :desc => N_("name of the GPG key"), :required => false
     param_group :search, Api::V2::ApiController
     def index
       options = sort_params
@@ -39,10 +40,8 @@ module Katello
 
       ids = GpgKey.readable.where(:organization_id => @organization.id).pluck(:id)
 
-      options[:filters] = [
-        {:terms => {:id => ids}}
-      ]
-      @search_service.model = GpgKey
+      options[:filters] = [{:terms => {:id => ids}}]
+      options[:filters] << {:term => {:name => params[:name]}} if params[:name]
       respond_for_index(:collection => item_search(GpgKey, params, options))
     end
 
