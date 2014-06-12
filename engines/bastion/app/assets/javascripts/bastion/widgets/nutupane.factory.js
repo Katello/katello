@@ -269,7 +269,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
             self.table.selectAllResults = function (selectAll) {
                 if (self.table.allSelected()) {
                     self.table.selectAll(selectAll);
-                } else {
+                } else if (selectAll) {
                     self.table.initialSelectAll = true;
                 }
 
