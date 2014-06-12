@@ -49,6 +49,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   param :content_view_id, :number, :desc => N_("ID of a content view to show repositories in")
   param :library, :bool, :desc => N_("show repositories in Library and the default content view")
   param :content_type, String, :desc => N_("limit to only repositories of this time")
+  param :name, String, :desc => N_("name of the repository"), :required => false
   param_group :search, Api::V2::ApiController
   def index
     options = sort_params
@@ -68,6 +69,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
       options[:filters] << {:term => {:content_view_version_id => @organization.default_content_view.versions.first.id}}
     end
     options[:filters] << {:term => {:content_type => params[:content_type]}} if params[:content_type]
+    options[:filters] << {:term => {:name => params[:name]}} if params[:name]
 
     respond :collection => item_search(Repository, params, options)
   end
