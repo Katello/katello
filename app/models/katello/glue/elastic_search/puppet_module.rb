@@ -141,7 +141,7 @@ module Glue::ElasticSearch::PuppetModule
       options = {:start => 0,
                  :page_size => 10,
                  :repoids => nil,
-                 :sort => [:name_sort, "ASC"],
+                 :sort => [:name_sort, "asc"],
                  :search_mode => :all,
                  :default_field => 'name',
                  :fields => [],
@@ -169,7 +169,7 @@ module Glue::ElasticSearch::PuppetModule
           size options[:page_size]
           from options[:start]
         end
-        sort { by options[:sort][0], options[:sort][1] } unless !all_rows
+        sort { by options[:sort][0], options[:sort][1] } if all_rows
       end
 
       if options[:filters]
