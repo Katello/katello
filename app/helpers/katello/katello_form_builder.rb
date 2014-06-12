@@ -114,17 +114,20 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
       unless options[wrapper][:class].is_a?(Array)
         options[wrapper][:class] = (options[wrapper][:class] || '').split
       end
-      options[wrapper][:class] |= ["grid_#{options[:grid][i]}", (i == 0 ? "ra" : "la")]
+      options[wrapper][:class] ||= ["grid_#{options[:grid][i]}", (i == 0 ? "ra" : "la")]
     end
     options[:tabindex] ||= tabindex
     options[:wrapper] ||= {}
     options[:size] ||= '30'
 
-    content_tag :fieldset, :id => options[:wrapper][:id] do
-      @template.concat label_wrapper(options) { field_label(name, options) }
-      @template.concat input_wrapper(options) { yield if block_given? }
+    content_tag(:div, :class=> "clearfix") do
+      content_tag :div, :class => "form-group'}",
+        content_tag :fieldset, :id => options[:wrapper][:id] do
+          @template.concat label_wrapper(options) { field_label(name, options) }
+          @template.concat input_wrapper(options) { yield if block_given? }
+        end
+      end
     end
-
   end
 
   def label_wrapper(options)
@@ -150,7 +153,7 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
     label_content = label(name, options[:label], :class => ("required" if required))
     return label_content if options[:label_help].nil?
 
-    help_content = content_tag(:i, '', :class => 'details_icon-grey tipsify', 'title' => options[:label_help])
+    help_content = content_tag(:i, '', :class => 'details_icon-grey tipsify col-md-2 control-label', 'title' => options[:label_help])
     return help_content + label_content
   end
 
