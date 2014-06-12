@@ -34,21 +34,21 @@
         <span class="info-value">{{ contentHost.type }}</span>
       </div>
 
-      <div ng-show="contentHost.guests" class="detail">
-        <span class="info-label" translate>Guests</span>
+      <div ng-show="contentHost.virtual_guests" class="detail">
+        <span class="info-label" translate>Virtual Guests</span>
         <div class="info-value">
-          <ul>
-            <li ng-repeat="guest in system.guests">
-              <a ui-sref="content-hosts.details.info({contentHostId: guest.uuid})">{{ guest.name }}</a>
-            </li>
-          </ul>
+          <a ng-href="/products?search={{ virtualGuestIds(contentHost) }}"
+                 translate translate-n="contentHost.virtual_guests.length"
+                 translate-plural="{{ contentHost.virtual_guests.length }} Hosts">
+             1 Host
+          </a>
         </div>
       </div>
 
-      <div ng-show="contentHost.host" class="detail">
-        <span class="info-label" translate>Host</span>
+      <div ng-show="contentHost.virtual_host" class="detail">
+        <span class="info-label" translate>Virtual Host</span>
         <div class="info-value">
-          <a ui-sref="content-hosts.details.info({contentHostId: system.host.uuid })">{{ system.host.name }}</a>
+          <a ui-sref="content-hosts.details.info({contentHostId: contentHost.virtual_host.uuid })">{{ contentHost.virtual_host.name }}</a>
         </div>
       </div>
 

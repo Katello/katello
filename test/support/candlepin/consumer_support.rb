@@ -36,7 +36,7 @@ module CandlepinConsumerSupport
     @system.arch = 'x86_64'
     @system.sockets = 2
     @system.memory = 256
-    @system.guest = false
+    @system.virtual_guest = false
 
     return @system
   end

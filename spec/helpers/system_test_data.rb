@@ -14,7 +14,7 @@ module Katello
 module SystemTestData
   class << self
 
-    def guests
+    def virtual_guests
       [{"href"=>"/consumers/fcba65f1-5fe4-42e0-8f7b-6c719ec2bc42",
         "facts"=>
       {

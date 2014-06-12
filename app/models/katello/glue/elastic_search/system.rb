@@ -54,8 +54,8 @@ module Glue::ElasticSearch::System
                                        :memory,
                                        :sockets,
                                        :status,
-                                       :host,
-                                       :guests
+                                       :virtual_host,
+                                       :virtual_guests
                     ]
 
       dynamic_templates = [
@@ -112,8 +112,8 @@ module Glue::ElasticSearch::System
         indexes :environment_sort, :type => 'string', :index => :not_analyzed
         indexes :content_view_sort, :type => 'string', :index => :not_analyzed
 
-        indexes :host, :type => 'string', :analyzer => :kt_name_analyzer
-        indexes :guests, :type => 'string', :analyzer => :kt_name_analyzer
+        indexes :virtual_host, :type => 'string', :analyzer => :kt_name_analyzer
+        indexes :virtual_guests, :type => 'string', :analyzer => :kt_name_analyzer
       end
 
       # Whenever a system's 'name' field changes, the objects returned by system.host_collections
@@ -142,10 +142,10 @@ module Glue::ElasticSearch::System
       :environment_sort => self.environment.try(:name)
     }
 
-    if self.guest
-      attrs[:host] = self.host ? self.host.name : ''
+    if self.virtual_guest
+      attrs[:virtual_host] = self.virtual_host ? self.virtual_host.name : ''
     else
-      attrs[:guests] = self.guests.map(&:name)
+      attrs[:virtual_guests] = self.virtual_guests.map(&:name)
     end
 
     attrs

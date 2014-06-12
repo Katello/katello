@@ -230,14 +230,14 @@ module Resources
           self.delete(uri, self.default_headers).code.to_i
         end
 
-        def guests(uuid)
+        def virtual_guests(uuid)
           response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'guests'), self.default_headers).body
           Util::Data.array_with_indifferent_access JSON.parse(response)
         rescue
           return []
         end
 
-        def host(uuid)
+        def virtual_host(uuid)
           response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'host'), self.default_headers).body
           if response.present?
             JSON.parse(response).with_indifferent_access

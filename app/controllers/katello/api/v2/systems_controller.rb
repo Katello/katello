@@ -99,7 +99,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
     param :fact, String, :desc => N_("Any number of facts about this content host")
   end
   param :type, String, :desc => N_("Type of the content host, it should always be 'content host'"), :required => true, :action_aware => true
-  param :guest_ids, Array, :desc => N_("IDs of the guests running on this content host")
+  param :virtual_guest_ids, Array, :desc => N_("IDs of the virtual guests running on this content host")
   param :installed_products, Array, :desc => N_("List of products installed on the content host"), :action_aware => true
   param :release_ver, String, :desc => N_("Release version of the content host")
   param :service_level, String, :allow_nil => true, :desc => N_("A service level for auto-healing process, e.g. SELF-SUPPORT"), :action_aware => true
@@ -125,7 +125,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
     param :fact, String, :desc => N_("Any number of facts about this content host")
   end
   param :type, String, :desc => N_("Type of the content host, it should always be 'content host'"), :required => true, :action_aware => true
-  param :guest_ids, Array, :desc => N_("IDs of the guests running on this content host")
+  param :virtual_guest_ids, Array, :desc => N_("IDs of the virtual guests running on this content host")
   param :installed_products, Array, :desc => N_("List of products installed on the content host"), :action_aware => true
   param :release_ver, String, :desc => N_("Release version of the content host")
   param :service_level, String, :allow_nil => true, :desc => N_("A service level for auto-healing process, e.g. SELF-SUPPORT"), :action_aware => true
