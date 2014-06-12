@@ -70,6 +70,10 @@ class ContentViewVersion < Katello::Model
     default?
   end
 
+  def available_releases
+    self.repositories.pluck(:minor).compact.uniq.sort
+  end
+
   def repos(env)
     self.repositories.in_environment(env)
   end

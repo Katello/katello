@@ -293,50 +293,6 @@ describe System do
     end
   end
 
-  describe "available releases" do
-    before do
-      disable_product_orchestration
-      disable_repo_orchestration
-      @product = Product.create!(:name=>"prod1", :label=> "prod1", :cp_id => '12345', :provider => @organization.redhat_provider, :organization => @organization)
-      @environment = create_environment({:name=>"Dev 2", :label=> "Dev_2", :prior => @organization.library, :organization => @organization})
-      environment = Katello.config.katello? ? @environment : @organization.library
-      @releases = %w[6.1 6.2 6Server]
-      @releases.each do |release|
-        Repository.create!(:name => "Repo #{release}",
-                          :label => "Repo#{release.gsub(".", "_")}",
-                          :pulp_id => "repo #{release}",
-                          :environment => environment,
-                          :product => @product,
-                          :major => "6",
-                          :minor => release,
-                          :cp_label => "repo",
-                          :relative_path=>'/foo',
-                          :content_id=>'foo',
-                          :content_view_version=>environment.content_view_versions.first,
-                          :feed => 'https://localhost')
-      end
-      Repository.create!(:name => "Repo without releases",
-                         :label => "Repo_without_releases",
-                         :pulp_id => "repo_without_release",
-                         :environment => environment,
-                         :product => @product,
-                         :major => nil,
-                         :minor => nil,
-                         :cp_label => "repo",
-                         :relative_path=>'/foo',
-                         :content_id=>'foo',
-                         :content_view_version=>environment.content_view_versions.first,
-                         :feed => 'https://localhost')
-      @system.environment = environment
-      @system.content_view = environment.content_views.first
-      @system.save!
-    end
-
-    it "returns all releases available for the current environment (katello)" do
-      @system.available_releases.must_equal(@releases.sort)
-    end
-  end
-
   describe "find system by a pool id" do
     let(:pool_id_1) {"POOL_ID_123"}
     let(:pool_id_2) {"POOL_ID_456"}

@@ -78,4 +78,16 @@ class SystemCreateTest < SystemTestBase
     refute_nil System.find_by_name(name)
   end
 end
+
+class SystemTest < SystemTestBase
+
+  def setup
+    super
+  end
+
+  def test_available_releases
+    assert @system.available_releases.include?('6Server')
+  end
+
+end
 end
