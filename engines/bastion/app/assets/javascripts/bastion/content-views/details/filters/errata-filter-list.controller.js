@@ -30,20 +30,21 @@ angular.module('Bastion.content-views').controller('ErrataFilterListController',
     function ($scope, translate, Nutupane, Filter, Rule) {
         var nutupane;
 
-        nutupane = new Nutupane(Filter, {
-                filterId:     $scope.$stateParams.filterId,
-                'sort_by':    'errata_id',
-                'sort_order': 'DESC'
+        $scope.nutupane = nutupane = new Nutupane(Filter, {
+                filterId: $scope.$stateParams.filterId,
+                'sort_order': 'DESC',
+                'sort_by': 'issued'
             },
             'errata'
         );
 
-        $scope.errataTable = nutupane.table;
+        $scope.detailsTable = nutupane.table;
 
         $scope.removeErrata = function () {
             var errataIds = nutupane.getAllSelectedResults('errata_id').included.ids,
                 rules;
 
+            nutupane.table.working = true;
             rules = findRules(errataIds);
 
             angular.forEach(rules, function (rule) {

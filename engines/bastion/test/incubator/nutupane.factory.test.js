@@ -273,7 +273,7 @@ describe('Factory: Nutupane', function() {
         });
     });
 
-    describe("recognizes custom actions by", function() {
+    describe("Nutupane should", function() {
         beforeEach(function() {
             nutupane = new Nutupane(Resource, {}, 'customAction');
             nutupane.table.working = false;
@@ -281,7 +281,7 @@ describe('Factory: Nutupane', function() {
             nutupane.table.allSelected = function () {};
         });
 
-        it("providing a method to fetch records for the table", function() {
+        it("provide a method to fetch records for the table via a custom action", function() {
             spyOn(Resource, 'customAction');
             nutupane.query();
 
@@ -293,6 +293,12 @@ describe('Factory: Nutupane', function() {
             nutupane.table.search('*');
 
             expect($location.search()['customActionSearch']).toBe('*');
+        });
+
+        it("provide a method to add params", function () {
+            nutupane.addParam('test', 'ABC');
+
+            expect(nutupane.getParams()['test']).toBe('ABC');
         });
     });
 

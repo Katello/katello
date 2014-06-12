@@ -84,14 +84,21 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
       N_("Get errata that are available to be added to the filter")
   param :content_view_id, :identifier, :desc => N_("content view identifier")
   param :id, :identifier, :desc => N_("filter identifier"), :required => true
+  param :types, Array, :desc => N_("Errata types array ['security', 'bugfix', 'enhancement']")
+  param :start_date, DateTime, :desc => N_("Start date that Errata was issued on to filter by")
+  param :end_date, DateTime, :desc => N_("End date that Errata was issued on to filter by")
   def available_errata
     current_errata_ids = @filter.erratum_rules.map(&:errata_id)
     repo_ids = @filter.applicable_repos.pluck(:pulp_id)
-    search_filters = [{ :terms => { :repoids => repo_ids } },
-                      { :not => { :terms => { :errata_id_exact => current_errata_ids } } }]
+
+    search_filters = [
+      { :not => { :terms => { :errata_id_exact => current_errata_ids }}}
+    ]
+    search_filters.concat(Errata.filters(params.merge(:repo_ids => repo_ids)))
 
     options = sort_params
     options[:filters] = search_filters
+    options[:fields] = [:errata_id, :id, :type, :title, :issued, :_href]
 
     collection = item_search(Errata, params, options)
     collection[:results] = collection[:results].map do |erratum|

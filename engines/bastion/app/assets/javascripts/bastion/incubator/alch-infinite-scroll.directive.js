@@ -42,7 +42,7 @@ angular.module('alchemy').directive('alchInfiniteScroll', [function () {
 
             $element.bind('scroll', function () {
                 var sliderPosition = raw.scrollTop + raw.offsetHeight;
-                if (sliderPosition > 0 && sliderPosition >= raw.scrollHeight) {
+                if (sliderPosition > 0 && sliderPosition >= raw.scrollHeight - 1) {
                     $scope.loadMoreFunction();
                 }
             });

@@ -124,6 +124,10 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 params = newParams;
             };
 
+            self.addParam = function (param, value) {
+                params[param] = value;
+            };
+
             self.searchTransform = function (term) {
                 return term;
             };
@@ -172,7 +176,8 @@ angular.module('Bastion.widgets').factory('Nutupane',
                     included: {
                         ids: [],
                         resources: [],
-                        search: null
+                        search: null,
+                        params: params
                     },
                     excluded: {
                         ids: []

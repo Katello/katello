@@ -50,10 +50,10 @@ describe('Controller: ErrataFilterListController', function() {
     }));
 
     it("puts a table object on the scope", function() {
-        expect($scope.errataTable).toBeDefined();
+        expect($scope.detailsTable).toBeDefined();
     });
 
-    it("should provide a method to add errata to the filter", function () {
+    it("should provide a method to remove errata from the filter", function () {
         $scope.removeErrata($scope.filter);
 
         expect($scope.successMessages.length).toBe(1);

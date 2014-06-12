@@ -99,4 +99,13 @@ describe('Controller: ErrataFilterController', function() {
         expect($scope.errataFilter(errata)).toBe(true);
     });
 
+    it("should provide a method to check if an errata type is the only one selected", function () {
+        var selections = {enhancement: false, bugfix: false, security: true};
+
+        expect($scope.onlySelected(selections, 'security')).toBe(true);
+
+        selections = {enhancement: false, bugfix: false, security: false};
+        expect($scope.onlySelected(selections, 'bugfix')).toBe(false);
+    });
+
 });

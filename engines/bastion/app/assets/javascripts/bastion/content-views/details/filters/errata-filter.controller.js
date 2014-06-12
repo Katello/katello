@@ -77,5 +77,14 @@ angular.module('Bastion.content-views').controller('ErrataFilterController',
             $scope.date.startOpen = true;
             $scope.date.endOpen = false;
         };
+
+        $scope.onlySelected = function (object, type) {
+            var selected = _.filter(object, function (value) {
+                return value;
+            });
+
+            return object[type] && (selected.length === 1);
+        };
+
     }]
 );
