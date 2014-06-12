@@ -17,6 +17,9 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
+
+        alias_method_chain :medium_uri, :content_uri
+
         # TODO: these were pulled in from katello_foreman_engine. It may be
         # useful to make them configurable in the future.
         OS = {
@@ -86,6 +89,21 @@ module Katello
         end
 
       end
+
+      def medium_uri_with_content_uri host, url = nil
+        if url.nil? && (full_path = kickstart_repo(host).try(:full_path))
+          URI.parse(full_path)
+        else
+          medium_uri_without_content_uri(host, url)
+        end
+      end
+
+      private
+
+      def kickstart_repo host
+        ### TODO ###
+      end
+
     end
   end
 end

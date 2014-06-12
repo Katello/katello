@@ -1,3 +1,13 @@
+<% proxies = SmartProxy.unscoped.with_features("Pulp").with_taxonomy_scope(@location,@organization,:path_ids) %>
+<% if proxies.count > 0 %>
+  <%= javascript_tag do %>
+        $(function() {
+            $("#host_medium_id").parent().parent().remove();
+            $("#hostgroup_medium_id").parent().parent().remove();
+        });
+  <% end %>
+<% end %>
+
 <style>
     option.kt-env { margin-left: 0em; }
     option.kt-cv  { margin-left: 1em; }
@@ -50,3 +60,10 @@ end %>
              :'data-host-id' => (@host && @host.id),
              :class => 'form-control' }
 end %>
+
+<% if proxies.count > 0 %>
+    <%= select_f f, :pulp_proxy_id, proxies, :id, :name,
+             { :include_blank => blank_or_inherit_f(f, :pulp_proxy) },
+             { :label       => _("Pulp"),
+               :help_inline => _("Use this as a Pulp server") } %>
+<% end %>
