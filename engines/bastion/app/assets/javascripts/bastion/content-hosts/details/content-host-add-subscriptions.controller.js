@@ -62,9 +62,12 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
 
             $scope.isAdding = true;
             ContentHost.addSubscriptions({uuid: $scope.contentHost.uuid, 'subscriptions': selected}, function () {
-                $scope.successMessages.push(translate("Successfully added %s subscriptions.").replace('%s', selected.length));
-                $scope.isAdding = false;
-                addSubscriptionsPane.refresh();
+                ContentHost.get({id: $scope.$stateParams.contentHostId}, function (host) {
+                    $scope.$parent.contentHost = host;
+                    $scope.successMessages.push(translate("Successfully added %s subscriptions.").replace('%s', selected.length));
+                    $scope.isAdding = false;
+                    addSubscriptionsPane.refresh();
+                });
             }, function (response) {
                 $scope.$parent.errorMessages = response.data.displayMessage;
                 $scope.isAdding  = false;
