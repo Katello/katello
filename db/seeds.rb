@@ -149,3 +149,5 @@ Role.without_auditing do
     create_filters(Role.find_by_name(role_name), permissions)
   end
 end
+
+Setting.find_by_name("dynflow_enable_console").update_attributes!(:value => true) if Rails.env.development?
