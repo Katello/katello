@@ -267,7 +267,7 @@ $col_width: (($static_width) * 0.5);
       }
     }
 
-    #dashboard_promotions, #dashboard_content_views {
+    #dashboard_content_views {
       h5 {
         display: inline;
       }
@@ -276,24 +276,19 @@ $col_width: (($static_width) * 0.5);
         padding-bottom: 0;
       }
       .row_item {
-        .col_1 {
-          white-space: nowrap;
-          width: $width * .6;
-          padding-right: 10px;
-          overflow: hidden;
+        .col_1, .col_2, .col_3 {
           display: inline-block;
-          margin-bottom: -5px;
-          text-overflow: ellipsis;
-
-          &.environment {
-            vertical-align: top;
-          }
+          overflow: hidden;
+          margin-bottom:-5px;
         }
-        .col_2 {
-          display: inline-block;
-          width: 115px;
-          overflow: hidden;
-          margin-bottom: -5px;
+        .col_1, .col_2 {
+          white-space: nowrap;
+          width: 150px;
+          padding-right: 10px;
+          text-overflow: ellipsis;
+        }
+        .col_3 {
+          width: 100px;
         }
       }
     }

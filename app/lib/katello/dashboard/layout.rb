@@ -20,7 +20,6 @@ module Dashboard
       notices
       content_views
       sync
-      promotions
       host_collections
       errata
     )

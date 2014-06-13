@@ -36,77 +36,59 @@ module DashboardHelper
     end
   end
 
-  def content_view_versions(num = quantity)
-    versions = ContentViewVersion
-               .readable
-               .non_default_view
-               .joins(:task_status)
-               .order("#{Katello::TaskStatus.table_name}.updated_at DESC").limit(num)
-
-    versions.select { |version| version.organization == current_organization }
-  end
-
-  def content_view_name(version)
-    if version.content_view.readable?
-      link_to(version.content_view.name, content_view_path_helper(version))
-    else
-      version.content_view.name
-    end
-  end
-
-  def content_view_class(version)
-    if version.task_status.finished?
-      "check_icon"
-    elsif version.task_status.pending? && version.task_status.start_time
-      "gears_icon"  #running
-    else
-      "clock_icon" #pending
-    end
-  end
-
-  def content_view_message(version)
-    if version.task_status.error?
-      _("Failed")
-    elsif version.task_status.finished?
-      _("Success")
-    else # pending
-      if version.task_status.task_type == TaskStatus::TYPES[:content_view_refresh][:type].to_s
-        _("Refreshing")
-      else
-        _("Publishing")
-      end
-    end
-  end
-
-  def content_view_path_helper(version)
-    content_view_definitions_path +
-        "#panel=content_view_definition_#{version.content_view.content_view_definition.id}&panelpage=views"
-  end
-
-  def content_view_history(num = quantity)
+  def content_view_histories(num  = quantity)
     content_views = ContentView.where(:organization_id => current_organization.id).readable
-    ContentViewHistory
-      .joins(:content_view_version => :content_view)
-      .where("#{ContentView.table_name}.id" => content_views)
-      .limit(num)
+    ContentViewHistory.joins(:content_view_version => :content_view).
+        where("#{ContentView.table_name}.id" => content_views).
+        order("#{Katello::ContentViewHistory.table_name}.updated_at DESC").
+        limit(num)
   end
 
-  def history_class(cs)
-    if cs.status == ContentViewHistory::SUCCESSFUL
+  def content_view_history_view_info(history)
+    version = history.content_view_version
+    if version.content_view.readable?
+      link_to(content_view_version_message(version), "/content_views/#{version.content_view.id}/versions")
+    else
+      content_view_version_message(version)
+    end
+  end
+
+  def content_view_history_class(history)
+    case history.status
+    when ContentViewHistory::IN_PROGRESS
+      "gears_icon"
+    when ContentViewHistory::FAILED
+      "error_icon"
+    when ContentViewHistory::SUCCESSFUL
       "check_icon"
-    elsif cs.status == ContentViewHistory::IN_PROGRESS
-      "gears_icon"  #running
     end
   end
 
-  def history_message(cs)
-    if cs.status == ContentViewHistory::SUCCESSFUL
-      _("Success")
-    elsif cs.status == ContentViewHistory::IN_PROGRESS
-      _("Promoting")
-    elsif cs.status == ContentViewHistory::FAILED
-      _("Failed")
+  def content_view_history_action(history)
+    case history.task.label
+    when "Actions::Katello::ContentView::Publish"
+      _("Published new version")
+    when "Actions::Katello::ContentView::Promote"
+      _("Promoted to %{environment}") % { :environment => history.environment.name }
+    when "Actions::Katello::ContentView::Remove"
+      _("Deleted from %{environment}") % { :environment => history.environment.name }
     end
+  end
+
+  def content_view_message(history)
+    case history.status
+    when ContentViewHistory::IN_PROGRESS
+      _("In Progress")
+    when ContentViewHistory::FAILED
+      _("Failed")
+    when ContentViewHistory::SUCCESSFUL
+      _("Success")
+    end
+  end
+
+  def content_view_version_message(version)
+    _("%{content_view_name}, version %{content_view_version}") %
+        { :content_view_name => version.content_view.name, :content_view_version => version.version }
   end
 
   def products_synced(num = quantity)
