@@ -46,12 +46,14 @@ angular.module('Bastion.widgets').factory('Nutupane',
             var self = this;
             params = params || {};
 
+            self.searchKey = action ? action + 'Search' : 'search';
+
             self.table = {
                 action: action || 'queryPaged',
                 params: params,
                 resource: resource,
                 rows: [],
-                searchTerm: $location.search().search
+                searchTerm: $location.search()[self.searchKey]
             };
 
             // Set default resource values
@@ -203,7 +205,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
             };
 
             self.table.search = function (searchTerm) {
-                $location.search('search', searchTerm);
+                $location.search(self.searchKey, searchTerm);
                 self.table.resource.page = 1;
                 self.table.rows = [];
                 self.table.closeItem();

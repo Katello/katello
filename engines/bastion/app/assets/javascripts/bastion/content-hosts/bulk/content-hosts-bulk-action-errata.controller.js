@@ -38,7 +38,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionErrata
         nutupane.table.closeItem = function () {};
         $scope.detailsTable = nutupane.table;
         $scope.detailsTable.errataFilterTerm = "";
-        $scope.detailsTable.skipInitialLoad = true;
+        $scope.detailsTable.initialLoad = false;
         $scope.outOfDate = false;
         $scope.initialLoad = true;
 
@@ -61,8 +61,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionErrata
             }
         };
 
-        $scope.$watch('nutupane.table.rows', function () {
-            if ($scope.initialLoad) {
+        $scope.$watch('nutupane.table.rows', function (rows) {
+            if ($scope.initialLoad && rows.length > 0) {
                 $scope.initialLoad = false;
                 $scope.fetchErrata();
             }
