@@ -22,7 +22,7 @@ module Katello
       #
       # Calls "status" services in all backend engines.
       #
-      # This should be called as 'admin' user otherwise the oauth will fail.
+      # This should be called with User.current set if you want to check pulp_auth
       #
       # TODO: break up this method
       # rubocop:disable MethodLength
@@ -80,7 +80,7 @@ module Katello
         end
 
         # pulp - ping with oauth
-        if Katello.config.katello?
+        if Katello.config.katello? && User.current
           exception_watch(result[:services][:pulp_auth]) do
             Katello.pulp_server.resources.user.retrieve_all
           end
