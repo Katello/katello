@@ -43,6 +43,7 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
     @request.env['CONTENT_TYPE'] = 'application/json'
     System.any_instance.stubs(:releaseVer).returns(1)
     System.any_instance.stubs(:refresh_subscriptions).returns(true)
+    System.any_instance.stubs(:products).returns([{:id => 1, :name => 'product', :available_content => []}])
     @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
 
     models
