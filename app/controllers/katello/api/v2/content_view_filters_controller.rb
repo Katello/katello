@@ -27,7 +27,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
     options = sort_params
     options[:load_records?] = true
     options[:filters] = [{ :terms => { :id => @view.filter_ids } }]
-    options[:filters] << {:term => {:name => params[:name].downcase}} if params[:name]
+    options[:filters] << {:term => {:name => params[:name]}} if params[:name]
 
     @search_service.model = ContentViewFilter
     respond(:collection => item_search(ContentViewFilter, params, options))
