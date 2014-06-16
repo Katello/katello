@@ -62,6 +62,12 @@ class SystemCreateTest < SystemTestBase
     assert @system.content_view.default?
   end
 
+  def test_description_length_enforced_on_build
+    desc = "a" * 256
+    @system = build(:katello_system, :alabama, :name => 'alabama', :description => desc, :environment => @dev, :uuid => '1234')
+    refute @system.valid?
+  end
+
   def test_create_with_content_view
     @system = build(:katello_system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
     @system.content_view = ContentView.find(katello_content_views(:library_dev_view))
