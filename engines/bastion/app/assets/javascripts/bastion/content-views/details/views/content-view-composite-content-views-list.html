@@ -36,14 +36,15 @@
           row-select="contentViewVersion">
         <td alch-table-cell>{{ contentViewVersion.content_view.name }}</td>
         <td alch-table-cell>
-          <select class="form-control"
-                  name="contentViewVersion.version"
-                  ng-show="contentViewVersion.content_view.versions.length > 1"
-                  ng-change="saveContentViewVersion(contentViewVersion)"
-                  ng-model="contentViewVersion.id"
-                  ng-options="cvv.id as cvv.version for cvv in contentViewVersion.content_view.versions">
-          </select>
-          <span ng-show="contentViewVersion.content_view.versions.length === 1" ng-model="contentViewVersions.version">1</span>
+          <span alch-edit-select="contentViewVersion.id"
+                display-value="getVersionString(contentViewVersion)"
+                display-value-default="getVersionString(contentViewVersion)"
+                readonly="denied('edit_content_views', contentView)"
+                selector="contentViewVersion.id"
+                options="getContentViewForVersion(contentViewVersion)"
+                options-format="option.id as option.version for option in options"
+                on-save="saveContentViewVersion(contentViewVersion)">
+          </span>
         </td>
         <td alch-table-cell>
         <span ng-show="contentViewVersions.environments.length !== 0"

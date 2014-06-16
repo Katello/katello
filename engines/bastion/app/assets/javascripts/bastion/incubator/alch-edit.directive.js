@@ -238,6 +238,7 @@ angular.module('alchemy')
             replace: true,
             scope: {
                 model: '=alchEditSelect',
+                displayValueDefault: '=displayValueDefault',
                 readonly: '=',
                 selector: '=',
                 handleOptions: '&options',

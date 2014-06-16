@@ -16,6 +16,8 @@
  * @name  Bastion.content-views.controller:ContentViewCompositeContentViewsListController
  *
  * @requires $scope
+ * @requires $q
+ * @requires translate
  * @requires Nutupane
  * @requires CurrentOrganization
  * @requires ContentView
@@ -24,8 +26,8 @@
  *  Provides a nutupane for existing content views that are included in the composite.
  */
 angular.module('Bastion.content-views').controller('ContentViewCompositeContentViewsListController',
-    ['$scope', 'Nutupane', 'CurrentOrganization', 'ContentView',
-    function ($scope, Nutupane, CurrentOrganization, ContentView) {
+    ['$scope', '$q', 'translate', 'Nutupane', 'CurrentOrganization', 'ContentView',
+    function ($scope, $q, translate, Nutupane, CurrentOrganization, ContentView) {
         var nutupane = new Nutupane(ContentView, {
             'organization_id': CurrentOrganization,
             'id': $scope.$stateParams.contentViewId,
@@ -34,10 +36,21 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeContentV
 
         $scope.detailsTable = nutupane.table;
 
+        $scope.getContentViewForVersion = function (contentViewVersion) {
+            var deferred = $q.defer();
+
+            ContentView.get({id: contentViewVersion['content_view_id']}, function (response) {
+                deferred.resolve(response.versions);
+            });
+
+            return deferred.promise;
+        };
+
         $scope.saveContentViewVersion = function (contentViewVersion) {
             var contentViewVersionToRemove = _.find($scope.contentView.components, function (component) {
                 return component['content_view_id'] === contentViewVersion['content_view_id'];
             });
+
             $scope.contentView['component_ids'] = _.without($scope.contentView['component_ids'], contentViewVersionToRemove.id);
             $scope.contentView['component_ids'].push(contentViewVersion.id);
 
@@ -56,5 +69,8 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeContentV
             });
         };
 
+        $scope.getVersionString = function (contentViewVersion) {
+            return translate('Version %s').replace('%s', contentViewVersion.version.toString());
+        };
     }]
 );
