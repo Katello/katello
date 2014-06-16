@@ -400,7 +400,8 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   def authorize_environment
-    deny_access unless @environment.readable?
+    return deny_access unless @environment.readable?
+    true
   end
 
 end

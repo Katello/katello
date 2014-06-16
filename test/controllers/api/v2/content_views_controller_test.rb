@@ -318,8 +318,18 @@ module Katello
                       [single_env_remove_permission, :promote_or_remove_content_views],
                       [:promote_or_remove_content_views_to_environments, diff_view_remove_permission],
                      ]
+
+      env_ids = [@dev.id.to_s, @staging.id.to_s]
+      Katello::System.expects(:where).at_least_once.returns([]).with do |args|
+        args[:content_view_id].id == @library_dev_staging_view.id && args[:environment_id] == env_ids
+      end
+
+      Katello::ActivationKey.expects(:where).at_least_once.returns([]).with do |args|
+        args[:content_view_id].id == @library_dev_staging_view.id && args[:environment_id] == env_ids
+      end
+
       assert_protected_action(:remove, allowed_perms, denied_perms) do
-        put :remove, :id => @library_dev_staging_view.id, :environment_ids => [@dev.id, @staging.id]
+        put :remove, :id => @library_dev_staging_view.id, :environment_ids => env_ids
       end
     end
 
@@ -344,7 +354,6 @@ module Katello
                                                      @library_dev_staging_view.version(@staging).id]
       end
     end
-
 
     def test_remove_protected_envs_with_systems
       sys = System.find(katello_systems(:simple_server_3))
@@ -387,9 +396,15 @@ module Katello
                          alternate_env_read_permission, bad_cv_read_permission]
                       ]
 
+      env_ids = [sys.environment.id.to_s]
+
+      Katello::ActivationKey.expects(:where).at_least_once.returns([]).with do |args|
+        args[:content_view_id].id == sys.content_view.id && args[:environment_id] == env_ids
+      end
+
       assert_protected_action(:remove, allowed_perms, denied_perms) do
         put :remove, :id => sys.content_view.id,
-                     :environment_ids => [sys.environment.id],
+                     :environment_ids => env_ids,
                      :system_content_view_id => alternate_cv.id,
                      :system_environment_id => alternate_env.id
       end
@@ -436,6 +451,12 @@ module Katello
                       [ak_edit_permission, ak_cv_remove_permission, ak_env_remove_permission,
                          alternate_env_read_permission, bad_cv_read_permission]
                       ]
+
+      env_ids = [ak.environment.id.to_s]
+
+      Katello::System.expects(:where).at_least_once.returns([]).with do |args|
+        args[:content_view_id].id == ak.content_view.id && args[:environment_id] == env_ids
+      end
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do
         put :remove, :id => ak.content_view.id,

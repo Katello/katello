@@ -50,7 +50,7 @@ module Katello
         include Ext::IndexedModel
 
         include AsyncOrchestration
-        include Authorization::Enforcement
+        include Katello::Authorization::Enforcement
         include Katello::Authorization::UserAuthorization
         include Util::ThreadSession::UserModel
 
