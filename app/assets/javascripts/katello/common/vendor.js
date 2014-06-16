@@ -14,7 +14,6 @@
 //= require "alchemy/jquery-ui-1.8.11.custom/js/jquery-ui-1.8.11.custom.min"
 //= require "alchemy/jquery/plugins/jquery.hoverIntent"
 //= require "alchemy/jquery/plugins/jquery.ui.totop"
-//= require "alchemy/rails"
 //= require "alchemy/jquery/plugins/jquery.jnotify"
 //= require "alchemy/jquery/plugins/jquery.text-overflow"
 //= require "alchemy/jquery/plugins/jquery.linkHover"
