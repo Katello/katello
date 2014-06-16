@@ -1,19 +1,22 @@
 #dashboard_content_views.widget.scroll-pane{"data-quantity"=>quantity}
-  - if (view_versions = content_view_versions).empty?
-    #{_("No content views found.")}
+  - if (view_histories = content_view_histories).empty?
+    #{_("No content view history events found.")}
 
   -else
     %ul
-      - view_versions.each do |version|
+      - view_histories.each do |history|
         %li
-          %div.row_item
-            .col_1.one-line-ellipsis{:title=>version.content_view.name}
-              %span.icon_wrap.fl
-                %span.fl{:class=>content_view_class(version)}
+          .row_item
+            .col_1.one-line-ellipsis{:title => content_view_version_message(history.content_view_version)}
               %h5
-                #{content_view_name(version)}
+                #{content_view_history_view_info(history)}
             .col_2
-              #{content_view_message(version)}
+              #{content_view_history_action(history)}
+            .col_3
+              .fl{:class=>content_view_history_class(history)}
+              #{content_view_message(history)}
+
             .col_1
             .col_2
-              #{format_time version.task_status.finish_time}
+            .col_3
+              #{format_time history.updated_at}

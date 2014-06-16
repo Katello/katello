@@ -23,6 +23,7 @@ module Actions
         # system_environment_id - environment to reassociate systems with
         # key_content_view_id - content view to reassociate actvation keys with
         # key_environment_id - environment to reassociate activation keys with
+        # rubocop:disable MethodLength
         def plan(content_view, options)
           cv_envs = options.fetch(:content_view_environments, [])
           versions = options.fetch(:content_view_versions, [])
@@ -41,10 +42,13 @@ module Actions
               end
             end
 
+            cv_histories = []
             all_cv_envs.each do |cve|
-              ::Katello::ContentViewHistory.create!(:content_view_version => cve.content_view_version,
-                                                    :user => ::User.current.login, :environment => cve.environment,
-                                                    :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task)
+              cv_histories << ::Katello::ContentViewHistory.create!(:content_view_version => cve.content_view_version,
+                                                                    :user => ::User.current.login,
+                                                                    :environment => cve.environment,
+                                                                    :status => ::Katello::ContentViewHistory::IN_PROGRESS,
+                                                                    :task => self.task)
               plan_action(ContentViewEnvironment::Destroy, cve)
             end
 
@@ -55,13 +59,24 @@ module Actions
               plan_action(ContentViewVersion::Destroy, version)
             end
 
-            plan_self(content_view_id: content_view.id, environment_ids: cv_envs.map(&:environment_id),
-                      environment_names: cv_envs.map{|cve| cve.environment.name}, version_ids: versions.map(&:id))
+            plan_self(content_view_id: content_view.id,
+                      environment_ids: cv_envs.map(&:environment_id),
+                      environment_names: cv_envs.map{ |cve| cve.environment.name },
+                      version_ids: versions.map(&:id),
+                      content_view_history_ids: cv_histories.map{ |history| history.id })
           end
         end
 
         def humanized_name
           _("Remove Versions and Associations")
+        end
+
+        def finalize
+          input[:content_view_history_ids].each do |history_id|
+            history = ::Katello::ContentViewHistory.find(history_id)
+            history.status = ::Katello::ContentViewHistory::SUCCESSFUL
+            history.save!
+          end
         end
 
         def validate_options(content_view, cv_envs, versions, options)
