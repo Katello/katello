@@ -70,9 +70,10 @@ module Actions
         output[:pulp_tasks].each do |pulp_task|
           task_resource.cancel(pulp_task['task_id'])
         end
+        self.external_task = poll_external_task
         # We suspend the action and the polling will take care of finding
-        # out if the cancleling was successful
-        suspend
+        # out if the cancelling was successful
+        suspend unless done?
       end
 
       private
