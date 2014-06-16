@@ -46,11 +46,6 @@ end
 #   subscription.activation_keys.readable(current_organization).map { |key| {id: key.id, name: key.name} }
 # end
 
-node :distributors, :if => (params[:action] == "show") do |subscription|
-  current_organization = subscription.organization
-  subscription.distributors.readable(current_organization).map { |dist| {id: dist.id, name: dist.name} }
-end
-
 node :host, :if => lambda { |sub| sub && sub.host } do |subscription|
   {id: subscription.host.id, name: subscription.host.name}
 end
