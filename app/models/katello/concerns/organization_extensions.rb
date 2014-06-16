@@ -86,6 +86,11 @@ module Katello
           end
         end
 
+        # TODO: ORG_DESTROY - renable once we support organization destroying
+        def destroy
+          fail _("Organizations cannot be deleted in this release.")
+        end
+
         # Organizations which are being deleted (or deletion failed) can be filtered out with this scope.
         def self.without_deleting
           self.where(:deletion_task_id => nil)

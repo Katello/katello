@@ -24,6 +24,8 @@ class OrganizationDestroyerTest < ActiveSupport::TestCase
   end
 
   def test_non_async_destroy
+    # TODO: ORG_DESTROY - remove or update this test once org destroy is enabled
+    skip "Org destroy is disabled"
     User.current = User.find(users(:admin))
     org = FactoryGirl.create(:katello_organization)
     OrganizationDestroyer.destroy(org, :async => false)
