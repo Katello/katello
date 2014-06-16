@@ -120,8 +120,8 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
     options[:wrapper] ||= {}
     options[:size] ||= '30'
 
-    content_tag(:div, :class=> "clearfix") do
-      content_tag :div, :class => "form-group'}",
+    content_tag(:div, :class => "clearfix") do
+      content_tag :div, :class => "form-group'}" do
         content_tag :fieldset, :id => options[:wrapper][:id] do
           @template.concat label_wrapper(options) { field_label(name, options) }
           @template.concat input_wrapper(options) { yield if block_given? }

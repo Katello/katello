@@ -40,8 +40,7 @@ class Actions::Katello::Foreman::ContentUpdateTest < ActiveSupport::TestCase
   end
 
   it 'updates the foreman content' do
-    ::Katello::Foreman.expects(:update_foreman_content).with do |org, env, view|
-      org.id.must_equal environment.organization.id
+    ::Katello::Foreman.expects(:update_puppet_environment).with do |view, env|
       env.id.must_equal environment.id
       view.id.must_equal content_view.id
     end

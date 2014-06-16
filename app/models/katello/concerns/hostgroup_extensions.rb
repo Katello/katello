@@ -21,7 +21,7 @@ module Katello
 
       # instead of calling nested_attribute_for(:pulp_proxy_id) in Foreman, define the methods explictedly
       def inherited_pulp_proxy_id
-        read_attribute(:inherited_pulp_proxy_id) || self.class.sort_by_ancestry(ancestors.where("pulp_proxy_id is not NULL")).last.try(:pulp_proxy_id) if ancestry.present?
+        self[:inherited_pulp_proxy_id] || self.class.sort_by_ancestry(ancestors.where("pulp_proxy_id is not NULL")).last.try(:pulp_proxy_id) if ancestry.present?
       end
 
       def pulp_proxy

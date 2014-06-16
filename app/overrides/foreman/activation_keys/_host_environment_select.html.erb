@@ -1,4 +1,4 @@
-<% proxies = SmartProxy.unscoped.with_features("Pulp").with_taxonomy_scope(@location,@organization,:path_ids) %>
+<% proxies = SmartProxy.unscoped.with_taxonomy_scope(@location,@organization,:path_ids) %>
 <% if proxies.count > 0 %>
   <%= javascript_tag do %>
         $(function() {

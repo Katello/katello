@@ -17,7 +17,6 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
-
         alias_method_chain :medium_uri, :content_uri
 
         # TODO: these were pulled in from katello_foreman_engine. It may be
@@ -90,18 +89,42 @@ module Katello
 
       end
 
-      def medium_uri_with_content_uri host, url = nil
-        if url.nil? && (full_path = kickstart_repo(host).try(:full_path))
+      def medium_uri_with_content_uri(host, url = nil)
+        if url.nil? && (full_path = kickstart_repo(host))
           URI.parse(full_path)
         else
           medium_uri_without_content_uri(host, url)
         end
       end
 
+      def kickstart_repo(host)
+        distro = distribution_repositories(host).first
+        distro.full_path(host.pulp_proxy)  if distro && host.pulp_proxy
+      end
+
       private
 
-      def kickstart_repo host
-        ### TODO ###
+      def distribution_repositories(host)
+        content_view = host.environment.content_view
+        lifecycle_environment = host.environment.lifecycle_environment
+
+        if content_view && lifecycle_environment
+          version = content_view.version(lifecycle_environment)
+          repo_ids = version.repositories.in_environment(lifecycle_environment).pluck(:pulp_id)
+
+          #TODO: handle multiple variants
+          filters = [{:terms => {:repoids => repo_ids}},
+                     {:term => {:version => host.os.release}},
+                     {:term => {:arch => host.arch.name}}]
+          distributions = Katello::Distribution.search do
+            filter :and, filters
+          end
+          distribution_repo_ids = distributions.map(&:repoids).flatten
+
+          ::Katello::Repository.where(:pulp_id => (repo_ids & distribution_repo_ids))
+        else
+          []
+        end
       end
 
     end

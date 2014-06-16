@@ -264,7 +264,7 @@ class ContentView < Katello::Model
     end
 
     if options[:async]
-      task  = self.async(:organization => self.organization,
+      task = self.async(:organization => self.organization,
                          :task_type => TaskStatus::TYPES[:content_view_publish][:type]).
         publish_content(version, options[:notify])
 
@@ -303,8 +303,6 @@ class ContentView < Katello::Model
 
     clone_overrides = self.repositories.select{|r| self.filters.applicable(r).empty?}
     version.trigger_contents_changed(:cloned_repo_overrides => clone_overrides, :non_archive => true)
-
-    Katello::Foreman.update_foreman_content(self.organization, self.organization.library, self)
 
     if notify
       message = _("Successfully published content view '%s'.") % name
@@ -513,10 +511,16 @@ class ContentView < Katello::Model
     pulp_id = ContentViewPuppetEnvironment.generate_pulp_id(organization.label, to_env.try(:label),
                                                             self.label, version.try(:version))
 
-    ContentViewPuppetEnvironment.new(:environment => to_env,
-                                     :content_view_version => to_version,
-                                     :name => self.name,
-                                     :pulp_id => pulp_id)
+    env = ContentViewPuppetEnvironment.new(:environment => to_env,
+                                          :content_view_version => to_version,
+                                          :name => self.name,
+                                          :pulp_id => pulp_id
+                                          )
+    if to_env
+      env.puppet_environment = Katello::Foreman.create_puppet_environment(content_view.organization,
+                                                                          to_env, content_view)
+    end
+    env
   end
 
   def create_puppet_env(options)
@@ -554,6 +558,7 @@ class ContentView < Katello::Model
   def check_ready_to_publish!
     fail _("User must be logged in.") if ::User.current.nil?
     fail _("Cannot publish default content view") if default?
+    check_distribution_conflicts!
   end
 
   def check_remove_from_environment!(env)
@@ -593,6 +598,54 @@ class ContentView < Katello::Model
 
     fail errors.join(" ") if errors.any?
     return true
+  end
+
+  def check_distribution_conflicts!
+    duplicates = duplicate_distributions
+    pulp_repo_ids = []
+    if duplicates.any?
+      failed_distribution = duplicates.first
+      pulp_repo_ids = failed_distribution.repoids
+    else
+      conflicts = distribution_conflicts
+      if conflicts.first && conflicts.first[:distributions]
+        pulp_repo_ids = conflicts.first[:distributions].flat_map(&:repoids) & self.repositories_to_publish.map(&:pulp_id)
+        failed_distribution = conflicts.first[:distributions].first
+      end
+    end
+
+    if failed_distribution
+        fail _("Content Views cannot contain multiple Kickstart trees with the same version and architecture. " +
+               "Multiple Kickstart trees of %{release} %{arch} were found in Repositories: %{repos}") %
+                 {:release => failed_distribution.version, :arch => failed_distribution.arch,
+                  :repos => Repository.where(:pulp_id => pulp_repo_ids).pluck(:name).join(', ')}
+    end
+
+  end
+
+  def distribution_conflicts
+    #find distributions, where there are two in the content view with the same version and Arch
+    repo_ids =  self.repositories_to_publish.pluck(:pulp_id)
+    distributions = Distribution.search do
+      filter :terms, {:repoids => repo_ids}
+    end
+    release_arches = {}
+    distributions.each do |dist|
+      key = [dist.version, dist.arch]
+      release_arches[key] ||= []
+      release_arches[key] << dist
+    end
+    conflicts = release_arches.map{|key, value| {:version => key[0], :arch => key[1], :distributions => value}}
+    conflicts.select{|conflict| conflict[:distributions].length > 1}
+  end
+
+  def duplicate_distributions
+    #find distributions where two repositories in the content view share them
+    repo_ids =  self.repositories_to_publish.pluck(:pulp_id)
+    distributions = Distribution.search do
+      filter :terms, {:repoids => repo_ids}
+    end
+    distributions.find_all{|dist| (dist.repoids & repo_ids).length > 1}
   end
 
   protected
