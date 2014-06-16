@@ -40,10 +40,10 @@ angular.module('Bastion.content-views').controller('PackageGroupFilterListContro
         nutupane.table.closeItem = function () {};
 
         $scope.removePackageGroups = function () {
-            var packageGroupNames = nutupane.getAllSelectedResults('name').included.ids,
+            var packageGroupIds = nutupane.getAllSelectedResults().included.ids,
                 rules;
 
-            rules = findRules(packageGroupNames);
+            rules = findRules(packageGroupIds);
 
             angular.forEach(rules, function (rule) {
                 rule.$delete(success, failure);
@@ -51,7 +51,7 @@ angular.module('Bastion.content-views').controller('PackageGroupFilterListContro
         };
 
         function success(rule) {
-            nutupane.removeRow(rule.name, 'name');
+            nutupane.removeRow(rule.uuid, 'id');
             $scope.successMessages = [translate('Package Group successfully removed.')];
         }
 
@@ -59,14 +59,14 @@ angular.module('Bastion.content-views').controller('PackageGroupFilterListContro
             $scope.errorMessages = [response.data.displayMessage];
         }
 
-        function findRules(packageGroupNames) {
+        function findRules(packageGroupIds) {
             var rules = [];
 
-            angular.forEach(packageGroupNames, function (id) {
+            angular.forEach(packageGroupIds, function (id) {
                 var found;
 
                 found = _.find($scope.filter.rules, function (rule) {
-                    return (rule.name === id);
+                    return (rule.uuid === id);
                 });
 
                 if (found) {

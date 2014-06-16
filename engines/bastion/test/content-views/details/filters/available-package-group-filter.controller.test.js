@@ -23,7 +23,7 @@ describe('Controller: AvailablePackageGroupFilterController', function() {
             Nutupane = function() {
                 this.table = {};
                 this.getAllSelectedResults = function () {
-                    return {included: {ids: ['packageGroup']}};
+                    return {included: {resources: ['packageGroup']}};
                 };
                 this.removeRow = function (item, field) {
                     return true;
@@ -49,7 +49,7 @@ describe('Controller: AvailablePackageGroupFilterController', function() {
         expect($scope.detailsTable).toBeDefined();
     });
 
-    it("should provide a method to add errata to the filter", function () {
+    it("should provide a method to add package groups to the filter", function () {
         $scope.addPackageGroups($scope.filter);
 
         expect($scope.successMessages.length).toBe(1);

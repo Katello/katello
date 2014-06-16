@@ -40,10 +40,10 @@ angular.module('Bastion.content-views').controller('AvailablePackageGroupFilterC
         nutupane.table.closeItem = function () {};
 
         $scope.addPackageGroups = function (filter) {
-            var packageGroupNames = nutupane.getAllSelectedResults('name').included.ids;
+            var packageGroups = nutupane.getAllSelectedResults().included.resources;
 
-            angular.forEach(packageGroupNames, function (name) {
-                var rule = new Rule({name: name});
+            angular.forEach(packageGroups, function (group) {
+                var rule = new Rule({uuid: group.id, name: group.name});
                 saveRule(rule, filter);
             });
         };
@@ -55,7 +55,7 @@ angular.module('Bastion.content-views').controller('AvailablePackageGroupFilterC
         }
 
         function success(rule) {
-            nutupane.removeRow(rule.name, 'name');
+            nutupane.removeRow(rule.uuid, 'id');
             $scope.successMessages = [translate('Package Group successfully added.')];
         }
 

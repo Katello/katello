@@ -30,7 +30,7 @@ class Api::V2::PackageGroupsController < Api::V2::ApiController
     collection = if @repo && !@repo.puppet?
                    filter_by_repo_id @repo.pulp_id
                  elsif @filter
-                   filter_by_name @filter.package_group_rules.map(&:name)
+                   filter_by_content_view_filter @filter
                  else
                    filter_by_repo_id
                  end
@@ -48,9 +48,11 @@ class Api::V2::PackageGroupsController < Api::V2::ApiController
 
   private
 
-  def filter_by_name(names)
+  def filter_by_content_view_filter(filter)
+    ids = filter.package_group_rules.map(&:uuid)
+    repo_ids = filter.applicable_repos.select([:pulp_id, "#{Katello::Repository.table_name}.name"])
     options = sort_params
-    options[:filters] = [{ :terms => { :name => names } }]
+    options[:filters] = [{ :terms => { :id => ids } }, { :terms => { :repo_id => repo_ids } }]
     item_search(PackageGroup, params, options)
   end
 
