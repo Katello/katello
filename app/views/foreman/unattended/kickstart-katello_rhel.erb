@@ -12,6 +12,7 @@ oses:
   # safemode renderer does not support unary negation
   pm_set = @host.puppetmaster.empty? ? false : true
   puppet_enabled = pm_set || @host.params['force-puppet']
+  realm_compatible = (@host.operatingsystem.name == "Fedora" && os_major >= 20) || (rhel_compatible && os_major >= 7)
 %>
 install
 <%= @mediapath %>
@@ -34,6 +35,9 @@ bootloader --location=mbr --append="nofb quiet splash=quiet" <%= grub_pass %>
 key --skip
 <% end -%>
 
+<% if realm_compatible && @host.info["parameters"]["realm"] && @host.otp && @host.realm -%>
+realm join --one-time-password='<%= @host.otp %>' <%= @host.realm %>
+<% end -%>
 
 <% if @dynamic -%>
 %include /tmp/diskpart.cfg
