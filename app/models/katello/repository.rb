@@ -61,11 +61,15 @@ class Repository < Katello::Model
                           :foreign_key => :content_view_filter_id
   belongs_to :content_view_version, :inverse_of => :repositories
 
+  validates :name, :presence => true
+  validates :label, :presence => true
   validates :product_id, :presence => true
   validates :pulp_id, :presence => true, :uniqueness => true
   #validates :content_id, :presence => true #add back after fixing add_repo orchestration
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::RepositoryUniqueAttributeValidator, :attributes => :label
+  validates_with Validators::RepositoryUniqueAttributeValidator, :attributes => :name
   validates_with Validators::KatelloUrlFormatValidator,
     :attributes => :feed, :nil_allowed => proc { |o| o.custom? }, :field_name => :url,
     :if => proc { |o| o.in_default_view? }
@@ -430,6 +434,28 @@ class Repository < Katello::Model
 
   def node_syncable?
     environment && !(environment.library? && content_view.default? && puppet?)
+  end
+
+  def exist_for_environment?(environment, content_view, attribute = nil)
+    if environment.present?
+      repos = content_view.version(environment).repos(environment)
+
+      repos.any? do |repo|
+        not_self = (repo.id != self.id)
+        same_product = (repo.product.id == self.product.id)
+
+        repo_exists = same_product && not_self
+
+        if repo_exists && attribute
+          same_attribute = repo.send(attribute) == self.send(attribute)
+          repo_exists = same_attribute
+        end
+
+        repo_exists
+      end
+    else
+      false
+    end
   end
 
   protected
