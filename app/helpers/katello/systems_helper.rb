@@ -82,7 +82,7 @@ module SystemsHelper
 
   def system_type(system)
 
-    return _("Guest") if system.guest
+    return _("Guest") if system.virtual_guest
 
     case system.type
     when "Hypervisor"

@@ -200,11 +200,11 @@ class System < Katello::Model
     json['content_view'] = content_view.as_json if content_view
     json['ipv4_address'] = facts.try(:[], 'network.ipv4_address') if respond_to?(:facts)
 
-    if respond_to?(:guest)
-      if self.guest == 'true'
-        json['host'] = self.host.attributes if self.host
+    if respond_to?(:virtual_guest)
+      if self.virtual_guest == 'true'
+        json['virtual_host'] = self.virtual_host.attributes if self.virtual_host
       else
-        json['guests'] = self.guests.map(&:attributes)
+        json['virtual_guests'] = self.virtual_guests.map(&:attributes)
       end
     end
 
@@ -219,8 +219,8 @@ class System < Katello::Model
   end
 
   def type
-    if respond_to?(:guest) && guest
-      _("Guest")
+    if respond_to?(:virtual_guest) && virtual_guest
+      _("Virtual Guest")
     else
       case self
       when Hypervisor

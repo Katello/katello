@@ -259,5 +259,14 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
             memory = Math.round(memory * 100) / 100;
             return memory;
         }
+
+        $scope.virtualGuestIds = function (contentHost) {
+            var ids = 'id:%s'.replace('%s', contentHost.id);
+            angular.forEach(contentHost['virtual_guests'], function (host) {
+                ids += ' id:%s'.replace('%s', host.id);
+            });
+
+            return ids;
+        };
     }]
 );

@@ -379,7 +379,7 @@ describe System do
         response = stub
         response.stubs(:code => 204, :body => "")
         Resources::Candlepin::CandlepinResource.stubs(:default_headers => {}, :get => response)
-        @system.host.must_be_nil
+        @system.virtual_host.must_be_nil
       end
     end
 

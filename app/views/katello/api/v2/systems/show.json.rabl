@@ -64,14 +64,14 @@ if params[:fields] == "full"
   attributes :compliance
   attributes :facts
 
-  if @resource.respond_to?(:guest) || @resource.respond_to?(:host)
-    if @resource.guest
-      node :host do |system|
-        system.host.attributes if system.host
+  if @resource.respond_to?(:virtual_guest) || @resource.respond_to?(:virtual_host)
+    if @resource.virtual_guest
+      node :virtual_host do |system|
+        system.virtual_host.attributes if system.virtual_host
       end
     else
-      node :guests do |system|
-        system.guests.map(&:attributes)
+      node :virtual_guests do |system|
+        system.virtual_guests.map(&:attributes)
       end
     end
   end
