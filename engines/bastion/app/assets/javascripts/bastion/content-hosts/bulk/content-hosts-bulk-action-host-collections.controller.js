@@ -45,7 +45,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionHostCo
             'paged':            true
         };
 
-        hostCollectionNutupane = new Nutupane(HostCollection, params);
+        hostCollectionNutupane = new Nutupane(HostCollection, params, 'queryPaged');
 
         $scope.setState(false, [], []);
         $scope.detailsTable = hostCollectionNutupane.table;

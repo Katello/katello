@@ -277,6 +277,8 @@ describe('Factory: Nutupane', function() {
         beforeEach(function() {
             nutupane = new Nutupane(Resource, {}, 'customAction');
             nutupane.table.working = false;
+            nutupane.table.closeItem = function () {};
+            nutupane.table.allSelected = function () {};
         });
 
         it("providing a method to fetch records for the table", function() {
@@ -284,6 +286,13 @@ describe('Factory: Nutupane', function() {
             nutupane.query();
 
             expect(Resource.customAction).toHaveBeenCalled();
+        });
+
+        it("naming the URL search field based off the action", function() {
+            spyOn(Resource, 'customAction');
+            nutupane.table.search('*');
+
+            expect($location.search()['customActionSearch']).toBe('*');
         });
     });
 

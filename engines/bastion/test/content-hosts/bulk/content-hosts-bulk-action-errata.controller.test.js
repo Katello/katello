@@ -36,14 +36,22 @@ describe('Controller: ContentHostsBulkActionErrataController', function() {
 
     beforeEach(inject(function($controller, $rootScope, $q) {
         $scope = $rootScope.$new();
-        $scope.nutupane = {};
+        $scope.nutupane = {
+            table: {
+                rows: [{}],
+                numSelected: 5
+            }
+        };
         $scope.nutupane.getAllSelectedResults = function () { return selectedContentHosts }
         $scope.setState = function(){};
 
-        $scope.detailsTable = {};
+        $scope.detailsTable = {
+            rows: [],
+            numSelected: 5
+        };
 
         $scope.table = {
-            rows: [],
+            rows: [{}],
             numSelected: 5
         };
 
@@ -71,7 +79,7 @@ describe('Controller: ContentHostsBulkActionErrataController', function() {
         );
     });
 
-    it("Should fetch new errata on initial load", function () {
+    it("Should fetch new errata on initial load if there are initial items present", function () {
         $scope.initialLoad = true;
         spyOn($scope, 'fetchErrata');
         $scope.$apply();
