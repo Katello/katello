@@ -42,7 +42,7 @@ module Katello
               where("#{::Organization.table_name}.label" => kt_org_label).first
 
           %[<option value="#{kt_org_label}/#{kt_env_label}"
-                    class="kt-env" data-katello-env-id="#{kt_env.id}"
+                    class="kt-env" data-katello-env-id="#{kt_env.try(:id)}"
                     #{selected}>#{kt_env_label}</option>]
 
         end
