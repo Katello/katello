@@ -60,6 +60,10 @@ module Glue::ElasticSearch::PuppetModule
       "#{Katello.config.elastic_index}_puppet_module"
     end
 
+    def search_type
+      :puppet_module
+    end
+
     def autocomplete_name(query, repoids = nil, page_size = 15)
       return [] if !Tire.index(self.index).exists?
 
