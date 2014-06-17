@@ -4,6 +4,15 @@
   
   <nav>
     <ul class="nav nav-tabs">
+
+      <li ng-class="{active: isState('content-views.details.filters.details.erratum.edit')}">
+        <a ui-sref="content-views.details.filters.details.erratum.edit">
+        <span translate>
+	  Details
+        </span>
+        </a>
+      </li>
+
       <li ng-if="!filter.rules[0].types" ng-class="{active: isState('content-views.details.filters.details.erratum.list')}">
         <a ui-sref="content-views.details.filters.details.erratum.list({filterId: filter.id})">
         <span translate>

@@ -24,6 +24,9 @@
 angular.module('Bastion.content-views').controller('PackageFilterController',
     ['$scope', 'translate', 'Rule', 'Package', function ($scope, translate, Rule, Package) {
 
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
+
         $scope.rule = {
             type: 'all',
             editMode: false,
