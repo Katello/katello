@@ -16,6 +16,7 @@
  * @name  Bastion.content-views.controller:ContentViewPromotionController
  *
  * @requires $scope
+ * @requires $q
  * @requires translate
  * @requires ContentViewVersion
  * @requires Organization
@@ -27,16 +28,32 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewPromotionController',
-    ['$scope', 'translate', 'ContentViewVersion', 'Organization', 'CurrentOrganization',
-    function ($scope, translate, ContentViewVersion, Organization, CurrentOrganization) {
+    ['$scope', '$q', 'translate', 'ContentViewVersion', 'Organization', 'CurrentOrganization',
+    function ($scope, $q, translate, ContentViewVersion, Organization, CurrentOrganization) {
 
         $scope.promotion = {};
+        $scope.working = false;
 
-        $scope.availableEnvironments =  Organization.paths({id: CurrentOrganization, 'permission_type': 'promotable'});
+        $scope.version = ContentViewVersion.get({id: $scope.$stateParams.versionId});
+        $scope.currentOrganization = CurrentOrganization;
+        $scope.availableEnvironments = Organization.paths({id: CurrentOrganization, 'permission_type': 'promotable'});
 
-        $scope.enabledCheck = function (env) {
+        $q.all([$scope.availableEnvironments.$promise, $scope.version.$promise]).then(function (args) {
+            var environments = args[0],
+                version = args[1];
+
+            angular.forEach(environments, function (path) {
+                angular.forEach(path.environments, function (environment) {
+                    environment.disabled = $scope.checkDisabled(environment, version.environments);
+                });
+            });
+
+            $scope.working = true;
+        });
+
+        $scope.checkDisabled = function (env, environments) {
             var enabled = false,
-                envIds = _.pluck($scope.version.environments, 'id');
+                envIds = _.pluck(environments, 'id');
 
             if (!env.prior) {
                 env.prior = {};
@@ -50,11 +67,9 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
                 //if environment is a successor an existing environment
                 enabled = true;
             }
-            return enabled;
-        };
 
-        $scope.version = ContentViewVersion.get({id: $scope.$stateParams.versionId});
-        $scope.currentOrganization = CurrentOrganization;
+            return !enabled;
+        };
 
         $scope.promote = function () {
             $scope.promoting = true;

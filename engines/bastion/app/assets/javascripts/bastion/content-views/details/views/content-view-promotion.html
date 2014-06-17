@@ -14,12 +14,17 @@
     available in '{{ currentOrganization }}'.
   </p>
 
+  <p ng-hide="working">
+    <i class="icon-spinner icon-spin"></i>
+    <span translate>Loading Environment Paths...</span>
+  </p>
   <div path-selector="availableEnvironments"
        ng-model="selectedEnvironment"
        mode="singleSelect"
        path-attribute="environments"
        disabled="denied('promote_or_remove_content_views', contentView)"
-       enabled-check="enabledCheck(item)"></div>
+       ng-show="working">
+  </div>
 
   <div>
     <button class="btn btn-primary btn-lg" ng-disabled="promoting || !selectedEnvironment" ng-click="promote()" translate>

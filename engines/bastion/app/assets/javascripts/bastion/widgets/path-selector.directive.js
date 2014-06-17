@@ -31,7 +31,6 @@ angular.module('Bastion.widgets').directive('pathSelector',
             mode: '@',
             disabled: '=',
             disableTrigger: '=',
-            enabledCheck: '&',
             pathAttribute: '@'
         },
         templateUrl: 'widgets/views/path-selector.html',
@@ -72,18 +71,6 @@ angular.module('Bastion.widgets').directive('pathSelector',
                     item.disabled = disable;
                 });
             });
-
-            scope.checkEnabled = function (item) {
-                var enabled = true;
-                if (scope.disabled) {
-                    enabled = false;
-                } else if (item.disabled) {
-                    enabled = false;
-                } else if (attrs.enabledCheck) {
-                    enabled = scope.enabledCheck({item: item});
-                }
-                return enabled;
-            };
 
             function selectById(id) {
                 forEachItem(function (item) {
