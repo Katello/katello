@@ -42,7 +42,8 @@ class Product < Katello::Model
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
-  validate  :validate_unique_name
+  validates_with Validators::ProductUniqueAttributeValidator, :attributes => :name
+  validates_with Validators::ProductUniqueAttributeValidator, :attributes => :label
 
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :organization_id, :complete_value => true
@@ -237,16 +238,6 @@ class Product < Katello::Model
 
   def self.humanize_class_name(name = nil)
     _("Product")
-  end
-
-  protected
-
-  def validate_unique_name
-    if self.provider && !self.provider.redhat_provider? && self.name_changed?
-      if Product.in_org(self.provider.organization).where(:name => self.name).exists?
-        self.errors[:name] << _("Product with name %s already exists in this organization.") % self.name
-      end
-    end
   end
 
 end
