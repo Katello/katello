@@ -18,6 +18,7 @@ oses:
   # safemode renderer does not support unary negation
   pm_set = @host.puppetmaster.empty? ? false : true
   puppet_enabled = pm_set || @host.params['force-puppet']
+  realm_compatible = (@host.operatingsystem.name == "Fedora" && os_major >= 20) || (rhel_compatible && os_major >= 7)
 %>
 install
 <%= @mediapath %>
@@ -34,6 +35,10 @@ timezone --utc <%= @host.params['time-zone'] || 'UTC' %>
 services --disabled gpm,sendmail,cups,pcmcia,isdn,rawdevices,hpoj,bluetooth,openibd,avahi-daemon,avahi-dnsconfd,hidd,hplip,pcscd
 <% end -%>
 
+<% if realm_compatible && @host.info["parameters"]["realm"] && @host.otp && @host.realm -%>
+realm join --one-time-password='<%= @host.otp %>' <%= @host.realm %>
+<% end -%>
+
 <% if @host.operatingsystem.name == 'Fedora' and os_major <= 16 -%>
 # Bootloader exception for Fedora 16:
 bootloader --append="nofb quiet splash=quiet <%=ks_console%>" <%= grub_pass %>
@@ -47,7 +52,6 @@ bootloader --location=mbr --append="nofb quiet splash=quiet" <%= grub_pass %>
 <% else -%>
 <%= @host.diskLayout %>
 <% end -%>
-
 text
 reboot
 
