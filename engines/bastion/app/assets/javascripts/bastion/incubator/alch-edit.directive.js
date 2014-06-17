@@ -75,7 +75,11 @@ angular.module('alchemy')
 
         $scope.save = function () {
             var action = $scope.handleSave({ value: $scope.model });
-            $scope.editTrigger = false;
+
+            if ($scope.editTrigger) {
+                $scope.editTrigger = false;
+            }
+
             handleAction(action);
         };
 
