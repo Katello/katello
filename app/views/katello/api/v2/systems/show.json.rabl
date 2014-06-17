@@ -6,6 +6,7 @@ attributes :id, :uuid
 attributes :name, :description
 attributes :location
 attributes :content_view, :content_view_id
+attributes :distribution
 
 child :products => :products do |product|
   attributes :id, :name, :available_content
