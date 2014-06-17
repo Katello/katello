@@ -70,8 +70,8 @@ module Katello
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
     param :name, String, :desc => N_("name"), :required => true
     param :description, String, :desc => N_("description")
-    param :environment_id, :identifier, :desc => N_("environment id"), :required => true
-    param :content_view_id, :identifier, :desc => N_("content view id"), :required => true
+    param :environment_id, :identifier, :desc => N_("environment id")
+    param :content_view_id, :identifier, :desc => N_("content view id")
     param :usage_limit, :number, :desc => N_("maximum number of registered content hosts, or 'unlimited'")
     param :release_version, String, :desc => N_("content release version")
     param :service_level, String, :desc => N_("service level")
