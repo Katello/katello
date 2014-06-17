@@ -103,7 +103,8 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   def applicable_errata
     @search_service = nil #reload search service after systems are loaded
     load_search_service
-    results = item_search(Katello::Errata, params, {}) do |service|
+    options = {:default_field => "errata_id"}
+    results = item_search(Katello::Errata, params, options) do |service|
       Katello::Errata.search_applicable_for_consumers(@systems.collect{|i| i.uuid}, service)
     end
 
