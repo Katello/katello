@@ -1,3 +1,13 @@
+<% proxies = SmartProxy.unscoped.with_features("Pulp").with_taxonomy_scope(@location,@organization,:path_ids) %>
+<% if proxies.count > 0 %>
+  <%= javascript_tag do %>
+        $(function() {
+            $("#host_medium_id").parent().parent().remove();
+            $("#hostgroup_medium_id").parent().parent().remove();
+        });
+  <% end %>
+<% end %>
+
 <style>
     option.kt-env { margin-left: 0em; }
     option.kt-cv  { margin-left: 1em; }
@@ -38,7 +48,7 @@
 </script>
 
 <%= field(f, _("Lifecycle Environment"), { :include_blank => true }) do
-  select_tag :kt_environment_id, grouped_env_options
+  select_tag :kt_environment_id, grouped_env_options, :class => 'form-control'
 end %>
 
 <%= field(f, _("Content View"), { :include_blank => true }) do
@@ -47,5 +57,13 @@ end %>
            { :include_blank => true },
            { :onchange => 'update_puppetclasses(this);',
              :"data-url" => environment_selected_hostgroups_path,
-             :'data-host-id' => (@host && @host.id) }
+             :'data-host-id' => (@host && @host.id),
+             :class => 'form-control' }
 end %>
+
+<% if proxies.count > 0 %>
+    <%= select_f f, :pulp_proxy_id, proxies, :id, :name,
+             { :include_blank => blank_or_inherit_f(f, :pulp_proxy) },
+             { :label       => _("Pulp"),
+               :help_inline => _("Use this as a Pulp server") } %>
+<% end %>

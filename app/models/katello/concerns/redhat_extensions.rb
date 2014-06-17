@@ -1,3 +1,5 @@
+# rubocop:disable AccessModifierIndentation
+#
 # Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -11,15 +13,27 @@
 
 module Katello
   module Concerns
-    module HostBaseExtensions
+    module RedhatExtensions
       extend ActiveSupport::Concern
 
       included do
-        has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
-                :dependent => :destroy, :inverse_of => :foreman_host
-        belongs_to :pulp_proxy, :class_name => "::SmartProxy", :foreign_key => :pulp_proxy_id, :inverse_of => :hosts
-        scoped_search :in => :pulp_proxy, :on => :name, :complete_value => true, :rename => :pulp_proxy
+        alias_method_chain :medium_uri, :content_uri
       end
+
+      def medium_uri_with_content_uri host, url = nil
+        if url.nil? && (full_path = kickstart_repo(host).try(:full_path))
+          URI.parse(full_path)
+        else
+          medium_uri_without_content_uri(host, url)
+        end
+      end
+
+      private
+
+      def kickstart_repo host
+        ### TODO ###
+      end
+
     end
   end
 end
