@@ -1,4 +1,9 @@
 <span page-title>{{ 'Create Repositories' | translate }}</span>
+  
+<div class="loading-mask loading-mask-panel" ng-show="panel.loading">
+  <i class="icon-spinner icon-spin"></i>
+  <span translate>Loading...</span>
+</div>
 
 <a ui-sref="products.discovery.scan">
   <i class="icon-double-angle-left"></i>

@@ -61,7 +61,6 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     end
   end
 
-
   def test_create
     product_params = {
       :name => 'fedora product',

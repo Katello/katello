@@ -38,13 +38,17 @@ module Katello
     param :subscription_id, :identifier, :desc => N_("Filter products by subscription")
     param :name, String, :desc => N_("Filter products by name")
     param :enabled, :bool, :desc => N_("Filter products by enabled or disabled")
+    param :custom, :bool, :desc => N_("Filter products by custom")
     param_group :search, Api::V2::ApiController
     def index
       options = {
         :filters => [],
         :load_records? => true
       }
-      ids = Product.readable.where(:organization_id => @organization.id).pluck(:id)
+      products = Product.readable.where(:organization_id => @organization.id)
+      products = products.where(:provider_id => @organization.anonymous_provider.id) if params[:custom]
+
+      ids = products.pluck(:id)
       ids = filter_by_subscription(ids, params[:subscription_id]) if params[:subscription_id]
       ids = filter_by_activation_key(ids, @activation_key) if @activation_key
       ids = filter_by_system(ids, @system) if @system
@@ -53,6 +57,7 @@ module Katello
       options[:filters] << {:term => {:name => params[:name]}} if params[:name]
       options[:filters] << {:term => {:enabled => params[:enabled].to_bool}} if params[:enabled]
       options.merge!(sort_params)
+
       respond(:collection => item_search(Product, params, options))
     end
 

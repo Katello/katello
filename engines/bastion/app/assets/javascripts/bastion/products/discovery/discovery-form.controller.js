@@ -31,7 +31,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
     function ($scope, $q, CurrentOrganization, Product, Repository, GPGKey, FormUtils) {
 
         $scope.discovery = $scope.discovery || {selected: []};
-        $scope.panel = $scope.panel || {loading: false};
+        $scope.panel = {loading: true};
 
         $scope.$watch('createRepoChoices.product.name', function () {
             FormUtils.labelize($scope.createRepoChoices.product);
@@ -56,7 +56,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             FormUtils.labelize(repo);
         });
 
-        Product.queryUnpaged({'organization_id': CurrentOrganization}, function (values) {
+        Product.queryUnpaged({'organization_id': CurrentOrganization, custom: true}, function (values) {
             $scope.products = filterEditable(values.results);
 
             if ($scope.products.length > 0) {
