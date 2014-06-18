@@ -229,7 +229,16 @@ To run the HTML linter:
 
         myFunction(parameters) {
         }
+* Declare all `var` statements at the top of a function in order to prevent problems associated with variable hoisting. Stack `var` statements for readability and assign values simultaneously if appropriate. 
 
+        $scope.myFunction = function (parameters) {
+            var success, 
+                error,
+                someOtherVar = 'blah';
+            
+            success = function () {};
+            error = function () {};
+        };
 
 ## i18n ##
 
