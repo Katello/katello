@@ -102,7 +102,7 @@ module Katello
       ::Host.send :include, Katello::Concerns::HostBaseExtensions
       ::Location.send :include, Katello::Concerns::LocationExtensions
       ::Medium.send :include, Katello::Concerns::MediumExtensions
-      ::Operatingsystem.send :include, Katello::Concerns::OperatingsystemExtensions
+      ::Operatingsystem.send :include, Katello::Concerns::RedhatExtensions
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
       begin

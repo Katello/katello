@@ -21,24 +21,24 @@ module Katello
         def update_media(repo)
           return if repo.puppet?
 
-          medium_path = Medium.installation_media_path(repo.uri)
+          medium_path = ::Medium.installation_media_path(repo.uri)
 
           if distribution = repo.bootable_distribution
-            return if Medium.find_by_path(medium_path)
+            return if ::Medium.find_by_path(medium_path)
 
-            os = Operatingsystem.find_or_create_operating_system(distribution)
+            os = ::Redhat.find_or_create_operating_system(distribution)
 
-            arch = Architecture.where(:name => distribution.arch).first_or_create!
+            arch = ::Architecture.where(:name => distribution.arch).first_or_create!
             os.architectures << arch unless os.architectures.include?(arch)
 
-            medium_name = Medium.construct_name(repo, distribution)
-            medium = Medium.find_or_create_medium(repo.organization, medium_name, medium_path)
+            medium_name = ::Medium.construct_name(repo, distribution)
+            medium = ::Medium.find_or_create_medium(repo.organization, medium_name, medium_path)
             os.media << medium
 
             os.save!
 
           else
-            if medium = Medium.find_by_path(medium_path)
+            if medium = ::Medium.find_by_path(medium_path)
               medium.destroy
             end
           end
@@ -49,8 +49,8 @@ module Katello
           params = { :name => medium_name, :path => medium_path,
                      :os_family => Operatingsystem::OS['foreman_os_family'] }
 
-          medium = Medium.joins(:organizations).where(params).where("taxonomies.id in (?)", [org.id]).first
-          medium = Medium.create!(params.merge({ :organization_ids => [org.id] })) unless medium
+          medium = ::Medium.joins(:organizations).where(params).where("taxonomies.id in (?)", [org.id]).first
+          medium = ::Medium.create!(params.merge({ :organization_ids => [org.id] })) unless medium
 
           return medium
         end
