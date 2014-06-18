@@ -94,19 +94,6 @@ describe('Directive: pathSelector', function() {
         expect(element.find('.path-list-item:first input').attr('disabled')).toBe('disabled');
     });
 
-    it("should provide a way to control disablement via a function", function () {
-        scope.check = function () { return false };
-        element = angular.element('<div path-selector="paths" ng-model="environment" mode="singleSelect" enabled-check="check(item)"></div>');
-        compile(element)(scope);
-
-        scope.$digest();
-        expect(element.find('.path-list-item:first input').attr('disabled')).toBe('disabled');
-
-        scope.check = function () { return true };
-        scope.$digest();
-        expect(element.find('.path-list-item:first input').attr('disabled')).toBe(undefined);
-    });
-
     it("should provide a way to use paths that are objects", function() {
         element = angular.element('<div path-selector="objPaths" ng-model="environment" mode="singleSelect" path-attribute="environments"></div>');
         compile(element)(scope);
