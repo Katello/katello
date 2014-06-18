@@ -64,16 +64,16 @@
         </td>
         <td alch-table-cell>{{ version.user }}</td>
         <td class="col-sm-2">
-          <a ui-sref="content-views.details.promotion({contentViewId: contentView.id, versionId: version.id})" ng-show="contentView.permissions.promotable_or_removable">
-            <button class="btn btn-default">
+          <a ui-sref="content-views.details.promotion({contentViewId: contentView.id, versionId: version.id})">
+            <button class="btn btn-default" ng-hide="denied('promote_or_remove_content_views', contentView)">
               <i class="icon-share-alt"></i>
               <span translate>
                 Promote
               </span>
             </button>
           </a>
-          <a ui-sref="content-views.details.version-deletion.environments({contentViewId: contentView.id, versionId: version.id})" ng-show="version.permissions.deletable">
-            <button class="btn btn-default">
+          <a ui-sref="content-views.details.version-deletion.environments({contentViewId: contentView.id, versionId: version.id})">
+            <button class="btn btn-default" ng-hide="denied('promote_or_remove_content_views', contentView)">
               <i class="icon-trash"></i>
               <span translate>
                 Remove

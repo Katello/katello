@@ -7,11 +7,15 @@
   </div>
 
   <div data-block="actions">
-    <button class="btn btn-default" ui-sref="content-views.details.filters.new">
+    <button class="btn btn-default"
+            ng-hide="denied('edit_content_views', contentView)"
+            ui-sref="content-views.details.filters.new">
       <i class="icon-plus"></i>
       <span translate>New Filter</span>
     </button>
-    <button class="btn btn-default" ng-click="removeFilters()">
+    <button class="btn btn-default"
+            ng-hide="denied('edit_content_views', contentView)"
+            ng-click="removeFilters()">
       <i class="icon-trash"></i>
       <span translate>Remove Filters</span>
     </button>

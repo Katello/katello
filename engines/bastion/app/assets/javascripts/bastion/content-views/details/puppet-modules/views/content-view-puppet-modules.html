@@ -6,7 +6,9 @@
   <span data-block="header" translate>Currently Selected Puppet Modules</span>
 
   <div data-block="actions">
-    <button class="btn btn-primary fr" ui-sref="content-views.details.puppet-modules.names">
+    <button class="btn btn-primary fr"
+            ng-hide="denied('edit_content_views', contentView)"
+            ui-sref="content-views.details.puppet-modules.names">
       <i class="icon-plus"></i>
       <span translate>Add New Module</span>
     </button>
@@ -40,10 +42,14 @@
           <td alch-table-cell >{{ contentViewPuppetModule.author}}</td>
           <td alch-table-cell >{{ versionText(contentViewPuppetModule) }}</td>
           <td alch-table-cell class="action-cell">
-            <button translate ng-click="selectNewVersion(contentViewPuppetModule)">
+            <button translate
+                    ng-hide="denied('edit_content_views', contentView)"
+                    ng-click="selectNewVersion(contentViewPuppetModule)">
               Select new version
             </button>
-            <button translate ng-click="removeModule(contentViewPuppetModule)">
+            <button translate
+                    ng-hide="denied('edit_content_views', contentView)"
+                    ng-click="removeModule(contentViewPuppetModule)">
               Remove Module
             </button>
           </td>

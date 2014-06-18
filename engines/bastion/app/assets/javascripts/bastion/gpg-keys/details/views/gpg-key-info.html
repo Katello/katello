@@ -4,10 +4,10 @@
     <span class="info-value"
           alch-edit-text="gpgKey.name"
           on-save="save(gpgKey)"
-          readonly="gpgKey.readonly">
+          readonly="denied('edit_gpg_keys', gpgKey)">
     </span>
   </div>
-  <div class="detail" ng-if="!gpgKey.readonly">
+  <div class="detail" ng-if="permitted('edit_gpg_keys', gpgKey)">
     <span class="info-label" translate>Upload GPG Key</span>
     <span class="info-value">
         <form role="form"
@@ -33,7 +33,7 @@
     <span class="info-label" translate>Content</span>
     <span class="gpg-alch-edit info-value"
         alch-edit-textarea="gpgKey.content"
-        readonly="gpgKey.readonly"
+        readonly="denied('edit_gpg_keys', gpgKey)"
         on-save="save(gpgKey)">
      </span>
   </div>

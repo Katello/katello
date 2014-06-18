@@ -26,12 +26,14 @@
 
       <button ng-if="isState('activation-keys.details.host-collections.list')"
               class="btn btn-default"
+              ng-hide="denied('edit_activation_key', activationKey)"
               ng-disabled="hostCollectionsTable.numSelected == 0 || hostCollectionsTable.working"
               ng-click="removeHostCollections()">
         {{ 'Remove Selected' | translate }}
       </button>
       <button ng-if="isState('activation-keys.details.host-collections.add')"
               class="btn btn-default"
+              ng-hide="denied('edit_activation_key', activationKey)"
               ng-disabled="hostCollectionsTable.numSelected == 0 || hostCollectionsTable.working"
               ng-click="addHostCollections()">
         {{ 'Add Selected' | translate }}

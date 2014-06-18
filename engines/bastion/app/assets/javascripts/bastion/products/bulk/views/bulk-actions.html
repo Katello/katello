@@ -8,7 +8,7 @@
       <button class="btn btn-default"
               ng-disabled="product.readonly || removeProducts.workingMode"
               ng-click="openModal()"
-              ng-hide="removeProducts.workingMode">
+              ng-hide="denied('delete_products')">
         <i class="icon-trash"></i>
         {{ "Remove Products" | translate }}
       </button>

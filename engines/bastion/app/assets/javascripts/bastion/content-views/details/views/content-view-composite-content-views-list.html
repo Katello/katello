@@ -4,7 +4,7 @@
   <div data-block="messages"></div>
 
   <div data-block="actions">
-    <button class="btn btn-primary fr" ng-click="removeContentViews()">
+    <button ng-hide="denied('edit_content_views', contentView)" class="btn btn-primary fr" ng-click="removeContentViews()">
       <i class="icon-trash"></i>
       <span translate>Remove Content Views</span>
     </button>

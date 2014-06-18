@@ -147,6 +147,7 @@ angular.module('Bastion').config(
  * @requires $stateParams
  * @requires gettextCatalog
  * @requires currentLocale
+ * @requires Authorization
  * @requires $location
  * @requires $window
  * @requires PageTitle
@@ -155,8 +156,8 @@ angular.module('Bastion').config(
  * @description
  *   Set up some common state related functionality and set the current language.
  */
-angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale', '$location', '$window', 'PageTitle', 'RootURL',
-    function ($rootScope, $state, $stateParams, gettextCatalog, currentLocale, $location, $window, PageTitle, RootURL) {
+angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale', 'Authorization', '$location', '$window', 'PageTitle', 'RootURL',
+    function ($rootScope, $state, $stateParams, gettextCatalog, currentLocale, Authorization, $location, $window, PageTitle, RootURL) {
         var fromState, fromParams, orgSwitcherRegex;
 
         $rootScope.$state = $state;
@@ -219,5 +220,8 @@ angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextC
                 $window.location.href = newUrl;
             }
         });
+
+        $rootScope.permitted = Authorization.permitted;
+        $rootScope.denied = Authorization.denied;
     }
 ]);

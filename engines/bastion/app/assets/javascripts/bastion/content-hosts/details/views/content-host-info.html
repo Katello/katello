@@ -10,7 +10,7 @@
         <span class="info-label" translate>Name</span>
         <span class="info-value"
               alch-edit-text="contentHost.name"
-              readonly="contentHost.readonly"
+              readonly="denied('edit_content_hosts', contentHost)"
               on-save="save(contentHost)">
         </span>
       </div>
@@ -24,7 +24,7 @@
         <span class="info-label" translate>Description</span>
         <span class="info-value"
               alch-edit-textarea="contentHost.description"
-              readonly="contentHost.readonly"
+              readonly="denied('edit_content_hosts', contentHost)"
               on-save="save(contentHost)">
         </span>
       </div>
@@ -79,6 +79,7 @@
         <span class="info-label" translate>Auto-Attach</span>
         <span class="info-value"
               alch-edit-checkbox="contentHost.autoheal"
+              readonly="denied('edit_content_hosts', contentHost)"
               formatter="booleanToYesNo"
               on-save="save(contentHost)">
         </span>
@@ -87,7 +88,7 @@
         <span class="info-label" translate>Service Level</span>
         <span class="info-value"
               alch-edit-select="contentHost.service_level"
-              readonly="contentHost.readonly"
+              readonly="denied('edit_content_hosts', contentHost)"
               selector="contentHost.service_level"
               options="serviceLevels()"
               options-format="option for option in options"
@@ -192,7 +193,7 @@
         <span class="info-label" translate>Release Version</span>
         <span class="info-value"
               alch-edit-select="contentHost.release_ver"
-              readonly="contentHost.readonly"
+              readonly="denied('edit_content_hosts', contentHost)"
               selector="contentHost.release_ver"
               options="releaseVersions()"
               options-format="option for option in options"
@@ -206,7 +207,7 @@
         <span class="info-label" translate>Content View</span>
         <span class="info-value"
               alch-edit-select="contentHost.content_view.name"
-              readonly="contentHost.readonly"
+              readonly="denied('edit_content_hosts', contentHost)"
               selector="contentHost.content_view.id"
               options="contentViews()"
               on-cancel="cancelContentViewUpdate()"
@@ -232,6 +233,7 @@
         <span path-selector="environments"
               ng-model="contentHost.environment"
               mode="singleSelect"
+              disabled="denied('edit_content_hosts', contentHost)"
               disable-trigger="disableEnvironmentSelection">
         </span>
       </div>
@@ -299,6 +301,7 @@
       <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
       <span alch-edit-add-item="contentHost.customInfo"
+            ng-show="perimtted('edit_content_hosts', contentHost)"
             on-add="addCustomInfo(value)">
       </span>
       <p translate ng-show="contentHost.customInfo.length == 0">
@@ -313,6 +316,7 @@
           <span class="info-value"
                 alch-edit-text="customInfo.value"
                 on-save="saveCustomInfo(customInfo)"
+                readonly="denied('edit_content_hosts', contentHost)"
                 deletable="true"
                 on-delete="deleteCustomInfo(customInfo)">
           </span>

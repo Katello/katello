@@ -53,7 +53,9 @@
           </ul>
         </td>
         <td alch-table-cell class="action-cell">
-          <button translate ng-click="selectVersion(item)">
+          <button translate
+                  ng-hide="denied('edit_content_views', contentView)"
+                  ng-click="selectVersion(item)">
             Select Version
           </button>
         </td>

@@ -18,6 +18,7 @@
        ng-model="selectedEnvironment"
        mode="singleSelect"
        path-attribute="environments"
+       disabled="denied('promote_or_remove_content_views', contentView)"
        enabled-check="enabledCheck(item)"></div>
 
   <div>

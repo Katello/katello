@@ -8,7 +8,7 @@
         <span class="info-label" translate>Name</span>
         <span class="info-value"
               alch-edit-text="hostCollection.name"
-              readonly="hostCollection.readonly"
+              readonly="denied('edit_host_collection', hostCollection)"
               on-save="save(hostCollection)">
         </span>
       </div>
@@ -17,7 +17,7 @@
         <span class="info-label" translate>Description</span>
         <span class="info-value"
               alch-edit-textarea="hostCollection.description"
-              readonly="hostCollection.readonly"
+              readonly="denied('edit_host_collection', hostCollection)"
               on-save="save(hostCollection)">
         </span>
       </div>
@@ -28,7 +28,7 @@
 
         <span class="info-value"
               alch-edit-custom="hostCollection.max_content_hosts"
-              readonly="hostCollection.readonly"
+              readonly="denied('edit_host_collection', hostCollection)"
               formatter="defaultNumberString"
               formatter-options="limitTranslations"
               on-save="save(hostCollection)">

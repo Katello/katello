@@ -7,7 +7,7 @@
     <span class="info-value"
           alch-edit-text="contentView.name"
           on-save="save(contentView)"
-          readonly="contentView.readonly">
+          readonly="denied('edit_content_views', contentView)">
     </span>
   </div>
 
@@ -21,7 +21,7 @@
     <span class="info-value"
           alch-edit-textarea="contentView.description"
           on-save="save(contentView)"
-          readonly="contentView.readonly">
+          readonly="denied('edit_content_views', contentView)">
     </span>
   </div>
 

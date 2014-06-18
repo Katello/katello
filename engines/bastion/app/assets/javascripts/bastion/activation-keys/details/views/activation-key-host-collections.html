@@ -2,7 +2,7 @@
 
 <h4 translate>Host Collection Management</h4>
 <nav>
-  <ul class="nav nav-tabs">
+  <ul class="nav nav-tabs" ng-show="permitted('edit_activation_keys', activationKey)">
     <li ng-class="{active: isState('activation-keys.details.host-collections.list')}">
       <a ui-sref="activation-keys.details.host-collections.list">
         <span translate>List/Remove</span>

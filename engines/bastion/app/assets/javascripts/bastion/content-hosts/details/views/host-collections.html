@@ -2,7 +2,7 @@
 
 <h4 translate>Host Collection Management</h4>
 <nav>
-  <ul class="nav nav-tabs">
+  <ul class="nav nav-tabs" ng-show="permitted('edit_content_hosts', contentHost)">
     <li ng-class="{active: isState('content-hosts.details.host-collections.list')}">
       <a ui-sref="content-hosts.details.host-collections.list">
         <span translate>List/Remove</span>

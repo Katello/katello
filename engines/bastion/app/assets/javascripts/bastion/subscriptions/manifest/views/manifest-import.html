@@ -26,7 +26,9 @@
     </div>
 
     <div class="detail pull-left" ng-show="upstream != null">
-      <button class="btn btn-default" ng-click="deleteManifest()">
+      <button class="btn btn-default"
+              ng-hide="denied('delete_manifest')"
+              ng-click="deleteManifest()">
          <i class="icon-spinner icon-spin" ng-show="deleteTask.pending"></i>
           <span ng-show="deleteTask.pending" translate>Deleting Manifest...</span>
           <span ng-hide="deleteTask.pending" translate>Delete Manifest</span>
@@ -53,6 +55,7 @@
   <form role="form"
         action="{{ uploadURL }}"
         ng-upload="uploadManifest(content, completed)"
+        ng-hide="denied('import_manifest')"
         upload-options-enable-controls
         upload-options-enable-rails-csrf>
 

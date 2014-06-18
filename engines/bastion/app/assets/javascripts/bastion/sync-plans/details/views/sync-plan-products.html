@@ -9,7 +9,8 @@
       </a>
     </li>
 
-    <li ng-class="{active: isState('sync-plans.details.products.add')}">
+    <li ng-class="{active: isState('sync-plans.details.products.add')}"
+        ng-show="permitted('edit_sync_plans', syncPlan)">
       <a ui-sref="sync-plans.details.products.add">
         <span translate>Add</span>
       </a>

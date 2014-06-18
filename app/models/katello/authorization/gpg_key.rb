@@ -32,7 +32,7 @@ module Authorization::GpgKey
       authorized?(:edit_gpg_keys)
     end
 
-    def deleteable?
+    def deletable?
       authorized?(:destroy_gpg_keys)
     end
   end

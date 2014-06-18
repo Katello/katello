@@ -49,7 +49,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeySubscriptions
         });
 
         $scope.disableRemoveButton = function () {
-            return $scope.subscriptionsTable.numSelected === 0 || $scope.isRemoving || !$scope.activationKey.permissions.editable;
+            return $scope.subscriptionsTable.numSelected === 0 || $scope.isRemoving;
         };
 
         $scope.removeSelected = function () {

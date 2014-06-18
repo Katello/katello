@@ -8,13 +8,20 @@
     <div class="well col-sm-8">
       <div class="radio">
         <label>
-          <input type="radio" ng-value="false" ng-model="showRepos" ng-click="selectAllRepositories()"/>
+          <input type="radio"
+                 ng-value="false"
+                 ng-model="showRepos"
+                 ng-hide="denied('edit_content_views', contentView)"
+                 ng-click="selectAllRepositories()"/>
           <span translate>This filter applies to all repositories in the content view (current and future).</span>
         </label>
       </div>
       <div class="radio">
         <label>
-          <input type="radio" ng-value="true" ng-model="showRepos"/>
+          <input type="radio"
+                 ng-value="true"
+                 ng-hide="denied('edit_content_views', contentView)"
+                 ng-model="showRepos"/>
           <span translate>This filter applies only to a subset of repositories in the content view.</span>
         </label>
       </div>
@@ -25,6 +32,7 @@
     <span class="pull-right">
       <button class="btn btn-primary"
               translate
+              ng-hide="denied('edit_content_views', contentView)"
               ng-disabled="!showRepos"
               ng-click="updateRepositories()">
         Update Repositories
@@ -66,6 +74,7 @@
       <tbody>
         <tr alch-table-row
             row-select="repository"
+            ng-hide="denied('edit_content_views', contentView)"
             ng-disabled="!showRepos"
             ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch | filter:repositoryFilter">
           <td alch-table-cell>

@@ -43,6 +43,9 @@
 //= require "bastion/i18n/translate.service.js"
 //= require "bastion/i18n/translations"
 
+//= require "bastion/auth/auth.module"
+//= require_tree "./auth"
+
 //= require "bastion/menu/menu.module"
 //= require_tree "./menu"
 

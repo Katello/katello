@@ -17,7 +17,7 @@
            modal-body='Are you sure you want to remove the sync plan "{{ syncPlan.name }}"?'></div>
 
 
-      <button class="btn btn-default" ng-click="openModal()">
+      <button class="btn btn-default" ng-click="openModal()" ng-hide="denied('destroy_sync_plans', syncPlan)">
         <i class="icon-trash"></i>
         {{ "Remove Sync Plan" | translate }}
       </button>

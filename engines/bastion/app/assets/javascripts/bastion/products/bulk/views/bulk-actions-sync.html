@@ -29,6 +29,7 @@
 
   <div class="pull-left">
     <button class="btn btn-default"
+            ng-hide="denied('sync_products')"
             ng-click="syncProducts()">
       <i class="icon-spinner icon-spin" ng-show="syncingProducts"></i>
       <span ng-show="syncingProducts" translate>Syncing...</span>

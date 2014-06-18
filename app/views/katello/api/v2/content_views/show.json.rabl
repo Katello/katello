@@ -40,11 +40,13 @@ child :versions => :versions do
 end
 
 node :permissions do |cv|
-{
-  :promotable_or_removable => cv.promotable_or_removable? && Katello::KTEnvironment.any_promotable?,
-  :deletable => cv.deletable?,
-  :readable => cv.readable?
-}
+  {
+    :view_content_views => cv.readable?,
+    :edit_content_views => cv.editable?,
+    :destroy_content_views => cv.deletable?,
+    :publish_content_views => cv.publishable?,
+    :promote_or_remove_content_views => cv.promotable_or_removable?
+  }
 end
 
 child :components => :components do

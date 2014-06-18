@@ -43,7 +43,9 @@
         <tr alch-table-row ng-repeat="item in detailsTable.rows | filter:filterTerm">
           <td alch-table-cell>{{ item.module_name }}</td>
           <td alch-table-cell class="action-cell">
-            <button translate ng-click="selectVersion(item.module_name)">
+            <button translate
+                    ng-hide="denied('edit_content_views', contentView)"
+                    ng-click="selectVersion(item.module_name)">
               Select a Version
             </button>
           </td>

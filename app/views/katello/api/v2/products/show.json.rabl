@@ -40,7 +40,10 @@ end
 
 node :permissions do |product|
   {
-    :deletable => product.deletable?
+    :view_products => product.readable?,
+    :edit_products => product.editable?,
+    :destroy_products => product.deletable?,
+    :sync_products => product.syncable?
   }
 end
 

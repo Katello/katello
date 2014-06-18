@@ -6,13 +6,13 @@
 
 <div class="col-sm-12">
   <button class="btn btn-primary fr"
-          ng-show="isState('content-views.details.filters.details.erratum.list')"
+          ng-show="isState('content-views.details.filters.details.erratum.list') && permitted('edit_content_views', contentView)"
           ng-click="removeErrata(contentView)">
     <i class="icon-trash"></i>
     <span translate>Remove Errata</span>
   </button>
   <button class="btn btn-primary fr"
-          ng-show="isState('content-views.details.filters.details.erratum.available')"
+          ng-show="isState('content-views.details.filters.details.erratum.available') && permitted('edit_content_views', contentView)"
           ng-click="addErrata(filter)">
     <i class="icon-plus"></i>
     <span translate>Add Errata</span>

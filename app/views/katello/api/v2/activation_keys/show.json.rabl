@@ -21,8 +21,9 @@ end
 
 node :permissions do |activation_key|
   {
-    :editable => activation_key.editable?,
-    :deletable => activation_key.deletable?
+    :view_activation_keys => activation_key.readable?,
+    :edit_activation_keys => activation_key.editable?,
+    :destroy_activation_keys => activation_key.deletable?,
   }
 end
 

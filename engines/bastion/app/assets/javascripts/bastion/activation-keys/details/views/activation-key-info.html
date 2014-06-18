@@ -8,7 +8,7 @@
         <span class="info-label" translate>Name</span>
         <span class="info-value"
               alch-edit-text="activationKey.name"
-              readonly="activationKey.readonly"
+              readonly="denied('edit_activation_keys', activationKey)"
               on-save="save(activationKey)">
         </span>
       </div>
@@ -17,7 +17,7 @@
         <span class="info-label" translate>Description</span>
         <span class="info-value"
               alch-edit-textarea="activationKey.description"
-              readonly="activationKey.readonly"
+              readonly="denied('edit_activation_keys', activationKey)"
               on-save="save(activationKey)">
         </span>
         </div>
@@ -28,7 +28,7 @@
 
         <span class="info-value"
               alch-edit-custom="activationKey.usage_limit"
-              readonly="activationKey.readonly"
+              readonly="denied('edit_activation_keys', activationKey)"
               formatter="defaultNumberString"
               formatter-options="limitTranslations"
               on-save="save(activationKey)">
@@ -63,7 +63,7 @@
         <span class="info-label" translate>Service Level</span>
         <span class="info-value"
               alch-edit-select="activationKey.service_level"
-              readonly="activationKey.readonly"
+              readonly="denied('edit_activation_keys', activationKey)"
               selector="activationKey.service_level"
               options="serviceLevels()"
               options-format="option for option in options"
@@ -83,7 +83,7 @@
         <span class="info-label" translate>Release Version</span>
         <span class="info-value"
               alch-edit-select="activationKey.release_version"
-              readonly="activationKey.readonly"
+              readonly="denied('edit_activation_keys', activationKey)"
               selector="activationKey.release_version"
               options="releaseVersions()"
               options-format="option for option in options"
@@ -101,6 +101,7 @@
         <span path-selector="environments"
               ng-model="activationKey.environment"
               mode="singleSelect"
+              disabled="denied('edit_activation_keys', activationKey)"
               disable-trigger="disableEnvironmentSelection">
         </span>
       </div>
@@ -109,7 +110,7 @@
         <span class="info-label" translate>Content View</span>
         <span class="info-value"
               alch-edit-select="activationKey.content_view.name"
-              readonly="activationKey.readonly"
+              readonly="denied('edit_activation_keys', activationKey)"
               selector="activationKey.content_view.id"
               options="contentViews()"
               on-cancel="cancelContentViewUpdate()"

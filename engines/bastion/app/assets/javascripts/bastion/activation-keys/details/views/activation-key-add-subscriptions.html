@@ -33,7 +33,7 @@
         </a>
       </div>
 
-      <div ng-hide="activationKey.readonly" class="nutupane-actions pull-right">
+      <div ng-hide="denied('edit_activation_keys', activationKey)" class="nutupane-actions pull-right">
          <button class="btn btn-primary"
                  translate
                  ng-disabled="disableAddButton()"

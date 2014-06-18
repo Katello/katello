@@ -12,11 +12,15 @@
 
     <div class="details-actions fr">
       <button class="btn btn-default"
-              ng-click="openModal()" ng-disabled="!hostCollection.permissions.deletable" translate>
+              ng-click="openModal()"
+              ng-hide="denied('destroy_host_collections', hostCollection)"
+              translate>
         Remove
       </button>
 
-      <button class="btn btn-default" ng-click="showCopy = true">
+      <button class="btn btn-default"
+              ng-hide="denied('create_host_collections')"
+              ng-click="showCopy = true">
         <i class="icon-copy"></i>
         {{ "Copy Collection" | translate }}
       </button>
@@ -76,7 +80,8 @@
           </span>
         </a>
       </li>
-      <li ng-class="{active: isState('host-collections.details.actions')}">
+      <li ng-class="{active: isState('host-collections.details.actions')}"
+          ng-show="permitted('edit_host_collections', hostCollection)">
         <a ui-sref="host-collections.details.actions">
           <span translate>
             Collection Actions

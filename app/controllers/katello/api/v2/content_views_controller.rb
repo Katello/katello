@@ -213,8 +213,7 @@ module Katello
     end
 
     def authorize_remove_from_environment
-      deny_access unless @view.promotable_or_removable?
-      deny_access unless @environment.promotable_or_removable?
+      deny_access unless @environment.promotable_or_removable? && @view.promotable_or_removable?
     end
 
     def authorize_remove

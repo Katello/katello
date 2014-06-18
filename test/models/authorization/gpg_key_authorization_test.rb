@@ -33,8 +33,8 @@ class GpgKeyAuthorizationAdminTest < AuthorizationTestBase
     assert @key.editable?
   end
 
-  def test_key_deleteable?
-    assert @key.deleteable?
+  def test_key_deletable?
+    assert @key.deletable?
   end
 end
 
@@ -58,8 +58,8 @@ class GpgKeyAuthorizationNoPermsTest < AuthorizationTestBase
     refute @key.editable?
   end
 
-  def test_key_deleteable?
-    refute @key.deleteable?
+  def test_key_deletable?
+    refute @key.deletable?
   end
 
 end

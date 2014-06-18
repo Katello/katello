@@ -8,17 +8,20 @@
 
     <div class="col-sm-6">
       <div class="fr">
-        <a class="btn btn-primary" ui-sref="content-views.details.publish">
+        <a class="btn btn-primary" ui-sref="content-views.details.publish"
+           ng-hide="denied('publish_content_views', contentView)">
           <i class="icon-paste"></i>
           <span translate>Publish New Version</span>
         </a>
 
-        <a class="btn btn-default" ng-hide="true" ui-sref="content-views.details.clone">
+        <a class="btn btn-default" ng-hide="true" ui-sref="content-views.details.clone"
+           ng-hide="denied('create_content_views')">
           <i class="icon-copy"></i>
           <span translate>Clone View</span>
         </a>
 
-        <button class="btn btn-default" ui-sref="content-views.details.deletion" ng-show="contentView.permissions.deletable">
+        <button class="btn btn-default" ui-sref="content-views.details.deletion"
+                ng-hide="denied('destroy_content_views', contentView)">
           <i class="icon-trash"></i>
           {{ "Remove View" | translate }}
         </button>

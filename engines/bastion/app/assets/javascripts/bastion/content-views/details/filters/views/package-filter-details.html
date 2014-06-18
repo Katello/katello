@@ -20,7 +20,9 @@
     </span>
   </div>
 
-  <button class="btn btn-default fr" ng-click="removeRules(filter)">
+  <button class="btn btn-default fr"
+          ng-hide="denied('edit_content_views', contentView)"
+          ng-click="removeRules(filter)">
     <i class="icon-trash"></i>
     <span translate>Remove Packages</span>
   </button>
@@ -30,7 +32,10 @@
 
   <thead>
   <tr>
-    <th class="row-select"><input type="checkbox" ng-model="allSelected" ng-change="selectAll(allSelected)"/></th>
+    <th class="row-select"><input type="checkbox"
+                                  ng-model="allSelected"
+                                  ng-change="selectAll(allSelected)"
+                                  ng-hide="denied('edit_content_views', contentView)"/></th>
     <th translate>Package Name</th>
     <th class="col-sm-5" translate>Detail</th>
     <th class="col-sm-2"></th>
@@ -44,11 +49,15 @@
       <input type="text"
              class="form-control"
              typeahead="package for package in fetchAutocomplete($viewValue)"
+             ng-hide="denied('edit_content_views', contentView)"
              ng-model="rule.name"/>
     </td>
     <td>
         <span class="col-sm-12" ng-class="{ 'col-sm-7': rule.type != 'all'}">
-          <select class="form-control" ng-model="rule.type" ng-change="clearValues(rule)">
+          <select class="form-control"
+                  ng-model="rule.type"
+                  ng-change="clearValues(rule)"
+                  ng-hide="denied('edit_content_views', contentView)">
             <option value="all" translate>All Versions</option>
             <option value="equal" translate>Equal To</option>
             <option value="greater" translate>Greater Than</option>
@@ -62,6 +71,7 @@
             <input type="text"
                    class="form-control"
                    ng-model="rule.min_version"
+                   ng-hide="denied('edit_content_views', contentView)"
                    ng-disabled="rule.type === 'less'"/>
           </span>
           <span class="fl">-</span>
@@ -69,18 +79,24 @@
             <input type="text"
                    class="form-control"
                    ng-model="rule.max_version"
+                   ng-hide="denied('edit_content_views', contentView)"
                    ng-disabled="rule.type === 'greater'"/>
           </span>
         </span>
 
         <span ng-show="rule.type === 'equal'">
           <span class="col-sm-4">
-            <input type="text" class="form-control" ng-model="rule.version"/>
+            <input type="text" class="form-control"
+                   ng-model="rule.version"
+                   ng-hide="denied('edit_content_views', contentView)"/>
           </span>
         </span>
     </td>
     <td class="action-cell">
-      <button class="btn btn-default" ng-click="addRule(rule, filter)" ng-disabled="!valid(rule)">
+      <button class="btn btn-default"
+              ng-click="addRule(rule, filter)"
+              ng-hide="denied('edit_content_views', contentView)"
+              ng-disabled="!valid(rule)">
         <i class="icon-plus"></i>
         <span translate>Add</span>
       </button>
@@ -89,15 +105,21 @@
 
   <tr ng-repeat="rule in filter.rules | filter:packageFilter" row-select="rule">
     <td class="row-select">
-      <input type="checkbox" ng-model="rule.selected"/>
+      <input type="checkbox"
+             ng-hide="denied('edit_content_views', contentView)"
+             ng-model="rule.selected"/>
     </td>
     <td>
-      <input class="form-control" ng-model="rule.name" ng-readonly="!rule.editMode"/>
+      <input class="form-control"
+             ng-hide="denied('edit_content_views', contentView)"
+             ng-model="rule.name"
+             ng-readonly="!rule.editMode"/>
     </td>
     <td>
         <span class="col-sm-12" ng-class="{ 'col-sm-7': rule.type != 'all'}">
           <select class="form-control"
                   ng-model="rule.type"
+                  ng-hide="denied('edit_content_views', contentView)"
                   ng-readonly="!rule.editMode"
                   ng-disabled="!rule.editMode">
             <option value="all" translate>All Versions</option>

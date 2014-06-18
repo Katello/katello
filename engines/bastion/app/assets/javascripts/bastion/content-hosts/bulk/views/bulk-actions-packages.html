@@ -5,7 +5,7 @@
     <h4 translate>Content Host Package Management</h4>
 
 
-    <form name="systemContentForm" class="form" ng-hide="content.workingMode">
+    <form name="systemContentForm" class="form" ng-hide="content.workingMode || denied('edit_content_hosts', contentHost)">
 
       <div>
         <input type="radio"
@@ -37,6 +37,7 @@
       <div>
         <button class="btn btn-default"
                 translate
+                ng-hide="denied('edit_content_hosts', contentHost)"
                 ng-click="confirmContentAction('install', content)"
                 ng-disabled="!systemContentForm.$valid || content.confirm">
           Install
@@ -44,6 +45,7 @@
 
         <button class="btn btn-default"
                 translate
+                ng-hide="denied('edit_content_hosts', contentHost)"
                 ng-click="confirmContentAction('update', content)"
                 ng-disabled="!systemContentForm.$valid || content.confirm"
                 ng-hide="content.contentType == 'errata'">
@@ -52,9 +54,9 @@
 
         <button class="btn btn-default"
                 translate
+                ng-hide="content.contentType == 'errata' || denied('edit_content_hosts', contentHost)"
                 ng-click="confirmContentAction('remove', content)"
-                ng-disabled="!systemContentForm.$valid || content.confirm"
-                ng-hide="content.contentType == 'errata'">
+                ng-disabled="!systemContentForm.$valid || content.confirm">
           Remove
         </button>
       </div>

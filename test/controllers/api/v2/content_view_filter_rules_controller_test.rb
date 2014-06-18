@@ -71,8 +71,8 @@ module Katello
     end
 
     def test_create_protected
-      allowed_perms = [@create_permission]
-      denied_perms = [@view_permission, @update_permission, @destroy_permission]
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
         post :create, :content_view_filter_id => @filter.id, :name => "testpkg", :version => "10.0"
@@ -127,8 +127,8 @@ module Katello
     end
 
     def test_destroy_protected
-      allowed_perms = [@destroy_permission]
-      denied_perms = [@view_permission, @create_permission, @update_permission]
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         delete :destroy, :content_view_filter_id => @filter.id, :id => @rule.id

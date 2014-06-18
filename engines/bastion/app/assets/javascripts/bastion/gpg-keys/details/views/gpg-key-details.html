@@ -8,7 +8,7 @@
     <div class="details-actions fr">
       <button class="btn btn-default"
               ng-click="openModal()"
-              ng-disabled="!gpgKey.permissions.deletable"
+              ng-hide="denied('destroy_gpg_keys', gpgKey)"
               translate>
         Remove GPG Key
       </button>

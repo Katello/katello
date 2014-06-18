@@ -32,6 +32,10 @@ module Katello
         authorized(:destroy_content_views)
       end
 
+      def deletable
+        authorized(:publish_content_views)
+      end
+
       def readable_repositories(repo_ids = nil)
         query = Katello::Repository
         content_views = Katello::ContentView.readable
@@ -72,8 +76,12 @@ module Katello
         authorized?(:destroy_content_views)
       end
 
+      def publishable?
+        authorized?(:publish_content_views)
+      end
+
       def promotable_or_removable?
-        authorized?(:promote_or_remove_content_views)
+        authorized?(:promote_or_remove_content_views) && Katello::KTEnvironment.any_promotable?
       end
     end
 

@@ -53,7 +53,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
         });
 
         $scope.disableAddButton = function () {
-            return $scope.addSubscriptionsTable.numSelected === 0 || $scope.isAdding || !$scope.contentHost.permissions.editable;
+            return $scope.addSubscriptionsTable.numSelected === 0 || $scope.isAdding;
         };
 
         $scope.addSelected = function () {

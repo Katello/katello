@@ -34,6 +34,7 @@
       <div ng-hide="system.readonly" class="nutupane-actions fr">
          <button class="btn btn-primary"
                  translate
+                 ng-hide="denied('edit_content_hosts', contentHost)"
                  ng-disabled="disableAddButton()"
                  ng-click="addSelected()">
            Add Selected
