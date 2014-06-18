@@ -299,7 +299,7 @@ module Katello
         fail HttpErrors::NotFound, message % params[:organization_id]
       end
 
-      if User.current && !User.current.allowed_organizations.include?(organization)
+      if User.current && !User.consumer? && !User.current.allowed_organizations.include?(organization)
         message = _("User '%{user}' does not belong to Organization '%{organization}'.")
         fail HttpErrors::NotFound, message % {:user => current_user.login, :organization => params[:organization_id]}
       end
@@ -412,14 +412,14 @@ module Katello
       when "api_proxy_consumer_deletionrecord_delete_path"
         User.consumer? || Organization.deletable?
       when "api_proxy_owner_pools_path"
-        find_optional_organization
+        find_organization
         if params[:consumer]
           User.consumer? && current_user.uuid == params[:consumer]
         else
           User.consumer? || ::User.current.can?(:view_organizations, self)
         end
       when "api_proxy_owner_servicelevels_path"
-        find_optional_organization
+        find_organization
         (User.consumer? || ::User.current.can?(:view_organizations, self))
       when "api_proxy_consumer_certificates_path", "api_proxy_consumer_releases_path", "api_proxy_certificate_serials_path",
            "api_proxy_consumer_entitlements_path", "api_proxy_consumer_entitlements_post_path",
