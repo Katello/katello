@@ -54,6 +54,7 @@ class System < Katello::Model
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates :location, :length => {:maximum => 255}
+  validates :description, :length => {:maximum => 255, :message => N_("description must be less than 255 characters")}
   validates_with Validators::ContentViewEnvironmentValidator
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
