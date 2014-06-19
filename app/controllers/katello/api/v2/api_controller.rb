@@ -29,10 +29,6 @@ module Katello
       api_base_url "#{Katello.config.url_prefix}/api"
     end
 
-    rescue_from(ActionController::ParameterMissing) do |parameter_missing_exception|
-      render :text => _("Missing values for #{parameter_missing_exception.param}."), :status => :bad_request
-    end
-
     def_param_group :search do
       param :search, String, :desc => N_("Search string")
       param :page, :number, :desc => N_("Page number, starting at 1")
