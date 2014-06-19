@@ -112,7 +112,7 @@ class System < Katello::Model
   end
 
   def available_releases
-    self.environment.available_releases
+    self.content_view.version(self.environment).available_releases
   end
 
   def consumed_pool_ids=(attributes)
