@@ -106,13 +106,15 @@ module Errors
     # Return a CandlepinError with the displayMessage
     # as the message set if
     def self.from_task(task)
-      if task[:state] == 'error'
+      if task[:state] == 'error' || task[:state] == 'canceled'
         message = if task[:exception]
                     Array(task[:exception]).join('; ')
                   elsif task[:error]
                     "#{task[:error][:code]}: #{task[:error][:description]}"
+                  elsif task[:state] == 'canceled'
+                    _("Task canceled")
                   else
-                    "Pulp task error"
+                    _("Pulp task error")
                   end
         self.new(message)
       end
