@@ -57,7 +57,7 @@ class ProductsController < Katello::ApplicationController
         string query
       end
       filter :term, {:organization_id => org.id}
-      filter :term, {:id => readable_ids}
+      filter :terms, {:id => readable_ids}
     end
 
     render :json => products.collect{|s| {:label => s.name, :value => s.name, :id => s.id}}

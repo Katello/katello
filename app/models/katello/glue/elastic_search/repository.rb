@@ -26,6 +26,7 @@ module Glue::ElasticSearch::Repository
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :name_sort, :type => 'string', :index => :not_analyzed
         indexes :labels, :type => 'string', :index => :not_analyzed
+        indexes :name_autocomplete, :type => 'string', :analyzer => 'autcomplete_name_analyzer'
       end
 
       after_save :update_related_index
@@ -41,7 +42,8 @@ module Glue::ElasticSearch::Repository
         :product_id => self.product.id,
         :default_content_view => self.content_view_version.has_default_content_view?,
         :name_sort => self.name,
-        :content_view_ids => self.content_view_ids
+        :content_view_ids => self.content_view_ids,
+        :name_autocomplete => self.name
       }
     end
 

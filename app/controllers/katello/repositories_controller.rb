@@ -17,9 +17,7 @@ class RepositoriesController < Katello::ApplicationController
 
   def auto_complete_library
     # retrieve and return a list (array) of repo names in library that contain the 'term' that was passed in
-    term = Util::Search.filter_input params[:term]
-    name = 'name:' + term
-    name_query = name + ' OR ' + name + '*'
+    query = "name_autocomplete:#{params[:term]}"
 
     ids = []
     ids += Product.readable_repositories.pluck(:id) if Product.readable?
@@ -27,11 +25,10 @@ class RepositoriesController < Katello::ApplicationController
     ids.uniq!
 
     repos = Repository.search do
-      query {string name_query}
-      filter "and", [
-          {:terms => {:id => ids}},
-          {:terms => {:enabled => [true]}}
-      ]
+      query do
+        string query
+      end
+      filter :terms, {:id => ids}
     end
 
     render :json => (repos.map do |repo|
