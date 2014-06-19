@@ -67,7 +67,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionSubscr
                 });
             };
 
-            Organization.autoAttachSubscriptions({}, success, error);
+            Organization.autoAttachSubscriptions({id: CurrentOrganization}, success, error);
 
             return deferred.promise;
         };

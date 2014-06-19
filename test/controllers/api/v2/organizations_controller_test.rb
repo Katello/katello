@@ -120,5 +120,21 @@ module Katello
       end
     end
 
+    def test_autoattach_subscriptions
+      Organization.any_instance.expects(:auto_attach_all_systems).returns(Katello::TaskStatus.new)
+
+      post :autoattach_subscriptions, :id => @organization.id
+
+      assert_response :success
+    end
+
+    def test_autoattach_subscriptions_protected
+      allowed_perms = [@update_permission]
+
+      assert_protected_action(:autoattach_subscriptions, allowed_perms) do
+        post :autoattach_subscriptions, :id => @organization.id
+      end
+    end
+
   end
 end

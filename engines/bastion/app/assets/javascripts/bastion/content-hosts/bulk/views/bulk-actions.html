@@ -71,7 +71,7 @@
 
   <div>
 
-    <div class="alert warning alert-warning" ng-show="table.numSelected == 0">
+    <div class="alert warning alert-warning" ng-show="table.numSelected == 0 && !isState('content-hosts.bulk-actions.subscriptions')">
       <i class="icon-exclamation-sign"></i>
       {{ 'At least one content host needs to be selected in order to perform a bulk action.' | translate }}
     </div>
