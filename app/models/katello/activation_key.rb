@@ -19,6 +19,7 @@ class ActivationKey < Katello::Model
   include Glue if Katello.config.use_cp
   include Katello::Authorization::ActivationKey
   include Ext::LabelFromName
+  include ForemanTasks::Concerns::ActionSubject
 
   belongs_to :organization, :inverse_of => :activation_keys
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :activation_keys
