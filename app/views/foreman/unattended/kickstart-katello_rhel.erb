@@ -25,10 +25,6 @@ firewall --<%= os_major >= 6 ? 'service=' : '' %>ssh
 authconfig --useshadow --passalgo=sha256 --kickstart
 timezone --utc <%= @host.params['time-zone'] || 'UTC' %>
 
-<% if os_major > 4 -%>
-services --disabled gpm,sendmail,cups,pcmcia,isdn,rawdevices,hpoj,bluetooth,openibd,avahi-daemon,avahi-dnsconfd,hidd,hplip,pcscd
-<% end -%>
-
 bootloader --location=mbr --append="nofb quiet splash=quiet" <%= grub_pass %>
 <% if os_major == 5 -%>
 key --skip
