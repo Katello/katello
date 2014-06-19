@@ -1,7 +1,3 @@
-<div alert type="'info'">
-  {{ 'All dates and times below are relative to this server.' | translate }}
-</div>
-
 <div class="detail">
   <span class="info-label" translate>Sync Interval</span>
   <span class="info-value" ng-if="product.sync_plan.interval == 'hourly'">
@@ -11,12 +7,12 @@
   </span>
   <span class="info-value" ng-if="product.sync_plan.interval == 'daily'">
     <span translate>
-      Daily at {{ product.sync_plan.sync_date | date:'mediumTime' }}
+      Daily at {{ product.sync_plan.sync_date | date:'mediumTime' }} (Server Time)
     </span>
   </span>
   <span class="info-value" ng-if="product.sync_plan.interval == 'weekly'">
     <span translate>
-      Weekly on {{ product.sync_plan.sync_date | date:'EEEE' }} at {{ product.sync_plan.sync_date | date:'mediumTime' }}
+      Weekly on {{ product.sync_plan.sync_date | date:'EEEE' }} at {{ product.sync_plan.sync_date | date:'mediumTime' }} (Server Time)
     </span>
   </span>
   <span class="info-value" ng-hide="product.sync_plan.next_sync">

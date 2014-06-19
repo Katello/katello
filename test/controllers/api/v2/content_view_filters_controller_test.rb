@@ -40,6 +40,7 @@ module Katello
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @request.env['CONTENT_TYPE'] = 'application/json'
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
+      Repository.any_instance.stubs(:last_sync).returns(Time.now.asctime)
       models
       permissions
     end

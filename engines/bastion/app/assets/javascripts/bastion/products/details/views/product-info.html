@@ -64,13 +64,15 @@
 
     <div class="detail">
       <span class="info-label" translate>Last Sync</span>
-      <span class="info-value">{{ product.sync_status.finish_time | date:'medium' }}</span>
+      <span class="info-value" translate>
+        {{ product.last_sync_words }} Ago ({{ product.sync_status.finish_time | date:'medium' }} Local Time)
+      </span>
     </div>
 
     <div class="detail">
       <span class="info-label" translate>Next Sync</span>
-      <span class="info-value" ng-show="product.sync_plan.next_sync">
-        {{ product.sync_plan.next_sync | date:'medium' }}
+      <span class="info-value" ng-show="product.sync_plan.next_sync" translate>
+        {{ product.sync_plan.next_sync | date:'medium' }} (Server Time)
       </span>
       <span class="info-value" ng-hide="product.sync_plan.next_sync" translate>
         Synced manually, no interval set.
