@@ -15,7 +15,7 @@
 
     <button class="btn btn-default"
             ng-click="syncRepository(repository); working = true"
-            ng-hide="denied('sync_products', product)"
+            ng-hide="!repository.url || denied('sync_products', product)"
             ng-disabled="syncInProgress(repository.sync_state)">
       <i class="icon-refresh"></i>
       <span translate>Sync Now</span>
