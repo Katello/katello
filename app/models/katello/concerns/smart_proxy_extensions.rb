@@ -31,8 +31,10 @@ module Katello
                  :through    => :capsule_lifecycle_environments,
                  :source     => :lifecycle_environment
 
-        has_many :hosts,      :class_name => "::Host::Managed", :foreign_key => :pulp_proxy_id, :inverse_of => :smart_proxies
-        has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :pulp_proxy_id, :inverse_of => :smart_proxies
+        has_many :hosts,      :class_name => "::Host::Managed", :foreign_key => :content_source_id,
+                 :inverse_of => :smart_proxies
+        has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :content_source_id,
+                 :inverse_of => :smart_proxies
       end
 
       def default_capsule?

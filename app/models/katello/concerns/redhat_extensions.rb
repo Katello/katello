@@ -99,7 +99,7 @@ module Katello
 
       def kickstart_repo(host)
         distro = distribution_repositories(host).first
-        distro.full_path(host.pulp_proxy)  if distro && host.pulp_proxy
+        distro.full_path(host.content_source)  if distro && host.content_source
       end
 
       private

@@ -15,18 +15,18 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
-        belongs_to :pulp_proxy, :class_name => "::SmartProxy", :foreign_key => :pulp_proxy_id, :inverse_of => :hostgroups
-        scoped_search :in => :pulp_proxy, :on => :name, :complete_value => true, :rename => :pulp_proxy
+        belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hostgroups
+        scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
       end
 
-      # instead of calling nested_attribute_for(:pulp_proxy_id) in Foreman, define the methods explictedly
-      def inherited_pulp_proxy_id
-        self[:inherited_pulp_proxy_id] || self.class.sort_by_ancestry(ancestors.where("pulp_proxy_id is not NULL")).last.try(:pulp_proxy_id) if ancestry.present?
+      # instead of calling nested_attribute_for(:content_source_id) in Foreman, define the methods explictedly
+      def inherited_content_source_id
+        self[:inherited_content_source_id] || self.class.sort_by_ancestry(ancestors.where("content_source_id is not NULL")).last.try(:content_source_id) if ancestry.present?
       end
 
-      def pulp_proxy
+      def content_source
         return super unless ancestry.present?
-        SmartProxy.find_by_id(inherited_pulp_proxy_id)
+        SmartProxy.find_by_id(inherited_content_source_id)
       end
 
     end

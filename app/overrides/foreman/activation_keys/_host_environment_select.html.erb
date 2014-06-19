@@ -62,8 +62,8 @@ end %>
 end %>
 
 <% if proxies.count > 0 %>
-    <%= select_f f, :pulp_proxy_id, proxies, :id, :name,
-             { :include_blank => blank_or_inherit_f(f, :pulp_proxy) },
-             { :label       => _("Pulp"),
-               :help_inline => _("Use this as a Pulp server") } %>
+    <%= select_f f, :content_source_id, proxies, :id, :name,
+             { :include_blank => blank_or_inherit_f(f, :content_source) },
+             { :label       => _("Content Source"),
+               :help_inline => _("Use this as a source for installation and updates.") } %>
 <% end %>

@@ -17,8 +17,8 @@ module Katello
       included do
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
                 :dependent => :destroy, :inverse_of => :foreman_host
-        belongs_to :pulp_proxy, :class_name => "::SmartProxy", :foreign_key => :pulp_proxy_id, :inverse_of => :hosts
-        scoped_search :in => :pulp_proxy, :on => :name, :complete_value => true, :rename => :pulp_proxy
+        belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hosts
+        scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
       end
     end
   end
