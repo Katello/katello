@@ -248,7 +248,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     # TODO: remove this fragile logic
     # Without any search terms, reindex all subscriptions in elasticsearch. This is to ensure
     # that the latest information is searchable.
-    if params[:offset].to_i == 0 && params[:search].blank?
+    if params[:page].to_i == 1 && params[:search].blank?
       @organization.redhat_provider.index_subscriptions
     end
 

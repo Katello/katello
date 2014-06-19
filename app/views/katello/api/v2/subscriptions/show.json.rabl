@@ -1,9 +1,3 @@
-# TODO: Bug #4005: allow Rabl.render(object, 'something/show') to work
-#       http://projects.theforeman.org/issues/4005#change-12796
-#       Ideally, as_json would be replaced w/ rabl output which would solve this need
-#       for duplication and sync between rabl and elasticsearch indexing.
-#       See also models/katello/glue/elasticsearch/pool.rb
-
 object @subscription
 
 attributes :cp_id => :id
