@@ -197,23 +197,9 @@ module Katello
 
       key_params[:environment_id] = params[:environment][:id] if params[:environment].try(:[], :id)
       key_params[:content_view_id] = params[:content_view][:id] if params[:content_view].try(:[], :id)
-      key_params[:usage_limit] = int_limit(params)
+      key_params[:usage_limit] = params[:usage_limit]
 
       key_params
-    end
-
-    def int_limit(key_params)
-      limit = key_params[:activation_key].try(:[], :usage_limit)
-      if limit.nil?
-        limit = -1
-      elsif limit == 'unlimited' #_('Unlimited') || limit == 'Unlimited' || limit == _('unlimited') || limit == 'unlimited'
-        limit = -1
-      else
-        limit = Integer(limit) rescue nil
-        fail(HttpErrors::BadRequest, _("Invalid usage limit value of '%{value}'") %
-            {:value => key_params[:activation_key][:usage_limit]}) if limit.nil?
-      end
-      limit
     end
   end
 end
