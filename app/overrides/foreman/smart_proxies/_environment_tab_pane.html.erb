@@ -1,0 +1,3 @@
+<div class="tab-pane" id="kt_environments">
+  <%= multiple_selects f, :lifecycle_environments, Katello::KTEnvironment.completer_scope(:organization_id => ::Organization.current.try(:id)), @smart_proxy.lifecycle_environment_ids, {:label => _('Lifecyle Environments')} %>
+</div>

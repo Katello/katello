@@ -31,28 +31,31 @@ module Katello
                  :through    => :capsule_lifecycle_environments,
                  :source     => :lifecycle_environment
 
-        def default_capsule?
-          server_fqdn = Facter.value(:fqdn) || SETTINGS[:fqdn]
-          self.name == server_fqdn
-        end
+        attr_accessible :lifecycle_environment_ids
+      end
 
-        def associate_organizations
-          self.organizations = Organization.all if self.default_capsule?
-        end
+      def default_capsule?
+        server_fqdn = Facter.value(:fqdn) || SETTINGS[:fqdn]
+        self.name == server_fqdn
+      end
 
-        def associate_default_location
-          if self.default_capsule?
-            default_location = Location.default_location
-            if default_location && !self.locations.include?(default_location)
-              self.locations << default_location
-            end
+      def associate_organizations
+        self.organizations = Organization.all if self.default_capsule?
+      end
+
+      def associate_default_location
+        if self.default_capsule?
+          default_location = Location.default_location
+          if default_location && !self.locations.include?(default_location)
+            self.locations << default_location
           end
         end
-
-        def associate_lifecycle_environments
-          self.lifecycle_environments = Katello::KTEnvironment.all if self.default_capsule?
-        end
       end
+
+      def associate_lifecycle_environments
+        self.lifecycle_environments = Katello::KTEnvironment.all if self.default_capsule?
+      end
+
     end
   end
 end
