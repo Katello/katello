@@ -18,7 +18,8 @@ module Katello
 
     before_filter :local_find_taxonomy, :only => %w{repo_discover cancel_repo_discover
                                                     download_debug_certificate
-                                                    redhat_provider update}
+                                                    redhat_provider update
+                                                    autoattach_subscriptions}
 
     resource_description do
       api_version 'v2'
@@ -116,7 +117,8 @@ module Katello
     protected
 
     def action_permission
-      if %w(download_debug_certificate redhat_provider repo_discover cancel_repo_discover).include?(params[:action])
+      if %w(download_debug_certificate redhat_provider repo_discover
+            cancel_repo_discover autoattach_subscriptions).include?(params[:action])
         :edit
       else
         super
