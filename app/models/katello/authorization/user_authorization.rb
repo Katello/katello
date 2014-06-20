@@ -16,6 +16,18 @@ module Authorization::UserAuthorization
 
   READ_PERM_VERBS = [:read, :update, :create, :delete]
 
+  def readable?
+    ::User.any_readable? && !hidden
+  end
+
+  def editable?
+    ::User.allowed_to?([:create, :update], :users, nil) && !hidden
+  end
+
+  def deletable?
+    self.id != ::User.current.id && ::User.allowed_to?([:delete], :users, nil)
+  end
+
   module ClassMethods
     # scope
     def readable
@@ -45,22 +57,6 @@ module Authorization::UserAuthorization
     def no_tag_verbs
       [:create]
     end
-  end
-
-  included do
-
-    def readable?
-      ::User.any_readable? && !hidden
-    end
-
-    def editable?
-      ::User.allowed_to?([:create, :update], :users, nil) && !hidden
-    end
-
-    def deletable?
-      self.id != ::User.current.id && ::User.allowed_to?([:delete], :users, nil)
-    end
-
   end
 
 end

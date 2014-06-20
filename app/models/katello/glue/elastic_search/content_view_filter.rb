@@ -28,13 +28,14 @@ module Katello
         indexes :inclusion, :type => 'boolean'
       end
 
-      def extended_index_attrs
-        {
-          :name_sort => name.downcase,
-          :content_view_id => self.content_view_id
-        }
-      end
-
     end
+
+    def extended_index_attrs
+      {
+        :name_sort => name.downcase,
+        :content_view_id => self.content_view_id
+      }
+    end
+
   end
 end

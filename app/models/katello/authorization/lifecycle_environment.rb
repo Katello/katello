@@ -16,6 +16,53 @@ module Authorization::LifecycleEnvironment
 
   DISTRIBUTORS_READABLE = [:read_distributors, :register_distributors, :update_distributors, :delete_distributors]
 
+  include Authorizable
+  include Katello::Authorization
+
+  def readable?
+    authorized?(:view_lifecycle_environments)
+  end
+
+  def creatable?
+    self.class.creatable?
+  end
+
+  def editable?
+    authorized?(:edit_lifecycle_environments)
+  end
+
+  def deletable?
+    authorized?(:destroy_lifecycle_environments)
+  end
+
+  def promotable_or_removable?
+    authorized?(:promote_or_remove_content_views_to_environments)
+  end
+
+  def distributors_readable?
+    self.organization.distributors_readable? ||
+        (Katello.config.katello? &&
+            ::User.allowed_to?(DISTRIBUTORS_READABLE, :environments, self.id, self.organization))
+  end
+
+  def distributors_editable?
+    ::User.allowed_to?([:update_distributors], :organizations, nil, self.organization) ||
+        (Katello.config.katello? &&
+            ::User.allowed_to?([:update_distributors], :environments, self.id, self.organization))
+  end
+
+  def distributors_deletable?
+    ::User.allowed_to?([:delete_distributors], :organizations, nil, self.organization) ||
+        (Katello.config.katello? &&
+            ::User.allowed_to?([:delete_distributors], :environments, self.id, self.organization))
+  end
+
+  def distributors_registerable?
+    self.organization.distributors_registerable? ||
+        (Katello.config.katello? &&
+            ::User.allowed_to?([:register_distributors], :environments, self.id, self.organization))
+  end
+
   module ClassMethods
 
     def readable
@@ -56,55 +103,6 @@ module Authorization::LifecycleEnvironment
       else
         authorized_items(org, [:register_distributors])
       end
-    end
-  end
-
-  included do
-    include Authorizable
-    include Katello::Authorization
-
-    def readable?
-      authorized?(:view_lifecycle_environments)
-    end
-
-    def creatable?
-      self.class.creatable?
-    end
-
-    def editable?
-      authorized?(:edit_lifecycle_environments)
-    end
-
-    def deletable?
-      authorized?(:destroy_lifecycle_environments)
-    end
-
-    def promotable_or_removable?
-      authorized?(:promote_or_remove_content_views_to_environments)
-    end
-
-    def distributors_readable?
-      self.organization.distributors_readable? ||
-          (Katello.config.katello? &&
-              ::User.allowed_to?(DISTRIBUTORS_READABLE, :environments, self.id, self.organization))
-    end
-
-    def distributors_editable?
-      ::User.allowed_to?([:update_distributors], :organizations, nil, self.organization) ||
-          (Katello.config.katello? &&
-              ::User.allowed_to?([:update_distributors], :environments, self.id, self.organization))
-    end
-
-    def distributors_deletable?
-      ::User.allowed_to?([:delete_distributors], :organizations, nil, self.organization) ||
-          (Katello.config.katello? &&
-              ::User.allowed_to?([:delete_distributors], :environments, self.id, self.organization))
-    end
-
-    def distributors_registerable?
-      self.organization.distributors_registerable? ||
-          (Katello.config.katello? &&
-              ::User.allowed_to?([:register_distributors], :environments, self.id, self.organization))
     end
   end
 

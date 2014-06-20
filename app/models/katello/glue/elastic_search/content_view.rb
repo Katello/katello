@@ -14,9 +14,6 @@ module Katello
 module Glue::ElasticSearch::ContentView
   extend ActiveSupport::Concern
 
-  module ClassMethods
-  end
-
   included do
     include Ext::IndexedModel
 
@@ -32,33 +29,33 @@ module Glue::ElasticSearch::ContentView
       indexes :name_autocomplete, :type => 'string', :analyzer => 'autcomplete_name_analyzer'
       indexes :default, :type => 'boolean'
     end
-
-    def extended_index_attrs
-      {
-        :name_sort => name.downcase,
-        :name_autocomplete => self.name,
-        :organization_id => organization.id
-      }
-    end
-
-    def total_package_count(env)
-      repoids = self.repos(env).collect{|r| r.pulp_id}
-      result = Katello::Package.legacy_search('*', 0, 1, repoids)
-      result.length > 0 ? result.total : 0
-    end
-
-    def total_errata_count(env)
-      repo_ids = self.repos(env).collect{|r| r.pulp_id}
-      results = Katello::Errata.legacy_search('', :page_size => 1, :filters => {:repoids => repo_ids})
-      results.empty? ? 0 : results.total
-    end
-
-    def total_puppet_module_count(env)
-      repoids = self.repos(env).collect{|r| r.pulp_id}
-      result = Katello::PuppetModule.legacy_search('*', :page_size => 1, :repoids => repoids)
-      result.length > 0 ? result.total : 0
-    end
-
   end
+
+  def extended_index_attrs
+    {
+      :name_sort => name.downcase,
+      :name_autocomplete => self.name,
+      :organization_id => organization.id
+    }
+  end
+
+  def total_package_count(env)
+    repoids = self.repos(env).collect{|r| r.pulp_id}
+    result = Katello::Package.legacy_search('*', 0, 1, repoids)
+    result.length > 0 ? result.total : 0
+  end
+
+  def total_errata_count(env)
+    repo_ids = self.repos(env).collect{|r| r.pulp_id}
+    results = Katello::Errata.legacy_search('', :page_size => 1, :filters => {:repoids => repo_ids})
+    results.empty? ? 0 : results.total
+  end
+
+  def total_puppet_module_count(env)
+    repoids = self.repos(env).collect{|r| r.pulp_id}
+    result = Katello::PuppetModule.legacy_search('*', :page_size => 1, :repoids => repoids)
+    result.length > 0 ? result.total : 0
+  end
+
 end
 end

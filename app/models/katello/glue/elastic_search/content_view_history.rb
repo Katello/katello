@@ -14,9 +14,6 @@ module Katello
 module Glue::ElasticSearch::ContentViewHistory
   extend ActiveSupport::Concern
 
-  module ClassMethods
-  end
-
   included do
     include Ext::IndexedModel
 
@@ -31,17 +28,17 @@ module Glue::ElasticSearch::ContentViewHistory
       indexes :version, :type => 'integer'
       indexes :user, :type => 'string'
     end
-
-    def extended_index_attrs
-      {
-        :environment => self.environment.try(:name),
-        :version_id => self.version.id,
-        :version => self.version.version,
-        :content_view_id => self.content_view.id,
-        :environment_id => self.katello_environment_id
-      }
-    end
-
   end
+
+  def extended_index_attrs
+    {
+      :environment => self.environment.try(:name),
+      :version_id => self.version.id,
+      :version => self.version.version,
+      :content_view_id => self.content_view.id,
+      :environment_id => self.katello_environment_id
+    }
+  end
+
 end
 end

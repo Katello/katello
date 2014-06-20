@@ -15,28 +15,25 @@ module Katello
     module Product
       extend ActiveSupport::Concern
 
-      included do
-        include Authorizable
-        include Katello::Authorization
+      include Authorizable
+      include Katello::Authorization
 
-        def readable?
-          authorized?(:view_products)
-        end
+      def readable?
+        authorized?(:view_products)
+      end
 
-        def syncable?
-          authorized?(:sync_products)
-        end
+      def syncable?
+        authorized?(:sync_products)
+      end
 
-        def editable?
-          authorized?(:edit_products)
-        end
+      def editable?
+        authorized?(:edit_products)
+      end
 
-        def deletable?
-          promoted_repos = repositories.select { |repo| repo.promoted? }
-          authorized?(:destroy_products) && promoted_repos.empty?
-        end
-
-      end # included
+      def deletable?
+        promoted_repos = repositories.select { |repo| repo.promoted? }
+        authorized?(:destroy_products) && promoted_repos.empty?
+      end
 
       module ClassMethods
 
