@@ -14,7 +14,9 @@ module Katello
 module Glue::ElasticSearch::PuppetModule
   extend ActiveSupport::Concern
 
-  include Glue::ElasticSearch::BackendIndexedModel
+  included do
+    include Glue::ElasticSearch::BackendIndexedModel
+  end
 
   def index_options
     {
