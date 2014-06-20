@@ -68,6 +68,11 @@ angular.module('Bastion').config(
                 $window.location.href = oldBrowserBastionPath + $location.path();
             }
 
+            if (path.slice(0, '/katello'.length) === '/katello') {
+                $window.location.href = $location.url();
+                $window.location.reload();
+            }
+
             // removing trailing slash to prevent endless redirect
             if (path[path.length - 1] === '/') {
                 return path.slice(0, -1);
