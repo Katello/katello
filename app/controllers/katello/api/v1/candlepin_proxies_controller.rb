@@ -194,8 +194,8 @@ module Katello
 
     #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")
     def consumer_create
-      foreman_host = find_foreman_host
       content_view_environment = find_content_view_environment
+      foreman_host = find_foreman_host(content_view_environment.environment.organization)
 
       @system = System.new(system_params.merge(:environment  => content_view_environment.environment,
                                                :content_view => content_view_environment.content_view,
@@ -222,7 +222,7 @@ module Katello
       # Set it before calling find_activation_keys to allow communication with candlepin
       User.current    = User.hidden.first
       activation_keys = find_activation_keys
-      foreman_host    = find_foreman_host
+      foreman_host    = find_foreman_host(activation_keys.first.organization)
 
       @system = System.new(system_params.merge(:host_id => foreman_host.try(:id)))
       sync_task(::Actions::Katello::System::Create, @system, activation_keys)
@@ -326,9 +326,9 @@ module Katello
       activation_keys
     end
 
-    def find_foreman_host
+    def find_foreman_host(organization)
       if params[:facts].present? && params[:facts]['network.hostname'].present?
-        foreman_host = Host.where(:name => params[:facts]['network.hostname'], :organization_id => @organization).first
+        foreman_host = Host.where(:name => params[:facts]['network.hostname'], :organization_id => organization.id).first
       end
       foreman_host
     end

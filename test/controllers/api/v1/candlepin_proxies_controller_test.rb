@@ -41,6 +41,46 @@ module Katello
         post('consumer_activate', :owner => @organization.label, :activation_keys => '')
         assert_response 400
       end
+
+      it "should associate the foreman host with the content host" do
+        foreman_host = Host.find(hosts(:one))
+        activation_key = ActivationKey.create!(:name => "key 1", :organization => foreman_host.organization)
+        @controller.stubs(:find_activation_keys).returns([activation_key])
+
+        Host.expects(:where)
+            .with({ :name => foreman_host.name, :organization_id => foreman_host.organization.id })
+            .returns([foreman_host])
+
+        System.expects(:new).with({ 'facts' => { 'network.hostname' => foreman_host.name },
+                                    'host_id' => foreman_host.id })
+
+        post(:consumer_activate,
+             :activation_keys => 'some_valid_keys',
+             :facts => { 'network.hostname' => foreman_host.name })
+      end
+    end
+
+    describe "register with a lifecycle environment" do
+      it "should associate the foreman host with the content host" do
+        foreman_host = Host.find(hosts(:one))
+        content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment))
+        KTEnvironment.any_instance.stubs(:organization).returns(foreman_host.organization)
+        @controller.stubs(:find_content_view_environment).returns(content_view_environment)
+
+        Host.expects(:where)
+            .with({ :name => foreman_host.name, :organization_id => foreman_host.organization.id })
+            .returns([foreman_host])
+
+        System.expects(:new).with({ 'environment' => content_view_environment.environment,
+                                    'content_view' => content_view_environment.content_view,
+                                    'serviceLevel' => nil,
+                                    'facts' => { 'network.hostname' => foreman_host.name },
+                                    'host_id' => foreman_host.id })
+
+        post(:consumer_create,
+             :environment_id => content_view_environment.environment.id,
+             :facts => { 'network.hostname' => foreman_host.name })
+      end
     end
 
     describe "update enabled_repos", :katello => true do
