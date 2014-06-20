@@ -38,6 +38,7 @@ module Actions
                                     service_level:       system.serviceLevel,
                                     uuid:                system.uuid,
                                     capabilities:        system.capabilities,
+                                    guest_ids:           system.guestIds,
                                     activation_keys:     activation_keys }
           system.save!
           action_subject system
