@@ -1,10 +1,3 @@
-node(:total) { @collection[:total] }
-node(:subtotal) { @collection[:subtotal] }
-node(:offset) { params[:offset] }
-node(:limit) { params[:page_size] }
-node(:search) { params[:search] }
-node(:sort) { {:by => params[:sort_by], :order => params[:sort_order]} }
+object false
 
-node :results do
-    partial("katello/api/v2/subscriptions/show", :object => @collection[:results])
-end
+extends "katello/api/v2/common/index"

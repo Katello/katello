@@ -66,8 +66,7 @@ module Glue::ElasticSearch::Pool
           #       Ideally, as_json would be replaced w/ rabl output which would solve this need
           #       for duplication and sync between rabl and elasticsearch indexing.
           #       See also views/katello/api/v2/subscriptions/show.json.rabl
-          "cp_id" => @cp_id,  # TODO: not working / blank
-          "organization" => @organization,  # TODO: not working / blank
+          "cp_id" => @cp_id,
           "start_date" => @start_date,
           "end_date"   => @end_date,
           "account_number" => @account_number,
@@ -133,7 +132,15 @@ module Glue::ElasticSearch::Pool
           end
         end
 
-        json_pools = pools.collect { |pool| pool.as_json.merge(pool.index_options) }
+        json_pools = pools.collect do |pool|
+          json_pool = pool.as_json
+          # Add minimal organization information to elasticsearch since the Tire records are returned
+          # as-is to calls for subscriptions index and the json returned by that is meant to have organization
+          # details
+          organization = pool.organization
+          json_pool[:organization] = {:id => organization.id, :name => organization.name, :label => organization.label}
+          json_pool.merge(pool.index_options)
+        end
 
         unless json_pools.empty?
           Tire.index self.index do
