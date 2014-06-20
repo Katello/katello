@@ -40,8 +40,8 @@ angular.module('Bastion.content-views').controller('ContentViewRepositoriesListC
         $scope.repositoriesTable = nutupane.table;
 
         $scope.removeRepositories = function () {
-            var selected = nutupane.getAllSelectedResults().included.ids,
-                ids = [];
+            var ids = [],
+                selected = $scope.getSelected(nutupane);
 
             angular.forEach($scope.contentView['repository_ids'], function (id) {
                 if (selected.indexOf(id) === -1) {

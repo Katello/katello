@@ -53,4 +53,19 @@ describe('Service: ContentViewRepositoriesService', function() {
         expect(Object.keys($scope.products).length).toBe(2);
     });
 
+    it('should provide a method to get all selected repositories', function () {
+        var Nutupane = function () {
+                this.getAllSelectedResults = function () {
+                    return {included: {ids: [1, 2]}};
+                };
+
+                this.table = {};
+            },
+            nutupane = new Nutupane();
+
+        $scope.filteredItems = [{id: 1}];
+
+        expect($scope.getSelected(nutupane).length).toBe(1);
+    });
+
 });

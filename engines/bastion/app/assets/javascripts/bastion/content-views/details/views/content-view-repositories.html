@@ -90,7 +90,7 @@
         <tbody>
           <tr alch-table-row
               row-select="repository"
-              ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch | filter:repositoryFilter">
+              ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch | filter:repositoryFilter | as:'filteredItems'">
             <td alch-table-cell>
               <a ui-sref="products.details.repositories.info({productId: repository.product.id, repositoryId: repository.id})">
                 {{ repository.name }}

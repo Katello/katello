@@ -55,10 +55,11 @@ describe('Controller: ContentViewAvailableRepositoriesController', function() {
     });
 
     it('provides a method to add repositories to a content view', function() {
+        $scope.filteredItems = [{id: 1}];
         $scope.addRepositories($scope.contentView);
 
         expect($scope.save).toHaveBeenCalled();
-        expect($scope.contentView['repository_ids'].length).toBe(2);
+        expect($scope.contentView['repository_ids'].length).toBe(1);
     });
 
 });
