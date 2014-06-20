@@ -12,14 +12,12 @@
 
 module Katello
   class Api::V2::ContentViewsController < Api::V2::ApiController
+    include Concerns::Authorization::Api::V2::ContentViewsController
     before_filter :find_content_view, :except => [:index, :create]
     before_filter :find_organization, :only => [:index, :create]
     before_filter :load_search_service, :only => [:index, :history, :available_puppet_modules,
                                                   :available_puppet_module_names]
     before_filter :find_environment, :only => [:index, :remove_from_environment]
-    before_filter :authorize_remove_from_environment, :only => [:remove_from_environment]
-    before_filter :authorize_remove, :only => [:remove]
-    before_filter :authorize_destroy, :only => [:destroy]
 
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids component_ids))
 
@@ -211,95 +209,5 @@ module Katello
       return if !params.key?(:environment_id) && params[:action] == "index"
       @environment = KTEnvironment.find(params[:environment_id])
     end
-
-    def authorize_remove_from_environment
-      deny_access unless @environment.promotable_or_removable? && @view.promotable_or_removable?
-    end
-
-    def authorize_remove
-      options = params.slice(:system_content_view_id,
-                             :system_environment_id,
-                             :key_content_view_id,
-                             :key_environment_id,
-                             :content_view_version_ids,
-                             :environment_ids
-                            )
-      options = options.reject { |k, v| v.nil? }
-
-      content_view_version_ids = options[:content_view_version_ids]
-      unless content_view_version_ids.blank?
-        # If we are deleting versions from the archives then we need content view delete.
-        deny_access unless @view.deletable?
-      end
-      env_ids = options[:environment_ids]
-      authorize_remove_environments(options) unless env_ids.blank?
-
-      authorize_system_options(options)
-      authorize_activation_key_options(options)
-    end
-
-    def authorize_destroy
-      deny_access unless @view.deletable?
-    end
-
-    def authorize_system_options(options)
-      if options[:system_content_view_id]
-        sys_content_view = ContentView.where(:organization_id => @view.organization,
-                                          :id => options[:system_content_view_id]).first
-        fail HttpErrors::NotFound, _("Couldn't find content host content view id '%s'") % options[:system_content_view_id] unless sys_content_view
-        # deny if we cannot register systems to the new content view id
-        deny_access unless sys_content_view.readable?
-      end
-
-      if options[:system_environment_id]
-        sys_env = KTEnvironment.where(:organization_id => @view.organization,
-                                          :id => options[:system_environment_id]).first
-        fail HttpErrors::NotFound, _("Couldn't find content host environment '%s'") % options[:system_environment_id] unless sys_env
-        # deny if we cannot register systems to the new env id
-        deny_access unless sys_env.readable?
-      end
-    end
-
-    def authorize_activation_key_options(options)
-      if options[:key_content_view_id]
-        key_content_view = ContentView.where(:organization_id => @view.organization,
-                                          :id => options[:key_content_view_id]).first
-        fail HttpErrors::NotFound, _("Couldn't find activation key content view id '%s'") % options[:key_content_view_id] unless key_content_view
-        # deny if we cannot reassign keys to the new content view id
-        deny_access unless key_content_view.readable?
-      end
-
-      if options[:key_environment_id]
-        key_env = KTEnvironment.where(:organization_id => @view.organization,
-                                          :id => options[:key_environment_id]).first
-        fail HttpErrors::NotFound, _("Couldn't find activation key environment '%s'") % options[:key_environment_id] unless key_env
-        # deny if we cannot reassign keys to the new env id
-        deny_access unless key_env.readable?
-      end
-    end
-
-    def authorize_remove_environments(options)
-      env_ids = options[:environment_ids]
-      deny_access unless (env_ids - @view.environment_ids.map(&:to_s)).empty?
-      # If we are removing from the environments
-      # then we need to be sure that cv has the "remove" permission
-      # and also ensure that the environments have the remove permission
-      deny_access unless KTEnvironment.promotable.where(:id => env_ids).count == env_ids.size && @view.promotable_or_removable?
-
-      # if we are reassigning systems to a diffent environment or cv
-      # make sure the systems in existing environments are editable.
-      if options[:system_content_view_id] || options[:system_environment_id]
-        # deny if none of the systems listed here are editable
-        deny_access unless Katello::System.all_editable?(@view, env_ids)
-      end
-
-      # if we are reassigning activation key environments/ cv
-      # make sure the activation key using present environments or cv are editable.
-      if options[:key_content_view_id] || options[:key_environment_id]
-        # deny if none of the activation keys listed here are editable
-        deny_access unless Katello::ActivationKey.all_editable?(@view, env_ids)
-      end
-    end
-
   end
 end
