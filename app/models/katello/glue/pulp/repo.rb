@@ -887,8 +887,8 @@ module Glue::Pulp::Repo
     end
   end
 
-  def full_path
-    pulp_uri = URI.parse(Katello.config.pulp.url)
+  def full_path(smart_proxy = nil)
+    pulp_uri = URI.parse(smart_proxy ? smart_proxy.url : Katello.config.pulp.url)
     scheme   = (self.unprotected ? 'http' : 'https')
     "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
   end

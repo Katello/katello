@@ -16,6 +16,20 @@ module Katello
     module EnvironmentExtensions
       extend ActiveSupport::Concern
 
+      included do
+        has_one :content_view_puppet_environment, :class_name => "Katello::ContentViewPuppetEnvironment",
+                :foreign_key => :puppet_environment_id,
+                :dependent => :destroy, :inverse_of => :puppet_environment
+      end
+
+      def content_view
+        self.content_view_puppet_environment.try(:content_view)
+      end
+
+      def lifecycle_environment
+        self.content_view_puppet_environment.try(:environment)
+      end
+
       module ClassMethods
         def find_by_katello_id(org, env, content_view)
           katello_id = Environment.construct_katello_id(org, env, content_view)

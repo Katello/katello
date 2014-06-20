@@ -25,8 +25,12 @@ module Katello
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",
                :inverse_of => :content_view_puppet_environments
 
+    belongs_to :puppet_environment, :class_name => "Environment",
+               :inverse_of => :content_view_puppet_environment
+
     validates :pulp_id, :presence => true, :uniqueness => true
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+    validates :puppet_environment_id, :presence => true, :if => :environment
 
     scope :non_archived, where('environment_id is not NULL')
     scope :archived, where('environment_id is NULL')
@@ -66,13 +70,17 @@ module Katello
 
     def generate_puppet_path
       if self.environment
-        File.join(Katello.config.puppet_repo_root,
-                  Environment.construct_name(self.organization,
-                                             self.environment,
-                                             self.content_view),
-                  'modules')
+        File.join(Katello.config.puppet_repo_root, generate_puppet_env_name, 'modules')
       else
         nil #don't generate archived content view puppet environments
+      end
+    end
+
+    def generate_puppet_env_name
+      if self.environment
+        Environment.construct_name(self.organization,
+                                   self.environment,
+                                   self.content_view)
       end
     end
 

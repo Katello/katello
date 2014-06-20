@@ -100,9 +100,10 @@ module Katello
       # Model extensions
       ::Environment.send :include, Katello::Concerns::EnvironmentExtensions
       ::Host.send :include, Katello::Concerns::HostBaseExtensions
+      ::Hostgroup.send :include, Katello::Concerns::HostgroupExtensions
       ::Location.send :include, Katello::Concerns::LocationExtensions
       ::Medium.send :include, Katello::Concerns::MediumExtensions
-      ::Operatingsystem.send :include, Katello::Concerns::RedhatExtensions
+      ::Redhat.send :include, Katello::Concerns::RedhatExtensions
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
       begin

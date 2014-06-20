@@ -12,6 +12,7 @@ library_view_puppet_environment:
   pulp_id: I sleep all night
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
+  puppet_environment_id: <% ActiveRecord::Fixtures.identify(:global_puppetmaster) %>
 
 dev_view_puppet_environment:
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>
@@ -20,3 +21,4 @@ dev_view_puppet_environment:
   pulp_id: and i work all day
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
+  puppet_environment_id: <%= ActiveRecord::Fixtures.identify(:global_puppetmaster) %>

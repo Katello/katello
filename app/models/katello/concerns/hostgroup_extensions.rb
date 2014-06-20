@@ -11,15 +11,24 @@
 
 module Katello
   module Concerns
-    module HostBaseExtensions
+    module HostgroupExtensions
       extend ActiveSupport::Concern
 
       included do
-        has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
-                :dependent => :destroy, :inverse_of => :foreman_host
-        belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hosts
+        belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hostgroups
         scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
       end
+
+      # instead of calling nested_attribute_for(:content_source_id) in Foreman, define the methods explictedly
+      def inherited_content_source_id
+        self[:inherited_content_source_id] || self.class.sort_by_ancestry(ancestors.where("content_source_id is not NULL")).last.try(:content_source_id) if ancestry.present?
+      end
+
+      def content_source
+        return super unless ancestry.present?
+        SmartProxy.find_by_id(inherited_content_source_id)
+      end
+
     end
   end
 end

@@ -296,5 +296,69 @@ class ContentViewTest < ActiveSupport::TestCase
     assert_equal 3, @library_dev_view.next_version
     assert_equal @library_dev_view.next_version - 1, @library_dev_view.versions.reload.maximum(:version)
   end
+
+  def test_check_distribution_conflicts_conflict
+    view = @library_view
+    view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64))
+    view.save!
+
+    distro1 = Distribution.new()
+    distro1.repoids = view.repositories.pluck(:pulp_id)
+    distro2 = Distribution.new()
+    distro2.repoids = []
+    Distribution.stubs(:search).returns([distro1, distro2])
+    assert_raises(RuntimeError) do
+      view.check_distribution_conflicts!
+    end
+  end
+
+  def test_check_distribution_conflicts_no_conflict
+    view = @library_view
+    view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64))
+    view.save!
+
+    distro1 = Distribution.new()
+    distro1.repoids = []
+
+    Distribution.stubs(:search).returns([distro1])
+    assert_nil view.check_distribution_conflicts!
+
+  end
+
+  def test_duplicate_distributions
+    view = @library_view
+    view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64))
+    view.save!
+
+    distro1 = Distribution.new()
+    distro1.repoids = view.repositories.pluck(:pulp_id)
+    distro2 = Distribution.new()
+    distro2.repoids = []
+    Distribution.stubs(:search).returns([distro1, distro2])
+
+    assert_equal [distro1], view.duplicate_distributions
+  end
+
+  def test_distribution_conflicts
+    view = @library_view
+    view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64))
+    view.save!
+
+    distro1 = Distribution.new(:version => '6.4', :arch => 'x86_64')
+    distro1.repoids = [view.repositories[0].pulp_id]
+    distro2 = Distribution.new(:version => '6.4', :arch => 'x86_64')
+    distro2.repoids = [view.repositories[1].pulp_id]
+    distro3 = Distribution.new(:version => '6.5', :arch => 'x86_64')
+    distro3.repoids = []
+
+    Distribution.stubs(:search).returns([distro1, distro2, distro3])
+
+    conflicts = view.distribution_conflicts
+    assert_equal 1, conflicts.size
+    assert_equal '6.4', conflicts.first[:version]
+    assert_equal 'x86_64', conflicts.first[:arch]
+    assert_equal [distro1, distro2], conflicts.first[:distributions]
+  end
+
 end
 end
