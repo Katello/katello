@@ -58,7 +58,6 @@ module Katello
       def associate_lifecycle_environments
         self.lifecycle_environments = Katello::KTEnvironment.all if self.default_capsule?
       end
-
     end
   end
 end

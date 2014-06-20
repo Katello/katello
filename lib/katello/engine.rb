@@ -106,8 +106,10 @@ module Katello
       ::Redhat.send :include, Katello::Concerns::RedhatExtensions
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
+
       begin
       ::SmartProxy.send :include, Katello::Concerns::SmartProxyExtensions
+      ::SmartProxiesController.send :include, Katello::Concerns::SmartProxiesControllerExtensions
       rescue ActiveRecord::StatementInvalid
         Rails.logger.info('Database was not initialized yet: skipping smart proxy katello extension')
       end

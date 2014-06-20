@@ -52,7 +52,7 @@ class KTEnvironment < Katello::Model
 
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
 
-  scope :completer_scope, lambda { |options=nil| where('organization_id = ?', options[:organization_id]) if options[:organization_id].present? }
+  scope :completer_scope, lambda { |options = nil| where('organization_id = ?', options[:organization_id]) if options[:organization_id].present? }
   scope :non_library, where(library: false)
   scope :library, where(library: true)
 
