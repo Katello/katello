@@ -42,9 +42,11 @@
           </span>
         </td>
         <td alch-table-cell>
-          <li ng-repeat="environment in version.environments" ng-if="environment.permissions.readable">
-            {{ environment.name }}
-          </li>
+          <ul>
+            <li ng-repeat="environment in version.environments" ng-if="environment.permissions.readable">
+              {{ environment.name }}
+            </li>
+          </ul>
         </td>
         <td alch-table-cell>
           <div translate>
