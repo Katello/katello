@@ -36,7 +36,8 @@ angular.module('Bastion.content-views').controller('ContentViewRepositoriesListC
         nutupane = new Nutupane(Repository, {
             'organization_id': CurrentOrganization,
             'content_view_id': $scope.$stateParams.contentViewId
-        });
+        },
+        'queryUnpaged');
         $scope.repositoriesTable = nutupane.table;
 
         $scope.removeRepositories = function () {

@@ -37,9 +37,9 @@ angular.module('Bastion.content-views').controller('ContentViewAvailableReposito
         nutupane = new Nutupane(Repository, {
             'organization_id': CurrentOrganization,
             'library': true,
-            'content_type': 'yum',
-            'enabled': true
-        });
+            'content_type': 'yum'
+        },
+        'queryUnpaged');
 
         nutupane.searchTransform = function () {
             return "NOT ( content_view_ids:" + $scope.$stateParams.contentViewId + " )";
