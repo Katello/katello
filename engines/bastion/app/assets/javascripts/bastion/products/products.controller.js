@@ -47,6 +47,14 @@ angular.module('Bastion.products').controller('ProductsController',
             $scope.transitionTo('products.index');
         };
 
+        $scope.$on('productDelete', function (event, taskId) {
+            $scope.productDeletionTaskId = taskId;
+        });
+
+        $scope.unsetProductDeletionTaskId = function () {
+            $scope.productDeletionTaskId = undefined;
+        };
+
         $scope.productTable.refresh = nutupane.refresh;
 
         $scope.table = $scope.productTable;

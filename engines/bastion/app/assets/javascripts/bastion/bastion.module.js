@@ -185,6 +185,10 @@ angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextC
             }
         };
 
+        $rootScope.taskUrl = function (taskId) {
+            return "/foreman_tasks/tasks/" + taskId;
+        };
+
         // Set the current language
         gettextCatalog.currentLanguage = currentLocale;
 

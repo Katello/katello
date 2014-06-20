@@ -28,8 +28,6 @@ module Glue::Candlepin::Product
       lazy_accessor :key, :initializer => lambda {|s| Resources::Candlepin::Product.key(cp_id, self.organization.label) }, :unless => lambda {|s| cp_id.nil? }
 
       before_save :save_product_orchestration
-      before_destroy :destroy_product_orchestration
-
       # we must store custom logger object during product importing so we can log status
       # from various places like callbacks
       attr_accessor :import_logger
@@ -160,64 +158,12 @@ module Glue::Candlepin::Product
       Resources::Candlepin::Product.remove_content cp_id, content_id
     end
 
-    def del_product
-      return true unless no_other_assignment?
-      Rails.logger.debug "Deleting product in candlepin: #{name}"
-      Resources::Candlepin::Product.destroy self.cp_id
-      true
-    rescue => e
-      Rails.logger.error "Failed to delete candlepin product #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
     def product_content_by_id(content_id)
       self.productContent.find{|pc| pc.content.id == content_id}
     end
 
     def product_content_by_name(content_name)
       self.productContent.find{|pc| pc.content.name == content_name}
-    end
-
-    def set_content
-      self.productContent.each do |pc|
-        Rails.logger.debug "Creating content in candlepin: #{pc.content.name}"
-        #TODO: use json returned from cp to populate productContent
-        new_content = Resources::Candlepin::Content.create pc.content
-        pc.content.id = new_content[:id]
-      end
-    rescue => e
-      Rails.logger.error "Failed to create content for product #{name} in candlepin: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
-    def del_content
-      self.productContent.each do |pc|
-        Rails.logger.debug "Deleting content in candlepin: #{pc.content.name}"
-        Resources::Candlepin::Content.destroy(pc.content.id)
-      end
-    rescue => e
-      Rails.logger.error "Failed to delete content for product #{name} in candlepin"
-      raise e
-    end
-
-    def remove_all_content
-      return true unless no_other_assignment?
-      # engineering products handle content deletion when destroying
-      # repositories
-      return true unless self.is_a? MarketingProduct
-
-      self.productContent.each do |pc|
-        Rails.logger.debug "Removing content from product '#{self.cp_id}' in candlepin: #{pc.content.name}"
-        self.remove_content_by_id pc.content.id
-      end
-      true
-    rescue => e
-      Rails.logger.error "Failed to remove content form a product in candlepin #{name}."
-      raise e
-    end
-
-    def no_other_assignment?
-      Product.where(["cp_id = ? AND id != ?", self.cp_id, self.id]).empty?
     end
 
     def update_content
@@ -239,55 +185,6 @@ module Glue::Candlepin::Product
       end
     end
 
-    def set_unlimited_subscription
-      # we create unlimited subscriptions only for generic yum providers
-      if self.provider && self.provider.yum_repo?
-        Rails.logger.debug "Creating unlimited subscription for product #{name} in candlepin"
-        Resources::Candlepin::Product.create_unlimited_subscription self.organization.label, self.cp_id
-      end
-      true
-    rescue => e
-      Rails.logger.error "Failed to create unlimited subscription for product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
-    def del_unlimited_subscription
-      # we create unlimited subscriptions only for generic yum providers
-      if self.provider && self.provider.yum_repo?
-        self.del_subscriptions
-      end
-    end
-
-    def del_pools
-      Rails.logger.debug "Deleting pools for product #{name} in candlepin"
-      Resources::Candlepin::Product.pools(organization.label, self.cp_id).each do |pool|
-        Katello::Pool.find_all_by_cp_id(pool['id']).each(&:destroy)
-        Resources::Candlepin::Pool.destroy(pool['id'])
-      end
-      true
-    rescue => e
-      Rails.logger.error "Failed to delete pools for product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
-    def del_subscriptions
-      Rails.logger.debug "Deleting subscriptions for product #{name} in candlepin"
-      job = Resources::Candlepin::Product.delete_subscriptions self.organization.label, self.cp_id
-      wait_for_job(job) if job
-      true
-    rescue => e
-      Rails.logger.error "Failed to delete subscription for product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
-    # preventing of going into race-condition described in BZ_788932 by waiting
-    # for each job to finish before proceeding.
-    def wait_for_job(job)
-      while Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job[:id]))
-        sleep 0.5
-      end
-    end
-
     def save_product_orchestration
       case self.orchestration_for
       when :import_from_cp
@@ -300,13 +197,6 @@ module Glue::Candlepin::Product
       when :promote
         #queue.create(:name => "update candlepin product: #{self.name}", :priority => 3, :action => [self, :update_content])
       end
-    end
-
-    def destroy_product_orchestration
-      pre_queue.create(:name => "delete pools for product in candlepin: #{self.name}", :priority => 7,  :action => [self, :del_pools])
-      pre_queue.create(:name => "delete subscriptions for product in candlepin: #{self.name}", :priority => 8,  :action => [self, :del_subscriptions])
-      pre_queue.create(:name => "remove candlepin content from a product: #{self.name}",       :priority => 9,  :action => [self, :remove_all_content])
-      pre_queue.create(:name => "candlepin product: #{self.name}",                             :priority => 10, :action => [self, :del_product])
     end
 
     protected

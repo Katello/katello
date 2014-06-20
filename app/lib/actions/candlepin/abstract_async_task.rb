@@ -10,16 +10,26 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-  class Model < ActiveRecord::Base
-    self.abstract_class = true
+module Actions
+  module Candlepin
+    class AbstractAsyncTask < Candlepin::Abstract
+      include Actions::Base::Polling
 
-    # remove once foreman has strong_parameters or Rails 4
-    include Katello::ForbiddenAttributesProtection
+      def run(event = nil)
+        # do nothing when the action is being skipped
+        unless event == Dynflow::Action::Skip
+          super
+        end
+      end
 
-    def destroy!
-      unless destroy
-        fail self.errors.full_messages.join('; ')
+      def done?
+        ! ::Katello::Resources::Candlepin::Job.not_finished?(external_task)
+      end
+
+      private
+
+      def poll_external_task
+        ::Katello::Resources::Candlepin::Job.get(external_task[:id])
       end
     end
   end
