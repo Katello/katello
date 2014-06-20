@@ -91,6 +91,50 @@ describe('Controller: PackageFilterController', function() {
         expect(rule.max_version).toBe(undefined);
     });
 
+    it("should provide a method to backup a rule", function() {
+        var rule = {
+            name: 'test',
+            type: 'all',
+            version: '1',
+            min_version: '2',
+            max_version: '3'
+        };
+
+        $scope.backupPrevious(rule);
+
+        expect(rule.previous.name).toBe(rule.name);
+        expect(rule.previous.type).toBe(rule.type);
+        expect(rule.previous.version).toBe(rule.version);
+        expect(rule.previous.min_version).toBe(rule.min_version);
+        expect(rule.previous.max_version).toBe(rule.max_version);
+    });
+
+    it("should provide a method to restore a rule", function() {
+        var rule = {
+            name: 'current',
+            type: 'all',
+            version: '1',
+            min_version: '2',
+            max_version: '3'
+        }, previousRule = {
+            name: 'previous',
+            type: 'previous all',
+            version: '10',
+            min_version: '20',
+            max_version: '30'
+        };
+        rule.previous = previousRule;
+
+        $scope.restorePrevious(rule);
+
+        expect(rule.name).toBe(previousRule.name);
+        expect(rule.type).toBe(previousRule.type);
+        expect(rule.version).toBe(previousRule.version);
+        expect(rule.min_version).toBe(previousRule.min_version);
+        expect(rule.max_version).toBe(previousRule.max_version);
+        expect(Object.keys(rule.previous).length).toBe(0)
+    });
+
     it("should provide a method to determine if a rule is valid if no name is given", function() {
         var result,
             rule = {};

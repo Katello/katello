@@ -121,7 +121,8 @@
                   ng-model="rule.type"
                   ng-hide="denied('edit_content_views', contentView)"
                   ng-readonly="!rule.editMode"
-                  ng-disabled="!rule.editMode">
+                  ng-disabled="!rule.editMode"
+                  ng-change="clearValues(rule)">
             <option value="all" translate>All Versions</option>
             <option value="equal" translate>Equal To</option>
             <option value="greater" translate>Greater Than</option>
@@ -158,13 +159,13 @@
         </span>
     </td>
     <td class="action-cell">
-      <button class="btn btn-default" ng-click="rule.editMode = true" ng-hide="rule.editMode">
+      <button class="btn btn-default" ng-click="rule.editMode = true; backupPrevious(rule)" ng-hide="rule.editMode">
         <i class="icon-edit"></i>
         <span translate>Edit</span>
       </button>
 
       <button alch-save-control
-              on-cancel="rule.editMode = false"
+              on-cancel="restorePrevious(rule); rule.editMode = false"
               on-save="updateRule(rule, filter)"
               working="rule.working"
               invalid="!valid(rule)"

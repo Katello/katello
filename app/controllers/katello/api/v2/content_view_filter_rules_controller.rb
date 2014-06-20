@@ -64,7 +64,12 @@ module Katello
     param :end_date, String, :desc => N_("erratum: end date (YYYY-MM-DD)")
     param :types, Array, :desc => N_("erratum: types (enhancement, bugfix, security)")
     def update
-      @rule.update_attributes!(rule_params)
+      update_params = rule_params
+      update_params[:version] = "" unless rule_params[:version]
+      update_params[:min_version] = "" unless rule_params[:min_version]
+      update_params[:max_version] = "" unless rule_params[:max_version]
+
+      @rule.update_attributes!(update_params)
       respond :resource => @rule
     end
 
