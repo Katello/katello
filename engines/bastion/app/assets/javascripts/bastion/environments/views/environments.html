@@ -118,7 +118,7 @@
                          modal-body='Are you sure you want to remove environment "{{ workingOn.environment.name }}"?'></div>
 
                     <button class="btn btn-default"
-                            ng-show="isLastEnvironment(workingOn.environment) && workingOn.environment.permissions.deletable"
+                            ng-show="isLastEnvironment(workingOn.environment) && permitted('destroy_lifecycle_environments', workingOn.environment)"
                             ng-click="openModal()"
                             translate>
                       Remove Environment
