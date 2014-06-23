@@ -53,9 +53,10 @@ describe('Controller: PackageGroupFilterListController', function() {
     });
 
     it("should provide a method to remove package groups from the filter", function () {
-        $scope.removePackageGroups($scope.filter);
+        $scope.removePackageGroups();
 
         expect($scope.successMessages.length).toBe(1);
+        expect($scope.filter.rules.length).toBe(0);
     });
 
 });

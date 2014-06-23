@@ -52,7 +52,7 @@ module Katello
       end
 
       if rules && rule.nil?
-        respond_for_index(:collection => {:results => rules.collect(&:errata_id)})
+        respond_for_index(:collection => {:results => rules}, :template => 'index')
       else
         respond :resource => rule
       end

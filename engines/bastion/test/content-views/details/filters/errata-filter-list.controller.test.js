@@ -54,9 +54,10 @@ describe('Controller: ErrataFilterListController', function() {
     });
 
     it("should provide a method to remove errata from the filter", function () {
-        $scope.removeErrata($scope.filter);
+        $scope.removeErrata();
 
         expect($scope.successMessages.length).toBe(1);
+        expect($scope.filter.rules.length).toBe(0);
     });
 
 });

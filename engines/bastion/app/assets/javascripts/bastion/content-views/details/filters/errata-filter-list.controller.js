@@ -58,6 +58,9 @@ angular.module('Bastion.content-views').controller('ErrataFilterListController',
 
         function success(rule) {
             nutupane.removeRow(rule['errata_id'], 'errata_id');
+            $scope.filter.rules = _.reject($scope.filter.rules, function (filterRule) {
+                return rule.id === filterRule.id;
+            });
             $scope.$parent.successMessages = [translate('Errata successfully removed.')];
         }
 
