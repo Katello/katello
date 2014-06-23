@@ -68,7 +68,13 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionEn
         };
 
         $scope.anySelectable = function () {
-            return _.findWhere($scope.environmentsTable.rows, {unselectable: false}) !== undefined;
+            var anySelectable;
+            if ($scope.environmentsTable.rows.length === 0) {
+                anySelectable = true;
+            } else {
+                anySelectable =  _.findWhere($scope.environmentsTable.rows, {unselectable: false}) !== undefined;
+            }
+            return anySelectable;
         };
 
         $scope.allSelectable = function () {

@@ -122,7 +122,11 @@ class ContentViewVersion < Katello::Model
   end
 
   def removable?
-    content_view.promotable_or_removable? && KTEnvironment.where(:id => environments).any_promotable?
+    if environments.blank?
+      content_view.promotable_or_removable?
+    else
+      content_view.promotable_or_removable? && KTEnvironment.where(:id => environments).any_promotable?
+    end
   end
 
   def deletable?(from_env)
