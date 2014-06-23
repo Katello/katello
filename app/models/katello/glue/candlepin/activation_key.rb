@@ -19,7 +19,6 @@ module Glue::Candlepin::ActivationKey
 
     base.class_eval do
       before_save :save_activation_key_orchestration
-      before_destroy :destroy_activation_key_orchestration
 
       lazy_accessor :service_level,
                     :initializer => (lambda do |s|
@@ -65,15 +64,6 @@ module Glue::Candlepin::ActivationKey
       raise e
     end
 
-    def del_activation_key
-      Rails.logger.debug "Deleting activation_key in candlepin: %s" % self.label
-      Resources::Candlepin::ActivationKey.destroy self.cp_id
-      true
-    rescue => e
-      Rails.logger.error _("Failed to delete candlepin activation key %s") % "#{self.label}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
     def save_activation_key_orchestration
       case self.orchestration_for
       when :create
@@ -81,10 +71,6 @@ module Glue::Candlepin::ActivationKey
       when :update
         pre_queue.create(:name => "update candlepin activation_key: #{self.label}", :priority => 2, :action => [self, :update_activation_key])
       end
-    end
-
-    def destroy_activation_key_orchestration
-      pre_queue.create(:name => "candlepin activation_key: #{self.label}", :priority => 3, :action => [self, :del_activation_key])
     end
 
     def subscribe(pool_id, quantity = 1)
