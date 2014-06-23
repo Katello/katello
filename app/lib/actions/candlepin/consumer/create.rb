@@ -28,6 +28,7 @@ module Actions
           param :capabilities
           param :activation_keys
           param :response
+          param :guest_ids
         end
 
         # We need to call this in plan phase as this can lean to error responses
@@ -45,7 +46,8 @@ module Actions
                      input[:service_level],
                      input[:uuid],
                      input[:capabilities],
-                     input[:activation_keys])
+                     input[:activation_keys],
+                     input[:guest_ids])
           plan_self(input.merge(response: response))
         end
 
