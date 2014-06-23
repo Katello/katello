@@ -43,7 +43,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostProductsControlle
         };
 
         $scope.contentHost.$promise.then(function () {
-            ContentHost.products({id: $scope.contentHost.uuid, 'organization_id': CurrentOrganization}, function (response) {
+            ContentHost.products({id: $scope.contentHost.uuid,
+                                  'organization_id': CurrentOrganization,
+                                  enabled: true,
+                                  'full_result': true
+                                 }, function (response) {
                 $scope.products = response.results;
                 $scope.displayArea.isAvailableContent = $scope.isAnyAvailableContent($scope.products);
                 $scope.displayArea.working = false;

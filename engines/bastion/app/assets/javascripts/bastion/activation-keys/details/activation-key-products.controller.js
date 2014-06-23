@@ -43,7 +43,11 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyProductsContr
         };
 
         $scope.activationKey.$promise.then(function () {
-            ActivationKey.products({id: $scope.activationKey.id, 'organization_id': CurrentOrganization}, function (response) {
+            ActivationKey.products({id: $scope.activationKey.id,
+                                    'organization_id': CurrentOrganization,
+                                    enabled: true,
+                                    'full_result': true
+                                   }, function (response) {
                 $scope.products = response.results;
                 $scope.displayArea.isAvailableContent = $scope.isAnyAvailableContent($scope.products);
                 $scope.displayArea.working = false;
