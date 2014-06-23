@@ -120,8 +120,9 @@ module Katello
       respond_for_index :collection => response
     end
 
-    api :PUT, "/activation_keys/:id/host_collections"
+    api :POST, "/activation_keys/:id/host_collections"
     param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :host_collection_ids, Array, :required => true, :desc => N_("List of host collection IDs to associate with activation key")
     def add_host_collections
       ids = activation_key_params[:host_collection_ids]
       @activation_key.host_collection_ids = (@activation_key.host_collection_ids + ids).uniq
@@ -129,7 +130,9 @@ module Katello
       respond_for_show
     end
 
-    api :DELETE, "/activation_keys/:id/host_collections"
+    api :PUT, "/activation_keys/:id/host_collections"
+    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :host_collection_ids, Array, :required => true, :desc => N_("List of host collection IDs to disassociate from the activation key")
     def remove_host_collections
       ids = activation_key_params[:host_collection_ids]
       @activation_key.host_collection_ids = (@activation_key.host_collection_ids - ids).uniq
