@@ -46,6 +46,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
 
             // Need access to the original rule
             success = function () {
+                rule.previous = {};
                 rule.editMode = false;
                 rule.working = false;
                 $scope.successMessages = [translate('Package successfully updated.')];
@@ -78,6 +79,16 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
             rule.version = undefined;
             rule['min_version'] = undefined;
             rule['max_version'] = undefined;
+        };
+
+        $scope.backupPrevious = function (rule) {
+            rule.previous = {};
+            angular.copy(rule, rule.previous);
+        };
+
+        $scope.restorePrevious = function (rule) {
+            angular.copy(rule.previous, rule);
+            rule.previous = {};
         };
 
         $scope.removeRules = function (filter) {
