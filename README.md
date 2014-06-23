@@ -55,7 +55,6 @@ rake katello:reset
 ## Found a bug?
 
 That's rather unfortunate. But don't worry! We can help. Just file a bug
-[on our Bugzilla](https://bugzilla.redhat.com/enter_bug.cgi?product=Katello) or
 [in our project tracker](http://projects.theforeman.org/projects/katello).
 
 
