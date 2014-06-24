@@ -19,10 +19,10 @@ module Katello
                                           :upload_package_profile, :regenerate_identity_certificates, :facts,
                                           :available_releases]
     before_filter :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
-    before_filter :authorize_client_or_user, :only => [:upload_package_profile, :regenerate_identity_certificates,
+    before_filter :authorize_client_or_user, :only => [:consumer_show, :upload_package_profile, :regenerate_identity_certificates,
                                                        :hypervisors_update]
     before_filter :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
-    before_filter :authorize_client, :only => [:consumer_show, :consumer_destroy, :consumer_checkin,
+    before_filter :authorize_client, :only => [:consumer_destroy, :consumer_checkin,
                                                :enabled_repos, :facts, :available_releases]
 
     before_filter :add_candlepin_version_header

@@ -14,7 +14,7 @@ Foreman::Plugin.find(:katello).security_block :content_hosts do
   permission :create_content_hosts,
              {
               'katello/api/v2/systems' => [:create],
-              'katello/api/v1/candlepin_proxies' => [:consumer_create],
+              'katello/api/v1/candlepin_proxies' => [:consumer_create, :consumer_show],
              },
              :resource_type => 'Katello::System'
   permission :edit_content_hosts,
