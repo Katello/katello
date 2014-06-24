@@ -29,7 +29,10 @@ angular.module('Bastion.subscriptions').controller('SubscriptionProductsControll
 
         $scope.displayArea = { working: true };
 
-        Product.queryUnpaged({'organization_id': CurrentOrganization, 'subscription_id': $scope.$stateParams.subscriptionId}, function (response) {
+        Product.queryUnpaged({'organization_id': CurrentOrganization,
+                              'subscription_id': $scope.$stateParams.subscriptionId,
+                              enabled: true
+                             }, function (response) {
             $scope.products = response.results;
             $scope.displayArea.working = false;
         });
