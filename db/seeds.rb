@@ -5,12 +5,11 @@
 #
 
 require 'util/password'
-require 'util/puppet'
 
-# variables which are taken from Puppet
-first_user_name = (un = Util::Puppet.config_value("user_name")).blank? ? 'admin' : un
-first_org_name = (org = Util::Puppet.config_value("org_name")).blank? ? 'ACME_Corporation' : org
-first_location_name = (loc = Util::Puppet.config_value("location_name")).blank? ? 'Default' : loc
+# Can be specified via the command line using:
+# rake db:seed SEED_INITIAL_ORGANIZATION=MyOrg SEED_INITIAL_LOCATION=MyDefault
+first_org_name = ENV['SEED_INITIAL_ORGANIZATION'] || 'ACME_Corporation'
+first_location_name = ENV['SEED_INITIAL_LOCATION'] || 'Default'
 
 def format_errors(model = nil)
   return '(nil found)' if model.nil?
@@ -32,7 +31,6 @@ fail "Foreman admin does not exist" unless user_admin
 # however, for the initial migrate/seed, it needs to be done manually
 user_admin.katello_roles.find_or_create_own_role(user_admin)
 user_admin.katello_roles << superadmin_role unless user_admin.katello_roles.include?(superadmin_role)
-user_admin.remote_id = first_user_name
 user_admin.save!
 fail "Unable to update admin user: #{format_errors(user_admin)}" if user_admin.errors.size > 0
 
