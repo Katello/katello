@@ -48,7 +48,7 @@ angular.module('Bastion.content-views').controller('ContentViewAvailableReposito
         $scope.repositoriesTable = nutupane.table;
 
         $scope.addRepositories = function (contentView) {
-            var selected = nutupane.getAllSelectedResults().included.ids;
+            var selected = $scope.getSelected(nutupane);
 
             contentView['repository_ids'] = contentView['repository_ids'].concat(selected);
 

@@ -29,6 +29,7 @@ angular.module('Bastion.content-views').service('ContentViewRepositoriesUtil',
 
             scope.product = {id: 'all'};
             scope.products = {};
+            scope.filteredItems = [];
 
             scope.$watch('repositoriesTable.rows', function (repositories) {
                 scope.products = extractProducts(repositories);
@@ -44,6 +45,17 @@ angular.module('Bastion.content-views').service('ContentViewRepositoriesUtil',
                 }
 
                 return include;
+            };
+
+            scope.getSelected = function (nutupane) {
+                var selected = nutupane.getAllSelectedResults().included.ids,
+                    filtered = _.pluck(scope.filteredItems, 'id');
+
+                selected = _.reject(selected, function (id) {
+                    return !_.contains(filtered, id);
+                });
+
+                return selected;
             };
 
             function extractProducts(repositories) {
