@@ -60,4 +60,19 @@ module ::Actions::Katello::System
       system.uuid.must_equal '123'
     end
   end
+
+  class DestroyTest < TestBase
+    let(:action_class) { ::Actions::Katello::System::Destroy }
+
+    let(:system) { Katello::System.find(katello_systems(:simple_server)) }
+
+    it 'plans' do
+      system.expects(:destroy!)
+      action.stubs(:action_subject).with(system)
+
+      plan_action(action, system)
+      assert_action_planed(action, ::Actions::Candlepin::Consumer::Destroy)
+      assert_action_planed(action, ::Actions::Pulp::Consumer::Destroy)
+    end
+  end
 end

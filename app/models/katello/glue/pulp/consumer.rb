@@ -18,8 +18,6 @@ module Glue::Pulp::Consumer
 
     base.class_eval do
       before_save    :save_pulp_orchestration
-      before_destroy :destroy_pulp_orchestration
-      after_rollback :rollback_on_pulp_create, :on => :create
 
       lazy_accessor :pulp_facts, :initializer => lambda {|s| Katello.pulp_server.extensions.consumer.retrieve(uuid) }
       lazy_accessor :package_profile, :initializer => lambda{|s| fetch_package_profile}
@@ -131,16 +129,6 @@ module Glue::Pulp::Consumer
     rescue => e
       Rails.logger.error "Failed to delete pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
-    end
-
-    def destroy_pulp_orchestration
-      return true if self.is_a? Hypervisor
-      pre_queue.create(:name => "delete pulp consumer: #{self.name}", :priority => 3, :action => [self, :del_pulp_consumer])
-    end
-
-    # A rollback occurred while attempting to create the consumer; therefore, perform necessary cleanup.
-    def rollback_on_pulp_create
-      del_pulp_consumer
     end
 
     def update_pulp_consumer

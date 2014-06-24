@@ -15,6 +15,7 @@ require "katello_test_helper"
 
 module Katello
 class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
+  include Support::ForemanTasks::Task
 
   def self.before_suite
     models = ["System", "KTEnvironment",  "ContentViewEnvironment", "ContentView"]
@@ -135,11 +136,12 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
   end
 
   def test_destroy_systems
-    put :destroy_systems, :included => {:ids => @system_ids}, :organization_id => @org.id
+    System.stubs(:where).returns([@system1, @system2])
+    assert_sync_task(::Actions::Katello::System::Destroy, @system1)
+    assert_sync_task(::Actions::Katello::System::Destroy, @system2)
 
+    put :destroy_systems, :included => {:ids => @system_ids}, :organization_id => @org.id
     assert_response :success
-    assert_nil System.find_by_id(@system1.id)
-    assert_nil System.find_by_id(@system2.id)
   end
 
   def test_content_view_environment
