@@ -24,6 +24,9 @@ module Actions
           pulp_resources.consumer.unbind(input[:consumer_uuid],
                                          input[:repo_id],
                                          distributor['id'])
+        rescue  RestClient::ResourceNotFound
+          Rails.logger.error("404 on consumer unbind.")
+          return []
         end
       end
     end
