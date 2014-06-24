@@ -34,7 +34,7 @@ BASTION_MODULES = [
     'Bastion.gpg-keys',
     'Bastion.i18n',
     'Bastion.menu',
-    'Bastion.nodes',
+    'Bastion.capsules',
     'Bastion.organizations',
     'Bastion.products',
     'Bastion.repositories',

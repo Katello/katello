@@ -26,7 +26,7 @@ angular.module('Bastion.content-hosts', [
     'Bastion',
     'Bastion.widgets',
     'Bastion.subscriptions',
-    'Bastion.nodes',
+    'Bastion.capsules',
     'Bastion.errata',
     'Bastion.host-collections'
 ]);
@@ -57,7 +57,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     });
 
     $stateProvider.state('content-hosts.register', {
-        url: '/content_host/register',
+        url: '/content_hosts/register',
         collapsed: true,
         views: {
             'table': {

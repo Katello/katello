@@ -13,12 +13,12 @@
 
 /**
  * @ngdoc module
- * @name  Bastion.nodes
+ * @name  Bastion.capsules
  *
  * @description
- *   Module for node related functionality.
+ *   Module for Capsule related functionality.
  */
-angular.module('Bastion.nodes', [
+angular.module('Bastion.capsules', [
     'ngResource',
     'Bastion'
 ]);

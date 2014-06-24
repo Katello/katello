@@ -13,17 +13,17 @@
 
 /**
  * @ngdoc service
- * @name  Bastion.nodes.factory:Node
+ * @name  Bastion.capsules.factory:Capsule
  *
  * @requires BastionResource
  *
  * @description
- *   Provides a BastionResource for nodes or list of nodes.
+ *   Provides a BastionResource for capsules or list of capsules.
  */
-angular.module('Bastion.nodes').factory('Node',
+angular.module('Bastion.capsules').factory('Capsule',
     ['BastionResource', function (BastionResource) {
 
-        return BastionResource('/api/nodes/:id/:action', {id: '@id'}, {
+        return BastionResource('/api/capsules/:id/:action', {id: '@id'}, {
         });
 
     }]
