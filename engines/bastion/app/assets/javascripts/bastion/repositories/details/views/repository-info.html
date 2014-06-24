@@ -106,13 +106,15 @@
 
     <div class="detail">
       <span class="info-label" translate>Last Sync</span>
-      <span class="info-value">{{ repository.last_sync | date:'medium' }}</span>
+      <span class="info-value" translate>
+        {{ repository.last_sync_words }} Ago ({{ repository.last_sync | date:'medium' }} Local Time)
+      </span>
     </div>
 
     <div class="detail">
       <span class="info-label" translate>Next Sync</span>
-      <span class="info-value" ng-show="repository.product.sync_plan.next_sync">
-        {{ repository.product.sync_plan.next_sync | date:'medium' }}
+      <span class="info-value" ng-show="repository.product.sync_plan.next_sync" translate>
+        {{ repository.product.sync_plan.next_sync | date:'medium' }} (Server Time)
       </span>
       <span class="info-value" ng-hide="repository.product.sync_plan.next_sync" translate>
         Synced manually, no interval set.

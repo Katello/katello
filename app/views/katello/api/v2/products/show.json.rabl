@@ -3,6 +3,7 @@ object @resource
 attributes :id, :cp_id, :name, :label, :description
 
 extends 'katello/api/v2/common/org_reference'
+extends 'katello/api/v2/common/syncable'
 
 attributes :marketing_product
 attributes :provider_id

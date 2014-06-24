@@ -75,7 +75,7 @@
             </span>
             <span ng-hide="repository.last_sync == null">
               <a href="/katello/sync_management">{{ repository.sync_state | capitalize}}</a>
-              ({{ repository.last_sync | date:"short" }})
+              <span translate>{{ repository.last_sync_words }} ago</span>
             </span>
           </span>
           <span ng-hide="repository.url" translate>N/A</span>
