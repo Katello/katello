@@ -39,59 +39,66 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionSubscr
 
         $scope.subscription = {
             confirm: false,
-            workingMode: false
+            runningTask: null,
+            taskRunnable: false,
+            monitorTask: function (task) {
+                var promise;
+                $scope.subscription.runningTask = Task.monitorTask(task);
+                promise = $scope.subscription.runningTask.promise;
+                promise.then(function () {
+                    $scope.state.successMessages.push(translate('Successfully Scheduled Auto-attach.'));
+                });
+                promise.catch(function (errors) {
+                    $scope.state.errorMessages.push(translate("An error occurred applying Subscriptions: ") + errors.join('; '));
+                });
+                promise['finally'](function () {
+                    if ($scope.subscription.runningTask.state === 'stopped') {
+                        $scope.subscription.runningTask = null;
+                    }
+                });
+            }
         };
+
+        $scope.$watch('subscription.runningTask', function (value) {
+            if (value) {
+                $scope.subscription.taskRunnable = false;
+            }
+            if (value && $scope.subscription.runningTasksSearchId) {
+                Task.unregisterSearch($scope.subscription.runningTasksSearchId);
+                $scope.subscription.runningTasksSearchId = null;
+            } else if (!value && !$scope.subscription.runningTasksSearchId) {
+                $scope.subscription.runningTasksSearchId = watchRunningTasks();
+            }
+        });
+
+        $scope.$on('$destroy', function () {
+            if ($scope.subscription.runningTask) {
+                $scope.subscription.runningTask.stopMonitoring();
+                $scope.subscription.runningTask = null;
+            }
+            if ($scope.subscription.runningTasksSearchId) {
+                Task.unregisterSearch($scope.subscription.runningTasksSearchId);
+            }
+        });
 
         $scope.performAutoAttachSubscriptions = function () {
-            var success, error, deferred = $q.defer();
-
             $scope.subscription.confirm = false;
-            $scope.subscription.workingMode = true;
-
-            success = function (scheduledTask) {
-                deferred.resolve(scheduledTask);
-                $scope.subscription.autoAttachTask = scheduledTask;
-                Task.poll(scheduledTask, function (polledTask) {
-                    $scope.subscription.autoAttachTask = polledTask;
-                    $scope.subscription.workingMode = false;
-                });
-
-                $scope.successMessages.push(translate('Successfully Scheduled Auto-attach.'));
-            };
-
-            error = function (error) {
-                deferred.reject(error.data["errors"]);
-                $scope.subscription.workingMode = false;
-                _.each(error.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(translate("An error occurred applying Subscriptions: ") + errorMessage);
-                });
-            };
-
-            Organization.autoAttachSubscriptions({id: CurrentOrganization}, success, error);
-
-            return deferred.promise;
+            $scope.subscription.monitorTask(Organization.autoAttachSubscriptions({id: CurrentOrganization}));
         };
 
-        function autoAttachSubscriptionsInProgress() {
-            // Check to see if an 'auto attach subscriptions' action is currently in progress.
-            // If it is, poll on the associated task, until it is completed.
-            Organization.queryUnpaged({'id': CurrentOrganization}, function (organization) {
-                if (organization['owner_auto_attach_all_systems_task_id'] !== null) {
-
-                    Task.queryUnpaged({'id' : organization['owner_auto_attach_all_systems_task_id']}, function (task) {
-                        $scope.subscription.autoAttachTask = task;
-
-                        if (task.pending) {
-                            $scope.subscription.workingMode = true;
-                            Task.poll(task, function (polledTask) {
-                                $scope.subscription.autoAttachTask = polledTask;
-                                $scope.subscription.workingMode = false;
-                            });
-                        }
-                    });
+        function watchRunningTasks() {
+            var searchParams = { 'type': 'resource',
+                                 'active_only': true,
+                                 'action_types': ['Actions::Katello::Organization::AutoAttachSubscriptions'],
+                                 'resource_type': 'Organization',
+                                 'resource_id': CurrentOrganization };
+            return Task.registerSearch(searchParams, function (tasks) {
+                if (tasks.length > 0) {
+                    $scope.subscription.monitorTask(tasks[0]);
+                } else {
+                    $scope.subscription.taskRunnable = true;
                 }
             });
         }
-        autoAttachSubscriptionsInProgress();
     }]
 );

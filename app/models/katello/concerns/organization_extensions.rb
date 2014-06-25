@@ -232,28 +232,6 @@ module Katello
           CustomInfo.apply_to_set(ids_and_types, custom_info)
         end
 
-        def auto_attaching_all_systems?
-          return false if self.owner_auto_attach_all_systems_task_id.nil?
-          !TaskStatus.find_by_id(self.owner_auto_attach_all_systems_task_id).finished?
-        end
-
-        def auto_attach_all_systems
-          job = self.owner_auto_attach
-          task = self.async(:organization => self, :task_type => "monitor owner all_systems auto_attach").monitor_owner_auto_attach(job)
-          self.owner_auto_attach_all_systems_task_id = task.id
-          self.save!
-          return task
-        end
-
-        def monitor_owner_auto_attach(job, options = {})
-          options = { :pause => 5 }.merge(options)
-          loop do
-            break unless Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job["id"]))
-            sleep options[:pause]
-          end
-          return job["id"]
-        end
-
         def syncable_content?
           products.any?(&:syncable_content?)
         end
