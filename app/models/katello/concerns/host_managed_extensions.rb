@@ -15,11 +15,18 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
+        alias_method_chain :validate_media?, :capsule
+
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
                 :dependent => :destroy, :inverse_of => :foreman_host
         belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hosts
         scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
       end
+
+      def validate_media_with_capsule?
+        content_source_id.blank? && validate_media_without_capsule?
+      end
+
     end
   end
 end
@@ -27,5 +34,3 @@ end
 class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source
 end
-
-

@@ -136,7 +136,8 @@ module Katello
       # overwrite foreman method in operatingsystem.rb
       def boot_files_uri_with_content(medium, architecture, host = nil)
         return boot_files_uri_without_content(medium, architecture, host) unless host.try(:content_source)
-        eval("#{self.family}::PXEFILES").values.collect do |img|
+        family_class = self.family.constantize
+        family_class::PXEFILES.values.collect do |img|
           "#{medium_uri(host)}/#{pxedir}/#{img}"
         end
       end
