@@ -99,7 +99,7 @@ module Katello
       end
 
       def mediumpath_with_content(host)
-        medium_uri(host).to_s
+        "url --url #{medium_uri(host)}"
       end
 
       def kickstart_repo(host)
