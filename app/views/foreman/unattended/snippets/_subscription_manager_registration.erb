@@ -7,5 +7,5 @@ echo "Registering the System"
 subscription-manager register --org="<%= @host.params['kt_org']%>" --name="<%= @host.name %>" --activationkey="<%= @host.params['kt_activation_keys'] %>"
 <% end %>
 <% if @host.content_source %>
-  subscription-manager config --rhsm.baseurl=https://<%= @host.content_source.hostname %>/pulp/repos
+  subscription-manager config --rhsm.baseurl=https://<%= @host.content_source %>/pulp/repos
 <% end %>
