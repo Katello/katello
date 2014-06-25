@@ -11,7 +11,7 @@
 
 module Katello
   module Concerns
-    module HostBaseExtensions
+    module HostManagedExtensions
       extend ActiveSupport::Concern
 
       included do
@@ -23,3 +23,9 @@ module Katello
     end
   end
 end
+
+class ::Host::Managed::Jail < Safemode::Jail
+  allow :content_source
+end
+
+
