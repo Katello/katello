@@ -15,6 +15,7 @@
     </button>
     <button class="btn btn-default"
             ng-hide="denied('edit_content_views', contentView)"
+            ng-disabled="detailsTable.numSelected === 0"
             ng-click="removeFilters()">
       <i class="icon-trash"></i>
       <span translate>Remove Filters</span>

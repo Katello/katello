@@ -43,12 +43,14 @@
 
     <div class="col-sm-4">
       <button class="btn btn-primary fr"
+              ng-disabled="repositoriesTable.numSelected === 0"
               ng-show="isState('content-views.details.repositories.list') && permitted('edit_content_views', contentView)"
               ng-click="removeRepositories(contentView)">
         <i class="icon-trash"></i>
         <span translate>Remove Repositories</span>
       </button>
       <button class="btn btn-primary fr"
+              ng-disabled="repositoriesTable.numSelected === 0"
               ng-show="isState('content-views.details.repositories.available') && permitted('edit_content_views', contentView)"
               ng-click="addRepositories(contentView)">
         <i class="icon-plus"></i>
