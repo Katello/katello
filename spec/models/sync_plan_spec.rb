@@ -134,8 +134,8 @@ module Katello
 
         organization = get_organization
 
-        @plan.products.create! ProductTestData::SIMPLE_PRODUCT.merge(
-                                   :provider => organization.redhat_provider)
+        @plan.products.create!(ProductTestData::SIMPLE_PRODUCT.merge(:organization_id => organization.id,
+                                                                     :provider => organization.redhat_provider))
         @plan.save!
         @plan.reload
         @plan.products.length.must_equal(1)

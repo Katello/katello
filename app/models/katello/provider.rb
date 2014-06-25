@@ -29,7 +29,7 @@ class Provider < Katello::Model
 
   belongs_to :organization, :inverse_of => :providers, :class_name => "Organization"
   belongs_to :task_status, :inverse_of => :provider
-  has_many :products, :class_name => "Katello::Product", :inverse_of => :provider, :dependent => :destroy
+  has_many :products, :class_name => "Katello::Product", :inverse_of => :provider, :dependent => :restrict
   has_many :repositories, :through => :products
 
   validates :name, :uniqueness => {:scope => :organization_id}

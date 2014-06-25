@@ -71,7 +71,7 @@ class KTEnvironment < Katello::Model
   validates_with Validators::PathDescendentsValidator
 
   has_many :capsule_lifecycle_environments, :foreign_key => :lifecycle_environment_id,
-           :dependent => :destroy
+           :dependent => :destroy, :inverse_of => :lifecycle_environment
 
   scope(:not_in_capsule,
         lambda do |capsule|
