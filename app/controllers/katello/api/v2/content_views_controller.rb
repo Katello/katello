@@ -36,6 +36,8 @@ module Katello
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
     param :environment_id, :identifier, :desc => N_("environment identifier")
     param :nondefault, :bool, :desc => N_("Filter out default content views")
+    param :noncomposite, :bool, :desc => N_("Filter out composite content views")
+    param :without, Array, :desc => N_("Do not include this array of content views")
     param :name, String, :desc => N_("Name of the content view"), :required => false
     def index
       options = sort_params
@@ -46,8 +48,10 @@ module Katello
       ids = readable_cvs.pluck("#{Katello::ContentView.table_name}.id")
 
       options[:filters] = [{:terms => {:id => ids}}]
+      options[:filters] << {:not => {:terms => {:id => params[:without]}}} if params[:without]
 
       options[:filters] << {:term => {:default => false}} if params[:nondefault]
+      options[:filters] << {:term => {:composite => false}} if params[:noncomposite]
       options[:filters] << {:term => {:name => params[:name]}} if params[:name]
 
       respond(:collection => item_search(ContentView, params, options))

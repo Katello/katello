@@ -37,7 +37,7 @@
 
       <tbody>
       <tr alch-table-row
-          ng-repeat="contentView in detailsTable.rows | availableForComposite:contentView | filter:contentViewFilter | orderBy:'name'"
+          ng-repeat="contentView in detailsTable.rows | filter:contentViewFilter | orderBy:'name'"
           row-select="contentView">
         <td alch-table-cell>{{ contentView.name }}</td>
         <td alch-table-cell>

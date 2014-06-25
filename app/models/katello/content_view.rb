@@ -69,6 +69,7 @@ class ContentView < Katello::Model
   scope :default, where(:default => true)
   scope :non_default, where(:default => false)
   scope :composite, where(:composite => true)
+  scope :non_composite, where(:composite => nil)
 
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :organization_id, :complete_value => true

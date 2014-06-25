@@ -37,13 +37,6 @@ angular.module('Bastion.content-views').factory('ContentView',
                     var contentView = angular.fromJson(data);
                     return {results: contentView.components};
                 }},
-                compositeEligible: {method: 'GET', transformResponse: function (data) {
-                    var contentViews = angular.fromJson(data).results;
-                    contentViews = _.filter(contentViews, function (contentView) {
-                        return !contentView.composite && contentView.versions.length > 0;
-                    });
-                    return {results: contentViews};
-                }},
                 availablePuppetModules: {method: 'GET', params: {action: 'available_puppet_modules'},
                     transformResponse: function (data) {
                         var response = angular.fromJson(data);
