@@ -20,6 +20,11 @@ module Katello
         belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hosts
         scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
       end
-    end
+
+      def validate_media?
+        content_source_id.blank?
+      end
+
+     end
   end
 end
