@@ -34,6 +34,32 @@ class RepositoryCreateTest < RepositoryTestBase
     refute_empty  Repository.where(:id=>@repo.id)
   end
 
+  def test_unique_repository_name_per_product_and_environment
+    @repo.save
+    @repo2 = build(:katello_repository,
+                   :environment => @repo.environment,
+                   :product => @repo.product,
+                   :content_view_version => @repo.content_view_version,
+                   :name => @repo.name,
+                   :label => 'Another Label'
+                  )
+
+    refute @repo2.valid?
+  end
+
+  def test_unique_repository_label_per_product_and_environment
+    @repo.save
+    @repo2 = build(:katello_repository,
+                   :environment => @repo.environment,
+                   :product => @repo.product,
+                   :content_view_version => @repo.content_view_version,
+                   :name => 'Another Name',
+                   :label => @repo.label
+                  )
+
+    refute @repo2.valid?
+  end
+
   def test_create_with_no_type
     @repo.content_type = ''
     assert_raises ActiveRecord::RecordInvalid do
@@ -111,9 +137,11 @@ class RepositoryInstanceTest < RepositoryTestBase
     assert @fedora_17_x86_64.promoted?
 
     repo = build(:katello_repository,
+                 :environment => @dev,
                  :content_view_version => @fedora_17_x86_64.content_view_version,
                  :product => @fedora_17_x86_64.product
                 )
+
     assert repo.valid?
     refute_nil repo.organization
     refute repo.promoted?

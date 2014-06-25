@@ -53,9 +53,18 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         function error(response) {
             $scope.working = false;
 
+            angular.forEach($scope.repositoryForm, function (value, field) {
+                if ($scope.repositoryForm.hasOwnProperty(field) && value.hasOwnProperty('$setValidity')) {
+                    value.$setValidity('server', true);
+                    $scope.repositoryForm[field].$error.messages = [];
+                }
+            });
+
             angular.forEach(response.data.errors, function (errors, field) {
-                $scope.repositoryForm[field].$setValidity('server', false);
-                $scope.repositoryForm[field].$error.messages = errors;
+                if ($scope.repositoryForm.hasOwnProperty(field)) {
+                    $scope.repositoryForm[field].$setValidity('server', false);
+                    $scope.repositoryForm[field].$error.messages = errors;
+                }
             });
         }
 

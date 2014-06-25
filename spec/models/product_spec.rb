@@ -142,31 +142,6 @@ describe Product, :katello => true do
       end
     end
 
-    describe "add repo" do
-      before(:each) do
-        Resources::Candlepin::Product.stubs(:create).returns({:id => ProductTestData::PRODUCT_ID})
-        Resources::Candlepin::Content.stubs(:create).returns({:id => "123", :type=>'yum'})
-        Resources::Candlepin::Content.stubs(:update).returns({:id => "123", :type=>'yum'})
-        Resources::Candlepin::Content.stubs(:get).returns({:id => "123", :type=>'yum'})
-        Repository.any_instance.stubs(:generate_metadata)
-        @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
-      end
-
-      describe "when there is a repo with the same name for the product" do
-        before do
-          @repo_name = "repo"
-          @repo_label = "repo"
-          disable_repo_orchestration
-          @p.add_repo(@repo_label, @repo_name, "http://test/repo","yum").save!
-        end
-
-        it "should raise conflict error" do
-          lambda {@p.add_repo(@repo_label, @repo_name, "http://test/repo","yum")}.must_raise(
-              Errors::ConflictException)
-        end
-      end
-    end
-
     describe "when importing product from candlepin" do
 
       describe "marketing product" do

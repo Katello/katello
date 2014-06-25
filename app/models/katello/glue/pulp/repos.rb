@@ -294,7 +294,6 @@ module Glue::Pulp::Repos
 
     def add_repo(label, name, url, repo_type, unprotected = false, gpg = nil)
       unprotected = unprotected.nil? ? false : unprotected
-      check_for_repo_conflicts(name, label)
 
       Repository.new(:environment => self.organization.library,
                      :product => self,
@@ -341,25 +340,6 @@ module Glue::Pulp::Repos
         async_tasks << repo.promote(from_env, to_env)
       end
       async_tasks.flatten(1)
-    end
-
-    def check_for_repo_conflicts(repo_name, repo_label)
-      is_dupe =  Repository.where(:name => repo_name,
-                                  :product_id => self.id,
-                                  :environment_id => self.library.id
-                                 ).count > 0
-      if is_dupe
-        fail Errors::ConflictException.new(_("Label has already been taken"))
-      end
-      unless repo_label.blank?
-        is_dupe =  Repository.where(:label => repo_label,
-                                    :product_id => self.id,
-                                    :environment_id => self.library.id
-                                   ).count > 0
-        if is_dupe
-          fail Errors::ConflictException.new(_("Label has already been taken"))
-        end
-      end
     end
 
   end
