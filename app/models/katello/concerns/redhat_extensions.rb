@@ -18,6 +18,8 @@ module Katello
 
       included do
         alias_method_chain :medium_uri, :content_uri
+        alias_method_chain :mediumpath, :content
+        alias_method_chain :boot_files_uri, :content
 
         # TODO: these were pulled in from katello_foreman_engine. It may be
         # useful to make them configurable in the future.
@@ -90,16 +92,20 @@ module Katello
       end
 
       def medium_uri_with_content_uri(host, url = nil)
-        if url.nil? && (full_path = kickstart_repo(host))
+        if host.try(:content_source) && (full_path = kickstart_repo(host))
           URI.parse(full_path)
         else
           medium_uri_without_content_uri(host, url)
         end
       end
 
+      def mediumpath_with_content(host)
+        "url --url #{medium_uri(host)}"
+      end
+
       def kickstart_repo(host)
         distro = distribution_repositories(host).first
-        distro.full_path(host.content_source)  if distro && host.content_source
+        distro.full_path(host.content_source) if distro && host.content_source
       end
 
       private
@@ -124,6 +130,15 @@ module Katello
           ::Katello::Repository.where(:pulp_id => (repo_ids & distribution_repo_ids))
         else
           []
+        end
+      end
+
+      # overwrite foreman method in operatingsystem.rb
+      def boot_files_uri_with_content(medium, architecture, host = nil)
+        return boot_files_uri_without_content(medium, architecture, host) unless host.try(:content_source)
+        family_class = self.family.constantize
+        family_class::PXEFILES.values.collect do |img|
+          "#{medium_uri(host)}/#{pxedir}/#{img}"
         end
       end
 
