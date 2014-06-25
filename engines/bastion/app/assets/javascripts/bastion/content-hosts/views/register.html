@@ -23,15 +23,15 @@
 
   <pre><code>subscription-manager register --org="{{ organization.label }}" --environment="Library"</code></pre>
 
-  <div ng-show="nodes.results.length > 0">
+  <div ng-show="capsules.results.length > 0">
     <p>
-      <h5 translate>Consuming Content From a Node</h5>
-      {{ "Selected Node:" | translate }}
-      <select ng-model="selectedNode"
-              ng-options="node.hostname for node in nodes.results">
+      <h5 translate>Consuming Content From a Capsule</h5>
+      {{ "Selected Capsule:" | translate }}
+      <select ng-model="selectedCapsule"
+              ng-options="capsule.url for capsule in capsules.results">
       </select>
 
-      <pre><code>subscription-manager register --org="{{ organization.label }}" --baseurl="https://{{  selectedNode.hostname }}/pulp/repos"</code></pre>
+      <pre ng-show="selectedCapsule"><code>subscription-manager register --org="{{ organization.label }}" --baseurl="https://{{ hostname(selectedCapsule.url) }}/pulp/repos</code></pre>
     </p>
   </div>
 </section>

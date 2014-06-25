@@ -11,18 +11,18 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-describe('Factory: Node', function() {
+describe('Factory: Capsule', function() {
     var $httpBackend,
-        nodes,
-        Node;
+        capsules,
+        Capsule;
 
-    beforeEach(module('Bastion.nodes', 'Bastion.test-mocks'));
+    beforeEach(module('Bastion.capsules', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
-        nodes = {
+        capsules = {
             records: [
-                { name: 'Node1', id: 1 },
-                { name: 'Node2', id: 2 }
+                { name: 'Capsule1', id: 1 },
+                { name: 'Capsule2', id: 2 }
             ],
             total: 2,
             subtotal: 2
@@ -31,7 +31,7 @@ describe('Factory: Node', function() {
 
     beforeEach(inject(function($injector) {
         $httpBackend = $injector.get('$httpBackend');
-        Node = $injector.get('Node');
+        Capsule = $injector.get('Capsule');
     }));
 
     afterEach(function() {
@@ -41,10 +41,10 @@ describe('Factory: Node', function() {
     });
 
     it('provides a way to get a list of products', function() {
-        $httpBackend.expectGET('/api/nodes?full_result=true').respond(nodes);
+        $httpBackend.expectGET('/api/capsules?full_result=true').respond(capsules);
 
-        Node.queryUnpaged(function(nodes) {
-            expect(nodes.records.length).toBe(2);
+        Capsule.queryUnpaged(function(capsules) {
+            expect(capsules.records.length).toBe(2);
         });
     });
 

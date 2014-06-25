@@ -19,14 +19,14 @@ describe('Controller: ContentHostRegisterController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $location = $injector.get('$location'),
-            Node = $injector.get('MockResource').$new(),
+            Capsule = $injector.get('MockResource').$new(),
             BastionConfig = {consumerCertRPM: 'katello-ca.rpm'};
 
         $scope = $injector.get('$rootScope').$new();
         $controller('ContentHostRegisterController', {
             $scope: $scope,
             $location: $location,
-            Node: Node,
+            Capsule: Capsule,
             CurrentOrganization: 'ACME',
             BastionConfig: BastionConfig
         });
@@ -40,9 +40,9 @@ describe('Controller: ContentHostRegisterController', function() {
         expect($scope.baseURL).toBeDefined();
     });
 
-    it('should fetch a list of nodes', function(){
-        expect($scope.nodes).toBeDefined();
-        expect($scope.selectedNode).toBeDefined();
+    it('should fetch a list of capsules', function(){
+        expect($scope.capsules).toBeDefined();
+        expect($scope.selectedCapsule).toBeDefined();
     });
 
 });

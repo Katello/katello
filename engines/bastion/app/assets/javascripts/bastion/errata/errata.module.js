@@ -16,7 +16,7 @@
  * @name  Bastion.errata
  *
  * @description
- *   Module for node related functionality.
+ *   Module for Errata related functionality.
  */
 angular.module('Bastion.errata', [
     'ngResource',
