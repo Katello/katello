@@ -144,7 +144,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   api :PUT, "/systems/bulk/destroy", N_("Destroy one or more systems")
   param_group :bulk_params
   def destroy_systems
-    @systems.each{ |system| system.destroy }
+    @systems.each { |system| sync_task(::Actions::Katello::System::Destroy, system) }
     display_message = _("Successfully removed %s content host(s)") % @systems.length
     respond_for_show :template => 'bulk_action', :resource_name => 'common',
                      :resource => { 'displayMessages' => [display_message] }

@@ -98,18 +98,6 @@ describe System do
     System.find(s.id).custom_info.find_by_keyname("test_key").keyname.must_equal("test_key")
   end
 
-  describe "delete system" do
-    before(:each) {
-      @system.save!
-    }
-
-    it "should delete consumer in candlepin and pulp" do
-      Resources::Candlepin::Consumer.expects(:destroy).once.with(uuid).returns(true)
-      Katello.pulp_server.extensions.consumer.expects(:delete).once.with(uuid).returns(true) if Katello.config.katello?
-      @system.destroy
-    end
-  end
-
   describe "regenerate identity certificates" do
     before { @system.uuid = uuid }
 

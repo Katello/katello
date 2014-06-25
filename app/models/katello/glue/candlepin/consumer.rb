@@ -22,8 +22,6 @@ module Glue::Candlepin::Consumer
 
     base.class_eval do
       before_save :save_candlepin_orchestration
-      before_destroy :destroy_candlepin_orchestration
-      after_rollback :rollback_on_candlepin_create, :on => :create
 
       as_json_hook :consumer_as_json
 
@@ -130,17 +128,6 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
-    def del_candlepin_consumer
-      Rails.logger.debug "Deleting consumer in candlepin: #{name}"
-      Resources::Candlepin::Consumer.destroy(self.uuid)
-    rescue RestClient::Gone
-      #ignore already deleted system
-      true
-    rescue => e
-      Rails.logger.error "Failed to delete candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
-      fail e
-    end
-
     def regenerate_identity_certificates
       Rails.logger.debug "Regenerating consumer identity certificates: #{name}"
       Resources::Candlepin::Consumer.regenerate_identity_certificates(self.uuid)
@@ -234,15 +221,6 @@ module Glue::Candlepin::Consumer
       when :update
         pre_queue.create(:name => "update candlepin consumer: #{self.name}", :priority => 3, :action => [self, :update_candlepin_consumer])
       end
-    end
-
-    def destroy_candlepin_orchestration
-      pre_queue.create(:name => "delete candlepin consumer: #{self.name}", :priority => 3, :action => [self, :del_candlepin_consumer])
-    end
-
-    # A rollback occurred while attempting to create the consumer; therefore, perform necessary cleanup.
-    def rollback_on_candlepin_create
-      del_candlepin_consumer
     end
 
     def cp_environment_id
