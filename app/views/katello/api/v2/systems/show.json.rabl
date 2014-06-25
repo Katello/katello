@@ -9,7 +9,7 @@ attributes :content_view, :content_view_id
 attributes :distribution
 
 child :products => :products do |product|
-  attributes :id, :name, :available_content
+  attributes :id, :name
 end
 attributes :content_overrides
 
