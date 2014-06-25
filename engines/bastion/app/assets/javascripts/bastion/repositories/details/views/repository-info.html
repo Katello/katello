@@ -40,7 +40,11 @@
 
     <div class="detail">
       <span class="info-label" translate>Name</span>
-      <span class="info-value">{{ repository.name }}</span>
+      <span class="info-value"
+            alch-edit-text="repository.name"
+            on-save="save(repository)"
+            readonly="product.readonly || denied('edit_products', product)">
+      </span>
     </div>
 
     <div class="detail">
@@ -58,7 +62,7 @@
       <span class="info-value"
             alch-edit-text="repository.url"
             on-save="save(repository)"
-            readonly="repository.readonly || denied('edit_products', product)">
+            readonly="product.readonly || denied('edit_products', product)">
       </span>
     </div>
 
@@ -73,7 +77,7 @@
             alch-edit-checkbox="repository.unprotected"
             formatter="booleanToYesNo"
             on-save="save(repository)"
-            readonly="repository.readonly || denied('edit_products', product)">
+            readonly="product.readonly || denied('edit_products', product)">
       </span>
 
     </div>
@@ -89,7 +93,7 @@
       <span class="info-label" translate>GPG Key</span>
       <span class="info-value"
             alch-edit-select="repository.gpg_key.name"
-            readonly="repository.readonly || denied('edit_products', product)"
+            readonly="product.readonly || denied('edit_products', product)"
             selector="repository.gpg_key_id"
             options="gpgKeys()"
             on-save="save(repository)">
