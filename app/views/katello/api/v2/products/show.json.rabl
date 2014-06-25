@@ -47,5 +47,10 @@ node :permissions do |product|
   }
 end
 
+attributes :published_content_views
+
+node :readonly do |product|
+  product.redhat? || product.published_content_views.length > 0
+end
+
 extends 'katello/api/v2/common/timestamps'
-extends 'katello/api/v2/common/readonly'

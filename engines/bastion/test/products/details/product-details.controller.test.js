@@ -47,17 +47,29 @@ describe('Controller: ProductDetailsController', function() {
         expect($scope.removeRow).toHaveBeenCalledWith($scope.product.id);
     });
 
-    it("provivdes a method to check if a product is read only", function() {
-        var product = {readonly: false, redhat: false};
-        expect($scope.isReadOnly(product)).toBe(false);
+    describe("it provides a method to get the read only reason", function() {
+        var product;
 
-        product.readonly = true;
-        expect($scope.isReadOnly(product)).toBe(true);
+        beforeEach(function () {
+            product = {$resolved: true};
+            $scope.denied = function() {};
+        });
 
-        product.redhat = true;
-        expect($scope.isReadOnly(product)).toBe(true);
+        it ("if the permission was denied", function() {
+            spyOn($scope, 'denied').andReturn(true);
+            expect($scope.getReadOnlyReason(product)).toBe('permissions');
+            expect($scope.denied).toHaveBeenCalledWith('delete_products', product);
+        });
 
-        product.readonly = false;
-        expect($scope.isReadOnly(product)).toBe(true);
+        it("if the product was published in a content view", function() {
+            product['published_content_views'] = [1, 2];
+            expect($scope.getReadOnlyReason(product)).toBe('published');
+        });
+
+        it("if the product is a Red Hat product", function() {
+            product['published_content_views'] = [];
+            product.redhat = true;
+            expect($scope.getReadOnlyReason(product)).toBe('redhat');
+        });
     });
 });

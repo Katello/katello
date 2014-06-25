@@ -3,7 +3,6 @@ object @resource
 extends 'katello/api/v2/common/identifier'
 extends 'katello/api/v2/common/org_reference'
 extends 'katello/api/v2/common/timestamps'
-extends 'katello/api/v2/common/readonly'
 
 attributes :name
 attributes :content
