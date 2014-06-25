@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: ContentHostsBulkActionSubscriptionsController', function() {
-    var $scope, $q, translate, ContentHostBulkAction, HostCollection, Organization, Task, CurrentOrganization;
+    var $scope, $_q_, translate, ContentHostBulkAction, HostCollection, Organization, Task, CurrentOrganization;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
@@ -34,13 +34,15 @@ describe('Controller: ContentHostsBulkActionSubscriptionsController', function()
         };
         Task = {
             queryUnpaged: function() {},
-            poll: function() {}
+            poll: function() {},
+            monitorTask: function() { return $_q_.defer(); },
         };
         translate = function() {};
         CurrentOrganization = 'foo';
     });
 
     beforeEach(inject(function($controller, $rootScope, $q) {
+        $_q_ = $q;
         $scope = $rootScope.$new();
         $scope.getSelectedContentHostIds = function() {
             return [1,2,3]
