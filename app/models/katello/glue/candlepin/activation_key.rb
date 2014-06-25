@@ -51,15 +51,6 @@ module Glue::Candlepin::ActivationKey
       pools
     end
 
-    def set_activation_key
-      Rails.logger.debug "Creating an activation key in candlepin: #{name}"
-      json = Resources::Candlepin::ActivationKey.create(Util::Model.uuid, self.organization.label)
-      self.cp_id = json[:id]
-    rescue => e
-      Rails.logger.error _("Failed to create candlepin activation_key %s") % "#{self.name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
     def update_activation_key
       Rails.logger.debug "Updating an activation key in candlepin: #{name}"
       Resources::Candlepin::ActivationKey.update(self.cp_id, self.release_version, @service_level)
@@ -70,8 +61,6 @@ module Glue::Candlepin::ActivationKey
 
     def save_activation_key_orchestration
       case self.orchestration_for
-      when :create
-        pre_queue.create(:name => "candlepin activation_key: #{self.name}", :priority => 2, :action => [self, :set_activation_key])
       when :update
         pre_queue.create(:name => "update candlepin activation_key: #{self.name}", :priority => 2, :action => [self, :update_activation_key])
       end

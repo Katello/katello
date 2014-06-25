@@ -69,6 +69,10 @@ class ActivationKey < Katello::Model
     system_activation_keys.count
   end
 
+  def related_resources
+    self.organization
+  end
+
   def available_releases
     if self.environment
       self.environment.available_releases

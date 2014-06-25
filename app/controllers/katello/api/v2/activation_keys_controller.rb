@@ -57,11 +57,13 @@ module Katello
     param :max_content_hosts, :number, :desc => N_("maximum number of registered content hosts")
     param :unlimited_content_hosts, :bool, :desc => N_("can the activation key have unlimited content hosts")
     def create
-      @activation_key = ActivationKey.create!(activation_key_params) do |activation_key|
+      @activation_key = ActivationKey.new(activation_key_params) do |activation_key|
         activation_key.environment = @environment if @environment
         activation_key.organization = @organization
         activation_key.user = current_user
       end
+      sync_task(::Actions::Katello::ActivationKey::Create, @activation_key)
+      @activation_key.reload
       respond
     end
 
