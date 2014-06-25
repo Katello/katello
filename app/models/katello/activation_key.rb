@@ -119,6 +119,10 @@ class ActivationKey < Katello::Model
     all_products
   end
 
+  def unlimited_usage?
+    usage_limit == -1
+  end
+
   # sets up system when registering with this activation key - must be executed in a transaction
   def apply_to_system(system)
     if !usage_limit.nil? && usage_limit != -1 && usage_count >= usage_limit
