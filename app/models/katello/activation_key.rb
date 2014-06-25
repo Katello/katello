@@ -40,10 +40,12 @@ class ActivationKey < Katello::Model
   validates :name, :uniqueness => {:scope => :organization_id}
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validate :environment_exists
+  validates :usage_limit, :numericality => {:only_integer => true,
+                                            :greater_than_or_equal_to => -1,
+                                            :less_than_or_equal_to => 2_147_483_647,
+                                            :message => N_("must be an integer value of at least 0.")}
   validates_each :usage_limit do |record, attr, value|
-    if value.nil?
-      record.errors[attr] << _("cannot be nil")
-    elsif value > -1 && value < record.systems.length
+    if value != nil && value > -1 && value < record.systems.length
       # we don't let users to set usage limit lower than current in-use
       record.errors[attr] << _("cannot be lower than current usage count (%s)" % record.systems.length)
     end
