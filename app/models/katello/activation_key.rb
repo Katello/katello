@@ -18,7 +18,6 @@ class ActivationKey < Katello::Model
   include Glue::ElasticSearch::ActivationKey if Katello.config.use_elasticsearch
   include Glue if Katello.config.use_cp
   include Katello::Authorization::ActivationKey
-  include Ext::LabelFromName
   include ForemanTasks::Concerns::ActionSubject
 
   belongs_to :organization, :inverse_of => :activation_keys
@@ -33,8 +32,7 @@ class ActivationKey < Katello::Model
   has_many :systems, :through => :system_activation_keys
 
   before_validation :set_default_content_view, :unless => :persisted?
-  validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
-  validates :label, :uniqueness => {:scope => :organization_id}, :presence => true
+
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates :name, :presence => true
   validates :name, :uniqueness => {:scope => :organization_id}

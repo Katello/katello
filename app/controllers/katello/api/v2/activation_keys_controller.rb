@@ -57,7 +57,6 @@ module Katello
     param :usage_limit, :number, :desc => N_("maximum number of registered content hosts, or 'unlimited'")
     def create
       @activation_key = ActivationKey.create!(activation_key_params) do |activation_key|
-        activation_key.label ||= labelize_params(params[:activation_key])
         activation_key.environment = @environment if @environment
         activation_key.organization = @organization
         activation_key.user = current_user
