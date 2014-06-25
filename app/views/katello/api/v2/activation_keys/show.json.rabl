@@ -16,7 +16,7 @@ attributes :usage_count, :user_id, :usage_limit, :pools, :system_template_id, :r
 attributes :get_key_pools => :pools
 
 child :products => :products do |product|
-  attributes :id, :name, :available_content
+  attributes :id, :name
 end
 
 node :permissions do |activation_key|
