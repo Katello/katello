@@ -127,6 +127,15 @@ module Katello
         end
       end
 
+      # overwrite foreman method in operatingsystem.rb
+      # removed raise (_("invalid medium for %s") % to_s) if  media.include?(medium)
+      def boot_files_uri(medium, architecture)
+        raise (_("invalid architecture for %s") % to_s) unless architectures.include?(architecture)
+        eval("#{self.family}::PXEFILES").values.collect do |img|
+          medium_vars_to_uri("#{medium.path}/#{pxedir}/#{img}", architecture.name, self)
+        end
+      end
+
     end
   end
 end
