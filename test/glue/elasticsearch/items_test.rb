@@ -38,6 +38,7 @@ class GlueElasticSearchTest < ActiveSupport::TestCase
   def test_items
     @results.expect(:total, 0)
     @results.expect(:total, 0)
+    @results.expect(:subtotal, 0)
     @results.expect(:results, [])
     @results.expect(:facets, {})
 

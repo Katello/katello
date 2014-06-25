@@ -29,36 +29,76 @@ angular.module('Bastion.content-views').controller('AvailableErrataFilterControl
     ['$scope', 'translate', 'Nutupane', 'Filter', 'Rule',
     function ($scope, translate, Nutupane, Filter, Rule) {
 
-        var nutupane;
+        var nutupane, filterByDate;
 
-        nutupane = new Nutupane(Filter, {
-                filterId:     $scope.$stateParams.filterId,
-                'sort_by':    'errata_id',
-                'sort_order': 'DESC'
+        $scope.nutupane = nutupane = new Nutupane(Filter, {
+                filterId: $scope.$stateParams.filterId,
+                'sort_order': 'DESC',
+                'sort_by': 'issued'
             },
             'availableErrata'
         );
+        nutupane.enableSelectAllResults();
 
-        $scope.errataTable = nutupane.table;
+        filterByDate = function (date, type) {
+            date = date.toISOString().split('T')[0];
+            nutupane.addParam(type, date);
+            nutupane.refresh();
+        };
+
+        $scope.detailsTable = nutupane.table;
 
         $scope.addErrata = function (filter) {
-            var errataIds = nutupane.getAllSelectedResults('errata_id').included.ids;
+            var errataIds,
+                rule,
+                results = nutupane.getAllSelectedResults('errata_id');
 
-            angular.forEach(errataIds, function (erratumId) {
-                var rule = new Rule({'errata_id': erratumId});
-                saveRule(rule, filter);
-            });
+            if (nutupane.table.allResultsSelected) {
+                rule = new Rule({'errata_ids': results});
+            } else {
+                errataIds = results.included.ids;
+                rule = new Rule({'errata_ids': errataIds});
+            }
+
+            nutupane.table.working = true;
+            saveRule(rule, filter);
         };
+
+        $scope.updateTypes = function (errataTypes) {
+            var types = [];
+
+            angular.forEach(errataTypes, function (value, key) {
+                if (value) {
+                    types.push(key);
+                }
+            });
+
+            nutupane.addParam('types[]', types);
+            nutupane.refresh();
+        };
+
+        $scope.$watch('rule.start_date', function (start) {
+            if (start) {
+                filterByDate(start, 'start_date');
+            }
+        });
+
+        $scope.$watch('rule.end_date', function (end) {
+            if (end) {
+                filterByDate(end, 'end_date');
+            }
+        });
 
         function saveRule(rule, filter) {
             var params = {filterId: filter.id};
 
-            rule.$save(params, success, failure);
+            return rule.$save(params, success, failure);
         }
 
-        function success(rule) {
-            nutupane.removeRow(rule['errata_id'], 'errata_id');
+        function success() {
             $scope.$parent.successMessages = [translate('Errata successfully added.')];
+            nutupane.table.selectAllResults(false);
+            nutupane.refresh();
         }
 
         function failure(response) {

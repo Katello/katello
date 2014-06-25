@@ -58,7 +58,8 @@ module Glue::ElasticSearch::Errata
               :severity     => { :type => 'string', :analyzer => :kt_name_analyzer},
               :type         => { :type => 'string', :analyzer => :kt_name_analyzer},
               :title        => { :type => 'string', :analyzer => :title_analyzer},
-              :issued       => { :type => 'date'}
+              :issued       => { :type => 'date'},
+              :issued_sort  => { :type => 'date', :index => :not_analyzed}
             }
           }
         }
@@ -78,7 +79,8 @@ module Glue::ElasticSearch::Errata
           :errata_id_exact => self.errata_id,
           :errata_id_sort => self.errata_id,
           :id_title => self.errata_id + ' : ' + self.title,
-          :issued => self.issued.split[0]
+          :issued => self.issued.split[0],
+          :issued_sort => self.issued.split[0]
         }
       end
 
@@ -236,6 +238,16 @@ module Glue::ElasticSearch::Errata
         end
 
         search.results
+      end
+
+      def self.filters(params)
+        search_filters = []
+        search_filters << {:terms => {:repoids => params[:repo_ids]}} if params[:repo_ids]
+        search_filters << {:terms => {:type => params[:types]}} if params[:types]
+        search_filters << {:terms => {:type => params['types[]']}} if params['types[]']
+        search_filters << {:range => {:issued => {'gte' => params[:start_date]}}} if params[:start_date]
+        search_filters << {:range => {:issued => {'lte' => params[:end_date]}}} if params[:end_date]
+        search_filters
       end
 
     end

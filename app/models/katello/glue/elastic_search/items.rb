@@ -92,6 +92,7 @@ module Glue
           sort {by sort_by, sort_order.to_s.downcase } if sort_by && sort_order
 
           fields [:id] if search_options[:load_records?]
+          fields search_options[:fields] if search_options[:fields]
 
           filter :and, filters if filters.any?
 

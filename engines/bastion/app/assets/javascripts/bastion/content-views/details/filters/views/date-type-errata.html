@@ -1,16 +1,35 @@
 <div alch-form-group label="{{ 'Errata Type' | translate }}">
+
   <label class="checkbox-inline">
-    <input type="checkbox" ng-model="types.security" ng-change="updateTypes(types)"/>
+    <input type="checkbox"
+           name="types"
+           value="{{ types.security }}"
+           ng-model="types.security"
+           ng-change="updateTypes(types)"
+           ng-disabled="onlySelected(types, 'security')"/>
     <span translate>Security</span>
   </label>
+
   <label class="checkbox-inline">
-    <input type="checkbox" ng-model="types.enhancement" ng-change="updateTypes(types)"/>
+    <input type="checkbox"
+           name="types"
+           value="{{ types.enhancement }}"
+           ng-model="types.enhancement"
+           ng-change="updateTypes(types)"
+           ng-disabled="onlySelected(types, 'enhancement')"/>
     <span translate>Enhancement</span>
   </label>
+
   <label class="checkbox-inline">
-    <input type="checkbox" ng-model="types.bugfix" ng-change="updateTypes(types)"/>
+    <input type="checkbox"
+           name="types"
+           value="{{ types.bugfix }}"
+           ng-model="types.bugfix"
+           ng-change="updateTypes(types)"
+           ng-disabled="onlySelected(types, 'bugfix')"/>
     <span translate>Bugfix</span>
   </label>
+
 </div>
 
 <div alch-form-group label="{{ 'Start Date' | translate }}">

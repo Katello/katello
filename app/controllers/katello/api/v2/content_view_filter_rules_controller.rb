@@ -35,13 +35,27 @@ module Katello
     param :min_version, String, :desc => N_("package: minimum version")
     param :max_version, String, :desc => N_("package: maximum version")
     param :errata_id, String, :desc => N_("erratum: id")
+    param :errata_ids, Array, :desc => N_("erratum: IDs or a select all object")
     param :start_date, String, :desc => N_("erratum: start date (YYYY-MM-DD)")
     param :end_date, String, :desc => N_("erratum: end date (YYYY-MM-DD)")
     param :types, Array, :desc => N_("erratum: types (enhancement, bugfix, security)")
     def create
       rule_clazz = ContentViewFilter.rule_class_for(@filter)
-      rule = rule_clazz.create!(rule_params.merge(:filter => @filter))
-      respond :resource => rule
+
+      if rule_params.key?(:errata_ids)
+        rules = []
+        rule_params[:errata_ids].each do |errata_id|
+          rules << rule_clazz.create!({:errata_id => errata_id}.merge(:filter => @filter))
+        end
+      else
+        rule = rule_clazz.create!(rule_params.merge(:filter => @filter))
+      end
+
+      if rules && rule.nil?
+        respond_for_index(:collection => {:results => rules.collect(&:errata_id)})
+      else
+        respond :resource => rule
+      end
     end
 
     api :GET, "/content_view_filters/:content_view_filter_id/rules/:id", N_("Show filter rule info")
@@ -93,8 +107,51 @@ module Katello
     end
 
     def rule_params
-      params.fetch(:content_view_filter_rule, {}).permit(:uuid, :name, :version, :min_version, :max_version,
-                                                         :errata_id, :start_date, :end_date, :types => [])
+      if params[:content_view_filter_rule][:errata_ids].is_a?(Hash)
+        ids = process_errata_ids(params[:content_view_filter_rule][:errata_ids])
+        params[:content_view_filter_rule][:errata_ids] = ids
+      end
+
+      params.fetch(:content_view_filter_rule, {})
+            .permit(:uuid, :name, :version, :min_version, :max_version,
+                    :errata_id, :start_date, :end_date,
+                    :types => [], :errata_ids => [])
+    end
+
+    def process_errata_ids(select_all_params)
+      if select_all_params[:included][:ids].blank?
+        load_search_service
+        step_size = 50
+
+        current_errata_ids = @filter.erratum_rules.map(&:errata_id)
+        current_errata_ids += select_all_params[:excluded][:ids]
+        repo_ids = @filter.applicable_repos.pluck(:pulp_id)
+        select_all_params[:included][:params][:repo_ids] = repo_ids
+
+        search_filters = [
+          { :not => { :terms => { :errata_id_exact => current_errata_ids }}}
+        ]
+        search_filters.concat(Errata.filters(select_all_params[:included][:params]))
+
+        options = sort_params
+        options[:filters] = search_filters
+        options[:fields] = [:errata_id]
+
+        options[:per_page] = 1
+        collection = item_search(Errata, select_all_params, options)
+        total = collection[:subtotal]
+        results = []
+
+        (0..total).step(step_size).flat_map do |start|
+          options[:per_page] = step_size
+          options[:page] = start / step_size
+          results.concat(item_search(Errata, select_all_params, options)[:results])
+        end
+
+        results.collect { |erratum| erratum.errata_id }
+      else
+        []
+      end
     end
 
   end
