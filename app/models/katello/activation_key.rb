@@ -49,6 +49,7 @@ class ActivationKey < Katello::Model
     end
   end
   validates_with Validators::ContentViewEnvironmentValidator
+  after_validation :remove_label_errors_if_name_errors
 
   scope :in_environment, lambda { |env| where(:environment_id => env) }
 
@@ -61,6 +62,10 @@ class ActivationKey < Katello::Model
     elsif !environment.nil? && environment.organization != self.organization
       errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
     end
+  end
+
+  def remove_label_errors_if_name_errors
+    self.errors.delete(:label) if self.errors[:name].any?
   end
 
   def usage_count
