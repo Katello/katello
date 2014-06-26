@@ -24,6 +24,8 @@ module Glue::ElasticSearch::System
 
       add_host_collection_hook     lambda { |host_collection| reindex_on_association_change(host_collection) }
       remove_host_collection_hook  lambda { |host_collection| reindex_on_association_change(host_collection) }
+      add_activation_key_hook     lambda { |activation_key| reindex_on_association_change(activation_key) }
+      remove_activation_key_hook  lambda { |activation_key| reindex_on_association_change(activation_key) }
 
       # 'index_options' controls what attributes are indexed and stored in ES. From indexed_model.rb
       #  :json  - normal to_json options,  :only or :except allowed
@@ -48,6 +50,7 @@ module Glue::ElasticSearch::System
                                        :created_at,
                                        :lastCheckin,
                                        :host_collection,
+                                       :activation_key,
                                        :installed_products,
                                        "custom_info.KEYNAME",
                                        :content_view,
@@ -129,6 +132,8 @@ module Glue::ElasticSearch::System
       :organization_id => self.organization.id,
       :host_collection => self.host_collections.collect{|g| g.name},
       :host_collection_ids => self.host_collection_ids,
+      :activation_key => self.activation_keys.collect{|g| g.name},
+      :activation_key_ids => self.activation_key_ids,
       :installed_products => collect_installed_product_names,
       :sockets => self.sockets,
       :custom_info => collect_custom_info,
@@ -159,7 +164,16 @@ module Glue::ElasticSearch::System
     Tire.index System.index.name do
       update System.document_type, system_id, {:script => id_update + name_update }
     end
+  end
 
+  def update_activation_keys
+    system_id = self.id #save the system id for the block
+    id_update = "ctx._source.activation_key_ids = [#{self.activation_key_ids.join(",")}]; "
+    names = self.activation_keys.pluck(:name).map{|name| "\"#{name}\""}
+    name_update = "ctx._source.activation_key = [#{names.join(",")}];"
+    Tire.index System.index.name do
+      update System.document_type, system_id, {:script => id_update + name_update }
+    end
   end
 
 end

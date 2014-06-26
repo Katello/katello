@@ -73,8 +73,12 @@ class Api::V2::SystemsController < Api::V2::ApiController
     environment_ids = environment_ids.empty? ? params[:environment_id] : environment_ids & [params[:environment_id].to_i] if params[:environment_id]
     if !environment_ids.empty?
       filters << {:terms => {:environment_id =>  environment_ids}}
-    elsif params[:host_collection_id]
+    end
+    if params[:host_collection_id]
       filters << {:terms => {:host_collection_ids => [params[:host_collection_id]] }}
+    end
+    if params[:activation_key_id]
+      filters << {:terms => {:activation_key_ids => [params[:activation_key_id]] }}
     end
 
     filters << {:terms => {:uuid => System.all_by_pool_uuid(params['pool_id']) }} if params['pool_id']

@@ -19,6 +19,7 @@ class System < Katello::Model
 
   include Hooks
   define_hooks :add_host_collection_hook, :remove_host_collection_hook,
+               :add_activation_key_hook, :remove_activation_key_hook,
                :as_json_hook
 
   include ForemanTasks::Concerns::ActionSubject
@@ -30,7 +31,8 @@ class System < Katello::Model
   include AsyncOrchestration
 
   attr_accessible :name, :uuid, :description, :location, :environment, :content_view,
-                  :environment_id, :content_view_id, :host_collection_ids, :host_id
+                  :environment_id, :content_view_id, :host_collection_ids, :host_id,
+                  :activation_key_ids
 
   after_rollback :rollback_on_create, :on => :create
 
@@ -39,7 +41,11 @@ class System < Katello::Model
 
   has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
   has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
-  has_many :activation_keys, :through => :system_activation_keys
+  has_many :activation_keys, {
+                               :through => :system_activation_keys,
+                               :after_add    => :add_activation_key,
+                               :after_remove => :remove_activation_key
+                             }
   has_many :system_host_collections, :class_name => "Katello::SystemHostCollection", :dependent => :destroy
   has_many :host_collections, {:through      => :system_host_collections,
                                :after_add    => :add_host_collection,
@@ -91,6 +97,14 @@ class System < Katello::Model
 
   def remove_host_collection(host_collection)
     run_hook(:remove_host_collection_hook, host_collection)
+  end
+
+  def add_activation_key(activation_key)
+    run_hook(:add_activation_key_hook, activation_key)
+  end
+
+  def remove_activation_key(activation_key)
+    run_hook(:remove_activation_key_hook, activation_key)
   end
 
   class << self

@@ -2,7 +2,13 @@
   <thead>
     <tr alch-table-head row-select>
       <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
-      <th alch-table-column="status">{{ "Subscription Status" | translate }}</th>
+      <th alch-table-column="status">
+        {{ "Subscription Status" | translate }}
+        <i class="icon-info-sign"
+           tooltip="{{ 'Mouse over the red or yellow subscription status to see detailed reason' | translate }}"
+           tooltip-animation=false>
+        </i>
+      </th>
       <th alch-table-column="os">{{ "OS" | translate }}</th>
       <th alch-table-column="environment" sortable>{{ "Environment" | translate }}</th>
       <th alch-table-column="contentView">{{ "Content View" | translate }}</th>
@@ -14,14 +20,21 @@
   <div data-extend-template="layouts/select-all-results.html"></div>
 
   <tbody>
-    <tr alch-table-row ng-repeat="contentHost in contentHostTable.rows" row-select="contentHost">
+    <tr alch-table-row ng-repeat="contentHost in contentHostTable.rows" row-select="contentHost"
+        ng-controller="ContentHostStatusController">
       <td alch-table-cell>
         <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
           {{ contentHost.name }}
         </a>
       </td>
       <td alch-table-cell>
-        <span class="icon-circle" ng-class="contentHostTable.getStatusColor(contentHost.entitlementStatus)"></span>
+        <span class="icon-circle" ng-class="contentHostTable.getStatusColor(contentHost.entitlementStatus)"
+              tooltip-html-unsafe="{{ statusReason }}"
+              tooltip-trigger=mouseenter
+              tooltip-placement=right
+              tooltip-append-to-body=true
+              tooltip-animation=false
+              ng-mouseover="getComplianceReason(contentHost.uuid)"/>
       </td>
       <td alch-table-cell>{{ contentHost.distribution }}</td>
       <td alch-table-cell>{{ contentHost.environment.name }}</td>

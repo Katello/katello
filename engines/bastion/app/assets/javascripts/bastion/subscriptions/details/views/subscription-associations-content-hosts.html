@@ -1,0 +1,71 @@
+<span page-title ng-model="subscription">{{ 'Content Hosts for Subscription:' | translate }} {{ subscription.name }}</span>
+
+<div class="details details-full">
+
+  <h3 translate>
+    Attached to Content Hosts
+  </h3>
+
+  <table class="table table-striped" alch-table="table" ng-class="{'table-mask': working}">
+    <thead>
+      <tr alch-table-head>
+        <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
+        <th alch-table-column="status">
+          {{ "Subscription Status" | translate }}
+          <i class="icon-info-sign"
+             tooltip="{{ 'Mouse over the red or yellow subscription status icon to see detailed reason' | translate }}"
+             tooltip-animation=false>
+          </i>
+        </th>
+        <th alch-table-column="virtual">{{ "Virtual" | translate }}</th>
+        <th alch-table-column="environment" sortable>{{ "Environment" | translate }}</th>
+        <th alch-table-column="contentView">{{ "Content View" | translate }}</th>
+        <th alch-table-column="serviceLevel">{{ "Service Level" | translate }}</th>
+        <th alch-table-column="sockets">{{ "Sockets" | translate }}</th>
+        <th alch-table-column="cores">{{ "Cores per Socket" | translate }}</th>
+        <th alch-table-column="memory">{{ "RAM (GB)" | translate }}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-show="!working && contentHosts.length === 0">
+        <td colspan="9" translate>This subscription is not attached to any content hosts.</td>
+      </tr>
+
+      <tr ng-show="working">
+        <td colspan="9" translate>
+          <div class="loading-mask icon-3x" ng-show="working">
+            <i class="icon-spinner icon-spin"></i>
+            {{ "Loading..." | translate }}
+          </div>
+        </td>
+      </tr>
+
+      <tr alch-table-row ng-repeat="contentHost in contentHosts"
+          ng-controller="ContentHostStatusController">
+        <td alch-table-cell>
+          <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
+            {{ contentHost.name }}
+          </a>
+        </td>
+        <td alch-table-cell>
+          <span class="icon-circle" ng-class="getStatusColor(contentHost['entitlement_status'])"
+                tooltip-html-unsafe="{{ statusReason }}"
+                tooltip-trigger=mouseenter
+                tooltip-placement=right
+                tooltip-append-to-body=true
+                tooltip-animation=false
+                ng-mouseover="getComplianceReason(contentHost.uuid)"/>
+        </td>
+        <td alch-table-cell>{{ virtual(contentHost.facts) | booleanToYesNo }}</td>
+        <td alch-table-cell>{{ contentHost.environment.name }}</td>
+        <td alch-table-cell>{{ contentHost.content_view.name || "" }}</td>
+        <td alch-table-cell>{{ contentHost.service_level }}</td>
+        <td alch-table-cell>{{ contentHost.facts.cpu['cpu_socket(s)'] }}</td>
+        <td alch-table-cell>{{ contentHost.facts.cpu['core(s)_per_socket'] }}</td>
+        <td alch-table-cell>{{ memory(contentHost.facts) }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
