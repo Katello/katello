@@ -42,7 +42,7 @@
     <button class="btn btn-primary"
             translate
             ng-hide="denied('edit_products', product)"
-            ng-disabled="isReadOnly(product)"
+            ng-disabled="product.readonly"
             ui-sref="products.details.repositories.new({productId: product.id})">
       Create Repository
     </button>

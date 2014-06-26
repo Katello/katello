@@ -24,7 +24,6 @@
  */
 angular.module('Bastion.products').controller('ProductDetailsController',
     ['$scope', '$state', 'Product', function ($scope, $state, Product) {
-
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
@@ -48,8 +47,20 @@ angular.module('Bastion.products').controller('ProductDetailsController',
             });
         };
 
-        $scope.isReadOnly = function (product) {
-            return product.readonly || product.redhat;
+        $scope.getReadOnlyReason = function (product) {
+            var readOnlyReason = null;
+
+            if (product.$resolved) {
+                if ($scope.denied('delete_products', product)) {
+                    readOnlyReason = 'permissions';
+                } else if (product['published_content_views'].length > 0) {
+                    readOnlyReason = 'published';
+                } else if (product.redhat) {
+                    readOnlyReason = 'redhat';
+                }
+            }
+            
+            return readOnlyReason;
         };
     }]
 );
