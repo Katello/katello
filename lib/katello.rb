@@ -40,5 +40,6 @@ module Katello
   require "katello/load_configuration"
   require "katello/logging"
   require 'katello/middleware/silenced_logger.rb'
+  require 'katello/middleware/custom_ac_log_subscriber.rb'
 
 end
