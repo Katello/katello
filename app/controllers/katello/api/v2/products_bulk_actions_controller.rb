@@ -19,7 +19,9 @@ module Katello
     param :ids, Array, :desc => N_("List of product ids"), :required => true
     def destroy_products
       deletable_products = @products.deletable
-      deletable_products.each(&:destroy)
+      deletable_products.each do |prod|
+        async_task(::Actions::Katello::Product::Destroy, prod)
+      end
 
       messages = format_bulk_action_messages(
         :success    => _("Successfully removed %s product(s)"),
