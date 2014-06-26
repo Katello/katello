@@ -29,7 +29,7 @@
 angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsController',
     ['$scope', '$location', 'translate', 'CurrentOrganization', 'Subscription', 'ContentHost', 'SubscriptionsHelper',
     function ($scope, $location, translate, CurrentOrganization, Subscription, ContentHost, SubscriptionsHelper) {
-        
+
         $scope.addSubscriptionsTable = $scope.addSubscriptionsPane.table;
         $scope.isAdding  = false;
         $scope.addSubscriptionsTable.closeItem = function () {};

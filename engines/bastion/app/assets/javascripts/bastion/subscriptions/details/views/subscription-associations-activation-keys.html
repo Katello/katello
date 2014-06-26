@@ -1,0 +1,48 @@
+<span page-title ng-model="subscription">{{ 'Activation Keys for Subscription:' | translate }} {{ subscription.product_name }}</span>
+
+<div class="details details-full">
+
+  <h3 translate>
+    Included in Activation Keys
+  </h3>
+
+  <table class="table table-striped" alch-table="table" ng-class="{'table-mask': working}">
+    <thead>
+      <tr alch-table-head>
+        <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
+        <th alch-table-column="environment">{{ "Environment" | translate }}</th>
+        <th alch-table-column="contentView">{{ "Content View" | translate }}</th>
+        <th alch-table-column="contentView">{{ "Service Level" | translate }}</th>
+        <th alch-table-column="contentView">{{ "Release Version" | translate }}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-show="!working && activationKeys.length === 0">
+        <td colspan="5" translate>This subscription is not associated with any activation keys.</td>
+      </tr>
+
+      <tr ng-show="working">
+        <td colspan="5" translate>
+          <div class="loading-mask icon-3x" ng-show="working">
+            <i class="icon-spinner icon-spin"></i>
+            {{ "Loading..." | translate }}
+          </div>
+        </td>
+      </tr>
+
+      <tr alch-table-row ng-repeat="activationKey in activationKeys">
+        <td alch-table-cell>
+          <a ui-sref="activation-keys.details.info({activationKeyId: activationKey.id})">
+            {{ activationKey.name }}
+          </a>
+        </td>
+        <td alch-table-cell>{{ activationKey.environment.name || "" }}</td>
+        <td alch-table-cell>{{ activationKey.content_view.name || "" }}</td>
+        <td alch-table-cell>{{ activationKey.service_level || "" }}</td>
+        <td alch-table-cell>{{ activationKey.release_version || "" }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
