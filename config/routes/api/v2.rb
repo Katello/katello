@@ -363,17 +363,6 @@ Katello::Engine.routes.draw do
       api_resources :users do
         get :report, :on => :collection
         get :sync_ldap_roles, :on => :collection
-        api_resources :roles, :controller => :users, :only => [] do
-          post :index, :on => :collection, :action => :add_role
-          delete :destroy, :on => :member, :action => :remove_role
-          get :index, :on => :collection, :action => :list_roles
-        end
-      end
-
-      api_resources :roles do
-        get :available_verbs, :on => :collection, :action => :available_verbs
-        api_resources :permissions, :only => [:index, :show, :create, :destroy]
-        api_resources :ldap_groups, :controller => :role_ldap_groups, :only => [:create, :destroy, :index]
       end
 
       api_resources :sync_plans, :only => [:show, :update, :destroy]
