@@ -177,7 +177,7 @@ class Product < Katello::Model
   # TODO: this should be a part of product update orchestration
   def reset_repo_gpgs!
     repositories.each do |repo|
-      repo.update_attributes!(:gpg_key => self.gpg_key)
+      ::ForemanTasks.async_task(::Actions::Katello::Repository::Update, repo, :gpg_key => self.gpg_key)
     end
   end
 

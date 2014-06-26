@@ -16,56 +16,15 @@ module Glue::Candlepin::Content
     base.send :include, InstanceMethods
     # required for GPG key url generation
     base.send :include, Rails.application.routes.url_helpers
-
-    base.class_eval do
-      before_save :save_content_orchestration
-      after_create :rectify_gpg_key_orchestration
-    end
   end
 
   module InstanceMethods
-    def save_content_orchestration
-      #until candelpin supports view content, just ignore
-      if self.new_record? && !self.content_view.default?
-        return
-      end
-
-      if !self.new_record? && should_update_content?
-        pre_queue.create(:name => "update content : #{self.name}", :priority => 2, :action => [self, :update_content])
-      end
-    end
-
-    def rectify_gpg_key_orchestration
-      #if we are creating a repo with a gpg key, we have to create the content without the gpg key
-      # and then update the content with the gpg key (since repo needs content created before it is actually saved
-      #  and thus can't create the gpg key url)
-      if self.gpg_key
-        pre_queue.create(:name => "update content : #{self.name}", :priority => 2, :action => [self, :update_content])
-      end
-    end
-
     def content
       return @content unless @content.nil?
       unless self.content_id.nil?
         @content = Katello::Candlepin::Content.find(self.content_id)
       end
       @content
-    end
-
-    def update_content
-      #if the gpg key was enabled
-      #we only update the content if the content is actually not set properly
-      #this means we don't recreate the environment for the same repo in
-      #each environment.   We do the same for it being disabled, we check
-      #to make sure it is not enabled in the contnet before refreshing
-      self.content.update(
-        :name => self.name,
-        :contentUrl => Glue::Pulp::Repos.custom_content_path(self.product, label),
-        :gpgUrl => yum_gpg_key_url,
-        :label => custom_content_label,
-        :type => self.content_type,
-        :vendor => Provider::CUSTOM
-      )
     end
 
     def create_content

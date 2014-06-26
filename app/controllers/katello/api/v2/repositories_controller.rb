@@ -113,7 +113,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   def update
     repo_params = repository_params
     repo_params[:url] = nil if repository_params[:url].blank?
-    @repository.update_attributes!(repo_params)
+    sync_task(::Actions::Katello::Repository::Update, @repository, repo_params)
     respond_for_show(:resource => @repository)
   end
 
