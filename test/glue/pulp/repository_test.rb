@@ -119,13 +119,6 @@ class GluePulpRepoTest < GluePulpRepoTestBase
     refute_empty dists.select{|d| d.is_a? Runcible::Models::YumCloneDistributor}
   end
 
-  def test_update_unprotected
-    @fedora_17_x86_64.expects(:refresh_pulp_repo).once.returns(true)
-    @fedora_17_x86_64.expects(:generate_metadata).once.returns(true)
-    @fedora_17_x86_64.unprotected = !@fedora_17_x86_64.unprotected
-    @fedora_17_x86_64.save!
-  end
-
   def test_populate_from
     assert @fedora_17_x86_64.populate_from({ @fedora_17_x86_64.pulp_id => {} })
   end
@@ -178,7 +171,6 @@ class GluePulpRepoAfterSyncTest < GluePulpRepoTestBase
 
 end
 
-
 class GluePulpChangeFeedTest < GluePulpRepoTestBase
 
   def self.before_suite
@@ -192,13 +184,6 @@ class GluePulpChangeFeedTest < GluePulpRepoTestBase
     VCR.eject_cassette
   end
 
-  def test_feed_change
-    new_feed = "http://foo.com/foo"
-    @@fedora_17_x86_64.url = new_feed
-    @@fedora_17_x86_64.save!
-    pulps_feed = Repository.find(@@fedora_17_x86_64.id).pulp_repo_facts['importers'].first['config']['feed']
-    assert_equal new_feed, pulps_feed
-  end
 end
 
 class GluePulpPuppetRepoTest < GluePulpRepoTestBase

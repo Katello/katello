@@ -178,13 +178,20 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
 
   def test_update
     key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
+    assert_sync_task(::Actions::Katello::Repository::Update) do |repo, attributes|
+      repo.must_equal @repository
+      attributes.must_equal({ 'gpg_key_id' => "#{key.id}", 'url' => nil })
+    end
     put :update, :id => @repository.id, :repository => {:gpg_key_id => key.id}
-
     assert_response :success
     assert_template 'api/v2/repositories/show'
   end
 
   def test_update_empty_string_url
+    assert_sync_task(::Actions::Katello::Repository::Update) do |repo, attributes|
+      repo.must_equal @repository
+      attributes.must_equal({ 'url' => nil })
+    end
     put :update, :id => @repository.id, :repository => {:url => ''}
 
     assert_response :success
