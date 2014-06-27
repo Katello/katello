@@ -132,7 +132,7 @@ module Katello
 
       if Katello::System.where(:content_view_id => view, :environment_id => env_ids).count > 0
         unless options[:system_content_view_id] && options[:system_environment_id]
-          fail _("Unable to reassign systems. Please provide system_content_view_id and system_environment_id.")
+          fail _("Unable to reassign content hosts. Please provide system_content_view_id and system_environment_id.")
         end
 
         # if we are reassigning systems to a diffent environment or cv
