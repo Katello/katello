@@ -11,27 +11,15 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Katello
-    module ContentView
-      class Destroy < Actions::EntryAction
-
-        def plan(content_view)
-          action_subject(content_view)
-          content_view.check_ready_to_destroy!
-
-          sequence do
-            concurrence do
-              content_view.content_view_versions.each do |version|
-                plan_action(ContentViewVersion::Destroy, version)
-              end
-            end
-
-            content_view.destroy!
-          end
+  module Candlepin
+    module Owner
+      class Destroy < Candlepin::Abstract
+        input_format do
+          param :label
         end
 
-        def humanized_name
-          _("Delete")
+        def run
+          output[:response] = ::Katello::Resources::Candlepin::Owner.destroy(input[:label])
         end
       end
     end

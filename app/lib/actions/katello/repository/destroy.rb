@@ -15,12 +15,20 @@ module Actions
     module Repository
       class Destroy < Actions::EntryAction
 
-        def plan(repository)
+        # options:
+        #   skip_environment_update - defaults to false. skips updating the CP environment
+        #
+        def plan(repository, options = {})
+          skip_environment_update = options.fetch(:skip_environment_update, false)
           action_subject(repository)
           plan_action(Pulp::Repository::Destroy, pulp_id: repository.pulp_id)
           plan_action(Product::ContentDestroy, repository)
-          plan_action(ContentView::UpdateEnvironment, repository.content_view, repository.environment)
           plan_action(ElasticSearch::Repository::Destroy, pulp_id: repository.pulp_id)
+
+          if !skip_environment_update && ::Katello.config.use_cp
+            plan_action(ContentView::UpdateEnvironment, repository.content_view, repository.environment)
+          end
+
           repository.destroy!
         end
 

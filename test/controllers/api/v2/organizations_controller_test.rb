@@ -15,6 +15,7 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::OrganizationsControllerTest < ActionController::TestCase
+    include Support::ForemanTasks::Task
 
     def self.before_suite
       models = ["Organization"]
@@ -78,7 +79,9 @@ module Katello
     end
 
     def test_delete
-      Organization.any_instance.stubs(:destroy).returns(true)
+      assert_async_task ::Actions::Katello::Organization::Destroy do |org|
+        org.id.must_equal @organization.id
+      end
       delete(:destroy, :id => @organization.id)
 
       assert_response :success

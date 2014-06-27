@@ -114,6 +114,9 @@ module Katello
         Rails.logger.info('Database was not initialized yet: skipping smart proxy katello extension')
       end
 
+      # Organization controller extensions
+      ::OrganizationsController.send :include, Katello::Concerns::OrganizationsControllerExtensions
+
       # Service extensions
       require "#{Katello::Engine.root}/app/services/katello/puppet_class_importer_extensions"
 

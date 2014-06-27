@@ -21,7 +21,7 @@ module Actions
           sequence do
             concurrence do
               version.repositories.each do |repo|
-                plan_action(Repository::Destroy, repo)
+                plan_action(Repository::Destroy, repo, skip_environment_update: true)
               end
 
               version.content_view_puppet_environments.each do |puppet_env|

@@ -34,6 +34,8 @@ module Katello
         include Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
         include Ext::LabelFromName
 
+        before_destroy :remove_environments # must be before has_many :kt_environments
+
         has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :destroy
         has_many :providers, :class_name => "Katello::Provider", :dependent => :destroy
         has_many :products, :class_name => "Katello::Product", :dependent => :destroy, :inverse_of => :organization
@@ -45,6 +47,7 @@ module Katello
         has_many :sync_plans, :class_name => "Katello::SyncPlan", :dependent => :destroy, :inverse_of => :organization
         has_many :host_collections, :class_name => "Katello::HostCollection", :dependent => :destroy, :inverse_of => :organization
         has_many :content_views, :class_name => "Katello::ContentView", :dependent => :destroy, :inverse_of => :organization
+        has_many :content_view_environments, :through => :content_views
         has_many :task_statuses, :class_name => "Katello::TaskStatus", :dependent => :destroy, :as => :task_owner
 
         #older association
@@ -66,8 +69,7 @@ module Katello
 
         validates :name, :uniqueness => true, :presence => true
         validates_with Validators::KatelloNameFormatValidator, :attributes => :name
-        validates :label, :uniqueness => { :message => _("already exists (including organizations being deleted)") },
-                  :presence => true
+        validates :label, :presence => true
         validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
         validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
         validate :unique_name_and_label
@@ -84,16 +86,6 @@ module Katello
           else
             true
           end
-        end
-
-        # TODO: ORG_DESTROY - renable once we support organization destroying
-        def destroy
-          fail _("Organizations cannot be deleted in this release.")
-        end
-
-        # Organizations which are being deleted (or deletion failed) can be filtered out with this scope.
-        def self.without_deleting
-          self.where(:deletion_task_id => nil)
         end
 
         def default_content_view
@@ -172,7 +164,14 @@ module Katello
         end
 
         def being_deleted?
-          !self.deletion_task_id.nil?
+          ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Organization::Destroy).
+            for_resource(self).active.any?
+        end
+
+        def destroy!
+          unless destroy
+            fail self.errors.full_messages.join('; ')
+          end
         end
 
         def applying_default_info?
@@ -267,6 +266,14 @@ module Katello
 
         def parent_id=(parent_id)
           fail ::Foreman::Exception.new(N_("You cannot set an organization's parent_id. This feature is disabled."))
+        end
+
+        def remove_environments
+          # start at the end of each promotion path
+          promotion_paths.each do |path|
+            path.reverse.each { |env| env.destroy! }
+          end
+          library.destroy!
         end
 
       private

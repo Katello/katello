@@ -18,8 +18,6 @@ module Glue::Candlepin::Owner
     base.send :include, InstanceMethods
 
     base.class_eval do
-      before_destroy :destroy_owner_orchestration
-
       validates :label,
           :presence => true,
           :format => { :with => /^[\w-]*$/ }
@@ -45,49 +43,6 @@ module Glue::Candlepin::Owner
     rescue => e
       Rails.logger.error _("Failed to delete candlepin owner %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
-    end
-
-    def del_environments
-      Rails.logger.debug _("All environments for owner %s in candlepin") % name
-      #need to destroy environments in the proper order to not leave orphans
-      self.promotion_paths.each do |path|
-        path.reverse.each do |env|
-          env.reload.destroy #if we do not reload, the environment may think its successor still exists
-        end
-      end
-      self.library.destroy
-      self.library = nil
-      return true
-    rescue => e
-      Rails.logger.error _("Failed to delete all environments for owner %{org} in candlepin: %{message}") % {:org => name, :message => "#{e}, #{e.backtrace.join("\n")}"}
-      raise e
-    end
-
-    def del_providers
-      Rails.logger.debug _("All providers for owner %s in candlepin") % name
-      self.providers.destroy_all
-    rescue => e
-      Rails.logger.error _("Failed to delete all providers for owner %s in candlepin") % [name]
-      raise e
-    end
-
-    #we must delete all systems as part of org deletion explicitly, otherwise the consumers in
-    #  candlepin will be deleted before destroy is called on the Organization object
-    def del_systems
-      Rails.logger.debug _("All Systems for owner %s in candlepin") % name
-      System.joins(:environment).where("#{Katello::KTEnvironment.table_name}.organization_id = :org_id", :org_id => self.id).each do |sys|
-        sys.destroy
-      end
-    rescue => e
-      Rails.logger.error _("Failed to delete all systems for owner %{org} in candlepin: %{message}") % {:org => name, :message => "#{e}, #{e.backtrace.join("\n")}"}
-      raise e
-    end
-
-    def destroy_owner_orchestration
-      pre_queue.create(:name => "candlepin systems for organization: #{self.name}", :priority => 2, :action => [self, :del_systems])
-      pre_queue.create(:name => "candlepin providers for organization: #{self.name}", :priority => 3, :action => [self, :del_providers])
-      pre_queue.create(:name => "candlepin environments for organization: #{self.name}", :priority => 4, :action => [self, :del_environments])
-      pre_queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 5, :action => [self, :del_owner])
     end
 
     def owner_info

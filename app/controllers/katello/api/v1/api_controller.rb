@@ -76,7 +76,7 @@ class Api::V1::ApiController < Api::ApiController
   private
 
   def get_organization(org_id)
-    return Organization.without_deleting.find_by_id(org_id)
+    return Organization.find_by_id(org_id)
   end
 
   def organization_id
