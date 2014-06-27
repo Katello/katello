@@ -8,8 +8,8 @@ require 'util/password'
 
 # Can be specified via the command line using:
 # rake db:seed SEED_INITIAL_ORGANIZATION=MyOrg SEED_INITIAL_LOCATION=MyDefault
-first_org_name = ENV['SEED_INITIAL_ORGANIZATION'] || 'ACME_Corporation'
-first_location_name = ENV['SEED_INITIAL_LOCATION'] || 'Default'
+first_org_name = ENV['SEED_INITIAL_ORGANIZATION'] || 'Default_Organization'
+first_location_name = ENV['SEED_INITIAL_LOCATION'] || 'Default_Location'
 
 def format_errors(model = nil)
   return '(nil found)' if model.nil?
