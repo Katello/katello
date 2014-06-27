@@ -17,10 +17,17 @@ module Katello
 
     api :GET, "/content_views/:content_view_id/content_view_puppet_modules", N_("List content view puppet modules")
     param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
+    param :name, String, :desc => N_("name of the puppet module")
+    param :author, String, :desc => N_("author of the puppet module")
+    param :uuid, String, :desc => N_("the uuid of the puppet module to associate")
     def index
       options = sort_params
       options[:load_records?] = true
-      options[:filters] = [{ :terms => { :id => @view.content_view_puppet_module_ids } }]
+      options[:filters] = []
+      options[:filters] << { :terms => { :id => @view.content_view_puppet_module_ids } }
+      options[:filters] << { :term => {:name => params[:name]} } if params[:name]
+      options[:filters] << { :term => {:uuid => params[:uuid]} } if params[:uuid]
+      options[:filters] << { :term => {:author => params[:author]} } if params[:author]
 
       @search_service.model = ContentViewPuppetModule
       respond(:collection => item_search(ContentViewPuppetModule, params, options))
@@ -42,6 +49,7 @@ module Katello
 
     api :GET, "/content_views/:content_view_id/content_view_puppet_modules/:id", N_("Show a content view puppet module")
     param :content_view_id, :number, :desc => N_("content view numeric identifier"), :required => true
+    param :id, :identifier, :desc => N_("puppet module ID"), :required => true
     def show
       respond :resource => @puppet_module
     end
@@ -49,7 +57,7 @@ module Katello
     api :PUT, "/content_views/:content_view_id/content_view_puppet_modules/:id",
         N_("Update a puppet module associated with the content view")
     param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
-    param :id, :identifier, :desc => N_("puppet module identifier"), :required => true
+    param :id, :identifier, :desc => N_("puppet module ID"), :required => true
     param :name, String, :desc => N_("name of the puppet module")
     param :author, String, :desc => N_("author of the puppet module")
     param :uuid, String, :desc => N_("the uuid of the puppet module to associate")
@@ -61,7 +69,7 @@ module Katello
     api :DELETE, "/content_views/:content_view_id/content_view_puppet_modules/:id",
         N_("Remove a puppet module from the content view")
     param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
-    param :id, :identifier, :desc => N_("puppet module identifierr"), :required => true
+    param :id, :identifier, :desc => N_("puppet module ID"), :required => true
     def destroy
       @puppet_module.destroy
       respond :resource => @puppet_module
@@ -81,5 +89,6 @@ module Katello
       attrs = [:name, :author, :uuid]
       params.require(:content_view_puppet_module).permit(*attrs)
     end
+
   end
 end
