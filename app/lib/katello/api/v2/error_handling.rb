@@ -32,7 +32,7 @@ module Api
         rescue_from Errors::SecurityViolation, :with => :rescue_from_security_violation
         rescue_from Errors::ConflictException, :with => :rescue_from_conflict_exception
         rescue_from Errors::UnsupportedActionException, :with => :rescue_from_unsupported_action_exception
-        rescue_from Errors::UsageLimitExhaustedException, :with => :rescue_from_usage_limit_exhausted_exception
+        rescue_from Errors::MaxContentHostsReachedException, :with => :rescue_from_max_content_hosts_reached_exception
         rescue_from ActionController::ParameterMissing, :with => :rescue_from_missing_param
       end
 
@@ -87,7 +87,7 @@ module Api
         respond_for_exception(exception, :status => :bad_request)
       end
 
-      def rescue_from_usage_limit_exhausted_exception(exception)
+      def rescue_from_max_content_hosts_reached_exception(exception)
         respond_for_exception(exception, :status => :conflict, :with_logging => false)
       end
 

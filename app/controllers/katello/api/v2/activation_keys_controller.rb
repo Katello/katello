@@ -54,7 +54,8 @@ module Katello
     param :environment, Hash, :desc => N_("environment")
     param :environment_id, :identifier, :desc => N_("environment id")
     param :content_view_id, :identifier, :desc => N_("content view id")
-    param :usage_limit, :number, :desc => N_("maximum number of registered content hosts, or 'unlimited'")
+    param :max_content_hosts, :number, :desc => N_("maximum number of registered content hosts")
+    param :unlimited_content_hosts, :bool, :desc => N_("can the activation key have unlimited content hosts")
     def create
       @activation_key = ActivationKey.create!(activation_key_params) do |activation_key|
         activation_key.environment = @environment if @environment
@@ -71,7 +72,8 @@ module Katello
     param :description, String, :desc => N_("description")
     param :environment_id, :identifier, :desc => N_("environment id")
     param :content_view_id, :identifier, :desc => N_("content view id")
-    param :usage_limit, :number, :desc => N_("maximum number of registered content hosts, or 'unlimited'")
+    param :max_content_hosts, :number, :desc => N_("maximum number of registered content hosts")
+    param :unlimited_content_hosts, :bool, :desc => N_("can the activation key have unlimited content hosts")
     param :release_version, String, :desc => N_("content release version")
     param :service_level, String, :desc => N_("service level")
     def update
@@ -194,28 +196,16 @@ module Katello
                                                           :content_view_id,
                                                           :release_version,
                                                           :service_level,
+                                                          :max_content_hosts,
+                                                          :unlimited_content_hosts,
                                                           :content_overrides => [],
                                                           :host_collection_ids => [])
 
       key_params[:environment_id] = params[:environment][:id] if params[:environment].try(:[], :id)
       key_params[:content_view_id] = params[:content_view][:id] if params[:content_view].try(:[], :id)
-      key_params[:usage_limit] = int_limit(params)
+      key_params[:max_content_hosts] = nil if params[:unlimited_content_hosts]
 
       key_params
-    end
-
-    def int_limit(key_params)
-      limit = key_params[:activation_key].try(:[], :usage_limit)
-      if limit.nil?
-        limit = -1
-      elsif limit == 'unlimited' #_('Unlimited') || limit == 'Unlimited' || limit == _('unlimited') || limit == 'unlimited'
-        limit = -1
-      else
-        limit = Integer(limit) rescue nil
-        fail(HttpErrors::BadRequest, _("Invalid usage limit value of '%{value}'") %
-            {:value => key_params[:activation_key][:usage_limit]}) if limit.nil?
-      end
-      limit
     end
   end
 end

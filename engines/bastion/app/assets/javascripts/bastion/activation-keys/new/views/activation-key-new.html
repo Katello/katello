@@ -29,21 +29,20 @@
              required/>
     </div>
 
-    <div alch-form-group label="{{ 'System Limit' | translate }}" field="usage_limit">
+    <div alch-form-group label="{{ 'System Limit' | translate }}" field="max_content_hosts">
       <span translate>Unlimited Systems:</span>
       <input type="checkbox"
              name="limit"
-             ng-model="unlimited"
-             ng-checked="isUnlimited(activationKey)"
-             ng-change="unlimitedChanged(activationKey)"/>
+             ng-model="activationKey.unlimited_content_hosts"/>
 
-      <div alch-form-group label="{{ 'Limit' | translate }}" ng-hide="isUnlimited(activationKey)">
-        <input id="usage_limit"
-               name="usage_limit"
+      <div alch-form-group label="{{ 'Limit' | translate }}" ng-hide="activationKey.unlimited_content_hosts">
+        <input id="max_content_hosts"
+               name="max_content_hosts"
                class="form-control"
-               ng-model="activationKey.usage_limit"
+               ng-model="activationKey.max_content_hosts"
+               ng-required="!activationKey.unlimited_content_hosts"
                type="number"
-               ng-change="inputChanged(activationKey)"
+               min="1"
                tabindex="2"/>
       </div>
     </div>

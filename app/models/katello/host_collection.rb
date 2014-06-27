@@ -35,12 +35,12 @@ class HostCollection < Katello::Model
   validates :organization_id, :presence => {:message => N_("Organization cannot be blank.")}
   validates :name, :uniqueness => {:scope => :organization_id, :message => N_("must be unique within one organization")}
   validates :content_host_limit, :numericality => {:only_integer => true,
-                                                   :greater_than_or_equal_to => -1,
+                                                   :allow_nil => true,
+                                                   :greater_than_or_equal_to => 1,
                                                    :less_than_or_equal_to => 2_147_483_647,
                                                    :message => N_("must be a positive integer value.")}
 
   alias_attribute :content_host_limit, :max_content_hosts
-  UNLIMITED_SYSTEMS = -1
   validate :validate_max_content_hosts
 
   scoped_search :on => :name, :complete_value => true
@@ -48,7 +48,7 @@ class HostCollection < Katello::Model
 
   def validate_max_content_hosts
     if new_record? || max_content_hosts_changed?
-      if (max_content_hosts != UNLIMITED_SYSTEMS) && (systems.length > 0 && (systems.length > max_content_hosts))
+      if (!unlimited_content_hosts) && (systems.length > 0 && (systems.length > max_content_hosts))
         errors.add :content_host_limit, _("may not be less than the number of content hosts associated with the host collection.")
       elsif (max_content_hosts == 0)
         errors.add :content_host_limit, _("may not be set to 0.")

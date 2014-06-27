@@ -46,7 +46,7 @@ module Errors
 
   class ConnectionRefusedException < StandardError; end
 
-  class UsageLimitExhaustedException < StandardError; end
+  class MaxContentHostsReachedException < StandardError; end
 
   class UnsupportedActionException < StandardError
     attr_reader :action, :receiver

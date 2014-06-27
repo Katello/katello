@@ -75,7 +75,7 @@ describe HostCollection do
   describe "changing systems (katello)" do
     it "should allow systems to be added" do
       @system.expects(:update_host_collections)
-      grp = HostCollection.create!(:name=>"TestHostCollection", :organization=>@org)
+      grp = HostCollection.create!(:name=>"TestHostCollection", :organization=>@org, :unlimited_content_hosts => true)
       grp.systems << @system
       grp.save!
       HostCollection.find(grp).consumer_ids.size.must_equal(1)
@@ -83,7 +83,7 @@ describe HostCollection do
 
     it "should call allow ids to be removed" do
       @system.expects(:update_host_collections).twice
-      grp = HostCollection.create!(:name=>"TestHostCollection", :organization=>@org)
+      grp = HostCollection.create!(:name=>"TestHostCollection", :organization=>@org, :unlimited_content_hosts => true)
       grp.systems << @system
       grp.systems = grp.systems - [@system]
       grp.save!

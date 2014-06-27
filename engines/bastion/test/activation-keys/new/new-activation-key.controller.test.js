@@ -100,48 +100,6 @@ describe('Controller: NewActivationKeyController', function() {
         expect($scope.activationKeyForm['name'].$error.messages).toBeDefined();
     });
 
-    it('should correctly determine unlimited', function() {
-        $scope.activationKey.usage_limit = -1;
-        expect($scope.isUnlimited($scope.activationKey)).toBe(true);
-    });
-
-    it('should correctly determine limited', function() {
-        $scope.activationKey.usage_limit = 0;
-        expect($scope.isUnlimited($scope.activationKey)).toBe(false);
-    });
-
-    it('should set unlimited to true if input changes if actually unlimited', function() {
-       $scope.unlimited = false;
-       $scope.activationKey.usage_limit = -1;
-       $scope.inputChanged($scope.activationKey);
-       expect($scope.unlimited).toBe(true);
-    });
-
-    it('should not set unlimited to true if input changes if not unlimited', function() {
-       $scope.unlimited = false;
-       $scope.activationKey.usage_limit = 1;
-       $scope.inputChanged($scope.activationKey);
-       expect($scope.unlimited).toBe(false);
-    });
-
-    it('should set usage_limit to 1 if unlimited unchecked', function() {
-        $scope.unlimited = true;
-        $scope.activationKey.usage_limit = -1;
-        $scope.unlimitedChanged($scope.activationKey);
-
-        expect($scope.unlimited).toBe(false);
-        expect($scope.activationKey.usage_limit).toBe(1);
-    });
-
-    it('should set usage_limit to -1 if unlimited checked', function() {
-        $scope.unlimited = false;
-        $scope.activationKey.usage_limit = 0;
-        $scope.unlimitedChanged($scope.activationKey);
-
-        expect($scope.unlimited).toBe(true);
-        expect($scope.activationKey.usage_limit).toBe(-1);
-    });
-
     it("should fetch content views", function () {
         $httpBackend.expectGET('/organizations/default_label?name=Test+Resource').respond('changed_name');
         spyOn(ContentView, 'queryUnpaged');

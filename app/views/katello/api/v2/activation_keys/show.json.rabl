@@ -1,7 +1,6 @@
 object @activation_key
 
-attributes :id, :name
-attributes :description
+attributes :id, :name, :description, :unlimited_content_hosts
 
 extends 'katello/api/v2/common/org_reference'
 
@@ -11,7 +10,7 @@ child :environment => :environment do
 end
 attributes :environment_id
 
-attributes :usage_count, :user_id, :usage_limit, :pools, :system_template_id, :release_version,
+attributes :usage_count, :user_id, :max_content_hosts, :pools, :system_template_id, :release_version,
            :service_level
 attributes :get_key_pools => :pools
 

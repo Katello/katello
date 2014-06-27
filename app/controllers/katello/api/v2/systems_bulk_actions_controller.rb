@@ -225,7 +225,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
 
     @host_collections.each do |host_collection|
       computed_count = (host_collection.system_ids + system_ids).uniq.length
-      if host_collection.max_content_hosts != HostCollection::UNLIMITED_SYSTEMS && computed_count > host_collection.max_content_hosts
+      if !host_collection.unlimited_content_hosts && computed_count > host_collection.max_content_hosts
         max_content_hosts_exceeded.push(host_collection.name)
       end
     end

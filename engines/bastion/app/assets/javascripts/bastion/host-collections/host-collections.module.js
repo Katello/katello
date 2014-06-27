@@ -76,7 +76,6 @@ angular.module('Bastion.host-collections').config(['$stateProvider', function ($
     .state('host-collections.details.info', {
         url: '/info',
         collapsed: true,
-        controller: 'HostCollectionDetailsInfoController',
         templateUrl: 'host-collections/details/views/host-collection-info.html'
     })
     .state('host-collections.details.content-hosts', {

@@ -1,4 +1,4 @@
-attribute :pulp_id, :name, :organization_id, :max_content_hosts, :description, :total_content_hosts
+attribute :pulp_id, :name, :organization_id, :max_content_hosts, :description, :total_content_hosts, :unlimited_content_hosts
 
 node :id do |host_collection|
   host_collection.id.to_i

@@ -38,12 +38,16 @@ class ActivationKey < Katello::Model
   validates :name, :uniqueness => {:scope => :organization_id}
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validate :environment_exists
-  validates_each :usage_limit do |record, attr, value|
-    if value.nil?
-      record.errors[attr] << _("cannot be nil")
-    elsif value > -1 && value < record.systems.length
-      # we don't let users to set usage limit lower than current in-use
-      record.errors[attr] << _("cannot be lower than current usage count (%s)" % record.systems.length)
+  validates_each :max_content_hosts do |record, attr, value|
+    if !record.unlimited_content_hosts
+      if value.nil?
+        record.errors[attr] << _("cannot be nil")
+      elsif value <= 0
+        record.errors[attr] << _("cannot be less than one")
+      elsif value < record.systems.length
+        # we don't let users to set usage limit lower than current in-use
+        record.errors[attr] << _("cannot be lower than current usage count (%s)" % record.systems.length)
+      end
     end
   end
   validates_with Validators::ContentViewEnvironmentValidator
@@ -117,14 +121,10 @@ class ActivationKey < Katello::Model
     all_products
   end
 
-  def unlimited_usage?
-    usage_limit == -1
-  end
-
   # sets up system when registering with this activation key - must be executed in a transaction
   def apply_to_system(system)
-    if !usage_limit.nil? && usage_limit != -1 && usage_count >= usage_limit
-      fail Errors::UsageLimitExhaustedException, _("Usage limit (%{limit}) exhausted for activation key '%{name}'") % {:limit => usage_limit, :name => name}
+    if !max_content_hosts.nil? && !self.unlimited_content_hosts && usage_count >= max_content_hosts
+      fail Errors::MaxContentHostsReachedException, _("Max Content Hosts (%{limit}) reached for activation key '%{name}'") % {:limit => max_content_hosts, :name => name}
     end
     system.environment_id = self.environment_id if self.environment_id
     system.content_view_id = self.content_view_id if self.content_view_id
