@@ -41,7 +41,7 @@ module Glue::Pulp::Distribution
 
     def as_json(*args)
       result = super(*args)
-      result['files'] = result['files'].inject([]) do |paths, file|
+      result['files'] = (result['files'] || []).inject([]) do |paths, file|
         paths << file['relativepath']
       end
       result

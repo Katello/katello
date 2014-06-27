@@ -20,6 +20,7 @@ module Katello
         before_create :associate_organizations
         before_create :associate_default_location
         before_create :associate_lifecycle_environments
+        attr_accessible :lifecycle_environment_ids
 
         has_many :capsule_lifecycle_environments,
                  :class_name  => "Katello::CapsuleLifecycleEnvironment",
