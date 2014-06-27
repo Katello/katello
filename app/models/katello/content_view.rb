@@ -549,8 +549,15 @@ class ContentView < Katello::Model
 
     # In order to minimize the number of copy requests, organize the data by repoid.
     modules_by_repoid = puppet_modules.flatten.each_with_object({}) do |puppet_module, result|
-      result[puppet_module.repoids.first] ||= []
-      result[puppet_module.repoids.first] << puppet_module.id
+      repo = Repository.where(:pulp_id => puppet_module.repoids).first ||
+              ContentViewPuppetEnvironment.where(:pulp_id =>  puppet_module.repoids).first
+      if repo
+        result[repo.pulp_id] ||= []
+        result[repo.pulp_id] << puppet_module.id
+      else
+        fail _("Could not find Repository for module %s.") % puppet_module.name
+      end
+
     end
     modules_by_repoid
   end
