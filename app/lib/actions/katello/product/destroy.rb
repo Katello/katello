@@ -50,7 +50,7 @@ module Actions
         end
 
         def humanized_name
-          _("Delete")
+          _("Delete Product")
         end
       end
     end
