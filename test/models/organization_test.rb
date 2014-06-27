@@ -39,5 +39,13 @@ class OrganizationTestCreate < OrganizationTestBase
     refute_empty org.default_content_view.content_view_environments
   end
 
+  def test_being_deleted
+    org = Organization.find(taxonomies(:empty_organization))
+    refute org.library.is_deletable?
+    assert_equal 1, org.library.errors.size
+
+    org.stubs(:being_deleted?).returns(true)
+    assert org.library.is_deletable?
+  end
 end
 end

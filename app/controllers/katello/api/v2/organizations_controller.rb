@@ -68,12 +68,12 @@ module Katello
       super
     end
 
-    # TODO: ORG_DESTROY - renable once we support organization destroying
-    #api :DELETE, '/organizations/:id', N_('Delete an organization')
-    #param :id, :number, :desc => N_("Organization ID"), :required => true
-    #def destroy
-      #process_response @organization.destroy, _("Deleted organization '%s'") % params[:id]
-    #end
+    api :DELETE, '/organizations/:id', N_('Delete an organization')
+    param :id, :number, :desc => N_("Organization ID"), :required => true
+    def destroy
+      task = async_task(::Actions::Katello::Organization::Destroy, @organization, nil)
+      respond_for_async :resource => task
+    end
 
     api :PUT, "/organizations/:id/repo_discover", N_("Discover Repositories")
     param :id, :number, :desc => N_("Organization ID"), :required => true

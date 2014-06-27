@@ -45,6 +45,7 @@ module Katello
         has_many :sync_plans, :class_name => "Katello::SyncPlan", :dependent => :destroy, :inverse_of => :organization
         has_many :host_collections, :class_name => "Katello::HostCollection", :dependent => :destroy, :inverse_of => :organization
         has_many :content_views, :class_name => "Katello::ContentView", :dependent => :destroy, :inverse_of => :organization
+        has_many :content_view_environments, :through => :content_views
         has_many :task_statuses, :class_name => "Katello::TaskStatus", :dependent => :destroy, :as => :task_owner
 
         #older association
@@ -84,11 +85,6 @@ module Katello
           else
             true
           end
-        end
-
-        # TODO: ORG_DESTROY - renable once we support organization destroying
-        def destroy
-          fail _("Organizations cannot be deleted in this release.")
         end
 
         # Organizations which are being deleted (or deletion failed) can be filtered out with this scope.
@@ -172,7 +168,14 @@ module Katello
         end
 
         def being_deleted?
-          !self.deletion_task_id.nil?
+          ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Organization::Destroy).
+            for_resource(self).active.any?
+        end
+
+        def destroy!
+          unless destroy
+            fail self.errors.full_messages.join('; ')
+          end
         end
 
         def applying_default_info?
