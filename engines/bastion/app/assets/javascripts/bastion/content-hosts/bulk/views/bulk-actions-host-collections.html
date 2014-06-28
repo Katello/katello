@@ -24,13 +24,17 @@
     </div>
 
     <div data-block="actions">
-      <button class="btn btn-default" ng-disable="detailsTable.numSelected == 0 || denied('edit_content_hosts', contentHost)"
+      <button class="btn btn-default"
+              ng-hide="denied('edit_content_hosts', contentHost)"
+              ng-disabled="table.numSelected == 0 || detailsTable.numSelected == 0"
               ng-click="hostCollections.action = 'add'; hostCollections.working = true">
         <i class="icon-plus"></i>
         {{ "Add To" | translate }}
       </button>
 
-      <button class="btn btn-default" ng-disable="detailsTable.numSelected == 0 || denied('edit_content_hosts', contentHost)"
+      <button class="btn btn-default"
+              ng-hide="denied('edit_content_hosts', contentHost)"
+              ng-disabled="table.numSelected == 0 || detailsTable.numSelected == 0"
               ng-click="hostCollections.action = 'remove'; hostCollections.working = true">
         <i class="icon-minus"></i>
         {{ "Remove From" | translate }}
