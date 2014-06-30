@@ -17,6 +17,7 @@ module Katello
     class << self
 
       OK_RETURN_CODE = 'ok'
+      FAIL_RETURN_CODE = 'FAIL'
       PACKAGES = %w(katello candlepin pulp thumbslug qpid elasticsearch)
 
       #
@@ -97,7 +98,9 @@ module Katello
         end
 
         # set overall status result code
-        result[:services].each_value { |v| result[:status] = 'FAIL' if v[:result] != OK_RETURN_CODE }
+        result[:services].each_value do |v|
+          result[:status] = FAIL_RETURN_CODE unless v[:status] == OK_RETURN_CODE
+        end
         result
       end
 
@@ -109,7 +112,7 @@ module Katello
         result[:duration_ms] = ((Time.new - start) * 1000).round.to_s
       rescue => e
         Rails.logger.warn(e.backtrace ? [e.message, e.backtrace].join("\n") : e.message)
-        result[:status] = 'FAIL'
+        result[:status] = FAIL_RETURN_CODE
         result[:message] = e.message
       end
 
