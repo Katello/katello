@@ -260,5 +260,23 @@ module Katello
       end
     end
 
+    describe "consumer show" do
+      before do
+        Resources::Candlepin::Consumer.stubs(:get).returns(Resources::Candlepin::Consumer.new({:id => 1, :uuid => 2 }))
+      end
+
+       it "can be accessed by user" do
+         User.current = setup_user_with_permissions(:create_content_hosts, User.find(users(:restricted).id))
+         get :consumer_show, :id => @system.uuid
+         assert_response 200
+       end
+
+      it "can be accessed by client" do
+        uuid = @system.uuid
+        User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid))
+        get :consumer_show, :id => @system.uuid
+        assert_response 200
+      end
+    end
   end
 end
