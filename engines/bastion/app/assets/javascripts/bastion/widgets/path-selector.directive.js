@@ -37,11 +37,15 @@ angular.module('Bastion.widgets').directive('pathSelector',
         link: function (scope, element, attrs, ngModel) {
             var activeItemId, convertPathObjects;
 
-            scope.itemSelected = function (item) {
+            scope.itemChanged = function (item) {
                 if (item && scope.mode === 'singleSelect') {
-                    unselectActive();
-                    selectById(item.id);
-                    activeItemId = item.id;
+                    if (item.selected) {
+                        unselectActive();
+                        selectById(item.id);
+                        activeItemId = item.id;
+                    } else {
+                        ngModel.$setViewValue(undefined);
+                    }
                 }
             };
 
@@ -55,15 +59,15 @@ angular.module('Bastion.widgets').directive('pathSelector',
             if (scope.paths.$promise) {
                 scope.paths.$promise.then(function (paths) {
                     scope.paths = convertPathObjects(paths);
-                    scope.itemSelected(ngModel.$modelValue);
+                    scope.itemChanged(ngModel.$modelValue);
                 });
             } else {
                 scope.paths = convertPathObjects(scope.paths);
-                scope.itemSelected(ngModel.$modelValue);
+                scope.itemChanged(ngModel.$modelValue);
             }
 
             ngModel.$render = function () {
-                scope.itemSelected(ngModel.$modelValue);
+                scope.itemChanged(ngModel.$modelValue);
             };
 
             scope.$watch('disableTrigger', function (disable) {
