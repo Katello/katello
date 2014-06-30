@@ -14,6 +14,9 @@ module Katello
 class Api::V2::ContentUploadsController < Api::V2::ApiController
   before_filter :find_repository
 
+  include Foreman::Controller::FilterParameters
+  filter_parameters :content
+
   api :POST, "/repositories/:repository_id/content_uploads", N_("Create an upload request")
   param :repository_id, :identifier, :required => true, :desc => N_("repository id")
   def create
