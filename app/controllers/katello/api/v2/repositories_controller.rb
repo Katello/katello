@@ -105,6 +105,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   end
 
   api :PUT, "/repositories/:id", N_("Update a custom repository")
+  param :name, String, :desc => N_("New name for the repository")
   param :id, :identifier, :required => true, :desc => N_("repository ID")
   param :gpg_key_id, :number, :desc => N_("ID of a gpg key that will be assigned to this repository")
   param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
@@ -233,7 +234,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   end
 
   def repository_params
-    params.require(:repository).permit(:url, :gpg_key_id, :unprotected)
+    params.require(:repository).permit(:url, :gpg_key_id, :unprotected, :name)
   end
 
   def error_on_rh_product
