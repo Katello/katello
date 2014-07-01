@@ -258,6 +258,22 @@ module Katello
       end
     end
 
+    def test_copy
+      post :copy, :id => @library_dev_staging_view.id, :name => "My New View"
+
+      assert_response :success
+      assert_template %w(katello/api/v2/content_views/copy)
+    end
+
+    def test_copy_protected
+      allowed_perms = [@create_permission]
+      denied_perms = [@view_permission, @update_permission, :destroy_content_views]
+
+      assert_protected_action(:create, allowed_perms, denied_perms) do
+        post :copy, :id => @library_dev_staging_view.id, :name => "Test"
+      end
+    end
+
     def test_remove_from_environment_protected
       dev_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments, :search => "name=\"#{@dev.name}\"" }
       library_dev_staging_view_remove_permission = {:name => :promote_or_remove_content_views, :search => "name=\"#{@library_dev_staging_view.name}\"" }

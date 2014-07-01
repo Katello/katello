@@ -28,6 +28,7 @@ angular.module('Bastion.content-views').factory('ContentView',
         return BastionResource('/api/v2/content_views/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
+                copy: {method: 'POST', params: {action: 'copy'}},
                 update: {method: 'PUT'},
                 publish: {method: 'POST', params: {action: 'publish'}},
                 history: {method: 'GET', params: {action: 'history'}},

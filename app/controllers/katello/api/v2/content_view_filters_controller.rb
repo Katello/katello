@@ -89,7 +89,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   param :end_date, DateTime, :desc => N_("End date that Errata was issued on to filter by")
   def available_errata
     current_errata_ids = @filter.erratum_rules.map(&:errata_id)
-    repo_ids = @filter.applicable_repos.pluck(:pulp_id)
+    repo_ids = @filter.applicable_repos.select([:pulp_id, "#{Katello::Repository.table_name}.name"])
 
     search_filters = [
       { :not => { :terms => { :errata_id_exact => current_errata_ids }}}

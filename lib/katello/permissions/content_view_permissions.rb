@@ -44,7 +44,7 @@ Foreman::Plugin.find(:katello).security_block :content_views do
              :resource_type => 'Katello::ContentView'
   permission :create_content_views,
              {
-              'katello/api/v2/content_views' => [:create]
+              'katello/api/v2/content_views' => [:create, :copy]
              },
              :resource_type => 'Katello::ContentView'
   permission :edit_content_views,

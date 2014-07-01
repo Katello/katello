@@ -54,6 +54,7 @@ Katello::Engine.routes.draw do
 
       api_resources :content_views do
         member do
+          post :copy
           post :publish
           post :refresh
           put :remove

@@ -13,7 +13,8 @@
 
 describe('Controller: ContentViewDetailsController', function() {
     var $scope,
-        ContentView;
+        ContentView,
+        newContentView;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -21,13 +22,19 @@ describe('Controller: ContentViewDetailsController', function() {
         var $controller = $injector.get('$controller'),
             translate = $injector.get('translateMock');
 
+        newContentView = {id: 7};
         ContentView = $injector.get('MockResource').$new();
+        ContentView.copy = function(params, success){success(newContentView)};
+
         ContentViewVersion = $injector.get('MockResource').$new();
         AggregateTask = {newAggregate: function(){}};
 
         $scope = $injector.get('$rootScope').$new();
 
         $scope.$stateParams = {contentViewId: 1};
+        $scope.table = {
+            addRow: function() {}
+        };
 
         $controller('ContentViewDetailsController', {
             $scope: $scope,
@@ -52,4 +59,12 @@ describe('Controller: ContentViewDetailsController', function() {
         expect($scope.successMessages.length).toBe(1);
     });
 
+    it('should be able to copy the content view', function(){
+        spyOn($scope, 'transitionTo');
+        spyOn($scope.table, 'addRow');
+        $scope.copy(name);
+
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.info', {contentViewId: newContentView.id});
+        expect($scope.table.addRow).toHaveBeenCalledWith(newContentView);
+    });
 });

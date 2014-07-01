@@ -39,6 +39,16 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
             deletion:  "Actions::Katello::ContentView::Remove"
         };
 
+        $scope.copy = function (newName) {
+            ContentView.copy({id: $scope.contentView.id, 'content_view': {name: newName}}, function (response) {
+                $scope.showCopy = false;
+                $scope.table.addRow(response);
+                $scope.transitionTo('content-views.details.info', {contentViewId: response['id']});
+            }, function (response) {
+                $scope.copyErrorMessages.push(response.data.displayMessage);
+            });
+        };
+
         function processTasks(versions) {
             _.each(versions, function (version) {
                 var taskIds = _.map(version['active_history'], function (history) {

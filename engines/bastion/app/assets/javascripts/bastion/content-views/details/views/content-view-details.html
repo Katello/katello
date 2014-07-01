@@ -14,10 +14,11 @@
           <span translate>Publish New Version</span>
         </a>
 
-        <a class="btn btn-default" ng-hide="true" ui-sref="content-views.details.clone"
-           ng-hide="denied('create_content_views')">
+        <a class="btn btn-default"
+           ng-hide="denied('create_content_views')"
+           ng-click="showCopy = true">
           <i class="icon-copy"></i>
-          <span translate>Clone View</span>
+          <span translate>Copy View</span>
         </a>
 
         <button class="btn btn-default" ui-sref="content-views.details.deletion"
@@ -34,6 +35,32 @@
 
     </div>
   </header>
+
+  <div ng-show="showCopy" class="fr action-pane" >
+    <form>
+      <h5 translate>Copy</h5>
+      <div class="input">
+        <div alch-alert error-messages="copyErrorMessages"></div>
+        <div class="info-label">
+          <label for="copy_name" translate>New Name:</label>
+        </div>
+        <input ng-model="copyName"
+               id="copy_name"
+               name="copy_name"
+               tabindex="1"
+               autofocus
+               required/>
+        <div>
+          <button class="btn btn-default" ng-click="copy(copyName)">
+              <span translate>Create</span>
+          </button>
+          <button class="btn btn-default" ng-click="showCopy = false">
+            <span translate>Cancel</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
 
   <nav>
     <ul class="nav nav-tabs">
