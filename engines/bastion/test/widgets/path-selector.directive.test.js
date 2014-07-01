@@ -103,4 +103,17 @@ describe('Directive: pathSelector', function() {
         expect(element.find('.path-list:first .path-list-item').length).toBe(3);
 
     });
+
+    it("should provide a way to unselect an environment", function () {
+        var checkbox = element.find('.path-list:first .path-list-item:first').find('input');
+        expect(checkbox.is(':checked')).toBe(false);
+        
+        checkbox.click();
+        expect(checkbox.is(':checked')).toBe(true);
+
+        checkbox.click();
+        expect(checkbox.is(':checked')).toBe(false);
+    });
+
+
 });
