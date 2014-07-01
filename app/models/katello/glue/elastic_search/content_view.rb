@@ -18,7 +18,7 @@ module Glue::ElasticSearch::ContentView
     include Ext::IndexedModel
 
     index_options :extended_json => :extended_index_attrs,
-                  :json => {:only => [:id, :name, :label, :description, :default]},
+                  :json => {:only => [:id, :name, :label, :description, :default, :composite]},
                   :display_attrs => [:name, :description]
 
     mapping do
@@ -28,6 +28,7 @@ module Glue::ElasticSearch::ContentView
       indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
       indexes :name_autocomplete, :type => 'string', :analyzer => 'autcomplete_name_analyzer'
       indexes :default, :type => 'boolean'
+      indexes :composite, :type => 'boolean'
     end
   end
 
@@ -35,7 +36,8 @@ module Glue::ElasticSearch::ContentView
     {
       :name_sort => name.downcase,
       :name_autocomplete => self.name,
-      :organization_id => organization.id
+      :organization_id => organization.id,
+      :composite => !!composite
     }
   end
 
