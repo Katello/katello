@@ -121,6 +121,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
                         $scope.filter.rules.splice(index, 1);
                     }
                 });
+                $scope.successMessages = [translate('Package successfully removed.')];
             };
 
             Rule.delete({filterId: rule['content_view_filter_id'], ruleId: ruleId}, success, failure);
