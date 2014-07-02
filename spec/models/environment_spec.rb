@@ -187,38 +187,6 @@ describe KTEnvironment do
         @organization.library.must_be :valid?
       end
     end
-
-    describe "updating CP content assignment" do
-      it "should add content not already promoted" do
-        @content_view_environment = @environment.content_views.first.
-                content_view_environments.where(:environment_id=>@environment.id).first
-        already_promoted_content("123", "456")
-        newly_promoted_content("123", "456", "789", "10")
-        Resources::Candlepin::Environment.expects(:add_content).with(@content_view_environment.cp_id,
-                                                                                Set.new(["789", "10"]))
-        @content_view_environment.update_cp_content
-      end
-
-      def already_promoted_content(*content_ids)
-        @already_promoted_content_ids = content_ids
-        Resources::Candlepin::Environment.stubs(:find).returns(
-          {:environmentContent => @already_promoted_content_ids.map {|id| {:contentId => id}}})
-      end
-
-      def newly_promoted_content(*content_ids)
-        promoted_repos = content_ids.map do |id|
-          repo = stub
-          repo.stubs(:content_id).returns(id)
-          repo.stubs(:yum?).returns(true)
-          repo
-        end
-
-        content_view = stub
-        content_view.stubs(:repos).returns(promoted_repos)
-        @content_view_environment.stubs(:content_view).returns(content_view)
-      end
-    end
-
   end
 end
 end

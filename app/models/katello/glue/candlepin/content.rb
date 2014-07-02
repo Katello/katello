@@ -19,7 +19,6 @@ module Glue::Candlepin::Content
 
     base.class_eval do
       before_save :save_content_orchestration
-      after_destroy :update_environment_content
       after_create :rectify_gpg_key_orchestration
     end
   end
@@ -34,10 +33,6 @@ module Glue::Candlepin::Content
       if !self.new_record? && should_update_content?
         pre_queue.create(:name => "update content : #{self.name}", :priority => 2, :action => [self, :update_content])
       end
-    end
-
-    def update_environment_content
-      self.content_view.update_cp_content(self.environment)
     end
 
     def rectify_gpg_key_orchestration
