@@ -20,9 +20,7 @@ class KTEnvironment < Katello::Model
   include Ext::LabelFromName
 
   # RAILS3458: before_destroys before associations. see http://tinyurl.com/rails3458
-  before_destroy :is_deletable?
-  before_destroy :delete_core_environments
-  before_destroy :delete_default_view_version
+  before_destroy :is_deletable?, :prepend => true
 
   belongs_to :organization, :class_name => "Organization", :inverse_of => :environments
   has_many :activation_keys, :class_name => "Katello::ActivationKey",
@@ -38,16 +36,16 @@ class KTEnvironment < Katello::Model
 
   has_many :repositories, :class_name => "Katello::Repository", dependent: :destroy, foreign_key: :environment_id
   has_many :systems, :class_name => "Katello::System", :inverse_of => :environment,
-           :dependent => :destroy, :foreign_key => :environment_id
+           :dependent => :restrict, :foreign_key => :environment_id
   has_many :distributors, :class_name => "Katello::Distributor", :inverse_of => :environment,
-           :dependent => :destroy, :foreign_key => :environment_id
+           :dependent => :restrict, :foreign_key => :environment_id
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
-           :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
+           :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :restrict
   has_many :content_view_puppet_environments, :class_name => "Katello::ContentViewPuppetEnvironment",
-           :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
+           :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :restrict
   has_many :content_view_versions, :through => :content_view_environments, :inverse_of => :environments
   has_many :content_views, :through => :content_view_environments, :inverse_of => :environments
-  has_many :content_view_histories, :class_name => "Katello::ContentViewHistory", :dependent => :destroy,
+  has_many :content_view_histories, :class_name => "Katello::ContentViewHistory", :dependent => :restrict,
            :inverse_of => :environment, :foreign_key => :katello_environment_id
 
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
@@ -88,6 +86,8 @@ class KTEnvironment < Katello::Model
 
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :organization_id, :complete_value => true
+
+  attr_accessor :library_deletion
 
   def library?
     self.library
@@ -156,15 +156,18 @@ class KTEnvironment < Katello::Model
   def is_deletable?
     return true if self.organization.nil? || self.organization.being_deleted?
 
-    if library?
+    if library? && !library_deletion
       errors.add :base, _("Library environments may not be deleted.")
-      return false
     elsif !successor.nil?
       errors.add :base, _("Environment %s has a successor.  Only the last environment on a path can be deleted") % self.name
-      return false
     end
 
-    return true
+    if (views = content_views).any?
+      errors.add(:base, _("Cannot delete '%{env}' due to attached content views: %{views}.") %
+        {env: name, views: views.map(&:name).to_sentence})
+    end
+
+    return errors.empty?
   end
 
   #Unlike path which only gives the path from this environment going forward
@@ -294,20 +297,6 @@ class KTEnvironment < Katello::Model
     else
       self.organization.redhat_provider.available_releases
     end
-  end
-
-  def delete_core_environments
-    # For each content view associated with this lifecycle environment, there may be
-    # a puppet environment (in the core/Foreman), so let's delete those
-    self.content_views.each do |content_view|
-      if foreman_env = Environment.find_by_katello_id(self.organization, self, content_view)
-        foreman_env.destroy
-      end
-    end
-  end
-
-  def delete_default_view_version
-    self.default_content_view_version.destroy if library?
   end
 
   private

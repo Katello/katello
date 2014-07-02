@@ -132,8 +132,7 @@ module Katello
         @environment.destroy
         respond_for_destroy
       else
-        fail HttpErrors::BadRequest,
-          _("Environment %s has a successor. Only the last environment on a path can be deleted.") % @environment.name
+        fail HttpErrors::BadRequest, @environment.errors.full_messages.join(" ")
       end
     end
 
