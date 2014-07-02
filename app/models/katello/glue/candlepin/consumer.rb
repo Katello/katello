@@ -12,6 +12,10 @@
 
 module Katello
 module Glue::Candlepin::Consumer
+  SYSTEM = "system"
+  HYPERVISOR = "hypervisor"
+  CANDLEPIN = "candlepin"
+  CP_TYPES = [SYSTEM, HYPERVISOR, CANDLEPIN]
 
   # TODO: break up method
   # rubocop:disable MethodLength
@@ -52,7 +56,7 @@ module Glue::Candlepin::Consumer
       lazy_accessor :compliance, :initializer => lambda {|s| Resources::Candlepin::Consumer.compliance(uuid) }
       lazy_accessor :events, :initializer => lambda {|s| Resources::Candlepin::Consumer.events(uuid) }
 
-      validates :cp_type, :inclusion => {:in => %w(system hypervisor candlepin)},
+      validates :cp_type, :inclusion => {:in => CP_TYPES},
                           :if => :new_record?
       validates :facts, :presence => true, :if => :new_record?
     end

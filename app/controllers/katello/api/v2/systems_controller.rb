@@ -97,7 +97,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   param :facts, Hash, :desc => N_("Key-value hash of content host-specific facts"), :action_aware => true, :required => true do
     param :fact, String, :desc => N_("Any number of facts about this content host")
   end
-  param :type, String, :desc => N_("Type of the content host, it should always be 'content host'"), :required => true, :action_aware => true
+  param :type, String, :desc => N_("Type of the content host, it should always be 'system'"), :required => true, :action_aware => true
   param :guest_ids, Array, :desc => N_("IDs of the virtual guests running on this content host")
   param :installed_products, Array, :desc => N_("List of products installed on the content host"), :action_aware => true
   param :release_ver, String, :desc => N_("Release version of the content host")
@@ -123,7 +123,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   param :facts, Hash, :desc => N_("Key-value hash of content host-specific facts"), :action_aware => true, :required => true do
     param :fact, String, :desc => N_("Any number of facts about this content host")
   end
-  param :type, String, :desc => N_("Type of the content host, it should always be 'content host'"), :required => true, :action_aware => true
+  param :type, String, :desc => N_("Type of the content host, it should always be 'system'"), :required => true, :action_aware => true
   param :guest_ids, Array, :desc => N_("IDs of the virtual guests running on this content host")
   param :installed_products, Array, :desc => N_("List of products installed on the content host"), :action_aware => true
   param :release_ver, String, :desc => N_("Release version of the content host")
@@ -355,10 +355,8 @@ class Api::V2::SystemsController < Api::V2::ApiController
                                                    :service_level, {:facts => []},
                                                    :guest_ids, {:host_collection_ids => []})
 
-    if params[:system].key?(:type)
-      system_params[:cp_type] = params[:type]
-      system_params.delete(:type)
-    end
+    system_params[:cp_type] = params[:type] ? params[:type] : ::Katello::System::DEFAULT_CP_TYPE
+    system_params.delete(:type) if params[:system].key?(:type)
 
     # TODO: permit :facts above not working, why?
     system_params[:facts] = params[:facts] if params[:facts]

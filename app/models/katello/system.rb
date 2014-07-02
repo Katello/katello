@@ -13,6 +13,8 @@
 
 module Katello
 class System < Katello::Model
+  DEFAULT_CP_TYPE = Glue::Candlepin::Consumer::SYSTEM
+
   self.include_root_in_json = false
 
   include Hooks
