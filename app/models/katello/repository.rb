@@ -306,10 +306,10 @@ class Repository < Katello::Model
     index_units = options.fetch(:index_units, nil) if Katello.config.use_elasticsearch
 
     if index_units
-      ids = index_units.collect do |filter|
+      ids = index_units.flat_map do |filter|
         found = unit_search(:type_ids => [unit_type_id],
                             :filters => filter)
-        found[0].try(:[], :unit_id)
+        found.map { |result| result.try(:[], :unit_id) }
       end
 
       ids.compact!
