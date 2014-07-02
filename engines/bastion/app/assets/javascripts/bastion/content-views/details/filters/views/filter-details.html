@@ -1,6 +1,11 @@
 <span page-title ng-model="filter">{{ 'Filter:' | translate }} {{ filter.name }}</span>
 
-<div class="details details-full">
+<div class="loading-mask loading-mask-panel icon-3x" ng-show="filter.id === undefined">
+    <i class="icon-spinner icon-spin"></i>
+    {{ "Loading..." | translate }}
+</div>
+
+<div class="details details-full" ng-show="filter.id !== undefined">
 
   <ol class="breadcrumb">
     <li ng-class="{active: isState('content-views.details.filters.list')}">
