@@ -47,6 +47,7 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
     })
     .state('products.index', {
         url: '/products',
+        permission: 'view_products',
         views: {
             'table': {
                 templateUrl: 'products/views/products-table-full.html'
@@ -69,12 +70,14 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
     })
     .state('products.new.form', {
         url: '/products/new',
+        permission: 'create_products',
         collapsed: true,
         controller: 'ProductFormController',
         templateUrl: 'products/new/views/product-new-form.html'
     })
     .state('products.new.sync-plan', {
         url: '/products/new/sync-plan',
+        permission: 'create_sync_plans',
         collapsed: true,
         controller: 'NewSyncPlanController',
         templateUrl: 'sync-plans/new/views/new-sync-plan-form.html'
@@ -96,12 +99,14 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
     .state("products.discovery.scan", {
         collapsed: true,
         url: '/products/discovery/scan',
+        permission: 'edit_products',
         templateUrl: 'products/discovery/views/discovery.html'
 
     })
     .state("products.discovery.create", {
         collapsed: true,
         url: '/products/discovery/scan/create',
+        permission: 'edit_products',
         templateUrl: 'products/discovery/views/discovery-create.html',
         controller: 'DiscoveryFormController'
 
@@ -110,6 +115,7 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
     .state("products.details", {
         abstract: true,
         url: '/products/:productId',
+        permission: 'view_products',
         collapsed: true,
         views: {
             'table': {
@@ -123,12 +129,14 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
     })
     .state('products.details.info', {
         url: '/info',
+        permission: 'view_products',
         collapsed: true,
         controller: 'ProductDetailsInfoController',
         templateUrl: 'products/details/views/product-info.html'
     })
     .state('products.details.info.new-sync-plan', {
         url: '/sync-plan/new',
+        permission: 'create_sync_plans',
         collapsed: true,
         views: {
             '@products.details': {
@@ -146,22 +154,26 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
     .state('products.details.repositories.index', {
         collapsed: true,
         url: '/repositories',
+        permission: 'view_products',
         templateUrl: 'products/details/views/product-repositories.html'
     })
     .state('products.details.repositories.new', {
         url: '/repositories/new',
+        permission: 'create_products',
         collapsed: true,
         controller: 'NewRepositoryController',
         templateUrl: 'repositories/new/views/repository-new.html'
     })
     .state('products.details.repositories.info', {
         url: '/repositories/:repositoryId',
+        permission: 'view_products',
         collapsed: true,
         controller: 'RepositoryDetailsInfoController',
         templateUrl: 'repositories/details/views/repository-info.html'
     })
     .state('products.details.repositories.manage-packages', {
         url: '/repositories/:repositoryId/packages',
+        permission: 'edit_products',
         collapsed: true,
         controller: 'RepositoryManagePackagesController',
         templateUrl: 'repositories/details/views/repository-manage-packages.html'
@@ -174,11 +186,13 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
     })
     .state('products.details.tasks.index', {
         url: '/tasks',
+        permission: 'view_products',
         collapsed: true,
         templateUrl: 'products/details/views/product-tasks.html'
     })
     .state('products.details.tasks.details', {
         url: '/tasks/:taskId',
+        permission: 'view_products',
         collapsed: true,
         controller: 'TaskDetailsController',
         templateUrl: 'tasks/views/task-details.html'
@@ -199,18 +213,21 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
     })
     .state('products.bulk-actions.sync', {
         url: '/products/bulk-actions/sync',
+        permission: 'sync_products',
         collapsed: true,
         controller: 'ProductsBulkActionSyncController',
         templateUrl: 'products/bulk/views/bulk-actions-sync.html'
     })
     .state('products.bulk-actions.sync-plan', {
         url: '/products/bulk-actions/sync-plan',
+        permission: 'edit_products',
         collapsed: true,
         controller: 'ProductsBulkActionSyncPlanController',
         templateUrl: 'products/bulk/views/bulk-actions-sync-plan.html'
     })
     .state('products.bulk-actions.sync-plan.new', {
         url: '/products/bulk-actions/sync-plan/new',
+        permission: 'create_sync_plans',
         collapsed: true,
         views: {
             '@products.bulk-actions': {

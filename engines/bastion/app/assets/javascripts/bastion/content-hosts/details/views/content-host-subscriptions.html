@@ -48,7 +48,7 @@
 </section>
 
 <nav>
-  <ul class="nav nav-tabs" ng-show="permitted('edit_content_hosts', contentHost)">
+  <ul class="nav nav-tabs" ng-show="permitted('attach_subscriptions')">
     <li ng-class="{active: isState('content-hosts.details.subscriptions.list')}">
       <a ui-sref="content-hosts.details.subscriptions.list">
         <!-- TODO: other pages too - label "List" vs. "List/Remove" based on edit permissions -->
@@ -58,7 +58,6 @@
       </a>
     </li>
 
-    <!-- TODO: permissions? ng-show="contentHost.permissions.editable" -->
     <li ng-class="{active: stateIncludes('content-hosts.details.subscriptions.add')}">
       <a ui-sref="content-hosts.details.subscriptions.add">
         <span translate>

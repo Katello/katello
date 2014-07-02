@@ -45,6 +45,7 @@ angular.module('Bastion.gpg-keys').config(['$stateProvider', function ($statePro
     })
     .state('gpgKeys.index', {
         url: '/gpg_keys',
+        permission: 'view_gpg_keys',
         views: {
             'table': {
                 templateUrl: 'gpg-keys/views/gpg-keys-table-full.html'
@@ -53,6 +54,7 @@ angular.module('Bastion.gpg-keys').config(['$stateProvider', function ($statePro
     })
     .state('gpgKeys.new', {
         url: '/gpg_keys/new',
+        permission: 'create_gpg_keys',
         collapsed: true,
         views: {
             'table': {
@@ -67,6 +69,7 @@ angular.module('Bastion.gpg-keys').config(['$stateProvider', function ($statePro
     .state("gpgKeys.details", {
         abstract: true,
         url: '/gpg_keys/:gpgKeyId',
+        permission: 'view_gpg_keys',
         collapsed: true,
         views: {
             'table': {
@@ -80,18 +83,21 @@ angular.module('Bastion.gpg-keys').config(['$stateProvider', function ($statePro
     })
     .state('gpgKeys.details.info', {
         url: '/info',
+        permission: 'view_gpg_keys',
         collapsed: true,
         controller: 'GPGKeyDetailsInfoController',
         templateUrl: 'gpg-keys/details/views/gpg-key-info.html'
     })
     .state('gpgKeys.details.products', {
         url: '/products',
+        permission: 'view_gpg_keys',
         collapsed: true,
         controller: 'GPGKeyDetailsController',
         templateUrl: 'gpg-keys/details/views/gpg-key-products.html'
     })
     .state('gpgKeys.details.repositories', {
         url: '/repositories',
+        permission: 'view_gpg_keys',
         collapsed: true,
         controller: 'GPGKeyDetailsController',
         templateUrl: 'gpg-keys/details/views/gpg-key-repositories.html'

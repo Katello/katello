@@ -13,7 +13,7 @@
       </li>
 
       <li ng-if="!filter.rules[0].types" ng-class="{active: isState('content-views.details.filters.details.erratum.available')}"
-          ng-show="!contentView.permissions.editable">
+          ng-show="permitted('edit_content_views', contentView)">
         <a ui-sref="content-views.details.filters.details.erratum.available({filterId: filter.id})">
         <span translate>
           Add
@@ -22,7 +22,7 @@
       </li>
 
       <li ng-if="filter.rules[0].types" ng-class="{active: isState('content-views.details.filters.details.erratum.dateType')}"
-          ng-show="!contentView.permissions.editable">
+          ng-show="permitted('edit_content_views', contentView)">
         <a ui-sref="content-views.details.filters.details.erratum.dateType({filterId: filter.id})">
         <span translate>
           Erratum Date Range
@@ -31,7 +31,7 @@
       </li>
 
       <li ng-class="{active: isState('content-views.details.filters.details.erratum.repositories')}"
-          ng-show="!contentView.permissions.editable">
+          ng-show="permitted('edit_content_views', contentView)">
         <a ui-sref="content-views.details.filters.details.erratum.repositories({filterId: filter.id})"
            ng-include="'content-views/details/filters/views/partials/filter-repositories-count.html'">
         </a>

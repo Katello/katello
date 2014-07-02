@@ -45,6 +45,7 @@ angular.module('Bastion.subscriptions').config(['$stateProvider', function ($sta
 
     $stateProvider.state('subscriptions.index', {
         url: '/subscriptions',
+        permission: 'view_subscriptions',
         views: {
             'table': {
                 templateUrl: 'subscriptions/views/subscriptions-table-full.html'
@@ -55,6 +56,7 @@ angular.module('Bastion.subscriptions').config(['$stateProvider', function ($sta
     .state('subscriptions.details', {
         abstract: true,
         url: '/subscriptions/:subscriptionId',
+        permission: 'view_subscriptions',
         collapsed: true,
         views: {
             'table': {
@@ -68,17 +70,20 @@ angular.module('Bastion.subscriptions').config(['$stateProvider', function ($sta
     })
     .state('subscriptions.details.info', {
         url: '/info',
+        permission: 'view_subscriptions',
         collapsed: true,
         templateUrl: 'subscriptions/details/views/subscription-info.html'
     })
     .state('subscriptions.details.products', {
         url: '/products',
+        permission: 'view_subscriptions',
         collapsed: true,
         controller: 'SubscriptionProductsController',
         templateUrl: 'subscriptions/details/views/subscription-products.html'
     })
     .state('subscriptions.details.associations', {
         url: '/associations',
+        permission: 'view_subscriptions',
         collapsed: true,
         templateUrl: 'subscriptions/details/views/subscription-associations.html'
     })
@@ -99,18 +104,21 @@ angular.module('Bastion.subscriptions').config(['$stateProvider', function ($sta
     })
     .state('subscriptions.manifest.import', {
         url: '/subscriptions/manifest/import',
+        permission: 'import_subscriptions',
         collapsed: true,
         controller: 'ManifestImportController',
         templateUrl: 'subscriptions/manifest/views/manifest-import.html'
     })
     .state('subscriptions.manifest.details', {
         url: '/subscriptions/manifest/details',
+        permission: 'import_subscriptions',
         collapsed: true,
         controller: 'ManifestDetailsController',
         templateUrl: 'subscriptions/manifest/views/manifest-details.html'
     })
     .state('subscriptions.manifest.history', {
         url: '/subscriptions/manifest/history',
+        permission: 'import_subscriptions',
         collapsed: true,
         controller: 'ManifestHistoryController',
         templateUrl: 'subscriptions/manifest/views/manifest-import-history.html'
