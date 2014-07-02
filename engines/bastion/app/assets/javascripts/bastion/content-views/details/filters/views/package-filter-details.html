@@ -23,6 +23,7 @@
   </div>
 
   <button class="btn btn-default fr"
+          ng-disabled="getSelectedRules(filter).length === 0"
           ng-hide="denied('edit_content_views', contentView)"
           ng-click="removeRules(filter)">
     <i class="icon-trash"></i>

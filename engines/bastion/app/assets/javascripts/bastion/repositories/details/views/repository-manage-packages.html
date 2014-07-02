@@ -25,7 +25,9 @@
   </div>
 
   <div data-block="actions">
-    <button class="btn btn-default" ng-click="removePackages()" ng-disabled="detailsTable.working">
+    <button class="btn btn-default"
+            ng-click="removePackages()"
+            ng-disabled="detailsTable.working || detailsTable.numSelected === 0">
       <i class="icon-trash" ng-hide="detailsTable.working"></i>
       <i class="icon-spinner icon-spin" ng-show="detailsTable.working"></i>
       <span translate>Remove Packages</span>

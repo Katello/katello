@@ -33,7 +33,7 @@
       <button class="btn btn-primary"
               translate
               ng-hide="denied('edit_content_views', contentView)"
-              ng-disabled="!showRepos"
+              ng-disabled="!showRepos || repositoriesTable.numSelected === 0"
               ng-click="updateRepositories()">
         Update Repositories
       </button>

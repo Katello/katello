@@ -135,6 +135,20 @@ describe('Controller: PackageFilterController', function() {
         expect(Object.keys(rule.previous).length).toBe(0)
     });
 
+    it("should provide a method to get selected rules", function () {
+        $scope.filter.rules = [{id: 1, selected: true}, {id: 2, selected: false}];
+        expect($scope.getSelectedRules($scope.filter).length).toBe(1);
+        expect($scope.getSelectedRules($scope.filter)[0].id).toBe(1);
+    });
+
+    it("should provide a method to delete a rule", function () {
+        $scope.filter.rules = [{id: 1, selected: true}, {id: 2, selected: false}];
+
+        $scope.removeRules($scope.filter);
+        expect($scope.filter.rules.length).toBe(1);
+        expect($scope.filter.rules[0].id).toBe(2);
+    });
+
     it("should provide a method to determine if a rule is valid if no name is given", function() {
         var result,
             rule = {};

@@ -91,11 +91,19 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
             rule.previous = {};
         };
 
-        $scope.removeRules = function (filter) {
+        $scope.getSelectedRules = function (filter) {
+            var rules = [];
             angular.forEach(filter.rules, function (rule) {
                 if (rule.selected) {
-                    removeRule(rule);
+                    rules.push(rule);
                 }
+            });
+            return rules;
+        };
+
+        $scope.removeRules = function (filter) {
+            angular.forEach($scope.getSelectedRules(filter), function (rule) {
+                removeRule(rule);
             });
         };
 

@@ -2,6 +2,7 @@
 
   <div data-block="actions">
     <button class="btn btn-primary fr"
+            ng-disabled="detailsTable.numSelected === 0"
             ng-show="isState('content-views.details.filters.details.package_group.list') && permitted('edit_content_views', contentView)"
             ng-click="removePackageGroups(filter)">
       <i class="icon-trash"></i>
@@ -9,6 +10,7 @@
     </button>
 
     <button class="btn btn-primary fr"
+            ng-disabled="detailsTable.numSelected === 0"
             ng-show="isState('content-views.details.filters.details.package_group.available') && permitted('edit_content_views', contentView)"
             ng-click="addPackageGroups(filter)">
       <i class="icon-plus"></i>
