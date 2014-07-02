@@ -193,6 +193,14 @@ module Katello
       respond_for_async :resource => task
     end
 
+    api :POST, "/content_views/:id/copy", N_("Make copy of a content view")
+    param :id, :identifier, :desc => N_("Content view numeric identifier"), :required => true
+    param :name, String, :required => true, :desc => N_("New content view name")
+    def copy
+      new_content_view = @view.copy(params[:content_view][:name])
+      respond_for_create :resource => new_content_view
+    end
+
     private
 
     def find_content_view

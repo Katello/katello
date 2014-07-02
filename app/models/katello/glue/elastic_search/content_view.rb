@@ -17,6 +17,8 @@ module Glue::ElasticSearch::ContentView
   included do
     include Ext::IndexedModel
 
+    update_related_indexes :repositories, :name
+
     index_options :extended_json => :extended_index_attrs,
                   :json => {:only => [:id, :name, :label, :description, :default, :composite]},
                   :display_attrs => [:name, :description]

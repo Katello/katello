@@ -81,6 +81,18 @@ describe('Factory: ContentView', function() {
         });
     });
 
+    it('provides a way to copy a content view', function() {
+        var contentView = {id: 1, name: 'New Content View'};
+
+        $httpBackend.expectPOST('/api/v2/content_views/1/copy?organization_id=ACME')
+            .respond(contentView);
+
+        ContentView.copy(contentView, function (contentView) {
+            expect(contentView).toBeDefined();
+            expect(contentView.name).toEqual('New Content View');
+        });
+    });
+
     it('provides a way to update a content view', function() {
         $httpBackend.expectPUT('/api/v2/content_views/1?organization_id=ACME')
                     .respond(contentViews.results[0]);
