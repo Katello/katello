@@ -19,7 +19,7 @@ module Katello
       included do
         has_one :content_view_puppet_environment, :class_name => "Katello::ContentViewPuppetEnvironment",
                 :foreign_key => :puppet_environment_id,
-                :dependent => :destroy, :inverse_of => :puppet_environment
+                :dependent => :nullify, :inverse_of => :puppet_environment
       end
 
       def content_view
@@ -28,6 +28,12 @@ module Katello
 
       def lifecycle_environment
         self.content_view_puppet_environment.try(:environment)
+      end
+
+      def destroy!
+        unless destroy
+          fail self.errors.full_messages.join('; ')
+        end
       end
 
       module ClassMethods

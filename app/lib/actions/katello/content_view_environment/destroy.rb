@@ -27,6 +27,7 @@ module Actions
               end
 
               if puppet_env = content_view.puppet_env(environment)
+                plan_action(Actions::Foreman::Environment::Destroy, puppet_env.puppet_environment) if puppet_env.puppet_environment
                 plan_action(ContentViewPuppetEnvironment::Destroy, puppet_env)
               end
             end
