@@ -24,6 +24,10 @@ module Glue::Candlepin::ActivationKey
                     :initializer => (lambda do |s|
                                       Resources::Candlepin::ActivationKey.get(cp_id)[0][:serviceLevel] if cp_id
                                      end)
+      lazy_accessor :cp_name,
+                    :initializer => (lambda do |s|
+                                      Resources::Candlepin::ActivationKey.get(cp_id)[0][:name] if cp_id
+                                     end)
     end
   end
 

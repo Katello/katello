@@ -124,7 +124,7 @@ module Resources
 # rubocop:enable ParameterLists
 
           activation_key_ids = activation_keys.collect do |activation_key|
-            activation_key['label']
+            activation_key.cp_name
           end
 
           url = "/candlepin/environments/#{url_encode(env_id)}/consumers/"
