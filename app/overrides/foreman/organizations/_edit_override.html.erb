@@ -6,9 +6,7 @@
 
   <%= textarea_f f, :description, :class => 'input-xlarge', :rows => 4 %>
 
-  <%= field(f, _('Default System SLA')) do
-    select_tag 'organization[service_level]', options_for_select(service_level_options, service_level_selected)
-  end %>
+  <%= selectable_f(f, :service_level, options_for_select(service_level_options, service_level_selected), {}, :label => _('Default System SLA')) %>
 
   <%= field(f, _('Debug Certificate'),
             :help_inline => _('This certificate allows a user to view the repositories in any environment from a browser.')) do
