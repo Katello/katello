@@ -317,11 +317,16 @@ class ContentViewTest < ActiveSupport::TestCase
     view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64))
     view.save!
 
-    distro1 = Distribution.new()
+    distro1 = Distribution.new
     distro1.repoids = view.repositories.pluck(:pulp_id)
-    distro2 = Distribution.new()
+    distro1.files = [{'relativepath' => 'vmlinuz'}]
+
+    distro2 = Distribution.new
     distro2.repoids = []
+    distro2.files = [{'relativepath' => 'vmlinuz'}]
+
     Distribution.stubs(:search).returns([distro1, distro2])
+
     assert_raises(RuntimeError) do
       view.check_distribution_conflicts!
     end
@@ -332,12 +337,12 @@ class ContentViewTest < ActiveSupport::TestCase
     view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64))
     view.save!
 
-    distro1 = Distribution.new()
+    distro1 = Distribution.new
     distro1.repoids = []
+    distro1.files = [{'relativepath' => 'vmlinuz'}]
 
     Distribution.stubs(:search).returns([distro1])
     assert_nil view.check_distribution_conflicts!
-
   end
 
   def test_duplicate_distributions
@@ -345,12 +350,15 @@ class ContentViewTest < ActiveSupport::TestCase
     view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64))
     view.save!
 
-    distro1 = Distribution.new()
+    distro1 = Distribution.new
     distro1.repoids = view.repositories.pluck(:pulp_id)
-    distro2 = Distribution.new()
-    distro2.repoids = []
-    Distribution.stubs(:search).returns([distro1, distro2])
+    distro1.files = [{'relativepath' => 'vmlinuz'}]
 
+    distro2 = Distribution.new
+    distro2.repoids = []
+    distro2.files = [{'relativepath' => 'vmlinuz'}]
+
+    Distribution.stubs(:search).returns([distro1, distro2])
     assert_equal [distro1], view.duplicate_distributions
   end
 
@@ -361,10 +369,15 @@ class ContentViewTest < ActiveSupport::TestCase
 
     distro1 = Distribution.new(:version => '6.4', :arch => 'x86_64')
     distro1.repoids = [view.repositories[0].pulp_id]
+    distro1.files = [{'relativepath' => 'vmlinuz'}]
+
     distro2 = Distribution.new(:version => '6.4', :arch => 'x86_64')
     distro2.repoids = [view.repositories[1].pulp_id]
+    distro2.files = [{'relativepath' => 'vmlinuz'}]
+
     distro3 = Distribution.new(:version => '6.5', :arch => 'x86_64')
     distro3.repoids = []
+    distro3.files = [{'relativepath' => 'vmlinuz'}]
 
     Distribution.stubs(:search).returns([distro1, distro2, distro3])
 

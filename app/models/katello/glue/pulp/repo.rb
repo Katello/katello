@@ -359,15 +359,7 @@ module Glue::Pulp::Repo
 
     def bootable_distribution
       return unless self.unprotected
-
-      # Not every distribution from Pulp represents a bootable
-      # repo. Determine based on the files in the repo.
-      return self.distributions.find do |distribution|
-        distribution.files.any? do |file|
-          file[:relativepath].include?("vmlinuz") ||
-              file[:relativepath].include?("pxeboot")
-        end
-      end
+      self.distributions.find{|distribution| distribution.bootable? }
     end
 
     def package_groups

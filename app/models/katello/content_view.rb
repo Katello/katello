@@ -666,6 +666,8 @@ class ContentView < Katello::Model
     distributions = Distribution.search do
       filter :terms, {:repoids => repo_ids}
     end
+    distributions = distributions.select{ |dist| Katello::Distribution.new(dist.as_json).bootable? }
+
     release_arches = {}
     distributions.each do |dist|
       key = [dist.version, dist.arch]
@@ -682,6 +684,7 @@ class ContentView < Katello::Model
     distributions = Distribution.search do
       filter :terms, {:repoids => repo_ids}
     end
+    distributions = distributions.select{ |dist| Katello::Distribution.new(dist.as_json).bootable? }
     distributions.find_all{|dist| (dist.repoids & repo_ids).length > 1}
   end
 
