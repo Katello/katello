@@ -37,7 +37,7 @@
             <span class="col-sm-4" translate>Enabled by Default</span>
             <span class="col-sm-3"
                   alch-edit-select="content.enabledText"
-                  readonly="contentHost.readonly"
+                  readonly="denied('edit_content_hosts', contentHost)"
                   selector="content.overrideEnabled"
                   options="overrideEnableChoices(content)"
                   on-save="saveContentOverride(content)">
