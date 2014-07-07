@@ -39,7 +39,7 @@
                 translate
                 ng-hide="denied('edit_content_hosts', contentHost)"
                 ng-click="confirmContentAction('install', content)"
-                ng-disabled="!systemContentForm.$valid || content.confirm">
+                ng-disabled="(table.numSelected === 0) || !systemContentForm.$valid || content.confirm">
           Install
         </button>
 
@@ -47,7 +47,7 @@
                 translate
                 ng-hide="denied('edit_content_hosts', contentHost)"
                 ng-click="confirmContentAction('update', content)"
-                ng-disabled="!systemContentForm.$valid || content.confirm"
+                ng-disabled="(table.numSelected === 0) || !systemContentForm.$valid || content.confirm"
                 ng-hide="content.contentType == 'errata'">
           Update
         </button>
@@ -56,7 +56,7 @@
                 translate
                 ng-hide="content.contentType == 'errata' || denied('edit_content_hosts', contentHost)"
                 ng-click="confirmContentAction('remove', content)"
-                ng-disabled="!systemContentForm.$valid || content.confirm">
+                ng-disabled="(table.numSelected === 0) || !systemContentForm.$valid || content.confirm">
           Remove
         </button>
       </div>
