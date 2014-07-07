@@ -1,3 +1,5 @@
-<li id="kt_environments_tab">
-  <a href="#kt_environments" data-toggle="tab"><%= _('Lifecyle Environments') %></a>
-</li>
+<% unless @smart_proxy.new_record? -%>
+  <li id="kt_environments_tab">
+    <a href="#kt_environments" data-toggle="tab"><%= _('Lifecyle Environments') %></a>
+  </li>
+<% end -%>  
