@@ -39,9 +39,12 @@ Katello::Engine.routes.draw do
     end
   end
 
-  get "notices/note_count"
-  get "notices/get_new"
-  get "notices/auto_complete_search"
+  resources :notices, :only => [] do
+   collection do
+    get :get_new
+   end
+  end
+
   match 'notices/:id/details' => 'notices#details', :via => :get, :as => 'notices_details'
   match 'notices' => 'notices#show', :via => :get
   match 'notices' => 'notices#destroy_all', :via => :delete

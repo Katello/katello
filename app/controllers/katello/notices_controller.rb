@@ -18,7 +18,6 @@ class NoticesController < Katello::ApplicationController
 
   skip_before_filter :authorize, :require_org
   before_filter :notices_authorize
-  before_filter :readable_by, :only => [:auto_complete_search]
 
   helper_method :sort_column, :sort_direction
 
