@@ -19,6 +19,7 @@ module Actions
           action_subject(repository)
           plan_action(Pulp::Repository::Destroy, pulp_id: repository.pulp_id)
           plan_action(Product::ContentDestroy, repository)
+          plan_action(ContentView::UpdateEnvironment, repository.content_view, repository.environment)
           plan_action(ElasticSearch::Repository::Destroy, pulp_id: repository.pulp_id)
           repository.destroy!
         end
@@ -26,7 +27,6 @@ module Actions
         def humanized_name
           _("Delete")
         end
-
       end
     end
   end
