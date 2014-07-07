@@ -126,15 +126,18 @@ module ::Actions::Katello::Product
       action.stubs(:action_subject).with do |subject, params|
         subject.must_equal(product)
       end
-
-      repo = "fooo"
       product.expects(:user_deletable?).returns(true)
-      ::Katello::Product.any_instance.expects(:repositories).returns([repo])
+      default_view_repos = product.repositories.in_default_view.map(&:id)
+
       product.expects(:destroy!)
+      product.expects(:disable_auto_reindex!)
 
       plan_action(action, product)
+
       assert_action_planed_with(action, candlepin_destroy_class, cp_id: product.cp_id )
-      assert_action_planed_with(action, ::Actions::Katello::Repository::Destroy, repo )
+      assert_action_planed_with(action, ::Actions::Katello::Repository::Destroy) do |repo|
+        default_view_repos.include?(repo.first.id)
+      end
 
       assert_action_planed_with(action,
                                 candlepin_delete_pools_class,
@@ -144,6 +147,7 @@ module ::Actions::Katello::Product
       assert_action_planed_with(action, candlepin_delete_subscriptions_class,
                                 cp_id: product.cp_id, organization_label: product.organization.label)
 
+      assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, product)
     end
 
     it 'fails' do
@@ -154,6 +158,4 @@ module ::Actions::Katello::Product
       end
     end
   end
-
 end
-
