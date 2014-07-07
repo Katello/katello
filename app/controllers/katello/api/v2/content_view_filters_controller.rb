@@ -117,9 +117,9 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   param :id, :identifier, :desc => N_("filter identifier"), :required => true
   def available_package_groups
     current_ids = @filter.package_group_rules.map(&:uuid)
-    repo_ids = @filter.applicable_repos.select([:pulp_id, "#{Katello::Repository.table_name}.name"])
-    search_filters = [{ :terms => { :repo_id => repo_ids } },
-                      { :not => { :terms => { :id => current_ids } } }]
+    repo_ids = @filter.applicable_repos.readable.pluck("#{Repository.table_name}.pulp_id")
+    search_filters = [{ :terms => { :repo_id => repo_ids } }]
+    search_filters << { :not => { :terms => { :id => current_ids } } } unless current_ids.blank?
 
     options = sort_params
     options[:filters] = search_filters
