@@ -84,7 +84,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
       N_("Get errata that are available to be added to the filter")
   param :content_view_id, :identifier, :desc => N_("content view identifier")
   param :id, :identifier, :desc => N_("filter identifier"), :required => true
-  param :types, Array, :desc => N_("Errata types array ['security', 'bugfix', 'enhancement']")
+  param :types, Array, :desc => N_("Errata types array \\['security', 'bugfix', 'enhancement'\\]")
   param :start_date, DateTime, :desc => N_("Start date that Errata was issued on to filter by")
   param :end_date, DateTime, :desc => N_("End date that Errata was issued on to filter by")
   def available_errata
