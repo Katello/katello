@@ -10,26 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'katello_test_helper'
+
 module Katello
-  module Concerns
-    module LocationExtensions
-      extend ActiveSupport::Concern
+class LocationTest < ActiveSupport::TestCase
 
-      included do
-        after_initialize :set_default_overrides, :if => :new_record?
-      end
+ def test_location_create
+   loc = Location.create!(:name => "FOO")
+   assert_includes loc.ignore_types, ::ConfigTemplate.name
+   assert_includes loc.ignore_types, ::Hostgroup.name
+ end
 
-      def set_default_overrides
-        self.ignore_types << ::ConfigTemplate.name
-        self.ignore_types << ::Hostgroup.name
-      end
 
-      module ClassMethods
-        def default_location
-          # In the future, we should have a better way to identify the 'default' location
-          Location.where(:name => "Default").first
-        end
-      end
-    end
-  end
+end
 end
