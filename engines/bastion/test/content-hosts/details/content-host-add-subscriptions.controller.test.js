@@ -17,10 +17,8 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
         translate,
         ContentHost,
         Subscription,
-        Nutupane,
         expectedTable,
         expectedRows,
-        ContentHostsHelper,
         SubscriptionsHelper;
 
     beforeEach(module(
@@ -39,7 +37,6 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
         ContentHost = $injector.get('MockResource').$new();
         $scope = $injector.get('$rootScope').$new();
         $location = $injector.get('$location');
-        ContentHostsHelper = $injector.get('ContentHostsHelper');
         SubscriptionsHelper = $injector.get('SubscriptionsHelper');
 
         ContentHost.addSubscriptions = function() {};
@@ -82,6 +79,15 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
             selected: false
         }
 
+        $scope.contentHost = new ContentHost({
+            uuid: 12345,
+            subscriptions: [{id: 1, quantity: 11}, {id: 2, quantity: 22}]
+        });
+
+        $scope.addSubscriptionsPane = {
+            table: {}
+        }
+
         $controller('ContentHostAddSubscriptionsController', {
             $scope: $scope,
             $location: $location,
@@ -89,14 +95,7 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
             CurrentOrganization: 'organization',
             Subscription: Subscription,
             ContentHost: ContentHost,
-            Nutupane: Nutupane,
-            ContentHostsHelper: ContentHostsHelper,
             SubscriptionsHelper: SubscriptionsHelper
-        });
-
-        $scope.contentHost = new ContentHost({
-            uuid: 12345,
-            subscriptions: [{id: 1, quantity: 11}, {id: 2, quantity: 22}]
         });
     }));
 
@@ -104,7 +103,7 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
         expect($scope.addSubscriptionsTable).toBeDefined();
     });
 
-    it("allows removing host collections from the content host", function() {
+    it("allows adding subscriptions to the content host", function() {
 
         var expected = {uuid: 12345, subscriptions: [
                                                       {id: 2, quantity: 0},

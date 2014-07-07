@@ -20,28 +20,16 @@
  * @requires translate
  * @requires Subscription
  * @requires ContentHost
- * @requires Nutupane
- * @requires ContentHostsHelper
  * @requires SubscriptionsHelper
  *
  * @description
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsController',
-    ['$scope', '$location', 'translate', 'Subscription', 'ContentHost', 'Nutupane', 'ContentHostsHelper', 'SubscriptionsHelper',
-    function ($scope, $location, translate, Subscription, ContentHost, Nutupane, ContentHostsHelper, SubscriptionsHelper) {
-        var subscriptionsPane, params;
-
-        params = {
-            'id':          $scope.$stateParams.contentHostId,
-            'search':      $location.search().search || "",
-            'sort_by':     'name',
-            'sort_order':  'ASC',
-            'paged':       true
-        };
-
-        subscriptionsPane = new Nutupane(ContentHost, params, 'subscriptions');
-        $scope.subscriptionsTable = subscriptionsPane.table;
+    ['$scope', '$location', 'translate', 'Subscription', 'ContentHost', 'SubscriptionsHelper',
+    function ($scope, $location, translate, Subscription, ContentHost, SubscriptionsHelper) {
+        
+        $scope.subscriptionsTable = $scope.subscriptionsPane.table;
         $scope.subscriptionsTable.closeItem = function () {};
         $scope.isRemoving = false;
 
@@ -62,8 +50,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
             ContentHost.removeSubscriptions({uuid: $scope.contentHost.uuid, 'subscriptions': selected}, function () {
                 ContentHost.get({id: $scope.$stateParams.contentHostId}, function (host) {
                     $scope.$parent.contentHost = host;
-                    subscriptionsPane.table.selectAll(false);
-                    subscriptionsPane.refresh();
+                    $scope.subscriptionsPane.table.selectAll(false);
+                    $scope.subscriptionsPane.refresh();
                     $scope.successMessages.push(translate("Successfully removed %s subscriptions.").replace('%s', selected.length));
                     $scope.isRemoving = false;
                 });

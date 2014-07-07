@@ -11,15 +11,15 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-describe('Controller: ContentHostSubscriptionsController', function() {
+describe('Controller: ContentHostBaseSubscriptionsController', function() {
     var $scope,
         $controller,
         translate,
         ContentHost,
         Subscription,
+        Nutupane,
         expectedTable,
-        expectedRows,
-        SubscriptionsHelper;
+        expectedRows;
 
     beforeEach(module(
         'Bastion.content-hosts',
@@ -37,9 +37,8 @@ describe('Controller: ContentHostSubscriptionsController', function() {
         ContentHost = $injector.get('MockResource').$new();
         $scope = $injector.get('$rootScope').$new();
         $location = $injector.get('$location');
-        SubscriptionsHelper = $injector.get('SubscriptionsHelper');
-
-        ContentHost.removeSubscriptions = function() {};
+        
+        ContentHost.refreshSubscriptions = function() {};
 
         translate = function(message) {
             return message;
@@ -65,40 +64,38 @@ describe('Controller: ContentHostSubscriptionsController', function() {
             this.query = function() {};
             this.refresh = function() {};
         };
+        translate = function(message) {
+            return message;
+        };
 
         $scope.contentHost = new ContentHost({
             uuid: 12345,
             subscriptions: [{id: 1, quantity: 11}, {id: 2, quantity: 22}]
         });
 
-        $scope.subscriptionsPane = {
-            table: {}
-        }
-
-        $controller('ContentHostSubscriptionsController', {
+        
+        $controller('ContentHostBaseSubscriptionsController', {
             $scope: $scope,
             $location: $location,
             translate: translate,
+            CurrentOrganization: 'organization',
             Subscription: Subscription,
             ContentHost: ContentHost,
-            SubscriptionsHelper: SubscriptionsHelper
+            Nutupane: Nutupane
         });
     }));
 
-    it('attaches the nutupane table to the scope', function() {
-        expect($scope.subscriptionsTable).toBeDefined();
+    it('attaches available subscriptions to the scope', function() {
+        expect($scope.addSubscriptionsPane).toBeDefined();
     });
 
-    it("allows removing subscriptions from the content host", function() {
+    it('attaches current subscriptions to the scope', function() {
+        expect($scope.subscriptionsPane).toBeDefined();
+    });
 
-        var expected = {uuid: 12345, subscriptions: [{id: 2}]};
-        spyOn(ContentHost, 'removeSubscriptions');
-
-        $scope.subscriptionsTable.getSelected = function() {
-            return [{id: 2}];
-        };
-
-        $scope.removeSelected();
-        expect(ContentHost.removeSubscriptions).toHaveBeenCalledWith(expected, jasmine.any(Function), jasmine.any(Function));
+    it("allows auto attaching subscriptions to the content host", function() {
+        spyOn(ContentHost, 'refreshSubscriptions');
+        $scope.autoAttachSubscriptions();
+        expect(ContentHost.refreshSubscriptions).toHaveBeenCalledWith({uuid: $scope.contentHost.uuid}, jasmine.any(Function), jasmine.any(Function));
     });
 });
