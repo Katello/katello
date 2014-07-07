@@ -195,11 +195,6 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return selected;
             };
 
-            self.anyResultsSelected = function () {
-                var results = self.getAllSelectedResults();
-                return results.included.search !== undefined || results.included.ids.length > 0;
-            };
-
             self.getDeselected = function () {
                 var deselectedRows = [];
                 angular.forEach(self.table.rows, function (row, rowIndex) {
