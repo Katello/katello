@@ -52,6 +52,9 @@ angular.module('Bastion.content-views').controller('PackageGroupFilterListContro
 
         function success(rule) {
             nutupane.removeRow(rule.uuid, 'id');
+            $scope.filter.rules = _.reject($scope.filter.rules, function (filterRule) {
+                return rule.id === filterRule.id;
+            });
             $scope.successMessages = [translate('Package Group successfully removed.')];
         }
 

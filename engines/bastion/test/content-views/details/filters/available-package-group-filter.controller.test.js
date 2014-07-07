@@ -34,7 +34,7 @@ describe('Controller: AvailablePackageGroupFilterController', function() {
         spyOn(Rule, 'save');
 
         $scope = $injector.get('$rootScope').$new();
-        $scope.filter = Filter({id: 1});
+        $scope.filter = Filter({id: 1, rules: []});
 
         $controller('AvailablePackageGroupFilterController', {
             $scope: $scope,
@@ -53,6 +53,7 @@ describe('Controller: AvailablePackageGroupFilterController', function() {
         $scope.addPackageGroups($scope.filter);
 
         expect($scope.successMessages.length).toBe(1);
+        expect($scope.filter.rules.length).toBe(1);
     });
 
 });

@@ -50,18 +50,18 @@ angular.module('Bastion.content-views').controller('AvailableErrataFilterControl
 
         $scope.addErrata = function (filter) {
             var errataIds,
-                rule,
+                rules,
                 results = nutupane.getAllSelectedResults('errata_id');
 
             if (nutupane.table.allResultsSelected) {
-                rule = new Rule({'errata_ids': results});
+                rules = new Rule({'errata_ids': results});
             } else {
                 errataIds = results.included.ids;
-                rule = new Rule({'errata_ids': errataIds});
+                rules = new Rule({'errata_ids': errataIds});
             }
 
             nutupane.table.working = true;
-            saveRule(rule, filter);
+            saveRules(rules, filter);
         };
 
         $scope.updateTypes = function (errataTypes) {
@@ -89,13 +89,14 @@ angular.module('Bastion.content-views').controller('AvailableErrataFilterControl
             }
         });
 
-        function saveRule(rule, filter) {
+        function saveRules(rules, filter) {
             var params = {filterId: filter.id};
 
-            return rule.$save(params, success, failure);
+            return rules.$save(params, success, failure);
         }
 
-        function success() {
+        function success(data) {
+            $scope.filter.rules = _.union($scope.filter.rules, data.results);
             $scope.$parent.successMessages = [translate('Errata successfully added.')];
             nutupane.table.selectAllResults(false);
             nutupane.refresh();

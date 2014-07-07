@@ -56,6 +56,7 @@ angular.module('Bastion.content-views').controller('AvailablePackageGroupFilterC
 
         function success(rule) {
             nutupane.removeRow(rule.uuid, 'id');
+            $scope.filter.rules.push(rule);
             $scope.successMessages = [translate('Package Group successfully added.')];
         }
 
