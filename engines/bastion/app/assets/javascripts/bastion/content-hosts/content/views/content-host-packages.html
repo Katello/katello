@@ -24,6 +24,7 @@
         <span class="input-group-btn">
           <button class="btn btn-default"
                   ng-hide="denied('edit_content_hosts', contentHost)"
+                  ng-disabled="packageAction.term === undefined || packageAction.term.length === 0"
                   translate>
             Perform</button>
         </span>
