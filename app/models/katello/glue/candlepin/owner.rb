@@ -18,8 +18,6 @@ module Glue::Candlepin::Owner
     base.send :include, InstanceMethods
 
     base.class_eval do
-      before_destroy :destroy_owner_orchestration
-
       validates :label,
           :presence => true,
           :format => { :with => /^[\w-]*$/ }
