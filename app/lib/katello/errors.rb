@@ -48,6 +48,8 @@ module Errors
 
   class UsageLimitExhaustedException < StandardError; end
 
+  class OrganizationDestroyException < StandardError; end
+
   class UnsupportedActionException < StandardError
     attr_reader :action, :receiver
 

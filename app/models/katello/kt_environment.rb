@@ -21,8 +21,6 @@ class KTEnvironment < Katello::Model
 
   # RAILS3458: before_destroys before associations. see http://tinyurl.com/rails3458
   before_destroy :is_deletable?
-  before_destroy :delete_core_environments
-  before_destroy :delete_default_view_version
 
   belongs_to :organization, :class_name => "Organization", :inverse_of => :environments
   has_many :activation_keys, :class_name => "Katello::ActivationKey",
@@ -294,20 +292,6 @@ class KTEnvironment < Katello::Model
     else
       self.organization.redhat_provider.available_releases
     end
-  end
-
-  def delete_core_environments
-    # For each content view associated with this lifecycle environment, there may be
-    # a puppet environment (in the core/Foreman), so let's delete those
-    self.content_views.each do |content_view|
-      if foreman_env = Environment.find_by_katello_id(self.organization, self, content_view)
-        foreman_env.destroy
-      end
-    end
-  end
-
-  def delete_default_view_version
-    self.default_content_view_version.destroy if library?
   end
 
   private
