@@ -10,7 +10,7 @@
     <button class="btn btn-default" ng-click="confirm = false; installErrata()" translate>Yes</button>
   </div>
 
-  <div class="alert alert-warning" ng-show="outOfDate">
+  <div class="alert alert-warning" ng-show="outOfDate && table.numSelected > 0">
     <i class="inline-icon icon-exclamation"></i>
     <span translate>
       Your selected content hosts have changed, it is highly recommended to refresh the calculated list of errata using the 'Refresh Errata' button below.
@@ -25,13 +25,15 @@
     <div data-block="header" translate>Content Host Errata Management</div>
 
     <div data-block="actions">
-      <button class="btn btn-default" ng-disabled="detailsTable.working" ng-click="fetchErrata()">
+      <button class="btn btn-default"
+              ng-disabled="table.numSelected === 0 || detailsTable.working"
+              ng-click="fetchErrata()">
         <i class="icon-refresh"></i>
         {{ "Refresh Table" | translate }}
       </button>
 
       <button class="btn btn-primary"
-              ng-disabled="detailsTable.working || detailsTable.numSelected == 0"
+              ng-disabled="table.numSelected === 0 || detailsTable.working || detailsTable.numSelected === 0"
               ng-click="confirm = true">
         <i class="icon-plus"></i>
         {{ "Install Selected" | translate }}
