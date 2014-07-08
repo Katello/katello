@@ -29,8 +29,8 @@
         <span class="info-value"
               alch-edit-custom="hostCollection.max_content_hosts"
               readonly="denied('edit_host_collection', hostCollection)"
-              formatter="defaultNumberString"
-              formatter-options="limitTranslations"
+              formatter="unlimitedFilter"
+              formatter-options="hostCollection.unlimited_content_hosts"
               on-save="save(hostCollection)">
 
           <div class="form input">
@@ -38,18 +38,17 @@
               <span translate>
                 Unlimited Content Hosts:
               </span>
-              <input type='checkbox'
-                   ng-model="unlimited"
-                   ng-checked="isUnlimited(hostCollection)"
-                   ng-change="unlimitedChanged()"/>
+              <input type='checkbox' ng-model="hostCollection.unlimited_content_hosts"/>
             </div>
-            <div ng-hide="isUnlimited(hostCollection)" >
+            <div ng-hide="hostCollection.unlimited_content_hosts" >
               <span translate>
                 Limit:
               </span>
               <input ng-model="hostCollection.max_content_hosts"
                      name="max_content_hosts"
                      type="number"
+                     min="1"
+                     ng-required="!hostCollection.unlimited_content_hosts"
                      tabindex="2"/>
               <span class="note error" ng-show="hostCollection.max_content_hosts.$invalid">
                 <ul><li ng-repeat="message in hostCollection.max_content_hosts.$error.messages">{{ message }}</li></ul>

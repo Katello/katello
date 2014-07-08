@@ -24,8 +24,8 @@ describe('Filter:unlimitedFilter', function() {
     }));
 
     it("ensures correctly transforms limit", function() {
-        expect(unlimitedFilter(-1)).toBe('Unlimited');
-        expect(unlimitedFilter(0)).toBe(0);
+        expect(unlimitedFilter(3, true)).toBe('Unlimited');
+        expect(unlimitedFilter(2)).toBe('2');
     });
 
 });

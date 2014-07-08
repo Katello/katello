@@ -58,17 +58,7 @@ module Katello
              :activation_keys => 'some_valid_keys',
              :facts => { 'network.hostname' => foreman_host.name })
       end
-
-      it "should fail when usage limit exceeded" do
-        activation_key = ActivationKey.create!(:name => 'zero key', :organization => @organization,
-                                               :usage_limit => 0)
-        response = post(:consumer_activate, :owner => @organization.label,
-                        :activation_keys => 'zero key')
-        assert_equal JSON.parse(response.body)['displayMessage'],
-                     "Usage limit (0) exhausted for activation key 'zero key'"
-        assert_response 409
-      end
-    end
+    end	
 
     describe "register with a lifecycle environment" do
       it "should associate the foreman host with the content host" do

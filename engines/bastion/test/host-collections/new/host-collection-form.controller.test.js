@@ -64,14 +64,14 @@ describe('Controller: HostCollectionFormController', function() {
 
         it('with unlimited hosts', function () {
             hostCollection['max_content_hosts'] = 3;
-            hostCollection.unlimited = true;
+            hostCollection.unlimited_content_hosts = true;
             $scope.save(hostCollection);
-            expect(hostCollection['max_content_hosts']).toBe(-1);
+            expect(hostCollection['unlimited_content_hosts']).toBe(true);
         });
 
         it ('with a host limit', function () {
             hostCollection['max_content_hosts'] = 3;
-            hostCollection.unlimited = false;
+            hostCollection.unlimited_content_hosts = false;
             $scope.save(hostCollection);
             expect(hostCollection['max_content_hosts']).toBe(3);
         });

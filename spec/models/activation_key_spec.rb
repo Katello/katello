@@ -31,7 +31,7 @@ module Katello
       @environment_1 = katello_environments(:dev)
       @environment_2 = katello_environments(:staging)
       @akey = ActivationKey.create(:name => aname, :description => adesc, :organization => @organization,
-                                    :environment_id => @environment_1.id)
+                                    :environment_id => @environment_1.id, :max_content_hosts => 1)
     end
 
     describe "in valid state" do
@@ -126,7 +126,8 @@ module Katello
         Resources::Candlepin::Consumer.stubs(:create).returns({:uuid => "1234", :owner => {:key => "1234"}})
         @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})
         @system2 = System.new(:name => "test2", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})
-        @akey_limit1 = ActivationKey.create(:name => "usage_limit_key1", :usage_limit => 1, :organization => @organization, :environment => @environment_1)
+        @akey_limit1 = ActivationKey.create(:name => "max_content_hosts_key1", :max_content_hosts => 1, :unlimited_content_hosts=> false, 
+                                            :organization => @organization, :environment => @environment_1)
       end
 
       it "assignes environment to the system" do
@@ -153,7 +154,7 @@ module Katello
         apply_limit = lambda {
           @akey_limit1.apply_to_system(@system2)
         }
-        apply_limit.must_raise Katello::Errors::UsageLimitExhaustedException
+        apply_limit.must_raise Katello::Errors::MaxContentHostsReachedException
       end
 
     end

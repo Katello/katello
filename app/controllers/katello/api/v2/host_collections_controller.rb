@@ -29,6 +29,7 @@ module Katello
       param :system_ids, Array, :required => false, :desc => N_("List of system uuids to be in the host collection")
       param :description, String
       param :max_content_hosts, Integer, :desc => N_("Maximum number of content hosts in the host collection")
+      param :unlimited_content_hosts, :bool, :desc => N_("Whether or not the host collection may have unlimited content hosts")
     end
 
     api :GET, "/host_collections/:id", N_("Show a host collection")
@@ -145,12 +146,13 @@ module Katello
     param :id, :identifier, :desc => N_("ID of the host collection"), :required => true
     param :name, String, :required => true, :desc => N_("New host collection name")
     def copy
-      new_host_collection                   = HostCollection.new
-      new_host_collection.name              = params[:host_collection][:name]
-      new_host_collection.organization      = @host_collection.organization
-      new_host_collection.description       = @host_collection.description
-      new_host_collection.max_content_hosts = @host_collection.max_content_hosts
-      new_host_collection.systems           = @host_collection.systems
+      new_host_collection                           = HostCollection.new
+      new_host_collection.name                      = params[:host_collection][:name]
+      new_host_collection.organization              = @host_collection.organization
+      new_host_collection.description               = @host_collection.description
+      new_host_collection.max_content_hosts         = @host_collection.max_content_hosts
+      new_host_collection.unlimited_content_hosts   = @host_collection.unlimited_content_hosts
+      new_host_collection.systems                   = @host_collection.systems
       new_host_collection.save!
       respond_for_create :resource => new_host_collection
     end
@@ -198,7 +200,7 @@ module Katello
     end
 
     def host_collection_params
-      attrs = [:name, :description, :max_content_hosts, { :system_ids => [] }]
+      attrs = [:name, :description, :max_content_hosts, :unlimited_content_hosts, { :system_ids => [] }]
       params.fetch(:host_collection).permit(*attrs)
     end
 
@@ -208,6 +210,7 @@ module Katello
         systems_from_uuid = System.uuids_to_ids(params['system_uuids'])
         result['system_ids'] = result['system_ids'] ?  result['system_ids'] + systems_from_uuid : systems_from_uuid
       end
+      result[:max_content_hosts] = nil if params[:unlimited_content_hosts]
       result
     end
 

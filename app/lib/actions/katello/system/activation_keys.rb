@@ -45,7 +45,8 @@ module Actions
 
           host_collection_ids.each do |host_collection_id|
             host_collection = ::Katello::HostCollection.find(host_collection_id)
-            if host_collection.max_content_hosts >= 0 && host_collection.systems.length >= host_collection.max_content_hosts
+            if !host_collection.unlimited_content_hosts && host_collection.max_content_hosts >= 0 &&
+               host_collection.systems.length >= host_collection.max_content_hosts
               fail _("Host collection '%{name}' exceeds maximum usage limit of '%{limit}'") %
                        {:limit => host_collection.max_content_hosts, :name => host_collection.name}
             end

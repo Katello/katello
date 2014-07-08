@@ -316,9 +316,9 @@ module Katello
           activation_key = organization.activation_keys.find_by_name(ak_name)
           fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
 
-          if !activation_key.unlimited_usage? && activation_key.usage_count >= activation_key.usage_limit
-            fail Errors::UsageLimitExhaustedException, _("Usage limit (%{limit}) exhausted for activation key '%{name}'") %
-                { :limit => activation_key.usage_limit, :name => activation_key.name }
+          if !activation_key.unlimited_content_hosts && activation_key.usage_count >= activation_key.max_content_hosts
+            fail Errors::MaxContentHostsReachedException, _("Max Content Hosts (%{limit}) reached for activation key '%{name}'") %
+                { :limit => activation_key.max_content_hosts, :name => activation_key.name }
           end
           activation_key
         end

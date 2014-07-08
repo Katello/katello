@@ -27,10 +27,10 @@
         <span class="info-label" translate>System Limit</span>
 
         <span class="info-value"
-              alch-edit-custom="activationKey.usage_limit"
+              alch-edit-custom="activationKey.max_content_hosts"
+              formatter="unlimitedFilter"
+              formatter-options="activationKey.unlimited_content_hosts"
               readonly="denied('edit_activation_keys', activationKey)"
-              formatter="defaultNumberString"
-              formatter-options="limitTranslations"
               on-save="save(activationKey)">
 
           <div class="form input">
@@ -38,22 +38,18 @@
               <span translate>
                 Unlimited Systems:
               </span>
-              <input type='checkbox'
-                   ng-model="unlimited"
-                   ng-checked="isUnlimited(activationKey)"
-                   ng-change="unlimitedChanged()"/>
+              <input type='checkbox' ng-model="activationKey.unlimited_content_hosts"/>
             </div>
-            <div ng-hide="isUnlimited(activationKey)" >
+            <div ng-hide="activationKey.unlimited_content_hosts" >
               <span translate>
                 Limit:
               </span>
-              <input ng-model="activationKey.usage_limit"
-                     name="usage_limit"
+              <input ng-model="activationKey.max_content_hosts"
+                     name="max_content_hosts"
                      type="number"
+                     min="1"
+                     ng-required="!activationKey.unlimited_content_hosts"
                      tabindex="2"/>
-              <span class="note error" ng-show="activationKeyForm.usage_limit.$invalid">
-                <ul><li ng-repeat="message in activationKeyForm.usage_limit.$error.messages">{{ message }}</li></ul>
-              </span>
             </div>
           </div>
 

@@ -28,17 +28,12 @@ angular.module('Bastion.host-collections').controller('HostCollectionFormControl
     function ($scope, $q, HostCollection, CurrentOrganization) {
 
         $scope.hostCollection = $scope.hostCollection || new HostCollection();
+        $scope.hostCollection['unlimited_content_hosts'] = true;
 
         $scope.save = function (hostCollection) {
-            if (hostCollection.unlimited) {
-                hostCollection['max_content_hosts'] = -1;
-            }
             hostCollection['organization_id'] = CurrentOrganization;
             hostCollection.$save(success, error);
         };
-
-        $scope.hostCollection.unlimited = true;
-        $scope.hostCollection['max_content_hosts'] = 1;
 
         function success(response) {
             $scope.table.addRow(response);

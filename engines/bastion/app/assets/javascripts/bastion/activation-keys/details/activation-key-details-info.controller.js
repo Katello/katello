@@ -94,20 +94,5 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
 
             return deferred.promise;
         };
-
-        $scope.limitTranslations = {"-1": translate("Unlimited")};
-
-        $scope.isUnlimited = function (activationKey) {
-            return activationKey['usage_limit'] === -1;
-        };
-
-        $scope.unlimitedChanged = function () {
-            if ($scope.isUnlimited($scope.activationKey)) {
-                $scope.activationKey['usage_limit'] = 1;
-            } else {
-                $scope.activationKey['usage_limit'] = -1;
-            }
-        };
-
     }]
 );

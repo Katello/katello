@@ -70,7 +70,7 @@ module Katello
 
       results = JSON.parse(response.body)
       assert_equal results['name'], 'Collection A'
-      assert_equal results['max_content_hosts'], -1
+      assert_equal results['unlimited_content_hosts'], true
       assert_equal results['organization_id'], @organization.id
       assert_equal results['description'], 'Collection A, World Cup 2014'
       assert_equal results['system_ids'], [@system.id]

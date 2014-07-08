@@ -31,6 +31,8 @@ angular.module('Bastion.activation-keys').controller('NewActivationKeyController
     function ($scope, $q, FormUtils, ActivationKey, Organization, CurrentOrganization, ContentView) {
 
         $scope.activationKey = $scope.activationKey || new ActivationKey();
+        $scope.activationKey['unlimited_content_hosts'] = true;
+
         $scope.panel = {loading: false};
         $scope.organization = CurrentOrganization;
 
@@ -52,30 +54,6 @@ angular.module('Bastion.activation-keys').controller('NewActivationKeyController
         $scope.save = function (activationKey) {
             activationKey['organization_id'] = CurrentOrganization;
             activationKey.$save(success, error);
-        };
-
-        $scope.unlimited = true;
-        $scope.activationKey['usage_limit'] = -1;
-
-        $scope.isUnlimited = function (activationKey) {
-            return activationKey['usage_limit'] === -1;
-        };
-
-        $scope.inputChanged = function (activationKey) {
-            if ($scope.isUnlimited(activationKey)) {
-                $scope.unlimited = true;
-            }
-        };
-
-        $scope.unlimitedChanged = function (activationKey) {
-            if ($scope.isUnlimited(activationKey)) {
-                $scope.unlimited = false;
-                activationKey['usage_limit'] = 1;
-            }
-            else {
-                $scope.unlimited = true;
-                activationKey['usage_limit'] = -1;
-            }
         };
 
         function success(response) {

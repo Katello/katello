@@ -129,25 +129,13 @@ module Katello
       assert_template 'katello/api/v2/common/create'
     end
 
-    def test_create_unlimited
+    def test_create_unlimited_content_hosts
       post :create, :organization_id => @organization.id,
-           :activation_key => {:name => 'Unlimited Key', :usage_limit => 'unlimited'}
+           :activation_key => {:name => 'Unlimited Key', :unlimited_content_hosts => true}
 
       results = JSON.parse(response.body)
       assert_equal results['name'], 'Unlimited Key'
-      assert_equal results['usage_limit'], -1
-
-      assert_response :success
-      assert_template 'katello/api/v2/common/create'
-    end
-
-    def test_create_unlimited2
-      post :create, :organization_id => @organization.id,
-           :activation_key => {:name => 'Unlimited Key 2', :usage_limit => -1}
-
-      results = JSON.parse(response.body)
-      assert_equal results['name'], 'Unlimited Key 2'
-      assert_equal results['usage_limit'], -1
+      assert_equal results['unlimited_content_hosts'], true
 
       assert_response :success
       assert_template 'katello/api/v2/common/create'
@@ -155,23 +143,18 @@ module Katello
 
     def test_create_zero_limit
       post :create, :organization_id => @organization.id,
-           :activation_key => {:name => 'Zero Key', :usage_limit => 0}
+           :activation_key => {:name => 'Zero Key', :max_content_hosts => 0, :unlimited_content_hosts => false}
 
-      results = JSON.parse(response.body)
-      assert_equal results['name'], 'Zero Key'
-      assert_equal results['usage_limit'], 0
-
-      assert_response :success
-      assert_template 'katello/api/v2/common/create'
+      assert_response 422 
     end
 
     def test_create_23_limit
       post :create, :organization_id => @organization.id,
-           :activation_key => {:name => '23 Limited Key', :usage_limit => 23}
+           :activation_key => {:name => '23 Limited Key', :max_content_hosts => 23, :unlimited_content_hosts => false}
 
       results = JSON.parse(response.body)
       assert_equal results['name'], '23 Limited Key'
-      assert_equal results['usage_limit'], 23
+      assert_equal results['max_content_hosts'], 23
 
       assert_response :success
       assert_template 'katello/api/v2/common/create'
@@ -179,11 +162,12 @@ module Katello
 
     def test_update
       put :update, :id => @activation_key.id, :organization_id => @organization.id,
-          :activation_key => {:name => 'New Name'}
+          :activation_key => {:name => 'New Name', :max_content_hosts => 2}
 
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
       assert_equal assigns[:activation_key].name, 'New Name'
+      assert_equal assigns[:activation_key].max_content_hosts, 2
     end
 
     def test_update_protected
@@ -244,7 +228,7 @@ module Katello
 
     def test_failed_validator
       results = JSON.parse(post(:create, :organization_id => @organization.id,
-                           :activation_key => { :usage_limit => 0 }).body)
+                           :activation_key => { :max_content_hosts => 0 }).body)
 
       assert_response 422
       assert_includes results['errors']['name'], 'cannot be blank'

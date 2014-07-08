@@ -6,7 +6,7 @@
 <button class="btn btn-primary"
         translate
         ng-click="save()"
-        ng-disabled="disableSave"
+        ng-disabled="disableSave || alchEditForm.$invalid"
         ng-show="editMode && !workingMode">
   Save
 </button>
