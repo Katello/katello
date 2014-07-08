@@ -128,6 +128,7 @@ module ::Actions::Katello::Product
       end
 
       repo = "fooo"
+      product.expects(:user_deletable?).returns(true)
       ::Katello::Product.any_instance.expects(:repositories).returns([repo])
       product.expects(:destroy!)
 
@@ -143,6 +144,14 @@ module ::Actions::Katello::Product
       assert_action_planed_with(action, candlepin_delete_subscriptions_class,
                                 cp_id: product.cp_id, organization_label: product.organization.label)
 
+    end
+
+    it 'fails' do
+      product.expects(:user_deletable?).returns(false)
+
+      assert_raises(RuntimeError) do
+        plan_action(action, product)
+      end
     end
   end
 

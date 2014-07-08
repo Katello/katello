@@ -148,6 +148,10 @@ class Product < Katello::Model
     provider.redhat_provider?
   end
 
+  def user_deletable?
+    self.published_content_views.empty? && !self.redhat?
+  end
+
   def custom?
     provider.custom_provider?
   end

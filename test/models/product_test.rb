@@ -28,10 +28,23 @@ module Katello
                        :organization => get_organization,
                        :provider => katello_providers(:anonymous)
                       )
+      @redhat_product = Product.find(katello_products(:redhat))
+      @promoted_product = Product.find(katello_products(:fedora))
     end
 
     def teardown
       @product.destroy if @product
+    end
+
+    def test_redhat?
+      assert @redhat_product.redhat?
+      refute @product.redhat?
+    end
+
+    def test_user_deletable?
+      refute @redhat_product.user_deletable?
+      assert @product.user_deletable?
+      refute @promoted_product.user_deletable?
     end
 
     def test_create

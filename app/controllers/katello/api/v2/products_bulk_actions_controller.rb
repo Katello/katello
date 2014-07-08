@@ -18,13 +18,13 @@ module Katello
     api :PUT, "/products/bulk/destroy", N_("Destroy one or more products")
     param :ids, Array, :desc => N_("List of product ids"), :required => true
     def destroy_products
-      deletable_products = @products.deletable
+      deletable_products = @products.deletable#.select{|p| p.user_deletable?}
       deletable_products.each do |prod|
         async_task(::Actions::Katello::Product::Destroy, prod)
       end
 
       messages = format_bulk_action_messages(
-        :success    => _("Successfully removed %s product(s)"),
+        :success    => _("Successfully initiated removal of %s product(s)"),
         :error      => _("You were not allowed to delete %s"),
         :models     => @products,
         :authorized => deletable_products
@@ -76,7 +76,7 @@ module Katello
 
     def find_products
       params.require(:ids)
-      @products = Product.where(:cp_id => params[:ids])
+      @products = Product.where(:id => params[:ids])
     end
 
   end

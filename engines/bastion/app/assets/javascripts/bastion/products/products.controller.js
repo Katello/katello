@@ -39,9 +39,9 @@ angular.module('Bastion.products').controller('ProductsController',
             'paged':            true
         };
 
-        var nutupane = new Nutupane(Product, params);
-        $scope.productTable = nutupane.table;
-        $scope.removeRow = nutupane.removeRow;
+        $scope.productsNutupane = new Nutupane(Product, params);
+        $scope.productTable = $scope.productsNutupane.table;
+        $scope.removeRow = $scope.productsNutupane.removeRow;
 
         $scope.productTable.closeItem = function () {
             $scope.transitionTo('products.index');
@@ -55,7 +55,7 @@ angular.module('Bastion.products').controller('ProductsController',
             $scope.productDeletionTaskId = undefined;
         };
 
-        $scope.productTable.refresh = nutupane.refresh;
+        $scope.productTable.refresh = $scope.productsNutupane.refresh;
 
         $scope.table = $scope.productTable;
 

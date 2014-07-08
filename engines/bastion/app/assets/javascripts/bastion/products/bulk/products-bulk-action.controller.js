@@ -42,7 +42,7 @@ angular.module('Bastion.products').controller('ProductsBulkActionController',
 
         $scope.getSelectedProductIds = function () {
             var rows = $scope.productTable.getSelected();
-            return _.pluck(rows, 'cp_id');
+            return _.pluck(rows, 'id');
         };
 
         $scope.removeProducts = function () {
@@ -52,12 +52,11 @@ angular.module('Bastion.products').controller('ProductsBulkActionController',
             $scope.actionParams.ids = $scope.getSelectedProductIds();
 
             success = function (data) {
-                angular.forEach($scope.productTable.getSelected(), function (row) {
-                    $scope.removeRow(row.id);
-                });
-
+                $scope.productsNutupane.refresh();
                 $scope.table.selectAll(false);
-                $scope.successMessages = data.displayMessages.success;
+
+                $scope.$parent.successMessages = data.displayMessages.success;
+                $scope.$parent.errorMessages = data.displayMessages.error;
                 $scope.removingProducts = false;
                 $scope.transitionTo('products.index');
             };

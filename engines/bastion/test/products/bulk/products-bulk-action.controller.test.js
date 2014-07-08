@@ -17,7 +17,7 @@ describe('Controller: ProductsBulkActionController', function() {
     beforeEach(module('Bastion.products'));
 
     beforeEach(function() {
-        selected = [{cp_id: 1}, {cp_id: 2}, {cp_id: 3}];
+        selected = [{id: 1}, {id: 2}, {id: 3}];
         ProductBulkAction = {
             removeProducts: function() {
                 var deferred = $q.defer();
