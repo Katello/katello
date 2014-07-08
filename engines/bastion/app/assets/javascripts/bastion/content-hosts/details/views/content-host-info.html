@@ -199,8 +199,14 @@
               options-format="option for option in options"
               deletable="true"
               on-delete="clearReleaseVersion()"
-              on-save="save(contentHost)">
+              on-save="save(contentHost)"
+              on-cancel="cancelReleaseVersionUpdate()">
         </span>
+        <div alert type="'info'" ng-show="showVersionAlert">
+          <p translate>
+            No alternate release version choices are available. The available releases are based upon what is available in "{{ contentHost.content_view.name }}", the selected <a href="/content_views">content view</a> this content host is attached to for the given <a href="/lifecycle_environments">lifecycle environment</a>, "{{ contentHost.environment.name }}".
+          </p>
+        </div>
       </div>
 
       <div class="detail">
