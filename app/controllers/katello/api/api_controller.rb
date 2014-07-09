@@ -153,7 +153,7 @@ class Api::ApiController < ::Api::BaseController
     unauthorized = models - authorized
 
     messages[:success] << args.fetch(:success) % authorized.length if authorized.present?
-    messages[:error] << args.fetch(:error) % unauthorized if unauthorized.present?
+    unauthorized.each{|item| messages[:error] << args.fetch(:error) % item }
 
     messages
   end

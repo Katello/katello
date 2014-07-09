@@ -53,7 +53,7 @@ module Katello
         test_product.id.must_equal product.id
       end
 
-      put :destroy_products, {:ids => [test_product.cp_id], :organization_id => @organization.id}
+      put :destroy_products, {:ids => [test_product.id], :organization_id => @organization.id}
 
       assert_response :success
     end
@@ -70,7 +70,7 @@ module Katello
     def test_sync
       Product.any_instance.expects(:sync).times(@products.length).returns([{}])
 
-      put :sync_products, {:ids => @products.collect(&:cp_id), :organization_id => @organization.id}
+      put :sync_products, {:ids => @products.collect(&:id), :organization_id => @organization.id}
 
       assert_response :success
     end
@@ -80,14 +80,14 @@ module Katello
       denied_perms = [@update_permission, @destroy_permission, @view_permission, @create_permission]
 
       assert_protected_action(:sync_products, allowed_perms, denied_perms) do
-        put :sync_products, {:ids => @products.collect(&:cp_id), :organization_id => @organization.id}
+        put :sync_products, {:ids => @products.collect(&:id), :organization_id => @organization.id}
       end
     end
 
     def test_update_sync_plans
       Product.any_instance.expects(:save!).times(@products.length).returns([{}])
 
-      put :update_sync_plans, {:ids => @products.collect(&:cp_id), :organization_id => @organization.id, :plan_id => 1}
+      put :update_sync_plans, {:ids => @products.collect(&:id), :organization_id => @organization.id, :plan_id => 1}
 
       assert_response :success
     end
@@ -97,7 +97,7 @@ module Katello
       denied_perms = [@sync_permission, @create_permission, @destroy_permission, @view_permission]
 
       assert_protected_action(:update_sync_plans, allowed_perms, denied_perms) do
-        put :update_sync_plans, {:ids => @products.collect(&:cp_id), :organization_id => @organization.id}
+        put :update_sync_plans, {:ids => @products.collect(&:id), :organization_id => @organization.id}
       end
     end
   end
