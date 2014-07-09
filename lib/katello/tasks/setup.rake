@@ -45,6 +45,7 @@ namespace :katello do
   end
 
   task :reset => ['environment'] do
+    ENV['SEED_ADMIN_PASSWORD'] ||= 'changeme'
     Rake::Task['katello:reset_backends'].invoke
     Rake::Task['db:drop'].invoke
     Rake::Task['db:create'].invoke
