@@ -3,7 +3,7 @@ require 'katello/plugin.rb'
 Foreman::Plugin.find(:katello).security_block :gpg_keys do
   permission :view_gpg_keys,
              {
-              'katello/gpg_keys' => [:all, :index],
+              'katello/gpg_keys' => [:all, :index, :auto_complete_search],
               'katello/api/v2/gpg_keys' => [:index, :show]
              },
              :resource_type => 'Katello::GpgKey'
