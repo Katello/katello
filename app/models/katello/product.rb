@@ -36,7 +36,7 @@ class Product < Katello::Model
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products, :class_name => 'Katello::SyncPlan'
   belongs_to :gpg_key, :inverse_of => :products
-  has_many :repositories, :class_name => "Katello::Repository", :dependent => :destroy
+  has_many :repositories, :class_name => "Katello::Repository", :dependent => :restrict
 
   validates :provider_id, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name

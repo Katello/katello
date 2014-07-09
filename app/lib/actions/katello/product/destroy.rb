@@ -23,11 +23,12 @@ module Actions
           end
 
           no_other_assignment = ::Katello::Product.where(["cp_id = ? AND id != ?", product.cp_id, product.id]).count == 0
+          product.disable_auto_reindex!
           action_subject(product)
 
           sequence do
             concurrence do
-              product.repositories.each do |repo|
+              product.repositories.in_default_view.each do |repo|
                 plan_action(Katello::Repository::Destroy, repo)
               end
             end
@@ -52,7 +53,8 @@ module Actions
               plan_action(Candlepin::Product::Destroy, cp_id: product.cp_id)
             end
 
-            product.destroy!
+            product.reload.destroy!
+            plan_action(ElasticSearch::Reindex, product)
           end
         end
 
