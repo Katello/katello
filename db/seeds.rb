@@ -57,7 +57,8 @@ fail "Are you sure you cleared candlepin?! Unable to create first org!" if first
 
 # Create an Initial Location.
 # This is a global location for the satelite server by default
-Location.find_or_create_by_name(:name => first_location_name)
+location = Location.find_or_create_by_name(:name => first_location_name)
+location.update_attributes!(:katello_default => true) unless Location.default_location
 
 if Katello.config.use_pulp
   Katello::Repository.ensure_sync_notification

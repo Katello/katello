@@ -18,7 +18,7 @@ module Katello
       module ClassMethods
         def default_location
           # In the future, we should have a better way to identify the 'default' location
-          Location.where(:name => "Default").first
+          Location.where(:katello_default => true).first
         end
       end
     end
