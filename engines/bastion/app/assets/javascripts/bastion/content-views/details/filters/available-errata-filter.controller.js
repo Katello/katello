@@ -33,8 +33,7 @@ angular.module('Bastion.content-views').controller('AvailableErrataFilterControl
 
         $scope.nutupane = nutupane = new Nutupane(Filter, {
                 filterId: $scope.$stateParams.filterId,
-                'sort_order': 'DESC',
-                'sort_by': 'issued'
+                'order': 'issued DESC'
             },
             'availableErrata'
         );

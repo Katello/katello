@@ -13,6 +13,9 @@
 module Katello
 module Glue
   module ElasticSearch
+
+    UnsortableFieldError = Class.new(RuntimeError)
+
     class Items
 
       attr_accessor :obj_class, :query_string, :results, :total, :filters, :search_options, :facets
@@ -55,7 +58,7 @@ module Glue
         @filters      = search_options[:filters] || @filters
         start         = offset || search_options[:offset] || 0
         all_rows      = false
-        sort_by       = search_options.fetch(:sort_by, 'name_sort')
+        sort_by       = search_options.fetch(:sort_by, 'name')
         sort_order    = search_options[:sort_order] || 'ASC'
         facet_filters  = search_options[:facet_filters] || {}
         total_count   = 0
@@ -180,11 +183,13 @@ module Glue
       private
 
       def format_sort(sort_by)
+        ok_types = %w(date boolean)
         mapping = @obj_class.mapping || {}
-        if mapping[sort_by.to_sym] && mapping[sort_by.to_sym][:type] == 'date'
+        fail UnsortableFieldError, _("Cannot sort by '%s'") % sort_by unless @obj_class.sortable_fields.include?(sort_by)
+        if mapping[sort_by.to_sym] && ok_types.include?(mapping[sort_by.to_sym][:type])
           sort_by
         else
-          sort_by + '_sort' if !sort_by.to_s.include?('_sort')
+          "#{sort_by}_sort" unless sort_by.to_s.include?('_sort')
         end
       end
 

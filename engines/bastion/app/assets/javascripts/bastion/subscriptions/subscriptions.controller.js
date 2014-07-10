@@ -37,8 +37,7 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
         var params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
-            'sort_by':          'name',
-            'sort_order':       'ASC',
+            'order':            'name ASC',
             'enabled' :         true,
             'paged':            true
         };

@@ -37,8 +37,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlansController',
             var params = {
                 'organization_id':  CurrentOrganization,
                 'search':           $location.search().search || "",
-                'sort_by':          'name',
-                'sort_order':       'ASC'
+                'order':            'name ASC'
             };
 
             var nutupane = new Nutupane(SyncPlan, params);

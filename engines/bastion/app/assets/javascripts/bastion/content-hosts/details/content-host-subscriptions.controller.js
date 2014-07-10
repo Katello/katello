@@ -28,7 +28,7 @@
 angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsController',
     ['$scope', '$location', 'translate', 'Subscription', 'ContentHost', 'SubscriptionsHelper',
     function ($scope, $location, translate, Subscription, ContentHost, SubscriptionsHelper) {
-        
+
         $scope.subscriptionsTable = $scope.subscriptionsPane.table;
         $scope.subscriptionsTable.closeItem = function () {};
         $scope.isRemoving = false;

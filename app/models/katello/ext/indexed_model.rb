@@ -24,13 +24,17 @@ module Ext::IndexedModel
         self.class_index_options[:display_attrs].sort{|a, b| a.to_s <=> b.to_s}
       end
 
+      def self.sortable_fields
+        %w(name)
+      end
+
       if Rails.env.development? || Rails.env.production?
         include Tire::Model::Search
         include Tire::Model::Callbacks
         index_name Katello.config.elastic_index + '_' +  self.base_class.name.downcase
 
-        #Shared analyzers.  If you need a model-specific analyzer for some reason,
-        #  we'll need to refactor this to support that.
+        # Shared analyzers.  If you need a model-specific analyzer for some reason,
+        # we'll need to refactor this to support that.
         settings :analysis => {
                     :filter => Util::Search.custom_filters,
                     :analyzer => Util::Search.custom_analyzers
@@ -47,10 +51,8 @@ module Ext::IndexedModel
         def self.mapping(*args)
           {}
         end
-        def self.index_import(list)
-        end
-        def self.index_name(name)
-        end
+        def self.index_import(list); end
+        def self.index_name(name); end
       end
 
       def disable_auto_reindex!

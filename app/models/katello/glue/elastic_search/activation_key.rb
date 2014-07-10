@@ -12,6 +12,7 @@
 
 module Katello
 module Glue::ElasticSearch::ActivationKey
+
   def self.included(base)
     base.send :include, Ext::IndexedModel
 

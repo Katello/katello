@@ -14,6 +14,12 @@ module Katello
   module Glue::ElasticSearch::ContentViewPackageFilterRule
     extend ActiveSupport::Concern
 
+    module ClassMethods
+      def sortable_fields
+        %w(name)
+      end
+    end
+
     included do
       include Ext::IndexedModel
 
