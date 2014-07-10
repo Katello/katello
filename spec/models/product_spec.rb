@@ -17,7 +17,6 @@ module Katello
 describe Product, :katello => true do
 
   include OrchestrationHelper
-  include AuthorizationHelperMethods
   include ProductHelperMethods
   include OrganizationHelperMethods
 

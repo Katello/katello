@@ -16,13 +16,10 @@ module Katello
 describe Api::V1::SystemPackagesController do
   include OrganizationHelperMethods
   include SystemHelperMethods
-  include AuthorizationHelperMethods
+
   include OrchestrationHelper
 
   let(:uuid) { '1234' }
-
-  let(:user_with_update_permissions) { user_with_permissions { |u| u.can(:update_systems, :organizations, nil, @organization) } }
-  let(:user_without_update_permissions) { user_without_permissions }
 
   let(:package_groups) { %w[@Editors FTP Server] }
   let(:packages) { %w[zsh bash] }
@@ -54,9 +51,6 @@ describe Api::V1::SystemPackagesController do
     let(:action) { :create }
     let(:req) { post :create, :organization_id => @organization.name, :system_id => @system.uuid, :packages => packages }
     subject { req }
-    let(:authorized_user) { user_with_update_permissions }
-    let(:unauthorized_user) { user_without_update_permissions }
-    it_should_behave_like "protected action"
 
     it { must_respond_with(:success) }
 
@@ -95,9 +89,6 @@ describe Api::V1::SystemPackagesController do
     let(:action) { :destroy }
     let(:req) { delete :destroy, :organization_id => @organization.name, :system_id => @system.uuid, :packages => packages }
     subject { req }
-    let(:authorized_user) { user_with_update_permissions }
-    let(:unauthorized_user) { user_without_update_permissions }
-    it_should_behave_like "protected action"
 
     it { must_respond_with(:success) }
 
@@ -136,9 +127,6 @@ describe Api::V1::SystemPackagesController do
     let(:action) { :create }
     let(:req) { put :update, :organization_id => @organization.name, :system_id => @system.uuid, :packages => packages }
     subject { req }
-    let(:authorized_user) { user_with_update_permissions }
-    let(:unauthorized_user) { user_without_update_permissions }
-    it_should_behave_like "protected action"
 
     it { must_respond_with(:success) }
 

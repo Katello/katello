@@ -18,7 +18,6 @@ class Api::V1::ApiController < Api::ApiController
 
   # support for session (thread-local) variables must be the last filter in this class
   include Foreman::ThreadSession::Cleaner
-  include AuthorizationRules
 
   resource_description do
     api_version 'v1'

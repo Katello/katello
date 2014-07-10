@@ -17,7 +17,7 @@ describe ContentSearchController do
 
   include LocaleHelperMethods
   include OrganizationHelperMethods
-  include AuthorizationHelperMethods
+
   include ProductHelperMethods
   include RepositoryHelperMethods
   include SearchHelperMethods

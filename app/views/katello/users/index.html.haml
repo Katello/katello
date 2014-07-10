@@ -1,8 +1,0 @@
-.grid_16#main
-  = two_panel(@users, @panel_options)
-
-= javascript 'katello/users', 'katello/widgets/jquery.jeditable.helpers'
-
-= javascript do
-  :plain
-    var current_login = '#{_(current_user.login)}';

@@ -17,7 +17,7 @@ describe CustomInfo do
 
   include OrchestrationHelper
   include SystemHelperMethods
-  include AuthorizationHelperMethods
+
 
   let(:uuid) { '1234' }
 

@@ -60,7 +60,7 @@ Katello::Engine.routes.draw do
     end
   end
 
-  resources :packages, :only => [] do
+  resources :packages, :only => [:show] do
     member do
       get :details
     end
@@ -123,24 +123,6 @@ Katello::Engine.routes.draw do
     end
   end
 
-  resources :users do
-    collection do
-      get :auto_complete_search
-      get :items
-      post :enable_helptip
-      post :disable_helptip
-    end
-    member do
-      post :clear_helptips
-      put :update_roles
-      put :update_locale
-      put :update_preference
-      put :setup_default_org
-      get :edit_environment
-      put :update_environment
-    end
-  end
-
   resources :providers do
     collection do
       get :auto_complete_search
@@ -197,7 +179,5 @@ Katello::Engine.routes.draw do
   end
 
   root :to => "dashboard#index"
-
-  match '/user_session/set_org' => 'user_sessions#set_org', :via => :post
 
 end

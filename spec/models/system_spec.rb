@@ -16,7 +16,7 @@ require 'helpers/system_test_data'
 module Katello
 describe System do
 
-  include AuthorizationHelperMethods
+
   include OrchestrationHelper
   include OrganizationHelperMethods
   include SystemHelperMethods

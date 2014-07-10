@@ -2,8 +2,6 @@ class AddForeignKeysForOrganizations < ActiveRecord::Migration
   def up
     add_foreign_key(:katello_task_statuses, :taxonomies,
                     :name => 'katello_task_statuses_organization_fk', :column => 'organization_id')
-    add_foreign_key(:katello_permissions, :taxonomies,
-                    :name => 'katello_permissions_organization_fk', :column => 'organization_id')
     add_foreign_key(:katello_sync_plans, :taxonomies,
                     :name => 'katello_sync_plans_organization_fk', :column => 'organization_id')
     add_foreign_key(:katello_providers, :taxonomies,
@@ -24,7 +22,6 @@ class AddForeignKeysForOrganizations < ActiveRecord::Migration
 
   def down
     remove_foreign_key('katello_task_statuses', :name => 'katello_task_statuses_organization_fk')
-    remove_foreign_key('katello_permissions', :name => 'katello_permissions_organization_fk')
     remove_foreign_key('katello_sync_plans', :name => 'katello_sync_plans_organization_fk')
     remove_foreign_key('katello_providers', :name => 'katello_providers_organization_fk')
     remove_foreign_key('katello_gpg_keys', :name => 'katello_gpg_keys_organization_fk')

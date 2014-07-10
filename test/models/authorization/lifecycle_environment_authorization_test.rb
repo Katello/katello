@@ -37,6 +37,7 @@ class EnvironmentAuthorizationAdminTest < AuthorizationTestBase
   def test_any_promotable?
     assert KTEnvironment.any_promotable?
   end
+
 end
 
 class EnvironmentAuthorizationNoPermsTest < AuthorizationTestBase

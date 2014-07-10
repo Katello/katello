@@ -19,15 +19,8 @@ module ControllerSupport
     permissions = params[:permission].is_a?(Array) ? params[:permission] : [params[:permission]]
 
     permissions.each do |permission|
-      # TODO: allow user to be passed in via params and clear permissions between iterations
-
-      if permission.is_a?(UserPermission) || permission.is_a?(Proc) || permission.is_a?(UserPermissionSet)
-        user = no_permission_user
-        permission.call(Katello::AuthorizationSupportMethods::UserPermissionsGenerator.new(user))
-      else
-        user = User.find(users(:restricted))
-        setup_user_with_permissions(permission, user)
-      end
+      user = User.find(users(:restricted))
+      setup_user_with_permissions(permission, user)
 
       action = params[:action]
       req = params[:request]
@@ -74,41 +67,4 @@ module ControllerSupport
     check_permission(check_params)
   end
 
-  def no_permission_user
-    user = User.find(users(:restricted))
-    user.own_role.permissions.delete_all
-    user
-  end
-end
-
-UserPermission = Struct.new(:verbs, :resource_type, :tags, :org, :options) do
-  def call(generator)
-    self.tags ||= []
-    self.options ||= {}
-    generator.can(verbs, resource_type, tags, org, options)
-  end
-
-  def +(permission)
-    UserPermissionSet.new([self, permission])
-  end
-end
-
-# create a constant for a lack of permissions
-NO_PERMISSION = lambda { |user| }
-
-class UserPermissionSet
-  attr_accessor :permissions
-
-  def initialize(permissions = [])
-    self.permissions = permissions
-  end
-
-  def +(user_permission)
-    self.permissions << user_permission
-  end
-  alias_method :<<, :+
-
-  def call(generator)
-    permissions.each { |p| p.call(generator) }
-  end
 end

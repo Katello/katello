@@ -30,29 +30,15 @@ module KatelloMiniTestRunner
 
     def _run_suite(suite, type)
       begin
-        ResourceTypeBackup.initiate
         User.current = nil  #reset User.current
         suite.before_suite if suite.respond_to?(:before_suite)
         super(suite, type)
       ensure
         suite.after_suite if suite.respond_to?(:after_suite)
         restore_glue_layers
-        ResourceTypeBackup.restore
       end
     end
 
-  end
-end
-
-class ResourceTypeBackup
-
-  def self.initiate
-    @types_backup ||= Katello::ResourceType::TYPES.clone
-  end
-
-  def self.restore
-    Katello::ResourceType::TYPES.clear
-    Katello::ResourceType::TYPES.merge!(@types_backup)
   end
 end
 

@@ -20,7 +20,7 @@ describe ProductsController do
 
   include LocaleHelperMethods
   include OrganizationHelperMethods
-  include AuthorizationHelperMethods
+
 
   describe "(katello)" do
 

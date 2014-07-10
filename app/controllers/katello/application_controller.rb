@@ -103,35 +103,7 @@ class ApplicationController < ::ApplicationController
     execute_rescue(exception) { |ex| render_bad_parameters(ex) }
   end
 
-  include AuthorizationRules
   include Menu
-
-  # Override Foreman authorized method to call the Katello authorize check
-  def authorized
-    if converted_controllers.include?(request.params['controller'])
-      super
-    else
-      authorize_katello
-    end
-  end
-
-  def converted_controllers
-    [
-      'bastion/bastion_controller',
-      'katello/products',
-      'katello/providers',
-      'katello/sync_management',
-      'katello/content_search',
-      'katello/content_views',
-      'katello/errata',
-      'katello/packages',
-      'katello/puppet_modules',
-      'katello/repositories',
-      'katello/dashboard'
-    ]
-  end
-
-  before_filter :verify_ldap
 
   def section_id
     'generic'
@@ -296,11 +268,6 @@ class ApplicationController < ::ApplicationController
   end
 
   private # why bother? methods below are not testable/tested
-
-  def verify_ldap
-    u = current_user
-    u.verify_ldap_roles if Katello.config.ldap_roles && !u.nil?
-  end
 
   def require_org
     unless session && current_organization
@@ -763,6 +730,10 @@ class ApplicationController < ::ApplicationController
     [:user, :organization, :location].each do |key|
       Thread.current[key] = nil
     end
+  end
+
+  def turn_off_strong_params
+    Thread.current[:strong_parameters] = false
   end
 
 end

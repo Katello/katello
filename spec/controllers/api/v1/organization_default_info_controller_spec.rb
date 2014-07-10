@@ -15,7 +15,7 @@ require 'katello_test_helper'
 module Katello
 describe Api::V1::OrganizationDefaultInfoController do
   include OrganizationHelperMethods
-  include AuthorizationHelperMethods
+
   include OrchestrationHelper
   include SystemHelperMethods
   let(:facts) { { "distribution.name" => "Fedora" } }

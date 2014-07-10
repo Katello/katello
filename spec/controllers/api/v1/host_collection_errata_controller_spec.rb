@@ -14,14 +14,10 @@ require 'katello_test_helper'
 
 module Katello
 describe Api::V1::HostCollectionErrataController do
-  include AuthorizationHelperMethods
+
   include OrchestrationHelper
   include OrganizationHelperMethods
   include SystemHelperMethods
-
-  let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_systems, :host_collections, @host_collection.id, @organization) } }
-  let(:user_with_update_permissions) { user_with_permissions { |u| u.can(:update_systems, :host_collections, @host_collection.id, @organization) } }
-  let(:user_without_update_permissions) { user_without_permissions }
 
   let(:uuid) { '1234' }
   let(:errata) { %w[RHBA-2012:0001 RHSA-2012:0002] }
@@ -64,10 +60,7 @@ describe Api::V1::HostCollectionErrataController do
     let(:action) { :index }
     let(:req) { get :index, :organization_id => @organization.name, :host_collection_id => @host_collection.id }
     subject { req }
-    let(:authorized_user) { user_with_update_permissions }
-    let(:unauthorized_user) { user_without_update_permissions }
 
-    it_should_behave_like "protected action"
 
     it "should retrieve errata from pulp" do
       subject
@@ -88,10 +81,6 @@ describe Api::V1::HostCollectionErrataController do
     let(:action) { :create }
     let(:req) { post :create, :organization_id => @organization.name, :host_collection_id => @host_collection.id, :errata_ids => errata }
     subject { req }
-    let(:authorized_user) { user_with_update_permissions }
-    let(:unauthorized_user) { user_without_update_permissions }
-
-    it_should_behave_like "protected action"
 
     it "should call model to install errata" do
       @host_collection.expects(:install_errata)

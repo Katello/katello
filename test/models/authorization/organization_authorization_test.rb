@@ -19,60 +19,21 @@ class OrganizationAuthorizationAdminTest < AuthorizationTestBase
     User.current = User.find(users('admin'))
     @org = @acme_corporation
   end
+
   def test_promotion_paths
     assert_equal(@org.promotion_paths, @org.readable_promotion_paths)
-  end
-
-  def test_class_readable
-    refute_empty Organization.readable
-  end
-
-  def test_creatable?
-    assert Organization.creatable?
-  end
-
-  def test_any_readable?
-    assert Organization.any_readable?
   end
 
   def test_editable?
     assert @org.editable?
   end
 
-  def test_deletable?
-    assert @org.deletable?
+  def test_manifest_importable?
+    assert @org.manifest_importable?
   end
 
-  def test_readable?
-    assert @org.readable?
-  end
-
-  def test_systems_readable?
-    assert @org.systems_readable?
-  end
-
-  def test_systems_deletable?
-    assert @org.systems_deletable?
-  end
-
-  def test_systems_registerable?
-    assert @org.systems_registerable?
-  end
-
-  def test_any_systems_registerable?
-    assert @org.systems_registerable?
-  end
-
-  def test_gpg_keys_manageable?
-    assert @org.gpg_keys_manageable?
-  end
-
-  def test_syncable?
-    assert @org.syncable?
-  end
-
-  def test_redhat_manageable?
-    assert @org.redhat_manageable?
+  def test_subscriptions_readable?
+    assert @org.subscriptions_readable?
   end
 
 end
@@ -85,56 +46,8 @@ class OrganizationAuthorizationNoPermsTest < AuthorizationTestBase
     @org = @acme_corporation
   end
 
-  def test_class_readable
-    assert_empty Organization.readable
-  end
-
   def def_class_creatable?
     refute Organization.creatable?
-  end
-
-  def test_any_readable?
-    refute Organization.any_readable?
-  end
-
-  def test_editable?
-    refute @org.editable?
-  end
-
-  def test_deletable?
-    refute @org.deletable?
-  end
-
-  def test_readable?
-    refute @org.readable?
-  end
-
-  def test_systems_readable?
-    refute @org.systems_readable?
-  end
-
-  def test_systems_deletable?
-    refute @org.systems_deletable?
-  end
-
-  def test_systems_registerable?
-    refute @org.systems_registerable?
-  end
-
-  def test_any_systems_registerable?
-    refute @org.systems_registerable?
-  end
-
-  def test_gpg_keys_manageable?
-    refute @org.gpg_keys_manageable?
-  end
-
-  def test_syncable?
-    refute @org.syncable?
-  end
-
-  def test_redhat_manageable?
-    refute @org.redhat_manageable?
   end
 
   def test_read_promotion_paths
@@ -158,5 +71,14 @@ class OrganizationAuthorizationNoPermsTest < AuthorizationTestBase
     refute_equal(@org.promotion_paths, @org.promotable_promotion_paths)
     assert_equal(1, @org.promotable_promotion_paths.size)
   end
+
+  def test_manifest_importable?
+    refute @org.manifest_importable?
+  end
+
+  def test_subscriptions_readable?
+    refute @org.subscriptions_readable?
+  end
+
 end
 end

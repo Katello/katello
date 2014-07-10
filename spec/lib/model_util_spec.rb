@@ -17,6 +17,8 @@ require 'katello_test_helper'
 module Katello
 class UtilModelSpec < ActiveSupport::TestCase
 
+  include OrchestrationHelper
+
   describe "labelize tests" do
     specify {Util::Model::labelize("sweet home alabama").must_equal "sweet_home_alabama"}
     specify {Util::Model::labelize("sweet-home+alabama").must_equal "sweet-home_alabama"}

@@ -17,7 +17,7 @@ module Headpin
       def plan(user)
         plan_self('login' => user.login,
                   'mail' => user.mail,
-                  'admin' => user.has_superadmin_role?,
+                  'admin' => user.admin?,
                   'hidden' => user.hidden?)
       end
 
