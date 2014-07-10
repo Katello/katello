@@ -92,8 +92,8 @@ module Katello
       end
 
       def medium_uri_with_content_uri(host, url = nil)
-        if host.try(:content_source) && (full_path = kickstart_repo(host))
-          URI.parse(full_path)
+        if host.try(:content_source) && (repo_details = kickstart_repo(host))
+          URI.parse(repo_details[:path])
         else
           medium_uri_without_content_uri(host, url)
         end
@@ -105,7 +105,7 @@ module Katello
 
       def kickstart_repo(host)
         distro = distribution_repositories(host).first
-        distro.full_path(host.content_source) if distro && host.content_source
+        {:name => distro.name, :path => distro.full_path(host.content_source)} if distro && host.content_source
       end
 
       private

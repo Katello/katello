@@ -57,6 +57,5 @@ end %>
     <%= select_f f, :content_source_id, proxies, :id, :name,
              { :include_blank => blank_or_inherit_f(f, :content_source) },
              { :label       => _("Content Source"),
-               :onchange    => 'toggle_installation_medium(this);',
                :help_inline => _("Use this as a source for installation and updates.") } %>
 <% end %>
