@@ -192,6 +192,14 @@ common:
     log_trace: false
     #do not log certain paths (example  /notices/get_new)
     ignored_paths: []
+    # filter discrete parameters based on request paths
+    # instead of a blanket filtering like in config.filer_parameters
+    # (example: prevent the name paramater from being logged when an activation key
+    #    is updated)
+    filter_parameters_by_path:
+       - path: 'content_uploads'
+         names:
+           - 'content'
     # configuration of all loggers used in app
     loggers:
       # this logger is parent of all other loggers, by default this is the only one having appender

@@ -6,6 +6,10 @@ module Katello
 
     initializer 'katello.silenced_logger', :before => :build_middleware_stack do |app|
       app.config.middleware.swap Rails::Rack::Logger, Katello::Middleware::SilencedLogger, {}
+      %w(start_processing).each do |evt|
+        ::ActiveSupport::Notifications.unsubscribe "#{evt}.action_controller"
+      end
+      Katello::Middleware::CustomAcLogSubscriber.attach_to :action_controller
     end
 
     initializer 'katello.mount_engine', :after => :build_middleware_stack do |app|
