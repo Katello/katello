@@ -27,9 +27,9 @@
     </li>
 
     <li>
-      <p translate>
-        Change assigned Environment or Content View
-      </p>
+      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.environment') }}?select_all=true&search=host_collection:'{{ hostCollection.name }}'">
+        Change assigned Lifecycle Environment or Content View
+      </a>
     </li>
 
   </ul>
