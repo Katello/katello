@@ -14,18 +14,27 @@ module Katello
   class Api::V2::ContentViewVersionsController < Api::V2::ApiController
     before_filter :find_content_view_version, :only => [:show, :promote, :destroy]
     before_filter :find_content_view
-    before_filter :find_environment, :only => [:promote]
+    before_filter :find_environment, :only => [:promote, :index]
     before_filter :authorize_promotable, :only => [:promote]
     before_filter :authorize_destroy, :only => [:destroy]
 
     api :GET, "/content_view_versions", N_("List content view versions")
     api :GET, "/content_views/:content_view_id/content_view_versions", N_("List content view versions")
     param :content_view_id, :identifier, :desc => N_("Content view identifier"), :required => true
+    param :environment_id, :identifier, :desc => N_("Filter versions by environment"), :required => false
+    param :version, String, :desc => N_("Filter versions by version number"), :required => false
     def index
-      collection = {:results  => @view.versions.order('version desc'),
-                    :subtotal => @view.versions.count,
-                    :total    => @view.versions.count
+      versions = @view.versions.where(params.permit(:version))
+      versions = versions.in_environment(@environment) if @environment
+
+      collection = {:results  => versions.order('version desc'),
+                    :subtotal => versions.count,
+                    :total    => versions.count
                    }
+
+      params[:sort_by] = 'version'
+      params[:sort_order] = 'desc'
+
       respond(:collection => collection)
     end
 
