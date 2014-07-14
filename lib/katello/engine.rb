@@ -41,6 +41,12 @@ module Katello
       end
     end
 
+    initializer "katello.initialize_cp_listener", after: "foreman_tasks.initialize_dynflow" do
+      unless ForemanTasks.dynflow.config.remote? || File.basename($PROGRAM_NAME) == 'rake' || Rails.env.test?
+        ForemanTasks.async_task(::Actions::Candlepin::ListenOnCandlepinEvents)
+      end
+    end
+
     initializer "katello.load_app_instance_data" do |app|
       app.config.paths['db/migrate'] += Katello::Engine.paths['db/migrate'].existent
       app.config.autoload_paths += Dir["#{config.root}/app/lib"]

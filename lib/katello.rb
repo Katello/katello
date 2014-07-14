@@ -24,6 +24,7 @@ require "ninesixty"
 require "ui_alchemy-rails"
 require "deface"
 require 'jquery-ui-rails'
+require 'qpid_messaging'
 
 require "uuidtools"
 
