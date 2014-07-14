@@ -1,0 +1,24 @@
+<section class="nutupane-sub-section">
+  <div alch-container-scroll alch-infinite-scroll="eventTable.nextPage()">
+    <table alch-table="eventTable" class="table table-striped">
+      <thead>
+        <tr alch-table-head>
+          <th alch-table-column="Type" class='type' translate>Type</th>
+          <th alch-table-column="Target" translate>Target</th>
+          <th alch-table-column="Message" class='type' translate>Message</th>
+          <th alch-table-column="Date" translate>Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr alch-table-row ng-repeat="event in eventTable.rows">
+          <td alch-table-cell>{{ event.type }}</td>
+          <td alch-table-cell>{{ event.target }}</td>
+          <td alch-table-cell>{{ event.messageText }}</td>
+          <td alch-table-cell>{{ event.timestamp | date:"short" }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
