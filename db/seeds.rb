@@ -16,8 +16,9 @@ def format_errors(model = nil)
   model.errors.full_messages.join(';')
 end
 
+::User.current = ::User.anonymous_api_admin
+
 unless hidden_user = ::User.hidden.first
-  ::User.current = ::User.anonymous_api_admin
   login = "hidden-#{Password.generate_random_string(6)}".downcase
   hidden_user = ::User.new(:auth_source_id => AuthSourceInternal.first.id,
                            :login => login,
