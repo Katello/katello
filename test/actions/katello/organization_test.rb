@@ -66,7 +66,6 @@ module ::Actions::Katello::Organization
       organization.expects(:validate_destroy).returns([])
       organization.expects(:products).returns([])
       organization.expects(:systems).returns([])
-      organization.expects(:distributors).returns([])
       organization.expects(:activation_keys).returns([])
       organization.expects(:content_views).returns(stub(:non_default => []))
       organization.expects(:default_content_view).twice.returns(default_view)

@@ -23,6 +23,7 @@ module Actions
           concurrence do
             if ::Katello.config.use_cp
               sequence do
+                # this will clean up systems, keys, etc in candlepin
                 plan_action(Candlepin::Owner::Destroy, label:  organization.label)
                 plan_action(Katello::Organization::IndexSubscriptions, organization)
               end
@@ -52,16 +53,12 @@ module Actions
         def remove_consumers(organization)
           concurrence do
             organization.systems.each do |system|
-              plan_action(Pulp::Consumer::Destroy, uuid: system.uuid)
-              system.destroy!
+              plan_action(Katello::System::Destroy, system, skip_candlepin: true)
             end
 
-            organization.distributors.each do |distributor|
-              plan_action(Pulp::Consumer::Destroy, uuid: distributor.uuid)
-              distributor.destroy!
+            organization.activation_keys.each do |key|
+              plan_action(Katello::ActivationKey::Destroy, key, skip_candlepin: true)
             end
-
-            organization.activation_keys.each { |key| key.destroy! }
           end
         end
 

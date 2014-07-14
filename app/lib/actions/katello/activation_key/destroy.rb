@@ -16,10 +16,11 @@ module Actions
     module ActivationKey
       class Destroy < Actions::EntryAction
 
-        def plan(activation_key)
+        def plan(activation_key, options = {})
+          skip_candlepin = options.fetch(:skip_candlepin, false)
           action_subject(activation_key)
 
-          plan_action(Candlepin::ActivationKey::Destroy, cp_id: activation_key.cp_id)
+          plan_action(Candlepin::ActivationKey::Destroy, cp_id: activation_key.cp_id) unless skip_candlepin
           activation_key.destroy!
         end
 
