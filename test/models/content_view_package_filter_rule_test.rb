@@ -44,12 +44,9 @@ class ContentViewPackageFilterRuleTest < ActiveSupport::TestCase
     attrs = FactoryGirl.attributes_for(:katello_content_view_package_filter_rule,
                                        :name => @rule.name)
 
-    assert_raises(ActiveRecord::RecordInvalid) do
-      ContentViewPackageFilterRule.create!(attrs)
-    end
     rule_item = ContentViewPackageFilterRule.create(attrs)
-    refute rule_item.persisted?
-    refute rule_item.save
+    assert rule_item.persisted?
+    assert rule_item.save
   end
 
   def test_version
