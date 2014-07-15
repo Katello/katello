@@ -50,4 +50,35 @@ module ::Actions::Katello::Organization
 
     end
   end
+
+  class DestroyTest < TestBase
+    let(:action_class) { ::Actions::Katello::Organization::Destroy }
+    let(:action) { create_action action_class }
+
+    let(:organization) { stub }
+
+    it 'plans' do
+      action.stubs(:action_subject).with(organization)
+      default_view = stub(:content_view_environments => [])
+      library = stub(:destroy! => true)
+
+      organization.expects(:label).returns("ACME_Corporation")
+      organization.expects(:validate_destroy).returns([])
+      organization.expects(:products).returns([])
+      organization.expects(:systems).returns([])
+      organization.expects(:activation_keys).returns([])
+      organization.expects(:content_views).returns(stub(:non_default => []))
+      organization.expects(:default_content_view).twice.returns(default_view)
+      organization.expects(:content_view_environments).returns(stub(:non_default => []))
+      organization.expects(:reload)
+      organization.expects(:destroy!).returns(true)
+
+      plan_action(action, organization)
+
+      assert_action_planed_with(action,
+                                ::Actions::Candlepin::Owner::Destroy,
+                                label: "ACME_Corporation")
+      assert_action_planed_with(action, ::Actions::Katello::ContentView::Destroy, default_view)
+    end
+  end
 end

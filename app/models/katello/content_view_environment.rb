@@ -29,6 +29,8 @@ class ContentViewEnvironment < Katello::Model
 
   before_save :generate_info
 
+  scope :non_default, joins(:content_view).where("katello_content_views.default" => false)
+
   # retrieve the owning environment for this content view environment.
   def owner
     self.environment

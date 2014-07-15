@@ -1,4 +1,3 @@
-
 #
 # Copyright 2014 Red Hat, Inc.
 #
@@ -12,20 +11,15 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Katello
-    module ActivationKey
-      class Destroy < Actions::EntryAction
-
-        def plan(activation_key, options = {})
-          skip_candlepin = options.fetch(:skip_candlepin, false)
-          action_subject(activation_key)
-
-          plan_action(Candlepin::ActivationKey::Destroy, cp_id: activation_key.cp_id) unless skip_candlepin
-          activation_key.destroy!
+  module Candlepin
+    module Owner
+      class Destroy < Candlepin::Abstract
+        input_format do
+          param :label
         end
 
-        def humanized_name
-          _("Delete Activation Key")
+        def run
+          output[:response] = ::Katello::Resources::Candlepin::Owner.destroy(input[:label])
         end
       end
     end

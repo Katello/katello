@@ -122,12 +122,6 @@ describe Organization do
   end
 
   describe "delete an organization" do
-    before do
-      # TODO: ORG_DESTROY - fix or enable these tests after org destroy is reenabled
-      skip "Organization destroy is currently disabled"
-      Resources::Candlepin::Owner.expects(:destroy).at_least_once.returns({})
-    end
-
     it "can delete the org" do
       id = @organization.id
       Organization.any_instance.stubs(:being_deleted?).returns(true)

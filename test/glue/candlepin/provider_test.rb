@@ -34,7 +34,7 @@ class GlueCandlepinProviderTestBase < ActiveSupport::TestCase
   end
 
   def self.after_suite
-    @@org.del_owner
+    Resources::Candlepin::Owner.destroy(@@org.label)
   ensure
     VCR.eject_cassette
   end

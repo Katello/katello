@@ -51,7 +51,7 @@ class GlueCandlepinConsumerTestBase < ActiveSupport::TestCase
 
   def self.after_suite
     @@dev_cve.del_environment unless @@dev_cve.nil?
-    @@org.del_owner unless @@org.nil?
+    Resources::Candlepin::Owner.destroy(@@org.label) unless @@org.nil?
   ensure
     VCR.eject_cassette
   end

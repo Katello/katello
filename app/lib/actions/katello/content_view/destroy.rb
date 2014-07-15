@@ -26,7 +26,7 @@ module Actions
               end
             end
 
-            content_view.destroy
+            content_view.destroy!
           end
         end
 

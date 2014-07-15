@@ -15,11 +15,12 @@ module Actions
     module System
       class Destroy < Actions::EntryAction
 
-        def plan(system)
+        def plan(system, options = {})
+          skip_candlepin = options.fetch(:skip_candlepin, false)
           action_subject(system)
 
           concurrence do
-            plan_action(Candlepin::Consumer::Destroy, uuid: system.uuid)
+            plan_action(Candlepin::Consumer::Destroy, uuid: system.uuid) unless skip_candlepin
             plan_action(Pulp::Consumer::Destroy, uuid: system.uuid)
           end
 

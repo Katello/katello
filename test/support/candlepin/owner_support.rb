@@ -57,7 +57,7 @@ module CandlepinOwnerSupport
 
   def self.destroy_organization(id=@organization_id, cassette='support/candlepin/organization')
     VCR.use_cassette(cassette, :match_requests_on => [:path, :params, :method, :body_json]) do
-      @organization.del_owner
+      Resources::Candlepin::Owner.destroy(@organization.label)
     end
   rescue RestClient::ResourceNotFound => e
     puts e
