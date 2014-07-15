@@ -107,7 +107,7 @@ module ::Actions::Katello::Repository
       plan_action action, repository
 
       assert_action_planed_with action, pulp_action_class, pulp_id: repository.pulp_id
-      assert_action_planed_with action, ::Actions::ElasticSearch::Repository::IndexContent, id: repository.id
+      assert_action_planed action, ::Actions::ElasticSearch::Repository::IndexContent
       assert_action_planed_with action, ::Actions::ElasticSearch::Reindex, repository
     end
 
@@ -124,7 +124,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :success }
 
         specify do
-          action.humanized_output.must_equal "New packages: 32 (76.7 KB)"
+          action.humanized_output.must_equal "New packages: 32 (76.7 KB)."
         end
       end
 
@@ -132,7 +132,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :success_no_packages }
 
         specify do
-          action.humanized_output.must_equal "No new packages"
+          action.humanized_output.must_equal "No new packages."
         end
       end
 
@@ -140,7 +140,7 @@ module ::Actions::Katello::Repository
         let(:fixture_variant) { :progress_packages }
 
         specify do
-          action.humanized_output.must_equal "New packages: 20/32 (48 KB/76.7 KB)"
+          action.humanized_output.must_equal "New packages: 20/32 (48 KB/76.7 KB)."
         end
 
         specify do

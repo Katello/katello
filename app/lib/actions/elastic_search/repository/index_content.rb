@@ -17,6 +17,7 @@ module Actions
 
         input_format do
           param :id, Integer
+          param :dependency, Hash
         end
 
         def run

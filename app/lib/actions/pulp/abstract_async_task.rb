@@ -69,6 +69,10 @@ module Actions
       def cancel!
         output[:pulp_tasks].each do |pulp_task|
           task_resource.cancel(pulp_task['task_id'])
+          if pulp_task['spawned_tasks']
+            #the main task may have completed, so cancel spawned tasks too
+            pulp_task['spawned_tasks'].each{|spawned| task_resource.cancel(spawned['task_id'])}
+          end
         end
         self.external_task = poll_external_task
         # We suspend the action and the polling will take care of finding

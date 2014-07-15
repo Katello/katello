@@ -80,17 +80,34 @@ module Actions
 
           def humanized_details
             ret = []
-            if content_details && content_details[:state] != 'NOT_STARTED'
+            ret << _("Cancelled.") if cancelled?
+
+            if pending?
+              ret << _("Pending")
+            elsif content_started?
               if items_total > 0
-                ret << (_("New packages: %s (%s)") % [count_summary, size_summary])
+                ret << (_("New packages: %s (%s).") % [count_summary, size_summary])
               else
-                ret << _("No new packages")
+                #if there are no new packages, it could just mean that they have not started downloading yet
+                # so only tell the user no new packages if errata have been processed
+                if errata_details && errata_details['state'] != 'NOT_STARTED'
+                  ret << _("No new packages.")
+                else
+                  ret << _("Processing metadata.")
+                end
               end
-            end
-            if metadata_details  && metadata_details[:state] == 'IN_PROGRESS'
+            elsif metadata_in_progress?
               ret << _("Processing metadata")
             end
-            return ret.join("\n")
+
+            ret << metadata_error if metadata_error
+
+            if error_details.any?
+              ret << n_("Failed to download %s package.", "Failed to download %s packages.",
+                        error_details.count) % error_details.count
+            end
+
+            ret.join("\n")
           end
 
           def count_summary
@@ -137,8 +154,16 @@ module Actions
             task_details && task_details[:content]
           end
 
+          def error_details
+            content_details.nil? ? [] : content_details[:error_details]
+          end
+
           def metadata_details
             task_details && task_details[:metadata]
+          end
+
+          def errata_details
+            task_details && task_details[:errata]
           end
 
           def items_done
@@ -155,6 +180,26 @@ module Actions
 
           def size_total
             (content_details && content_details[:size_total]).to_i
+          end
+
+          def cancelled?
+            task_details.nil? ? false : task_details.values.map{|item| item['state']}.include?('CANCELLED')
+          end
+
+          def content_started?
+            content_details && content_details[:state] != 'NOT_STARTED'
+          end
+
+          def metadata_in_progress?
+            metadata_details && metadata_details[:state] == 'IN_PROGRESS'
+          end
+
+          def metadata_error
+            metadata_details && metadata_details[:error]
+          end
+
+          def pending?
+            metadata_details.nil? || metadata_details['state'] == 'NOT_RUNNING'
           end
 
         end

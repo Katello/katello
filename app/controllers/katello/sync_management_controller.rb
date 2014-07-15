@@ -19,18 +19,10 @@ class SyncManagementController < Katello::ApplicationController
   include SyncManagementHelper::RepoMethods
   respond_to :html, :json
 
-  # to avoid problems when generating Headpin documenation when
-  # building RPMs
-  if Katello.config.use_pulp
-    @@status_values = { PulpSyncStatus::Status::WAITING => _("Queued."),
-                        PulpSyncStatus::Status::FINISHED => _("Sync complete."),
-                        PulpSyncStatus::Status::ERROR => _("Error syncing!"),
-                        PulpSyncStatus::Status::RUNNING => _("Running."),
-                        PulpSyncStatus::Status::CANCELED => _("Canceled."),
-                        PulpSyncStatus::Status::NOT_SYNCED => ""}
-  else
-    @@status_values = {}
-  end
+  @@status_values = { :stopped      => _("Syncing Complete."),
+                      :error        => _("Sync Incomplete"),
+                      :never_synced => _("Never Synced"),
+                      :paused       => _("Paused")}.with_indifferent_access
 
   def section_id
     'contents'
@@ -56,61 +48,66 @@ class SyncManagementController < Katello::ApplicationController
   end
 
   def sync
-    ids = sync_repos(params[:repoids]) || {}
-    render :json => ids.to_json
+    tasks = sync_repos(params[:repoids]) || []
+    render :json => tasks.as_json
   end
 
   def sync_status
-    collected = []
     repos = Repository.where(:id => params[:repoids]).readable
-    repos.each do |repo|
-      begin
-        progress = format_sync_progress(repo.sync_status, repo)
-        collected.push(progress)
-      rescue ActiveRecord::RecordNotFound => e
-        notify.exception e # debugging and skip for now
-        next
-      end
-    end
-
-    render :json => collected.to_json
+    statuses = repos.map{ |repo| format_sync_progress(repo) }
+    render :json => statuses.flatten.to_json
   end
 
   def destroy
-    Repository.find(params[:id]).cancel_sync
+    repo = Repository.where(:id => params[:id]).syncable.first
+    repo.cancel_dynflow_sync if repo
     render :text => ""
   end
 
   private
 
-  def format_sync_progress(sync_status, repo)
-    progress = sync_status.progress
-    error_details = progress.error_details
+  def format_sync_progress(repo)
+    task = latest_task(repo)
+    if task
+      {   :id             => repo.id,
+          :product_id     => repo.product.id,
+          :progress       => {:progress => task.progress * 100},
+          :sync_id        => task.id,
+          :state          => format_state(task),
+          :raw_state      => raw_state(task),
+          :start_time     => format_date(task.started_at),
+          :finish_time    => format_date(task.ended_at),
+          :duration       => format_duration(task.ended_at, task.started_at),
+          :display_size   => task.humanized[:output],
+          :size           => task.humanized[:output],
+          :is_running     => task.pending && task.state != 'paused',
+          :error_details  => task.errors
+      }
+    else
+      empty_task(repo)
+    end
+  end
 
-    not_running_states = [PulpSyncStatus::Status::FINISHED,
-                          PulpSyncStatus::Status::ERROR,
-                          PulpSyncStatus::Status::WAITING,
-                          PulpSyncStatus::Status::CANCELED,
-                          PulpSyncStatus::Status::NOT_SYNCED]
+  def empty_task(repo)
+    state = 'never_synced'
     {   :id             => repo.id,
         :product_id     => repo.product.id,
-        :progress       => calc_progress(sync_status, repo.content_type),
-        :sync_id        => sync_status.uuid,
-        :state          => format_state(sync_status.state),
-        :raw_state      => sync_status.state,
-        :start_time     => format_date(sync_status.start_time),
-        :finish_time    => format_date(sync_status.finish_time),
-        :duration       => format_duration(sync_status.finish_time, sync_status.start_time),
-        :packages       => sync_status.progress.total_count,
-        :display_size   => number_to_human_size(sync_status.progress.total_size),
-        :size           => sync_status.progress.total_size,
-        :is_running     => !not_running_states.include?(sync_status.state.to_sym),
-        :error_details  => error_details ? error_details : "No errors."
+        :progress       => {},
+        :state          => format_state(OpenStruct.new(:state => state)),
+        :raw_state      => state
     }
   end
 
-  def format_state(state)
-    @@status_values[state.to_sym]
+  def raw_state(task)
+    if task.result == 'error' || task.result == 'warning'
+      return 'error'
+    else
+      task.state
+    end
+  end
+
+  def format_state(task)
+    @@status_values[raw_state(task)] || task.state
   end
 
   def format_duration(finish, start)
@@ -129,16 +126,19 @@ class SyncManagementController < Katello::ApplicationController
     retval
   end
 
+  def latest_task(repo)
+    repo.latest_dynflow_sync
+  end
+
   # loop through checkbox list of products and sync
-  def sync_repos(repos)
-    repos = [repos] if !repos.is_a? Array
+  def sync_repos(repo_ids)
     collected = []
-    repos = Repository.where(:id => repos).syncable
+    repos = Repository.where(:id => repo_ids).syncable
     repos.each do |repo|
-      begin
-        resp = repo.sync(:notify => true).first
-        collected.push(:id => repo.id, :product_id => repo.product.id, :state => resp[:state])
-      rescue RestClient::Conflict
+      if latest_task(repo).try(:state) != 'running'
+        ForemanTasks.async_task(::Actions::Katello::Repository::Sync, repo)
+        collected << format_sync_progress(repo)
+      else
         notify.error N_("There is already an active sync process for the '%s' repository. Please try again later") %
                         repo.name
       end
@@ -146,37 +146,10 @@ class SyncManagementController < Katello::ApplicationController
     collected
   end
 
-  # calculate the % complete of ongoing sync from pulp
-  def calc_progress(val, content_type)
-
-    if content_type == Repository::PUPPET_TYPE
-      completed = val.progress.total_count - val.progress.items_left
-      progress = if val.state =~ /error/i then -1
-                 elsif val.progress.total_count == 0 then 0
-                 else completed.to_f / val.progress.total_count.to_f * 100
-                 end
-    else
-      completed = val.progress.total_size - val.progress.size_left
-      progress = if val.state =~ /error/i then -1
-                 elsif val.progress.total_size == 0 then 0
-                 else completed.to_f / val.progress.total_size.to_f * 100
-                 end
-    end
-
-    {:count => val.progress.total_count,
-     :left => val.progress.items_left,
-     :progress => progress
-    }
-  end
-
   def get_product_info(product)
-    product_size = 0
     product.repos(product.organization.library).each do |repo|
-      status = repo.sync_status
-      @repo_status[repo.id] = format_sync_progress(status, repo)
-      product_size += status.progress.total_size
+      @repo_status[repo.id] = format_sync_progress(repo)
     end
-    @product_size[product.id] = number_to_human_size(product_size)
   end
 end
 end

@@ -53,7 +53,6 @@ class SyncManagementControllerTest < ActionController::TestCase
   def test_sync_status
     @request.env['HTTP_ACCEPT'] = 'application/json'
     @request.env['CONTENT_TYPE'] = 'application/json'
-    Repository.any_instance.expects(:sync_status).returns({})
     @controller.expects(:format_sync_progress).returns({})
     get :sync_status, :repoids => [@repository.id]
 
@@ -89,7 +88,7 @@ class SyncManagementControllerTest < ActionController::TestCase
   end
 
   def test_destroy
-    Repository.any_instance.expects(:cancel_sync)
+    Repository.any_instance.expects(:cancel_dynflow_sync)
     delete :destroy, :id => @repository.id
 
     assert_response :success

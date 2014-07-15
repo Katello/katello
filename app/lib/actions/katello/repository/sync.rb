@@ -19,9 +19,11 @@ module Actions
 
         input_format do
           param :id, Integer
+          param :sync_result, Hash
         end
 
         def plan(repo)
+          sync_task = nil
           action_subject(repo)
 
           if repo.url.blank?
@@ -29,14 +31,20 @@ module Actions
           end
 
           sequence do
-            plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
+            sync_task = plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
             concurrence do
-              plan_action(Katello::Repository::NodeMetadataGenerate, repo)
-              plan_action(ElasticSearch::Repository::IndexContent, id: repo.id)
+              plan_action(Katello::Repository::NodeMetadataGenerate, repo, sync_task.output[:pulp_tasks])
+
+              plan_action(ElasticSearch::Repository::IndexContent, dependency: sync_task.output[:pulp_tasks], id: repo.id)
             end
             plan_action(ElasticSearch::Reindex, repo)
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view)
           end
+          plan_self(:sync_result => sync_task.output)
+        end
+
+        def run
+          output[:sync_result] = input[:sync_result]
         end
 
         def humanized_name
