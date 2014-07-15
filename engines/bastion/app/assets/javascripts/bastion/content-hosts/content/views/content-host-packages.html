@@ -24,7 +24,7 @@
         <span class="input-group-btn">
           <button class="btn btn-default"
                   ng-hide="denied('edit_content_hosts', contentHost)"
-                  ng-disabled="packageAction.term === undefined || packageAction.term.length === 0"
+                  ng-disabled="working || packageAction.term === undefined || packageAction.term.length === 0"
                   translate>
             Perform</button>
         </span>
@@ -48,7 +48,8 @@
     <div class="fr" ng-hide="denied('edit_content_hosts', contentHost)">
        <button class="btn btn-primary"
                translate
-               ng-click="updateAll()">
+               ng-click="updateAll()"
+               ng-disabled="working">
          Update All
        </button>
     </div>

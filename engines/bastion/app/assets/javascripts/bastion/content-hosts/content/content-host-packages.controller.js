@@ -36,16 +36,20 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
             } else {
                 $scope.transitionTo('content-hosts.details.events.details', {eventId: event.id});
             }
+            $scope.working = false;
         };
 
         var errorHandler = function (response) {
             $scope.errorMessages = response.data.errors;
+            $scope.working = false;
         };
 
         $scope.packageAction = {actionType: 'packageInstall'}; //default to packageInstall
         $scope.errorMessages = [];
+        $scope.working = false;
 
         $scope.updateAll = function () {
+            $scope.working = true;
             ContentHostPackage.updateAll({uuid: $scope.contentHost.uuid}, openEventInfo, errorHandler);
         };
 
@@ -53,6 +57,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
             var action, terms;
             action = $scope.packageAction.actionType;
             terms = $scope.packageAction.term.split(/ *, */);
+            $scope.working = true;
             packageActions[action](terms);
         };
 
@@ -84,11 +89,14 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
         };
 
         $scope.currentPackagesTable.removePackage = function (pkg) {
-            ContentHostPackage.remove({
-                uuid: $scope.contentHost.uuid,
-                packages: [{name: pkg.name, version: pkg.version,
-                            arch: pkg.arch, release: pkg.release}]
-            }, openEventInfo, errorHandler);
+            if (!$scope.working) {
+                $scope.working = true;
+                ContentHostPackage.remove({
+                    uuid: $scope.contentHost.uuid,
+                    packages: [{name: pkg.name, version: pkg.version,
+                        arch: pkg.arch, release: pkg.release}]
+                }, openEventInfo, errorHandler);
+            }
         };
     }
 ]);
