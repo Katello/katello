@@ -98,7 +98,7 @@ module FixtureTestCase
       @loaded_fixtures = load_fixtures
 
       @@admin = ::User.find(@loaded_fixtures['users']['admin']['id'])
-      @@admin.remote_id = @@admin.login
+      @@admin.remote_id = Katello.config.pulp.default_login
       User.current = @@admin
     end
   end
