@@ -30,7 +30,7 @@
         <td alch-table-cell translate>Version {{ version.version }}</td>
         <td alch-table-cell >
           <a ui-sref="content-views.details.history" ng-hide="hideProgress(version)">
-            <div ng-class="{ active: (version.task.state === 'pending' || version.task.state === 'running') }"
+            <div ng-class="{ active: taskInProgress(version) }"
                  class="progress progress-striped">
               <span progressbar animate="false" value="version.task.progressbar.value" type="{{version.task.progressbar.type}}"></span>
             </div>
@@ -66,22 +66,24 @@
         </td>
         <td alch-table-cell>{{ version.user }}</td>
         <td class="col-sm-2">
-          <a ui-sref="content-views.details.promotion({contentViewId: contentView.id, versionId: version.id})">
-            <button class="btn btn-default" ng-hide="denied('promote_or_remove_content_views', contentView)">
-              <i class="icon-share-alt"></i>
-              <span translate>
-                Promote
-              </span>
-            </button>
-          </a>
-          <a ui-sref="content-views.details.version-deletion.environments({contentViewId: contentView.id, versionId: version.id})">
-            <button class="btn btn-default" ng-hide="denied('promote_or_remove_content_views', contentView)">
-              <i class="icon-trash"></i>
-              <span translate>
-                Remove
-              </span>
-            </button>
-          </a>
+          <button class="btn btn-default"
+                  ui-sref="content-views.details.promotion({contentViewId: contentView.id, versionId: version.id})"
+                  ng-hide="denied('promote_or_remove_content_views', contentView)"
+                  ng-disabled="taskInProgress(version)">
+            <i class="icon-share-alt"></i>
+            <span translate>
+              Promote
+            </span>
+          </button>
+          <button class="btn btn-default"
+                  ui-sref="content-views.details.version-deletion.environments({contentViewId: contentView.id, versionId: version.id})"
+                  ng-hide="denied('promote_or_remove_content_views', contentView)"
+                  ng-disabled="taskInProgress(version)">
+            <i class="icon-trash"></i>
+            <span translate>
+              Remove
+            </span>
+          </button>
         </td>
       </tr>
     </tbody>

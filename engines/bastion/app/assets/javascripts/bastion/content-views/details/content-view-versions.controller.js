@@ -77,6 +77,14 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
             return messages;
         };
 
+        $scope.taskInProgress = function (version) {
+            var inProgress = false;
+            if (version.task && (version.task.state === 'pending' || version.task.state === 'running')) {
+                inProgress = true;
+            }
+            return inProgress;
+        };
+
         function findTaskTypes(activeHistory, taskType) {
             return _.filter(activeHistory, function (history) {
                 return history.task.label === taskType;
