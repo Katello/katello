@@ -29,7 +29,7 @@ module Glue::Candlepin::Consumer
 
       as_json_hook :consumer_as_json
 
-      attr_accessible :cp_type, :owner, :serviceLevel, :installedProducts, :facts, :guestIds, :releaseVer
+      attr_accessible :cp_type, :owner, :serviceLevel, :installedProducts, :facts, :guestIds, :releaseVer, :autoheal
 
       lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds,
                     :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities, :entitlementStatus,
@@ -198,7 +198,7 @@ module Glue::Candlepin::Consumer
     end
 
     def convert_from_cp_fields(cp_json)
-      cp_json.merge(:cp_type => cp_json.delete(:type)) if cp_json.key?(:type)
+      cp_json.merge!(:cp_type => cp_json.delete(:type)[:label]) if cp_json.key?(:type)
       cp_json = reject_db_columns(cp_json)
 
       cp_json[:guestIds] = remove_hibernate_fields(cp_json[:guestIds]) if cp_json.key?(:guestIds)

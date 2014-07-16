@@ -15,7 +15,7 @@ module Katello
 class Api::V2::SystemsController < Api::V2::ApiController
   respond_to :json
 
-  wrap_parameters :include => (System.attribute_names + %w(type facts guest_ids host_collection_ids installed_products content_view environment))
+  wrap_parameters :include => (System.attribute_names + %w(type autoheal facts guest_ids host_collection_ids installed_products content_view environment))
 
   skip_before_filter :set_default_response_format, :only => :report
 
@@ -132,8 +132,9 @@ class Api::V2::SystemsController < Api::V2::ApiController
   param :environment_id, String, :desc => N_("Specify the environment")
   param :content_view_id, String, :desc => N_("Specify the content view")
   def update
-    @system.update_attributes!(system_params(params))
-
+    system_params = system_params(params)
+    @system.update_attributes!(system_params)
+    @system.refresh_subscriptions if system_params[:autoheal]
     respond_for_update
   end
 
@@ -352,14 +353,11 @@ class Api::V2::SystemsController < Api::V2::ApiController
 
   def system_params(params)
     system_params = params.require(:system).permit(:name, :description, :location, :owner, :type,
-                                                   :service_level, {:facts => []},
+                                                   :service_level, :autoheal, {:facts => []},
                                                    :guest_ids, {:host_collection_ids => []})
 
     system_params[:cp_type] = params[:type] ? params[:type] : ::Katello::System::DEFAULT_CP_TYPE
     system_params.delete(:type) if params[:system].key?(:type)
-
-    # TODO: permit :facts above not working, why?
-    system_params[:facts] = params[:facts] if params[:facts]
 
     { :guest_ids => :guestIds,
       :installed_products => :installedProducts,
