@@ -81,7 +81,7 @@ module Glue::Pulp::Repo
     end
 
     def pulp_update_needed?
-      ((self.respond_to?(:feed) && self.feed_changed?) ||
+      ((self.respond_to?(:url) && self.url_changed?) ||
        (self.respond_to?(:unprotected) && self.unprotected_changed?)) &&
       !self.product.provider.redhat_provider?
     end
@@ -150,15 +150,15 @@ module Glue::Pulp::Repo
         Runcible::Models::YumImporter.new(:ssl_ca_cert => self.feed_ca,
                                           :ssl_client_cert => self.feed_cert,
                                           :ssl_client_key => self.feed_key,
-                                          :feed => self.feed)
+                                          :feed => self.url)
       when Repository::FILE_TYPE
         Runcible::Models::IsoImporter.new(:ssl_ca_cert => self.feed_ca,
                                           :ssl_client_cert => self.feed_cert,
                                           :ssl_client_key => self.feed_key,
-                                          :feed => self.feed)
+                                          :feed => self.url)
       when Repository::PUPPET_TYPE
         options = {}
-        options[:feed] = self.feed if self.respond_to?(:feed)
+        options[:feed] = self.url if self.respond_to?(:url)
         Runcible::Models::PuppetImporter.new(options)
       else
         fail _("Unexpected repo type %s") % self.content_type

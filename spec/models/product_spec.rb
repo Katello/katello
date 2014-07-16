@@ -192,7 +192,7 @@ describe Product, :katello => true do
                                  :content_id=>"123",
                                  :relative_path => "#{@organization.name}/library/Prod/Repo",
                                  :content_view_version=>@organization.library.default_content_view_version,
-                                 :feed => 'https://localhost')
+                                 :url => 'https://localhost')
       @repo.stubs(:product).returns(@product)
       @repo.stubs(:promoted?).returns(false)
       @repo.stubs(:update_content).returns(Candlepin::Content.new)
@@ -254,7 +254,7 @@ describe Product, :katello => true do
       2.times do
         create(:katello_repository, product: product, environment: @organization.library,
                content_view_version: @organization.library.default_content_view_version,
-               feed: "http://something")
+               url: "http://something")
       end
       product.repositories.length.must_equal(2)
       product.repositories.map(&:environment).length.must_be(:>, product.environments.length)

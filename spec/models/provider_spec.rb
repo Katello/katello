@@ -249,7 +249,7 @@ describe Provider do
                              :relative_path=>'/foo',
                              :content_id=>'asdfasdf',
                              :content_view_version=>product.organization.library.default_content_view_version,
-                             :feed => 'https://localhost')
+                             :url => 'https://localhost')
           repo.stubs(:create_pulp_repo).returns({})
           repo.save!
 

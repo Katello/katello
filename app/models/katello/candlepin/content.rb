@@ -75,7 +75,7 @@ class Candlepin::Content
                                 :relative_path => relative_path,
                                 :name => name,
                                 :label => label,
-                                :feed => feed_url,
+                                :url => feed_url,
                                 :feed_ca => ca,
                                 :feed_cert => product.certificate,
                                 :feed_key => product.key,

@@ -24,7 +24,7 @@ module RepositoryHelperMethods
                           :relative_path => path, :pulp_id => "pulp-id-#{random_id}",
                           :content_id => "content-id-#{random_id}",
                           :content_view_version=>env.content_view_versions.first,
-                          :feed=>'http://localhost.com/foo')
+                          :url=>'http://localhost.com/foo')
     repo.library_instance = library_instance if library_instance
     repo.stubs(:create_pulp_repo).returns([])
     repo.save!

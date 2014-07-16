@@ -64,7 +64,7 @@ class Product < Katello::Model
 
   scope :engineering, where(:type => "Katello::Product")
   scope :marketing, where(:type => "Katello::MarketingProduct")
-  scope :syncable_content, joins(:repositories).where(Katello::Repository.arel_table[:feed].not_eq(nil))
+  scope :syncable_content, joins(:repositories).where(Katello::Repository.arel_table[:url].not_eq(nil))
 
   before_create :assign_unique_label
 
@@ -105,7 +105,7 @@ class Product < Katello::Model
     @repo_cache[env.id] ||= content_view.repos_in_product(env, self)
 
     repositories = @repo_cache[env.id]
-    repositories = repositories.has_feed if !include_feedless
+    repositories = repositories.has_url if !include_feedless
     repositories
   end
 
@@ -223,7 +223,7 @@ class Product < Katello::Model
   end
 
   def syncable_content?
-    repositories.any?(&:feed?)
+    repositories.any?(&:url?)
   end
 
   def available_content
