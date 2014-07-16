@@ -21,32 +21,32 @@ class Api::V1::RootController < Api::V1::ApiController
     all_routes = all_routes.collect { |r| r.path.spec.to_s }
 
     api_root_routes = all_routes.select do |path|
-      path =~ %r{^/api(\(/:api_version\))?/[^/]+/:id\(\.:format\)$}
+      path =~ %r{^/katello/api(\(/:api_version\))?/[^/]+/:id\(\.:format\)$}
     end
     api_root_routes = api_root_routes.collect do |path|
       path = path.sub("(/:api_version)", "")
       path[0..-(":id(.:format)".length + 1)]
     end
 
-    api_root_routes.collect! { |r| { :rel => r["/api/".size..-2], :href => r } }
+    api_root_routes.collect! { |r| { :rel => r["/katello/api/".size..-2], :href => r } }
 
     # provide some fake paths that does not exist (but rhsm is checking it's existance)
-    api_root_routes << { :href => '/api/packages/', :rel => 'packages' }
-    api_root_routes << { :href => '/api/status/', :rel => 'status' }
-    api_root_routes << { :href => '/api/guestids', :rel => 'guestids'}
-    api_root_routes << { :href => '/api/content_overrides', :rel => 'content_overrides'}
-    api_root_routes << { :href => '/api/available_releases', :rel => 'available_releases'}
+    api_root_routes << { :href => '/katello/api/packages/', :rel => 'packages' }
+    api_root_routes << { :href => '/katello/api/status/', :rel => 'status' }
+    api_root_routes << { :href => '/katello/api/guestids', :rel => 'guestids'}
+    api_root_routes << { :href => '/katello/api/content_overrides', :rel => 'content_overrides'}
+    api_root_routes << { :href => '/katello/api/available_releases', :rel => 'available_releases'}
 
     # katello only APIs
-    katello_only = ["/api/templates/",
-                    "/api/changesets/",
-                    "/api/repositories/",
-                    "/api/packages/",
-                    "/api/errata/",
-                    "/api/disributions/",
-                    "/api/tasks/",
-                    "/api/gpg_keys/",
-                    "/api/environments/"
+    katello_only = ["/katello/api/templates/",
+                    "/katello/api/changesets/",
+                    "/katello/api/repositories/",
+                    "/katello/api/packages/",
+                    "/katello/api/errata/",
+                    "/katello/api/disributions/",
+                    "/katello/api/tasks/",
+                    "/katello/api/gpg_keys/",
+                    "/katello/api/environments/"
     ]
 
     # filter out katello-only apis from headpin resource list

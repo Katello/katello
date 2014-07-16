@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-  class Api::V1::CandlepinProxiesController < Api::V1::ApiController
+  class Api::Rhsm::CandlepinProxiesController < Api::V1::ApiController
 
     include Katello::Authentication::ClientAuthentication
 
@@ -50,7 +50,7 @@ module Katello
     end
 
     def drop_api_namespace(original_request_path)
-      prefix = "#{Katello.config.url_prefix}/api"
+      prefix = "/rhsm"
       original_request_path.gsub(prefix, '')
     end
 
@@ -414,39 +414,39 @@ module Katello
 
       # route names are defined in routes.rb (:as => :name)
       case route.name
-      when "api_proxy_consumer_deletionrecord_delete_path"
+      when "rhsm_proxy_consumer_deletionrecord_delete_path"
         User.consumer? || Organization.deletable?
-      when "api_proxy_owner_pools_path"
+      when "rhsm_proxy_owner_pools_path"
         find_organization
         if params[:consumer]
           User.consumer? && current_user.uuid == params[:consumer]
         else
           User.consumer? || ::User.current.can?(:view_organizations, self)
         end
-      when "api_proxy_owner_servicelevels_path"
+      when "rhsm_proxy_owner_servicelevels_path"
         find_organization
         (User.consumer? || ::User.current.can?(:view_organizations, self))
-      when "api_proxy_consumer_certificates_path", "api_proxy_consumer_releases_path", "api_proxy_certificate_serials_path",
-           "api_proxy_consumer_entitlements_path", "api_proxy_consumer_entitlements_post_path",
-           "api_proxy_consumer_entitlements_delete_path",
-           "api_proxy_consumer_dryrun_path", "api_proxy_consumer_owners_path",
-           "api_proxy_consumer_compliance_path"
+      when "rhsm_proxy_consumer_certificates_path", "rhsm_proxy_consumer_releases_path", "rhsm_proxy_certificate_serials_path",
+           "rhsm_proxy_consumer_entitlements_path", "rhsm_proxy_consumer_entitlements_post_path",
+           "rhsm_proxy_consumer_entitlements_delete_path",
+           "rhsm_proxy_consumer_dryrun_path", "rhsm_proxy_consumer_owners_path",
+           "rhsm_proxy_consumer_compliance_path"
         User.consumer? && current_user.uuid == params[:id]
-      when "api_proxy_consumer_certificates_delete_path"
+      when "rhsm_proxy_consumer_certificates_delete_path"
         User.consumer? && current_user.uuid == params[:consumer_id]
-      when "api_proxy_pools_path"
+      when "rhsm_proxy_pools_path"
         User.consumer? && current_user.uuid == params[:consumer]
-      when "api_proxy_subscriptions_post_path"
+      when "rhsm_proxy_subscriptions_post_path"
         User.consumer? && current_user.uuid == params[:consumer_uuid]
-      when "api_proxy_consumer_content_overrides_path", "api_proxy_consumer_content_overrides_put_path",
-           "api_proxy_consumer_content_overrides_delete_path",
-           "api_proxy_consumer_guestids_path", "api_proxy_consumer_guestids_get_guestid_path",
-           "api_proxy_consumer_guestids_put_path", "api_proxy_consumer_guestids_put_guestid_path",
-           "api_proxy_consumer_guestids_delete_guestid_path",
-           "api_proxy_entitlements_path"
+      when "rhsm_proxy_consumer_content_overrides_path", "rhsm_proxy_consumer_content_overrides_put_path",
+           "rhsm_proxy_consumer_content_overrides_delete_path",
+           "rhsm_proxy_consumer_guestids_path", "rhsm_proxy_consumer_guestids_get_guestid_path",
+           "rhsm_proxy_consumer_guestids_put_path", "rhsm_proxy_consumer_guestids_put_guestid_path",
+           "rhsm_proxy_consumer_guestids_delete_guestid_path",
+           "rhsm_proxy_entitlements_path"
         # These queries are restricted in Candlepin
         User.consumer?
-      when "api_proxy_deleted_consumers_path"
+      when "rhsm_proxy_deleted_consumers_path"
         current_user.admin?
       else
         Rails.logger.warn "Unknown proxy route #{request.method} #{request.fullpath}, access denied"

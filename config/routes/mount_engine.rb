@@ -1,3 +1,3 @@
 Foreman::Application.routes.draw do
-  mount Katello::Engine, :at => "/katello", :as => 'katello'
+  mount Katello::Engine, :at => '/', :as => 'katello'
 end
