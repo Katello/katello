@@ -77,7 +77,6 @@ describe('Controller: ContentHostPackagesController', function() {
         expect($scope.currentPackagesTable.taskFailed({failed: false})).toBe(false);
         expect($scope.currentPackagesTable.taskFailed({failed: false, affected_units: 0})).toBe(true);
         expect($scope.currentPackagesTable.taskFailed({failed: false, affected_units: 1})).toBe(false);
-
     });
 
     it("performs a package update", function() {
@@ -87,6 +86,7 @@ describe('Controller: ContentHostPackagesController', function() {
         $scope.performPackageAction();
         expect(ContentHostPackage.update).toHaveBeenCalledWith({uuid: mockContentHost.uuid, packages: ["foo"]},
                                                           jasmine.any(Function), jasmine.any(Function));
+        expect($scope.working).toBe(true);
     });
 
     it("performs a package update with multiple packages", function() {
@@ -96,6 +96,7 @@ describe('Controller: ContentHostPackagesController', function() {
         $scope.performPackageAction();
         expect(ContentHostPackage.update).toHaveBeenCalledWith({uuid: mockContentHost.uuid, packages: ["foo", "bar"]},
                                                           jasmine.any(Function), jasmine.any(Function));
+        expect($scope.working).toBe(true);
     });
 
     it("performs a package group install", function() {
@@ -105,6 +106,7 @@ describe('Controller: ContentHostPackagesController', function() {
         $scope.performPackageAction();
         expect(ContentHostPackage.install).toHaveBeenCalledWith({uuid: mockContentHost.uuid, groups: ["bigGroup"]},
                                                           jasmine.any(Function), jasmine.any(Function));
+        expect($scope.working).toBe(true);
     });
 
     it("performs a selected package removal", function() {
@@ -112,10 +114,11 @@ describe('Controller: ContentHostPackagesController', function() {
         mockPackage = {name: 'foo', version: '3', release: '14', arch: 'noarch'};
         mockPackageClone = {name: 'foo', version: '3', release: '14', arch: 'noarch'};
 
-        spyOn(ContentHostPackage, 'remove').andCallThrough();
+        spyOn(ContentHostPackage, 'remove');
         $scope.currentPackagesTable.removePackage(mockPackage);
         expect(ContentHostPackage.remove).toHaveBeenCalledWith({uuid: mockContentHost.uuid, packages: [mockPackageClone]},
                                                           jasmine.any(Function), jasmine.any(Function));
+        expect($scope.working).toBe(true);
     });
 
     it("provides a way to upgrade all packages", function() {
@@ -123,6 +126,7 @@ describe('Controller: ContentHostPackagesController', function() {
         $scope.updateAll();
         expect(ContentHostPackage.updateAll).toHaveBeenCalledWith({uuid: mockContentHost.uuid}, jasmine.any(Function),
             jasmine.any(Function));
+        expect($scope.working).toBe(true);
     });
 
 });
