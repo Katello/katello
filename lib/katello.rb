@@ -26,6 +26,7 @@ require "compass-rails"
 require "ninesixty"
 require "ui_alchemy-rails"
 require "deface"
+require 'jquery-ui-rails'
 
 require "uuidtools"
 require "delayed_job"
