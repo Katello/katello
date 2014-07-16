@@ -118,7 +118,6 @@ module Katello
       fail HttpErrors::BadRequest, _("Can't update the '%s' environment") % "Library" if @environment.library?
       update_params = environment_params
       update_params[:name] = params[:environment][:new_name] if params[:environment][:new_name]
-      update_params[:label] = labelize_params(update_params) if update_params[:name]
       @environment.update_attributes!(update_params)
       respond
     end

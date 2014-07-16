@@ -89,15 +89,21 @@ module Katello
     end
 
     def test_update
+      original_label = @staging.label
+
       put :update,
         :organization_id => @organization.id,
         :id => @staging.id,
         :environment => {
-          :new_name => 'New Name'
+          :new_name => 'New Name',
+          :label => 'New Label'
         }
 
       assert_response :success
       assert_template 'api/v2/common/update'
+      assert_equal 'New Name', @staging.reload.name
+      # note: label is not editable; therefore, confirm that it is unchanged
+      assert_equal original_label, @staging.label
     end
 
     def test_update_protected
