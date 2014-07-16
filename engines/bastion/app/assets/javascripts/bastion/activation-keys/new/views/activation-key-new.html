@@ -60,13 +60,14 @@
       <div class="col-sm-5 input">
         <span path-selector="environments"
               ng-model="activationKey.environment"
+              selection-required="false"
               mode="singleSelect">
         </span>
       </div>
     </div>
 
     <div alch-form-group label="{{ 'Content View' | translate }}">
-      <select ng-hide="contentViews.length === 0"
+      <select ng-hide="contentViews.length === 0 || activationKey.environment === undefined "
               id="content_view_id"
               name="content_view_id"
               ng-model="activationKey.content_view_id"

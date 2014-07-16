@@ -35,11 +35,12 @@ angular.module('Bastion.widgets').directive('pathSelector',
         },
         templateUrl: 'widgets/views/path-selector.html',
         link: function (scope, element, attrs, ngModel) {
-            var activeItemId, convertPathObjects;
+            var activeItemId, convertPathObjects, selectionRequired;
+            selectionRequired = attrs['selectionRequired'] ? attrs['selectionRequired'] === 'true' : true;
 
             scope.itemChanged = function (item) {
                 if (item && scope.mode === 'singleSelect') {
-                    if (item.selected) {
+                    if (item.selected || selectionRequired) {
                         unselectActive();
                         selectById(item.id);
                         activeItemId = item.id;
@@ -67,7 +68,10 @@ angular.module('Bastion.widgets').directive('pathSelector',
             }
 
             ngModel.$render = function () {
-                scope.itemChanged(ngModel.$modelValue);
+                if (ngModel.$modelValue) {
+                    ngModel.$modelValue.selected = true;
+                    scope.itemChanged(ngModel.$modelValue);
+                }
             };
 
             scope.$watch('disableTrigger', function (disable) {

@@ -101,13 +101,30 @@ describe('Directive: pathSelector', function() {
 
         expect(element.find('.path-list').length).toBe(1);
         expect(element.find('.path-list:first .path-list-item').length).toBe(3);
+    });
 
+    it ("should not unselect by default", function () {
+        var checkbox = element.find('.path-list:first .path-list-item:first').find('input');
+
+        expect(checkbox.is(':checked')).toBe(false);
+
+        checkbox.click();
+        expect(checkbox.is(':checked')).toBe(true);
+
+        checkbox.click();
+        expect(checkbox.is(':checked')).toBe(true);
     });
 
     it("should provide a way to unselect an environment", function () {
-        var checkbox = element.find('.path-list:first .path-list-item:first').find('input');
+        var checkbox, element;
+
+        element = angular.element('<div path-selector="paths" ng-model="environment" mode="singleSelect" selection-required="false"></div>');
+        compile(element)(scope);
+        scope.$digest();
+        checkbox = element.find('.path-list:first .path-list-item:first').find('input');
+
         expect(checkbox.is(':checked')).toBe(false);
-        
+
         checkbox.click();
         expect(checkbox.is(':checked')).toBe(true);
 
