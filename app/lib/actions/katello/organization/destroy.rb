@@ -100,7 +100,7 @@ module Actions
               product.repositories.each do |repo|
                 plan_action(Repository::Destroy, repo, skip_environment_update: true)
               end
-              product.destroy!
+              product.reload.destroy!
             end
           end
         end
