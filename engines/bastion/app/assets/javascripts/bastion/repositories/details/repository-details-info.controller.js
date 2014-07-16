@@ -62,7 +62,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
             repository.$update(function (response) {
                 deferred.resolve(response);
-                $scope.successMessages.push(translate('Repository Saved.'));
+                $scope.successMessages = [translate('Repository Saved.')];
             }, function (response) {
                 deferred.reject(response);
                 _.each(response.data.errors, function (errorMessage) {
