@@ -55,6 +55,10 @@ module Katello
                                                            'font-awesome', 'scss')
     end
 
+    initializer "katello.override.routes", :after => :add_routing_paths do |app|
+      app.routes_reloader.paths.unshift("#{Katello::Engine.root}/config/routes/override.rb")
+    end
+
     initializer "katello.paths" do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/v2.rb"
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/rhsm.rb"

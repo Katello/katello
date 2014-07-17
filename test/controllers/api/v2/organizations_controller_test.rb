@@ -139,5 +139,13 @@ module Katello
       end
     end
 
+    def test_organization_destroy_route
+      assert_recognizes({:api_version => "v2",
+                         :action => "destroy",
+                         :controller => "katello/api/v2/organizations",
+                         :id => "1"},
+                        {:path => "/api/v2/organizations/1", :method => :delete}
+                       )
+    end
   end
 end
