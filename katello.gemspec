@@ -63,6 +63,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "haml-rails"
   gem.add_dependency "ui_alchemy-rails", '1.0.12'
   gem.add_dependency "deface", '< 1.0.0'
+  gem.add_dependency "jquery-ui-rails"
 
   # Testing
   gem.add_development_dependency "rubocop", "0.17.0"

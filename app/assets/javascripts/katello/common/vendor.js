@@ -11,7 +11,10 @@
 */
 
 //= require "bastion/underscore/underscore"
-//= require "alchemy/jquery-ui-1.8.11.custom/js/jquery-ui-1.8.11.custom.min"
+//= require "jquery.ui.sortable"
+//= require "jquery.ui.tabs"
+//= require "jquery.ui.progressbar"
+//= require "jquery.ui.effect.all"
 //= require "alchemy/jquery/plugins/jquery.hoverIntent"
 //= require "alchemy/jquery/plugins/jquery.ui.totop"
 //= require "alchemy/jquery/plugins/jquery.jnotify"
