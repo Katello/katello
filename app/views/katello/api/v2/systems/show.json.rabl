@@ -63,7 +63,7 @@ end
 
 # Requires another API call to fetch from Candlepin
 if params[:fields] == "full"
-  attributes :type
+  attributes :system_type => :type
   attributes :compliance
   attributes :facts
 

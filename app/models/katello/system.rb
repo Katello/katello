@@ -220,7 +220,7 @@ class System < Katello::Model
     json
   end
 
-  def type
+  def system_type
     if respond_to?(:virtual_guest) && virtual_guest
       _("Virtual Guest")
     else
