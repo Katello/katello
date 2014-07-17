@@ -13,12 +13,11 @@
 module Katello
   class Api::V2::ProductsController < Api::V2::ApiController
 
-    before_filter :find_activation_key, :only => [:index]
+    before_filter :find_resource, :only => [:update, :destroy, :show, :sync]
+    before_filter :find_nested_object, :only => [:index]
+
     before_filter :find_system, :only => [:index]
     before_filter :find_organization, :only => [:create, :index]
-    before_filter :find_product, :only => [:update, :destroy, :show, :sync]
-    before_filter :find_organization_from_product, :only => [:update]
-    before_filter :authorize_gpg_key, :only => [:update, :create]
 
     resource_description do
       api_version "v2"
@@ -108,16 +107,17 @@ module Katello
 
     protected
 
-    def find_product
-      @product = Product.find_by_id(params[:id]) if params[:id]
+    def action_permission
+      case params[:action]
+      when 'sync'
+        'sync'
+      else
+        super
+      end
     end
 
-    def find_activation_key
-      if params[:activation_key_id]
-        @activation_key = ActivationKey.find_by_id(params[:activation_key_id])
-        fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:activation_key_id] if @activation_key.nil?
-        @organization = @activation_key.organization
-      end
+    def allowed_nested_id
+      %w(activation_key_id)
     end
 
     def find_system
@@ -135,18 +135,6 @@ module Katello
 
     def filter_by_activation_key(ids = [], activation_key)
       ids & activation_key.products.map { |product| product.id }
-    end
-
-    def find_organization_from_product
-      @organization = @product.organization
-    end
-
-    def authorize_gpg_key
-      gpg_key_id = product_params[:gpg_key_id]
-      if gpg_key_id
-        gpg_key = GpgKey.readable.where(:id => gpg_key_id, :organization_id => @organization).first
-        fail HttpErrors::NotFound, _("Couldn't find gpg key '%s'") % gpg_key_id if gpg_key.nil?
-      end
     end
 
     def filter_by_system(ids = [], system)
