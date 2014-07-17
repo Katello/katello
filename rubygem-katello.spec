@@ -92,7 +92,7 @@ Requires: candlepin-selinux
 Requires: createrepo >= 0.9.9-18%{?dist}
 Requires: elasticsearch
 Requires: foreman >= 1.3.0
-Requires: java-openjdk
+Requires: java-openjdk >= 1:1.7.0
 # Still Requires katello-common which clashes with
 # new build - will re-enable after fixing
 #Requires: katello-selinux
