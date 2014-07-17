@@ -267,6 +267,10 @@ class ApplicationController < ::ApplicationController
     end
   end
 
+  def permission_denied
+    render :template => "katello/common/403"
+  end
+
   private # why bother? methods below are not testable/tested
 
   def require_org

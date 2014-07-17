@@ -33,6 +33,7 @@ angular.module('Bastion.host-collections').config(['$stateProvider', function ($
     })
     .state('host-collections.index', {
         url: '/host_collections',
+        permission: 'view_host_collections',
         views: {
             'table': {
                 templateUrl: 'host-collections/views/host-collections-table-full.html'
@@ -54,6 +55,7 @@ angular.module('Bastion.host-collections').config(['$stateProvider', function ($
     })
     .state('host-collections.new.form', {
         url: '/host_collections/new',
+        permission: 'create_host_collections',
         collapsed: true,
         controller: 'HostCollectionFormController',
         templateUrl: 'host-collections/new/views/host-collection-new-form.html'
@@ -62,6 +64,7 @@ angular.module('Bastion.host-collections').config(['$stateProvider', function ($
     $stateProvider.state("host-collections.details", {
         abstract: true,
         url: '/host_collections/:hostCollectionId',
+        permission: 'view_host_collections',
         collapsed: true,
         views: {
             'table': {
@@ -75,6 +78,7 @@ angular.module('Bastion.host-collections').config(['$stateProvider', function ($
     })
     .state('host-collections.details.info', {
         url: '/info',
+        permission: 'view_host_collections',
         collapsed: true,
         templateUrl: 'host-collections/details/views/host-collection-info.html'
     })
@@ -85,18 +89,21 @@ angular.module('Bastion.host-collections').config(['$stateProvider', function ($
     })
     .state('host-collections.details.content-hosts.list', {
         url: '/content-hosts',
+        permission: 'view_host_collections',
         collapsed: true,
         controller: 'HostCollectionContentHostsController',
         templateUrl: 'host-collections/details/views/host-collection-content-hosts-list.html'
     })
     .state('host-collections.details.content-hosts.add', {
         url: '/add-content-hosts',
+        permission: 'edit_host_collections',
         collapsed: true,
         controller: 'HostCollectionAddContentHostsController',
         templateUrl: 'host-collections/details/views/host-collection-add-content-hosts.html'
     })
     .state('host-collections.details.actions', {
         url: '/actions',
+        permission: 'edit_host_collections',
         collapsed: true,
         templateUrl: 'host-collections/details/views/host-collection-actions.html'
     });

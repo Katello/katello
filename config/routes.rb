@@ -185,6 +185,8 @@ Katello::Engine.routes.draw do
 
     root :to => "dashboard#index"
 
+    match '/403' => 'application#permission_denied', :via => :get
+
   end
 
 end

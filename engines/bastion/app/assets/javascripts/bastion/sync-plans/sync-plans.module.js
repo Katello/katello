@@ -41,6 +41,7 @@ angular.module('Bastion.sync-plans').config(['$stateProvider', function ($stateP
     })
     .state('sync-plans.index', {
         url: '/sync_plans',
+        permission: 'view_sync_plans',
         views: {
             'table': {
                 templateUrl: 'sync-plans/views/sync-plans-table-full.html'
@@ -50,6 +51,7 @@ angular.module('Bastion.sync-plans').config(['$stateProvider', function ($stateP
 
     .state('sync-plans.new', {
         url: '/sync_plans/new',
+        permission: 'create_sync_plans',
         collapsed: true,
 
         views: {
@@ -70,6 +72,7 @@ angular.module('Bastion.sync-plans').config(['$stateProvider', function ($stateP
     .state("sync-plans.details", {
         abstract: true,
         url: '/sync_plans/:syncPlanId',
+        permission: 'view_sync_plans',
         collapsed: true,
         views: {
             'table': {
@@ -83,6 +86,7 @@ angular.module('Bastion.sync-plans').config(['$stateProvider', function ($stateP
     })
     .state('sync-plans.details.info', {
         url: '/info',
+        permission: 'view_sync_plans',
         collapsed: true,
         controller: 'SyncPlanDetailsInfoController',
         templateUrl: 'sync-plans/details/views/sync-plan-info.html'
@@ -95,12 +99,14 @@ angular.module('Bastion.sync-plans').config(['$stateProvider', function ($stateP
     })
     .state('sync-plans.details.products.list', {
         url: '/products',
+        permission: 'view_sync_plans',
         collapsed: true,
         controller: 'SyncPlanProductsController',
         templateUrl: 'sync-plans/details/views/sync-plan-products-table.html'
     })
     .state('sync-plans.details.products.add', {
         url: '/products/add',
+        permission: 'edit_sync_plans',
         collapsed: true,
         controller: 'SyncPlanAddProductsController',
         templateUrl: 'sync-plans/details/views/sync-plan-products-table.html'

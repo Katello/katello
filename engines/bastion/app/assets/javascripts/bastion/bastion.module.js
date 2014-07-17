@@ -102,29 +102,6 @@ angular.module('Bastion').config(
             };
         }]);
 
-        $provide.factory('UnauthorizedInterceptor', ['$q', '$window', 'translate',
-            function ($q, $window, translate) {
-                return {
-                    responseError: function (response) {
-                        var message;
-
-                        if (response.status === 401) {
-                            $window.location.href = '/users/login';
-                        } else if (response.status === 403) {
-                            // Add unauthorized display message to response
-                            message = translate('You are not authorized to perform this action.');
-                            response.data.errors = [message];
-                            response.data.displayMessage = message;
-                            return $q.reject(response);
-                        } else
-                        {
-                            return $q.reject(response);
-                        }
-                    }
-                };
-            }]
-        );
-
         // Add Xs around translated strings if the config value mark_translated is set.
         if (BastionConfig.markTranslated) {
             $provide.decorator('gettextCatalog', ["$delegate", function ($delegate) {
@@ -138,7 +115,6 @@ angular.module('Bastion').config(
         }
 
         $httpProvider.interceptors.push('PrefixInterceptor');
-        $httpProvider.interceptors.push('UnauthorizedInterceptor');
     }]
 );
 
@@ -152,7 +128,6 @@ angular.module('Bastion').config(
  * @requires $stateParams
  * @requires gettextCatalog
  * @requires currentLocale
- * @requires Authorization
  * @requires $location
  * @requires $window
  * @requires PageTitle
@@ -162,8 +137,8 @@ angular.module('Bastion').config(
  * @description
  *   Set up some common state related functionality and set the current language.
  */
-angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale', 'Authorization', '$location', '$window', 'PageTitle', 'markActiveMenu', 'RootURL',
-    function ($rootScope, $state, $stateParams, gettextCatalog, currentLocale, Authorization, $location, $window, PageTitle, markActiveMenu, RootURL) {
+angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale', '$location', '$window', 'PageTitle', 'markActiveMenu', 'RootURL',
+    function ($rootScope, $state, $stateParams, gettextCatalog, currentLocale, $location, $window, PageTitle, markActiveMenu, RootURL) {
         var fromState, fromParams, orgSwitcherRegex;
 
         $rootScope.$state = $state;
@@ -233,8 +208,5 @@ angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextC
                 $window.location.href = newUrl;
             }
         });
-
-        $rootScope.permitted = Authorization.permitted;
-        $rootScope.denied = Authorization.denied;
     }
 ]);

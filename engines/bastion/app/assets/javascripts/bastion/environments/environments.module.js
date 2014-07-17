@@ -38,8 +38,9 @@ angular.module('Bastion.environments', [
  */
 angular.module('Bastion.environments').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('environments', {
-        controller: 'EnvironmentsController',
         url: '/lifecycle_environments',
+        permission: 'view_lifecycle_environments',
+        controller: 'EnvironmentsController',
         templateUrl: 'environments/views/environments.html'
     });
 }]);
