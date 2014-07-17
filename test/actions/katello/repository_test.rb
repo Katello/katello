@@ -12,6 +12,13 @@
 
 require 'katello_test_helper'
 
+class Dynflow::Testing::DummyPlannedAction
+
+  attr_accessor :error
+
+end
+
+
 module ::Actions::Katello::Repository
 
   class TestBase < ActiveSupport::TestCase
@@ -34,6 +41,18 @@ module ::Actions::Katello::Repository
         content_create.stubs(input: { content_id: 123 })
       end
       plan_action action, repository
+    end
+  end
+
+  class CreateFailTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::Create }
+    before do
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:error).returns("ERROR")
+    end
+
+
+    it 'fails to plan' do
+      repository.expects(:save!).never
     end
   end
 

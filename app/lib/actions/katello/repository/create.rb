@@ -26,18 +26,20 @@ module Actions
           path = repository.relative_path unless repository.puppet?
 
           sequence do
-            plan_action(Actions::Pulp::Repository::Create,
-                        content_type: repository.content_type,
-                        pulp_id: repository.pulp_id,
-                        name: repository.name,
-                        feed: repository.feed,
-                        ssl_ca_cert: repository.feed_ca,
-                        ssl_client_cert: repository.feed_cert,
-                        ssl_client_key: repository.feed_key,
-                        unprotected: repository.unprotected,
-                        checksum_type: repository.checksum_type,
-                        path: path,
-                        with_importer: true)
+            create_action = plan_action(Actions::Pulp::Repository::CreateInPlan,
+                                        content_type: repository.content_type,
+                                        pulp_id: repository.pulp_id,
+                                        name: repository.name,
+                                        feed: repository.feed,
+                                        ssl_ca_cert: repository.feed_ca,
+                                        ssl_client_cert: repository.feed_cert,
+                                        ssl_client_key: repository.feed_key,
+                                        unprotected: repository.unprotected,
+                                        checksum_type: repository.checksum_type,
+                                        path: path,
+                                        with_importer: true)
+
+            return if create_action.error
 
             if repository.environment
               concurrence do

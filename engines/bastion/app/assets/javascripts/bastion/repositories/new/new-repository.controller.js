@@ -53,6 +53,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         }
 
         function error(response) {
+            var foundError = false;
             $scope.working = false;
 
             angular.forEach($scope.repositoryForm, function (value, field) {
@@ -64,10 +65,15 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
 
             angular.forEach(response.data.errors, function (errors, field) {
                 if ($scope.repositoryForm.hasOwnProperty(field)) {
+                    foundError = true;
                     $scope.repositoryForm[field].$setValidity('server', false);
                     $scope.repositoryForm[field].$error.messages = errors;
                 }
             });
+
+            if (!foundError) {
+                $scope.errorMessages = [response.data.displayMessage];
+            }
         }
 
     }]
