@@ -129,7 +129,7 @@ module Katello
       # pulp is the one that responded
       def pulp_without_oauth
         url = Katello.config.pulp.url
-        uri = URI("#{url}/repositories/")
+        uri = URI("#{url}/status/")
         http = Net::HTTP.new(uri.host, uri.port)
         if uri.scheme == "https"
           http.use_ssl = true
