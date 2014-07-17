@@ -29,29 +29,38 @@ if Katello.config.use_pulp
   Katello::Repository.ensure_sync_notification
 end
 
-ConfigTemplate.where(:name => "Katello Kickstart Default").first_or_create!(
-    :template_kind_id    => TemplateKind.find_by_name('provision').id,
-    :operatingsystem_ids => Operatingsystem.where("name not like ? and type = ?", "Red Hat Enterprise Linux", "Redhat").map(&:id),
-    :template            => File.read("#{Katello::Engine.root}/app/views/foreman/unattended/kickstart-katello.erb"))
+# Provisioning Templates
 
-ConfigTemplate.where(:name => "Katello Kickstart Default for RHEL").first_or_create!(
-    :template_kind_id    => TemplateKind.find_by_name('provision').id,
-    :operatingsystem_ids => Redhat.where("name like ?", "Red Hat Enterprise Linux").map(&:id),
-    :template            => File.read("#{Katello::Engine.root}/app/views/foreman/unattended/kickstart-katello_rhel.erb"))
+kinds = [:provision, :finish, :user_data].inject({}) do |hash, kind|
+  hash[kind] = TemplateKind.find_by_name(kind)
+  hash
+end
 
-ConfigTemplate.where(:name => "Katello Kickstart default user data").first_or_create!(
-    :template_kind_id    => TemplateKind.find_by_name('user_data').id,
-    :operatingsystem_ids => Operatingsystem.where("name not like ? and type = ?", "Red Hat Enterprise Linux", "Redhat").map(&:id),
-    :template            => File.read("#{Katello::Engine.root}/app/views/foreman/unattended/userdata-katello.erb"))
+defaults = {:vendor => "Katello", :default => true, :locked => true}
 
-ConfigTemplate.where(:name => "Katello Kickstart default finish").first_or_create!(
-    :template_kind_id    => TemplateKind.find_by_name('finish').id,
-    :operatingsystem_ids => Operatingsystem.where("name not like ? and type = ?", "Red Hat Enterprise Linux", "Redhat").map(&:id),
-    :template            => File.read("#{Katello::Engine.root}/app/views/foreman/unattended/finish-katello.erb"))
+templates = [{:name => "Katello Kickstart Default",           :source => "kickstart-katello.erb",      :template_kind => kinds[:provision]},
+             {:name => "Katello Kickstart Default for RHEL",  :source => "kickstart-katello_rhel.erb", :template_kind => kinds[:provision]},
+             {:name => "Katello Kickstart Default User Data", :source => "userdata-katello.erb",       :template_kind => kinds[:user_data]},
+             {:name => "Katello Kickstart Default Finish",    :source => "finish-katello.erb",         :template_kind => kinds[:finish]},
+             {:name => "subscription_manager_registration",   :source => "snippets/_subscription_manager_registration.erb", :snippet => true}]
 
-ConfigTemplate.where(:name => "subscription_manager_registration").first_or_create!(
-    :snippet  => true,
-    :template => File.read("#{Katello::Engine.root}/app/views/foreman/unattended/snippets/_subscription_manager_registration.erb"))
+templates.each do |template|
+ template[:template] = File.read(File.join(Katello::Engine.root, "app/views/foreman/unattended", template.delete(:source)))
+ ConfigTemplate.find_or_create_by_name(template).update_attributes(defaults.merge(template))
+end
+
+# Take ownership of Foreman templates we rely on
+templates = ["puppet.conf", "freeipa_register", "Kickstart default iPXE", "Kickstart default PXELinux", "PXELinux global default"]
+
+ConfigTemplate.where(:name => templates).each do |template|
+  template.update_attributes(defaults)
+end
+
+# Ensure all default templates are seeded into the first org and loc
+ConfigTemplate.where(:default => true).each do |template|
+  template.organizations << Organization.first unless template.organizations.include?(Organization.first) || Organization.count.zero?
+  template.locations << Location.first unless template.locations.include?(Location.first) || Location.count.zero?
+end
 
 Katello::Util::Search.backend_search_classes.each{|c| c.create_index}
 
