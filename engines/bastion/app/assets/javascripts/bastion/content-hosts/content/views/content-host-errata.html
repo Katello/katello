@@ -32,7 +32,7 @@
 
 <div alch-table="errataTable">
   <p class="alert alert-info" translate>Please note katello-agent is required to be installed on the Content Host for Errata reporting.</p>
-  <div alch-container-scroll control-width="table" alch-infinite-scroll="errataTable.nextPage()" data="errataTable.rows">
+  <div alch-container-scroll alch-infinite-scroll="errataTable.nextPage()" data="errataTable.rows">
     <table ng-class="{'table-mask': errataTable.working}" class="table table-striped">
       <thead>
         <tr alch-table-head row-select>
