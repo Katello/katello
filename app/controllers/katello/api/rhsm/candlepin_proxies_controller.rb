@@ -231,6 +231,22 @@ module Katello
       render :json => Resources::Candlepin::Consumer.get(@system.uuid)
     end
 
+    #api :GET, "/status", N_("Shows version information")
+    #description N_("This service is available for unauthenticated users")
+    def server_status
+      # rubocop:disable SymbolName
+      status = { :managerCapabilities => Resources::Candlepin::CandlepinPing.ping['managerCapabilities'],
+                 :release => Katello.config.app_name,
+                 :result => Resources::Candlepin::CandlepinPing.ping['result'],
+                 :rulesSource => Resources::Candlepin::CandlepinPing.ping['rulesSource'],
+                 :rulesVersion => Resources::Candlepin::CandlepinPing.ping['rulesVersion'],
+                 :standalone => Resources::Candlepin::CandlepinPing.ping['standalone'],
+                 :timeUTC => Time.now.getutc,
+                 :version => Katello.config.katello_version }
+
+      render :json => status
+    end
+
     def facts
       attrs = params.clone
       slice_attrs = [:name, :description, :location,

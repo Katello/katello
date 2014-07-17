@@ -10,7 +10,6 @@ Katello::Engine.routes.draw do
   scope :api, :module => :api do
 
     match '/rhsm' => 'v2/root#resource_list', :via => :get
-    match '/rhsm/status' => 'v2/ping#server_status', :via => :get
 
     scope :path => :rhsm, :module => :rhsm, :as => :rhsm do
 
@@ -58,6 +57,7 @@ Katello::Engine.routes.draw do
       match '/consumers/:id/content_overrides/' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_content_overrides_delete_path
       match '/consumers/:id/available_releases' => 'candlepin_proxies#available_releases', :via => :get
       match '/systems/:id/enabled_repos' => 'candlepin_proxies#enabled_repos', :via => :put
+      match '/status' => 'candlepin_proxies#server_status', :via => :get
     end
 
   end
