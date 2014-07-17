@@ -58,6 +58,23 @@ describe('Controller: ContentViewVersionsController', function() {
         expect($scope.hideProgress(version)).toBe(false);
     });
 
+    it("correctly returns task in progress", function() {
+        var version = {};
+        expect($scope.taskInProgress(version)).toBe(false);
+
+        version = {task: {state: 'running'}};
+        expect($scope.taskInProgress(version)).toBe(true);
+
+        version = {task: {state: 'pending'}};
+        expect($scope.taskInProgress(version)).toBe(true);
+
+        version = {task: {state: 'error'}};
+        expect($scope.taskInProgress(version)).toBe(false);
+
+        version = {task: {state: 'stopped'}};
+        expect($scope.taskInProgress(version)).toBe(false);
+    });
+
     it("determines what history text to display", function() {
         var version = {active_history: [],
             last_event: {environment: {name: 'test'},
