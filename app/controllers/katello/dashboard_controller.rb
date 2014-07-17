@@ -97,15 +97,16 @@ class DashboardController < Katello::ApplicationController
   end
 
   def update_user_preference(key, value)
-    current_user.preferences = HashWithIndifferentAccess.new  unless current_user.preferences
-    current_user.preferences[:dashboard] = {} unless current_user.preferences.key? :dashboard
-    current_user.preferences[:dashboard][key] = value
+    user_preferences = current_user.preferences_hash
+    user_preferences[:dashboard] = {} unless user_preferences.key? :dashboard
+    user_preferences[:dashboard][key] = value
+    current_user.preferences = user_preferences
     current_user.save!
   end
 
   helper_method :quantity
   def quantity
-    current_user.preferences[:dashboard][params[:action]][:page_size] rescue 5
+    current_user.preferences_hash[:dashboard][params[:action]][:page_size] rescue 5
   end
 end
 end
