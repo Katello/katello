@@ -51,6 +51,7 @@ class KTEnvironment < Katello::Model
   scope :completer_scope, lambda { |options = nil| where('organization_id = ?', options[:organization_id]) if options[:organization_id].present? }
   scope :non_library, where(library: false)
   scope :library, where(library: true)
+  scope :has_puppet_environment, lambda { includes(:content_view_puppet_environments).where('katello_content_view_puppet_environments.puppet_environment_id IS NOT NULL')}
 
   validates :organization, :presence => true
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id,

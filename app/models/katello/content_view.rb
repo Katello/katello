@@ -29,6 +29,7 @@ class ContentView < Katello::Model
   has_many :environments, :class_name => "Katello::KTEnvironment", :through => :content_view_environments
 
   has_many :content_view_versions, :class_name => "Katello::ContentViewVersion", :dependent => :destroy
+  has_many :content_view_puppet_environments, :through => :content_view_versions
   alias_method :versions, :content_view_versions
 
   has_many :content_view_components, :class_name => "Katello::ContentViewComponent", :dependent => :destroy
@@ -71,13 +72,17 @@ class ContentView < Katello::Model
   scope :composite, where(:composite => true)
   scope :non_composite, where(:composite => nil)
 
+  scope :with_available_versions_in_puppet_environment, lambda { joins(:content_view_puppet_environments).where("puppet_environment_id IS NOT NULL") }
+  scope :in_environment, (lambda do |env = nil|
+    if env.present?
+      joins(:content_view_environments).where("#{Katello::ContentViewEnvironment.table_name}.environment_id = ?", env.id)
+    else
+      where("#{self.table_name}.id < 0")
+    end
+  end)
+
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :organization_id, :complete_value => true
-
-  def self.in_environment(env)
-    joins(:content_view_environments).
-      where("#{Katello::ContentViewEnvironment.table_name}.environment_id = ?", env.id)
-  end
 
   def to_s
     name
