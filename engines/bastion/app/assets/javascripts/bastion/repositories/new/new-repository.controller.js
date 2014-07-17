@@ -19,13 +19,14 @@
  * @requires Repository
  * @requires GPGKey
  * @requires FormUtils
+ * @requires translate
  *
  * @description
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', 'Repository', 'GPGKey', 'FormUtils',
-    function ($scope, Repository, GPGKey, FormUtils) {
+    ['$scope', 'Repository', 'GPGKey', 'FormUtils', 'translate',
+    function ($scope, Repository, GPGKey, FormUtils, translate) {
 
         $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true});
         $scope.repositoryTypes = [{}, {name: 'yum'}, {name: 'puppet'}];
@@ -47,6 +48,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
 
         function success(response) {
             $scope.repositoriesTable.rows.push(response);
+            $scope.successMessages.push(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
             $scope.transitionTo('products.details.repositories.index', {productId: $scope.$stateParams.productId});
         }
 

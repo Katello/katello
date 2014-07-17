@@ -1,5 +1,7 @@
 <span page-title ng-model="repository">{{ 'Repository:' | translate }} {{ repository.name }}</span>
 <div>
+  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
   <a ui-sref="products.details.repositories.index({productId: product.id})">
     <i class="icon-double-angle-left"></i>
     {{ "Back to Repository List" | translate }}
