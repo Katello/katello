@@ -519,11 +519,11 @@ class ContentView < Katello::Model
   end
 
   def cp_environment_label(env)
-    ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.label
+    ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.try(:label)
   end
 
   def cp_environment_id(env)
-    ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.cp_id
+    ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.try(:cp_id)
   end
 
   def create_new_version
