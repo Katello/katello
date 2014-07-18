@@ -28,6 +28,7 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
     })
     .state('content-views.index', {
         url: '/content_views',
+        permission: 'view_content_views',
         views: {
             'table': {
                 templateUrl: 'content-views/views/content-views-table-full.html'

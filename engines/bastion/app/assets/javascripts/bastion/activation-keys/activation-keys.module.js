@@ -35,6 +35,7 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
     })
     .state('activation-keys.index', {
         url: '/activation_keys',
+        permission: 'view_activation_keys',
         views: {
             'table': {
                 templateUrl: 'activation-keys/views/activation-keys-table-full.html'
@@ -43,6 +44,7 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
     })
     .state('activation-keys.new', {
         url: '/activation_keys/new',
+        permission: 'create_activation_keys',
         collapsed: true,
         views: {
             'table': {
@@ -58,6 +60,7 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
     $stateProvider.state("activation-keys.details", {
         abstract: true,
         url: '/activation_keys/:activationKeyId',
+        permission: 'view_activation_keys',
         collapsed: true,
         views: {
             'table': {
@@ -71,12 +74,14 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
     })
     .state('activation-keys.details.info', {
         url: '/info',
+        permission: 'view_activation_keys',
         collapsed: true,
         controller: 'ActivationKeyDetailsInfoController',
         templateUrl: 'activation-keys/details/views/activation-key-info.html'
     })
     .state('activation-keys.details.products', {
         url: '/products',
+        permission: 'view_activation_keys',
         collapsed: true,
         controller: 'ActivationKeyProductsController',
         templateUrl: 'activation-keys/details/views/activation-key-products.html'
@@ -88,12 +93,14 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
     })
     .state('activation-keys.details.subscriptions.list', {
         url: '/subscriptions',
+        permission: 'view_activation_keys',
         collapsed: true,
         controller: 'ActivationKeySubscriptionsController',
         templateUrl: 'activation-keys/details/views/activation-key-subscriptions-list.html'
     })
     .state('activation-keys.details.subscriptions.add', {
         url: '/add-subscriptions',
+        permission: 'edit_activation_keys',
         collapsed: true,
         controller: 'ActivationKeyAddSubscriptionsController',
         templateUrl: 'activation-keys/details/views/activation-key-add-subscriptions.html'
@@ -106,12 +113,14 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
     })
     .state('activation-keys.details.host-collections.list', {
         url: '/host-collections',
+        permission: 'view_activation_keys',
         collapsed: true,
         controller: 'ActivationKeyHostCollectionsController',
         templateUrl: 'activation-keys/details/views/activation-key-host-collections-table.html'
     })
     .state('activation-keys.details.host-collections.add', {
         url: '/host-collections/add',
+        permission: 'edit_activation_keys',
         collapsed: true,
         controller: 'ActivationKeyAddHostCollectionsController',
         templateUrl: 'activation-keys/details/views/activation-key-host-collections-table.html'
