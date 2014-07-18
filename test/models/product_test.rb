@@ -74,5 +74,10 @@ module Katello
       refute @product2.valid?
     end
 
+    def test_syncable_content
+      products = Katello::Product.syncable_content
+      refute_empty products
+      products.each { |prod| assert prod.syncable_content? }
+    end
   end
 end
