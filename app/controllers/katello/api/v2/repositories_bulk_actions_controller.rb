@@ -39,7 +39,9 @@ module Katello
     param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def sync_repositories
       syncable_repositories = @repositories.syncable.has_feed
-      syncable_repositories.each(&:sync)
+      syncable_repositories.each do |repo|
+        async_task(::Actions::Katello::Repository::Sync, repo)
+      end
 
       messages1 = format_bulk_action_messages(
         :success    => "",

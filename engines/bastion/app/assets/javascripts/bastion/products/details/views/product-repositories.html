@@ -33,7 +33,7 @@
     <button class="btn btn-default"
             ng-click="syncSelectedRepositories()"
             ng-hide="denied('sync_products', product)"
-            ng-disabled="repositoriesTable.numSelected == 0">
+            ng-disabled="syncInProgress || repositoriesTable.numSelected == 0">
       <i class="icon-spinner icon-spin" ng-show="syncInProgress"></i>
       <span ng-show="syncInProgress" translate>Syncing...</span>
       <i ng-hide="syncInProgress" class="icon-refresh"></i>
