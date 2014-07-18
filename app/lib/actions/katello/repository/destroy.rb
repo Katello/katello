@@ -21,6 +21,7 @@ module Actions
         def plan(repository, options = {})
           skip_environment_update = options.fetch(:skip_environment_update, false)
           action_subject(repository)
+          plan_action(ContentViewPuppetModule::Destroy, repository) if repository.puppet?
           plan_action(Pulp::Repository::Destroy, pulp_id: repository.pulp_id)
           plan_action(Product::ContentDestroy, repository)
           plan_action(ElasticSearch::Repository::Destroy, pulp_id: repository.pulp_id)
