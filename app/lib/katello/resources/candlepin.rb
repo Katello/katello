@@ -659,7 +659,8 @@ module Resources
 
           product_subscription = subscriptions.find do |sub|
             sub["product"]["id"] == id ||
-              sub["providedProducts"].any? { |provided| provided["id"] == id }
+              sub["providedProducts"].any? { |provided| provided["id"] == id } ||
+              sub["derivedProvidedProducts"].any? { |provided| provided["id"] == id }
           end
 
           if product_subscription

@@ -408,7 +408,7 @@ module Glue::Candlepin::Consumer
         end
 
         provided_products = []
-        pool["providedProducts"].each do |cp_product|
+        pool['providedProducts'].each do |cp_product|
           product = Katello::Product.where(:cp_id => cp_product["productId"]).first
           if product
             provided_products << product
