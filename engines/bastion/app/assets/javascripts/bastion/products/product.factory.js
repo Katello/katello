@@ -23,11 +23,16 @@
 angular.module('Bastion.products').factory('Product',
     ['BastionResource', function (BastionResource) {
 
-        return BastionResource('/api/products/:id/:action', {id: '@id'}, {
-            update: { method: 'PUT'},
-            sync: { method: 'POST', isArray: true, params: { action: 'sync' }},
-            updateSyncPlan: { method: 'POST', params: { action: 'sync_plan' }}
-        });
+        return BastionResource('/api/products/:id/:action',
+            {id: '@id'},
+            {
+                get: { method: 'GET' },
+                update: { method: 'PUT' },
+                sync: { method: 'POST', isArray: true, params: { action: 'sync' }},
+                updateSyncPlan: { method: 'POST', params: { action: 'sync_plan' }}
+            },
+            'product'
+        );
 
     }]
 );
