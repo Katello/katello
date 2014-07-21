@@ -137,6 +137,7 @@ module Katello
     end
 
     def organization_id
+      return params[resource_name][:organization_id] if params[resource_name] && params[resource_name][:organization_id]
       key = organization_id_keys.find { |k| !params[k].nil? }
       return params[key]
     end

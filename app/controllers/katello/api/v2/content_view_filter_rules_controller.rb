@@ -30,15 +30,17 @@ module Katello
     api :POST, "/content_view_filters/:content_view_filter_id/rules",
         N_("Create a filter rule. The parameters included should be based upon the filter type.")
     param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
-    param :name, String, :desc => N_("package or package group: name")
-    param :version, String, :desc => N_("package: version")
-    param :min_version, String, :desc => N_("package: minimum version")
-    param :max_version, String, :desc => N_("package: maximum version")
-    param :errata_id, String, :desc => N_("erratum: id")
-    param :errata_ids, Array, :desc => N_("erratum: IDs or a select all object")
-    param :start_date, String, :desc => N_("erratum: start date (YYYY-MM-DD)")
-    param :end_date, String, :desc => N_("erratum: end date (YYYY-MM-DD)")
-    param :types, Array, :desc => N_("erratum: types (enhancement, bugfix, security)")
+    param :content_view_filter_rule, Hash do
+      param :name, String, :desc => N_("package or package group: name")
+      param :version, String, :desc => N_("package: version")
+      param :min_version, String, :desc => N_("package: minimum version")
+      param :max_version, String, :desc => N_("package: maximum version")
+      param :errata_id, String, :desc => N_("erratum: id")
+      param :errata_ids, Array, :desc => N_("erratum: IDs or a select all object")
+      param :start_date, String, :desc => N_("erratum: start date (YYYY-MM-DD)")
+      param :end_date, String, :desc => N_("erratum: end date (YYYY-MM-DD)")
+      param :types, Array, :desc => N_("erratum: types (enhancement, bugfix, security)")
+    end
     def create
       rule_clazz = ContentViewFilter.rule_class_for(@filter)
 
@@ -69,14 +71,16 @@ module Katello
         N_("Update a filter rule. The parameters included should be based upon the filter type.")
     param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
     param :id, :identifier, :desc => N_("rule identifier"), :required => true
-    param :name, String, :desc => N_("package or package group: name")
-    param :version, String, :desc => N_("package: version")
-    param :min_version, String, :desc => N_("package: minimum version")
-    param :max_version, String, :desc => N_("package: maximum version")
-    param :errata_id, String, :desc => N_("erratum: id")
-    param :start_date, String, :desc => N_("erratum: start date (YYYY-MM-DD)")
-    param :end_date, String, :desc => N_("erratum: end date (YYYY-MM-DD)")
-    param :types, Array, :desc => N_("erratum: types (enhancement, bugfix, security)")
+    param :content_view_filter_rule, Hash do
+      param :name, String, :desc => N_("package or package group: name")
+      param :version, String, :desc => N_("package: version")
+      param :min_version, String, :desc => N_("package: minimum version")
+      param :max_version, String, :desc => N_("package: maximum version")
+      param :errata_id, String, :desc => N_("erratum: id")
+      param :start_date, String, :desc => N_("erratum: start date (YYYY-MM-DD)")
+      param :end_date, String, :desc => N_("erratum: end date (YYYY-MM-DD)")
+      param :types, Array, :desc => N_("erratum: types (enhancement, bugfix, security)")
+    end
     def update
       update_params = rule_params
       update_params[:version] = "" unless rule_params[:version]

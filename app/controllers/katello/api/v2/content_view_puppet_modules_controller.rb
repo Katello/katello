@@ -36,9 +36,11 @@ module Katello
     api :POST, "/content_views/:content_view_id/content_view_puppet_modules",
         N_("Add a puppet module to the content view")
     param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
-    param :name, String, :desc => N_("name of the puppet module")
-    param :author, String, :desc => N_("author of the puppet module")
-    param :uuid, String, :desc => N_("the uuid of the puppet module to associate")
+    param :content_view_puppet_module, Hash do
+      param :name, String, :desc => N_("name of the puppet module")
+      param :author, String, :desc => N_("author of the puppet module")
+      param :uuid, String, :desc => N_("the uuid of the puppet module to associate")
+    end
     def create
       @puppet_module = ContentViewPuppetModule.create!(puppet_module_params) do |puppet_module|
         puppet_module.content_view = @view
@@ -58,9 +60,11 @@ module Katello
         N_("Update a puppet module associated with the content view")
     param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
     param :id, :identifier, :desc => N_("puppet module ID"), :required => true
-    param :name, String, :desc => N_("name of the puppet module")
-    param :author, String, :desc => N_("author of the puppet module")
-    param :uuid, String, :desc => N_("the uuid of the puppet module to associate")
+    param :content_view_puppet_module, Hash do
+      param :name, String, :desc => N_("name of the puppet module")
+      param :author, String, :desc => N_("author of the puppet module")
+      param :uuid, String, :desc => N_("the uuid of the puppet module to associate")
+    end
     def update
       @puppet_module.update_attributes!(puppet_module_params)
       respond :resource => @puppet_module

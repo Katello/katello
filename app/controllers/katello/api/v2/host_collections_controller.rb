@@ -25,11 +25,14 @@ module Katello
     wrap_parameters :include => (HostCollection.attribute_names + %w(system_ids))
 
     def_param_group :host_collection do
-      param :name, String, :required => true, :desc => N_("Host Collection name")
-      param :system_ids, Array, :required => false, :desc => N_("List of system uuids to be in the host collection")
-      param :description, String
-      param :max_content_hosts, Integer, :desc => N_("Maximum number of content hosts in the host collection")
-      param :unlimited_content_hosts, :bool, :desc => N_("Whether or not the host collection may have unlimited content hosts")
+      param :host_collection, Hash do
+        param :name, String, :required => true, :desc => N_("Host Collection name")
+        param :system_ids, Array, :required => false, :desc => N_("List of system uuids to be in the host collection")
+        param :description, String
+        param :max_content_hosts, Integer, :desc => N_("Maximum number of content hosts in the host collection")
+        param :unlimited_content_hosts, :bool, :desc => N_("Whether or not the host collection may have unlimited content hosts")
+        param :system_uuids, Array, :required => false, :desc => N_("List of system uuids to be in the host collection")
+      end
     end
 
     api :GET, "/host_collections/:id", N_("Show a host collection")
@@ -62,7 +65,6 @@ module Katello
     api :POST, "/host_collections", N_("Create a host collection")
     api :POST, "/organizations/:organization_id/host_collections", N_("Create a host collection")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
-    param :system_uuids, Array, :required => false, :desc => N_("List of system uuids to replace the content hosts in host collection")
     param_group :host_collection
     def create
       @host_collection = HostCollection.new(host_collection_params_with_system_uuids)
@@ -73,7 +75,6 @@ module Katello
 
     api :PUT, "/host_collections/:id", N_("Update a host collection")
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
-    param :system_uuids, Array, :required => false, :desc => N_("List of system uuids to be in the host collection")
     param_group :host_collection
     def update
       @host_collection.update_attributes!(host_collection_params_with_system_uuids)

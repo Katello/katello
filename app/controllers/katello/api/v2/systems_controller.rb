@@ -40,16 +40,18 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   def_param_group :system do
-    param :facts, Hash, :desc => N_("Key-value hash of content host-specific facts"), :action_aware => true do
-      param :fact, String, :desc => N_("Any number of facts about this content host")
+    param :system, Hash do
+      param :facts, Hash, :desc => N_("Key-value hash of content host-specific facts"), :action_aware => true do
+        param :fact, String, :desc => N_("Any number of facts about this content host")
+      end
+      param :installed_products, Array, :desc => N_("List of products installed on the content host"), :action_aware => true
+      param :name, String, :desc => N_("Name of the content host"), :required => true, :action_aware => true
+      param :type, String, :desc => N_("Type of the content host, it should always be 'content host'"), :required => true, :action_aware => true
+      param :service_level, String, :allow_nil => true, :desc => N_("A service level for auto-healing process, e.g. SELF-SUPPORT"), :action_aware => true
+      param :location, String, :desc => N_("Physical location of the content host")
+      param :content_view_id, :identifier
+      param :environment_id, :identifier
     end
-    param :installed_products, Array, :desc => N_("List of products installed on the content host"), :action_aware => true
-    param :name, String, :desc => N_("Name of the content host"), :required => true, :action_aware => true
-    param :type, String, :desc => N_("Type of the content host, it should always be 'content host'"), :required => true, :action_aware => true
-    param :service_level, String, :allow_nil => true, :desc => N_("A service level for auto-healing process, e.g. SELF-SUPPORT"), :action_aware => true
-    param :location, String, :desc => N_("Physical location of the content host")
-    param :content_view_id, :identifier
-    param :environment_id, :identifier
   end
 
   api :GET, "/systems", N_("List content hosts")

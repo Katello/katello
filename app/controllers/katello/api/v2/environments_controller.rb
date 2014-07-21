@@ -87,12 +87,14 @@ module Katello
     api :POST, "/environments", N_("Create an environment")
     api :POST, "/organizations/:organization_id/environments", N_("Create an environment in an organization")
     param :organization_id, :number, :desc => N_("name of organization"), :required => true
-    param :name, String, :desc => N_("name of the environment"), :required => true
-    param :description, String, :desc => N_("description of the environment")
-    param :prior, String, :required => true, :desc => <<-DESC
-      Name of an environment that is prior to the new environment in the chain. It has to be
-      either 'Library' or an environment at the end of a chain.
-    DESC
+    param :environment, Hash do
+      param :name, String, :desc => N_("name of the environment"), :required => true
+      param :description, String, :desc => N_("description of the environment")
+      param :prior, String, :required => true, :desc => <<-DESC
+        Name of an environment that is prior to the new environment in the chain. It has to be
+        either 'Library' or an environment at the end of a chain.
+      DESC
+    end
     def create
       create_params = environment_params
       create_params[:label] = labelize_params(create_params)
@@ -108,12 +110,14 @@ module Katello
     api :PUT, "/organizations/:organization_id/environments/:id", N_("Update an environment in an organization")
     param :id, :number, :desc => N_("ID of the environment"), :required => true
     param :organization_id, :number, :desc => N_("name of the organization")
-    param :new_name, String, :desc => N_("new name to be given to the environment")
-    param :description, String, :desc => N_("description of the environment")
-    param :prior, String, :desc => <<-DESC
-      Name of an environment that is prior to the new environment in the chain. It has to be
-      either 'Library' or an environment at the end of a chain.
-    DESC
+    param :environment, Hash do
+      param :new_name, String, :desc => N_("new name to be given to the environment")
+      param :description, String, :desc => N_("description of the environment")
+      param :prior, String, :desc => <<-DESC
+        Name of an environment that is prior to the new environment in the chain. It has to be
+        either 'Library' or an environment at the end of a chain.
+      DESC
+    end
     def update
       fail HttpErrors::BadRequest, _("Can't update the '%s' environment") % "Library" if @environment.library?
       update_params = environment_params

@@ -36,12 +36,14 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   api :POST, "/content_views/:content_view_id/filters", N_("Create a filter for a content view")
   api :POST, "/content_view_filters", N_("Create a filter for a content view")
   param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
-  param :name, String, :desc => N_("name of the filter"), :required => true
-  param :type, String, :desc => N_("type of filter (e.g. rpm, package_group, erratum)"), :required => true
-  param :original_packages, :bool, :desc => N_("Add all packages without Errata to the included/excluded list. " +
-                                                     "(Package Filter only)")
-  param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")
-  param :repository_ids, Array, :desc => N_("list of repository ids")
+  param :content_view_filter, Hash do
+    param :name, String, :desc => N_("name of the filter"), :required => true
+    param :type, String, :desc => N_("type of filter (e.g. rpm, package_group, erratum)"), :required => true
+    param :original_packages, :bool, :desc => N_("Add all packages without Errata to the included/excluded list. " +
+                                                 "(Package Filter only)")
+    param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")
+    param :repository_ids, Array, :desc => N_("list of repository ids")
+  end
   def create
     filter = ContentViewFilter.create_for(params[:type], filter_params.merge(:content_view => @view))
     respond :resource => filter
@@ -59,11 +61,13 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   api :PUT, "/content_view_filters/:id", N_("Update a filter")
   param :content_view_id, :identifier, :desc => N_("content view identifier")
   param :id, :identifier, :desc => N_("filter identifier"), :required => true
-  param :name, String, :desc => N_("new name for the filter")
-  param :original_packages, :bool, :desc => N_("Add all packages without Errata to the included/excluded list. " +
-                                                     "(Package Filter only)")
-  param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")
-  param :repository_ids, Array, :desc => N_("list of repository ids")
+  param :content_view_filter, Hash do
+    param :name, String, :desc => N_("new name for the filter")
+    param :original_packages, :bool, :desc => N_("Add all packages without Errata to the included/excluded list. " +
+                                                 "(Package Filter only)")
+    param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")
+    param :repository_ids, Array, :desc => N_("list of repository ids")
+  end
   def update
     @filter.update_attributes!(filter_params)
     respond :resource => @filter

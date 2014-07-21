@@ -26,9 +26,6 @@ module Katello
     end
 
     def_param_group :content_view do
-      param :description, String, :desc => N_("Description for the content view")
-      param :repository_ids, Array, :desc => N_("List of repository ids")
-      param :component_ids, Array, :desc => N_("List of component content view version ids for composite views")
     end
 
     api :GET, "/organizations/:organization_id/content_views", N_("List content views")
@@ -59,11 +56,16 @@ module Katello
 
     api :POST, "/organizations/:organization_id/content_views", N_("Create a content view")
     api :POST, "/content_views", N_("Create a content view")
-    param :organization_id, :number, :desc => N_("Organization identifier"), :required => true
-    param :name, String, :desc => N_("Name of the content view"), :required => true
-    param :label, String, :desc => N_("Content view label")
-    param :composite, :bool, :desc => N_("Composite content view")
-    param_group :content_view
+    param :organization_id, :number, :desc => N_("Organization identifier")
+    param :content_view, Hash, :action_aware => true do
+      param :organization_id, :number, :desc => N_("Organization identifier")
+      param :name, String, :desc => N_("Name of the content view"), :required => true
+      param :label, String, :desc => N_("Content view label")
+      param :composite, :bool, :desc => N_("Composite content view")
+      param :description, String, :desc => N_("Description for the content view")
+      param :repository_ids, Array, :desc => N_("List of repository ids")
+      param :component_ids, Array, :desc => N_("List of component content view version ids for composite views")
+    end
     def create
       @view = ContentView.create!(view_params) do |view|
         view.organization = @organization
@@ -75,8 +77,12 @@ module Katello
 
     api :PUT, "/content_views/:id", N_("Update a content view")
     param :id, :number, :desc => N_("Content view identifier"), :required => true
-    param :name, String, :desc => N_("New name for the content view")
-    param_group :content_view
+    param :content_view, Hash do
+      param :name, String, :desc => N_("Name of the content view")
+      param :description, String, :desc => N_("Description for the content view")
+      param :repository_ids, Array, :desc => N_("List of repository ids")
+      param :component_ids, Array, :desc => N_("List of component content view version ids for composite views")
+    end
     def update
       @view.update_attributes!(view_params)
 

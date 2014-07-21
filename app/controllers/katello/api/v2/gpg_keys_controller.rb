@@ -18,8 +18,10 @@ module Katello
     before_filter :find_gpg_key, :only => [:show, :update, :destroy, :content]
 
     def_param_group :gpg_key do
-      param :name, :identifier, :action_aware => true, :required => true, :desc => N_("identifier of the gpg key")
-      param :content, String, :action_aware => true, :required => true, :desc => N_("public key block in DER encoding")
+      param :gpg_key, Hash do
+        param :name, :identifier, :action_aware => true, :required => true, :desc => N_("identifier of the gpg key")
+        param :content, String, :action_aware => true, :required => true, :desc => N_("public key block in DER encoding")
+      end
     end
 
     resource_description do
