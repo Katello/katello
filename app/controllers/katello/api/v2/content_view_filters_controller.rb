@@ -24,6 +24,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
   param :name, String, :desc => N_("Filter content view filters by name")
   def index
+    params.require(:content_view_id)
     options = sort_params
     options[:load_records?] = true
     options[:filters] = [{ :terms => { :id => @view.filter_ids } }]
