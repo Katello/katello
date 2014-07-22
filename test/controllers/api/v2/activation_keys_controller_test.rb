@@ -180,6 +180,18 @@ module Katello
       end
     end
 
+    def test_update_limit_below_consumed
+      content_host1 = System.find(katello_systems(:simple_server))
+      content_host2 = System.find(katello_systems(:simple_server2))
+      @activation_key.system_ids = [content_host1.id, content_host2.id]
+
+      results = JSON.parse(put(:update, :id => @activation_key.id, :organization_id => @organization.id,
+                               :activation_key => {:max_content_hosts => 1}).body)
+
+      assert_response 422
+      assert_includes results['errors']['max_content_hosts'][0], 'cannot be lower than current usage count'
+    end
+
     def test_destroy
       @controller.stubs(:sync_task).returns(true)
       delete :destroy, :organization_id => @organization.id, :id => @activation_key.id
