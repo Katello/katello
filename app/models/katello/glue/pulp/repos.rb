@@ -191,7 +191,7 @@ module Glue::Pulp::Repos
     def sync_status
       return @status if @status
 
-      statuses = repos(self.library).map {|r| r.sync_status}
+      statuses = repos(self.library, nil, false).map {|r| r.sync_status}
       return PulpSyncStatus.new(:state => PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
 
       #if any of repos sync still running -> product sync running
