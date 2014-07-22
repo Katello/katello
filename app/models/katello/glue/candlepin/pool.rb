@@ -168,7 +168,7 @@ module Glue::Candlepin::Pool
     end
 
     def products
-      Product.where(:cp_id => provided_products.map { |prod| prod[:productId] })
+      Katello::Product.where(:cp_id => provided_products.map { |prod| prod[:productId] })
     end
 
     def systems

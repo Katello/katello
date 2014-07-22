@@ -29,7 +29,7 @@
 angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsController',
     ['$scope', '$location', 'translate', 'CurrentOrganization', 'Subscription', 'ContentHost', 'SubscriptionsHelper',
     function ($scope, $location, translate, CurrentOrganization, Subscription, ContentHost, SubscriptionsHelper) {
-        
+
         $scope.addSubscriptionsTable = $scope.addSubscriptionsPane.table;
         $scope.isAdding  = false;
         $scope.addSubscriptionsTable.closeItem = function () {};
@@ -62,7 +62,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
         };
 
         $scope.amountSelectorValues = function (subscription) {
-            // TODO: should the logic for step go here since content host is known whether phys or virt?
             var step, value, values;
 
             step = subscription['instance_multiplier'];

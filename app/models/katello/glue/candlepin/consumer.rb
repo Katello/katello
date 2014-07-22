@@ -434,9 +434,9 @@ module Glue::Candlepin::Consumer
       self.entitlements.collect do |entitlement|
         pool = self.get_pool(entitlement['pool']['id'])
         entitlement_pool = Katello::Pool.new(pool)
-        entitlement_pool['cp_id'] = entitlement['id']
-        entitlement_pool['subscription_id'] = entitlement['pool']['id']
-        entitlement_pool['quantity'] = entitlement['quantity']
+        entitlement_pool.cp_id = entitlement['id']
+        entitlement_pool.subscription_id = entitlement['pool']['id']
+        entitlement_pool.amount = entitlement['quantity']
         entitlement_pool
       end
     end
