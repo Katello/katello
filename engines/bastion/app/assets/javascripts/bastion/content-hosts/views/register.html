@@ -23,6 +23,10 @@
 
   <pre><code>subscription-manager register --org="{{ organization.label }}" --environment="Library"</code></pre>
 
+  <p translate>Use an Activation Key to register.</p>
+
+  <pre><code>subscription-manager register --org="{{ organization.label }}" --activationkey="activationkey1"</code></pre>
+
   <div ng-show="capsules.results.length > 0">
     <p>
       <h5 translate>Consuming Content From a Capsule</h5>
