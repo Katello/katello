@@ -2,9 +2,15 @@
 
 <button class="btn btn-primary fr"
         ng-hide="denied('edit_content_hosts', contentHost)"
-        ng-click="autoAttachSubscriptions()">
+        ng-click="autoAttachSubscriptions()"
+        ng-disabled="subscription.workingMode">
 {{ "Run Auto-Attach" | translate }}
 </button>
+
+<span ng-show="subscription.workingMode">
+  <i class="icon-spinner inline-icon icon-spin fr"></i>
+  <span translate>Working</span>
+</span>
 
 <section class="details">
   <h4 translate>Subscription Details</h4>

@@ -21,29 +21,16 @@
  * @requires CurrentOrganization
  * @requires Subscription
  * @requires ContentHost
- * @requires Nutupane
- * @requires ContentHostsHelper
  * @requires SubscriptionsHelper
  *
  * @description
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsController',
-    ['$scope', '$location', 'translate', 'CurrentOrganization', 'Subscription', 'ContentHost', 'Nutupane', 'ContentHostsHelper', 'SubscriptionsHelper',
-    function ($scope, $location, translate, CurrentOrganization, Subscription, ContentHost, Nutupane, ContentHostsHelper, SubscriptionsHelper) {
-
-        var addSubscriptionsPane, params;
-
-        params = {
-            'id':                       $scope.$stateParams.contentHostId,
-            'organization_id':          CurrentOrganization,
-            'search':                   $location.search().search || "",
-            'sort_by':                  'name',
-            'sort_order':               'ASC'
-        };
-
-        addSubscriptionsPane = new Nutupane(ContentHost, params, 'available');
-        $scope.addSubscriptionsTable = addSubscriptionsPane.table;
+    ['$scope', '$location', 'translate', 'CurrentOrganization', 'Subscription', 'ContentHost', 'SubscriptionsHelper',
+    function ($scope, $location, translate, CurrentOrganization, Subscription, ContentHost, SubscriptionsHelper) {
+        
+        $scope.addSubscriptionsTable = $scope.addSubscriptionsPane.table;
         $scope.isAdding  = false;
         $scope.addSubscriptionsTable.closeItem = function () {};
 
@@ -66,7 +53,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
                     $scope.$parent.contentHost = host;
                     $scope.successMessages.push(translate("Successfully added %s subscriptions.").replace('%s', selected.length));
                     $scope.isAdding = false;
-                    addSubscriptionsPane.refresh();
+                    $scope.addSubscriptionsPane.refresh();
                 });
             }, function (response) {
                 $scope.$parent.errorMessages = response.data.displayMessage;

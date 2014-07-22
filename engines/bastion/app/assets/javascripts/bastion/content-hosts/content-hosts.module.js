@@ -130,6 +130,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     $stateProvider.state('content-hosts.details.subscriptions', {
         abstract: true,
         collapsed: true,
+        controller: 'ContentHostBaseSubscriptionsController',
         templateUrl: 'content-hosts/details/views/content-host-subscriptions.html'
     })
     .state('content-hosts.details.subscriptions.list', {
