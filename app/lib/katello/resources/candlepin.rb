@@ -742,8 +742,8 @@ module Resources
           self.put("/candlepin/entitlements/product/#{product_id}", nil, self.default_headers).code.to_i
         end
 
-        def get(id = nil)
-          json = Candlepin::CandlepinResource.get(path(id), self.default_headers).body
+        def get(id = nil, params = '')
+          json = Candlepin::CandlepinResource.get(path(id) + params, self.default_headers).body
           JSON.parse(json)
         end
 
@@ -756,8 +756,8 @@ module Resources
     class ActivationKey < CandlepinResource
       class << self
 
-        def get(id = nil)
-          akeys_json = super(path(id), self.default_headers).body
+        def get(id = nil, params = '')
+          akeys_json = super(path(id) + params, self.default_headers).body
           akeys = JSON.parse(akeys_json)
           akeys = [akeys] unless id.nil?
           Util::Data.array_with_indifferent_access akeys

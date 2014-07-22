@@ -52,6 +52,7 @@ Katello::Engine.routes.draw do
               match '/available' => 'subscriptions#available', :via => :get
             end
           end
+          api_resources :systems, :only => [:index]
         end
 
         api_resources :content_views do

@@ -29,10 +29,24 @@
           Product Content
         </a>
       </li>
-      <li ng-class="{active: stateIncludes('subscriptions.details.associations')}">
-        <a translate ui-sref="subscriptions.details.associations({subscriptionId: subscription.id})">
-          Associations
+      <li class="dropdown"
+          ng-class="{active: stateIncludes('subscriptions.details.associations-activation-keys') || stateIncludes('subscriptions.details.associations-content-hosts')}">
+        <a class="dropdown-toggle">
+          <span translate>Associations</span>
+          <i class="icon-chevron-down"></i>
         </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a ui-sref="subscriptions.details.associations-activation-keys({subscriptionId: subscription.id})" translate>
+              Activation Keys
+            </a>
+          </li>
+          <li>
+            <a ui-sref="subscriptions.details.associations-content-hosts({subscriptionId: subscription.id})" translate>
+              Content Hosts
+            </a>
+          </li>
+        </ul>
       </li>
     </ul>
   </nav>

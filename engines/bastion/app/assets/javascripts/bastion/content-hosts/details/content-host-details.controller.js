@@ -21,6 +21,7 @@
  * @requires translate
  * @requires ContentHost
  * @requires Organization
+ * @requires CurrentOrganization
  * @requires MenuExpander
  *
  * @description

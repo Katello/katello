@@ -30,15 +30,53 @@ end
 
 node :systems, :if => (params[:action] == "show") do |subscription|
   current_organization = subscription.organization
-  subscription.systems.readable.map { |sys| {id: sys.id, name: sys.name} }
+  subscription.systems.readable.map do |sys|
+    facts = sys.facts
+    {
+      uuid: sys.uuid,
+      name: sys.name,
+      environment: { id: sys.environment.id, name: sys.environment.name },
+      content_view: { id: sys.content_view.id, name: sys.content_view.name },
+      created: sys.created,
+      checkin_time: sys.checkin_time,
+      entitlement_status: sys.entitlementStatus,
+      service_level: sys.serviceLevel,
+      autoheal: sys.autoheal,
+      facts: {
+        memory: {
+            memtotal: facts['memory.memtotal']
+        },
+        cpu: {
+          'cpu_socket(s)' => facts['cpu.cpu_socket(s)'],
+          'core(s)_per_socket' => facts['cpu.core(s)_per_socket']
+        },
+        virt: {
+            is_guest: facts['virt.is_guest']
+        }
+      }
+    }
+  end
 end
 
-# TODO: what should replace this since activerecord relation is gone?
-#       http://projects.theforeman.org/issues/4255
-# node :activation_keys, :if => (params[:action] == "show") do |subscription|
-#   current_organization = subscription.organization
-#   subscription.activation_keys.readable(current_organization).map { |key| {id: key.id, name: key.name} }
-# end
+node :activation_keys, :if => (params[:action] == "show") do |subscription|
+  current_organization = subscription.organization
+  subscription.activation_keys.readable.map do |key|
+    {
+      id: key.id,
+      name: key.name,
+      release_version: key.release_version,
+      service_level: key.service_level,
+      environment: {
+        id: key.environment.try(:id),
+        name: key.environment.try(:name)
+      },
+      content_view: {
+        id: key.content_view.try(:id),
+        name: key.content_view.try(:name)
+      }
+    }
+  end
+end
 
 node :host, :if => lambda { |sub| sub && sub.host } do |subscription|
   {id: subscription.host.id, name: subscription.host.name}

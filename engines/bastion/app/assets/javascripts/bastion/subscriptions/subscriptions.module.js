@@ -81,11 +81,19 @@ angular.module('Bastion.subscriptions').config(['$stateProvider', function ($sta
         controller: 'SubscriptionProductsController',
         templateUrl: 'subscriptions/details/views/subscription-products.html'
     })
-    .state('subscriptions.details.associations', {
-        url: '/associations',
+    .state('subscriptions.details.associations-activation-keys', {
+        url: '/associations/activation-keys',
         permission: 'view_subscriptions',
         collapsed: true,
-        templateUrl: 'subscriptions/details/views/subscription-associations.html'
+        controller: 'SubscriptionAssociationsActivationKeysController',
+        templateUrl: 'subscriptions/details/views/subscription-associations-activation-keys.html'
+    })
+    .state('subscriptions.details.associations-content-hosts', {
+        url: '/associations/content-hosts',
+        permission: 'view_subscriptions',
+        collapsed: true,
+        controller: 'SubscriptionAssociationsContentHostsController',
+        templateUrl: 'subscriptions/details/views/subscription-associations-content-hosts.html'
     })
 
     // manifest states

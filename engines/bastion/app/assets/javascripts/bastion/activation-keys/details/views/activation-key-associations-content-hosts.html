@@ -1,0 +1,46 @@
+<span page-title ng-model="activationKey">{{ 'Content Hosts for Activation Key:' | translate }} {{ activationKey.name }}</span>
+
+<div class="details details-full">
+
+  <h3 translate>
+    Attached to Content Hosts
+  </h3>
+
+  <table class="table table-striped" alch-table="table" ng-class="{'table-mask': table.working}">
+    <thead>
+      <tr alch-table-head>
+        <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
+        <th alch-table-column="status">
+          {{ "Subscription Status" | translate }}
+        </th>
+        <th alch-table-column="environment" sortable>{{ "Environment" | translate }}</th>
+        <th alch-table-column="contentView">{{ "Content View" | translate }}</th>
+        <th alch-table-column="serviceLevel">{{ "Service Level" | translate }}</th>
+        <th alch-table-column="releaseVersion">{{ "Release Version" | translate }}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-show="!table.working && contentHosts.length === 0">
+        <td colspan="6" translate>This activation key is not associated with any content hosts.</td>
+      </tr>
+
+      <tr alch-table-row ng-repeat="contentHost in contentHosts"
+          ng-controller="ContentHostStatusController">
+        <td alch-table-cell>
+          <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
+            {{ contentHost.name }}
+          </a>
+        </td>
+        <td alch-table-cell>
+          <span class="icon-circle" ng-class="getStatusColor(contentHost.entitlementStatus)"/>
+        </td>
+        <td alch-table-cell>{{ contentHost.environment.name }}</td>
+        <td alch-table-cell>{{ contentHost.content_view.name || "" }}</td>
+        <td alch-table-cell>{{ contentHost.service_level }}</td>
+        <td alch-table-cell>{{ contentHost.release_ver }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
