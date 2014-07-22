@@ -95,7 +95,7 @@ module DashboardHelper
     syncing_products = []
     synced_products = []
 
-    Product.where(:organization_id => current_organization.id).syncable.each do |prod|
+    Product.in_org(current_organization).syncable_content.syncable.each do |prod|
       if !prod.sync_status.start_time.nil?
         syncing_products << prod
       else

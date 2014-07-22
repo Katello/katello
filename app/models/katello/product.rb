@@ -59,11 +59,12 @@ class Product < Katello::Model
   end
 
   def self.in_org(organization)
-    self.joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => organization.id)
+    where(:organization_id => organization.id)
   end
 
   scope :engineering, where(:type => "Katello::Product")
   scope :marketing, where(:type => "Katello::MarketingProduct")
+  scope :syncable_content, joins(:repositories).where(Katello::Repository.arel_table[:feed].not_eq(nil))
 
   before_create :assign_unique_label
 
