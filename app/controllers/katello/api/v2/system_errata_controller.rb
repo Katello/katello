@@ -15,14 +15,21 @@ class Api::V2::SystemErrataController < Api::V2::ApiController
 
   before_filter :find_system
 
+  resource_description do
+    api_version 'v2'
+    api_base_url "#{Katello.config.url_prefix}/api"
+  end
+
   api :PUT, "/systems/:system_id/errata/", N_("Schedule errata for installation")
-  param :errata_ids, Array, :desc => N_("List of Errata ids to install")
+  param :system_id, :identifier, :desc => N_("System UUID"), :required => true
+  param :errata_ids, Array, :desc => N_("List of Errata ids to install"), :required => true
   def apply
     task = async_task(::Actions::Katello::System::Erratum::Install, @system, params[:errata_ids])
     respond_for_async :resource => task
   end
 
   api :GET, "/systems/:system_id/errata/:id", N_("Retrieve a single errata for a system")
+  param :system_id, :identifier, :desc => N_("System UUID"), :required => true
   param :id, String, :desc => N_("Errata id of the erratum (RHSA-2012:108)"), :required => true
   def show
     errata = Errata.find_by_errata_id(params[:id])
