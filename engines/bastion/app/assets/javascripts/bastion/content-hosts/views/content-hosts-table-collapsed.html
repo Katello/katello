@@ -14,13 +14,7 @@
         active-row="stateIncludes('content-hosts.details', {contentHostId: contentHost.uuid})"
         ng-controller="ContentHostStatusController">
       <td alch-table-cell>
-        <span class="icon-circle" ng-class="contentHostTable.getStatusColor(contentHost.entitlementStatus)"
-              tooltip-html-unsafe="{{ statusReason }}"
-              tooltip-trigger=mouseenter
-              tooltip-placement=right
-              tooltip-append-to-body=true
-              tooltip-animation=false
-              ng-mouseover="getComplianceReason(contentHost.uuid)"/>
+        <span class="icon-circle" ng-class="contentHostTable.getStatusColor(contentHost.entitlementStatus)"/>
         <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
           {{ contentHost.name }}
         </a>

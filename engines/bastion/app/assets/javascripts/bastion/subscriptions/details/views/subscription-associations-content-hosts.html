@@ -12,10 +12,6 @@
         <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
         <th alch-table-column="status">
           {{ "Subscription Status" | translate }}
-          <i class="icon-info-sign"
-             tooltip="{{ 'Mouse over the red or yellow subscription status icon to see detailed reason' | translate }}"
-             tooltip-animation=false>
-          </i>
         </th>
         <th alch-table-column="virtual">{{ "Virtual" | translate }}</th>
         <th alch-table-column="environment" sortable>{{ "Environment" | translate }}</th>
@@ -49,13 +45,7 @@
           </a>
         </td>
         <td alch-table-cell>
-          <span class="icon-circle" ng-class="getStatusColor(contentHost['entitlement_status'])"
-                tooltip-html-unsafe="{{ statusReason }}"
-                tooltip-trigger=mouseenter
-                tooltip-placement=right
-                tooltip-append-to-body=true
-                tooltip-animation=false
-                ng-mouseover="getComplianceReason(contentHost.uuid)"/>
+          <span class="icon-circle" ng-class="getStatusColor(contentHost['entitlement_status'])"/>
         </td>
         <td alch-table-cell>{{ virtual(contentHost.facts) | booleanToYesNo }}</td>
         <td alch-table-cell>{{ contentHost.environment.name }}</td>

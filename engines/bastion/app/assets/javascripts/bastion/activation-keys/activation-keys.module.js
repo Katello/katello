@@ -127,6 +127,7 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
     })
     .state('activation-keys.details.associations-content-hosts', {
         url: '/associations/content-hosts',
+        permission: 'view_activation_keys',
         collapsed: true,
         controller: 'ActivationKeyAssociationsController',
         templateUrl: 'activation-keys/details/views/activation-key-associations-content-hosts.html'

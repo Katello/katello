@@ -26,22 +26,5 @@ angular.module('Bastion.content-hosts').controller('ContentHostStatusController'
         $scope.statusReason = translate("Loading...");
         $scope.statusRetrieved = false;
 
-        $scope.getComplianceReason = function (uuid) {
-            if (!$scope.statusRetrieved) {
-                ContentHost.get({id: uuid}, function (contentHost) {
-                    if (contentHost.compliance.reasons.length < 1) {
-                        $scope.statusReason = translate('No reason provided');
-                    } else {
-                        $scope.statusReason = '';
-                        angular.forEach(contentHost.compliance.reasons, function (reason) {
-                            $scope.statusReason += reason.attributes.name + '(' + reason.message + ')  ';
-                        });
-                    }
-
-                    $scope.statusRetrieved = true;
-                });
-            }
-        };
-
     }]
 );
