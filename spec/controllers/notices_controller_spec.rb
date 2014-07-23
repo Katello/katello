@@ -69,10 +69,10 @@ describe NoticesController do
     end
 
     it 'should allow all notices to be destroyed for a single user (katello)' do #TODO headpin
-      pre_count = UserNotice.count
+      !UserNotice.where(:user_id => @user.id).count.wont_equal(0)
       delete :destroy_all
       must_respond_with(:success)
-      UserNotice.count.must_equal(pre_count - 10)
+      UserNotice.where(:user_id => @user.id).count.must_equal(0)
     end
   end
 

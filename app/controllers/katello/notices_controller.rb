@@ -38,11 +38,10 @@ class NoticesController < Katello::ApplicationController
   end
 
   def show
-    # TODO: search by organization
     # currently doesn't handle pagination
+    ids = Katello::Notice.readable(current_user).for_org(current_organization).select("#{Katello::Notice.table_name}.id")
     @notices = render_panel_direct(Notice, { }, params[:search], 0, [sort_column, sort_direction],
-                                   { :filter      => { :user_ids => [current_user.id] },
-                                     #:organization_id => [current_organization.id] },
+                                   { :filter      => { :_id => ids },
                                      :skip_render => true,
                                      :page_size   => 100 })
     retain_search_history
@@ -76,7 +75,7 @@ class NoticesController < Katello::ApplicationController
 
   def destroy_all
     # destroy all notices for the user
-    Katello::Notice.for_user(current_user).for_org(current_organization).read.each do |notice|
+    Katello::Notice.for_user(current_user).for_org(current_organization).each do |notice|
       notice.users.delete(current_user)
       notice.destroy unless notice.users.any?
     end
