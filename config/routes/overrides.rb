@@ -11,6 +11,20 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 Foreman::Application.routes.draw do
-  match "/api/v2/organizations/*all", to: proc { [404, {}, ['']] }
   match "/api/v1/organizations/:id", via: :delete, to: proc { [404, {}, ['']] }
+
+  namespace :api, :defaults => {:format => 'json'} do
+    scope "(:apiv)", :module => :v2, :defaults => {:apiv => 'v2'}, :apiv => /v1|v2/, :constraints => ApiConstraints.new(:version => 2) do
+      resources :organizations, :except => [:new, :edit] do
+        member do
+          get :manifest_history
+          post :repo_discover
+          post :cancel_repo_discover
+          post :autoattach_subscriptions
+          get :download_debug_certificate
+          get :redhat_provider
+        end
+      end
+    end
+  end
 end

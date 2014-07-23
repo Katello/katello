@@ -18,7 +18,6 @@ module Katello
 
     initializer "katello.apipie" do
       Apipie.configuration.api_controllers_matcher << "#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"
-      Apipie.configuration.ignored += %w[Api::V2::OrganizationsController]
       Apipie.configuration.checksum_path += ['/katello/api/']
       require 'katello/apipie/validators'
     end
@@ -116,9 +115,6 @@ module Katello
         Rails.logger.info('Database was not initialized yet: skipping smart proxy katello extension')
       end
 
-      # Organization controller extensions
-      ::OrganizationsController.send :include, Katello::Concerns::OrganizationsControllerExtensions
-
       # Service extensions
       require "#{Katello::Engine.root}/app/services/katello/puppet_class_importer_extensions"
 
@@ -129,6 +125,11 @@ module Katello
       require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v1/api_controller"
       require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v2/api_controller"
       ::PuppetClassImporter.send :include, Katello::Services::PuppetClassImporterExtensions
+
+      # Organization controller extensions
+      ::OrganizationsController.send :include, Katello::Concerns::OrganizationsControllerExtensions
+      require "#{Katello::Engine.root}/app/controllers/katello/concerns/api/v2/organizations_controller_extensions"
+      ::Api::V2::OrganizationsController.send :include, Katello::Concerns::Api::V2::OrganizationsControllerExtensions
     end
 
     initializer 'katello.register_plugin', :after => :disable_dependency_loading do
