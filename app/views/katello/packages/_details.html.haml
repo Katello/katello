@@ -46,18 +46,20 @@
       =_("Requires:")
     %p
       &nbsp;
-    - @package.requires.each do |item|
-      %p
-        = format_package_details(item)
+    - if @package.requires
+      - @package.requires.each do |item|
+        %p
+          = format_package_details(item)
 
   .item-container
     %label.fl.ra
       =_("Provides:")
     %p
       &nbsp;
-    - @package.provides.each do |item|
-      %p
-        = format_package_details(item)
+    - if @package.provides
+      - @package.provides.each do |item|
+        %p
+          = format_package_details(item)
 
   .details-link-container
     %a{class: "package-filelist-link", data: {id: "#{@package.id}"}}
@@ -68,13 +70,14 @@
       = _("View package changelog")
 
 .package-filelist{id: "package-filelist-#{@package.id}", title: (_("Files for %s") % @package.name)}
-  - if @package.files[:file].length > 0
-    - @package.files[:file].each do |file|
+  - if @package.files
+    - if @package.files[:file].length > 0
+      - @package.files[:file].each do |file|
+        %p
+          = file
+    - else
       %p
-        = file
-  - else
-    %p
-      = _("There are no files in this repository.")
+        = _("There are no files in this package.")
 
 .package-changelog{id: "package-changelog-#{@package.id}", title: (_("Changelog for %s") % @package.name)}
   %table.changelog
@@ -86,11 +89,12 @@
           = _("Author/Release")
         %th
           = _("Changes")
-        - @package.changelog.each do |change|
-          %tr
-            %td
-              = format_changelog_date(change[0].to_s)
-            %td
-              = change.try(:[], 1)
-            %td
-              = changelog_changes(change.try(:[], 2))
+        - if @package.changelog
+          - @package.changelog.each do |change|
+            %tr
+              %td
+                = format_changelog_date(change[0].to_s)
+              %td
+                = change.try(:[], 1)
+              %td
+                = changelog_changes(change.try(:[], 2))
