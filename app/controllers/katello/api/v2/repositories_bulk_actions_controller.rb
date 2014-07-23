@@ -35,21 +35,30 @@ module Katello
                        :resource => { 'displayMessages' => messages }
     end
 
-    api :POST, "/repositories/bulk/sync", N_("Synchronise repository")
+    api :POST, "/repositories/bulk/sync", N_("Synchronize repository")
     param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def sync_repositories
-      syncable_repositories = @repositories.syncable
+      syncable_repositories = @repositories.syncable.has_feed
       syncable_repositories.each(&:sync)
 
-      messages = format_bulk_action_messages(
-        :success    => _("Successfully started sync for %s repositories, you are free to leave this page."),
-        :error      => _("You were not allowed to sync %s"),
+      messages1 = format_bulk_action_messages(
+        :success    => "",
+        :error      => _("You do not have permissions to sync %s"),
         :models     => @repositories,
-        :authorized => syncable_repositories
+        :authorized => @repositories.syncable
       )
 
+      messages2 = format_bulk_action_messages(
+        :success    => _("Successfully started sync for %s repositories, you are free to leave this page."),
+        :error      => _("Repository %s does not have a feed url."),
+        :models     => @repositories,
+        :authorized => @repositories.has_feed
+      )
+
+      messages2[:error] += messages1[:error]
+
       respond_for_show :template => 'bulk_action', :resource_name => 'common',
-                       :resource => { 'displayMessages' => messages }
+                       :resource => { 'displayMessages' => messages2 }
     end
 
     private

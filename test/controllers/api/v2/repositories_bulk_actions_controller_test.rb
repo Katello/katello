@@ -69,6 +69,21 @@ module Katello
       assert_response :success
     end
 
+    def test_sync_feedless
+      repo_with_feed = katello_repositories(:fedora_17_x86_64)
+      repo_with_no_feed = katello_repositories(:feedless_fedora_17_x86_64)
+
+      Repository.any_instance.expects(:sync).times(1).returns([{}])
+
+      post :sync_repositories, {:ids => [repo_with_feed, repo_with_no_feed].collect(&:id), :organization_id => @organization.id}
+
+      assert_response :success
+      results = JSON.parse(response.body)
+      assert_equal 1, results["displayMessages"]["success"].size
+      assert_equal 1, results["displayMessages"]["error"].size
+      assert_includes results["displayMessages"]["error"].first, repo_with_no_feed.name
+    end
+
     def test_sync_protected
       allowed_perms = [@sync_permission]
       denied_perms = [@destroy_permission, @read_permission, @create_permission, @update_permission]
