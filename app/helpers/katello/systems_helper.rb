@@ -84,7 +84,7 @@ module SystemsHelper
 
     return _("Guest") if system.virtual_guest
 
-    case system.type
+    case system.system_type
     when "Hypervisor"
       _("Hypervisor")
     else
