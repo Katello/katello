@@ -56,7 +56,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostProductDetailsCon
             var enabledText;
 
             if (overrideEnabled === null) {
-                enabledText = enabled ? translate("Defaults to Yes") : translate("Defaults to No");
+                enabledText = enabled ? translate("Yes (Default)") : translate("No (Default)");
             } else if (overrideEnabled === 1) {
                 enabledText = translate("Override to Yes");
             } else {

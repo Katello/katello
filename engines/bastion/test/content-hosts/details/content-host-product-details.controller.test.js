@@ -138,7 +138,7 @@ describe('Controller: ContentHostProductDetailsController', function () {
         $scope.productDetails($scope.products[0]);
 
         expect($scope.details['available_content'][0].overrideEnabled).toBe(null);
-        expect($scope.details['available_content'][0].enabledText).toBe("Defaults to No");
+        expect($scope.details['available_content'][0].enabledText).toBe("No (Default)");
 
         expect($scope.details['available_content'][1].overrideEnabled).toBe(1);
         expect($scope.details['available_content'][1].enabledText).toBe("Override to Yes");
@@ -147,7 +147,7 @@ describe('Controller: ContentHostProductDetailsController', function () {
         expect($scope.details['available_content'][2].enabledText).toBe("Override to No");
 
         expect($scope.details['available_content'][3].overrideEnabled).toBe(null);
-        expect($scope.details['available_content'][3].enabledText).toBe("Defaults to Yes");
+        expect($scope.details['available_content'][3].enabledText).toBe("Yes (Default)");
     });
 
     it('should save the content without override successfully', function () {
