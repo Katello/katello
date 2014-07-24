@@ -27,6 +27,7 @@
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
     ['$scope', '$state', '$q', 'translate', 'Repository', 'GPGKey', function ($scope, $state, $q, translate, Repository, GPGKey) {
+        var updateRepositoriesTable;
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -63,6 +64,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             repository.$update(function (response) {
                 deferred.resolve(response);
                 $scope.successMessages = [translate('Repository Saved.')];
+                updateRepositoriesTable();
             }, function (response) {
                 deferred.reject(response);
                 _.each(response.data.errors, function (errorMessage) {
@@ -90,6 +92,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 if (returnData !== null && returnData['status'] === 'success') {
                     $scope.uploadSuccessMessages = [translate('Content successfully uploaded')];
                     $scope.repository.$get();
+                    updateRepositoriesTable();
                 } else {
                     $scope.uploadErrorMessages = [translate('Error during upload: ') + returnData.displayMessage];
                 }
@@ -106,7 +109,11 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             Repository.sync({id: repository.id}, function (task) {
                 $state.go('products.details.tasks.details', {taskId: task.id});
             });
+            updateRepositoriesTable();
         };
 
+        updateRepositoriesTable = function () {
+            $scope.repositoriesTable.replaceRow($scope.repository);
+        };
     }]
 );
