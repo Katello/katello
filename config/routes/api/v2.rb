@@ -102,9 +102,6 @@ Katello::Engine.routes.draw do
           api_resources :systems, :only => system_onlies do
             get :report, :on => :collection
           end
-          scope :constraints => Katello::RegisterWithActivationKeyConstraint.new do
-            match '/systems' => 'systems#activate', :via => :post
-          end
         end
 
         api_resources :errata, :only => [:index, :show]
@@ -148,9 +145,6 @@ Katello::Engine.routes.draw do
           end
           api_resources :systems, :only => system_onlies do
             get :report, :on => :collection
-          end
-          scope :constraints => Katello::RegisterWithActivationKeyConstraint.new do
-            match '/systems' => 'systems#activate', :via => :post
           end
         end
 
@@ -224,9 +218,6 @@ Katello::Engine.routes.draw do
               put :add_products
               put :remove_products
             end
-          end
-          scope :constraints => Katello::RegisterWithActivationKeyConstraint.new do
-            match '/systems' => 'systems#activate', :via => :post
           end
           api_resources :systems, :only => [:create] do
             get :report, :on => :collection

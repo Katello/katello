@@ -52,7 +52,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   end
 
   api :PUT, "/systems/bulk/add_host_collections",
-      N_("Add one or more host collections to one or more content hosts")
+      N_("Add one or more host collections to one or more content hosts"), :deprecated => true
   param_group :bulk_params
   param :host_collection_ids, Array, :desc => N_("List of host collection ids"), :required => true
   def bulk_add_host_collections
@@ -75,7 +75,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   end
 
   api :PUT, "/systems/bulk/remove_host_collections",
-      N_("Remove one or more host collections from one or more content hosts")
+      N_("Remove one or more host collections from one or more content hosts"), :deprecated => true
   param_group :bulk_params
   param :host_collection_ids, Array, :desc => N_("List of host collection ids"), :required => true
   def bulk_remove_host_collections
@@ -98,7 +98,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   end
 
   api :POST, "/systems/bulk/applicable_errata",
-      N_("Fetch applicable errata for a system.")
+      N_("Fetch applicable errata for a system."), :deprecated => true
   param_group :bulk_params
   def applicable_errata
     @search_service = nil #reload search service after systems are loaded
@@ -111,7 +111,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     respond_for_index(:collection => results)
   end
 
-  api :PUT, "/systems/bulk/install_content", N_("Install content on one or more systems")
+  api :PUT, "/systems/bulk/install_content", N_("Install content on one or more systems"), :deprecated => true
   param_group :bulk_params
   param :content_type, String,
         :desc => N_("The type of content.  The following types are supported: 'package', 'package_group' and 'errata'."),
@@ -121,7 +121,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     content_action
   end
 
-  api :PUT, "/systems/bulk/update_content", N_("Update content on one or more systems")
+  api :PUT, "/systems/bulk/update_content", N_("Update content on one or more systems"), :deprecated => true
   param_group :bulk_params
   param :content_type, String,
         :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),
@@ -131,7 +131,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     content_action
   end
 
-  api :PUT, "/systems/bulk/remove_content", N_("Remove content on one or more systems")
+  api :PUT, "/systems/bulk/remove_content", N_("Remove content on one or more systems"), :deprecated => true
   param_group :bulk_params
   param :content_type, String,
         :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),
@@ -141,7 +141,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     content_action
   end
 
-  api :PUT, "/systems/bulk/destroy", N_("Destroy one or more systems")
+  api :PUT, "/systems/bulk/destroy", N_("Destroy one or more systems"), :deprecated => true
   param_group :bulk_params
   def destroy_systems
     @systems.each { |system| sync_task(::Actions::Katello::System::Destroy, system) }
@@ -150,7 +150,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
                      :resource => { 'displayMessages' => [display_message] }
   end
 
-  api :PUT, "/systems/bulk/environment_content_view", N_("Assign the environment and content view to one or more systems")
+  api :PUT, "/systems/bulk/environment_content_view", N_("Assign the environment and content view to one or more systems"), :deprecated => true
   param_group :bulk_params
   param :environment_id, Integer
   param :content_view_id, Integer
