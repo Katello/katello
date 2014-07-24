@@ -23,6 +23,11 @@ module Actions
 
         def plan(repo)
           action_subject(repo)
+
+          if repo.url.blank?
+            fail _("Unable to sync %s. This repository does not have a feed url.")
+          end
+
           sequence do
             plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
             concurrence do

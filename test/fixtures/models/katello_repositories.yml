@@ -7,6 +7,7 @@ fedora_17_x86_64:
   environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
   product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  feed:                 "http://myrepo.com"
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
 
 fedora_17_x86_64_dev:
@@ -20,6 +21,20 @@ fedora_17_x86_64_dev:
   product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:dev_default_version) %>
+  feed:                 "http://myrepo.com"
+
+
+feedless_fedora_17_x86_64:
+  name:                 Feedless Fedora 17 x86_64
+  pulp_id:              feedless_1
+  content_id:           1
+  label:                feedless_fedora_17_x86_64_label
+  relative_path:        '/ACME_Corporation/library/fedora_17_label'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+
 
 rhel_6_x86_64:
   name:                 RHEL 6 x86_64
@@ -110,6 +125,7 @@ fedora_17_x86_64_library_view_2_library:
   product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>
+  feed:                  "http://www.pleaseack.com"
 
 fedora_17_unpublished:
   name:                 Fedora 17 x86_64
@@ -121,6 +137,7 @@ fedora_17_unpublished:
   product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  feed:                  "http://www.pleaseack.com"
 
 fedora_17_unpublished_2:
   name:                 Fedora 17 x86_64 2
@@ -132,3 +149,4 @@ fedora_17_unpublished_2:
   product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  feed:                  "http://www.pleaseack.com"

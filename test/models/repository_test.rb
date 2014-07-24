@@ -245,10 +245,11 @@ class RepositoryInstanceTest < RepositoryTestBase
 
   def test_blank_feed_url
     new_repo = new_custom_repo
+    original_url = new_repo.url
     new_repo.feed = ""
     refute new_repo.save
     refute new_repo.errors.empty?
-    assert_equal nil, new_repo.reload.feed
+    assert_equal original_url, new_repo.reload.url
   end
 
   def test_nil_rhel_url
