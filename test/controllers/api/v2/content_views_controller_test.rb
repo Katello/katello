@@ -18,7 +18,8 @@ module Katello
 
     def self.before_suite
       models = ["ContentViewEnvironment", "ContentViewVersion",
-                "Repository", "ContentViewComponent", "ContentView"]
+                "Repository", "ContentViewComponent", "ContentView", "System",
+                "ActivationKey"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
       super
     end

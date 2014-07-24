@@ -52,4 +52,8 @@ child :components => :components do
   extends 'katello/api/v2/content_view_versions/show'
 end
 
+child :activation_keys => :activation_keys do
+  attributes :id, :name
+end
+
 extends 'katello/api/v2/common/timestamps'
