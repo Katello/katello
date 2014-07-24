@@ -19,7 +19,7 @@ module Katello
     def self.before_suite
       models = ["ActivationKey", "KTEnvironment",
                 "ContentView", "ContentViewEnvironment", "ContentViewVersion"]
-      disable_glue_layers(["Candlepin", "ElasticSearch"], models)
+      disable_glue_layers(["Candlepin"], models)
       super
     end
 
@@ -78,6 +78,8 @@ module Katello
     end
 
     def test_show
+      @fake_search_service.stubs(:retrieve).returns([[@activation_key], 1])
+      @fake_search_service.stubs(:total_items).returns(1)
       results = JSON.parse(get(:show, :id => @activation_key.id).body)
 
       assert_equal results['name'], 'Simple Activation Key'
@@ -87,6 +89,9 @@ module Katello
     end
 
     def test_show_protected
+      @fake_search_service.stubs(:retrieve).returns([[@activation_key], 1])
+      @fake_search_service.stubs(:total_items).returns(1)
+
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
@@ -219,20 +224,20 @@ module Katello
     end
 
     def test_content_override
-      results = JSON.parse(put(:show, :id => @activation_key.id, :content_label => 'some-content',
+      results = JSON.parse(put(:update ,:id => @activation_key.id, :content_label => 'some-content',
                                :name => 'enabled', :value => 1).body)
 
-      assert_equal results['name'], 'Simple Activation Key'
+      assert_equal results['name'], 'enabled'
 
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
     end
 
     def test_content_override_empty
-      results = JSON.parse(put(:show, :id => @activation_key.id, :content_label => 'some-content',
+      results = JSON.parse(put(:update, :id => @activation_key.id, :content_label => 'some-content',
                                :name => 'enabled').body)
 
-      assert_equal results['name'], 'Simple Activation Key'
+      assert_equal results['name'], 'enabled'
 
       assert_response :success
       assert_template 'api/v2/activation_keys/show'

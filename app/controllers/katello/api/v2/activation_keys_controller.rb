@@ -15,12 +15,13 @@ module Katello
 
     before_filter :verify_presence_of_organization_or_environment, :only => [:index]
     before_filter :find_environment, :only => [:index, :create, :update]
-    before_filter :find_optional_organization, :only => [:index, :create]
-    before_filter :find_activation_key, :only => [:show, :update, :destroy, :available_releases,
+    before_filter :find_optional_organization, :only => [:index, :create, :show]
+    before_filter :find_activation_key, :only => [:update, :destroy, :available_releases,
                                                   :available_host_collections, :add_host_collections, :remove_host_collections,
                                                   :content_override]
     before_filter :authorize
-    before_filter :load_search_service, :only => [:index, :available_host_collections]
+    before_filter :load_search_service, :only => [:show, :index, :available_host_collections]
+    before_filter :search_for_activation_key, :only => [:show]
 
     wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level content_view_environment))
 
@@ -33,18 +34,7 @@ module Katello
     param :name, String, :desc => N_("activation key name to filter by")
     param_group :search, Api::V2::ApiController
     def index
-      ids = ActivationKey.readable.pluck(:id)
-      filters = [:terms => { :id => ids }]
-      filters << { :term => {:organization_id => @organization.id} }
-      filters << { :terms => {:environment_id => [params[:environment_id]] } } if params[:environment_id]
-      filters << { :terms => {:content_view_id => [params[:content_view_id]] } } if params[:content_view_id]
-      filters << { :term => { :name => params[:name] } } if params[:name]
-
-      options = {
-          :filters       => filters,
-          :load_records? => true
-      }
-      respond_for_index(:collection => item_search(ActivationKey, params, options))
+      respond_for_index(:collection => search_for_activation_keys)
     end
 
     api :POST, "/activation_keys", N_("Create an activation key")
@@ -90,6 +80,7 @@ module Katello
 
     api :GET, "/activation_keys/:id", N_("Show an activation key")
     param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     def show
       respond
     end
@@ -168,6 +159,14 @@ module Katello
       @activation_key
     end
 
+    def search_for_activation_key
+      search_result = search_for_activation_keys
+      fail HttpErrors::NotFound, _("Couldn't find activation key") % params[:id] if search_result[:results].empty?
+      fail HttpErrors::NotFound, _("found more than one activation key") % params[:id] if search_result[:results].size > 1
+      @activation_key = search_result[:results].first
+      @activation_key
+    end
+
     def find_pool
       @pool = Pool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
     end
@@ -187,6 +186,22 @@ module Katello
     def verify_presence_of_organization_or_environment
       return if params.key?(:organization_id) || params.key?(:environment_id)
       fail HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
+    end
+
+    def search_for_activation_keys
+      ids = ActivationKey.readable.pluck(:id)
+      ids = ids & [params[:id].to_i] if params[:id]
+      filters = [:terms => { :id => ids }]
+      filters << { :term => {:organization_id => @organization.id} } if params[:organization_id]
+      filters << { :terms => {:environment_id => [params[:environment_id]] } } if params[:environment_id]
+      filters << { :terms => {:content_view_id => [params[:content_view_id]] } } if params[:content_view_id]
+      filters << { :term => { :name => params[:name] } } if params[:name]
+
+      options = {
+          :filters       => filters,
+          :load_records? => true
+      }
+      item_search(ActivationKey, params, options)
     end
 
     def activation_key_params
