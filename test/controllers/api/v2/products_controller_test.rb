@@ -81,7 +81,8 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   end
 
   def test_create_fail_without_product
-    post :create, :organization_id => @organization.id
+    Organization.stubs(:current).returns(@organization)
+    post :create
 
     assert_response :bad_request
   end
