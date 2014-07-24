@@ -32,6 +32,10 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             repositoryId: 1
         };
 
+        $scope.repositoriesTable = {
+            replaceRow: function (row) {}
+        }
+
         translate = function(message) {
             return message;
         };
@@ -67,16 +71,23 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     });
 
     it('should save the repository and return a promise', function() {
-        var promise = $scope.save($scope.repository);
+        var promise;
+        spyOn($scope.repositoriesTable, 'replaceRow');
+
+        promise = $scope.save($scope.repository);
 
         expect(promise.then).toBeDefined();
+        expect($scope.repositoriesTable.replaceRow).toHaveBeenCalledWith($scope.repository);
     });
 
     it('should save the repository successfully', function() {
+        spyOn($scope.repositoriesTable, 'replaceRow');
+
         $scope.save($scope.repository);
 
         expect($scope.errorMessages.length).toBe(0);
         expect($scope.successMessages.length).toBe(1);
+        expect($scope.repositoriesTable.replaceRow).toHaveBeenCalledWith($scope.repository);
     });
 
     it('should fail to save the repository', function() {
@@ -95,12 +106,14 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     });
 
     it('should set the upload status to success and refresh the repository if a file upload status is success', function() {
+        spyOn($scope.repositoriesTable, 'replaceRow');
         spyOn($scope.repository, '$get');
         $scope.uploadContent('<pre>{"status": "success"}</pre>', true);
 
         expect($scope.uploadErrorMessages.length).toBe(0);
         expect($scope.uploadSuccessMessages.length).toBe(1);
         expect($scope.repository.$get).toHaveBeenCalled();
+        expect($scope.repositoriesTable.replaceRow).toHaveBeenCalledWith($scope.repository);
     });
 
     it('should provide a method to determine if a repository is currently being syncd', function() {
@@ -113,7 +126,10 @@ describe('Controller: RepositoryDetailsInfoController', function() {
 
     it("provides a way to sync a repository", function() {
         spyOn($state, 'go');
+        spyOn($scope.repositoriesTable, 'replaceRow');
+
         $scope.syncRepository($scope.repository);
         expect($state.go).toHaveBeenCalled();
+        expect($scope.repositoriesTable.replaceRow).toHaveBeenCalledWith($scope.repository);
     });
 });
