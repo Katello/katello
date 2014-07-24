@@ -24,7 +24,7 @@
 # This simple wrapper works with any service and just pass over the request
 # to /sbin/service, but for few problematic ones it waits until service is
 # fully started or stopped.
-# 
+#
 # To test the implementation use:
 #
 #   service-wait xxx test-wait
@@ -35,7 +35,7 @@ COMMAND=$2
 [ -f /etc/sysconfig/service-wait ] && source "/etc/sysconfig/service-wait"
 
 # maximum time to wait (in seconds)
-WAIT_MAX=${WAIT_MAX:-30}
+WAIT_MAX=${WAIT_MAX:-120}
 TOMCAT_PORT=${TOMCAT_PORT:-8443}
 TOMCAT_SERV_PORT=${TOMCAT_SERV_PORT:-8005}
 TOMCAT_TEST_URL=${TOMCAT_TEST_URL:-https://localhost:$TOMCAT_PORT/candlepin/status}
