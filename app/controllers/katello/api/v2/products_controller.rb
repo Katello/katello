@@ -24,12 +24,6 @@ module Katello
       api_version "v2"
     end
 
-    def_param_group :product do
-      param :description, String, :desc => N_("Product description")
-      param :gpg_key_id, :number, :desc => N_("Identifier of the GPG key")
-      param :sync_plan_id, :number, :desc => N_("Plan numeric identifier"), :allow_nil => true
-    end
-
     api :GET, "/products", N_("List products")
     api :GET, "/subscriptions/:subscription_id/products", N_("List of subscription products in a subscription")
     api :GET, "/activation_keys/:activation_key_id/products", N_("List of subscription products in an activation key")
@@ -63,9 +57,13 @@ module Katello
 
     api :POST, "/products", N_("Create a product")
     param :organization_id, :number, N_("ID of the organization"), :required => true
-    param_group :product
-    param :name, String, :desc => N_("Product name"), :required => true
-    param :label, String, :required => false
+    param :product, Hash do
+      param :name, String, :desc => N_("Product name"), :action_aware => true
+      param :label, String, :required => false
+      param :description, String, :desc => N_("Product description")
+      param :gpg_key_id, :number, :desc => N_("Identifier of the GPG key")
+      param :sync_plan_id, :number, :desc => N_("Plan numeric identifier"), :allow_nil => true
+    end
     def create
       params[:product][:label] = labelize_params(product_params) if product_params
 
@@ -83,8 +81,12 @@ module Katello
 
     api :PUT, "/products/:id", N_("Updates a product")
     param :id, :number, :desc => N_("product numeric identifier"), :required => true, :allow_nil => false
-    param_group :product
-    param :name, String, :desc => N_("Product name")
+    param :product, Hash do
+      param :name, String, :desc => N_("Product name"), :action_aware => true
+      param :description, String, :desc => N_("Product description")
+      param :gpg_key_id, :number, :desc => N_("Identifier of the GPG key")
+      param :sync_plan_id, :number, :desc => N_("Plan numeric identifier"), :allow_nil => true
+    end
     def update
       reset_gpg_keys = (product_params[:gpg_key_id] != @product.gpg_key_id)
       @product.reset_repo_gpgs! if reset_gpg_keys

@@ -19,10 +19,12 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
   before_filter :load_search_service, :only => [:index, :available_products]
 
   def_param_group :sync_plan do
-    param :name, String, :desc => N_("sync plan name"), :required => true, :action_aware => true
-    param :interval, SyncPlan::TYPES, :desc => N_("how often synchronization should run"), :required => true, :action_aware => true
-    param :sync_date, String, :desc => N_("start datetime of synchronization"), :required => true, :action_aware => true
-    param :description, String, :desc => N_("sync plan description")
+    param :sync_plan, Hash do
+      param :name, String, :desc => N_("sync plan name"), :required => true, :action_aware => true
+      param :interval, SyncPlan::TYPES, :desc => N_("how often synchronization should run"), :required => true, :action_aware => true
+      param :sync_date, String, :desc => N_("start datetime of synchronization"), :required => true, :action_aware => true
+      param :description, String, :desc => N_("sync plan description")
+    end
   end
 
   api :GET, "/organizations/:organization_id/sync_plans", N_("List sync plans")

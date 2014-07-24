@@ -15,7 +15,8 @@ module Katello
 
     before_filter :verify_presence_of_organization_or_environment, :only => [:index]
     before_filter :find_environment, :only => [:index, :create, :update]
-    before_filter :find_optional_organization, :only => [:index, :create]
+    before_filter :find_optional_organization, :only => [:index]
+    before_filter :find_organization, :only => [:create]
     before_filter :find_activation_key, :only => [:show, :update, :destroy, :available_releases,
                                                   :available_host_collections, :add_host_collections, :remove_host_collections,
                                                   :content_override]
@@ -48,14 +49,16 @@ module Katello
     end
 
     api :POST, "/activation_keys", N_("Create an activation key")
-    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
-    param :name, String, :desc => N_("name"), :required => true
-    param :description, String, :desc => N_("description")
-    param :environment, Hash, :desc => N_("environment")
-    param :environment_id, :identifier, :desc => N_("environment id")
-    param :content_view_id, :identifier, :desc => N_("content view id")
-    param :max_content_hosts, :number, :desc => N_("maximum number of registered content hosts")
-    param :unlimited_content_hosts, :bool, :desc => N_("can the activation key have unlimited content hosts")
+    param :activation_key, Hash do
+      param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+      param :name, String, :desc => N_("name"), :required => true
+      param :description, String, :desc => N_("description")
+      param :environment, Hash, :desc => N_("environment")
+      param :environment_id, :identifier, :desc => N_("environment id")
+      param :content_view_id, :identifier, :desc => N_("content view id")
+      param :max_content_hosts, :number, :desc => N_("maximum number of registered content hosts")
+      param :unlimited_content_hosts, :bool, :desc => N_("can the activation key have unlimited content hosts")
+    end
     def create
       @activation_key = ActivationKey.create!(activation_key_params) do |activation_key|
         activation_key.environment = @environment if @environment
@@ -67,15 +70,16 @@ module Katello
 
     api :PUT, "/activation_keys/:id", N_("Update an activation key")
     param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
-    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
-    param :name, String, :desc => N_("name"), :required => true
-    param :description, String, :desc => N_("description")
-    param :environment_id, :identifier, :desc => N_("environment id")
-    param :content_view_id, :identifier, :desc => N_("content view id")
-    param :max_content_hosts, :number, :desc => N_("maximum number of registered content hosts")
-    param :unlimited_content_hosts, :bool, :desc => N_("can the activation key have unlimited content hosts")
-    param :release_version, String, :desc => N_("content release version")
-    param :service_level, String, :desc => N_("service level")
+    param :activation_key, Hash do
+      param :name, String, :desc => N_("name"), :required => true
+      param :description, String, :desc => N_("description")
+      param :environment_id, :identifier, :desc => N_("environment id")
+      param :content_view_id, :identifier, :desc => N_("content view id")
+      param :max_content_hosts, :number, :desc => N_("maximum number of registered content hosts")
+      param :unlimited_content_hosts, :bool, :desc => N_("can the activation key have unlimited content hosts")
+      param :release_version, String, :desc => N_("content release version")
+      param :service_level, String, :desc => N_("service level")
+    end
     def update
       @activation_key.update_attributes!(activation_key_params)
       respond_for_show(:resource => @activation_key)

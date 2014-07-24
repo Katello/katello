@@ -33,15 +33,9 @@ module Api
         rescue_from Errors::ConflictException, :with => :rescue_from_conflict_exception
         rescue_from Errors::UnsupportedActionException, :with => :rescue_from_unsupported_action_exception
         rescue_from Errors::MaxContentHostsReachedException, :with => :rescue_from_max_content_hosts_reached_exception
-        rescue_from ActionController::ParameterMissing, :with => :rescue_from_missing_param
       end
 
       protected
-
-      def rescue_from_missing_param(exception)
-        text = "Missing values for #{exception.param}."
-        respond_for_exception(exception, :text => text, :display_message => text, :status => :bad_request)
-      end
 
       def rescue_from_exception(exception)
         text = 'Fatal Error: See logs for details or contact system administrator'
