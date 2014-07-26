@@ -64,7 +64,7 @@ Requires: curl
 Requires: redhat-logos >= 60.0.14
 %endif
 
-%if 0%{?fedora} > 18
+%if 0%{?fedora} > 18 || 0%{?rhel} > 6
 Requires(post): candlepin-tomcat
 %else
 Requires(post): candlepin-tomcat6
