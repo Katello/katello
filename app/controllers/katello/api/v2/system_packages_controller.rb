@@ -17,12 +17,18 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
   before_filter :require_packages_only, :only => [:upgrade]
   before_filter :find_system
 
+  resource_description do
+    api_version 'v2'
+    api_base_url "#{Katello.config.url_prefix}/api"
+  end
+
   def_param_group :packages_or_groups do
     param :packages, Array, :desc => N_("List of package names"), :required => false
     param :groups, Array, :desc => N_("List of package group names"), :required => false
   end
 
-  api :POST, "/systems/:system_id/packages/install", N_("Install packages remotely")
+  api :PUT, "/systems/:system_id/packages/install", N_("Install packages remotely")
+  param :system_id, :identifier, :required => true, :desc => N_("UUID of the content-host")
   param_group :packages_or_groups
   def install
     if params[:packages]
@@ -40,9 +46,9 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
 
   end
 
-  # update packages remotely
   api :PUT, "/systems/:system_id/packages/upgrade", N_("Update packages remotely")
-  param :packages, Array, :desc => N_("list of packages names")
+  param :system_id, :identifier, :required => true, :desc => N_("UUID of the content-host")
+  param :packages, Array, :desc => N_("list of packages names"), :required => true
   def upgrade
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
@@ -52,12 +58,14 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
   end
 
   api :PUT, "/systems/:system_id/packages/upgrade_all", N_("Update packages remotely")
+  param :system_id, :identifier, :required => true, :desc => N_("UUID of the content-host")
   def upgrade_all
     task     = async_task(::Actions::Katello::System::Package::Update, @system, [])
     respond_for_async :resource => task
   end
 
-  api :POST, "/systems/:system_id/packages/remove", N_("Uninstall packages remotely")
+  api :PUT, "/systems/:system_id/packages/remove", N_("Uninstall packages remotely")
+  param :system_id, :identifier, :required => true, :desc => N_("UUID of the content-host")
   param_group :packages_or_groups
   def remove
     if params[:packages]
