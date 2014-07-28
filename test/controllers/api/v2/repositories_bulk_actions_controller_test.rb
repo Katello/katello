@@ -15,6 +15,7 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::RepositoriesBulkActionsControllerTest < ActionController::TestCase
+    include Support::ForemanTasks::Task
 
     def self.before_suite
       models = ["Repository", "Provider"]
@@ -62,7 +63,10 @@ module Katello
     end
 
     def test_sync
-      Repository.any_instance.expects(:sync).times(@repositories.length).returns([{}])
+      @controller.expects(:async_task).times(@repositories.length).with do |action_class, repo|
+        action_class.must_equal ::Actions::Katello::Repository::Sync
+        @repositories.map(&:id).must_include repo.id
+      end
 
       post :sync_repositories, {:ids => @repositories.collect(&:id), :organization_id => @organization.id}
 
@@ -73,7 +77,11 @@ module Katello
       repo_with_feed = katello_repositories(:fedora_17_x86_64)
       repo_with_no_feed = katello_repositories(:feedless_fedora_17_x86_64)
 
-      Repository.any_instance.expects(:sync).times(1).returns([{}])
+
+      @controller.expects(:async_task).times(1).with do |action_class, repo|
+        action_class.must_equal ::Actions::Katello::Repository::Sync
+        repo.id.must_equal repo_with_feed.id
+      end
 
       post :sync_repositories, {:ids => [repo_with_feed, repo_with_no_feed].collect(&:id), :organization_id => @organization.id}
 

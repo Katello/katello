@@ -42,20 +42,24 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
         repositoriesNutupane.query();
 
         $scope.syncSelectedRepositories = function () {
-            var params = getParams();
+            var params = getParams(), syncPromise;
 
             $scope.syncInProgress = true;
-            RepositoryBulkAction.syncRepositories(params, success, error).$promise.then(function () {
+
+            syncPromise = RepositoryBulkAction.syncRepositories(params, success, error).$promise;
+            syncPromise["finally"](function () {
                 repositoriesNutupane.refresh();
                 $scope.syncInProgress = false;
             });
         };
 
         $scope.removeSelectedRepositories = function () {
-            var params = getParams();
+            var params = getParams(), removalPromise;
 
             $scope.removingRepositories = true;
-            RepositoryBulkAction.removeRepositories(params, success, error).$promise.then(function () {
+            removalPromise = RepositoryBulkAction.removeRepositories(params, success, error).$promise;
+
+            removalPromise["finally"](function () {
                 repositoriesNutupane.refresh();
                 $scope.removingRepositories = false;
             });
