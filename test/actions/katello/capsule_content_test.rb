@@ -91,8 +91,10 @@ module ::Actions::Katello::CapsuleContent
 
   class SyncTest < TestBase
     let(:action_class) { ::Actions::Katello::CapsuleContent::Sync }
+    let(:staging_environment) { katello_environments(:staging) }
 
     it 'plans' do
+      capsule_content.add_lifecycle_environment(environment)
       action = create_and_plan_action(action_class, capsule_content)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncNode) do |(input)|
         input.must_equal(consumer_uuid: @capsule_system.uuid,
@@ -101,6 +103,7 @@ module ::Actions::Katello::CapsuleContent
     end
 
     it 'allows limiting scope of the syncing to one environment' do
+      capsule_content.add_lifecycle_environment(environment)
       action = create_and_plan_action(action_class, capsule_content, environment)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncNode) do |(input)|
         input[:repo_ids].size.must_equal 4
@@ -110,6 +113,20 @@ module ::Actions::Katello::CapsuleContent
       Katello::CapsuleContent.any_instance.stubs(:default_capsule?).returns(true)
       assert_raises(RuntimeError) do
         create_and_plan_action(action_class, capsule_content, environment)
+      end
+    end
+    it 'fails when trying to sync if no lifecycle environments attached' do
+      Katello::CapsuleContent.any_instance.stubs(:lifecycle_environments).returns([])
+      assert_raises(RuntimeError) do
+        create_and_plan_action(action_class, capsule_content, environment)
+      end
+    end
+    it 'fails when trying to sync a lifecyle environment that is not attached' do
+      capsule_content.add_lifecycle_environment(environment)
+
+      Katello::CapsuleContent.any_instance.stubs(:lifecycle_environments).returns([])
+      assert_raises(RuntimeError) do
+        create_and_plan_action(action_class, capsule_content, staging_environment)
       end
     end
   end
