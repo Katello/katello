@@ -49,7 +49,7 @@ class ProductsController < Katello::ApplicationController
 
     readable_ids = []
     readable_ids += Product.readable.pluck(:id) if Product.readable?
-    readable_ids += ContentView.readable_products.pluck(:id)
+    readable_ids += ContentView.readable_products.pluck("#{Katello::Product.table_name}.id")
     readable_ids.uniq
 
     products = Product.search do

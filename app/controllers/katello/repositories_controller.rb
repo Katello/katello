@@ -20,7 +20,7 @@ class RepositoriesController < Katello::ApplicationController
     query = "name_autocomplete:#{params[:term]}"
 
     ids = []
-    ids += Product.readable_repositories.pluck(:id) if Product.readable?
+    ids += Product.readable_repositories.pluck("#{Katello::Repository.table_name}.id") if Product.readable?
     ids += ContentView.readable_repositories.pluck(:library_instance_id)
     ids.uniq!
 
