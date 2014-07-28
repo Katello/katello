@@ -58,6 +58,9 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
                 if (taskIds.length > 0) {
                     version.task = AggregateTask.new(taskIds, function (task) {
                         taskUpdated(version,  task);
+                        if (task.label === $scope.taskTypes.publish && !task.pending && task.result === 'success') {
+                            updateVersion(version);
+                        }
                     });
                 }
             });
@@ -104,6 +107,18 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
             return translate("Successfully published %cv version %ver and promoted to Library")
                 .replace('%cv', version['content_view'].name)
                 .replace('%ver', version.version);
+        }
+
+        function updateVersion(version) {
+            var versionIds = _.map($scope.contentView.versions, function (ver) {
+                    return ver.id;
+                }),
+                versionIndex = versionIds.indexOf(version.id);
+
+            ContentViewVersion.get({'id': version.id}).$promise.then(function (newVersion) {
+                $scope.contentView.versions[versionIndex] = newVersion;
+                $scope.versions[versionIndex] = newVersion;
+            });
         }
 
         $scope.reloadVersions = function () {
