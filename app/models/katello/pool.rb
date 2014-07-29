@@ -23,6 +23,9 @@ class Pool < Katello::Model
   attr_accessor :cp_provider_id
   alias_method :provider_id, :cp_provider_id
   alias_method :provider_id=, :cp_provider_id=
+  attr_accessor :cp_id
+  attr_accessor :subscription_id
+  attr_accessor :amount
 
   DAYS_EXPIRING_SOON = 120
   DAYS_RECENTLY_EXPIRED = 30

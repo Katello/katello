@@ -211,7 +211,7 @@ module Resources
 
         def consume_entitlement(uuid, pool, quantity = nil)
           uri = join_path(path(uuid), 'entitlements') + "?pool=#{pool}"
-          uri += "&quantity=#{quantity}" if quantity
+          uri += "&quantity=#{quantity}" if quantity && quantity > 0
           response = self.post(uri, "", self.default_headers).body
           response.blank? ? [] : JSON.parse(response)
         end
@@ -795,9 +795,7 @@ module Resources
         def add_pools(id, pool_id, quantity)
           cppath = join_path(path(id), "pools/#{pool_id}")
           quantity = Integer(quantity) rescue nil
-          if quantity && quantity > 0
-            cppath += "?quantity=#{quantity}" if quantity
-          end
+          cppath += "?quantity=#{quantity}" if quantity && quantity > 0
           pool = self.post(cppath, {}, self.default_headers)
           JSON.parse(pool).with_indifferent_access
         end
