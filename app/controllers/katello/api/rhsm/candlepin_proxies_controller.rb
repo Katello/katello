@@ -251,7 +251,7 @@ module Katello
       attrs = params.clone
       slice_attrs = [:name, :description, :location,
                      :facts, :guestIds, :installedProducts,
-                     :releaseVer, :serviceLevel, :lastCheckin
+                     :releaseVer, :serviceLevel, :lastCheckin, :autoheal
                      ]
       attrs[:installedProducts] = [] if attrs.key?(:installedProducts) && attrs[:installedProducts].nil?
 
