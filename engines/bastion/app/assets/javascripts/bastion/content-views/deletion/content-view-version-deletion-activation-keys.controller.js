@@ -71,7 +71,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionAc
 
         $scope.activationKeyLink = function () {
             var search = $scope.searchString($scope.contentView, $scope.deleteOptions.environments);
-            return $scope.$state.href('activation-keys.index').url + '?search=' + search;
+            return $scope.$state.href('activation-keys.index') + '?search=' + search;
         };
 
         $scope.toggleKeys = function () {
