@@ -60,7 +60,11 @@ angular.module('Bastion.test-mocks').factory('MockResource', function () {
             label: '',
             failed: false,
             readonly: false,
-            $get: function() {},
+            $get: function() {
+                return {then: function(callback) {
+                    callback(mockResource);
+                }};
+            },
             $save: function(params, success, error) {
                 if (typeof(params) === "function") {
                     error = success;
