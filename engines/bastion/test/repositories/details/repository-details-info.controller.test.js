@@ -132,4 +132,32 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect($state.go).toHaveBeenCalled();
         expect($scope.repositoriesTable.replaceRow).toHaveBeenCalledWith($scope.repository);
     });
+
+    it("should provide a valid reason for a repo deletion disablement", function() {
+        var product = {id: 100, $resolved: true},
+            repository = {id: 200, $resolved: true};
+
+        $scope.denied = function (perm, prod) {
+            expect(perm).toBe("delete_products");
+            return true;
+        };
+        expect($scope.getRepoNonDeletableReason(repository, product)).toBe("permissions");
+        expect($scope.canRemove(repository, product)).toBe(false);
+
+        $scope.denied = function (perm, prod) {
+            return false;
+        };
+        repository.promoted = true;
+        expect($scope.getRepoNonDeletableReason(repository, product)).toBe("published");
+        expect($scope.canRemove(repository, product)).toBe(false);
+
+        repository.promoted = false;
+        repository.product_type = "redhat";
+        expect($scope.getRepoNonDeletableReason(repository, product)).toBe("redhat");
+        expect($scope.canRemove(repository, product)).toBe(false);
+
+        repository.product_type = "custom";
+        expect($scope.getRepoNonDeletableReason(repository, product)).toBe(null);
+        expect($scope.canRemove(repository, product)).toBe(true);
+    });
 });

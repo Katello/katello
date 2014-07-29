@@ -13,6 +13,7 @@ attributes :major, :minor
 attributes :gpg_key_id
 attributes :content_id, :content_view_version_id, :library_instance_id
 attributes :product_type
+attributes :promoted? => :promoted
 
 node :content_counts do |repo|
   if repo.respond_to?(:pulp_repo_facts)

@@ -89,7 +89,7 @@ describe('Controller: ProductRepositoriesController', function() {
         expect(RepositoryBulkAction.removeRepositories).toHaveBeenCalledWith({ids: expectedIds},
             jasmine.any(Function), jasmine.any(Function));
     });
-    
+
     it("provides a way to sync all of the selected repositories in the table", function() {
         spyOn(RepositoryBulkAction, 'syncRepositories').andCallThrough();
 
@@ -97,4 +97,29 @@ describe('Controller: ProductRepositoriesController', function() {
         expect(RepositoryBulkAction.syncRepositories).toHaveBeenCalledWith({ids: expectedIds},
             jasmine.any(Function), jasmine.any(Function));
     });
+
+
+    it("should provide a valid reason for a repo deletion disablement", function() {
+        var product = {id: 100, $resolved: true};
+
+        $scope.denied = function (perm, prod) {
+            expect(perm).toBe("delete_products");
+            return true;
+        };
+        expect($scope.getRepositoriesNonDeletableReason(product)).toBe("permissions");
+        expect($scope.canRemoveRepositories(product)).toBe(false);
+
+        $scope.denied = function (perm, prod) {
+            return false;
+        };
+
+        product.redhat = true;
+        expect($scope.getRepositoriesNonDeletableReason(product)).toBe("redhat");
+        expect($scope.canRemoveRepositories(product)).toBe(false);
+
+        product.redhat = false;
+        expect($scope.getRepositoriesNonDeletableReason(product)).toBe(null);
+        expect($scope.canRemoveRepositories(product)).toBe(true);
+    });
+
 });

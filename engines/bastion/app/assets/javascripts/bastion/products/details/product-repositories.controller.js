@@ -72,6 +72,24 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
             });
         };
 
+        $scope.getRepositoriesNonDeletableReason = function (product) {
+            var readOnlyReason = null;
+
+            if (product.$resolved) {
+                if ($scope.denied('delete_products', product)) {
+                    readOnlyReason = 'permissions';
+                }  else if (product.redhat) {
+                    readOnlyReason = 'redhat';
+                }
+            }
+
+            return readOnlyReason;
+        };
+
+        $scope.canRemoveRepositories = function (product) {
+            return $scope.getRepositoriesNonDeletableReason(product) === null;
+        };
+
         function getParams() {
             return {
                 ids: repositoriesNutupane.getAllSelectedResults('id').included.ids
