@@ -13,6 +13,7 @@ module Katello
   module Concerns
     module HostManagedExtensions
       extend ActiveSupport::Concern
+      include Katello::KatelloUrlsHelper
 
       included do
         alias_method_chain :validate_media?, :capsule
@@ -32,5 +33,5 @@ module Katello
 end
 
 class ::Host::Managed::Jail < Safemode::Jail
-  allow :content_source
+  allow :content_source, :subscription_manager_configuration_url
 end

@@ -1,0 +1,59 @@
+<%#
+kind: user_data
+name: Katello Kickstart default user data
+oses:
+- CentOS 6
+- CentOS 7
+- Fedora 19
+- Fedora 20
+-%>
+#cloud-config
+hostname: <%= @host.shortname %>
+fqdn: <%= @host %>
+manage_etc_hosts: true
+<%# Allow user to specify additional SSH key as host paramter -%>
+<% if @host.params['sshkey'] -%>
+ssh_authorized_keys:
+  - <%= @host.params['sshkey'] %>
+<% end -%>
+write_files:
+- path: /tmp/foreman-userdata.sh
+  permissions: '0755'
+  content: |
+    #!/bin/bash
+<%= indent 4 do
+      snippet 'subscription_manager_registration'
+    end %>
+<% if @host.info["parameters"]["realm"] && @host.otp && @host.realm && @host.realm.realm_type == "FreeIPA" -%>
+<%= indent 4 do
+      snippet 'freeipa_register'
+    end %>
+<% end -%>
+    # update all the base packages from the updates repository
+    yum -t -y -e 0 update
+<%
+  # safemode renderer does not support unary negation
+  pm_set = @host.puppetmaster.empty? ? false : true
+  puppet_enabled = pm_set || @host.params['force-puppet']
+%>
+<% if puppet_enabled %>
+    yum install -y puppet
+    cat > /etc/puppet/puppet.conf << EOF
+    <%= indent 4 do
+          snippet 'puppet.conf'
+        end %>
+    EOF
+    # Setup puppet to run on system reboot
+    /sbin/chkconfig --level 345 puppet on
+
+    /usr/bin/puppet agent --config /etc/puppet/puppet.conf --onetime --tags no_such_tag <%= @host.puppetmaster.blank? ? '' : "--server #{@host.puppetmaster}" %> --no-daemonize
+    /sbin/service puppet start
+<% end -%>
+phone_home:
+ url: <%= foreman_url('built') %>
+ post: []
+ tries: 10
+runcmd:
+ - [ cloud-init-per, once, foreman-userdata, /tmp/foreman-userdata.sh ]
+output: {all: '| tee -a /root/install.userdata.log'}
+

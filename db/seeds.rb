@@ -56,6 +56,16 @@ ConfigTemplate.where(:name => "Katello Kickstart Default for RHEL").first_or_cre
     :operatingsystem_ids => Redhat.where("name like ?", "Red Hat Enterprise Linux").map(&:id),
     :template            => File.read("#{Katello::Engine.root}/app/views/foreman/unattended/kickstart-katello_rhel.erb"))
 
+ConfigTemplate.where(:name => "Katello Kickstart default user data").first_or_create!(
+    :template_kind_id    => TemplateKind.find_by_name('user_data').id,
+    :operatingsystem_ids => Operatingsystem.where("name not like ? and type = ?", "Red Hat Enterprise Linux", "Redhat").map(&:id),
+    :template            => File.read("#{Katello::Engine.root}/app/views/foreman/unattended/userdata-katello.erb"))
+
+ConfigTemplate.where(:name => "Katello Kickstart default finish").first_or_create!(
+    :template_kind_id    => TemplateKind.find_by_name('finish').id,
+    :operatingsystem_ids => Operatingsystem.where("name not like ? and type = ?", "Red Hat Enterprise Linux", "Redhat").map(&:id),
+    :template            => File.read("#{Katello::Engine.root}/app/views/foreman/unattended/finish-katello.erb"))
+
 ConfigTemplate.where(:name => "subscription_manager_registration").first_or_create!(
     :snippet  => true,
     :template => File.read("#{Katello::Engine.root}/app/views/foreman/unattended/snippets/_subscription_manager_registration.erb"))
