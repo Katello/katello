@@ -70,7 +70,7 @@
           Errata
         </a>
       </li>
-      <li ng-class="{active: isState('content-hosts.details.products')}">
+      <li ng-hide="denied('view_products')" ng-class="{active: isState('content-hosts.details.products')}">
         <a translate
            ui-sref="content-hosts.details.products">
           Product Content
