@@ -279,6 +279,7 @@ describe('Factory: Nutupane', function() {
             nutupane.table.working = false;
             nutupane.table.closeItem = function () {};
             nutupane.table.allSelected = function () {};
+            nutupane.table.selectAll = function () {};
         });
 
         it("provide a method to fetch records for the table via a custom action", function() {
