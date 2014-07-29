@@ -37,6 +37,10 @@ angular.module('Bastion.content-views').controller('FiltersController',
             nutupane.refresh();
         });
 
+        $scope.$on('filter.updated', function () {
+            nutupane.refresh();
+        });
+
         $scope.removeFilters = function () {
             var filterIds = nutupane.getAllSelectedResults().included.ids;
 

@@ -244,6 +244,7 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         collapsed: true,
         url: '/filters/:filterId/package',
         permission: 'view_content_views',
+        controller: 'PackageFilterController',
         templateUrl: 'content-views/details/filters/views/package-filter.html'
     })
     .state('content-views.details.filters.details.rpm.details', {
@@ -252,6 +253,13 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         collapsed: true,
         controller: 'PackageFilterController',
         templateUrl: 'content-views/details/filters/views/package-filter-details.html'
+    })
+    .state('content-views.details.filters.details.rpm.edit', {
+        url: '/edit',
+        collapsed: true,
+        controller: 'FilterEditController',
+        permission: 'edit_content_views',
+        templateUrl: 'content-views/details/filters/views/edit-filter.html'
     })
     .state('content-views.details.filters.details.rpm.repositories', {
         collapsed: true,
@@ -264,8 +272,16 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
     .state('content-views.details.filters.details.package_group', {
         abstract: true,
         collapsed: true,
+        controller: 'PackageGroupFilterController',
         url: '/filters/:filterId/package-group',
         templateUrl: 'content-views/details/filters/views/package-group-filter.html'
+    })
+    .state('content-views.details.filters.details.package_group.edit', {
+        url: '/edit',
+        collapsed: true,
+        controller: 'FilterEditController',
+        permission: 'edit_content_views',
+        templateUrl: 'content-views/details/filters/views/edit-filter.html'
     })
     .state('content-views.details.filters.details.package_group.list', {
         collapsed: true,
@@ -295,6 +311,13 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         url: '/filters/:filterId/errata',
         controller: 'ErrataFilterController',
         templateUrl: 'content-views/details/filters/views/errata-filter.html'
+    })
+    .state('content-views.details.filters.details.erratum.edit', {
+        url: '/edit',
+        collapsed: true,
+        controller: 'FilterEditController',
+        permission: 'edit_content_views',
+        templateUrl: 'content-views/details/filters/views/edit-filter.html'
     })
     .state('content-views.details.filters.details.erratum.list', {
         collapsed: true,

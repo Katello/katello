@@ -1,8 +1,20 @@
 <span page-title ng-model="filter">{{ 'Package Group Filter:' | translate }} {{ filter.name }}</span>
 
 <div class="details details-full">
+
+  <div data-block="messages" alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
   <nav>
     <ul class="nav nav-tabs">
+
+      <li ng-class="{active: isState('content-views.details.filters.details.package_group.edit')}">
+        <a ui-sref="content-views.details.filters.details.package_group.edit">
+        <span translate>
+	  Details
+        </span>
+        </a>
+      </li>
+
       <li ng-class="{active: isState('content-views.details.filters.details.package_group.list')}">
         <a ui-sref="content-views.details.filters.details.package_group.list({filterId: filter.id})">
         <span translate>

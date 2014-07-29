@@ -43,6 +43,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
                                                      "(Package Filter only)")
   param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")
   param :repository_ids, Array, :desc => N_("list of repository ids")
+  param :description, String, :desc => N_("description of the filter")
   def create
     filter = ContentViewFilter.create_for(params[:type], filter_params.merge(:content_view => @view))
     respond :resource => filter
@@ -146,7 +147,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   end
 
   def filter_params
-    params.require(:content_view_filter).permit(:name, :inclusion, :original_packages, :repository_ids => [])
+    params.require(:content_view_filter).permit(:name, :inclusion, :original_packages, :description, :repository_ids => [])
   end
 
 end
