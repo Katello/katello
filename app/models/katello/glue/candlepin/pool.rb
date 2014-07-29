@@ -168,7 +168,7 @@ module Glue::Candlepin::Pool
     end
 
     def products
-      Product.where(:cp_id => provided_products.map { |prod| prod[:productId] })
+      Katello::Product.where(:cp_id => provided_products.map { |prod| prod[:productId] })
     end
 
     def systems
@@ -176,8 +176,12 @@ module Glue::Candlepin::Pool
     end
 
     def activation_keys
-      # TODO: no longer valid - error thrown here now
-      ActivationKey.joins(:pools).where("#{self.class.table_name}.cp_id" => cp_id)
+      keys = Resources::Candlepin::ActivationKey.get(nil, "?include=id&include=pools.pool.id")
+      activation_key_ids = keys.collect do |key|
+        key['id'] if key['pools'].any? { |pool| pool['pool']['id'] == cp_id }
+      end
+
+      return Katello::ActivationKey.where(:cp_id => activation_key_ids.compact)
     end
 
     def distributors

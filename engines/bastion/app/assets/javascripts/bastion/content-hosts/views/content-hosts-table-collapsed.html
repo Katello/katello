@@ -11,8 +11,11 @@
     <tr alch-table-row
         ng-repeat="contentHost in contentHostTable.rows"
         row-select="contentHost"
-        active-row="stateIncludes('content-hosts.details', {contentHostId: contentHost.uuid})">
+        active-row="stateIncludes('content-hosts.details', {contentHostId: contentHost.uuid})"
+        ng-controller="ContentHostStatusController">
       <td alch-table-cell>
+        <span class="icon-circle" ng-class="contentHostTable.getStatusColor(contentHost.entitlementStatus)">
+        </span>
         <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
           {{ contentHost.name }}
         </a>
