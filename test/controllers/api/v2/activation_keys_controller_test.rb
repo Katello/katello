@@ -16,6 +16,8 @@ require "katello_test_helper"
 module Katello
   class Api::V2::ActivationKeysControllerTest < ActionController::TestCase
 
+    include Support::ForemanTasks::Task
+
     def self.before_suite
       models = ["ActivationKey", "KTEnvironment",
                 "ContentView", "ContentViewEnvironment", "ContentViewVersion"]
@@ -33,6 +35,9 @@ module Katello
       @library = @organization.library
 
       @activation_key.stubs(:get_key_pools).returns([])
+
+      ::Katello::ActivationKey.stubs(:find).returns(@activation_key)
+
       stub_find_organization(@organization)
     end
 
@@ -100,18 +105,6 @@ module Katello
       end
     end
 
-    def test_create
-      post :create, :environment_id => @library.id, :content_view_id => @view.id,
-           :activation_key => {:name => 'Key A', :description => 'Key A, Key to the World'}
-
-      results = JSON.parse(response.body)
-      assert_equal results['name'], 'Key A'
-      assert_equal results['description'], 'Key A, Key to the World'
-
-      assert_response :success
-      assert_template 'katello/api/v2/common/create'
-    end
-
     def test_create_protected
       allowed_perms = [@create_permission]
       denied_perms = [@view_permission, @update_permission, @destroy_permission]
@@ -122,44 +115,13 @@ module Katello
       end
     end
 
-    def test_create_nested
-      post :create, :environment => { :id => @library.id }, :content_view => { :id => @view.id },
-           :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'}
+    def test_create_unlimited
+      assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
+        activation_key.max_content_hosts.must_be_nil
+      end
 
-      results = JSON.parse(response.body)
-      assert_equal results['name'], 'Key A2'
-      assert_equal results['description'], 'Key A2, Key to the World'
-
-      assert_response :success
-      assert_template 'katello/api/v2/common/create'
-    end
-
-    def test_create_unlimited_content_hosts
       post :create, :organization_id => @organization.id,
            :activation_key => {:name => 'Unlimited Key', :unlimited_content_hosts => true}
-
-      results = JSON.parse(response.body)
-      assert_equal results['name'], 'Unlimited Key'
-      assert_equal results['unlimited_content_hosts'], true
-
-      assert_response :success
-      assert_template 'katello/api/v2/common/create'
-    end
-
-    def test_create_zero_limit
-      post :create, :organization_id => @organization.id,
-           :activation_key => {:name => 'Zero Key', :max_content_hosts => 0, :unlimited_content_hosts => false}
-
-      assert_response 422 
-    end
-
-    def test_create_23_limit
-      post :create, :organization_id => @organization.id,
-           :activation_key => {:name => '23 Limited Key', :max_content_hosts => 23, :unlimited_content_hosts => false}
-
-      results = JSON.parse(response.body)
-      assert_equal results['name'], '23 Limited Key'
-      assert_equal results['max_content_hosts'], 23
 
       assert_response :success
       assert_template 'katello/api/v2/common/create'
@@ -242,14 +204,5 @@ module Katello
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
     end
-
-    def test_failed_validator
-      results = JSON.parse(post(:create, :organization_id => @organization.id,
-                           :activation_key => { :max_content_hosts => 0 }).body)
-
-      assert_response 422
-      assert_includes results['errors']['name'], 'cannot be blank'
-    end
-
   end
 end
