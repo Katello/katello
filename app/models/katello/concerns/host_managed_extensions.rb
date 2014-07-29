@@ -15,6 +15,7 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
+        include ::Katello::KatelloUrlsHelper
         alias_method_chain :validate_media?, :capsule
 
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
