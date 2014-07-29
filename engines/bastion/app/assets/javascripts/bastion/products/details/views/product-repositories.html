@@ -13,7 +13,7 @@
 
       <button class="btn btn-default"
               ng-hide="denied('delete_products', product)"
-              ng-disabled="removingRepositories || repositoriesTable.numSelected == 0"
+              ng-disabled="removingRepositories || repositoriesTable.numSelected == 0 || !product.can_remove"
               ng-click="openModal()">
         <span ng-show="removingRepositories">
           <i class="icon-spinner inline-icon icon-spin"></i>

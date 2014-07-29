@@ -29,6 +29,7 @@
 
     <button class="btn btn-default"
             ng-click="openModal()"
+            ng-disabled="product.can_remove"
             ng-hide="denied('delete_products', product)">
       {{ "Remove Repository" | translate }}
     </button>
