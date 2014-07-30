@@ -2,8 +2,8 @@ object @resource
 
 @resource ||= @object
 
-attributes :id, :uuid
-attributes :name, :description
+node(:id) { |resource| resource.uuid }
+attributes :uuid, :name, :description
 attributes :location
 attributes :content_view, :content_view_id
 attributes :distribution
