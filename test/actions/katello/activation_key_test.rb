@@ -48,9 +48,8 @@ module ::Actions::Katello::ActivationKey
     let(:action_class) { ::Actions::Katello::ActivationKey::Destroy }
 
     it 'plans' do
-      activation_key.expects(:destroy!)
-
       action = create_action(action_class)
+      action.expects(:plan_self)
       action.expects(:action_subject).with(activation_key)
       plan_action(action, activation_key)
       assert_action_planed(action, ::Actions::Candlepin::ActivationKey::Destroy)

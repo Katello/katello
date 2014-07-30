@@ -15,31 +15,30 @@ module Actions
     module Organization
       class Destroy < Actions::EntryAction
 
+        middleware.use ::Actions::Middleware::RemoteAction
+
         def plan(organization, current_org = nil)
           action_subject(organization)
 
           validate(organization, current_org)
 
-          concurrence do
-            if ::Katello.config.use_cp
-              sequence do
-                # this will clean up systems, keys, etc in candlepin
-                plan_action(Candlepin::Owner::Destroy, label:  organization.label)
-                plan_action(Katello::Organization::IndexSubscriptions, organization)
-              end
-            end
-
-            sequence do
-              remove_consumers(organization)
-              remove_content_view_environments(organization)
-              remove_content_views(organization)
-              remove_products(organization)
-              remove_default_content_view(organization)
-              remove_environments(organization)
-              organization.reload
-              organization.destroy!
-            end
+          sequence do
+            remove_consumers(organization)
+            remove_content_views(organization)
+            remove_default_content_view(organization)
+            remove_products(organization)
+            remove_providers(organization)
+            remove_environments(organization)
+            destroy_contents(organization)
+            plan_self
+            plan_action(Candlepin::Owner::Destroy, label:  organization.label) if ::Katello.config.use_cp
+            plan_action(Katello::Organization::IndexSubscriptions, organization) if ::Katello.config.use_cp
           end
+        end
+
+        def finalize
+          organization = ::Organization.find(input[:organization][:id])
+          organization.destroy!
         end
 
         def humanized_name
@@ -49,6 +48,14 @@ module Actions
         def validate(organization, current_org)
           errors = organization.validate_destroy(current_org)
           fail ::Katello::Errors::OrganizationDestroyException, errors.join(" ") if errors.present?
+        end
+
+        def remove_providers(organization)
+          concurrence do
+            organization.providers.each do |provider|
+              plan_action(Katello::Provider::Destroy, provider, false)
+            end
+          end
         end
 
         def remove_consumers(organization)
@@ -66,26 +73,20 @@ module Actions
         def remove_environments(organization)
           organization.promotion_paths.each do |path|
             path.reverse.each do |env|
-              plan_action(Katello::Environment::Destroy, env)
+              plan_action(Katello::Environment::Destroy, env, :skip_repo_destroy => true, :organization_destroy => true)
             end
           end
-          plan_action(Katello::Environment::Destroy, organization.library)
-        end
-
-        def remove_content_view_environments(organization)
-          organization.content_view_environments.non_default.each do |cv_env|
-            remove_content_view_environment(cv_env)
-          end
+          plan_action(Katello::Environment::Destroy, organization.library, :skip_repo_destroy => true, :organization_destroy => true)
         end
 
         def remove_content_view_environment(cv_env)
-          plan_action(ContentViewEnvironment::Destroy, cv_env, skip_candlepin_update: true)
+          plan_action(ContentViewEnvironment::Destroy, cv_env, :skip_repo_destroy => true, :skip_candlepin_update => true, :organization_destroy => true)
         end
 
         def remove_content_views(organization)
           concurrence do
             organization.content_views.non_default.each do |content_view|
-              plan_action(ContentView::Destroy, content_view)
+              plan_action(ContentView::Destroy, content_view, :check_ready_to_destroy => false, :organization_destroy => true)
             end
           end
         end
@@ -93,10 +94,7 @@ module Actions
         def remove_products(organization)
           concurrence do
             organization.products.each do |product|
-              product.repositories.each do |repo|
-                plan_action(Repository::Destroy, repo, skip_environment_update: true)
-              end
-              product.reload.destroy!
+              plan_action(Product::Destroy, product, :organization_destroy => true)
             end
           end
         end
@@ -104,7 +102,16 @@ module Actions
         def remove_default_content_view(organization)
           organization.default_content_view.tap do |view|
             view.content_view_environments.each { |cve| remove_content_view_environment(cve) }
-            plan_action(ContentView::Destroy, organization.default_content_view)
+            plan_action(ContentView::Destroy, organization.default_content_view, :check_ready_to_destroy => false, :organization_destroy => true)
+          end
+        end
+
+        def destroy_contents(organization)
+          repositories = organization.products.map(&:repositories).flatten
+          content_ids = repositories.map(&:content_id).uniq
+          content_ids.each do |content_id|
+            plan_action(Candlepin::Product::ContentDestroy,
+                        content_id: content_id)
           end
         end
       end

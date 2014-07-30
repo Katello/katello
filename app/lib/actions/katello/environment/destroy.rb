@@ -14,25 +14,50 @@ module Actions
   module Katello
     module Environment
       class Destroy < Actions::EntryAction
-        def plan(env)
+
+        middleware.use ::Actions::Middleware::RemoteAction
+
+        input_format do
+          param :id
+          param :name
+        end
+
+        def plan(env, options = {})
+          unless env.deletable?
+            fail env.errors.full_messages.join(" ")
+          end
+          skip_elastic = options.fetch(:skip_elastic, false)
+          skip_repo_destroy = options.fetch(:skip_repo_destroy, false)
+          organization_destroy = options.fetch(:organization_destroy, false)
           sequence do
             env.disable_auto_reindex!
             action_subject(env)
 
             concurrence do
               env.content_view_environments.each do |cve|
-                plan_action(ContentView::Remove, cve.content_view, :content_view_environments => [cve])
+                plan_action(ContentView::Remove, cve.content_view, :content_view_environments => [cve], :skip_repo_destroy => skip_repo_destroy, :organization_destroy => organization_destroy)
               end
             end
 
-            env.reload.destroy!
-            plan_action(ElasticSearch::Reindex, env)
+            plan_self
+            plan_action(ElasticSearch::Reindex, env) if env.organization && !skip_elastic
           end
         end
 
         def humanized_name
           _("Delete Lifecycle Environment")
         end
+
+        def humanized_input
+          ["'#{input['kt_environment']['name']}'" + super]
+        end
+
+        def finalize
+          environment = ::Katello::KTEnvironment.find(input['kt_environment']['id'])
+          environment.disable_auto_reindex!
+          environment.destroy!
+        end
+
       end
     end
   end

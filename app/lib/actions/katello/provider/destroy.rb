@@ -1,3 +1,4 @@
+
 #
 # Copyright 2014 Red Hat, Inc.
 #
@@ -12,31 +13,24 @@
 
 module Actions
   module Katello
-    module System
+    module Provider
       class Destroy < Actions::EntryAction
 
-        middleware.use ::Actions::Middleware::RemoteAction
-
-        def plan(system, options = {})
-          skip_candlepin = options.fetch(:skip_candlepin, false)
-          skip_pulp = system.hypervisor?
-          action_subject(system)
-
-          concurrence do
-            plan_action(Candlepin::Consumer::Destroy, uuid: system.uuid) unless skip_candlepin
-            plan_action(Pulp::Consumer::Destroy, uuid: system.uuid) unless skip_pulp
-          end
+        def plan(provider, check_products = true)
+          fail _("Red Hat provider can not be deleted") if !provider.being_deleted? && provider.redhat_provider?
+          fail _("Cannot delete provider with attached products") if check_products && !provider.products.empty?
+          action_subject(provider)
 
           plan_self
         end
 
         def finalize
-          system = ::Katello::System.find(input[:system][:id])
-          system.destroy!
+          provider = ::Katello::Provider.find(input[:provider][:id])
+          provider.destroy!
         end
 
         def humanized_name
-          _("Destroy Content Host")
+          _("Delete")
         end
       end
     end

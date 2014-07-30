@@ -15,24 +15,29 @@ module Actions
     module ContentViewVersion
       class Destroy < Actions::Base
 
-        def plan(version)
+        def plan(version, options = {})
           version.check_ready_to_destroy!
 
           sequence do
             concurrence do
               version.repositories.each do |repo|
-                plan_action(Repository::Destroy, repo, skip_environment_update: true)
+                plan_action(Repository::Destroy, repo, options)
               end
 
               version.content_view_puppet_environments.each do |puppet_env|
                 plan_action(ContentViewPuppetEnvironment::Destroy, puppet_env)
               end
             end
-
-            version.reload
-            version.destroy
           end
+
+          plan_self(:id => version.id)
         end
+
+        def finalize
+          version = ::Katello::ContentViewVersion.find(input[:id])
+          version.destroy!
+        end
+
       end
     end
   end

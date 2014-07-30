@@ -21,6 +21,11 @@ module Actions
           action_subject(activation_key)
 
           plan_action(Candlepin::ActivationKey::Destroy, cp_id: activation_key.cp_id) unless skip_candlepin
+          plan_self
+        end
+
+        def finalize
+          activation_key = ::Katello::ActivationKey.find(input[:activation_key][:id])
           activation_key.destroy!
         end
 

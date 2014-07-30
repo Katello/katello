@@ -23,7 +23,7 @@ module Actions
         propagate_candlepin_errors { pass(*args) }
       end
 
-      def finalize
+      def finalize(*args)
         propagate_candlepin_errors { pass(*args) }
       end
 

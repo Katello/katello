@@ -69,13 +69,13 @@ module ::Actions::Katello::Environment
       content_view = stub
       cve = mock(:content_view => content_view)
       action.stubs(:action_subject).with(environment)
-      environment.expects(:reload).returns(environment)
-      environment.expects(:destroy!).returns(true)
       environment.expects(:disable_auto_reindex!)
       environment.expects(:content_view_environments).returns([cve])
+      environment.expects(:deletable?).returns(true)
+      environment.expects(:organization).returns(mock)
       plan_action(action, environment)
       assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, environment)
-      assert_action_planed_with(action, ::Actions::Katello::ContentView::Remove, content_view, :content_view_environments => [cve])
+      assert_action_planed_with(action, ::Actions::Katello::ContentView::Remove, content_view, :content_view_environments => [cve], :skip_repo_destroy => false, :organization_destroy => false)
     end
   end
 

@@ -56,7 +56,7 @@ module Katello
         User.current.remote_id =  User.current.login
         # To prevent deletion of the fixture object
         @@dev_cve.stubs(:destroy).returns(true)
-        ForemanTasks.sync_task(::Actions::Katello::ContentViewEnvironment::Destroy, @@dev_cve)
+        # ForemanTasks.sync_task(::Actions::Katello::ContentViewEnvironment::Destroy, @@dev_cve)
       end
       Resources::Candlepin::Owner.destroy(@@org.label) unless @@org.nil?
     ensure

@@ -22,19 +22,23 @@ module Actions
         # system_content_view_id - content view to reassociate systems with
         # system_environment_id - environment to reassociate systems with
         # key_content_view_id - content view to reassociate actvation keys with
-        # key_environment_id - environment to reassociate activation keys with
+        # key_environment_id - environment to reassociate activation keys with'
+        # organization_destroy
         # rubocop:disable MethodLength
         def plan(content_view, options)
           cv_envs = options.fetch(:content_view_environments, [])
           versions = options.fetch(:content_view_versions, [])
-
+          organization_destroy = options.fetch(:organization_destroy, false)
+          skip_elastic = options.fetch(:skip_elastic, false)
+          skip_repo_destroy = options.fetch(:skip_repo_destroy, false)
           action_subject(content_view)
-          validate_options(content_view, cv_envs, versions, options)
+          validate_options(content_view, cv_envs, versions, options) unless organization_destroy
 
           all_cv_envs = combined_cv_envs(cv_envs, versions)
 
           sequence do
             concurrence do
+
               all_cv_envs.each do |cv_env|
                 if cv_env.systems.any? || cv_env.activation_keys.any?
                   plan_action(ContentViewEnvironment::ReassignObjects, cv_env, options)
@@ -49,7 +53,11 @@ module Actions
                                                                     :environment => cve.environment,
                                                                     :status => ::Katello::ContentViewHistory::IN_PROGRESS,
                                                                     :task => self.task)
-              plan_action(ContentViewEnvironment::Destroy, cve)
+              plan_action(ContentViewEnvironment::Destroy,
+                          cve,
+                          :skip_elastic => skip_elastic,
+                          :skip_repo_destroy => skip_repo_destroy,
+                          :organization_destroy => organization_destroy)
             end
 
             versions.each do |version|
