@@ -102,7 +102,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     })
     .state('content-hosts.details.products', {
         url: '/products',
-        permission: 'view_content_hosts',
+        permission: 'view_products',
         collapsed: true,
         controller: 'ContentHostProductsController',
         templateUrl: 'content-hosts/details/views/content-host-products.html'
