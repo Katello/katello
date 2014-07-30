@@ -23,7 +23,9 @@ module Actions
           sequence do
             concurrence do
               content_view.repos(environment).each do |repo|
-                plan_action(Repository::Destroy, repo)
+                # no need to update the content view environment since it's
+                # getting destroyed so skip_environment_update
+                plan_action(Repository::Destroy, repo, skip_environment_update: true)
               end
 
               if puppet_env = content_view.puppet_env(environment)
