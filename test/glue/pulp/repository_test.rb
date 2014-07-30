@@ -263,6 +263,7 @@ class GluePulpRepoContentsTest < GluePulpRepoTestBase
   end
 
   def test_generate_metadata
+    ::ForemanTasks.stubs(:sync_task).returns({})
     refute_empty @@fedora_17_x86_64.generate_metadata
   end
 

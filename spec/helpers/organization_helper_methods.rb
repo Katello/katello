@@ -70,7 +70,7 @@ module OrganizationHelperMethods
     Repository.any_instance.stubs(:clone_contents).returns([])
     Repository.any_instance.stubs(:sync).returns([])
     Repository.any_instance.stubs(:pulp_repo_facts).returns({:clone_ids => []})
-    Glue::Event.stubs(:trigger).returns({})
+    ::ForemanTasks.stubs(:sync_task).returns({})
     version = cv.version(from_env)
     version.promote(to_env)
   end

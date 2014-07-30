@@ -18,7 +18,6 @@ class ContentView < Katello::Model
   include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
   include Katello::Authorization::ContentView
   include AsyncOrchestration
-  include Glue::Event
   include ForemanTasks::Concerns::ActionSubject
 
   CONTENT_DIR = "content_views"
@@ -273,8 +272,6 @@ class ContentView < Katello::Model
       fail Errors::ChangesetContentException.new(_("Cannot delete from %s, view does not exist there.") % from_env.name)
     end
     version = ContentViewVersion.find(version.id)
-
-    Glue::Event.trigger(Katello::Actions::ContentViewDemote, self, from_env)
 
     if foreman_env = Environment.find_by_katello_id(self.organization, from_env, self)
       foreman_env.destroy
