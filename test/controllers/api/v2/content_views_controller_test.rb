@@ -29,6 +29,7 @@ module Katello
       @dev = KTEnvironment.find(katello_environments(:dev))
       @staging = KTEnvironment.find(katello_environments(:staging))
       @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view))
+      @library_dev_view = ContentView.find(katello_content_views(:library_dev_view))
     end
 
     def permissions
@@ -272,6 +273,12 @@ module Katello
       assert_protected_action(:create, allowed_perms, denied_perms) do
         post :copy, :id => @library_dev_staging_view.id, :name => "Test"
       end
+    end
+
+    def test_remove_from_environment
+      refute @library_dev_view.environments.include?(@staging)
+      delete :remove_from_environment, id: @library_dev_view.id, environment_id: @staging.id
+      assert_response 400
     end
 
     def test_remove_from_environment_protected
