@@ -18,6 +18,14 @@ module Actions
         def plan(capsule_content, environment = nil)
           fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
 
+          if capsule_content.lifecycle_environments.blank?
+            fail _("Capsule should have at least one lifecycle environment attached.")
+          end
+
+          if environment && !capsule_content.lifecycle_environments.include?(environment)
+            fail _("Lifecycle environment '%{environment}' is not attached to this capsule.") % { :environment => environment.name }
+          end
+
           repository_ids = if environment
                              capsule_content.pulp_repos(environment).map(&:pulp_id)
                            end
