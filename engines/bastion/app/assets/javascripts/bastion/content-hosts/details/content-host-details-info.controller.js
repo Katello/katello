@@ -64,7 +64,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         $scope.cancelReleaseVersionUpdate = function () {
             $scope.showVersionAlert = false;
         };
-        
+
         $scope.cancelContentViewUpdate = function () {
             if ($scope.editContentView) {
                 $scope.editContentView = false;
