@@ -42,6 +42,12 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
             $scope.panel.loading = false;
         });
 
+        $scope.refreshHostCollection = function () {
+            $scope.hostCollection.$get().then(function (hostCollection) {
+                $scope.$emit("updateContentHostCollection", hostCollection);
+            });
+        };
+
         $scope.save = function (hostCollection) {
             var deferred = $q.defer();
 

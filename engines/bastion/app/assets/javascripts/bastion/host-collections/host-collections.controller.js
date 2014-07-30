@@ -47,5 +47,9 @@ angular.module('Bastion.host-collections').controller('HostCollectionsController
             $scope.transitionTo('host-collections.index');
         };
 
+        $scope.$on("updateContentHostCollection", function (event, hostCollectionRow) {
+            $scope.table.replaceRow(hostCollectionRow);
+        });
+
     }]
 );

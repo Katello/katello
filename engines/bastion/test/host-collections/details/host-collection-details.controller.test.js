@@ -83,4 +83,14 @@ describe('Controller: HostCollectionDetailsController', function() {
         expect($scope.table.addRow).toHaveBeenCalledWith(newHostCollection)
     });
 
+    it("should be able to raise the host collection event on the .", function() {
+        var eventRaised = false;
+        $scope.$on("updateContentHostCollection", function (event, hostCollectionRow) {
+             eventRaised = true;
+        });
+        $scope.refreshHostCollection();
+        expect(eventRaised).toBe(true);
+    });
+
+
 });

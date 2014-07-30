@@ -57,6 +57,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionContentHost
                 angular.forEach(data.displayMessages.error, function (error) {
                     $scope.$parent.errorMessages.push(error);
                 });
+                $scope.refreshHostCollection();
 
                 $scope.isRemoving = false;
             }, function (response) {
