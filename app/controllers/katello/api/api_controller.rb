@@ -18,6 +18,7 @@ class Api::ApiController < ::Api::BaseController
 
   respond_to :json
   before_filter :turn_off_strong_params
+  before_filter :set_gettext_locale
 
   # override warden current_user (returns nil because there is no user in that scope)
   def current_user
