@@ -36,7 +36,7 @@ describe('Controller: ContentViewVersionDeletionActivationKeysController', funct
         $scope.version = ContentViewVersion.get({id: 1});
         $scope.initEnvironmentWatch = function() {};
         $scope.validateEnvironmentSelection = function() {};
-        $scope.deleteOptions = {activationKeys: {}};
+        $scope.deleteOptions = {activationKeys: {}, environments: {}};
 
         spyOn(Organization, 'readableEnvironments').andCallThrough();
         spyOn($scope, 'validateEnvironmentSelection').andCallThrough();
@@ -84,4 +84,13 @@ describe('Controller: ContentViewVersionDeletionActivationKeysController', funct
         expect($scope.transitionToNext).toHaveBeenCalled();
     });
 
+    it('should construct the activation key link', function () {
+        $scope.searchString = function (contentView, environments) {};
+        spyOn($scope, 'searchString').andReturn('search');
+        spyOn($scope.$state, 'href').andReturn('activationKeys');
+
+        expect($scope.activationKeyLink()).toBe('activationKeys?search=search');
+        expect($scope.searchString).toHaveBeenCalledWith($scope.contentView, $scope.deleteOptions.environments);
+        expect($scope.$state.href).toHaveBeenCalledWith('activation-keys.index');
+    });
 });
