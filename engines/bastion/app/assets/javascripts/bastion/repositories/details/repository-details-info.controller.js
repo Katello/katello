@@ -112,6 +112,26 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             updateRepositoriesTable();
         };
 
+        $scope.getRepoNonDeletableReason = function (repo, product) {
+            var readOnlyReason = null;
+
+            if (repo.$resolved && product.$resolved) {
+                if ($scope.denied('delete_products', product)) {
+                    readOnlyReason = 'permissions';
+                } else if (repo.promoted) {
+                    readOnlyReason = 'published';
+                } else if (repo['product_type'] === "redhat") {
+                    readOnlyReason = 'redhat';
+                }
+            }
+
+            return readOnlyReason;
+        };
+
+        $scope.canRemove = function (repo, product) {
+            return $scope.getRepoNonDeletableReason(repo, product) === null;
+        };
+
         updateRepositoriesTable = function () {
             $scope.repositoriesTable.replaceRow($scope.repository);
         };

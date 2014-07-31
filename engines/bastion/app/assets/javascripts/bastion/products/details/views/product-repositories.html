@@ -11,10 +11,29 @@
 
   <span class="pull-right">
 
+      <div alch-modal="removeSelectedRepositories()" model="table"
+           modal-header='Remove {{ repositoriesTable.numSelected  }} Repositories?'
+           modal-body='Are you sure you want to remove the {{ repositoriesTable.numSelected }} repositories selected?'></div>
+
+      <span ng-switch="getRepositoriesNonDeletableReason(product)">
+        <i class="icon-question-sign" ng-switch-when="permissions"
+           tooltip="{{ 'You cannot remove these repositories because you do not have permission.' | translate }}"
+           tooltip-animation="false"
+           tooltip-placement="left"
+           tooltip-append-to-body="true">
+        </i>
+        <i class="icon-question-sign" ng-switch-when="redhat"
+           tooltip="{{ 'You cannot remove these repositories because they belong to a Red Hat product.' | translate }}"
+           tooltip-animation="false"
+           tooltip-placement="left"
+           tooltip-append-to-body="true">
+        </i>
+      </span>
+
       <button class="btn btn-default"
-              ng-hide="denied('delete_products', product)"
-              ng-disabled="removingRepositories || repositoriesTable.numSelected == 0"
-              ng-click="openModal()">
+              ng-click="openModal()"
+              ng-show="canRemoveRepositories(product)"
+              ng-disabled="removingRepositories || repositoriesTable.numSelected == 0">
         <span ng-show="removingRepositories">
           <i class="icon-spinner inline-icon icon-spin"></i>
           <span>{{ "Removing Repositories" | translate }}</span>
@@ -23,12 +42,8 @@
           <i class="icon-trash"></i>
           {{ "Remove Repositories" | translate }}
         </span>
+
       </button>
-
-
-      <div alch-modal="removeSelectedRepositories()" model="table"
-           modal-header='Remove {{ repositoriesTable.numSelected  }} Repositories?'
-           modal-body='Are you sure you want to remove the {{ repositoriesTable.numSelected }} repositories selected?'></div>
 
     <button class="btn btn-default"
             ng-click="syncSelectedRepositories()"

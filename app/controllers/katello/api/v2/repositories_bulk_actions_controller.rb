@@ -18,21 +18,41 @@ module Katello
     api :PUT, "/repositories/bulk/destroy", N_("Destroy one or more repositories")
     param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def destroy_repositories
-      deletable_repositories = @repositories.deletable
+      deletion_authorized_repositories = @repositories.deletable
+
+      unpromoted_repos = deletion_authorized_repositories.reject {|repo| repo.promoted?}
+
+      deletable_repositories = unpromoted_repos.reject {|repo| repo.redhat?}
 
       deletable_repositories.each do |repository|
         trigger(::Actions::Katello::Repository::Destroy, repository)
       end
 
-      messages = format_bulk_action_messages(
-        :success    => _("Successfully removed %s repositories"),
-        :error      => _("You were not allowed to delete %s"),
+      messages1 = format_bulk_action_messages(
+        :success    => "",
+        :error      => _("You do not have permissions to delete %s"),
         :models     => @repositories,
+        :authorized => deletion_authorized_repositories
+      )
+
+      messages2 = format_bulk_action_messages(
+        :success    => "",
+        :error      => _("Repository %s cannot be deleted since it has already been included in a published Content View."),
+        :models     => deletion_authorized_repositories,
+        :authorized => unpromoted_repos
+      )
+
+      messages3 = format_bulk_action_messages(
+        :success    => _("Successfully initiated deletion for %s repositories, you are free to leave this page."),
+        :error      => _("Repository %s cannot be deleted since they are Red Hat repositories."),
+        :models     => unpromoted_repos,
         :authorized => deletable_repositories
       )
 
+      messages3[:error] = messages3[:error] + messages1[:error] + messages2[:error]
+
       respond_for_show :template => 'bulk_action', :resource_name => 'common',
-                       :resource => { 'displayMessages' => messages }
+                       :resource => { 'displayMessages' => messages3 }
     end
 
     api :POST, "/repositories/bulk/sync", N_("Synchronize repository")
