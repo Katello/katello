@@ -83,6 +83,10 @@ class ContentView < Katello::Model
     name
   end
 
+  def content_host_count
+    systems.count
+  end
+
   def copy(new_name)
     new_view = ContentView.new
     new_view.name = new_name
