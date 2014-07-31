@@ -121,7 +121,7 @@ module Katello
           #TODO: handle multiple variants
           filters = [{:terms => {:repoids => repo_ids}},
                      {:term => {:version => host.os.release}},
-                     {:term => {:arch => host.arch.name}}]
+                     {:term => {:arch => host.architecture.name}}]
           distributions = Katello::Distribution.search do
             filter :and, filters
           end

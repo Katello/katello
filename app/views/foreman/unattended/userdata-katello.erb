@@ -24,7 +24,7 @@ write_files:
 <%= indent 4 do
       snippet 'subscription_manager_registration'
     end %>
-<% if @host.info["parameters"]["realm"] && @host.otp && @host.realm && @host.realm.realm_type == "FreeIPA" -%>
+<% if @host.respond_to?(:realm) && @host.otp && @host.realm && @host.realm.realm_type == "FreeIPA" -%>
 <%= indent 4 do
       snippet 'freeipa_register'
     end %>
