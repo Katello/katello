@@ -23,8 +23,25 @@
  */
 angular.module('Bastion').factory('BastionResource', ['$resource', function ($resource) {
 
-    return function (url, paramDefaults, actions) {
+    return function (url, paramDefaults, actions, node) {
         var defaultActions;
+
+        var unwrapResponse = function (data, headersGetter) {
+            data = JSON.parse(data);
+            if (data.results === undefined) {
+                data = data[node];
+            }
+
+            return data;
+        };
+
+        var wrapRequest = function (data, headersGetter) {
+            var transformed = {};
+
+            transformed[node] = data;
+
+            return JSON.stringify(transformed);
+        };
 
         defaultActions = {
             queryPaged: {method: 'GET', isArray: false},
@@ -32,6 +49,11 @@ angular.module('Bastion').factory('BastionResource', ['$resource', function ($re
         };
 
         actions = angular.extend({}, defaultActions, actions);
+
+        angular.forEach(actions, function (action) {
+            action.transformRequest = wrapRequest;
+            action.transformResponse = unwrapResponse;
+        });
 
         return $resource(url, paramDefaults, actions);
     };
