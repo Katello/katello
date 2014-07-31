@@ -6,11 +6,6 @@
 
 require 'util/password'
 
-# Can be specified via the command line using:
-# rake db:seed SEED_INITIAL_ORGANIZATION=MyOrg SEED_INITIAL_LOCATION=MyDefault
-first_org_name = ENV['SEED_INITIAL_ORGANIZATION'] || 'Default_Organization'
-first_location_name = ENV['SEED_INITIAL_LOCATION'] || 'Default_Location'
-
 def format_errors(model = nil)
   return '(nil found)' if model.nil?
   model.errors.full_messages.join(';')
@@ -29,18 +24,6 @@ unless hidden_user = ::User.hidden.first
   hidden_user.save!
   fail "Unable to create hidden user: #{format_errors hidden_user}" if hidden_user.nil? || hidden_user.errors.size > 0
 end
-
-first_org_desc = first_org_name + " Organization"
-first_org_label = first_org_name.gsub(' ', '_')
-# create the default org = "admin" if none exist
-first_org = Organization.find_or_create_by_name(:name => first_org_name, :label => first_org_label, :description => first_org_desc)
-fail "Unable to create first org: #{format_errors first_org}" if first_org && first_org.errors.size > 0
-fail "Are you sure you cleared candlepin?! Unable to create first org!" if first_org.kt_environments.nil?
-
-# Create an Initial Location.
-# This is a global location for the satelite server by default
-location = Location.find_or_create_by_name(:name => first_location_name)
-location.update_attributes!(:katello_default => true) unless Location.default_location
 
 if Katello.config.use_pulp
   Katello::Repository.ensure_sync_notification
