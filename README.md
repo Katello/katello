@@ -4,6 +4,9 @@ Full documentation is at http://katello.github.io/katello
 
 ## About
 
+
+Note: David Is Not At katello cookout
+
 [Katello](http://www.katello.org) is a systems life cycle management
 plugin to [Foreman](http://www.theforeman.org). Katello allows you to manage
 thousands of machines with one click. Katello can pull content
