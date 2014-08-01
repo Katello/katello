@@ -303,6 +303,19 @@ module Resources
       end
 
       def self.resource(url, client_cert, client_key, ca_file)
+        if Katello.config.cdn_proxy && Katello.config.cdn_proxy.host
+          proxy_config = Katello.config.cdn_proxy
+          uri = URI('')
+
+          uri.scheme = URI.parse(proxy_config.host).scheme
+          uri.host = URI.parse(proxy_config.host).host
+          uri.port = proxy_config.port
+          uri.user = proxy_config.user
+          uri.password = proxy_config.password
+
+          RestClient.proxy = uri.to_s
+        end
+
         RestClient::Resource.new(url,
                                  :ssl_client_cert => OpenSSL::X509::Certificate.new(client_cert),
                                  :ssl_client_key => OpenSSL::PKey::RSA.new(client_key),
@@ -317,6 +330,8 @@ module Resources
         return resource(url, client_cert, client_key, ca_file).get
       rescue => e
         raise e
+      ensure
+        RestClient.proxy = ""
       end
 
       def self.update(url, client_cert, client_key, ca_file, attributes)
@@ -327,6 +342,8 @@ module Resources
                                                                    {'accept' => 'application/json',
                                                                     'accept-language' => I18n.locale,
                                                                     'content-type' => 'application/json'})
+      ensure
+        RestClient.proxy = ""
       end
 
     end
