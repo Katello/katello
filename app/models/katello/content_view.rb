@@ -164,9 +164,9 @@ class ContentView < Katello::Model
     version(env).content_view_version_environments.select {|cvve| cvve.environment_id == env.id}
   end
 
-   def resulting_products
-     (self.repositories.collect{|r| r.product}).uniq
-   end
+  def resulting_products
+    (self.repositories.collect{|r| r.product}).uniq
+  end
 
   def repos(env = nil)
     if env

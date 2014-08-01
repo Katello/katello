@@ -178,14 +178,13 @@ class Provider < Katello::Model
 
   protected
 
-   def sanitize_repository_url
-     if redhat_provider? && self.repository_url.blank?
-       self.repository_url = Katello.config.redhat_repository_url
-     end
-     if self.repository_url
-       self.repository_url.strip!
-     end
-   end
-
+  def sanitize_repository_url
+    if redhat_provider? && self.repository_url.blank?
+      self.repository_url = Katello.config.redhat_repository_url
+    end
+    if self.repository_url
+      self.repository_url.strip!
+    end
+  end
 end
 end

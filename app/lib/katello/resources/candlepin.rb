@@ -367,7 +367,7 @@ module Resources
 
         def find(key)
           owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(User.cp_oauth_header)).body
-            JSON.parse(owner_json).with_indifferent_access
+          JSON.parse(owner_json).with_indifferent_access
         end
 
         def update(key, attrs)

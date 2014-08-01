@@ -23,7 +23,7 @@ Foreman::Plugin.find(:katello).security_block :lifecycle_environments do
              },
              :resource_type => 'Katello::KTEnvironment'
 
-   permission :promote_or_remove_content_views_to_environments,
-              {},
-              :resource_type => 'Katello::KTEnvironment'
+  permission :promote_or_remove_content_views_to_environments,
+             {},
+             :resource_type => 'Katello::KTEnvironment'
 end

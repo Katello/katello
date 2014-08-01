@@ -122,20 +122,19 @@ class Distributor < Katello::Model
 
   private
 
-    def save_task_status(pulp_task, task_type, parameters_type, parameters)
-      # TODO: remove entirely from distributor model, or need to keep as stub?
-    end
+  def save_task_status(pulp_task, task_type, parameters_type, parameters)
+    # TODO: remove entirely from distributor model, or need to keep as stub?
+  end
 
-    def fill_defaults
-      self.description = _("Initial Creation Params") unless self.description
-      self.location = _("None") unless self.location
-    end
+  def fill_defaults
+    self.description = _("Initial Creation Params") unless self.description
+    self.location = _("None") unless self.location
+  end
 
-    def collect_custom_info
-      hash = {}
-      self.custom_info.each { |c| hash[c.keyname] = c.value } if self.custom_info
-      hash
-    end
-
+  def collect_custom_info
+    hash = {}
+    self.custom_info.each { |c| hash[c.keyname] = c.value } if self.custom_info
+    hash
+  end
 end
 end
