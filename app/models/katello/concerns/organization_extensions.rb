@@ -76,11 +76,11 @@ module Katello
 
         # Ensure that the name and label namespaces do not overlap
         def unique_name_and_label
-          if new_record? && Organization.where("name = ? OR label = ?", label, name).any?
+          if new_record? && Organization.where("name = ? OR label = ?", name, label).any?
             errors.add(:organization, _("Names and labels must be unique across all organizations"))
-          elsif label_changed? && Organization.where("id != ? AND name = ?", id, label).any?
+          elsif label_changed? && Organization.where("id != ? AND label = ?", id, label).any?
             errors.add(:label, _("Names and labels must be unique across all organizations"))
-          elsif name_changed? && Organization.where("id != ? AND label = ?", id, name).any?
+          elsif name_changed? && Organization.where("id != ? AND name = ?", id, name).any?
             errors.add(:name, _("Names and labels must be unique across all organizations"))
           else
             true
