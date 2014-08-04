@@ -61,8 +61,7 @@ module Katello
     end
 
     def self.default_capsule
-      server_fqdn = Facter.value(:fqdn) || SETTINGS[:fqdn]
-      proxy = SmartProxy.where(name: server_fqdn).first
+      proxy = SmartProxy.with_features(SmartProxy::PULP_FEATURE).first
       self.new(proxy) if proxy
     end
   end

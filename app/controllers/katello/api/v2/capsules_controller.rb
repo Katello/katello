@@ -20,7 +20,9 @@ module Katello
     api :GET, '/capsules', 'List all capsules'
     param_group :search, Api::V2::ApiController
     def index
-      super
+      @smart_proxies = SmartProxy.with_content.authorized(:view_smart_proxies).includes(:features).
+                search_for(*search_options).paginate(paginate_options)
+      @total = SmartProxy.with_content.authorized(:view_smart_proxies).includes(:features).count
     end
 
     api :GET, '/capsules/:id', 'Show the capsule details'

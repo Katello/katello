@@ -16,6 +16,9 @@ module Katello
     module SmartProxyExtensions
       extend ActiveSupport::Concern
 
+      PULP_FEATURE = "Pulp"
+      PULP_NODE_FEATURE = "Pulp Node"
+
       included do
         before_create :associate_organizations
         before_create :associate_default_location
@@ -37,11 +40,13 @@ module Katello
                  :inverse_of => :content_source
         has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :content_source_id,
                  :inverse_of => :content_source
+
+        scope :with_content, with_features(PULP_FEATURE, PULP_NODE_FEATURE)
+
       end
 
       def default_capsule?
-        server_fqdn = Facter.value(:fqdn) || SETTINGS[:fqdn]
-        self.name == server_fqdn
+        self.features.pluck(:name).include?(PULP_FEATURE)
       end
 
       def associate_organizations

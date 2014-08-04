@@ -1,4 +1,4 @@
-<% unless @smart_proxy.new_record? -%>
+<% if !@smart_proxy.new_record? && @smart_proxy.features.pluck(:name).include?(SmartProxy::PULP_NODE_FEATURE) -%>
   <div class="tab-pane" id="kt_environments">
     <%= multiple_selects f, :lifecycle_environments, Katello::KTEnvironment.completer_scope(:organization_id => ::Organization.current.try(:id)), @smart_proxy.lifecycle_environment_ids, {:label => _('Lifecyle Environments')}, @smart_proxy.default_capsule? ? {:disabled => :disabled } : {}  %>
 
