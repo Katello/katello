@@ -26,7 +26,7 @@ module Katello
 
     def_param_group :host_collection do
       param :name, String, :required => true, :desc => N_("Host Collection name")
-      param :system_ids, Array, :required => false, :desc => N_("List of system uuids to be in the host collection")
+      param :system_ids, Array, :required => false, :desc => N_("List of content host uuids to be in the host collection")
       param :description, String
       param :max_content_hosts, Integer, :desc => N_("Maximum number of content hosts in the host collection")
       param :unlimited_content_hosts, :bool, :desc => N_("Whether or not the host collection may have unlimited content hosts")
@@ -62,7 +62,7 @@ module Katello
     api :POST, "/host_collections", N_("Create a host collection")
     api :POST, "/organizations/:organization_id/host_collections", N_("Create a host collection")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
-    param :system_uuids, Array, :required => false, :desc => N_("List of system uuids to replace the content hosts in host collection")
+    param :system_uuids, Array, :required => false, :desc => N_("List of content host uuids to replace the content hosts in host collection")
     param_group :host_collection
     def create
       @host_collection = HostCollection.new(host_collection_params_with_system_uuids)
@@ -73,7 +73,7 @@ module Katello
 
     api :PUT, "/host_collections/:id", N_("Update a host collection")
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
-    param :system_uuids, Array, :required => false, :desc => N_("List of system uuids to be in the host collection")
+    param :system_uuids, Array, :required => false, :desc => N_("List of content host uuids to be in the host collection")
     param_group :host_collection
     def update
       @host_collection.update_attributes!(host_collection_params_with_system_uuids)
@@ -91,9 +91,9 @@ module Katello
       respond_for_index(:collection => item_search(System, params, options))
     end
 
-    api :PUT, "/host_collections/:id/add_systems", N_("Add systems to the host collection")
+    api :PUT, "/host_collections/:id/add_systems", N_("Add content host to the host collection")
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
-    param :system_ids, Array, :desc => N_("Array of system ids")
+    param :system_ids, Array, :desc => N_("Array of content host ids")
     def add_systems
       ids = System.uuids_to_ids(params[:system_ids])
       @systems = System.editable.where(:id => ids)
@@ -113,9 +113,9 @@ module Katello
                        :resource => { 'displayMessages' => messages }
     end
 
-    api :PUT, "/host_collections/:id/remove_systems", N_("Remove systems from the host collection")
+    api :PUT, "/host_collections/:id/remove_systems", N_("Remove content hosts from the host collection")
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
-    param :system_ids, Array, :desc => N_("Array of system ids")
+    param :system_ids, Array, :desc => N_("Array of content host ids")
     def remove_systems
       ids = System.uuids_to_ids(params[:system_ids])
       @systems = System.editable.where(:id => ids)
