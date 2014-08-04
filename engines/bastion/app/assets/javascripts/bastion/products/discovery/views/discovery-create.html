@@ -1,5 +1,5 @@
 <span page-title>{{ 'Create Repositories' | translate }}</span>
-  
+
 <div class="loading-mask loading-mask-panel" ng-show="panel.loading">
   <i class="icon-spinner icon-spin"></i>
   <span translate>Loading...</span>
@@ -12,83 +12,61 @@
 
 <h3 translate>Product Selection</h3>
 
-<span translate>Create Repositories within:</span>
-
-<div>
-  <div>
-    <label for="newProduct" translate>Existing Product:</label>
-    <input type="radio"
-           name="newProduct"
-           value="false"
-           ng-model="createRepoChoices.newProduct"
-           ng-disabled="creating()"/>
-    <select ng-hide="createRepoChoices.newProduct"
-            ng-disabled="creating()"
-            ng-model="createRepoChoices.existingProductId"
-            ng-options="product.id as product.name for product in products">
-    </select>
-  </div>
-
-  <div>
-    <label for="newProduct" translate>New Product:</label>
-    <input type="radio"
-           name="newProduct"
-           value="true"
-           ng-model="createRepoChoices.newProduct"
-           ng-disabled="creating()"/>
-  </div>
-</div>
-
-<form name="productForm" class="form" ng-show="createRepoChoices.newProduct" ng-disabled="creating()" novalidate>
-
-  <div class="control-group required" ng-class="{ 'error' : productForm.name.$invalid }">
-    <div class="label">
-      <label for="name" translate>Name</label>
+<form name="productForm" class="form-horizontal" ng-disabled="creating()" novalidate role="form">
+  <div class="details details-full">
+    <span translate>Create Repositories within:</span>
+    <div alch-form-group label="{{ 'Existing Product' | translate }}" class="row">
+      <input type="radio"
+             name="newProduct"
+             value="false"
+             ng-model="createRepoChoices.newProduct"
+             ng-disabled="creating()"/>
+      <select ng-hide="createRepoChoices.newProduct"
+              ng-disabled="creating()"
+              ng-model="createRepoChoices.existingProductId"
+              ng-options="product.id as product.name for product in products">
+      </select>
     </div>
-    <div class="input">
+
+    <div alch-form-group label="{{ 'New Product' | translate }}"  class="row">
+      <input type="radio"
+             name="newProduct"
+             value="true"
+             ng-model="createRepoChoices.newProduct"
+             ng-disabled="creating()"/>
+    </div>
+  </div>
+  <div ng-show="createRepoChoices.newProduct">
+    <div alch-alert error-messages="productErrorMessages"></div>
+
+    <div alch-form-group label="{{ 'Name' | translate }}">
       <input ng-model="createRepoChoices.product.name"
-             name="name"
-             type="text"
-             tabindex=1
-             required/>
-      <span class="note error" ng-show="productForm.name.$invalid">
-        <ul><li ng-repeat="message in productForm.name.$error.messages">{{ message }}</li></ul>
-      </span>
+           id="name"
+           name="name"
+           type="text"
+           tabindex=1
+           required/>
     </div>
-  </div>
 
-  <div class="control-group required" ng-class="{ 'error' : productForm.label.$invalid }">
-    <div class="label">
-      <label class="required" for="label" translate>Label</label>
+    <div alch-form-group label="{{ 'Label' | translate }}">
+        <input ng-model="createRepoChoices.product.label"
+               id="label"
+               name="label"
+               type="text"
+               tabindex=2
+               required/>
     </div>
-    <div class="input">
-      <input ng-model="createRepoChoices.product.label"
-             name="label"
-             type="text"
-             tabindex=2
-             required/>
-      <span class="note error" ng-show="productForm.label.$invalid">
-        <ul><li ng-repeat="message in productForm.label.$error.messages">{{ message }}</li></ul>
-      </span>
-    </div>
-  </div>
 
-  <div class="control-group" >
-    <div class="label">
-      <label for="gpgkey" translate>GPG Key:</label>
+    <div alch-form-group label="{{ 'GPG Key' | translate }}">
+       <select ng-model="createRepoChoices.product.gpg_key_id"
+               ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
+      </select>
     </div>
-    <select
-      ng-model="createRepoChoices.product.gpg_key_id"
-      ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
-    </select>
-  </div>
-
+   </div>
 </form>
 
-
-<div class="form">
+<div class="form-horizontal">
   <h3 translate>Options</h3>
-
   <div class="control-group" >
     <div class="label">
       <label for="unprotected" translate>Serve via HTTP</label>
@@ -100,9 +78,7 @@
 </div>
 
 <section class="form">
-  
   <h3 translate>Selected URLs</h3>
-
   <div ng-repeat="repo in discovery.selected">
     <form novalidate>
 
@@ -133,7 +109,6 @@
       </div>
 
       <div class="control-group required" ng-class="{ 'error' : repo.form.$invalid }">
-
         <div class="label">
           <label translate>Label</label>
         </div>
@@ -147,16 +122,14 @@
                  tabindex=2
                  required/>
         </div>
-
       </div>
-
     </form>
   </div>
 
   <div class="control-group buttons">
     <div class="input">
       <button ng-click="createRepos()"
-              ng-disabled="creating()"
+              ng-disabled="creating() || !requiredFieldsEnabled()"
               translate
               class="btn btn-primary btn-large">
         Create
