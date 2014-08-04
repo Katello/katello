@@ -75,4 +75,20 @@ module ::Actions::Katello::System
       assert_action_planed(action, ::Actions::Pulp::Consumer::Destroy)
     end
   end
+
+  class ActivationKeyTest < TestBase
+    let(:action_class) { ::Actions::Katello::System::ActivationKeys }
+
+    let(:system) { Katello::System.new() }
+
+    let(:activation_keys) { [katello_activation_keys(:simple_key),
+                             katello_activation_keys(:library_dev_staging_view_key)] }
+
+    it 'plans' do
+      plan_action(action, system, activation_keys)
+
+      assert_equal system.environment, activation_keys[1].environment
+      assert_equal system.content_view, activation_keys[1].content_view
+    end
+  end
 end
