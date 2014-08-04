@@ -64,7 +64,8 @@ class Product < Katello::Model
 
   scope :engineering, where(:type => "Katello::Product")
   scope :marketing, where(:type => "Katello::MarketingProduct")
-  scope :syncable_content, joins(:repositories).where(Katello::Repository.arel_table[:url].not_eq(nil))
+  scope :syncable_content, uniq.where(Katello::Repository.arel_table[:url].not_eq(nil))
+    .joins(:repositories)
 
   before_create :assign_unique_label
 
