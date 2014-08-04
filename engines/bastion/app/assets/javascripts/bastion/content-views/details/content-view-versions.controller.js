@@ -85,6 +85,14 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
             return inProgress;
         };
 
+        $scope.taskFailed = function (version) {
+            var failed = false;
+            if (version.task && (version.task.result === 'error')) {
+                failed = true;
+            }
+            return failed;
+        };
+
         function findTaskTypes(activeHistory, taskType) {
             return _.filter(activeHistory, function (history) {
                 return history.task.label === taskType;

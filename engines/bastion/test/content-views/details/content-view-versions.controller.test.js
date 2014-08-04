@@ -75,6 +75,23 @@ describe('Controller: ContentViewVersionsController', function() {
         expect($scope.taskInProgress(version)).toBe(false);
     });
 
+    it("correctly returns task failed", function() {
+        var version = {};
+        expect($scope.taskFailed(version)).toBe(false);
+
+        version = {task: {result: 'success'}};
+        expect($scope.taskFailed(version)).toBe(false);
+
+        version = {task: {result: 'pending'}};
+        expect($scope.taskFailed(version)).toBe(false);
+
+        version = {task: {result: 'warning'}};
+        expect($scope.taskFailed(version)).toBe(false);
+
+        version = {task: {result: 'error'}};
+        expect($scope.taskFailed(version)).toBe(true);
+    });
+
     it("determines what history text to display", function() {
         var version = {active_history: [],
             last_event: {environment: {name: 'test'},
