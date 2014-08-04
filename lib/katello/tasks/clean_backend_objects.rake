@@ -28,6 +28,7 @@ namespace :katello do
         system.del_candlepin_consumer unless cp_fail        
         system.del_pulp_consumer unless pulp_fail
         Katello::System.index.remove system
+        system.system_activation_keys.destroy_all
         system.delete
       end      
     end
