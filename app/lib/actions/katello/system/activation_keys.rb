@@ -29,7 +29,7 @@ module Actions
         def set_environment_and_content_view(system, activation_keys)
           return if system.content_view
 
-          activation_key = activation_keys.detect do |act_key|
+          activation_key = activation_keys.reverse.detect do |act_key|
             act_key.environment && act_key.content_view
           end
           if activation_key
