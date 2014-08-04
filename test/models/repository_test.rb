@@ -234,19 +234,20 @@ class RepositoryInstanceTest < RepositoryTestBase
     new_custom_repo
   end
 
-  def test_nil_feed_url
+  def test_nil_url_url
     new_repo = new_custom_repo
-    new_repo.feed = nil
+    new_repo.url = nil
     assert new_repo.save
     assert new_repo.persisted?
-    assert_equal nil, new_repo.reload.feed
-    refute new_repo.feed?
+    assert_equal nil, new_repo.reload.url
+    refute new_repo.url?
   end
 
-  def test_blank_feed_url
+  def test_blank_url_url
     new_repo = new_custom_repo
+
     original_url = new_repo.url
-    new_repo.feed = ""
+    new_repo.url = ""
     refute new_repo.save
     refute new_repo.errors.empty?
     assert_equal original_url, new_repo.reload.url
@@ -254,7 +255,7 @@ class RepositoryInstanceTest < RepositoryTestBase
 
   def test_nil_rhel_url
     rhel = Repository.find(katello_repositories(:rhel_6_x86_64))
-    rhel.feed = nil
+    rhel.url = nil
     refute rhel.valid?
     refute rhel.save
     refute_empty rhel.errors

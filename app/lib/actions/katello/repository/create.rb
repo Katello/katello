@@ -30,7 +30,7 @@ module Actions
                                         content_type: repository.content_type,
                                         pulp_id: repository.pulp_id,
                                         name: repository.name,
-                                        feed: repository.feed,
+                                        feed: repository.url,
                                         ssl_ca_cert: repository.feed_ca,
                                         ssl_client_cert: repository.feed_cert,
                                         ssl_client_key: repository.feed_key,

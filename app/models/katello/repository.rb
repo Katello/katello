@@ -71,7 +71,7 @@ class Repository < Katello::Model
   validates_with Validators::RepositoryUniqueAttributeValidator, :attributes => :label
   validates_with Validators::RepositoryUniqueAttributeValidator, :attributes => :name
   validates_with Validators::KatelloUrlFormatValidator,
-    :attributes => :feed, :nil_allowed => proc { |o| o.custom? }, :field_name => :url,
+    :attributes => :url, :nil_allowed => proc { |o| o.custom? }, :field_name => :url,
     :if => proc { |o| o.in_default_view? }
   validates :content_type, :inclusion => {
       :in => TYPES,
@@ -80,7 +80,7 @@ class Repository < Katello::Model
   }
 
   default_scope order("#{Katello::Repository.table_name}.name ASC")
-  scope :has_feed, where('feed IS NOT NULL')
+  scope :has_url, where('url IS NOT NULL')
   scope :in_default_view, joins(:content_view_version => :content_view).
     where("#{Katello::ContentView.table_name}.default" => true)
 
@@ -90,8 +90,6 @@ class Repository < Katello::Model
   scope :non_puppet, where("content_type != ?", PUPPET_TYPE)
   scope :non_archived, where('environment_id is not NULL')
   scope :archived, where('environment_id is NULL')
-
-  alias_attribute :url, :feed
 
   def organization
     if self.environment
@@ -406,8 +404,8 @@ class Repository < Katello::Model
     search.in_content_views([view])
   end
 
-  def feed?
-    feed.present?
+  def url?
+    url.present?
   end
 
   def name_conflicts

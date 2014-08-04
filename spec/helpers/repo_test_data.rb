@@ -33,7 +33,7 @@ module RepoTestData
     :arch => 'architecture',
     :relative_path => "ACME_Corporation/Library/zoo/base",
     :content_id=>'123234',
-    :feed => 'https://localhost',
+    :url => 'https://localhost',
     "distributors" => [
        {'config' => {'relative_url'=>"ACME_Corporation/Library/zoo/base"}}
     ],
@@ -47,7 +47,7 @@ module RepoTestData
     :label => REPO_LABEL,
     :arch => 'architecture',
     :relative_path => "ACME_Corporation/Dev/zoo/base",
-    :feed => 'https://localhost',
+    :url => 'https://localhost',
     "distributors" => [
        {'config' => {'relative_url'=>"ACME_Corporation/Library/zoo/base"}}
     ]

@@ -58,7 +58,7 @@ module Katello
     api :POST, "/repositories/bulk/sync", N_("Synchronize repository")
     param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def sync_repositories
-      syncable_repositories = @repositories.syncable.has_feed
+      syncable_repositories = @repositories.syncable.has_url
       syncable_repositories.each do |repo|
         async_task(::Actions::Katello::Repository::Sync, repo)
       end
@@ -74,7 +74,7 @@ module Katello
         :success    => _("Successfully started sync for %s repositories, you are free to leave this page."),
         :error      => _("Repository %s does not have a feed url."),
         :models     => @repositories,
-        :authorized => @repositories.has_feed
+        :authorized => @repositories.has_url
       )
 
       messages2[:error] += messages1[:error]

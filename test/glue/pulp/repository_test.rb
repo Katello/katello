@@ -29,7 +29,7 @@ class GluePulpRepoTestBase < ActiveSupport::TestCase
 
     @@fedora_17_x86_64 = Repository.find(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
     @@fedora_17_x86_64.relative_path = '/test_path/'
-    @@fedora_17_x86_64.feed = "file:///var/www/test_repos/zoo"
+    @@fedora_17_x86_64.url = "file:///var/www/test_repos/zoo"
   end
 
   def self.delete_repo(repo)
@@ -49,7 +49,7 @@ class GluePulpRepoTestBase < ActiveSupport::TestCase
                             content_type: repository.content_type,
                             pulp_id: repository.pulp_id,
                             name: repository.name,
-                            feed: repository.feed,
+                            feed: repository.url,
                             ssl_ca_cert: repository.feed_ca,
                             ssl_client_cert: repository.feed_cert,
                             ssl_client_key: repository.feed_key,
@@ -194,7 +194,7 @@ class GluePulpChangeFeedTest < GluePulpRepoTestBase
 
   def test_feed_change
     new_feed = "http://foo.com/foo"
-    @@fedora_17_x86_64.feed = new_feed
+    @@fedora_17_x86_64.url = new_feed
     @@fedora_17_x86_64.save!
     pulps_feed = Repository.find(@@fedora_17_x86_64.id).pulp_repo_facts['importers'].first['config']['feed']
     assert_equal new_feed, pulps_feed
@@ -210,7 +210,7 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
     VCR.insert_cassette('pulp/repository/puppet')
     @@p_forge = Repository.find(@loaded_fixtures['katello_repositories']['p_forge']['id'])
     @@p_forge.relative_path = '/test_path/'
-    @@p_forge.feed = "http://davidd.fedorapeople.org/repos/random_puppet/"
+    @@p_forge.url = "http://davidd.fedorapeople.org/repos/random_puppet/"
     create_repo(@@p_forge)
   end
 

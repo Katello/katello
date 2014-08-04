@@ -40,13 +40,13 @@ module RepositorySupport
   def self.create_repo(repo_id)
     @repo = Repository.find(repo_id)
     @repo.relative_path = '/test_path/'
-    @repo.feed = @repo.content_type == 'puppet' ? @puppet_repo_url : @repo_url
+    @repo.url = @repo.content_type == 'puppet' ? @puppet_repo_url : @repo_url
 
     ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Create,
                              content_type: @repo.content_type,
                              pulp_id: @repo.pulp_id,
                              name: @repo.name,
-                             feed: @repo.feed,
+                             feed: @repo.url,
                              ssl_ca_cert: @repo.feed_ca,
                              ssl_client_cert: @repo.feed_cert,
                              ssl_client_key: @repo.feed_key,

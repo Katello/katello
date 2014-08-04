@@ -302,7 +302,7 @@ module Glue::Pulp::Repos
                      :arch => arch,
                      :name => name,
                      :label => label,
-                     :feed => url,
+                     :url => url,
                      :gpg_key => gpg,
                      :unprotected => unprotected,
                      :content_type => repo_type,

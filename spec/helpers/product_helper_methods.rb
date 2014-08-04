@@ -42,7 +42,7 @@ module ProductHelperMethods
     repo = Repository.new(:environment => env, :product => @p, :name=>"FOOREPO" + suffix,
                           :label=>"FOOREPO" + suffix, :pulp_id=>RepoTestData::REPO_ID,
                           :content_id=> "1234", :content_view_version=>env.default_content_view_version,
-                          :relative_path=>'/foo/', :feed => 'https://localhost.com/foo')
+                          :relative_path=>'/foo/', :url => 'https://localhost.com/foo')
     repo.stubs(:create_pulp_repo).returns([])
     repo.save!
 
@@ -73,7 +73,7 @@ module ProductHelperMethods
     repo.stubs(:pulp_repo_facts).returns({'distributors' => []})
     repo.stubs(:content => {:id => "123"})
     Repository.where(:environment_id => environment, :product_id => repo.product).first.tap do |promoted|
-        promoted.stubs(:feed => repo.feed)
+        promoted.stubs(:url => repo.url)
     end
   end
 end
