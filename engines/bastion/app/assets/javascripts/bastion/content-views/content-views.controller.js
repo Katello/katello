@@ -32,8 +32,7 @@ angular.module('Bastion.content-views').controller('ContentViewsController',
         var nutupane = new Nutupane(ContentView, {
             'nondefault':       true,
             'organization_id':  CurrentOrganization,
-            'sort_by':          'name',
-            'sort_order':       'ASC'
+            'order':            'name ASC'
         });
 
         $scope.table = nutupane.table;

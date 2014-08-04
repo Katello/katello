@@ -38,8 +38,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
         var params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
-            'sort_by':          'name',
-            'sort_order':       'ASC'
+            'order':            'name ASC'
         };
 
         var nutupane = new Nutupane(ContentHost, params);

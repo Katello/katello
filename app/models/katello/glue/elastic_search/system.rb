@@ -17,10 +17,17 @@
 module Katello
 module Glue::ElasticSearch::System
 
+  module ClassMethods
+    def sortable_fields
+      %w(name environment content_view)
+    end
+  end
+
   # rubocop:disable MethodLength
   def self.included(base)
     base.class_eval do
       include Ext::IndexedModel
+      extend ClassMethods
 
       add_host_collection_hook     lambda { |host_collection| reindex_on_association_change(host_collection) }
       remove_host_collection_hook  lambda { |host_collection| reindex_on_association_change(host_collection) }

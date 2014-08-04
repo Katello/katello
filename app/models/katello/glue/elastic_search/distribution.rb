@@ -13,11 +13,18 @@
 module Katello
 module Glue::ElasticSearch::Distribution
 
+  module ClassMethods
+    def sortable_fields
+      []
+    end
+  end
+
   # TODO: break this up into modules
   # rubocop:disable MethodLength
   def self.included(base)
     base.class_eval do
       include Glue::ElasticSearch::BackendIndexedModel
+      extend ClassMethods
 
       def index_options
         {

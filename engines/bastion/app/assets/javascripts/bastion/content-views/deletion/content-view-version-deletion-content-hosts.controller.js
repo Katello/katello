@@ -36,8 +36,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
         params = {
             'organization_id':  CurrentOrganization,
             'content_view_id':  $scope.contentView.id,
-            'sort_by':          'name',
-            'sort_order':       'ASC'
+            'order':            'name ASC'
         };
         nutupane = new Nutupane(ContentHost, params);
 

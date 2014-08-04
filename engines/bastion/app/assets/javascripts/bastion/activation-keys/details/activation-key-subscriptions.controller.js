@@ -33,8 +33,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeySubscriptions
         params = {
             'id':          $scope.$stateParams.activationKeyId,
             'search':      $location.search().search || "",
-            'sort_by':     'name',
-            'sort_order':  'ASC',
+            'order':       'name ASC',
             'paged':       true
         };
 

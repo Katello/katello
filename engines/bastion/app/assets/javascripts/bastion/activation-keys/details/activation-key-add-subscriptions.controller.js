@@ -38,8 +38,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddSubscripti
             'id':                       $scope.$stateParams.activationKeyId,
             'organization_id':          CurrentOrganization,
             'search':                   $location.search().search || "",
-            'sort_by':                  'name',
-            'sort_order':               'ASC'
+            'order':                    'name ASC'
         };
 
         addSubscriptionsPane = new Nutupane(ActivationKey, params, 'availableSubscriptions');

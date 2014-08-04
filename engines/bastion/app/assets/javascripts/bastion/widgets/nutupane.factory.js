@@ -298,15 +298,18 @@ angular.module('Bastion.widgets').factory('Nutupane',
                     return;
                 }
 
-                params["sort_by"] = column.id;
+                var sortOrder, sortBy = column.id;
                 if (column.id === sort.by) {
-                    params["sort_order"] = (sort.order === 'ASC') ? 'DESC' : 'ASC';
+                    sortOrder = (sort.order === 'ASC') ? 'DESC' : 'ASC';
                 } else {
-                    params["sort_order"] = 'ASC';
+                    sortOrder = 'ASC';
                 }
 
-                column.sortOrder = params["sort_order"];
+                column.sortOrder = sortOrder;
                 column.active = true;
+
+                params['order'] = sortBy + ' ' + sortOrder;
+
                 self.table.rows = [];
                 self.query();
             };

@@ -13,6 +13,12 @@
 module Katello
 module Glue::ElasticSearch::Errata
 
+  module ClassMethods
+    def sortable_fields
+      %w(id errata_id issued)
+    end
+  end
+
   SHORT_FIELDS =  [:id, :errata_id, :type, :summary, :severity, :title, :issued]
 
   # TODO: break this up into modules
@@ -20,6 +26,7 @@ module Glue::ElasticSearch::Errata
   def self.included(base)
     base.class_eval do
       include Glue::ElasticSearch::BackendIndexedModel
+      extend ClassMethods
 
       def self.index_settings
         {
@@ -58,8 +65,7 @@ module Glue::ElasticSearch::Errata
               :severity     => { :type => 'string', :analyzer => :kt_name_analyzer},
               :type         => { :type => 'string', :analyzer => :kt_name_analyzer},
               :title        => { :type => 'string', :analyzer => :title_analyzer},
-              :issued       => { :type => 'date'},
-              :issued_sort  => { :type => 'date', :index => :not_analyzed}
+              :issued       => { :type => 'date'}
             }
           }
         }

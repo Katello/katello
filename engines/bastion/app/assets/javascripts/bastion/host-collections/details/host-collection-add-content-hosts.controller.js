@@ -35,8 +35,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddContentH
             'organization_id':          CurrentOrganization,
             'search':                   $location.search().search || "",
             'page':                     1,
-            'sort_by':                  'name',
-            'sort_order':               'ASC',
+            'order':                    'name ASC',
             'paged':                    true
         };
 

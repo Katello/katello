@@ -34,8 +34,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeysController',
         var params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
-            'sort_by':          'name',
-            'sort_order':       'ASC',
+            'order':            'name ASC',
             'paged':            true
         };
 

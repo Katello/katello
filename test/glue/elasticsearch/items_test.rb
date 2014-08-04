@@ -26,6 +26,10 @@ class GlueElasticSearchTest < ActiveSupport::TestCase
       def self.mapping(*args)
         {}
       end
+
+      def self.sortable_fields
+        %w(name)
+      end
     end
 
     @results = MiniTest::Mock.new

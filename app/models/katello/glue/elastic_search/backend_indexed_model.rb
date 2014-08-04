@@ -20,10 +20,13 @@ module Glue::ElasticSearch::BackendIndexedModel
   end
 
   module InstanceMethods
-
   end
 
   module ClassMethods
+
+    def sortable_fields
+      %w(name)
+    end
 
     def index_all
       self.create_index
