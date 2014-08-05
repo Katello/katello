@@ -46,13 +46,13 @@ KT.content_search_templates = (function(i18n) {
         },
         errata_header = function(display) {
             if(display["errata_type"] === "bugfix") {
-                display["icon_class"] = "bug_icon-black";
+                display["icon_class"] = "bugzilla_icon";
             }
             else if(display["errata_type"] === "enhancement") {
-                display["icon_class"] = "plus_icon-black";
+                display["icon_class"] = "enhancement_icon";
             }
             else if(display["errata_type"] === "security") {
-                display["icon_class"] = "shield_icon-black";
+                display["icon_class"] = "security_icon";
             }
             else {
                 display["icon_class"] = "enhancement_icon";
