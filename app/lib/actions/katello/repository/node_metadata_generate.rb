@@ -15,12 +15,13 @@ module Actions
     module Repository
       class NodeMetadataGenerate < Actions::Base
 
-        def plan(repo)
+        def plan(repo, dependency = nil)
           return unless repo.environment
           sequence do
             unless repo.puppet? && repo.content_view.default?
               plan_action(Pulp::Repository::DistributorPublish,
                           pulp_id: repo.pulp_id,
+                          dependency: dependency,
                           distributor_type_id: Runcible::Models::NodesHttpDistributor.type_id)
             end
             concurrence do

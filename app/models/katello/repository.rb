@@ -390,6 +390,23 @@ class Repository < Katello::Model
 
   end
 
+  def cancel_dynflow_sync
+    if latest_dynflow_sync
+      plan = latest_dynflow_sync.execution_plan
+
+      plan.steps.each_pair do |number, step|
+        if step.cancellable? && step.is_a?(Dynflow::ExecutionPlan::Steps::RunStep)
+          ::ForemanTasks.dynflow.world.event(plan.id, step.id, Dynflow::Action::Cancellable::Cancel)
+        end
+      end
+    end
+  end
+
+  def latest_dynflow_sync
+    ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Repository::Sync).
+              for_resource(self).order(:started_at).last
+  end
+
   def create_clone(options)
     clone = build_clone(options)
     clone.save!

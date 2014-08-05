@@ -7,7 +7,7 @@
       = "(Orphaned)" if prod[:object].orphaned?
     %td.max_width.start_time
     %td.max_width.duration
-    %td.size= @product_size[pid]
+    %td
     %td.result{:id =>'table_#{pid}'}
     - if @show_org
       %td= prod[:organization]

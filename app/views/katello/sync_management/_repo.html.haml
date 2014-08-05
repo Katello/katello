@@ -10,9 +10,9 @@
     #{@repo_status[repo.id][:duration]}
   %td.size{ "data-size" => @repo_status[repo.id][:size] }
     #{@repo_status[repo.id][:display_size]}
-    (#{@repo_status[repo.id][:packages]})
   %td.result
-    %a.info-tipsy.clickable.icon-warning-sign{ "class" => "#{"hidden" if !error_state?(@repo_status[repo.id])}", :href => notices_path }
+    %a.info-tipsy.clickable.icon-warning-sign{ "class" => "#{"hidden" if @repo_status[repo.id][:raw_state] != 'error'}",
+                                               :href => "/foreman_tasks/tasks/#{@repo_status[repo.id][:sync_id]}"}
       %span.hidden-text.hidden
         .la.error-tipsy
           %ul
@@ -20,6 +20,8 @@
               - @repo_status[repo.id][:error_details][:messages].each do |error|
                 %li #{error}
     %span.result-info
-      #{@repo_status[repo.id][:state]}
+      %a{:href => "/foreman_tasks/tasks/#{@repo_status[repo.id][:sync_id]}"}
+        #{@repo_status[repo.id][:state]}
+
   - if @show_org
     %td
