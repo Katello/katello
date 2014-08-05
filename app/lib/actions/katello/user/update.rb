@@ -21,6 +21,10 @@ module Actions
           plan_action ElasticSearch::Reindex, user
         end
 
+        def resource_locks
+          :link
+        end
+
       end
     end
   end
