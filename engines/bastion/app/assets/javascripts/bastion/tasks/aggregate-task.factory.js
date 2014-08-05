@@ -37,6 +37,7 @@ angular.module('Bastion.tasks').factory('AggregateTask',
                 taskSearches = {},
                 taskRepresentation = {
                     state: undefined,
+                    result: undefined,
                     progressbar: {}
                 };
 
@@ -90,6 +91,21 @@ angular.module('Bastion.tasks').factory('AggregateTask',
                 });
                 return found;
             },
+            greatestResult = function () {
+                var found = 'success',
+                    weights = {
+                        error: 4,
+                        warning: 3,
+                        pending: 2,
+                        success: 1
+                    };
+                _.each(taskMap, function (task) {
+                    if (weights[task.result] > weights[found]) {
+                        found = task.result;
+                    }
+                });
+                return found;
+            },
             updateProgress = function () {
                 var total = 0;
                 _.each(taskMap, function (task) {
@@ -98,6 +114,7 @@ angular.module('Bastion.tasks').factory('AggregateTask',
                 taskRepresentation.progressbar.value = total / _.size(taskMap);
                 taskRepresentation.progressbar.type = greatestType();
                 taskRepresentation.state = greatestState();
+                taskRepresentation.result = greatestResult();
             };
 
             taskRepresentation.unregisterAll = unregisterAll;

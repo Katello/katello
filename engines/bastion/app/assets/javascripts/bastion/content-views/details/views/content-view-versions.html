@@ -69,7 +69,7 @@
           <button class="btn btn-default"
                   ui-sref="content-views.details.promotion({contentViewId: contentView.id, versionId: version.id})"
                   ng-hide="denied('promote_or_remove_content_views', contentView)"
-                  ng-disabled="taskInProgress(version)">
+                  ng-disabled="taskInProgress(version) || taskFailed(version)">
             <i class="icon-share-alt"></i>
             <span translate>
               Promote
@@ -78,7 +78,7 @@
           <button class="btn btn-default"
                   ui-sref="content-views.details.version-deletion.environments({contentViewId: contentView.id, versionId: version.id})"
                   ng-hide="denied('promote_or_remove_content_views', contentView)"
-                  ng-disabled="taskInProgress(version)">
+                  ng-disabled="taskInProgress(version) || taskFailed(version)">
             <i class="icon-trash"></i>
             <span translate>
               Remove
