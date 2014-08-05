@@ -1,3 +1,10 @@
+# error out if called directly
+if [ $BASH_SOURCE == $0 ]
+then
+  echo "This script should not be executed directly, use foreman-debug instead."
+  exit 1
+fi
+
 # General stuff
 add_files "/var/log/audit/audit.log"
 
