@@ -35,7 +35,7 @@
               ng-options="capsule.url for capsule in capsules.results">
       </select>
 
-      <pre ng-show="selectedCapsule"><code>subscription-manager register --org="{{ organization.label }}" --baseurl="https://{{ hostname(selectedCapsule.url) }}/pulp/repos</code></pre>
+      <pre ng-show="selectedCapsule"><code>subscription-manager register --org="{{ organization.label }}" --baseurl="https://{{ hostname(selectedCapsule.url) }}/pulp/repos"</code></pre>
     </p>
   </div>
 </section>
