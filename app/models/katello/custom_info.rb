@@ -42,32 +42,6 @@ class CustomInfo < Katello::Model
     return informable
   end
 
-  def self.apply_to_set(ids_and_types, custom_info_list)
-    list_of_objects = ids_and_types.inject([]) do |collection, obj|
-      collection << CustomInfo.find_informable(obj[:informable_type], obj[:informable_id])
-    end
-
-    affected = []
-    list_of_objects.each do |obj|
-
-      to_apply = custom_info_list.collect { |c| c[:keyname] } - obj.custom_info.collect { |c| c[:keyname] }
-      custom_info_list.select { |c| to_apply.include?(c[:keyname]) }.each do |info|
-        info[:org_default] = true
-        obj.custom_info.create!(info)
-        affected << { :informable_type => obj.class.name, :informable_id => obj.id }
-      end
-
-      to_remove = obj.custom_info.select { |c| c[:org_default] }.collect { |c| c[:keyname] } - custom_info_list.collect { |c| c[:keyname] }
-      to_remove.each do |key|
-        ci = obj.custom_info.find_by_keyname(key)
-        ci.destroy
-        affected << { :informable_type => obj.class.name, :informable_id => obj.id }
-      end
-
-    end
-    return affected.uniq
-  end
-
   def reindex_informable
     self.informable.class.index.import([self.informable])
   end

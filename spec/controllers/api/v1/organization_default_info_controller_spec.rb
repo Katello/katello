@@ -125,44 +125,5 @@ describe Api::V1::OrganizationDefaultInfoController do
     end
 
   end
-
-  describe "apply default custom info to an org's existing systems" do
-
-    before(:each) do
-      (1..50).each do |i|
-        create_system(:name => "test_sys#{i}", :cp_type => "system", :environment => @env1, :facts => facts)
-      end
-    end
-
-    it "should be successful" do
-      @org.systems.each do |s|
-        s.custom_info.empty?.must_equal true
-      end
-      @org.default_info["system"] << "test_key"
-      @org.save!
-
-      get :apply_to_all, :organization_id => @org.label, :informable_type => "system", :async => false
-      response.code.must_equal "200"
-      JSON.parse(response.body)["informables"].wont_be_nil
-      JSON.parse(response.body)["task"].must_be_nil
-
-      @org.systems.each do |s|
-        s.custom_info.size.must_equal @org.default_info["system"].size
-      end
-    end
-
-    it "should kick off a task when running asynchronously" do
-      @org.systems.each do |s|
-        s.custom_info.empty?.must_equal true
-      end
-      @org.default_info["system"] << "test_key"
-      @org.save!
-
-      get :apply_to_all, :organization_id => @org.label, :informable_type => "system", :async => true
-      response.code.must_equal "200"
-      JSON.parse(response.body)["informables"].must_be_empty
-      JSON.parse(response.body)["task"].wont_be_nil
-    end
-  end
 end
 end

@@ -18,7 +18,6 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
   before_filter :authorize
   before_filter :check_informable_type
   before_filter :find_default_info, :only => :destroy
-  before_filter :check_apply_default_info, :only => :apply_to_all
 
   def rules
     read_org = lambda { @organization.readable? }
@@ -28,7 +27,6 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
         :index        => read_org,
         :create       => edit_org,
         :destroy      => edit_org,
-        :apply_to_all => edit_org
     }
   end
 
@@ -70,29 +68,6 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
     }.to_json
   end
 
-  api :POST, '/organizations/:organization_id/default_info/:informable_type/apply', N_("Apply existing default info on all informable resources")
-  param_group :informable_identifier
-  param :async, :bool, :required => false, :desc => N_("directive to run this asynchronously or not")
-  def apply_to_all
-    params[:async] = true if params[:async].nil?
-
-    to_apply = []
-    @organization.default_info[params[:informable_type]].each do |key|
-      to_apply << { :keyname => key }
-    end
-
-    # retval will either be the Task, or an array of system names, based on whether the call is asynchronous or not
-    retval = @organization.apply_default_info(params[:informable_type], to_apply, :async => params[:async])
-
-    response = {:informables => [], :task => nil}
-    if params[:async] == false
-      response[:informables] = retval
-    else
-      response[:task] = retval
-    end
-    render :json => response.to_json
-  end
-
   private
 
   def check_informable_type
@@ -102,14 +77,6 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
         { :list => Organization::ALLOWED_DEFAULT_INFO_TYPES.join(", ") },
       :error => HttpErrors::BadRequest
     )
-  end
-
-  def check_apply_default_info
-    if @organization.applying_default_info?
-      fail HttpErrors::BadRequest,
-        _("Organization [ %{org} ] is currently applying default custom info. Please try again later.") %
-          { :org => @organization.name }
-    end
   end
 
   def find_default_info

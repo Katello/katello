@@ -208,28 +208,6 @@ module Katello
           end
         end
 
-        def apply_default_info(informable_type, custom_info, options = {})
-          options = {:async => true}.merge(options)
-          Organization.check_informable_type!(informable_type)
-          objects = self.send(informable_type.pluralize)
-          ids_and_types = objects.inject([]) do |collection, obj|
-            collection << { :informable_type => obj.class.name, :informable_id => obj.id }
-          end
-
-          if options[:async]
-            task = self.async(:organization => self, :task_type => "apply default info").run_apply_info(ids_and_types, custom_info)
-            self.apply_info_task_id = task.id
-            self.save!
-            return task
-          else
-            return CustomInfo.apply_to_set(ids_and_types, custom_info)
-          end
-        end
-
-        def run_apply_info(ids_and_types, custom_info)
-          CustomInfo.apply_to_set(ids_and_types, custom_info)
-        end
-
         def syncable_content?
           products.any?(&:syncable_content?)
         end

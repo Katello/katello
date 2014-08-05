@@ -166,7 +166,6 @@ Katello::Engine.routes.draw do
         get :show
         get :events
         get :download_debug_certificate
-        get :apply_default_info_status
       end
     end
     match '/organizations/:id/edit' => 'organizations#update', :via => :put
