@@ -32,11 +32,14 @@ angular.module('Bastion.auth', ['Bastion']);
  */
 angular.module('Bastion.auth').config(['$httpProvider', '$provide',
     function ($httpProvider, $provide) {
-        $provide.factory('UnauthorizedInterceptor', ['$q', '$window', 'translate',
-                function ($q, $window, translate) {
+        $provide.factory('UnauthorizedInterceptor', ['$injector',
+                function ($injector) {
                     return {
                         responseError: function (response) {
-                            var message;
+                            var message,
+                                $q = $injector.get('$q'),
+                                $window = $injector.get('$window'),
+                                translate = $injector.get('translate');
 
                             if (response.status === 401) {
                                 $window.location.href = '/users/login';
