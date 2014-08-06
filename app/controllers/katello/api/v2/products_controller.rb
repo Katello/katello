@@ -109,7 +109,8 @@ module Katello
     protected
 
     def find_product
-      @product = Product.find_by_id(params[:id]) if params[:id]
+      @product = Product.find_by_id(params[:id])
+      fail HttpErrors::NotFound, _("Couldn't find product '%s'") % params[:id] unless @product
     end
 
     def find_activation_key
