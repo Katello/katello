@@ -1,6 +1,5 @@
-require File.expand_path("../engine", File.dirname(__FILE__))
-
 begin
+  require "ci/reporter/rake/minitest"
 
   namespace :jenkins do
     task :katello do

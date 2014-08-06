@@ -148,7 +148,7 @@ module Katello
       require 'katello/permissions'
 
       Tire::Configuration.url(Katello.config.elastic_url)
-      bridge = Katello::TireBridge.new(Foreman::Logging.logger('katello/tire_rest'))
+      bridge = Katello::TireBridge.new(::Foreman::Logging.logger('katello/tire_rest'))
       Tire.configure { logger bridge, :level => bridge.level }
     end
 

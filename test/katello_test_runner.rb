@@ -1,8 +1,8 @@
-require 'ci/reporter/minitest'
+require 'test_runner'
 require File.expand_path("support/vcr", File.dirname(__FILE__))
 
 module KatelloMiniTestRunner
-  class Unit < CI::Reporter::Runner
+  class Unit < ForemanMiniTestRunner::Unit
     def before_suites
       # code to run before the first test
       configure_vcr
@@ -26,7 +26,6 @@ module KatelloMiniTestRunner
 
     def _run_suite(suite, type)
       User.current = nil  #reset User.current
-      puts suite
       suite.before_suite if suite.respond_to?(:before_suite)
       super(suite, type)
     ensure

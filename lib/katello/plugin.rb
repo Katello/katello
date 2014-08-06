@@ -1,6 +1,8 @@
 Foreman::Plugin.register :katello do
   requires_foreman '>= 1.9'
 
+  test_task 'test:katello'
+
   sub_menu :top_menu, :content_menu, :caption => N_('Content'), :after => :monitor_menu do
     menu :top_menu,
          :environments,
@@ -155,4 +157,61 @@ Foreman::Plugin.register :katello do
   logger :action, :enabled => true
   logger :tire_rest, :enabled => false
   logger :manifest_import_logger, :enabled => true
+
+  tests_to_skip(
+    # This block is skipped due to Katello disabling nested organizations
+    "LocationTest" => [
+      "selected_or_inherited_ids",
+      "used_and_selected_or_inherited_ids"
+    ],
+    "OrganizationTest" => [
+      "my_organizations returns user's associated orgs and children",
+      "name can be the same if parent is different"
+    ],
+    "TaxonomixTest" => [
+      ".used_organization_ids can work with array of organizations"
+    ],
+    "UserTest" => [
+      "return organization and child ids for non-admin user"
+    ],
+
+    # This block is skipped due to Katello extending Host::Managed with dynflow hooks
+    "Api::V2::HostsControllerTest" => [
+      "destroy hosts",
+      "allow destroy for restricted user who owns the hosts"
+    ],
+    "Api::V2::LocationsControllerTest" => [
+      "destroy location if hosts do not use it"
+    ],
+    "HostsControllerTest" => [
+      "should destroy host"
+    ],
+
+    "LocationsControllerTest" => [
+      "should clone location with assocations"
+    ],
+
+    # This block is skipped due to Katello needing to hook into the Organization create/update/delete workflow
+    "OrganizationsControllerTest" => [
+      "should get edit",
+      "should delete null organization",
+      "should clear the session if the user deleted their current organization",
+      "should clone organization with assocations"
+    ],
+    "MenuItemTest::MenuItem" => [
+      "caption",
+      "html_options"
+    ],
+    "AccessPermissionsTest" => [
+      "route operatingsystems/available_kickstart_repo should have a permission that grants access",
+      "route hosts/puppet_environment_for_content_view should have a permission that grants access",
+      "route bastion/bastion/index should have a permission that grants access",
+      "route bastion/bastion/index_ie should have a permission that grants access"
+    ],
+
+    # foreman_docker tests
+    "Containers::StepsControllerTest" => [
+      "image show doesnot load katello"
+    ]
+  )
 end
