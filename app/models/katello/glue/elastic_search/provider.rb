@@ -12,16 +12,8 @@
 
 module Katello
 module Glue::ElasticSearch::Provider
-
-  module ClassMethods
-    def sortable_fields
-      %w(name provider_type)
-    end
-  end
-
   def self.included(base)
     base.send :include, Ext::IndexedModel
-    base.send :extend, ClassMethods
 
     base.class_eval do
       index_options :extended_json => :extended_index_attrs,

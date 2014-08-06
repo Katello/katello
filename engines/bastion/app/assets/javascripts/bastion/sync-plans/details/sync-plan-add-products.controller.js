@@ -34,10 +34,11 @@ angular.module('Bastion.sync-plans').controller('SyncPlanAddProductsController',
             $scope.errorMessages = [];
 
             params = {
-                'search':       $location.search().search || "",
-                'order':        'name ASC',
-                'full_result':  true,
-                'id':           $scope.$stateParams.syncPlanId
+                'search': $location.search().search || "",
+                'sort_by': 'name',
+                'sort_order': 'ASC',
+                'full_result': true,
+                'id': $scope.$stateParams.syncPlanId
             };
 
             productsNutupane = new Nutupane(SyncPlan, params, 'availableProducts');

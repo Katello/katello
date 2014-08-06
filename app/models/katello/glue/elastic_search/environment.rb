@@ -13,16 +13,9 @@
 module Katello
   module Glue::ElasticSearch::Environment
 
-    module ClassMethods
-      def sortable_fields
-        %w(name library)
-      end
-    end
-
     def self.included(base)
       base.class_eval do
         include Ext::IndexedModel
-        extend ClassMethods
         after_save :update_related_index
         after_destroy :delete_related_index
 

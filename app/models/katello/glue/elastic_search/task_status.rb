@@ -12,16 +12,8 @@
 
 module Katello
 module Glue::ElasticSearch::TaskStatus
-
-  module ClassMethods
-    def sortable_fields
-      %w(start_time finish_time)
-    end
-  end
-
   def self.included(base)
     base.send :include, Ext::IndexedModel
-    base.send :extend, ClassMethods
 
     base.class_eval do
       index_options :json => { :only => [:parameters, :organization_id, :start_time,

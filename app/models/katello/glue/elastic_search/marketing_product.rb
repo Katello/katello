@@ -13,14 +13,7 @@
 module Katello
 module Glue::ElasticSearch::MarketingProduct
 
-  module ClassMethods
-    def sortable_fields
-      []
-    end
-  end
-
   def self.included(base)
-    base.send :extend, ClassMethods
     base.class_eval do
       index_name "#{Katello.config.elastic_index}_marketing_product"
     end
