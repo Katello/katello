@@ -228,17 +228,6 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
   def test_generate_distributors
     refute_nil @@p_forge.find_distributor
   end
-
-  def test_upload_puppet_module
-    Repository.any_instance.expects(:trigger_contents_changed).with() do |options|
-      options[:wait] == false && options[:reindex] == false
-    end
-
-    @filepath = File.join(Katello::Engine.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
-    @p_forge.upload_content([@filepath])
-
-    assert_includes @p_forge.puppet_modules.map(&:name), "ntp"
-  end
 end
 
 

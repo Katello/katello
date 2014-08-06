@@ -38,4 +38,32 @@ module Actions::ElasticSearch
     end
   end
 
+  class FilteredIndexContentTest < TestBase
+    let(:action_class) { ::Actions::ElasticSearch::Repository::FilteredIndexContent }
+    let(:yum_repository) { katello_repositories(:fedora_17_x86_64) }
+    let(:puppet_repository) { katello_repositories(:p_forge) }
+
+    context 'yum repository' do
+      it 'indexes just units sattisfying the filter' do
+        action = create_and_plan_action(action_class,
+                                        id: yum_repository.id, filter: { name: 'cheetah' })
+        ::Katello::Repository.any_instance.expects(:unit_search).
+            with(type_ids: ['rpm'], filters: { 'name' => 'cheetah' }).returns([{unit_id: 1}])
+        ::Katello::Package.expects(:index_packages).with([1])
+        run_action action
+      end
+    end
+
+    context 'puppet repository' do
+      it 'indexes just units sattisfying the filter' do
+        action = create_and_plan_action(action_class,
+                                        id: puppet_repository.id, filter: { name: 'cheetah' })
+        ::Katello::Repository.any_instance.expects(:unit_search).
+            with(type_ids: ['puppet_module'], filters: { 'name' => 'cheetah' }).returns([{unit_id: 1}])
+        ::Katello::PuppetModule.expects(:index_puppet_modules).with([1])
+        run_action action
+      end
+    end
+  end
+
 end

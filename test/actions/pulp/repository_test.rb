@@ -58,14 +58,13 @@ module ::Actions::Pulp::Repository
     end
   end
 
-  class SyncTest < ActiveSupport::TestCase
-    include Dynflow::Testing
-    include Support::Actions::PulpTask
-    include Support::Actions::RemoteAction
+  class VCRTestBase < TestBase
     include VCR::TestCase
-
-    let(:action_class) { ::Actions::Pulp::Repository::Sync }
     let(:repo) { katello_repositories(:fedora_17_x86_64) }
+
+    def run_action(action_class, *args)
+      ForemanTasks.sync_task(action_class, *args).main_action
+    end
 
     def setup
       ::Katello::RepositorySupport.create_repo(repo.id)
@@ -74,10 +73,33 @@ module ::Actions::Pulp::Repository
     def teardown
       ::Katello::RepositorySupport.destroy_repo
     end
+  end
 
+  class SyncTest < VCRTestBase
+    let(:action_class) { ::Actions::Pulp::Repository::Sync }
     def test_sync
-      response = ::ForemanTasks.sync_task(action_class, pulp_id: repo.pulp_id)
+      run_action(action_class, pulp_id: repo.pulp_id)
       assert_equal 8, repo.packages.length
+    end
+  end
+
+  class UploadFileTest < VCRTestBase
+    let(:repo) { katello_repositories(:p_forge) }
+    let(:file) { File.join(Katello::Engine.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz") }
+
+    def test_upload_file
+      upload_request = run_action(::Actions::Pulp::Repository::CreateUploadRequest)
+      run_action(::Actions::Pulp::Repository::UploadFile,
+                  upload_id: upload_request.output[:upload_id],
+                  file: file)
+      run_action(::Actions::Pulp::Repository::ImportUpload,
+                  pulp_id: repo.pulp_id,
+                  unit_type_id: repo.unit_type_id,
+                  upload_id: upload_request.output[:upload_id])
+      run_action(::Actions::Pulp::Repository::DeleteUploadRequest,
+                  upload_id: upload_request.output[:upload_id])
+
+      assert_includes repo.puppet_modules.map(&:name), "ntp"
     end
   end
 end

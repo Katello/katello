@@ -770,31 +770,6 @@ module Glue::Pulp::Repo
       return statuses
     end
 
-    def upload_content(filepaths)
-      filepaths.map { |path| build_content_upload(path) }.each do |file|
-        upload_content_file(file[:filepath])
-      end
-    end
-
-    def build_content_upload(filepath)
-      case content_type
-      when Repository::PUPPET_TYPE
-        {:filepath => filepath, :unit_key => {}, :unit_metadata => {}}
-      when Repository::YUM_TYPE
-        {:filepath => filepath, :unit_key => {}, :unit_metadata => {}}
-      else
-        fail _("Uploads not supported for content type '%s'.") % content_type
-      end
-    end
-
-    def import_upload(upload_id)
-      response = Katello.pulp_server.resources.content.import_into_repo(pulp_id, unit_type_id, upload_id, {}, {:unit_metadata => {}})
-      task = PulpTaskStatus.using_pulp_task(response)
-      PulpTaskStatus.wait_for_tasks([task])
-
-      _handle_upload_import_result(task)
-    end
-
     def unit_type_id
       case content_type
       when Repository::YUM_TYPE
@@ -828,22 +803,6 @@ module Glue::Pulp::Repo
 
     protected
 
-    def upload_content_file(filepath)
-      upload_id = Katello.pulp_server.resources.content.create_upload_request["upload_id"]
-
-      File.open(filepath, "rb") do |file|
-        offset = 0
-        while (chunk = file.read(Katello.config.pulp.upload_chunk_size))
-          Katello.pulp_server.resources.content.upload_bits(upload_id, offset, chunk)
-          offset += Katello.config.pulp.upload_chunk_size
-        end
-      end
-
-      import_upload(upload_id)
-    ensure
-      Katello.pulp_server.resources.content.delete_upload_request(upload_id) if upload_id
-    end
-
     def _get_most_recent_sync_status
       begin
         history = Katello.pulp_server.extensions.repository.sync_status(pulp_id)
@@ -863,21 +822,6 @@ module Glue::Pulp::Repo
       end
     end
 
-    def _handle_upload_import_result(task)
-      if task.result["success_flag"]
-        # reindex content created within the past 5 minutes
-        recent_range = 5.minutes.ago.iso8601
-        filter = {:association => {:created => {"$gt" => recent_range}}}
-        trigger_contents_changed(:wait => false, :reindex => false,
-                                 :index_units => [filter])
-      else
-        if (errors = task.result["details"]["errors"])
-          fail Katello::Errors::InvalidRepositoryContent, _("File upload failed: %s.") % errors.join(",")
-        else
-          fail Katello::Errors::InvalidRepositoryContent, _("File upload failed. Please check the file and try again.")
-        end
-      end
-    end
   end
 
   def full_path(smart_proxy = nil)

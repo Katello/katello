@@ -168,7 +168,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     filepaths = Array.wrap(params[:content]).compact.map(&:path)
 
     if !filepaths.blank?
-      @repository.upload_content(filepaths)
+      sync_task(::Actions::Katello::Repository::UploadFiles, @repository, filepaths)
       render :json => {:status => "success"}
     else
       fail HttpErrors::BadRequest, _("No file uploaded")
@@ -190,8 +190,8 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   def import_uploads
     params[:upload_ids].each do |upload_id|
       begin
-        @repository.import_upload(upload_id)
-      rescue Katello::Errors::InvalidRepositoryContent => e
+        sync_task(::Actions::Katello::Repository::ImportUpload, @repository, upload_id)
+      rescue => e
         raise HttpErrors::BadRequest, e.message
       end
     end

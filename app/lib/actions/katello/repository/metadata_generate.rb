@@ -15,11 +15,12 @@ module Actions
     module Repository
       class MetadataGenerate < Actions::Base
 
-        def plan(repository, source_repository = nil)
+        def plan(repository, source_repository = nil, dependency = nil)
           plan_action(Pulp::Repository::DistributorPublish,
                       pulp_id: repository.pulp_id,
                       distributor_type_id: distributor_class(repository, !!source_repository).type_id,
-                      source_pulp_id: source_repository.try(:pulp_id))
+                      source_pulp_id: source_repository.try(:pulp_id),
+                      dependency: dependency)
         end
 
         def distributor_class(repository, clone)

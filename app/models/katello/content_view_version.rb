@@ -134,41 +134,6 @@ class ContentViewVersion < Katello::Model
         self.content_view.versions.in_environment(from_env).count > 1
   end
 
-  def promote(to_env, options = {:async => true})
-    history = ContentViewHistory.create!(:content_view_version => self, :user => User.current.login,
-                               :environment => to_env, :status => ContentViewHistory::IN_PROGRESS)
-
-    replacing_version = self.content_view.version(to_env)
-
-    promote_version = ContentViewVersion.find(self.id)
-    promote_version.environments << to_env unless promote_version.environments.include?(to_env)
-    promote_version.save!
-
-    replacing_version.environments.delete(to_env) if replacing_version
-
-    if options[:async]
-      self.async(:organization => self.content_view.organization).promote_content(to_env, replacing_version,
-                                                                                  history)
-    else
-      promote_content(to_env, replacing_version, history)
-    end
-  end
-
-  def trigger_contents_changed(options = {})
-    repos_changed = options[:non_archive] ? non_archive_repos : repositories.reload
-
-    Repository.trigger_contents_changed(repos_changed, :wait => true, :reindex => true,
-                                        :cloned_repo_overrides => options.fetch(:cloned_repo_overrides, []))
-
-    envs_changed = if options[:non_archive]
-                     content_view_puppet_environments.non_archived
-                   else
-                     content_view_puppet_environments.reload
-                   end
-
-    ContentViewPuppetEnvironment.trigger_contents_changed(envs_changed, :wait => true, :reindex => true)
-  end
-
   def archive_puppet_environment
     content_view_puppet_environments.archived.first
   end

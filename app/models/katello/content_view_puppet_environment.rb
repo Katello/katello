@@ -88,20 +88,5 @@ module Katello
       [organization_label, env_label, view_label, version].compact.join("-").gsub(/[^-\w]/, "_")
     end
 
-    def self.trigger_contents_changed(repos, options)
-      wait    = options.fetch(:wait, false)
-      reindex = options.fetch(:reindex, true) && Katello.config.use_elasticsearch
-      publish = options.fetch(:publish, true) && Katello.config.use_pulp
-
-      tasks = []
-      if publish
-        tasks += repos.flat_map do |repo|
-          repo.generate_metadata(:node_publish_async => true, :force_regeneration => true)
-        end
-      end
-      repos.each{|repo| repo.index_content } if reindex
-
-      PulpTaskStatus.wait_for_tasks(tasks) if wait
-    end
   end
 end
