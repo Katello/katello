@@ -364,9 +364,10 @@ class Api::V2::SystemsController < Api::V2::ApiController
 
   def system_params(params)
     system_params = params.require(:system).permit(:name, :description, :location, :owner, :type,
-                                                   :service_level, :autoheal, {:facts => []},
+                                                   :service_level, :autoheal,
                                                    :guest_ids, {:host_collection_ids => []})
 
+    system_params[:facts] = params[:system][:facts].permit! if params[:system][:facts]
     system_params[:cp_type] = params[:type] ? params[:type] : ::Katello::System::DEFAULT_CP_TYPE
     system_params.delete(:type) if params[:system].key?(:type)
 
