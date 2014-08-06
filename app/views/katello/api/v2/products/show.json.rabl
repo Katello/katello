@@ -51,7 +51,7 @@ end
 attributes :published_content_views
 
 node :readonly do |product|
-  product.redhat? || product.published_content_views.length > 0
+  product.redhat? 
 end
 
 extends 'katello/api/v2/common/timestamps'

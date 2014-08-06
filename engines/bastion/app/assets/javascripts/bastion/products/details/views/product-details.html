@@ -35,7 +35,7 @@
       </span>
 
       <button class="btn btn-default"
-              ng-hide="denied('delete_products', product) || product.readonly"
+              ng-hide="denied('delete_products', product) || product.readonly || product.published_content_views.length > 0"
               ng-click="openModal()">
         <i class="icon-trash"></i>
         {{ "Remove Product" | translate }}
