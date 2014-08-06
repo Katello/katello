@@ -67,17 +67,7 @@ describe Organization do
     end
     it "should complain on duplicate label" do
       lambda{
-        Organization.create!(:name => @organization.name + "_changed", :label =>@organization.name)
-      }.must_raise(ActiveRecord::RecordInvalid)
-    end
-    it "should complain on duplicate name when label is taken" do
-      lambda{
-        Organization.create!(:name => @organization.label)
-      }.must_raise(ActiveRecord::RecordInvalid)
-    end
-    it "should complain on duplicate label when name is taken" do
-      lambda{
-        Organization.create!(:label => @organization.name)
+        Organization.create!(:name => @organization.name + "_changed", :label => @organization.label)
       }.must_raise(ActiveRecord::RecordInvalid)
     end
     it "should complain if the label is invalid" do
@@ -98,8 +88,8 @@ describe Organization do
     end
     it "can update label" do
       new_label = @organization.label + "_changed"
-      @organization = Organization.update(@organization.id, {:name => new_label})
-      @organization.name.must_equal(new_label)
+      @organization = Organization.update(@organization.id, {:label => new_label})
+      @organization.label.must_equal(new_label)
     end
     it "name update is ok for overlapping label from the same org" do
       @organization = Organization.update(@organization.id, {:name => @organization.label})
@@ -111,13 +101,31 @@ describe Organization do
     end
     it "name update should fail when already taken for different org" do
       lambda{
-        @organization.update_attributes!({:name => @organization2.label})
+        @organization.update_attributes!({:name => @organization2.name})
       }.must_raise(ActiveRecord::RecordInvalid)
     end
     it "label update should fail when already taken for different org" do
       lambda{
-        @organization.update_attributes!({:label => @organization2.name})
+        @organization.update_attributes!({:label => @organization2.label})
       }.must_raise(ActiveRecord::RecordInvalid)
+    end
+  end
+
+  describe "update existing org name and create a new org using the original org name" do
+    it "allows user to perform scenario" do
+      original_org_name = "original org name"
+      new_org_name = "new org name"
+
+      @organization1 = Organization.create!(:name => original_org_name)
+      assert_equal @organization1.name, original_org_name
+
+      @organization1.name = new_org_name
+      @organization1.save!
+      assert_equal @organization1.name, new_org_name
+
+      @organization2 = Organization.create!(:name => original_org_name)
+      assert_equal @organization2.name, original_org_name
+      refute_equal @organization1.label, @organization2.label
     end
   end
 
@@ -182,7 +190,7 @@ describe Organization do
   end
 
   describe "it can retrieve manifest history" do
-    test 'test manifest history should be successful' do 
+    test 'test manifest history should be successful' do
       @organization = @organization.reload
       @organization.expects(:imports).returns([{'foo' => 'bar' },{'foo' => 'bar'}])
       assert @organization.manifest_history[0].foo == 'bar'
