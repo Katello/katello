@@ -21,7 +21,7 @@ add_files "/etc/elasticsearch/*"
 # Pulp
 add_files "/etc/pulp/*.conf"
 add_files "/etc/pulp/server/plugins.conf.d/nodes/distributor/*"
-add_files "/var/lib/mongodb/mongodb.log"
+add_files "/var/log/mongodb/*"
 add_files "/etc/httpd/conf.d/pulp.conf"
 add_files "/etc/qpid/qpidd.conf"
 add_cmd "cat /var/log/messages | grep pulp"
