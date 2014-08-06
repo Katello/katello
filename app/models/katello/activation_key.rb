@@ -51,6 +51,7 @@ class ActivationKey < Katello::Model
     end
   end
   validates_with Validators::ContentViewEnvironmentValidator
+  validates_with OrganizationAssociationValidator
 
   scope :in_environment, lambda { |env| where(:environment_id => env) }
 

@@ -45,7 +45,7 @@ module OrganizationHelperMethods
     if !attrs[:content_view]
         find_or_create_content_view(env)
     end
-    env
+    env.reload
   end
 
   def find_or_create_content_view(env)
@@ -85,6 +85,7 @@ module OrganizationHelperMethods
     cv.repositories = repos
     cv.save!
     cv.publish(:async => false)
+    cv.reload
     cv
   end
 

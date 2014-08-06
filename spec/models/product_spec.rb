@@ -104,10 +104,10 @@ describe Product, :katello => true do
       disable_product_orchestration
     end
 
-    specify { Product.new(:label=> "goo", :name => 'contains /', :provider => @provider).must_be :valid? }
-    specify { Product.new(:label=>"boo", :name => 'contains #', :provider => @provider).must_be :valid? }
-    specify { Product.new(:label=> "shoo", :name => 'contains space', :provider => @provider).must_be :valid? }
-    specify { Product.new(:label => "bar foo", :name=> "foo", :provider => @provider).wont_be :valid?}
+    specify { Product.new(:label=> "goo", :name => 'contains /', :organization => @provider.organization, :provider => @provider).must_be :valid? }
+    specify { Product.new(:label=>"boo", :name => 'contains #', :organization => @provider.organization, :provider => @provider).must_be :valid? }
+    specify { Product.new(:label=> "shoo", :name => 'contains space', :organization => @provider.organization, :provider => @provider).must_be :valid? }
+    specify { Product.new(:label => "bar foo", :name=> "foo", :organization => @provider.organization, :provider => @provider).wont_be :valid?}
     it "should not be successful when creating a product with a duplicate name in one organization" do
       @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge(:organization_id => @organization.id))
 
@@ -151,7 +151,7 @@ describe Product, :katello => true do
           end
           product.orchestration_for = :import_from_cp_ar_setup
           product.save!
-          product
+          product.reload
         end
 
         subject { Glue::Candlepin::Product.import_marketing_from_cp(ProductTestData::PRODUCT_WITH_CP_CONTENT, [eng_product_after_import.id]) }
@@ -196,6 +196,7 @@ describe Product, :katello => true do
       @repo.stubs(:product).returns(@product)
       @repo.stubs(:promoted?).returns(false)
       @repo.stubs(:update_content).returns(Candlepin::Content.new)
+      @product.reload
     end
 
     describe "resetting product gpg and asking repos to reset should work" do
@@ -205,7 +206,7 @@ describe Product, :katello => true do
         @product.reset_repo_gpgs!
       end
 
-      subject { Repository.find(@repo.id) }
+      subject { @repo.reload }
       it { subject.gpg_key.must_equal(@gpg) }
     end
 
@@ -228,7 +229,7 @@ describe Product, :katello => true do
         @product.update_attributes!(:gpg_key => @gpg)
         @product.reset_repo_gpgs!
       end
-      subject {Repository.find(@new_repo.id)}
+      subject { @new_repo }
       it { subject.gpg_key.must_equal(@gpg) }
     end
 
@@ -242,7 +243,7 @@ describe Product, :katello => true do
         @product.update_attributes!(:gpg_key => nil)
         @product.reset_repo_gpgs!
       end
-      subject {Repository.find(@repo.id)}
+      subject { @repo }
       it { subject.gpg_key.must_be_nil }
     end
   end
@@ -256,6 +257,7 @@ describe Product, :katello => true do
                content_view_version: @organization.library.default_content_view_version,
                feed: "http://something")
       end
+      product.reload
       product.repositories.length.must_equal(2)
       product.repositories.map(&:environment).length.must_be(:>, product.environments.length)
       product.repositories.map(&:environment).uniq.length.must_equal(product.environments.length)
@@ -265,7 +267,7 @@ describe Product, :katello => true do
 
   it 'should be destroyable' do
     disable_repo_orchestration
-    product = create(:katello_product, :fedora, provider: create(:katello_provider), organization: @organization)
+    product = create(:katello_product, :fedora, provider: create(:katello_provider, :organization => @organization), organization: @organization)
     assert product.destroy
   end
 end

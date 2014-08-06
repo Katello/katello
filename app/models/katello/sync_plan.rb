@@ -37,6 +37,7 @@ class SyncPlan < Katello::Model
   validate :validate_sync_date
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
+  validates_with OrganizationAssociationValidator
 
   before_save :reassign_sync_plan_to_products
 

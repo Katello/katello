@@ -42,6 +42,7 @@ class Provider < Katello::Model
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_with Validators::KatelloUrlFormatValidator, :if => :redhat_provider?,
                                                         :attributes => :repository_url
+  validates_with OrganizationAssociationValidator
 
   before_destroy :prevent_redhat_deletion
   before_validation :sanitize_repository_url

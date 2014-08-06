@@ -26,6 +26,7 @@ module Actions
             v.version = 1
           end
 
+          library_view.reload
           version = library_view.versions.first
 
           plan_action(Katello::ContentView::Create, library_view)
