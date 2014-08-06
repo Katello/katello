@@ -8,10 +8,12 @@ oses:
 - RedHat 7
 %>
 <%
+  rhel_compatible = @host.operatingsystem.family == 'Redhat' && @host.operatingsystem.name != 'Fedora'
   os_major = @host.operatingsystem.major.to_i
   # safemode renderer does not support unary negation
   pm_set = @host.puppetmaster.empty? ? false : true
   puppet_enabled = pm_set || @host.params['force-puppet']
+  section_end = (rhel_compatible && os_major <= 5) ? '' : '%end'
 %>
 install
 <%= @mediapath %>
@@ -46,12 +48,12 @@ dhclient
 ntp
 wget
 @Core
-%end
+<%= section_end -%>
 
 <% if @dynamic -%>
 %pre
 <%= @host.diskLayout %>
-%end
+<%= section_end -%>
 <% end -%>
 
 %post --nochroot
@@ -62,7 +64,7 @@ exec < /dev/tty3 > /dev/tty3
 cp -va /etc/resolv.conf /mnt/sysimage/etc/resolv.conf
 /usr/bin/chvt 1
 ) 2>&1 | tee /mnt/sysimage/root/install.postnochroot.log
-%end
+<%= section_end -%>
 
 %post
 logger "Starting anaconda <%= @host %> postinstall"
@@ -108,4 +110,4 @@ wget -q -O /dev/null --no-check-certificate <%= foreman_url %>
 ) 2>&1 | tee /root/install.post.log
 exit 0
 
-%end
+<%= section_end -%>
