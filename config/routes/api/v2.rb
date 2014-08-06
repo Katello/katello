@@ -262,6 +262,9 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :systems, :only => [] do
+          member do
+            get :events
+          end
           collection do
             match '/bulk/add_host_collections' => 'systems_bulk_actions#bulk_add_host_collections', :via => :put
             match '/bulk/remove_host_collections' => 'systems_bulk_actions#bulk_remove_host_collections', :via => :put
