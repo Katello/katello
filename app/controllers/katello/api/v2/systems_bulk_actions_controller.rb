@@ -103,7 +103,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   def applicable_errata
     @search_service = nil #reload search service after systems are loaded
     load_search_service
-    options = {:default_field => "errata_id"}
+    options = { :default_field => "errata_id", :sort_by => "errata_id" }
     results = item_search(Katello::Errata, params, options) do |service|
       Katello::Errata.search_applicable_for_consumers(@systems.collect{|i| i.uuid}, service)
     end
@@ -190,14 +190,14 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     params[:excluded] ||= {}
     @systems = []
     unless params[:included][:ids].blank?
-      @systems = System.send(perm_method).where(:id => params[:included][:ids])
-      @systems.where('id not in (?)', params[:excluded]) unless params[:excluded][:ids].blank?
+      @systems = System.send(perm_method).where(:uuid => params[:included][:ids])
+      @systems.where('uuid not in (?)', params[:excluded]) unless params[:excluded][:ids].blank?
     end
 
     if params[:included][:search]
       ids = find_system_ids_by_search(params[:included][:search])
-      search_systems = System.send(perm_method).where(:id => ids)
-      search_systems = search_systems.where('id not in (?)', params[:excluded][:ids]) unless params[:excluded][:ids].blank?
+      search_systems = System.send(perm_method).where(:uuid => ids)
+      search_systems = search_systems.where('uuid not in (?)', params[:excluded][:ids]) unless params[:excluded][:ids].blank?
       @systems = @systems + search_systems
     end
 
