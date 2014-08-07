@@ -20,16 +20,7 @@ module Katello
         alias_method_chain :medium_uri, :content_uri
         alias_method_chain :mediumpath, :content
         alias_method_chain :boot_files_uri, :content
-
-        # TODO: these were pulled in from katello_foreman_engine. It may be
-        # useful to make them configurable in the future.
-        OS = {
-            'foreman_os_family' => 'Redhat',
-            'foreman_os_rhel_provisioning_template' => 'Katello Kickstart Default for RHEL',
-            'foreman_os_provisioning_template' => 'Katello Kickstart Default',
-            'foreman_os_pxe_template' => 'Kickstart default PXElinux',
-            'foreman_os_ptable' => 'RedHat default'
-        }
+        after_create :assign_templates!
       end
 
       module ClassMethods
@@ -48,37 +39,10 @@ module Katello
               'name' => name,
               'major' => major.to_s,
               'minor' => minor.to_s,
-              'family' => ::Redhat::OS['foreman_os_family']
+              'family' => 'Redhat'
           }
 
-          provisioning_template_name = if name == 'RedHat'
-                                         ::Redhat::OS['foreman_os_rhel_provisioning_template']
-                                       else
-                                         ::Redhat::OS['foreman_os_provisioning_template']
-                                       end
-
-          templates_to_add = [ConfigTemplate.find_by_name(provisioning_template_name),
-                              ConfigTemplate.find_by_name(::Redhat::OS['foreman_os_pxe_template'])].compact
-
-          params['os_default_templates_attributes'] = templates_to_add.map do |template|
-            {
-                "config_template_id" => template.id,
-                "template_kind_id" => template.template_kind.id,
-            }
-          end
-
-          if ptable = Ptable.find_by_name(::Redhat::OS['foreman_os_ptable'])
-            params['ptable_ids'] = [ptable.id]
-          end
-
-          os = ::Redhat.create!(params)
-
-          templates_to_add.each do |template|
-            template.operatingsystems << os
-            template.save!
-          end
-
-          return os
+          return ::Redhat.create!(params)
         end
 
         def construct_name(family)
@@ -89,6 +53,22 @@ module Katello
           end
         end
 
+      end
+
+      def assign_templates!
+        # Automatically assign default templates
+        TemplateKind.all.each do |kind|
+          if (template = ConfigTemplate.find_by_name(Setting["katello_default_#{kind.name}"]))
+            config_templates << template unless config_templates.include?(template)
+            if OsDefaultTemplate.where(:template_kind_id => kind.id, :operatingsystem_id => id).empty?
+              OsDefaultTemplate.create(:template_kind_id => kind.id, :config_template_id => template.id, :operatingsystem_id => id)
+            end
+          end
+        end
+
+        if (ptable = Ptable.find_by_name(Setting["katello_default_ptable"]))
+          ptables << ptable unless ptables.include?(ptable)
+        end
       end
 
       def medium_uri_with_content_uri(host, url = nil)

@@ -27,7 +27,6 @@ end
 defaults = {:vendor => "Katello", :default => true, :locked => true}
 
 templates = [{:name => "Katello Kickstart Default",           :source => "kickstart-katello.erb",      :template_kind => kinds[:provision]},
-             {:name => "Katello Kickstart Default for RHEL",  :source => "kickstart-katello_rhel.erb", :template_kind => kinds[:provision]},
              {:name => "Katello Kickstart Default User Data", :source => "userdata-katello.erb",       :template_kind => kinds[:user_data]},
              {:name => "Katello Kickstart Default Finish",    :source => "finish-katello.erb",         :template_kind => kinds[:finish]},
              {:name => "subscription_manager_registration",   :source => "snippets/_subscription_manager_registration.erb", :snippet => true}]

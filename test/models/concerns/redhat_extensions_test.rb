@@ -24,14 +24,6 @@ module Katello
     def setup
       User.current = User.find(users(:admin))
       @my_distro = OpenStruct.new(:name => 'RedHat', :family => 'Red Hat Enterprise Linux', :version => '9.0')
-
-      @config_template = ConfigTemplate.find(config_templates(:pxe_default))
-      @config_template.name = ::Redhat::OS['foreman_os_rhel_provisioning_template']
-      @config_template.save
-
-      @ptable = Ptable.find(ptables(:one))
-      @ptable.name = ::Redhat::OS['foreman_os_ptable']
-      @ptable.save
     end
 
     def test_find_or_create_operating_system
@@ -48,13 +40,31 @@ module Katello
       assert_equal os.name, @my_distro.name
       assert_equal os.major, '9'
       assert_equal os.minor, '0'
-      assert os.ptables.include?(@ptable)
-      assert @config_template.operatingsystems.include?(::Redhat.find(os.id))
     end
 
     def test_construct_name
       assert_equal ::Redhat.construct_name('Red Hat Enterprise Linux'), 'RedHat'
       assert_equal ::Redhat.construct_name('My Custom Linux'), 'My_Custom_Linux'
+    end
+
+    def test_assign_template
+      template = config_templates(:mystring2)
+      ptable = ptables(:one)
+
+      Setting.create(:name => 'katello_default_provision', :description => 'default template',
+                     :category => 'Setting::Katello', :settings_type => 'string',
+                     :default => template.name)
+
+      Setting.create(:name => 'katello_default_ptable', :description => 'default template',
+                     :category => 'Setting::Katello', :settings_type => 'string',
+                     :default => ptable.name)
+
+      os = ::Redhat.create_operating_system(@my_distro.name, '9', '0')
+      assert ::OsDefaultTemplate.where(:template_kind_id    => ::TemplateKind.find_by_name('provision').id,
+                                       :config_template_id  => template.id,
+                                       :operatingsystem_id  => os.id).any?
+
+      assert os.ptables.include? ptable
     end
   end
 end

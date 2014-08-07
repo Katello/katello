@@ -47,7 +47,7 @@ module Katello
 
         def find_or_create_medium(org, medium_name, medium_path)
           params = { :name => medium_name, :path => medium_path,
-                     :os_family => Redhat::OS['foreman_os_family'] }
+                     :os_family => 'Redhat' }
 
           medium = ::Medium.joins(:organizations).where(params).where("taxonomies.id in (?)", [org.id]).first
           medium = ::Medium.create!(params.merge({ :organization_ids => [org.id] })) unless medium
