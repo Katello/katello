@@ -122,7 +122,7 @@ Katello::Engine.routes.draw do
           api_resources :systems, :only => system_onlies
         end
 
-        api_resources :organizations, :only => [:index, :show, :update, :create, :destroy] do
+        namespace :organizations do
           api_resources :activation_keys, :only => [:index]
           api_resources :content_views, :only => [:index, :create]
           api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
@@ -131,14 +131,6 @@ Katello::Engine.routes.draw do
             end
           end
           api_resources :host_collections, :only => [:index, :create]
-          member do
-            get :manifest_history
-            post :repo_discover
-            post :cancel_repo_discover
-            post :autoattach_subscriptions
-            get :download_debug_certificate
-            get :redhat_provider
-          end
           api_resources :products, :only => [:index]
           api_resources :subscriptions, :only => [:index] do
             collection do
