@@ -75,6 +75,38 @@ class System < Katello::Model
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :organization_id, :complete_value => true, :ext_method => :search_by_environment
 
+  has_one :system_host_join, :class_name => "Katello::SystemHostJoin", :dependent => :nullify, :foreign_key => :system_id
+  has_one :content_view, :through => :system_host_join, :source => :content_view, :dependent => :nullify
+  has_one :kt_environment, :through => :system_host_join, :source => :kt_environment, :dependent => :nullify
+
+  def content_view_id
+    build_system_host_join.content_view_id if new_record?
+    system_host_join.try(:content_view_id)
+  end
+  def content_view_id=(int)
+    return false unless (int)
+    if (cv = Katello::ContentView.find_by_id(int))
+      self.content_view = cv
+    else
+      # nullify didn't work in association
+      self.system_host_join.update_attribute(:content_view_id, nil) if self.system_host_join
+    end
+  end
+
+  def kt_environment_id
+    build_system_host_join.kt_environment_id if new_record?
+    system_host_join.try(:kt_environment_id)
+  end
+  def kt_environment_id=(int)
+    if (env = Katello::KTEnvironment.find_by_id(int))
+      self.kt_environment = env
+    else
+      # nullify didn't work in association
+      self.system_host_join.update_attribute(:kt_environment_id, nil) if self.system_host_join
+    end
+  end
+
+
   def self.search_by_environment(key, operator, value)
     conditions = "environment_id IN (#{::Organization.find(value).kt_environments.pluck(:id).join(',')})"
     {:conditions => conditions}

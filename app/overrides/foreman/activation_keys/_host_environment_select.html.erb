@@ -4,59 +4,33 @@
     option.kt-cv  { margin-left: 1em; }
 </style>
 
-<script>
-    $(function () {
-        function ktUpdateContentViews() {
-            var ktEnvId = $("#kt_environment_id").val();
-            var cvSelect = $("#hostgroup_environment_id");
-            if(cvSelect.length === 0) {
-                cvSelect = $("#host_environment_id");
-            }
-            cvSelect.children("option").each(function (i, option) {
-                var option = $(option);
-                var display = false
-                if(ktEnvId &&
-                        option.attr('data-katello-id') &&
-                        option.attr('data-katello-id').indexOf(ktEnvId) == 0) {
-                    display = true;
-                } else if(!ktEnvId && !option.attr('data-katello-id')) {
-                    display = true;
-                }
-                if(display) {
-                    option.show();
-                } else {
-                    if(cvSelect.val() === option.val()) {
-                        cvSelect.val('');
-                    };
-                    option.hide();
-                }
-            });
-        }
-
-        ktUpdateContentViews();
-        $("#kt_environment_id").change(ktUpdateContentViews);
-    });
-</script>
-
-<%= field(f, _("Lifecycle Environment"), { :include_blank => true }) do
-  select_tag :kt_environment_id, grouped_env_options, :class => 'form-control', :onchange => 'update_environment_label(this);'
-end %>
-
-<%= field(f, _("Puppet Environment"), { :include_blank => true }) do
-  f.select :environment_id,
-           content_view_options,
+<%= select_f f, :kt_environment_id,
+           Katello::KTEnvironment.completer_scope(@organization).has_puppet_environment, :id, :name,
            { :include_blank => true },
-           { :onchange => 'update_puppetclasses(this);',
-             :"data-url" => environment_selected_hostgroups_path,
-             :'data-host-id' => (@host && @host.id),
-             :class => 'form-control' }
-end %>
+           { :class => 'form-control', :label => _('Lifecycle Environment'),
+             :'data-url' => kt_environment_selected_hosts_path,
+             :help_inline => :indicator
+            }
+%>
+
+<%# put in helper %>
+<% @kt_environment = f.object.kt_environment %>
+<% cv_options = Katello::ContentView.in_environment(@kt_environment).with_available_versions_in_puppet_environment %>
+<%# ----- %>
+<%= select_f f, :content_view_id,
+           cv_options, :id, :name,
+           { :include_blank => true },
+           { :class => 'form-control', :label => _('Content View'),
+             :disabled => cv_options.empty?,
+             :'data-url' => content_view_selected_hosts_path,
+             :help_inline => :indicator
+           }
+%>
 
 <% proxies = SmartProxy.unscoped.with_taxonomy_scope(@location,@organization,:path_ids) %>
 <% if proxies.count > 0 %>
     <%= select_f f, :content_source_id, proxies, :id, :name,
              { :include_blank => blank_or_inherit_f(f, :content_source) },
              { :label       => _("Content Source"),
-               :onchange    => 'toggle_installation_medium(this);',
                :help_inline => _("Use this as a source for installation and updates.") } %>
 <% end %>
