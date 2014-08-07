@@ -29,7 +29,8 @@ angular.module('Bastion.content-views').controller('ContentViewHistoryController
 
         nutupane = new Nutupane(ContentView, {
             id: $scope.$stateParams.contentViewId,
-            'order':            'created_at DESC'
+            'sort_by':          'created_at',
+            'sort_order':       'DESC'
         }, 'history');
 
         nutupane.table.closeItem = function () {};

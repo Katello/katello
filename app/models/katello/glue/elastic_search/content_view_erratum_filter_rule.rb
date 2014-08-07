@@ -14,12 +14,6 @@ module Katello
   module Glue::ElasticSearch::ContentViewErratumFilterRule
     extend ActiveSupport::Concern
 
-    module ClassMethods
-      def sortable_fields
-        %w(errata_id)
-      end
-    end
-
     included do
       include Ext::IndexedModel
 

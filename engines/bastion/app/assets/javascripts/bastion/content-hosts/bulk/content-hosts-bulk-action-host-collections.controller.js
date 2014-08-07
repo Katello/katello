@@ -40,7 +40,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionHostCo
         params = {
             'organization_id':  CurrentOrganization,
             'offset':           0,
-            'order':            'name ASC',
+            'sort_by':          'name',
+            'sort_order':       'ASC',
             'paged':            true
         };
 

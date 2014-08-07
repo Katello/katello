@@ -14,18 +14,11 @@
 module Katello
 module Glue::ElasticSearch::Distributor
 
-  module ClassMethods
-    def sortable_fields
-      %w(name lastCheckin)
-    end
-  end
-
   # TODO: break this up into modules
   # rubocop:disable MethodLength
   def self.included(base)
     base.class_eval do
       include Ext::IndexedModel
-      extend ClassMethods
 
       index_options :extended_json => :extended_index_attrs,
                     :json => {:only => [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},

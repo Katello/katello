@@ -36,6 +36,10 @@ module Katello
       param :per_page,  :number, :desc => N_("Number of results per page to return")
       param :order, String, :desc => N_("Sort field and order, eg. 'name DESC'")
       param :full_results, :bool, :desc => N_("Whether or not to show all results")
+      param :sort, Hash, :desc => N_("Hash version of 'order' param") do
+        param :by, String, :desc => N_("Field to sort the results on")
+        param :order, String, :desc => N_("How to order the sorted results (e.g. ASC for ascending)")
+      end
     end
 
     param :object_root, String, :desc => N_("root-node of single-resource responses (optional)")
@@ -43,7 +47,11 @@ module Katello
 
     def item_search(item_class, params, options)
       fail "@search_service search not defined" if @search_service.nil?
-      options[:sort_by], _, options[:sort_order] = params[:order].rpartition(' ') if params[:order]
+      if params[:order]
+        (params[:sort_by], params[:sort_order]) = params[:order].split(' ')
+      end
+      options[:sort_by] = params[:sort_by] if params[:sort_by]
+      options[:sort_order] = params[:sort_order] if params[:sort_order]
       options[:full_result] = params[:full_result] if params[:full_result]
 
       unless options[:full_result]
@@ -69,8 +77,6 @@ module Katello
         :page     => options[:page],
         :per_page => options[:per_page]
       }
-    rescue Katello::Glue::ElasticSearch::UnsortableFieldError => e
-      raise HttpErrors::BadRequest, e.message
     end
 
     def facet_search(item_class, term , options)
@@ -87,7 +93,7 @@ module Katello
       facets = @search_service.facets[facet_name]['terms']
       results = facets.collect{|f| Katello::Glue::ElasticSearch::FacetItem.new(f)}
       {
-        :results  => results.sort_by {|f| f.term },
+        :results  => results.sort_by{|f| f.term },
         :subtotal => results.length,
         :total    => results.length,
       }

@@ -36,7 +36,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsCo
         params = {
             'id':          $scope.$stateParams.contentHostId,
             'search':      $location.search().search || "",
-            'order':       'name ASC',
+            'sort_by':     'name',
+            'sort_order':  'ASC',
             'paged':       true
         };
 

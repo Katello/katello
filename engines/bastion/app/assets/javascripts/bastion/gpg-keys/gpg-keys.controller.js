@@ -32,7 +32,8 @@ angular.module('Bastion.gpg-keys').controller('GPGKeysController',
         var params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
-            'order':            'name ASC',
+            'sort_by':          'name',
+            'sort_order':       'ASC',
             'paged':            true
         };
 
