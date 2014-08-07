@@ -15,13 +15,14 @@ class RepoDiscovery
 
   attr_reader :found
 
-  def initialize(url)
+  def initialize(url, options = {})
     #add a / on the end, as directories require it or else
     #  They will get double slahes on them
     url += '/' if !url.ends_with?('/')
     @uri = URI(url)
     @found = []
     @crawled = []
+    @options = options
   end
 
   def run(found_lambda, continue_lambda)
@@ -37,7 +38,7 @@ class RepoDiscovery
   private
 
   def http_crawl(found_lambda, continue_lambda)
-    Anemone.crawl(@uri) do |anemone|
+    Anemone.crawl(@uri, @options) do |anemone|
 
       anemone.focus_crawl do |page|
         return false if !continue_lambda.call
