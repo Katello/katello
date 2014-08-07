@@ -5,4 +5,4 @@ All URLs are relative to the application root, `/content-hosts` and `/content_vi
 The only real difference, as far as the user is concerned, is that the application is much quicker between Bastion "page loads" since only the HTML needed to render the next page is loaded instead of the entire page.
 
 ## Contributing ##
-We welcome contributions, please see the Bastion (developer guide)[https://github.com/Katello/katello.org/blob/master/docs/developer_guide/bastion/index.md].
+We welcome contributions, please see the Bastion [developer guide](https://github.com/Katello/katello.org/blob/master/docs/developer_guide/bastion/index.md).
