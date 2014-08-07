@@ -32,3 +32,7 @@ module Katello
     end
   end
 end
+
+class ::Hostgroup::Jail < Safemode::Jail
+  allow :content_source
+end
