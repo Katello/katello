@@ -20,7 +20,7 @@ class Api::V2::SystemErrataController < Api::V2::ApiController
     api_base_url "#{Katello.config.url_prefix}/api"
   end
 
-  api :PUT, "/systems/:system_id/errata/", N_("Schedule errata for installation")
+  api :PUT, "/systems/:system_id/errata/apply", N_("Schedule errata for installation")
   param :system_id, :identifier, :desc => N_("System UUID"), :required => true
   param :errata_ids, Array, :desc => N_("List of Errata ids to install"), :required => true
   def apply
