@@ -35,6 +35,7 @@ module Actions
               remove_content_views(organization)
               remove_products(organization)
               remove_default_content_view(organization)
+              remove_environments(organization)
               organization.reload
               organization.destroy!
             end
@@ -60,6 +61,15 @@ module Actions
               plan_action(Katello::ActivationKey::Destroy, key, skip_candlepin: true)
             end
           end
+        end
+
+        def remove_environments(organization)
+          organization.promotion_paths.each do |path|
+            path.reverse.each do |env|
+              plan_action(Katello::Environment::Destroy, env)
+            end
+          end
+          plan_action(Katello::Environment::Destroy, organization.library)
         end
 
         def remove_content_view_environments(organization)

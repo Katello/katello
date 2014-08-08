@@ -45,12 +45,20 @@ class KTEnvironmentTest < KTEnvironmentTestBase
     assert_nil env.default_content_view_version
   end
 
-  def test_destroy_content_view_environment
-    env = @staging
-    cve = env.content_views.first.content_view_environments.where(:environment_id=>env.id).first
-    cve_cp_id = cve.cp_id
-    env.destroy
-    assert_empty ContentViewEnvironment.where(:cp_id=>cve_cp_id)
+  def test_destroy_env_with_systems_should_fail
+    env = KTEnvironment.create!(:name => "batman", :organization => @acme_corporation, :prior => @library)
+    env.expects(:systems).returns([stub])
+    assert_raises(RuntimeError) do
+      env.destroy!
+    end
+  end
+
+  def test_destroy_env_with_activation_keys_should_fail
+    env = KTEnvironment.create!(:name => "batman", :organization => @acme_corporation, :prior => @library)
+    env.stubs(:activation_keys).returns([stub])
+    assert_raises(RuntimeError) do
+      env.destroy!
+    end
   end
 
   def test_destroy_library

@@ -13,18 +13,17 @@
 module Katello
 class KTEnvironment < Katello::Model
   self.include_root_in_json = false
+
+  include ForemanTasks::Concerns::ActionSubject
   include Authorization::LifecycleEnvironment
   include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
 
   self.table_name = "katello_environments"
   include Ext::LabelFromName
 
-  # RAILS3458: before_destroys before associations. see http://tinyurl.com/rails3458
-  before_destroy :is_deletable?
-
   belongs_to :organization, :class_name => "Organization", :inverse_of => :environments
   has_many :activation_keys, :class_name => "Katello::ActivationKey",
-           :dependent => :destroy, :foreign_key => :environment_id
+           :dependent => :restrict, :foreign_key => :environment_id
   # rubocop:disable HasAndBelongsToMany
   # TODO: change these into has_many associations
   has_and_belongs_to_many :priors, { :class_name => "Katello::KTEnvironment", :foreign_key => :environment_id,
@@ -36,13 +35,13 @@ class KTEnvironment < Katello::Model
 
   has_many :repositories, :class_name => "Katello::Repository", dependent: :destroy, foreign_key: :environment_id
   has_many :systems, :class_name => "Katello::System", :inverse_of => :environment,
-           :dependent => :destroy, :foreign_key => :environment_id
+           :dependent => :restrict, :foreign_key => :environment_id
   has_many :distributors, :class_name => "Katello::Distributor", :inverse_of => :environment,
            :dependent => :destroy, :foreign_key => :environment_id
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
-           :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
+           :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :restrict
   has_many :content_view_puppet_environments, :class_name => "Katello::ContentViewPuppetEnvironment",
-           :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
+           :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :restrict
   has_many :content_view_versions, :through => :content_view_environments, :inverse_of => :environments
   has_many :content_views, :through => :content_view_environments, :inverse_of => :environments
   has_many :content_view_histories, :class_name => "Katello::ContentViewHistory", :dependent => :destroy,
@@ -68,6 +67,9 @@ class KTEnvironment < Katello::Model
 
   has_many :capsule_lifecycle_environments, :foreign_key => :lifecycle_environment_id,
            :dependent => :destroy, :inverse_of => :lifecycle_environment
+
+  # RAILS3458: before_destroys before associations. see http://tinyurl.com/rails3458
+  before_destroy :is_deletable?, :prepend => true
 
   scope(:not_in_capsule,
         lambda do |capsule|
@@ -152,14 +154,24 @@ class KTEnvironment < Katello::Model
     return true if self.organization.nil? || self.organization.being_deleted?
 
     if library?
-      errors.add :base, _("Library environments may not be deleted.")
-      return false
+      errors.add :base, _("Library lifecycle environments may not be deleted.")
     elsif !successor.nil?
-      errors.add :base, _("Environment %s has a successor.  Only the last environment on a path can be deleted") % self.name
-      return false
+      errors.add :base, _("Lifecycle Environment %s has a successor.  Only the last lifecycle environment on a path can be deleted") % self.name
     end
 
-    return true
+    if systems.any?
+      errors.add(:base,
+         _("Lifecycle Environment %s has associated Content Hosts." +
+            " Please unregister or move the associated Content Hosts before trying to delete this lifecycle environment.") % self.name)
+    end
+
+    if activation_keys.any?
+      errors.add(:base,
+         _("Lifecycle Environment %s has associated Activation Keys." +
+           " Please change or remove the associated Activation Keys before trying to delete this lifecycle environment.") % self.name)
+    end
+
+    return errors.empty?
   end
 
   #Unlike path which only gives the path from this environment going forward

@@ -34,13 +34,11 @@ module Katello
         include Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
         include Ext::LabelFromName
 
-        before_destroy :remove_environments # must be before has_many :kt_environments
-
         has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :destroy
         has_many :providers, :class_name => "Katello::Provider", :dependent => :destroy
         has_many :products, :class_name => "Katello::Product", :dependent => :destroy, :inverse_of => :organization
         # has_many :environments is already defined in Foreman taxonomy.rb
-        has_many :kt_environments, :class_name => "Katello::KTEnvironment", :dependent => :destroy, :inverse_of => :organization
+        has_many :kt_environments, :class_name => "Katello::KTEnvironment", :dependent => :restrict, :inverse_of => :organization
         has_one :library, :class_name => "Katello::KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
         has_many :gpg_keys, :class_name => "Katello::GpgKey", :dependent => :destroy, :inverse_of => :organization
         has_many :sync_plans, :class_name => "Katello::SyncPlan", :dependent => :destroy, :inverse_of => :organization
@@ -265,14 +263,6 @@ module Katello
 
         def parent_id=(parent_id)
           fail ::Foreman::Exception.new(N_("You cannot set an organization's parent_id. This feature is disabled."))
-        end
-
-        def remove_environments
-          # start at the end of each promotion path
-          promotion_paths.each do |path|
-            path.reverse.each { |env| env.destroy! }
-          end
-          library.destroy!
         end
 
       private

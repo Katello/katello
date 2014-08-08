@@ -58,4 +58,25 @@ module ::Actions::Katello::Environment
                                 library, content_view)
     end
   end
+
+  class DestroyTest < TestBase
+    let(:action_class) { ::Actions::Katello::Environment::Destroy }
+    let(:action) { create_action action_class }
+
+    let(:environment) { stub }
+
+    it 'plans' do
+      content_view = stub
+      cve = mock(:content_view => content_view)
+      action.stubs(:action_subject).with(environment)
+      environment.expects(:reload).returns(environment)
+      environment.expects(:destroy!).returns(true)
+      environment.expects(:disable_auto_reindex!)
+      environment.expects(:content_view_environments).returns([cve])
+      plan_action(action, environment)
+      assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, environment)
+      assert_action_planed_with(action, ::Actions::Katello::ContentView::Remove, content_view, :content_view_environments => [cve])
+    end
+  end
+
 end
