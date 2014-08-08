@@ -118,7 +118,7 @@ module ::Actions::Katello::Repository
         end
       end
 
-      let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
+      let(:pulp_action) { fixture_action(pulp_action_class, input: {pulp_id: repository.pulp_id}, output: fixture_variant) }
 
       describe 'successfully synchronized' do
         let(:fixture_variant) { :success }
