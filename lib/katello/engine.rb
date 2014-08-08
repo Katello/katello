@@ -109,6 +109,10 @@ module Katello
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
 
+      #Controller extensions
+      ::OperatingsystemsController.send :include, Katello::Concerns::OperatingsystemsControllerExtensions
+
+      #Handle Smart Proxy items separately
       begin
       ::SmartProxy.send :include, Katello::Concerns::SmartProxyExtensions
       ::SmartProxiesController.send :include, Katello::Concerns::SmartProxiesControllerExtensions
