@@ -29,6 +29,8 @@ class System < Katello::Model
   include Glue::ElasticSearch::System if Katello.config.use_elasticsearch
   include Authorization::System
 
+  audited :on => [:create], :allow_mass_assignment => true
+
   attr_accessible :name, :uuid, :description, :location, :environment, :content_view,
                   :environment_id, :content_view_id, :host_collection_ids, :host_id,
                   :activation_key_ids
@@ -51,6 +53,8 @@ class System < Katello::Model
                                :after_remove => :remove_host_collection
                               }
   has_many :custom_info, :class_name => "Katello::CustomInfo", :as => :informable, :dependent => :destroy
+  has_many :audits, :class_name => "::Audit", :as => :auditable, :dependent => :destroy
+
   belongs_to :content_view, :inverse_of => :systems
 
   before_validation :set_default_content_view, :unless => :persisted?
@@ -106,6 +110,10 @@ class System < Katello::Model
 
   def remove_activation_key(activation_key)
     run_hook(:remove_activation_key_hook, activation_key)
+  end
+
+  def registered_by
+    audits.first.try(:username) unless activation_keys.length > 0
   end
 
   class << self

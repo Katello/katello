@@ -98,7 +98,7 @@ describe 'associations' do
           it('is using correct foreign_key') do
 
             class_name = association.class_name
-            unless class_name.start_with?("Katello") || class_name == "User" || class_name == "Organization"
+            unless class_name.start_with?("Katello") || class_name == "User" || class_name == "Organization" || class_name == "::Audit"
               class_name = "Katello::" + association.class_name
             end
             other_model = class_name.constantize

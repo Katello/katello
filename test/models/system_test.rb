@@ -77,6 +77,13 @@ class SystemCreateTest < SystemTestBase
     assert @system.save!
     refute_nil System.find_by_name(name)
   end
+
+  def test_registered_by
+    User.current = User.find(users(:admin))
+    @system = build(:katello_system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
+    assert @system.save!
+    assert_equal User.current.name, @system.registered_by
+  end
 end
 
 class SystemUpdateTest < SystemTestBase

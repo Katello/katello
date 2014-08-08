@@ -110,30 +110,6 @@
           </span>
       </div>
 
-      <div class="detail">
-        <span class="info-label"
-              translate
-              translate-n="contentHost.activation_keys.length"
-              translate-plural="Activation Keys">
-          Activation Key
-        </span>
-        <span class="info-value">
-          <span translate ng-show="contentHost.activation_keys.length == 0">
-            None
-          </span>
-          <ul ng-show="contentHost.activation_keys.length > 0">
-            <li ng-repeat="activation_key in contentHost.activation_keys">
-              <span>
-                <a ui-sref="activation-keys.details.info({activationKeyId: activation_key.id})">
-                  {{ activation_key.name }}
-                </a>
-              </span>
-              <span ng-show="activation_key.description"> - {{ activation_key.description }}</span>
-            </li>
-          </ul>
-        </span>
-      </div>
-
       <div class="divider"></div>
     </section>
 
@@ -265,6 +241,34 @@
       <div class="detail">
         <span class="info-label" translate>Registered</span>
         <span class="info-value">{{ contentHost.created | date:'short' }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate> Registered By</span>
+        <span class="info-value"
+              translate
+              ng-show="contentHost.activation_keys.length == 0">
+          {{ contentHost.registered_by }}
+        </span>
+        <span class="info-value"
+              ng-show="contentHost.activation_keys.length > 0"
+              translate
+              translate-n="contentHost.activation_keys.length"
+              translate-plural="Activation Keys">
+          Activation Key
+        </span>
+        <span class="info-value">
+          <ul ng-show="contentHost.activation_keys.length > 0">
+            <li ng-repeat="activation_key in contentHost.activation_keys">
+              <span>
+                <a ui-sref="activation-keys.details.info({activationKeyId: activation_key.id})">
+                  {{ activation_key.name }}
+                </a>
+              </span>
+              <span ng-show="activation_key.description"> - {{ activation_key.description }}</span>
+            </li>
+          </ul>
+        </span>
       </div>
 
       <div class="detail">
