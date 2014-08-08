@@ -477,60 +477,6 @@ module Glue::Pulp::Repo
       return [task]
     end
 
-    # Returns true if the pulp_task_id was triggered by the last synchronization
-    # action for the repository. Dynflow action handles the synchronization
-    # by it's own so no need to synchronize it again in this callback. Since the
-    # callbacks are run just after synchronization is finished, it should be enough
-    # to check for the last synchronization task.
-    def dynflow_handled_last_sync?(pulp_task_id)
-      task = ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Repository::Sync).
-          for_resource(self).order(:started_at).last
-      return task && task.main_action.pulp_task_id == pulp_task_id
-    end
-
-    def handle_sync_complete_task(pulp_task_id, notifier_service = Notify)
-      return if dynflow_handled_last_sync?(pulp_task_id)
-
-      pulp_task =  Katello.pulp_server.resources.task.poll(pulp_task_id)
-
-      if pulp_task.nil?
-        Rails.logger.error("Sync_complete called for #{pulp_task_id}, but no task found.")
-        return
-      end
-
-      task = PulpSyncStatus.using_pulp_task(pulp_task)
-      task.user ||= User.current
-      task.organization ||= organization
-      task.save!
-
-      notify = task.parameters.try(:[], :options).try(:[], :notify)
-      user = task.user
-      if task.state == TaskStatus::Status::FINISHED.to_s && task.progress.error_details[:messages].blank?
-        if user && notify
-          notifier_service.success _("Repository '%s' finished syncing successfully.") % [self.name],
-                         :user => user, :organization => self.organization
-        end
-      else
-        details = []
-
-        if task.progress.error_details.present?
-          details = task.progress.error_details[:details].map do |error|
-            error[:error_message].to_s
-          end
-        else
-          details = task.result[:errors].flatten.map(&:chomp)
-        end
-
-        details = details.join("\n")
-
-        Rails.logger.error("*** Sync error: " +  details)
-        if user && notify
-          notifier_service.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
-                       :details => details, :user => user, :organization => self.organization
-        end
-      end
-    end
-
     def clone_contents_by_filter(to_repo, content_type, filter_clauses, override_config = {})
       content_classes = {
           Katello::Package::CONTENT_TYPE => :rpm,

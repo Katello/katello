@@ -141,14 +141,15 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
     repo_id = params['payload']['repo_id']
     task_id = params['call_report']['task_id']
-    task = TaskStatus.find_by_uuid(task_id)
-    User.current = (task && task.user) ?  task.user : User.anonymous_admin
+    User.current = User.anonymous_admin
 
     repo    = Repository.where(:pulp_id => repo_id).first
     fail _("Couldn't find repository '%s'") % repo_id if repo.nil?
     Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
 
-    repo.async(:organization => repo.environment.organization).after_sync(task_id)
+    unless repo.dynflow_handled_last_sync?(task_id)
+      async_task(::Actions::Katello::Repository::Sync, repo, task_id)
+    end
     render :json => {}
   end
 

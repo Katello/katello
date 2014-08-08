@@ -203,11 +203,15 @@ class Repository < Katello::Model
     end
   end
 
-  def after_sync(pulp_task_id)
-    self.handle_sync_complete_task(pulp_task_id)
-    #don't publish as auto_publish should be enabled
-    self.trigger_contents_changed(:wait => false, :publish => false, :reindex => true)
-    Medium.update_media(self)
+  # Returns true if the pulp_task_id was triggered by the last synchronization
+  # action for the repository. Dynflow action handles the synchronization
+  # by it's own so no need to synchronize it again in this callback. Since the
+  # callbacks are run just after synchronization is finished, it should be enough
+  # to check for the last synchronization task.
+  def dynflow_handled_last_sync?(pulp_task_id)
+    task = ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Repository::Sync).
+        for_resource(self).order(:started_at).last
+    return task && task.main_action.pulp_task_id == pulp_task_id
   end
 
   def as_json(*args)

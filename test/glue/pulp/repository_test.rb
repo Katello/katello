@@ -163,19 +163,6 @@ class GluePulpRepoAfterSyncTest < GluePulpRepoTestBase
     @fedora_17_x86_64 = @@fedora_17_x86_64
     @fedora_17_x86_64.relative_path = '/test_path/'
   end
-
-  def test_handle_sync_complete_task
-    mock_notifier = Minitest::Mock.new
-    mock_notifier.expect(:success, nil)
-
-    task_list = @fedora_17_x86_64.sync
-    TaskSupport.wait_on_tasks(task_list)
-
-    @fedora_17_x86_64.handle_sync_complete_task(task_list.first.uuid, mock_notifier)
-
-    assert PulpTaskStatus.where(:uuid => task_list.first.uuid).length > 0
-  end
-
 end
 
 
@@ -249,11 +236,6 @@ class GluePulpRepoContentsTest < GluePulpRepoTestBase
 
   def test_last_sync
     assert @@fedora_17_x86_64.last_sync
-  end
-
-  def test_generate_metadata
-    ::ForemanTasks.stubs(:sync_task).returns({})
-    refute_empty @@fedora_17_x86_64.generate_metadata
   end
 
   def test_sync_status
@@ -331,17 +313,6 @@ class GluePulpRepoContentsTest < GluePulpRepoTestBase
 
     refute_empty categories.select { |category| category['name'] == 'all' }
   end
-
-  def test_trigger_contents_changed_index_units
-    Katello.config.stubs(:use_elasticsearch).returns(:true)
-    pkg = @@fedora_17_x86_64.find_packages_by_nvre('elephant', '0.3', '0.8', '0')[0]
-    @@fedora_17_x86_64.expects(:generate_metadata).returns([])
-    Package.expects(:index_packages).with([pkg['_id']])
-
-    unit = {:checksumtype => pkg['checksumtype'], :checksum => pkg['checksum'] }
-    @@fedora_17_x86_64.trigger_contents_changed(:publish => true, :reindex => false, :index_units => [{:unit => unit}])
-  end
-
 end
 
 

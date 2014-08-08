@@ -22,7 +22,10 @@ module Actions
           param :sync_result, Hash
         end
 
-        def plan(repo)
+        # @param repo
+        # @param pulp_sync_task_id in case the sync was triggered outside
+        #   of Katello and we just need to finish the rest of the orchestration
+        def plan(repo, pulp_sync_task_id = nil)
           sync_task = nil
           action_subject(repo)
 
@@ -31,7 +34,7 @@ module Actions
           end
 
           sequence do
-            sync_task = plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
+            sync_task = plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id, task_id: pulp_sync_task_id)
             concurrence do
               plan_action(Katello::Repository::NodeMetadataGenerate, repo, sync_task.output[:pulp_tasks])
 
@@ -59,8 +62,9 @@ module Actions
 
         def pulp_task_id
           pulp_action = planned_actions(Pulp::Repository::Sync).first
-          pulp_action.output[:pulp_task] &&
-              pulp_action.output[:pulp_task][:task_id]
+          if pulp_task = Array(pulp_action.external_task).first
+            pulp_task.fetch(:task_id)
+          end
         end
       end
     end

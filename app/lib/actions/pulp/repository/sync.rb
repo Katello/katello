@@ -19,23 +19,29 @@ module Actions
 
         input_format do
           param :pulp_id
+          param :task_id # In case we need just pair this action with existing sync task
         end
 
         def invoke_external_task
-          sync_options = {}
+          if input[:task_id]
+            # don't initiate, just load the existing task
+            task_resource.poll(input[:task_id])
+          else
+            sync_options = {}
 
-          if ::Katello.config.pulp.sync_KBlimit
-            # set bandwidth limit
-            sync_options[:max_speed] ||= ::Katello.config.pulp.sync_KBlimit
-          end
-          if ::Katello.config.pulp.sync_threads
-            # set threads per sync
-            sync_options[:num_threads] ||= ::Katello.config.pulp.sync_threads
-          end
+            if ::Katello.config.pulp.sync_KBlimit
+              # set bandwidth limit
+              sync_options[:max_speed] ||= ::Katello.config.pulp.sync_KBlimit
+            end
+            if ::Katello.config.pulp.sync_threads
+              # set threads per sync
+              sync_options[:num_threads] ||= ::Katello.config.pulp.sync_threads
+            end
 
-          output[:pulp_tasks] = pulp_tasks =
-              pulp_resources.repository.sync(input[:pulp_id], { override_config: sync_options })
-          pulp_tasks
+            output[:pulp_tasks] = pulp_tasks =
+                pulp_resources.repository.sync(input[:pulp_id], { override_config: sync_options })
+            pulp_tasks
+          end
         end
 
         def run_progress
