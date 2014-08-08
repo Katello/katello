@@ -35,6 +35,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   param :organization_id, :number, :desc => N_("Organization ID"), :required => true
   param :system_id, String, :desc => N_("UUID of the system"), :required => false
   param :activation_key_id, String, :desc => N_("Activation key ID"), :required => false
+  param_group :search, Api::V2::ApiController
   def index
     subscriptions = if @system
                       index_system
