@@ -16,6 +16,8 @@ require "katello_test_helper"
 module Katello
   describe Api::Rhsm::CandlepinProxiesController do
 
+    include Support::ForemanTasks::Task
+
     before do
       models = ["Organization", "KTEnvironment", "User", "ContentViewFilter",
                 "ContentViewEnvironment", "System", "HostCollection", "ActivationKey"]
@@ -26,60 +28,98 @@ module Katello
       @organization = get_organization
     end
 
-    describe "register with activation key"  do
-      it "should fail without specifying owner (organization)" do
+    describe "register with activation key should fail"  do
+      it "without specifying owner (organization)" do
         post('consumer_activate', :activation_keys => 'non_existent_key')
         assert_response 404
       end
 
-      it "should fail with unknown organization" do
+      it "with unknown organization" do
         post('consumer_activate', :owner => 'not_an_organization', :activation_keys => 'non_existent_key')
         assert_response 404
       end
 
-      it "should fail with known organization and no activation_keys" do
+      it "with known organization and no activation_keys" do
         post('consumer_activate', :owner => @organization.label, :activation_keys => '')
         assert_response 400
       end
+    end
+
+    describe "register with activation key" do
+
+      before do
+        @foreman_host = Host.find(hosts(:one))
+        @facts = { 'network.hostname' => @foreman_host.name }
+
+        @activation_key = ActivationKey.create!(:name => "key 1", :organization => @foreman_host.organization)
+        @controller.stubs(:find_activation_keys).returns([@activation_key])
+        @controller.stubs(:find_foreman_host).returns(@foreman_host)
+      end
 
       it "should associate the foreman host with the content host" do
-        foreman_host = Host.find(hosts(:one))
-        activation_key = ActivationKey.create!(:name => "key 1", :organization => foreman_host.organization)
-        @controller.stubs(:find_activation_keys).returns([activation_key])
+        System.expects(:new).with({ 'facts' => @facts, 'host_id' => @foreman_host.id }).returns(@system)
 
-        Host.expects(:where)
-            .with({ :name => foreman_host.name, :organization_id => foreman_host.organization.id })
-            .returns([foreman_host])
-
-        System.expects(:new).with({ 'facts' => { 'network.hostname' => foreman_host.name },
-                                    'host_id' => foreman_host.id })
+        assert_sync_task(::Actions::Katello::System::Create, @system, [@activation_key])
 
         post(:consumer_activate,
              :activation_keys => 'some_valid_keys',
-             :facts => { 'network.hostname' => foreman_host.name })
+             :facts => @facts)
       end
-    end	
+
+      it "should delete content host currently associated with the foreman host" do
+        @system2 = katello_systems(:simple_server)
+        Host.any_instance.stubs(:content_host).returns(@system2)
+
+        System.expects(:new).with({ 'facts' => @facts, 'host_id' => @foreman_host.id }).returns(@system)
+
+        assert_sync_task(::Actions::Katello::System::Destroy, @system2)
+
+        post(:consumer_activate,
+             :activation_keys => 'some_valid_keys',
+             :facts => @facts)
+      end
+    end
 
     describe "register with a lifecycle environment" do
+      before do
+        @foreman_host = Host.find(hosts(:one))
+        @facts = { 'network.hostname' => @foreman_host.name }
+
+        @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment))
+        KTEnvironment.any_instance.stubs(:organization).returns(@foreman_host.organization)
+        @controller.stubs(:find_content_view_environment).returns(@content_view_environment)
+        @controller.stubs(:find_foreman_host).returns(@foreman_host)
+      end
+
       it "should associate the foreman host with the content host" do
-        foreman_host = Host.find(hosts(:one))
-        content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment))
-        KTEnvironment.any_instance.stubs(:organization).returns(foreman_host.organization)
-        @controller.stubs(:find_content_view_environment).returns(content_view_environment)
-
-        Host.expects(:where)
-            .with({ :name => foreman_host.name, :organization_id => foreman_host.organization.id })
-            .returns([foreman_host])
-
-        System.expects(:new).with({ 'environment' => content_view_environment.environment,
-                                    'content_view' => content_view_environment.content_view,
+        System.expects(:new).with({ 'environment' => @content_view_environment.environment,
+                                    'content_view' => @content_view_environment.content_view,
                                     'serviceLevel' => nil,
-                                    'facts' => { 'network.hostname' => foreman_host.name },
-                                    'host_id' => foreman_host.id })
+                                    'facts' => @facts,
+                                    'host_id' => @foreman_host.id }).returns(@system)
+
+        assert_sync_task(::Actions::Katello::System::Create, @system)
 
         post(:consumer_create,
-             :environment_id => content_view_environment.environment.id,
-             :facts => { 'network.hostname' => foreman_host.name })
+             :environment_id => @content_view_environment.environment.id,
+             :facts => @facts)
+      end
+
+      it "should delete content host currently associated with the foreman host" do
+        @system2 = katello_systems(:simple_server)
+        Host.any_instance.stubs(:content_host).returns(@system2)
+
+        System.expects(:new).with({ 'environment' => @content_view_environment.environment,
+                                    'content_view' => @content_view_environment.content_view,
+                                    'serviceLevel' => nil,
+                                    'facts' => @facts,
+                                    'host_id' => @foreman_host.id }).returns(@system)
+
+        assert_sync_task(::Actions::Katello::System::Destroy, @system2)
+
+        post(:consumer_create,
+             :environment_id => @content_view_environment.environment.id,
+             :facts => @facts)
       end
     end
 
