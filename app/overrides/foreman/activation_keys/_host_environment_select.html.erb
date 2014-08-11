@@ -38,11 +38,11 @@
     });
 </script>
 
-<%= field(f, _("Lifecycle Environment"), { :include_blank => true }) do
+<%= field(f, :kt_environment_id, { :include_blank => true, :label => _("Lifecycle Environment") }) do
   select_tag :kt_environment_id, grouped_env_options, :class => 'form-control', :onchange => 'update_environment_label(this);'
 end %>
 
-<%= field(f, _("Puppet Environment"), { :include_blank => true }) do
+<%= field(f, :environment_id, { :include_blank => true, :label => _("Puppet Environment") }) do
   f.select :environment_id,
            content_view_options,
            { :include_blank => true },
