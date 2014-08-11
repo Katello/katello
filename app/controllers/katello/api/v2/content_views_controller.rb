@@ -151,7 +151,7 @@ module Katello
     param :id, :number, :desc => N_("content view numeric identifier"), :required => true
     param :environment_id, :number, :desc => N_("environment numeric identifier"), :required => true
     def remove_from_environment
-      unless @view.environments.include?(@environments)
+      unless @view.environments.include?(@environment)
         fail HttpErrors::BadRequest, _("Content view '%{view}' is not in lifecycle environment '%{env}'.") %
               {view: @view.name, env: @environment.name}
       end
