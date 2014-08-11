@@ -69,21 +69,7 @@ module Actions
         end
 
         def remove_content_view_environment(cv_env)
-          content_view = cv_env.content_view
-          environment = cv_env.environment
-
-          concurrence do
-            content_view.repos(environment).each do |repo|
-              plan_action(Repository::Destroy, repo, skip_environment_update: true)
-            end
-
-            if puppet_env = content_view.puppet_env(environment)
-              plan_action(ContentViewPuppetEnvironment::Destroy, puppet_env)
-            end
-          end
-
-          cv_env.reload
-          cv_env.destroy!
+          plan_action(ContentViewEnvironment::Destroy, cv_env, skip_candlepin_update: true)
         end
 
         def remove_content_views(organization)
