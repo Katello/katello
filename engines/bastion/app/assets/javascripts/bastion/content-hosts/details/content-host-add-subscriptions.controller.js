@@ -54,6 +54,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
                     $scope.successMessages.push(translate("Successfully added %s subscriptions.").replace('%s', selected.length));
                     $scope.isAdding = false;
                     $scope.addSubscriptionsPane.refresh();
+                    $scope.subscriptionsPane.refresh();
+                    $scope.nutupane.refresh();
                 });
             }, function (response) {
                 $scope.$parent.errorMessages = response.data.displayMessage;
