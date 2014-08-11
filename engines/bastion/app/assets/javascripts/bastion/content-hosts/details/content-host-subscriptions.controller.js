@@ -54,6 +54,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
                     $scope.subscriptionsPane.refresh();
                     $scope.successMessages.push(translate("Successfully removed %s subscriptions.").replace('%s', selected.length));
                     $scope.isRemoving = false;
+                    $scope.nutupane.refresh();
                 });
             }, function (response) {
                 $scope.isRemoving = false;
