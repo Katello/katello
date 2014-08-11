@@ -20,7 +20,7 @@ class Api::V2::SystemErrataController < Api::V2::ApiController
     api_base_url "#{Katello.config.url_prefix}/api"
   end
 
-  api :PUT, "/systems/:system_id/errata/apply", N_("Schedule errata for installation")
+  api :PUT, "/systems/:system_id/errata/apply", N_("Schedule errata for installation"), :deprecated => true
   param :system_id, :identifier, :desc => N_("System UUID"), :required => true
   param :errata_ids, Array, :desc => N_("List of Errata ids to install"), :required => true
   def apply
@@ -28,7 +28,7 @@ class Api::V2::SystemErrataController < Api::V2::ApiController
     respond_for_async :resource => task
   end
 
-  api :GET, "/systems/:system_id/errata/:id", N_("Retrieve a single errata for a system")
+  api :GET, "/systems/:system_id/errata/:id", N_("Retrieve a single errata for a system"), :deprecated => true
   param :system_id, :identifier, :desc => N_("System UUID"), :required => true
   param :id, String, :desc => N_("Errata id of the erratum (RHSA-2012:108)"), :required => true
   def show

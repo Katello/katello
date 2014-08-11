@@ -46,7 +46,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "i18n_data", ">= 0.2.6"
 
   # Documentation
-  gem.add_dependency "apipie-rails", ">= 0.1.0"
   gem.add_dependency "maruku"
 
   # Pulp

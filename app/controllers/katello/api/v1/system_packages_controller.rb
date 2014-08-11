@@ -16,7 +16,6 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
     param :system_id, :identifier, :desc => N_("system identifier"), :required => true
 
     api_version 'v1'
-    api_version 'v2'
   end
 
   respond_to :json

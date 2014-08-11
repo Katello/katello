@@ -39,9 +39,9 @@ module Katello
     end
 
     api :GET, "/host_collections", N_("List host collections")
-    api :GET, "/organizations/:organization_id/host_collections"
-    api :GET, "/activation_keys/:activation_key_id/host_collections"
-    api :GET, "/systems/:system_id/host_collections"
+    api :GET, "/organizations/:organization_id/host_collections", N_("List host collections within an organization")
+    api :GET, "/activation_keys/:activation_key_id/host_collections", N_("List host collections in an activation key")
+    api :GET, "/systems/:system_id/host_collections", N_("List host collections containing a content host"), :deprecated => true
     param_group :search, Api::V2::ApiController
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
     param :name, String, :desc => N_("host collection name to filter by")
@@ -81,7 +81,7 @@ module Katello
     end
 
     # TODO: switch to systems controller index w/ @adprice pull-request
-    api :GET, "/host_collections/:id/systems", N_("List content hosts in the host collection")
+    api :GET, "/host_collections/:id/systems", N_("List content hosts in the host collection"), :deprecated => true
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
     def systems
       options = {
@@ -91,7 +91,7 @@ module Katello
       respond_for_index(:collection => item_search(System, params, options))
     end
 
-    api :PUT, "/host_collections/:id/add_systems", N_("Add content host to the host collection")
+    api :PUT, "/host_collections/:id/add_systems", N_("Add content host to the host collection"), :deprecated => true
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
     param :system_ids, Array, :desc => N_("Array of content host ids")
     def add_systems
@@ -113,7 +113,7 @@ module Katello
                        :resource => { 'displayMessages' => messages }
     end
 
-    api :PUT, "/host_collections/:id/remove_systems", N_("Remove content hosts from the host collection")
+    api :PUT, "/host_collections/:id/remove_systems", N_("Remove content hosts from the host collection"), :deprecated => true
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
     param :system_ids, Array, :desc => N_("Array of content host ids")
     def remove_systems

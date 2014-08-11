@@ -30,7 +30,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   end
 
   api :GET, "/organizations/:organization_id/subscriptions", N_("List organization subscriptions")
-  api :GET, "/systems/:system_id/subscriptions", N_("List a system's subscriptions")
+  api :GET, "/systems/:system_id/subscriptions", N_("List a system's subscriptions"), :deprecated => true
   api :GET, "/activation_keys/:activation_key_id/subscriptions", N_("List an activation key's subscriptions")
   param :organization_id, :number, :desc => N_("Organization ID"), :required => true
   param :system_id, String, :desc => N_("UUID of the system"), :required => false
@@ -68,7 +68,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   end
 
   api :POST, "/subscriptions/:id", N_("Add a subscription to a resource")
-  api :POST, "/systems/:system_id/subscriptions", N_("Add a subscription to a system")
+  api :POST, "/systems/:system_id/subscriptions", N_("Add a subscription to a system"), :deprecated => true
   api :POST, "/activation_keys/:activation_key_id/subscriptions", N_("Add a subscription to an activation key")
   param :id, String, :desc => N_("Subscription Pool uuid"), :required => false
   param :system_id, String, :desc => N_("UUID of the system"), :required => false
@@ -101,7 +101,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   end
 
   api :DELETE, "/subscriptions/:id", N_("Unattach a subscription")
-  api :DELETE, "/systems/:system_id/subscriptions/:id", N_("Unattach a subscription")
+  api :DELETE, "/systems/:system_id/subscriptions/:id", N_("Unattach a subscription"), :deprecated => true
   api :DELETE, "/activation_keys/:activation_key_id/subscriptions/:id", N_("Unattach a subscription")
   param :id, String, :desc => N_("Subscription ID"), :required => false
   param :system_id, String, :desc => N_("UUID of the system")
@@ -257,7 +257,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     return subscriptions
   end
 
-  api :GET, "/systems/:system_id/subscriptions/available", N_("List available subscriptions")
+  api :GET, "/systems/:system_id/subscriptions/available", N_("List available subscriptions"), :deprecated => true
   param :system_id, String, :desc => N_("UUID of the system"), :required => true
   param :match_system, :bool, :desc => N_("Return subscriptions that match system")
   param :match_installed, :bool, :desc => N_("Return subscriptions that match installed")

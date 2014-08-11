@@ -25,9 +25,9 @@ class Api::V2::SystemsController < Api::V2::ApiController
                                         :available_host_collections,
                                         :refresh_subscriptions, :tasks, :content_override, :events]
   before_filter :find_environment, :only => [:index, :report]
-  before_filter :find_optional_organization, :only => [:create, :index, :activate, :report]
+  before_filter :find_optional_organization, :only => [:create, :index, :report]
   before_filter :find_host_collection, :only => [:index]
-  before_filter :find_default_organization_and_or_environment, :only => [:create, :index, :activate]
+  before_filter :find_default_organization_and_or_environment, :only => [:create, :index]
   before_filter :find_only_environment, :only => [:create]
 
   before_filter :find_environment_and_content_view, :only => [:create]
@@ -52,10 +52,10 @@ class Api::V2::SystemsController < Api::V2::ApiController
     param :environment_id, :identifier
   end
 
-  api :GET, "/systems", N_("List content hosts")
-  api :GET, "/organizations/:organization_id/systems", N_("List content hosts in an organization")
-  api :GET, "/environments/:environment_id/systems", N_("List content hosts in environment")
-  api :GET, "/host_collections/:host_collection_id/systems", N_("List content hosts in a host collection")
+  api :GET, "/systems", N_("List content hosts"), :deprecated => true
+  api :GET, "/organizations/:organization_id/systems", N_("List content hosts in an organization"), :deprecated => true
+  api :GET, "/environments/:environment_id/systems", N_("List content hosts in environment"), :deprecated => true
+  api :GET, "/host_collections/:host_collection_id/systems", N_("List content hosts in a host collection"), :deprecated => true
   param :name, String, :desc => N_("Filter content host by name")
   param :pool_id, String, :desc => N_("Filter content host by subscribed pool")
   param :uuid, String, :desc => N_("Filter content host by uuid")
@@ -92,9 +92,9 @@ class Api::V2::SystemsController < Api::V2::ApiController
     respond_for_index(:collection => item_search(System, params, options))
   end
 
-  api :POST, "/systems", N_("Register a content host")
-  api :POST, "/environments/:environment_id/systems", N_("Register a content host in environment")
-  api :POST, "/host_collections/:host_collection_id/systems", N_("Register a content host in environment")
+  api :POST, "/systems", N_("Register a content host"), :deprecated => true
+  api :POST, "/environments/:environment_id/systems", N_("Register a content host in environment"), :deprecated => true
+  api :POST, "/host_collections/:host_collection_id/systems", N_("Register a content host in environment"), :deprecated => true
   param :name, String, :desc => N_("Name of the content host"), :required => true, :action_aware => true
   param :description, String, :desc => N_("Description of the content host")
   param :location, String, :desc => N_("Physical location of the content host")
@@ -119,7 +119,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
     respond_for_create
   end
 
-  api :PUT, "/systems/:id", N_("Update content host information")
+  api :PUT, "/systems/:id", N_("Update content host information"), :deprecated => true
   param :id, String, :desc => N_("UUID of the content host"), :required => true
   param :name, String, :desc => N_("Name of the content host"), :required => true, :action_aware => true
   param :description, String, :desc => N_("Description of the content host")
@@ -142,7 +142,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
     respond_for_update
   end
 
-  api :GET, "/systems/:id", N_("Show a content host")
+  api :GET, "/systems/:id", N_("Show a content host"), :deprecated => true
   param :id, String, :desc => N_("UUID of the content host"), :required => true
   def show
     @host_collections = @system.host_collections
@@ -150,7 +150,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
     respond
   end
 
-  api :GET, "/systems/:id/available_host_collections", N_("List host collections the content host does not belong to")
+  api :GET, "/systems/:id/available_host_collections", N_("List host collections the content host does not belong to"), :deprecated => true
   param_group :search, Api::V2::ApiController
   param :name, String, :desc => N_("host collection name to filter by")
   def available_host_collections
@@ -166,14 +166,14 @@ class Api::V2::SystemsController < Api::V2::ApiController
     respond_for_index(:collection => host_collections)
   end
 
-  api :DELETE, "/systems/:id", N_("Unregister a content host")
+  api :DELETE, "/systems/:id", N_("Unregister a content host"), :deprecated => true
   param :id, String, :desc => N_("UUID of the content host"), :required => true
   def destroy
     sync_task(::Actions::Katello::System::Destroy, @system)
     respond :message => _("Deleted content host '%s'") % params[:id], :status => 204
   end
 
-  api :GET, "/systems/:id/packages", N_("List packages installed on the content host")
+  api :GET, "/systems/:id/packages", N_("List packages installed on the content host"), :deprecated => true
   param :id, String, :desc => N_("UUID of the content host"), :required => true
   def package_profile
     packages = @system.simple_packages.sort { |a, b| a.name.downcase <=> b.name.downcase }
@@ -185,14 +185,14 @@ class Api::V2::SystemsController < Api::V2::ApiController
     respond_for_index :collection => response
   end
 
-  api :PUT, "/systems/:id/refresh_subscriptions", N_("Trigger a refresh of subscriptions, auto-attaching if enabled")
+  api :PUT, "/systems/:id/refresh_subscriptions", N_("Trigger a refresh of subscriptions, auto-attaching if enabled"), :deprecated => true
   param :id, String, :desc => N_("UUID of the content host"), :required => true
   def refresh_subscriptions
     @system.refresh_subscriptions
     respond_for_show(:resource => @system)
   end
 
-  api :GET, "/systems/:id/errata", N_("List errata available for the content host")
+  api :GET, "/systems/:id/errata", N_("List errata available for the content host"), :deprecated => true
   param :id, String, :desc => N_("UUID of the content host"), :required => true
   def errata
     errata = @system.errata
@@ -206,8 +206,8 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   # TODO: break this mehtod up
-  api :GET, "/environments/:environment_id/systems/report", N_("Get content host reports for the environment")
-  api :GET, "/organizations/:organization_id/systems/report", N_("Get content host reports for the organization")
+  api :GET, "/environments/:environment_id/systems/report", N_("Get content host reports for the environment"), :deprecated => true
+  api :GET, "/organizations/:organization_id/systems/report", N_("Get content host reports for the organization"), :deprecated => true
   def report # rubocop:disable MethodLength
     data = @environment.nil? ? @organization.systems.readable : @environment.systems.readable
 
@@ -237,7 +237,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
     end
   end
 
-  api :GET, "/systems/:id/pools", N_("List pools a content host is subscribed to")
+  api :GET, "/systems/:id/pools", N_("List pools a content host is subscribed to"), :deprecated => true
   param :id, String, :desc => N_("UUID of the content host"), :required => true
   param :match_system, [true, false], :desc => N_("Match pools to content host")
   param :match_installed, [true, false], :desc => N_("Match pools to installed")
@@ -255,7 +255,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
     respond_for_index :collection => response
   end
 
-  api :GET, "/systems/:id/releases", N_("Show releases available for the content host")
+  api :GET, "/systems/:id/releases", N_("Show releases available for the content host"), :deprecated => true
   param :id, String, :desc => N_("UUID of the content host"), :required => true
   desc <<-DESC
     A hint for choosing the right value for the releaseVer param
