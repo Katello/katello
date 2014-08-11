@@ -672,7 +672,7 @@ class ContentSearchController < Katello::ApplicationController
   # parent_repo    the library repo instance (or the parent row)
   # spanned_repos  all other instances of repos across all environments
   def spanning_content_rows(view, content_list, id_prefix, parent_repo, spanned_repos)
-    env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
+    env_ids = KTEnvironment.content_readable(current_organization).pluck("#{Katello::KTEnvironment.table_name}.id")
     to_ret = []
     content_list.each do |item|
 
@@ -744,8 +744,8 @@ class ContentSearchController < Katello::ApplicationController
 
     # repos were searched by string
     if repo_ids.is_a? Array
-      ids = ContentView.readable_repositories(repo_ids).pluck(:id)
-      ids += Product.readable_repositories(repo_ids).pluck(:id)
+      ids = ContentView.readable_repositories(repo_ids).pluck("#{Katello::Repository.table_name}.id")
+      ids += Product.readable_repositories(repo_ids).pluck("#{Katello::Repository.table_name}.id")
       repo_ids = ids
     else
       search_string = repo_ids
