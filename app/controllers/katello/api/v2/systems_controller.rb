@@ -319,8 +319,8 @@ class Api::V2::SystemsController < Api::V2::ApiController
       # the single env of the org or throw an error if more than one.
       #
       if @organization.kt_environments.size > 1
-        if current_user.default_environment && current_user.default_environment.organization == @organization
-          @environment = current_user.default_environment
+        if current_user.default_organization && current_user.default_organization == @organization
+          @environment = current_user.library
         else
           fail HttpErrors::BadRequest, _("Organization %s has more than one environment. Please specify target environment for content host registration.") % @organization.name
         end
