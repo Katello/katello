@@ -76,7 +76,7 @@ module Katello
 
     def test_syncable_content
       products = Katello::Product.syncable_content
-      refute_empty products
+      assert_equal 2, products.length
       products.each { |prod| assert prod.syncable_content? }
     end
   end
