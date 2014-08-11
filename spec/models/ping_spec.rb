@@ -25,9 +25,6 @@ describe Ping do
 
       # candlepin - with oauth
       Resources::Candlepin::CandlepinPing.stubs(:ping).returns
-
-      # katello jobs
-      Ping.expects(:system).with("/sbin/service katello-jobs status").returns(true)
     end
 
     describe "headpin mode", :headpin => true do

@@ -35,14 +35,14 @@ module Katello
             :elasticsearch => {},
             :pulp_auth => {},
             :candlepin_auth => {},
-            :katello_jobs => {},
+            :foreman_tasks => {},
           }}
         else
           result = { :status => OK_RETURN_CODE, :services => {
             :candlepin => {},
             :elasticsearch => {},
             :candlepin_auth => {},
-            :katello_jobs => {},
+            :foreman_tasks => {},
             :thumbslug => {}
           }}
         end
@@ -92,9 +92,12 @@ module Katello
           Katello::Resources::Candlepin::CandlepinPing.ping
         end
 
-        # katello jobs - TODO we should not spawn processes
-        exception_watch(result[:services][:katello_jobs]) do
-          fail _("katello-jobs service not running") unless system("/sbin/service katello-jobs status")
+        exception_watch(result[:services][:foreman_tasks]) do
+          dynflow_world = ForemanTasks.dynflow.world
+          if dynflow_world.executor.is_a?(Dynflow::Executors::RemoteViaSocket) &&
+                !dynflow_world.executor.connected?
+            fail _("foreman-tasks service not running")
+          end
         end
 
         # set overall status result code
