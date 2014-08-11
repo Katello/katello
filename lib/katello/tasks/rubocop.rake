@@ -6,7 +6,7 @@ namespace :katello do
   task :rubocop do
     system("cd #{Katello::Engine.root} && bundle exec rubocop")
   end
-  
+
   desc "Runs Rubocop style checker with xml output for Jenkins"
   task 'rubocop:jenkins' do
     system("cd #{Katello::Engine.root} && bundle exec rubocop \

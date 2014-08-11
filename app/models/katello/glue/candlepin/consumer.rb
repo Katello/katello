@@ -18,8 +18,7 @@ module Glue::Candlepin::Consumer
   CP_TYPES = [SYSTEM, HYPERVISOR, CANDLEPIN]
 
   # TODO: break up method
-  # rubocop:disable MethodLength
-  def self.included(base)
+  def self.included(base) # rubocop:disable MethodLength
     base.send :include, LazyAccessor
     base.send :include, InstanceMethods
     base.send :extend, ClassMethods

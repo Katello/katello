@@ -374,8 +374,7 @@ class ContentSearchController < Katello::ApplicationController
   private
 
   # TODO: break up this method
-  # rubocop:disable MethodLength
-  def repo_compare_content(unit_type, offset)
+  def repo_compare_content(unit_type, offset) # rubocop:disable Style/MethodLength
     repo_map = @repos.inject({}) do |map, repo|
       map[repo.pulp_id] = repo
       map
