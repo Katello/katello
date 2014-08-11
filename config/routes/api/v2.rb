@@ -225,7 +225,6 @@ Katello::Engine.routes.draw do
               put :remove_products
             end
           end
-          api_resources :tasks, :only => [:index, :show]
           scope :constraints => Katello::RegisterWithActivationKeyConstraint.new do
             match '/systems' => 'systems#activate', :via => :post
           end
@@ -372,7 +371,6 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :sync_plans, :only => [:show, :update, :destroy]
-        api_resources :tasks, :only => [:show]
         api_resources :about, :only => [:index]
 
         # api custom information
