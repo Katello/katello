@@ -115,7 +115,7 @@ module Glue::Pulp::Consumer
     def generate_applicability
       #can't use consumer users until https://bugzilla.redhat.com/show_bug.cgi?id=1015583 is resolved
       original_user = User.current
-      User.current = User.hidden.first if original_user.is_a?(CpConsumerUser)
+      User.current = User.anonymous_admin if original_user.is_a?(CpConsumerUser)
       Rails.logger.debug "Regenerating applicability for consumer #{self.name}"
       task = Katello.pulp_server.extensions.consumer.regenerate_applicability_by_ids([self.uuid])
       PulpTaskStatus.using_pulp_task(task)

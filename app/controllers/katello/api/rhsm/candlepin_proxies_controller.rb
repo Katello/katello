@@ -220,7 +220,7 @@ module Katello
     def consumer_activate
       # Activation keys are userless by definition so use the internal generic user
       # Set it before calling find_activation_keys to allow communication with candlepin
-      User.current    = User.hidden.first
+      User.current    = User.anonymous_admin
       activation_keys = find_activation_keys
       foreman_host    = find_foreman_host(activation_keys.first.organization)
 

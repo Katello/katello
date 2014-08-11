@@ -52,9 +52,6 @@ module Katello
         include AsyncOrchestration
         include Util::ThreadSession::UserModel
 
-        scope :hidden, where(:hidden => true)
-        scope :visible, where(:hidden => false)
-
         has_many :help_tips, :dependent => :destroy, :class_name => "Katello::HelpTip"
         has_many :user_notices, :dependent => :destroy, :class_name => "Katello::UserNotice"
         has_many :notices, :through => :user_notices, :class_name => "Katello::Notice"
@@ -222,7 +219,7 @@ module Katello
         end
 
         def allowed_organizations
-          (admin? || hidden) ? Organization.all : self.organizations
+          (admin? || anonymous_admin) ? Organization.all : self.organizations
         end
 
         private

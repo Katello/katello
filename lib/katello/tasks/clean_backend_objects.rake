@@ -1,7 +1,7 @@
 namespace :katello do
   desc "Cleans backend objects (systems) that are missing in one or more backend systems"
   task :clean_backend_objects => ["environment"] do
-    User.current = User.hidden.first
+    User.current = User.anonymous_admin
     Katello::System.find_each do |system|
       cp_fail = false
       pulp_fail = false
