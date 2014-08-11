@@ -43,7 +43,7 @@
     </thead>
 
     <tbody>
-      <tr alch-table-row ng-repeat="item in versions.results | filter:filterTerm | orderBy:'author'">
+      <tr alch-table-row ng-repeat="item in versions.results | filter:filterTerm | orderBy: ['author', '-version']">
         <td alch-table-cell >{{ item.author }}</td>
         <td alch-table-cell >{{ item.version }}</td>
         <td alch-table-cell >{{ item.summary }}</td>

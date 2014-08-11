@@ -24,7 +24,7 @@ module Glue::ElasticSearch::PuppetModule
       "name_sort"         => name.downcase,
       "name_autocomplete" => name,
       "author_autocomplete" => author,
-      "sortable_version"  => sortable_version
+      "sortable_version_sort"  => sortable_version
     }
   end
 
@@ -49,6 +49,7 @@ module Glue::ElasticSearch::PuppetModule
             :name             => { :type => 'string', :analyzer => :kt_name_analyzer },
             :name_sort        => { :type => 'string', :index    => :not_analyzed },
             :sortable_version => { :type => 'string', :index    => :not_analyzed },
+            :sortable_version_sort => { :type => 'string', :index    => :not_analyzed },
             :repoids          => { :type => 'string', :index    => :not_analyzed }
           }
         }

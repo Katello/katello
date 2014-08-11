@@ -110,7 +110,7 @@ module Katello
         search_filters << { :not => { :terms => { :id => current_ids } } }
       end
       search_filters << { :term => { :name => params[:name] } } if params[:name]
-      options = { :filters => search_filters }
+      options = { :filters => search_filters, :sort_by => 'sortable_version', :sort_order => 'DESC' }
 
       collection = item_search(PuppetModule, params, options)
       collection[:results] = collection[:results].map{|i| PuppetModule.new(i.as_json) }
