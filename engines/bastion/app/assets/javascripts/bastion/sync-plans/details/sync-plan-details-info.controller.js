@@ -29,7 +29,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
         function ($scope, $q, translate, SyncPlan, MenuExpander) {
             $scope.successMessages = [];
             $scope.errorMessages = [];
-            $scope.intervals = ['none', 'hourly', 'daily', 'weekly'];
+            $scope.intervals = ['disabled', 'hourly', 'daily', 'weekly'];
 
             $scope.menuExpander = MenuExpander;
             $scope.panel = $scope.panel || {loading: false};
