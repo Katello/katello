@@ -31,7 +31,7 @@ describe ContentSearchController do
   end
 
   describe "check packages and errata" do
-    before (:each) do
+    before do
       @organization = new_test_org #controller.current_organization
       @controller.stubs(:current_organization).returns(@organization)
       @env1 = create_environment(:name=>"env1", :label=> "env1", :organization => @organization, :prior => @organization.library)

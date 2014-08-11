@@ -35,7 +35,7 @@ module Actions
 
         def run
           provider = ::Katello::Provider.find(input[:provider][:id])
-          provider.refresh_manifest(input[:upstream], :async => false, :notify => false)
+          provider.refresh_manifest(input[:upstream])
         end
 
       end

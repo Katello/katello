@@ -24,39 +24,22 @@ module Glue::Provider
   module InstanceMethods
 
     def import_manifest(zip_file_path, options = {})
-      options = { :async => false, :notify => false , :zip_file_path => zip_file_path}.merge(options)
-      options.assert_valid_keys(:force, :async, :notify, :zip_file_path)
+      options = {:zip_file_path => zip_file_path}.merge(options)
+      options.assert_valid_keys(:force, :zip_file_path)
 
-      if options[:async]
-        self.task_status = async(:organization => self.organization, :task_type => "import manifest").queue_import_manifest(options)
-        self.save!
-      else
-        queue_import_manifest options
-      end
+      queue_import_manifest options
     end
 
     def delete_manifest(options = {})
-      options = { :async => false, :notify => false }.merge(options)
-      options.assert_valid_keys(:async, :notify)
-
-      if options[:async]
-        self.task_status = async(:organization => self.organization, :task_type => "delete manifest").queue_delete_manifest(options)
-        self.save!
-      else
-        queue_delete_manifest(options)
-      end
+      options = options.dup
+      queue_delete_manifest(options)
     end
 
     def refresh_manifest(upstream, options = {})
-      options = { :async => true, :notify => false, :upstream => upstream }.merge(options)
-      options.assert_valid_keys(:async, :notify, :upstream)
+      options = { :upstream => upstream }.merge(options)
+      options.assert_valid_keys(:upstream)
 
-      if options[:async]
-        self.task_status = async(:organization => self.organization, :task_type => "refresh manifest").queue_import_manifest(options)
-        self.save!
-      else
-        queue_import_manifest(options)
-      end
+      queue_import_manifest(options)
     end
 
     def sync
@@ -280,21 +263,6 @@ module Glue::Provider
                          :priority => 6, :action => [self, :refresh_existing_products]) if manifest_update && Katello.config.use_pulp
 
         self.save!
-
-        if options[:notify]
-          message = if Katello.config.katello?
-                      _("Subscription manifest uploaded successfully for provider '%s'. " +
-                            "Please enable the repositories you want to sync by selecting 'Enable Repositories' and " +
-                            "selecting individual repositories to be enabled.")
-                    else
-                      _("Subscription manifest uploaded successfully for provider '%s'.")
-                    end
-          values = [self.name]
-          Notify.success message % values,
-                         :request_type => 'providers__update_redhat_provider',
-                         :organization => self.organization,
-                         :details      => output.read.dup
-        end
       rescue => error
         display_manifest_message(manifest_refresh ? 'refresh' : 'import', error, options)
         raise error

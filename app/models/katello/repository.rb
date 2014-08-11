@@ -293,31 +293,6 @@ class Repository < Katello::Model
     end
   end
 
-  def trigger_contents_changed(options)
-    Repository.trigger_contents_changed([self], options)
-  end
-
-  def self.trigger_contents_changed(repos, options)
-    wait = options.fetch(:wait, false)
-    reindex = options.fetch(:reindex, true) && Katello.config.use_elasticsearch
-    publish = options.fetch(:publish, true) && Katello.config.use_pulp
-    cloned_repo_overrides = options.fetch(:cloned_repo_overrides, [])
-
-    tasks = []
-    if publish
-      tasks += repos.flat_map do |repo|
-        clone = cloned_repo_overrides.find do |c|
-          repo.library_instance_id == c.id || repo.library_instance_id == c.library_instance_id
-        end
-        repo.generate_metadata(:cloned_repo_override => clone, :node_publish_async => true)
-      end
-    end
-    repos.each{|repo| repo.generate_applicability } #don't wait on applicability
-    repos.each{|repo| repo.index_content } if reindex
-
-    PulpTaskStatus.wait_for_tasks(tasks) if wait
-  end
-
   # TODO: break up method
   # rubocop:disable MethodLength
   def build_clone(options)

@@ -40,9 +40,7 @@ module Actions
         def run
           provider = ::Katello::Provider.find(input[:provider][:id])
           provider.import_manifest(input[:path],
-                                   force:  input[:force],
-                                   async:  false,
-                                   notify: false)
+                                   force:  input[:force])
         end
 
       end

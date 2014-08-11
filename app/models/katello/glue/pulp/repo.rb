@@ -609,60 +609,6 @@ module Glue::Pulp::Repo
       sync_history_item['state'] == PulpTaskStatus::Status::FINISHED.to_s
     end
 
-    def generate_metadata(options = {})
-      force_regeneration = options.fetch(:force_regeneration, false)
-      cloned_repo_override = options.fetch(:cloned_repo_override, nil)
-
-      unless force_regeneration
-        clone = cloned_repo_override ||
-            self.content_view_version.repositories.where(:library_instance_id => self.library_instance_id).where("id != #{self.id}").first
-      end
-
-      tasks = []
-      if force_regeneration || self.content_view.default? || clone.nil?
-        tasks << self.publish_distributor
-      else
-        tasks << self.publish_clone_distributor(clone)
-      end
-
-      # If this repository is for an 'archive', it doesn't need to be
-      # published using the node distributor.
-      if !self.archive? && self.find_node_distributor
-        if options[:node_publish_async]
-          self.async(:organization => self.organization,
-                     :task_type => TaskStatus::TYPES[:content_view_node_publish][:type]).publish_node_distributor
-        else
-          tasks << self.publish_node_distributor
-        end
-      end
-
-      tasks
-    end
-
-    def publish_distributor
-      dist = find_distributor
-      dist.nil? ? nil :  Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'])
-    end
-
-    def publish_node_distributor
-      dist = self.find_node_distributor
-      task = Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'])
-      PulpTaskStatus.wait_for_tasks([task])
-      # TODO: is this code still reachable?
-      ::ForemanTasks.sync_task(::Actions::Katello::Repository::NodeMetadataGenerate, self)
-    end
-
-    def publish_clone_distributor(source_repo)
-      dist = find_distributor(true)
-      source_dist = source_repo.find_distributor
-
-      fail "Could not find #{self.content_type} clone distributor for #{self.pulp_id}" if dist.nil?
-      fail "Could not find #{self.content_type} distributor for #{source_repo.pulp_id}" if source_dist.nil?
-      Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'],
-                               :override_config => {:source_repo_id => source_repo.pulp_id,
-                                                    :source_distributor_id => source_dist['id']})
-    end
-
     def find_distributor(use_clone_distributor = false)
       dist_type_id = if use_clone_distributor
                        case self.content_type

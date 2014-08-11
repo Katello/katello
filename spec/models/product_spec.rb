@@ -123,7 +123,6 @@ describe Product, :katello => true do
     before(:each) do
       disable_product_orchestration
       Katello.pulp_server.extensions.repository.stubs(:publish_all).returns([])
-      Repository.any_instance.stubs(:publish_distributor)
     end
 
     describe "repo id" do
