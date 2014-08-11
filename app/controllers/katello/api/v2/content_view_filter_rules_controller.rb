@@ -79,9 +79,12 @@ module Katello
     param :types, Array, :desc => N_("erratum: types (enhancement, bugfix, security)")
     def update
       update_params = rule_params
-      update_params[:version] = "" unless rule_params[:version]
-      update_params[:min_version] = "" unless rule_params[:min_version]
-      update_params[:max_version] = "" unless rule_params[:max_version]
+
+      if @rule.filter.content_type == 'package'
+        update_params[:version] = "" unless rule_params[:version]
+        update_params[:min_version] = "" unless rule_params[:min_version]
+        update_params[:max_version] = "" unless rule_params[:max_version]
+      end
 
       @rule.update_attributes!(update_params)
       respond :resource => @rule

@@ -46,11 +46,9 @@ describe('Controller: DateTypeErrataFilterController', function() {
     });
 
     it("should provide a method to add errata to the filter", function () {
-        spyOn($scope, 'transitionTo');
         $scope.save($scope.rule, $scope.filter);
 
         expect($scope.successMessages.length).toBe(1);
-        expect($scope.transitionTo).toHaveBeenCalled();
     });
 
 });
