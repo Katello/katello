@@ -21,7 +21,6 @@ class Product < Katello::Model
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
   include Katello::Authorization::Product
-  include AsyncOrchestration
 
   include Ext::LabelFromName
 

@@ -29,7 +29,6 @@ module Katello
           ::Actions::Katello::Organization::Create
         end
 
-        include AsyncOrchestration
         include Katello::Authorization::Organization
         include Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
         include Ext::LabelFromName
@@ -211,36 +210,6 @@ module Katello
           fail ::Foreman::Exception.new(N_("You cannot set an organization's parent_id. This feature is disabled."))
         end
 
-      private
-
-        def start_discovery_task(url, notify = false)
-          task_id = AsyncOperation.current_task_id
-          task = TaskStatus.find(task_id)
-          task.parameters = {:url => url}
-          task.result ||= []
-          task.save!
-
-          #Lambda to continually update the task
-          found_func = lambda do |found_url|
-            task = TaskStatus.find(task_id)
-            task.result << found_url
-            task.save!
-          end
-
-          #Lambda to decide to continue or not
-          #  Using the saved task_id to compare current providers
-          #  task id
-          continue_func = lambda do
-            task = TaskStatus.find(task_id)
-            !task.canceled?
-          end
-
-          discover = RepoDiscovery.new(url)
-          discover.run(found_func, continue_func)
-        rescue => e
-          Notify.exception _('Repos discovery failed.'), e if notify
-          raise e
-        end
       end
     end
   end

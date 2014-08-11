@@ -39,9 +39,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "justified"
   gem.add_dependency "strong_parameters", "~> 0.2.1" # remove after we upgrade to Rails 4
 
-  gem.add_dependency "delayed_job", "~> 3.0.2"
-  gem.add_dependency "delayed_job_active_record", "~> 0.3.3"
-
   gem.add_dependency "gettext_i18n_rails"
   gem.add_dependency "i18n_data", ">= 0.2.6"
 

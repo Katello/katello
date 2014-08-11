@@ -16,7 +16,6 @@ class Job < Katello::Model
 
   include Glue
   include Glue::ElasticSearch::Job  if Katello.config.use_elasticsearch
-  include AsyncOrchestration
 
   belongs_to :job_owner, :polymorphic => true
 

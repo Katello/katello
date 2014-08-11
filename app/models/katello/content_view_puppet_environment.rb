@@ -18,7 +18,6 @@ module Katello
     include Glue::Pulp::Repo if Katello.config.use_pulp
     include Glue::ElasticSearch::ContentViewPuppetEnvironment if Katello.config.use_elasticsearch
     include Glue if Katello.config.use_pulp
-    include AsyncOrchestration
 
     belongs_to :environment, :class_name => "Katello::KTEnvironment",
                :inverse_of => :content_view_puppet_environments

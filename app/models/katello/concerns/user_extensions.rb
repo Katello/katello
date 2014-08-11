@@ -49,7 +49,6 @@ module Katello
 
         include Ext::IndexedModel
 
-        include AsyncOrchestration
         include Util::ThreadSession::UserModel
 
         has_many :help_tips, :dependent => :destroy, :class_name => "Katello::HelpTip"

@@ -68,13 +68,7 @@ module Katello
     end
 
     initializer "logging" do |app|
-      if caller.last =~ /script\/delayed_job:\d+$/ ||
-          ((caller[-10..-1] || []).any? {|l| l =~ /\/rake/} && ARGV.include?("jobs:work"))
-        Katello::Logging.configure(:prefix => 'delayed_')
-        Delayed::Worker.logger = ::Logging.logger['app']
-      else
-        Katello::Logging.configure
-      end
+      Katello::Logging.configure
 
       app.config.logger = ::Logging.logger['app']
       app.config.active_record.logger = ::Logging.logger['sql']

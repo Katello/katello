@@ -14,7 +14,6 @@ module Katello
 class ContentViewVersion < Katello::Model
   self.include_root_in_json = false
 
-  include AsyncOrchestration
   include Authorization::ContentViewVersion
 
   before_destroy :check_ready_to_destroy!

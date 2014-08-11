@@ -17,7 +17,6 @@ class ContentView < Katello::Model
   include Ext::LabelFromName
   include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
   include Katello::Authorization::ContentView
-  include AsyncOrchestration
   include ForemanTasks::Concerns::ActionSubject
 
   CONTENT_DIR = "content_views"

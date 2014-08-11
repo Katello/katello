@@ -24,7 +24,6 @@ class Repository < Katello::Model
   include Glue if (Katello.config.use_cp || Katello.config.use_pulp)
   include Authorization::Repository
 
-  include AsyncOrchestration
   include Ext::LabelFromName
   include Katello::Engine.routes.url_helpers
 
