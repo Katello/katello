@@ -32,7 +32,6 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
 
         $scope.discovery = $scope.discovery || {selected: []};
         $scope.panel = {loading: true};
-
         $scope.$watch('createRepoChoices.product.name', function () {
             FormUtils.labelize($scope.createRepoChoices.product);
         });
@@ -69,6 +68,16 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
 
         $scope.creating = function () {
             return $scope.createRepoChoices.creating;
+        };
+
+        $scope.requiredFieldsEnabled = function () {
+            var fieldsEnabled = true;
+            if ($scope.createRepoChoices.newProduct === "true") {
+                fieldsEnabled =  $scope.productForm.$valid;
+            } else if ($scope.createRepoChoices.existingProductId === undefined) {
+                fieldsEnabled = false;
+            }
+            return fieldsEnabled;
         };
 
         $scope.gpgKeys = GPGKey.queryUnpaged();
@@ -111,11 +120,11 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
         }
 
         function productCreateError(response) {
+            $scope.working = false;
             $scope.createRepoChoices.creating = false;
-            $scope.productForm.$setDirty();
             angular.forEach(response.data.errors, function (errors, field) {
-                $scope.productForm[field].$setValidity('', false);
-                $scope.productForm[field].messages = errors;
+                $scope.productForm[field].$setValidity('server', false);
+                $scope.productForm[field].$error.messages = errors;
             });
         }
 
@@ -165,7 +174,6 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             var currentlyCreating = $scope.currentlyCreating;
             $scope.currentlyCreating = undefined;
             $scope.createRepoChoices.creating = false;
-
             currentlyCreating.form.$invalid = true;
             currentlyCreating.form.messages = response.data.errors;
         }
