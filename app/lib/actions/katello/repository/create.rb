@@ -62,7 +62,11 @@ module Actions
                 plan_action(ContentView::UpdateEnvironment, org.default_content_view,
                             org.library, content_create.input[:content_id])
               end
-              plan_action(Katello::Repository::MetadataGenerate, repository) unless repository.puppet?
+
+              #skip metadata generation until https://bugzilla.redhat.com/show_bug.cgi?id=1127793 is resolved
+              if !repository.puppet? && !repository.redhat?
+                plan_action(Katello::Repository::MetadataGenerate, repository)
+              end
               plan_action(ElasticSearch::Reindex, repository)
             end
           end

@@ -39,6 +39,7 @@ module Actions
             end
             plan_action(ElasticSearch::Reindex, repo)
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view)
+            plan_action(Katello::Repository::CorrectChecksum, repo)
           end
           plan_self(:sync_result => sync_task.output)
         end
