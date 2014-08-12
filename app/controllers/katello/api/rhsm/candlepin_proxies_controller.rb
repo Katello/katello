@@ -197,6 +197,8 @@ module Katello
       content_view_environment = find_content_view_environment
       foreman_host = find_foreman_host(content_view_environment.environment.organization)
 
+      sync_task(::Actions::Katello::System::Destroy, foreman_host.content_host) if foreman_host.content_host
+
       @system = System.new(system_params.merge(:environment  => content_view_environment.environment,
                                                :content_view => content_view_environment.content_view,
                                                :serviceLevel => params[:service_level],
@@ -223,6 +225,8 @@ module Katello
       User.current    = User.anonymous_admin
       activation_keys = find_activation_keys
       foreman_host    = find_foreman_host(activation_keys.first.organization)
+
+      sync_task(::Actions::Katello::System::Destroy, foreman_host.content_host) if foreman_host.content_host
 
       @system = System.new(system_params.merge(:host_id => foreman_host.try(:id)))
       sync_task(::Actions::Katello::System::Create, @system, activation_keys)
@@ -349,7 +353,13 @@ module Katello
 
     def find_foreman_host(organization)
       if params[:facts].present? && params[:facts]['network.hostname'].present?
-        foreman_host = Host.where(:name => params[:facts]['network.hostname'], :organization_id => organization.id).first
+        mac_addresses =  System.interfaces(params[:facts]).
+                                map{ |interface| interface[:mac].downcase if interface[:mac] }.
+                                reject{ |mac| mac.nil? }
+
+        foreman_host = Host.where(:name => params[:facts]['network.hostname'],
+                                  :organization_id => organization.id,
+                                  :mac => mac_addresses).first
       end
       foreman_host
     end
