@@ -26,6 +26,7 @@ module ::Actions::Pulp::Repository
 
     before do
       stub_remote_user
+      @repo = Katello::Repository.find(katello_repositories(:fedora_17_x86_64))
     end
 
     it 'runs' do
@@ -35,7 +36,7 @@ module ::Actions::Pulp::Repository
       task3         = task1.merge(task_progress_hash 0, 8).merge(task_finished_hash)
       pulp_response =  { 'spawned_tasks' => [{'task_id' => 'other' }]}
 
-      plan_action action, pulp_id: 'pulp-id'
+      plan_action action, pulp_id: @repo.pulp_id
       action = run_action action do |action|
         runcible_expects(action, :resources, :repository, :sync).
             returns(pulp_response)

@@ -2,6 +2,7 @@ fedora_17_x86_64:
   name:                 Fedora 17 x86_64
   pulp_id:              1
   content_id:           1
+  content_type:         yum
   label:                fedora_17_x86_64_label
   relative_path:        '/ACME_Corporation/library/fedora_17_label'
   environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
@@ -14,6 +15,7 @@ fedora_17_x86_64_dev:
   name:                 Fedora 17 x86_64
   pulp_id:              2
   content_id:           1
+  content_type:         yum
   library_instance:     fedora_17_x86_64
   label:                fedora_17_dev_label
   relative_path:        '/ACME_Corporation/dev/fedora_17_dev_label'
@@ -28,6 +30,7 @@ feedless_fedora_17_x86_64:
   name:                 Feedless Fedora 17 x86_64
   pulp_id:              feedless_1
   content_id:           1
+  content_type:         yum
   label:                feedless_fedora_17_x86_64_label
   relative_path:        '/ACME_Corporation/library/fedora_17_label'
   environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
@@ -42,6 +45,7 @@ rhel_6_x86_64:
   content_id:           1
   major:                6
   minor:                6Server
+  content_type:         yum
   label:                rhel_6_x86_64_label
   relative_path:        '/ACME_Corporation/library/rhel_6_label'
   environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
@@ -56,6 +60,7 @@ rhel_6_x86_64_dev:
   content_id:           1
   major:                6
   minor:                6Server
+  content_type:         yum
   label:                rhel_6_x86_64_label
   relative_path:        '/ACME_Corporation/library/rhel_6_label'
   url:                 'https://cdn.example.com/rhel/6/os'
