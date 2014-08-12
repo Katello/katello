@@ -28,7 +28,6 @@ class Api::V2::SystemsController < Api::V2::ApiController
   before_filter :find_optional_organization, :only => [:create, :index, :report]
   before_filter :find_host_collection, :only => [:index]
   before_filter :find_default_organization_and_or_environment, :only => [:create, :index]
-  before_filter :find_only_environment, :only => [:create]
 
   before_filter :find_environment_and_content_view, :only => [:create]
   before_filter :find_content_view, :only => [:create, :update]
@@ -306,38 +305,10 @@ class Api::V2::SystemsController < Api::V2::ApiController
     @host_collection = HostCollection.find(params[:host_collection_id])
   end
 
-  def find_only_environment
-    if !@environment && @organization && !params.key?(:environment_id)
-      if @organization.kt_environments.empty?
-        fail HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for content host registration.") %
-          { :org => @organization.name, :env => "Library" }
-      end
-
-      # Some subscription-managers will call /users/$user/owners to retrieve the orgs that a user belongs to.
-      # Then, If there is just one org, that will be passed to the POST /api/consumers as the owner. To handle
-      # this scenario, if the org passed in matches the user's default org, use the default env. If not use
-      # the single env of the org or throw an error if more than one.
-      #
-      if @organization.kt_environments.size > 1
-        if current_user.default_organization && current_user.default_organization == @organization
-          @environment = current_user.library
-        else
-          fail HttpErrors::BadRequest, _("Organization %s has more than one environment. Please specify target environment for content host registration.") % @organization.name
-        end
-      else
-        if @environment = @organization.kt_environments.first
-          return
-        end
-      end
-    end
-  end
-
-  def find_environment_and_content_view
+  def find_environment_and_content_view_by_env_id
     # There are some scenarios (primarily create) where a system may be
     # created using the content_view_environment.cp_id which is the
     # equivalent of "environment_id"-"content_view_id".
-    return unless params.key?(:environment_id)
-
     if params[:environment_id].is_a? String
       if !params.key?(:content_view_id)
         cve = ContentViewEnvironment.find_by_cp_id!(params[:environment_id])
@@ -353,6 +324,14 @@ class Api::V2::SystemsController < Api::V2::ApiController
       return @environment, @content_view
     else
       find_environment
+    end
+  end
+
+  def find_environment_and_content_view
+    if params.key?(:environment_id)
+      find_environment_and_content_view_by_env_id
+    else
+      @environment = @organization.library if @organization
     end
   end
 
