@@ -32,7 +32,8 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
             'product_id': $scope.$stateParams.productId,
             'library': true,
             'organization_id': CurrentOrganization,
-            'enabled': true
+            'enabled': true,
+            'full_result': true
         });
 
         $scope.successMessages = [];
