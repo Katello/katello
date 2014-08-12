@@ -56,7 +56,7 @@
   </div>
 
   <div alch-table="currentPackagesTable">
-    <div alch-container-scroll control-width="table" alch-infinite-scroll="currentPackagesTable.nextPage()" data="currentPackagesTable.rows">
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="currentPackagesTable.loadMorePackages()" data="currentPackagesTable.rows">
       <table ng-class="{'table-mask': currentPackagesTable.working}" class="table table-striped">
         <thead>
           <tr alch-table-head>
@@ -66,7 +66,8 @@
         </thead>
 
         <tbody>
-          <tr alch-table-row ng-repeat="package in currentPackagesTable.rows | filter:currentPackagesTable.filter" >
+
+            <tr alch-table-row ng-repeat="package in currentPackagesTable.rows | filter: currentPackagesTable.filter | limitTo: currentPackagesTable.limit" >
             <td alch-table-cell>{{ package.nvrea }}</td>
             <td alch-table-cell ng-hide="currentPackagesTable.contentHost.readonly">
 

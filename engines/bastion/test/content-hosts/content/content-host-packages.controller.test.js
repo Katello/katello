@@ -23,6 +23,7 @@ describe('Controller: ContentHostPackagesController', function() {
                 showColumns: function() {}
             };
             this.get = function() {};
+            this.load = function() {};
         };
         ContentHost = {
             tasks: function() {return []}
@@ -129,4 +130,16 @@ describe('Controller: ContentHostPackagesController', function() {
         expect($scope.working).toBe(true);
     });
 
+    it("sets the default number of packages limit to 20", function() {
+        expect($scope.currentPackagesTable.limit).toBe(50);
+    });
+
+    it("provides a way to load more packages", function() {
+        expect($scope.currentPackagesTable.limit).toBe(50);
+
+        $scope.currentPackagesTable.loadMorePackages();
+        $scope.$digest();
+
+        expect($scope.currentPackagesTable.limit).toBe(100);
+    })
 });
