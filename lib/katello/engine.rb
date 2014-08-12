@@ -99,6 +99,10 @@ module Katello
         })
       FastGettext.default_text_domain = 'katello'
 
+      unless SETTINGS[:organizations_enabled]
+        fail Foreman::Exception.new(N_("Organizations disabled, try allowing them in foreman/config/settings.yaml"))
+      end
+
       # Model extensions
       ::Environment.send :include, Katello::Concerns::EnvironmentExtensions
       ::Host::Managed.send :include, Katello::Concerns::HostManagedExtensions
