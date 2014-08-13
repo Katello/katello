@@ -1,4 +1,8 @@
-<table class="table table-striped" ng-class="{'table-mask': productTable.working}">
+<p class="alert alert-info" ng-show="productTable.rows.length === 0" translate>
+  You currently don't have any Products, you can add products using the button on the right.
+</p>
+
+<table class="table table-striped" ng-class="{'table-mask': productTable.working}" ng-show="productTable.rows.length > 0">
   <thead>
     <tr alch-table-head row-select>
       <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>

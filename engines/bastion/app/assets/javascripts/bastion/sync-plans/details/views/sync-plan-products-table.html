@@ -49,7 +49,10 @@
           {{ "Loading..." | translate }}
         </div>
 
-        <p ng-hide="productsTable.working" translate>No Products to show.</p>
+        <p class="alert alert-info" 
+           ng-hide="productsTable.working" 
+           translate>No Products to show. You can add products after selecting 'Add' tab. 
+        </p>
       </div>
 
       <table ng-show="productsTable.rows.length > 0"
