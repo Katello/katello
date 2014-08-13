@@ -196,7 +196,7 @@ module Katello
       content_view_environment = find_content_view_environment
       foreman_host = find_foreman_host(content_view_environment.environment.organization)
 
-      sync_task(::Actions::Katello::System::Destroy, foreman_host.content_host) if foreman_host.content_host
+      sync_task(::Actions::Katello::System::Destroy, foreman_host.content_host) if foreman_host.try(:content_host)
 
       @system = System.new(system_params.merge(:environment  => content_view_environment.environment,
                                                :content_view => content_view_environment.content_view,
@@ -225,7 +225,7 @@ module Katello
       activation_keys = find_activation_keys
       foreman_host    = find_foreman_host(activation_keys.first.organization)
 
-      sync_task(::Actions::Katello::System::Destroy, foreman_host.content_host) if foreman_host.content_host
+      sync_task(::Actions::Katello::System::Destroy, foreman_host.content_host) if foreman_host.try(:content_host)
 
       @system = System.new(system_params.merge(:host_id => foreman_host.try(:id)))
       sync_task(::Actions::Katello::System::Create, @system, activation_keys)
