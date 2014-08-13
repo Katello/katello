@@ -31,14 +31,14 @@ module Katello
       super
     end
 
+    def resource_name
+      :smart_proxy
+    end
+
     protected
 
     def resource_class
       SmartProxy
-    end
-
-    def resource_name
-      :smart_proxy
     end
 
     def authorized
