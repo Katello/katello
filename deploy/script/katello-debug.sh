@@ -39,6 +39,8 @@ add_files "/etc/cron.d/splice-sst-sync"
 # Katello
 add_files "/var/log/katello/*"
 add_files "/var/log/katello-installer/*"
+add_files "/etc/katello-installer/*"
+add_files "/etc/pulp/server/plugins.d/*"
 add_cmd "find /root/ssl-build -ls | sort -k 11" "katello_ssl_build_dir"
 add_files "/etc/foreman/plugins/katello.yaml"
 add_files "/var/lib/pgsql/data/pg_log/*"
