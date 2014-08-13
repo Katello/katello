@@ -28,7 +28,7 @@ module Actions
         end
 
         def run
-          repo_discovery = ::Katello::RepoDiscovery.new(input[:url])
+          repo_discovery = ::Katello::RepoDiscovery.new(input[:url], proxy)
           output[:repo_urls] = []
           found = lambda { |path| output[:repo_urls] << path }
           # TODO: implement task cancelling
@@ -45,6 +45,19 @@ module Actions
         def task_output
           output[:repo_urls] || []
         end
+
+        def proxy
+          proxy = {}
+
+          config = ::Katello.config.cdn_proxy
+          proxy[:proxy_host] = URI.parse(config.host).host if config.respond_to?(:host)
+          proxy[:proxy_port] = config.port if config.respond_to?(:port)
+          proxy[:proxy_user] = config.user if config.respond_to?(:user)
+          proxy[:proxy_password] = config.password if config.respond_to?(:password)
+
+          proxy
+        end
+
       end
     end
   end
