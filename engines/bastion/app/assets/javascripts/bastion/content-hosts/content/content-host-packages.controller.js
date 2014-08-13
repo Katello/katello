@@ -26,6 +26,7 @@
 angular.module('Bastion.content-hosts').controller('ContentHostPackagesController',
     ['$scope', 'ContentHostPackage', 'translate', 'Nutupane',
     function ($scope, ContentHostPackage, translate, Nutupane) {
+        const PACKAGES_PER_PAGE = 50;
         var packagesNutupane, packageActions, openEventInfo;
 
         openEventInfo = function (event) {
@@ -80,6 +81,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
         };
 
         packagesNutupane = new Nutupane(ContentHostPackage, { 'id': $scope.$stateParams.contentHostId }, 'get');
+        packagesNutupane.load();
         $scope.currentPackagesTable = packagesNutupane.table;
         $scope.currentPackagesTable.openEventInfo = openEventInfo;
         $scope.currentPackagesTable.contentHost = $scope.contentHost;
@@ -97,6 +99,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
                         arch: pkg.arch, release: pkg.release}]
                 }, openEventInfo, errorHandler);
             }
+        };
+
+        $scope.currentPackagesTable.limit = PACKAGES_PER_PAGE;
+        $scope.currentPackagesTable.loadMorePackages = function () {
+            $scope.$evalAsync(function (scope) {
+                scope.currentPackagesTable.limit = scope.currentPackagesTable.limit + PACKAGES_PER_PAGE;
+            });
         };
     }
 ]);
