@@ -61,11 +61,12 @@
             ui-sref="products.details.repositories.new({productId: product.id})">
       Create Repository
     </button>
-  </span>
-
+  </span> 
+  
   <table alch-table="repositoriesTable"
          class="table table-striped"
-         ng-class="{'table-mask': repositoriesTable.working}">
+         ng-class="{'table-mask': repositoriesTable.working}"
+         ng-show="repositoriesTable.rows.length > 0">
     <thead>
       <tr alch-table-head row-select>
         <th alch-table-column="name" translate>Name</th>
@@ -119,5 +120,8 @@
       </tr>
     </tbody>
   </table>
-
 </section>
+
+<p class="alert alert-info" ng-show="repositoriesTable.rows.length === 0" translate>
+  You currently don't have any Repositories included in this Product, you can add repositories using the button on the right.
+</p>

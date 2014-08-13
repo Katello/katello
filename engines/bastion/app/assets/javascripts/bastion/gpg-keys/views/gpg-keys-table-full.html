@@ -1,4 +1,10 @@
-<table alch-table="table" class="table table-striped" ng-class="{'table-mask': table.working}">
+<p class="alert alert-info" ng-show="table.rows.length === 0" translate>
+      You currently don't have any Gpg Keys, you can add gpg keys using the button on the right.
+</p>
+<table alch-table="table"
+       class="table table-striped"
+       ng-class="{'table-mask': table.working}"
+       ng-show="table.rows.length > 0">
   <thead>
     <tr alch-table-head>
       <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>

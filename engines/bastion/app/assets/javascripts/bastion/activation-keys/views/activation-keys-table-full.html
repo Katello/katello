@@ -1,4 +1,8 @@
-<table class="table table-striped" ng-class="{'table-mask': table.working}">
+<p class="alert alert-info" ng-show="table.rows.length === 0" translate>
+  You currently don't have any Activation keys, you can add activation keys using the button on the right.
+</p>
+
+<table class="table table-striped" ng-class="{'table-mask': table.working}" ng-show="table.rows.length > 0">
   <thead>
     <tr alch-table-head>
       <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
