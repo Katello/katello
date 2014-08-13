@@ -86,8 +86,10 @@ class Api::ApiController < ::Api::BaseController
     controller_name
   end
 
-  def resource_name
-    controller_name.singularize
+  def get_class(model_name)
+    "Katello::#{model_name.classify}".constantize
+  rescue NameError
+    super(model_name)
   end
 
   def respond(options = {})

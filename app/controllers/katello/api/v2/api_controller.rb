@@ -99,6 +99,12 @@ module Katello
       }
     end
 
+    def get_class(model_name)
+      "Katello::#{model_name.classify}".constantize
+    rescue NameError
+      super(model_name)
+    end
+
     protected
 
     def is_database_id?(num)

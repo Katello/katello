@@ -13,21 +13,15 @@
 module Katello
 class Api::V2::RepositoriesController < Api::V2::ApiController
 
-  before_filter :find_organization, :only => [:index]
-  before_filter :find_product, :only => [:index]
-  before_filter :find_product_for_create, :only => [:create]
-  before_filter :find_organization_from_product, :only => [:create]
-  before_filter :find_repository, :only => [:show, :update, :destroy, :sync,
-                                            :remove_packages, :upload_content,
-                                            :import_uploads, :gpg_key_content]
-  before_filter :find_organization_from_repo, :only => [:update]
-  before_filter :find_gpg_key, :only => [:create, :update]
+  before_filter :find_resource, :only => [:show, :update, :destroy, :sync,
+                                          :remove_packages, :upload_content,
+                                          :import_uploads]
+  before_filter :find_nested_object, :only => [:index, :create]
+
   before_filter :error_on_rh_product, :only => [:create]
   before_filter :error_on_rh_repo, :only => [:update, :destroy]
 
   skip_before_filter :authorize, :only => [:sync_complete, :gpg_key_content]
-  skip_before_filter :require_org, :only => [:sync_complete]
-  skip_before_filter :require_user, :only => [:sync_complete]
 
   wrap_parameters :include => (Repository.attribute_names + ["url"])
 
@@ -42,8 +36,9 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   end
 
   api :GET, "/repositories", N_("List of enabled repositories")
+  api :GET, "/products/:id/repositories", N_("List of enabled repositories")
   api :GET, "/content_views/:id/repositories", N_("List of repositories for a content view")
-  param :organization_id, :number, :required => true, :desc => N_("ID of an organization to show repositories in")
+  param :organization_id, :number, :desc => N_("ID of an organization to show repositories in")
   param :product_id, :number, :desc => N_("ID of a product to show repositories of")
   param :environment_id, :number, :desc => N_("ID of an environment to show repositories in")
   param :content_view_id, :number, :desc => N_("ID of a content view to show repositories in")
@@ -58,16 +53,20 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
     if @product
       options[:filters] << {:term => {:product_id => @product.id}}
-    else
+    elsif @organization
       ids = Repository.where(:product_id => Product.readable.where(:organization_id => @organization.id)).pluck(:id)
+    else
+      ids = Repository.where(:product_id => Product.readable).pluck(:id)
     end
 
     options[:filters] << {:terms => {:id => ids}} if ids
     options[:filters] << {:term => {:environment_id => params[:environment_id]}} if params[:environment_id]
     options[:filters] << {:term => {:content_view_ids => params[:content_view_id]}} if params[:content_view_id]
-    if params[:library] || params[:environment_id].nil?
+
+    if (params[:library] || params[:environment_id].nil?) && @organization
       options[:filters] << {:term => {:content_view_version_id => @organization.default_content_view.versions.first.id}}
     end
+
     options[:filters] << {:term => {:content_type => params[:content_type]}} if params[:content_type]
     options[:filters] << {:term => {:name => params[:name]}} if params[:name]
 
@@ -205,8 +204,9 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   api :GET, "/repositories/:id/gpg_key_content", N_("Return the content of a repo gpg key, used directly by yum")
   param :id, :identifier, :required => true
   def gpg_key_content
-    if @repository.gpg_key && @repository.gpg_key.content.present?
-      render(:text => @repository.gpg_key.content, :layout => false)
+    repository = Repository.find(params[:id])
+    if repository.gpg_key && repository.gpg_key.content.present?
+      render(:text => repository.gpg_key.content, :layout => false)
     else
       head(404)
     end
@@ -214,23 +214,24 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
   protected
 
-  def find_product
-    @product = Product.find(params[:product_id]) if params[:product_id]
-  end
-
-  def find_product_for_create
-    @product = Product.find(params[:product_id])
-  end
-
-  def find_repository
-    @repository = Repository.find(params[:id])
-  end
-
-  def find_gpg_key
-    if params[:gpg_key_id]
-      @gpg_key = GpgKey.readable.where(:id => params[:gpg_key_id], :organization_id => @organization).first
-      fail HttpErrors::NotFound, _("Couldn't find gpg key '%s'") % params[:gpg_key_id] if @gpg_key.nil?
+  def action_permission
+    case params[:action]
+    when 'remove_packages', 'upload_content', 'import_uploads'
+      'edit'
+    when 'sync'
+      'sync'
+    else
+      super
     end
+  end
+
+  def resource_scope(controller = controller_name)
+    product_ids = authorized_scope('products', Katello::Product).pluck(:id)
+    Repository.where(:product_id => product_ids)
+  end
+
+  def allowed_nested_id
+    %w(product_id organization_id)
   end
 
   def repository_params
@@ -243,14 +244,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
   def error_on_rh_repo
     fail HttpErrors::BadRequest, _("Red Hat repositories cannot be manipulated.") if @repository.redhat?
-  end
-
-  def find_organization_from_repo
-    @organization = @repository.organization
-  end
-
-  def find_organization_from_product
-    @organization = @product.organization
   end
 
 end
