@@ -19,6 +19,7 @@ module Katello
         before_update :update_content_host, :if => :environment_id_changed?
 
         alias_method_chain :validate_media?, :capsule
+        alias_method_chain :set_hostgroup_defaults, :content_source
 
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
                 :dependent => :destroy, :inverse_of => :foreman_host
@@ -45,6 +46,10 @@ module Katello
         end
       end
 
+      def set_hostgroup_defaults_with_content_source
+        assign_hostgroup_attributes(%w{content_source_id}) if hostgroup.present?
+        set_hostgroup_defaults_without_content_source
+      end
     end
   end
 end
