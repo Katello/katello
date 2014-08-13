@@ -20,7 +20,7 @@ module Actions
         end
 
         def finalize
-          ::User.current = ::User.hidden.first
+          ::User.current = ::User.anonymous_admin
           repo = ::Katello::Repository.find(input[:repo_id])
           found_checksum = repo.pulp_checksum_type
 
