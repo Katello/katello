@@ -30,7 +30,7 @@ module Actions
           end
 
           if ::Katello.config.use_pulp &&
-              (repository.previous_changes.key?('feed') || repository.previous_changes.key?('unprotected')) &&
+              (repository.previous_changes.key?('url') || repository.previous_changes.key?('unprotected')) &&
               !repository.product.provider.redhat_provider?
             plan_action(::Actions::Pulp::Repository::Refresh, repository)
           end
