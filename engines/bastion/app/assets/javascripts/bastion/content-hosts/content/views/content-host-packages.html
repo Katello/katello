@@ -2,6 +2,12 @@
 <section ng-hide="denied('edit_content_hosts', contentHost)">
   <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
   <h4 translate>Package Actions</h4>
+  <p class="alert alert-info" ng-hide="contentHost.katello_agent_installed" translate>
+    The katello-agent package is required to manage packages on this Host.
+    Please install the katello-agent package to manage packages on
+    {{ contentHost.name }}. To install the package, connect directly to the
+    host from a terminal and use yum.
+  </p>
   <section>
     <form ng-submit="performPackageAction()" role="form" class="row">
 

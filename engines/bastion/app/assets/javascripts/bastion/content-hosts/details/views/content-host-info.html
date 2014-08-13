@@ -34,6 +34,18 @@
         <span class="info-value">{{ contentHost.type }}</span>
       </div>
 
+      <div class="detail">
+        <span class="info-label" translate>Katello Agent</span>
+        <span class="info-value" ng-show="contentHost.katello_agent_installed">
+          <span class="icon-circle green"></span>
+          <span translate>Installed</span>
+        </span>
+        <span class="info-value" ng-hide="contentHost.katello_agent_installed">
+          <span class="icon-circle yellow"></span>
+          <span translate>Not installed</span>
+        </span>
+      </div>
+
       <div ng-show="contentHost.virtual_guests" class="detail">
         <span class="info-label" translate>Virtual Guests</span>
         <div class="info-value">

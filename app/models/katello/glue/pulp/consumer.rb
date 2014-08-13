@@ -216,6 +216,10 @@ module Glue::Pulp::Consumer
       end
     end
 
+    def katello_agent_installed?
+      simple_packages.any? { |package| package.name == "katello-agent" }
+    end
+
     private
 
     def fetch_package_profile

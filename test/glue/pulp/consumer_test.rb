@@ -40,7 +40,6 @@ end
 
 
 class GluePulpConsumerTestCreateDestroy < GluePulpConsumerTestBase
-
   def setup
     VCR.insert_cassette('pulp/consumer/create')
     @simple_server = System.find(katello_systems(:simple_server).id)
@@ -73,12 +72,10 @@ class GluePulpConsumerDeleteTest < GluePulpConsumerTestBase
   def test_del_pulp_consumer
     assert @simple_server.del_pulp_consumer
   end
-
 end
 
 
 class GluePulpConsumerTest < GluePulpConsumerTestBase
-
   def setup
     VCR.insert_cassette('pulp/consumer/consumer')
     @simple_server = System.find(katello_systems(:simple_server).id)
@@ -104,11 +101,19 @@ class GluePulpConsumerTest < GluePulpConsumerTestBase
     assert @simple_server.upload_package_profile(profile)
   end
 
+  def test_katello_agent_installed
+    package = Glue::Pulp::SimplePackage.new(:name => "katello-agent")
+    @simple_server.stubs(:simple_packages).returns([package])
+    assert @simple_server.katello_agent_installed?
+
+    package.name = "not-katello-agent"
+    @simple_server.stubs(:simple_packages).returns([package])
+    refute @simple_server.katello_agent_installed?
+  end
 end
 
 
 class GluePulpConsumerBindTest < GluePulpConsumerTestBase
-
   @@simple_server = nil
 
   def self.before_suite
@@ -133,12 +138,10 @@ class GluePulpConsumerBindTest < GluePulpConsumerTestBase
     assert_includes processed_ids, RepositorySupport.repo.pulp_id
     refute_includes error_ids, RepositorySupport.repo.pulp_id
   end
-
 end
 
 
 class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
-
   @@simple_server = nil
 
   def self.before_suite
@@ -199,6 +202,5 @@ class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
 
     assert tasks[:spawned_tasks].first['task_id']
   end
-
 end
 end

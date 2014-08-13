@@ -31,7 +31,11 @@
 </div>
 
 <div alch-table="errataTable">
-  <p class="alert alert-info" translate>Please note katello-agent is required to be installed on the Content Host for Errata reporting.</p>
+  <p class="alert alert-info" ng-hide="contentHost.katello_agent_installed" translate>
+    The katello-agent package is required to manage errata on this Host.
+    Please install the katello-agent package to manage errata on
+    {{ contentHost.name }}.
+  </p>
   <div alch-container-scroll alch-infinite-scroll="errataTable.nextPage()" data="errataTable.rows">
     <table ng-class="{'table-mask': errataTable.working}" class="table table-striped">
       <thead>
