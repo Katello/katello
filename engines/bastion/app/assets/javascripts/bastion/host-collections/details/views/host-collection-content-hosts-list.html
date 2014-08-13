@@ -52,7 +52,13 @@
         {{ "Loading..." | translate }}
       </div>
 
-      <table ng-class="{'table-mask': contentHostsTable.working}" class="table table-full table-striped">
+      <p class="alert alert-info" ng-show="contentHostsTable.rows.length === 0" translate>
+        You currently don't have any Content Hosts in this Host Group, you can add Content Hosts after selecting the 'Add' tab.
+      </p>
+
+      <table ng-class="{'table-mask': contentHostsTable.working}" 
+             class="table table-full table-striped"
+             ng-show="contentHostTable.rows.length > 0">
         <thead>
           <tr alch-table-head row-select>
             <th alch-table-column="name" translate>Name</th>

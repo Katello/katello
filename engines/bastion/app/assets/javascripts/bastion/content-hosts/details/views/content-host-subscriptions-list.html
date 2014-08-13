@@ -51,7 +51,13 @@
         {{ "Loading..." | translate }}
       </div>
 
-      <table ng-class="{'table-mask': subscriptionsTable.working}" class="table table-full table-striped">
+      <p class="alert alert-info" ng-show="subscriptionsTable.rows.length === 0" translate>
+        You currently don't have any Subscriptions associated with this Content Host, you can add Subscriptions after selecting the 'Add' tab.
+      </p>
+
+      <table ng-class="{'table-mask': subscriptionsTable.working}" 
+             class="table table-full table-striped"
+             ng-show="subscriptionsTable.rows.length > 0">
         <thead>
           <tr alch-table-head row-select>
             <th alch-table-column="quantity" sortable class="align-center"><span translate>Quantity</span></th>

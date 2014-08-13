@@ -52,7 +52,13 @@
         {{ "Loading..." | translate }}
       </div>
 
-      <table ng-class="{'table-mask': addSubscriptionsTable.working}" class="table table-full table-striped">
+      <p class="alert alert-info" ng-show="addSubscriptionsTable.rows.length === 0" translate>
+        You currently don't have any Products to subscribe to, you can add Products after selecting 'Products' under 'Content' in the main menu.
+      </p>
+
+      <table ng-class="{'table-mask': addSubscriptionsTable.working}"
+             class="table table-full table-striped" 
+             ng-show="addSubscriptionsTable.rows.length > 0" >
         <thead>
           <tr alch-table-head row-select>
             <th alch-table-column="quantity" sortable class="align-center"><span translate>Quantity</span></th>

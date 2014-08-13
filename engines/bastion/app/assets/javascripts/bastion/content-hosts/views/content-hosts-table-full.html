@@ -1,4 +1,9 @@
-<table class="table table-striped" ng-class="{'table-mask': contentHostTable.working}">
+<p class="alert alert-info" ng-show="contentHostTable.rows.length === 0" translate>
+      You currently don't have any Content Hosts, you can register Content Hosts using the button on the right.
+</p>
+<table class="table table-striped" 
+       ng-class="{'table-mask': contentHostTable.working}"
+       ng-show="contentHostTable.rows.length > 0">
   <thead>
     <tr alch-table-head row-select>
       <th alch-table-column="name" sortable><span translate>Name</span></th>

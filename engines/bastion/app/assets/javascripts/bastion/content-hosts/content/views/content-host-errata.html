@@ -36,7 +36,14 @@
     Please install the katello-agent package to manage errata on
     {{ contentHost.name }}.
   </p>
-  <div alch-container-scroll alch-infinite-scroll="errataTable.nextPage()" data="errataTable.rows">
+
+  <p class="alert alert-info" ng-show="errataTable.rows.length === 0">There are no Errata to display.</p>
+
+  <div alch-container-scroll 
+       alch-infinite-scroll="errataTable.nextPage()"
+       data="errataTable.rows" 
+       ng-show="errataTable.rows.length > 0">
+       
     <table ng-class="{'table-mask': errataTable.working}" class="table table-striped">
       <thead>
         <tr alch-table-head row-select>
