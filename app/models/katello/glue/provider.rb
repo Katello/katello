@@ -240,8 +240,7 @@ module Glue::Provider
     end
 
     # TODO: break up method
-    # rubocop:disable MethodLength
-    def queue_import_manifest(options)
+    def queue_import_manifest(options) # rubocop:disable MethodLength
       options = options.with_indifferent_access
       fail "zip_file_path or upstream must be specified" if options[:zip_file_path].nil? && options[:upstream].nil?
 
@@ -307,8 +306,7 @@ module Glue::Provider
     end
 
     # TODO: break up method
-    # rubocop:disable MethodLength
-    def import_products_from_cp(options = {})
+    def import_products_from_cp(options = {}) # rubocop:disable MethodLength
 
       import_logger = options[:import_logger]
       product_in_katello_ids = self.organization.providers.redhat.first.products.pluck("cp_id")

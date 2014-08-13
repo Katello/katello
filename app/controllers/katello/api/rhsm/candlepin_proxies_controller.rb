@@ -152,8 +152,7 @@ module Katello
       end
     end
     param :id, String, :desc => N_("UUID of the system"), :required => true
-    # rubocop:disable MethodLength
-    def enabled_repos
+    def enabled_repos # rubocop:disable Style/MethodLength
       repos_params = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
       repos_params = repos_params['repos'] || []
 

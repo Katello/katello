@@ -1,80 +1,19 @@
-
-# TODO: Fix these problems in our code and remove/edit the rules below
-
-LineLength:
-  Max: 200 # set to 100
-
-ParameterLists:
-  Max: 10 # set to 4
-
-CollectionMethods:
-  # remove this once we pick either map or collect, inject or reduce, etc
-  PreferredMethods: {}
-
-StringLiterals:
-  Enabled: false # remove me
-
-SpaceAroundBlockBraces:
-  Enabled: false # remove me
-
-BlockNesting:
-  Enabled: false # change to 4
-
-PerlBackrefs:
-  Enabled: false # remove me
-
-RaiseArgs:
-  Enabled: false # should we turn this on?
-
-ClassLength:
-  Enabled: false # agree on a limit and enable
-
-IndentationWidth:
-  Enabled: false
-
-EmptyLinesAroundBody:
-  Enabled: false
-
-Output:
-  Enabled: false
-
-CyclomaticComplexity:
-  Enabled: false
-
-BracesAroundHashParameters:
-  Enabled: false
-
-AlignHash:
-  Enabled: false
-
-PredicateName:
-  Enabled: false # remove me
-
-DefaultScope:
-  Enabled: false # remove me?
-
-TrailingComma:
-  Enabled: false # remove me
-
-ConditionPosition:
-  Enabled: false # remove me
-
-AccessorMethodName:
-  Enabled: false # remove me
-
+# TODO: Remove the following once the rules in the file is addressed
+inherit_from:
+  - .rubocop_todo.yml
 # end TODO
 
 AllCops:
   RunRailsCops: true # automatically run rails cops
-  Excludes:
+  Exclude:
     - script/rails
     - script/thin
     - db/migrate/20131014135042_katello_tables.rb
-    - engines/bastion/node_modules/**
-    - engines/bastion/vendor/assets/dev-components/**
+    - engines/bastion/node_modules/**/*
+    - engines/bastion/vendor/assets/dev-components/**/*
     # TODO: remove these other paths as we fix them
-    - spec/**
-    - test/**
+    - spec/**/*
+    - test/**/*
     - config/navigation.rb
 
 MethodLength:
@@ -102,9 +41,6 @@ RescueModifier:
 AssignmentInCondition:
   Enabled: false
 
-FavorUnlessOverNegatedIf:
-  Enabled: false
-
 WhileUntilModifier:
   Enabled: false
 
@@ -119,9 +55,6 @@ DotPosition:
 
 Lambda:
   Enabled: false # don't require -> for single line lambdas
-
-FavorSprintf:
-  Enabled: false # we use % for i18n
 
 RedundantSelf:
   Enabled: false
@@ -143,3 +76,12 @@ MethodCalledOnDoEndBlock:
 
 SingleLineBlockParams:
   Enabled: false
+
+Style/Next:
+  Enabled: false # don't enforce next in loops over if/unless
+
+Rails/ActionFilter:
+  Enabled: false # Rails 4.0 check
+
+FormatString:
+  Enabled: false # we use % for i18n
