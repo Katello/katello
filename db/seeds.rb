@@ -122,3 +122,8 @@ Role.without_auditing do
 end
 
 Setting.find_by_name("dynflow_enable_console").update_attributes!(:value => true) if Rails.env.development?
+
+["Pulp", "Pulp Node"].each do |input|
+  f = Feature.find_or_create_by_name(input)
+  fail "Unable to create proxy feature: #{format_errors f}" if f.nil? || f.errors.any?
+end

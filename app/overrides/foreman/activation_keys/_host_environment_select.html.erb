@@ -52,7 +52,7 @@ end %>
              :class => 'form-control' }
 end %>
 
-<% proxies = SmartProxy.unscoped.with_taxonomy_scope(@location,@organization,:path_ids) %>
+<% proxies = SmartProxy.with_content.unscoped.with_taxonomy_scope(@location,@organization,:path_ids) %>
 <% if proxies.count > 0 %>
     <%= select_f f, :content_source_id, proxies, :id, :name,
              { :include_blank => blank_or_inherit_f(f, :content_source) },
