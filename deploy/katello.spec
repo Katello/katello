@@ -42,6 +42,7 @@ Requires:       %{name}-installer
 Requires:       rubygem-hammer_cli 
 Requires:       rubygem-hammer_cli_foreman
 Requires:       rubygem-hammer_cli_katello
+Requires:       rubygem-hammer_cli_import
 
 #foreman plugins and optional packages
 Requires:       ruby193-rubygem-foreman_bootdisk
