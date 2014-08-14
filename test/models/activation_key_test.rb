@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
 class ActivationKeyTest < ActiveSupport::TestCase
-
   def self.before_suite
     models = ["ActivationKey", "KTEnvironment", "ContentViewEnvironment", "ContentView", "Organization"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
@@ -64,5 +63,17 @@ class ActivationKeyTest < ActiveSupport::TestCase
     assert ActivationKey.new(:name => original_name, :organization => org).valid?
   end
 
+  def test_available_subscriptions
+    key1 = ActivationKey.find(katello_activation_keys(:simple_key))
+    key1.stubs(:get_pools).returns([{:id => 1, :productId => "abc"},
+                                    {:id => 2, :productId => "def"},
+                                    {:id => 3, :productId => "klm"}
+    ])
+    key1.stubs(:get_key_pools).returns([{:id => 1, :productId => "abc"}])
+    key1.stubs(:content_view_version).returns(stub(:products => [stub(:cp_id => "def")]))
+    key1.stubs(:subscriptions).with do |pools|
+      assert_equal 1, pools.length
+    end
+  end
 end
 end

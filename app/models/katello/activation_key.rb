@@ -81,6 +81,15 @@ class ActivationKey < Katello::Model
     end
   end
 
+  def content_view_environment
+    ContentViewEnvironment.where(content_view_id: content_view_id,
+                                 environment_id: environment_id).first
+  end
+
+  def content_view_version
+    content_view_environment.content_view_version
+  end
+
   # For efficiency, sometimes the candlepin pool objects have already been fetched so allow
   # them to be passed in directly. By default, a call to candlepin will be made
   def subscriptions(cp_pools = nil)
@@ -100,7 +109,10 @@ class ActivationKey < Katello::Model
   def available_subscriptions
     all_pools = self.get_pools
     key_pool_ids = self.get_key_pools.collect { |pool| pool[:id] }
-    pools = all_pools.reject { |pool| key_pool_ids.include? pool[:id] }
+    cv_product_ids = content_view_version.products.map(&:cp_id)
+    pools = all_pools.reject do |pool|
+      key_pool_ids.include?(pool[:id]) || !cv_product_ids.include?(pool[:productId])
+    end
     self.subscriptions(pools)
   end
 
