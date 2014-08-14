@@ -16,6 +16,8 @@ module Katello
       include Katello::KatelloUrlsHelper
 
       included do
+        before_update :update_content_host, :if => :environment_id_changed?
+
         alias_method_chain :validate_media?, :capsule
 
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
@@ -26,6 +28,21 @@ module Katello
 
       def validate_media_with_capsule?
         content_source_id.blank? && validate_media_without_capsule?
+      end
+
+      def update_content_host
+        # If the puppet environment is being changed for the host, then we may also need to
+        # update the associated content host's lifecycle environment and content view
+        if self.content_host &&
+           self.environment.lifecycle_environment &&
+           self.environment.content_view &&
+           ((self.content_host.environment_id != self.environment.lifecycle_environment.id) ||
+            (self.content_host.content_view_id != self.environment.content_view.id))
+
+          self.content_host.environment_id = self.environment.lifecycle_environment.id
+          self.content_host.content_view_id = self.environment.content_view.id
+          self.content_host.save!
+        end
       end
 
     end

@@ -79,6 +79,71 @@ class SystemCreateTest < SystemTestBase
   end
 end
 
+class SystemUpdateTest < SystemTestBase
+  def setup
+    super
+    foreman_host = Host.find(hosts(:one))
+    @system.host_id = foreman_host.id
+    @system.save!
+
+    new_view = ContentView.find(katello_content_views(:library_view))
+    new_lifecycle_environment = new_view.environments.first
+
+    @system.environment = new_lifecycle_environment
+    @system.content_view = new_view
+  end
+
+  def teardown
+    @system.destroy
+  end
+
+  def test_update_lifecycle_environment_and_content_view_updates_foreman_host
+    Environment.any_instance.stubs(:content_view_puppet_environment).returns(
+        ContentViewPuppetEnvironment.find(katello_content_view_puppet_environments(:dev_view_puppet_environment)))
+
+    ContentViewPuppetEnvironment.any_instance.stubs(:puppet_environment).returns(Environment.find(environments(:testing)))
+
+    # we are making an update to the system that should result in a change to the foreman host's puppet environment
+    @system.foreman_host.expects(:save!)
+    @system.save!
+  end
+
+  def test_update_lifecycle_environment_and_content_view_does_not_foreman_host
+    ContentViewPuppetEnvironment.any_instance.stubs(:puppet_environment).returns(Environment.find(environments(:testing)))
+
+    # we are making an update to the system that should NOT result in a change to the foreman host's puppet environment
+    # (by default, the fixtures have the foreman host associated with a puppet environment that has no
+    # content view or lifecycle environment; therefore, we should not alter it)
+    @system.foreman_host.expects(:save!).never
+    @system.save!
+  end
+
+  def test_update_lifecycle_environment_and_content_view_raises_error
+    Environment.any_instance.stubs(:content_view_puppet_environment).returns(
+        ContentViewPuppetEnvironment.find(katello_content_view_puppet_environments(:dev_view_puppet_environment)))
+
+    # unable to locate a foreman puppet environment that is associated with the content view
+    ContentViewPuppetEnvironment.any_instance.stubs(:puppet_environment).returns(nil)
+
+    # If a puppet environment cannot be found for the lifecycle environment + content view
+    # combination, then an error should be raised
+    assert_raises Errors::NotFound do
+      @system.save!
+    end
+  end
+
+  def test_update_does_not_update_foreman_host
+    foreman_host = Host.find(hosts(:one))
+    @system2 = System.find(katello_systems(:simple_server2))
+    @system2.host_id = foreman_host.id
+    @system2.save!
+
+    @system2.expects(:udpate_foreman_host).never
+    @system2.save!
+  end
+
+end
+
 class SystemTest < SystemTestBase
 
   def setup
