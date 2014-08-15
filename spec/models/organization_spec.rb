@@ -163,7 +163,7 @@ describe Organization do
       @organization.kt_environments << @env1
       @env1.save!
 
-      @env2 = KTEnvironment.new(:name=>env_name, :label=> env_name, :organization => @org2, :prior => @organization.library)
+      @env2 = KTEnvironment.new(:name=>env_name, :label=> env_name, :organization => @org2, :prior => @org2.library)
       @org2.kt_environments << @env2
       @env2.save!
 

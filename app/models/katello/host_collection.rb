@@ -39,6 +39,7 @@ class HostCollection < Katello::Model
                                                    :greater_than_or_equal_to => 1,
                                                    :less_than_or_equal_to => 2_147_483_647,
                                                    :message => N_("must be a positive integer value.")}
+  validates_with OrganizationAssociationValidator
 
   alias_attribute :content_host_limit, :max_content_hosts
   validate :validate_max_content_hosts

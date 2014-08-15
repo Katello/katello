@@ -65,6 +65,7 @@ class KTEnvironment < Katello::Model
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_with Validators::PriorValidator
   validates_with Validators::PathDescendentsValidator
+  validates_with OrganizationAssociationValidator
 
   has_many :capsule_lifecycle_environments, :foreign_key => :lifecycle_environment_id,
            :dependent => :destroy, :inverse_of => :lifecycle_environment

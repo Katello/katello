@@ -27,6 +27,7 @@ class Notice < Katello::Model
   validates :user_notices, :length => {:minimum => 1}
   validates :level, :length => {:maximum => 255}
   validates :request_type, :length => {:maximum => 255}
+  validates_with OrganizationAssociationValidator
 
   before_validation :set_default_notice_level
   before_validation :trim_text

@@ -44,6 +44,7 @@ class Product < Katello::Model
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_with Validators::ProductUniqueAttributeValidator, :attributes => :name
   validates_with Validators::ProductUniqueAttributeValidator, :attributes => :label
+  validates_with OrganizationAssociationValidator
 
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :organization_id, :complete_value => true
@@ -112,10 +113,6 @@ class Product < Katello::Model
 
   def enabled?
     !self.provider.redhat_provider? || self.repositories.present?
-  end
-
-  def organization
-    provider.organization
   end
 
   def library

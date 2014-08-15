@@ -64,6 +64,7 @@ class ContentView < Katello::Model
 
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
+  validates_with OrganizationAssociationValidator
 
   scope :default, where(:default => true)
   scope :non_default, where(:default => false)
