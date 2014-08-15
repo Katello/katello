@@ -16,7 +16,8 @@ module Actions
       class NodeMetadataGenerate < Actions::Base
 
         def plan(repo, dependency = nil)
-          return unless repo.environment
+          return if (repo.content_type == ::Katello::Repository::FILE_TYPE) || !repo.environment
+
           sequence do
             unless repo.puppet? && repo.content_view.default?
               plan_action(Pulp::Repository::DistributorPublish,
