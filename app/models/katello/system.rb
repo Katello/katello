@@ -68,6 +68,8 @@ class System < Katello::Model
   before_create  :fill_defaults
   after_create :init_default_custom_info
 
+  before_update :update_foreman_host, :if => proc { |r| r.environment_id_changed? || r.content_view_id_changed? }
+
   scope :in_environment, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
   scope :by_uuids, lambda { |uuids| where(:uuid => uuids)}
@@ -309,6 +311,26 @@ class System < Katello::Model
 
   def set_default_content_view
     self.content_view = self.environment.try(:default_content_view) unless self.content_view
+  end
+
+  def update_foreman_host
+    # If the lifecycle environment and/or content view are being changed for the content host
+    # (system), then we may also need to update the associated foreman host's puppet environment
+    if self.foreman_host &&
+       self.foreman_host.environment.lifecycle_environment &&
+       self.foreman_host.environment.content_view
+
+      if puppet_env = self.content_view.puppet_env(self.environment).try(:puppet_environment)
+        if puppet_env.id != self.foreman_host.environment_id
+          self.foreman_host.environment_id = puppet_env.id
+          self.foreman_host.save!
+        end
+      else
+        fail Errors::NotFound,
+             _("Couldn't find puppet environment associated with lifecycle environment '%{env}' and content view '%{view}'") %
+                 { :env => self.environment.name, :view => self.content_view.name }
+      end
+    end
   end
 
   # rubocop:disable SymbolName
