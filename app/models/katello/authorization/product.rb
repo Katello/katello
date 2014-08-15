@@ -58,7 +58,7 @@ module Katello
         end
 
         def readable_repositories(repo_ids = nil)
-          query = Katello::Repository
+          query = Katello::Repository.scoped
 
           if repo_ids
             query = query.where(:id => repo_ids)
