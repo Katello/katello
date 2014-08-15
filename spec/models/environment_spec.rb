@@ -75,10 +75,13 @@ describe KTEnvironment do
     end
 
     describe "delete an environment" do
-
       it "should delete the environment" do
-        id = @environment.id
-        @environment.destroy
+        User.current.remote_id =  User.current.login
+        env = KTEnvironment.create!(:name=>"Boooo1224",
+                                    :organization => @organization,
+                                    :prior => @organization.library)
+        id = env.id
+        env.destroy!
         lambda { KTEnvironment.find(id)}.must_raise(ActiveRecord::RecordNotFound)
       end
     end

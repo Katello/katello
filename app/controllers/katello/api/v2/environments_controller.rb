@@ -128,7 +128,7 @@ module Katello
     param :organization_id, :number, :desc => N_("organization identifier")
     def destroy
       if @environment.is_deletable?
-        @environment.destroy
+        sync_task(::Actions::Katello::Environment::Destroy, @environment)
         respond_for_destroy
       else
         fail HttpErrors::BadRequest, @environment.errors.full_messages.join(" ")

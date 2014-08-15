@@ -58,6 +58,9 @@ module ::Actions::Katello::Organization
     let(:organization) { stub }
 
     it 'plans' do
+      env = stub
+      library = stub
+
       action.stubs(:action_subject).with(organization)
       default_view = stub(:content_view_environments => [])
       library = stub(:destroy! => true)
@@ -72,6 +75,8 @@ module ::Actions::Katello::Organization
       organization.expects(:content_view_environments).returns(stub(:non_default => []))
       organization.expects(:reload)
       organization.expects(:destroy!).returns(true)
+      organization.expects(:promotion_paths).returns([[env]])
+      organization.expects(:library).returns(library)
 
       plan_action(action, organization)
 
@@ -79,6 +84,7 @@ module ::Actions::Katello::Organization
                                 ::Actions::Candlepin::Owner::Destroy,
                                 label: "ACME_Corporation")
       assert_action_planed_with(action, ::Actions::Katello::ContentView::Destroy, default_view)
+      assert_action_planed_with(action, ::Actions::Katello::Environment::Destroy, env)
     end
   end
 end

@@ -15,7 +15,7 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::EnvironmentsControllerTest < ActionController::TestCase
-
+    include Support::ForemanTasks::Task
     def self.before_suite
       models = ["KTEnvironment", "ContentViewEnvironment", "Organization"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
@@ -121,8 +121,12 @@ module Katello
     end
 
     def test_destroy
+      destroyable_env = KTEnvironment.create!(:name => "DestroyAble",
+                                              :organization => @staging.organization,
+                                              :prior => @staging)
+      assert_sync_task(::Actions::Katello::Environment::Destroy, destroyable_env)
       delete :destroy, :organization_id => @organization.id,
-                       :id => @staging.id
+                       :id => destroyable_env.id
 
       assert_response :success
     end

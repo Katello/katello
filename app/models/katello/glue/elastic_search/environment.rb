@@ -17,7 +17,6 @@ module Katello
       base.class_eval do
         include Ext::IndexedModel
         after_save :update_related_index
-        after_destroy :delete_related_index
 
         index_options :extended_json => :extended_index_attrs,
           :json => {:only => [:id, :name, :description, :organization_id]},
@@ -49,10 +48,6 @@ module Katello
         self.organization.update_index
         ActivationKey.index.import(self.activation_keys) if !self.activation_keys.empty?
       end
-    end
-
-    def delete_related_index
-      self.organization.update_index if self.organization
     end
 
   end

@@ -18,7 +18,7 @@ module Glue::ElasticSearch::Organization
     base.class_eval do
       index_options :extended_json => :extended_index_attrs,
                     :json => {:except => [:debug_cert, :events]},
-                    :display_attrs => [:name, :description, :environment]
+                    :display_attrs => [:name, :description]
 
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
@@ -29,7 +29,7 @@ module Glue::ElasticSearch::Organization
   end
 
   def extended_index_attrs
-    {:name_sort => name.downcase, :environment => self.kt_environments.collect{|e| e.name}}
+    {:name_sort => name.downcase}
   end
 end
 end

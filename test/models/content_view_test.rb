@@ -82,12 +82,15 @@ class ContentViewTest < ActiveSupport::TestCase
     assert_includes @library.content_views, @library_view
   end
 
-  def test_environment_content_view_env_destroy
+  def test_environment_content_view_env_destroy_should_fail
+    User.current = User.find(users(:admin))
     ContentViewPuppetEnvironment.any_instance.stubs(:clear_content_indices)
     env = @dev
     cve = env.content_views.first.content_view_environments.where(:environment_id=>env.id).first
-    env.destroy
-    assert_nil ContentViewEnvironment.find_by_id(cve.id)
+    assert_raises(RuntimeError) do
+      env.destroy!
+    end
+    refute_nil ContentViewEnvironment.find_by_id(cve.id)
   end
 
   def test_promote
