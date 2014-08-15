@@ -27,6 +27,7 @@ module Katello
       @library = KTEnvironment.find(katello_environments(:library))
       @dev = KTEnvironment.find(katello_environments(:dev))
       @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view))
+      @library_view = ContentView.find(katello_content_views(:library_view))
     end
 
     def permissions
@@ -60,6 +61,32 @@ module Katello
       get :index, :content_view_id => @library_dev_staging_view.id
       assert_response :success
       assert_template 'api/v2/content_view_versions/index'
+    end
+
+    def test_index_with_content_view_in_environment
+      expected_version = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2))
+
+      results = JSON.parse(get(:index, :content_view_id => @library_view.id, :environment_id => @library.id).body)
+
+      assert_response :success
+      assert_template 'api/v2/content_view_versions/index'
+
+      assert_equal ['page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total'], results.keys.sort
+      assert_equal 1, results['results'].size
+      assert_equal expected_version.id, results['results'][0]['id']
+    end
+
+    def test_index_with_content_view_by_version
+      expected_version = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2))
+
+      results = JSON.parse(get(:index, :content_view_id => @library_view.id, :version => 2).body)
+
+      assert_response :success
+      assert_template 'api/v2/content_view_versions/index'
+
+      assert_equal ['page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total'], results.keys.sort
+      assert_equal 1, results['results'].size
+      assert_equal expected_version.id, results['results'][0]['id']
     end
 
     def test_index_protected
