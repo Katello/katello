@@ -8,7 +8,7 @@
   <tbody>
     <tr alch-table-row
         ng-repeat="hostCollection in table.rows"
-        row-select="product"
+        row-select="hostCollection"
         active-row="stateIncludes('host-collections.details', {hostCollectionId: hostCollection.id})">
       <td alch-table-cell>
         <a ui-sref="host-collections.details.info({hostCollectionId: hostCollection.id})">
