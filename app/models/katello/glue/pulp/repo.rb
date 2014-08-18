@@ -21,8 +21,6 @@ module Glue::Pulp::Repo
 
     base.class_eval do
 
-      before_save :save_repo_orchestration
-
       lazy_accessor :pulp_repo_facts,
                     :initializer => (lambda do |s|
                                        if pulp_id
@@ -66,25 +64,6 @@ module Glue::Pulp::Repo
   end
 
   module InstanceMethods
-    def save_repo_orchestration
-      case orchestration_for
-      when :update
-        if self.pulp_update_needed?
-          pre_queue.create(:name => "update pulp repo: #{self.name}", :priority => 2,
-                           :action => [self, :refresh_pulp_repo, nil, nil, nil])
-        end
-        if self.respond_to?(:unprotected) && self.unprotected_changed?
-          post_queue.create(:name => "generate metadata for pulp repo #{self.name}", :priority => 3,
-                            :action => [self, :generate_metadata])
-        end
-      end
-    end
-
-    def pulp_update_needed?
-      ((self.respond_to?(:url) && self.url_changed?) ||
-       (self.respond_to?(:unprotected) && self.unprotected_changed?)) &&
-      !self.product.provider.redhat_provider?
-    end
 
     def last_sync
       self.importers.first["last_sync"] if self.importers.first
