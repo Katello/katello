@@ -14,6 +14,8 @@ module Katello
   class ContentViewRepository < Katello::Model
     self.include_root_in_json = false
 
+    ALLOWED_REPOSITORY_TYPES = [Repository::YUM_TYPE]
+
     belongs_to :content_view, :inverse_of => :content_view_repositories,
       :class_name => "Katello::ContentView"
     belongs_to :repository, :inverse_of => :content_view_repositories,
@@ -21,7 +23,7 @@ module Katello
 
     validates :repository_id, :uniqueness => {:scope => :content_view_id}
     validate :content_view_composite
-    validate :non_puppet_repository
+    validate :ensure_repository_type
 
     private
 
@@ -31,9 +33,9 @@ module Katello
       end
     end
 
-    def non_puppet_repository
-      if repository.puppet?
-        errors.add(:base, _("Cannot add puppet repositories to a content view"))
+    def ensure_repository_type
+      unless ALLOWED_REPOSITORY_TYPES.include?(repository.content_type)
+        errors.add(:base, _("Cannot add %s repositories to a content view.") % repository.content_type)
       end
     end
   end
