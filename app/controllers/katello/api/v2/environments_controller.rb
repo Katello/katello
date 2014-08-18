@@ -153,7 +153,12 @@ module Katello
       end
       paths = [{ :environments => [@organization.library] }] if paths.empty?
 
-      respond_for_index(:collection => paths, :template => :paths)
+      collection = {
+        :results => paths,
+        :total => paths.size,
+        :subtotal => paths.size
+      }
+      respond_for_index(:collection => collection, :template => :paths)
     end
 
     api :GET, "/organizations/:organization_id/environments/:id/repositories", "List repositories available in the environment"

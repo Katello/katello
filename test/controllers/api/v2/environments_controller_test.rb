@@ -145,7 +145,7 @@ module Katello
       get :paths, :organization_id => @organization.id
 
       assert_response :success
-      assert_template 'api/v2/environments/paths'
+      assert_template %w(api/v2/environments/paths api/v2/common/metadata)
     end
 
     def test_paths_protected
