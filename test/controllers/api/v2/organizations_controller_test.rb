@@ -17,6 +17,8 @@ module Katello
   class Api::V2::OrganizationsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
+    include Support::ForemanTasks::Task
+
     def self.before_suite
       models = ["Organization"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
@@ -124,7 +126,9 @@ module Katello
     end
 
     def test_autoattach_subscriptions
-      Organization.any_instance.expects(:auto_attach_all_systems).returns(Katello::TaskStatus.new)
+      assert_async_task ::Actions::Katello::Organization::AutoAttachSubscriptions do |organization|
+        organization.id == @organization.id
+      end
 
       post :autoattach_subscriptions, :id => @organization.id
 

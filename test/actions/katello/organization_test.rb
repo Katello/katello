@@ -20,15 +20,14 @@ module ::Actions::Katello::Organization
     include FactoryGirl::Syntax::Methods
 
     let(:action) { create_action action_class }
-  end
-
-  class CreateTest < TestBase
-    let(:action_class) { ::Actions::Katello::Organization::Create }
-    let(:action) { create_action action_class }
 
     let(:organization) do
       build(:katello_organization, :acme_corporation, :with_library)
     end
+  end
+
+  class CreateTest < TestBase
+    let(:action_class) { ::Actions::Katello::Organization::Create }
 
     it 'plans' do
       provider = mock()
@@ -85,6 +84,18 @@ module ::Actions::Katello::Organization
                                 label: "ACME_Corporation")
       assert_action_planed_with(action, ::Actions::Katello::ContentView::Destroy, default_view)
       assert_action_planed_with(action, ::Actions::Katello::Environment::Destroy, env)
+    end
+  end
+
+  class AutoAttachSubscriptionsTest < TestBase
+    let(:action_class) { ::Actions::Katello::Organization::AutoAttachSubscriptions }
+
+    it 'plans' do
+      action.stubs(:action_subject).with(organization)
+      plan_action(action, organization)
+      assert_action_planed_with(action,
+                                ::Actions::Candlepin::Owner::AutoAttach,
+                                label:  organization.label)
     end
   end
 end
