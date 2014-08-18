@@ -265,6 +265,14 @@ class ContentViewTest < ActiveSupport::TestCase
     end
   end
 
+  def test_puppet_repos
+    @file_repo = build_stubbed(:katello_repository, :iso)
+
+    assert_raises(ActiveRecord::RecordInvalid) do
+      @library_view.repositories << @file_repo
+    end
+  end
+
   def test_unique_environments
     3.times do |i|
       ContentViewVersion.create!(:version => i + 2,

@@ -31,5 +31,8 @@ FactoryGirl.define do
       content_type "puppet"
     end
 
+    trait :iso do
+      content_type "file"
+    end
   end
 end
