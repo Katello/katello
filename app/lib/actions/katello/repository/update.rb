@@ -24,7 +24,7 @@ module Actions
                         :content_id => repository.content_id,
                         :name => repository.name,
                         :content_url => ::Katello::Glue::Pulp::Repos.custom_content_path(repository.product, repository.label),
-                        :gpg_url => repository.yum_gpg_key_url,
+                        :gpg_key_url => repository.yum_gpg_key_url,
                         :label => repository.custom_content_label,
                         :type => repository.content_type)
           end
