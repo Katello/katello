@@ -45,7 +45,7 @@ angular.module('Bastion.organizations').factory('Organization',
                     transformResponse: function (data) {
                         // transform [{environments : [{id, name, permissions: {readable : true}}]}]
                         // to [[{id, name, select: true}]]
-                        return _.map(angular.fromJson(data), function (path) {
+                        return _.map(angular.fromJson(data)["results"], function (path) {
                             return _.map(path["environments"], function (env) {
                                 return {
                                     id: env.id,
