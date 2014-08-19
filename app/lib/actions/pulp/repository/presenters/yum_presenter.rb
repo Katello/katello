@@ -14,17 +14,7 @@ module Actions
   module Pulp
     module Repository
       module Presenters
-
-        class YumPresenter < Helpers::Presenter::Base
-
-          # TODO: in Rails 4.0, the logic is possible to use from ActiveSupport
-          include ActionView::Helpers::NumberHelper
-
-          def humanized_output
-           if action.external_task
-             humanized_details
-           end
-          end
+        class YumPresenter < AbstractSyncPresenter
 
           def progress
            if sync_task && size_total > 0
@@ -81,18 +71,6 @@ module Actions
            else
              number_to_human_size(size_total)
            end
-          end
-
-          def sync_task
-           action.external_task.select{ |task| task['tags'].include?("pulp:action:sync") }.first
-          end
-
-          def task_result
-           sync_task[:result]
-          end
-
-          def task_result_details
-           task_result && task_result[:details]
           end
 
           def task_progress
