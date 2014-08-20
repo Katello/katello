@@ -397,7 +397,7 @@ class Repository < Katello::Model
   end
 
   def node_syncable?
-    environment && !(environment.library? && content_view.default? && puppet?)
+    environment && !(environment.library? && content_view.default? && puppet?) && !file?
   end
 
   def exist_for_environment?(environment, content_view, attribute = nil)
