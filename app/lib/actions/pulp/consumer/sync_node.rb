@@ -13,7 +13,7 @@
 module Actions
   module Pulp
     module Consumer
-      class SyncNode < ::Actions::Pulp::AbstractAsyncTask
+      class SyncNode < AbstractSyncNodeTask
 
         input_format do
           param :consumer_uuid, String
@@ -40,8 +40,14 @@ module Actions
           ret[:skip_content_update] = true if input[:skip_content]
           ret
         end
-      end
 
+        def rescue_strategy_for_self
+          # There are various reasons the syncing fails, not all of them are
+          # fatal: when fail on syncing, we continue with the task ending up
+          # in the warning state, but not locking further syncs
+          Dynflow::Action::Rescue::Skip
+        end
+      end
     end
   end
 end

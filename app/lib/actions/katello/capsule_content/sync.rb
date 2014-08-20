@@ -15,6 +15,10 @@ module Actions
     module CapsuleContent
       class Sync < ::Actions::EntryAction
 
+        def humanized_name
+          _("Sychronize capsule content")
+        end
+
         def plan(capsule_content, environment = nil)
           fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
 
