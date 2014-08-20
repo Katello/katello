@@ -119,10 +119,6 @@ Requires: %{?scl_prefix}rubygem-logging >= 1.8.0
 Requires: %{?scl_prefix}rubygem-hooks
 Requires: %{?scl_prefix}rubygem-foreman-tasks >= 0.6.0
 Requires: %{?scl_prefix}rubygem-justified
-Requires: %{?scl_prefix}rubygem-delayed_job => 3.0.2
-Requires: %{?scl_prefix}rubygem-delayed_job < 3.1
-Requires: %{?scl_prefix}rubygem-delayed_job_active_record => 0.3.3
-Requires: %{?scl_prefix}rubygem-delayed_job_active_record < 0.4
 Requires: %{?scl_prefix}rubygem-gettext_i18n_rails
 Requires: %{?scl_prefix}rubygem-i18n_data >= 0.2.6
 Requires: %{?scl_prefix}rubygem-apipie-rails >= 0.1.1
@@ -149,10 +145,6 @@ BuildRequires: %{?scl_prefix}rubygem-logging >= 1.8.0
 BuildRequires: %{?scl_prefix}rubygem-hooks
 BuildRequires: %{?scl_prefix}rubygem-foreman-tasks >= 0.6.0
 BuildRequires: %{?scl_prefix}rubygem-justified
-BuildRequires: %{?scl_prefix}rubygem-delayed_job => 3.0.2
-BuildRequires: %{?scl_prefix}rubygem-delayed_job < 3.1
-BuildRequires: %{?scl_prefix}rubygem-delayed_job_active_record => 0.3.3
-BuildRequires: %{?scl_prefix}rubygem-delayed_job_active_record < 0.4
 BuildRequires: %{?scl_prefix}rubygem-gettext_i18n_rails
 BuildRequires: %{?scl_prefix}rubygem-i18n_data >= 0.2.6
 BuildRequires: %{?scl_prefix}rubygem-apipie-rails >= 0.1.1

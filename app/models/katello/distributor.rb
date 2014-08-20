@@ -22,7 +22,6 @@ class Distributor < Katello::Model
   include Glue if Katello.config.use_cp
   include Glue::ElasticSearch::Distributor if Katello.config.use_elasticsearch
   include Authorization::Distributor
-  include AsyncOrchestration
 
   after_rollback :rollback_on_create, :on => :create
 

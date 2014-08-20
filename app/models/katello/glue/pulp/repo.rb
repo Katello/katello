@@ -21,8 +21,6 @@ module Glue::Pulp::Repo
 
     base.class_eval do
 
-      before_save :save_repo_orchestration
-
       lazy_accessor :pulp_repo_facts,
                     :initializer => (lambda do |s|
                                        if pulp_id
@@ -66,25 +64,6 @@ module Glue::Pulp::Repo
   end
 
   module InstanceMethods
-    def save_repo_orchestration
-      case orchestration_for
-      when :update
-        if self.pulp_update_needed?
-          pre_queue.create(:name => "update pulp repo: #{self.name}", :priority => 2,
-                           :action => [self, :refresh_pulp_repo, nil, nil, nil])
-        end
-        if self.respond_to?(:unprotected) && self.unprotected_changed?
-          post_queue.create(:name => "generate metadata for pulp repo #{self.name}", :priority => 3,
-                            :action => [self, :generate_metadata])
-        end
-      end
-    end
-
-    def pulp_update_needed?
-      ((self.respond_to?(:url) && self.url_changed?) ||
-       (self.respond_to?(:unprotected) && self.unprotected_changed?)) &&
-      !self.product.provider.redhat_provider?
-    end
 
     def last_sync
       self.importers.first["last_sync"] if self.importers.first
@@ -477,60 +456,6 @@ module Glue::Pulp::Repo
       return [task]
     end
 
-    # Returns true if the pulp_task_id was triggered by the last synchronization
-    # action for the repository. Dynflow action handles the synchronization
-    # by it's own so no need to synchronize it again in this callback. Since the
-    # callbacks are run just after synchronization is finished, it should be enough
-    # to check for the last synchronization task.
-    def dynflow_handled_last_sync?(pulp_task_id)
-      task = ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Repository::Sync).
-          for_resource(self).order(:started_at).last
-      return task && task.main_action.pulp_task_id == pulp_task_id
-    end
-
-    def handle_sync_complete_task(pulp_task_id, notifier_service = Notify)
-      return if dynflow_handled_last_sync?(pulp_task_id)
-
-      pulp_task =  Katello.pulp_server.resources.task.poll(pulp_task_id)
-
-      if pulp_task.nil?
-        Rails.logger.error("Sync_complete called for #{pulp_task_id}, but no task found.")
-        return
-      end
-
-      task = PulpSyncStatus.using_pulp_task(pulp_task)
-      task.user ||= User.current
-      task.organization ||= organization
-      task.save!
-
-      notify = task.parameters.try(:[], :options).try(:[], :notify)
-      user = task.user
-      if task.state == TaskStatus::Status::FINISHED.to_s && task.progress.error_details[:messages].blank?
-        if user && notify
-          notifier_service.success _("Repository '%s' finished syncing successfully.") % [self.name],
-                         :user => user, :organization => self.organization
-        end
-      else
-        details = []
-
-        if task.progress.error_details.present?
-          details = task.progress.error_details[:details].map do |error|
-            error[:error_message].to_s
-          end
-        else
-          details = task.result[:errors].flatten.map(&:chomp)
-        end
-
-        details = details.join("\n")
-
-        Rails.logger.error("*** Sync error: " +  details)
-        if user && notify
-          notifier_service.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
-                       :details => details, :user => user, :organization => self.organization
-        end
-      end
-    end
-
     def clone_contents_by_filter(to_repo, content_type, filter_clauses, override_config = {})
       content_classes = {
           Katello::Package::CONTENT_TYPE => :rpm,
@@ -663,60 +588,6 @@ module Glue::Pulp::Repo
       sync_history_item['state'] == PulpTaskStatus::Status::FINISHED.to_s
     end
 
-    def generate_metadata(options = {})
-      force_regeneration = options.fetch(:force_regeneration, false)
-      cloned_repo_override = options.fetch(:cloned_repo_override, nil)
-
-      unless force_regeneration
-        clone = cloned_repo_override ||
-            self.content_view_version.repositories.where(:library_instance_id => self.library_instance_id).where("id != #{self.id}").first
-      end
-
-      tasks = []
-      if force_regeneration || self.content_view.default? || clone.nil?
-        tasks << self.publish_distributor
-      else
-        tasks << self.publish_clone_distributor(clone)
-      end
-
-      # If this repository is for an 'archive', it doesn't need to be
-      # published using the node distributor.
-      if !self.archive? && self.find_node_distributor
-        if options[:node_publish_async]
-          self.async(:organization => self.organization,
-                     :task_type => TaskStatus::TYPES[:content_view_node_publish][:type]).publish_node_distributor
-        else
-          tasks << self.publish_node_distributor
-        end
-      end
-
-      tasks
-    end
-
-    def publish_distributor
-      dist = find_distributor
-      dist.nil? ? nil :  Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'])
-    end
-
-    def publish_node_distributor
-      dist = self.find_node_distributor
-      task = Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'])
-      PulpTaskStatus.wait_for_tasks([task])
-      # TODO: is this code still reachable?
-      ::ForemanTasks.sync_task(::Actions::Katello::Repository::NodeMetadataGenerate, self)
-    end
-
-    def publish_clone_distributor(source_repo)
-      dist = find_distributor(true)
-      source_dist = source_repo.find_distributor
-
-      fail "Could not find #{self.content_type} clone distributor for #{self.pulp_id}" if dist.nil?
-      fail "Could not find #{self.content_type} distributor for #{source_repo.pulp_id}" if source_dist.nil?
-      Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'],
-                               :override_config => {:source_repo_id => source_repo.pulp_id,
-                                                    :source_distributor_id => source_dist['id']})
-    end
-
     def find_distributor(use_clone_distributor = false)
       dist_type_id = if use_clone_distributor
                        case self.content_type
@@ -770,31 +641,6 @@ module Glue::Pulp::Repo
       return statuses
     end
 
-    def upload_content(filepaths)
-      filepaths.map { |path| build_content_upload(path) }.each do |file|
-        upload_content_file(file[:filepath])
-      end
-    end
-
-    def build_content_upload(filepath)
-      case content_type
-      when Repository::PUPPET_TYPE
-        {:filepath => filepath, :unit_key => {}, :unit_metadata => {}}
-      when Repository::YUM_TYPE
-        {:filepath => filepath, :unit_key => {}, :unit_metadata => {}}
-      else
-        fail _("Uploads not supported for content type '%s'.") % content_type
-      end
-    end
-
-    def import_upload(upload_id)
-      response = Katello.pulp_server.resources.content.import_into_repo(pulp_id, unit_type_id, upload_id, {}, {:unit_metadata => {}})
-      task = PulpTaskStatus.using_pulp_task(response)
-      PulpTaskStatus.wait_for_tasks([task])
-
-      _handle_upload_import_result(task)
-    end
-
     def unit_type_id
       case content_type
       when Repository::YUM_TYPE
@@ -828,22 +674,6 @@ module Glue::Pulp::Repo
 
     protected
 
-    def upload_content_file(filepath)
-      upload_id = Katello.pulp_server.resources.content.create_upload_request["upload_id"]
-
-      File.open(filepath, "rb") do |file|
-        offset = 0
-        while (chunk = file.read(Katello.config.pulp.upload_chunk_size))
-          Katello.pulp_server.resources.content.upload_bits(upload_id, offset, chunk)
-          offset += Katello.config.pulp.upload_chunk_size
-        end
-      end
-
-      import_upload(upload_id)
-    ensure
-      Katello.pulp_server.resources.content.delete_upload_request(upload_id) if upload_id
-    end
-
     def _get_most_recent_sync_status
       begin
         history = Katello.pulp_server.extensions.repository.sync_status(pulp_id)
@@ -863,21 +693,6 @@ module Glue::Pulp::Repo
       end
     end
 
-    def _handle_upload_import_result(task)
-      if task.result["success_flag"]
-        # reindex content created within the past 5 minutes
-        recent_range = 5.minutes.ago.iso8601
-        filter = {:association => {:created => {"$gt" => recent_range}}}
-        trigger_contents_changed(:wait => false, :reindex => false,
-                                 :index_units => [filter])
-      else
-        if (errors = task.result["details"]["errors"])
-          fail Katello::Errors::InvalidRepositoryContent, _("File upload failed: %s.") % errors.join(",")
-        else
-          fail Katello::Errors::InvalidRepositoryContent, _("File upload failed. Please check the file and try again.")
-        end
-      end
-    end
   end
 
   def full_path(smart_proxy = nil)

@@ -102,8 +102,8 @@ module Katello
 
     api :POST, "/organizations/:id/autoattach_subscriptions", N_("Auto-attach available subscriptions to all systems within an organization. Asynchronous operation.")
     def autoattach_subscriptions
-      async_job = @organization.auto_attach_all_systems
-      respond_for_async :resource => async_job
+      task = async_task(::Actions::Katello::Organization::AutoAttachSubscriptions, @organization)
+      respond_for_async :resource => task
     end
 
     api :GET, '/organizations/:id/redhat_provider', N_('List all :resource_id')

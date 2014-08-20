@@ -15,15 +15,7 @@ module Actions
     module Repository
       module Presenters
 
-        class PuppetPresenter < Helpers::Presenter::Base
-
-          include ActionView::Helpers::NumberHelper
-
-          def humanized_output
-            if action.external_task
-              humanized_details
-            end
-          end
+        class PuppetPresenter < AbstractSyncPresenter
 
           def progress
             #TODO: Add proper progress reporting
@@ -61,23 +53,8 @@ module Actions
           end
 
           def error_count
-            task_result_details['error_count'] || 0
-          end
-
-          def sync_task
-            action.external_task.select{ |task| task['tags'].include?("pulp:action:sync") }.first
-          end
-
-          def cancelled?
-            sync_task['state'] == 'canceled'
-          end
-
-          def task_result
-            sync_task['result']
-          end
-
-          def task_result_details
-            task_result ? task_result['details'] : {}
+            return 0 if !task_result_details || !task_result_details['error_count']
+            task_result_details['error_count']
           end
 
           def task_progress

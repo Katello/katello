@@ -230,7 +230,6 @@ Katello::Engine.routes.draw do
 
           match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
           match '/default_info/:informable_type/*keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
-          match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
           api_resources :content_views, :only => [:index, :create]
           api_resources :subscriptions, :only => [:index, :upload, :delete_manifest, :refresh_manifest, :show] do

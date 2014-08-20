@@ -19,6 +19,7 @@ module Actions
           param :pulp_id
           param :distributor_type_id
           param :source_pulp_id
+          param :dependency
         end
 
         def invoke_external_task

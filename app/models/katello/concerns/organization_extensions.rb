@@ -29,7 +29,6 @@ module Katello
           ::Actions::Katello::Organization::Create
         end
 
-        include AsyncOrchestration
         include Katello::Authorization::Organization
         include Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
         include Ext::LabelFromName
@@ -146,16 +145,6 @@ module Katello
           end
         end
 
-        def discover_repos(url, notify = false)
-          fail _("Repository Discovery already in progress") if self.repo_discovery_task && !self.repo_discovery_task.finished?
-          fail _("Discovery URL not set.") if url.blank?
-          task = self.async(:organization => self, :task_type => :repo_discovery).start_discovery_task(url, notify)
-          task.parameters = {:url => url}
-          self.task_statuses << task
-          self.save!
-          task
-        end
-
         def redhat_repository_url
           redhat_provider.repository_url
         end
@@ -208,50 +197,6 @@ module Katello
           end
         end
 
-        def apply_default_info(informable_type, custom_info, options = {})
-          options = {:async => true}.merge(options)
-          Organization.check_informable_type!(informable_type)
-          objects = self.send(informable_type.pluralize)
-          ids_and_types = objects.inject([]) do |collection, obj|
-            collection << { :informable_type => obj.class.name, :informable_id => obj.id }
-          end
-
-          if options[:async]
-            task = self.async(:organization => self, :task_type => "apply default info").run_apply_info(ids_and_types, custom_info)
-            self.apply_info_task_id = task.id
-            self.save!
-            return task
-          else
-            return CustomInfo.apply_to_set(ids_and_types, custom_info)
-          end
-        end
-
-        def run_apply_info(ids_and_types, custom_info)
-          CustomInfo.apply_to_set(ids_and_types, custom_info)
-        end
-
-        def auto_attaching_all_systems?
-          return false if self.owner_auto_attach_all_systems_task_id.nil?
-          !TaskStatus.find_by_id(self.owner_auto_attach_all_systems_task_id).finished?
-        end
-
-        def auto_attach_all_systems
-          job = self.owner_auto_attach
-          task = self.async(:organization => self, :task_type => "monitor owner all_systems auto_attach").monitor_owner_auto_attach(job)
-          self.owner_auto_attach_all_systems_task_id = task.id
-          self.save!
-          return task
-        end
-
-        def monitor_owner_auto_attach(job, options = {})
-          options = { :pause => 5 }.merge(options)
-          loop do
-            break unless Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job["id"]))
-            sleep options[:pause]
-          end
-          return job["id"]
-        end
-
         def syncable_content?
           products.any?(&:syncable_content?)
         end
@@ -265,36 +210,6 @@ module Katello
           fail ::Foreman::Exception.new(N_("You cannot set an organization's parent_id. This feature is disabled."))
         end
 
-      private
-
-        def start_discovery_task(url, notify = false)
-          task_id = AsyncOperation.current_task_id
-          task = TaskStatus.find(task_id)
-          task.parameters = {:url => url}
-          task.result ||= []
-          task.save!
-
-          #Lambda to continually update the task
-          found_func = lambda do |found_url|
-            task = TaskStatus.find(task_id)
-            task.result << found_url
-            task.save!
-          end
-
-          #Lambda to decide to continue or not
-          #  Using the saved task_id to compare current providers
-          #  task id
-          continue_func = lambda do
-            task = TaskStatus.find(task_id)
-            !task.canceled?
-          end
-
-          discover = RepoDiscovery.new(url)
-          discover.run(found_func, continue_func)
-        rescue => e
-          Notify.exception _('Repos discovery failed.'), e if notify
-          raise e
-        end
       end
     end
   end

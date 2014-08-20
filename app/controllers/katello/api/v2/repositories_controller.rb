@@ -113,7 +113,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   def update
     repo_params = repository_params
     repo_params[:url] = nil if repository_params[:url].blank?
-    @repository.update_attributes!(repo_params)
+    sync_task(::Actions::Katello::Repository::Update, @repository, repo_params)
     respond_for_show(:resource => @repository)
   end
 
@@ -141,14 +141,15 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
     repo_id = params['payload']['repo_id']
     task_id = params['call_report']['task_id']
-    task = TaskStatus.find_by_uuid(task_id)
-    User.current = (task && task.user) ?  task.user : User.anonymous_admin
+    User.current = User.anonymous_admin
 
     repo    = Repository.where(:pulp_id => repo_id).first
     fail _("Couldn't find repository '%s'") % repo_id if repo.nil?
     Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
 
-    repo.async(:organization => repo.environment.organization).after_sync(task_id)
+    unless repo.dynflow_handled_last_sync?(task_id)
+      async_task(::Actions::Katello::Repository::Sync, repo, task_id)
+    end
     render :json => {}
   end
 
@@ -168,7 +169,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     filepaths = Array.wrap(params[:content]).compact.map(&:path)
 
     if !filepaths.blank?
-      @repository.upload_content(filepaths)
+      sync_task(::Actions::Katello::Repository::UploadFiles, @repository, filepaths)
       render :json => {:status => "success"}
     else
       fail HttpErrors::BadRequest, _("No file uploaded")
@@ -190,8 +191,8 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   def import_uploads
     params[:upload_ids].each do |upload_id|
       begin
-        @repository.import_upload(upload_id)
-      rescue Katello::Errors::InvalidRepositoryContent => e
+        sync_task(::Actions::Katello::Repository::ImportUpload, @repository, upload_id)
+      rescue => e
         raise HttpErrors::BadRequest, e.message
       end
     end

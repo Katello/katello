@@ -88,7 +88,6 @@ install -m 755 script/katello-remove-orphans %{buildroot}%{_sysconfdir}/cron.wee
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/service-wait
-install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 
 install -p -m0644 etc/service-list %{buildroot}%{_sysconfdir}/%{name}/
@@ -97,7 +96,6 @@ install -p -m0644 etc/service-list %{buildroot}%{_sysconfdir}/%{name}/
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_sbindir}
 mkdir -p %{buildroot}/usr/share/foreman/script/foreman-debug.d/
-ln -sv %{homedir}/script/katello-jobs %{buildroot}%{_bindir}/katello-jobs
 ln -sv %{homedir}/script/katello-debug.sh %{buildroot}/usr/share/foreman/script/foreman-debug.d/katello-debug.sh
 ln -sv %{homedir}/script/katello-remove %{buildroot}%{_bindir}/katello-remove
 ln -sv %{homedir}/script/katello-generate-passphrase %{buildroot}%{_bindir}/katello-generate-passphrase
@@ -110,9 +108,6 @@ chmod +x %{buildroot}%{homedir}/script/*
 install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 
 %post
-#Add /etc/rc*.d link
-/sbin/chkconfig --add %{name}-jobs
-
 #Generate secret token if the file does not exist
 #(this must be called both for installation and upgrade)
 TOKEN=/etc/katello/secret_token
@@ -137,12 +132,10 @@ usermod -a -G katello-shared tomcat
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/service-wait
-%{_initddir}/%{name}-jobs
 %{homedir}/script/service-wait
 %defattr(-, katello, katello)
 %dir %{homedir}
 %config(missingok) %{_sysconfdir}/cron.weekly/katello-remove-orphans
-
 
 %pre
 # Add the "katello" user and group
@@ -153,12 +146,6 @@ getent passwd %{name} >/dev/null || \
 getent group katello-shared > /dev/null || groupadd -r katello-shared
 usermod -a -G katello-shared katello
 exit 0
-
-%preun
-if [ $1 -eq 0 ] ; then
-    /sbin/service %{name}-jobs stop >/dev/null 2>&1
-    /sbin/chkconfig --del %{name}-jobs
-fi
 
 %changelog
 * Sat Jan 11 2014 Justin Sherrill <jsherril@redhat.com> 1.5.0-14

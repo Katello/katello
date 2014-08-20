@@ -1,9 +1,0 @@
-#!/usr/bin/env ruby
-
-foreman_root = "/usr/share/foreman"
-require File.expand_path('./config/application', foreman_root)
-ForemanTasks::Dynflow::Daemon.new.run_background(ARGV.last, :foreman_root => foreman_root)
-
-require File.expand_path('./config/environment', foreman_root)
-require 'delayed/command'
-Delayed::Command.new(ARGV).daemonize

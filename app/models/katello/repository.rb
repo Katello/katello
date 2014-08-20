@@ -24,7 +24,6 @@ class Repository < Katello::Model
   include Glue if (Katello.config.use_cp || Katello.config.use_pulp)
   include Authorization::Repository
 
-  include AsyncOrchestration
   include Ext::LabelFromName
   include Katello::Engine.routes.url_helpers
 
@@ -203,11 +202,15 @@ class Repository < Katello::Model
     end
   end
 
-  def after_sync(pulp_task_id)
-    self.handle_sync_complete_task(pulp_task_id)
-    #don't publish as auto_publish should be enabled
-    self.trigger_contents_changed(:wait => false, :publish => false, :reindex => true)
-    Medium.update_media(self)
+  # Returns true if the pulp_task_id was triggered by the last synchronization
+  # action for the repository. Dynflow action handles the synchronization
+  # by it's own so no need to synchronize it again in this callback. Since the
+  # callbacks are run just after synchronization is finished, it should be enough
+  # to check for the last synchronization task.
+  def dynflow_handled_last_sync?(pulp_task_id)
+    task = ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Repository::Sync).
+        for_resource(self).order(:started_at).last
+    return task && task.main_action.pulp_task_id == pulp_task_id
   end
 
   def as_json(*args)
@@ -287,44 +290,6 @@ class Repository < Katello::Model
         from offset
       end
     end
-  end
-
-  def trigger_contents_changed(options)
-    Repository.trigger_contents_changed([self], options)
-    index_units = options.fetch(:index_units, nil) if Katello.config.use_elasticsearch
-
-    if index_units
-      ids = index_units.flat_map do |filter|
-        found = unit_search(:type_ids => [unit_type_id],
-                            :filters => filter)
-        found.map { |result| result.try(:[], :unit_id) }
-      end
-
-      ids.compact!
-      puppet? ? PuppetModule.index_puppet_modules(ids) : Package.index_packages(ids)
-    end
-
-  end
-
-  def self.trigger_contents_changed(repos, options)
-    wait = options.fetch(:wait, false)
-    reindex = options.fetch(:reindex, true) && Katello.config.use_elasticsearch
-    publish = options.fetch(:publish, true) && Katello.config.use_pulp
-    cloned_repo_overrides = options.fetch(:cloned_repo_overrides, [])
-
-    tasks = []
-    if publish
-      tasks += repos.flat_map do |repo|
-        clone = cloned_repo_overrides.find do |c|
-          repo.library_instance_id == c.id || repo.library_instance_id == c.library_instance_id
-        end
-        repo.generate_metadata(:cloned_repo_override => clone, :node_publish_async => true)
-      end
-    end
-    repos.each{|repo| repo.generate_applicability } #don't wait on applicability
-    repos.each{|repo| repo.index_content } if reindex
-
-    PulpTaskStatus.wait_for_tasks(tasks) if wait
   end
 
   # TODO: break up method

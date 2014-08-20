@@ -18,7 +18,6 @@ module Actions
         middleware.use Actions::Middleware::PropagateCandlepinErrors
 
         def plan(provider, path, force)
-          # this is simple replacement of previous usage of delayed jobs
           # TODO: extract the REST calls from Provider#import_manifest
           # and construct proper execution plan
           action_subject provider
@@ -40,9 +39,7 @@ module Actions
         def run
           provider = ::Katello::Provider.find(input[:provider][:id])
           provider.import_manifest(input[:path],
-                                   force:  input[:force],
-                                   async:  false,
-                                   notify: false)
+                                   force:  input[:force])
         end
 
       end

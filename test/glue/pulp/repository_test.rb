@@ -119,13 +119,6 @@ class GluePulpRepoTest < GluePulpRepoTestBase
     refute_empty dists.select{|d| d.is_a? Runcible::Models::YumCloneDistributor}
   end
 
-  def test_update_unprotected
-    @fedora_17_x86_64.expects(:refresh_pulp_repo).once.returns(true)
-    @fedora_17_x86_64.expects(:generate_metadata).once.returns(true)
-    @fedora_17_x86_64.unprotected = !@fedora_17_x86_64.unprotected
-    @fedora_17_x86_64.save!
-  end
-
   def test_populate_from
     assert @fedora_17_x86_64.populate_from({ @fedora_17_x86_64.pulp_id => {} })
   end
@@ -163,21 +156,7 @@ class GluePulpRepoAfterSyncTest < GluePulpRepoTestBase
     @fedora_17_x86_64 = @@fedora_17_x86_64
     @fedora_17_x86_64.relative_path = '/test_path/'
   end
-
-  def test_handle_sync_complete_task
-    mock_notifier = Minitest::Mock.new
-    mock_notifier.expect(:success, nil)
-
-    task_list = @fedora_17_x86_64.sync
-    TaskSupport.wait_on_tasks(task_list)
-
-    @fedora_17_x86_64.handle_sync_complete_task(task_list.first.uuid, mock_notifier)
-
-    assert PulpTaskStatus.where(:uuid => task_list.first.uuid).length > 0
-  end
-
 end
-
 
 class GluePulpChangeFeedTest < GluePulpRepoTestBase
 
@@ -192,13 +171,6 @@ class GluePulpChangeFeedTest < GluePulpRepoTestBase
     VCR.eject_cassette
   end
 
-  def test_feed_change
-    new_feed = "http://foo.com/foo"
-    @@fedora_17_x86_64.url = new_feed
-    @@fedora_17_x86_64.save!
-    pulps_feed = Repository.find(@@fedora_17_x86_64.id).pulp_repo_facts['importers'].first['config']['feed']
-    assert_equal new_feed, pulps_feed
-  end
 end
 
 class GluePulpPuppetRepoTest < GluePulpRepoTestBase
@@ -228,17 +200,6 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
   def test_generate_distributors
     refute_nil @@p_forge.find_distributor
   end
-
-  def test_upload_puppet_module
-    Repository.any_instance.expects(:trigger_contents_changed).with() do |options|
-      options[:wait] == false && options[:reindex] == false
-    end
-
-    @filepath = File.join(Katello::Engine.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
-    @p_forge.upload_content([@filepath])
-
-    assert_includes @p_forge.puppet_modules.map(&:name), "ntp"
-  end
 end
 
 
@@ -260,11 +221,6 @@ class GluePulpRepoContentsTest < GluePulpRepoTestBase
 
   def test_last_sync
     assert @@fedora_17_x86_64.last_sync
-  end
-
-  def test_generate_metadata
-    ::ForemanTasks.stubs(:sync_task).returns({})
-    refute_empty @@fedora_17_x86_64.generate_metadata
   end
 
   def test_sync_status
@@ -342,17 +298,6 @@ class GluePulpRepoContentsTest < GluePulpRepoTestBase
 
     refute_empty categories.select { |category| category['name'] == 'all' }
   end
-
-  def test_trigger_contents_changed_index_units
-    Katello.config.stubs(:use_elasticsearch).returns(:true)
-    pkg = @@fedora_17_x86_64.find_packages_by_nvre('elephant', '0.3', '0.8', '0')[0]
-    @@fedora_17_x86_64.expects(:generate_metadata).returns([])
-    Package.expects(:index_packages).with([pkg['_id']])
-
-    unit = {:checksumtype => pkg['checksumtype'], :checksum => pkg['checksum'] }
-    @@fedora_17_x86_64.trigger_contents_changed(:publish => true, :reindex => false, :index_units => [{:unit => unit}])
-  end
-
 end
 
 

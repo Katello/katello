@@ -29,6 +29,7 @@ module ::Actions::Katello::Repository
     let(:action) { create_action action_class }
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
     let(:custom_repository) { katello_repositories(:fedora_17_x86_64) }
+    let(:puppet_repository) { katello_repositories(:p_forge) }
   end
 
   class CreateTest < TestBase
@@ -97,6 +98,43 @@ module ::Actions::Katello::Repository
     end
   end
 
+  class UploadFilesTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::UploadFiles }
+
+    it 'plans' do
+      files = ['/tmp/cheetah.rpm']
+      action.expects(:action_subject).with(custom_repository)
+      action.execution_plan.stub_planned_action(::Actions::Pulp::Repository::CreateUploadRequest) do |content_create|
+        content_create.stubs(output: { upload_id: 123 })
+      end
+
+      plan_action action, custom_repository, files
+      assert_action_planed(action, ::Actions::Pulp::Repository::CreateUploadRequest)
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::UploadFile,
+                                upload_id: 123, file: "/tmp/cheetah.rpm")
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::DeleteUploadRequest,
+                                upload_id: 123)
+      assert_action_planed_with(action, ::Actions::Katello::Repository::FinishUpload,
+                                custom_repository)
+    end
+  end
+
+  class FinishUploadTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::FinishUpload }
+
+    it 'plans' do
+      plan_action action, custom_repository
+      assert_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
+      assert_action_planed(action, ::Actions::ElasticSearch::Repository::FilteredIndexContent)
+    end
+
+    it "doesn't plan metadata generate for puppet repository" do
+      plan_action action, puppet_repository
+      refute_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
+      assert_action_planed(action, ::Actions::ElasticSearch::Repository::FilteredIndexContent)
+    end
+  end
+
   class SyncTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Sync }
     let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
@@ -106,7 +144,19 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository)
       plan_action action, repository
 
-      assert_action_planed_with action, pulp_action_class, pulp_id: repository.pulp_id
+      assert_action_planed_with(action, pulp_action_class,
+                                pulp_id: repository.pulp_id, task_id: nil)
+      assert_action_planed action, ::Actions::ElasticSearch::Repository::IndexContent
+      assert_action_planed_with action, ::Actions::ElasticSearch::Reindex, repository
+    end
+
+    it 'passes the task id to pulp sync action when provided' do
+      action       = create_action action_class
+      action.stubs(:action_subject).with(repository)
+      plan_action action, repository, '123'
+
+      assert_action_planed_with(action, pulp_action_class,
+                                pulp_id: repository.pulp_id, task_id: '123')
       assert_action_planed action, ::Actions::ElasticSearch::Repository::IndexContent
       assert_action_planed_with action, ::Actions::ElasticSearch::Reindex, repository
     end

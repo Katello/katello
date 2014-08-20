@@ -15,14 +15,7 @@ module Actions
     module Repository
       module Presenters
 
-        class IsoPresenter < Helpers::Presenter::Base
-          include ActionView::Helpers::NumberHelper
-
-          def humanized_output
-            if action.external_task
-              humanized_details
-            end
-          end
+        class IsoPresenter < AbstractSyncPresenter
 
           def progress
             total_bytes == 0 ? 0.01 : finished_bytes.to_f / total_bytes
@@ -35,14 +28,6 @@ module Actions
             ret << _("Cancelled.") if cancelled?
             ret << _("New ISOs: %s") % num_isos
             ret.join("\n")
-          end
-
-          def sync_task
-            action.external_task.select{ |task| task['tags'].include?("pulp:action:sync") }.first
-          end
-
-          def cancelled?
-            sync_task['state'] == 'canceled'
           end
 
           def num_isos

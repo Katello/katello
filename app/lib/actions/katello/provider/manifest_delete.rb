@@ -34,7 +34,7 @@ module Actions
 
         def run
           provider = ::Katello::Provider.find(input[:provider][:id])
-          provider.delete_manifest(:async => false, :notify => false)
+          provider.delete_manifest
         end
 
       end

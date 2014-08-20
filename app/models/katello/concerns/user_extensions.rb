@@ -49,7 +49,6 @@ module Katello
 
         include Ext::IndexedModel
 
-        include AsyncOrchestration
         include Util::ThreadSession::UserModel
 
         has_many :help_tips, :dependent => :destroy, :class_name => "Katello::HelpTip"
@@ -125,15 +124,6 @@ module Katello
 
         def cp_oauth_header
           { 'cp-user' => self.login }
-        end
-
-        def send_password_reset
-          # generate a random password reset token that will be valid for only a configurable period of time
-          generate_token(:password_reset_token)
-          self.password_reset_sent_at = Time.zone.now
-          save!
-
-          UserMailer.send_password_reset(self)
         end
 
         def default_locale

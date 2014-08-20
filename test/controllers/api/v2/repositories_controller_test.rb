@@ -178,13 +178,20 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
 
   def test_update
     key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
+    assert_sync_task(::Actions::Katello::Repository::Update) do |repo, attributes|
+      repo.must_equal @repository
+      attributes.must_equal({ 'gpg_key_id' => "#{key.id}", 'url' => nil })
+    end
     put :update, :id => @repository.id, :repository => {:gpg_key_id => key.id}
-
     assert_response :success
     assert_template 'api/v2/repositories/show'
   end
 
   def test_update_empty_string_url
+    assert_sync_task(::Actions::Katello::Repository::Update) do |repo, attributes|
+      repo.must_equal @repository
+      attributes.must_equal({ 'url' => nil })
+    end
     put :update, :id => @repository.id, :repository => {:url => ''}
 
     assert_response :success
@@ -246,11 +253,16 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   def test_sync_complete
     token = 'imalittleteapotshortandstout'
     Katello.config[:post_sync_url] = "http://foo.com/foo?token=#{token}"
-    TaskStatus.stubs(:find_by_uuid).returns(TaskStatus.new(:user => User.first))
     Repository.stubs(:where).returns([@repository])
 
-    post :sync_complete, :token => token, :payload => {:repo_id => @repository.pulp_id}, :call_report => {}
+    assert_async_task ::Actions::Katello::Repository::Sync do |repo, task_id|
+      repo.id == @repository.id && task_id == '1234'
+    end
 
+    post(:sync_complete,
+         :token => token,
+         :payload => {:repo_id => @repository.pulp_id},
+         :call_report => {:task_id => '1234'})
     assert_response :success
   end
 
@@ -274,10 +286,13 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   def test_upload_content
     test_document = File.join(Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
     puppet_module = Rack::Test::UploadedFile.new(test_document, '')
-    Repository.any_instance.stubs(:upload_content)
+
+    assert_sync_task ::Actions::Katello::Repository::UploadFiles do |repo, files|
+      repo.id == @repository.id &&
+          files.size == 1 && files.first.include?("puppet_module.tar.gz")
+    end
 
     post :upload_content, :id => @repository.id, :content => [puppet_module]
-
     assert_response :success
   end
 

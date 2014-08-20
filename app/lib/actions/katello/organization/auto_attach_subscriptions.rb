@@ -10,22 +10,21 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-class UserMailer < ActionMailer::Base
-  include AsyncOrchestration
+module Actions
+  module Katello
+    module Organization
+      class AutoAttachSubscriptions < Actions::EntryAction
 
-  default :from => Katello.config.email_reply_address
+        def plan(organization)
+          action_subject(organization)
+          plan_action(Candlepin::Owner::AutoAttach, label: organization.label)
+        end
 
-  def send_logins(users)
-    org = users.collect { |u| u.default_org }.first || Organization.first
-    UserMailer.async(:organization => org).logins(users, I18n.locale)
+        def humanized_name
+          _("Auto-attach subscriptions")
+        end
+
+      end
+    end
   end
-
-  def logins(users, locale)
-    I18n.locale = locale
-    @email = users.first.mail
-    @users = users
-    mail :to => @email, :subject => _("Katello Logins")
-  end
-end
 end

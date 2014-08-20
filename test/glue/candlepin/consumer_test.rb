@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
+require 'support/candlepin/owner_support'
 require 'support/candlepin/consumer_support'
 
 module Katello
@@ -50,7 +51,12 @@ class GlueCandlepinConsumerTestBase < ActiveSupport::TestCase
   end
 
   def self.after_suite
-    @@dev_cve.del_environment unless @@dev_cve.nil?
+    unless @@dev_cve.nil?
+      User.current.remote_id =  User.current.login
+      # To prevent deletion of the fixture object
+      @@dev_cve.stubs(:destroy).returns(true)
+      ForemanTasks.sync_task(::Actions::Katello::ContentViewEnvironment::Destroy, @@dev_cve)
+    end
     Resources::Candlepin::Owner.destroy(@@org.label) unless @@org.nil?
   ensure
     VCR.eject_cassette

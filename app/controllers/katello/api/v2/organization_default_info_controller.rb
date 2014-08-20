@@ -49,14 +49,5 @@ class Api::V2::OrganizationDefaultInfoController < Api::V1::OrganizationDefaultI
     respond :resource => false
   end
 
-  # apipie docs are defined in v1 controller - they remain the same
-  def apply_to_all
-    to_apply = @organization.default_info[params[:informable_type]].collect do |key|
-      { :keyname => key }
-    end
-    systems  = CustomInfo.apply_to_set(@organization.systems, to_apply)
-    respond_for_index :collection => systems
-  end
-
 end
 end

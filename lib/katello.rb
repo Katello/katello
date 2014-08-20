@@ -29,7 +29,6 @@ require "deface"
 require 'jquery-ui-rails'
 
 require "uuidtools"
-require "delayed_job"
 
 require File.expand_path("../engines/bastion/lib/bastion", File.dirname(__FILE__))
 require "monkeys/string_to_bool"

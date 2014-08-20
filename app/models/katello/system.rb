@@ -28,7 +28,6 @@ class System < Katello::Model
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
   include Glue::ElasticSearch::System if Katello.config.use_elasticsearch
   include Authorization::System
-  include AsyncOrchestration
 
   attr_accessible :name, :uuid, :description, :location, :environment, :content_view,
                   :environment_id, :content_view_id, :host_collection_ids, :host_id,

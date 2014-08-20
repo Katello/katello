@@ -72,10 +72,6 @@ module Glue::Candlepin::Owner
       return generate_debug_cert
     end
 
-    def owner_auto_attach
-      Resources::Candlepin::Owner.auto_attach(self.label)
-    end
-
     def imports
       Resources::Candlepin::Owner.imports(self.label)
     end

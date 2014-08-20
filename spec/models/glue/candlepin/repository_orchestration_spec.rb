@@ -23,10 +23,6 @@ describe Repository do
     repository
   end
 
-  it "should contain create/update Candlepin::Content orchestration" do
-    repository._save_callbacks.select {|cb| cb.kind.eql?(:before)}.collect(&:filter).include?(:save_content_orchestration)
-  end
-
   it "should contain delete Candlepin::Content orchestration" do
     repository._destroy_callbacks.select {|cb| cb.kind.eql?(:before)}.collect(&:filter).include?(:destroy_content_orchestration)
   end
@@ -50,27 +46,6 @@ describe Repository do
     repository.stubs(:content).returns(Candlepin::Content.new(:gpgUrl => "#{rand(100)}"))
 
     repository.should_update_content?.must_equal(true)
-  end
-
-  it "should call update on content in update_content (katello)" do #TODO headpin
-    remote_content = stub
-    Candlepin::Content.stubs(:find).returns(remote_content)
-    repository.stubs(:should_update_content?).returns(true)
-    repository.stubs(:id).returns(1)
-
-    organization = stub
-    organization.stubs(:label).returns("ACME_Corporation")
-    repository.stubs(:organization).returns(organization)
-
-    remote_content.expects(:update).with({
-      :name => repository.name,
-      :contentUrl => Glue::Pulp::Repos.custom_content_path(repository.product, repository.label),
-      :gpgUrl => repository.yum_gpg_key_url,
-      :label => repository.custom_content_label,
-      :type => "yum",
-      :vendor => Provider::CUSTOM
-    })
-    repository.update_content
   end
 end
 end
