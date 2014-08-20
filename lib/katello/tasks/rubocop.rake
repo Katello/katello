@@ -11,8 +11,9 @@ namespace :katello do
   task 'rubocop:jenkins' do
     system("cd #{Katello::Engine.root} && bundle exec rubocop \
             --require rubocop/formatter/checkstyle_formatter \
-            --format Rubocop::Formatter::CheckstyleFormatter \
+            --format RuboCop::Formatter::CheckstyleFormatter \
             --no-color --out rubocop.xml")
+    exit($?.exitstatus)
   end
 
 end
