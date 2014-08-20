@@ -52,15 +52,6 @@ module.exports = function (grunt) {
                     },
                     clearBowerDir: true
                 }
-            },
-            dev: {
-                options: {
-                    targetDir: '.tmp/bower_components',
-                    copy: false,
-                    layout: 'byType',
-                    verbose: true,
-                    cleanTargetDir: true
-                }
             }
         },
         clean: {
