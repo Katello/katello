@@ -81,58 +81,62 @@ describe('Factory: Organization', function() {
 
     it("provides a way to get the organizations's readableEnvironments", function() {
         var pathIndex, envIndex, readableEnvs,
-            envs = [
-            {
-                "environments": [
-                    {   "id": 1,
-                        "name": "Library",
-                        "prior": null,
-                        "permissions": {
-                            "readable": true,
-                        }
+            response = {
+                "total": 2,
+                "subtotal": 2,
+                "results": [
+                    {
+                        "environments": [
+                            {   "id": 1,
+                                "name": "Library",
+                                "prior": null,
+                                "permissions": {
+                                    "readable": true,
+                                }
+                            },
+                            {
+                                "id": 2,
+                                "name": "new-env",
+                                "prior": {
+                                    "name": "Library",
+                                    "id": 1
+                                },
+                                "permissions": {
+                                    "readable": true,
+                                }
+                            },
+                        ]
                     },
                     {
-                        "id": 2,
-                        "name": "new-env",
-                        "prior": {
-                            "name": "Library",
-                            "id": 1
-                        },
-                        "permissions": {
-                            "readable": true,
-                        }
-                    },
-                ]
-            },
-            {
-                "environments": [
-                    {
-                        "id": 1,
-                        "name": "Library",
-                        "prior": null,
-                        "permissions": {
-                            "readable": true,
-                        }
-                    },
-                    {
-                        "id": 5,
-                        "name": "new-path",
-                        "prior": {
-                            "name": "Library",
-                            "id": 1
-                        },
-                        "permissions": {
-                            "readable": false,
-                        }
+                        "environments": [
+                            {
+                                "id": 1,
+                                "name": "Library",
+                                "prior": null,
+                                "permissions": {
+                                    "readable": true,
+                                }
+                            },
+                            {
+                                "id": 5,
+                                "name": "new-path",
+                                "prior": {
+                                    "name": "Library",
+                                    "id": 1
+                                },
+                                "permissions": {
+                                    "readable": false,
+                                }
+                            }
+                        ]
                     }
                 ]
-            }
-        ];
+            };
 
         //testing the transform
         // from [{environments : [{id, name, permissions: {readable : true}}]}]
         // to [[{id, name, select: true}]]
-        $httpBackend.expectGET('/api/v2/organizations/ACME/environments/paths').respond(envs);
+        $httpBackend.expectGET('/api/v2/organizations/ACME/environments/paths').respond(response);
         readableEnvs = Organization.readableEnvironments({"id":"ACME"});
         $httpBackend.flush ();
         flushAfterFunction = false;
@@ -140,9 +144,9 @@ describe('Factory: Organization', function() {
 
         for (pathIndex = 0; pathIndex < readableEnvs.length; ++pathIndex) {
             for (envIndex = 0; envIndex < readableEnvs[pathIndex].length; ++envIndex) {
-                expect(readableEnvs[pathIndex][envIndex].id).toBe(envs[pathIndex].environments[envIndex].id);
-                expect(readableEnvs[pathIndex][envIndex].name).toBe(envs[pathIndex].environments[envIndex].name);
-                expect(readableEnvs[pathIndex][envIndex].select).toBe(envs[pathIndex].environments[envIndex].permissions.readable);
+                expect(readableEnvs[pathIndex][envIndex].id).toBe(response[pathIndex].environments[envIndex].id);
+                expect(readableEnvs[pathIndex][envIndex].name).toBe(response[pathIndex].environments[envIndex].name);
+                expect(readableEnvs[pathIndex][envIndex].select).toBe(response[pathIndex].environments[envIndex].permissions.readable);
             }
         }
 
