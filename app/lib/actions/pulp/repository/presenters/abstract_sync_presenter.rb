@@ -32,8 +32,8 @@ module Actions
           end
 
           def sync_task
-            action.external_task.select do |task|
-              if task.has_key? 'tags'
+            tasks = action.external_task.select do |task|
+              if task.key? 'tags'
                 task['tags'].include?("pulp:action:sync")
               else
                 # workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1131537
@@ -41,7 +41,8 @@ module Actions
                 task['result'] &&
                     task['result']['importer_type_id'].to_s =~ /_importer$/
               end
-            end.first
+            end
+            tasks.first
           end
 
           def cancelled?
