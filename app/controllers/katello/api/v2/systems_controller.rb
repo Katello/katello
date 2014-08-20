@@ -109,7 +109,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   param :organization_id, :number, :desc => N_("Specify the organization"), :required => true
   param :environment_id, String, :desc => N_("Specify the environment")
   param :content_view_id, String, :desc => N_("Specify the content view")
-  param :host_collection_id, String, :desc => N_("Specify the host collection")
+  param :host_collection_ids, Array, :desc => N_("Specify the host collections as an array")
   def create
     @system = System.new(system_params(params).merge(:environment  => @environment,
                                                      :content_view => @content_view))
@@ -134,6 +134,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   param :last_checkin, String, :desc => N_("Last check-in time of this content host")
   param :environment_id, String, :desc => N_("Specify the environment")
   param :content_view_id, String, :desc => N_("Specify the content view")
+  param :host_collection_ids, Array, :desc => N_("Specify the host collections as an array")
   def update
     system_params = system_params(params)
     @system.update_attributes!(system_params)
