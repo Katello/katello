@@ -164,7 +164,7 @@ module DashboardHelper
   def render_dashboard
     output = ""
     dashboard_layout.columns.each do |col|
-      output += content_tag "div", class: "column" do
+      output += content_tag "div", class: "col-md-6 column" do
         render_column(col)
       end
     end
