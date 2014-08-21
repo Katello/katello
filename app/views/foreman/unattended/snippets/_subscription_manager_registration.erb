@@ -13,5 +13,4 @@ subscription-manager register --org="<%= @host.params['kt_org']%>" --name="<%= @
 echo "Installing Katello Agent"
 yum -t -y -e 0 install katello-agent
 chkconfig goferd on
-service goferd start
 <% end %>
