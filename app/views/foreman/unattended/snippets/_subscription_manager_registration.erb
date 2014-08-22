@@ -10,6 +10,11 @@ subscription-manager register --org="<%= @host.params['kt_org']%>" --name="<%= @
   subscription-manager config --rhsm.baseurl=https://<%= @host.content_source.hostname %>/pulp/repos
 <% end %>
 
+<% if @host.operatingsystem.name == "RedHat" %>
+  # add the rhel rpms to install katello agent
+  subscription-manager repos --enable=rhel-*-rh-common-rpms
+<% end %>
+
 echo "Installing Katello Agent"
 yum -t -y -e 0 install katello-agent
 chkconfig goferd on
