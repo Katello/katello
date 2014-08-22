@@ -26,10 +26,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "json"
   gem.add_dependency "oauth"
   gem.add_dependency "rest-client"
-  gem.add_dependency "ruby-openid"
 
-  gem.add_dependency "net-ldap"
-  gem.add_dependency "daemons", ">= 1.1.4"
   gem.add_dependency "uuidtools"
   gem.add_dependency "rabl"
   gem.add_dependency "tire", "~> 0.6.2"
@@ -51,7 +48,6 @@ Gem::Specification.new do |gem|
 
   # UI
   gem.add_dependency "angular-rails-templates", "~> 0.0.4"
-  gem.add_dependency "simple-navigation", ">= 3.3.4", "< 3.12.0"
   gem.add_dependency "less-rails"
   gem.add_dependency "sass-rails"
   gem.add_development_dependency "compass-rails", "< 1.1.4"

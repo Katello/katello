@@ -107,10 +107,8 @@ Requires: %{?scl_prefix}rubygem-rails
 Requires: %{?scl_prefix}rubygem-json
 Requires: %{?scl_prefix}rubygem-oauth
 Requires: %{?scl_prefix}rubygem-rest-client
-Requires: %{?scl_prefix}rubygem-net-ldap
 Requires: %{?scl_prefix}rubygem-foreigner => 1.4.2
 Requires: %{?scl_prefix}rubygem-foreigner < 1.5
-Requires: %{?scl_prefix}rubygem-daemons >= 1.1.4
 Requires: %{?scl_prefix}rubygem-uuidtools
 Requires: %{?scl_prefix}rubygem-rabl
 Requires: %{?scl_prefix}rubygem-tire => 0.6.2
@@ -124,9 +122,7 @@ Requires: %{?scl_prefix}rubygem-i18n_data >= 0.2.6
 Requires: %{?scl_prefix}rubygem-apipie-rails >= 0.1.1
 Requires: %{?scl_prefix}rubygem-maruku
 Requires: %{?scl_prefix}rubygem-runcible >= 1.0.8
-Requires: %{?scl_prefix}rubygem-ruby-openid
 Requires: %{?scl_prefix}rubygem-anemone
-Requires: %{?scl_prefix}rubygem-simple-navigation >= 3.3.4
 Requires: %{?scl_prefix}rubygem-sass-rails
 Requires: %{?scl_prefix}rubygem-less-rails
 Requires: %{?scl_prefix}rubygem-compass-rails
@@ -137,7 +133,6 @@ Requires: %{?scl_prefix}rubygem-deface < 1.0.0
 Requires: %{?scl_prefix}rubygem-strong_parameters
 BuildRequires: foreman >= 1.3.0
 BuildRequires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
-BuildRequires: %{?scl_prefix}rubygem-net-ldap
 BuildRequires: %{?scl_prefix}rubygem-sqlite3
 BuildRequires: %{?scl_prefix}rubygem-tire => 0.6.2
 BuildRequires: %{?scl_prefix}rubygem-tire < 0.7
@@ -150,9 +145,7 @@ BuildRequires: %{?scl_prefix}rubygem-i18n_data >= 0.2.6
 BuildRequires: %{?scl_prefix}rubygem-apipie-rails >= 0.1.1
 BuildRequires: %{?scl_prefix}rubygem-maruku
 BuildRequires: %{?scl_prefix}rubygem-runcible >= 1.0.8
-BuildRequires: %{?scl_prefix}rubygem-ruby-openid
 BuildRequires: %{?scl_prefix}rubygem-anemone
-BuildRequires: %{?scl_prefix}rubygem-simple-navigation >= 3.3.4
 BuildRequires: %{?scl_prefix}rubygem-sass-rails
 BuildRequires: %{?scl_prefix}rubygem-less-rails
 BuildRequires: %{?scl_prefix}rubygem-compass-rails
