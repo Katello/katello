@@ -80,6 +80,18 @@ p_forge:
   environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
   product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+
+lib_p_forge:
+  name:                 P Forge
+  pulp_id:              10
+  content_id:           1
+  content_type:         puppet
+  label:                p_forge
+  relative_path:        '/ACME_Corporation/library/LibraryView/p_forge'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>
 
 dev_p_forge:
@@ -154,3 +166,15 @@ fedora_17_unpublished_2:
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
   url:                  "http://www.pleaseack.com"
+
+iso:
+  name:                 ISO REpo
+  pulp_id:              8iso
+  content_id:           1
+  content_type:         file
+  label:                iso
+  relative_path:        '/ACME_Corporation/library/LibraryView/iso'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>

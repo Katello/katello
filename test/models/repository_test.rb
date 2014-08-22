@@ -260,5 +260,16 @@ class RepositoryInstanceTest < RepositoryTestBase
     refute rhel.save
     refute_empty rhel.errors
   end
+
+  def test_node_syncable
+    lib_yum_repo = Repository.find(katello_repositories(:rhel_6_x86_64))
+    lib_puppet_repo = Repository.find(katello_repositories(:p_forge))
+    lib_iso_repo = Repository.find(katello_repositories(:iso))
+
+    assert lib_yum_repo.node_syncable?
+    refute lib_puppet_repo.node_syncable?
+    refute lib_iso_repo.node_syncable?
+  end
+
 end
 end
