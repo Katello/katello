@@ -15,9 +15,11 @@ module Actions
     module ContentView
       class Promote < Actions::EntryAction
 
-        def plan(version, environment)
+        def plan(version, environment, is_force = false)
           action_subject(version.content_view)
           version.check_ready_to_promote!
+
+          fail ::Katello::HttpErrors::BadRequest, _("Cannot promote environment out of sequence. Use force to bypass restriction.") if !is_force && !version.promotable?(environment)
 
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
                                                 :environment => environment, :task => self.task,
