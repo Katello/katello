@@ -84,8 +84,8 @@ Requires: pulp-rpm-plugins
 Requires: pulp-puppet-tools
 Requires: pulp-selinux
 Requires: pulp-server
-Requires: mongodb
-Requires: mongodb-server
+Requires: mongodb >= 2.4
+Requires: mongodb-server >= 2.4
 Requires: cyrus-sasl-plain
 
 Requires: candlepin-selinux
