@@ -18,7 +18,10 @@ module Actions
     # that triggered the action.
     class RemoteAction < Dynflow::Middleware
       def plan(*args)
-        pass(*args).tap { action.input[:remote_user] = User.current.remote_id }
+        pass(*args).tap do
+          action.input[:remote_user] = User.current.remote_id
+          action.input[:remote_cp_user] = User.current.login
+        end
       end
 
       def run(*args)
@@ -32,8 +35,8 @@ module Actions
       private
 
       def as_cp_user(&block)
-        fail 'missing :remote_user' unless remote_user
-        User.set_cp_config('cp-user' => remote_user, &block)
+        fail 'missing :remote_user' unless cp_user
+        User.set_cp_config('cp-user' => cp_user, &block)
       end
 
       def as_pulp_user(&block)
@@ -43,6 +46,10 @@ module Actions
 
       def remote_user
         action.input[:remote_user]
+      end
+
+      def cp_user
+        action.input[:remote_cp_user]
       end
 
       def as_remote_user

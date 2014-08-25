@@ -19,6 +19,8 @@ module ::Actions::Katello::CapsuleContent
     include Support::Actions::Fixtures
     include FactoryGirl::Syntax::Methods
     include Support::CapsuleSupport
+    include Support::Actions::RemoteAction
+
 
     let(:environment) do
       katello_environments(:dev)

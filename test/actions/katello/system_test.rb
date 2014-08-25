@@ -53,6 +53,7 @@ module ::Actions::Katello::System
     it 'updates the uuid in finalize method' do
       ::Katello::System.stubs(:find).with(123).returns(system)
       action.input[:remote_user] = 'user'
+      action.input[:remote_cp_user] = 'user'
       action.input[:system] = { id:  123 }
       action.input[:uuid] = '123'
       system.expects(:save!)
