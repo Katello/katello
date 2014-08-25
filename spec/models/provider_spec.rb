@@ -41,8 +41,7 @@ describe Provider do
   before(:each) do
     disable_org_orchestration
     disable_product_orchestration
-    @organization = Organization.new(:name =>"org10020",:label =>"org10020")
-    @organization.save!
+    @organization = get_organization(:organization2)
     @organization.redhat_provider.delete
   end
 
@@ -69,7 +68,11 @@ describe Provider do
   describe "import manifest via RED HAT provider" do
     before(:each) do
       disable_org_orchestration
-      @organization = Organization.create!(:name=>"org10021", :label=> "org10021_key")
+      @organization = get_organization(:organization2)
+      @organization.setup_label_from_name
+      @organization.create_redhat_provider
+      @organization.create_anonymous_provider
+      @organization.save!
       @provider = @organization.redhat_provider
     end
 

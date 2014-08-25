@@ -11,6 +11,15 @@ def format_errors(model = nil)
   model.errors.full_messages.join(';')
 end
 
+if ENV['SEED_ORGANIZATION']
+  Organization.without_auditing do
+    User.current = User.anonymous_admin
+    org = Organization.find_by_name!(ENV['SEED_ORGANIZATION'])
+    ForemanTasks.sync_task(::Actions::Katello::Organization::Create, org)
+    User.current = nil
+  end
+end
+
 ::User.current = ::User.anonymous_api_admin
 
 if Katello.config.use_pulp

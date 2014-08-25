@@ -66,7 +66,8 @@ module Katello
       end
 
       it "should be invalid if environment in another org is specified" do
-        org_2 = Organization.create!(:name=>'test_org2', :label=> 'test_org2')
+        org_2 = get_organization(:organization2)
+        #Organization.create!(:name=>'test_org2', :label=> 'test_org2')
         env_1_org2 = KTEnvironment.create(:name=>'dev', :label=> 'dev', :prior => org_2.library.id, :organization => org_2)
         @akey.name = 'invalid key'
         @akey.organization=@organization
@@ -125,7 +126,7 @@ module Katello
         Resources::Candlepin::Consumer.stubs(:create).returns({:uuid => "1234", :owner => {:key => "1234"}})
         @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})
         @system2 = System.new(:name => "test2", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})
-        @akey_limit1 = ActivationKey.create(:name => "max_content_hosts_key1", :max_content_hosts => 1, :unlimited_content_hosts=> false, 
+        @akey_limit1 = ActivationKey.create(:name => "max_content_hosts_key1", :max_content_hosts => 1, :unlimited_content_hosts=> false,
                                             :organization => @organization, :environment => @environment_1)
       end
 

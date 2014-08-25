@@ -16,8 +16,13 @@ module Actions
       class Create < Actions::EntryAction
 
         def plan(organization)
-          organization.disable_auto_reindex! if ::Katello.config.use_elasticsearch
+          organization.setup_label_from_name
+          organization.create_library
+          organization.create_anonymous_provider
+          organization.create_redhat_provider
           cp_create = nil
+
+          organization.save!
 
           sequence do
             if ::Katello.config.use_cp
@@ -26,22 +31,18 @@ module Actions
                                       name: organization.name)
             end
             plan_action(Environment::LibraryCreate, organization.library)
-            organization.create_anonymous_provider
-            organization.create_redhat_provider
-            organization.save!
           end
           if cp_create
             action_subject organization, label: cp_create.output[:response][:key]
           else
             action_subject organization
           end
-          plan_action(ElasticSearch::Reindex, organization)  if ::Katello.config.use_elasticsearch
+          plan_self
         end
 
         def humanized_name
           _("Create")
         end
-
       end
     end
   end

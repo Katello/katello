@@ -29,11 +29,13 @@ describe SyncManagementHelper do
     @routes = Katello::Engine.routes
     disable_product_orchestration
     disable_org_orchestration
-    Katello.pulp_server.extensions.repository.stubs(:search_by_repository_ids).returns([]) if Katello.config.katello?
+    Katello.stubs(:pulp_server).returns(stub(:extensions => stub(:repository => stub(:search_by_repository_ids => []))))
     ProductTestData::PRODUCT_WITH_ATTRS.merge!({ :provider => provider, :organization => provider.organization })
   end
 
-  let(:organization) { Organization.create!(:name => 'test_organization', :label => 'test_organization') }
+  let(:organization) do
+    get_organization
+  end
   let(:provider) { organization.redhat_provider }
   let(:env_name) { 'test_environment' }
   let(:environment) { organization.library }
@@ -46,6 +48,7 @@ describe SyncManagementHelper do
   end
 
   describe "#has_repos? (katello)" do #TODO headpin
+#    Katello.pulp_server.extensions.repository.stubs(:search_by_repository_ids).returns([]) if Katello.config.katello?
     subject { object.has_repos?(object.collect_repos([product_1], environment).first) }
     it "should return false for a product without repos" do
       subject.must_equal(false)

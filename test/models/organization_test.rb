@@ -28,23 +28,14 @@ class OrganizationTestBase < ActiveSupport::TestCase
 
 end
 
-class OrganizationTestCreate < OrganizationTestBase
-
-  def test_create_validate_view
-    User.current = User.find(users(:admin))
-    org = Organization.create!(:name=>"TestOrg", :label=>'test_org')
-    refute_nil org.library
-    refute_nil org.default_content_view
-    refute_nil org.library.default_content_view_version
-    refute_empty org.default_content_view.content_view_environments
-  end
-
+class OrganizationTestDelete < OrganizationTestBase
   def test_org_being_deleted
     Organization.any_instance.stubs(:being_deleted?).returns(true)
     User.current = User.find(users(:admin))
-    org = Organization.create!(:name=>"TestOrg", :label=>'test_org')
+    org = get_organization(:organization2)
     org.content_view_environments.first.destroy!
     org.reload.library.destroy!
+    org.reload.kt_environments.destroy_all
     id = org.id
     org.destroy!
     assert_nil Organization.find_by_id(id)

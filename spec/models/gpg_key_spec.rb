@@ -22,13 +22,12 @@ describe GpgKey, :katello => true do
     disable_org_orchestration
     as_admin do
       User.current.stubs(:remote_id).returns(User.current.login)
-      Organization.create!(:name => "Duh", :label => "ahaha")
     end
   end
 
   describe "create gpg key" do
     before(:each) do
-      new_test_org_model
+      @organization = get_organization
       @test_gpg_content = File.open("#{Katello::Engine.root}/spec/assets/gpg_test_key").read
     end
 
@@ -40,10 +39,9 @@ describe GpgKey, :katello => true do
     it 'should be destroyable' do
       gpg_key = GpgKey.create!(:name => "Gpg Key 1", :content => @test_gpg_content, :organization => @organization)
       disable_product_orchestration
-      create(:katello_product, :fedora, provider: create(:katello_provider), organization: organization).tap do |product|
-        product.gpg_key = gpg_key
-        product.save!
-      end
+      product = katello_products(:fedora)
+      product.gpg_key = gpg_key
+      product.save!
       gpg_key.destroy.wont_equal(false)
     end
 

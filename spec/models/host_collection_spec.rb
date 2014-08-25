@@ -23,7 +23,7 @@ describe HostCollection do
 
   before(:each) do
     disable_org_orchestration
-    @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
+    @org = get_organization
     @host_collection = HostCollection.create!(:name=>"TestHostCollection1", :organization=>@org)
 
     setup_system_creation
