@@ -29,7 +29,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 1.5.0
-Release: 11%{dist}
+Release: 12%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -236,6 +236,9 @@ ln -s %{gem_instdir}/public/assets/bastion %{buildroot}%{foreman_dir}/public/ass
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Mon Aug 25 2014 Justin Sherrill <jsherril@redhat.com> 1.5.0-12
+- refs #5271 - remove unused gem dependencies (jsherril@redhat.com)
+
 * Fri Aug 22 2014 Justin Sherrill <jsherril@redhat.com> 1.5.0-11
 - Merge pull request #4596 from jlsherrill/7175 (jlsherrill@gmail.com)
 - fixes #7175 - do not treat iso repos as capsule syncable
