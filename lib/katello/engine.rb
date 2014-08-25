@@ -12,10 +12,6 @@ module Katello
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
     end
 
-    initializer "katello.simple_navigation" do |app|
-      SimpleNavigation.config_file_paths << File.expand_path("../../../config", __FILE__)
-    end
-
     initializer "katello.apipie" do
       Apipie.configuration.api_controllers_matcher << "#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"
       Apipie.configuration.ignored += %w[Api::V2::OrganizationsController]
