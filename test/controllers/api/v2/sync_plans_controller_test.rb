@@ -16,6 +16,8 @@ require "katello_test_helper"
 module Katello
   class Api::V2::SyncPlansControllerTest < ActionController::TestCase
 
+    include Support::ForemanTasks::Task
+
     def self.before_suite
       models = ["SyncPlan", "Product"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
@@ -147,6 +149,13 @@ module Katello
     end
 
     def test_add_products
+      @products.each do |product|
+        ::ForemanTasks.expects(:sync_task).
+          with(::Actions::Katello::Product::Update,
+               product,
+               {:sync_plan_id => @sync_plan.id})
+      end
+
       put :add_products, :id => @sync_plan.id, :organization_id => @organization.id,
           :product_ids => @products.collect{ |p| p.id}
 

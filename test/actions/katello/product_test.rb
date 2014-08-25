@@ -112,6 +112,30 @@ module ::Actions::Katello::Product
     end
   end
 
+  class UpdateTest < TestBase
+    let(:action_class) { ::Actions::Katello::Product::Update }
+    let(:product) { katello_products(:fedora) }
+    let(:action) { create_action action_class }
+    let(:key) { katello_gpg_keys(:fedora_gpg_key) }
+
+    it 'plans' do
+      action.expects(:action_subject).with(product)
+      plan_action action, product, :gpg_key_id => key.id
+      assert_action_planed_with(action,
+                                ::Actions::Katello::Product::RepositoriesGpgReset,
+                                product)
+      assert_action_planed_with(action,
+                              ::Actions::Pulp::Repos::Update,
+                              product)
+      assert_action_planed action, ::Actions::ElasticSearch::Reindex
+    end
+
+    it 'raises error when validation fails' do
+      ::Actions::Katello::Product::Update.any_instance.expects(:action_subject).with(product)
+      proc { create_and_plan_action action_class, product, :name => '' }.must_raise(ActiveRecord::RecordInvalid)
+    end
+  end
+
   class DestroyTest < TestBase
     let( :action_class ) { ::Actions::Katello::Product::Destroy }
     let(:candlepin_destroy_class) { ::Actions::Candlepin::Product::Destroy }

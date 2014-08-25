@@ -17,9 +17,6 @@ module Glue::Pulp::Repos
 
   def self.included(base)
     base.send :include, InstanceMethods
-    base.class_eval do
-      before_save :save_repos_orchestration
-    end
   end
 
   def self.repo_path_from_content_path(environment, content_path)
@@ -318,18 +315,6 @@ module Glue::Pulp::Repos
 
     def custom_repos_create_orchestration
       pre_queue.create(:name => "create pulp repositories for product: #{self.label}",      :priority => 1, :action => [self, :set_repos])
-    end
-
-    def save_repos_orchestration
-      case orchestration_for
-      when :create
-        # no repositories are added when a product is created
-      when :update
-        #called when sync schedule changed, repo added, repo deleted
-        pre_queue.create(:name => "setting up pulp sync schedule for product: #{self.label}", :priority => 2, :action => [self, :setup_sync_schedule])
-      when :promote
-        # do nothing, as repos have already been promoted (see promote_repos method)
-      end
     end
 
     protected

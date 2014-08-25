@@ -126,48 +126,28 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   end
 
   def test_update
-    put :update, :id => @product.id, :product => {:name => 'New Name'}
+    params = {:name => 'New Name'}
+    assert_sync_task(::Actions::Katello::Product::Update) do |product, product_params|
+      product.id.must_equal @product.id
+      product_params.key?(:name).must_equal true
+      product_params[:name].must_equal params[:name]
+    end
+    put :update, :id => @product.id, :product => params
 
     assert_response :success
     assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
-    assert_equal assigns[:product].name, 'New Name'
-  end
-
-  def test_update_product_requires_name
-    put :update, :id => @product.id, :product => {:name => nil}
-
-    assert_response :unprocessable_entity
-    assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
-    assert_equal assigns[:product].name, nil
-  end
-
-  def test_update_redhat
-    @product.stubs(:redhat?).returns(true)
-
-    sync_plan = katello_sync_plans(:sync_plan_hourly)
-    put :update, :id => @product.id, :product => {:name => 'lalala', :sync_plan_id => sync_plan.id}
-
-    assert_response :success
-    assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
-    assert_equal assigns[:product].sync_plan_id, sync_plan.id
-    assert_equal @product.name, katello_products(:empty_product).name
   end
 
   def test_update_sync_plan
     sync_plan = katello_sync_plans(:sync_plan_hourly)
-    put :update, :id => @product.id, :product => {:sync_plan_id => sync_plan.id}
+    params = {:sync_plan_id => sync_plan.id}
+    assert_sync_task(::Actions::Katello::Product::Update) do |product, product_params|
+      product.id.must_equal @product.id
+    end
+    put :update, :id => @product.id, :product => params
 
     assert_response :success
     assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
-    assert_equal assigns[:product].sync_plan_id, sync_plan.id
-  end
-
-  def test_remove_sync_plan
-    put :update, :id => @product.id, :product => {:sync_plan_id => nil, :provider_id => @provider.id}
-
-    assert_response :success
-    assert_template %w(katello/api/v1/common/update katello/api/v2/layouts/resource)
-    assert_equal assigns[:product].sync_plan_id, nil
   end
 
   def test_update_protected

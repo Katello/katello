@@ -46,8 +46,7 @@ class SyncPlan < Katello::Model
   def reassign_sync_plan_to_products
     # triggers orchestration in products
     self.products.each do |product|
-      product.sync_plan = self # assign current updated sync_plan, don't let products to load sync_plan again
-      product.save!
+      ::ForemanTasks.sync_task(::Actions::Katello::Product::Update, product, :sync_plan_id => self.id)
     end
   end
 

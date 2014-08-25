@@ -174,13 +174,6 @@ class Product < Katello::Model
     end
   end
 
-  # TODO: this should be a part of product update orchestration
-  def reset_repo_gpgs!
-    repositories.each do |repo|
-      ::ForemanTasks.async_task(::Actions::Katello::Repository::Update, repo, :gpg_key => self.gpg_key)
-    end
-  end
-
   scope :all_in_org, lambda{|org| Product.joins(:provider).where("#{Katello::Provider.table_name}.organization_id = ?", org.id)}
 
   def assign_unique_label

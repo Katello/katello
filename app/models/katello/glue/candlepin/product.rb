@@ -27,7 +27,6 @@ module Glue::Candlepin::Product
       # Entitlement Key for this product
       lazy_accessor :key, :initializer => lambda {|s| Resources::Candlepin::Product.key(cp_id, self.organization.label) }, :unless => lambda {|s| cp_id.nil? }
 
-      before_save :save_product_orchestration
       # we must store custom logger object during product importing so we can log status
       # from various places like callbacks
       attr_accessor :import_logger
@@ -164,39 +163,6 @@ module Glue::Candlepin::Product
 
     def product_content_by_name(content_name)
       self.productContent.find{|pc| pc.content.name == content_name}
-    end
-
-    def update_content
-      return true unless productContent_changed?
-
-      deleted_content.each do |content|
-        Rails.logger.debug "deleting content #{content.id}"
-        Resources::Candlepin::Product.remove_content cp_id, content.id
-        Resources::Candlepin::Content.destroy(content.id)
-      end
-
-      added_content.each do |pc|
-        Rails.logger.debug "creating content #{pc.content.name}"
-        new_content = Resources::Candlepin::Content.create pc.content
-        pc.content.id = new_content[:id] # candlepin generates id for new content
-
-        Rails.logger.debug "adding content #{pc.content.id}"
-        Resources::Candlepin::Product.add_content cp_id, pc.content.id, pc.enabled
-      end
-    end
-
-    def save_product_orchestration
-      case self.orchestration_for
-      when :import_from_cp
-        # we leave it as it is - to not break re-import logic
-      when :import_from_cp_ar_setup
-        # skip creating product in candlepin as its already there
-      when :update
-        #called when sync schedule changed, repo added, repo deleted
-        pre_queue.create(:name => "update content in candlein: #{self.name}", :priority => 1, :action => [self, :update_content])
-      when :promote
-        #queue.create(:name => "update candlepin product: #{self.name}", :priority => 3, :action => [self, :update_content])
-      end
     end
 
     protected
