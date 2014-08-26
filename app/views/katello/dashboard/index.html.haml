@@ -1,6 +1,6 @@
 = javascript "katello/dashboard"
 
-- if current_user && current_user.organizations.length == 0
+- if (current_user && current_user.organizations.length == 0) && !current_user.admin
   .flash_hud
     %ul.flash_messages.warning
       %li
