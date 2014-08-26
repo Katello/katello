@@ -171,7 +171,7 @@ class ContentViewTest < ActiveSupport::TestCase
     assert_empty @library_dev_view.all_version_library_instances
   end
 
-  def test_all_version_library_instances_empty
+  def test_all_version_library_instances_not_empty
     refute_empty @library_view.all_version_library_instances
   end
 
@@ -268,8 +268,9 @@ class ContentViewTest < ActiveSupport::TestCase
     end
   end
 
-  def test_puppet_repos
-    @file_repo = build_stubbed(:katello_repository, :iso)
+  def test_iso_repos
+    @file_repo = create(:katello_repository, :iso, :product => @organization.products.first, :content_view_version =>
+        @organization.default_content_view.versions.first)
 
     assert_raises(ActiveRecord::RecordInvalid) do
       @library_view.repositories << @file_repo
@@ -397,6 +398,28 @@ class ContentViewTest < ActiveSupport::TestCase
     assert_equal '6.4', conflicts.first[:version]
     assert_equal 'x86_64', conflicts.first[:arch]
     assert_equal [distro1, distro2], conflicts.first[:distributions]
+  end
+
+  def test_add_repository_from_other_org
+    view = @library_view
+    other_org = create(:katello_organization)
+    product = create(:katello_product, :organization => other_org, :provider => other_org.anonymous_provider)
+    repo = create(:katello_repository, :product => product, :content_view_version =>
+        other_org.default_content_view.versions.first)
+
+    assert_raises(ActiveRecord::RecordInvalid) do
+      view.repositories << repo
+      view.save!
+    end
+  end
+
+  def test_add_repository_from_other_view
+    view = @library_view
+    bad_repo =  Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1))
+    assert_raises(ActiveRecord::RecordInvalid) do
+      view.repositories << bad_repo
+      view.save!
+    end
   end
 
 end
