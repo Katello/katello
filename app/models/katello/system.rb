@@ -56,8 +56,6 @@ class System < Katello::Model
   before_validation :set_default_content_view, :unless => :persisted?
   validates :environment, :presence => true
   validates :content_view, :presence => true, :allow_blank => false
-  # multiple systems with a single name are supported
-  validates :name, :presence => true
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates :location, :length => {:maximum => 255}
