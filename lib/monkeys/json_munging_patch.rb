@@ -5,6 +5,7 @@ module ActionDispatch
 
     # Remove nils from the params hash
     def deep_munge(hash)
+      hash ||= {}
       hash.each do |k, v|
         case v
         when Array
