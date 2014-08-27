@@ -8,6 +8,7 @@ attributes :location
 attributes :content_view, :content_view_id
 attributes :distribution
 attributes :katello_agent_installed? => :katello_agent_installed
+attributes :registered_by
 
 child :products => :products do |product|
   attributes :id, :name
