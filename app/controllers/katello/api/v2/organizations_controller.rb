@@ -13,6 +13,8 @@
 module Katello
   class Api::V2::OrganizationsController < ::Api::V2::OrganizationsController
 
+    apipie_concern_subst(:a_resource => N_("an organization"), :resource => "organization")
+
     include Api::V2::Rendering
     include ForemanTasks::Triggers
 
@@ -52,6 +54,7 @@ module Katello
     param :id, :identifier, :desc => N_("organization ID"), :required => true
     param :description, String, :desc => N_("description of the organization"), :required => false
     param :redhat_repository_url, String, :desc => N_("Redhat CDN url")
+    param_group :resource, ::Api::V2::TaxonomiesController
     def update
       if params.key?(:redhat_repository_url)
         @organization.redhat_provider.update_attributes!(:repository_url => params[:redhat_repository_url])
@@ -63,6 +66,7 @@ module Katello
     param :name, String, :desc => N_("name"), :required => true
     param :label, String, :desc => N_("unique label")
     param :description, String, :desc => N_("description")
+    param_group :resource, ::Api::V2::TaxonomiesController
     def create
       super
     end
