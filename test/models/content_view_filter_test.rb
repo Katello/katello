@@ -23,8 +23,9 @@ class ContentViewFilterTest < ActiveSupport::TestCase
 
   def setup
     User.current = User.find(users(:admin))
-    @filter = FactoryGirl.build(:katello_content_view_filter)
     @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
+    @view = create(:katello_content_view, :organization => @repo.product.organization)
+    @filter =  create(:katello_content_view_filter, :content_view => @view)
     ContentView.any_instance.stubs(:reindex_on_association_change).returns(true)
   end
 
