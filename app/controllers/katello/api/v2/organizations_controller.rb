@@ -38,6 +38,7 @@ module Katello
     end
 
     api :GET, '/organizations/:id', N_('Show organization')
+    param :id, :identifier, :desc => N_("organization ID"), :required => true
     def show
       @render_template = 'katello/api/v2/organizations/show'
       super
