@@ -77,7 +77,13 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             } else if ($scope.createRepoChoices.existingProductId === undefined) {
                 fieldsEnabled = false;
             }
-            return fieldsEnabled;
+            
+            if (fieldsEnabled) {
+                return $scope.productForm.$valid;
+            } else {
+                return fieldsEnabled;
+            }
+      
         };
 
         $scope.gpgKeys = GPGKey.queryUnpaged();
