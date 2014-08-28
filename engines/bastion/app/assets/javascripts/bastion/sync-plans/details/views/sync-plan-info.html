@@ -35,6 +35,17 @@
     </div>
 
     <div class="detail">
+      <span class="info-label" translate>Sync Enabled</span>
+      <span class="info-value"
+            alch-edit-checkbox="syncPlan.enabled"
+            readonly="denied('edit_sync_plans', syncPlan)"
+            formatter="booleanToYesNo"
+            on-save="save(syncPlan)">
+      </span>
+    </div> 
+
+         
+    <div class="detail" ng-show="syncPlan.enabled">
       <span class="info-label" translate>Interval</span>
       <span class="info-value"
             alch-edit-select="syncPlan.interval"
@@ -45,5 +56,11 @@
             on-save="save(syncPlan)">
       </span>
     </div>
+
+    <div class="detail grey" ng-show="!syncPlan.enabled">
+      <span class="info-label" translate>Interval</span>
+      <span class="info-value" >{{ syncPlan.interval }}</span>
+    </div>    
+    
   </section>
 </div>

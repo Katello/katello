@@ -4,6 +4,7 @@
       <th alch-table-column="name" sortable><span translate>Name</span></th>
       <th alch-table-column="description"><span translate>Description</span></th>
       <th alch-table-column="syncDate"><span translate>Original Sync Date</span></th>
+      <th alch-table-column="enabled"><span translate>Sync Enabled</span></th>
       <th alch-table-column="interval"><span translate>Interval</span></th>
       <th alch-table-column="nextSync"><span translate>Next Sync</span></th>
     </tr>
@@ -20,6 +21,7 @@
       </td>
       <td alch-table-cell>{{ syncPlan.description }}</td>
       <td alch-table-cell>{{ syncPlan.sync_date | date:'medium' }}</td>
+      <td alch-table-cell>{{ syncPlan.enabled }}</td>
       <td alch-table-cell>{{ syncPlan.interval | capitalize }}</td>
       <td alch-table-cell>{{ syncPlan.next_sync | date:'medium' }}</td>
     </tr>
