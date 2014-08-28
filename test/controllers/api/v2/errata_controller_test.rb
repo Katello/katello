@@ -51,6 +51,22 @@ class Api::V2::ErrataControllerTest < ActionController::TestCase
 
     assert_response :success
     assert_template %w(katello/api/v2/errata/index)
+
+    get :index
+
+    assert_response :success
+    assert_template %w(katello/api/v2/errata/index)
+  end
+
+  def test_index_with_content_view_version
+    @content_view_version = ContentViewVersion.first
+    ContentViewVersion.expects(:readable).returns(stub(:find => @content_view_version))
+    @content_view_version.expects(:archived_repos).returns([@repo])
+
+    get :index, :content_view_version_id => @content_view_version.id
+
+    assert_response :success
+    assert_template %w(katello/api/v2/errata/index)
   end
 
   def test_index_protected
