@@ -115,7 +115,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
     respond_for_index(:collection => products)
   end
 
-  api :PUT, "/organizations/:organization_id/sync_plans/:id/products", N_("Add products to sync plan")
+  api :PUT, "/organizations/:organization_id/sync_plans/:id/add_products", N_("Add products to sync plan")
   param :id, String, :desc => N_("ID of the sync plan"), :required => true
   param :product_ids, Array, :desc => N_("List of product ids to add to the sync plan"), :required => true
   def add_products
@@ -126,7 +126,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
     respond_for_show
   end
 
-  api :PUT, "/organizations/:organization_id/sync_plans/:id/products", N_("Remove products from sync plan")
+  api :PUT, "/organizations/:organization_id/sync_plans/:id/remove_products", N_("Remove products from sync plan")
   param :id, String, :desc => N_("ID of the sync plan"), :required => true
   param :product_ids, Array, :desc => N_("List of product ids to remove from the sync plan"), :required => true
   def remove_products
