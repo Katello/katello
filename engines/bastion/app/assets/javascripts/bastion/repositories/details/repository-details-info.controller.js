@@ -101,8 +101,12 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             }
         };
 
-        $scope.syncInProgress = function (state) {
-            return (state === 'running' || state === 'waiting');
+        $scope.syncInProgress = function (task) {
+            var inProgress = false;
+            if (task && (task.state === 'pending' || task.state === 'running')) {
+                inProgress = true;
+            }
+            return inProgress;
         };
 
         $scope.syncRepository = function (repository) {

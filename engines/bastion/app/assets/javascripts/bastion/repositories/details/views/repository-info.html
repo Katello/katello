@@ -18,7 +18,7 @@
     <button class="btn btn-default"
             ng-click="syncRepository(repository); working = true"
             ng-hide="!repository.url || denied('sync_products', product)"
-            ng-disabled="syncInProgress(repository.sync_state)">
+            ng-disabled="syncInProgress(repository.last_sync)">
       <i class="icon-refresh"></i>
       <span translate>Sync Now</span>
     </button>
@@ -135,7 +135,7 @@
     <div class="detail">
       <span class="info-label" translate>Last Sync</span>
       <span class="info-value" translate>
-        {{ repository.last_sync_words }} Ago ({{ repository.last_sync | date:'medium' }} Local Time)
+        {{ repository.last_sync_words }} Ago ({{ repository.last_sync.ended_at | date:'medium' }} Local Time)
       </span>
     </div>
 
@@ -152,7 +152,7 @@
     <div class="detail">
       <span class="info-label" translate>Sync State</span>
       <span class="info-value">
-        <a href="sync_management">{{ repository.sync_state }}</a>
+        <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result }}</a>
       </span>
     </div>
   </section>

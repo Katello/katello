@@ -3,7 +3,6 @@ object @resource
 extends 'katello/api/v2/common/identifier'
 extends 'katello/api/v2/common/org_reference'
 extends 'katello/api/v2/common/timestamps'
-extends 'katello/api/v2/common/syncable'
 
 attributes :content_type
 attributes :unprotected, :full_path
@@ -48,3 +47,14 @@ end
 child :gpg_key do
   attributes :id, :name
 end
+
+child :latest_dynflow_sync => :last_sync do |object|
+  attributes :id, :username, :started_at, :ended_at, :state, :result, :progress
+end
+
+node :last_sync_words do |object|
+  if (object.latest_dynflow_sync.respond_to?('ended_at') && object.latest_dynflow_sync.ended_at)
+    time_ago_in_words(Time.parse(object.latest_dynflow_sync.ended_at.to_s))
+  end
+end
+

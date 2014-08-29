@@ -94,8 +94,8 @@
                   Not Synced
                 </span>
                 <span ng-hide="repository.last_sync == null">
-                  <a href="/katello/sync_management">{{ repository.sync_state | capitalize}}</a>
-                  ({{ repository.last_sync | date:"short" }})
+                  <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result | capitalize}}</a>
+                  ({{ repository.last_sync.ended_at | date:"short" }})
                 </span>
               </span>
             <span ng-hide="repository.url" translate>N/A</span>

@@ -121,7 +121,8 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     });
 
     it('should provide a method to determine if a repository is currently being syncd', function() {
-        expect($scope.syncInProgress('running')).toBe(true);
+        var lastSync = {state: 'running'};
+        expect($scope.syncInProgress(lastSync)).toBe(true);
     });
 
     it("provides a way to sync a repository", function() {
