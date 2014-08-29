@@ -33,7 +33,7 @@ class Api::V2::ErrataControllerTest < ActionController::TestCase
     @destroy_permission = :destroy_products
     @sync_permission = :sync_products
 
-    @auth_permissions = [@read_permission, :view_content_views]
+    @auth_permissions = [@read_permission]
     @unauth_permissions = [@create_permission, @update_permission, @destroy_permission, @sync_permission]
   end
 
@@ -60,13 +60,21 @@ class Api::V2::ErrataControllerTest < ActionController::TestCase
 
   def test_index_with_content_view_version
     @content_view_version = ContentViewVersion.first
-    ContentViewVersion.expects(:readable).returns(stub(:find => @content_view_version))
+    ContentViewVersion.expects(:readable).returns(stub(:find_by_id => @content_view_version))
     @content_view_version.expects(:archived_repos).returns([@repo])
 
     get :index, :content_view_version_id => @content_view_version.id
 
     assert_response :success
     assert_template %w(katello/api/v2/errata/index)
+  end
+
+  def test_index_with_filters
+    errata_filter = ContentViewFilter.find(katello_content_view_filters(:populated_erratum_filter))
+    get :index, :content_view_filter_id => errata_filter
+
+    package_group_filter = ContentViewFilter.find(katello_content_view_filters(:populated_package_group_filter))
+    get :index, :content_view_filter_id => package_group_filter
   end
 
   def test_index_protected
