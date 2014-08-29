@@ -24,6 +24,7 @@ class Api::V2::PackagesControllerTest < ActionController::TestCase
 
   def models
     @repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
+    @version = ContentViewVersion.first
   end
 
   def permissions
@@ -50,6 +51,17 @@ class Api::V2::PackagesControllerTest < ActionController::TestCase
 
     assert_response :success
     assert_template %w(katello/api/v2/packages/index)
+
+    get :index, :content_view_version_id => @version.id
+
+    assert_response :success
+    assert_template %w(katello/api/v2/packages/index)
+  end
+
+  def test_index_parameters
+    get :index
+
+    assert_response 400
   end
 
   def test_index_protected
