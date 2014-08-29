@@ -15,6 +15,7 @@ class Api::V2::ErrataController < Api::V2::ApiController
 
   before_filter :find_repository, :only => [:index, :show]
   before_filter :find_content_view, :only => [:index]
+  before_filter :find_content_view_version, :only => [:index]
   before_filter :find_filter, :only => [:index]
   before_filter :find_erratum, :only => [:show]
 
@@ -23,14 +24,17 @@ class Api::V2::ErrataController < Api::V2::ApiController
   api :GET, "/content_view_filters/:content_view_filter_id/errata", N_("List errata")
   api :GET, "/repositories/:repository_id/errata", N_("List errata")
   param :content_view_id, :identifier, :desc => N_("content view identifier")
+  param :content_view_version_id, :identifier, :desc => N_("content view version identifier")
   param :filter_id, :identifier, :desc => N_("content view filter identifier")
   param :content_view_filter_id, :identifier, :desc => N_("content view filter identifier")
-  param :repository_id, :number, :desc => N_("repository identifier"), :required => true
+  param :repository_id, :number, :desc => N_("repository identifier")
   def index
     collection = if @repo && !@repo.puppet?
                    filter_by_repoids [@repo.pulp_id]
                  elsif @filter
                    filter_by_errata_id @filter.erratum_rules.map(&:errata_id)
+                 elsif @content_view_version
+                   filter_by_content_view_version
                  else
                    filter_by_repoids
                  end
@@ -60,8 +64,18 @@ class Api::V2::ErrataController < Api::V2::ApiController
     item_search(Errata, params, options)
   end
 
+  def filter_by_content_view_version
+    filter_by_repoids(@content_view_version.archived_repos.map(&:pulp_id))
+  end
+
   def find_content_view
     @view = ContentView.find(params[:content_view_id]) if params[:content_view_id]
+  end
+
+  def find_content_view_version
+    if params[:content_view_version_id]
+      @content_view_version = ContentViewVersion.readable.find(params[:content_view_version_id])
+    end
   end
 
   def find_filter
