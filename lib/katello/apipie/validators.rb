@@ -93,6 +93,10 @@ module Katello
         def description
           "boolean"
         end
+
+        def expected_type
+          'boolean'
+        end
       end
     end
   end
