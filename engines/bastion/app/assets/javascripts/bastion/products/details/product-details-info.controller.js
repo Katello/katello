@@ -27,8 +27,8 @@
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('ProductDetailsInfoController',
-    ['$scope', '$q', 'translate', 'Product', 'SyncPlan', 'GPGKey', 'MenuExpander',
-    function ($scope, $q, translate, Product, SyncPlan, GPGKey, MenuExpander) {
+    ['$scope', '$state', '$q', 'translate', 'Product', 'SyncPlan', 'GPGKey', 'MenuExpander',
+    function ($scope, $state, $q, translate, Product, SyncPlan, GPGKey, MenuExpander) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -80,23 +80,9 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
         });
 
         $scope.syncProduct = function () {
-            var success, error;
-            $scope.productSyncing = true;
-
-            success = function () {
-                $scope.successMessages.push(translate("Successfully started sync for %s products, you are free to leave this page.")
-                    .replace('%s', $scope.product.name));
-                $scope.productSyncing = false;
-            };
-
-            error = function (response) {
-                _.each(response.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(translate("An error occurred saving the Product: ") + errorMessage);
-                });
-                $scope.productSyncing = false;
-            };
-
-            Product.sync({id: $scope.$stateParams.productId}, success, error);
+            Product.sync({id: $scope.product.id}, function (task) {
+                $state.go('products.details.tasks.details', {taskId: task.id});
+            });
         };
     }]
 );
