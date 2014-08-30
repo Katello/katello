@@ -34,7 +34,7 @@ module Actions
              ret << _("Pending")
            elsif content_started?
              if items_total > 0
-               ret << (_("New packages: %s (%s).") % [count_summary, size_summary])
+               ret << (_("New packages: %{count} (%{size}).") % {:count => count_summary, :size => size_summary})
              else
                #if there are no new packages, it could just mean that they have not started downloading yet
                # so only tell the user no new packages if errata have been processed

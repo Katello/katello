@@ -55,7 +55,7 @@ describe('Controller: ContentHostsBulkActionEnvironmentController', function() {
             Organization: Organization,
             CurrentOrganization: CurrentOrganization,
             ContentView: ContentView
-	    });
+        });
     }));
 
 

@@ -14,7 +14,7 @@
 require 'ripper'
 
 unless ENV['RAILS_ENV'] == 'build' # ok
-  require_relative 'minitest_helper'
+  require_relative 'katello_test_helper'
 else
   # if we are in build environment of RPM we have only the bare minimum
   warn 'loading minimal test environment'
@@ -23,7 +23,7 @@ else
   require 'minitest/rails'
 end
 
-class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
+class SourceCodeTest < ActiveSupport::TestCase
 
   class SourceCode
     include MiniTest::Assertions
@@ -112,7 +112,10 @@ for more info.
           new('**/*.rb',
               %r'config/(application|boot)\.rb',
               %r'engines/bastion/test/test_helper\.rb',
-              %r'test/base_test_helper\.rb', # TODO clean up minitest_helper
+              %r'test/support/vcr\.rb',
+              %r'test/support/runcible\.rb',
+              %r'test/katello_test_runner\.rb', # TODO clean up minitest_helper
+              %r'app/services/katello/authentication/client_authentication\.rb',
               %r'lib/util/puppet\.rb').
           check_lines(<<-DOC) { |line| (line !~ /ENV\[[^\]]+\]/) ? true : line =~ /#\s?ok/ }
 Katello.config or Katello.early_config should be always used instead of ENV variables, Katello.config is
@@ -197,24 +200,4 @@ Multiple anonymous placeholders:
     end
   end
 
-  describe 'DB schema/structure' do
-    it 'should be up to date' do
-      message = 'The schema is not up to date. Please run db:migrate and check in db/schema.rb or db/structure.rb'
-      schema_dirs = Dir.glob('db/migrate/*.rb') + Dir.glob('engines/*/db/migrate/*.rb')
-      schema_version = schema_dirs.collect{ |f| File.basename(f) }.sort.last[/(\d+).*.rb/, 1]
-      actual_version = if File.exist? 'db/schema.rb'
-                         File.read('db/schema.rb')[/^ActiveRecord::Schema.define\(\:version \=\> (\d+)\) do/, 1]
-                       elsif File.exist? 'db/structure.sql'
-                         File.
-                             read('db/structure.sql').
-                             scan(/INSERT INTO schema_migrations \(version\) VALUES \('(\d+)'\);/).
-                             map(&:first).
-                             sort.last
-                       else
-                         raise 'no schema.rb or structure.sql'
-                       end
-
-      assert_equal schema_version, actual_version, message
-    end
-  end
 end

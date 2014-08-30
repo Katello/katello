@@ -13,14 +13,16 @@
 require 'katello_test_helper'
 
 module Katello
-  class Api::V1::CandlepinProxiesControllerTest < ActionController::TestCase
+  class Api::Rhsm::CandlepinProxiesControllerTest < ActionController::TestCase
+
     def setup
       setup_controller_defaults
-      @proxies_controller = "katello/api/v1/candlepin_proxies"
+      @proxies_controller = "katello/api/rhsm/candlepin_proxies"
     end
 
     def test_user_resource_proxies
-      {:controller => @proxies_controller, :action => "list_owners", :login => "1", :api_version => "v2"}.must_recognize({ :method => "get", :path => "/api/users/1/owners" })
+      {:controller => @proxies_controller, :action => "list_owners", :login => "1"}.must_recognize({ :method => "get", :path => "/rhsm/users/1/owners" })
     end
+
   end
 end

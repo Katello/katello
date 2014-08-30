@@ -62,7 +62,7 @@ describe('Controller: ContentHostsBulkActionErrataController', function() {
             Nutupane: Nutupane,
             translate: translate,
             CurrentOrganization: CurrentOrganization
-	});
+        });
     }));
 
     it("can install errata on multiple content hosts", function () {

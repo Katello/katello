@@ -10,9 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class Util::PackageTest < MiniTest::Rails::ActiveSupport::TestCase
+module Katello
+class Util::PackageTest < ActiveSupport::TestCase
 
   def test_sortable_version
     # Examples pulled from Pulp documentation
@@ -25,4 +26,6 @@ class Util::PackageTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_equal "02-12.$a.01-3.$bc", Util::Package.sortable_version("12a3bc")
     assert_equal "01-2.$xFg.02-33.$f.01-5", Util::Package.sortable_version("2xFg33.+f.5")
   end
+
+end
 end
