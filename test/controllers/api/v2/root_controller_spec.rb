@@ -10,14 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'katello_test_helper'
+
 module Katello
-class Api::V2::HostCollectionErrataController < Api::V1::HostCollectionErrataController
+class Api::V2::RootControllerTest < ActionController::TestCase
 
-  include Api::V2::Rendering
+  def setup
+    setup_controller_defaults_api
+  end
 
-  resource_description do
-    api_version 'v2'
-    api_base_url "#{Katello.config.url_prefix}/api"
+  def test_resource_list
+    get :resource_list
+
+    assert_response :success
   end
 
 end

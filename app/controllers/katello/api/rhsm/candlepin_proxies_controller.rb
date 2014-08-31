@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-  class Api::Rhsm::CandlepinProxiesController < Api::V1::ApiController
+  class Api::Rhsm::CandlepinProxiesController < Api::V2::ApiController
 
     include Katello::Authentication::ClientAuthentication
 
@@ -413,6 +413,22 @@ module Katello
 
     def logger
       ::Logging.logger['cp_proxy']
+    end
+
+    def respond_for_index(options = {})
+      collection = options[:collection] || get_resource_collection
+      status     = options[:status] || :ok
+      format     = options[:format] || :json
+
+      render format => collection, :status => status
+    end
+
+    def respond_for_show(options = {})
+      resource = options[:resource] || get_resource
+      status   = options[:status] || :ok
+      format   = options[:format] || :json
+
+      render format => resource, :status => status
     end
 
     def authorize_client_or_user

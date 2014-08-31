@@ -10,14 +10,20 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'katello_test_helper'
+
 module Katello
-class Api::V2::AboutController < Api::V1::AboutController
+class Api::V2::UebercertsControllerTest < ActionController::TestCase
 
-  include Api::V2::Rendering
+  OWNER_KEY = "some_org"
 
-  resource_description do
-    api_version 'v2'
-    api_base_url "#{Katello.config.url_prefix}/api"
+  def setup
+    setup_controller_defaults_api
+    @org = get_organization
+  end
+
+  def test_show
+    get :show, :organization_id => @org.id
   end
 
 end
