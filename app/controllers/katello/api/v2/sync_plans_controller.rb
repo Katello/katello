@@ -25,7 +25,8 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
     param :description, String, :desc => N_("sync plan description")
   end
 
-  api :GET, "/organizations/:organization_id/sync_plans", N_("List sync plans")
+  api :GET, "/sync_plans", N_("List sync plans")
+  api :GET, "/organizations/:organization_id/sync_plans"
   param :organization_id, :number, :desc => N_("Filter sync plans by organization name or label"), :required => true
   param :name, String, :desc => N_("filter by name")
   param :sync_date, String, :desc => N_("filter by sync date")
