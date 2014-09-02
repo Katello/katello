@@ -48,7 +48,13 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
             $scope.syncInProgress = true;
 
             syncPromise = RepositoryBulkAction.syncRepositories(params, success, error).$promise;
-            syncPromise["finally"](function () {
+            $scope.refreshView(syncPromise);
+            
+        };
+
+        $scope.refreshView = function (promise) {
+            promise["finally"](function () {
+                $scope.repositoriesTable.selectAll(false);
                 repositoriesNutupane.refresh();
                 $scope.syncInProgress = false;
             });
