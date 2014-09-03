@@ -360,7 +360,7 @@ Katello::Engine.routes.draw do
           get :report, :on => :collection
         end
 
-        api_resources :sync_plans, :only => [:show, :update, :destroy]
+        api_resources :sync_plans, :only => [:index, :show, :update, :destroy]
         api_resources :about, :only => [:index]
 
         # api custom information
