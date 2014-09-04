@@ -62,7 +62,11 @@ angular.module('Bastion.products').controller('ProductsController',
         watch = $scope.$watch('productTable.rows', function (rows) {
             if (_.isArray(rows) && !_.isEmpty(rows)) {
                 angular.forEach(rows, function (row) {
-                    row.repositoriesByState = _.groupBy(row.repositories, 'sync_state');
+                    row.repositoriesByState = _.groupBy(row.repositories, function (repository) {
+                        if (repository['last_sync'] !== null) {
+                            return repository['last_sync']['result'];
+                        }
+                    });
                 });
                 watch();
             }
