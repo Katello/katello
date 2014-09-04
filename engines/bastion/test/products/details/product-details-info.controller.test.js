@@ -22,9 +22,11 @@ describe('Controller: ProductDetailsInfoController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q'),
-            Product = $injector.get('MockResource').$new(),
             SyncPlan = $injector.get('MockResource').$new();
             GPGKey = $injector.get('MockResource').$new();
+
+        Product = $injector.get('MockResource').$new();
+        Product.sync = function() {};
 
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {productId: 1};
@@ -88,11 +90,10 @@ describe('Controller: ProductDetailsInfoController', function() {
     });
 
     it('provides a way to sync a product', function() {
-        $scope.product.$sync = function () {};
-        spyOn($scope.product, '$sync');
+        spyOn(Product, 'sync');
 
         $scope.syncProduct();
 
-        expect($scope.product.$sync).toHaveBeenCalled();
+        expect(Product.sync).toHaveBeenCalledWith({id: $scope.$stateParams.productId}, jasmine.any(Function), jasmine.any(Function));
     });
 });
