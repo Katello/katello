@@ -31,15 +31,15 @@ module Actions
           end
 
           def num_isos
-            task_progress_details['num_isos'] || 0
+            task_progress_details && task_progress_details['num_isos'] || 0
           end
 
           def total_bytes
-            task_progress_details['total_bytes'] || 0
+            task_progress_details && task_progress_details['total_bytes'] || 0
           end
 
           def finished_bytes
-            task_progress_details['finished_bytes'] || 0
+            task_progress_details && task_progress_details['finished_bytes'] || 0
           end
 
           def task_progress_details
