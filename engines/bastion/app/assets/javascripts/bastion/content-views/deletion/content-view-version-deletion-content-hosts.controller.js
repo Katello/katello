@@ -71,7 +71,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
 
         $scope.contentHostsLink = function () {
             var search = $scope.searchString($scope.contentView, $scope.deleteOptions.environments);
-            return $scope.$state.href('content-hosts.index').url + '?search=' + search;
+            return $scope.$state.href('content-hosts.index') + '?search=' + search;
         };
 
         $scope.toggleHosts = function () {
