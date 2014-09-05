@@ -15,7 +15,7 @@
 
 = content_for(:inline_javascripts) do
   :plain
-    KT.routes.options.prefix = "#{Katello.config.url_prefix}";
+    KT.routes.options.prefix = "/katello";
   = render :partial => "katello/common/common_i18n"
 
 = content_for(:title) do

@@ -43,7 +43,7 @@ module Katello
       end
 
       def add_candlepin_version_header
-        response.headers["X-CANDLEPIN-VERSION"] = "katello/#{Katello.config.katello_version}"
+        response.headers["X-CANDLEPIN-VERSION"] = "katello/#{Katello::VERSION}"
       end
 
     end

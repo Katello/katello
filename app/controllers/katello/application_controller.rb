@@ -16,8 +16,6 @@ require 'base64'
 module Katello
 class ApplicationController < ::ApplicationController
   include Notifications::ControllerHelper
-  include Profiling
-  include KTLocale
   include ::HomeHelper
 
   layout 'katello/layouts/katello'
@@ -47,8 +45,8 @@ class ApplicationController < ::ApplicationController
   # this is always in the top
   # order of these are important.
   rescue_from Exception do |exception|
-    paranoia = Katello.config.exception_paranoia
-    hide     = Katello.config.hide_exceptions
+    paranoia = false
+    hide     = false
 
     to_do = case exception
             when StandardError
@@ -86,14 +84,6 @@ class ApplicationController < ::ApplicationController
     notify.error e.message
     render :nothing => true, :status => :not_found
     execute_after_filters
-  end
-
-  if Katello.config.hide_exceptions
-    rescue_from ActionController::RoutingError,
-                ActionController::UnknownController,
-                AbstractController::ActionNotFound do |exception|
-      execute_rescue(exception) { |ex| render_404 }
-    end
   end
 
   rescue_from Errors::SecurityViolation do |exception|

@@ -28,30 +28,18 @@ module Katello
       # TODO: break up this method
       # rubocop:disable MethodLength
       def ping
-        if Katello.config.katello?
-          result = { :status => OK_RETURN_CODE, :services => {
-            :pulp => {},
-            :candlepin => {},
-            :elasticsearch => {},
-            :pulp_auth => {},
-            :candlepin_auth => {},
-            :foreman_tasks => {},
-          }}
-        else
-          result = { :status => OK_RETURN_CODE, :services => {
-            :candlepin => {},
-            :elasticsearch => {},
-            :candlepin_auth => {},
-            :foreman_tasks => {},
-            :thumbslug => {}
-          }}
-        end
+        result = { :status => OK_RETURN_CODE, :services => {
+          :pulp => {},
+          :candlepin => {},
+          :elasticsearch => {},
+          :pulp_auth => {},
+          :candlepin_auth => {},
+          :foreman_tasks => {},
+        }}
 
         # pulp - ping without oauth
-        if Katello.config.katello?
-          exception_watch(result[:services][:pulp]) do
-            Ping.pulp_without_oauth
-          end
+        exception_watch(result[:services][:pulp]) do
+          Ping.pulp_without_oauth
         end
 
         # candlepin - ping without oauth
@@ -66,22 +54,8 @@ module Katello
           RestClient.get "#{url}/_status"
         end
 
-        # thumbslug - ping without authentication
-        unless Katello.config.katello?
-          url = Katello.config.thumbslug_url
-          exception_watch(result[:services][:thumbslug]) do
-            begin
-              RestClient.get "#{url}/ping"
-            # rubocop:disable HandleExceptions
-            rescue OpenSSL::SSL::SSLError
-              # We want to see this error, because it means that Thumbslug
-              # is running and refused our (non-existent) ssl cert.
-            end
-          end
-        end
-
         # pulp - ping with oauth
-        if Katello.config.katello? && User.current
+        if User.current
           exception_watch(result[:services][:pulp_auth]) do
             Katello.pulp_server.resources.user.retrieve_all
           end

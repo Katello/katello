@@ -103,10 +103,8 @@ EOKEY
     Resources::Candlepin::Product.stubs(:key).returns("")
     Resources::Candlepin::Product.stubs(:destroy).returns(true)
 
-    if Katello.config.katello?
-      Katello.pulp_server.extensions.repository.stubs(:create_or_update_schedule).returns(true)
-      Katello.pulp_server.extensions.repository.stubs(:remove_schedules).returns(true)
-    end
+    Katello.pulp_server.extensions.repository.stubs(:create_or_update_schedule).returns(true)
+    Katello.pulp_server.extensions.repository.stubs(:remove_schedules).returns(true)
   end
 
   def disable_pools_orchestration
@@ -137,12 +135,10 @@ EOKEY
   end
 
   def disable_user_orchestration(options = {})
-    if Katello.config.katello?
-      Katello.pulp_server.resources.user.stubs(:create).returns({})
-      Katello.pulp_server.resources.user.stubs(:delete).returns(200)
-      Katello.pulp_server.resources.role.stubs(:add).returns(true)
-      Katello.pulp_server.resources.role.stubs(:remove).returns(true)
-    end
+    Katello.pulp_server.resources.user.stubs(:create).returns({})
+    Katello.pulp_server.resources.user.stubs(:delete).returns(200)
+    Katello.pulp_server.resources.role.stubs(:add).returns(true)
+    Katello.pulp_server.resources.role.stubs(:remove).returns(true)
     disable_foreman_tasks_hooks(User)
   end
 
@@ -156,27 +152,23 @@ EOKEY
   end
 
   def disable_consumer_group_orchestration
-    if Katello.config.katello?
-      Katello.pulp_server.extensions.consumer_group.stubs(:create).returns({})
-      Katello.pulp_server.extensions.consumer_group.stubs(:delete).returns(200)
-      Katello.pulp_server.extensions.consumer_group.stubs(:retrieve).returns({})
-      Katello.pulp_server.extensions.consumer_group.stubs(:add_consumers_by_id).returns(200)
-      Katello.pulp_server.extensions.consumer_group.stubs(:remove_consumers_by_id).returns(200)
-    end
+    Katello.pulp_server.extensions.consumer_group.stubs(:create).returns({})
+    Katello.pulp_server.extensions.consumer_group.stubs(:delete).returns(200)
+    Katello.pulp_server.extensions.consumer_group.stubs(:retrieve).returns({})
+    Katello.pulp_server.extensions.consumer_group.stubs(:add_consumers_by_id).returns(200)
+    Katello.pulp_server.extensions.consumer_group.stubs(:remove_consumers_by_id).returns(200)
   end
 
   def disable_repo_orchestration
-    if Katello.config.katello?
-      Katello.pulp_server.extensions.repository.stubs(:create).returns({})
-      Katello.pulp_server.extensions.repository.stubs(:sync_history).returns([])
-      Katello.pulp_server.resources.task.stubs(:destroy).returns({})
+    Katello.pulp_server.extensions.repository.stubs(:create).returns({})
+    Katello.pulp_server.extensions.repository.stubs(:sync_history).returns([])
+    Katello.pulp_server.resources.task.stubs(:destroy).returns({})
 
-      Katello.pulp_server.extensions.repository.stubs(:packages).with(RepoTestData::REPO_ID).returns(RepoTestData::REPO_PACKAGES)
-      Katello.pulp_server.extensions.repository.stubs(:errata).with(RepoTestData::REPO_ID).returns(RepoTestData::REPO_ERRATA)
-      Katello.pulp_server.extensions.repository.stubs(:distributions).with(RepoTestData::REPO_ID).returns(RepoTestData::REPO_DISTRIBUTIONS)
-      Katello.pulp_server.extensions.repository.stubs(:find).with(RepoTestData::REPO_ID).returns(RepoTestData::REPO_PROPERTIES)
-      Katello.pulp_server.extensions.repository.stubs(:find).with(RepoTestData::CLONED_REPO_ID).returns(RepoTestData::CLONED_PROPERTIES)
-    end
+    Katello.pulp_server.extensions.repository.stubs(:packages).with(RepoTestData::REPO_ID).returns(RepoTestData::REPO_PACKAGES)
+    Katello.pulp_server.extensions.repository.stubs(:errata).with(RepoTestData::REPO_ID).returns(RepoTestData::REPO_ERRATA)
+    Katello.pulp_server.extensions.repository.stubs(:distributions).with(RepoTestData::REPO_ID).returns(RepoTestData::REPO_DISTRIBUTIONS)
+    Katello.pulp_server.extensions.repository.stubs(:find).with(RepoTestData::REPO_ID).returns(RepoTestData::REPO_PROPERTIES)
+    Katello.pulp_server.extensions.repository.stubs(:find).with(RepoTestData::CLONED_REPO_ID).returns(RepoTestData::CLONED_PROPERTIES)
 
     Resources::Candlepin::Content.stubs(:create).returns({ :id => '123', :type=>'yum'})
     Resources::Candlepin::Content.stubs(:update).returns({ :id => '123', :type=>'yum' })

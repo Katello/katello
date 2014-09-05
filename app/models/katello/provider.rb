@@ -119,10 +119,8 @@ class Provider < Katello::Model
   def serializable_hash(options = {})
     options = {} if options.nil?
     hash = super(options)
-    if Katello.config.katello?
-      hash = hash.merge(:sync_state => self.sync_state,
-                        :last_sync => self.last_sync)
-    end
+    hash = hash.merge(:sync_state => self.sync_state,
+                      :last_sync => self.last_sync)
     hash
   end
 

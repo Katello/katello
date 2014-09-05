@@ -14,7 +14,7 @@ module Katello
   class Api::V2::CapsulesController < ::Api::V2::SmartProxiesController
 
     resource_description do
-      api_base_url "#{Katello.config.url_prefix}/api"
+      api_base_url "/katello/api"
     end
 
     api :GET, '/capsules', 'List all capsules'

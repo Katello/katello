@@ -15,76 +15,26 @@
 # and development environments. Values can be overridden bellow.
 #
 common:
-  app_mode: katello
-  katello_version: # let katello detect the version in configuration postprocess
   use_cp: # set to true/false if you want to override default
   use_pulp: # set to true/false if you want to override default
-  use_foreman: # set to true/false if you want to override default
   use_elasticsearch: # set to true/false if you want to override default
-  app_name: # set a name if you want to override default
-  gravatar: false # set to true/false for enabling disabling gravatar
-  warden: database
+
   rest_client_timeout: 30
   gpg_strict_validation: false
 
-  url_prefix: "/katello"
-
   # Puppet publishing location
   puppet_repo_root: '/etc/puppet/environments/'
-
-  # detect system locale or fallback to English
-  system_lang: <%= ENV['LC_ALL'] || ENV['LC_MESSAGES'] || ENV['LANG'] || 'en' %>
-
-  # The host (i.e. fully qualified domain name) of the server.
-  # This host is used by ActionMailer when generating urls sent in
-  # emails from the server. For example, the host would be the fqdn portion
-  # of a URL for resetting a user's password.
-  host: 127.0.0.1
-
-  # Similar to host; however, provides the port component of the URL.
-  port: 3000
-  use_ssl: false
 
   elastic_index: katello
   elastic_url: http://localhost:9200
 
   post_sync_url: "http://localhost:3000/katello/api/v2/repositories/sync_complete?token=katello"
-  thumbslug_url: https://localhost:8088
-
-  # Specifies the number of minutes that a password reset token will remain valid.
-  password_reset_expiration: 120
-
-  # email_reply_address is used to specify the "From:" address included
-  # in emails sent from the Server.  If not specified, it will default to
-  # no-reply@host, where host is the value specified above.
-  email_reply_address:
-
-  # Available language locale choices. (Note: Syntax for yaml requires a space after each comma ', ')
-  # Default available locales are below
-  available_locales: ["bn", "de", "en", "es", "fr", "gu", "hi", "it", "ja", "kn", "ko", "mr", "or", "pa", "pt-BR",
-  "ru", "ta", "te", "zh-CN", "zh-TW"]
 
   simple_search_tokens: [":", " and\\b", " or\\b", " not\\b"]
 
   redhat_repository_url: https://cdn.redhat.com
 
   consumer_cert_rpm: 'katello-ca-consumer-latest.noarch.rpm'
-
-  # Add actions you want to profile with ruby-prof to profiling option, e.g.
-  #   profiling:
-  #     - "user_sessions#new"
-  #     - "user_sessions#create"
-  # Profiles will be stored in `tmp/profiles/`.
-  # When no action is present profiling is disabled, which is default.
-  profiling:
-
-  # if paranoia is set to true even children of Exception will be rescued
-  exception_paranoia: false
-  # set true to hide exceptions from user
-  hide_exceptions: false
-
-  # run yard server inside katello server
-  embed_yard_documentation: false
 
   #setup how often you want
   #your notifications to be checked
@@ -93,14 +43,6 @@ common:
   #
   notification:
     polling_seconds: 120
-
-  # Setup your UI search configuration.
-  search:
-    # specifies the number of search history elementsthat will be retained for users
-    max_history: 5
-
-    # specifies the number of search favorites that a user may store per search box
-    max_favorites: 5
 
   # Setup your candlepin environment here
   candlepin:
@@ -142,27 +84,6 @@ common:
     sync_KBlimit:
     upload_chunk_size: 1048575 # upload size in bytes to pulp. see SSLRenegBufferSize in apache
 
-
-  # Setup your foreman environment here
-  foreman:
-    # refers to the url of the Foreman (without the final '/')
-    # example https://foreman.instance.company.com:443
-    url: http://localhost:3001
-
-    # Specify your oauth key and secret
-    # used to authenticate between Katello and Foreman
-    oauth_key: katello
-    oauth_secret: katello
-
-    # generate random password for each user created in Foreman by Katello
-    # when false user can log in to Foreman UI with Katello password
-    #   USE WITH CAUTION: it's for debugging
-    random_password: true
-
-  cloud_forms:
-    oauth_key: cloud_forms
-    oauth_secret: katello
-
   # Setup proxy to use when accessing CDN.
   # Katello calls CDN to retrieve list of repositories for a product
   # Uncomment in case you want this calls to go through your proxy
@@ -171,14 +92,6 @@ common:
   #    port: 3128
   #    user: login
   #    password: password
-
-
-  database:
-    adapter: postgresql
-    host: localhost
-    encoding: UTF8
-    login: katellouser
-    password: katellouser
 
   # when adding a new logger don't forget to add it in here even if it's disabled by default
   # otherwise log trace feature won't work for such logger
@@ -260,10 +173,6 @@ common:
 # The following configuration values override ones from the common section
 #
 production:
-  exception_paranoia: true
-  hide_exceptions: true
-  database:
-    database: katello
   logging:
     loggers:
       sql:
@@ -275,14 +184,6 @@ production:
 # The following configuration values override ones from the common section
 #
 development:
-  embed_yard_documentation: true
-  foreman:
-    random_password: false
-  database:
-    database: katelloschema
-    min_messages: WARNING
-  sso:
-    enable: false
   logging:
     ignored_paths: ['/notices/get_new', '/assets/', '/api/tasks/bulk_search']
     colorize: true
@@ -321,10 +222,6 @@ development:
 #
 test:
   elastic_index: katello_test
-  rspec_gc_defer_time: <%= (ENV['DEFER_GC'] || 10).to_f %>
-  database:
-    database: katello-test<%= ENV['TEST_ENV_NUMBER'] %>
-    min_messages: WARNING
   logging:
     colorize: false
     loggers:
@@ -335,17 +232,3 @@ test:
         keep: 1
         pattern: "[%5l %d %c] %m\n"
         filename: "test.log"
-
-#
-# Blank environment configuration (rpm build environment)
-#
-# The following configuration values override ones from the common section
-#
-build:
-  use_pulp: false
-  use_candlepin: false
-  database:
-    adapter: sqlite3
-    database: db/build.sqlite3
-    pool: 5
-    timeout: 5000

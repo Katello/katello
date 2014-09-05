@@ -122,7 +122,7 @@ module Katello
     describe "#apply_to_system" do
 
       before(:each) do
-        Katello.pulp_server.extensions.consumer.stubs(:create).returns({:id => "1234"}) if Katello.config.katello?
+        Katello.pulp_server.extensions.consumer.stubs(:create).returns({:id => "1234"})
         Resources::Candlepin::Consumer.stubs(:create).returns({:uuid => "1234", :owner => {:key => "1234"}})
         @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})
         @system2 = System.new(:name => "test2", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})

@@ -18,7 +18,7 @@ class Api::V2::RootController < Api::V2::ApiController
 
   resource_description do
     api_version 'v2'
-    api_base_url "#{Katello.config.url_prefix}/api"
+    api_base_url "/katello/api"
   end
 
   def resource_list
@@ -41,24 +41,6 @@ class Api::V2::RootController < Api::V2::ApiController
     api_root_routes << { :href => '/katello/api/guestids', :rel => 'guestids'}
     api_root_routes << { :href => '/katello/api/content_overrides', :rel => 'content_overrides'}
     api_root_routes << { :href => '/katello/api/available_releases', :rel => 'available_releases'}
-
-    # katello only APIs
-    katello_only = [
-      "/katello/api/templates/",
-      "/katello/api/changesets/",
-      "/katello/api/repositories/",
-      "/katello/api/packages/",
-      "/katello/api/errata/",
-      "/katello/api/disributions/",
-      "/katello/api/tasks/",
-      "/katello/api/gpg_keys/",
-      "/katello/api/environments/"
-    ]
-
-    # filter out katello-only apis from headpin resource list
-    if !Katello.config.katello?
-      api_root_routes = api_root_routes.select { |api| !katello_only.include?(api[:href]) }
-    end
 
     respond_for_index :collection => api_root_routes
   end

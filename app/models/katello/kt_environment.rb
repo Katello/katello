@@ -279,11 +279,7 @@ class KTEnvironment < Katello::Model
   # enabled repos. Headpin, which does not traverse products to the repo level, exposes all release
   # versions in the manifest.
   def available_releases
-    if Katello.config.katello?
-      self.repositories.map(&:minor).compact.uniq.sort
-    else
-      self.organization.redhat_provider.available_releases
-    end
+    self.repositories.map(&:minor).compact.uniq.sort
   end
 
   private

@@ -19,7 +19,7 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
 
   resource_description do
     api_version 'v2'
-    api_base_url "#{Katello.config.url_prefix}/api"
+    api_base_url "/katello/api"
   end
 
   def_param_group :packages_or_groups do

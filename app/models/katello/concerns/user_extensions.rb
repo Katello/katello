@@ -60,8 +60,6 @@ module Katello
         has_many :activation_keys, :dependent => :destroy, :class_name => "Katello::ActivationKey"
         serialize :preferences, Hash
 
-        validates :default_locale, :inclusion => {:in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ')}
-
         after_validation :setup_remote_id
         before_save :setup_preferences
 

@@ -21,10 +21,8 @@ module SystemHelperMethods
     Resources::Candlepin::Consumer.stubs(:create).returns({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stubs(:update).returns(true)
 
-    if Katello.config.katello?
-      Katello.pulp_server.extensions.consumer.stubs(:create).returns({ :id => uuid })
-      Katello.pulp_server.extensions.consumer.stubs(:update).returns(true)
-    end
+    Katello.pulp_server.extensions.consumer.stubs(:create).returns({ :id => uuid })
+    Katello.pulp_server.extensions.consumer.stubs(:update).returns(true)
     setup_test_org
   end
 
@@ -78,11 +76,9 @@ module SystemHelperMethods
   end
 
   def stub_consumer_packages_install(expected_response, refresh_response = nil)
-    if Katello.config.katello?
-      refresh_response ||= expected_response
-      Katello.pulp_server.extensions.consumer.stubs(:install_content).returns(expected_response)
-      Katello.pulp_server.resources.task.stubs(:poll).returns(refresh_response)
-    end
+    refresh_response ||= expected_response
+    Katello.pulp_server.extensions.consumer.stubs(:install_content).returns(expected_response)
+    Katello.pulp_server.resources.task.stubs(:poll).returns(refresh_response)
   end
 
 end

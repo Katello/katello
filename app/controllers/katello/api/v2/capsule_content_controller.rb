@@ -14,7 +14,7 @@ module Katello
   class Api::V2::CapsuleContentController < Api::V2::ApiController
 
     resource_description do
-      api_base_url "#{Katello.config.url_prefix}/api"
+      api_base_url "/katello/api"
     end
 
     before_filter :find_capsule

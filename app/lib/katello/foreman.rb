@@ -33,7 +33,8 @@ module Katello
           foreman_environment.save!
         end
 
-        if (foreman_smart_proxy = SmartProxy.find_by_name(Katello.config.host))
+        host = Facter.value(:fqdn) || SETTINGS[:fqdn]
+        if (foreman_smart_proxy = SmartProxy.find_by_name(host))
           PuppetClassImporter.new(:url => foreman_smart_proxy.url).update_environment(foreman_environment)
         end
       end
