@@ -15,7 +15,7 @@ module Katello
 
     before_filter :find_activation_key, :only => [:index]
     before_filter :find_system, :only => [:index]
-    before_filter :find_organization, :only => [:create, :index]
+    before_filter :find_organization, :only => [:index]
     before_filter :find_product, :only => [:update, :destroy, :show, :sync]
     before_filter :find_organization_from_product, :only => [:update]
     before_filter :authorize_gpg_key, :only => [:update, :create]
@@ -71,7 +71,7 @@ module Katello
 
       product = Product.new(product_params)
 
-      sync_task(::Actions::Katello::Product::Create, product, @organization)
+      sync_task(::Actions::Katello::Product::Create, product)
       respond(:resource => product)
     end
 

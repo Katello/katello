@@ -14,10 +14,13 @@ module Actions
     module Product
 
       class Create < Actions::EntryAction
-        def plan(product, organization)
+        def plan(product)
           product.disable_auto_reindex!
-          product.provider = organization.anonymous_provider
-          product.organization = organization
+
+          if product.organization
+            product.provider = product.organization.anonymous_provider
+          end
+          product.save!
 
           cp_create = plan_action(::Actions::Candlepin::Product::Create,
                                   :name => product.name,
@@ -27,20 +30,23 @@ module Actions
           cp_id = cp_create.output[:response][:id]
 
           plan_action(::Actions::Candlepin::Product::CreateUnlimitedSubscription,
-                      :owner_key => organization.label,
+                      :owner_key => product.organization.label,
                       :product_id => cp_id)
-          product.save!
+
           action_subject product, :cp_id => cp_id
 
-          plan_self
+          plan_self(:user_id => ::User.current.id)
           plan_action ElasticSearch::Reindex, product
         end
 
         def finalize
+          ::User.current = ::User.find(input[:user_id])
           product = ::Katello::Product.find(input[:product][:id])
           product.disable_auto_reindex!
           product.cp_id = input[:cp_id]
           product.save!
+        ensure
+          ::User.current = nil
         end
 
         def humanized_name

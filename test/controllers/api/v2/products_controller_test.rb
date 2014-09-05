@@ -67,10 +67,9 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
       :name => 'fedora product',
       :description => 'this is my cool new product.'
     }
-    Api::V2::ProductsController.any_instance.expects(:sync_task).with do |action_class, prod, org|
+    Api::V2::ProductsController.any_instance.expects(:sync_task).with do |action_class, prod|
       action_class.must_equal ::Actions::Katello::Product::Create
       prod.must_be_kind_of(Product)
-      org.must_equal @organization
       prod.provider = @provider
     end
 
@@ -97,16 +96,6 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     assert_protected_action(:create, allowed_perms, denied_perms) do
       post :create, :product => {:name => "foo"}, :organization_id => @organization.id
     end
-  end
-
-  def test_create_with_bad_org
-    product_params = {
-     :name => 'fedora product',
-     :description => 'this is my cool new product.'
-    }
-    post :create, :product => product_params, :organization_id => 'asdfdsafds'
-
-    assert_response 404
   end
 
   def test_show

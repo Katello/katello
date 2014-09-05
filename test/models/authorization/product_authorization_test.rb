@@ -63,6 +63,25 @@ class ProductAuthorizationAdminTest < AuthorizationTestBase
     refute_empty Product.readable_repositories([Repository.first.id])
   end
 
+  test "should be invalid if not authorized to view gpg keys" do
+    @prod.gpg_key = katello_gpg_keys(:fedora_gpg_key)
+
+    assert @prod.valid?
+    assert_empty @prod.errors[:gpg_key]
+  end
+
+  test "should be invalid if not authorized to view sync plans" do
+    @prod.sync_plan = katello_sync_plans(:sync_plan_hourly)
+
+    assert @prod.valid?
+    assert_empty @prod.errors[:sync_plan]
+  end
+
+  test "should be invalid if user does not belong to the organization" do
+    assert @prod.valid?
+    assert_empty @prod.errors[:organizations]
+  end
+
 end
 
 class ProductAuthorizationNoPermsTest < AuthorizationTestBase

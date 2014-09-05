@@ -98,7 +98,7 @@ module ::Actions::Katello::Product
       product.expects(:disable_auto_reindex!).returns
       product.expects(:save!).returns( [] )
 
-      plan_action(action, product, product.organization)
+      plan_action(action, product)
 
       assert_action_planed_with(action,
                                 ::Actions::Candlepin::Product::Create,
