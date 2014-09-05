@@ -145,13 +145,13 @@ module Katello
   end
 
   def self.git_commit_hash
-    hash = %x{cd #{File.dirname(__FILE__)} && git rev-parse HEAD 2>/dev/null}.chop
+    hash = `cd #{File.dirname(__FILE__)} && git rev-parse HEAD 2>/dev/null`.chop
     $?.exitstatus.zero? ? "git: #{hash}" : N_("Unknown") # rubocop:disable SpecialGlobalVars
   end
 
   def self.rpm_package_name(config)
     package = config.katello? ? 'katello' : 'katello-headpin'
-    rpm = %x{rpm -q #{package} --queryformat '%{VERSION}-%{RELEASE}' 2>&1}
+    rpm = `rpm -q #{package} --queryformat '%{VERSION}-%{RELEASE}' 2>&1`
     $?.exitstatus.zero? ? rpm : N_("Unknown") # rubocop:disable SpecialGlobalVars
   end
 end

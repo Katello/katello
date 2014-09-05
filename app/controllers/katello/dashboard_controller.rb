@@ -15,7 +15,7 @@ class DashboardController < Katello::ApplicationController
 
   helper ErrataHelper
 
-  before_filter :update_preferences_quantity , :except => [:index, :section_id]
+  before_filter :update_preferences_quantity, :except => [:index, :section_id]
   #before_filter :update_preferences_age , :except => [:index, :section_id]
 
   def index

@@ -33,8 +33,8 @@ module Authorization::System
 
     def readable_search_filters(org)
       {:or => [
-          {:terms => {:environment_id => KTEnvironment.readable.pluck(:id) }}
-        ]
+        {:terms => {:environment_id => KTEnvironment.readable.pluck(:id) }}
+      ]
       }
     end
 

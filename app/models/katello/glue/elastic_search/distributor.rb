@@ -31,15 +31,15 @@ module Glue::ElasticSearch::Distributor
                                        "custom_info.KEYNAME"]
 
       dynamic_templates = [
-          {
-            "custom_info_string" => {
-              :path_match => "custom_info.*",
-              :mapping => {
-                  :type => "string",
-                  :analyzer => "kt_name_analyzer"
-              }
+        {
+          "custom_info_string" => {
+            :path_match => "custom_info.*",
+            :mapping => {
+                :type => "string",
+                :analyzer => "kt_name_analyzer"
             }
           }
+        }
       ]
 
       mapping   :dynamic_templates => dynamic_templates do

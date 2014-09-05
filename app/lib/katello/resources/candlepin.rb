@@ -118,10 +118,10 @@ module Resources
           end
         end
 
-# rubocop:disable ParameterLists
+        # rubocop:disable ParameterLists
         def create(env_id, key, name, type, facts, installed_products, autoheal = true, release_ver = nil,
                    service_level = "", uuid = "", capabilities = nil, activation_keys = [], guest_ids = [])
-# rubocop:enable ParameterLists
+          # rubocop:enable ParameterLists
 
           activation_key_ids = activation_keys.collect do |activation_key|
             activation_key.cp_name

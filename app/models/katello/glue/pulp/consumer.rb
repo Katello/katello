@@ -64,8 +64,8 @@ module Glue::Pulp::Consumer
       bind_ids      = update_ids - intersection
       unbind_ids    = bound_ids - intersection
 
-      Rails.logger.debug "Bound #{} repo ids: #{bound_ids.inspect}"
-      Rails.logger.debug "Update #{} repo ids: #{update_ids.inspect}"
+      Rails.logger.debug "Bound repo ids: #{bound_ids.inspect}"
+      Rails.logger.debug "Update repo ids: #{update_ids.inspect}"
       Rails.logger.debug "Repo ids to bind: #{bind_ids.inspect}"
       Rails.logger.debug "Repo ids to unbind: #{unbind_ids.inspect}"
 

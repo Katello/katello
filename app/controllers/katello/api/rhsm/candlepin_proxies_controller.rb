@@ -255,7 +255,7 @@ module Katello
       slice_attrs = [:name, :description, :location,
                      :facts, :guestIds, :installedProducts,
                      :releaseVer, :serviceLevel, :lastCheckin, :autoheal
-                     ]
+                    ]
       attrs[:installedProducts] = [] if attrs.key?(:installedProducts) && attrs[:installedProducts].nil?
 
       @system.update_attributes!(attrs.slice(*slice_attrs))

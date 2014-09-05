@@ -18,7 +18,7 @@ module Katello
     api :PUT, "/products/bulk/destroy", N_("Destroy one or more products")
     param :ids, Array, :desc => N_("List of product ids"), :required => true
     def destroy_products
-      deletable_products = @products.deletable#.select{|p| p.user_deletable?}
+      deletable_products = @products.deletable #.select{|p| p.user_deletable?}
       deletable_products.each do |prod|
         async_task(::Actions::Katello::Product::Destroy, prod)
       end

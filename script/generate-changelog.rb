@@ -11,7 +11,7 @@ end
 
 def syscall(*cmd)
   stdout, _stderr, status = Open3.capture3(*cmd)
-  status.success? && stdout.slice!(0..-(1 + $/.size)) # strip trailing eol
+  status.success? && stdout.slice!(0..-(1 + $INPUT_RECORD_SEPARATOR.size)) # strip trailing eol
 end
 
 def issue_numbers(title)

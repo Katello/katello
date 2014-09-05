@@ -18,7 +18,7 @@ module Util
     # initially introduced to support System Event history and was later refactored, so that it may be used
     # for system groups...etc.  Refer to the job.rb and system_task.rb for examples of it's usage.
     TYPES = {
-        #package tasks
+       #package tasks
        :package_install => {
             :english_name => N_("Package Install"),
             :type => :package,
@@ -61,7 +61,7 @@ module Util
             },
             :user_message => _('Package Remove scheduled by %s')
         },
-        #package group tasks
+       #package group tasks
        :package_group_install => {
             :english_name => N_("Package Group Install"),
             :type => :package_group,

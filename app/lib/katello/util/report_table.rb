@@ -20,7 +20,7 @@ module Util
 
     def initialize(params)
       self.transform = params[:transforms]
-      self.column_names = params.fetch(:column_names, [])#retained for ordering
+      self.column_names = params.fetch(:column_names, []) #retained for ordering
       self.data = params[:data]
       self.renamed_columns = {}
       self.column_hash = {}

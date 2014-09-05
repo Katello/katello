@@ -79,7 +79,7 @@ module Katello
       }
     end
 
-    def facet_search(item_class, term , options)
+    def facet_search(item_class, term, options)
       fail "@search_service search not defined" if @search_service.nil?
       facet_name = 'facet_search'
 

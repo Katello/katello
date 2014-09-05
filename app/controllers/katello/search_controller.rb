@@ -79,13 +79,13 @@ class SearchController < Katello::ApplicationController
   end
 
   def is_valid?(path, query)
-      # the path may contain a service prefix (e.g. /katello).  if it does, remove it from the path when
-      # checking for path validity.  This is required since the routes do not know of this prefix.
-      #path = path.split(Katello.config.prefix_url).last
-      #path_details = Rails.application.routes.recognize_path(path)
+    # the path may contain a service prefix (e.g. /katello).  if it does, remove it from the path when
+    # checking for path validity.  This is required since the routes do not know of this prefix.
+    #path = path.split(Katello.config.prefix_url).last
+    #path_details = Rails.application.routes.recognize_path(path)
 
-      #eval(path_details[:controller].singularize.camelize).readable(current_organization).complete_for(query,
-      #  {:organization_id => current_organization})
+    #eval(path_details[:controller].singularize.camelize).readable(current_organization).complete_for(query,
+    #  {:organization_id => current_organization})
 
     return true
   end

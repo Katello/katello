@@ -66,7 +66,7 @@ module Glue::Candlepin::Consumer
     def initialize(attrs = nil, options = {})
       if attrs.nil?
         super
-      elsif
+      else
         type_key = attrs.key?('type') ? 'type' : :type
         #rename "type" to "cp_type" (activerecord and candlepin variable name conflict)
         if attrs.key?(type_key) && !(attrs.key?(:cp_type) || attrs.key?('cp_type'))

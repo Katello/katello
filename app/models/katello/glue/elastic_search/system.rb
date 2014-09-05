@@ -42,7 +42,7 @@ module Glue::ElasticSearch::System
                                         :memory,
                                         :sockets,
                                         :content_view
-                      ]},
+                                       ]},
                     :display_attrs => [:name,
                                        :description,
                                        :id,
@@ -59,27 +59,27 @@ module Glue::ElasticSearch::System
                                        :status,
                                        :virtual_host,
                                        :virtual_guests
-                    ]
+                                      ]
 
       dynamic_templates = [
-          {
-            "fact_string" => {
-              :path_match => "facts.*",
-              :mapping => {
-                  :type => "string",
-                  :analyzer => "kt_name_analyzer"
-              }
-            }
-          },
-          {
-            "custom_info_string" => {
-              :path_match => "custom_info.*",
-              :mapping => {
-                  :type => "string",
-                  :analyzer => "kt_name_analyzer"
-              }
+        {
+          "fact_string" => {
+            :path_match => "facts.*",
+            :mapping => {
+                :type => "string",
+                :analyzer => "kt_name_analyzer"
             }
           }
+        },
+        {
+          "custom_info_string" => {
+            :path_match => "custom_info.*",
+            :mapping => {
+                :type => "string",
+                :analyzer => "kt_name_analyzer"
+            }
+          }
+        }
       ]
 
       # http://www.elasticsearch.org/guide/reference/mapping/index.html

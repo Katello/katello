@@ -336,16 +336,16 @@ module Glue::Provider
 
     def import_error_message(display_message)
       error_texts = [
-          _("Subscription manifest upload for provider '%s' failed.") % self.name,
-          (_("Reason: %s") % display_message unless display_message.blank?)
+        _("Subscription manifest upload for provider '%s' failed.") % self.name,
+        (_("Reason: %s") % display_message unless display_message.blank?)
       ].compact
       error_texts.join('<br />')
     end
 
     def refresh_error_message(display_message)
       error_texts = [
-          _("Subscription manifest refresh for provider '%s' failed.") % self.name,
-          (_("Reason: %s") % display_message unless display_message.blank?)
+        _("Subscription manifest refresh for provider '%s' failed.") % self.name,
+        (_("Reason: %s") % display_message unless display_message.blank?)
       ].compact
       error_texts.join('<br />')
     end
@@ -450,9 +450,9 @@ module Glue::Provider
         # For MANIFEST_SAME simply inform that no action was taken
         if !results['conflicts'].nil? && results['conflicts'].include?('MANIFEST_SAME')
           error_texts = [
-              _("Subscription manifest import for provider '%s' skipped") % self.name,
-              _("Reason: %s") % _("Manifest subscriptions unchanged from previous")
-              ]
+            _("Subscription manifest import for provider '%s' skipped") % self.name,
+            _("Reason: %s") % _("Manifest subscriptions unchanged from previous")
+          ]
           error_texts.join('<br />')
           Notify.message(error_texts, :request_type => 'providers__update_redhat_provider',
                                       :organization => self.organization)

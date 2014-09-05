@@ -72,7 +72,7 @@ module Glue::Pulp::Repo
     def initialize(attrs = nil, options = {})
       if attrs.nil?
         super
-      elsif
+      else
         #rename "type" to "cp_type" (activerecord and candlepin variable name conflict)
         #if attrs.has_key?(type_key) && !(attrs.has_key?(:cp_type) || attrs.has_key?('cp_type'))
         #  attrs[:cp_type] = attrs[type_key]
