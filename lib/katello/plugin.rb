@@ -16,14 +16,14 @@ Foreman::Plugin.register :katello do
          :url_hash => {:controller => 'katello/api/v2/subscriptions',
                        :action => 'index'},
          :engine => Katello::Engine
-   # TODO
-   # Refs http://projects.theforeman.org/issues/4883
-   # menu :top_menu,
-   #      :subscription_manager_applications,
-   #      :caption => N_('Subscription Manager Applications'),
-   #      :url_hash => {:controller => 'katello/distributors',
-   #                    :action => 'index'},
-   #      :engine => Katello::Engine
+    # TODO
+    # Refs http://projects.theforeman.org/issues/4883
+    # menu :top_menu,
+    #      :subscription_manager_applications,
+    #      :caption => N_('Subscription Manager Applications'),
+    #      :url_hash => {:controller => 'katello/distributors',
+    #                    :action => 'index'},
+    #      :engine => Katello::Engine
     menu :top_menu,
          :activation_keys,
          :url => '/activation_keys',

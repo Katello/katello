@@ -27,7 +27,7 @@ class SyncPlan < Katello::Model
   WEEKLY = 'weekly'
   TYPES = [NONE, HOURLY, DAILY, WEEKLY]
   DURATION = { NONE => '', HOURLY => 'T1H', DAILY => 'T24H', WEEKLY => '7D' }
-  WEEK_DAYS = (%W(Sunday Monday Tuesday Wednesday Thursday Friday)).collect{|d| N_(d)}
+  WEEK_DAYS = (%w(Sunday Monday Tuesday Wednesday Thursday Friday)).collect{|d| N_(d)}
 
   belongs_to :organization, :inverse_of => :sync_plans
   has_many :products, :class_name => "Katello::Product", :dependent => :nullify

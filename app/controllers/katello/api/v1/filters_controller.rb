@@ -17,7 +17,7 @@
 module Katello
 class Api::V1::FiltersController < Api::V1::ApiController
 
-# TODO: remove me
+  # TODO: remove me
 
 end
 end

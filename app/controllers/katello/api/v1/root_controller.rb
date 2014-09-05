@@ -47,7 +47,7 @@ class Api::V1::RootController < Api::V1::ApiController
                     "/katello/api/tasks/",
                     "/katello/api/gpg_keys/",
                     "/katello/api/environments/"
-    ]
+                   ]
 
     # filter out katello-only apis from headpin resource list
     if !Katello.config.katello?
