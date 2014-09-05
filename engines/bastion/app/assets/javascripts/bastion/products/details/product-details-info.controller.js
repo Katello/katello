@@ -80,17 +80,23 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
         });
 
         $scope.syncProduct = function () {
+            var success, error;
             $scope.productSyncing = true;
-            $scope.product.$sync(function () {
-                $scope.productSyncing = false;
+
+            success = function () {
                 $scope.successMessages.push(translate("Successfully started sync for %s products, you are free to leave this page.")
                     .replace('%s', $scope.product.name));
-            }, function (response) {
                 $scope.productSyncing = false;
+            };
+
+            error = function (response) {
                 _.each(response.data.errors, function (errorMessage) {
                     $scope.errorMessages.push(translate("An error occurred saving the Product: ") + errorMessage);
                 });
-            });
+                $scope.productSyncing = false;
+            };
+
+            Product.sync({id: $scope.$stateParams.productId}, success, error);
         };
     }]
 );
