@@ -55,6 +55,7 @@ module Actions
 
             product.reload.destroy!
             plan_action(ElasticSearch::Reindex, product)
+            plan_action(ElasticSearch::Provider::ReindexSubscriptions, product.provider)
           end
         end
 

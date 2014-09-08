@@ -12,8 +12,8 @@
 module Actions
   module Katello
     module Product
-
       class Create < Actions::EntryAction
+
         def plan(product, organization)
           product.disable_auto_reindex!
           product.provider = organization.anonymous_provider
@@ -34,6 +34,7 @@ module Actions
 
           plan_self
           plan_action ElasticSearch::Reindex, product
+          plan_action ElasticSearch::Provider::ReindexSubscriptions, product.provider
         end
 
         def finalize

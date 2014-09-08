@@ -375,9 +375,8 @@ module Glue::Provider
       end
 
       # Index pools
-      # Note: Only the Red Hat provider subscriptions are being indexed.
       Katello::Pool.index_pools(subscriptions, [{:term => {:org => self.organization.label}},
-                                                {:term => {:provider_id => self.organization.redhat_provider.id}}])
+                                                {:term => {:provider_id => self.id}}])
 
       subscriptions
     end
