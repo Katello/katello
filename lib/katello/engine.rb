@@ -12,6 +12,10 @@ module Katello
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
     end
 
+    initializer 'katello.load_default_settings', :before => :load_config_initializers do
+      require_dependency File.expand_path('../../../app/models/setting/katello.rb', __FILE__) if (Setting.table_exists? rescue(false))
+    end
+
     initializer "katello.apipie" do
       Apipie.configuration.api_controllers_matcher << "#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"
       Apipie.configuration.ignored += %w[Api::V2::OrganizationsController]
