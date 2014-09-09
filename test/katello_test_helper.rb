@@ -153,6 +153,7 @@ class ActiveSupport::TestCase
     User.current = User.find(users(:admin))
     org = org.nil? ? :empty_organization : org
     organization = Organization.find(taxonomies(org.to_sym))
+    organization.stubs(:label_not_changed).returns(true)
     organization.setup_label_from_name
     organization.save!
     User.current = saved_user
