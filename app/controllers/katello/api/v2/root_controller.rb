@@ -23,7 +23,7 @@ class Api::V2::RootController < Api::V2::ApiController
 
   def resource_list
     all_routes = Engine.routes.routes
-    all_routes.collect! { |r| r.path.spec.to_s }
+    all_routes = all_routes.collect { |r| r.path.spec.to_s }
 
     api_root_routes = all_routes.select do |path|
       path =~ %r{^/katello/api(\(/:api_version\))?/[^/]+/:id\(\.:format\)$}
