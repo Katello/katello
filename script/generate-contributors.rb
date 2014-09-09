@@ -4,7 +4,7 @@ require 'open3'
 
 def syscall(*cmd)
   stdout, _stderr, status = Open3.capture3(*cmd)
-  status.success? && stdout.slice!(0..-(1 + $/.size)) # strip trailing eol
+  status.success? && stdout.slice!(0..-(1 + $INPUT_RECORD_SEPARATOR.size))
 end
 
 log = syscall("git log --pretty=format:'%h %s XX %aN <%cE>' | grep -v Merge")
