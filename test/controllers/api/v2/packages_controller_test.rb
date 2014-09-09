@@ -61,7 +61,7 @@ class Api::V2::PackagesControllerTest < ActionController::TestCase
   def test_index_parameters
     get :index
 
-    assert_response 400
+    assert_response :success
   end
 
   def test_index_protected

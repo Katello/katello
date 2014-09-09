@@ -33,7 +33,7 @@ class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
     @destroy_permission = :destroy_products
     @sync_permission = :sync_products
 
-    @auth_permissions = [@read_permission, :view_content_views]
+    @auth_permissions = [@read_permission]
     @unauth_permissions = [@create_permission, @update_permission, @destroy_permission, @sync_permission]
   end
 
@@ -53,6 +53,12 @@ class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
     assert_template %w(katello/api/v2/package_groups/index)
   end
 
+  def test_index_with_content_view_version
+    get :index, :content_view_version_id => ContentViewVersion.first.id
+    assert_response :success
+    assert_template %w(katello/api/v2/package_groups/index)
+  end
+
   def test_index_protected
     assert_protected_action(:index, @auth_permissions, @unauth_permissions) do
       get :index, :repository_id => @repo.id
@@ -60,8 +66,7 @@ class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
   end
 
   def test_show
-    Repository.stubs(:where).returns([])
-    PackageGroup.expects(:find).once.returns(OpenStruct.new({ :repo_id => @repo.pulp_id }))
+    PackageGroup.expects(:find).once.returns(stub(:repo_id => @repo.pulp_id))
     get :show, :repository_id => @repo.id, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f"
 
     assert_response :success
@@ -76,7 +81,7 @@ class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
 
   def test_show_protected
     pckage_group = stub
-    pckage_group.stubs(:repoids).returns([@repo.pulp_id])
+    pckage_group.stubs(:repo_id).returns([@repo.pulp_id])
     PackageGroup.stubs(:find).with("3805853f-5cae-4a4a-8549-0ec86410f58f").returns(pckage_group)
 
     assert_protected_action(:show, @auth_permissions, @unauth_permissions) do

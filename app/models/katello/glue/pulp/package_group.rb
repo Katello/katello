@@ -16,7 +16,7 @@ module Glue::Pulp::PackageGroup
     base.send :include, InstanceMethods
 
     base.class_eval do
-      attr_accessor :name, :package_group_id, :default_package_names, :id, :repoid, :conditional_package_names,
+      attr_accessor :name, :package_group_id, :default_package_names, :id, :repo_id, :conditional_package_names,
                       :mandatory_package_names, :description, :optional_package_names
 
       def self.find(id)
