@@ -11,7 +11,7 @@ Katello::Engine.routes.draw do
 
     namespace :api do
 
-      scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 2, :default => true) do
+      scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v2/, :constraints => ApiConstraints.new(:version => 2, :default => true) do
 
         ##############################
         # re-routes alphabetical
@@ -228,9 +228,6 @@ Katello::Engine.routes.draw do
 
           api_resources :gpg_keys, :only => [:index]
 
-          match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
-          match '/default_info/:informable_type/*keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
-
           api_resources :content_views, :only => [:index, :create]
           api_resources :subscriptions, :only => [:index, :upload, :delete_manifest, :refresh_manifest, :show] do
             collection do
@@ -245,9 +242,6 @@ Katello::Engine.routes.draw do
           member do
             delete :destroy_systems
           end
-
-          resource :packages, :action => [:create, :update, :destroy], :controller => :host_collection_packages
-          api_resources :errata, :only => [:index, :create], :controller => :host_collection_errata
         end
 
         api_resources :systems, :only => [] do
@@ -361,28 +355,8 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :sync_plans, :only => [:index, :show, :update, :destroy]
-        api_resources :about, :only => [:index]
-
-        # api custom information
-        match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
-        match '/custom_info/:informable_type/:informable_id' => 'custom_info#index', :via => :get, :as => :custom_info
-        match '/custom_info/:informable_type/:informable_id/*keyname' => 'custom_info#show', :via => :get, :as => :show_custom_info
-        match '/custom_info/:informable_type/:informable_id/*keyname' => 'custom_info#update', :via => :put, :as => :update_custom_info
-        match '/custom_info/:informable_type/:informable_id/*keyname' => 'custom_info#destroy', :via => :delete, :as => :destroy_custom_info
 
       end # module v2
-
-      # routes that didn't change in v2 and point to v1
-      scope "(:api_version)", :module => :v1, :defaults => {:api_version => 'v2'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 2, :default => true) do
-
-        api_resources :crls, :only => [:index]
-
-        # development / debugging support
-        if Rails.env == "development"
-          match 'status/memory' => 'status#memory', :via => :get
-        end
-
-      end # module v1
 
     end # '/api' namespace
   end # '/katello' namespace
