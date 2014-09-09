@@ -90,7 +90,6 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
         current_capsule_content.capsule.id == capsule_content.capsule.id &&
             dev_puppet_env == repo
       end
-      assert_action_planed_with action, ::Actions::Katello::Repository::NodeMetadataGenerate, dev_puppet_env
     end
 
     it 'plans without existing puppet environment' do

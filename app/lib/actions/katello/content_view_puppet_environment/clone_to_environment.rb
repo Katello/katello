@@ -41,8 +41,6 @@ module Actions
                 ::Katello::CapsuleContent.with_environment(environment).each do |capsule_content|
                   plan_action(CapsuleContent::AddRepository, capsule_content, clone)
                 end
-
-                plan_action(Katello::Repository::NodeMetadataGenerate, clone)
               end
             end
           end
