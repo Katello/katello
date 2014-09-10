@@ -2,13 +2,12 @@
 kind: finish
 name: Katello Kickstart default finish
 oses:
-- CentOS 4
 - CentOS 5
 - CentOS 6
 - CentOS 7
-- Fedora 16
-- Fedora 17
-- Fedora 18
+- RedHat 5
+- RedHat 6
+- RedHat 7
 - Fedora 19
 - Fedora 20
 %>
@@ -17,6 +16,7 @@ oses:
   os_major = @host.operatingsystem.major.to_i
   pm_set = @host.puppetmaster.empty? ? false : true
   puppet_enabled = pm_set || @host.params['force-puppet']
+  salt_enabled = @host.params['salt_master'] ? true : false
 %>
 
 <%= snippet "subscription_manager_registration" %>
@@ -36,6 +36,17 @@ echo "updating system time"
 
 # update all the base packages from the updates repository
 yum -t -y -e 0 update
+
+<% if salt_enabled %>
+yum -t -y -e 0 install salt-minion
+cat > /etc/salt/minion << EOF
+<%= snippet 'saltstack_minion' %>
+EOF
+# Setup salt-minion to run on system reboot
+/sbin/chkconfig --level 345 salt-minion on
+# Running salt-call to trigger key signing
+salt-call --no-color --grains >/dev/null
+<% end -%>
 
 <% if puppet_enabled %>
 yum -t -y -e 0 install puppet
