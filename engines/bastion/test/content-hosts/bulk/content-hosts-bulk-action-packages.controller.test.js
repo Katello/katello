@@ -13,7 +13,7 @@
 
 describe('Controller: ContentHostsBulkActionPackagesController', function() {
     var $scope, $q, translate, ContentHostBulkAction, HostCollection, Organization,
-		Task, CurrentOrganization, selected;
+        Task, CurrentOrganization, selected;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 

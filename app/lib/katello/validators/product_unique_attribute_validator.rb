@@ -18,7 +18,9 @@ module Katello
         unique = self.unique_attribute?(record, attribute, value)
 
         if !unique
-          record.errors[attribute] << _("Product with #{attribute} '%s' already exists in this organization.") % value
+          message = _("Product with %{attribute} '%{id}' already exists in this organization.") %
+                    {:attribute => attribute, :id => value}
+          record.errors[attribute] << message
         end
       end
 

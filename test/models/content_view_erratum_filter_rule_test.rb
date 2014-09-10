@@ -25,7 +25,7 @@ class ContentViewErratumFilterRuleTest < ActiveSupport::TestCase
   def setup
     User.current = User.find(users(:admin))
 
-    @rule = FactoryGirl.build(:katello_content_view_erratum_filter_rule)
+    @rule = FactoryGirl.build(:katello_content_view_erratum_filter_rule, :errata_id => '1')
 
     @start_date = "2013-01-01"
     @end_date = "2013-01-31"

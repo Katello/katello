@@ -17,7 +17,7 @@ class ContentViewPackageGroupFilterRuleTest < ActiveSupport::TestCase
 
   def self.before_suite
     models = ["Organization", "KTEnvironment", "User", "ContentView",
-              "ContentViewEnvironment", "ContentViewFilter",
+              "ContentViewVersion", "ContentViewEnvironment", "ContentViewFilter",
               "ContentViewPackageGroupFilter", "ContentViewPackageGroupFilterRule"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
   end
@@ -44,6 +44,7 @@ class ContentViewPackageGroupFilterRuleTest < ActiveSupport::TestCase
     attrs = FactoryGirl.attributes_for(:katello_content_view_package_group_filter_rule,
                                        :uuid => @rule.uuid)
 
+    attrs[:filter] = @rule.filter
     assert_raises(ActiveRecord::RecordInvalid) do
       ContentViewPackageGroupFilterRule.create!(attrs)
     end

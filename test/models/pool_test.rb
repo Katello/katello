@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
 module Katello
   class PoolTest < ActiveSupport::TestCase
@@ -50,15 +50,17 @@ module Katello
     end
 
     def test_find_by_organization_and_id
-      test_raises(ActiveRecord::RecordNotFound) do
-        Pool.find_by_organization_and_id!(katello_organizations(:acme_corporation), 3)
+      Resources::Candlepin::Pool.expects(:find).returns(nil)
+      Pool.any_instance.expects(:organization).returns(nil)
+      assert_raises(ActiveRecord::RecordNotFound) do
+        Pool.find_by_organization_and_id!(get_organization, 3)
       end
     end
 
     def test_systems
       active_pool = FactoryGirl.build(:katello_pool, :active)
       systems = [katello_systems(:simple_server)]
-      System.expects(:all_by_pool_id).with(active_pool.cp_id).returns(systems)
+      System.expects(:all_by_pool).with(active_pool.cp_id).returns(systems)
       assert_equal active_pool.systems, systems
     end
   end

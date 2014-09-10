@@ -17,7 +17,7 @@ class ContentViewPuppetEnvironmentTest < ActiveSupport::TestCase
 
   def self.before_suite
     models = ["Organization", "KTEnvironment", "User", "ContentView",
-              "ContentViewEnvironment", "ContentViewPuppetEnvironment"]
+              "ContentViewEnvironment", "ContentViewPuppetEnvironment", "ContentViewVersion"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
   end
 
@@ -55,7 +55,7 @@ class ContentViewPuppetEnvironmentTest < ActiveSupport::TestCase
     assert       @puppet_env.save
     refute_empty ContentViewPuppetEnvironment.in_environment(@library)
 
-    dev = KTEnvironment.find(katello_environments(:dev).id)
+    dev = KTEnvironment.find(katello_environments(:staging).id)
     assert_empty ContentViewPuppetEnvironment.in_environment(dev)
   end
 
