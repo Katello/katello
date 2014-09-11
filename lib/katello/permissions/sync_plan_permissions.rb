@@ -3,7 +3,7 @@ require 'katello/plugin.rb'
 Foreman::Plugin.find(:katello).security_block :sync_plans do
   permission :view_sync_plans,
              {
-              'katello/sync_plans' => [:all, :index],
+              'katello/sync_plans' => [:all, :index, :auto_complete_search],
               'katello/api/v2/sync_plans' => [:index, :show, :add_products, :remove_products, :available_products],
              },
              :resource_type => 'Katello::SyncPlan'

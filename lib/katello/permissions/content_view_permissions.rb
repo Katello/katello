@@ -13,7 +13,7 @@ Foreman::Plugin.find(:katello).security_block :content_views do
               'katello/api/v2/package_groups' => [:index, :show],
               'katello/api/v2/errata' => [:index, :show],
               'katello/api/v2/puppet_modules' => [:index, :show],
-              'katello/content_views' => [:auto_complete],
+              'katello/content_views' => [:auto_complete, :auto_complete_search],
               'katello/errata' => [:short_details, :auto_complete],
               'katello/packages' => [:details, :auto_complete],
               'katello/products' => [:auto_complete],

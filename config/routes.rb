@@ -27,6 +27,8 @@ Katello::Engine.routes.draw do
       end
     end
 
+    match ':kt_path/auto_complete_search', :action => :auto_complete_search, :controller => :auto_complete_search, :via => :get
+
     resources :content_views, :only => [:index] do
       collection do
         get :auto_complete

@@ -3,6 +3,7 @@ require 'katello/plugin.rb'
 Foreman::Plugin.find(:katello).security_block :content_hosts do
   permission :view_content_hosts,
              {
+              'katello/content_hosts'        => [:auto_complete_search],
               'katello/api/v2/systems' => [:index, :show, :errata, :package_profile,
                                            :report, :pools, :releases, :available_host_collections, :events],
               'katello/api/v2/system_errata' => [:show],

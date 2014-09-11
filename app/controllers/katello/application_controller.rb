@@ -106,6 +106,15 @@ class ApplicationController < ::ApplicationController
 
   include Menu
 
+  # Override Foreman authorized method to support permissions on meta controllers that handle multiple routes
+  def authorized
+    if self.respond_to? :permission_controller
+      User.current.allowed_to?(params.slice(:action, :id).merge(:controller => permission_controller))
+    else
+      super
+    end
+  end
+
   def section_id
     'generic'
   end

@@ -40,6 +40,34 @@ module Util
     def self.uuid
       UUIDTools::UUID.random_create.to_s
     end
+
+    def self.controller_path_to_model_hash
+      {
+        "katello/environments"  => "Katello::KTEnvironment",
+        "katello/content_hosts" => "Katello::System"
+      }
+    end
+
+    def self.controller_path_to_model(controller)
+      if controller_path_to_model_hash.key? controller.to_s
+        controller_path_to_model_hash[controller.to_s].constantize
+      else
+        controller.to_s.classify.constantize
+      end
+    end
+
+    def self.model_to_controller_path_hash
+      controller_path_to_model_hash.invert
+    end
+
+    def self.model_to_controller_path(model)
+      if model_to_controller_path_hash.key? model.to_s
+        model_to_controller_path_hash[model.to_s]
+      else
+        model.to_s.underscore.pluralize
+      end
+    end
+
   end
 
 end

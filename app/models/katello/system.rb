@@ -76,12 +76,7 @@ class System < Katello::Model
   scope :by_uuids, lambda { |uuids| where(:uuid => uuids)}
 
   scoped_search :on => :name, :complete_value => true
-  scoped_search :on => :organization_id, :complete_value => true, :ext_method => :search_by_environment
-
-  def self.search_by_environment(key, operator, value)
-    conditions = "environment_id IN (#{::Organization.find(value).kt_environments.pluck(:id).join(',')})"
-    {:conditions => conditions}
-  end
+  scoped_search :in => :environment, :on => :organization_id, :complete_value => true, :rename => :organization_id
 
   def self.in_organization(organization)
     where(:environment_id => organization.kt_environments.pluck(:id))

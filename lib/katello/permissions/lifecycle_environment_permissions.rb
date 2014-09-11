@@ -5,6 +5,7 @@ Foreman::Plugin.find(:katello).security_block :lifecycle_environments do
              {
               'katello/api/v2/environments' => [:index, :show, :paths, :repositories],
               'katello/api/rhsm/candlepin_proxies' => [:rhsm_index],
+              'katello/environments' => [:auto_complete_search]
              },
              :resource_type => 'Katello::KTEnvironment'
   permission :create_lifecycle_environments,
