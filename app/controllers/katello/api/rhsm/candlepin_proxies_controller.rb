@@ -89,7 +89,7 @@ module Katello
     #api :GET, "/owners/:organization_id/environments", N_("List environments for RHSM")
     def rhsm_index
       organization = find_organization
-      @all_environments = get_content_view_environments(query_params[:name], organization).collect do |env|
+      @all_environments = get_content_view_environments(params[:name], organization).collect do |env|
         {
           :id  => env.cp_id,
           :name => env.label,
