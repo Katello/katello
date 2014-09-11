@@ -132,7 +132,7 @@ module Katello
       ::PuppetClassImporter.send :include, Katello::Services::PuppetClassImporterExtensions
     end
 
-    initializer 'katello.register_plugin', :after => :disable_dependency_loading do
+    initializer 'katello.register_plugin', :after => :finisher_hook do
       require 'katello/plugin'
       require 'katello/permissions'
     end
