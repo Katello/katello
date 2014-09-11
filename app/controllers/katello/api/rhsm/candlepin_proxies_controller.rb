@@ -15,6 +15,8 @@ module Katello
 
     include Katello::Authentication::ClientAuthentication
 
+    skip_before_filter :turn_on_strong_params
+
     before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin, :enabled_repos,
                                           :upload_package_profile, :regenerate_identity_certificates, :facts,
                                           :available_releases]
