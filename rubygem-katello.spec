@@ -236,6 +236,88 @@ ln -s %{gem_instdir}/public/assets/bastion %{buildroot}%{foreman_dir}/public/ass
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Fri Sep 12 2014 Justin Sherrill <jsherril@redhat.com> 2.0.0-1
+- bumping to katello 2.0 (jsherril@redhat.com)
+- Automatic commit of package [katello] minor release [2.0.0-0].
+  (jsherril@redhat.com)
+- fixes #7410 - replaced query_params with params (thomasmckay@redhat.com)
+- fixes #7404 - add salt support to katello templates (stbenjam@redhat.com)
+- Fixes #7395: Turn off strong params for Candlepin proxies controller.
+  (ericdhelms@gmail.com)
+- fixes #6488 enable autosearch completion on Katello model filters
+  (stbenjam@redhat.com)
+- Fixes #7394: Stop blocking plugin routes from being loaded properly.
+  (ericdhelms@gmail.com)
+- Fixes #3584: Enable all tests to be run. (ericdhelms@gmail.com)
+- Fixes #7390: Change global variable $/ to $INPUT_RECORD_SEPARATOR.
+  (ericdhelms@gmail.com)
+- Fixes #7389: Prevent undefined method error from root controller.
+  (ericdhelms@gmail.com)
+- Fixes #7358/BZ1138411: correct empty org message logic on dashboard.
+  (walden@redhat.com)
+- Fixes #6287: Remove V1 API entirely. (ericdhelms@gmail.com)
+- refs #6370 - automatically associate OS's with templates
+  (stbenjam@redhat.com)
+- Fixes #7307 - Refactor errata/package/package group APIs
+  (daviddavis@redhat.com)
+- Refs #7156 - Fixing a bunch of small rubocop items (daviddavis@redhat.com)
+- fixes #7360 / BZ 1120595 - UI: Product: fix Sync Now behavior
+  (bbuckingham@redhat.com)
+- Fixes #6942,bz1122924 - subscription reindex (inecas@redhat.com)
+- Fixes #6821/BZ1117636: fix link to content hosts on CV delete page.
+  (walden@redhat.com)
+- fixes #7343 / BZ 1132576 - iso sync - fix issue where progress report not
+  available yet (bbuckingham@redhat.com)
+- fixes #7342 / BZ 1128469 - content view filter - improve behavior when
+  clicking calendar icon (bbuckingham@redhat.com)
+- Fixes #7341: Adds script to generate contributors with initial list.
+  (ericdhelms@gmail.com)
+- fixes #7309 / BZ 1093483 - Repo sync status - update UI cross-links and
+  status based on dynflow task (bbuckingham@redhat.com)
+- fixes #7328 - Adds route for sync-plans, BZ 1132817 (cfouant@redhat.com)
+- Fixes #6773 - Host inherits Content Source from Hostgroup
+  (elobatocs@gmail.com)
+- Fixes #7303 - Added content view version param to errata api
+  (daviddavis@redhat.com)
+- Fixes #7300 - Adding a content view version parameter for packages
+  (daviddavis@redhat.com)
+- Fixes #7242: Script to generate formatted changelog. (ericdhelms@gmail.com)
+- fixes #7292 - Fixes duplicated sync plan route, BZ 1132914
+  (cfouant@redhat.com)
+- Fixes #7283: using translate directive in <span> to avoid infinite loop.
+  (walden@redhat.com)
+- Fixes #7294: replace <th> translate filters with directives.
+  (walden@redhat.com)
+- Fixes #6993: Ensure repo discovery proxy setup is loaded in production.
+  (ericdhelms@gmail.com)
+- fixes #7273 - sync puppet and rpm content together (jsherril@redhat.com)
+- fixes #7278 - Fixes activation key registration hint, BZ 1128245
+  (cfouant@redhat.com)
+- Fixes #7028 - fixing api docs for orgs (tstrachota@redhat.com)
+- fixes #7271 - validate repositories associated to content views
+  (jsherril@redhat.com)
+- fixes #6605 - Adds registered by to content host, BZ 1020402
+  (cfouant@redhat.com)
+- fixes #7162 / BZ 1102763 - capsule - treat task as failed if sync times out
+  with capsule (bbuckingham@redhat.com)
+- Fixes #7272 - system has extra validation on name (dtsang@redhat.com)
+- Fixes #7270/BZ1131661: remove GMT from new sync plan form.
+  (walden@redhat.com)
+- Fixes #6955: using CSS to mimic a <pre> for multiple line support.
+  (walden@redhat.com)
+- fixes #7266 - specify time when creating new ulimited subscriptions
+  (jsherril@redhat.com)
+- Fixes #6990 - No message for admin (oprazak@redhat.com)
+- Fixes #7027: Restrict mongodb to version 2.4 or greater.
+  (ericdhelms@gmail.com)
+- Fixes #7251 - hammer org_id help text missing (dtsang@redhat.com)
+- Fixes #7241/bz1132790 - Enable rh common for ks template (paji@redhat.com)
+- fixes #7084 - add rubygem-hammer_cli_import dep (jmontleo@redhat.com)
+- refs #5271 - update tito for el7 (jsherril@redhat.com)
+- Fixes #7120/BZ980113: use BS3 on dashboard to make it responsive.
+  (walden@redhat.com)
+- Fixes #6726 - sends username in cp-user header. (aruzicka@redhat.com)
+
 * Mon Aug 25 2014 Justin Sherrill <jsherril@redhat.com> 1.5.0-12
 - refs #5271 - remove unused gem dependencies (jsherril@redhat.com)
 
