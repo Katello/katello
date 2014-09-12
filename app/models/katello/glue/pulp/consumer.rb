@@ -17,7 +17,7 @@ module Glue::Pulp::Consumer
     base.send :include, LazyAccessor
 
     base.class_eval do
-      before_save    :save_pulp_orchestration
+      before_save :save_pulp_orchestration
 
       lazy_accessor :pulp_facts, :initializer => lambda {|s| Katello.pulp_server.extensions.consumer.retrieve(uuid) }
       lazy_accessor :package_profile, :initializer => lambda{|s| fetch_package_profile}

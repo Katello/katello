@@ -93,7 +93,7 @@ class Product < Katello::Model
   def repos(env, content_view = nil, include_feedless = true)
     if content_view.nil?
       if !env.library?
-        fail "No content view specified for the repos call in a " +
+        fail "No content view specified for the repos call in a " \
                         "Non library environment #{env.inspect}"
       else
         content_view = env.default_content_view

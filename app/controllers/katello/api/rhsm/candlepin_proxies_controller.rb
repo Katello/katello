@@ -169,7 +169,7 @@ module Katello
             logger.warn("System #{@system.name} (#{@system.id}) requested binding to unknown repo #{path}")
           else
             repos << possible_repos.first
-            logger.warn("System #{@system.name} (#{@system.id}) requested binding to path #{path} matching" +
+            logger.warn("System #{@system.name} (#{@system.id}) requested binding to path #{path} matching" \
                          "#{possible_repos.size} repositories.") if possible_repos.size > 1
           end
         else

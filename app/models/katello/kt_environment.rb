@@ -161,13 +161,13 @@ class KTEnvironment < Katello::Model
 
     if systems.any?
       errors.add(:base,
-         _("Lifecycle Environment %s has associated Content Hosts." +
+         _("Lifecycle Environment %s has associated Content Hosts." \
             " Please unregister or move the associated Content Hosts before trying to delete this lifecycle environment.") % self.name)
     end
 
     if activation_keys.any?
       errors.add(:base,
-         _("Lifecycle Environment %s has associated Activation Keys." +
+         _("Lifecycle Environment %s has associated Activation Keys." \
            " Please change or remove the associated Activation Keys before trying to delete this lifecycle environment.") % self.name)
     end
 

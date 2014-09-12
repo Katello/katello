@@ -433,7 +433,7 @@ class Repository < Katello::Model
       elsif !self.custom? && self.redhat_deletable?
         return true
       else
-        errors.add(:base, _("Repository cannot be deleted since it has already been included in a published Content View. " +
+        errors.add(:base, _("Repository cannot be deleted since it has already been included in a published Content View. " \
                             "Please delete all Content View versions containing this repository before attempting to deleting it."))
 
         return false

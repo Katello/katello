@@ -18,8 +18,8 @@ module Glue::ElasticSearch::HostCollection
     base.class_eval do
       update_related_indexes :systems, :name
 
-      add_system_hook     lambda { |system| system.update_host_collections }
-      remove_system_hook  lambda { |system| system.update_host_collections }
+      add_system_hook lambda { |system| system.update_host_collections }
+      remove_system_hook lambda { |system| system.update_host_collections }
 
       index_options :extended_json => :extended_index_attrs,
                     :json => {:only => [:id, :organization_id, :name, :description, :max_content_hosts]},

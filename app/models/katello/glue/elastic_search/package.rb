@@ -202,14 +202,14 @@ module Glue::ElasticSearch::Package
       end
 
       def self.add_indexed_repoid(pkg_ids, repoid)
-        if !repoid.kind_of?(Array)
+        if !repoid.is_a?(Array)
           repoid = [repoid]
         end
         update_array(pkg_ids, 'repoids', repoid, [])
       end
 
       def self.remove_indexed_repoid(pkg_ids, repoid)
-        if !repoid.kind_of?(Array)
+        if !repoid.is_a?(Array)
           repoid = [repoid]
         end
         update_array(pkg_ids, 'repoids', [], repoid)
