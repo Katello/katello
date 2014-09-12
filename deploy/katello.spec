@@ -149,6 +149,9 @@ usermod -a -G katello-shared katello
 exit 0
 
 %changelog
+* Fri Sep 12 2014 Justin Sherrill <jsherril@redhat.com> 2.1.0-1
+- bumping to katello version to 2.1 (jsherril@redhat.com)
+
 * Fri Sep 12 2014 Justin Sherrill <jsherril@redhat.com> 2.0.0-0
 - fixes #7084 - add rubygem-hammer_cli_import dep (jmontleo@redhat.com)
 - Fixes #6297 - delayed jobs is dead, long live foreman-tasks
