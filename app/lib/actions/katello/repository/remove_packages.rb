@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class RemovePackages < Actions::EntryAction
-
         def plan(repository, uuids)
           fail _("Cannot remove packages from a non-custom repository") if repository.redhat?
           fail _("Can only remove packages from within the Default Content View") unless repository.content_view.default?
@@ -44,7 +43,6 @@ module Actions
         ensure
           ::User.current = nil
         end
-
       end
     end
   end

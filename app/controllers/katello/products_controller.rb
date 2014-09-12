@@ -87,6 +87,5 @@ class ProductsController < Katello::ApplicationController
   def substitutions
     params.slice(:basearch, :releasever)
   end
-
 end
 end

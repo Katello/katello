@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::HostCollectionsController <  Api::V2::ApiController
-
     before_filter :find_host_collection, :only => [:copy, :show, :update, :destroy, :destroy_systems,
                                                    :add_systems, :remove_systems, :systems,
                                                    :add_activation_keys, :remove_activation_keys]
@@ -223,6 +222,5 @@ module Katello
       @activation_key = ActivationKey.find_by_id!(params[:activation_key_id]) if params[:activation_key_id]
       @organization = @activation_key.organization if @activation_key
     end
-
   end
 end

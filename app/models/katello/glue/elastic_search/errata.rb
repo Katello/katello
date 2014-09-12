@@ -12,7 +12,6 @@
 
 module Katello
 module Glue::ElasticSearch::Errata
-
   SHORT_FIELDS =  [:id, :errata_id, :type, :summary, :severity, :title, :issued]
 
   # TODO: break this up into modules

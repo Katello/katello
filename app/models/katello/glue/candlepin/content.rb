@@ -65,6 +65,5 @@ module Glue::Candlepin::Content
       "#{organization.label} #{product.label} #{label}".gsub(/\s/, "_")
     end
   end
-
 end
 end

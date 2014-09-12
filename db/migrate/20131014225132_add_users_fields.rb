@@ -1,5 +1,4 @@
 class AddUsersFields < ActiveRecord::Migration
-
   def change
     add_column :users, :helptips_enabled, :boolean, :default => true
     add_column :users, :hidden, :boolean, :default => false, :null => false
@@ -8,5 +7,4 @@ class AddUsersFields < ActiveRecord::Migration
     add_column :users, :preferences, :text
     add_column :users, :remote_id, :string
   end
-
 end

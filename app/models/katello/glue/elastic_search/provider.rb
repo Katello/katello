@@ -40,6 +40,5 @@ module Glue::ElasticSearch::Provider
       :name_sort => name.downcase
     }
   end
-
 end
 end

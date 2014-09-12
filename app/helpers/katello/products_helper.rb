@@ -67,6 +67,5 @@ module ProductsHelper
     end
     @product_hash
   end
-
 end
 end

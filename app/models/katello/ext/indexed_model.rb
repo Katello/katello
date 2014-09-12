@@ -12,7 +12,6 @@
 
 module Katello
 module Ext::IndexedModel
-
   # TODO: move methods out into submodule
   # rubocop:disable MethodLength
   def self.included(base)
@@ -174,6 +173,5 @@ module Ext::IndexedModel
 
     to_ret.to_json
   end
-
 end
 end

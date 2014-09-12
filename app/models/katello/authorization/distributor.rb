@@ -27,7 +27,6 @@ module Authorization::Distributor
   end
 
   module ClassMethods
-
     def readable(org)
       fail "scope requires an organization" if org.nil?
       if org.distributors_readable?
@@ -55,6 +54,5 @@ module Authorization::Distributor
       (env || org).distributors_registerable?
     end
   end
-
 end
 end

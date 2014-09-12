@@ -15,7 +15,6 @@ require 'erb'
 
 module Katello
   module Configuration
-
     # processes configuration loading from config_files
     class Loader
       attr_reader :config_file_paths,

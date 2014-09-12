@@ -12,7 +12,6 @@
 
 module Katello
 class ErrataController < Katello::ApplicationController
-
   before_filter :lookup_errata, except: [:auto_complete]
 
   def short_details
@@ -42,6 +41,5 @@ class ErrataController < Katello::ApplicationController
     repos += ContentView.readable_repositories.pluck(attribute)
     repos
   end
-
 end
 end

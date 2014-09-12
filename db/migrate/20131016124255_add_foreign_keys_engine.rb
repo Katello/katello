@@ -1,5 +1,4 @@
 class AddForeignKeysEngine < ActiveRecord::Migration
-
   def change
     add_foreign_key "katello_activation_keys", "katello_content_views", :column => 'content_view_id', :name => "activation_keys_content_view_id_fk"
     add_foreign_key "katello_activation_keys", "katello_environments", :column => 'environment_id', :name => "activation_keys_environment_id_fk"
@@ -96,5 +95,4 @@ class AddForeignKeysEngine < ActiveRecord::Migration
     add_foreign_key "katello_user_notices", "katello_notices", :name => "user_notices_notice_id_fk", :column => 'notice_id'
     add_foreign_key "katello_user_notices", "users", :name => "user_notices_user_id_fk", :column => 'user_id'
   end
-
 end

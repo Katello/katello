@@ -44,6 +44,5 @@ module KatelloUrlHelper
   def file_prefix?(url)
     !!FILEPREFIX.match(url)
   end
-
 end
 end

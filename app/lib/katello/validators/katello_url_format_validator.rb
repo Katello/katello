@@ -27,7 +27,6 @@ module Validators
       attribute_name = options[:field_name] || attribute
       record.errors[attribute_name] << N_("is invalid") unless kurl_valid?(value)
     end
-
   end
 end
 end

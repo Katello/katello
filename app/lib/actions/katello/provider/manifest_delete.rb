@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Provider
       class ManifestDelete < Actions::AbstractAsyncTask
-
         middleware.use Actions::Middleware::PropagateCandlepinErrors
 
         def plan(provider)
@@ -36,7 +35,6 @@ module Actions
           provider = ::Katello::Provider.find(input[:provider][:id])
           provider.delete_manifest
         end
-
       end
     end
   end

@@ -13,7 +13,6 @@
 module Katello
   module Middleware
     class SilencedLogger < Rails::Rack::Logger
-
       def prefixes
         Katello.config.logging.ignored_paths
       end

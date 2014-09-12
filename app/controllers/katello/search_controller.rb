@@ -43,7 +43,6 @@ class SearchController < Katello::ApplicationController
   end
 
   def create_favorite
-
     # save in the user's search favorites
     unless params[:favorite].nil? || params[:favorite].blank?
       search_string = String.new(params[:favorite])
@@ -89,6 +88,5 @@ class SearchController < Katello::ApplicationController
 
     return true
   end
-
 end
 end

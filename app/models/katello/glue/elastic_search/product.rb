@@ -61,6 +61,5 @@ module Glue::ElasticSearch::Product
     results = Katello::PuppetModule.legacy_search('', :page_size => 1, :repoids => repo_ids)
     results.empty? ? 0 : results.total
   end
-
 end
 end

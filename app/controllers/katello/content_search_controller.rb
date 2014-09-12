@@ -12,7 +12,6 @@
 
 module Katello
 class ContentSearchController < Katello::ApplicationController
-
   include ContentSearchHelper
 
   before_filter :find_repo, :only => [:repo_packages, :repo_errata, :repo_puppet_modules]
@@ -757,6 +756,5 @@ class ContentSearchController < Katello::ApplicationController
     repo_ids.uniq!
     repo_search(search_string, repo_ids, product_ids)
   end
-
 end
 end

@@ -37,7 +37,6 @@ end
 module Katello
 module Util
   module ThreadSession
-
     # include this in the User model
     module UserModel
       # TODO: break up method
@@ -97,7 +96,6 @@ module Util
         end
       end
     end
-
   end
 end
 end

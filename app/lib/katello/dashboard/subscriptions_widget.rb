@@ -12,7 +12,6 @@
 
 module Katello
 class Dashboard::SubscriptionsWidget < Dashboard::Widget
-
   def accessible?
     User.current.admin? ||
      (current_organization &&
@@ -22,6 +21,5 @@ class Dashboard::SubscriptionsWidget < Dashboard::Widget
   def title
     _("Content Host Subscription Status")
   end
-
 end
 end

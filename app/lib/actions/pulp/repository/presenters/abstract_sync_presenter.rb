@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Repository
       module Presenters
-
         class AbstractSyncPresenter < Helpers::Presenter::Base
           # TODO: in Rails 4.0, the logic is possible to use from ActiveSupport
           include ActionView::Helpers::NumberHelper
@@ -56,7 +55,6 @@ module Actions
           def task_result_details
             task_result && task_result['details']
           end
-
         end
       end
     end

@@ -15,7 +15,6 @@
 
 module Katello
 class NoticesController < Katello::ApplicationController
-
   skip_before_filter :authorize, :require_org
   before_filter :notices_authorize
 

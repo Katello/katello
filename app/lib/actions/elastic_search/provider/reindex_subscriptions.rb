@@ -14,7 +14,6 @@ module Actions
   module ElasticSearch
     module Provider
       class ReindexSubscriptions < ElasticSearch::Abstract
-
         input_format do
           param :id
         end
@@ -28,7 +27,6 @@ module Actions
           provider = ::Katello::Provider.find_by_id!(input[:id])
           provider.index_subscriptions
         end
-
       end
     end
   end

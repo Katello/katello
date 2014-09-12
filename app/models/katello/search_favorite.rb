@@ -33,6 +33,5 @@ class SearchFavorite < Katello::Model
   def count_favorites(path)
     SearchFavorite.where(:user_id => self.user_id, :path => path).count(:id)
   end
-
 end
 end

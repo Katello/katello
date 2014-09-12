@@ -13,7 +13,6 @@
 module Katello
 module Validators
   class ContentViewPuppetModuleValidator < ActiveModel::Validator
-
     def validate(record)
       if record.name.blank? && record.author.blank? && record.uuid.blank?
         invalid_parameters = _("Invalid puppet module parameters specified.  Either 'uuid' or 'name' and 'author' must be specified.")
@@ -33,7 +32,6 @@ module Validators
         end
       end
     end
-
   end
 end
 end

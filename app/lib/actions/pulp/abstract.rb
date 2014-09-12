@@ -22,7 +22,6 @@ module Actions
       def pulp_extensions
         ::Katello.pulp_server.extensions
       end
-
     end
   end
 end

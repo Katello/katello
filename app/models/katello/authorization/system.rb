@@ -30,7 +30,6 @@ module Authorization::System
   end
 
   module ClassMethods
-
     def readable_search_filters(org)
       {:or => [
         {:terms => {:environment_id => KTEnvironment.readable.pluck(:id) }}
@@ -63,6 +62,5 @@ module Authorization::System
       systems_query.count == systems_query.editable.count
     end
   end
-
 end
 end

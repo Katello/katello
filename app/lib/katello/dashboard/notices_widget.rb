@@ -12,7 +12,6 @@
 
 module Katello
 class Dashboard::NoticesWidget < Dashboard::Widget
-
   def title
     _("Latest Notifications")
   end

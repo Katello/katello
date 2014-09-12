@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::CapsulesController < ::Api::V2::SmartProxiesController
-
     resource_description do
       api_base_url "#{Katello.config.url_prefix}/api"
     end
@@ -44,6 +43,5 @@ module Katello
     def authorized
       User.current.allowed_to?(params.slice(:action, :id).merge(controller: 'api/v2/smart_proxies'))
     end
-
   end
 end

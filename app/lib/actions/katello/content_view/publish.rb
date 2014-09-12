@@ -14,7 +14,6 @@ module Actions
   module Katello
     module ContentView
       class Publish < Actions::EntryAction
-
         def plan(content_view)
           action_subject(content_view)
           content_view.check_ready_to_publish!
@@ -81,7 +80,6 @@ module Actions
             !library_instances.include?(repo.library_instance_id)
           end
         end
-
       end
     end
   end

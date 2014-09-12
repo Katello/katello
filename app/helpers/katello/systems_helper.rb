@@ -12,7 +12,6 @@
 
 module Katello
 module SystemsHelper
-
   def render_rows(options)
     render :partial => "systems/list_systems",
            :locals => {:accessor => options[:accessor], :columns => options[:columns], :collection => options[:collection], :name => options[:name]}
@@ -81,7 +80,6 @@ module SystemsHelper
   end
 
   def system_type(system)
-
     return _("Guest") if system.virtual_guest
 
     case system.system_type
@@ -136,7 +134,6 @@ module SystemsHelper
   end
 
   def system_status_message(system)
-
     if system.compliant?
       until_time = @system.compliant_until
       message = until_time ? _("Subscriptions are Current Until %s") % format_time(until_time) : _("Subscriptions are Current")
@@ -169,6 +166,5 @@ module SystemsHelper
     end
     messages.join(' ')
   end
-
 end
 end

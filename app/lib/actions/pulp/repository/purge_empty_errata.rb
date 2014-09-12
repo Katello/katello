@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Repository
       class PurgeEmptyErrata < Pulp::AbstractAsyncTask
-
         input_format do
           param :pulp_id, Integer
         end

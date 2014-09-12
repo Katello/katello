@@ -25,7 +25,6 @@ module Glue::Pulp::Distribution
   end
 
   module InstanceMethods
-
     def initialize(attrs = {}, options = {})
       attrs[:repoids] = attrs.delete(:repository_memberships)
       generate_instance_variables(attrs)
@@ -46,7 +45,6 @@ module Glue::Pulp::Distribution
       end
       result
     end
-
   end
 end
 end

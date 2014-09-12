@@ -1,6 +1,5 @@
 module Bastion
   class Engine < ::Rails::Engine
-
     isolate_namespace Bastion
 
     initializer 'bastion.assets_dispatcher', :before => :build_middleware_stack do |app|

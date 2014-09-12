@@ -40,6 +40,5 @@ module Katello
         :content_view_filter_id => self.content_view_filter_id
       }
     end
-
   end
 end

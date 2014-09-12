@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Organization
       class Create < Actions::EntryAction
-
         def plan(organization)
           organization.disable_auto_reindex! if ::Katello.config.use_elasticsearch
           cp_create = nil
@@ -41,7 +40,6 @@ module Actions
         def humanized_name
           _("Create")
         end
-
       end
     end
   end

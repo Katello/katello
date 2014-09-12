@@ -94,11 +94,9 @@ module Glue::Pulp::Errata
         end
       end
     end
-
   end
 
   module InstanceMethods
-
     def initialize(params = {}, options = {})
       params['repoids'] = params.delete(:repository_memberships)
       params['errata_id'] = params['id']
@@ -143,6 +141,5 @@ module Glue::Pulp::Errata
       products.map(&:cp_id)
     end
   end
-
 end
 end

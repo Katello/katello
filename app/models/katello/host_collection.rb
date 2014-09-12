@@ -195,6 +195,5 @@ class HostCollection < Katello::Model
   def self.humanize_class_name(name = nil)
     _("Host Collections")
   end
-
 end
 end

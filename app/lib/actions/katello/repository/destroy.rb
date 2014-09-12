@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class Destroy < Actions::EntryAction
-
         # options:
         #   skip_environment_update - defaults to false. skips updating the CP environment
         #

@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::GpgKeysController < Api::V2::ApiController
-
     before_filter :authorize
     before_filter :find_organization, :only => [:create, :index]
     before_filter :find_gpg_key, :only => [:show, :update, :destroy, :content]
@@ -109,6 +108,5 @@ module Katello
     def gpg_key_params
       params.permit(:name, :content)
     end
-
   end
 end

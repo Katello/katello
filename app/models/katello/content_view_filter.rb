@@ -159,6 +159,5 @@ class ContentViewFilter < Katello::Model
   def validate_repos
     validate_filter_repos(self.errors, self.content_view)
   end
-
 end
 end

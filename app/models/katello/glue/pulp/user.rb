@@ -21,7 +21,6 @@ module Glue::Pulp::User
   end
 
   module InstanceMethods
-
     def initialize(attrs = nil, options = {})
       attrs = prune_pulp_only_attributes(attrs)
       super
@@ -36,7 +35,6 @@ module Glue::Pulp::User
 
       return attrs
     end
-
   end
 
   private
@@ -57,6 +55,5 @@ module Glue::Pulp::User
     Katello.pulp_server = old_pulp_server if used_admin_user
     to_return
   end
-
 end
 end

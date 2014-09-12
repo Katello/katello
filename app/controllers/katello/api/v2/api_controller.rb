@@ -14,7 +14,6 @@ require 'strong_parameters'
 
 module Katello
   class Api::V2::ApiController < Api::ApiController
-
     include Api::Version2
     include Api::V2::Rendering
     include Api::V2::ErrorHandling
@@ -169,6 +168,5 @@ module Katello
       # prevent create and update_attributes from being called without strong params
       Thread.current[:strong_parameters] = true
     end
-
   end
 end

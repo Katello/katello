@@ -12,7 +12,6 @@
 
 module Katello
 module Glue::Candlepin::ActivationKey
-
   def self.included(base)
     base.send :include, LazyAccessor
     base.send :include, InstanceMethods
@@ -32,7 +31,6 @@ module Glue::Candlepin::ActivationKey
   end
 
   module InstanceMethods
-
     def get_pools
       Resources::Candlepin::ActivationKey.pools(self.organization.label)
     end
@@ -81,7 +79,6 @@ module Glue::Candlepin::ActivationKey
     def content_overrides
       Resources::Candlepin::ActivationKey.content_overrides(self.cp_id)
     end
-
   end
 end
 end

@@ -14,7 +14,6 @@ module Actions
   module Katello
     module CapsuleContent
       class AddRepository < ::Actions::EntryAction
-
         # @param capsule_content [::Katello::CapsuleContent]
         # @param pulp_repo [::Katello::Glue::Pulp::Repo]
         def plan(capsule_content, pulp_repo)
@@ -31,7 +30,6 @@ module Actions
         def bind_options
           { notify_agent: false, binding_config: { strategy: 'mirror' } }
         end
-
       end
     end
   end

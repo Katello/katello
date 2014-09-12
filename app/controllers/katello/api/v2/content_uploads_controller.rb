@@ -50,6 +50,5 @@ class Api::V2::ContentUploadsController < Api::V2::ApiController
   def find_repository
     @repository = Repository.find(params[:repository_id])
   end
-
 end
 end

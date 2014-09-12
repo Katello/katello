@@ -14,7 +14,6 @@ module Actions
   module Katello
     module CapsuleContent
       class AddLifecycleEnvironment < ::Actions::EntryAction
-
         def plan(capsule_content, environment)
           fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
 
@@ -24,7 +23,6 @@ module Actions
             plan_action(CapsuleContent::AddRepository, capsule_content, pulp_repo)
           end
         end
-
       end
     end
   end

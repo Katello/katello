@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::ActivationKeysController < Api::V2::ApiController
-
     before_filter :verify_presence_of_organization_or_environment, :only => [:index]
     before_filter :find_environment, :only => [:index, :create, :update]
     before_filter :find_optional_organization, :only => [:index, :create, :show]

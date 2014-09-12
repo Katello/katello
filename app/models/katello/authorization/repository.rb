@@ -38,7 +38,6 @@ module Authorization::Repository
   end
 
   module ClassMethods
-
     def readable
       where(:product_id => Katello::Product.authorized(:view_products))
     end
@@ -72,8 +71,6 @@ module Authorization::Repository
         where(environment_id: KTEnvironment.content_readable(org).non_library)
       end
     end
-
   end
-
 end
 end

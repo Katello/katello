@@ -60,6 +60,5 @@ class CustomInfo < Katello::Model
     self.keyname.try(:strip!)
     self.value.try(:strip!)
   end
-
 end
 end

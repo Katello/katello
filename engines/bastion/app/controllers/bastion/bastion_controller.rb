@@ -11,7 +11,6 @@
 
 module Bastion
   class BastionController < Katello::ApplicationController
-
     skip_before_filter :authorize
 
     def index

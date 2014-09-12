@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Repository
       class DistributorPublish < Pulp::AbstractAsyncTask
-
         input_format do
           param :pulp_id
           param :distributor_type_id
@@ -50,7 +49,6 @@ module Actions
         def repo(pulp_id)
           pulp_extensions.repository.retrieve_with_details(pulp_id)
         end
-
       end
     end
   end

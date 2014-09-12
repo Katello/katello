@@ -17,6 +17,5 @@ class Errata
   CONTENT_TYPE = "erratum"
 
   attr_accessor :applicable_consumers
-
 end
 end

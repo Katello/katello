@@ -12,7 +12,6 @@
 
 module Katello
   module Glue::ElasticSearch::ContentViewPuppetEnvironment
-
     # TODO: break this up into modules
     # rubocop:disable MethodLength
     def self.included(base)

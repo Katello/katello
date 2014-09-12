@@ -14,7 +14,6 @@ module Actions
   module Helpers
     # Delegate task information to presenter object
     module Presenter
-
       def presenter
         fail NotImplementedError
       end

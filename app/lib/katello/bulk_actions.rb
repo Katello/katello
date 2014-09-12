@@ -12,7 +12,6 @@
 
 module Katello
 class BulkActions
-
   attr_accessor :systems, :user, :organization
 
   def initialize(user, org, systems)
@@ -82,6 +81,5 @@ class BulkActions
   ensure
     group.del_pulp_consumer_group
   end
-
 end
 end

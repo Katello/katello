@@ -12,7 +12,6 @@
 
 module Katello
 class Api::V2::PuppetModulesController < Api::V2::ApiController
-
   before_filter :find_repository
   before_filter :find_content_view, :only => [:index]
   before_filter :find_environment, :only => [:index]
@@ -82,6 +81,5 @@ class Api::V2::PuppetModulesController < Api::V2::ApiController
           { :id => params[:id], :repo => @repo.name }
     end
   end
-
 end
 end

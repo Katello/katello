@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Repository
       class Refresh < Pulp::Abstract
-
         def plan(repository)
           plan_action(::Actions::Pulp::Repository::UpdateImporter,
                       :repo_id => repository.pulp_id,
@@ -41,7 +40,6 @@ module Actions
               end
             end
           end
-
         end
       end
     end

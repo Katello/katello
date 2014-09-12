@@ -347,6 +347,5 @@ class System < Katello::Model
   def self.humanize_class_name(name = nil)
     _('Content Host')
   end
-
 end
 end

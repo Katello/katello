@@ -1,5 +1,4 @@
 class AddOrganizationFields < ActiveRecord::Migration
-
   def change
     add_column :taxonomies, :description, :text
     add_column :taxonomies, :label, :string
@@ -11,5 +10,4 @@ class AddOrganizationFields < ActiveRecord::Migration
     add_index :taxonomies, [:deletion_task_id], :name => "index_organizations_on_task_id"
     add_index :taxonomies, [:label], :name => "index_organizations_on_cp_key", :unique => true
   end
-
 end

@@ -33,6 +33,5 @@ module Glue::ElasticSearch::ActivationKey
              }
     to_ret
   end
-
 end
 end

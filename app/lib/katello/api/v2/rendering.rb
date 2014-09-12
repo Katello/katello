@@ -2,7 +2,6 @@ module Katello
   module Api
     module V2
       module Rendering
-
         def respond_for_show(options = {})
           respond_with_template_resource(options[:template] || 'show', options[:resource_name] || controller_name,
                                          options)
@@ -73,7 +72,6 @@ module Katello
         rescue ActionView::MissingTemplate
           respond_with_template_collection(common_action, "common", options)
         end
-
       end # module Rendering
     end # module V2
   end # module Api

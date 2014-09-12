@@ -30,6 +30,5 @@ module Glue::ElasticSearch::User
   def extended_index_attrs
     { :login_sort => login.downcase }
   end
-
 end
 end

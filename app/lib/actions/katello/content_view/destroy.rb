@@ -14,7 +14,6 @@ module Actions
   module Katello
     module ContentView
       class Destroy < Actions::EntryAction
-
         def plan(content_view)
           action_subject(content_view)
           content_view.check_ready_to_destroy!

@@ -158,8 +158,6 @@ class Candlepin::Content
     def ca
       File.read(::Katello::Resources::CDN::CdnResource.ca_file)
     end
-
   end
-
 end
 end

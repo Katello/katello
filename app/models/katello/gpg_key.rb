@@ -50,6 +50,5 @@ class GpgKey < Katello::Model
   def self.humanize_class_name(name = nil)
     _("GPG Keys")
   end
-
 end
 end

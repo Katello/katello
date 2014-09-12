@@ -252,7 +252,6 @@ class KTEnvironment < Katello::Model
   end
 
   def find_latest_packages_by_name(name)
-
     packs = self.products.collect do |prod|
       prod.find_latest_packages_by_name(self, name).collect do |pack|
         pack[:product_id] = prod.cp_id
@@ -291,6 +290,5 @@ class KTEnvironment < Katello::Model
   def self.humanize_class_name
    _("Lifecycle Environment")
   end
-
 end
 end

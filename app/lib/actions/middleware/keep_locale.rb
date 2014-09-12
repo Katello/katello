@@ -12,7 +12,6 @@
 
 module Actions
   module Middleware
-
     # Keeps the locale value from plan and keeps that in run/finalize
     # so that the error from there are localized correctly
     class KeepLocale < Dynflow::Middleware

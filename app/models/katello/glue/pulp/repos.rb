@@ -14,7 +14,6 @@ require 'openssl'
 
 module Katello
 module Glue::Pulp::Repos
-
   def self.included(base)
     base.send :include, InstanceMethods
     base.class_eval do
@@ -68,7 +67,6 @@ module Glue::Pulp::Repos
   end
 
   module InstanceMethods
-
     def empty?
       return self.repos(library).empty?
     end
@@ -145,7 +143,6 @@ module Glue::Pulp::Repos
     end
 
     def find_latest_packages_by_name(env, name)
-
       packs = self.repos(env).collect do |repo|
         repo.find_latest_packages_by_name(name).collect do |pack|
           pack[:repo_id] = repo.id
@@ -341,7 +338,6 @@ module Glue::Pulp::Repos
       end
       async_tasks.flatten(1)
     end
-
   end
 end
 end

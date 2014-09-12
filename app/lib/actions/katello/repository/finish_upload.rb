@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class FinishUpload < Actions::Base
-
         def plan(repository, dependency = nil)
           unless repository.puppet?
             plan_action(Katello::Repository::MetadataGenerate, repository, nil, dependency)
@@ -26,7 +25,6 @@ module Actions
                       filter: {:association => {:created => {"$gt" => recent_range}}},
                       dependency: dependency)
         end
-
       end
     end
   end

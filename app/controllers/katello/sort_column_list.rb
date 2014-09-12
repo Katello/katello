@@ -12,7 +12,6 @@
 
 module Katello
 module SortColumnList
-
   # columns is a hash with keys being the two pane colunms and value is the arr attribute
   def sort_columns(columns, arr)
     field = params[:order].split(" ").first
@@ -28,6 +27,5 @@ module SortColumnList
       arr.reverse! if params[:order].split(" ").last.downcase == "desc"
     end
   end
-
 end
 end

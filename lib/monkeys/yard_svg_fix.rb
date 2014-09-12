@@ -2,7 +2,6 @@ module YARD
   module Server
     module Commands
       class DisplayFileCommand < LibraryCommand
-
         # return svg images in responses
         def run
           path = library.source_path

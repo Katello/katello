@@ -15,7 +15,6 @@ require 'cgi'
 
 module Katello
 class HttpResource
-
   class NetworkException < StandardError
   end
 
@@ -213,7 +212,6 @@ class HttpResource
         so_far << "#{current[0].to_s}=#{url_encode(current[1])}"
       end
     end
-
   end
 end
 end

@@ -69,7 +69,6 @@ class Product < Katello::Model
   before_create :assign_unique_label
 
   def initialize(attrs = nil, options = {})
-
     unless attrs.nil?
       attrs = attrs.with_indifferent_access
 
@@ -249,6 +248,5 @@ class Product < Katello::Model
   def self.humanize_class_name(name = nil)
     _("Product and Repositories")
   end
-
 end
 end

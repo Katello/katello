@@ -30,6 +30,5 @@ class SystemHostCollection < Katello::Model
       end
     end
   end
-
 end
 end

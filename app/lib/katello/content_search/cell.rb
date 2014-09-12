@@ -25,6 +25,5 @@ class ContentSearch::Cell
     to_ret[:hover_details] = self.hover_details.nil? ? '' : self.hover_details.call
     to_ret
   end
-
 end
 end

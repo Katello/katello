@@ -39,6 +39,5 @@ module Glue::ElasticSearch::ContentViewHistory
       :environment_id => self.katello_environment_id
     }
   end
-
 end
 end

@@ -14,7 +14,6 @@ module Actions
   module Katello
     module RepositorySet
       class ScanCdn < Actions::AbstractAsyncTask
-
         input_format do
           param :product_id
           param :content_id

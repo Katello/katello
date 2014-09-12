@@ -12,9 +12,7 @@
 
 module Katello
 module Util
-
   module Model
-
     # hardcoded model names (uses kp_ prefix)
     def self.table_to_model_hash
       {
@@ -69,6 +67,5 @@ module Util
     end
 
   end
-
 end
 end

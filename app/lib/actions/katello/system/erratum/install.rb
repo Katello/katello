@@ -15,7 +15,6 @@ module Actions
     module System
       module Erratum
         class Install < Actions::EntryAction
-
           include Helpers::Presenter
 
           def plan(system, errata)

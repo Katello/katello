@@ -12,7 +12,6 @@
 
 module Katello
 module Glue::Candlepin::Product
-
   def self.included(base)
     base.send :include, LazyAccessor
     base.send :include, InstanceMethods
@@ -77,7 +76,6 @@ module Glue::Candlepin::Product
   end
 
   module InstanceMethods
-
     def initialize(attribs = nil, options = {})
       unless attribs.nil?
         attributes_key = attribs.key?(:attributes) ? :attributes : 'attributes'
@@ -220,7 +218,6 @@ module Glue::Candlepin::Product
       deleted_content = productContent_change[0].select {|pc| deleted_content_ids.include?(pc.content.label)}
       deleted_content
     end
-
   end
 end
 end

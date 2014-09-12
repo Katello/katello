@@ -17,6 +17,5 @@ module Katello
     def readable?
       self.content_view.readable? && self.environment.readable?
     end
-
   end
 end

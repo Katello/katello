@@ -12,7 +12,6 @@
 
 module Katello
 class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
-
   before_filter :find_organization
   before_filter :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
   before_filter :find_environment, :only => [:environment_content_view]
@@ -257,6 +256,5 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   def find_content_view
     @view = ContentView.find(params[:content_view_id])
   end
-
 end
 end

@@ -14,7 +14,6 @@ module Actions
   module Katello
     module System
       class Create < Actions::EntryAction
-
         middleware.use ::Actions::Middleware::RemoteAction
 
         def plan(system, activation_keys = [])
@@ -63,7 +62,6 @@ module Actions
           system.uuid = input[:uuid]
           system.save!
         end
-
       end
     end
   end

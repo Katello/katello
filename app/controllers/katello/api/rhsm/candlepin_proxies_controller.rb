@@ -12,7 +12,6 @@
 
 module Katello
   class Api::Rhsm::CandlepinProxiesController < Api::V2::ApiController
-
     include Katello::Authentication::ClientAuthentication
 
     skip_before_filter :turn_on_strong_params
@@ -496,6 +495,5 @@ module Katello
         deny_access
       end
     end
-
   end
 end

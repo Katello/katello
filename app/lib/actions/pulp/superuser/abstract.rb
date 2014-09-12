@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Superuser
       class Abstract < Pulp::Abstract
-
         input_format do
           param :remote_id, String
           param :pulp_user, String
@@ -30,7 +29,6 @@ module Actions
         def operation
           fail NotImplementedError
         end
-
       end
     end
   end

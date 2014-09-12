@@ -14,7 +14,6 @@ module Actions
   module Katello
     module ContentView
       class Promote < Actions::EntryAction
-
         def plan(version, environment)
           action_subject(version.content_view)
           version.check_ready_to_promote!
@@ -71,7 +70,6 @@ module Actions
             !archived_library_instance_ids.include?(repo.library_instance_id)
           end
         end
-
       end
     end
   end

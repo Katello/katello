@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Provider
       class ManifestImport < Actions::AbstractAsyncTask
-
         middleware.use Actions::Middleware::PropagateCandlepinErrors
 
         def plan(provider, path, force)
@@ -41,7 +40,6 @@ module Actions
           provider.import_manifest(input[:path],
                                    force:  input[:force])
         end
-
       end
     end
   end

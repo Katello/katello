@@ -15,7 +15,6 @@ require 'base64'
 
 module Client
   class Cert
-
     attr_accessor :cert
 
     def initialize(cert)
@@ -49,6 +48,5 @@ module Client
       cert.gsub!(/\n/, '')
       cert
     end
-
   end
 end

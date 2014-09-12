@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class Clear < Actions::Base
-
         def plan(repo)
           [Pulp::Repository::RemoveRpm,
            Pulp::Repository::RemoveErrata,

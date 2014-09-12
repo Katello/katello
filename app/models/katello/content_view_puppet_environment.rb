@@ -86,6 +86,5 @@ module Katello
     def self.generate_pulp_id(organization_label, env_label, view_label, version)
       [organization_label, env_label, view_label, version].compact.join("-").gsub(/[^-\w]/, "_")
     end
-
   end
 end

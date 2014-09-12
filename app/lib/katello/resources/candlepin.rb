@@ -13,11 +13,9 @@
 # rubocop:disable SymbolName
 module Katello
 module Resources
-
   require 'rest_client'
 
   module Candlepin
-
     class Proxy
       def self.logger
         ::Logging.logger['cp_proxy']
@@ -52,7 +50,6 @@ module Resources
       def self.path_with_cp_prefix(path)
         CandlepinResource.prefix + path
       end
-
     end
 
     class CandlepinResource < HttpResource
@@ -292,12 +289,10 @@ module Resources
           end
           Util::Data.array_with_indifferent_access(JSON.parse(result))
         end
-
       end
     end
 
     class UpstreamConsumer < HttpResource
-
       def self.logger
         ::Logging.logger['cp_rest']
       end
@@ -325,7 +320,6 @@ module Resources
       end
 
       def self.export(url, client_cert, client_key, ca_file)
-
         logger.debug "Sending GET request to upstream Candlepin: #{url}"
         return resource(url, client_cert, client_key, ca_file).get
       rescue => e
@@ -335,7 +329,6 @@ module Resources
       end
 
       def self.update(url, client_cert, client_key, ca_file, attributes)
-
         logger.debug "Sending POST request to upstream Candlepin: #{url} #{attributes.to_json}"
 
         return resource(url, client_cert, client_key, ca_file).put(attributes.to_json,
@@ -345,12 +338,10 @@ module Resources
       ensure
         RestClient.proxy = ""
       end
-
     end
 
     class OwnerInfo < CandlepinResource
       class << self
-
         def find(key)
           owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(User.cp_oauth_header)).body
           JSON.parse(owner_json).with_indifferent_access
@@ -486,7 +477,6 @@ module Resources
 
     class Environment < CandlepinResource
       class << self
-
         def find(id)
           JSON.parse(self.get(path(id), self.default_headers).body).with_indifferent_access
         end
@@ -598,7 +588,6 @@ module Resources
 
     class Subscription < CandlepinResource
       class << self
-
         def destroy(subscription_id)
           fail ArgumentError, "subscription id has to be specified" unless subscription_id
           self.delete(path(subscription_id), self.default_headers).code.to_i
@@ -633,7 +622,6 @@ module Resources
 
     class Job < CandlepinResource
       class << self
-
         NOT_FINISHED_STATES = %w[CREATED PENDING RUNNING] unless defined? NOT_FINISHED_STATES
 
         def not_finished?(job)
@@ -654,7 +642,6 @@ module Resources
 
     class Product < CandlepinResource
       class << self
-
         def all
           JSON.parse(Candlepin::CandlepinResource.get(path, self.default_headers).body)
         end
@@ -773,7 +760,6 @@ module Resources
 
     class ActivationKey < CandlepinResource
       class << self
-
         def get(id = nil, params = '')
           akeys_json = super(path(id) + params, self.default_headers).body
           akeys = JSON.parse(akeys_json)
@@ -848,7 +834,6 @@ module Resources
         end
       end
     end
-
   end
 end
 end

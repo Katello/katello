@@ -13,7 +13,6 @@
 module Katello
   module Validators
     class RepositoryUniqueAttributeValidator < ActiveModel::EachValidator
-
       def validate_each(record, attribute, value)
         unique = !record.exist_for_environment?(record.environment, record.content_view, attribute)
 
@@ -21,7 +20,6 @@ module Katello
           record.errors[attribute] << _("has already been taken for this product.")
         end
       end
-
     end
   end
 end

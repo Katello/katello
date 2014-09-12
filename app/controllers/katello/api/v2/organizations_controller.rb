@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::OrganizationsController < ::Api::V2::OrganizationsController
-
     apipie_concern_subst(:a_resource => N_("an organization"), :resource => "organization")
 
     include Api::V2::Rendering
@@ -131,6 +130,5 @@ module Katello
     def resource_identifying_attributes
       %w(id label)
     end
-
   end
 end

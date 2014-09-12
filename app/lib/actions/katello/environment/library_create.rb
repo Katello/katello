@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Environment
       class LibraryCreate < Actions::Base
-
         def plan(library_env)
           library_env.save!
           library_view = ::Katello::ContentView.create!(:default => true,

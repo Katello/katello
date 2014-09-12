@@ -12,7 +12,6 @@
 
 module Katello
 module PackagesHelper
-
   def format_changelog_changes(changes)
     (h(changes).gsub(/\n/, "<br>")).html_safe
   end
@@ -31,7 +30,6 @@ module PackagesHelper
   # where, the operator, epoch (e.g. 9), version (e.g 1.2.0) and
   # release (e.g. 3) are optional
   def format_package_details(package)
-
     package_details = package[:name]
 
     unless package[:flags].blank?

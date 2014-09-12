@@ -12,7 +12,6 @@
 
 module Katello
   module HostsAndHostgroupsHelper
-
     def kt_ak_label
       "kt_activation_keys"
     end

@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 module Katello
 module Glue::Pulp::PackageGroup
-
   def self.included(base)
     base.send :include, InstanceMethods
 
@@ -37,11 +36,9 @@ module Glue::Pulp::PackageGroup
         end
       end
     end
-
   end
 
   module InstanceMethods
-
     def initialize(params = {}, options = {})
       params['package_group_id'] = params['id']
       params['id'] = params.delete('_id')
@@ -53,14 +50,11 @@ module Glue::Pulp::PackageGroup
         values = values.collect { |v| v.split(", ") }.flatten
         send("#{attr}=", values)
       end
-
     end
 
     def package_names
       default_package_names + conditional_package_names + optional_package_names + mandatory_package_names
     end
-
   end
-
 end
 end

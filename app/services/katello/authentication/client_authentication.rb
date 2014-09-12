@@ -16,7 +16,6 @@ require File.expand_path('../../../client/cert.rb', __FILE__)
 module Katello
   module Authentication
     module ClientAuthentication
-
       def authenticate_client
         set_client_user
         User.current.present?
@@ -45,7 +44,6 @@ module Katello
       def add_candlepin_version_header
         response.headers["X-CANDLEPIN-VERSION"] = "katello/#{Katello.config.katello_version}"
       end
-
     end
   end
 end
