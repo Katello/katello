@@ -503,7 +503,6 @@ class ContentView < Katello::Model
                  {:release => failed_distribution.version, :arch => failed_distribution.arch,
                   :repos => Repository.where(:pulp_id => pulp_repo_ids).pluck(:name).join(', ')}
     end
-
   end
 
   def distribution_conflicts
@@ -656,6 +655,5 @@ class ContentView < Katello::Model
   def self.humanize_class_name(name = nil)
     _("Content Views")
   end
-
 end
 end

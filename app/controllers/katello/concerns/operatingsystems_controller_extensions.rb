@@ -39,7 +39,6 @@ module Katello
           super
         end
       end
-
     end
   end
 end

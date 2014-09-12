@@ -51,6 +51,5 @@ class ContentViewPackageFilter < ContentViewFilter
       Util::Package.version_filter(rule.min_version, rule.max_version)
     end
   end
-
 end
 end

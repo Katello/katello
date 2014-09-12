@@ -15,7 +15,6 @@ module Actions
   module Katello
     module ContentView
       class RemoveVersion < Actions::EntryAction
-
         def plan(version)
           action_subject(version.content_view)
           version.check_ready_to_destroy!

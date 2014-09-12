@@ -12,11 +12,8 @@
 
 module Katello
 module Resources
-
   module CDN
-
     class Utils
-
       # takes releasever from contentUrl (e.g. 6Server, 6.0, 6.1)
       # returns hash e.g. {:major => 6, :minor => "6.1"}
       # used to be able to make hierarchial view for RH repos
@@ -138,7 +135,6 @@ module Resources
       def log(level, *args)
         [Rails.logger, @logger].compact.each { |logger| logger.send(level, *args)}
       end
-
     end
   end
 end

@@ -316,7 +316,6 @@ class TaskStatus < Katello::Model
     else
       self.result
     end
-
   end
 
   def self.refresh(ids)
@@ -393,6 +392,5 @@ class TaskStatus < Katello::Model
     end
     ret.sort
   end
-
 end
 end

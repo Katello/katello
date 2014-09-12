@@ -391,6 +391,5 @@ class Api::V2::SystemsController < Api::V2::ApiController
     return deny_access unless @environment.readable?
     true
   end
-
 end
 end

@@ -18,9 +18,7 @@
 if defined? PhusionPassenger
   module PhusionPassenger
     module Utils
-
       class TeeInput
-
         def seek(position)
           if position == 0
              rewind
@@ -28,7 +26,6 @@ if defined? PhusionPassenger
              fail "Seeking not supported to non zero position"
           end
         end
-
       end
     end
   end

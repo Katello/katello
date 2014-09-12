@@ -41,6 +41,5 @@ class Dashboard::Widget
   def current_organization
     @organization
   end
-
 end
 end

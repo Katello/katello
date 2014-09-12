@@ -44,6 +44,5 @@ module Authorization::Organization
   def subscriptions_readable?
     User.current.can?(:view_subscriptions)
   end
-
 end
 end

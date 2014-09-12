@@ -15,7 +15,6 @@ module Actions
     module Repository
       module Presenters
         class YumPresenter < AbstractSyncPresenter
-
           def progress
            if sync_task && size_total > 0
              size_done.to_f / size_total
@@ -136,7 +135,6 @@ module Actions
           def pending?
            metadata_details.nil? || metadata_details['state'] == 'NOT_RUNNING'
           end
-
         end
       end
     end

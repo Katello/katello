@@ -20,11 +20,9 @@ module Glue::ElasticSearch::BackendIndexedModel
   end
 
   module InstanceMethods
-
   end
 
   module ClassMethods
-
     def index_all
       self.create_index
 
@@ -113,8 +111,6 @@ module Glue::ElasticSearch::BackendIndexedModel
         end
       end
     end
-
   end
-
 end
 end

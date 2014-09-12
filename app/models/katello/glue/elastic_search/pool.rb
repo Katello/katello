@@ -12,11 +12,9 @@
 
 module Katello
 module Glue::ElasticSearch::Pool
-
   # TODO: break this up into modules
   # rubocop:disable MethodLength
   def self.included(base)
-
     base.class_eval do
 
       include Glue::ElasticSearch::BackendIndexedModel
@@ -185,6 +183,5 @@ module Glue::ElasticSearch::Pool
 
     end
   end
-
 end
 end

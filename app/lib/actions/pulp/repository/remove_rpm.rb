@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Repository
       class RemoveRpm < Pulp::Repository::AbstractRemoveContent
-
         def content_extension
           pulp_extensions.rpm
         end
@@ -22,7 +21,6 @@ module Actions
         def criteria
           super.merge(fields: { :unit => ::Katello::Package::PULP_SELECT_FIELDS})
         end
-
       end
     end
   end

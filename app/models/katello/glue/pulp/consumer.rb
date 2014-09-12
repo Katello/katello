@@ -29,7 +29,6 @@ module Glue::Pulp::Consumer
   end
 
   module InstanceMethods
-
     def bound_yum_repos
       bindings(Runcible::Models::YumDistributor.type_id)
     end
@@ -228,7 +227,6 @@ module Glue::Pulp::Consumer
       Rails.logger.error "Failed to find profile for #{uuid}: #{e}, #{e.backtrace.join("\n")}"
       {:profile => []}.with_indifferent_access
     end
-
   end
 end
 end

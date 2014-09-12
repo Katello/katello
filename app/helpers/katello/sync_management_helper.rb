@@ -12,10 +12,8 @@
 
 module Katello
 module SyncManagementHelper
-
   def product_id(prod_id)
     "product-#{prod_id}".gsub(".", "_") #jquery treetable doesn't support periods
-
   end
 
   def product_child(prod_id)
@@ -119,6 +117,5 @@ module SyncManagementHelper
       product[:repos].length > 0
     end
   end
-
 end
 end

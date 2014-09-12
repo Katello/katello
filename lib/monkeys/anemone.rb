@@ -3,7 +3,6 @@
 
 module Anemone
   class HTTP
-
     #
     # The proxy user string
     #
@@ -30,6 +29,5 @@ module Anemone
 
       @connections[url.host][url.port] = http.start
     end
-
   end
 end

@@ -14,7 +14,6 @@ module Actions
   module Katello
     module CapsuleContent
       class UpdateWithoutContent < ::Actions::EntryAction
-
         def plan(environment)
           ::Katello::CapsuleContent.with_environment(environment).each do |capsule_content|
             plan_action(Pulp::Consumer::SyncNode,
@@ -23,7 +22,6 @@ module Actions
 
           end
         end
-
       end
     end
   end

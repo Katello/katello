@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::CapsuleContentController < Api::V2::ApiController
-
     resource_description do
       api_base_url "#{Katello.config.url_prefix}/api"
     end

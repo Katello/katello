@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Organization
       class Destroy < Actions::EntryAction
-
         def plan(organization, current_org = nil)
           action_subject(organization)
 

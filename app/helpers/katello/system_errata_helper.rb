@@ -12,7 +12,6 @@
 
 module Katello
 module SystemErrataHelper
-
   def errata_type_class(errata)
     case errata.type
     when Errata::SECURITY
@@ -23,6 +22,5 @@ module SystemErrataHelper
       return "bugzilla_icon"
     end
   end
-
 end
 end

@@ -29,7 +29,6 @@ module Glue::ElasticSearch::TaskStatus
         indexes :result, :type => 'string', :analyzer => 'snowball'
       end
     end
-
   end
 
   def extended_index_attrs
@@ -61,6 +60,5 @@ module Glue::ElasticSearch::TaskStatus
     end
     ret
   end
-
 end
 end

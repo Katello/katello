@@ -12,7 +12,6 @@
 
 module Katello
 module ConsumersControllerLogic
-
   # Consumed subscriptions
   # Note: Finding the provider is necessary for cross-linking in the UI
   def consumed_subscriptions(consumer)
@@ -52,6 +51,5 @@ module ConsumersControllerLogic
 
     return subscriptions
   end
-
 end
 end

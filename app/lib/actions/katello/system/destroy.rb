@@ -14,7 +14,6 @@ module Actions
   module Katello
     module System
       class Destroy < Actions::EntryAction
-
         def plan(system, options = {})
           skip_candlepin = options.fetch(:skip_candlepin, false)
           action_subject(system)

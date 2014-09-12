@@ -12,7 +12,6 @@
 
 module Katello
 module Glue::ElasticSearch::Package
-
   # TODO: break up into modules
   def self.included(base) # rubocop:disable MethodLength
     base.class_eval do

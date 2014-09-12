@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Consumer
       class AbstractContentAction < Pulp::AbstractAsyncTask
-
         include Helpers::Presenter
         include Actions::Pulp::ExpectOneTask
 
@@ -25,7 +24,6 @@ module Actions
         def rescue_strategy
           Dynflow::Action::Rescue::Skip
         end
-
       end
     end
   end

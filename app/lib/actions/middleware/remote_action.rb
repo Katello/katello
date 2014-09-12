@@ -12,7 +12,6 @@
 
 module Actions
   module Middleware
-
     # Helpers for remote actions
     # wraps the plan/run/finalize methods to include the info about the user
     # that triggered the action.
@@ -59,7 +58,6 @@ module Actions
           end
         end
       end
-
     end
   end
 end

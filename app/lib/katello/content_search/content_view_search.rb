@@ -12,7 +12,6 @@
 
 module Katello
 module ContentSearch
-
   class ContentViewSearch < ContainerSearch
     attr_accessor :views, :organization
 
@@ -65,8 +64,6 @@ module ContentSearch
     def filtered_views
       @filtered_views ||= @views.select {|v| view_versions.map(&:content_view_id).include?(v.id)}
     end
-
   end
-
 end
 end

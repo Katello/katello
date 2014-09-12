@@ -12,7 +12,6 @@
 
 module Katello
 class Api::V2::RepositoriesController < Api::V2::ApiController
-
   before_filter :find_organization, :only => [:index]
   before_filter :find_product, :only => [:index]
   before_filter :find_product_for_create, :only => [:create]
@@ -253,6 +252,5 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   def find_organization_from_product
     @organization = @product.organization
   end
-
 end
 end

@@ -23,6 +23,5 @@ class PuppetModulesController < Katello::ApplicationController
   def find_puppet_module
     @puppet_module = PuppetModule.find(params[:id])
   end
-
 end
 end

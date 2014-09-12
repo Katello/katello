@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::ProductsBulkActionsController < Api::V2::ApiController
-
     before_filter :find_products
 
     api :PUT, "/products/bulk/destroy", N_("Destroy one or more products")
@@ -78,6 +77,5 @@ module Katello
       params.require(:ids)
       @products = Product.where(:id => params[:ids])
     end
-
   end
 end

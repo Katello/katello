@@ -1,7 +1,5 @@
 module Katello
-
   class Engine < ::Rails::Engine
-
     isolate_namespace Katello
 
     initializer 'katello.silenced_logger', :before => :build_middleware_stack do |app|
@@ -151,7 +149,5 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/asset_compile.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/clean_backend_objects.rake"
     end
-
   end
-
 end

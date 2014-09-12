@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Repository
       class AbstractCopyContent < Pulp::AbstractAsyncTask
-
         input_format do
           param :source_pulp_id
           param :target_pulp_id
@@ -44,7 +43,6 @@ module Actions
           external_task_data = [external_task_data] if external_task_data.is_a?(Hash)
           super(external_task_data.map{ |task| task.except('result')})
         end
-
       end
     end
   end

@@ -12,7 +12,6 @@
 
 module Katello
 module ContentSearch
-
   class UnitRow < Row
     include ContentSearchHelper
     attr_accessor :unit # :package, :errata, :puppet_module

@@ -16,7 +16,6 @@ require 'yaml'
 
 module Katello
 module Mapping
-
   def self.configuration
     return @config if @config
     mapping_file = '/etc/katello/mapping.yml'
@@ -28,7 +27,6 @@ module Mapping
   end
 
   class ImageFactoryNaming
-
     def self.translate(name = '', version = '')
       matched_name = "#{name} #{version}"
       naming = Mapping.configuration['imagefactory_naming'] || {}
@@ -41,6 +39,5 @@ module Mapping
       return [name.to_s, version.to_s]
     end
   end
-
 end
 end

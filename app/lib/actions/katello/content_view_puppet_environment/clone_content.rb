@@ -14,7 +14,6 @@ module Actions
   module Katello
     module ContentViewPuppetEnvironment
       class CloneContent < Actions::Base
-
         def plan(puppet_environment, module_ids_by_repoid)
           concurrence do
             module_ids_by_repoid.each_pair do |repo_id, module_ids|

@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Consumer
       class AbstractSyncNodeTask <  ::Actions::Pulp::AbstractAsyncTask
-
         private
 
         def external_task=(external_task_data)
@@ -28,7 +27,6 @@ module Actions
           end
           super(external_task_data)
         end
-
       end
     end
   end

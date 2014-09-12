@@ -12,7 +12,6 @@
 
 module Katello
 class RepoDiscovery
-
   attr_reader :found
 
   def initialize(url, options = {})
@@ -75,7 +74,6 @@ class RepoDiscovery
   end
 
   def should_follow?(path)
-
     #Verify:
     # * link's path starts with the base url
     # * link hasn't already been crawled
@@ -85,6 +83,5 @@ class RepoDiscovery
     return path.starts_with?(@uri.path) && !@crawled.include?(path) &&
          path.ends_with?('/') && !path.ends_with?('/Packages/')
   end
-
 end
 end

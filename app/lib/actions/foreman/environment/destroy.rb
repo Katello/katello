@@ -14,7 +14,6 @@ module Actions
   module Foreman
     module Environment
       class Destroy < Actions::Base
-
         def plan(environment)
           if environment.hosts.count > 0
             names = environment.hosts.limit(5).pluck(:name).join(', ')
@@ -30,7 +29,6 @@ module Actions
 
           environment.destroy!
         end
-
       end
     end
   end

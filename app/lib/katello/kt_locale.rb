@@ -12,7 +12,6 @@
 
 module Katello
 module KTLocale
-
   def self.included(controller)
     controller.before_filter :set_locale_from_header
   end
@@ -71,6 +70,5 @@ module KTLocale
       l.first.downcase.gsub(/-[a-z]+$/i) { |x| x.upcase }
     end
   end
-
 end
 end

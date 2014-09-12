@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class UploadFiles < Actions::EntryAction
-
         def plan(repository, files)
           action_subject(repository)
           sequence do
@@ -36,13 +35,11 @@ module Actions
             end
             plan_action(FinishUpload, repository)
           end
-
         end
 
         def humanized_name
           _("Upload into")
         end
-
       end
     end
   end

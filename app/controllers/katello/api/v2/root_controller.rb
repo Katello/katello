@@ -12,7 +12,6 @@
 
 module Katello
 class Api::V2::RootController < Api::V2::ApiController
-
   skip_before_filter :authorize # ok - only shows URLs available
   skip_before_filter :require_user
 
@@ -62,6 +61,5 @@ class Api::V2::RootController < Api::V2::ApiController
 
     respond_for_index :collection => api_root_routes
   end
-
 end
 end

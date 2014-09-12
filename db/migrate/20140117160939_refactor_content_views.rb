@@ -120,6 +120,5 @@ class RefactorContentViews < ActiveRecord::Migration
     add_foreign_key "katello_filters_products", "katello_filters", :name => "filters_product_filter_id_fk", :column => 'filter_id'
     add_foreign_key "katello_filters_products", "katello_products", :name => "filters_product_product_id_fk", :column => "product_id"
     add_foreign_key "katello_filter_rules", "katello_filters", :name => "filters_rules_filter_id_fk", :column => 'filter_id'
-
   end
 end

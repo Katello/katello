@@ -154,7 +154,6 @@ module Api
         orig_hash[:errors] = [orig_hash[:displayMessage]] if orig_hash[:errors].nil?
         orig_hash
       end
-
     end
   end
 end

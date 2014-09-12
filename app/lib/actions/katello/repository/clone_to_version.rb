@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class CloneToVersion < Actions::Base
-
         # allows accessing the build object from the superior action
         attr_accessor :new_repository
 
@@ -28,7 +27,6 @@ module Actions
             plan_action(Repository::CloneContent, repository, new_repository, filters, true)
           end
         end
-
       end
     end
   end

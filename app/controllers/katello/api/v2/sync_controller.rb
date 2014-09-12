@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::SyncController < Api::V2::ApiController
-
     before_filter :find_optional_organization, :only => [:index]
     before_filter :find_object, :only => [:index]
     before_filter :ensure_library, :only => [:index]
@@ -55,6 +54,5 @@ module Katello
         fail HttpErrors::NotFound, _("You can check sync status for repositories only in the library lifecycle environment.'") if !@repository.environment.library?
       end
     end
-
   end
 end

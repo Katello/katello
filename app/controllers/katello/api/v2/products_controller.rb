@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::ProductsController < Api::V2::ApiController
-
     before_filter :find_activation_key, :only => [:index]
     before_filter :find_system, :only => [:index]
     before_filter :find_organization, :only => [:create, :index]
@@ -162,6 +161,5 @@ module Katello
         params.require(:product).permit(:name, :label, :description, :provider_id, :gpg_key_id, :sync_plan_id)
       end
     end
-
   end
 end

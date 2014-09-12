@@ -88,6 +88,5 @@ module ProvidersHelper
   def label_from_url(provider, url)
     Util::Model.labelize(name_from_url(provider, url))
   end
-
 end
 end

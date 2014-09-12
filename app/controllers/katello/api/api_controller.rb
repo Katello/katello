@@ -108,6 +108,5 @@ class Api::ApiController < ::Api::BaseController
 
     messages
   end
-
 end
 end

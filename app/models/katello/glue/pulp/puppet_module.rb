@@ -12,7 +12,6 @@
 
 module Katello
 module Glue::Pulp::PuppetModule
-
   def self.included(base)
     base.send :include, InstanceMethods
 
@@ -73,6 +72,5 @@ module Glue::Pulp::PuppetModule
       File.basename(@_storage_path, ".tar.gz")
     end
   end
-
 end
 end

@@ -36,7 +36,6 @@ module Katello
       end
 
       module ClassMethods
-
         def readable
           authorized(:view_products)
         end
@@ -73,9 +72,7 @@ module Katello
         def syncable?
           ::User.current.can?(:sync_products)
         end
-
       end # ClassMethods
-
     end # Product
   end # Authorization
 end # Katello

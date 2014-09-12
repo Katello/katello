@@ -187,7 +187,6 @@ class DistributorsController < Katello::ApplicationController
     end
     render_panel_direct(Distributor, @panel_options, search, params[:offset], order,
                         {:default_field => :name, :filter => filters, :load => true})
-
   end
 
   def auto_complete
@@ -214,7 +213,6 @@ class DistributorsController < Katello::ApplicationController
     else
       [:name_sort, "ASC"]
     end
-
   end
 
   def subscriptions
@@ -499,6 +497,5 @@ class DistributorsController < Katello::ApplicationController
 
     return next_objects, offset + size
   end
-
 end
 end

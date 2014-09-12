@@ -95,7 +95,6 @@ module Util
       end
       a
     end
-
   end
 end
 end

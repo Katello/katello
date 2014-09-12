@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Repository
       class ImportUpload < Pulp::AbstractAsyncTask
-
         input_format do
           param :pulp_id
           param :unit_type_id
@@ -32,7 +31,6 @@ module Actions
         def rescue_strategy
           Dynflow::Action::Rescue::Skip
         end
-
       end
     end
   end

@@ -13,7 +13,6 @@
 module Katello
 module Validators
   class DefaultInfoValidator < ActiveModel::EachValidator
-
     MAX_SIZE = 256
 
     def validate_each(record, attribute, value)

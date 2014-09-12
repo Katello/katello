@@ -34,6 +34,5 @@ module Authorization::GpgKey
       authorized(:view_gpg_keys)
     end
   end
-
 end
 end

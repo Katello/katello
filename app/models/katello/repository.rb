@@ -342,7 +342,6 @@ class Repository < Katello::Model
                                                        :content_view => content_view,
                                                        :version => version)
     end
-
   end
 
   def cancel_dynflow_sync

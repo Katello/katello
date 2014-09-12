@@ -1,6 +1,5 @@
 module Katello
   class CapsuleContent
-
     attr_reader :capsule
 
     def initialize(capsule)

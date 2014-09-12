@@ -47,6 +47,5 @@ module Katello
         key_query.count == key_query.editable.count
       end
     end
-
   end
 end

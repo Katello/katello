@@ -15,7 +15,6 @@ module Actions
     module System
       module PackageGroup
         class Install < Actions::EntryAction
-
           include Helpers::Presenter
 
           def plan(system, groups)

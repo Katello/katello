@@ -319,6 +319,5 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
 
     return subscriptions
   end
-
 end
 end

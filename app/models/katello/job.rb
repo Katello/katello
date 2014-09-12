@@ -210,6 +210,5 @@ class Job < Katello::Model
     end
     summary
   end
-
 end
 end

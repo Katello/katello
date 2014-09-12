@@ -41,6 +41,5 @@ class Candlepin::ProductContent
   def repositories
     @repos ||= self.product.repos(self.product.organization.library).where(:content_id => self.content.id)
   end
-
 end
 end

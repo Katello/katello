@@ -12,7 +12,6 @@
 
 module Katello
 module Glue::ElasticSearch::PackageGroup
-
   # TODO: break up into modules
   # rubocop:disable MethodLength
   def self.included(base)

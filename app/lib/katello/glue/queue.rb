@@ -23,7 +23,6 @@ require "katello/glue"
 module Katello
 module Glue
   class Queue
-
     attr_reader :items
     STATUS = %w[ pending running failed completed rollbacked ]
 
@@ -82,7 +81,6 @@ module Glue
     def default_status
       "pending"
     end
-
   end
 end
 end

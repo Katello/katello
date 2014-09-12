@@ -39,6 +39,5 @@ module Glue::ElasticSearch::HostCollection
      :system => self.systems.collect{|s| s.name}
     }
   end
-
 end
 end

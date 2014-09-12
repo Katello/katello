@@ -14,7 +14,6 @@ module Actions
   module Katello
     module User
       class Update < Actions::EntryAction
-
         def plan(user)
           user.disable_auto_reindex!
           action_subject user
@@ -24,7 +23,6 @@ module Actions
         def resource_locks
           :link
         end
-
       end
     end
   end

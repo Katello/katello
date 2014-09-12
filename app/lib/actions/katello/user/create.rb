@@ -14,7 +14,6 @@ module Actions
   module Katello
     module User
       class Create < Actions::EntryAction
-
         def plan(user)
           user.disable_auto_reindex!
           action_subject user
@@ -25,7 +24,6 @@ module Actions
 
           plan_action(ElasticSearch::Reindex, user)
         end
-
       end
     end
   end

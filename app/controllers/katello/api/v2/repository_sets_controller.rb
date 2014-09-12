@@ -95,6 +95,5 @@ class Api::V2::RepositorySetsController < Api::V2::ApiController
   def substitutions
     params.slice(:basearch, :releasever)
   end
-
 end
 end

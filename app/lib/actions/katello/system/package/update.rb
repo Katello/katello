@@ -15,7 +15,6 @@ module Actions
     module System
       module Package
         class Update < Actions::EntryAction
-
           include Helpers::Presenter
 
           def plan(system, packages)

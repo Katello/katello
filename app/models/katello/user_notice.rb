@@ -21,6 +21,5 @@ class UserNotice < Katello::Model
   def read!
     update_attributes! :viewed => true
   end
-
 end
 end

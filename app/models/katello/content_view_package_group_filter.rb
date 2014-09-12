@@ -25,6 +25,5 @@ class ContentViewPackageGroupFilter < ContentViewFilter
     end
     { "id" => { "$in" => package_group_ids } } unless package_group_ids.empty?
   end
-
 end
 end

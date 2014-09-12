@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class CorrectChecksum < Actions::Base
-
         def plan(repo)
          plan_self(:repo_id => repo.id)
         end

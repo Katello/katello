@@ -12,7 +12,6 @@
 
 module Katello
 module DashboardHelper
-
   def dashboard_entry(name, partial, dropbutton)
     render :partial => "entry", :locals => {:name => name, :partial => partial, :dropbutton => dropbutton}
   end
@@ -108,7 +107,6 @@ module DashboardHelper
     end
 
     return (syncing_products + synced_products)[0..num]
-
   end
 
   def sync_percentage(product)
@@ -191,6 +189,5 @@ module DashboardHelper
   def widget_drag_and_drop_text
     _("Click on the widget title text to drag and drop.")
   end
-
 end
 end

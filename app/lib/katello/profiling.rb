@@ -12,7 +12,6 @@
 
 module Katello
 module Profiling
-
   def self.included(controller)
     if profiling_enabled? && load_ruby_prof_gem
       FileUtils.mkdir_p "#{Rails.root}/tmp/profiles"

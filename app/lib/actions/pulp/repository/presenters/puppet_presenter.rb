@@ -14,9 +14,7 @@ module Actions
   module Pulp
     module Repository
       module Presenters
-
         class PuppetPresenter < AbstractSyncPresenter
-
           def progress
             #TODO: Add proper progress reporting
             # Requires https://bugzilla.redhat.com/show_bug.cgi?id=1128274 to be fixed
@@ -64,9 +62,7 @@ module Actions
           def task_progress_details
             task_progress && task_progress['puppet_importer']
           end
-
         end
-
       end
     end
   end

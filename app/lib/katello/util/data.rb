@@ -13,13 +13,11 @@
 module Katello
 module Util
   module Data
-
     def self.array_with_indifferent_access(variable)
       variable.map { |x| x.with_indifferent_access }
     end
 
     def self.ostructize(obj, options = {})
-
       options[:prefix_keys] ||= []
       options[:prefix]      ||= '_'
 
@@ -48,7 +46,6 @@ module Util
       end
       return obj
     end
-
   end
 end
 end

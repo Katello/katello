@@ -29,7 +29,6 @@ module Glue::ElasticSearch::PuppetModule
   end
 
   module ClassMethods
-
     def index_settings
       {
         "index" => {
@@ -233,7 +232,6 @@ module Glue::ElasticSearch::PuppetModule
     def remove_indexed_repoid(puppet_module_ids, repoid)
       update_array(puppet_module_ids, 'repoids', [], [repoid])
     end
-
   end
 end
 end

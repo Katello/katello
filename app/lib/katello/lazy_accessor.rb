@@ -12,7 +12,6 @@
 
 module Katello
 module LazyAccessor
-
   def self.included(base)
     base.send :include, LazyAccessor::InstanceMethods
     base.send :extend, LazyAccessor::ClassMethods

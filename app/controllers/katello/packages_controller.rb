@@ -12,7 +12,6 @@
 
 module Katello
 class PackagesController < Katello::ApplicationController
-
   before_filter :lookup_package, except: [:auto_complete]
 
   def auto_complete
@@ -42,6 +41,5 @@ class PackagesController < Katello::ApplicationController
     repos += ContentView.readable_repositories.pluck(attribute)
     repos
   end
-
 end
 end

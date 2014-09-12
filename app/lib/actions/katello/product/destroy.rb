@@ -14,10 +14,8 @@ module Actions
   module Katello
     module Product
       class Destroy < Actions::EntryAction
-
         # rubocop:disable MethodLength
         def plan(product)
-
           unless product.user_deletable?
             fail _("Cannot delete a Red Hat Products or Products with Repositories published in a Content View")
           end

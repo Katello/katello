@@ -14,7 +14,6 @@ module Actions
   module Katello
     module ContentViewPuppetEnvironment
       class CreateForVersion < Actions::Base
-
         # allows accessing the build object from the superior action
         attr_accessor :new_puppet_environment
 
@@ -29,7 +28,6 @@ module Actions
             plan_action(ContentViewPuppetEnvironment::CloneContent, new_puppet_environment, modules_by_repoid)
           end
         end
-
       end
     end
   end

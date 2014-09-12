@@ -13,7 +13,6 @@
 module Katello
 module Util
   module FilterClauseGenerator
-
     def initialize(repo, filters)
       @repo = repo
       @filters = filters

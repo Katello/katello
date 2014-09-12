@@ -12,7 +12,6 @@
 
 module Katello
 module ContentSearch
-
   class RepoSearch < ContainerSearch
     attr_accessor :repos, :view
 

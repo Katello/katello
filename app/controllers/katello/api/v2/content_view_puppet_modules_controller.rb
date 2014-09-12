@@ -89,6 +89,5 @@ module Katello
       attrs = [:name, :author, :uuid]
       params.require(:content_view_puppet_module).permit(*attrs)
     end
-
   end
 end
