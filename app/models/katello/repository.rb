@@ -51,10 +51,8 @@ class Repository < Katello::Model
                           :foreign_key => :content_view_filter_id
   belongs_to :content_view_version, :inverse_of => :repositories
 
-  validates :name, :presence => true
-  validates :label, :presence => true
   validates :product_id, :presence => true
-  validates :pulp_id, :presence => true, :uniqueness => true
+  validates :pulp_id, :presence => true, :uniqueness => true, :if => proc {|r| r.name.present?}
   #validates :content_id, :presence => true #add back after fixing add_repo orchestration
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -66,7 +64,7 @@ class Repository < Katello::Model
   validates :content_type, :inclusion => {
       :in => TYPES,
       :allow_blank => false,
-      :message => (_("Please select content type from one of the following: %s") % TYPES.join(', '))
+      :message => (_("must be one of the following: %s") % TYPES.join(', '))
   }
 
   default_scope order("#{Katello::Repository.table_name}.name ASC")

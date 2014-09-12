@@ -29,8 +29,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   skip_before_filter :require_org, :only => [:sync_complete]
   skip_before_filter :require_user, :only => [:sync_complete]
 
-  wrap_parameters :include => (Repository.attribute_names + ["url"])
-
   def_param_group :repo do
     param :name, String, :required => true
     param :label, String, :required => false
@@ -77,15 +75,17 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   api :POST, "/repositories", N_("Create a custom repository")
   param_group :repo
   def create
-    params[:label] = labelize_params(params)
-    params[:url] = nil if params[:url].blank?
+    repo_params = repository_params
     gpg_key = @product.gpg_key
-    unless params[:gpg_key_id].blank?
+    unless repo_params[:gpg_key_id].blank?
       gpg_key = @gpg_key
     end
 
-    repository = @product.add_repo(params[:label], params[:name], params[:url],
-                                   params[:content_type], params[:unprotected], gpg_key)
+    repo_params[:label] = labelize_params(repo_params)
+    repo_params[:url] = nil if repo_params[:url].blank?
+
+    repository = @product.add_repo(repo_params[:label], repo_params[:name], repo_params[:url],
+                                   repo_params[:content_type], repo_params[:unprotected], gpg_key)
     sync_task(::Actions::Katello::Repository::Create, repository)
     repository = Repository.find(repository.id)
     respond_for_show(:resource => repository)
@@ -235,7 +235,9 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   end
 
   def repository_params
-    params.require(:repository).permit(:url, :gpg_key_id, :unprotected, :name)
+    keys = [:url, :gpg_key_id, :unprotected, :name]
+    keys += [:label, :content_type] if params[:action] == "create"
+    params.require(:repository).permit(*keys)
   end
 
   def error_on_rh_product

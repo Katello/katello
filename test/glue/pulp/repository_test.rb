@@ -135,6 +135,14 @@ class GluePulpRepoTest < GluePulpRepoTestBase
     assert @fedora_17_x86_64.set_sync_schedule(time)
   end
 
+  def test_custom_repo_path
+    product = @fedora_17_x86_64.product
+    env = @fedora_17_x86_64.product.organization.library
+    env.organization.stubs(:label).returns("ACME")
+    assert_nil Glue::Pulp::Repos.custom_repo_path(nil, product, "test")
+    assert_equal "ACME/library_label/custom/fedora_label/test",
+      Glue::Pulp::Repos.custom_repo_path(env, product, "test")
+  end
 end
 
 

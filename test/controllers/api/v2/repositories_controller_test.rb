@@ -151,6 +151,11 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     end
   end
 
+  def test_create_without_label_or_name
+    post :create, :product_id => @product.id
+    assert_response 500 # should be 400 but dynflow doesn't raise RecordInvalid
+  end
+
   def test_create_protected
     allowed_perms = [@create_permission]
     denied_perms = [@read_permission, @update_permission, @destroy_permission]
