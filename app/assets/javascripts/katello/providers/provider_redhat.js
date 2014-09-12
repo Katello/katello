@@ -21,18 +21,12 @@ $(document).ready(function() {
 
     $("#content_tabs").tabs({
         cache: true,
-        select: function(event, ui) {
-          var panel = $(ui.panel);
-          if (panel.is(":empty")) {
-            panel.append(spinner);
-          }
-        },
         load: function(event, ui) {
             KT.redhat_provider_page.init_tab($(ui.panel));
         }
     });
 
-    $("#ui-tabs-1").append(spinner);
+    $("#content_tabs > .ui-tabs-panel").append(spinner);
 
     $("#content_tabs").delegate('.repo_enable', 'change', function() {
         KT.redhat_provider_page.repoChange($(this), false);
