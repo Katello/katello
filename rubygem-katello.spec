@@ -236,6 +236,9 @@ ln -s %{gem_instdir}/public/assets/bastion %{buildroot}%{foreman_dir}/public/ass
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Fri Sep 12 2014 Justin Sherrill <jsherril@redhat.com> 2.1.0-1
+- bumping to version to 2.1 (jsherril@redhat.com)
+
 * Fri Sep 12 2014 Justin Sherrill <jsherril@redhat.com> 2.0.0-1
 - bumping to katello 2.0 (jsherril@redhat.com)
 - Automatic commit of package [katello] minor release [2.0.0-0].
