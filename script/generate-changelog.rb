@@ -3,6 +3,7 @@
 require 'open3'
 require 'json'
 require 'restclient'
+require 'English'
 
 if ARGV.length < 2
   puts "Please provide a start and end tag to generate a changelog for."
