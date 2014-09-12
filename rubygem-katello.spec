@@ -28,7 +28,7 @@
 Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
-Version: 2.0.0
+Version: 2.1.0
 Release: 1%{dist}
 Group: Development/Ruby
 License: Distributable
