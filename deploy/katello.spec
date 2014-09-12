@@ -24,8 +24,8 @@
 %global confdir common
 
 Name:           katello
-Version:        1.5.0
-Release:        14%{?dist}
+Version:        2.0.0
+Release:        0%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -149,6 +149,53 @@ usermod -a -G katello-shared katello
 exit 0
 
 %changelog
+* Fri Sep 12 2014 Justin Sherrill <jsherril@redhat.com> 2.0.0-0
+- fixes #7084 - add rubygem-hammer_cli_import dep (jmontleo@redhat.com)
+- Fixes #6297 - delayed jobs is dead, long live foreman-tasks
+  (inecas@redhat.com)
+- Fixes #7071/BZ1125391: add installer and pulp configs to katello-debug.
+  (walden@redhat.com)
+- Fixes #6967: Add the correct location of mongo, and collect all log files
+  (bkearney@redhat.com)
+- Fixes #6682 : Add a warning message if the user tries to run katello-debug.sh
+  directly (bkearney@redhat.com)
+- Fixes #5805: Update qpidd.conf location and grab Pulp messages in debug.
+  (ericdhelms@gmail.com)
+- Fixes #6245 : Add mongo and postgres logs to katello debug
+  (bkearney@redhat.com)
+- Fixes 6048: The spec file was not building due to the new katello-debug
+  changes (bkearney@redhat.com)
+- Fixes 6041: Convert katello-debug to be an extension of foreman-debug
+  (bkearney@redhat.com)
+- fixes #5862 - adding pulp 2.4 services to katello-service
+  (jsherril@redhat.com)
+- Merge pull request #3980 from iNecas/reposets-rework (inecas@redhat.com)
+- Fixes #5164 - fix rpm builds (inecas@redhat.com)
+- Fixes #4826 - rework reposets to not create repositories on repo set enable
+  (inecas@redhat.com)
+- Merge pull request #3975 from mccun934/20140409-2045 (mmccune@gmail.com)
+- fixes #5164 - adding katello_remove.sh script (mmccune@redhat.com)
+- fixes #4991 - adding a few foreman plugins to the default installation
+  (jsherril@redhat.com)
+- Fixes #4690 - Updating directory in katello deployed scripts
+  (daviddavis@redhat.com)
+- fixes #4744 - updating copyright to 2014 (jsherril@redhat.com)
+- Merge remote-tracking branch 'origin/master' into dynflow (inecas@redhat.com)
+- rename hammer_cli package for katelli support (jmontleo@redhat.com)
+- Merge pull request #3609 from mccun934/requires-update9 (mmccune@gmail.com)
+- remove foreman and thumbslug services now that they are no longer used
+  (mmccune@redhat.com)
+- Update katello-jobs to include dynflow executor (inecas@redhat.com)
+- adding CLI requires so installs of katello pull in the CLI
+  (mmccune@redhat.com)
+- Merge pull request #3592 from mccun934/specfile-fixes3 (mmccune@gmail.com)
+- remove unused calls to the defunct 'katello' service (mmccune@redhat.com)
+- adding requires on the rubygem (mmccune@redhat.com)
+- Spec: Removing node-installer requires and adding back katello-installer
+  requires to katello RPM. (ericdhelms@gmail.com)
+- removing old files from katello spec file (jsherril@redhat.com)
+- removing katello's service calls and uneeded cruft
+
 * Sat Jan 11 2014 Justin Sherrill <jsherril@redhat.com> 1.5.0-14
 - adding util-linux to requires and removing f18 builds (jsherril@redhat.com)
 
