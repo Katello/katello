@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'open3'
+require 'English'
 
 def syscall(*cmd)
   stdout, _stderr, status = Open3.capture3(*cmd)
