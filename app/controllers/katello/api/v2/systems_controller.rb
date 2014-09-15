@@ -342,33 +342,33 @@ class Api::V2::SystemsController < Api::V2::ApiController
     end
   end
 
-  def system_params(params)
-    system_params = params.require(:system).permit(:name, :description, :location, :owner, :type,
+  def system_params(param_hash)
+    system_params = param_hash.require(:system).permit(:name, :description, :location, :owner, :type,
                                                    :service_level, :autoheal,
                                                    :guest_ids, {:host_collection_ids => []})
 
-    system_params[:facts] = params[:system][:facts].permit! if params[:system][:facts]
-    system_params[:cp_type] = params[:type] ? params[:type] : ::Katello::System::DEFAULT_CP_TYPE
-    system_params.delete(:type) if params[:system].key?(:type)
+    system_params[:facts] = param_hash[:system][:facts].permit! if param_hash[:system][:facts]
+    system_params[:cp_type] = param_hash[:type] ? param_hash[:type] : ::Katello::System::DEFAULT_CP_TYPE
+    system_params.delete(:type) if param_hash[:system].key?(:type)
 
     { :guest_ids => :guestIds,
       :installed_products => :installedProducts,
       :release_ver => :releaseVer,
       :service_level => :serviceLevel,
       :last_checkin => :lastCheckin }.each do |snake, camel|
-      if params[snake]
-        system_params[camel] = params[snake]
-      elsif params[camel]
-        system_params[camel] = params[camel]
+      if param_hash[snake]
+        system_params[camel] = param_hash[snake]
+      elsif param_hash[camel]
+        system_params[camel] = param_hash[camel]
       end
     end
     system_params[:installedProducts] = [] if system_params.key?(:installedProducts) && system_params[:installedProducts].nil?
 
     unless User.consumer?
-      system_params.merge!(params[:system].permit(:environment_id, :content_view_id))
+      system_params.merge!(param_hash[:system].permit(:environment_id, :content_view_id))
       system_params[:content_view_id] = nil if system_params[:content_view_id] == false
-      system_params[:content_view_id] = params[:system][:content_view][:id] if params[:system][:content_view]
-      system_params[:environment_id] = params[:system][:environment][:id] if params[:system][:environment]
+      system_params[:content_view_id] = param_hash[:system][:content_view][:id] if param_hash[:system][:content_view]
+      system_params[:environment_id] = param_hash[:system][:environment][:id] if param_hash[:system][:environment]
     end
 
     system_params

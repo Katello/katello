@@ -45,18 +45,18 @@ module Katello
     param :object_root, String, :desc => N_("root-node of single-resource responses (optional)")
     param :root_name, String, :desc => N_("root-node of collection contained in responses (default: 'results')")
 
-    def item_search(item_class, params, options)
+    def item_search(item_class, param_hash, options)
       fail "@search_service search not defined" if @search_service.nil?
-      if params[:order]
-        (params[:sort_by], params[:sort_order]) = params[:order].split(' ')
+      if param_hash[:order]
+        (param_hash[:sort_by], param_hash[:sort_order]) = param_hash[:order].split(' ')
       end
-      options[:sort_by] = params[:sort_by] if params[:sort_by]
-      options[:sort_order] = params[:sort_order] if params[:sort_order]
-      options[:full_result] = params[:full_result] if params[:full_result]
+      options[:sort_by] = param_hash[:sort_by] if param_hash[:sort_by]
+      options[:sort_order] = param_hash[:sort_order] if param_hash[:sort_order]
+      options[:full_result] = param_hash[:full_result] if param_hash[:full_result]
 
       unless options[:full_result]
-        options[:per_page] = params[:per_page] || ::Setting::General.entries_per_page
-        options[:page] = params[:page] || 1
+        options[:per_page] = param_hash[:per_page] || ::Setting::General.entries_per_page
+        options[:page] = param_hash[:page] || 1
         offset = (options[:page].to_i - 1) * options[:per_page].to_i
       end
 
@@ -65,10 +65,10 @@ module Katello
       if block_given?
         options[:offset] = offset
         @search_service.search_options = options
-        @search_service.query_string = params[:search]
+        @search_service.query_string = param_hash[:search]
         results, total_count = yield(@search_service)
       else
-        results, total_count = @search_service.retrieve(params[:search], offset, options)
+        results, total_count = @search_service.retrieve(param_hash[:search], offset, options)
       end
       {
         :results  => results,
@@ -108,9 +108,9 @@ module Katello
       false
     end
 
-    def labelize_params(params)
-      return params[:label] unless params.try(:[], :label).nil?
-      return Util::Model.labelize(params[:name]) unless params.try(:[], :name).nil?
+    def labelize_params(param_hash)
+      return param_hash[:label] unless param_hash.try(:[], :label).nil?
+      return Util::Model.labelize(param_hash[:name]) unless param_hash.try(:[], :name).nil?
     end
 
     def find_organization
