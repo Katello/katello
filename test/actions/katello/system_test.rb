@@ -77,6 +77,23 @@ module ::Actions::Katello::System
     end
   end
 
+  class HostDestroyTest < TestBase
+    let(:action_class) { ::Actions::Katello::System::HostDestroy }
+    it 'plans' do
+      host = mock()
+      content_host = mock()
+      host.expects(:content_host).at_least(1).returns(content_host)
+      host.expects(:reload).returns(host)
+      host.expects(:destroy).returns(true)
+
+      action.stubs(:action_subject).with(host)
+
+      plan_action(action, host)
+      assert_action_planed_with(action, ::Actions::Katello::System::Destroy, content_host)
+    end
+  end
+
+
   class ActivationKeyTest < TestBase
     let(:action_class) { ::Actions::Katello::System::ActivationKeys }
 
