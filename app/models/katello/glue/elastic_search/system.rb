@@ -22,10 +22,10 @@ module Glue::ElasticSearch::System
     base.class_eval do
       include Ext::IndexedModel
 
-      add_host_collection_hook     lambda { |host_collection| reindex_on_association_change(host_collection) }
-      remove_host_collection_hook  lambda { |host_collection| reindex_on_association_change(host_collection) }
-      add_activation_key_hook     lambda { |activation_key| reindex_on_association_change(activation_key) }
-      remove_activation_key_hook  lambda { |activation_key| reindex_on_association_change(activation_key) }
+      add_host_collection_hook lambda { |host_collection| reindex_on_association_change(host_collection) }
+      remove_host_collection_hook lambda { |host_collection| reindex_on_association_change(host_collection) }
+      add_activation_key_hook lambda { |activation_key| reindex_on_association_change(activation_key) }
+      remove_activation_key_hook lambda { |activation_key| reindex_on_association_change(activation_key) }
 
       # 'index_options' controls what attributes are indexed and stored in ES. From indexed_model.rb
       #  :json  - normal to_json options,  :only or :except allowed
@@ -93,7 +93,7 @@ module Glue::ElasticSearch::System
       # Sorting only works on fields with single values (ie. w/o tokenization). Setting :not_analyzed
       # on the 'name_sort' field prevents this. This does mean that anything that needs to be sorted
       # (eg. for display in UI table) needs to have its fields duplicated if they are tokenized.
-      mapping   :dynamic_templates => dynamic_templates do
+      mapping :dynamic_templates => dynamic_templates do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :description, :type => 'string'
         indexes :content_view, :type => 'string', :analyzer => :kt_name_analyzer

@@ -66,7 +66,7 @@ class System < Katello::Model
   validates_with Validators::ContentViewEnvironmentValidator
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
-  before_create  :fill_defaults
+  before_create :fill_defaults
   after_create :init_default_custom_info
 
   before_update :update_foreman_host, :if => proc { |r| r.environment_id_changed? || r.content_view_id_changed? }

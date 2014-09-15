@@ -229,7 +229,7 @@ module Katello
     # following line hence you can see what belongs to the same message
     class MultilinePatternLayout < ::Logging::Layouts::Pattern
       def format_obj(obj)
-        obj.kind_of?(String) ? indent_lines(obj) : super
+        obj.is_a?(String) ? indent_lines(obj) : super
       end
 
       private

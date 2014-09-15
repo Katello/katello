@@ -24,7 +24,7 @@ module Katello
         # note, content_view_id is not retreive as it should be inferred from environment_id
         host.content_source = SmartProxy.find(params[:content_source_id])
 
-        if operatingsystem.kind_of?(Redhat)
+        if operatingsystem.is_a?(Redhat)
           render :json => operatingsystem.kickstart_repo(host)
         else
           render :json => nil

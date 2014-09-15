@@ -96,13 +96,13 @@ module Resources
         rescue EOFError
           raise RestClient::ServerBrokeConnection
         rescue Timeout::Error
-          fail RestClient::RequestTimeout
+          raise RestClient::RequestTimeout
         rescue RestClient::ResourceNotFound
-          fail Errors::NotFound.new(_("CDN loading error: %s not found") % used_url)
+          raise Errors::NotFound.new(_("CDN loading error: %s not found") % used_url)
         rescue RestClient::Unauthorized
-          fail Errors::SecurityViolation.new(_("CDN loading error: access denied to %s") % used_url)
+          raise Errors::SecurityViolation.new(_("CDN loading error: access denied to %s") % used_url)
         rescue RestClient::Forbidden
-          fail Errors::SecurityViolation.new(_("CDN loading error: access forbidden to %s") % used_url)
+          raise Errors::SecurityViolation.new(_("CDN loading error: access forbidden to %s") % used_url)
         end
       end
 

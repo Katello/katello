@@ -58,7 +58,7 @@ class ApplicationController < ::ApplicationController
             when SignalException, SystemExit, NoMemoryError
               :raise
             else
-              Rails.logger.error 'Unknown child of Exception instead of StandardError detected: ' +
+              Rails.logger.error 'Unknown child of Exception instead of StandardError detected: ' \
                 "#{exception.message} (#{exception.class})"
               paranoia ? :handle : :raise
             end
@@ -136,17 +136,17 @@ class ApplicationController < ::ApplicationController
   # so generate_label and default_label_assigned can use them
   def n_gettext_for_generate_label
     # the same string for repository, product, organization, environment (see BZ 886718)
-    N_("A label was not provided during repository creation; therefore, a label of '%{label}' was " +
-      "automatically assigned. If you would like a different label, please delete the " +
+    N_("A label was not provided during repository creation; therefore, a label of '%{label}' was " \
+      "automatically assigned. If you would like a different label, please delete the " \
       "repository and recreate it with the desired label.")
-    N_("A label was not provided during product creation; therefore, a label of '%{label}' was " +
-      "automatically assigned. If you would like a different label, please delete the " +
+    N_("A label was not provided during product creation; therefore, a label of '%{label}' was " \
+      "automatically assigned. If you would like a different label, please delete the " \
       "product and recreate it with the desired label.")
-    N_("A label was not provided during organization creation; therefore, a label of '%{label}' was " +
-      "automatically assigned. If you would like a different label, please delete the " +
+    N_("A label was not provided during organization creation; therefore, a label of '%{label}' was " \
+      "automatically assigned. If you would like a different label, please delete the " \
       "organization and recreate it with the desired label.")
-    N_("A label was not provided during environment creation; therefore, a label of '%{label}' was " +
-      "automatically assigned. If you would like a different label, please delete the " +
+    N_("A label was not provided during environment creation; therefore, a label of '%{label}' was " \
+      "automatically assigned. If you would like a different label, please delete the " \
       "environment and recreate it with the desired label.")
   end
 
@@ -156,8 +156,8 @@ class ApplicationController < ::ApplicationController
     # user didn't provide a label, so generate one using the name
     label = Util::Model.labelize(object_name)
     # if you modify this string you have to modify it in n_gettext_for_generate_label as well
-    label_assigned_text = "A label was not provided during #{object_type} creation; therefore, a label of '%{label}' was " +
-      "automatically assigned. If you would like a different label, please delete the " +
+    label_assigned_text = "A label was not provided during #{object_type} creation; therefore, a label of '%{label}' was " \
+      "automatically assigned. If you would like a different label, please delete the " \
       "#{object_type} and recreate it with the desired label."
     label_assigned_text = _(label_assigned_text) % {:label => label}
     return label, label_assigned_text
@@ -168,8 +168,8 @@ class ApplicationController < ::ApplicationController
   def default_label_assigned(new_object)
     object_type = new_object.class.name.downcase
     # if you modify this string you have to modify it in n_gettext_for_generate_label as well
-    msg = "A label was not provided during #{object_type} creation; therefore, a label of '%{label}' was " +
-      "automatically assigned. If you would like a different label, please delete the " +
+    msg = "A label was not provided during #{object_type} creation; therefore, a label of '%{label}' was " \
+      "automatically assigned. If you would like a different label, please delete the " \
       "#{object_type} and recreate it with the desired label."
     return _(msg) % {:label => new_object.label}
   end
@@ -178,8 +178,8 @@ class ApplicationController < ::ApplicationController
   # the label that they provided has been overriden to ensure uniqueness.
   def label_overridden(new_object, requested_label)
     object_type = new_object.class.name.downcase
-    _("The label requested is already used by another %s; therefore, a unique label was " +
-      "assigned.  If you would like a different label, please delete the %s and recreate " +
+    _("The label requested is already used by another %s; therefore, a unique label was " \
+      "assigned.  If you would like a different label, please delete the %s and recreate " \
       "it with a unique label.  Requested label: %s, Assigned label: %s") %
       [object_type, object_type, requested_label, new_object.label]
   end
@@ -381,8 +381,8 @@ class ApplicationController < ::ApplicationController
                         _('Invalid parameters sent. You may have mistyped the address. If you continue having trouble with this, please contact an Administrator.')
                       end
 
-    exception = args.find { |o| o.kind_of? Exception }
-    message   = args.find { |o| o.kind_of? String } || exception.try(:message) || default_message
+    exception = args.find { |o| o.is_a? Exception }
+    message   = args.find { |o| o.is_a? String } || exception.try(:message) || default_message
 
     status = if exception && exception.respond_to?(:status_code)
                exception.status_code
@@ -580,7 +580,7 @@ class ApplicationController < ::ApplicationController
         #set total since @items will be just an array
         panel_options[:total_count] = results.empty? ? 0 : results.total
         if @items.length != results.length
-          Rails.logger.error("Failed to retrieve all #{obj_class} search results " +
+          Rails.logger.error("Failed to retrieve all #{obj_class} search results " \
                                  "(#{@items.length}/#{results.length} found.)")
         end
       else
@@ -648,7 +648,7 @@ class ApplicationController < ::ApplicationController
     # the caller may provide items either based on active record or a list within an array... in the case of an
     # array, it is assumed to be based upon results from a pulp/candlepin request, in which case search is
     # not currently supported
-    if @items.kind_of? ActiveRecord::Relation
+    if @items.is_a? ActiveRecord::Relation
       items_searched = @items.search_for(search)
       items_offset = items_searched.limit(current_user.page_size).offset(start)
     else

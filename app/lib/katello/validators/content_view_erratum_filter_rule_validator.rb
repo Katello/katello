@@ -15,7 +15,7 @@ module Validators
   class ContentViewErratumFilterRuleValidator < ActiveModel::Validator
     def validate(record)
       if record.errata_id.blank? && record.start_date.blank? && record.end_date.blank? && record.types.blank?
-        invalid_parameters = _("Invalid erratum filter rule specified, Must specify at least one of the following:" +
+        invalid_parameters = _("Invalid erratum filter rule specified, Must specify at least one of the following:" \
                                    " 'errata_id', 'start_date', 'end_date' or 'types'")
         record.errors[:base] << invalid_parameters
         return
@@ -24,7 +24,7 @@ module Validators
       if !record.errata_id.blank? && (!record.start_date.blank? ||
                                       !record.end_date.blank? ||
                                       !record.types.blank?)
-        invalid_parameters = _("Invalid erratum filter rule specified, 'errata_id' cannot be specified in the" +
+        invalid_parameters = _("Invalid erratum filter rule specified, 'errata_id' cannot be specified in the" \
                                " same tuple as 'start_date', 'end_date' or 'types'")
         record.errors[:base] << invalid_parameters
         return

@@ -100,7 +100,7 @@ class HttpResource
       raise_rest_client_exception e, a_path, "GET"
     rescue Errno::ECONNREFUSED
       service = a_path.split("/").second
-      fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+      raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
     def post(a_path, payload = {}, headers = {})
@@ -114,7 +114,7 @@ class HttpResource
       raise_rest_client_exception e, a_path, "POST"
     rescue Errno::ECONNREFUSED
       service = a_path.split("/").second
-      fail Katello::Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+      raise Katello::Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
     def put(a_path, payload = {}, headers = {})
@@ -128,7 +128,7 @@ class HttpResource
       raise_rest_client_exception e, a_path, "PUT"
     rescue Errno::ECONNREFUSED
       service = a_path.split("/").second
-      fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+      raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
     def delete(a_path = nil, headers = {})
@@ -142,7 +142,7 @@ class HttpResource
       raise_rest_client_exception e, a_path, "DELETE"
     rescue Errno::ECONNREFUSED
       service = a_path.split("/").second
-      fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+      raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
     # re-raise the same exception with nicer error message

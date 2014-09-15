@@ -59,7 +59,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
   def create
     sync_date = sync_plan_params[:sync_date].to_time
 
-    if !sync_date.kind_of?(Time)
+    if !sync_date.is_a?(Time)
       fail _("Date format is incorrect.")
     end
 
@@ -78,7 +78,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
   def update
     sync_date = sync_plan_params.try(:[], :sync_date).try(:to_time)
 
-    if !sync_date.nil? && !sync_date.kind_of?(Time)
+    if !sync_date.nil? && !sync_date.is_a?(Time)
       fail _("Date format is incorrect.")
     end
 

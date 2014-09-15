@@ -147,7 +147,7 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
 
   def field_label(name, options)
     required = object.class.validators_on(name).any? do|v|
-      v.kind_of? ActiveModel::Validations::PresenceValidator
+      v.is_a? ActiveModel::Validations::PresenceValidator
     end
 
     label_content = label(name, options[:label], :class => ("required" if required))

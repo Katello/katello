@@ -18,7 +18,7 @@ module Katello
       included do
         after_initialize :set_default_overrides, :if => :new_record?
         before_create :set_katello_default
-        before_save   :refute_katello_default_changed
+        before_save :refute_katello_default_changed
         before_destroy :is_deletable?
       end
 

@@ -53,7 +53,7 @@ module Util
     # values are loaded from CDN
     def substitute_vars(path_with_vars)
       if path_with_vars =~ /^(.*\$\w+)(.*)$/
-        prefix_with_vars, suffix_without_vars =  $1, $2
+        prefix_with_vars, suffix_without_vars =  Regexp.last_match[1], Regexp.last_match[2]
       else
         prefix_with_vars, suffix_without_vars = "", path_with_vars
       end
@@ -139,7 +139,7 @@ module Util
 
     def for_each_substitute_of_next_var(substitutions, path)
       if path =~ /^(.*?)\$([^\/]*)/
-        base_path, var = $1, $2
+        base_path, var = Regexp.last_match[1], Regexp.last_match[2]
         get_substitutions_from(base_path).compact.each do |value|
 
           new_substitutions = substitutions.merge(var => value)

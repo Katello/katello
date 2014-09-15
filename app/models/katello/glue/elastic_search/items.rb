@@ -139,7 +139,7 @@ module Glue
         #set total since @items will be just an array
         @total = @results.empty? ? 0 : @results.total
         if @total != collection.length
-          Rails.logger.error("Failed to retrieve all #{@obj_class} search results " +
+          Rails.logger.error("Failed to retrieve all #{@obj_class} search results " \
                                  "(#{collection.length}/#{@results.length} found.)")
         end
 

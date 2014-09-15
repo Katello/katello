@@ -39,7 +39,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
   param :name, String, :desc => N_("name of the filter"), :required => true
   param :type, String, :desc => N_("type of filter (e.g. rpm, package_group, erratum)"), :required => true
-  param :original_packages, :bool, :desc => N_("Add all packages without Errata to the included/excluded list. " +
+  param :original_packages, :bool, :desc => N_("Add all packages without Errata to the included/excluded list. " \
                                                      "(Package Filter only)")
   param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")
   param :repository_ids, Array, :desc => N_("list of repository ids")
@@ -62,7 +62,7 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   param :content_view_id, :identifier, :desc => N_("content view identifier")
   param :id, :identifier, :desc => N_("filter identifier"), :required => true
   param :name, String, :desc => N_("new name for the filter")
-  param :original_packages, :bool, :desc => N_("Add all packages without Errata to the included/excluded list. " +
+  param :original_packages, :bool, :desc => N_("Add all packages without Errata to the included/excluded list. " \
                                                      "(Package Filter only)")
   param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")
   param :repository_ids, Array, :desc => N_("list of repository ids")

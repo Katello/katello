@@ -41,7 +41,7 @@ module Profiling
     result = RubyProf.stop
     Rails.logger.info "stopped profiling #{action_name}"
     printer = RubyProf::GraphHtmlPrinter.new(result)
-    path    = "#{Rails.root}/tmp/profiles/#{params[:controller].gsub('/', '-')}." +
+    path    = "#{Rails.root}/tmp/profiles/#{params[:controller].gsub('/', '-')}." \
         "#{params[:action]}.#{Time.now.to_i.to_s}.html"
     File.open(path, 'w') do |f|
       printer.print(f, :min_percent => 0)

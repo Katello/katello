@@ -42,7 +42,7 @@ module Glue::ElasticSearch::Distributor
         }
       ]
 
-      mapping   :dynamic_templates => dynamic_templates do
+      mapping :dynamic_templates => dynamic_templates do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :description, :type => 'string'
         indexes :name_sort, :type => 'string', :index => :not_analyzed

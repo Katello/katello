@@ -498,7 +498,7 @@ class ContentView < Katello::Model
     end
 
     if failed_distribution
-        fail _("Content Views cannot contain multiple Kickstart trees with the same version and architecture. " +
+        fail _("Content Views cannot contain multiple Kickstart trees with the same version and architecture. " \
                "Multiple Kickstart trees of %{release} %{arch} were found in Repositories: %{repos}") %
                  {:release => failed_distribution.version, :arch => failed_distribution.arch,
                   :repos => Repository.where(:pulp_id => pulp_repo_ids).pluck(:name).join(', ')}
