@@ -110,6 +110,7 @@ for more info.
     it 'does not use ENV variables' do
       SourceCode.
           new('**/*.rb',
+              %r'db/seeds\.rb',
               %r'config/(application|boot)\.rb',
               %r'engines/bastion/test/test_helper\.rb',
               %r'test/support/vcr\.rb',

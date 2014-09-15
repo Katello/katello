@@ -64,6 +64,8 @@ class KTEnvironmentTest < KTEnvironmentTestBase
   def test_destroy_library
     User.current = User.find(users(:admin))
     org = FactoryGirl.create(:katello_organization)
+    org.create_library
+    org.save!
     env = org.library
     env.destroy
     refute env.destroyed?

@@ -68,7 +68,10 @@ module Katello
     param :description, String, :desc => N_("description")
     param_group :resource, ::Api::V2::TaxonomiesController
     def create
-      super
+      @organization = Organization.new(params[:organization])
+      sync_task(::Actions::Katello::Organization::Create, @organization)
+      @organization.reload
+      process_response @organization
     end
 
     api :DELETE, '/organizations/:id', N_('Delete an organization')

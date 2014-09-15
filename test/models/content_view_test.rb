@@ -403,6 +403,18 @@ class ContentViewTest < ActiveSupport::TestCase
   def test_add_repository_from_other_org
     view = @library_view
     other_org = create(:katello_organization)
+    other_org.create_library
+    other_org.create_anonymous_provider
+    other_org.save!
+    library_view = create(:katello_content_view, :default => true,
+                                       :name => "Default Organization View",
+                                       :organization => other_org)
+
+    ::Katello::ContentViewVersion.create! do |v|
+      v.content_view = library_view
+      v.version = 1
+    end
+
     product = create(:katello_product, :organization => other_org, :provider => other_org.anonymous_provider)
     repo = create(:katello_repository, :product => product, :content_view_version =>
         other_org.default_content_view.versions.first)

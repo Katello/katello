@@ -30,8 +30,7 @@ describe KTEnvironment do
       Repository.any_instance.stubs(:destroy_repo_orchestration).returns(true)
 
       @env_name = 'test_environment'
-
-      @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization')
+      @organization = get_organization
       @provider = @organization.redhat_provider
 
       @first_product = Product.create!(:name =>"prod1", :label=>"prod1", :cp_id => '12345', :provider => @provider, :organization => @organization)
@@ -39,6 +38,7 @@ describe KTEnvironment do
       @third_product = Product.create!(:name =>"prod3", :label=> "prrod3",:cp_id => '45678', :provider => @provider, :organization => @organization)
       @fourth_product = Product.create!(:name =>"prod4", :label => "prod4", :cp_id => '32683', :provider => @provider, :organization => @organization)
       @environment = create_environment({:name=>@env_name, :organization => @organization, :label=> @env_name, :prior => @organization.library})
+      @organization.reload
       FactoryGirl.create(:katello_repository, product: @first_product, environment: @environment,
                              content_view_version_id: @environment.content_view_versions.first.id)
       FactoryGirl.create(:katello_repository, product: @third_product, environment: @environment,
@@ -111,13 +111,14 @@ describe KTEnvironment do
 
       it "should return products from prior env" do
         @environment.prior = @prior_env.id
-
-        @environment.available_products.size.must_equal(1)
+        product_size = @prior_env.products.size - @environment.products.size
+        @environment.available_products.size.must_equal(product_size)
         @environment.available_products.must_include(@second_product)
       end
 
       it "should return products from the library if there is no prior env" do
-        @environment.available_products.size.must_equal(2)
+        product_size = @organization.library.products.size - @environment.products.size
+        @environment.available_products.size.must_equal(product_size)
         @environment.available_products.must_include(@second_product)
         @environment.available_products.must_include(@fourth_product)
       end

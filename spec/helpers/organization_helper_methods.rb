@@ -15,19 +15,10 @@ require File.expand_path("../models/model_spec_helper", File.dirname(__FILE__))
 module Katello
 module OrganizationHelperMethods
   include OrchestrationHelper
-  def new_test_org user=nil
+  def setup_test_org
     disable_org_orchestration
-    suffix = Organization.count + 1
-    @organization = Organization.create!(:name=>"test_organization#{suffix}", :label=> "test_organization#{suffix}_label")
+    @organization = get_organization
     session[:current_organization_id] = @organization.id if defined? session
-    return @organization
-  end
-
-  def new_test_org_model user=nil
-    disable_org_orchestration
-    suffix = Organization.count + 1
-    @organization = Organization.create!(:name=>"test_organization#{suffix}", :label=> "test_organization#{suffix}_label")
-    return @organization
   end
 
   def current_organization=(org)

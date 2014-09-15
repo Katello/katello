@@ -24,13 +24,7 @@ module Katello
         include Glue::Candlepin::Owner if Katello.config.use_cp
         include Glue if Katello.config.use_cp
 
-        def create_action
-          sync_action!
-          ::Actions::Katello::Organization::Create
-        end
-
         include Katello::Authorization::Organization
-        include Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
         include Ext::LabelFromName
 
         has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :destroy
@@ -58,8 +52,6 @@ module Katello
         scope :having_name_or_label, lambda { |name_or_label| { :conditions => ["name = :id or label = :id", {:id => name_or_label}] } }
         scoped_search :on => :label, :complete_value => :true
 
-        before_create :create_library
-        before_create :create_redhat_provider
         after_initialize :initialize_default_info
         after_create :associate_default_capsule
 

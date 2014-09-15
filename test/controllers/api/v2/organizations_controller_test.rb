@@ -80,6 +80,16 @@ module Katello
       end
     end
 
+    def test_create
+      name = "Michaelangelo"
+      assert_sync_task ::Actions::Katello::Organization::Create do |org|
+        org.name.must_equal name
+        org.stubs(:reload)
+      end
+      post(:create, :organization => {"name" => name})
+      assert_response :success
+    end
+
     def test_delete
       assert_async_task ::Actions::Katello::Organization::Destroy do |org|
         org.id.must_equal @organization.id
@@ -137,7 +147,6 @@ module Katello
 
     def test_autoattach_subscriptions_protected
       allowed_perms = [@update_permission]
-
       assert_protected_action(:autoattach_subscriptions, allowed_perms) do
         post :autoattach_subscriptions, :id => @organization.id
       end

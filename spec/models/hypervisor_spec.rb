@@ -22,7 +22,7 @@ describe Hypervisor do
   before do
     disable_org_orchestration
 
-    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
+    @organization = get_organization
     @environment = create_environment(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
     @content_view = @environment.content_views.first
   end

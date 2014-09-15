@@ -32,17 +32,22 @@ describe ContentSearchController do
 
   describe "check packages and errata" do
     before do
-      @organization = new_test_org #controller.current_organization
+      disable_org_orchestration
+      @organization = Organization.create!(:name => "justin", :label => "justin")
+      ForemanTasks.trigger(::Actions::Katello::Organization::Create, @organization)
+      session[:current_organization_id] = @organization.id if defined? session
+
+      #setup_test_org #controller.current_organization
       @controller.stubs(:current_organization).returns(@organization)
       @env1 = create_environment(:name=>"env1", :label=> "env1", :organization => @organization, :prior => @organization.library)
-      @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM,
-                                   :organization => @organization, :repository_url => "https://something.url/stuff")
+      @provider = @organization.anonymous_provider
       @product = Product.new({:name=>"prod", :label=> "prod"})
 
       @product.provider = @provider
       @product.organization = @organization
       @product.stubs(:arch).returns('noarch')
       @product.save!
+      @organization.reload
       @repo_library = new_test_repo(@organization.library, @product, "repo", "#{@organization.name}/Library/prod/repo")
       @cv_library = publish_content_view("ContentSearchView", @organization, [@repo_library])
       ContentView.any_instance.stubs(:total_package_count).returns(0)

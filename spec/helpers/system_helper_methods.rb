@@ -25,7 +25,7 @@ module SystemHelperMethods
       Katello.pulp_server.extensions.consumer.stubs(:create).returns({ :id => uuid })
       Katello.pulp_server.extensions.consumer.stubs(:update).returns(true)
     end
-    new_test_org
+    setup_test_org
   end
 
   def create_system attrs

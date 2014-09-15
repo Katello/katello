@@ -27,7 +27,10 @@ describe Product, :katello => true do
 
     as_admin do
       User.current.stubs(:remote_id).returns(User.current.login)
-      @organization = Organization.find_or_create_by_label!(:name=>ProductTestData::ORG_ID, :label => 'admin-org-37070')
+      @organization = get_organization
+
+      # Organization.find_or_create_by_label!(:name=>ProductTestData::ORG_ID, :label => 'admin-org-37070')
+      # ForemanTasks.trigger(::Actions::Katello::Organization::Create, @organization)
     end
 
     @provider     = Provider.find_or_create_by_name!(:name=>"customprovider", :organization=>@organization, :provider_type=>Provider::CUSTOM)
@@ -132,11 +135,11 @@ describe Product, :katello => true do
       end
 
       specify "format" do
-        @p.repo_id('123', 'root').must_equal("#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:label]}-123")
+        @p.repo_id('123', 'root').must_equal("#{@organization.label}-root-#{ProductTestData::SIMPLE_PRODUCT[:label]}-123")
       end
 
       it "should be the same as content id for cloned repository" do
-        @p.repo_id("#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:label]}-123").must_equal("#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:label]}-123")
+        @p.repo_id("#{@organization.label}-root-#{ProductTestData::SIMPLE_PRODUCT[:label]}-123").must_equal("#{@organization.label}-root-#{ProductTestData::SIMPLE_PRODUCT[:label]}-123")
       end
     end
 
