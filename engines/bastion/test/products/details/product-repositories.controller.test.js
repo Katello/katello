@@ -92,10 +92,18 @@ describe('Controller: ProductRepositoriesController', function() {
 
     it("provides a way to sync all of the selected repositories in the table", function() {
         spyOn(RepositoryBulkAction, 'syncRepositories').andCallThrough();
-
+        
         $scope.syncSelectedRepositories();
         expect(RepositoryBulkAction.syncRepositories).toHaveBeenCalledWith({ids: expectedIds},
-            jasmine.any(Function), jasmine.any(Function));
+            jasmine.any(Function), jasmine.any(Function));        
+    });
+
+    it("unchecks the 'Name' checkbox after sync", function(){        
+        spyOn($scope, 'refreshView')
+
+        $scope.syncSelectedRepositories();
+
+        expect($scope.refreshView).toHaveBeenCalled();
     });
 
 
