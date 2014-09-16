@@ -17,6 +17,8 @@ module Katello
 
     skip_before_filter :turn_on_strong_params
 
+    wrap_parameters false
+
     before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin, :enabled_repos,
                                           :upload_package_profile, :regenerate_identity_certificates, :facts,
                                           :available_releases]
@@ -30,8 +32,7 @@ module Katello
     before_filter :add_candlepin_version_header
 
     before_filter :proxy_request_path, :proxy_request_body
-    before_filter :set_organization_id
-    before_filter :find_optional_organization, :only => [:hypervisors_update]
+    before_filter :set_organization_id, :except => :hypervisors_update
     before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
 
     rescue_from RestClient::Exception do |e|
@@ -104,7 +105,7 @@ module Katello
     #api :POST, "/hypervisors", N_("Update the hypervisors information for environment")
     #desc 'See virt-who tool for more details.'
     def hypervisors_update
-      cp_response, _ = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action, :format))
+      cp_response, _ = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action, :format, :organization_id))
       render :json => cp_response
     end
 
@@ -374,7 +375,7 @@ module Katello
       if value
         cve = ContentViewEnvironment.where(key => value).first
         fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % value unless cve
-        deny_access if !cve.readable?
+        deny_access unless cve.readable? || User.consumer?
       end
       cve
     end

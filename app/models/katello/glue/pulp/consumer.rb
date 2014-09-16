@@ -217,6 +217,7 @@ module Glue::Pulp::Consumer
     end
 
     def katello_agent_installed?
+      return false if self.is_a? Hypervisor
       simple_packages.any? { |package| package.name == "katello-agent" }
     end
 

@@ -207,13 +207,14 @@ angular.module('Bastion.widgets').factory('Nutupane',
 
             self.table.search = function (searchTerm) {
                 $location.search(self.searchKey, searchTerm);
+                self.table.searchTerm = searchTerm;
                 self.table.resource.page = 1;
                 self.table.rows = [];
                 self.table.closeItem();
                 self.table.selectAllResults(false);
 
                 if (!self.table.working) {
-                    self.query(searchTerm);
+                    self.query();
                 }
             };
 
