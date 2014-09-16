@@ -51,7 +51,18 @@
           {{ "Loading..." | translate }}
         </div>
 
-        <p ng-hide="hostCollectionsTable.working" translate>No Host Collections to show.</p>
+        <p class="alert alert-info" 
+           ng-if="isState('content-hosts.details.host-collections.list')"
+           ng-hide="hostCollectionsTable.working"
+           translate>No Host Collections to show, you can add Host Collections after selecting the 'Add' tab.
+        </p>
+
+        <p class="alert alert-info" 
+           ng-if="isState('content-hosts.details.host-collections.add')"
+           ng-hide="hostCollectionsTable.working"
+           translate>No Host Collections to show, you can add Host Collections after selecting 'Host Collections'
+                     under 'Hosts' in main menu.
+        </p>
       </div>
 
       <table ng-show="hostCollectionsTable.rows.length > 0"

@@ -5,7 +5,8 @@
          placeholder="{{ 'Filter' | translate }}"
          ng-model="productSearch"/>
 
-  <table alch-table="table" class="table table-striped">
+  
+  <table alch-table="table" class="table table-striped" ng-show="gpgKey.products.length > 0">
     <thead>
       <tr alch-table-head>
         <th alch-table-column="name" sortable><span translate>Name</span></th>
@@ -25,3 +26,7 @@
     </tbody>
   </table>
 </section>
+
+<p class="alert alert-info" ng-show="gpgKey.products.length === 0" translate>
+  You currently don't have any Products associated with this Gpg Key.
+</p>

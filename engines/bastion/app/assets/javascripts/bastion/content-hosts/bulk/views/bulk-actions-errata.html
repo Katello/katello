@@ -38,40 +38,51 @@
         <i class="icon-plus"></i>
         {{ "Install Selected" | translate }}
       </button>
-   </div>
+    </div>
 
-    <table data-block="table"  class="table table-striped" ng-class="{'table-mask': detailsTable.working}">
-     <thead>
-       <tr alch-table-head row-select>
-         <th class="small" alch-table-column="type" translate>Type</th>
-         <th class="small" alch-table-column="errata_id" translate>Id</th>
-         <th alch-table-column="title" translate>Title</th>
-         <th class="small" alch-table-column="issued" translate>Issued</th>
-         <th class="small" alch-table-column="content_host_affected" translate>Affected Content Hosts</th>
-       </tr>
-     </thead>
 
-     <tbody>
-       <tr alch-table-row ng-repeat="erratum in detailsTable.rows" row-select="erratum">
-         <td class="small" alch-table-cell>
-             {{ erratum.type }}
-         </td>
-         <td class="small" alch-table-cell>
-           <a ng-click="transitionToErrata(erratum)">
-             {{ erratum.errata_id }}
-           </a>
-         </td>
+    <div data-block="table">
+      <p class="alert alert-info" ng-show="detailsTable.rows.length === 0">
+        There are no Errata associated with this Content Host to display.
+      </p>
 
-         <td alch-table-cell>{{ erratum.title }}</td>
-         <td class="small" alch-table-cell>{{ erratum.issued }}</td>
-         <td class="small" alch-table-cell class="number-cell">
-           <a ng-click="transitionToErrataContentHosts(erratum)">
-            {{ erratum.applicable_consumers.length }}
-           </a>
-         </td>
-       </tr>
-     </tbody>
-    </table>
+      <table class="table table-striped"
+             ng-class="{'table-mask': detailsTable.working}"
+             ng-show="detailsTable.rows.length > 0">
+       <thead>
+         <tr alch-table-head row-select>
+           <th class="small" alch-table-column="type" translate>Type</th>
+           <th class="small" alch-table-column="errata_id" translate>Id</th>
+           <th alch-table-column="title" translate>Title</th>
+           <th class="small" alch-table-column="issued" translate>Issued</th>
+           <th class="small" alch-table-column="content_host_affected" translate>Affected Content Hosts</th>
+         </tr>
+       </thead>
 
-  </div>
+       <tbody>
+         <tr alch-table-row ng-repeat="erratum in detailsTable.rows" row-select="erratum">
+           <td class="small" alch-table-cell>
+               {{ erratum.type }}
+           </td>
+           <td class="small" alch-table-cell>
+             <a ng-click="transitionToErrata(erratum)">
+               {{ erratum.errata_id }}
+             </a>
+           </td>
+
+           <td alch-table-cell>{{ erratum.title }}</td>
+           <td class="small" alch-table-cell>{{ erratum.issued }}</td>
+           <td class="small" alch-table-cell class="number-cell">
+             <a ng-click="transitionToErrataContentHosts(erratum)">
+              {{ erratum.applicable_consumers.length }}
+             </a>
+           </td>
+         </tr>
+       </tbody>
+      </table>
+    </div>
+
+  </div>  
 </section>
+
+

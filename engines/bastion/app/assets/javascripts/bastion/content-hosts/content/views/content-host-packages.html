@@ -61,8 +61,13 @@
     </div>
   </div>
 
-  <div alch-table="currentPackagesTable">
+  <p class="alert alert-info" ng-show="currentPackagesTable.rows.length === 0">
+    You currently do not have any Packages installed. You can use Package Actions above this message to install new Packages. 
+  </p>
+
+  <div alch-table="currentPackagesTable" ng-show="currentPackagesTable.rows.length > 0">
     <div alch-container-scroll control-width="table" alch-infinite-scroll="currentPackagesTable.loadMorePackages()" data="currentPackagesTable.rows">
+
       <table ng-class="{'table-mask': currentPackagesTable.working}" class="table table-striped">
         <thead>
           <tr alch-table-head>

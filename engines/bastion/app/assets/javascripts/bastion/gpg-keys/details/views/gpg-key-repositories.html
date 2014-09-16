@@ -6,7 +6,7 @@
          placeholder="{{ 'Filter' | translate }}"
          ng-model="repositorySearch"/>
 
-  <table class="table table-striped">
+  <table class="table table-striped" ng-show="gpgKey.repositories.length > 0">
     <thead>
       <tr>
         <th translate>Name</th>
@@ -31,3 +31,7 @@
   </table>
 
 </section>
+
+<p class="alert alert-info" ng-show="gpgKey.repositories.length === 0" translate>
+  You currently don't have any Repositories associated with this Gpg Key.
+</p>
