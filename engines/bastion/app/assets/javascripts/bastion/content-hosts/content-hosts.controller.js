@@ -29,8 +29,8 @@
  *   within the table.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'ContentHost', 'CurrentOrganization', 'ContentHostsHelper',
-    function ($scope, $location, translate, Nutupane, ContentHost, CurrentOrganization, ContentHostsHelper) {
+    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'ContentHost', 'CurrentOrganization', 'ContentHostsHelper',
+    function ($scope, $state, $location, translate, Nutupane, ContentHost, CurrentOrganization, ContentHostsHelper) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -68,6 +68,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
                 $scope.successMessages.push(translate('Content Host %s has been deleted.').replace('%s', contentHost.name));
                 $scope.transitionTo('content-hosts.index');
             });
+        };
+
+        $scope.reloadSearch = function (search) {
+            $scope.table.search(search);
+            $state.go('content-hosts.index');
         };
     }]
 );

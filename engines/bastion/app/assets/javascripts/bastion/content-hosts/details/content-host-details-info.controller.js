@@ -211,12 +211,12 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         $scope.memory = ContentHostsHelper.memory;
 
         $scope.virtualGuestIds = function (contentHost) {
-            var ids = 'id:%s'.replace('%s', contentHost.id);
+            var ids = [];
             angular.forEach(contentHost['virtual_guests'], function (host) {
-                ids += ' id:%s'.replace('%s', host.id);
+                ids.push('id:%s'.replace('%s', host.id));
             });
 
-            return ids;
+            return ids.join(" ");
         };
     }]
 );
