@@ -7,6 +7,7 @@ attributes :composite_content_view_ids
 attributes :content_view_id
 attributes :default
 attributes :package_count, :errata_count
+attributes :description
 
 attributes :errata_type_counts => :errata_counts
 
