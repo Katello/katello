@@ -29,7 +29,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.0.0
-Release: 1%{dist}
+Release: 2%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -239,6 +239,12 @@ ln -s %{gem_instdir}/public/assets/bastion %{buildroot}%{foreman_dir}/public/ass
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Wed Sep 17 2014 Justin Sherrill <jsherril@redhat.com> 2.0.0-2
+- refs #7206 - lock down 2.0 to foreman 1.6 (jsherril@redhat.com)
+- Fixes #7476: Updates releasers for 2.0 (ericdhelms@gmail.com)
+- refs 7207 - fixing comps for el7 candlepin (jsherril@redhat.com)
+- fixes #7441 - add candlepin-common to comps (jsherril@redhat.com)
+
 * Fri Sep 12 2014 Justin Sherrill <jsherril@redhat.com> 2.0.0-1
 - bumping to katello 2.0 (jsherril@redhat.com)
 - Automatic commit of package [katello] minor release [2.0.0-0].
