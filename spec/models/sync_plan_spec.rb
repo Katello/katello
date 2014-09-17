@@ -128,24 +128,6 @@ module Katello
         @plan.sync_date = DateTime.now.yesterday()
         @plan.schedule_format.must_be_nil
       end
-
-      it "reassign sync_plan to its products after update" do
-        disable_product_orchestration
-
-        organization = get_organization
-
-        @plan.products.create!(ProductTestData::SIMPLE_PRODUCT.merge(:organization_id => organization.id,
-                                                                     :provider => organization.redhat_provider))
-        @plan.save!
-        @plan.reload
-        @plan.products.length.must_equal(1)
-
-        #updating plan
-        @plan.sync_date += 1
-        @plan.products.to_a.first.expects(:setup_sync_schedule).returns(true)
-        @plan.save!
-        @plan.must_be :valid?
-      end
     end
 
   end

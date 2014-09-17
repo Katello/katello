@@ -86,10 +86,8 @@ module Katello
     param_group :product
     param :name, String, :desc => N_("Product name")
     def update
-      reset_gpg_keys = (product_params[:gpg_key_id] != @product.gpg_key_id)
+      sync_task(::Actions::Katello::Product::Update, @product, product_params)
 
-      @product.update_attributes!(product_params)
-      @product.reset_repo_gpgs! if reset_gpg_keys
       respond(:resource => @product.reload)
     end
 
