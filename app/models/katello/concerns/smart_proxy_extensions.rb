@@ -46,7 +46,8 @@ module Katello
       end
 
       def default_capsule?
-        self.features.pluck(:name).include?(PULP_FEATURE)
+        # use map instead of pluck in case the features aren't saved yet during create
+        self.features.map(&:name).include?(PULP_FEATURE)
       end
 
       def associate_organizations
