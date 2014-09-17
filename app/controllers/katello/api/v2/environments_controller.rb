@@ -88,6 +88,7 @@ module Katello
     api :POST, "/organizations/:organization_id/environments", N_("Create an environment in an organization")
     param :organization_id, :number, :desc => N_("name of organization"), :required => true
     param :name, String, :desc => N_("name of the environment"), :required => true
+    param :label, String, :desc => N_("label of the environment"), :required => false
     param :description, String, :desc => N_("description of the environment")
     param :prior, String, :required => true, :desc => <<-DESC
       Name of an environment that is prior to the new environment in the chain. It has to be
