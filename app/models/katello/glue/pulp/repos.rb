@@ -28,6 +28,9 @@ module Glue::Pulp::Repos
   # repo path for custom product repos (RH repo paths are derived from
   # content url)
   def self.custom_repo_path(environment, product, repo_label)
+    if [environment, product, repo_label].any?(&:nil?)
+      return nil # can't generate valid path
+    end
     prefix = [environment.organization.label, environment.label].map{|x| x.gsub(/[^-\w]/, "_") }.join("/")
     prefix + custom_content_path(product, repo_label)
   end
