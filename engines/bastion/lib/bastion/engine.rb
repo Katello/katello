@@ -12,8 +12,11 @@ module Bastion
     end
 
     initializer "bastion.assets.paths", :group => :all do |app|
-      app.config.less.paths << "#{Bastion::Engine.root}/app/assets/stylesheets/bastion"
-      app.config.less.paths << "#{Bastion::Engine.root}/vendor/assets/stylesheets/bastion"
+      if !Rails.env.production? || Foreman.in_rake?
+        require 'less-rails'
+        app.config.less.paths << "#{Bastion::Engine.root}/app/assets/stylesheets/bastion"
+        app.config.less.paths << "#{Bastion::Engine.root}/vendor/assets/stylesheets/bastion"
+      end
       app.middleware.use ::ActionDispatch::Static, "#{Bastion::Engine.root}/app/assets/javascripts/bastion"
     end
 
