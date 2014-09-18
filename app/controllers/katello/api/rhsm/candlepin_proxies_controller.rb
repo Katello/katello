@@ -105,7 +105,7 @@ module Katello
     #api :POST, "/hypervisors", N_("Update the hypervisors information for environment")
     #desc 'See virt-who tool for more details.'
     def hypervisors_update
-      cp_response, _ = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action, :format))
+      cp_response, _ = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action, :format, :organization_id))
       render :json => cp_response
     end
 
