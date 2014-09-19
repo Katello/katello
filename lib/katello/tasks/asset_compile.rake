@@ -1,12 +1,12 @@
 desc 'Compile Katello assets'
 task 'assets:precompile:katello' do
- 
   # Partially load the Rails environment to avoid
   # the need of a database being setup
   Rails.application.initialize!(:assets)
 
   def compile_assets(args = {})
     require 'uglifier'
+    require 'less-rails'
 
     precompile = args.fetch(:precompile, [])
 
