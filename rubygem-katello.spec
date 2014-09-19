@@ -29,7 +29,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.0.0
-Release: 2%{dist}
+Release: 3%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -239,6 +239,12 @@ ln -s %{gem_instdir}/public/assets/bastion %{buildroot}%{foreman_dir}/public/ass
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Fri Sep 19 2014 Justin Sherrill <jsherril@redhat.com> 2.0.0-3
+- Fixes #7527 - don't require less in production unless from rake
+  (inecas@redhat.com)
+- fixes #7481 - fix taxonomy association on smart proxy create
+  (jsherril@redhat.com)
+
 * Wed Sep 17 2014 Justin Sherrill <jsherril@redhat.com> 2.0.0-2
 - refs #7206 - lock down 2.0 to foreman 1.6 (jsherril@redhat.com)
 - Fixes #7476: Updates releasers for 2.0 (ericdhelms@gmail.com)
