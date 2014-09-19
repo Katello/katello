@@ -109,6 +109,7 @@ module Katello
 
       #Controller extensions
       ::OperatingsystemsController.send :include, Katello::Concerns::OperatingsystemsControllerExtensions
+      ::HostsController.send :include, Katello::Concerns::HostsControllerExtensions
 
       #Handle Smart Proxy items separately
       begin
@@ -130,6 +131,9 @@ module Katello
       require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/api_controller"
       require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v2/api_controller"
       ::PuppetClassImporter.send :include, Katello::Services::PuppetClassImporterExtensions
+
+      #Api controller extensions
+      ::Api::V2::HostsController.send :include, Katello::Concerns::Api::V2::HostsControllerExtensions
     end
 
     initializer 'katello.register_plugin', :after => :finisher_hook do

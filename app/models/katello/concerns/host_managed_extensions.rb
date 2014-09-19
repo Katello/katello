@@ -14,6 +14,7 @@ module Katello
     module HostManagedExtensions
       extend ActiveSupport::Concern
       include Katello::KatelloUrlsHelper
+      include ForemanTasks::Concerns::ActionSubject
 
       included do
         before_update :update_content_host, :if => :environment_id_changed?
@@ -22,7 +23,7 @@ module Katello
         alias_method_chain :set_hostgroup_defaults, :content_source
 
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
-                :dependent => :destroy, :inverse_of => :foreman_host
+                :dependent => :restrict, :inverse_of => :foreman_host
         belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hosts
         scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
       end

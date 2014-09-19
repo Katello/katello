@@ -40,7 +40,8 @@ module Katello
     end
 
     def teardown
-      @foreman_host.destroy
+      @foreman_host.content_host.destroy
+      @foreman_host.reload.destroy
     end
 
     def test_update_puppet_environment_updates_content_host
