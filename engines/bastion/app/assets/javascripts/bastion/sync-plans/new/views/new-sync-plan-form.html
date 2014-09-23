@@ -23,7 +23,9 @@
            name="interval"
            ng-model="syncPlan.interval"
            ng-options="interval for interval in intervals"
-           tabindex="3">
+           tabindex="3"
+           required>
+      <option value="" translate>-- select an interval --</option>
    </select>
  </div>
 

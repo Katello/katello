@@ -29,7 +29,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
         function ($scope, $q, translate, SyncPlan, MenuExpander) {
             $scope.successMessages = [];
             $scope.errorMessages = [];
-            $scope.intervals = ['none', 'hourly', 'daily', 'weekly'];
+            $scope.intervals = ['hourly', 'daily', 'weekly'];
 
             $scope.menuExpander = MenuExpander;
             $scope.panel = $scope.panel || {loading: false};
@@ -40,17 +40,19 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
 
             $scope.save = function (syncPlan) {
                 var deferred = $q.defer();
-
                 syncPlan.$update(function (response) {
                     deferred.resolve(response);
                     $scope.successMessages.push(translate('Sync Plan Saved'));
                 }, function (response) {
                     deferred.reject(response);
-                    angular.forEach(response.data.errors, function (errorMessage) {
+                    angular.forEach(response.data.errors, function (errorMessage, key) {
+                        if (angular.isString(key)) {
+                            errorMessage = [key, errorMessage].join(' ');
+                        }
                         $scope.errorMessages.push(translate("An error occurred saving the Sync Plan: ") + errorMessage);
                     });
                 });
-
+                
                 return deferred.promise;
             };
         }]

@@ -45,10 +45,10 @@ module Katello
           @plan.next_sync.to_s.must_equal(sync_date)
         end
 
-        it "nil if the interval is 'none'" do
+        it "nil if the sync is not enabled" do
           @plan.sync_date = '1999-11-17 18:26:48 UTC'
-          @plan.interval = 'none'
-          @plan.next_sync.must_equal(nil)
+          @plan.enabled = false
+          @plan.next_sync.must_be_nil
         end
 
         it "nil if the interval is unrecognied" do
@@ -116,15 +116,15 @@ module Katello
         @plan.schedule_format.must_match(/\/P7D$/)
       end
 
-      it "should properly handle pulp duration of none" do
-        @plan.interval = 'none'
+      it "should properly handle interval when not enabled" do
+        @plan.enabled = false
         @plan.sync_date = DateTime.now.tomorrow()
         @plan.schedule_format.wont_be_nil
         @plan.schedule_format.must_match(/R1\/.*\/P1D/)
       end
 
-      it "should properly handle pulp duration of none if scheduled in past" do
-        @plan.interval = 'none'
+      it "should properly handle not being enabled if scheduled in the past" do
+        @plan.enabled = false
         @plan.sync_date = DateTime.now.yesterday()
         @plan.schedule_format.must_be_nil
       end

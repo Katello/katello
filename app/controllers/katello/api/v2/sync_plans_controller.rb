@@ -23,6 +23,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
     param :interval, SyncPlan::TYPES, :desc => N_("how often synchronization should run"), :required => true, :action_aware => true
     param :sync_date, String, :desc => N_("start datetime of synchronization"), :required => true, :action_aware => true
     param :description, String, :desc => N_("sync plan description")
+    param :enabled, :bool, :desc => N_("enables or disables synchronization"), :required => true, :action_aware => true
   end
 
   api :GET, "/sync_plans", N_("List sync plans")
@@ -148,7 +149,7 @@ class Api::V2::SyncPlansController < Api::V2::ApiController
   end
 
   def sync_plan_params
-    params.require(:sync_plan).permit(:name, :description, :interval, :sync_date, :product_ids)
+    params.require(:sync_plan).permit(:name, :description, :interval, :sync_date, :product_ids, :enabled)
   end
 end
 end

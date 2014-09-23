@@ -24,12 +24,11 @@
  */
 angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
     ['$scope', 'translate', 'SyncPlan', function ($scope, translate, SyncPlan) {
-        $scope.intervals = [translate('none'), translate('hourly'), translate('daily'), translate('weekly')];
+        $scope.intervals = [translate('hourly'), translate('daily'), translate('weekly')];
         $scope.successMessages = [];
 
         $scope.syncPlan = new SyncPlan();
         $scope.syncPlan.startDate = new Date();
-        $scope.syncPlan.interval = $scope.intervals[0];
 
         function success(syncPlan) {
             $scope.working = false;

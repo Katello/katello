@@ -21,12 +21,11 @@ class SyncPlan < Katello::Model
   include Glue::ElasticSearch::SyncPlan if Katello.config.use_elasticsearch
   include Katello::Authorization::SyncPlan
 
-  NONE = 'none'
   HOURLY = 'hourly'
   DAILY = 'daily'
   WEEKLY = 'weekly'
-  TYPES = [NONE, HOURLY, DAILY, WEEKLY]
-  DURATION = { NONE => '', HOURLY => 'T1H', DAILY => 'T24H', WEEKLY => '7D' }
+  TYPES = [HOURLY, DAILY, WEEKLY]
+  DURATION = {HOURLY => 'T1H', DAILY => 'T24H', WEEKLY => '7D' }
   WEEK_DAYS = (%w(Sunday Monday Tuesday Wednesday Thursday Friday)).collect{|d| N_(d)}
 
   belongs_to :organization, :inverse_of => :sync_plans
@@ -34,6 +33,7 @@ class SyncPlan < Katello::Model
 
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
   validates :interval, :inclusion => {:in => TYPES}, :allow_blank => false
+  validates :enabled, :inclusion => [true, false]
   validate :validate_sync_date
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
@@ -74,7 +74,7 @@ class SyncPlan < Katello::Model
   end
 
   def schedule_format
-    if self.interval != NONE && DURATION[self.interval]
+    if (self.interval != DURATION[self.interval]) && self.enabled
       format = self.sync_date.iso8601 << "/P" << DURATION[self.interval]
     else
       if self.sync_date < Time.now
@@ -99,28 +99,29 @@ class SyncPlan < Katello::Model
       minutes = self.sync_date.min - now.min
       seconds = self.sync_date.sec - now.sec
 
-      case self.interval
-      when HOURLY
-        if self.sync_date.min < now.min
-          minutes += 60
+      next_sync = nil
+
+      if self.enabled
+        case self.interval
+        when HOURLY
+          if self.sync_date.min < now.min
+            minutes += 60
+          end
+          next_sync = now.advance(:minutes => minutes, :seconds => seconds)
+        when DAILY
+          sync_time = Time.at(self.sync_date.hour * 60 * 60 + self.sync_date.min * 60 + self.sync_date.sec)
+          now_time = Time.at(now.hour * 60 * 60 + now.min * 60 + now.sec)
+          if sync_time < now_time
+            hours += 24
+          end
+          next_sync = now.advance(:hours => hours, :minutes => minutes, :seconds => seconds)
+        when WEEKLY
+          days = 7 + self.sync_date.wday - now.wday
+          next_sync = now.change(:hour => self.sync_date.hour, :min => self.sync_date.min,
+                                 :sec => self.sync_date.sec).advance(:days => days)
         end
-        next_sync = now.advance(:minutes => minutes, :seconds => seconds)
-      when DAILY
-        sync_time = Time.at(self.sync_date.hour * 60 * 60 + self.sync_date.min * 60 + self.sync_date.sec)
-        now_time = Time.at(now.hour * 60 * 60 + now.min * 60 + now.sec)
-        if sync_time < now_time
-          hours += 24
-        end
-        next_sync = now.advance(:hours => hours, :minutes => minutes, :seconds => seconds)
-      when WEEKLY
-        days = 7 + self.sync_date.wday - now.wday
-        next_sync = now.change(:hour => self.sync_date.hour, :min => self.sync_date.min,
-                               :sec => self.sync_date.sec).advance(:days => days)
-      else
-        next_sync = nil
       end
     end
-
     next_sync
   end
 
