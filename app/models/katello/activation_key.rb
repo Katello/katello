@@ -33,10 +33,10 @@ class ActivationKey < Katello::Model
 
   before_validation :set_default_content_view, :unless => :persisted?
 
+  validates_lengths_from_database
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates :name, :presence => true
   validates :name, :uniqueness => {:scope => :organization_id}
-  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validate :environment_exists
   validates_each :max_content_hosts do |record, attr, value|
     if !record.unlimited_content_hosts

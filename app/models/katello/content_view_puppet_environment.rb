@@ -27,6 +27,7 @@ module Katello
     belongs_to :puppet_environment, :class_name => "Environment",
                :inverse_of => :content_view_puppet_environment, :dependent => :destroy
 
+    validates_lengths_from_database
     validates :pulp_id, :presence => true, :uniqueness => true
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates :puppet_environment_id, :presence => true, :if => :environment

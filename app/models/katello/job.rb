@@ -22,6 +22,8 @@ class Job < Katello::Model
   has_many :job_tasks, :class_name => "Katello::JobTask", :dependent => :destroy
   has_many :task_statuses, :through => :job_tasks
 
+  validates_lengths_from_database
+
   class << self
     def refresh_tasks(ids)
       unless ids.nil? || ids.empty?

@@ -53,6 +53,7 @@ class ContentView < Katello::Model
   has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict
   has_many :systems, :class_name => "Katello::System", :dependent => :restrict
 
+  validates_lengths_from_database :except => [:label]
   validates :label, :uniqueness => {:scope => :organization_id},
                     :presence => true
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}

@@ -37,10 +37,10 @@ class Product < Katello::Model
   belongs_to :gpg_key, :inverse_of => :products
   has_many :repositories, :class_name => "Katello::Repository", :dependent => :restrict
 
+  validates_lengths_from_database :except => [:label]
   validates :provider_id, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
-  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_with Validators::ProductUniqueAttributeValidator, :attributes => :name
   validates_with Validators::ProductUniqueAttributeValidator, :attributes => :label
 
