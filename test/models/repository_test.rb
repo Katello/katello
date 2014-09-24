@@ -228,6 +228,7 @@ class RepositoryInstanceTest < RepositoryTestBase
 
   def new_custom_repo
     new_custom_repo = @fedora_17_x86_64.clone
+    new_custom_repo.stubs(:label_not_changed).returns(true)
     new_custom_repo.name = "new_custom_repo"
     new_custom_repo.label = "new_custom_repo"
     new_custom_repo.pulp_id = "new_custom_repo"
