@@ -36,7 +36,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     param :url, String, :required => true, :desc => N_("repository source url")
     param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
     param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
-    param :content_type, String, :desc => N_("type of repo (either 'yum' or 'puppet', defaults to 'yum')")
+    param :content_type, String, :desc => N_("type of repo ('yum', 'puppet' or 'docker', defaults to 'yum')")
   end
 
   api :GET, "/repositories", N_("List of enabled repositories")
