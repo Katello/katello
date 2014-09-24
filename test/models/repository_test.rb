@@ -272,5 +272,11 @@ class RepositoryInstanceTest < RepositoryTestBase
     refute lib_iso_repo.node_syncable?
   end
 
+  def test_bad_checksum
+    @fedora_17_x86_64.checksum_type = 'XOR'
+    refute @fedora_17_x86_64.valid?
+    refute @fedora_17_x86_64.save
+  end
+
 end
 end

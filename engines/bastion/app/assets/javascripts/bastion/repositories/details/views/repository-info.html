@@ -90,12 +90,23 @@
       </span>
     </div>
 
-    <div class="detail">
+    <div class="detail" ng-show="repository.content_type == 'yum'">
+      <span class="info-label" translate>Yum Metadata Checksum</span>
+      <span class="info-value"
+            alch-edit-select="checksumTypeDisplay(repository.checksum_type)"
+            readonly="product.readonly || denied('edit_products', product)"
+            selector="repository.checksum_type"
+            options="checksums"
+            on-save="save(repository)">
+      </span>
+    </div>
+
+    <div class="detail" ng-show="repository.content_type == 'yum'">
       <span class="info-label" translate>Publish via HTTPS</span>
       <span class="info-value" translate> true </span>
     </div>
 
-    <div class="detail">
+    <div class="detail" ng-show="repository.content_type == 'yum'">
       <span class="info-label" translate>Publish via HTTP</span>
       <span class="info-value"
             alch-edit-checkbox="repository.unprotected"
@@ -113,7 +124,7 @@
       </span>
     </div>
 
-    <div class="detail">
+    <div class="detail" ng-show="repository.content_type == 'yum'">
       <span class="info-label" translate>GPG Key</span>
       <span class="info-value"
             alch-edit-select="repository.gpg_key.name"

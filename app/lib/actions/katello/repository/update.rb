@@ -19,6 +19,7 @@ module Actions
           repository.disable_auto_reindex!
           action_subject repository
           repository.update_attributes!(repo_params)
+
           if (::Katello.config.use_cp && ::Katello.config.use_pulp)
             plan_action(::Actions::Candlepin::Product::ContentUpdate,
                         :content_id => repository.content_id,
@@ -29,20 +30,28 @@ module Actions
                         :type => repository.content_type)
           end
 
-          if ::Katello.config.use_pulp &&
-              (repository.previous_changes.key?('url') || repository.previous_changes.key?('unprotected')) &&
+          allowed_changes = %w(url unprotected checksum_type)
+          if ::Katello.config.use_pulp && (allowed_changes & repository.previous_changes.keys).any? &&
               !repository.product.provider.redhat_provider?
             plan_action(::Actions::Pulp::Repository::Refresh, repository)
           end
 
-          if ::Katello.config.use_pulp && repository.previous_changes.key?('unprotected')
-            plan_action(::Actions::Pulp::Repository::DistributorPublish,
-                        :pulp_id => repository.pulp_id,
-                        :distributor_type_id => distributor_type_id(repository.content_type),
-                        :source_pulp_id => repository.pulp_id)
+          if ::Katello.config.use_pulp && (repository.previous_changes.key?('unprotected') ||
+              repository.previous_changes.key?('checksum_type'))
+            plan_self(:user_id => ::User.current.id, :pulp_id => repository.pulp_id,
+                      :distributor_type_id => distributor_type_id(repository.content_type))
           end
 
           plan_action(ElasticSearch::Reindex, repository) if ::Katello.config.use_elasticsearch
+        end
+
+        def run
+          ::User.current = ::User.find(input[:user_id])
+          ForemanTasks.async_task(::Actions::Pulp::Repository::DistributorPublish,
+                                  :pulp_id => input[:pulp_id],
+                                  :distributor_type_id => input[:distributor_type_id])
+        ensure
+          ::User.current = nil
         end
 
         def distributor_type_id(content_type)
