@@ -236,6 +236,10 @@ class System < Katello::Model
     json
   end
 
+  def hypervisor?
+    self.is_a? Hypervisor
+  end
+
   def system_type
     if respond_to?(:virtual_guest) && virtual_guest
       _("Virtual Guest")
