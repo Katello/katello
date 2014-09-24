@@ -20,7 +20,8 @@ module Actions
            Pulp::Repository::RemoveErrata,
            Pulp::Repository::RemovePackageGroup,
            Pulp::Repository::RemoveDistribution,
-           Pulp::Repository::RemovePuppetModule].each do |action_class|
+           Pulp::Repository::RemovePuppetModule,
+           Pulp::Repository::DockerImage].each do |action_class|
             plan_action(action_class, pulp_id: repo.pulp_id)
           end
         end

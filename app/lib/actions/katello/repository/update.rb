@@ -30,7 +30,8 @@ module Actions
           end
 
           if ::Katello.config.use_pulp &&
-              (repository.previous_changes.key?('url') || repository.previous_changes.key?('unprotected')) &&
+              (repository.previous_changes.key?('url') || repository.previous_changes.key?('unprotected') ||
+               (repository.previous_changes.key?('name') && repository.docker?)) &&
               !repository.product.provider.redhat_provider?
             plan_action(::Actions::Pulp::Repository::Refresh, repository)
           end
@@ -53,6 +54,8 @@ module Actions
                           Runcible::Models::PuppetInstallDistributor
                         when ::Katello::Repository::FILE_TYPE
                           Runcible::Models::IsoDistributor
+                        when ::Katello::Repository::DOCKER_TYPE
+                          Runcible::Models::DockerDistributor
                         end
           distributor.type_id
         end

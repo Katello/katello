@@ -35,6 +35,8 @@ module Actions
             Runcible::Models::PuppetInstallDistributor
           when ::Katello::Repository::FILE_TYPE
             Runcible::Models::IsoDistributor
+          when ::Katello::Repository::DOCKER_TYPE
+            Runcible::Models::DockerDistributor
           end
         end
 

@@ -30,8 +30,9 @@ class Repository < Katello::Model
   YUM_TYPE = 'yum'
   FILE_TYPE = 'file'
   PUPPET_TYPE = 'puppet'
-  TYPES = [YUM_TYPE, FILE_TYPE, PUPPET_TYPE]
-  SELECTABLE_TYPES = [YUM_TYPE, PUPPET_TYPE]
+  DOCKER_TYPE = 'docker'
+  TYPES = [YUM_TYPE, FILE_TYPE, PUPPET_TYPE, DOCKER_TYPE]
+  SELECTABLE_TYPES = [YUM_TYPE, PUPPET_TYPE, DOCKER_TYPE]
 
   belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
   belongs_to :product, :inverse_of => :repositories
@@ -75,6 +76,7 @@ class Repository < Katello::Model
   scope :yum_type, where(:content_type => YUM_TYPE)
   scope :file_type, where(:content_type => FILE_TYPE)
   scope :puppet_type, where(:content_type => PUPPET_TYPE)
+  scope :docker_type, where(:content_type => DOCKER_TYPE)
   scope :non_puppet, where("content_type != ?", PUPPET_TYPE)
   scope :non_archived, where('environment_id is not NULL')
   scope :archived, where('environment_id is NULL')
@@ -106,6 +108,10 @@ class Repository < Katello::Model
 
   def puppet?
     content_type == PUPPET_TYPE
+  end
+
+  def docker?
+    content_type == DOCKER_TYPE
   end
 
   def archive?

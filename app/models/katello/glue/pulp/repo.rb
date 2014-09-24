@@ -139,6 +139,11 @@ module Glue::Pulp::Repo
         options = {}
         options[:feed] = self.url if self.respond_to?(:url)
         Runcible::Models::PuppetImporter.new(options)
+      when Repository::DOCKER_TYPE
+        options = {}
+        options[:upstream_name] = self.name
+        options[:feed] = self.url if self.respond_to?(:url)
+        Runcible::Models::DockerImporter.new(options)
       else
         fail _("Unexpected repo type %s") % self.content_type
       end
@@ -170,6 +175,12 @@ module Glue::Pulp::Repo
             Runcible::Models::PuppetInstallDistributor.new(repo_path,
                                                            {:id => self.pulp_id, :auto_publish => true})
         [puppet_install_dist, nodes_distributor]
+      when Repository::DOCKER_TYPE
+        options = { :protected => !self.unprotected,
+                    :id => self.pulp_id,
+                    :auto_publish => true }
+        docker_dist = Runcible::Models::DockerDistributor.new(options)
+        [docker_dist, nodes_distributor]
       else
         fail _("Unexpected repo type %s") % self.content_type
       end
@@ -187,6 +198,8 @@ module Glue::Pulp::Repo
         Runcible::Models::IsoImporter::ID
       when Repository::PUPPET_TYPE
         Runcible::Models::PuppetImporter::ID
+      when Repository::DOCKER_TYPE
+        Runcible::Models::DockerImporter::ID
       else
         fail _("Unexpected repo type %s") % self.content_type
       end
@@ -647,6 +660,8 @@ module Glue::Pulp::Repo
         "rpm"
       when Repository::PUPPET_TYPE
         "puppet_module"
+      when Repository::DOCKER_TYPE
+        "docker_image"
       end
     end
 
