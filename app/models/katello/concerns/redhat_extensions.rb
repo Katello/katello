@@ -27,6 +27,7 @@ module Katello
         def find_or_create_operating_system(distribution)
           os_name = construct_name(distribution.family)
           major, minor = distribution.version.split('.')
+          minor ||= '' # treat minor versions as empty string to not confuse with nil
 
           os = ::Redhat.where(:name => os_name, :major => major, :minor => minor).first
           os = create_operating_system(os_name, major, minor) unless os
