@@ -150,7 +150,7 @@ module Glue::Pulp::Repo
         yum_dist_id = self.pulp_id
         yum_dist_options = {:protected => true, :id => yum_dist_id, :auto_publish => true}
         #check the instance variable, as we do not want to go to pulp
-        yum_dist_options['checksum_type'] = self.checksum_type if self.checksum_type
+        yum_dist_options['checksum_type'] = self.checksum_type
         yum_dist = Runcible::Models::YumDistributor.new(self.relative_path, (self.unprotected || false), true,
                                                         yum_dist_options)
         clone_dist = Runcible::Models::YumCloneDistributor.new(:id => "#{self.pulp_id}_clone",

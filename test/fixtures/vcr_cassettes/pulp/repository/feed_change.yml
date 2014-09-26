@@ -1,151 +1,8 @@
 --- 
 http_interactions: 
 - request: 
-    method: get
-    uri: https://centos.installer/pulp/api/v2/tasks/4554cf54-f369-4d6a-b90e-37dbdd709511/
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="Ci3Y1MKDs9NhOJ52ETrsxnT2SExcqiZjGbw3r4YObU", oauth_signature="BfiBTB4NU3F7YKb%2Fst9KoIYIA9A%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185852", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Thu, 15 May 2014 20:30:52 GMT
-      Server: 
-      - Apache/2.2.15 (CentOS)
-      Content-Length: 
-      - "593"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/4554cf54-f369-4d6a-b90e-37dbdd709511/\", \"task_id\": \"4554cf54-f369-4d6a-b90e-37dbdd709511\", \"tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"finish_time\": \"2014-05-15T20:30:52Z\", \"_ns\": \"task_status\", \"start_time\": \"2014-05-15T20:30:52Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@centos.installer\", \"state\": \"finished\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"537523fc3c307ec505e86117\"}, \"id\": \"537523fc86d9a9321c14a5e2\"}"
-    http_version: 
-  recorded_at: Thu, 15 May 2014 20:30:52 GMT
-- request: 
-    method: get
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/tasks/6c6c038a-01cf-4e02-b13b-4effa068f80c/
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="ji8QJyB20Uh83fEgpEbimAbuBgR0ncCTYurCAY8atI", oauth_signature="ZrXh271CbzTHY3cqeqCSVcjxjj4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1401898328", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Wed, 04 Jun 2014 16:12:08 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Encoding: 
-      - gzip
-      Content-Length: 
-      - "338"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: !binary |
-        H4sIAAAAAAAAA42QTW7DIBCFr1KhLmsb/FfqVQ/RVavKwnhIUBxDBkgaRbl7
-        wW6Uqqvu4L35Zt7MhcCXBOu1mUn3MIdpenogXrhd788WokRsmGzuAI+AeTJc
-        jmCN097gOR9hAg8kMv0WQaX6IgGFsLo4lsUCFK1sJa24yCiTKquBltnAqiG+
-        lBK05YpTWZDbYD2mNv9hVmTjYv3HkrO7R+tYchdRyLRe95P1M8pKz9pte6/3
-        cN/aeYH+ppGSsjqjbUbrN9Z2rOwof1/moZAwCLn7BVpxmmHsl2VTljTCotkg
-        ONenSOijfLlG+RAgLP2jl246Rt+ZgBL6k8EdYEZfI7oHv4Xg8hCL3Nnl44Gs
-        Cf0Kh3nW8yZpEQ+Tv4cBRIP373rNC3k061mbiqu6aXjDmeAMxCgqCXUpSAr3
-        p6RVYuA1begzpxV7IddvJO13tS0CAAA=
-
-    http_version: 
-  recorded_at: Wed, 04 Jun 2014 16:12:08 GMT
-- request: 
-    method: get
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/tasks/6c6c038a-01cf-4e02-b13b-4effa068f80c/
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="bvKb0lGy3VblPBHX6BFXU1ynOHf5WEjGOgWeR5vPPw", oauth_signature="0jESPPLxr%2BIPe7gRVFLTzNFQLO8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1401898329", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Wed, 04 Jun 2014 16:12:09 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Encoding: 
-      - gzip
-      Content-Length: 
-      - "347"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: !binary |
-        H4sIAAAAAAAAA42QTW7DIBCFrxKhLmsb/FfqVQ/RVavKwnhorDiGDJA0inL3
-        Ak4VqZt2N7yZN3zzLgS+JBg36YV0m8XP8+OGOGF3vTsbCBIxfja5BTwC5rFh
-        cwSj7eQ0nvMRZnBAgqffIqg4X0RDIcxUHMsiGYpWtpJWXGSUSZXVQMtsYNUQ
-        KqUEbbniVBbk5+NpjGv+41ktnzbMvyfO7o7WsdhNopDxvO7G+hFkNS2T3fZu
-        2qcTS8rqjLYZrV9Z27Gyo/wt3bTE1SuVdcJ5G9VQofvT61BIGITc3WO1RpwW
-        GPsUSmSOKAb1J4K1fURHF+TLNcgHDz7tD72Y/Rj6VnuU0J807gAz+hKse3Bb
-        8Db3YciebT4eboQumdc7YYxi8PvZ3WkAUeP9ucZ+IQ96zb+puKqbhjecCc5A
-        jKKSUJeCRLpfI60SA69pQ584rdgzuX4D41GYvlYCAAA=
-
-    http_version: 
-  recorded_at: Wed, 04 Jun 2014 16:12:09 GMT
-- request: 
     method: post
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/repositories/
+    uri: https://box.devel.com/pulp/api/v2/repositories/
     body: 
       encoding: US-ASCII
       string: "{\"id\":\"1\",\"display_name\":\"Fedora 17 x86_64\",\"importer_type_id\":\"yum_importer\",\"importer_config\":{\"feed\":\"file:///var/www/test_repos/zoo\",\"ssl_ca_cert\":null,\"ssl_client_cert\":null,\"ssl_client_key\":null},\"notes\":{\"_repo-type\":\"rpm-repo\"},\"distributors\":[{\"distributor_type_id\":\"yum_distributor\",\"distributor_config\":{\"relative_url\":\"/test_path/\",\"http\":false,\"https\":true,\"protected\":true},\"auto_publish\":true,\"distributor_id\":\"1\"},{\"distributor_type_id\":\"yum_clone_distributor\",\"distributor_config\":{\"destination_distributor_id\":\"1\"},\"auto_publish\":false,\"distributor_id\":\"1_clone\"},{\"distributor_type_id\":\"nodes_http_distributor\",\"distributor_config\":{},\"auto_publish\":true,\"distributor_id\":\"1_nodes\"}]}"
@@ -157,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="tjzNcDzgoRVqcyvjTkmQl7cIWAshOfqX8w22ABUY", oauth_signature="lU4F8gyALVadgkRbMOWwZlCZkNs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1401898503", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="Q2E2UN5asXZtZnnmQi5VtH4gujfUa4Hp", oauth_nonce="JTPHvB4wCWTGVymvFdrE1BIrrv2wvcfBUboglc418o", oauth_signature="PgPqvEVfLttGypCemKxPdjSv4p0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1411672715", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -170,7 +27,7 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Wed, 04 Jun 2014 16:15:03 GMT
+      - Thu, 25 Sep 2014 19:18:35 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Location: 
@@ -188,297 +45,17 @@ http_interactions:
     body: 
       encoding: ASCII-8BIT
       string: !binary |
-        H4sIAAAAAAAAAzWO0Q6CMAxFf4U0PmoGCoP4Af7GMseIS7BrtmIkxH+XzvjW
-        npze3g2yS5bdg+wI12r7HCsYQ6bZrgbt0+8Mbn6MyVZNX70HbXQL4vj9LhCH
-        iLuCyzzv0GAWP3mKWSSM7IVsYISdeKUSmOh5EgDyzUVkj2wWDGxcXJDzv4gJ
-        pRMcYhmguwxTq+u+05O9D23d1f1QX5wuOT+lkb/mkfwkm6JlJmUpqNdZlVqB
-        Ywo+q0bB5wv4/+ja/AAAAA==
+        H4sIAAAAAAAAAzWO0WrDMAxFfyWIPTY4CVkc9gH7DaMlGjWksrCVsRL6741c
+        +iYdjq7uAWXJqMtVcIWv5nhcGlhjkQ3vgfFGJ4NvWlPGpvfN/zyFaQRz6LyL
+        ojHxqfC+bScMXMzPJKmYxEnJyAHBWKt3qYFZbq0BsG9LYiXWsHPUsKSdtbyL
+        hFg7wUeqA3yOwzjh/DP6zs/eI/p+7TryNeel9PY3XDP92uZk38ShRPc3uFor
+        asqRiusdPJ4dGEqc/AAAAA==
 
     http_version: 
-  recorded_at: Wed, 04 Jun 2014 16:15:03 GMT
-- request: 
-    method: get
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/repositories/1/?details=true
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="qcLsN6qdXWClKITEBHFWUOlHEbeLzeIZk2holV6I2U", oauth_signature="FbMn3VBzy6wvEmmTC5nOpw8VQHI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1401898503", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Wed, 04 Jun 2014 16:15:03 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Encoding: 
-      - gzip
-      Content-Length: 
-      - "430"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: !binary |
-        H4sIAAAAAAAAA7WT224CIRCGX8WQXtagVdetD9CXaAxBdrZLwgKBQWuN717A
-        w6JX1qS3P3P6vxkOxAvHUXSWN2Q1OhxfR6SR3iq+Z5r3EDXyAY1xfDRdjr7r
-        ilVzkmIg5kmL0ugYooNSp0R0chPQOB/VzwNxYA2TqTKZpjSm08NJvomOb4p7
-        ZDZslPTdUJPH90JFFyCqXnTQBAXN5Qlyw/XtEAz3Fs7ttYkjsw7Rlo3zTDng
-        QF7MKXIxq9t5NVkuqpZv6vlkMVnWk5ngJLERRrfy60Lq7Izl4un9Hxy3XPnn
-        LO9Dz4QyGp50/H7nOC0dpeZp6WXJq90SSW78T0iePoJE5DkW9T0L6wyCQGiG
-        edJxFQtzoCKqLbDgVKpMEZI3jh0l52h/Ti7AkeP6FlHGomMzn/uypI2Tpxxg
-        +3ESLtMhaGRBS2TCBI3+eqi9NQ7hkW85hBZ59xAv+nVlfq/FsK9hM0m/buVB
-        1st71i1kzKSVClaU0i13dLfbnYBmRvTHmOL8bkY8/qF1Vd5wJtM5aPP2bFCW
-        civp9o3mnjJekARPp5QcfwFCZfa3RwUAAA==
-
-    http_version: 
-  recorded_at: Wed, 04 Jun 2014 16:15:03 GMT
-- request: 
-    method: put
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/repositories/1/importers/yum_importer//
-    body: 
-      encoding: US-ASCII
-      string: "{\"importer_config\":{\"feed\":\"http://foo.com/foo\",\"ssl_ca_cert\":null,\"ssl_client_cert\":null,\"ssl_client_key\":null}}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="ec1zulkSgzwynBr6gzz58YGusGOyfsXxnCsL4u9kI4", oauth_signature="lAD8Ly0DmCtSM6g3VkwXmB%2B6B1A%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1401898503", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "113"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 202
-      message: Accepted
-    headers: 
-      Date: 
-      - Wed, 04 Jun 2014 16:15:03 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Content-Encoding: 
-      - utf-8
-      Content-Length: 
-      - "172"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/79fb2de4-4fab-46da-bd78-ce239b8c44bf/\", \"task_id\": \"79fb2de4-4fab-46da-bd78-ce239b8c44bf\"}], \"result\": null, \"error\": null}"
-    http_version: 
-  recorded_at: Wed, 04 Jun 2014 16:15:04 GMT
-- request: 
-    method: put
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/repositories/1/distributors/1//
-    body: 
-      encoding: US-ASCII
-      string: "{\"distributor_config\":{\"relative_url\":\"/test_path/\",\"http\":false,\"https\":true,\"protected\":true}}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="pfk2HNt94hywxYXpcg6pfauaRwQChPu9ZebS9eoqLw", oauth_signature="XVFj%2Bq1U2eV%2Byd6cL7RIL1U0ZHY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1401898504", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "96"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 202
-      message: Accepted
-    headers: 
-      Date: 
-      - Wed, 04 Jun 2014 16:15:04 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Content-Encoding: 
-      - utf-8
-      Content-Length: 
-      - "172"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/d3c8f224-70b1-452d-b6ca-17416b4e3159/\", \"task_id\": \"d3c8f224-70b1-452d-b6ca-17416b4e3159\"}], \"result\": null, \"error\": null}"
-    http_version: 
-  recorded_at: Wed, 04 Jun 2014 16:15:05 GMT
-- request: 
-    method: put
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/repositories/1/distributors/1_clone//
-    body: 
-      encoding: US-ASCII
-      string: "{\"distributor_config\":{\"destination_distributor_id\":\"1\"}}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Xmlk1ztMIz3gLgrFeliWpdzLPTxhgrQOdIWQjG1Nr4", oauth_signature="T0G88j54h9lZ4PtQdba0tY1my6o%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1401898505", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "57"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 202
-      message: Accepted
-    headers: 
-      Date: 
-      - Wed, 04 Jun 2014 16:15:05 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Content-Encoding: 
-      - utf-8
-      Content-Length: 
-      - "172"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/e5889269-d411-4992-ab27-98c81dfd4bf8/\", \"task_id\": \"e5889269-d411-4992-ab27-98c81dfd4bf8\"}], \"result\": null, \"error\": null}"
-    http_version: 
-  recorded_at: Wed, 04 Jun 2014 16:15:05 GMT
-- request: 
-    method: put
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/repositories/1/distributors/1_nodes//
-    body: 
-      encoding: US-ASCII
-      string: "{\"distributor_config\":{}}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="H5vHj5t8wTqAv5stg5rNlNQplKRuCfbbgeqFeK2E", oauth_signature="0U0M4r7LSvw%2B9uTZaEYosDIxBd4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1401898505", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "25"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 202
-      message: Accepted
-    headers: 
-      Date: 
-      - Wed, 04 Jun 2014 16:15:05 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Content-Encoding: 
-      - utf-8
-      Content-Length: 
-      - "172"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/21412eed-a029-4c63-87d5-fb7cc642fe12/\", \"task_id\": \"21412eed-a029-4c63-87d5-fb7cc642fe12\"}], \"result\": null, \"error\": null}"
-    http_version: 
-  recorded_at: Wed, 04 Jun 2014 16:15:06 GMT
-- request: 
-    method: get
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/repositories/1/?details=true
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="wMuxNd2hZkcCMXtUl7rinZKK5cEIp0bM8UqKMo46Ck", oauth_signature="P8zFKtfqmkaxkKVu71EJtw%2FL6WQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1401898506", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Wed, 04 Jun 2014 16:15:06 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Encoding: 
-      - gzip
-      Content-Length: 
-      - "422"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: !binary |
-        H4sIAAAAAAAAA7WT3W7CMAyFXwVFuxwrDCgdD7CXmFAUUneNlCZR4qAhxLsv
-        Dj9tuWJIu0I9tmP7O+bIgvQCZetEzTaT4+l1wmoVnBYHbkQHSWOfUFsvJvP1
-        5KcqeblklAOpTjlU1qQUE7U+F6JXu4jWh6R+HZkHZ7mil9mcyrihwFkeZaeY
-        FgG5izutQtu/KVJ8oKKPkNQgW6ijhvoagtxwOx6C48HBpb2xaWTeIrph4zxT
-        TjiyF3vOXC2qZlnO1quyEbtqOVvN1tVsIQUjNtKaRn1fSV024/lxiv/Dxo3Q
-        4bmVD7HjUlsDT278cbcxmY7KCDJ9+ORt3SGS3PifkDx9BETkORbVPQvnLYJE
-        qPt56LgGhtFn6KMedCK3Bx69pkYFAq0qsC2G4NhpO0aUsZjULOS+nLQp7ZQT
-        XDcl4TodgkEejUIubTQYbofaOesRHvlb9qmDunuIV/1mWTgY2fvVO0P6zZUH
-        Wa/vWTeQMWeim6JorH2TtqPfAbnRWKc/tCtH+Kmu9dBki1zUrhBOFfv3Inuh
-        0tUoCMU8efYL1jQv4TsFAAA=
-
-    http_version: 
-  recorded_at: Wed, 04 Jun 2014 16:15:06 GMT
+  recorded_at: Thu, 25 Sep 2014 19:18:35 GMT
 - request: 
     method: delete
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/repositories/1/
+    uri: https://box.devel.com/pulp/api/v2/repositories/1/
     body: 
       encoding: US-ASCII
       string: ""
@@ -490,7 +67,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="ssm3i8wgkg2OS2fd4SW7MDfeeXmSSl7Cehn5swo", oauth_signature="GCtKyX9O6iJ3CgZowVhpzVkwfzk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1401898506", oauth_version="1.0"
+      - OAuth oauth_consumer_key="Q2E2UN5asXZtZnnmQi5VtH4gujfUa4Hp", oauth_nonce="wevdIVFHCDEl8gTPljHpOX6HpPhzMVwmMmwbrq4jfMM", oauth_signature="MiIEPRfpyiHR5kpOjlyoOlabkz4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1411672715", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -501,7 +78,7 @@ http_interactions:
       message: Accepted
     headers: 
       Date: 
-      - Wed, 04 Jun 2014 16:15:06 GMT
+      - Thu, 25 Sep 2014 19:18:35 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Encoding: 
@@ -514,12 +91,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/e0d70796-bb3a-4c28-a4a9-3c5fd041c48f/\", \"task_id\": \"e0d70796-bb3a-4c28-a4a9-3c5fd041c48f\"}], \"result\": null, \"error\": null}"
+      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/96695546-78d8-42b7-8b07-34c6fb721af6/\", \"task_id\": \"96695546-78d8-42b7-8b07-34c6fb721af6\"}], \"result\": null, \"error\": null}"
     http_version: 
-  recorded_at: Wed, 04 Jun 2014 16:15:07 GMT
+  recorded_at: Thu, 25 Sep 2014 19:18:36 GMT
 - request: 
     method: get
-    uri: https://prometheus.usersys.redhat.com/pulp/api/v2/tasks/e0d70796-bb3a-4c28-a4a9-3c5fd041c48f/
+    uri: https://box.devel.com/pulp/api/v2/tasks/96695546-78d8-42b7-8b07-34c6fb721af6/
     body: 
       encoding: US-ASCII
       string: ""
@@ -531,7 +108,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="xziRmYmCesQXmfiDujLRsHFzg0SnS7tMeiBrHcvtllM", oauth_signature="vACtIogtPV7tuF2GGtYR%2Bla7s0w%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1401898507", oauth_version="1.0"
+      - OAuth oauth_consumer_key="Q2E2UN5asXZtZnnmQi5VtH4gujfUa4Hp", oauth_nonce="le1S2ZRsVJQ1yQj3T6O2ZMJ1usfFiSfnIgB9eoMU", oauth_signature="6mcOZpG%2FZbrLSWWE9k4iw9pxmHA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1411672716", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -542,7 +119,59 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Wed, 04 Jun 2014 16:15:07 GMT
+      - Thu, 25 Sep 2014 19:18:36 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Vary: 
+      - Accept-Encoding
+      Content-Encoding: 
+      - gzip
+      Content-Length: 
+      - "338"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAAA42QzW6DMBCEXyWyeiw/dgADpz5ET60qZOwlsUIwWZv8KMq7
+        14ZGVD316Nn9vDNzJ3CVMDptBlJvhqnvXzfECXto3G0EL5Fx6sfYAp4B4zCw
+        McJorHYGb7GCHhwQzzR7hC7sJwFIxKiTM0tmIKmKosrzrIh4qcooYy2Pyjbl
+        0TaTRddyRkVXJOR5WKvwzX+YBdlZv/85+6xXazUN01kUMsSrf7x+ebnTg7b7
+        xukjrKmtE+ieGmEpzaK0ilj+TqualvW2+JjvoZDQCnn4BY7iMoBq5rDBSzgx
+        otkhWNsES+i8fH94+TTBNP/vZ6FT5efWTCihuRg8AEbpW2uuvtgz9LE0x1id
+        yGLOLdw0DHrYBc2TU+9WH4BocH0uRd7Ji1kazTOWFaKUmVSwVUzSTlKfkpHg
+        688KT3nJuRCcqjQFRR7fPgDnUSgCAAA=
+
+    http_version: 
+  recorded_at: Thu, 25 Sep 2014 19:18:36 GMT
+- request: 
+    method: get
+    uri: https://box.devel.com/pulp/api/v2/tasks/96695546-78d8-42b7-8b07-34c6fb721af6/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="Q2E2UN5asXZtZnnmQi5VtH4gujfUa4Hp", oauth_nonce="Uvah08LkKtzZwQ9XpJEfkNUiXvZdmBDet60XtW49M", oauth_signature="81%2FyeIJq5FTSNjZT4yVRmeiz5Kg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1411672717", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Thu, 25 Sep 2014 19:18:37 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Vary: 
@@ -558,15 +187,15 @@ http_interactions:
     body: 
       encoding: ASCII-8BIT
       string: !binary |
-        H4sIAAAAAAAAA42QwW6DMBBEf6WyeixgwBDCqR/RU6sKGXtJUAh21nbSKMq/
-        1zapkHppbzCzs347NwJfArQd1Uzap9lN08sTsdwcOnvV4CWi3aRTA3gGTINh
-        UgStzGgVXlMJE1ggPtPtEYYwn4VAxvWYnYssBjKgckM32zrp+5InTBRNwhnf
-        JqWoBklZLlgzZOTn4VGGNf/JLJGd8fMfkbNd0do8uFHkIpzXPlg/vTyM82j2
-        nR2P8cSC5iyhdULZW163edXSzXu8aQ6rFypjuXUmqP4L7Z9Zi1xAz8VhrdVo
-        fplBdrGUwBxQNKodgjFdQEfr5dvdyycHLu73Xuheet8ohwK6i8IDYEJfffQI
-        dg/OpM4PmatJ5elBaGN4uRNkEH3eTXalAUSF6+9S+408q6X/qmwGVtO+anLe
-        5MAlLwUwNpBA92ukHnjfMFrRTUNLWZD7NwEOynhWAgAA
+        H4sIAAAAAAAAA42Ry27DIBBFfyVCXdYPiG1sr/oRXbWqLAzjxIpjyIDzUJR/
+        L9ipLHXT7uDO3OHM5U7gKsG4Xo+k3ozTMLxuiBP20LibAS8RMw0mtoBnwDgU
+        bIxgtO2dxlusYAAHxHuaPUIX+pNgSITpkzNLZkNSFUWV51kR8VKVUcZaHpVt
+        yqNtJouu5YyKrkjIz8O9CmP+41ksO+v7P2fOekWraajOopBhvfrJ+uXlrh97
+        u29cf5xXZCnNorSKWP5Oq5qW9bb4mHcaw+iFyjrhJhtUf0L3p9ehkNAKeVhj
+        tUZcRlDNHEpgDigG9Q7B2iago/Py/eHl0wTTPN/XQvbK162eUEJz0XgAjNK3
+        Vl/9B5xhiKU+xur0hHOzb1kRVBC9dRrcCgKIGtfrkvidvOgl+jxjWSFKmUkF
+        W8Uk7ST1azISwH618JSXnAvBqUpT/9rjGwX0AutRAgAA
 
     http_version: 
-  recorded_at: Wed, 04 Jun 2014 16:15:07 GMT
-recorded_with: VCR 2.9.0
+  recorded_at: Thu, 25 Sep 2014 19:18:37 GMT
+recorded_with: VCR 2.9.2

@@ -73,6 +73,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
       'http://www.google.com',
       'yum',
       nil,
+      nil,
       nil
     ])
 
@@ -100,6 +101,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
       'Fedora Repository',
       nil,
       'yum',
+      nil,
       nil,
       nil
     ])
@@ -134,7 +136,8 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
       'http://www.google.com',
       'yum',
       nil,
-      key
+      key,
+      nil
     ])
     product.expect(:organization, @organization)
     product.expect(:redhat?, false)
@@ -145,6 +148,36 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
                     :product_id => @product.id,
                     :url => 'http://www.google.com',
                     :content_type => 'yum'
+
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
+    end
+  end
+
+  def test_create_with_checksum
+    product = MiniTest::Mock.new
+    product.expect(:add_repo, @repository, [
+      'Fedora_Repository',
+      'Fedora Repository',
+      nil,
+      'yum',
+      nil,
+      nil,
+      'sha256'
+    ])
+
+    product.expect(:editable?, @product.editable?)
+    product.expect(:gpg_key, nil)
+    product.expect(:organization, @organization)
+    product.expect(:redhat?, false)
+    assert_sync_task(::Actions::Katello::Repository::Create, @repository)
+
+    Product.stub(:find, product) do
+      post :create, :name => 'Fedora Repository',
+                    :product_id => @product.id,
+                    :url => '',
+                    :content_type => 'yum',
+                    :checksum_type => 'sha256'
 
       assert_response :success
       assert_template 'api/v2/repositories/show'
