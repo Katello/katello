@@ -119,12 +119,8 @@ describe('Controller: ContentHostDetailsInfoController', function() {
 
     it("builds list of guest ids", function () {
         var host;
-        host = {id: 1};
-        expect($scope.virtualGuestIds(host)).toEqual("id:1");
-        host = {id: 1, "virtual_guests":[]};
-        expect($scope.virtualGuestIds(host)).toEqual("id:1");
         host = {id: 1, "virtual_guests":[{ id: 2 }, { id: 3}]};
-        expect($scope.virtualGuestIds(host)).toEqual("id:1 id:2 id:3");
+        expect($scope.virtualGuestIds(host)).toEqual("id:2 id:3");
     });
 
     describe("populates advanced content host information", function () {
