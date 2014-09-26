@@ -29,7 +29,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.0.0
-Release: 3%{dist}
+Release: 4%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -239,6 +239,11 @@ ln -s %{gem_instdir}/public/assets/bastion %{buildroot}%{foreman_dir}/public/ass
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Fri Sep 26 2014 Justin Sherrill <jsherril@redhat.com> 2.0.0-4
+- fixes #7621 - treat a nil minor OS version as empty string
+  (jsherril@redhat.com)
+- Refs #7242: Add 1.5-2.0 Changelog. (ericdhelms@gmail.com)
+
 * Fri Sep 19 2014 Justin Sherrill <jsherril@redhat.com> 2.0.0-3
 - Fixes #7527 - don't require less in production unless from rake
   (inecas@redhat.com)
