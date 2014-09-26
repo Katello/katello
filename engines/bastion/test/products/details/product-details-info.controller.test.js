@@ -94,6 +94,6 @@ describe('Controller: ProductDetailsInfoController', function() {
 
         $scope.syncProduct();
 
-        expect(Product.sync).toHaveBeenCalledWith({id: $scope.$stateParams.productId}, jasmine.any(Function), jasmine.any(Function));
+        expect(Product.sync).toHaveBeenCalledWith({id: $scope.$stateParams.productId}, jasmine.any(Function));
     });
 });

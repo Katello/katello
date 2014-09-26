@@ -23,30 +23,16 @@
  *   A controller for providing bulk sync functionality for products..
  */
 angular.module('Bastion.products').controller('ProductsBulkActionSyncController',
-    ['$scope', 'translate', 'ProductBulkAction', function ($scope, translate, ProductBulkAction) {
+    ['$scope', '$state', 'translate', 'ProductBulkAction',
+     function ($scope, $state, translate, ProductBulkAction) {
         $scope.repositoryCount = 0;
-        $scope.syncingProducts = false;
 
         $scope.syncProducts = function () {
-            var success, error;
-
-            $scope.syncingProducts = true;
             $scope.actionParams.ids = $scope.getSelectedProductIds();
 
-            success = function (data) {
-                $scope.$parent.successMessages = data.displayMessages.success;
-                $scope.$parent.errorMessages = data.displayMessages.error;
-                $scope.syncingProducts = false;
-            };
-
-            error = function (error) {
-                angular.forEach(error.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(translate("An error occurred syncing the Products: ") + errorMessage);
-                });
-                $scope.syncingProducts = false;
-            };
-
-            ProductBulkAction.syncProducts($scope.actionParams, success, error);
+            ProductBulkAction.syncProducts($scope.actionParams, function (task) {
+                $state.go('task', {taskId: task.id});
+            });
 
         };
     }]

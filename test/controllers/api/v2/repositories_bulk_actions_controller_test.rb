@@ -63,9 +63,9 @@ module Katello
     end
 
     def test_sync
-      @controller.expects(:async_task).times(@repositories.length).with do |action_class, repo|
+      assert_async_task(::Actions::BulkAction) do |action_class, repos|
         action_class.must_equal ::Actions::Katello::Repository::Sync
-        @repositories.map(&:id).must_include repo.id
+        repos.map(&:id).must_equal @repositories.map(&:id)
       end
 
       post :sync_repositories, {:ids => @repositories.collect(&:id), :organization_id => @organization.id}
@@ -76,20 +76,14 @@ module Katello
     def test_sync_feedless
       repo_with_feed = katello_repositories(:fedora_17_x86_64)
       repo_with_no_feed = katello_repositories(:feedless_fedora_17_x86_64)
-
-
-      @controller.expects(:async_task).times(1).with do |action_class, repo|
+      assert_async_task(::Actions::BulkAction) do |action_class, repos|
         action_class.must_equal ::Actions::Katello::Repository::Sync
-        repo.id.must_equal repo_with_feed.id
+        repos.map(&:id).must_equal [repo_with_feed.id]
       end
 
       post :sync_repositories, {:ids => [repo_with_feed, repo_with_no_feed].collect(&:id), :organization_id => @organization.id}
 
       assert_response :success
-      results = JSON.parse(response.body)
-      assert_equal 1, results["displayMessages"]["success"].size
-      assert_equal 1, results["displayMessages"]["error"].size
-      assert_includes results["displayMessages"]["error"].first, repo_with_no_feed.name
     end
 
     def test_sync_protected

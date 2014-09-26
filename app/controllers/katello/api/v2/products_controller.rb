@@ -101,7 +101,11 @@ module Katello
     api :POST, "/products/:id/sync", "Sync a repository"
     param :id, :identifier, :required => true, :desc => "product ID"
     def sync
-      respond_for_async(:resource => @product.sync)
+      task = async_task(::Actions::BulkAction,
+                        ::Actions::Katello::Repository::Sync,
+                        @product.library_repositories.has_url.syncable)
+
+      respond_for_async(:resource => task)
     end
 
     protected
