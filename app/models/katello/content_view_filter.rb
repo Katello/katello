@@ -33,6 +33,7 @@ class ContentViewFilter < Katello::Model
                           :class_name => "Katello::Repository",
                           :join_table => :katello_content_view_filters_repositories
 
+  validates_lengths_from_database
   validate :validate_content_view
   validate :validate_repos
   validates :name, :presence => true, :allow_blank => false,

@@ -59,7 +59,6 @@ module Katello
         validates_with Validators::KatelloNameFormatValidator, :attributes => :name
         validates :label, :presence => true
         validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
-        validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
         validate :unique_name_and_label
         validates_with Validators::DefaultInfoValidator, :attributes => :default_info
 

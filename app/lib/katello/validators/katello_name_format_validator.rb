@@ -23,9 +23,8 @@ module Validators
       end
     end
 
-    def self.validate_length(record, attribute, value, max_length = 255, min_length = 1)
+    def self.validate_length(record, attribute, value, min_length = 1)
       if value
-        record.errors[attribute] << _("cannot contain more than %s characters") % max_length unless value.length <= max_length
         record.errors[attribute] << _("must contain at least %s character") % min_length unless value.length >= min_length
       end
     end

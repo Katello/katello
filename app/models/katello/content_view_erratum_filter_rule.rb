@@ -23,6 +23,7 @@ module Katello
 
     serialize :types, Array
 
+    validates_lengths_from_database
     validates :errata_id, :uniqueness => { :scope => :content_view_filter_id }, :allow_blank => true
     validates_with Validators::ContentViewErratumFilterRuleValidator
 

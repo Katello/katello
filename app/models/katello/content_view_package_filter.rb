@@ -18,6 +18,7 @@ class ContentViewPackageFilter < ContentViewFilter
 
   has_many :package_rules, :dependent => :destroy, :foreign_key => :content_view_filter_id,
            :class_name => "Katello::ContentViewPackageFilterRule"
+  validates_lengths_from_database
 
   # Returns a set of Pulp/MongoDB conditions to filter out packages in the
   # repo repository that match parameters

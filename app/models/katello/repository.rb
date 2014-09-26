@@ -14,6 +14,7 @@ module Katello
 class Repository < Katello::Model
   self.include_root_in_json = false
 
+  validates_lengths_from_database :except => [:label]
   before_destroy :assert_deletable
 
   include ForemanTasks::Concerns::ActionSubject

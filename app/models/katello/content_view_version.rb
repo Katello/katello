@@ -38,6 +38,8 @@ class ContentViewVersion < Katello::Model
 
   delegate :default, :default?, to: :content_view
 
+  validates_lengths_from_database
+
   scope :default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true)
   scope :non_default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false)
 

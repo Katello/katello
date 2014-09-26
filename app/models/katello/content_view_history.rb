@@ -20,13 +20,12 @@ class ContentViewHistory < Katello::Model
   belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion", :foreign_key => :katello_content_view_version_id, :inverse_of => :history
   belongs_to :task, :class_name => "ForemanTasks::Task::DynflowTask", :foreign_key => :task_id
 
-  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :notes
-
   IN_PROGRESS = 'in progress'
   FAILED = 'failed'
   SUCCESSFUL = 'successful'
   STATUSES = [IN_PROGRESS, FAILED, SUCCESSFUL]
 
+  validates_lengths_from_database
   validates :status, :inclusion => {:in          => STATUSES,
                                     :allow_blank => false}
 

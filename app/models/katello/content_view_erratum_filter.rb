@@ -23,6 +23,8 @@ class ContentViewErratumFilter < ContentViewFilter
   has_many :erratum_rules, :dependent => :destroy, :foreign_key => :content_view_filter_id,
            :class_name => "Katello::ContentViewErratumFilterRule"
 
+  validates_lengths_from_database
+
   def generate_clauses(repo)
     return if erratum_rules.blank?
 

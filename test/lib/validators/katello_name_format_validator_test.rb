@@ -33,22 +33,6 @@ class KatelloNameFormatValidatorTest < ActiveSupport::TestCase
     assert_empty @model.errors[:name]
   end
 
-  test "fails with more than 255 characters" do
-    cs = [*'0'..'9', *'a'..'z', *'A'..'Z']
-    random_string = 256.times.map { cs.sample }.join
-    @validator.validate_each(@model, :name, random_string)
-
-    refute_empty @model.errors[:name]
-  end
-
-  test "succeeds with 255 characters" do
-    cs = [*'0'..'9', *'a'..'z', *'A'..'Z']
-    random_string = 255.times.map { cs.sample }.join
-    @validator.validate_each(@model, :name, random_string)
-
-    assert_empty @model.errors[:name]
-  end
-
   test "succeeds with special characters" do
     @validator.validate_each(@model, :name, '@!#$%^&*()')
 

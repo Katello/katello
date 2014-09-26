@@ -13,6 +13,7 @@
 module Katello
 class Hypervisor < System
   use_index_of System if Katello.config.use_elasticsearch
+  validates_lengths_from_database
 
   UNSUPPORTED_ACTIONS = [:package_profile, :pulp_facts, :simple_packages, :errata, :del_pulp_consumer, :set_pulp_consumer,
                          :update_pulp_consumer, :upload_package_profile, :install_package, :uninstall_package,
