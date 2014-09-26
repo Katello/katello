@@ -29,7 +29,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.0.0
-Release: 4%{dist}
+Release: 5%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -239,6 +239,10 @@ ln -s %{gem_instdir}/public/assets/bastion %{buildroot}%{foreman_dir}/public/ass
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Fri Sep 26 2014 Justin Sherrill <jsherril@redhat.com> 2.0.0-5
+- fixes #7521 - fix import of virt-who subscription information
+  (stbenjam@redhat.com)
+
 * Fri Sep 26 2014 Justin Sherrill <jsherril@redhat.com> 2.0.0-4
 - fixes #7621 - treat a nil minor OS version as empty string
   (jsherril@redhat.com)
