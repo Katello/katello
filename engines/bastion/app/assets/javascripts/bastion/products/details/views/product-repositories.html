@@ -103,7 +103,7 @@
             </a>
           </span>
 
-          <span ng-hide="repository.content_type == 'puppet'">
+          <span ng-show="repository.content_type == 'yum'">
             <div>
               <a translate ng-href="{{ RootURL }}/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages">
                 {{ repository.content_counts.rpm || 0 }} Packages
@@ -113,6 +113,14 @@
             <div>
               <a translate ng-href="{{ RootURL }}/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata">
                 {{ repository.content_counts.erratum || 0 }} Errata
+              </a>
+            </div>
+          </span>
+
+          <span ng-show="repository.content_type == 'docker'">
+            <div>
+              <a translate>
+                {{ repository.content_counts.docker_image || 0 }} Docker Images
               </a>
             </div>
           </span>
