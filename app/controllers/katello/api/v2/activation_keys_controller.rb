@@ -221,8 +221,16 @@ module Katello
 
       key_params[:environment_id] = params[:environment][:id] if params[:environment].try(:[], :id)
       key_params[:content_view_id] = params[:content_view][:id] if params[:content_view].try(:[], :id)
-      key_params[:unlimited_content_hosts] = false if params[:activation_key].try(:[], :max_content_hosts)
-      key_params[:max_content_hosts] = nil if params[:activation_key].try(:[], :unlimited_content_hosts)
+      unlimited = params[:activation_key].try(:[], :unlimited_content_hosts)
+      max_hosts = params[:activation_key].try(:[], :max_content_hosts)
+
+      if unlimited && max_hosts
+        key_params[:unlimited_content_hosts] = true
+        key_params[:max_content_hosts] = nil
+      else
+        key_params[:unlimited_content_hosts] = false if max_hosts
+        key_params[:max_content_hosts] = nil if unlimited
+      end
 
       key_params
     end
