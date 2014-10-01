@@ -135,6 +135,10 @@ class ContentViewVersion < Katello::Model
         self.content_view.versions.in_environment(from_env).count > 1
   end
 
+  def promotable?(environment)
+    environments.include?(environment.prior) || environments.empty? && environment == organization.library
+  end
+
   def archive_puppet_environment
     content_view_puppet_environments.archived.first
   end

@@ -26,6 +26,8 @@ module Katello
       @organization = get_organization
       @library = KTEnvironment.find(katello_environments(:library))
       @dev = KTEnvironment.find(katello_environments(:dev))
+      @test = KTEnvironment.find(katello_environments(:test))
+      @beta = KTEnvironment.find(katello_environments(:beta))
       @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view))
       @library_view = ContentView.find(katello_content_views(:library_view))
     end
@@ -116,11 +118,35 @@ module Katello
 
     def test_promote
       version = @library_dev_staging_view.versions.first
-      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @dev).returns({})
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @dev, nil).returns({})
       post :promote, :id => version.id, :environment_id => @dev.id
 
       assert_response :success
       assert_template 'katello/api/v2/common/async'
+    end
+
+    def test_promote_out_of_sequence
+      version = @library_dev_staging_view.versions.first
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @beta, nil).raises(::Katello::HttpErrors::BadRequest)
+      post :promote, :id => version.id, :environment_id => @beta.id
+
+      assert_response 500
+    end
+
+    def test_promote_out_of_sequence_force
+      version = @library_dev_staging_view.versions.first
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @beta, true).returns({})
+      post :promote, :id => version.id, :environment_id => @beta.id, :force => 1
+
+      assert_response :success
+    end
+
+    def test_promote_out_of_sequence_force_false
+      version = @library_dev_staging_view.versions.first
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @beta, false).returns({})
+      post :promote, :id => version.id, :environment_id => @beta.id, :force => 0
+
+      assert_response :success
     end
 
     def test_promote_protected
@@ -145,6 +171,12 @@ module Katello
     end
 
     def test_promote_default
+      view = ContentView.find(katello_content_views(:acme_default))
+      post :promote, :id => view.versions.first.id, :environment_id => @dev.id
+      assert_response 400
+    end
+
+    def test_promote_out_of_sequence
       view = ContentView.find(katello_content_views(:acme_default))
       post :promote, :id => view.versions.first.id, :environment_id => @dev.id
       assert_response 400
