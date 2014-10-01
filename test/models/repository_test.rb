@@ -72,6 +72,28 @@ class RepositoryCreateTest < RepositoryTestBase
     assert @repo.save
     assert_equal "puppet", Repository.find(@repo.id).content_type
   end
+
+  def test_docker_pulp_id
+    # for docker repos, the pulp_id should be downcased
+    @repo.pulp_id = 'PULP-ID'
+    @repo.content_type = Repository::DOCKER_TYPE
+    assert @repo.save
+    assert @repo.pulp_id.ends_with?('pulp-id')
+  end
+
+  def test_yum_type_pulp_id
+    @repo.pulp_id = 'PULP-ID'
+    @repo.content_type = Repository::YUM_TYPE
+    assert @repo.save
+    assert @repo.pulp_id.ends_with?('PULP-ID')
+  end
+
+  def test_puppet_type_pulp_id
+    @repo.pulp_id = 'PULP-ID'
+    @repo.content_type = Repository::PUPPET_TYPE
+    assert @repo.save
+    assert @repo.pulp_id.ends_with?('PULP-ID')
+  end
 end
 
 class RepositoryInstanceTest < RepositoryTestBase
