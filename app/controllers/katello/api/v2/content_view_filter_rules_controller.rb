@@ -115,47 +115,19 @@ module Katello
         params[:content_view_filter_rule][:errata_ids] = ids
       end
 
-      params.fetch(:content_view_filter_rule, {})
-            .permit(:uuid, :name, :version, :min_version, :max_version,
+      params.fetch(:content_view_filter_rule, {}).
+            permit(:uuid, :name, :version, :min_version, :max_version,
                     :errata_id, :start_date, :end_date,
                     :types => [], :errata_ids => [])
     end
 
     def process_errata_ids(select_all_params)
       if select_all_params[:included][:ids].blank?
-        load_search_service
-        step_size = 50
-
-        current_errata_ids = @filter.erratum_rules.map(&:errata_id)
-        current_errata_ids += select_all_params[:excluded][:ids]
-        repo_ids = @filter.applicable_repos.pluck(:pulp_id)
-        select_all_params[:included][:params][:repo_ids] = repo_ids
-
-        search_filters = [
-          { :not => { :terms => { :errata_id_exact => current_errata_ids }}}
-        ]
-        search_filters.concat(Errata.filters(select_all_params[:included][:params]))
-
-        options = sort_params
-        options[:filters] = search_filters
-        options[:fields] = [:errata_id]
-
-        options[:per_page] = 1
-        collection = item_search(Errata, select_all_params, options)
-        total = collection[:subtotal]
-        results = []
-
-        (0..total).step(step_size).flat_map do |start|
-          options[:per_page] = step_size
-          options[:page] = start / step_size
-          results.concat(item_search(Errata, select_all_params, options)[:results])
-        end
-
-        results.collect { |erratum| erratum.errata_id }
+        current_errata_ids = @filter.erratum_rules.map(&:errata_id) + select_all_params[:excluded][:ids]
+        Erratum.where('errata_id not in (?)', current_errata_ids).in_repositories(@filter.applicable_repos).pluck(:errata_id)
       else
         []
       end
     end
-
   end
 end

@@ -10,13 +10,13 @@
           #{_("Errata")}
       .scroll-pane
         - errata.each do |erratum|
-          - content_hosts = erratum.applicable_consumers
+          - content_hosts = erratum.systems_applicable.in_organization(current_organization).readable
           - if !content_hosts.empty?
             .errata
               %div.errata_item
                 .col_1
                   %div{:class => 'tipsify ' + errata_type_class(erratum),
-                       'original-title' => errata_human_type(erratum.type)}
+                       'original-title' => errata_human_type(erratum.errata_type)}
                 .col_2.one-line-ellipsis
                   %span
                     %a{:href=>content_search_errata_link(erratum.errata_id)}

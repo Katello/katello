@@ -74,25 +74,6 @@ module Glue::ElasticSearch::Repository
       end
     end
 
-    def indexed_errata_ids
-      Katello::Errata.indexed_ids_for_repo(pulp_id)
-    end
-
-    def index_errata(force = false)
-      if self.content_view.default? || force
-        errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
-        Katello::Errata.create_index
-        Tire.index Katello::Errata.index do
-          import errata
-        end unless errata.empty?
-      else
-        errata_ids = self.errata_ids
-        search_errata_ids = self.indexed_errata_ids
-        Katello::Errata.add_indexed_repoid(errata_ids - search_errata_ids, self.pulp_id)
-        Katello::Errata.remove_indexed_repoid(search_errata_ids - errata_ids, self.pulp_id)
-      end
-    end
-
     def index_package_groups
       package_groups_map = self.package_groups.collect{|pg| pg.as_json.merge(pg.index_options)}
 
@@ -104,7 +85,6 @@ module Glue::ElasticSearch::Repository
         Tire.index Katello::PackageGroup.index do
           import package_groups_map
         end unless package_groups_map.empty?
-
       end
     end
 
@@ -135,11 +115,6 @@ module Glue::ElasticSearch::Repository
       Katello::PuppetModule.indexed_ids_for_repo(pulp_id)
     end
 
-    def errata_count
-      results = Katello::Errata.legacy_search('', :page_size => 1, :filters => {:repoids => [self.pulp_id]})
-      results.empty? ? 0 : results.total
-    end
-
     def package_count
       results = Katello::Package.legacy_search('', 0, 1, :repoids => [self.pulp_id])
       results.empty? ? 0 : results.total
@@ -152,7 +127,7 @@ module Glue::ElasticSearch::Repository
 
     def index_content
       self.index_packages
-      self.index_errata
+      self.index_db_errata
       self.index_package_groups
       self.index_puppet_modules
       self.index_distributions

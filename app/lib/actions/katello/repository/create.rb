@@ -16,7 +16,7 @@ module Actions
       class Create < Actions::EntryAction
 
         # rubocop:disable MethodLength
-        def plan(repository, clone = false)
+        def plan(repository, clone = false, plan_create = false)
           repository.disable_auto_reindex!
           repository.save!
           action_subject(repository)
@@ -25,8 +25,9 @@ module Actions
           org = repository.organization
           path = repository.relative_path unless repository.puppet?
 
+          create_action = plan_create ? Actions::Pulp::Repository::CreateInPlan : Actions::Pulp::Repository::Create
           sequence do
-            create_action = plan_action(Actions::Pulp::Repository::CreateInPlan,
+            create_action = plan_action(create_action,
                                         content_type: repository.content_type,
                                         pulp_id: repository.pulp_id,
                                         name: repository.name,

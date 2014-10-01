@@ -29,7 +29,10 @@ class SystemTestBase < ActiveSupport::TestCase
 
     @fedora             = Product.find(katello_products(:fedora).id)
     @dev                = KTEnvironment.find(katello_environments(:dev).id)
+    @library            = KTEnvironment.find(katello_environments(:library).id)
+    @library_view       = ContentView.find(katello_content_views(:library_view))
     @system             = System.find(katello_systems(:simple_server))
+    @errata_system      = System.find(katello_systems(:errata_server))
   end
 end
 end

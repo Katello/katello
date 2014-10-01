@@ -133,9 +133,11 @@ class GluePulpConsumerBindTest < GluePulpConsumerTestBase
   end
 
   def test_enable_repos
-    processed_ids, error_ids = @@simple_server.enable_yum_repos([RepositorySupport.repo.pulp_id])
+    @@simple_server.bound_repositories << RepositorySupport.repo
+    @@simple_server.save!
 
-    assert_includes processed_ids, RepositorySupport.repo.pulp_id
+    error_ids = @@simple_server.propagate_yum_repos
+
     refute_includes error_ids, RepositorySupport.repo.pulp_id
   end
 end
@@ -151,7 +153,8 @@ class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
     RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
     @@simple_server = System.find(@loaded_fixtures['katello_systems']['simple_server']['id'])
     set_pulp_consumer(@@simple_server)
-    @@simple_server.enable_yum_repos([RepositorySupport.repo.pulp_id])
+    @@simple_server.bound_repositories << RepositorySupport.repo
+    @@simple_server.propagate_yum_repos
   end
 
   def self.after_suite
@@ -197,10 +200,17 @@ class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
   end
 
   def test_install_consumer_errata
-    erratum_id = RepositorySupport.repo.errata.select{ |errata| errata.errata_id == 'RHEA-2010:0002' }.first.errata_id
+    erratum_id = RepositorySupport.repo.errata_json.select{ |errata| errata['id'] == 'RHEA-2010:0002' }.first['id']
     tasks = @@simple_server.install_consumer_errata([erratum_id])
 
     assert tasks[:spawned_tasks].first['task_id']
+  end
+
+  def test_import_applicability
+    erratum = Erratum.first
+    @@simple_server.expects(:errata_ids).returns([erratum.uuid])
+    @@simple_server.import_applicability
+    assert_equal [erratum], @@simple_server.reload.applicable_errata
   end
 end
 end

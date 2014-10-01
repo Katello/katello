@@ -13,10 +13,7 @@
 module Katello
 class DashboardController < Katello::ApplicationController
 
-  helper ErrataHelper
-
   before_filter :update_preferences_quantity, :except => [:index, :section_id]
-  #before_filter :update_preferences_age , :except => [:index, :section_id]
 
   def index
   end
@@ -45,10 +42,10 @@ class DashboardController < Katello::ApplicationController
     # retrieve the list of repos that are readable by the user,
     # but since a system cannot be registered to Library,
     # skip repos in Library
-    system_uuids = System.in_organization(current_organization).readable.pluck(:uuid)
-    errata = Errata.applicable_for_consumers(system_uuids)
+    systems = System.in_organization(current_organization).readable
+    errata = Erratum.applicable_to_systems(systems)
 
-    errata = errata.sort_by{|e| (e.applicable_consumers || []).length }.reverse[0...quantity]
+    errata = errata.sort_by{|e| e.systems_applicable.in_organization(current_organization).readable.count}.reverse[0...quantity]
 
     render :partial => "errata", :locals => { :quantity => quantity,
                                               :errata => errata }

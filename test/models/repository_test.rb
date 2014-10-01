@@ -300,5 +300,43 @@ class RepositoryInstanceTest < RepositoryTestBase
     refute @fedora_17_x86_64.save
   end
 
+  def test_errata_filenames
+    rhel = Repository.find(katello_repositories(:rhel_6_x86_64))
+
+    refute_empty  rhel.errata_filenames
+    assert_includes rhel.errata_filenames, rhel.errata.first.packages.first.filename
+  end
+
 end
+
+  class RepositoryApplicabilityTest < RepositoryTestBase
+
+    def setup
+      super
+      @lib_system = System.find(katello_systems(:simple_server))
+      @lib_repo =  @fedora_17_x86_64
+      @lib_system.environment = @fedora_17_x86_64.environment
+      @lib_system.bound_repositories = [@lib_repo]
+      @lib_system.save!
+
+      @view_system = System.find(katello_systems(:simple_server2))
+      @view_repo = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1))
+      @view_system.bound_repositories = [@view_repo]
+      @view_system.save!
+    end
+
+    def test_systems_with_applicability
+      assert_includes @lib_repo.systems_with_applicability, @lib_system
+      assert_includes @view_repo.systems_with_applicability, @view_system
+    end
+
+    def test_import_system_applicability
+      mock_active_records(@lib_system, @view_system)
+      @lib_system.expects(:import_applicability)
+      @view_system.expects(:import_applicability)
+      @lib_repo.import_system_applicability
+    end
+
+  end
+
 end

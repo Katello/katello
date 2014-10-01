@@ -159,18 +159,10 @@ class ContentViewVersion < Katello::Model
     Package.package_count(self.repositories.archived)
   end
 
-  def errata
-    repositories.archived.flat_map(&:errata)
-  end
-
-  def errata_count(errata_type = nil)
-    Errata.errata_count(self.repositories.archived, errata_type)
-  end
-
-  def errata_type_counts
-    Errata::TYPES.each_with_object({}) do |type, counts|
-      counts[type] = errata_count(type)
-    end
+  def errata(errata_type = nil)
+    errata = Erratum.in_repositories(self.repositories.archived).uniq
+    errata = errata.of_type(errata_type) if errata_type
+    errata
   end
 
   def check_ready_to_promote!

@@ -8,18 +8,11 @@
 
   = ' / '
 
-  %a.subgrid_link{'data-repo_id' => repo.id, 'data-env_id' =>repo.environment_id, 'data-type'=>:repo_errata}
-    = repo.errata_count
-
-  = ' / '
-
   %a.subgrid_link{'data-repo_id' => repo.id, 'data-env_id' => repo.environment_id, 'data-type'=>:repo_puppet_modules}
     = repo.puppet_module_count
 
 - else
 
   = _("Packages (%s)") % repo.package_count
-  <br/>
-  = _("Errata (%s)") % repo.errata_count
   <br/>
   = _("Puppet Modules (%s)") % repo.puppet_module_count

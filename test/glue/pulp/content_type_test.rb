@@ -23,7 +23,7 @@ class ContentTypeTest < ActiveSupport::TestCase
   end
 
   def test_erratum_type
-    assert_equal(Errata::CONTENT_TYPE, Katello.pulp_server.extensions.errata.content_type())
+    assert_equal(Erratum::CONTENT_TYPE, Katello.pulp_server.extensions.errata.content_type())
   end
 end
 end

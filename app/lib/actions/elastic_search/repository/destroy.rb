@@ -21,11 +21,9 @@ module Actions
 
         def run
           indexed_package_ids = ::Katello::Package.indexed_ids_for_repo(pulp_id)
-          indexed_erratum_ids = ::Katello::Errata.indexed_ids_for_repo(pulp_id)
           indexed_puppet_module_ids = ::Katello::PuppetModule.indexed_ids_for_repo(pulp_id)
 
           ::Katello::Package.remove_indexed_repoid(indexed_package_ids, pulp_id)
-          ::Katello::Errata.remove_indexed_repoid(indexed_erratum_ids, pulp_id)
           ::Katello::PuppetModule.remove_indexed_repoid(indexed_puppet_module_ids, pulp_id)
         end
 

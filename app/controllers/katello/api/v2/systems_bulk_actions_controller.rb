@@ -17,13 +17,12 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   before_filter :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
   before_filter :find_environment, :only => [:environment_content_view]
   before_filter :find_content_view, :only => [:environment_content_view]
-
+  before_filter :load_search_service
   before_filter :find_editable_systems, :except => [:destroy_systems, :applicable_errata]
   before_filter :find_deletable_systems, :only => [:destroy_systems]
   before_filter :find_readable_systems, :only => [:applicable_errata]
 
   before_filter :validate_content_action, :only => [:install_content, :update_content, :remove_content]
-  before_filter :load_search_service
 
   PARAM_ACTIONS = {
       :install_content => {
@@ -101,14 +100,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
       N_("Fetch applicable errata for a system."), :deprecated => true
   param_group :bulk_params
   def applicable_errata
-    @search_service = nil #reload search service after systems are loaded
-    load_search_service
-    options = { :default_field => "errata_id", :sort_by => "errata_id" }
-    results = item_search(Katello::Errata, params, options) do |service|
-      Katello::Errata.search_applicable_for_consumers(@systems.collect{|i| i.uuid}, service)
-    end
-
-    respond_for_index(:collection => results)
+    respond_for_index(:collection => scoped_search(Katello::Erratum.available_for_systems(@systems), 'updated', 'desc'))
   end
 
   api :PUT, "/systems/bulk/install_content", N_("Install content on one or more systems"), :deprecated => true
@@ -189,6 +181,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     params[:included] ||= {}
     params[:excluded] ||= {}
     @systems = []
+
     unless params[:included][:ids].blank?
       @systems = System.send(perm_method).where(:uuid => params[:included][:ids])
       @systems.where('uuid not in (?)', params[:excluded]) unless params[:excluded][:ids].blank?
@@ -196,7 +189,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
 
     if params[:included][:search]
       ids = find_system_ids_by_search(params[:included][:search])
-      search_systems = System.send(perm_method).where(:uuid => ids)
+      search_systems = System.send(perm_method).where(:id => ids)
       search_systems = search_systems.where('uuid not in (?)', params[:excluded][:ids]) unless params[:excluded][:ids].blank?
       @systems = @systems + search_systems
     end

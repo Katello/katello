@@ -57,6 +57,13 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
     assert_template 'api/v2/systems/index'
   end
 
+  def test_errata
+    get :errata, :id => @system.uuid
+    assert_response :success
+    assert_template 'api/v2/systems/errata'
+  end
+
+
   def test_index_protected
     allowed_perms = [@view_permission]
     denied_perms = [@create_permission, @update_permission, @destroy_permission]

@@ -19,11 +19,12 @@ namespace :katello do
       model.index.import(objects) if objects.count > 0
     end
 
-
     Katello::Util::Search.pulp_backend_search_classes.each do |object_class|
       puts "Re-indexing #{object_class.name}"
       object_class.index_all
     end
+
+    Katello::Erratum.import_all
 
     puts "Re-indexing Pools"
     cp_pools = Katello::Resources::Candlepin::Pool.all

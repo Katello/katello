@@ -27,7 +27,6 @@ module Actions
               plan_action(Repository::Clear, clone)
             end
             plan_action(Repository::CloneContent, repository, clone, [], false)
-            plan_action(Pulp::Repository::RegenerateApplicability, pulp_id: clone.pulp_id)
           end
         end
 

@@ -14,19 +14,16 @@ module Katello
   class Api::V2::ErrataController < Api::V2::ApiController
     apipie_concern_subst(:a_resource => N_("an erratum"), :resource => "errata")
     include Katello::Concerns::Api::V2::RepositoryContentController
+    include Katello::Concerns::Api::V2::RepositoryDbContentController
 
     private
 
-    def resource_class
-      # since it's Errata and not Erratum
-      Katello::Errata
+    def filter_by_content_view_filter(filter)
+      resource_class.where(:errata_id => filter.erratum_rules.pluck(:errata_id))
     end
 
-    def filter_by_content_view_filter(filter)
-      ids = filter.erratum_rules.map(&:errata_id)
-      options = sort_params
-      options[:filters] = [:terms => { :errata_id_exact => ids }]
-      item_search(resource_class, params, options)
+    def default_sort
+      %w(issued desc)
     end
   end
 end

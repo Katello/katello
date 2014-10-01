@@ -30,10 +30,6 @@ module Glue::Pulp::Consumer
 
   module InstanceMethods
 
-    def bound_yum_repos
-      bindings(Runcible::Models::YumDistributor.type_id)
-    end
-
     def bound_node_repos
       bindings(Runcible::Models::NodesHttpDistributor.type_id)
     end
@@ -43,20 +39,21 @@ module Glue::Pulp::Consumer
       bindings.select{ |b| b['type_id'] == type_id }.collect{ |repo| repo["repo_id"] }
     end
 
-    def enable_yum_repos(repo_ids)
-      to_return = enable_repos(Runcible::Models::YumDistributor.type_id, bound_yum_repos, repo_ids, {:notify_agent => false})
-      self.generate_applicability
-      to_return
-    end
-
     def enable_node_repos(repo_ids)
       enable_repos(Runcible::Models::NodesHttpDistributor.type_id, bound_node_repos, repo_ids,
                    {:notify_agent => false, :binding_config => {:strategy => 'mirror'}})
     end
 
+    def pulp_bound_yum_repositories
+      bindings(Runcible::Models::YumDistributor.type_id)
+    end
+
+    def propagate_yum_repos
+      pulp_ids = self.bound_repositories.map{|repo| repo.library_instance.try(:pulp_id) || repo.pulp_id}
+      enable_repos(Runcible::Models::YumDistributor.type_id, pulp_bound_yum_repositories, pulp_ids, {:notify_agent => false})
+    end
+
     # Binds and unbinds distributors of a certain type across repos
-    # TODO: break up method
-    # rubocop:disable MethodLength
     def enable_repos(distributor_type, existing_ids, update_ids, bind_options = {})
       # calculate repoids to bind/unbind
       bound_ids     = existing_ids
@@ -69,41 +66,37 @@ module Glue::Pulp::Consumer
       Rails.logger.debug "Repo ids to bind: #{bind_ids.inspect}"
       Rails.logger.debug "Repo ids to unbind: #{unbind_ids.inspect}"
 
-      processed_ids = []
-      error_ids     = []
-      events = []
-
-      unbind_ids.each do |repoid|
-        begin
-          events.concat(Katello.pulp_server.extensions.consumer.unbind_all(uuid,  repoid, distributor_type))
-          processed_ids << repoid
-        rescue => e
-          Rails.logger.error "Failed to unbind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
-          error_ids << repoid
-        end
-      end
-
-      bind_ids.each do |repoid|
-        begin
-          events.concat(Katello.pulp_server.extensions.consumer.bind_all(uuid, repoid, distributor_type, bind_options))
-          processed_ids << repoid
-        rescue => e
-          Rails.logger.error "Failed to bind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
-          error_ids << repoid
-        end
-      end
-      [processed_ids, error_ids]
+      error_ids = unbind_repo_ids(unbind_ids, distributor_type)
+      error_ids += bind_repo_ids(bind_ids, distributor_type, bind_options)
+      error_ids
     end
 
-    def errata
-      ids = errata_ids
-      if ids.empty?
-        []
-      else
-        errata = Katello::Errata.legacy_search("", :start => 0, :page_size => errata_ids.size,
-                                     :filters => {:id => ids}, :fields => Katello::Errata::SHORT_FIELDS)
-        errata.collect{|e| Katello::Errata.new_from_search(e.as_json)}
+    def unbind_repo_ids(repo_ids, distributor_type)
+      error_ids     = []
+
+      repo_ids.each do |repo_id|
+        begin
+          Katello.pulp_server.extensions.consumer.unbind_all(uuid,  repo_id, distributor_type)
+        rescue => e
+          Rails.logger.error "Failed to unbind repo #{repo_id}: #{e}, #{e.backtrace.join("\n")}"
+          error_ids << repo_id
+        end
       end
+      error_ids
+    end
+
+    def bind_repo_ids(repo_ids, distributor_type, bind_options)
+      error_ids     = []
+
+      repo_ids.each do |repo_id|
+        begin
+          Katello.pulp_server.extensions.consumer.bind_all(uuid, repo_id, distributor_type, bind_options)
+        rescue => e
+          Rails.logger.error "Failed to bind repo #{repo_id}: #{e}, #{e.backtrace.join("\n")}"
+          error_ids << repo_id
+        end
+      end
+      error_ids
     end
 
     def errata_ids
@@ -112,15 +105,25 @@ module Glue::Pulp::Consumer
       response[0]['applicability']['erratum'] || []
     end
 
+    def import_applicability
+      applicable_errata_ids = ::Katello::Erratum.where(:uuid => errata_ids).pluck(:id)
+      ActiveRecord::Base.transaction do
+        Katello::SystemErratum.where(:system_id => self.id).delete_all
+        unless applicable_errata_ids.empty?
+          inserts = applicable_errata_ids.map{|erratum_id| "(#{erratum_id.to_i}, #{id.to_i})"}
+          sql = "INSERT INTO katello_system_errata (erratum_id, system_id) VALUES #{inserts.join(', ')}"
+          ActiveRecord::Base.connection.execute(sql)
+        end
+      end
+
+    end
+
     def generate_applicability
-      #can't use consumer users until https://bugzilla.redhat.com/show_bug.cgi?id=1015583 is resolved
-      original_user = User.current
-      User.current = User.anonymous_admin if original_user.is_a?(CpConsumerUser)
-      Rails.logger.debug "Regenerating applicability for consumer #{self.name}"
-      task = Katello.pulp_server.extensions.consumer.regenerate_applicability_by_ids([self.uuid])
-      PulpTaskStatus.using_pulp_task(task)
+      old_user = User.current
+      User.current = User.anonymous_admin
+      ForemanTasks.async_task(::Actions::Katello::System::GenerateApplicability, [self])
     ensure
-      User.current = original_user
+      User.current = old_user
     end
 
     def del_pulp_consumer

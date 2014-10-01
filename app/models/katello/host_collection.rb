@@ -132,7 +132,8 @@ class HostCollection < Katello::Model
   end
 
   def errata(type = nil)
-    Errata.applicable_for_consumers(consumer_ids, type)
+    query = Erratum.joins(:system_errata).where("#{SystemErratum.table_name}.system_id" => self.system_ids)
+    type ? query.of_type(type) : query
   end
 
   def total_content_hosts
@@ -153,14 +154,14 @@ class HostCollection < Katello::Model
       host_collection_state = :ok
       unless host_collection.systems.empty?
         host_collection.errata.each do |erratum|
-          case erratum.type
-          when Errata::SECURITY
+          case erratum.errata_type
+          when Erratum::SECURITY
             # there is a critical errata, so stop searching...
             host_collection_state = :critical
             break
 
-          when Errata::BUGZILLA
-          when Errata::ENHANCEMENT
+          when Erratum::BUGZILLA
+          when Erratum::ENHANCEMENT
             # set state to warning, but continue searching...
             host_collection_state = :warning
           end

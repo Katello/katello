@@ -20,7 +20,7 @@ class SystemClassTest < SystemTestBase
     system_json = @system.as_json options
 
     assert_equal 'Simple Server', system_json['name']
-    assert_equal 'Dev', system_json['environment']['name']
+    assert_equal 'Library', system_json['environment']['name']
   end
 
   def test_uuids_to_ids
@@ -161,5 +161,52 @@ class SystemTest < SystemTestBase
     assert @system.available_releases.include?('6Server')
   end
 
+  def test_save_bound_repos_by_path_empty
+    @errata_system.expects(:generate_applicability)
+    @errata_system.expects(:propagate_yum_repos)
+    refute_empty @errata_system.bound_repositories
+    @errata_system.save_bound_repos_by_path!([])
+    assert_empty @errata_system.bound_repositories
+  end
+
+  def test_save_bound_repos_by_path
+    @repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64))
+
+    @errata_system.expects(:generate_applicability)
+    @errata_system.expects(:propagate_yum_repos)
+    @errata_system.bound_repositories = []
+    @errata_system.save!
+    @errata_system.save_bound_repos_by_path!(["/pulp/repos/#{@repo.relative_path}"])
+
+    refute_empty @errata_system.bound_repositories
+  end
+
+  def test_applicable_errata
+    refute_empty @errata_system.applicable_errata
+  end
+
+  def test_available_and_applicable_errta
+    assert_equal @errata_system.applicable_errata, @errata_system.available_errata
+  end
+
+  def test_available_errata
+    lib_applicable = @errata_system.applicable_errata
+
+    @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
+    @errata_system.bound_repositories = [@view_repo]
+    @errata_system.save!
+
+    assert_equal lib_applicable, @errata_system.applicable_errata
+    refute_equal lib_applicable, @errata_system.available_errata
+    assert_include @errata_system.available_errata, Erratum.find(katello_errata(:security))
+  end
+
+  def test_available_errata_other_view
+    available_in_view = @errata_system.available_errata(@library, @library_view)
+    assert_equal 1, available_in_view.length
+    assert_include available_in_view, Erratum.find(katello_errata(:security))
+  end
+
 end
+
 end

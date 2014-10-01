@@ -114,8 +114,6 @@ module ContentSearch
             display = case unit_type
                       when :package
                         repo.package_count
-                      when :errata
-                        repo.errata_count
                       when :puppet_module
                         repo.puppet_module_count
                       end
@@ -139,10 +137,6 @@ module ContentSearch
                 when :package
                   Package.legacy_search('', offset, page_size, view_repos.map(&:pulp_id),
                                  [:nvrea_sort, "ASC"], search_mode)
-                when :errata
-                  Errata.legacy_search('', :start => offset, :page_size => page_size,
-                                    :filters => {:repoids => view_repos.map(&:pulp_id)},
-                                    :search_mode => search_mode)
                 when :puppet_module
                   PuppetModule.legacy_search('', :start => offset, :page_size => page_size,
                                              :repoids => view_repos.map(&:pulp_id),

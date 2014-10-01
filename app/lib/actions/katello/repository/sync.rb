@@ -45,7 +45,8 @@ module Actions
             plan_action(Katello::Repository::CorrectChecksum, repo)
             plan_action(Katello::Repository::UpdateMedia, repo)
           end
-          plan_self(:sync_result => sync_task.output)
+          plan_self(:id => repo.id, :sync_result => sync_task.output)
+          plan_action(Pulp::Repository::RegenerateApplicability, :pulp_id => repo.pulp_id)
         end
 
         def run
@@ -66,6 +67,15 @@ module Actions
             pulp_task.fetch(:task_id)
           end
         end
+
+        def finalize
+          ::User.current = ::User.anonymous_admin
+          repo = ::Katello::Repository.find(input[:id])
+          repo.import_system_applicability
+        ensure
+          ::User.current = nil
+        end
+
       end
     end
   end

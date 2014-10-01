@@ -1,7 +1,8 @@
 object @resource
 
-attributes :title, :id, :errata_id
+attributes :uuid => :id
+attributes :title, :errata_id
 attributes :issued
 attributes :_href
 
-attributes :type
+attributes :errata_type => :type

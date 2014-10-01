@@ -49,12 +49,6 @@ module Glue::ElasticSearch::ContentView
     result.length > 0 ? result.total : 0
   end
 
-  def total_errata_count(env)
-    repo_ids = self.repos(env).collect{|r| r.pulp_id}
-    results = Katello::Errata.legacy_search('', :page_size => 1, :filters => {:repoids => repo_ids})
-    results.empty? ? 0 : results.total
-  end
-
   def total_puppet_module_count(env)
     repoids = self.repos(env).collect{|r| r.pulp_id}
     result = Katello::PuppetModule.legacy_search('*', :page_size => 1, :repoids => repoids)

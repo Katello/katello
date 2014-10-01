@@ -81,7 +81,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     product.expect(:gpg_key, nil)
     product.expect(:organization, @organization)
     product.expect(:redhat?, false)
-    assert_sync_task(::Actions::Katello::Repository::Create, @repository)
+    assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
     Product.stub(:find, product) do
       post :create, :name => 'Fedora Repository',
@@ -110,7 +110,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     product.expect(:gpg_key, nil)
     product.expect(:organization, @organization)
     product.expect(:redhat?, false)
-    assert_sync_task(::Actions::Katello::Repository::Create, @repository)
+    assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
     Product.stub(:find, product) do
       post :create, :name => 'Fedora Repository',
@@ -141,7 +141,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     ])
     product.expect(:organization, @organization)
     product.expect(:redhat?, false)
-    assert_sync_task(::Actions::Katello::Repository::Create, @repository)
+    assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
     Product.stub(:find, product) do
       post :create, :name => 'Fedora Repository',
@@ -170,7 +170,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     product.expect(:gpg_key, nil)
     product.expect(:organization, @organization)
     product.expect(:redhat?, false)
-    assert_sync_task(::Actions::Katello::Repository::Create, @repository)
+    assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
     Product.stub(:find, product) do
       post :create, :name => 'Fedora Repository',

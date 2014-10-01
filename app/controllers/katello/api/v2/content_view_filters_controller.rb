@@ -91,24 +91,15 @@ class Api::V2::ContentViewFiltersController < Api::V2::ApiController
   param :end_date, DateTime, :desc => N_("End date that Errata was issued on to filter by")
   def available_errata
     current_errata_ids = @filter.erratum_rules.map(&:errata_id)
-    repo_ids = @filter.applicable_repos.select([:pulp_id, "#{Katello::Repository.table_name}.name"])
 
-    search_filters = [
-      { :not => { :terms => { :errata_id_exact => current_errata_ids }}}
-    ]
-    search_filters.concat(Errata.filters(params.merge(:repo_ids => repo_ids)))
-
-    options = sort_params
-    options[:filters] = search_filters
-    options[:fields] = [:errata_id, :id, :type, :title, :issued, :_href]
-
-    collection = item_search(Errata, params, options)
-    collection[:results] = collection[:results].map do |erratum|
-      Katello::Errata.new_from_search(erratum.as_json)
-    end
+    scoped = Erratum.in_repositories(@filter.applicable_repos)
+    scoped = scoped.where('errata_id not in (?)', current_errata_ids) unless current_errata_ids.empty?
+    scoped = scoped.where('issued  >= ?', params[:start_date]) if params[:start_date]
+    scoped = scoped.where('issued  <= ?', params[:end_date]) if params[:end_date]
+    scoped = scoped.of_type(params[:types]) if params[:types]
 
     respond_for_index :template => '../errata/index',
-                      :collection => collection
+                      :collection => scoped_search(scoped, 'issued', 'desc')
   end
 
   api :GET, "/content_views/:content_view_id/filters/:id/available_package_groups",

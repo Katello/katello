@@ -122,13 +122,24 @@ module DashboardHelper
   end
 
   def errata_type_class(errata)
-    case errata.type
-    when Errata::SECURITY
+    case errata.errata_type
+    when Erratum::SECURITY
       return "security_icon"
-    when Errata::ENHANCEMENT
+    when Erratum::ENHANCEMENT
       return "enhancement_icon"
-    when Errata::BUGZILLA
+    when Erratum::BUGZILLA
       return "bugzilla_icon"
+    end
+  end
+
+  def errata_human_type(type)
+    case type
+    when Erratum::SECURITY
+      _('Security')
+    when Erratum::ENHANCEMENT
+      _('Enhancement')
+    when Erratum::BUGZILLA
+      _('Bug Fix')
     end
   end
 

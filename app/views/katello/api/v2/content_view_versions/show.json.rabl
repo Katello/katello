@@ -6,10 +6,17 @@ attributes :version
 attributes :composite_content_view_ids
 attributes :content_view_id
 attributes :default
-attributes :package_count, :errata_count
 attributes :description
+attributes :package_count
 
-attributes :errata_type_counts => :errata_counts
+node :errata_counts do |version|
+  {
+    :security => version.errata.security.count,
+    :bugfix => version.errata.bugfix.count,
+    :enhancement => version.errata.enhancement.count,
+    :total => version.errata.count
+  }
+end
 
 child :content_view => :content_view do
   attributes :id, :name, :label

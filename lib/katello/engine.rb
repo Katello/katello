@@ -160,6 +160,8 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/rubocop.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/asset_compile.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/clean_backend_objects.rake"
+
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.1/import_errata.rake"
     end
 
   end

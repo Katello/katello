@@ -82,6 +82,10 @@ module FixtureTestCase
     self.set_fixture_class :katello_system_host_collections => "Katello::SystemHostCollection"
     self.set_fixture_class :katello_task_statuses => "Katello::TaskStatus"
     self.set_fixture_class :katello_user_notices => "Katello::UserNotice"
+    self.set_fixture_class :katello_errata => "Katello::Erratum"
+    self.set_fixture_class :katello_erratum_packages => "Katello::ErratumPackage"
+    self.set_fixture_class :katello_repository_errata => "Katello::RepositoryErratum"
+    self.set_fixture_class :katello_system_errata => "Katello::SystemErratum"
 
     load_fixtures
     self.fixture_path = "#{Katello::Engine.root}/test/fixtures/models"
@@ -158,6 +162,13 @@ class ActiveSupport::TestCase
     organization.save!
     User.current = saved_user
     organization
+  end
+
+  def mock_active_records(*records)
+    records.each do |record|
+      record.class.stubs(:instantiate).with(has_entry('id', record.id.to_s)).returns(record)
+      record.stubs(:reload).returns(record)
+    end
   end
 
 end
