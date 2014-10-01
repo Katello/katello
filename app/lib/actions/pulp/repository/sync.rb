@@ -61,6 +61,8 @@ module Actions
             Presenters::YumPresenter.new(self)
           elsif repo.try(:file?)
             Presenters::IsoPresenter.new(self)
+          elsif repo.try(:docker?)
+            Presenters::DockerPresenter.new(self)
           end
         end
 
