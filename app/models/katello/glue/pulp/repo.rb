@@ -415,6 +415,14 @@ module Glue::Pulp::Repo
       @repo_puppet_modules
     end
 
+    def docker_image_ids
+      Katello.pulp_server.extensions.repository.docker_image_ids(self.pulp_id)
+    end
+
+    def docker_images
+      @repo_docker_images ||= Katello::DockerImage.find_all(self.pulp_id)
+    end
+
     def has_distribution?(id)
       self.distributions.each do |distro|
         return true if distro.id == id
