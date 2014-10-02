@@ -15,6 +15,7 @@ class Repository < Katello::Model
   self.include_root_in_json = false
 
   before_destroy :assert_deletable
+  before_create :downcase_pulp_id
 
   include ForemanTasks::Concerns::ActionSubject
   include Glue::Candlepin::Content if (Katello.config.use_cp && Katello.config.use_pulp)
@@ -442,6 +443,14 @@ class Repository < Katello::Model
 
         return false
       end
+    end
+  end
+
+  def downcase_pulp_id
+    # Docker doesn't support uppercase letters in repository names.  Since the pulp_id
+    # is currently being used for the name, it will be downcased for this content type.
+    if self.content_type == Repository::DOCKER_TYPE
+      self.pulp_id = self.pulp_id.downcase
     end
   end
 end
