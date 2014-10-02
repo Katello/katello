@@ -52,14 +52,7 @@
           <div translate>
             {{ version.package_count || 0 }} Packages
           </div>
-          <div translate>
-            {{ version.errata_count || 0 }} Errata
-            <span>(</span>
-            <span><i class="icon-warning-sign inline-icon" title="{{ 'Security' | translate }}"></i>{{ version.errata_counts.security || 0 }}</span>
-            <span><i class="icon-bug inline-icon" title="{{ 'Bug Fix' | translate }}"></i>{{ version.errata_counts.bugfix || 0 }}</span>
-            <span><i class="icon-plus-sign-alt inline-icon" title="{{ 'Enhancement' | translate }}"></i>{{ version.errata_counts.enhancement || 0 }}</span>
-            <span>)</span>
-          </div>
+          <div errata-counts="version.errata_counts"></div>
           <div translate>
             {{ version.puppet_modules.length || 0 }} Puppet Modules
           </div>

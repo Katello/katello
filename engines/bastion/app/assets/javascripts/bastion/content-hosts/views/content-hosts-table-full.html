@@ -10,6 +10,9 @@
       <th alch-table-column="status">
         {{ "Subscription Status" | translate }}
       </th>
+      <th alch-table-column="status">
+        <span translate>Applicable Errata</span>
+      </th>
       <th alch-table-column="os"><span translate>OS</span></th>
       <th alch-table-column="environment" sortable><span translate>Environment</span></th>
       <th alch-table-column="contentView"><span translate>Content View</span></th>
@@ -31,6 +34,9 @@
       <td alch-table-cell>
         <span class="icon-circle" ng-class="contentHostTable.getStatusColor(contentHost.entitlementStatus)">
         </span>
+      </td>
+      <td>
+        <span errata-counts="contentHost.errata_counts"></span>
       </td>
       <td alch-table-cell>{{ contentHost.distribution }}</td>
       <td alch-table-cell>{{ contentHost.environment.name }}</td>
