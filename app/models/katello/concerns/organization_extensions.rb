@@ -140,6 +140,10 @@ module Katello
           redhat_provider.repository_url
         end
 
+        def redhat_docker_registry_url
+          redhat_provider.docker_registry_url
+        end
+
         def being_deleted?
           ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Organization::Destroy).
             for_resource(self).active.any?

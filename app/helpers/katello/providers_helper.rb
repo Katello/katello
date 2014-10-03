@@ -22,6 +22,7 @@ module ProvidersHelper
       {:id => :debug, :name => _('Debug RPMs'), :products => {}},
       {:id => :beta, :name => _('Beta'), :products => {}},
       {:id => :isos, :name => _('ISOs'), :products => {}},
+      {:id => :docker_images, :name => _('Docker Images'), :products => {}},
       {:id => :other, :name => _('Other'), :products => {}}
     ]
   end
@@ -33,7 +34,9 @@ module ProvidersHelper
     provider.products.engineering.each do |product|
       product.productContent.each do |prod_content|
         name = prod_content.content.name
-        if name.include?(" Beta ")
+        if prod_content.content.type == "containerImage"
+          key = :docker_images
+        elsif name.include?(" Beta ")
           key = :beta
         elsif name.include?("(Source RPMs)")
           key = :srpms
