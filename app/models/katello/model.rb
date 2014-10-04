@@ -12,10 +12,8 @@
 
 module Katello
   class Model < ActiveRecord::Base
+    include ActiveModel::ForbiddenAttributesProtection
     self.abstract_class = true
-
-    # remove once foreman has strong_parameters or Rails 4
-    include Katello::ForbiddenAttributesProtection
 
     def destroy!
       unless destroy
