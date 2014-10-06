@@ -92,16 +92,16 @@ describe('Factory: ActivationKey', function() {
         });
     });
 
-    it('ActivationKey.removeSubscriptions PUT /api/v2/activation_keys/1/subscriptions', function() {
-        $httpBackend.expectPUT('/api/v2/activation_keys/1/subscriptions').respond(activationKeys.results[0]);
+    it('ActivationKey.removeSubscriptions PUT /api/v2/activation_keys/1/remove_subscriptions', function() {
+        $httpBackend.expectPUT('/api/v2/activation_keys/1/remove_subscriptions').respond(activationKeys.results[0]);
 
         ActivationKey.removeSubscriptions({id: 1}, function(response) {
             expect(response).toBeDefined();
         });
     });
 
-    it('ActivationKey.addSubscriptions POST /api/v2/activation_keys/1/subscriptions', function() {
-        $httpBackend.expectPOST('/api/v2/activation_keys/1/subscriptions').respond(activationKeys.results[0]);
+    it('ActivationKey.addSubscriptions PUT /api/v2/activation_keys/1/add_subscriptions', function() {
+        $httpBackend.expectPUT('/api/v2/activation_keys/1/add_subscriptions').respond(activationKeys.results[0]);
 
         ActivationKey.addSubscriptions({id: 1}, function(response) {
             expect(response).toBeDefined();

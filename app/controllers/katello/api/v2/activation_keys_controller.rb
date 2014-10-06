@@ -18,7 +18,7 @@ module Katello
     before_filter :find_optional_organization, :only => [:index, :create, :show]
     before_filter :find_activation_key, :only => [:update, :destroy, :available_releases,
                                                   :available_host_collections, :add_host_collections, :remove_host_collections,
-                                                  :content_override]
+                                                  :content_override, :add_subscriptions, :remove_subscriptions]
     before_filter :authorize
     before_filter :load_search_service, :only => [:show, :index, :available_host_collections]
     before_filter :search_for_activation_key, :only => [:show]
@@ -135,6 +135,40 @@ module Katello
       respond_for_show
     end
 
+    api :PUT, "/activation_keys/:id/add_subscriptions", N_("Attach a subscription")
+    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :subscription_id, :number, :desc => N_("Subscription identifier"), :required => false
+    param :quantity, :number, :desc => N_("Quantity of this subscription to add"), :required => false
+    param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
+      param :id, String, :desc => N_("Subscription Pool uuid"), :required => false
+      param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => false
+    end
+    def add_subscriptions
+      if params[:subscriptions]
+        params[:subscriptions].each { |subscription| @activation_key.subscribe(subscription[:id], subscription[:quantity]) }
+      elsif params[:subscription_id]
+        @activation_key.subscribe(params[:subscription_id], params[:quantity])
+      end
+
+      respond_for_index(:collection => subscription_index, :template => 'subscriptions')
+    end
+
+    api :PUT, "/activation_keys/:id/remove_subscriptions", N_("Unattach a subscription")
+    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :subscription_id, String, :desc => N_("Subscription ID"), :required => false
+    param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
+      param :id, String, :desc => N_("Subscription Pool uuid"), :required => false
+    end
+    def remove_subscriptions
+      if params[:subscriptions]
+        params[:subscriptions].each { |subscription| @activation_key.unsubscribe(subscription[:id]) }
+      elsif params[:subscription_id]
+        @activation_key.unsubscribe(params[:subscription_id])
+      end
+
+      respond_for_index(:collection => subscription_index, :template => 'subscriptions')
+    end
+
     def content_override
       content_override = params[:content_override]
       @activation_key.set_content_override(content_override[:content_label],
@@ -143,6 +177,18 @@ module Katello
     end
 
     private
+
+    def subscription_index
+      subs = @activation_key.subscriptions
+      subscriptions = {
+        :results => subs,
+        :subtotal => subs.count,
+        :total => subs.count,
+        :page => 1,
+        :per_page => subs.count
+      }
+      subscriptions
+    end
 
     def find_environment
       environment_id = params[:environment_id]
