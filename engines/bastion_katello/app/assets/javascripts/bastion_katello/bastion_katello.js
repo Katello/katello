@@ -40,6 +40,12 @@
 //= require "bastion_katello/packages/packages.module.js"
 //= require_tree "./packages"
 
+//= require "bastion_katello/package-groups/package-groups.module.js"
+//= require_tree "./package-groups"
+
+//= require "bastion_katello/puppet-modules/puppet-modules.module.js"
+//= require_tree "./puppet-modules"
+
 //= require "bastion_katello/products/products.module.js"
 //= require_tree "./products"
 

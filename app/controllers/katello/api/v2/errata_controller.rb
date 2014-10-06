@@ -23,7 +23,7 @@ module Katello
     end
 
     def default_sort
-      %w(issued desc)
+      %w(updated desc)
     end
   end
 end

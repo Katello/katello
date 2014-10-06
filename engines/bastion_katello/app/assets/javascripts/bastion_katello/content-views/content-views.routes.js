@@ -65,6 +65,7 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
             }
         }
     })
+
     .state('content-views.details.versions', {
         collapsed: true,
         url: '/versions',
@@ -72,6 +73,55 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         controller: 'ContentViewVersionsController',
         templateUrl: 'content-views/details/views/content-view-versions.html'
     })
+    .state('content-views.details.version', {
+        collapsed: true,
+        abstract: true,
+        url: '/versions/:versionId',
+        controller: 'ContentViewVersionController',
+        templateUrl: 'content-views/versions/views/content-view-version.html'
+    })
+    .state('content-views.details.version.details', {
+        collapsed: true,
+        url: '/details',
+        permission: 'view_content_views',
+        templateUrl: 'content-views/versions/views/content-view-version-details.html'
+    })
+    .state('content-views.details.version.repositories', {
+        collapsed: true,
+        url: '/repositories',
+        permission: 'view_content_views',
+        controller: 'ContentViewVersionContentController',
+        templateUrl: 'content-views/versions/views/content-view-version-repositories.html'
+    })
+    .state('content-views.details.version.packages', {
+        collapsed: true,
+        url: '/packages',
+        permission: 'view_content_views',
+        controller: 'ContentViewVersionContentController',
+        templateUrl: 'content-views/versions/views/content-view-version-packages.html'
+    })
+    .state('content-views.details.version.package-groups', {
+        collapsed: true,
+        url: '/package_groups',
+        permission: 'view_content_views',
+        controller: 'ContentViewVersionContentController',
+        templateUrl: 'content-views/versions/views/content-view-version-package-groups.html'
+    })
+    .state('content-views.details.version.errata', {
+        collapsed: true,
+        url: '/errata',
+        permission: 'view_content_views',
+        controller: 'ContentViewVersionContentController',
+        templateUrl: 'content-views/versions/views/content-view-version-errata.html'
+    })
+    .state('content-views.details.version.puppet-modules', {
+        collapsed: true,
+        url: '/puppet_modules',
+        permission: 'view_content_views',
+        controller: 'ContentViewVersionContentController',
+        templateUrl: 'content-views/versions/views/content-view-version-puppet-modules.html'
+    })
+
     .state('content-views.details.promotion', {
         collapsed: true,
         url: '/versions/:versionId/promotion',

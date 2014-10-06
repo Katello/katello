@@ -23,7 +23,10 @@
 angular.module('Bastion.errata').factory('Erratum',
     ['BastionResource', function (BastionResource) {
 
-        return BastionResource('/api/v2/errata/:id/', {id: '@id'}, {});
+        return BastionResource('/api/v2/errata/:id/',
+            {id: '@id', 'sort_by': 'issued', 'sort_order': 'DESC'},
+            {}
+        );
 
     }]
 );

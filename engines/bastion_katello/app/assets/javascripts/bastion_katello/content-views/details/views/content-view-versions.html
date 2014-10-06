@@ -27,7 +27,9 @@
 
     <tbody>
       <tr alch-table-row ng-repeat="version in versions | filter:filterTerm">
-        <td alch-table-cell translate>Version {{ version.version }}</td>
+        <td alch-table-cell translate>
+          <a ui-sref="content-views.details.version.details({versionId: version.id})" >Version {{ version.version }}</a>
+        </td>
         <td alch-table-cell >
           <a ui-sref="content-views.details.history" ng-hide="hideProgress(version)">
             <div ng-class="{ active: taskInProgress(version) }"
