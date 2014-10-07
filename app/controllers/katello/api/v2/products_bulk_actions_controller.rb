@@ -38,17 +38,13 @@ module Katello
     param :ids, Array, :desc => N_("List of product ids"), :required => true
     def sync_products
       syncable_products = @products.syncable
-      syncable_products.each(&:sync)
+      syncable_repositories = Repository.where(:product_id => syncable_products).has_url
 
-      messages = format_bulk_action_messages(
-        :success    => _("Successfully started sync for %s product(s), you are free to leave this page."),
-        :error      => _("You were not allowed to sync %s"),
-        :models     => @products,
-        :authorized => syncable_products
-      )
+      task = async_task(::Actions::BulkAction,
+                        ::Actions::Katello::Repository::Sync,
+                        syncable_repositories)
 
-      respond_for_show :template => 'bulk_action', :resource_name => 'common',
-                       :resource => { 'displayMessages' => messages }
+      respond_for_async :resource => task
     end
 
     api :PUT, "/products/bulk/sync_plan", N_("Sync one or more products")

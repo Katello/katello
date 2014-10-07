@@ -31,6 +31,15 @@ module Katello
       refute_nil ::Redhat.find_or_create_operating_system(@my_distro)
     end
 
+    def test_find_or_create_os_without_minor
+      other_distro = OpenStruct.new(:name => 'RedHat', :family => 'Red Hat Enterprise Linux', :version => '9')
+      os_count = Operatingsystem.count
+      created = ::Redhat.find_or_create_operating_system(other_distro)
+      created2 = ::Redhat.find_or_create_operating_system(other_distro)
+      assert_equal created, created2
+      assert_equal os_count + 1, Operatingsystem.count
+    end
+
     def test_create_operating_system
       assert_nil ::Redhat.where(:name => @my_distro.name).first
 

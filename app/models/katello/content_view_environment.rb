@@ -24,6 +24,7 @@ class ContentViewEnvironment < Katello::Model
   belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",
     :inverse_of => :content_view_environments
 
+  validates_lengths_from_database
   validates :environment_id, uniqueness: {scope: :content_view_id}, presence: true
   validates :content_view_id, presence: true
 

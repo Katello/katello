@@ -19,6 +19,7 @@ module Katello
 
     wrap_parameters false
 
+    around_filter :repackage_message
     before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin, :enabled_repos,
                                           :upload_package_profile, :regenerate_identity_certificates, :facts,
                                           :available_releases]
@@ -34,6 +35,24 @@ module Katello
     before_filter :proxy_request_path, :proxy_request_body
     before_filter :set_organization_id, :except => :hypervisors_update
     before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
+
+    def repackage_message
+      yield
+    ensure
+      if response.status >= 400
+        begin
+          body_json = JSON.parse(response.body)
+          if body_json['message'] && body_json['displayMessage'].nil?
+            body_json['displayMessage'] = body_json['message']
+          end
+          response.body = body_json.to_s
+
+        # rubocop:disable HandleExceptions
+        rescue JSON::ParserError
+          # Not a json response, leave as-is
+        end
+      end
+    end
 
     rescue_from RestClient::Exception do |e|
       Rails.logger.error pp_exception(e)

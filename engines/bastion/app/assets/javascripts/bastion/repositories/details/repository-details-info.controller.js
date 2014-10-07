@@ -136,6 +136,13 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             return $scope.getRepoNonDeletableReason(repo, product) === null;
         };
 
+        $scope.checksumTypeDisplay = function (checksum) {
+            if (checksum === null) {
+                checksum = translate('Default');
+            }
+            return checksum;
+        };
+
         updateRepositoriesTable = function () {
             $scope.repositoriesTable.replaceRow($scope.repository);
         };

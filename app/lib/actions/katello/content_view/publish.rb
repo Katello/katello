@@ -15,10 +15,10 @@ module Actions
     module ContentView
       class Publish < Actions::EntryAction
 
-        def plan(content_view)
+        def plan(content_view, description = "")
           action_subject(content_view)
           content_view.check_ready_to_publish!
-          version = content_view.create_new_version
+          version = content_view.create_new_version(description)
           library = content_view.organization.library
 
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,

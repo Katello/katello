@@ -53,6 +53,7 @@ class ContentView < Katello::Model
   has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict
   has_many :systems, :class_name => "Katello::System", :dependent => :restrict
 
+  validates_lengths_from_database :except => [:label]
   validates :label, :uniqueness => {:scope => :organization_id},
                     :presence => true
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
@@ -365,9 +366,11 @@ class ContentView < Katello::Model
     ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.try(:cp_id)
   end
 
-  def create_new_version
+  def create_new_version(description = "")
     version = ContentViewVersion.create!(:version => next_version,
-                                         :content_view => self)
+                                         :content_view => self,
+                                         :description => description
+                                        )
     increment!(:next_version)
 
     version

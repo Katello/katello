@@ -13,7 +13,9 @@ attributes :gpg_key_id
 attributes :redhat? => :redhat
 
 attributes :productContent => :product_content
-attributes :available_content
+
+child :available_content => :available_content, :object_root => false do
+end
 
 node :repository_count do |product|
   if product.library_repositories.to_a.any?
@@ -48,10 +50,11 @@ node :permissions do |product|
   }
 end
 
-attributes :published_content_views
+child :published_content_views => :published_content_views, :object_root => false do
+end
 
 node :readonly do |product|
-  product.redhat? 
+  product.redhat?
 end
 
 extends 'katello/api/v2/common/timestamps'

@@ -51,6 +51,7 @@ class KTEnvironment < Katello::Model
   scope :non_library, where(library: false)
   scope :library, where(library: true)
 
+  validates_lengths_from_database :except => [:label]
   validates :organization, :presence => true
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id,
                                                       :message => N_("of environment must be unique within one organization")},
@@ -61,7 +62,6 @@ class KTEnvironment < Katello::Model
                     :exclusion => { :in => [ContentView::CONTENT_DIR], :message => N_(": '%s' is a built-in environment") % ContentView::CONTENT_DIR }
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
-  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_with Validators::PriorValidator
   validates_with Validators::PathDescendentsValidator
 

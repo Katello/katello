@@ -16,5 +16,7 @@ class JobTask < Katello::Model
 
   belongs_to :job, :inverse_of => :job_tasks
   belongs_to :task_status, :inverse_of => :job_task
+
+  validates_lengths_from_database
 end
 end

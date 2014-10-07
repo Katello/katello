@@ -29,9 +29,9 @@ class HostCollection < Katello::Model
 
   has_many :jobs, :class_name => "Katello::Job", :as => :job_owner, :dependent => :nullify
 
+  validates_lengths_from_database
   validates :name, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
-  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates :organization_id, :presence => {:message => N_("Organization cannot be blank.")}
   validates :name, :uniqueness => {:scope => :organization_id, :message => N_("must be unique within one organization")}
   validates :content_host_limit, :numericality => {:only_integer => true,

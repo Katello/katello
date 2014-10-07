@@ -36,7 +36,8 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     param :url, String, :required => true, :desc => N_("repository source url")
     param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
     param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
-    param :content_type, String, :desc => N_("type of repo ('yum', 'puppet' or 'docker', defaults to 'yum')")
+    param :content_type, String, :desc => N_("type of repo (either 'yum', 'puppet' or 'docker', defaults to 'yum')")
+    param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.'")
   end
 
   api :GET, "/repositories", N_("List of enabled repositories")
@@ -85,7 +86,8 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     repo_params[:url] = nil if repo_params[:url].blank?
 
     repository = @product.add_repo(repo_params[:label], repo_params[:name], repo_params[:url],
-                                   repo_params[:content_type], repo_params[:unprotected], gpg_key)
+                                   repo_params[:content_type], repo_params[:unprotected],
+                                   gpg_key, repository_params[:checksum_type])
     sync_task(::Actions::Katello::Repository::Create, repository)
     repository = Repository.find(repository.id)
     respond_for_show(:resource => repository)
@@ -109,6 +111,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   param :id, :identifier, :required => true, :desc => N_("repository ID")
   param :gpg_key_id, :number, :desc => N_("ID of a gpg key that will be assigned to this repository")
   param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
+  param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.'")
   param :url, String, :desc => N_("the feed url of the original repository ")
   def update
     repo_params = repository_params
@@ -235,7 +238,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   end
 
   def repository_params
-    keys = [:url, :gpg_key_id, :unprotected, :name]
+    keys = [:url, :gpg_key_id, :unprotected, :name, :checksum_type]
     keys += [:label, :content_type] if params[:action] == "create"
     params.require(:repository).permit(*keys)
   end

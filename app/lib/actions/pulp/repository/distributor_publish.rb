@@ -51,6 +51,10 @@ module Actions
           pulp_extensions.repository.retrieve_with_details(pulp_id)
         end
 
+        def humanized_name
+          _("Repository metadata publish")
+        end
+
       end
     end
   end

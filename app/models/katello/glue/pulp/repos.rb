@@ -292,7 +292,7 @@ module Glue::Pulp::Repos
       end
     end
 
-    def add_repo(label, name, url, repo_type, unprotected = false, gpg = nil)
+    def add_repo(label, name, url, repo_type, unprotected = false, gpg = nil, checksum_type = nil)
       unprotected = unprotected.nil? ? false : unprotected
 
       Repository.new(:environment => self.organization.library,
@@ -306,6 +306,7 @@ module Glue::Pulp::Repos
                      :gpg_key => gpg,
                      :unprotected => unprotected,
                      :content_type => repo_type,
+                     :checksum_type => checksum_type,
                      :content_view_version => self.organization.library.default_content_view_version)
     end
 

@@ -5,7 +5,7 @@ extends 'katello/api/v2/common/org_reference'
 extends 'katello/api/v2/common/timestamps'
 
 attributes :content_type
-attributes :unprotected, :full_path
+attributes :unprotected, :full_path, :checksum_type
 attributes :url,
            :relative_path
 attributes :major, :minor

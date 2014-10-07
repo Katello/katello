@@ -27,6 +27,8 @@ class Pool < Katello::Model
   attr_accessor :subscription_id
   attr_accessor :amount
 
+  validates_lengths_from_database
+
   DAYS_EXPIRING_SOON = 120
   DAYS_RECENTLY_EXPIRED = 30
 

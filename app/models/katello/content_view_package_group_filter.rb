@@ -18,6 +18,7 @@ class ContentViewPackageGroupFilter < ContentViewFilter
 
   has_many :package_group_rules, :dependent => :destroy, :foreign_key => :content_view_filter_id,
            :class_name => "Katello::ContentViewPackageGroupFilterRule"
+  validates_lengths_from_database
 
   def generate_clauses(repo)
     package_group_ids = package_group_rules.reject{ |rule| rule.uuid.blank? }.flat_map do |rule|

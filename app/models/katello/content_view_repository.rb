@@ -21,6 +21,7 @@ module Katello
     belongs_to :repository, :inverse_of => :content_view_repositories,
       :class_name => "Katello::Repository"
 
+    validates_lengths_from_database
     validates :repository_id, :uniqueness => {:scope => :content_view_id}
     validate :content_view_composite
     validate :ensure_repository_type

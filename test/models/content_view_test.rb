@@ -49,6 +49,16 @@ class ContentViewTest < ActiveSupport::TestCase
     assert content_view.save
   end
 
+  def test_create_with_name
+    content_view = FactoryGirl.build(:katello_content_view)
+    content_view.name = (?a * 256)
+    refute content_view.valid?
+    assert_equal 1, content_view.errors.size
+
+    content_view.name = content_view.name[0...-1]
+    assert content_view.valid?
+  end
+
   def test_bad_name
     content_view = FactoryGirl.build(:katello_content_view, :name => "")
     assert content_view.invalid?
@@ -434,5 +444,9 @@ class ContentViewTest < ActiveSupport::TestCase
     end
   end
 
+  def test_content_view_version_publish_description
+    @library_view.create_new_version("Awesome")
+    assert_equal "Awesome", @library_view.versions.reload.last.description
+  end
 end
 end

@@ -38,6 +38,8 @@ class ContentViewVersion < Katello::Model
 
   delegate :default, :default?, to: :content_view
 
+  validates_lengths_from_database
+
   scope :default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true)
   scope :non_default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false)
 
@@ -131,6 +133,10 @@ class ContentViewVersion < Katello::Model
   def deletable?(from_env)
     !System.exists?(:environment_id => from_env, :content_view_id => self.content_view) ||
         self.content_view.versions.in_environment(from_env).count > 1
+  end
+
+  def promotable?(environment)
+    environments.include?(environment.prior) || environments.empty? && environment == organization.library
   end
 
   def archive_puppet_environment

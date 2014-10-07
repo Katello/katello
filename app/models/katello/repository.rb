@@ -14,6 +14,7 @@ module Katello
 class Repository < Katello::Model
   self.include_root_in_json = false
 
+  validates_lengths_from_database :except => [:label]
   before_destroy :assert_deletable
   before_create :downcase_pulp_id
 
@@ -34,6 +35,7 @@ class Repository < Katello::Model
   DOCKER_TYPE = 'docker'
   TYPES = [YUM_TYPE, FILE_TYPE, PUPPET_TYPE, DOCKER_TYPE]
   SELECTABLE_TYPES = [YUM_TYPE, PUPPET_TYPE, DOCKER_TYPE]
+  CHECKSUM_TYPES = %w(sha1 sha256)
 
   belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
   belongs_to :product, :inverse_of => :repositories
@@ -55,6 +57,7 @@ class Repository < Katello::Model
 
   validates :product_id, :presence => true
   validates :pulp_id, :presence => true, :uniqueness => true, :if => proc {|r| r.name.present?}
+  validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES, :allow_blank => true}
   #validates :content_id, :presence => true #add back after fixing add_repo orchestration
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name

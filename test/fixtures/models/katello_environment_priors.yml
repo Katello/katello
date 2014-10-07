@@ -2,6 +2,14 @@ dev_library_prior:
   prior_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
 
+test_dev_prior:
+  prior_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:test) %>
+
+test_beta_prior:
+  prior_id: <%= ActiveRecord::Fixtures.identify(:test) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:beta) %>
+
 staging_library_prior:
   prior_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   environment_id: <%= ActiveRecord::Fixtures.identify(:staging) %>

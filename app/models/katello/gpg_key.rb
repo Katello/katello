@@ -24,6 +24,7 @@ class GpgKey < Katello::Model
 
   belongs_to :organization, :inverse_of => :gpg_keys
 
+  validates_lengths_from_database
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id,
                                                       :message => N_("has already been taken")}
   validates :content, :presence => true, :length => {:maximum => MAX_CONTENT_LENGTH}

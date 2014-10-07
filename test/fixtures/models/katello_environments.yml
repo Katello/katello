@@ -11,6 +11,18 @@ dev:
   label:          dev_label
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
+test:
+  name:           Test_env
+  description:    Test environment.
+  label:          test_label
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+
+beta:
+  name:           Beta
+  description:    Beta environment.
+  label:          beta_label
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+
 staging:
   name:           Staging
   description:    Staging environment.
