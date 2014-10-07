@@ -30,10 +30,7 @@ module Actions
                         :type => repository.content_type)
           end
 
-          allowed_changes = %w(url unprotected checksum_type)
-          if ::Katello.config.use_pulp && ((repository.previous_changes.key?('name') && repository.docker?) ||
-              (allowed_changes & repository.previous_changes.keys).any?)) &&
-              !repository.product.provider.redhat_provider?
+          if ::Katello.config.use_pulp && repository.pulp_update_needed?
             plan_action(::Actions::Pulp::Repository::Refresh, repository)
           end
 

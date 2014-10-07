@@ -454,6 +454,14 @@ module Glue::Pulp::Repo
       return false
     end
 
+    def pulp_update_needed?
+      unless redhat?
+        allowed_changes = %w(url unprotected checksum_type)
+        allowed_changes << "name" if docker?
+        allowed_changes.any? {|key| previous_changes.key?(key)}
+      end
+    end
+
     def sync(options = {})
       sync_options = {}
       sync_options[:max_speed] ||= Katello.config.pulp.sync_KBlimit if Katello.config.pulp.sync_KBlimit # set bandwidth limit
