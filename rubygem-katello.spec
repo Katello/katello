@@ -79,6 +79,7 @@ Requires(preun): initscripts
 #Pulp Requirements
 Requires: pulp-katello
 Requires: pulp-nodes-parent
+Requires: pulp-docker-plugins
 Requires: pulp-puppet-plugins
 Requires: pulp-rpm-plugins
 Requires: pulp-puppet-tools
