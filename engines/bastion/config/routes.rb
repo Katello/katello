@@ -5,6 +5,7 @@ Bastion::Engine.routes.draw do
         activation_keys
         content_hosts
         content_views
+        errata
         gpg_keys
         lifecycle_environments
         products
