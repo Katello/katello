@@ -18,10 +18,10 @@ class CustomInfo < Katello::Model
 
   belongs_to :informable, :polymorphic => true
 
-  validates :keyname, :presence => true, :length => { :maximum => 255 },
+  validates_lengths_from_database
+  validates :keyname, :presence => true,
                       :uniqueness => {:scope => [:informable_type, :informable_id],
                                       :message => "already exists for this object"}
-  validates :value, :length => { :maximum => 255 }
 
   validates :informable_id, :presence => true
   validates :informable_type, :presence => true

@@ -250,6 +250,7 @@ class RepositoryInstanceTest < RepositoryTestBase
 
   def new_custom_repo
     new_custom_repo = @fedora_17_x86_64.clone
+    new_custom_repo.stubs(:label_not_changed).returns(true)
     new_custom_repo.name = "new_custom_repo"
     new_custom_repo.label = "new_custom_repo"
     new_custom_repo.pulp_id = "new_custom_repo"
@@ -291,6 +292,12 @@ class RepositoryInstanceTest < RepositoryTestBase
     assert lib_yum_repo.node_syncable?
     refute lib_puppet_repo.node_syncable?
     refute lib_iso_repo.node_syncable?
+  end
+
+  def test_bad_checksum
+    @fedora_17_x86_64.checksum_type = 'XOR'
+    refute @fedora_17_x86_64.valid?
+    refute @fedora_17_x86_64.save
   end
 
 end

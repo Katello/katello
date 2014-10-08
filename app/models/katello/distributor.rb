@@ -31,13 +31,12 @@ class Distributor < Katello::Model
   has_many :custom_info, :class_name => "Katello::CustomInfo", :as => :informable, :dependent => :destroy
   belongs_to :content_view, :inverse_of => :distributors
 
+  validates_lengths_from_database
   validates :environment, :presence => true
   # multiple distributors with a single name are supported
-  validates :name, :presence => true, :length => {:maximum => 250}
-  validates :location, :length => {:maximum => 255}
+  validates :name, :presence => true
   validates_with Validators::UniqueFieldInOrg, :attributes => :name
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
-  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_with Validators::ContentViewEnvironmentValidator
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 

@@ -42,7 +42,7 @@
             = label :distributor, :description, _("Description")
           .input
             .value
-              #distributor_description{'name' => 'distributor[description]', :class=>("editable edit_textarea" if editable), 'data-maxlength' => default_description_limit, 'data-url'=>distributor_path(distributor.id)} #{distributor[:description]}
+              #distributor_description{'name' => 'distributor[description]', :class=>("editable edit_textarea" if editable), 'data-url'=>distributor_path(distributor.id)} #{distributor[:description]}
         - if Katello.config.katello?
           %h5 #{_("Content Available From")}
           .control-group

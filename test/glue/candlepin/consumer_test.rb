@@ -37,7 +37,8 @@ class GlueCandlepinConsumerTestBase < ActiveSupport::TestCase
 
     @@org      = Organization.find(@loaded_fixtures['taxonomies']['organization2']['id'])
     @@org.setup_label_from_name
-    @@org.save
+    @@org.stubs(:label_not_changed).returns(true)
+    @@org.save!
 
     @@dev_cv   = ContentView.find(@loaded_fixtures['katello_content_views']['candlepin_library_dev_cv']['id'])
     @@dev_cve  = ContentViewEnvironment.find(@loaded_fixtures['katello_content_view_environments']['candlepin_library_dev_cve']['id'])

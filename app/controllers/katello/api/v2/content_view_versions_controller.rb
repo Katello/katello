@@ -46,9 +46,12 @@ module Katello
 
     api :POST, "/content_view_versions/:id/promote", N_("Promote a content view version")
     param :id, :identifier, :desc => N_("Content view version identifier"), :required => true
+    param :force, :bool, :desc => N_("force content view promotion and bypass lifecycle environment restriction")
     param :environment_id, :identifier
     def promote
-      task = async_task(::Actions::Katello::ContentView::Promote, @version, @environment)
+      is_force = params[:force].is_a?(String) ? params[:force].to_bool : params[:force]
+      task = async_task(::Actions::Katello::ContentView::Promote,
+                        @version, @environment, is_force)
       respond_for_async :resource => task
     end
 

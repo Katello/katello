@@ -24,7 +24,9 @@ if [ -x /etc/init.d/tomcat6 -o -x /lib/systemd/system/tomcat6.service ]; then
   TOMCAT="tomcat6"
 fi
 
-SERVICES="$TOMCAT mongod qpidd elasticsearch pulp_resource_manager pulp_workers pulp_celerybeat httpd foreman-tasks"
+# qpidd needs to be started prior to tomcat. candlepin currently does not automatically reconnect to qpidd
+# when qpidd is restarted. Order should not mater when Bugzilla 1147263 is resolved.
+SERVICES="qpidd $TOMCAT mongod elasticsearch pulp_resource_manager pulp_workers pulp_celerybeat httpd foreman-tasks"
 if [ -f /etc/katello/service-list ] ; then
   . /etc/katello/service-list
 fi

@@ -30,8 +30,10 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
         $scope.version = {};
 
         $scope.publish = function (contentView) {
+            var description = $scope.version.description,
+                data = {'id': contentView.id, 'description': description};
             $scope.working = true;
-            ContentView.publish(contentView, success, failure);
+            ContentView.publish(data, success, failure);
         };
 
         function success() {

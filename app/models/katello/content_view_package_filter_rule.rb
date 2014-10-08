@@ -21,6 +21,7 @@ module Katello
                :inverse_of => :package_rules,
                :foreign_key => :content_view_filter_id
 
+    validates_lengths_from_database
     validates :name, :presence => true
     validates_with Validators::ContentViewFilterVersionValidator
   end

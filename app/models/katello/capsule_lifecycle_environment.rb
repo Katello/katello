@@ -12,6 +12,7 @@
 
 module Katello
 class CapsuleLifecycleEnvironment < Katello::Model
+  validates_lengths_from_database
   validates :lifecycle_environment_id,
             :uniqueness => { :scope => :capsule_id,
                              :message => _("is already attached to the capsule") }

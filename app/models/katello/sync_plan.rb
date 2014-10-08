@@ -31,12 +31,12 @@ class SyncPlan < Katello::Model
   belongs_to :organization, :inverse_of => :sync_plans
   has_many :products, :class_name => "Katello::Product", :dependent => :nullify
 
+  validates_lengths_from_database
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
   validates :interval, :inclusion => {:in => TYPES}, :allow_blank => false
   validates :enabled, :inclusion => [true, false]
   validate :validate_sync_date
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
-  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
   before_save :reassign_sync_plan_to_products
 

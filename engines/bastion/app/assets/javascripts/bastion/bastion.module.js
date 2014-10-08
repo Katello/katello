@@ -68,7 +68,7 @@ angular.module('Bastion').config(
                 $window.location.href = oldBrowserBastionPath + $location.path();
             }
 
-            if (path.slice(0, '/katello'.length) === '/katello') {
+            if (/^\/katello($|\/)/.test(path)) {
                 $window.location.href = $location.url();
                 $window.location.reload();
             }

@@ -57,11 +57,11 @@ class System < Katello::Model
 
   belongs_to :content_view, :inverse_of => :systems
 
+  validates_lengths_from_database
   before_validation :set_default_content_view, :unless => :persisted?
   validates :environment, :presence => true
   validates :content_view, :presence => true, :allow_blank => false
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
-  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates :location, :length => {:maximum => 255}
   validates_with Validators::ContentViewEnvironmentValidator
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -234,6 +234,10 @@ class System < Katello::Model
     run_hook(:as_json_hook, json)
 
     json
+  end
+
+  def hypervisor?
+    self.is_a? Hypervisor
   end
 
   def system_type

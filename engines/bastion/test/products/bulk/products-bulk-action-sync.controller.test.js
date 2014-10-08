@@ -26,14 +26,14 @@ describe('Controller: ProductsBulkActionSyncController', function() {
         };
         translate = function() {};
     });
-    
+
     beforeEach(inject(function($controller, $rootScope, _$q_) {
         $scope = $rootScope.$new();
         $q = _$q_;
 
         $scope.actionParams = {};
         $scope.getSelectedProductIds = function () { return selected; };
-        
+
         $controller('ProductsBulkActionSyncController', {
             $scope: $scope,
             ProductBulkAction: ProductBulkAction,
@@ -45,8 +45,7 @@ describe('Controller: ProductsBulkActionSyncController', function() {
         spyOn(ProductBulkAction, 'syncProducts').andCallThrough();
         $scope.syncProducts();
 
-        expect(ProductBulkAction.syncProducts).toHaveBeenCalledWith({ids: [1, 2, 3]}, jasmine.any(Function),
-            jasmine.any(Function));
+        expect(ProductBulkAction.syncProducts).toHaveBeenCalledWith({ids: [1, 2, 3]}, jasmine.any(Function));
     });
 
 });

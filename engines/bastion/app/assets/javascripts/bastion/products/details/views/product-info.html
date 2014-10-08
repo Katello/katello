@@ -97,10 +97,8 @@
       <button class="btn btn-default"
               ng-click="syncProduct()"
               ng-hide="denied('sync_products', product)">
-        <i class="icon-spinner icon-spin" ng-show="productSyncing"></i>
-        <span ng-show="productSyncing" translate>Syncing...</span>
-        <i ng-hide="productSyncing" class="icon-refresh"></i>
-        <span ng-hide="productSyncing" translate>Sync Now</span>
+        <i class="icon-refresh"></i>
+        <span translate>Sync Now</span>
       </button>
     </div>
   </section>

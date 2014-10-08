@@ -25,7 +25,7 @@ module Katello
 
     def models
       @organization = get_organization
-      @products = Product.where(:id => katello_products(:empty_product, :empty_product_2).map(&:id))
+      @products = Product.where(:id => katello_products(:empty_product, :fedora).map(&:id))
       @provider = katello_providers(:fedora_hosted)
     end
 
@@ -68,7 +68,10 @@ module Katello
     end
 
     def test_sync
-      Product.any_instance.expects(:sync).times(@products.length).returns([{}])
+      assert_async_task(::Actions::BulkAction) do |action_class, repos|
+        action_class.must_equal ::Actions::Katello::Repository::Sync
+        repos.size.must_equal 5
+      end
 
       put :sync_products, {:ids => @products.collect(&:id), :organization_id => @organization.id}
 

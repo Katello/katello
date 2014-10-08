@@ -26,8 +26,8 @@
  *   Provides the functionality for manipulating repositories attached to a product.
  */
 angular.module('Bastion.products').controller('ProductRepositoriesController',
-    ['$scope', 'Repository', 'RepositoryBulkAction', 'CurrentOrganization', 'Nutupane',
-    function ($scope, Repository, RepositoryBulkAction, CurrentOrganization, Nutupane) {
+    ['$scope', '$state', 'Repository', 'RepositoryBulkAction', 'CurrentOrganization', 'Nutupane', 'translate',
+    function ($scope, $state, Repository, RepositoryBulkAction, CurrentOrganization, Nutupane, translate) {
         var repositoriesNutupane = new Nutupane(Repository, {
             'product_id': $scope.$stateParams.productId,
             'library': true,
@@ -39,24 +39,16 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
+
+        $scope.checksums = [{name: translate('Default'), id: null}, {id: 'sha256', name: 'sha256'}, {id: 'sha1', name: 'sha1'}];
         $scope.repositoriesTable = repositoriesNutupane.table;
         repositoriesNutupane.query();
 
         $scope.syncSelectedRepositories = function () {
-            var params = getParams(), syncPromise;
+            var params = getParams();
 
-            $scope.syncInProgress = true;
-
-            syncPromise = RepositoryBulkAction.syncRepositories(params, success, error).$promise;
-            $scope.refreshView(syncPromise);
-            
-        };
-
-        $scope.refreshView = function (promise) {
-            promise["finally"](function () {
-                $scope.repositoriesTable.selectAll(false);
-                repositoriesNutupane.refresh();
-                $scope.syncInProgress = false;
+            RepositoryBulkAction.syncRepositories(params, function (task) {
+                $state.go('products.details.tasks.details', {taskId: task.id});
             });
         };
 

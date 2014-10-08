@@ -155,7 +155,7 @@ module Glue::Pulp::Repo
         yum_dist_id = self.pulp_id
         yum_dist_options = {:protected => true, :id => yum_dist_id, :auto_publish => true}
         #check the instance variable, as we do not want to go to pulp
-        yum_dist_options['checksum_type'] = self.checksum_type if self.checksum_type
+        yum_dist_options['checksum_type'] = self.checksum_type
         yum_dist = Runcible::Models::YumDistributor.new(self.relative_path, (self.unprotected || false), true,
                                                         yum_dist_options)
         clone_dist = Runcible::Models::YumCloneDistributor.new(:id => "#{self.pulp_id}_clone",
@@ -452,6 +452,14 @@ module Glue::Pulp::Repo
         return true if err.errata_id == errata_id
       end
       return false
+    end
+
+    def pulp_update_needed?
+      unless redhat?
+        allowed_changes = %w(url unprotected checksum_type)
+        allowed_changes << "name" if docker?
+        allowed_changes.any? {|key| previous_changes.key?(key)}
+      end
     end
 
     def sync(options = {})

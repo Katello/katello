@@ -305,10 +305,6 @@ module ApplicationHelper
     lim.join(", ")
   end
 
-  def default_description_limit
-    return Validators::KatelloDescriptionFormatValidator::MAX_LENGTH
-  end
-
   def repo_selector(repositories, url, field = :repository_id, record = nil)
     products = repositories.map(&:product).uniq.sort_by{ |product| product[:name] }
     repo_ids = repositories.map(&:id)

@@ -18,6 +18,7 @@ module Katello
 
     belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
 
+    validates_lengths_from_database
     validates :content_view_id, :presence => true
     validates :name, :uniqueness => { :scope => :content_view_id }, :allow_blank => true
     validates :uuid, :uniqueness => { :scope => :content_view_id }, :allow_blank => true

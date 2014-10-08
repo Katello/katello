@@ -179,10 +179,10 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   end
 
   def test_sync
-    Product.any_instance.expects(:sync).returns({})
-
+    assert_async_task(::Actions::BulkAction) do |action_class, repos|
+      action_class.must_equal ::Actions::Katello::Repository::Sync
+    end
     post :sync, :id => @product.id
-
     assert_response :success
   end
 
@@ -190,7 +190,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     allowed_perms = [@sync_permission]
     denied_perms = [@read_permission, @update_permission, @delete_permission, @create_permission]
 
-    Product.any_instance.expects(:sync).returns({})
+    assert_async_task(::Actions::BulkAction)
     assert_protected_action(:update, allowed_perms, denied_perms) do
       post :sync, :id => @product.id
     end

@@ -59,28 +59,12 @@ module Katello
     param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def sync_repositories
       syncable_repositories = @repositories.syncable.has_url
-      syncable_repositories.each do |repo|
-        async_task(::Actions::Katello::Repository::Sync, repo)
-      end
 
-      messages1 = format_bulk_action_messages(
-        :success    => "",
-        :error      => _("You do not have permissions to sync %s"),
-        :models     => @repositories,
-        :authorized => @repositories.syncable
-      )
+      task = async_task(::Actions::BulkAction,
+                        ::Actions::Katello::Repository::Sync,
+                        syncable_repositories)
 
-      messages2 = format_bulk_action_messages(
-        :success    => _("Successfully started sync for %s repositories, you are free to leave this page."),
-        :error      => _("Repository %s does not have a feed url."),
-        :models     => @repositories,
-        :authorized => @repositories.has_url
-      )
-
-      messages2[:error] += messages1[:error]
-
-      respond_for_show :template => 'bulk_action', :resource_name => 'common',
-                       :resource => { 'displayMessages' => messages2 }
+      respond_for_async :resource => task
     end
 
     private

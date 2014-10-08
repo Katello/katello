@@ -16,6 +16,8 @@ class PulpTaskStatus < TaskStatus
   WAIT_TIMES = [0.5, 1, 2, 4, 8, 16]
   WAIT_TIME_STEP = 5
 
+  validates_lengths_from_database
+
   def refresh
     PulpTaskStatus.refresh(self)
   end

@@ -45,6 +45,7 @@ class TaskStatus < Katello::Model
   has_one :job_task,  :class_name => "Katello::JobTask", :dependent => :destroy
   has_one :job, :through => :job_task
 
+  validates_lengths_from_database
   before_save :setup_task_type
 
   before_save do |status|
