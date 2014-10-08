@@ -62,7 +62,7 @@ class Api::V2::PuppetModulesControllerTest < ActionController::TestCase
   end
 
   def test_index_protected
-    assert_protected_action(:index, @auth_permissions, @unauth_permissions) do
+    assert_protected_action(:index, @read_permission, @unauth_permissions) do
       get :index, :repository_id => @repo.id
     end
   end
@@ -80,7 +80,7 @@ class Api::V2::PuppetModulesControllerTest < ActionController::TestCase
     puppet_module.stubs(:repoids).returns([@repo.pulp_id])
     PuppetModule.stubs(:find).with("abc-123").returns(puppet_module)
 
-    assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
+    assert_protected_action(:show, @read_permission, @unauth_permissions) do
       get :show, :repository_id => @repo.id, :id => "abc-123"
     end
   end
