@@ -13,24 +13,6 @@
 #
 module Actions
   module Candlepin
-    class MessageStore
-      def initialize
-        @messages = {}
-      end
-
-      def add(id, message)
-        @messages[id] = message
-      end
-
-      def delete(id)
-        @messages.delete(id) if @messages.key?(id)
-      end
-
-      def message(id)
-        @messages[id]
-      end
-    end
-
     class ConnectionError < StandardError
     end
 
@@ -38,8 +20,6 @@ module Actions
       RECONNECT_ATTEMPTS = 30
       TIMEOUT =  Qpid::Messaging::Duration::SECOND
       NO_MESSAGE_AVAILABLE_ERROR_TYPE = 'NoMessageAvailable'
-
-      attr_reader :messages, :errors
 
       class << self
         attr_reader :instance
@@ -49,7 +29,7 @@ module Actions
         end
 
         def close
-          @instance.close
+          @instance.close if @instance
           @instance = nil
         end
       end
@@ -58,9 +38,6 @@ module Actions
         @url = url
         @address = address
         @connection = create_connection
-        @messages = MessageStore.new
-        @errors = {}
-        @counter = 0
         @logger = logger
       end
 
@@ -69,9 +46,8 @@ module Actions
       end
 
       def close
+        @thread.kill if @thread
         @connection.close
-      ensure
-        super
       end
 
       def retrieve
@@ -84,17 +60,11 @@ module Actions
         end
       end
 
-      def acknowledge_message(message_id)
-        @session.acknowledge(@messages.message(message_id))
-        @messages.delete(message_id)
-      end
-
       def start(suspended_action)
         unless @connection.open?
           @connection.open
           @session = @connection.create_session
           @receiver = @session.create_receiver(@address)
-          @messages = Actions::Candlepin::MessageStore.new
         end
         if @connection.open?
           suspended_action.notify_connected
@@ -105,19 +75,12 @@ module Actions
         suspended_action.notify_not_connected(e.message)
       end
 
-      def close
-        @thread.kill if @thread
-      end
-
       def fetch_message(suspended_action)
         result = nil
         begin
           result = retrieve
         rescue Actions::Candlepin::ConnectionError => e
           suspended_action.notify_not_connected(e.message)
-        rescue => e
-          notify_fatal(e)
-          raise e
         end
         result
       end
@@ -126,20 +89,19 @@ module Actions
         @thread.kill if @thread
         @thread = Thread.new do
           loop do
-            @counter += 1
-            message = fetch_message(suspended_action)
-            if message
-              messages.add(@counter, message)
-              suspended_action.notify_message_recieved(@counter)
+            begin
+              message = fetch_message(suspended_action)
+              if message
+                @session.acknowledge(:message => message)
+                suspended_action.notify_message_recieved(message.message_id, message.subject, message.content)
+              end
+              sleep 1
+            rescue => e
+              suspended_action.notify_fatal(e)
+              raise e
             end
-            sleep 3
           end
         end
-      end
-
-      def notify_fatal(error, suspended_action)
-        @errors[@counter] = error
-        suspended_action.notify_fatal(@counter)
       end
     end
   end
