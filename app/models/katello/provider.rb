@@ -24,7 +24,7 @@ class Provider < Katello::Model
   ANONYMOUS = 'Anonymous'.encode('utf-8')
   TYPES = [REDHAT, CUSTOM, ANONYMOUS]
 
-  attr_accessible :name, :description, :organization, :provider_type, :repository_url
+  attr_accessible :name, :description, :organization, :provider_type, :repository_url, :docker_registry_url
 
   belongs_to :organization, :inverse_of => :providers, :class_name => "Organization"
   belongs_to :task_status, :inverse_of => :provider
@@ -39,10 +39,11 @@ class Provider < Katello::Model
   validate :only_one_rhn_provider
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloUrlFormatValidator, :if => :redhat_provider?,
-                                                        :attributes => :repository_url
+                                                        :attributes => [:repository_url, :docker_registry_url]
 
   before_destroy :prevent_redhat_deletion
   before_validation :sanitize_repository_url
+  before_validation :sanitize_docker_registry_url
 
   scope :redhat, where(:provider_type => REDHAT)
   scope :custom, where(:provider_type => CUSTOM)
@@ -51,7 +52,7 @@ class Provider < Katello::Model
   def self.create_anonymous!(organization)
     create!({:name => SecureRandom.uuid, :description => nil,
              :organization => organization, :provider_type => ANONYMOUS,
-             :repository_url => nil})
+             :repository_url => nil, :docker_registry_url => nil})
   end
 
   def only_one_rhn_provider
@@ -73,7 +74,7 @@ class Provider < Katello::Model
 
   def constraint_redhat_update
     if !new_record? && redhat_provider?
-      allowed_changes = %w(repository_url task_status_id)
+      allowed_changes = %w(repository_url  docker_registry_url task_status_id)
       not_allowed_changes = changes.keys - allowed_changes
       unless not_allowed_changes.empty?
         errors.add(:base, _("the following attributes can not be updated for the Red Hat provider: [ %s ]") % not_allowed_changes.join(", "))
@@ -176,12 +177,21 @@ class Provider < Katello::Model
 
   protected
 
+  def sanitize_docker_registry_url
+    sanitize_url(:docker_registry_url,
+                 Katello.config.redhat_docker_registry_url)
+  end
+
   def sanitize_repository_url
-    if redhat_provider? && self.repository_url.blank?
-      self.repository_url = Katello.config.redhat_repository_url
+    sanitize_url(:repository_url, Katello.config.redhat_repository_url)
+  end
+
+  def sanitize_url(attrib, default_value)
+    if redhat_provider? && self.send(attrib).blank?
+      self.send("#{attrib}=", default_value)
     end
-    if self.repository_url
-      self.repository_url.strip!
+    if self.send(attrib)
+      self.send(attrib).strip!
     end
   end
 end
