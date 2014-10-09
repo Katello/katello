@@ -14,7 +14,6 @@ module Katello
 module ApplicationHelper
 
   include Katello::LayoutHelper
-  include Katello::BrandingHelper
 
   def current_user
     User.current

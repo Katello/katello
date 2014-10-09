@@ -59,7 +59,7 @@ describe System do
     Resources::Candlepin::Consumer.stubs(:create).returns({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stubs(:update).returns(true)
 
-    Katello.pulp_server.extensions.consumer.stubs(:create).returns({:id => uuid}) if Katello.config.katello?
+    Katello.pulp_server.extensions.consumer.stubs(:create).returns({:id => uuid})
   end
 
   describe "system in valid state should be valid" do

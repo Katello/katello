@@ -111,7 +111,7 @@ class Distributor < Katello::Model
   end
 
   def self.latest_version
-    available_versions.collect { |v| v["name"] }.select { |n| n =~ (Katello.config.katello? ? /\Asat/ : /\Asam/) }.last
+    available_versions.collect { |v| v["name"] }.select { |n| n =~ /\Asat/ }.last
   end
 
   def version

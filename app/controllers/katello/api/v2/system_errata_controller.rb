@@ -17,7 +17,7 @@ class Api::V2::SystemErrataController < Api::V2::ApiController
 
   resource_description do
     api_version 'v2'
-    api_base_url "#{Katello.config.url_prefix}/api"
+    api_base_url "/katello/api"
   end
 
   api :PUT, "/systems/:system_id/errata/apply", N_("Schedule errata for installation"), :deprecated => true

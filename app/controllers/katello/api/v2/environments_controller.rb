@@ -42,7 +42,7 @@ module Katello
       DESC
 
       api_version 'v2'
-      api_base_url "#{Katello.config.url_prefix}/api"
+      api_base_url "/katello/api"
     end
 
     respond_to :json

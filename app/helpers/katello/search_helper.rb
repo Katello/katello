@@ -13,13 +13,11 @@
 module Katello
 module SearchHelper
   def max_search_history
-    max_entries = Katello.config.search && Katello.config.search.max_history
-    max_entries.nil? ? 5 : max_entries
+    5
   end
 
   def max_search_favorites
-    max_entries = Katello.config.search && Katello.config.search.max_favorites
-    max_entries.nil? ? 5 : max_entries
+    5
   end
 
   def history_entries

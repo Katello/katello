@@ -261,13 +261,12 @@ module Katello
     def server_status
       # rubocop:disable SymbolName
       status = { :managerCapabilities => Resources::Candlepin::CandlepinPing.ping['managerCapabilities'],
-                 :release => Katello.config.app_name,
                  :result => Resources::Candlepin::CandlepinPing.ping['result'],
                  :rulesSource => Resources::Candlepin::CandlepinPing.ping['rulesSource'],
                  :rulesVersion => Resources::Candlepin::CandlepinPing.ping['rulesVersion'],
                  :standalone => Resources::Candlepin::CandlepinPing.ping['standalone'],
                  :timeUTC => Time.now.getutc,
-                 :version => Katello.config.katello_version }
+                 :version => Katello::VERSION }
 
       render :json => status
     end

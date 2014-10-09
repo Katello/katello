@@ -30,8 +30,7 @@ module Katello
     description N_("This service is available for unauthenticated users")
     def server_status
       # rubocop:disable SymbolName
-      status = { :release    => Katello.config.app_name,
-                 :version    => Katello.config.katello_version,
+      status = { :version    => Katello::VERSION,
                  :timeUTC    => Time.now.getutc }
       respond_for_show :resource => status, :template => "server_status"
     end

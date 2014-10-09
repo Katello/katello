@@ -134,14 +134,10 @@ class Product < Katello::Model
     hash = hash.merge(:productContent => self.productContent,
                       :multiplier => self.multiplier,
                       :attributes => self.attrs,
-                      :id => self.cp_id)
-    if Katello.config.katello?
-      hash = hash.merge(
-        :sync_plan_name => self.sync_plan ? self.sync_plan.name : nil,
-        :sync_state => self.sync_state,
-        :last_sync => self.last_sync
-      )
-    end
+                      :id => self.cp_id,
+                      :sync_plan_name => self.sync_plan ? self.sync_plan.name : nil,
+                      :sync_state => self.sync_state,
+                      :last_sync => self.last_sync)
     hash
   end
 

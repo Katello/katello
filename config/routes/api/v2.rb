@@ -17,9 +17,6 @@ Katello::Engine.routes.draw do
         # re-routes alphabetical
         ##############################
 
-        # we don't want headpin to be able to create system directly
-        system_onlies = Katello.config.katello? ? [:index, :show, :destroy, :create, :update] : [:index, :show, :destroy, :update]
-
         root :to => 'root#resource_list'
 
         api_resources :capsules, :only => [:index, :show] do
@@ -99,7 +96,7 @@ Katello::Engine.routes.draw do
         api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
           api_resources :activation_keys, :only => [:index, :create]
           api_resources :puppet_modules, :only => [:index]
-          api_resources :systems, :only => system_onlies do
+          api_resources :systems, :only => [:index, :show, :create, :update, :destroy] do
             get :report, :on => :collection
           end
         end
@@ -110,13 +107,13 @@ Katello::Engine.routes.draw do
           post :content, :on => :member
         end
 
-        api_resources :host_collections, :only => system_onlies do
+        api_resources :host_collections, :only => [:index, :show, :create, :update, :destroy] do
           member do
             post :copy
             put :add_systems
             put :remove_systems
           end
-          api_resources :systems, :only => system_onlies
+          api_resources :systems, :only => [:index, :show, :create, :update, :destroy]
         end
 
         api_resources :organizations, :only => [:index, :show, :update, :create, :destroy] do
@@ -143,7 +140,7 @@ Katello::Engine.routes.draw do
               get :manifest_history
             end
           end
-          api_resources :systems, :only => system_onlies do
+          api_resources :systems, :only => [:index, :show, :create, :update, :destroy] do
             get :report, :on => :collection
           end
         end
@@ -184,7 +181,7 @@ Katello::Engine.routes.draw do
 
         api_resources :subscriptions, :only => [:show]
 
-        api_resources :systems, :only => system_onlies do
+        api_resources :systems, :only => [:index, :show, :create, :update, :destroy] do
           member do
             get :available_host_collections, :action => :available_host_collections
             post :host_collections, :action => :add_host_collections

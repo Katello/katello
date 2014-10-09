@@ -80,7 +80,7 @@ describe PulpTaskStatus, :katello => true do
         end
         @t.save!
 
-        Katello.pulp_server.resources.task.stubs(:poll).returns(updated_pulp_task)  if Katello.config.katello?
+        Katello.pulp_server.resources.task.stubs(:poll).returns(updated_pulp_task)
       end
 
       it "should fetch data from pulp" do

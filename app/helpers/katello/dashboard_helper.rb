@@ -18,7 +18,7 @@ module DashboardHelper
   end
 
   def dashboard_ajax_entry(name, identifier, url, class_wrapper, dropbutton, quantity = 5)
-    url = Katello.config[:url_prefix] + url if !url.match(Katello.config[:url_prefix])
+    url = "/katello#{url}" if !url.match("/katello")
     render :partial => "ajax_entry", :locals => {:name => name, :url => url, :class_wrap => class_wrapper, :identifier => identifier, :dropbutton => dropbutton, :quantity => quantity}
   end
 
