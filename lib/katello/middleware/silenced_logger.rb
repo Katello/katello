@@ -18,7 +18,7 @@ module Katello
         Katello.config.logging.ignored_paths
       end
 
-      def initialize(app, options = {})
+      def initialize(app, _options = {})
         @app = app
       end
 

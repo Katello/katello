@@ -23,9 +23,9 @@ if defined? PhusionPassenger
 
         def seek(position)
           if position == 0
-             rewind
+            rewind
           else
-             fail "Seeking not supported to non zero position"
+            fail "Seeking not supported to non zero position"
           end
         end
 

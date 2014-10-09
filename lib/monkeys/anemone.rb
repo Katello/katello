@@ -21,7 +21,7 @@ module Anemone
     def refresh_connection(url)
       http = Net::HTTP.new(url.host, url.port, proxy_host, proxy_port, proxy_user, proxy_password)
 
-      http.read_timeout = read_timeout if !!read_timeout
+      http.read_timeout = read_timeout if read_timeout
 
       if url.scheme == 'https'
         http.use_ssl = true
