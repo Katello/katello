@@ -23,20 +23,20 @@ version = begin
            else
              RSpec::Core::Version::STRING
            end
-  version = const.split('.').map &:to_i
+  version = const.split('.').map(&:to_i)
   version[0] == 2 && (5..13).include?(version[1])
 rescue
   false
 end
 
-unless version # change if it works for other versions
+if !version # change if it works for other versions
   warn "monkey eats only a banana! (this monkey needs rspec 2.(5-13))\n#{__FILE__}:#{__LINE__}"
 else
   module RSpec::Mocks
     module TestDouble
-      def initialize(name=nil, stubs_and_options={})
+      def initialize(name = nil, stubs_and_options = {})
         __initialize_as_test_double(name, stubs_and_options)
-        @__created_on_line = caller.find { |line| line =~ %r(/spec/) }
+        @__created_on_line = caller.find { |line| line =~ %r{/spec/} }
       end
     end
 

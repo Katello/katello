@@ -22,7 +22,7 @@ class MemoStruct
 
   def method_missing(method, *args)
     if method.to_s =~ /^(.*)=$/
-      @hash[$1.to_sym]=args.first
+      @hash[Regexp.last_match[1].to_sym] = args.first
     else
       @hash[method]
     end

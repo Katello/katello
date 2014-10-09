@@ -11,8 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module UserHelperMethods
-  def new_user name = "foo"
+  def new_user(name = "foo")
     disable_user_orchestration
-    User.create!(:login => name, :password => "redhat", :mail =>"foo12@redhat.com")
+    User.create!(:login => name, :password => "redhat", :mail => "foo12@redhat.com")
   end
 end

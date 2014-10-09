@@ -25,20 +25,22 @@ class Notify
   end
 
   def matches?(controller)
-    raise ArgumentError, 'type cannot be nil' if @types.blank?
+    fail ArgumentError, 'type cannot be nil' if @types.blank?
 
     @controller   = controller
     notifier_mock = RSpec::Mocks::Mock.new('NotifierImpl', :__declared_as => 'Mock')
     @types.each do |type|
       notifier_mock.should_receive(type).and_return do |*args|
-        Rails.logger.debug("notify.#{type} received with:\n" + args.map do |arg|
+        args = args.map do |arg|
           case arg
-            when Exception
-              "#{arg.message} (#{arg.class})\n#{arg.backtrace.join("\n")}"
-            else
-              arg.inspect
+          when Exception
+            "#{arg.message} (#{arg.class})\n#{arg.backtrace.join("\n")}"
+          else
+            arg.inspect
           end
-        end.join("\n"))
+        end
+        args = args.join("\n")
+        Rails.logger.debug("notify.#{type} received with:\n" + args)
         true
       end
     end
