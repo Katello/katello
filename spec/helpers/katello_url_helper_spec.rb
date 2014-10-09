@@ -93,14 +93,5 @@ describe KatelloUrlHelper do
     end
   end
 
-  describe "Invalid Urls" do
-    it "should catch missing protocols" do
-      kprotocol?('www.hugheshoney.com').must_equal(false)
-      kprotocol?('http://www.hugheshoney.com').must_equal(true)
-      kprotocol?('https://www.hugheshoney.com').must_equal(true)
-      kprotocol?('ftp://www.hugheshoney.com').must_equal(true)
-    end
-  end
-
 end
 end

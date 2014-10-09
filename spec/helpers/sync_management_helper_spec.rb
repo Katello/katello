@@ -47,9 +47,9 @@ describe SyncManagementHelper do
     it { subject.keys.must_include(:name, :id) }
   end
 
-  describe "#has_repos? (katello)" do #TODO headpin
+  describe "#repos? (katello)" do #TODO headpin
 #    Katello.pulp_server.extensions.repository.stubs(:search_by_repository_ids).returns([]) if Katello.config.katello?
-    subject { object.has_repos?(object.collect_repos([product_1], environment).first) }
+    subject { object.repos?(object.collect_repos([product_1], environment).first) }
     it "should return false for a product without repos" do
       subject.must_equal(false)
     end

@@ -27,7 +27,7 @@ module Katello
 
     def grouped_env_options
       grouped_options = envs_by_kt_org.sort_by(&:first).map do |kt_org_label, envs_by_org|
-        optgroup = %[<optgroup label="#{kt_org_label}">]
+        optgroup = %(<optgroup label="#{kt_org_label}">)
 
         opts = envs_by_org.sort_by(&:katello_id).reduce({}) do |env_options, env|
           selected = env.id == (@host || @hostgroup).environment_id ? "selected" : ""
@@ -41,9 +41,9 @@ module Katello
               where("#{Katello::KTEnvironment.table_name}.label" => kt_env_label).
               where("#{::Organization.table_name}.label" => kt_org_label).first
 
-          %[<option value="#{kt_org_label}/#{kt_env_label}"
+          %(<option value="#{kt_org_label}/#{kt_env_label}"
                     class="kt-env" data-katello-env-id="#{kt_env.try(:id)}"
-                    #{selected}>#{kt_env_label}</option>]
+                    #{selected}>#{kt_env_label}</option>)
 
         end
 
@@ -51,7 +51,7 @@ module Katello
         optgroup << '</optgroup>'
       end
       grouped_options = grouped_options.join
-      grouped_options.insert(0, %[<option value=""></option>])
+      grouped_options.insert(0, %(<option value=""></option>))
       grouped_options.html_safe
     end
 
@@ -71,10 +71,10 @@ module Katello
             where("#{Katello::ContentView.table_name}.label" => content_view_label).
             where("#{::Organization.table_name}.label" => org_label).first
 
-        %[<option value="#{env.id}"
+        %(<option value="#{env.id}"
                   data-katello-id="#{env.katello_id}"
                   data-content_view-id="#{content_view.try(:id)}"
-                  #{selected}>#{option_text}</option>]
+                  #{selected}>#{option_text}</option>)
       end
 
       return cv_options.join.html_safe

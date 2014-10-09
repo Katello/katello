@@ -1,4 +1,4 @@
-- if has_repos?(prod)
+- if repos?(prod)
   - pid = prod[:id]
   - cycle_class = cycle("", "alt", :name => 'product')
   %tr.product{:id=>product_id(pid), :class => cycle_class}
