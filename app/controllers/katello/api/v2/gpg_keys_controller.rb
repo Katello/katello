@@ -73,7 +73,7 @@ module Katello
     param_group :gpg_key
     def update
       @gpg_key.update_attributes!(gpg_key_params)
-      respond_for_show({:resource => @gpg_key})
+      respond_for_show(:resource => @gpg_key)
     end
 
     api :DELETE, "/gpg_keys/:id", N_("Destroy a gpg key")

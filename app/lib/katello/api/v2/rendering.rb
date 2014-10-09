@@ -49,7 +49,7 @@ module Katello
           options[:object_name] = params[:object_name]
           respond_with_template(action, resource_name, options) do
             @resource = options[:resource] unless options[:resource].nil?
-            @resource = get_resource if @resource.nil?
+            @resource = resource if @resource.nil?
           end
         end
 
@@ -58,7 +58,7 @@ module Katello
           options[:root_name] = params[:root_name] || "results"
           respond_with_template(action, resource_name, options) do
             @collection = options[:collection] unless options[:collection].nil?
-            @collection = get_resource_collection if @collection.nil?
+            @collection = resource_collection if @collection.nil?
           end
         end
 

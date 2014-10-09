@@ -24,8 +24,8 @@ module Katello
         query do
           string query
         end
-        filter :term, {:organization_id => org.id}
-        filter :terms, {:id => readable_ids}
+        filter :term, :organization_id => org.id
+        filter :terms, :id => readable_ids
       end
 
       render :json => content_views.collect{|s| {:label => s.name, :value => s.name, :id => s.id}}

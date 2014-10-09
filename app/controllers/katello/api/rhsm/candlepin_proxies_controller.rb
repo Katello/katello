@@ -421,7 +421,7 @@ module Katello
     end
 
     def respond_for_index(options = {})
-      collection = options[:collection] || get_resource_collection
+      collection = options[:collection] || resource_collection
       status     = options[:status] || :ok
       format     = options[:format] || :json
 
@@ -429,7 +429,7 @@ module Katello
     end
 
     def respond_for_show(options = {})
-      resource = options[:resource] || get_resource
+      resource = options[:resource] || resource
       status   = options[:status] || :ok
       format   = options[:format] || :json
 
@@ -441,7 +441,7 @@ module Katello
     end
 
     def authorize_client
-      deny_access if !client_authorized?
+      deny_access unless client_authorized?
     end
 
     def client_authorized?
@@ -452,7 +452,7 @@ module Katello
 
     # rubocop:disable MethodLength
     def authorize_proxy_routes
-      deny_access if !(authenticate || authenticate_client)
+      deny_access unless (authenticate || authenticate_client)
 
       route, _, params = Engine.routes.router.recognize(request) do |rte, match, parameters|
         break rte, match, parameters if rte.name

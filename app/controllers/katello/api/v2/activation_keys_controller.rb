@@ -97,8 +97,8 @@ module Katello
       filters << { :term => { :organization_id => @activation_key.organization_id } }
 
       options = {
-          :filters       => filters,
-          :load_records? => true
+        :filters       => filters,
+        :load_records? => true
       }
 
       respond_for_index(:collection => item_search(HostCollection, params, options))
@@ -108,9 +108,9 @@ module Katello
     param :id, String, :desc => N_("ID of the activation key"), :required => true
     def available_releases
       response = {
-          :results => @activation_key.available_releases,
-          :total => @activation_key.available_releases.size,
-          :subtotal => @activation_key.available_releases.size
+        :results => @activation_key.available_releases,
+        :total => @activation_key.available_releases.size,
+        :subtotal => @activation_key.available_releases.size
       }
       respond_for_index :collection => response
     end
@@ -147,7 +147,7 @@ module Katello
     def find_environment
       environment_id = params[:environment_id]
       environment_id = params[:environment][:id] if !environment_id && params[:environment]
-      return if !environment_id
+      return unless environment_id
 
       @environment = KTEnvironment.find(environment_id)
       fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
@@ -192,7 +192,7 @@ module Katello
 
     def search_for_activation_keys
       ids = ActivationKey.readable.pluck(:id)
-      ids = ids & [params[:id].to_i] if params[:id]
+      ids &= [params[:id].to_i] if params[:id]
       filters = [:terms => { :id => ids }]
       filters << { :term => {:organization_id => @organization.id} } if params[:organization_id]
       filters << { :terms => {:environment_id => [params[:environment_id]] } } if params[:environment_id]
@@ -200,8 +200,8 @@ module Katello
       filters << { :term => { :name => params[:name] } } if params[:name]
 
       options = {
-          :filters       => filters,
-          :load_records? => true
+        :filters       => filters,
+        :load_records? => true
       }
       item_search(ActivationKey, params, options)
     end

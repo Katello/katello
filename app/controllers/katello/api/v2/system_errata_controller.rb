@@ -11,37 +11,37 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::SystemErrataController < Api::V2::ApiController
+  class Api::V2::SystemErrataController < Api::V2::ApiController
 
-  before_filter :find_system
+    before_filter :find_system
 
-  resource_description do
-    api_version 'v2'
-    api_base_url "/katello/api"
+    resource_description do
+      api_version 'v2'
+      api_base_url "/katello/api"
+    end
+
+    api :PUT, "/systems/:system_id/errata/apply", N_("Schedule errata for installation"), :deprecated => true
+    param :system_id, :identifier, :desc => N_("System UUID"), :required => true
+    param :errata_ids, Array, :desc => N_("List of Errata ids to install"), :required => true
+    def apply
+      task = async_task(::Actions::Katello::System::Erratum::Install, @system, params[:errata_ids])
+      respond_for_async :resource => task
+    end
+
+    api :GET, "/systems/:system_id/errata/:id", N_("Retrieve a single errata for a system"), :deprecated => true
+    param :system_id, :identifier, :desc => N_("System UUID"), :required => true
+    param :id, String, :desc => N_("Errata id of the erratum (RHSA-2012:108)"), :required => true
+    def show
+      errata = Erratum.find_by_errata_id(params[:id])
+      respond_for_show :resource => errata
+    end
+
+    private
+
+    def find_system
+      @system = System.first(:conditions => { :uuid => params[:system_id] })
+      fail HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
+      @system
+    end
   end
-
-  api :PUT, "/systems/:system_id/errata/apply", N_("Schedule errata for installation"), :deprecated => true
-  param :system_id, :identifier, :desc => N_("System UUID"), :required => true
-  param :errata_ids, Array, :desc => N_("List of Errata ids to install"), :required => true
-  def apply
-    task = async_task(::Actions::Katello::System::Erratum::Install, @system, params[:errata_ids])
-    respond_for_async :resource => task
-  end
-
-  api :GET, "/systems/:system_id/errata/:id", N_("Retrieve a single errata for a system"), :deprecated => true
-  param :system_id, :identifier, :desc => N_("System UUID"), :required => true
-  param :id, String, :desc => N_("Errata id of the erratum (RHSA-2012:108)"), :required => true
-  def show
-    errata = Erratum.find_by_errata_id(params[:id])
-    respond_for_show :resource => errata
-  end
-
-  private
-
-  def find_system
-    @system = System.first(:conditions => { :uuid => params[:system_id] })
-    fail HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
-    @system
-  end
-end
 end
