@@ -19,7 +19,7 @@ module Katello
         after_initialize :set_default_overrides, :if => :new_record?
         before_create :set_katello_default
         before_save :refute_katello_default_changed
-        before_destroy :is_deletable?
+        before_destroy :deletable?
       end
 
       def set_default_overrides
@@ -36,7 +36,7 @@ module Katello
         true
       end
 
-      def is_deletable?
+      def deletable?
         if self.katello_default
           errors.add(:base, _("Cannot delete the default Location"))
           false

@@ -151,8 +151,8 @@ class RepositoryInstanceTest < RepositoryTestBase
     assert_includes @fedora_17_x86_64.clones, @fedora_17_x86_64_dev
   end
 
-  def test_is_cloned_in?
-    assert @fedora_17_x86_64.is_cloned_in?(@dev)
+  def test_cloned_in?
+    assert @fedora_17_x86_64.cloned_in?(@dev)
   end
 
   def test_promoted?

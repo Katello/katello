@@ -50,12 +50,12 @@ module Katello
                      :os_family => 'Redhat' }
 
           medium = ::Medium.joins(:organizations).where(params).where("taxonomies.id in (?)", [org.id]).first
-          medium = ::Medium.create!(params.merge({ :organization_ids => [org.id] })) unless medium
+          medium = ::Medium.create!(params.merge(:organization_ids => [org.id])) unless medium
 
           return medium
         end
 
-        def construct_name(repo, distribution)
+        def construct_name(repo, _distribution)
           parts = [repo.organization.label, repo.environment.label]
           if repo.content_view && !repo.content_view.default?
             parts << repo.content_view.label

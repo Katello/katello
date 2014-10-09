@@ -1,4 +1,5 @@
 class AddErrata < ActiveRecord::Migration
+  # rubocop:disable MethodLength
   def up
     create_table "katello_errata" do |t|
       t.string "uuid", :null => false
@@ -25,7 +26,7 @@ class AddErrata < ActiveRecord::Migration
     end
 
     add_index :katello_erratum_packages, [:erratum_id, :nvrea, :name, :filename], :unique => true,
-              :name =>  'katello_erratum_packages_eid_nvrea_n_f'
+                                                                                  :name =>  'katello_erratum_packages_eid_nvrea_n_f'
     add_foreign_key "katello_erratum_packages", "katello_errata",
                     :name => "katello_erratum_packages_errata_id_fk", :column => "erratum_id"
 
@@ -67,7 +68,7 @@ class AddErrata < ActiveRecord::Migration
     end
 
     add_index :katello_system_errata, [:erratum_id, :system_id], :unique => true,
-              :name => :katello_system_errata_eid_sid
+                                                                 :name => :katello_system_errata_eid_sid
 
     add_foreign_key "katello_system_errata", "katello_errata",
                     :name => "katello_system_errata_errata_id", :column => "erratum_id"

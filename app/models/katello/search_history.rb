@@ -11,12 +11,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 #
 module Katello
-class SearchHistory < Katello::Model
-  self.include_root_in_json = false
+  class SearchHistory < Katello::Model
+    self.include_root_in_json = false
 
-  belongs_to :user, :inverse_of => :search_histories, :class_name => "::User"
-  validates_lengths_from_database
-  validates :params, :length => { :maximum => 255 }
-  validates :path, :length => { :maximum => 255 }
-end
+    belongs_to :user, :inverse_of => :search_histories, :class_name => "::User"
+    validates_lengths_from_database
+    validates :params, :length => { :maximum => 255 }
+    validates :path, :length => { :maximum => 255 }
+  end
 end

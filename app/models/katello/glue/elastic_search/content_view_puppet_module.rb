@@ -32,9 +32,9 @@ module Katello
 
     def extended_index_attrs
       {
-          :name_sort => name.try(:downcase),
-          :name_autocomplete => self.name,
-          :content_view => self.content_view.name
+        :name_sort => name.try(:downcase),
+        :name_autocomplete => self.name,
+        :content_view => self.content_view.name
       }
     end
 

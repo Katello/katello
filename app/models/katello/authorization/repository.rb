@@ -11,69 +11,63 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Authorization::Repository
-  extend ActiveSupport::Concern
+  module Authorization::Repository
+    extend ActiveSupport::Concern
 
-  include Authorizable
-  include Katello::Authorization
+    include Authorizable
+    include Katello::Authorization
 
-  def readable?
-    product.readable?
-  end
+    delegate :readable?, to: :product
 
-  def editable?
-    product.editable?
-  end
+    delegate :editable?, to: :product
 
-  def deletable?
-    product.editable? && !promoted?
-  end
-
-  def redhat_deletable?
-    !self.promoted? && self.product.editable?
-  end
-
-  def syncable?
-    product.syncable?
-  end
-
-  module ClassMethods
-
-    def readable
-      where(:product_id => Katello::Product.authorized(:view_products))
+    def deletable?
+      product.editable? && !promoted?
     end
 
-    def deletable
-      where(:product_id => Katello::Product.authorized(:destroy_products))
+    def redhat_deletable?
+      !self.promoted? && self.product.editable?
     end
 
-    def syncable
-      where(:product_id => Katello::Product.authorized(:sync_products))
-    end
+    delegate :syncable?, to: :product
 
-    def libraries_content_readable(org)
-      repos = Repository.readable
-      lib_ids = []
-      repos.each{|r|  lib_ids << (r.library_instance_id || r.id)}
-      where(:id => lib_ids)
-    end
+    module ClassMethods
 
-    def content_readable(org)
-      prod_ids = Katello::Product.readable.collect{|p| p.id}
-      env_ids = KTEnvironment.content_readable(org)
-      where(environment_id: env_ids, product_id: prod_ids)
-    end
-
-    def readable_in_org(org, *skip_library)
-      if (skip_library.empty? || skip_library.first.nil?)
-        # 'skip library' not included, so retrieve repos in library in the result
-        where(environment_id: KTEnvironment.content_readable(org))
-      else
-        where(environment_id: KTEnvironment.content_readable(org).non_library)
+      def readable
+        where(:product_id => Katello::Product.authorized(:view_products))
       end
+
+      def deletable
+        where(:product_id => Katello::Product.authorized(:destroy_products))
+      end
+
+      def syncable
+        where(:product_id => Katello::Product.authorized(:sync_products))
+      end
+
+      def libraries_content_readable(_org)
+        repos = Repository.readable
+        lib_ids = []
+        repos.each{|r|  lib_ids << (r.library_instance_id || r.id)}
+        where(:id => lib_ids)
+      end
+
+      def content_readable(org)
+        prod_ids = Katello::Product.readable.collect{|p| p.id}
+        env_ids = KTEnvironment.content_readable(org)
+        where(environment_id: env_ids, product_id: prod_ids)
+      end
+
+      def readable_in_org(org, *skip_library)
+        if (skip_library.empty? || skip_library.first.nil?)
+          # 'skip library' not included, so retrieve repos in library in the result
+          where(environment_id: KTEnvironment.content_readable(org))
+        else
+          where(environment_id: KTEnvironment.content_readable(org).non_library)
+        end
+      end
+
     end
 
   end
-
-end
 end

@@ -1,5 +1,5 @@
 class AddForeignKeysEngine < ActiveRecord::Migration
-
+  # rubocop:disable MethodLength
   def change
     add_foreign_key "katello_activation_keys", "katello_content_views", :column => 'content_view_id', :name => "activation_keys_content_view_id_fk"
     add_foreign_key "katello_activation_keys", "katello_environments", :column => 'environment_id', :name => "activation_keys_environment_id_fk"

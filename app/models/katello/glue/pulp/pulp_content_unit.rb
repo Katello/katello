@@ -13,87 +13,87 @@
 require 'set'
 
 module Katello
-module Glue::Pulp::PulpContentUnit
-  extend ActiveSupport::Concern
+  module Glue::Pulp::PulpContentUnit
+    extend ActiveSupport::Concern
 
-  #  Any class that includes this module should define:
-  #  Class.unit_handler
-  #  Class::CONTENT_TYPE
-  #  Class::PULP_INDEXED_FIELDS (optional)
-  #  Class.repository_association_class
-  #  Class#update_from_json
+    #  Any class that includes this module should define:
+    #  Class.unit_handler
+    #  Class::CONTENT_TYPE
+    #  Class::PULP_INDEXED_FIELDS (optional)
+    #  Class.repository_association_class
+    #  Class#update_from_json
 
-  def backend_data
-    self.class.pulp_data(self.uuid)
-  end
-
-  module ClassMethods
-
-    def unit_handler
-      Katello.pulp_server.extensions.send(self.name.demodulize.pluralize.underscore)
+    def backend_data
+      self.class.pulp_data(self.uuid)
     end
 
-    def in_repositories(repos)
-      self.joins(:repository_errata).where("#{repository_association_class.table_name}.repository_id" => repos)
-    end
+    module ClassMethods
 
-    def pulp_data(uuid)
-      unit_handler.find_by_unit_id(uuid)
-    end
-
-    # Import all units of a single type and refresh their repository associations
-    def import_all
-      all_items = items = fetch_all(0, Katello.config.pulp.bulk_load_size)
-      until items.empty? #we can't know how many there are, so we have to keep looping until we get nothing
-        items = fetch_all(all_items.length, Katello.config.pulp.bulk_load_size)
-        all_items.concat(items)
+      def unit_handler
+        Katello.pulp_server.extensions.send(self.name.demodulize.pluralize.underscore)
       end
 
-      all_items.each do |item_json|
-        item = self.find_or_create_by_uuid(:uuid => item_json['_id'])
-        item.update_from_json(item_json)
+      def in_repositories(repos)
+        self.joins(:repository_errata).where("#{repository_association_class.table_name}.repository_id" => repos)
       end
-      update_repository_associations(all_items)
-      all_items.count
-    end
 
-    def insert_repository_associations(repository, unit_uuids)
-      associated_ids = self.where(:uuid => unit_uuids).pluck(:id)
-      table_name = self.repository_association_class.table_name
-      attribute_name = "#{self.name.demodulize.underscore}_id"
-
-      unless associated_ids.empty?
-        inserts = associated_ids.map{|unit_id| "(#{unit_id.to_i}, #{repository.id.to_i})"}
-        sql = "INSERT INTO #{table_name} (#{attribute_name}, repository_id) VALUES #{inserts.join(', ')}"
-        ActiveRecord::Base.connection.execute(sql)
+      def pulp_data(uuid)
+        unit_handler.find_by_unit_id(uuid)
       end
-    end
 
-    def fetch_all(offset, page_size)
-      fields = self::PULP_INDEXED_FIELDS if self.constants.include?(:PULP_INDEXED_FIELDS)
-      criteria = {:limit => page_size, :skip => offset}
-      criteria[:fields] = fields if fields
-      Katello.pulp_server.resources.unit.search(self::CONTENT_TYPE, criteria, :include_repos => true)
-    end
+      # Import all units of a single type and refresh their repository associations
+      def import_all
+        all_items = items = fetch_all(0, Katello.config.pulp.bulk_load_size)
+        until items.empty? #we can't know how many there are, so we have to keep looping until we get nothing
+          items = fetch_all(all_items.length, Katello.config.pulp.bulk_load_size)
+          all_items.concat(items)
+        end
 
-    def update_repository_associations(units_json)
-      ActiveRecord::Base.transaction do
-        self.repository_association_class.delete_all
-        repo_unit_id = {}
-        units_json.each do |unit_json|
-          unit_json['repository_memberships'].each do |repo_pulp_id|
-            repo_unit_id[repo_pulp_id] ||= []
-            repo_unit_id[repo_pulp_id]  << unit_json['_id']
+        all_items.each do |item_json|
+          item = self.find_or_create_by_uuid(:uuid => item_json['_id'])
+          item.update_from_json(item_json)
+        end
+        update_repository_associations(all_items)
+        all_items.count
+      end
+
+      def insert_repository_associations(repository, unit_uuids)
+        associated_ids = self.where(:uuid => unit_uuids).pluck(:id)
+        table_name = self.repository_association_class.table_name
+        attribute_name = "#{self.name.demodulize.underscore}_id"
+
+        unless associated_ids.empty?
+          inserts = associated_ids.map{|unit_id| "(#{unit_id.to_i}, #{repository.id.to_i})"}
+          sql = "INSERT INTO #{table_name} (#{attribute_name}, repository_id) VALUES #{inserts.join(', ')}"
+          ActiveRecord::Base.connection.execute(sql)
+        end
+      end
+
+      def fetch_all(offset, page_size)
+        fields = self::PULP_INDEXED_FIELDS if self.constants.include?(:PULP_INDEXED_FIELDS)
+        criteria = {:limit => page_size, :skip => offset}
+        criteria[:fields] = fields if fields
+        Katello.pulp_server.resources.unit.search(self::CONTENT_TYPE, criteria, :include_repos => true)
+      end
+
+      def update_repository_associations(units_json)
+        ActiveRecord::Base.transaction do
+          self.repository_association_class.delete_all
+          repo_unit_id = {}
+          units_json.each do |unit_json|
+            unit_json['repository_memberships'].each do |repo_pulp_id|
+              repo_unit_id[repo_pulp_id] ||= []
+              repo_unit_id[repo_pulp_id]  << unit_json['_id']
+            end
+          end
+
+          repo_unit_id.each do |repo_pulp_id, unit_uuids|
+            insert_repository_associations(Repository.find_by_pulp_id(repo_pulp_id), unit_uuids)
           end
         end
-
-        repo_unit_id.each do |repo_pulp_id, unit_uuids|
-          insert_repository_associations(Repository.find_by_pulp_id(repo_pulp_id), unit_uuids)
-        end
       end
+
     end
 
   end
-
-end
 end

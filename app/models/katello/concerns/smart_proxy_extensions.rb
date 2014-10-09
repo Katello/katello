@@ -37,9 +37,9 @@ module Katello
                  :source     => :lifecycle_environment
 
         has_many :hosts,      :class_name => "::Host::Managed", :foreign_key => :content_source_id,
-                 :inverse_of => :content_source
+                              :inverse_of => :content_source
         has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :content_source_id,
-                 :inverse_of => :content_source
+                              :inverse_of => :content_source
 
         scope :with_content, with_features(PULP_FEATURE, PULP_NODE_FEATURE)
 

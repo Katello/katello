@@ -23,7 +23,7 @@ module Actions
 
         def run
           repo = ::Katello::Repository.find(input[:repo_id])
-          output[:response] = repo.set_sync_schedule(input[:schedule])
+          output[:response] = repo.sync_schedule(input[:schedule])
         end
 
       end

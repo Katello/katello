@@ -130,9 +130,9 @@ class GluePulpRepoTest < GluePulpRepoTestBase
     TaskSupport.wait_on_tasks(task_list)
   end
 
-  def test_set_sync_schedule
+  def test_sync_schedule
     time = "2013-08-01T00:00:00-04:00/P1D"
-    assert @fedora_17_x86_64.set_sync_schedule(time)
+    assert @fedora_17_x86_64.sync_schedule(time)
   end
 
   def test_custom_repo_path
@@ -259,9 +259,9 @@ class GluePulpRepoContentsTest < GluePulpRepoTestBase
     refute_empty @@fedora_17_x86_64.packages.select { |package| package.name == 'elephant' }
   end
 
-  def test_has_package?
+  def test_package?
     pkg_id = @@fedora_17_x86_64.packages.sort_by(&:id).first.id
-    assert @@fedora_17_x86_64.has_package?(pkg_id)
+    assert @@fedora_17_x86_64.package?(pkg_id)
   end
 
   def test_errata
@@ -281,8 +281,8 @@ class GluePulpRepoContentsTest < GluePulpRepoTestBase
     refute_empty distributions.select { |distribution| distribution.id == "ks-Test Family-TestVariant-16-x86_64" }
   end
 
-  def test_has_distribution?
-    assert @@fedora_17_x86_64.has_distribution?("ks-Test Family-TestVariant-16-x86_64")
+  def test_distribution?
+    assert @@fedora_17_x86_64.distribution?("ks-Test Family-TestVariant-16-x86_64")
   end
 
   def test_find_packages_by_name

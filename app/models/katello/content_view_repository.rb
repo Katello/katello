@@ -17,9 +17,9 @@ module Katello
     ALLOWED_REPOSITORY_TYPES = [Repository::YUM_TYPE]
 
     belongs_to :content_view, :inverse_of => :content_view_repositories,
-      :class_name => "Katello::ContentView"
+                              :class_name => "Katello::ContentView"
     belongs_to :repository, :inverse_of => :content_view_repositories,
-      :class_name => "Katello::Repository"
+                            :class_name => "Katello::Repository"
 
     validates_lengths_from_database
     validates :repository_id, :uniqueness => {:scope => :content_view_id}

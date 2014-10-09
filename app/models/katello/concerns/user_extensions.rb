@@ -86,8 +86,8 @@ module Katello
         end
 
         def disable_helptip(key)
-          return if !self.helptips_enabled? #don't update helptips if user has it disabled
-          return if !Katello::HelpTip.where(:key => key, :user_id => self.id).empty?
+          return unless self.helptips_enabled? #don't update helptips if user has it disabled
+          return unless Katello::HelpTip.where(:key => key, :user_id => self.id).empty?
           help      = Katello::HelpTip.new
           help.key  = key
           help.user = self
@@ -106,7 +106,7 @@ module Katello
         end
 
         def enable_helptip(key)
-          return if !self.helptips_enabled? #don't update helptips if user has it disabled
+          return unless self.helptips_enabled? #don't update helptips if user has it disabled
           help = Katello::HelpTip.where(:key => key, :user_id => self.id).first
           return if help.nil?
           help.destroy

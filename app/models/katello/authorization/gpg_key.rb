@@ -11,29 +11,29 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Authorization::GpgKey
-  extend ActiveSupport::Concern
+  module Authorization::GpgKey
+    extend ActiveSupport::Concern
 
-  include Authorizable
-  include Katello::Authorization
+    include Authorizable
+    include Katello::Authorization
 
-  def readable?
-    authorized?(:view_gpg_keys)
-  end
-
-  def editable?
-    authorized?(:edit_gpg_keys)
-  end
-
-  def deletable?
-    authorized?(:destroy_gpg_keys)
-  end
-
-  module ClassMethods
-    def readable
-      authorized(:view_gpg_keys)
+    def readable?
+      authorized?(:view_gpg_keys)
     end
-  end
 
-end
+    def editable?
+      authorized?(:edit_gpg_keys)
+    end
+
+    def deletable?
+      authorized?(:destroy_gpg_keys)
+    end
+
+    module ClassMethods
+      def readable
+        authorized(:view_gpg_keys)
+      end
+    end
+
+  end
 end

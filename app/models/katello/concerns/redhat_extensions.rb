@@ -37,10 +37,10 @@ module Katello
 
         def create_operating_system(name, major, minor)
           params = {
-              'name' => name,
-              'major' => major.to_s,
-              'minor' => minor.to_s,
-              'family' => 'Redhat'
+            'name' => name,
+            'major' => major.to_s,
+            'minor' => minor.to_s,
+            'family' => 'Redhat'
           }
 
           return ::Redhat.create!(params)

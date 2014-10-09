@@ -20,12 +20,12 @@ module Katello
     include Glue if Katello.config.use_pulp
 
     belongs_to :environment, :class_name => "Katello::KTEnvironment",
-               :inverse_of => :content_view_puppet_environments
+                             :inverse_of => :content_view_puppet_environments
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",
-               :inverse_of => :content_view_puppet_environments
+                                      :inverse_of => :content_view_puppet_environments
 
     belongs_to :puppet_environment, :class_name => "Environment",
-               :inverse_of => :content_view_puppet_environment, :dependent => :destroy
+                                    :inverse_of => :content_view_puppet_environment, :dependent => :destroy
 
     validates_lengths_from_database
     validates :pulp_id, :presence => true, :uniqueness => true

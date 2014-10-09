@@ -3,8 +3,8 @@ class CreateContentViewPuppetEnvironments < ActiveRecord::Migration
     create_table :katello_content_view_puppet_environments do |t|
       t.references :content_view_version
       t.references :environment
-      t.string     :name
-      t.string     :pulp_id, :null => false
+      t.string :name
+      t.string :pulp_id, :null => false
       t.timestamps
     end
 

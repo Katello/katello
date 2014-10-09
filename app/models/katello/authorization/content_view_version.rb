@@ -11,15 +11,15 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Authorization::ContentViewVersion
-  extend ActiveSupport::Concern
+  module Authorization::ContentViewVersion
+    extend ActiveSupport::Concern
 
-  module ClassMethods
-    def readable
-      view_ids = ContentView.readable.collect{|v| v.id}
-      joins(:content_view).where("#{Katello::ContentView.table_name}.id" => view_ids)
+    module ClassMethods
+      def readable
+        view_ids = ContentView.readable.collect{|v| v.id}
+        joins(:content_view).where("#{Katello::ContentView.table_name}.id" => view_ids)
+      end
     end
-  end
 
-end
+  end
 end

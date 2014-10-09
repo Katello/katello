@@ -10,57 +10,57 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 module Katello
-module Glue::Pulp::PackageGroup
+  module Glue::Pulp::PackageGroup
 
-  def self.included(base)
-    base.send :include, InstanceMethods
+    def self.included(base)
+      base.send :include, InstanceMethods
 
-    base.class_eval do
-      attr_accessor :name, :package_group_id, :default_package_names, :id, :repo_id, :conditional_package_names,
-                      :mandatory_package_names, :description, :optional_package_names
+      base.class_eval do
+        attr_accessor :name, :package_group_id, :default_package_names, :id, :repo_id, :conditional_package_names,
+                        :mandatory_package_names, :description, :optional_package_names
 
-      def self.find(id)
-        attrs = Katello.pulp_server.extensions.package_group.find_by_unit_id(id)
-        Katello::PackageGroup.new(attrs) if !attrs.nil?
-      end
+        def self.find(id)
+          attrs = Katello.pulp_server.extensions.package_group.find_by_unit_id(id)
+          Katello::PackageGroup.new(attrs) unless attrs.nil?
+        end
 
-      def self.list_by_filter_clauses(clauses)
-        package_groups = Katello.pulp_server.extensions.package_group.search(Katello::PackageGroup::CONTENT_TYPE,
-                                                                             :filters => clauses)
-        if package_groups
-          groups = package_groups.collect do |attrs|
-            Katello::PackageGroup.new(attrs) if attrs
+        def self.list_by_filter_clauses(clauses)
+          package_groups = Katello.pulp_server.extensions.package_group.search(Katello::PackageGroup::CONTENT_TYPE,
+                                                                               :filters => clauses)
+          if package_groups
+            groups = package_groups.collect do |attrs|
+              Katello::PackageGroup.new(attrs) if attrs
+            end
+            groups.compact
+          else
+            []
           end
-          groups.compact
-        else
-          []
         end
       end
+
     end
 
-  end
+    module InstanceMethods
 
-  module InstanceMethods
+      def initialize(params = {}, _options = {})
+        params['package_group_id'] = params['id']
+        params['id'] = params.delete('_id')
+        params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
 
-    def initialize(params = {}, options = {})
-      params['package_group_id'] = params['id']
-      params['id'] = params.delete('_id')
-      params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
+        [:default_package_names, :conditional_package_names,
+         :optional_package_names, :mandatory_package_names].each do |attr|
+          values = send(attr)
+          values = values.collect { |v| v.split(", ") }.flatten
+          send("#{attr}=", values)
+        end
 
-      [:default_package_names, :conditional_package_names,
-       :optional_package_names, :mandatory_package_names].each do |attr|
-        values = send(attr)
-        values = values.collect { |v| v.split(", ") }.flatten
-        send("#{attr}=", values)
+      end
+
+      def package_names
+        default_package_names + conditional_package_names + optional_package_names + mandatory_package_names
       end
 
     end
 
-    def package_names
-      default_package_names + conditional_package_names + optional_package_names + mandatory_package_names
-    end
-
   end
-
-end
 end
