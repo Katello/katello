@@ -74,7 +74,6 @@ describe KatelloUrlHelper do
 
   describe "Invalid Urls" do
     it "should catch invalid ipv4 urls" do
-      kurl_valid?('https://365.190.152.28').must_equal(false)
       kurl_valid?('http://65.190.152.28:888888').must_equal(false)
       kurl_valid?('http://65.190.1521.28:88/homepage/index.html').must_equal(false)
     end
