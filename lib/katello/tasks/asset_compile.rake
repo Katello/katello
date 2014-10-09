@@ -1,6 +1,6 @@
 desc 'Compile Katello assets'
 task 'assets:precompile:katello' do
- 
+
   # Partially load the Rails environment to avoid
   # the need of a database being setup
   Rails.application.initialize!(:assets)
@@ -11,7 +11,7 @@ task 'assets:precompile:katello' do
     precompile = args.fetch(:precompile, [])
 
     _ = ActionView::Base
-    
+
     target = File.join(Katello::Engine.root, 'public', 'assets')
 
     config = Rails.application.config

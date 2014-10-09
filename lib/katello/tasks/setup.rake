@@ -18,7 +18,7 @@ namespace :katello do
     end
 
     task :candlepin do
-      tomcat = File.exists?('/var/lib/tomcat') ? 'tomcat' : 'tomcat6'
+      tomcat = File.exist?('/var/lib/tomcat') ? 'tomcat' : 'tomcat6'
 
       system(service_stop.gsub("%s", tomcat))
       system("sudo /usr/share/candlepin/cpdb --drop --create")
