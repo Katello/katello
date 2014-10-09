@@ -38,31 +38,31 @@ module Katello
         Validator.new config[key] || Node.new, environment, (self.path + [key]), &block
       end
 
-      def are_booleans(*keys)
-        keys.each { |key| is_boolean key }
+      def booleans?(*keys)
+        keys.each { |key| boolean?(key) }
       end
 
-      def is_boolean(key)
-        has_values key, [true, false]
+      def boolean?(key)
+        values?(key, [true, false])
       end
 
-      def is_type(key, *types)
+      def type?(key, *types)
         unless types.any? { |type| type === config[key] }
           fail error_format(key.to_sym, "has to be one of #{types.inspect} types")
         end
       end
 
-      def has_values(key, values, options = {})
+      def values?(key, values, options = {})
         values << nil if options[:allow_nil]
         return true if values.include?(config[key])
         fail ArgumentError, error_format(key, "should be one of #{values.inspect}, but was #{config[key].inspect}")
       end
 
-      def has_keys(*keys)
-        keys.each { |key| has_key key }
+      def keys?(*keys)
+        keys.each { |key| key? key }
       end
 
-      def has_key(key)
+      def key?(key)
         unless config.key? key.to_sym
           fail error_format(key.to_sym, 'is required')
         end
@@ -76,7 +76,7 @@ module Katello
         "Key: '#{key_path}' in #{env} #{message}"
       end
 
-      def is_not_empty(key)
+      def not_empty?(key)
         if config[key].nil? || config[key].empty?
           fail error_format(key.to_sym, "must not be empty")
         end

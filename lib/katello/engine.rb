@@ -18,20 +18,20 @@ module Katello
 
     initializer "katello.apipie" do
       Apipie.configuration.api_controllers_matcher << "#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"
-      Apipie.configuration.ignored += %w[Api::V2::OrganizationsController]
+      Apipie.configuration.ignored += %w(Api::V2::OrganizationsController)
       Apipie.configuration.checksum_path += ['/katello/api/']
       require 'katello/apipie/validators'
     end
 
-    initializer "katello.register_actions", :before => 'foreman_tasks.initialize_dynflow' do |app|
+    initializer "katello.register_actions", :before => 'foreman_tasks.initialize_dynflow' do |_app|
       ForemanTasks.dynflow.require!
-      action_paths = %W[#{Katello::Engine.root}/app/lib/actions
+      action_paths = %W(#{Katello::Engine.root}/app/lib/actions
                         #{Katello::Engine.root}/app/lib/headpin/actions
-                        #{Katello::Engine.root}/app/lib/katello/actions]
+                        #{Katello::Engine.root}/app/lib/katello/actions)
       ForemanTasks.dynflow.config.eager_load_paths.concat(action_paths)
     end
 
-    initializer "katello.set_dynflow_middlewares", :before => 'foreman_tasks.initialize_dynflow' do |app|
+    initializer "katello.set_dynflow_middlewares", :before => 'foreman_tasks.initialize_dynflow' do |_app|
       # We don't enable this in test env, as it adds the new field into the actions input
       # that we are not interested in tests
       unless Rails.env.test?
@@ -67,7 +67,7 @@ module Katello
       app.routes_reloader.paths.unshift("#{Katello::Engine.root}/config/routes/overrides.rb")
     end
 
-    initializer "katello.helpers" do |app|
+    initializer "katello.helpers" do |_app|
       ActionView::Base.send :include, Katello::TaxonomyHelper
       ActionView::Base.send :include, Katello::HostsAndHostgroupsHelper
       ActionView::Base.send :include, Katello::KatelloUrlsHelper
@@ -91,16 +91,16 @@ module Katello
     end
 
     config.to_prepare do
-      FastGettext.add_text_domain('katello', {
-        :path => File.expand_path("../../../locale", __FILE__),
-        :type => :po,
-        :ignore_fuzzy => true,
-        :report_warning => false
-        })
+      FastGettext.add_text_domain('katello',
+                                    :path => File.expand_path("../../../locale", __FILE__),
+                                    :type => :po,
+                                    :ignore_fuzzy => true,
+                                    :report_warning => false
+                                  )
       FastGettext.default_text_domain = 'katello'
 
       unless SETTINGS[:organizations_enabled]
-        fail Foreman::Exception.new(N_("Organizations disabled, try allowing them in foreman/config/settings.yaml"))
+        fail Foreman::Exception, N_("Organizations disabled, try allowing them in foreman/config/settings.yaml")
       end
 
       # Model extensions
@@ -119,10 +119,10 @@ module Katello
 
       #Handle Smart Proxy items separately
       begin
-      ::SmartProxy.send :include, Katello::Concerns::SmartProxyExtensions
-      ::SmartProxiesController.send :include, Katello::Concerns::SmartProxiesControllerExtensions
-      rescue ActiveRecord::StatementInvalid
-        Rails.logger.info('Database was not initialized yet: skipping smart proxy katello extension')
+        ::SmartProxy.send :include, Katello::Concerns::SmartProxyExtensions
+        ::SmartProxiesController.send :include, Katello::Concerns::SmartProxiesControllerExtensions
+        rescue ActiveRecord::StatementInvalid
+          Rails.logger.info('Database was not initialized yet: skipping smart proxy katello extension')
       end
 
       # Organization controller extensions

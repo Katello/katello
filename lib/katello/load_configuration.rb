@@ -32,31 +32,31 @@ module Katello
       :default_config_file_path => "#{root}/config/katello_defaults.yml",
 
       :validation               => lambda do |*_|
-        has_keys(*%w(candlepin notification
-                     use_cp simple_search_tokens
-                     use_pulp cdn_proxy
-                     redhat_repository_url
-                     elastic_url rest_client_timeout elastic_index
-                     pulp
-                     logging
-                     consumer_cert_rpm))
+        keys?(*%w(candlepin notification
+                  use_cp simple_search_tokens
+                  use_pulp cdn_proxy
+                  redhat_repository_url
+                  elastic_url rest_client_timeout elastic_index
+                  pulp
+                  logging
+                  consumer_cert_rpm))
 
         validate :logging do
-          has_keys(*%w(console_inline colorize log_trace loggers))
+          keys?(*%w(console_inline colorize log_trace loggers))
 
           validate :loggers do
-            has_keys 'root'
+            keys? 'root'
             validate :root do
-              has_keys 'level'
+              keys? 'level'
               if config[:type] == 'file'
-                has_keys(*%w(age keep pattern filename))
-                has_keys 'path' unless early?
+                keys?(*%w(age keep pattern filename))
+                keys? 'path' unless early?
               end
             end
           end
         end
 
-        are_booleans :use_cp, :use_pulp, :use_elasticsearch
+        booleans? :use_cp, :use_pulp, :use_elasticsearch
 
       end,
 
@@ -71,14 +71,9 @@ module Katello
       end)
   end
 
-  # @see Katello::Configuration::Loader#config
-  def self.config
-    configuration_loader.config
-  end
-
-  # @see Katello::Configuration::Loader#early_config
-  def self.early_config
-    configuration_loader.early_config
+  class << self
+    delegate :config, :to => :configuration_loader
+    delegate :early_config, :to => :configuration_loader
   end
 
   def self.can_do_shell_command?(cmd)
@@ -94,7 +89,7 @@ module Katello
     $?.exitstatus.zero? ? "git: #{hash}" : N_("Unknown") # rubocop:disable SpecialGlobalVars
   end
 
-  def self.rpm_package_name(config)
+  def self.rpm_package_name(_config)
     package = 'katello'
     rpm = `rpm -q #{package} --queryformat '%{VERSION}-%{RELEASE}' 2>&1`
     $?.exitstatus.zero? ? rpm : N_("Unknown") # rubocop:disable SpecialGlobalVars

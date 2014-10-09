@@ -24,6 +24,7 @@ module Katello
         FileUtils.mkdir_p root_configuration.path unless File.directory?(root_configuration.path)
       rescue Errno::EACCES
         # just notify insufficient privileges
+        # rubocop:disable Output
         puts "Insufficient privileges for #{root_configuration.path}"
       end
       configure_root_logger(options)
@@ -78,7 +79,7 @@ module Katello
             end
 
             # disable setting level by Yard logger
-            def level=(level)
+            def level=(_level)
               # debug "setting level:#{level} ignored, use Logging.logger['yard'].level= instead"
             end
           end)
@@ -193,10 +194,10 @@ module Katello
     def configure_color_scheme
       ::Logging.color_scheme('bright',
                              :levels => {
-                                 :info  => :green,
-                                 :warn  => :yellow,
-                                 :error => :red,
-                                 :fatal => [:white, :on_red]
+                               :info  => :green,
+                               :warn  => :yellow,
+                               :error => :red,
+                               :fatal => [:white, :on_red]
                              },
                              :date   => :blue,
                              :logger => :cyan,

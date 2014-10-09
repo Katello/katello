@@ -16,11 +16,11 @@ module Katello
 
       class UndefValidator < ::Apipie::Validator::BaseValidator
 
-        def validate(value)
+        def validate(_value)
           true
         end
 
-        def self.build(param_description, argument, options, block)
+        def self.build(param_description, argument, _options, _block)
           if argument == :undef
             self.new(param_description)
           end
@@ -37,7 +37,7 @@ module Katello
           value.to_s =~ /^(0|[1-9]\d*)$/
         end
 
-        def self.build(param_description, argument, options, block)
+        def self.build(param_description, argument, _options, _block)
           if argument == :number
             self.new(param_description)
           end
@@ -59,7 +59,7 @@ module Katello
           value =~ /\A[\w| |_|-]*\Z/ && value.strip == value && (2..128).include?(value.length)
         end
 
-        def self.build(param_description, argument, options, block)
+        def self.build(param_description, argument, _options, _block)
           if argument == :identifier
             self.new(param_description)
           end
@@ -77,10 +77,10 @@ module Katello
       class BooleanValidator < ::Apipie::Validator::BaseValidator
 
         def validate(value)
-          %w[true false True False].include?(value.to_s)
+          %w(true false True False).include?(value.to_s)
         end
 
-        def self.build(param_description, argument, options, block)
+        def self.build(param_description, argument, _options, _block)
           if argument == :bool
             self.new(param_description)
           end
