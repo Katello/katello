@@ -445,8 +445,8 @@ class ContentViewTest < ActiveSupport::TestCase
   end
 
   def test_content_view_version_publish_description
-    @library_view.create_new_version("Awesome")
-    assert_equal "Awesome", @library_view.versions.reload.last.description
+    version = @library_view.create_new_version("Awesome")
+    assert_equal "Awesome", @library_view.versions.find(version.id).description
   end
 end
 end
