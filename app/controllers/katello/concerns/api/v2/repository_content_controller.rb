@@ -17,7 +17,6 @@ module Katello
 
       included do
         before_filter :find_repository
-        before_filter :find_content_view, :only => [:index]
         before_filter :find_content_view_version, :only => [:index]
         before_filter :find_filter, :only => [:index]
         before_filter :find_content_resource, :only => [:show]
@@ -29,7 +28,6 @@ module Katello
       api :GET, "/content_views/:content_view_id/filters/:filter_id/:resource_id", N_("List :resource_id")
       api :GET, "/content_view_filters/:content_view_filter_id/:resource_id", N_("List :resource_id")
       api :GET, "/repositories/:repository_id/:resource_id", N_("List :resource_id")
-      param :content_view_id, :identifier, :desc => N_("content view identifier")
       param :content_view_version_id, :identifier, :desc => N_("content view version identifier")
       param :content_view_filter_id, :identifier, :desc => N_("content view filter identifier")
       param :repository_id, :number, :desc => N_("repository identifier")
@@ -71,13 +69,6 @@ module Katello
         end
       end
 
-      def find_content_view
-        if params[:content_view_id]
-          @view = ContentView.readable.find_by_id(params[:content_view_id])
-          fail HttpErrors::NotFound, _("Couldn't find Content View with id '%s'.") % params[:content_view_id] if @view.nil?
-        end
-      end
-
       def find_content_resource
         @resource = resource_class.find(params[:id])
 
@@ -96,8 +87,8 @@ module Katello
         # TODO: in v2.rb some routes use "filters", others use "content_view_filters"
         filter_id = params[:content_view_filter_id] || params[:filter_id]
 
-        if filter_id || @view
-          scoped = @view ? @view.filters : ContentViewFilter.scoped
+        if filter_id
+          scoped = ContentViewFilter.scoped
           @filter = scoped.where(:type => filter_class_name).find_by_id(filter_id)
 
           unless @filter
@@ -127,6 +118,8 @@ module Katello
           _("Package")
         when "Katello::PackageGroup"
           _("Package Group")
+        when "Katello::PuppetModule"
+          _("Puppet Module")
         else
           fail "Can't find resource class: #{resource_class}"
         end
@@ -160,6 +153,7 @@ module Katello
       def filter_by_content_view_version(version)
         filter_by_repo_ids(version.archived_repos.map(&:pulp_id))
       end
+
     end
   end
 end

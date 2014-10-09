@@ -171,6 +171,11 @@ module Katello
       (self.repositories.collect{|r| r.product}).uniq
     end
 
+    def puppet_repos
+      # These are the repos that may contain puppet modules that can be associated with the content view
+      self.organization.library.repositories.puppet_type
+    end
+
     def repos(env = nil)
       if env
         repo_ids = versions.flat_map { |version| version.repositories.in_environment(env) }.map(&:id)
