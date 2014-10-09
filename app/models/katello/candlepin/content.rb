@@ -79,18 +79,20 @@ module Katello
                                   :feed_ca => ca,
                                   :feed_cert => product.certificate,
                                   :feed_key => product.key,
-                                  :content_type => content_type,
+                                  :content_type => katello_content_type,
                                   :preserve_metadata => true, #preserve repo metadata when importing from cp
                                   :unprotected => unprotected?,
                                   :content_view_version => product.organization.library.default_content_view_version)
       end
 
       def check_substitutions!
-        if substitutor.valid_substitutions?(content.contentUrl, substitutions)
-          return true
-        else
-          fail _("%{substitutions} are not valid substitutions for %{content_url}") %
-              { substitutions: substitutions, content_url: content.contentUrl }
+        unless content_type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
+          if substitutor.valid_substitutions?(content.contentUrl, substitutions)
+            return true
+          else
+            fail _("%{substitutions} are not valid substitutions for %{content_url}") %
+                { substitutions: substitutions, content_url: content.contentUrl }
+          end
         end
       end
 
@@ -120,7 +122,7 @@ module Katello
       end
 
       def feed_url
-        product.repo_url(path)
+        product.repo_url(path, content_type)
       end
 
       def arch
@@ -145,6 +147,14 @@ module Katello
 
       def content_type
         kickstart? ? 'yum' : content.type
+      end
+
+      def katello_content_type
+        if content_type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
+          ::Katello::Repository::DOCKER_TYPE
+        else
+          content_type
+        end
       end
 
       def unprotected?

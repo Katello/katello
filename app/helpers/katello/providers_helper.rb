@@ -34,7 +34,7 @@ module Katello
       provider.products.engineering.each do |product|
         product.productContent.each do |prod_content|
           name = prod_content.content.name
-          if prod_content.content.type == "containerImage"
+          if prod_content.content.type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
             key = :docker_images
           elsif name.include?(" Beta ")
             key = :beta
