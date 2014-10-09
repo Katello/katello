@@ -30,7 +30,7 @@ module Actions
           end
           errata_to_delete.compact!
           repo.unassociate_by_filter(::Katello::ContentViewErratumFilter::CONTENT_TYPE,
-                                { "id" => { "$in" => errata_to_delete } })
+                                 "id" => { "$in" => errata_to_delete })
         end
       end
     end

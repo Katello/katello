@@ -17,7 +17,7 @@ module Katello
       def validate_each(record, attribute, value)
         unique = self.unique_attribute?(record, attribute, value)
 
-        if !unique
+        unless unique
           message = _("Product with %{attribute} '%{id}' already exists in this organization.") %
                     {:attribute => attribute, :id => value}
           record.errors[attribute] << message

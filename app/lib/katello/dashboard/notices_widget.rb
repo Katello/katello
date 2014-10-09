@@ -11,14 +11,14 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Dashboard::NoticesWidget < Dashboard::Widget
+  class Dashboard::NoticesWidget < Dashboard::Widget
 
-  def title
-    _("Latest Notifications")
-  end
+    def title
+      _("Latest Notifications")
+    end
 
-  def content_path
-    notices_dashboard_index_path
+    def content_path
+      notices_dashboard_index_path
+    end
   end
-end
 end

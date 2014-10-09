@@ -50,7 +50,7 @@ module Actions
           end
 
           def task_result
-           sync_task['result']
+            sync_task['result']
           end
 
           def task_result_details

@@ -20,7 +20,7 @@ module Actions
 
         input_format do
           param :consumer_uuid, String
-          param :type, %w[rpm package_group erratum]
+          param :type, %w(rpm package_group erratum)
           param :args, array_of(String)
         end
 
@@ -28,7 +28,7 @@ module Actions
           pulp_extensions.consumer.install_content(input[:consumer_uuid],
                                                    input[:type],
                                                    input[:args],
-                                                   { "importkeys" => true })
+                                                    "importkeys" => true)
         end
 
         def presenter

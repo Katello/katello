@@ -85,19 +85,19 @@ module Actions
         end
 
         def yum_distributor
-            yum_dist_options = { protected: true,
-                                 id: input[:pulp_id],
-                                 auto_publish: true }
-            yum_dist_options[:checksum_type] = input[:checksum_type] if input[:checksum_type]
-            Runcible::Models::YumDistributor.new(input[:path],
-                                                 input[:unprotected] || false,
-                                                 true,
-                                                 yum_dist_options)
+          yum_dist_options = { protected: true,
+                               id: input[:pulp_id],
+                               auto_publish: true }
+          yum_dist_options[:checksum_type] = input[:checksum_type] if input[:checksum_type]
+          Runcible::Models::YumDistributor.new(input[:path],
+                                               input[:unprotected] || false,
+                                               true,
+                                               yum_dist_options)
         end
 
         def yum_clone_distributor
-            Runcible::Models::YumCloneDistributor.new(id: "#{input[:pulp_id]}_clone",
-                                                        destination_distributor_id: input[:pulp_id])
+          Runcible::Models::YumCloneDistributor.new(id: "#{input[:pulp_id]}_clone",
+                                                    destination_distributor_id: input[:pulp_id])
         end
 
         def nodes_distributor

@@ -39,7 +39,7 @@ module Actions
             end
 
             output[:pulp_tasks] = pulp_tasks =
-                pulp_resources.repository.sync(input[:pulp_id], { override_config: sync_options })
+                pulp_resources.repository.sync(input[:pulp_id],  override_config: sync_options)
             pulp_tasks
           end
         end

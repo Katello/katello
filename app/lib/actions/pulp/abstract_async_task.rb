@@ -16,7 +16,7 @@ module Actions
       include Actions::Base::Polling
       include ::Dynflow::Action::Cancellable
 
-      FINISHED_STATES = %w{finished error canceled skipped}
+      FINISHED_STATES = %w(finished error canceled skipped)
 
       # A call report (documented http://pulp-dev-guide.readthedocs.org/en/latest/conventions/sync-v-async.html)
       # Looks like:  {
@@ -59,7 +59,7 @@ module Actions
       end
 
       def done?
-        external_task.all?{ |task| !!task[:finish_time] || !!FINISHED_STATES.include?(task[:state]) }
+        external_task.all?{ |task| task[:finish_time] || FINISHED_STATES.include?(task[:state]) }
       end
 
       def external_task

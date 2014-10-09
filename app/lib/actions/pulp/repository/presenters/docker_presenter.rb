@@ -97,16 +97,16 @@ module Actions
             content_details && content_details[:state] == 'FINISHED'
           end
 
-          def pending?(content_details)
+          def pending?(_content_details)
             task_progress.nil? || task_progress['state'] == 'NOT_RUNNING'
           end
 
           def metadata_in_progress?
-           sync_task && sync_task[:state] == 'started'
+            sync_task && sync_task[:state] == 'started'
           end
 
           def metadata_error
-           sync_task && sync_task[:state] == 'error' && sync_task[:error][:description]
+            sync_task && sync_task[:state] == 'error' && sync_task[:error][:description]
           end
         end
       end

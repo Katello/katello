@@ -30,7 +30,7 @@ module Actions
 
       private
 
-      def with_locale(&block)
+      def with_locale(&_block)
         I18n.locale = action.input[:locale]
         yield
       ensure

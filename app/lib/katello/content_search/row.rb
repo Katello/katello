@@ -11,15 +11,15 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ContentSearch::Row
-  include ContentSearch::Element
-  display_attributes :id, :name, :cols, :data_type, :value, :parent_id, :comparable, :object_id
-  alias_method :cells, :cols
-  alias_method :cells=, :cols=
+  class ContentSearch::Row
+    include ContentSearch::Element
+    display_attributes :id, :name, :cols, :data_type, :value, :parent_id, :comparable, :object_id
+    alias_method :cells, :cols
+    alias_method :cells=, :cols=
 
-  def add_col(col)
-    self.cols << col
+    def add_col(col)
+      self.cols << col
+    end
+    alias_method :add_cell, :add_col
   end
-  alias_method :add_cell, :add_col
-end
 end

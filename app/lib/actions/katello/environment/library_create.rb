@@ -18,8 +18,8 @@ module Actions
         def plan(library_env)
           library_env.save!
           library_view = ::Katello::ContentView.create!(:default => true,
-                                             :name => "Default Organization View",
-                                             :organization => library_env.organization)
+                                                        :name => "Default Organization View",
+                                                        :organization => library_env.organization)
 
           ::Katello::ContentViewVersion.create! do |v|
             v.content_view = library_view

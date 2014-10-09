@@ -35,7 +35,7 @@ module Actions
               process_errata_and_groups = true
             end
             if remove_clauses
-              plan_remove(Pulp::Repository::RemoveRpm, target_repo, {:unit => remove_clauses})
+              plan_remove(Pulp::Repository::RemoveRpm, target_repo, :unit => remove_clauses)
               process_errata_and_groups = true
             end
             if process_errata_and_groups

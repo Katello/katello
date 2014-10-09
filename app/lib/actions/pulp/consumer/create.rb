@@ -24,7 +24,7 @@ module Actions
 
         def run
           output[:response] = pulp_extensions.consumer.create(input[:uuid],
-                                                              { display_name: input[:name]})
+                                                               display_name: input[:name])
         end
       end
     end

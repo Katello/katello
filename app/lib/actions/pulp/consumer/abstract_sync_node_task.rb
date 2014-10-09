@@ -23,7 +23,7 @@ module Actions
 
           output[:pulp_tasks].each do |pulp_task|
             if pulp_task[:result] && pulp_task[:result].key?(:succeeded) && pulp_task[:result][:succeeded] == false
-              fail StandardError.new(_("Pulp task error.  Refer to task for more details."))
+              fail StandardError, _("Pulp task error.  Refer to task for more details.")
             end
           end
           super(external_task_data)

@@ -11,23 +11,21 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ContentSearch::SearchUtils
-  cattr_accessor :current_organization, :env_ids, :offset, :current_user
+  class ContentSearch::SearchUtils
+    cattr_accessor :current_organization, :env_ids, :offset, :current_user
 
-  def self.search_envs(mode)
-    if mode != :all
-      KTEnvironment.readable.where(:id => self.env_ids)
-    else
-      KTEnvironment.readable
+    delegate :page_size, :to => :current_user
+
+    def self.search_envs(mode)
+      if mode != :all
+        KTEnvironment.readable.where(:id => self.env_ids)
+      else
+        KTEnvironment.readable
+      end
+    end
+
+    def self.offset
+      @@offset.to_i
     end
   end
-
-  def self.page_size
-    current_user.page_size
-  end
-
-  def self.offset
-    @@offset.to_i
-  end
-end
 end

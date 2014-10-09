@@ -65,7 +65,7 @@ module Actions
       end
 
       def create_connection
-        Qpid::Messaging::Connection.new({:url => @url, :options => {:transport => 'ssl'}})
+        Qpid::Messaging::Connection.new(:url => @url, :options => {:transport => 'ssl'})
       end
 
       def close

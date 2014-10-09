@@ -22,7 +22,7 @@ module Actions
 
           sequence do
             plan_action(Pulp::Repository::RemoveRpm, :pulp_id => repository.pulp_id,
-                        :clauses => {:association => {'unit_id' => {'$in' => uuids}}
+                                                     :clauses => {:association => {'unit_id' => {'$in' => uuids}}
             })
             plan_action(ElasticSearch::Repository::RemovePackages, :pulp_id => repository.pulp_id, :uuids => uuids)
             plan_self(:repository_id => repository.id, :user_id => ::User.current.id)
