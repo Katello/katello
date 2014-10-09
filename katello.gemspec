@@ -45,7 +45,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "maruku"
 
   # Pulp
-  gem.add_dependency "runcible", "1.1.0"
+  gem.add_dependency "runcible", "1.2.0"
   gem.add_dependency "anemone"
 
   # UI
