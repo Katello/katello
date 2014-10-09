@@ -6,13 +6,12 @@ attributes :sync_date, :interval, :next_sync
 attributes :created_at, :updated_at
 attributes :enabled
 
-
 child :products => :products do |product|
   attributes :id, :cp_id, :name, :label, :description
 
-  node :repository_count do |product|
-    if product.repositories.to_a.any?
-      product.repositories.count
+  node :repository_count do |prod|
+    if prod.repositories.to_a.any?
+      prod.repositories.count
     else
       0
     end

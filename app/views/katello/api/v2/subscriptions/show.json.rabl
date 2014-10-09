@@ -29,7 +29,6 @@ node :provided_products, :if => lambda { |sub| sub && !sub.products.blank? } do 
 end
 
 node :systems, :if => (params[:action] == "show") do |subscription|
-  current_organization = subscription.organization
   subscription.systems.readable.map do |sys|
     facts = sys.facts
     {
@@ -59,7 +58,6 @@ node :systems, :if => (params[:action] == "show") do |subscription|
 end
 
 node :activation_keys, :if => (params[:action] == "show") do |subscription|
-  current_organization = subscription.organization
   subscription.activation_keys.readable.map do |key|
     {
       id: key.id,
