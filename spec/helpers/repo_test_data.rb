@@ -20,7 +20,7 @@ module RepoTestData
   CLONED_REPO_ID = 'cloned_repository_id'
   CLONED_2_REPO_ID = 'cloned_2_repository_id'
 
-  REPO_PRODUCT_ID = 1313597888827
+  REPO_PRODUCT_ID = 1_313_597_888_827
   REPO_PRODUCT_CP_ID = "4312314881818"
   REPO_ENV_ID = 3
   REPO_ORG_ID = 2
@@ -32,14 +32,14 @@ module RepoTestData
     :label => REPO_LABEL,
     :arch => 'architecture',
     :relative_path => "ACME_Corporation/Library/zoo/base",
-    :content_id=>'123234',
+    :content_id => '123234',
     :url => 'https://localhost',
     "distributors" => [
-       {'config' => {'relative_url'=>"ACME_Corporation/Library/zoo/base"}}
+      {'config' => {'relative_url' => "ACME_Corporation/Library/zoo/base"}}
     ],
     "importers" => [
     ]
-    }.with_indifferent_access
+  }.with_indifferent_access
 
   CLONED_PROPERTIES = {
     :pulp_id => CLONED_REPO_ID,
@@ -49,7 +49,7 @@ module RepoTestData
     :relative_path => "ACME_Corporation/Dev/zoo/base",
     :url => 'https://localhost',
     "distributors" => [
-       {'config' => {'relative_url'=>"ACME_Corporation/Library/zoo/base"}}
+      {'config' => {'relative_url' => "ACME_Corporation/Library/zoo/base"}}
     ]
   }.with_indifferent_access
 
@@ -129,96 +129,92 @@ module RepoTestData
   ].map(&:with_indifferent_access)
 
   ERRATA = [
-    {"reboot_suggested"=>false,
-     "title"=>"Zoo package enhancements",
-     "issued"=>"2010-11-12 00:00:00",
-     "rights"=>"",
-     "pushcount"=>1,
-     "_id"=>"RHEA-2010:9983",
-     "_ns"=>"errata",
-     "id"=>"RHEA-2010:9983",
-     "immutable"=>true,
-     "type"=>"enhancements",
-     "version"=>"1",
-     "solution"=>"",
-     "summary"=>"",
-     "from_str"=>"enhancements@redhat.com",
-     "repo_defined"=>true,
-     "description"=>nil,
-     "release"=>"",
-     "updated"=>"2010-11-13 00:00:00",
-     "status"=>"final",
-     "severity"=>"",
-     "pkglist"=>
-     [{"name"=>"F14 Savanna Animals",
-       "packages"=>
-     [{"epoch"=>"0",
-       "sum"=>["md5", "0118ab5d4188121737cbc28ffda8783d"],
-       "name"=>"cheetah",
-       "arch"=>"noarch",
-       "src"=>"cheetah-0.3-0.8.noarch.rpm",
-       "version"=>"0.3",
-       "filename"=>"cheetah-0.3-0.8.noarch.rpm",
-       "release"=>"0.8"},
-       {"epoch"=>"0",
-        "sum"=>["md5", "b029ffa74171d1f60d58ad25a4822db2"],
-        "name"=>"elephant",
-        "arch"=>"noarch",
-        "src"=>"elephant-0.3-0.8.noarch.rpm",
-        "version"=>"0.3",
-        "filename"=>"elephant-0.3-0.8.noarch.rpm",
-        "release"=>"0.8"},
-        {"epoch"=>"0",
-         "sum"=>["md5", "38721d7eb537d3f1d39bfc7222dbf95d"],
-         "name"=>"giraffe",
-         "arch"=>"noarch",
-         "src"=>"giraffe-0.3-0.8.noarch.rpm",
-         "version"=>"0.3",
-         "filename"=>"giraffe-0.3-0.8.noarch.rpm",
-         "release"=>"0.8"}],
-         "short"=>"F14SavA"}],
-         "references"=>[]},
-         {"reboot_suggested"=>false,
-          "title"=>"Zoo package enhancements",
-          "issued"=>"2010-11-12 00:00:00",
-          "rights"=>"",
-          "pushcount"=>1,
-          "_id"=>"RHEA-2010:9984",
-          "_ns"=>"errata",
-          "id"=>"RHEA-2010:9984",
-          "immutable"=>true,
-          "type"=>"enhancements",
-          "version"=>"1",
-          "solution"=>"",
-          "summary"=>"",
-          "from_str"=>"enhancements@redhat.com",
-          "repo_defined"=>true,
-          "description"=>nil,
-          "release"=>"",
-          "updated"=>"2010-11-13 00:00:00",
-          "status"=>"final",
-          "severity"=>"",
-          "pkglist"=>
-     [{"name"=>"F14 Sea Animals",
-       "packages"=>
-     [{"epoch"=>"0",
-       "sum"=>["md5", "e3c3350f8a443e41aaecd9e9fbb4a711"],
-       "name"=>"walrus",
-       "arch"=>"noarch",
-       "src"=>"walrus-0.3-0.8.noarch.rpm",
-       "version"=>"0.3",
-       "filename"=>"walrus-0.3-0.8.noarch.rpm",
-       "release"=>"0.8"},
-       {"epoch"=>"0",
-        "sum"=>["md5", "a1cb40b5a3a4cdd5bf48573753ff1851"],
-        "name"=>"penguin",
-        "arch"=>"noarch",
-        "src"=>"penguin-0.3-0.8.noarch.rpm",
-        "version"=>"0.3",
-        "filename"=>"penguin-0.3-0.8.noarch.rpm",
-        "release"=>"0.8"}],
-        "short"=>"F14SeaA"}],
-        "references"=>[]}].map(&:with_indifferent_access)
+    {"reboot_suggested" => false,
+     "title" => "Zoo package enhancements",
+     "issued" => "2010-11-12 00:00:00",
+     "rights" => "",
+     "pushcount" => 1,
+     "_id" => "RHEA-2010:9983",
+     "_ns" => "errata",
+     "id" => "RHEA-2010:9983",
+     "immutable" => true,
+     "type" => "enhancements",
+     "version" => "1",
+     "solution" => "",
+     "summary" => "",
+     "from_str" => "enhancements@redhat.com",
+     "repo_defined" => true,
+     "description" => nil,
+     "release" => "",
+     "updated" => "2010-11-13 00:00:00",
+     "status" => "final",
+     "severity" => "",
+     "pkglist" =>      [{"name" => "F14 Savanna Animals",
+                         "packages" =>      [{"epoch" => "0",
+                                              "sum" => %w(md5 0118ab5d4188121737cbc28ffda8783d),
+                                              "name" => "cheetah",
+                                              "arch" => "noarch",
+                                              "src" => "cheetah-0.3-0.8.noarch.rpm",
+                                              "version" => "0.3",
+                                              "filename" => "cheetah-0.3-0.8.noarch.rpm",
+                                              "release" => "0.8"},
+                                             {"epoch" => "0",
+                                              "sum" => %w(md5 b029ffa74171d1f60d58ad25a4822db2),
+                                              "name" => "elephant",
+                                              "arch" => "noarch",
+                                              "src" => "elephant-0.3-0.8.noarch.rpm",
+                                              "version" => "0.3",
+                                              "filename" => "elephant-0.3-0.8.noarch.rpm",
+                                              "release" => "0.8"},
+                                             {"epoch" => "0",
+                                              "sum" => %w(md5 38721d7eb537d3f1d39bfc7222dbf95d),
+                                              "name" => "giraffe",
+                                              "arch" => "noarch",
+                                              "src" => "giraffe-0.3-0.8.noarch.rpm",
+                                              "version" => "0.3",
+                                              "filename" => "giraffe-0.3-0.8.noarch.rpm",
+                                              "release" => "0.8"}],
+                         "short" => "F14SavA"}],
+     "references" => []},
+    {"reboot_suggested" => false,
+     "title" => "Zoo package enhancements",
+     "issued" => "2010-11-12 00:00:00",
+     "rights" => "",
+     "pushcount" => 1,
+     "_id" => "RHEA-2010:9984",
+     "_ns" => "errata",
+     "id" => "RHEA-2010:9984",
+     "immutable" => true,
+     "type" => "enhancements",
+     "version" => "1",
+     "solution" => "",
+     "summary" => "",
+     "from_str" => "enhancements@redhat.com",
+     "repo_defined" => true,
+     "description" => nil,
+     "release" => "",
+     "updated" => "2010-11-13 00:00:00",
+     "status" => "final",
+     "severity" => "",
+     "pkglist" => [{"name" => "F14 Sea Animals",
+                    "packages" => [{"epoch" => "0",
+                                    "sum" => %w(md5 e3c3350f8a443e41aaecd9e9fbb4a711),
+                                    "name" => "walrus",
+                                    "arch" => "noarch",
+                                    "src" => "walrus-0.3-0.8.noarch.rpm",
+                                    "version" => "0.3",
+                                    "filename" => "walrus-0.3-0.8.noarch.rpm",
+                                    "release" => "0.8"},
+                                   {"epoch" => "0",
+                                    "sum" => %w(md5 a1cb40b5a3a4cdd5bf48573753ff1851),
+                                    "name" => "penguin",
+                                    "arch" => "noarch",
+                                    "src" => "penguin-0.3-0.8.noarch.rpm",
+                                    "version" => "0.3",
+                                    "filename" => "penguin-0.3-0.8.noarch.rpm",
+                                    "release" => "0.8"}],
+                    "short" => "F14SeaA"}],
+     "references" => []}].map(&:with_indifferent_access)
 
   # using methods instead of constants due to immutability
   def self.repo_package_groups
@@ -261,20 +257,20 @@ module RepoTestData
   def self.repo_distributions
     {
       "files" => ["/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/boot.iso",
-        "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/efiboot.img",
-        "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/efidisk.img",
-        "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/pxeboot/vmlinuz",
-        "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/pxeboot/initrd.img"],
-        "description" => "desc",
-        "family" => "Fedora",
-        "relativepath" => "",
-        "variant" => "Fedora",
-        "version" => "15",
-        "arch" => "i386",
-        "_ns" => "distribution",
-        "_id" => "distro-id",
-        "id" => "distro-id",
-        "url" => ["https://localhost/pulp/ks/ACME_Corporation/Library/isos/xxx/", "https://localhost/pulp/ks/ACME_Corporation/Dev/isos/xxx/"]
+                  "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/efiboot.img",
+                  "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/efidisk.img",
+                  "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/pxeboot/vmlinuz",
+                  "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/pxeboot/initrd.img"],
+      "description" => "desc",
+      "family" => "Fedora",
+      "relativepath" => "",
+      "variant" => "Fedora",
+      "version" => "15",
+      "arch" => "i386",
+      "_ns" => "distribution",
+      "_id" => "distro-id",
+      "id" => "distro-id",
+      "url" => ["https://localhost/pulp/ks/ACME_Corporation/Library/isos/xxx/", "https://localhost/pulp/ks/ACME_Corporation/Dev/isos/xxx/"]
     }.with_indifferent_access
   end
 
@@ -284,100 +280,100 @@ module RepoTestData
   ]
 
   SUCCESSFULL_SYNC_HISTORY = [
-      {
-        "scheduled_time" => nil,
-        "exception" => nil,
-        "traceback" => nil,
-        "job_id" => nil,
-        "status_path" => "/pulp/api/repositories/1313597888827-prod_a1_dummy_repos_zoo-ACME_Corporation/sync/24ca1782-c8ef-11e0-b3bb-0024d78b4ebc/",
-        "class_name" => nil,
-        "start_time" => "2011-08-17T18:37:06+02:00",
-        "args" => [
-          "1313597888827-prod_a1_dummy_repos_zoo-ACME_Corporation"
-        ],
-        "method_name" => "_sync",
-        "finish_time" => "2011-08-17T18:37:12+02:00",
-        "state" => "finished",
-        "result" => true,
-        "scheduler" => "immediate",
-        "progress" => {
-          "status" => "FINISHED",
-          "num_success" => 8,
-          "size_total" => 17872,
-          "num_download" => 8,
-          "item_name" => nil,
-          "items_left" => 0,
-          "items_total" => 8,
-          "item_type" => "",
-          "step" => "Importing data into pulp",
-          "size_left" => 0,
-          "details" => {
-            "rpm" => {
-              "num_success" => 8,
-              "total_count" => 8,
-              "items_left" => 0,
-              "size_left" => 0,
-              "total_size_bytes" => 17872,
-              "num_error" => 0
-            }
-          },
-          "error_details" => [
-
-          ],
-          "num_error" => 0
+    {
+      "scheduled_time" => nil,
+      "exception" => nil,
+      "traceback" => nil,
+      "job_id" => nil,
+      "status_path" => "/pulp/api/repositories/1313597888827-prod_a1_dummy_repos_zoo-ACME_Corporation/sync/24ca1782-c8ef-11e0-b3bb-0024d78b4ebc/",
+      "class_name" => nil,
+      "start_time" => "2011-08-17T18:37:06+02:00",
+      "args" => [
+        "1313597888827-prod_a1_dummy_repos_zoo-ACME_Corporation"
+      ],
+      "method_name" => "_sync",
+      "finish_time" => "2011-08-17T18:37:12+02:00",
+      "state" => "finished",
+      "result" => true,
+      "scheduler" => "immediate",
+      "progress" => {
+        "status" => "FINISHED",
+        "num_success" => 8,
+        "size_total" => 17_872,
+        "num_download" => 8,
+        "item_name" => nil,
+        "items_left" => 0,
+        "items_total" => 8,
+        "item_type" => "",
+        "step" => "Importing data into pulp",
+        "size_left" => 0,
+        "details" => {
+          "rpm" => {
+            "num_success" => 8,
+            "total_count" => 8,
+            "items_left" => 0,
+            "size_left" => 0,
+            "total_size_bytes" => 17_872,
+            "num_error" => 0
+          }
         },
-        "id" => "24ca1782-c8ef-11e0-b3bb-0024d78b4ebc"
-      }.with_indifferent_access
+        "error_details" => [
+
+        ],
+        "num_error" => 0
+      },
+      "id" => "24ca1782-c8ef-11e0-b3bb-0024d78b4ebc"
+    }.with_indifferent_access
   ]
 
   LAST_SUCC_SYNC_START = "2011-08-17 16:37:06"
   LAST_SUCC_SYNC_FINISH = "2011-08-17 16:37:12"
 
   UNSUCCESSFULL_SYNC_HISTORY = [
-      {
-          "scheduled_time" => nil,
-          "exception" => nil,
-          "traceback" => nil,
-          "job_id" => nil,
-          "status_path" => "/pulp/api/repositories/1313597888827-prod_a1_dummy_repos_zoo-ACME_Corporation/sync/3b83eda3-c8f1-11e0-a41d-0024d78b4ebc/",
-          "class_name" => nil,
-          "start_time" => "2011-08-17T18:52:03+02:00",
-          "args" => [
-            "1313597888827-prod_a1_dummy_repos_zoo-ACME_Corporation"
-          ],
-          "method_name" => "_sync",
-          "finish_time" => "2011-08-17T18:52:08+02:00",
-          "state" => "canceled",
-          "result" => nil,
-          "scheduler" => "immediate",
-          "progress" => {
-            "status" => "FINISHED",
+    {
+      "scheduled_time" => nil,
+      "exception" => nil,
+      "traceback" => nil,
+      "job_id" => nil,
+      "status_path" => "/pulp/api/repositories/1313597888827-prod_a1_dummy_repos_zoo-ACME_Corporation/sync/3b83eda3-c8f1-11e0-a41d-0024d78b4ebc/",
+      "class_name" => nil,
+      "start_time" => "2011-08-17T18:52:03+02:00",
+      "args" => [
+        "1313597888827-prod_a1_dummy_repos_zoo-ACME_Corporation"
+      ],
+      "method_name" => "_sync",
+      "finish_time" => "2011-08-17T18:52:08+02:00",
+      "state" => "canceled",
+      "result" => nil,
+      "scheduler" => "immediate",
+      "progress" => {
+        "status" => "FINISHED",
+        "num_success" => 8,
+        "size_total" => 17_872,
+        "num_download" => 0,
+        "item_name" => nil,
+        "items_left" => 0,
+        "items_total" => 8,
+        "item_type" => "",
+        "step" => "Running Createrepo",
+        "size_left" => 0,
+        "details" => {
+          "rpm" => {
             "num_success" => 8,
-            "size_total" => 17872,
-            "num_download" => 0,
-            "item_name" => nil,
+            "total_count" => 8,
             "items_left" => 0,
-            "items_total" => 8,
-            "item_type" => "",
-            "step" => "Running Createrepo",
             "size_left" => 0,
-            "details" => {
-              "rpm" => {
-                "num_success" => 8,
-                "total_count" => 8,
-                "items_left" => 0,
-                "size_left" => 0,
-                "total_size_bytes" => 17872,
-                "num_error" => 0
-              }
-            },
-            "error_details" => [
-
-            ],
+            "total_size_bytes" => 17_872,
             "num_error" => 0
-          },
-          "id" => "3b83eda3-c8f1-11e0-a41d-0024d78b4ebc"
-        }.with_indifferent_access
+          }
+        },
+        "error_details" => [
+
+        ],
+        "num_error" => 0
+      },
+      "id" => "3b83eda3-c8f1-11e0-a41d-0024d78b4ebc"
+    }.with_indifferent_access
   ]
 
 end

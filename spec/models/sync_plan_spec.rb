@@ -21,7 +21,7 @@ module Katello
     describe "SyncPlan should" do
       before(:each) do
         @organization = get_organization
-        @plan = SyncPlan.create!({:name => 'Norman Rockwell', :organization => @organization, :sync_date => DateTime.now, :interval => 'daily'})
+        @plan = SyncPlan.create!(:name => 'Norman Rockwell', :organization => @organization, :sync_date => DateTime.now, :interval => 'daily')
       end
 
       it "be able to create" do
@@ -98,7 +98,7 @@ module Katello
         p = SyncPlan.find_by_name('Norman Rockwell')
         p.wont_be_nil
         new_name = p.name + "N"
-        p = SyncPlan.update(p.id, {:name => new_name})
+        p = SyncPlan.update(p.id, :name => new_name)
         p.name.must_equal(new_name)
       end
 
@@ -118,14 +118,14 @@ module Katello
 
       it "should properly handle interval when not enabled" do
         @plan.enabled = false
-        @plan.sync_date = DateTime.now.tomorrow()
+        @plan.sync_date = DateTime.now.tomorrow
         @plan.schedule_format.wont_be_nil
-        @plan.schedule_format.must_match(/R1\/.*\/P1D/)
+        @plan.schedule_format.must_match(%r{R1\/.*\/P1D})
       end
 
       it "should properly handle not being enabled if scheduled in the past" do
         @plan.enabled = false
-        @plan.sync_date = DateTime.now.yesterday()
+        @plan.sync_date = DateTime.now.yesterday
         @plan.schedule_format.must_be_nil
       end
     end
