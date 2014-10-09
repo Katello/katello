@@ -1,4 +1,4 @@
-object Katello::Util::Data::ostructize(@collection)
+object Katello::Util::Data.ostructize(@collection)
 
 extends("katello/api/v2/common/metadata")
 
