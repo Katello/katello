@@ -11,59 +11,59 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Authorization::LifecycleEnvironment
-  extend ActiveSupport::Concern
+  module Authorization::LifecycleEnvironment
+    extend ActiveSupport::Concern
 
-  include Authorizable
-  include Katello::Authorization
+    include Authorizable
+    include Katello::Authorization
 
-  def readable?
-    authorized?(:view_lifecycle_environments)
-  end
-
-  def creatable?
-    self.class.creatable?
-  end
-
-  def editable?
-    authorized?(:edit_lifecycle_environments)
-  end
-
-  def deletable?
-    authorized?(:destroy_lifecycle_environments)
-  end
-
-  def promotable_or_removable?
-    authorized?(:promote_or_remove_content_views_to_environments)
-  end
-
-  module ClassMethods
-
-    def readable
-      authorized(:view_lifecycle_environments)
-    end
-
-    def promotable
-      authorized(:promote_or_remove_content_views_to_environments)
-    end
-
-    def promotable?
-      User.current.can?(:promote_or_remove_content_views_to_environments)
-    end
-
-    def any_promotable?
-      promotable.count > 0
+    def readable?
+      authorized?(:view_lifecycle_environments)
     end
 
     def creatable?
-      ::User.current.can?(:create_lifecycle_environments)
+      self.class.creatable?
     end
 
-    def content_readable(org)
-      readable.where(:organization_id => org)
+    def editable?
+      authorized?(:edit_lifecycle_environments)
+    end
+
+    def deletable?
+      authorized?(:destroy_lifecycle_environments)
+    end
+
+    def promotable_or_removable?
+      authorized?(:promote_or_remove_content_views_to_environments)
+    end
+
+    module ClassMethods
+
+      def readable
+        authorized(:view_lifecycle_environments)
+      end
+
+      def promotable
+        authorized(:promote_or_remove_content_views_to_environments)
+      end
+
+      def promotable?
+        User.current.can?(:promote_or_remove_content_views_to_environments)
+      end
+
+      def any_promotable?
+        promotable.count > 0
+      end
+
+      def creatable?
+        ::User.current.can?(:create_lifecycle_environments)
+      end
+
+      def content_readable(org)
+        readable.where(:organization_id => org)
+      end
+
     end
 
   end
-
-end
 end

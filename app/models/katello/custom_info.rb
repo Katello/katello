@@ -11,55 +11,55 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class CustomInfo < Katello::Model
-  self.include_root_in_json = false
+  class CustomInfo < Katello::Model
+    self.include_root_in_json = false
 
-  attr_accessible :keyname, :value, :org_default
+    attr_accessible :keyname, :value, :org_default
 
-  belongs_to :informable, :polymorphic => true
+    belongs_to :informable, :polymorphic => true
 
-  validates_lengths_from_database
-  validates :keyname, :presence => true,
-                      :uniqueness => {:scope => [:informable_type, :informable_id],
-                                      :message => "already exists for this object"}
+    validates_lengths_from_database
+    validates :keyname, :presence => true,
+                        :uniqueness => {:scope => [:informable_type, :informable_id],
+                                        :message => "already exists for this object"}
 
-  validates :informable_id, :presence => true
-  validates :informable_type, :presence => true
+    validates :informable_id, :presence => true
+    validates :informable_type, :presence => true
 
-  before_validation :strip_attributes
-  after_save :reindex_informable
+    before_validation :strip_attributes
+    after_save :reindex_informable
 
-  def self.find_by_informable_keyname(informable, keyname)
-    return informable.custom_info.find_by_keyname(keyname)
+    def self.find_by_informable_keyname(informable, keyname)
+      return informable.custom_info.find_by_keyname(keyname)
+    end
+
+    # find the Katello object by type and ID (i.e. "system", 32)
+    def self.find_informable(informable_type, informable_id)
+      class_name = informable_type.classify
+      class_name = "Katello::#{class_name}" unless class_name.start_with?("Katello::")
+      informable = class_name.constantize.find(informable_id)
+      fail _("Resource %s does not support custom information") % class_name unless informable.respond_to? :custom_info
+      return informable
+    end
+
+    def reindex_informable
+      self.informable.class.index.import([self.informable])
+    end
+
+    def to_s
+      "#{self.keyname}: #{self.value.nil? ? _("NOT-SPECIFIED") : self.value}"
+    end
+
+    def <=>(other)
+      return self.keyname <=> other.keyname
+    end
+
+    private
+
+    def strip_attributes
+      self.keyname.try(:strip!)
+      self.value.try(:strip!)
+    end
+
   end
-
-  # find the Katello object by type and ID (i.e. "system", 32)
-  def self.find_informable(informable_type, informable_id)
-    class_name = informable_type.classify
-    class_name = "Katello::#{class_name}" unless class_name.start_with?("Katello::")
-    informable = class_name.constantize.find(informable_id)
-    fail _("Resource %s does not support custom information") % class_name unless informable.respond_to? :custom_info
-    return informable
-  end
-
-  def reindex_informable
-    self.informable.class.index.import([self.informable])
-  end
-
-  def to_s
-    "#{self.keyname}: #{self.value.nil? ? _("NOT-SPECIFIED") : self.value}"
-  end
-
-  def <=>(other)
-    return self.keyname <=> other.keyname
-  end
-
-  private
-
-  def strip_attributes
-    self.keyname.try(:strip!)
-    self.value.try(:strip!)
-  end
-
-end
 end

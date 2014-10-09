@@ -11,34 +11,34 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Glue::ElasticSearch::ContentViewHistory
-  extend ActiveSupport::Concern
+  module Glue::ElasticSearch::ContentViewHistory
+    extend ActiveSupport::Concern
 
-  included do
-    include Ext::IndexedModel
+    included do
+      include Ext::IndexedModel
 
-    index_options :extended_json => :extended_index_attrs,
-                  :json => {:only => [:user, :id, :created_at, :updated_at]}
+      index_options :extended_json => :extended_index_attrs,
+                    :json => {:only => [:user, :id, :created_at, :updated_at]}
 
-    mapping do
-      indexes :version_id, :type => 'integer'
-      indexes :created_at, :type => 'date'
-      indexes :environment, :type => 'string'
-      indexes :content_view_id, :type => 'integer'
-      indexes :version, :type => 'integer'
-      indexes :user, :type => 'string'
+      mapping do
+        indexes :version_id, :type => 'integer'
+        indexes :created_at, :type => 'date'
+        indexes :environment, :type => 'string'
+        indexes :content_view_id, :type => 'integer'
+        indexes :version, :type => 'integer'
+        indexes :user, :type => 'string'
+      end
     end
-  end
 
-  def extended_index_attrs
-    {
-      :environment => self.environment.try(:name),
-      :version_id => self.version.id,
-      :version => self.version.version,
-      :content_view_id => self.content_view.id,
-      :environment_id => self.katello_environment_id
-    }
-  end
+    def extended_index_attrs
+      {
+        :environment => self.environment.try(:name),
+        :version_id => self.version.id,
+        :version => self.version.version,
+        :content_view_id => self.content_view.id,
+        :environment_id => self.katello_environment_id
+      }
+    end
 
-end
+  end
 end

@@ -23,7 +23,7 @@ module Katello
         alias_method_chain :set_hostgroup_defaults, :content_source
 
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
-                :dependent => :restrict, :inverse_of => :foreman_host
+                               :dependent => :restrict, :inverse_of => :foreman_host
         belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hosts
         scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
       end
@@ -48,7 +48,7 @@ module Katello
       end
 
       def set_hostgroup_defaults_with_content_source
-        assign_hostgroup_attributes(%w{content_source_id}) if hostgroup.present?
+        assign_hostgroup_attributes(%w(content_source_id)) if hostgroup.present?
         set_hostgroup_defaults_without_content_source
       end
     end

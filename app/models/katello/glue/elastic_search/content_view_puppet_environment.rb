@@ -31,10 +31,10 @@ module Katello
 
       def extended_index_attrs
         {
-            :environment => self.environment.try(:name),
-            :archive => self.archive?,
-            :environment_id => self.environment.try(:id),
-            :name_sort => self.name
+          :environment => self.environment.try(:name),
+          :archive => self.archive?,
+          :environment_id => self.environment.try(:id),
+          :name_sort => self.name
         }
       end
 
@@ -46,7 +46,7 @@ module Katello
         puppet_modules.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
           Tire.index Katello::PuppetModule.index do
             import sublist
-          end if !sublist.empty?
+          end unless sublist.empty?
         end
       end
 
@@ -54,7 +54,7 @@ module Katello
         service = Glue::ElasticSearch::Items.new
         service.model = ::Katello::PuppetModule
         options = {:full_result => true,
-                  :filters => {:term => {:repoids => self.pulp_id}}}
+                   :filters => {:term => {:repoids => self.pulp_id}}}
         results, _total = service.retrieve('', 0, options)
         results
       end

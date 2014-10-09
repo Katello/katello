@@ -13,123 +13,121 @@
 require 'time'
 
 module Katello
-class SyncPlan < Katello::Model
-  self.include_root_in_json = false
+  class SyncPlan < Katello::Model
+    self.include_root_in_json = false
 
-  include Glue
+    include Glue
 
-  include Glue::ElasticSearch::SyncPlan if Katello.config.use_elasticsearch
-  include Katello::Authorization::SyncPlan
+    include Glue::ElasticSearch::SyncPlan if Katello.config.use_elasticsearch
+    include Katello::Authorization::SyncPlan
 
-  HOURLY = 'hourly'
-  DAILY = 'daily'
-  WEEKLY = 'weekly'
-  TYPES = [HOURLY, DAILY, WEEKLY]
-  DURATION = {HOURLY => 'T1H', DAILY => 'T24H', WEEKLY => '7D' }
-  WEEK_DAYS = (%w(Sunday Monday Tuesday Wednesday Thursday Friday)).collect{|d| N_(d)}
+    HOURLY = 'hourly'
+    DAILY = 'daily'
+    WEEKLY = 'weekly'
+    TYPES = [HOURLY, DAILY, WEEKLY]
+    DURATION = {HOURLY => 'T1H', DAILY => 'T24H', WEEKLY => '7D' }
+    WEEK_DAYS = (%w(Sunday Monday Tuesday Wednesday Thursday Friday)).collect{|d| N_(d)}
 
-  belongs_to :organization, :inverse_of => :sync_plans
-  has_many :products, :class_name => "Katello::Product", :dependent => :nullify
+    belongs_to :organization, :inverse_of => :sync_plans
+    has_many :products, :class_name => "Katello::Product", :dependent => :nullify
 
-  validates_lengths_from_database
-  validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
-  validates :interval, :inclusion => {:in => TYPES}, :allow_blank => false
-  validates :enabled, :inclusion => [true, false]
-  validate :validate_sync_date
-  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+    validates_lengths_from_database
+    validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
+    validates :interval, :inclusion => {:in => TYPES}, :allow_blank => false
+    validates :enabled, :inclusion => [true, false]
+    validate :validate_sync_date
+    validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
-  before_save :reassign_sync_plan_to_products
+    before_save :reassign_sync_plan_to_products
 
-  scoped_search :on => :name, :complete_value => true
-  scoped_search :on => :organization_id, :complete_value => true
+    scoped_search :on => :name, :complete_value => true
+    scoped_search :on => :organization_id, :complete_value => true
 
-  def reassign_sync_plan_to_products
-    # triggers orchestration in products
-    self.products.each do |product|
-      ::ForemanTasks.sync_task(::Actions::Katello::Product::Update, product, :sync_plan_id => self.id)
-    end
-  end
-
-  def validate_sync_date
-    errors.add :base, _("Start Date and Time can't be blank") if self.sync_date.nil?
-  end
-
-  def zone_converted
-    #convert time to local timezone
-    self.sync_date.localtime.to_datetime
-  end
-
-  def plan_day
-    WEEK_DAYS[self.sync_date.strftime('%A').to_i]
-  end
-
-  def plan_date(localtime = true)
-    date_obj = localtime ? self.zone_converted : self.sync_date
-    date_obj.strftime('%m/%d/%Y')
-  end
-
-  def plan_time(localtime = true)
-    date_obj = localtime ? self.zone_converted : self.sync_date
-    date_obj.strftime('%I:%M %p')
-  end
-
-  def schedule_format
-    if (self.interval != DURATION[self.interval]) && self.enabled
-      format = self.sync_date.iso8601 << "/P" << DURATION[self.interval]
-    else
-      if self.sync_date < Time.now
-        format = nil # do not schedule tasks in past
-      else
-        format = "R1/" << self.sync_date.iso8601 << "/P1D"
+    def reassign_sync_plan_to_products
+      # triggers orchestration in products
+      self.products.each do |product|
+        ::ForemanTasks.sync_task(::Actions::Katello::Product::Update, product, :sync_plan_id => self.id)
       end
     end
-    return format
-  end
 
-  def plan_zone
-    self.sync_date.strftime('%Z')
-  end
+    def validate_sync_date
+      errors.add :base, _("Start Date and Time can't be blank") if self.sync_date.nil?
+    end
 
-  def next_sync
-    now = Time.zone.local_to_utc(Time.now)
-    next_sync = self.sync_date
+    def zone_converted
+      #convert time to local timezone
+      self.sync_date.localtime.to_datetime
+    end
 
-    if self.sync_date < now
-      hours = self.sync_date.hour - now.hour
-      minutes = self.sync_date.min - now.min
-      seconds = self.sync_date.sec - now.sec
+    def plan_day
+      WEEK_DAYS[self.sync_date.strftime('%A').to_i]
+    end
 
-      next_sync = nil
+    def plan_date(localtime = true)
+      date_obj = localtime ? self.zone_converted : self.sync_date
+      date_obj.strftime('%m/%d/%Y')
+    end
 
-      if self.enabled
-        case self.interval
-        when HOURLY
-          if self.sync_date.min < now.min
-            minutes += 60
-          end
-          next_sync = now.advance(:minutes => minutes, :seconds => seconds)
-        when DAILY
-          sync_time = Time.at(self.sync_date.hour * 60 * 60 + self.sync_date.min * 60 + self.sync_date.sec)
-          now_time = Time.at(now.hour * 60 * 60 + now.min * 60 + now.sec)
-          if sync_time < now_time
-            hours += 24
-          end
-          next_sync = now.advance(:hours => hours, :minutes => minutes, :seconds => seconds)
-        when WEEKLY
-          days = 7 + self.sync_date.wday - now.wday
-          next_sync = now.change(:hour => self.sync_date.hour, :min => self.sync_date.min,
-                                 :sec => self.sync_date.sec).advance(:days => days)
+    def plan_time(localtime = true)
+      date_obj = localtime ? self.zone_converted : self.sync_date
+      date_obj.strftime('%I:%M %p')
+    end
+
+    def schedule_format
+      if (self.interval != DURATION[self.interval]) && self.enabled
+        format = self.sync_date.iso8601 << "/P" << DURATION[self.interval]
+      else
+        if self.sync_date < Time.now
+          format = nil # do not schedule tasks in past
+        else
+          format = "R1/" << self.sync_date.iso8601 << "/P1D"
         end
       end
+      return format
     end
-    next_sync
+
+    def plan_zone
+      self.sync_date.strftime('%Z')
+    end
+
+    def next_sync
+      now = Time.zone.local_to_utc(Time.now)
+      next_sync = self.sync_date
+
+      if self.sync_date < now
+        hours = self.sync_date.hour - now.hour
+        minutes = self.sync_date.min - now.min
+        seconds = self.sync_date.sec - now.sec
+
+        next_sync = nil
+
+        if self.enabled
+          case self.interval
+          when HOURLY
+            if self.sync_date.min < now.min
+              minutes += 60
+            end
+            next_sync = now.advance(:minutes => minutes, :seconds => seconds)
+          when DAILY
+            sync_time = Time.at(self.sync_date.hour * 60 * 60 + self.sync_date.min * 60 + self.sync_date.sec)
+            now_time = Time.at(now.hour * 60 * 60 + now.min * 60 + now.sec)
+            if sync_time < now_time
+              hours += 24
+            end
+            next_sync = now.advance(:hours => hours, :minutes => minutes, :seconds => seconds)
+          when WEEKLY
+            days = 7 + self.sync_date.wday - now.wday
+            next_sync = now.change(:hour => self.sync_date.hour, :min => self.sync_date.min,
+                                   :sec => self.sync_date.sec).advance(:days => days)
+          end
+        end
+      end
+      next_sync
+    end
+
+    def self.humanize_class_name(_name = nil)
+      _("Sync Plans")
+    end
+
   end
-
-  private
-
-  def self.humanize_class_name(name = nil)
-    _("Sync Plans")
-  end
-
-end
 end

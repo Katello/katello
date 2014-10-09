@@ -19,8 +19,8 @@ module Katello
         after_save :update_related_index
 
         index_options :extended_json => :extended_index_attrs,
-          :json => {:only => [:id, :name, :description, :organization_id]},
-          :display_attrs => [:name, :description]
+                      :json => {:only => [:id, :name, :description, :organization_id]},
+                      :display_attrs => [:name, :description]
 
         mapping do
           indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
@@ -44,7 +44,7 @@ module Katello
 
     def update_related_index
       if self.name_changed?
-        ActivationKey.index.import(self.activation_keys) if !self.activation_keys.empty?
+        ActivationKey.index.import(self.activation_keys) unless self.activation_keys.empty?
       end
     end
 

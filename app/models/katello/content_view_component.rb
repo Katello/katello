@@ -15,9 +15,9 @@ module Katello
     self.include_root_in_json = false
 
     belongs_to :content_view, :class_name => "Katello::ContentView",
-      :inverse_of => :content_view_components
+                              :inverse_of => :content_view_components
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",
-      :inverse_of => :content_view_components
+                                      :inverse_of => :content_view_components
 
     validates_lengths_from_database
     validates :content_view_version_id, :uniqueness => {:scope => :content_view_id}
@@ -26,7 +26,7 @@ module Katello
     private
 
     def content_view_types
-      if !content_view.composite?
+      unless content_view.composite?
         errors.add(:base, _("Cannot add component versions to a non-composite content view"))
       end
       if content_view_version.content_view.composite?

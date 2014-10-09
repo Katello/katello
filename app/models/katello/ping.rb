@@ -82,7 +82,7 @@ module Katello
       end
 
       # check for exception - set the result code properly
-      def exception_watch(result, &block)
+      def exception_watch(result, &_block)
         start = Time.new
         yield
         result[:status] = OK_RETURN_CODE
