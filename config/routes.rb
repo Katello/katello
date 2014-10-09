@@ -42,9 +42,9 @@ Katello::Engine.routes.draw do
     end
 
     resources :notices, :only => [] do
-     collection do
-      get :get_new
-     end
+      collection do
+        get :get_new
+      end
     end
 
     match 'notices/:id/details' => 'notices#details', :via => :get, :as => 'notices_details'
