@@ -80,8 +80,8 @@ module ::Actions::Katello::System
   class HostDestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::System::HostDestroy }
     it 'plans' do
-      host = mock()
-      content_host = mock()
+      host = mock
+      content_host = mock
       host.expects(:content_host).at_least(1).returns(content_host)
       host.expects(:reload).returns(host)
       host.expects(:destroy).returns(true)
@@ -93,14 +93,15 @@ module ::Actions::Katello::System
     end
   end
 
-
   class ActivationKeyTest < TestBase
     let(:action_class) { ::Actions::Katello::System::ActivationKeys }
 
-    let(:system) { Katello::System.new() }
+    let(:system) { Katello::System.new }
 
-    let(:activation_keys) { [katello_activation_keys(:simple_key),
-                             katello_activation_keys(:library_dev_staging_view_key)] }
+    let(:activation_keys) do
+      [katello_activation_keys(:simple_key),
+       katello_activation_keys(:library_dev_staging_view_key)]
+    end
 
     it 'plans' do
       plan_action(action, system, activation_keys)

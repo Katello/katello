@@ -40,8 +40,8 @@ module Katello
       @env_promote_permission = :promote_or_remove_content_views_to_environments
       @cv_promote_permission = :promote_or_remove_content_views
 
-      @dev_env_promote_permission = {:name=> @env_promote_permission, :search => "name=\"#{@dev.name}\"" }
-      @library_dev_staging_view_promote_permission = {:name=> @cv_promote_permission, :search => "name=\"#{@library_dev_staging_view.name}\"" }
+      @dev_env_promote_permission = {:name => @env_promote_permission, :search => "name=\"#{@dev.name}\"" }
+      @library_dev_staging_view_promote_permission = {:name => @cv_promote_permission, :search => "name=\"#{@library_dev_staging_view.name}\"" }
     end
 
     def setup
@@ -152,8 +152,8 @@ module Katello
     def test_promote_protected
       diff_view = ContentView.find(katello_content_views(:candlepin_default_cv))
       diff_env = KTEnvironment.find(katello_environments(:staging))
-      diff_env_promote_permission = {:name=> @env_promote_permission, :search => "name=\"#{diff_env.name}\"" }
-      diff_view_promote_permission = {:name=> @cv_promote_permission, :search => "name=\"#{diff_view.name}\"" }
+      diff_env_promote_permission = {:name => @env_promote_permission, :search => "name=\"#{diff_env.name}\"" }
+      diff_view_promote_permission = {:name => @cv_promote_permission, :search => "name=\"#{diff_view.name}\"" }
 
       allowed_perms = [[@env_promote_permission, @cv_promote_permission],
                        [@dev_env_promote_permission, @library_dev_staging_view_promote_permission],
@@ -164,7 +164,7 @@ module Katello
                       @env_promote_permission, @cv_promote_permission,
                       [diff_env_promote_permission, @cv_promote_permission],
                       [@env_promote_permission, diff_view_promote_permission],
-                      ]
+                     ]
       assert_protected_action(:promote, allowed_perms, denied_perms) do
         post :promote, :id => @library_dev_staging_view.versions.first.id, :environment_id => @dev.id
       end
@@ -184,7 +184,7 @@ module Katello
 
     def test_destroy_protected
       diff_view = ContentView.find(katello_content_views(:candlepin_default_cv))
-      diff_view_destroy_permission = {:name=> @destroy_permission, :search => "name=\"#{diff_view.name}\"" }
+      diff_view_destroy_permission = {:name => @destroy_permission, :search => "name=\"#{diff_view.name}\"" }
 
       allowed_perms = [@destroy_permission]
 

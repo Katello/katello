@@ -31,4 +31,3 @@ module CapsuleSupport
 
 end
 end
-

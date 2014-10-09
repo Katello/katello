@@ -45,7 +45,7 @@ class ContentViewFilterTest < ActiveSupport::TestCase
   def test_bad_name
     filter = FactoryGirl.build(:katello_content_view_filter, :name => "")
     assert filter.invalid?
-    assert filter.errors.has_key?(:name)
+    assert filter.errors.has_key?(:name) # rubocop:disable Style/DeprecatedHashMethods
   end
 
   def test_duplicate_name

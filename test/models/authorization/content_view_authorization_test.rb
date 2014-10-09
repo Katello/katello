@@ -40,7 +40,7 @@ module Katello
     def test_content_view_publishable?
       assert @view.publishable?
     end
-    
+
     def test_promotable?
       assert @view.promotable_or_removable?
     end
@@ -85,11 +85,11 @@ module Katello
     def test_content_view_deletable?
       refute @view.deletable?
     end
-    
+
     def test_content_view_publishable?
       refute @view.publishable?
     end
-    
+
     def test_promotable?
       refute @view.promotable_or_removable?
     end

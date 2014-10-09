@@ -87,9 +87,7 @@ class ActivationKeyAuthorizationWithPermsTest < AuthorizationTestBase
     ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key))
     keys = ActivationKey.where(:content_view_id => ak.content_view_id, :environment_id => ak.environment)
 
-    clause = keys.map do |key|
-      "name=\"#{key.name}\""
-    end.join(" or ")
+    clause = keys.map { |key| "name=\"#{key.name}\"" }.join(" or ")
 
     setup_current_user_with_permissions(:name => "edit_activation_keys",
                                         :search => clause)

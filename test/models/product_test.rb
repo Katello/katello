@@ -48,8 +48,8 @@ module Katello
     end
 
     def test_create
-      assert        @product.save
-      refute_empty  Product.where(:id => @product.id)
+      assert @product.save
+      refute_empty Product.where(:id => @product.id)
     end
 
     def test_unique_name_per_organization

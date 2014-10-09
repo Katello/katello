@@ -61,21 +61,21 @@ class GlueCandlepinProviderTestImport < GlueCandlepinProviderTestBase
     # Import the newest org1 manifest - should work
     manifest = 'minitest-org1-v2'
     VCR.use_cassette("support/candlepin/provider_#{manifest}", :match_requests_on => [:path, :params, :method]) do
-      @@provider.queue_import_manifest(:zip_file_path=>"test/fixtures/manifests/#{manifest}.zip")
+      @@provider.queue_import_manifest(:zip_file_path => "test/fixtures/manifests/#{manifest}.zip")
     end
 
     # Import the older org1 manifest - should fail
     manifest = 'minitest-org1-v1'
     VCR.use_cassette("support/candlepin/provider_#{manifest}", :match_requests_on => [:path, :params, :method]) do
       assert_raises(RestClient::Conflict) do
-        @@provider.queue_import_manifest(:zip_file_path=>"test/fixtures/manifests/#{manifest}.zip")
+        @@provider.queue_import_manifest(:zip_file_path => "test/fixtures/manifests/#{manifest}.zip")
       end
     end
 
     # Import different org2 manifest - should fail
     manifest = 'minitest-org2-v1'
     VCR.use_cassette("support/candlepin/provider_#{manifest}", :match_requests_on => [:path, :params, :method]) do
-      @@provider.queue_import_manifest(:zip_file_path=>"test/fixtures/manifests/#{manifest}.zip")
+      @@provider.queue_import_manifest(:zip_file_path => "test/fixtures/manifests/#{manifest}.zip")
     end
 
     manifest = 'minitest-org1-v2'

@@ -16,7 +16,7 @@ module Katello
 class GlueElasticSearchTest < ActiveSupport::TestCase
 
   def setup
-    @FakeClass = Class.new do
+    @fake_class = Class.new do
       def self.search
       end
 
@@ -32,7 +32,7 @@ class GlueElasticSearchTest < ActiveSupport::TestCase
     @results.expect(:class, 0)
     @results.expect(:empty?, true)
 
-    @items = Glue::ElasticSearch::Items.new(@FakeClass)
+    @items = Glue::ElasticSearch::Items.new(@fake_class)
   end
 
   def test_items
@@ -42,7 +42,7 @@ class GlueElasticSearchTest < ActiveSupport::TestCase
     @results.expect(:results, [])
     @results.expect(:facets, {})
 
-    @FakeClass.stub(:search, @results) do
+    @fake_class.stub(:search, @results) do
       items, count = @items.retrieve("*")
 
       assert_empty items
@@ -54,7 +54,7 @@ class GlueElasticSearchTest < ActiveSupport::TestCase
     @results.expect(:length, 0)
     @results.expect(:order, [], [[]])
 
-    @FakeClass.stub(:where, @results) do
+    @fake_class.stub(:where, @results) do
       @items.results = []
       items = @items.load_records
 
@@ -65,7 +65,7 @@ class GlueElasticSearchTest < ActiveSupport::TestCase
   def test_total_items
     @results.expect(:total, 10)
 
-    @FakeClass.stub(:search, @results) do
+    @fake_class.stub(:search, @results) do
       total = @items.total_items
 
       assert_equal 10, total

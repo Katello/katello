@@ -55,7 +55,7 @@ class Actions::Candlepin::Product::DestroyTest < ActiveSupport::TestCase
     end
 
     it 'runs' do
-      pool = mock()
+      pool = mock
       pool.expects(:destroy)
       ::Katello::Pool.expects(:find_all_by_cp_id).with(pool_id).returns([pool])
       ::Katello::Resources::Candlepin::Pool.expects(:destroy).with(pool_id)

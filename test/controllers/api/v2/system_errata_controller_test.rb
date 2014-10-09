@@ -55,7 +55,7 @@ class Api::V2::SystemErrataControllerTest < ActionController::TestCase
     bad_perms = [@view_permission, @create_permission, @destroy_permission]
 
     assert_protected_action(:apply, good_perms, bad_perms) do
-      put :apply, :system_id => @system.uuid, :errata=> ["foo*"]
+      put :apply, :system_id => @system.uuid, :errata => ["foo*"]
     end
   end
 

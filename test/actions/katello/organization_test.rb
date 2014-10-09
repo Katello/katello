@@ -55,7 +55,6 @@ module ::Actions::Katello::Organization
 
     it 'plans' do
       env = stub
-      library = stub
 
       action.stubs(:action_subject).with(organization)
       default_view = stub(:content_view_environments => [])

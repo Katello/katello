@@ -125,8 +125,8 @@ class GluePulpRepoTest < GluePulpRepoTestBase
 
   def test_sync
     task_list = @fedora_17_x86_64.sync
-    refute_empty    task_list
-    assert_kind_of  PulpSyncStatus, task_list.first
+    refute_empty task_list
+    assert_kind_of PulpSyncStatus, task_list.first
     TaskSupport.wait_on_tasks(task_list)
   end
 
@@ -144,7 +144,6 @@ class GluePulpRepoTest < GluePulpRepoTestBase
       Glue::Pulp::Repos.custom_repo_path(env, product, "test")
   end
 end
-
 
 class GluePulpRepoAfterSyncTest < GluePulpRepoTestBase
 
@@ -210,7 +209,6 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
   end
 end
 
-
 class GluePulpRepoContentsTest < GluePulpRepoTestBase
 
   def self.before_suite
@@ -272,7 +270,7 @@ class GluePulpRepoContentsTest < GluePulpRepoTestBase
     assert_empty @@fedora_17_x86_64.errata
     @@fedora_17_x86_64.index_db_errata
     @@fedora_17_x86_64.reload
-    refute_empty@@fedora_17_x86_64.errata
+    refute_empty @@fedora_17_x86_64.errata
   end
 
   def test_distributions
@@ -310,7 +308,6 @@ class GluePulpRepoContentsTest < GluePulpRepoTestBase
   end
 end
 
-
 class GluePulpRepoOperationsTest < GluePulpRepoTestBase
 
   def self.before_suite
@@ -336,7 +333,7 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
     assert_kind_of Repository, clone
   ensure
     clone.destroy
-    assert_empty Repository.where(:id=>clone.id)
+    assert_empty Repository.where(:id => clone.id)
   end
 
   def test_clone_contents

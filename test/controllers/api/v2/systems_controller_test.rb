@@ -63,7 +63,6 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
     assert_template 'api/v2/systems/errata'
   end
 
-
   def test_index_protected
     allowed_perms = [@view_permission]
     denied_perms = [@create_permission, @update_permission, @destroy_permission]
@@ -91,10 +90,11 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
   end
 
   def test_index_with_system_id_only
-    Api::V2::SystemsController.any_instance.expects(:item_search).with do |model, params, options|
+    mock = Api::V2::SystemsController.any_instance.expects(:item_search).with do |model, params, options|
       terms = options[:filters].inject({}){|all_terms, filter| all_terms.merge(filter[:terms]) }
       terms[:environment_id] ==  @system.environment.id.to_s
-    end.returns({})
+    end
+    mock.returns({})
 
     get :index, :environment_id => @system.environment.id
 
@@ -103,22 +103,24 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
   end
 
   def test_index_with_org_id_only
-    Api::V2::SystemsController.any_instance.expects(:item_search).with do |model, params, options|
+    mock = Api::V2::SystemsController.any_instance.expects(:item_search).with do |model, params, options|
       terms = options[:filters].inject({}){|all_terms, filter| all_terms.merge(filter[:terms]) }
       terms[:environment_id] == @organization.kt_environments.pluck(:id)
-    end.returns({})
+    end
+    mock.returns({})
 
-    get :index, :organization_id=> @organization.id
+    get :index, :organization_id => @organization.id
 
     assert_response :success
     assert_template 'api/v2/systems/index'
   end
 
   def test_index_with_system_id_and_org_id
-    Api::V2::SystemsController.any_instance.expects(:item_search).with do |model, params, options|
+    mock = Api::V2::SystemsController.any_instance.expects(:item_search).with do |model, params, options|
       terms = options[:filters].inject({}){|all_terms, filter| all_terms.merge(filter[:terms]) }
       terms[:environment_id] == [@system.environment.id]
-    end.returns({})
+    end
+    mock.returns({})
 
     get :index, :organization_id => @organization.id, :environment_id => @system.environment.id
 

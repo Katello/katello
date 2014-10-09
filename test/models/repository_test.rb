@@ -30,8 +30,8 @@ class RepositoryCreateTest < RepositoryTestBase
   end
 
   def test_create
-    assert        @repo.save
-    refute_empty  Repository.where(:id=>@repo.id)
+    assert @repo.save
+    refute_empty Repository.where(:id => @repo.id)
   end
 
   def test_unique_repository_name_per_product_and_environment
@@ -192,7 +192,7 @@ class RepositoryInstanceTest < RepositoryTestBase
     @fedora_17_x86_64.stubs(:checksum_type).returns(nil)
     clone = @fedora_17_x86_64.create_clone(:environment => @staging)
     assert clone.id
-    assert Repository.in_environment(@staging).where(:library_instance_id=>@fedora_17_x86_64.id).count > 0
+    assert Repository.in_environment(@staging).where(:library_instance_id => @fedora_17_x86_64.id).count > 0
   end
 
   def test_create_clone_preserve_type
@@ -303,40 +303,40 @@ class RepositoryInstanceTest < RepositoryTestBase
   def test_errata_filenames
     rhel = Repository.find(katello_repositories(:rhel_6_x86_64))
 
-    refute_empty  rhel.errata_filenames
+    refute_empty rhel.errata_filenames
     assert_includes rhel.errata_filenames, rhel.errata.first.packages.first.filename
   end
 
 end
 
-  class RepositoryApplicabilityTest < RepositoryTestBase
+class RepositoryApplicabilityTest < RepositoryTestBase
 
-    def setup
-      super
-      @lib_system = System.find(katello_systems(:simple_server))
-      @lib_repo =  @fedora_17_x86_64
-      @lib_system.environment = @fedora_17_x86_64.environment
-      @lib_system.bound_repositories = [@lib_repo]
-      @lib_system.save!
+  def setup
+    super
+    @lib_system = System.find(katello_systems(:simple_server))
+    @lib_repo =  @fedora_17_x86_64
+    @lib_system.environment = @fedora_17_x86_64.environment
+    @lib_system.bound_repositories = [@lib_repo]
+    @lib_system.save!
 
-      @view_system = System.find(katello_systems(:simple_server2))
-      @view_repo = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1))
-      @view_system.bound_repositories = [@view_repo]
-      @view_system.save!
-    end
-
-    def test_systems_with_applicability
-      assert_includes @lib_repo.systems_with_applicability, @lib_system
-      assert_includes @view_repo.systems_with_applicability, @view_system
-    end
-
-    def test_import_system_applicability
-      mock_active_records(@lib_system, @view_system)
-      @lib_system.expects(:import_applicability)
-      @view_system.expects(:import_applicability)
-      @lib_repo.import_system_applicability
-    end
-
+    @view_system = System.find(katello_systems(:simple_server2))
+    @view_repo = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1))
+    @view_system.bound_repositories = [@view_repo]
+    @view_system.save!
   end
+
+  def test_systems_with_applicability
+    assert_includes @lib_repo.systems_with_applicability, @lib_system
+    assert_includes @view_repo.systems_with_applicability, @view_system
+  end
+
+  def test_import_system_applicability
+    mock_active_records(@lib_system, @view_system)
+    @lib_system.expects(:import_applicability)
+    @view_system.expects(:import_applicability)
+    @lib_repo.import_system_applicability
+  end
+
+end
 
 end

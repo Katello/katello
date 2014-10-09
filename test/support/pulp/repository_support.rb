@@ -24,12 +24,12 @@ module RepositorySupport
     @repo.id
   end
 
-  def self.repo
-    @repo
+  class << self
+    attr_reader :repo
   end
 
-  def self.repo_url
-    @repo_url
+  class << self
+    attr_reader :repo_url
   end
 
   def self.create_and_sync_repo(repo_id)
@@ -67,6 +67,7 @@ module RepositorySupport
   def self.destroy_repo
     ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :pulp_id => @repo.pulp_id)
   rescue RestClient::ResourceNotFound => e
+    puts "Failed to sync repo destroy #{e.message}"
   end
 
 end

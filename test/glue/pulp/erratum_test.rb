@@ -59,7 +59,6 @@ class GlueErratumTest < GlueErratumTestBase
     erratum = Erratum.create!(:uuid => errata_data['_id'])
     erratum.update_from_json(errata_data)
     %w(title severity issued description solution updated summary).each do |attr|
-      debugger if erratum.send(attr).blank?
       assert erratum.send(attr)
     end
     assert_equal Erratum::SECURITY, erratum.errata_type
@@ -69,7 +68,6 @@ class GlueErratumTest < GlueErratumTestBase
     refute erratum.packages.first.filename.blank?
     refute erratum.packages.first.nvrea.blank?
     refute erratum.packages.first.name.blank?
-
 
     refute_empty erratum.bugzillas
     refute_empty erratum.bugzillas.first.bug_id

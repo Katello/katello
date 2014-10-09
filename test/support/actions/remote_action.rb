@@ -25,7 +25,7 @@ module Support
         if [:resources, :extensions].include?(entry_method)
           method_chain.unshift "pulp_#{entry_method}"
         else
-          raise "Unexpected entry method: #{entry_method}"
+          fail "Unexpected entry method: #{entry_method}"
         end
         last_method = method_chain.pop
         last_stub = method_chain.reduce(action) do |target, method|

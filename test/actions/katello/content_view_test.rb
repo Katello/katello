@@ -34,7 +34,7 @@ module ::Actions::Katello::ContentView
     end
 
     def content_view_environment
-      ::Katello::ContentViewEnvironment.where(:environment_id => environment.id, :content_view_id => content_view.id).first      
+      ::Katello::ContentViewEnvironment.where(:environment_id => environment.id, :content_view_id => content_view.id).first
     end
 
     it 'plans' do

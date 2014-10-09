@@ -129,29 +129,27 @@ module Katello
         System.stubs(:first).returns(@system)
         uuid = @system.uuid
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid))
-        Repository.stubs(:where).with(:relative_path=>'foo').returns([OpenStruct.new({ :pulp_id => 'a' })])
-        Repository.stubs(:where).with(:relative_path=>'bar').returns([OpenStruct.new({ :pulp_id => 'b' })])
+        Repository.stubs(:where).with(:relative_path => 'foo').returns([OpenStruct.new({ :pulp_id => 'a' })])
+        Repository.stubs(:where).with(:relative_path => 'bar').returns([OpenStruct.new({ :pulp_id => 'b' })])
       end
-      let(:enabled_repos) {
+      let(:enabled_repos) do
         {
             "repos" => [
-                {
-                    "baseurl" => ["https://hostname/pulp/repos/foo"],
-                },
-                {
-                    "baseurl" => ["https://hostname/pulp/repos/bar"],
-                },
+              {
+                  "baseurl" => ["https://hostname/pulp/repos/foo"],
+              },
+              {
+                  "baseurl" => ["https://hostname/pulp/repos/bar"],
+              },
             ]
         }
-      }
+      end
 
       it "should bind all" do
         @system.expects(:save_bound_repos_by_path!).with(["/pulp/repos/foo", "/pulp/repos/bar"])
-
         put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
         assert_equal 200, response.status
       end
-
     end
 
     describe "list owners" do
@@ -159,7 +157,7 @@ module Katello
         User.current = User.find(users(:admin))
         get :list_owners, :login => User.current.login
 
-        assert_empty (JSON.parse(response.body).collect { |org| org['displayName'] } - Organization.pluck(:name))
+        assert_empty((JSON.parse(response.body).collect { |org| org['displayName'] } - Organization.pluck(:name)))
       end
 
       it 'should return organizations user is assigned to' do
@@ -196,7 +194,7 @@ module Katello
 
     it "test_consumer_create_protected" do
       assert_protected_action(:consumer_create, [[:create_content_hosts,
-                    :view_lifecycle_environments, :view_content_views]]) do
+                                                  :view_lifecycle_environments, :view_content_views]]) do
         post :consumer_create, :environment_id => @organization.library.content_view_environments.first.cp_id
       end
     end
@@ -251,11 +249,11 @@ module Katello
         Resources::Candlepin::Consumer.stubs(:get).returns(Resources::Candlepin::Consumer.new({:id => 1, :uuid => 2 }))
       end
 
-       it "can be accessed by user" do
-         User.current = setup_user_with_permissions(:create_content_hosts, User.find(users(:restricted).id))
-         get :consumer_show, :id => @system.uuid
-         assert_response 200
-       end
+      it "can be accessed by user" do
+        User.current = setup_user_with_permissions(:create_content_hosts, User.find(users(:restricted).id))
+        get :consumer_show, :id => @system.uuid
+        assert_response 200
+      end
 
       it "can be accessed by client" do
         uuid = @system.uuid

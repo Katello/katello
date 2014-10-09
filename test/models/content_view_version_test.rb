@@ -27,8 +27,8 @@ class ContentViewVersionTest < ActiveSupport::TestCase
     User.current = User.find(users(:admin))
     @cvv = create(:katello_content_view_version)
     @cvv.organization.kt_environments << Katello::KTEnvironment.find_by_name(:Library)
-    @dev = create(:katello_environment,  :organization => @cvv.organization, :prior => @cvv.organization.library,     :name=> 'dev' )
-    @beta = create(:katello_environment, :organization => @cvv.organization, :prior => @dev,                         :name=> 'beta' )
+    @dev = create(:katello_environment,  :organization => @cvv.organization, :prior => @cvv.organization.library,     :name => 'dev')
+    @beta = create(:katello_environment, :organization => @cvv.organization, :prior => @dev,                         :name => 'beta')
   end
 
   def test_promotable_in_sequence

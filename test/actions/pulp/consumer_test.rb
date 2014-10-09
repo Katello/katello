@@ -31,16 +31,17 @@ module ::Actions::Pulp
 
     def teardown
       configure_runcible
-      consumer = ::Katello.pulp_server.resources.consumer.delete(uuid)
+      ::Katello.pulp_server.resources.consumer.delete(uuid)
     rescue RestClient::ResourceNotFound => e
+      puts "Failed to delete consumer #{e.message}"
     end
 
     def it_runs(planned_action, *invocation_method)
-      action = run_action planned_action do |action|
-        expectation = runcible_expects(action, *invocation_method)
-        yield expectation, action if block_given?
+      action = run_action planned_action do |actn|
+        expectation = runcible_expects(actn, *invocation_method)
+        yield expectation, actn if block_given?
         expectation.returns(task_base)
-        stub_task_poll action, task_base.merge(task_finished_hash)
+        stub_task_poll actn, task_base.merge(task_finished_hash)
       end
 
       action.wont_be :done?
@@ -118,7 +119,6 @@ module ::Actions::Pulp
     def teardown
       ::Katello::RepositorySupport.destroy_repo
     end
-
 
     def test_bind_node_distributor
       action = create_and_plan_action(::Actions::Pulp::Consumer::BindNodeDistributor,

@@ -200,7 +200,8 @@ def stub_lazy_accessors(model, stubs)
   target.stubs(stubs)
 end
 
-def disable_glue_layers(services=[], models=[], force_reload=false)
+# rubocop:disable Style/MethodLength
+def disable_glue_layers(services = [], models = [], force_reload = false)
   @@glue_touched_models ||= Set.new
   @@model_service_cache ||= {}
   @@model_service_cache = {} if force_reload
@@ -283,7 +284,7 @@ end
 def restore_glue_layers
   if defined?(@@disable_glue_models_backup) && @@disable_glue_models_backup.any?
     @@disable_glue_models_backup.each do |target_module, constant, value|
-      Kernel::silence_warnings { target_module.const_set(constant, value) }
+      Kernel.silence_warnings { target_module.const_set(constant, value) }
     end
     constants_updated
     @@disable_glue_models_backup.clear

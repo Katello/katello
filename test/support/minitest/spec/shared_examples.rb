@@ -11,7 +11,7 @@ module MiniTest::Spec::SharedExamples
 
   def it_should_behave_like(desc)
     describe desc do
-      instance_eval &MiniTest::Spec.shared_examples[desc]
+      instance_eval { MiniTest::Spec.shared_examples[desc] }
     end
   end
 end

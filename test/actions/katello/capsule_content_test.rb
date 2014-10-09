@@ -21,7 +21,6 @@ module ::Actions::Katello::CapsuleContent
     include Support::CapsuleSupport
     include Support::Actions::RemoteAction
 
-
     let(:environment) do
       katello_environments(:dev)
     end
@@ -29,7 +28,6 @@ module ::Actions::Katello::CapsuleContent
     let(:repository) do
       katello_repositories(:fedora_17_x86_64_dev)
     end
-
 
     before do
       @capsule_system = create(:katello_system,

@@ -186,7 +186,7 @@ module Katello
     end
 
     def test_content_override
-      results = JSON.parse(put(:update ,:id => @activation_key.id, :content_label => 'some-content',
+      results = JSON.parse(put(:update, :id => @activation_key.id, :content_label => 'some-content',
                                :name => 'enabled', :value => 1).body)
 
       assert_equal results['name'], 'enabled'

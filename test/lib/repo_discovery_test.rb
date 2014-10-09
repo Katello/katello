@@ -24,7 +24,7 @@ class FileRepoDiscoveryTest < ActiveSupport::TestCase
     continue_proc = lambda{true}
 
     found_final = rd.run(add_proc, continue_proc)
-    assert_equal  found, found_final  #validate that final list equals incremental list
+    assert_equal found, found_final  #validate that final list equals incremental list
     assert_equal 1, found.size
     assert_equal found.first, base_url + 'test_repos/zoo'
   end

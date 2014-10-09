@@ -13,6 +13,7 @@
 
 require "katello_test_helper"
 
+# rubocop:disable Style/MethodLength
 module Katello
   class Api::V2::ContentViewsControllerTest < ActionController::TestCase
 
@@ -374,8 +375,8 @@ module Katello
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do
         put :remove, :id => @library_dev_staging_view.id,
-                      :content_view_version_ids => [ @library_dev_staging_view.version(@dev).id,
-                                                     @library_dev_staging_view.version(@staging).id]
+                      :content_view_version_ids => [@library_dev_staging_view.version(@dev).id,
+                                                    @library_dev_staging_view.version(@staging).id]
       end
     end
 
@@ -401,24 +402,23 @@ module Katello
       bad_cv_read_permission = {:name => :view_content_views,
                                        :search => "name=\"#{bad_cv.name}\"" }
 
-
       bad_env = KTEnvironment.find(katello_environments(:dev_path1))
       bad_env_read_permission = {:name => :view_lifecycle_environments,
                                        :search => "name=\"#{bad_env.name}\"" }
 
       allowed_perms = [[:edit_content_hosts, :promote_or_remove_content_views, :view_content_views,
-                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
+                        :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
                        [system_edit_permission, sys_cv_remove_permission, sys_env_remove_permission,
-                         alternate_env_read_permission, alternate_cv_read_permission],
+                        alternate_env_read_permission, alternate_cv_read_permission],
                       ]
 
       denied_perms = [[:edit_content_hosts, :promote_or_remove_content_views,
-                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
+                       :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
                       [system_edit_permission, sys_cv_remove_permission, sys_env_remove_permission,
-                         bad_env_read_permission, alternate_cv_read_permission],
+                       bad_env_read_permission, alternate_cv_read_permission],
                       [system_edit_permission, sys_cv_remove_permission, sys_env_remove_permission,
-                         alternate_env_read_permission, bad_cv_read_permission]
-                      ]
+                       alternate_env_read_permission, bad_cv_read_permission]
+                     ]
 
       env_ids = [sys.environment.id.to_s]
 
@@ -433,7 +433,6 @@ module Katello
                      :system_environment_id => alternate_env.id
       end
     end
-
 
     def test_remove_protected_envs_with_activation_keys
       ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key))
@@ -457,24 +456,23 @@ module Katello
       bad_cv_read_permission = {:name => :view_content_views,
                                        :search => "name=\"#{bad_cv.name}\"" }
 
-
       bad_env = KTEnvironment.find(katello_environments(:dev_path1))
       bad_env_read_permission = {:name => :view_lifecycle_environments,
                                        :search => "name=\"#{bad_env.name}\"" }
 
       allowed_perms = [[:edit_activation_keys, :promote_or_remove_content_views, :view_content_views,
-                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
+                        :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
                        [ak_edit_permission, ak_cv_remove_permission, ak_env_remove_permission,
-                         alternate_env_read_permission, alternate_cv_read_permission],
+                        alternate_env_read_permission, alternate_cv_read_permission],
                       ]
 
       denied_perms = [[:edit_activation_keys, :promote_or_remove_content_views,
-                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
+                       :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
                       [ak_edit_permission, ak_cv_remove_permission, ak_env_remove_permission,
-                         bad_env_read_permission, alternate_cv_read_permission],
+                       bad_env_read_permission, alternate_cv_read_permission],
                       [ak_edit_permission, ak_cv_remove_permission, ak_env_remove_permission,
-                         alternate_env_read_permission, bad_cv_read_permission]
-                      ]
+                       alternate_env_read_permission, bad_cv_read_permission]
+                     ]
 
       env_ids = [ak.environment.id.to_s]
 
@@ -489,7 +487,6 @@ module Katello
                      :key_environment_id => alternate_env.id
       end
     end
-
 
   end
 end

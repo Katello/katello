@@ -19,8 +19,8 @@ module Katello
     TAGS = File.join(Katello::Engine.root, "test", "fixtures", "pulp", "docker_tags.yml")
 
     def setup
-      @images = YAML::load_file(IMAGES).values.map(&:symbolize_keys)
-      @tags = YAML::load_file(TAGS).values.map(&:symbolize_keys)
+      @images = YAML.load_file(IMAGES).values.map(&:symbolize_keys)
+      @tags = YAML.load_file(TAGS).values.map(&:symbolize_keys)
       @repo_attrs = {:scratchpad => {:tags => @tags}}
     end
 

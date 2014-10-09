@@ -21,7 +21,7 @@ module AuthorizationSupportMethods
       begin
         role.add_permissions!([perm[:name]], :search => perm[:search])
       rescue ArgumentError => e
-        fail("Permissions not found: #{perm[:name]}")
+        raise("Permissions not found: #{perm[:name]}, #{e.message}")
       end
     end
     role

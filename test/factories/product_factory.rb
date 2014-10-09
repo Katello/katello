@@ -4,9 +4,9 @@ FactoryGirl.define do
     sequence(:label) { |n| "product_#{n}" }
 
     trait :fedora do
-      name          "Fedora"
-      description   "The open source Linux distribution."
-      label         "fedora_label"
+      name "Fedora"
+      description "The open source Linux distribution."
+      label "fedora_label"
     end
 
   end

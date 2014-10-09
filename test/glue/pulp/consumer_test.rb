@@ -38,7 +38,6 @@ class GluePulpConsumerTestBase < ActiveSupport::TestCase
   end
 end
 
-
 class GluePulpConsumerTestCreateDestroy < GluePulpConsumerTestBase
   def setup
     VCR.insert_cassette('pulp/consumer/create')
@@ -56,7 +55,6 @@ class GluePulpConsumerTestCreateDestroy < GluePulpConsumerTestBase
 
 end
 
-
 class GluePulpConsumerDeleteTest < GluePulpConsumerTestBase
 
   def setup
@@ -73,7 +71,6 @@ class GluePulpConsumerDeleteTest < GluePulpConsumerTestBase
     assert @simple_server.del_pulp_consumer
   end
 end
-
 
 class GluePulpConsumerTest < GluePulpConsumerTestBase
   def setup
@@ -112,7 +109,6 @@ class GluePulpConsumerTest < GluePulpConsumerTestBase
   end
 end
 
-
 class GluePulpConsumerBindTest < GluePulpConsumerTestBase
   @@simple_server = nil
 
@@ -141,7 +137,6 @@ class GluePulpConsumerBindTest < GluePulpConsumerTestBase
     refute_includes error_ids, RepositorySupport.repo.pulp_id
   end
 end
-
 
 class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
   @@simple_server = nil
