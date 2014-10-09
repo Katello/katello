@@ -50,7 +50,7 @@ module Katello
                               :content_view_version_ids => [],
                               :environment_ids => []
                               )
-      options = options.reject { |k, v| v.blank? }
+      options = options.reject { |_k, v| v.blank? }
 
       authorize_remove_versions(view, options) &&
         authorize_remove_environments(view, options) &&

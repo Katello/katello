@@ -107,7 +107,7 @@ module Katello
       repo_ids = @view.organization.library.puppet_repositories.pluck(:pulp_id)
       search_filters = [{ :terms => { :repoids => repo_ids }}]
 
-      if !current_ids.empty?
+      unless current_ids.empty?
         search_filters << { :not => { :terms => { :id => current_ids } } }
       end
       search_filters << { :term => { :name => params[:name] } } if params[:name]
@@ -127,7 +127,7 @@ module Katello
       repo_ids = @view.organization.library.puppet_repositories.pluck(:pulp_id)
       search_filters = [{ :terms => { :repoids => repo_ids } }]
 
-      if !current_names.empty?
+      unless current_names.empty?
         search_filters << { :not => { :terms => { :name => current_names } } }
       end
 
@@ -184,7 +184,7 @@ module Katello
                              :system_environment_id,
                              :key_content_view_id,
                              :key_environment_id
-                            ).reject { |k, v| v.nil? }
+                            ).reject { |_k, v| v.nil? }
       options[:content_view_versions] = versions
       options[:content_view_environments] = cv_envs
 
@@ -213,7 +213,7 @@ module Katello
       @view = ContentView.find(params[:id])
 
       if @view.default? && !%w(show history).include?(params[:action])
-        fail HttpErrors::BadRequest.new(_("The default content view cannot be edited, published, or deleted."))
+        fail HttpErrors::BadRequest, _("The default content view cannot be edited, published, or deleted.")
       end
     end
 

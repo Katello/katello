@@ -71,7 +71,7 @@ module Katello
     def find_content_view
       @view = @version ? @version.content_view : ContentView.find(params[:content_view_id])
       if @view.default? && params[:action] == "promote"
-        fail HttpErrors::BadRequest.new(_("The default content view cannot be promoted"))
+        fail HttpErrors::BadRequest, _("The default content view cannot be promoted")
       end
     end
 

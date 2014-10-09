@@ -122,13 +122,6 @@ module Katello
 
     protected
 
-    def is_database_id?(num)
-      Integer(num)
-      true
-    rescue
-      false
-    end
-
     def labelize_params(param_hash)
       return param_hash[:label] unless param_hash.try(:[], :label).nil?
       return Util::Model.labelize(param_hash[:name]) unless param_hash.try(:[], :name).nil?
@@ -171,7 +164,7 @@ module Katello
     end
 
     def find_default_organization_and_or_environment
-      return if (params.keys & %w{organization_id owner environment_id host_collection_id}).any?
+      return if (params.keys & %w(organization_id owner environment_id host_collection_id)).any?
 
       if current_user.default_organization.present?
         @organization = current_user.default_organization

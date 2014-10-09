@@ -12,36 +12,36 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class OrganizationsController < Katello::ApplicationController
+  class OrganizationsController < Katello::ApplicationController
 
-  before_filter :search_filter, :only => [:auto_complete_search]
+    before_filter :search_filter, :only => [:auto_complete_search]
 
-  def rules
-    {
-      :auto_complete_search => lambda{Organization.any_readable?},
-      :default_label => lambda{Organization.creatable?}
-    }
+    def rules
+      {
+        :auto_complete_search => lambda{Organization.any_readable?},
+        :default_label => lambda{Organization.creatable?}
+      }
+    end
+
+    def section_id
+      'operations'
+    end
+
+    protected
+
+    def search_filter
+      @filter = {:organization_id => current_organization}
+    end
+
+    def controller_display_name
+      return 'organization'
+    end
+
+    private
+
+    def default_notify_options
+      super.merge :organization => nil
+    end
+
   end
-
-  def section_id
-    'operations'
-  end
-
-  protected
-
-  def search_filter
-    @filter = {:organization_id => current_organization}
-  end
-
-  def controller_display_name
-    return 'organization'
-  end
-
-  private
-
-  def default_notify_options
-    super.merge :organization => nil
-  end
-
-end
 end

@@ -11,77 +11,77 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::PuppetModulesController < Api::V2::ApiController
+  class Api::V2::PuppetModulesController < Api::V2::ApiController
 
-  before_filter :find_repository
-  before_filter :find_content_view, :only => [:index]
-  before_filter :find_environment, :only => [:index]
-  before_filter :find_puppet_module, :only => [:show]
+    before_filter :find_repository
+    before_filter :find_content_view, :only => [:index]
+    before_filter :find_environment, :only => [:index]
+    before_filter :find_puppet_module, :only => [:show]
 
-  api :GET, "/puppet_modules", N_("List puppet modules")
-  api :GET, "/content_views/:content_view_id/puppet_modules", N_("List puppet modules")
-  api :GET, "/environments/:environment_id/puppet_modules", N_("List puppet modules")
-  api :GET, "/repositories/:repository_id/puppet_modules", N_("List puppet modules")
-  param :content_view_id, :identifier, :desc => N_("content view identifier")
-  param :environment_id, :identifier, :desc => N_("environment identifier")
-  param :repository_id, :identifier, :desc => N_("repository identifier"), :required => true
-  def index
-    collection = if @repo && @repo.puppet?
-                   filter_by_repoids [@repo.pulp_id]
-                 elsif @environment
-                   filter_by_repoids @environment.puppet_repositories.map(&:pulp_id)
-                 elsif @view
-                   filter_by_id @view.content_view_puppet_modules.map(&:uuid)
-                 else
-                   filter_by_repoids
-                 end
+    api :GET, "/puppet_modules", N_("List puppet modules")
+    api :GET, "/content_views/:content_view_id/puppet_modules", N_("List puppet modules")
+    api :GET, "/environments/:environment_id/puppet_modules", N_("List puppet modules")
+    api :GET, "/repositories/:repository_id/puppet_modules", N_("List puppet modules")
+    param :content_view_id, :identifier, :desc => N_("content view identifier")
+    param :environment_id, :identifier, :desc => N_("environment identifier")
+    param :repository_id, :identifier, :desc => N_("repository identifier"), :required => true
+    def index
+      collection = if @repo && @repo.puppet?
+                     filter_by_repoids [@repo.pulp_id]
+                   elsif @environment
+                     filter_by_repoids @environment.puppet_repositories.map(&:pulp_id)
+                   elsif @view
+                     filter_by_id @view.content_view_puppet_modules.map(&:uuid)
+                   else
+                     filter_by_repoids
+                   end
 
-    respond(:collection => collection)
-  end
-
-  api :GET, "/puppet_modules/:id", N_("Show a puppet module")
-  api :GET, "/repositories/:repository_id/puppet_modules/:id", N_("Show a puppet module")
-  param :repository_id, :identifier, :desc => N_("repository identifier"), :required => true
-  param :id, String, :desc => N_("puppet module identifier"), :required => true
-  def show
-    respond :resource => @puppet_module
-  end
-
-  private
-
-  def filter_by_id(ids)
-    options = sort_params
-    options[:filters] = [{ :terms => { :id => ids } }]
-    item_search(PuppetModule, params, options)
-  end
-
-  def filter_by_repoids(repoids = [])
-    options = sort_params
-    options[:filters] = [{ :terms => { :repoids => repoids } }]
-    item_search(PuppetModule, params, options)
-  end
-
-  def find_content_view
-    @view = ContentView.non_default.find(params[:content_view_id]) if params[:content_view_id]
-  end
-
-  def find_environment
-    @environment = KTEnvironment.find(params[:environment_id]) if params[:environment_id]
-  end
-
-  def find_repository
-    @repo = Repository.find(params[:repository_id]) if params[:repository_id]
-  end
-
-  def find_puppet_module
-    @puppet_module = PuppetModule.find(params[:id])
-    fail HttpErrors::NotFound, _("Puppet module with id '%s' not found") % params[:id] if @puppet_module.nil?
-
-    unless @puppet_module.repoids.include?(@repo.pulp_id)
-      fail HttpErrors::NotFound, _("Puppet module '%{id}' not found within repository '%{repo}'") %
-          { :id => params[:id], :repo => @repo.name }
+      respond(:collection => collection)
     end
-  end
 
-end
+    api :GET, "/puppet_modules/:id", N_("Show a puppet module")
+    api :GET, "/repositories/:repository_id/puppet_modules/:id", N_("Show a puppet module")
+    param :repository_id, :identifier, :desc => N_("repository identifier"), :required => true
+    param :id, String, :desc => N_("puppet module identifier"), :required => true
+    def show
+      respond :resource => @puppet_module
+    end
+
+    private
+
+    def filter_by_id(ids)
+      options = sort_params
+      options[:filters] = [{ :terms => { :id => ids } }]
+      item_search(PuppetModule, params, options)
+    end
+
+    def filter_by_repoids(repoids = [])
+      options = sort_params
+      options[:filters] = [{ :terms => { :repoids => repoids } }]
+      item_search(PuppetModule, params, options)
+    end
+
+    def find_content_view
+      @view = ContentView.non_default.find(params[:content_view_id]) if params[:content_view_id]
+    end
+
+    def find_environment
+      @environment = KTEnvironment.find(params[:environment_id]) if params[:environment_id]
+    end
+
+    def find_repository
+      @repo = Repository.find(params[:repository_id]) if params[:repository_id]
+    end
+
+    def find_puppet_module
+      @puppet_module = PuppetModule.find(params[:id])
+      fail HttpErrors::NotFound, _("Puppet module with id '%s' not found") % params[:id] if @puppet_module.nil?
+
+      unless @puppet_module.repoids.include?(@repo.pulp_id)
+        fail HttpErrors::NotFound, _("Puppet module '%{id}' not found within repository '%{repo}'") %
+            { :id => params[:id], :repo => @repo.name }
+      end
+    end
+
+  end
 end

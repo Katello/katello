@@ -85,8 +85,8 @@ module Katello
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
     def systems
       options = {
-          :filters       => [{:term => {:host_collection_ids => @host_collection.id }}],
-          :load_records? => true
+        :filters       => [{:term => {:host_collection_ids => @host_collection.id }}],
+        :load_records? => true
       }
       respond_for_index(:collection => item_search(System, params, options))
     end
@@ -163,8 +163,8 @@ module Katello
       filters = [:terms => {:id => @system.host_collections.pluck("#{Katello::HostCollection.table_name}.id")}]
 
       options = {
-          :filters       => filters,
-          :load_records? => true
+        :filters       => filters,
+        :load_records? => true
       }
       item_search(HostCollection, params, options)
     end
@@ -173,8 +173,8 @@ module Katello
       filters = [:terms => {:id => @activation_key.host_collections.pluck("#{Katello::HostCollection.table_name}.id")}]
 
       options = {
-          :filters       => filters,
-          :load_records? => true
+        :filters       => filters,
+        :load_records? => true
       }
       item_search(HostCollection, params, options)
     end
@@ -186,8 +186,8 @@ module Katello
       filters << {:term => {:name => params[:name]}} if params[:name]
 
       options = {
-          :filters       => filters,
-          :load_records? => true
+        :filters       => filters,
+        :load_records? => true
       }
       item_search(HostCollection, params, options)
     end

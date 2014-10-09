@@ -119,10 +119,10 @@ module Katello
         "Katello::ContentView#{controller_name.classify}Filter"
       end
 
-      def resource_name(i18n = true)
+      def resource_name(_i18n = true)
         case resource_class.to_s
         when "Katello::Erratum"
-            _("Erratum")
+          _("Erratum")
         when "Katello::Package"
           _("Package")
         when "Katello::PackageGroup"
