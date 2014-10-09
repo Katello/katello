@@ -29,7 +29,6 @@ module Actions::ElasticSearch
       action = create_and_plan_action(action_class, pulp_id: repository.pulp_id)
 
       [::Katello::Package,
-       ::Katello::Errata,
        ::Katello::PuppetModule].each do |klass|
         klass.expects(:indexed_ids_for_repo).with(repository.pulp_id).returns([1, 2, 3])
         klass.expects(:remove_indexed_repoid).with([1, 2, 3], repository.pulp_id)

@@ -19,10 +19,8 @@ Katello::Engine.routes.draw do
         get :repo_errata
         get :repo_puppet_modules
         get :repo_compare_packages
-        get :repo_compare_errata
         get :repo_compare_puppet_modules
         get :view_compare_packages
-        get :view_compare_errata
         get :view_compare_puppet_modules
       end
     end

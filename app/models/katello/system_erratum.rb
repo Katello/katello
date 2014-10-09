@@ -9,20 +9,15 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
 
 module Katello
-module SystemErrataHelper
+class SystemErratum < Katello::Model
+  self.include_root_in_json = false
 
-  def errata_type_class(errata)
-    case errata.type
-    when Errata::SECURITY
-      return "security_icon"
-    when Errata::ENHANCEMENT
-      return "enhancement_icon"
-    when Errata::BUGZILLA
-      return "bugzilla_icon"
-    end
-  end
+  # Do not use active record callbacks in this join model.  Direct INSERTs and DELETEs are done
+  belongs_to :system, :inverse_of => :system_errata, :class_name => 'Katello::System'
+  belongs_to :erratum, :inverse_of => :system_errata, :class_name => 'Katello::Erratum'
 
 end
 end

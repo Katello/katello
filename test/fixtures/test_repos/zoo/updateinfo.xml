@@ -8,6 +8,55 @@
   <description>Empty errata</description>
 </update>
 
+<update from="security@redhat.com" status="final" type="security" version="3">
+  <id>RHSA-2010:0858</id>
+  <title>Important: bzip2 security update</title>
+  <severity>Important</severity>
+  <issued date="2010-11-10 00:00:00" />
+  <updated date="2010-11-10 00:00:00" />
+  <rights>Copyright 2010 Red Hat Inc</rights>
+  <summary>Updated bzip2 packages that fix one security issue</summary>
+  <description>bzip2 is a freely available, high-quality data compressor. It provides both
+libbz2 library must be restarted for the update to take effect.</description>
+  <solution>Before applying this update, make sure all previously-released errata
+relevant to your system have been applied.
+
+This update is available via the Red Hat Network. Details on how to
+use the Red Hat Network to apply this update are available at
+http://kbase.redhat.com/faq/docs/DOC-11259</solution>
+  <references>
+    <reference href="https://rhn.redhat.com/errata/RHSA-2010-0858.html" type="self" title="RHSA-2010:0858" />
+    <reference href="https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=627882" id="627882" type="bugzilla" title="CVE-2010-0405 bzip2: integer overflow flaw in BZ2_decompress" />
+    <reference href="https://www.redhat.com/security/data/cve/CVE-2010-0405.html" id="CVE-2010-0405" type="cve" title="CVE-2010-0405" />
+    <reference href="http://www.redhat.com/security/updates/classification/#important" type="other" />
+  </references>
+  <pkglist>
+    <collection short="rhel-x86_64-server-6">
+      <name>Red Hat Enterprise Linux Server (v. 6 for 64-bit x86_64)</name>
+      <package name="bzip2-devel" version="1.0.5" release="7.el6_0" epoch="0" arch="i686" src="bzip2-1.0.5-7.el6_0.src.rpm">
+        <filename>bzip2-devel-1.0.5-7.el6_0.i686.rpm</filename>
+        <sum type="sha256">ea67c664da1ff96a6dc94d33009b73d8fab31b59824183fb45e9ba2ebf82d583</sum>
+      </package>
+      <package name="bzip2-libs" version="1.0.5" release="7.el6_0" epoch="0" arch="i686" src="bzip2-1.0.5-7.el6_0.src.rpm">
+        <filename>bzip2-libs-1.0.5-7.el6_0.i686.rpm</filename>
+        <sum type="sha256">c9f064a6862573fb9f2a6aff7c3621f1940b492df2edfc2ebbdc0b8305f51147</sum>
+      </package>
+      <package name="bzip2" version="1.0.5" release="7.el6_0" epoch="0" arch="x86_64" src="bzip2-1.0.5-7.el6_0.src.rpm">
+        <filename>bzip2-1.0.5-7.el6_0.x86_64.rpm</filename>
+        <sum type="sha256">b8a3f72bc2b0d89ba737099ac98bf8d2af4bea02d31884c02db97f7f66c3d5c2</sum>
+      </package>
+      <package name="bzip2-devel" version="1.0.5" release="7.el6_0" epoch="0" arch="x86_64" src="bzip2-1.0.5-7.el6_0.src.rpm">
+        <filename>bzip2-devel-1.0.5-7.el6_0.x86_64.rpm</filename>
+        <sum type="sha256">7f63124e4655b7c92d23ec4c38226f5d3746568853dff750fc85e058e74b5cf6</sum>
+      </package>
+      <package name="bzip2-libs" version="1.0.5" release="7.el6_0" epoch="0" arch="x86_64" src="bzip2-1.0.5-7.el6_0.src.rpm">
+        <filename>bzip2-libs-1.0.5-7.el6_0.x86_64.rpm</filename>
+        <sum type="sha256">802f4399dbdd01476e254c3b32c40aff59cf5d23a45fa488c6917ce8904d6b4d</sum>
+      </package>
+    </collection>
+  </pkglist>
+</update>
+
 <update from="lzap+pub@redhat.com" status="stable" type="security" version="1">
   <id>RHEA-2010:0002</id>
   <title>One package errata</title>
@@ -22,5 +71,6 @@
       </package>
     </collection>
   </pkglist>
+
 </update>
 </updates>

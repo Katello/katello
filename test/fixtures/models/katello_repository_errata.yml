@@ -1,0 +1,11 @@
+rhel6_security:
+  erratum_id: <%= ActiveRecord::Fixtures.identify(:security) %>
+  repository_id: <%= ActiveRecord::Fixtures.identify(:rhel_6_x86_64) %>
+
+rhel6_bugfix:
+  erratum_id: <%= ActiveRecord::Fixtures.identify(:bugfix) %>
+  repository_id: <%= ActiveRecord::Fixtures.identify(:rhel_6_x86_64) %>
+
+rhel6_view_security:
+  erratum_id: <%= ActiveRecord::Fixtures.identify(:security) %>
+  repository_id: <%= ActiveRecord::Fixtures.identify(:rhel_6_x86_64_library_view_1) %>

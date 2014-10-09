@@ -2,9 +2,7 @@ attributes :title, :version, :description, :status, :id, :errata_id
 attributes :reboot_suggested, :updated, :issued, :release, :solution
 
 node :packages do |e|
-  e.included_packages.collect{ |pkg| pkg.nvrea }.sort
+  e.packages.pluck(:nvrea).sort
 end
 
-attributes :applicable_consumers
-
-attributes :type
+attributes :errata_type => :type

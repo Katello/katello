@@ -88,7 +88,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     repository = @product.add_repo(repo_params[:label], repo_params[:name], repo_params[:url],
                                    repo_params[:content_type], repo_params[:unprotected],
                                    gpg_key, repository_params[:checksum_type])
-    sync_task(::Actions::Katello::Repository::Create, repository)
+    sync_task(::Actions::Katello::Repository::Create, repository, false, true)
     repository = Repository.find(repository.id)
     respond_for_show(:resource => repository)
   end

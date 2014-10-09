@@ -79,6 +79,27 @@ module Katello
       }
     end
 
+    def scoped_search(query, default_sort_by, default_sort_order)
+      total = query.count
+      sub_total = query.search_for(*search_options).count
+      query = query.search_for(*search_options)
+      query = query.order("#{params[:sort_by] || default_sort_by} #{params[:sort_order] || default_sort_order}")
+
+      if params[:full_result]
+        params[:per_page] = total
+      else
+        query = query.paginate(paginate_options)
+      end
+
+      {
+        :results  => query,
+        :subtotal => sub_total,
+        :total    => total,
+        :page     => params[:page] || 1,
+        :per_page => params[:per_page]  || ::Setting::General.entries_per_page
+      }
+    end
+
     def facet_search(item_class, term, options)
       fail "@search_service search not defined" if @search_service.nil?
       facet_name = 'facet_search'

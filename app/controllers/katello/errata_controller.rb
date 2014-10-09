@@ -13,12 +13,6 @@
 module Katello
 class ErrataController < Katello::ApplicationController
 
-  before_filter :lookup_errata, except: [:auto_complete]
-
-  def short_details
-    render :partial => "short_details"
-  end
-
   def auto_complete
     repo_ids = readable_repos(:pulp_id)
 
@@ -29,12 +23,6 @@ class ErrataController < Katello::ApplicationController
   end
 
   private
-
-  def lookup_errata
-    repo_ids = readable_repos(:pulp_id)
-    @errata = Errata.find(params[:id])
-    deny_access if (@errata.repoids & repo_ids).empty?
-  end
 
   def readable_repos(attribute)
     repos = []

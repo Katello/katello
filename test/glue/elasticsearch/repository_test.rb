@@ -26,10 +26,7 @@ module Katello
       cv = ContentView.new()
       cv.stubs(:default?).returns(false)
 
-      @errata = Errata.new(:pulp_id => "abcrepo")
       @repo = Repository.new(:pulp_id => "abcrepo")
-
-      @errata.stubs(:content_view).returns(cv)
       @repo.stubs(:content_view).returns(cv)
     end
 
@@ -39,14 +36,6 @@ module Katello
       Package.expects(:add_indexed_repoid).once.with([3], 'abcrepo')
       Package.expects(:remove_indexed_repoid).once.with([5], 'abcrepo')
       @repo.index_packages
-    end
-
-    def test_index_errata
-      @repo.stubs(:errata_ids).returns([1,2,3])
-      @repo.stubs(:indexed_errata_ids).returns([1,2,5])
-      Errata.expects(:add_indexed_repoid).once.with([3], 'abcrepo')
-      Errata.expects(:remove_indexed_repoid).once.with([5], 'abcrepo')
-      @repo.index_errata
     end
 
   end

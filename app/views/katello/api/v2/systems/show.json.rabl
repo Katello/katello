@@ -15,6 +15,15 @@ child :products => :products do |product|
 end
 attributes :content_overrides
 
+node :errata_counts do |system|
+  {
+    :security => system.applicable_errata.security.count,
+    :bugfix => system.applicable_errata.bugfix.count,
+    :enhancement => system.applicable_errata.enhancement.count,
+    :total => system.applicable_errata.count
+  }
+end
+
 child :foreman_host => :host do
   attributes :id, :name
   attributes :host_status => :status

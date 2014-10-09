@@ -81,11 +81,6 @@ module Katello
       def find_content_resource
         @resource = resource_class.find(params[:id])
 
-        if resource_class == Katello::Errata
-          # also try to look up erratum by errata_id
-          @resource ||= Errata.find_by_errata_id(params[:id])
-        end
-
         if @resource.nil?
           fail HttpErrors::NotFound, _("Failed to find %{content} with id '%{id}'.") %
             {content: resource_name, id: params[:id]}
@@ -99,7 +94,7 @@ module Katello
 
       def find_filter
         # TODO: in v2.rb some routes use "filters", others use "content_view_filters"
-        filter_id = params[:content_view_fitler_id] || params[:filter_id]
+        filter_id = params[:content_view_filter_id] || params[:filter_id]
 
         if filter_id || @view
           scoped = @view ? @view.filters : ContentViewFilter.scoped
@@ -126,12 +121,12 @@ module Katello
 
       def resource_name(i18n = true)
         case resource_class.to_s
+        when "Katello::Erratum"
+            _("Erratum")
         when "Katello::Package"
           _("Package")
         when "Katello::PackageGroup"
           _("Package Group")
-        when "Katello::Errata"
-          _("Erratum")
         else
           fail "Can't find resource class: #{resource_class}"
         end

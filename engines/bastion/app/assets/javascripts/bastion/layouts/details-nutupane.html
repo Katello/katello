@@ -13,7 +13,7 @@
                  class="form-control"
                  placeholder="{{ 'Search...' | translate }}"
                  ng-model="detailsTable.searchTerm"
-                 on-enter="detailsTable.search(table.searchTerm)"/>
+                 on-enter="detailsTable.search(detailsTable.searchTerm)"/>
           <span class="input-group-btn">
             <button ng-click="detailsTable.search(detailsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
           </span>
@@ -53,7 +53,7 @@
 
   <div class="nutupane" alch-table="detailsTable" nutupane-table>
 
-    <div alch-container-scroll alch-infinite-scroll="detailsTable.nextPage()" 
+    <div alch-container-scroll alch-infinite-scroll="detailsTable.nextPage()"
          data="detailsTable.rows" skip-initial-load="!detailsTable.initialLoad">
 
       <div class="nutupane-select-all" ng-show="detailsTable.selectAllResultsEnabled && detailsTable.allSelected() && !detailsTable.allResultsSelected">

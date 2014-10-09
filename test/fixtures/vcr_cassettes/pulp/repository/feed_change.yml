@@ -2,7 +2,7 @@
 http_interactions: 
 - request: 
     method: post
-    uri: https://box.devel.com/pulp/api/v2/repositories/
+    uri: https://localhost/pulp/api/v2/repositories/
     body: 
       encoding: US-ASCII
       string: "{\"id\":\"1\",\"display_name\":\"Fedora 17 x86_64\",\"importer_type_id\":\"yum_importer\",\"importer_config\":{\"feed\":\"file:///var/www/test_repos/zoo\",\"ssl_ca_cert\":null,\"ssl_client_cert\":null,\"ssl_client_key\":null},\"notes\":{\"_repo-type\":\"rpm-repo\"},\"distributors\":[{\"distributor_type_id\":\"yum_distributor\",\"distributor_config\":{\"relative_url\":\"/test_path/\",\"http\":false,\"https\":true,\"protected\":true},\"auto_publish\":true,\"distributor_id\":\"1\"},{\"distributor_type_id\":\"yum_clone_distributor\",\"distributor_config\":{\"destination_distributor_id\":\"1\"},\"auto_publish\":false,\"distributor_id\":\"1_clone\"},{\"distributor_type_id\":\"nodes_http_distributor\",\"distributor_config\":{},\"auto_publish\":true,\"distributor_id\":\"1_nodes\"}]}"
@@ -14,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="Q2E2UN5asXZtZnnmQi5VtH4gujfUa4Hp", oauth_nonce="JTPHvB4wCWTGVymvFdrE1BIrrv2wvcfBUboglc418o", oauth_signature="PgPqvEVfLttGypCemKxPdjSv4p0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1411672715", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="zunq8kNGE8Urkq69yVyb4PaWeKK1FJqxaQlDNUcJko", oauth_signature="ZOUI7LWL1rF95l%2FimgRrn%2Bcjj3A%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687786", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -27,35 +27,27 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Thu, 25 Sep 2014 19:18:35 GMT
+      - Tue, 07 Oct 2014 13:16:26 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Location: 
       - "1"
       Vary: 
       - Accept-Encoding
-      Content-Encoding: 
-      - gzip
       Content-Length: 
-      - "196"
+      - "252"
       Connection: 
       - close
       Content-Type: 
       - application/json
     body: 
       encoding: ASCII-8BIT
-      string: !binary |
-        H4sIAAAAAAAAAzWO0WrDMAxFfyWIPTY4CVkc9gH7DaMlGjWksrCVsRL6741c
-        +iYdjq7uAWXJqMtVcIWv5nhcGlhjkQ3vgfFGJ4NvWlPGpvfN/zyFaQRz6LyL
-        ojHxqfC+bScMXMzPJKmYxEnJyAHBWKt3qYFZbq0BsG9LYiXWsHPUsKSdtbyL
-        hFg7wUeqA3yOwzjh/DP6zs/eI/p+7TryNeel9PY3XDP92uZk38ShRPc3uFor
-        asqRiusdPJ4dGEqc/AAAAA==
-
+      string: "{\"scratchpad\": {}, \"display_name\": \"Fedora 17 x86_64\", \"description\": null, \"_ns\": \"repos\", \"notes\": {\"_repo-type\": \"rpm-repo\"}, \"content_unit_counts\": {}, \"_id\": {\"$oid\": \"5433e7aa5ca0134a6f279409\"}, \"id\": \"1\", \"_href\": \"/pulp/api/v2/repositories/1/\"}"
     http_version: 
-  recorded_at: Thu, 25 Sep 2014 19:18:35 GMT
+  recorded_at: Tue, 07 Oct 2014 13:16:26 GMT
 - request: 
     method: delete
-    uri: https://box.devel.com/pulp/api/v2/repositories/1/
+    uri: https://localhost/pulp/api/v2/repositories/1/
     body: 
       encoding: US-ASCII
       string: ""
@@ -67,7 +59,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="Q2E2UN5asXZtZnnmQi5VtH4gujfUa4Hp", oauth_nonce="wevdIVFHCDEl8gTPljHpOX6HpPhzMVwmMmwbrq4jfMM", oauth_signature="MiIEPRfpyiHR5kpOjlyoOlabkz4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1411672715", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="fpClbaYNxSaIUoNt0nJTBZfLelcm4WI1cCfC59v1oMM", oauth_signature="LW0ccVW4CtIHS%2FE2XEXsWxe02ws%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687786", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -78,7 +70,7 @@ http_interactions:
       message: Accepted
     headers: 
       Date: 
-      - Thu, 25 Sep 2014 19:18:35 GMT
+      - Tue, 07 Oct 2014 13:16:26 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Encoding: 
@@ -91,12 +83,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/96695546-78d8-42b7-8b07-34c6fb721af6/\", \"task_id\": \"96695546-78d8-42b7-8b07-34c6fb721af6\"}], \"result\": null, \"error\": null}"
+      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/81f464e4-8307-47dc-a650-655503d21b70/\", \"task_id\": \"81f464e4-8307-47dc-a650-655503d21b70\"}], \"result\": null, \"error\": null}"
     http_version: 
-  recorded_at: Thu, 25 Sep 2014 19:18:36 GMT
+  recorded_at: Tue, 07 Oct 2014 13:16:26 GMT
 - request: 
     method: get
-    uri: https://box.devel.com/pulp/api/v2/tasks/96695546-78d8-42b7-8b07-34c6fb721af6/
+    uri: https://localhost/pulp/api/v2/tasks/81f464e4-8307-47dc-a650-655503d21b70/
     body: 
       encoding: US-ASCII
       string: ""
@@ -108,7 +100,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="Q2E2UN5asXZtZnnmQi5VtH4gujfUa4Hp", oauth_nonce="le1S2ZRsVJQ1yQj3T6O2ZMJ1usfFiSfnIgB9eoMU", oauth_signature="6mcOZpG%2FZbrLSWWE9k4iw9pxmHA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1411672716", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="hdGLdmUZsbMrnFlftpvEhLBpk03aQl9HvPrXqqpMM", oauth_signature="9pX1owvIql3z8yVL1xMR4t4kVyo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687786", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -119,83 +111,20 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 25 Sep 2014 19:18:36 GMT
+      - Tue, 07 Oct 2014 13:16:27 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Vary: 
       - Accept-Encoding
-      Content-Encoding: 
-      - gzip
       Content-Length: 
-      - "338"
+      - "603"
       Connection: 
       - close
       Content-Type: 
       - application/json
     body: 
       encoding: ASCII-8BIT
-      string: !binary |
-        H4sIAAAAAAAAA42QzW6DMBCEXyWyeiw/dgADpz5ET60qZOwlsUIwWZv8KMq7
-        14ZGVD316Nn9vDNzJ3CVMDptBlJvhqnvXzfECXto3G0EL5Fx6sfYAp4B4zCw
-        McJorHYGb7GCHhwQzzR7hC7sJwFIxKiTM0tmIKmKosrzrIh4qcooYy2Pyjbl
-        0TaTRddyRkVXJOR5WKvwzX+YBdlZv/85+6xXazUN01kUMsSrf7x+ebnTg7b7
-        xukjrKmtE+ieGmEpzaK0ilj+TqualvW2+JjvoZDQCnn4BY7iMoBq5rDBSzgx
-        otkhWNsES+i8fH94+TTBNP/vZ6FT5efWTCihuRg8AEbpW2uuvtgz9LE0x1id
-        yGLOLdw0DHrYBc2TU+9WH4BocH0uRd7Ji1kazTOWFaKUmVSwVUzSTlKfkpHg
-        688KT3nJuRCcqjQFRR7fPgDnUSgCAAA=
-
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/81f464e4-8307-47dc-a650-655503d21b70/\", \"task_id\": \"81f464e4-8307-47dc-a650-655503d21b70\", \"tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"finish_time\": \"2014-10-07T13:16:27Z\", \"_ns\": \"task_status\", \"start_time\": \"2014-10-07T13:16:26Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-0@abed.usersys.redhat.com.dq\", \"state\": \"finished\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"5433e7aa33a7d3a2e73bef4f\"}, \"id\": \"5433e7aa5ca0134a6f27940f\"}"
     http_version: 
-  recorded_at: Thu, 25 Sep 2014 19:18:36 GMT
-- request: 
-    method: get
-    uri: https://box.devel.com/pulp/api/v2/tasks/96695546-78d8-42b7-8b07-34c6fb721af6/
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="Q2E2UN5asXZtZnnmQi5VtH4gujfUa4Hp", oauth_nonce="Uvah08LkKtzZwQ9XpJEfkNUiXvZdmBDet60XtW49M", oauth_signature="81%2FyeIJq5FTSNjZT4yVRmeiz5Kg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1411672717", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Thu, 25 Sep 2014 19:18:37 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Encoding: 
-      - gzip
-      Content-Length: 
-      - "348"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: !binary |
-        H4sIAAAAAAAAA42Ry27DIBBFfyVCXdYPiG1sr/oRXbWqLAzjxIpjyIDzUJR/
-        L9ipLHXT7uDO3OHM5U7gKsG4Xo+k3ozTMLxuiBP20LibAS8RMw0mtoBnwDgU
-        bIxgtO2dxlusYAAHxHuaPUIX+pNgSITpkzNLZkNSFUWV51kR8VKVUcZaHpVt
-        yqNtJouu5YyKrkjIz8O9CmP+41ksO+v7P2fOekWraajOopBhvfrJ+uXlrh97
-        u29cf5xXZCnNorSKWP5Oq5qW9bb4mHcaw+iFyjrhJhtUf0L3p9ehkNAKeVhj
-        tUZcRlDNHEpgDigG9Q7B2iago/Py/eHl0wTTPN/XQvbK162eUEJz0XgAjNK3
-        Vl/9B5xhiKU+xur0hHOzb1kRVBC9dRrcCgKIGtfrkvidvOgl+jxjWSFKmUkF
-        W8Uk7ST1azISwH618JSXnAvBqUpT/9rjGwX0AutRAgAA
-
-    http_version: 
-  recorded_at: Thu, 25 Sep 2014 19:18:37 GMT
-recorded_with: VCR 2.9.2
+  recorded_at: Tue, 07 Oct 2014 13:16:27 GMT
+recorded_with: VCR 2.9.3

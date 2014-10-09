@@ -178,37 +178,21 @@ module Katello
       repos_params = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
       repos_params = repos_params['repos'] || []
 
-      unknown_paths = []
-      repos = []
-      repos_params.each do |repo|
+      paths = repos_params.map do |repo|
         if !repo['baseurl'].blank?
-          path = URI(repo['baseurl'].first).path
-          possible_repos = Repository.where(:relative_path => path.gsub('/pulp/repos/', ''))
-          if possible_repos.empty?
-            unknown_paths << path
-            logger.warn("System #{@system.name} (#{@system.id}) requested binding to unknown repo #{path}")
-          else
-            repos << possible_repos.first
-            logger.warn("System #{@system.name} (#{@system.id}) requested binding to path #{path} matching" \
-                         "#{possible_repos.size} repositories.") if possible_repos.size > 1
-          end
+          URI(repo['baseurl'].first).path
         else
           logger.warn("System #{@system.name} (#{@system.id}) attempted to bind to unspecific repo (#{repo}).")
+          nil
         end
       end
 
-      pulp_ids = repos.collect{|r| r.pulp_id}
-      processed_ids, error_ids = @system.enable_yum_repos(pulp_ids)
+      processed_ids, error_ids = @system.save_bound_repos_by_path!(paths.compact)
 
-      result                  = {}
-      result[:processed_ids]  = processed_ids
-      result[:error_ids]      = error_ids
-      result[:unknown_labels] = unknown_paths
-      if error_ids.present? || unknown_paths.present?
-        result[:result] = "error"
-      else
-        result[:result] = "ok"
-      end
+      result = {:processed_ids => processed_ids,
+                :error_ids     => error_ids,
+                :result        => "ok"}
+      result[:result] = "error" if error_ids.present?
 
       respond_for_show :resource => result
     end

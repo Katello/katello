@@ -23,7 +23,7 @@ class Api::V2::ErrataControllerTest < ActionController::TestCase
   end
 
   def models
-    @repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
+    @repo = Repository.find(katello_repositories(:rhel_6_x86_64))
   end
 
   def permissions
@@ -61,7 +61,6 @@ class Api::V2::ErrataControllerTest < ActionController::TestCase
   def test_index_with_content_view_version
     @content_view_version = ContentViewVersion.first
     ContentViewVersion.expects(:readable).returns(stub(:find_by_id => @content_view_version))
-    @content_view_version.expects(:archived_repos).returns([@repo])
 
     get :index, :content_view_version_id => @content_view_version.id
 
@@ -84,32 +83,28 @@ class Api::V2::ErrataControllerTest < ActionController::TestCase
   end
 
   def test_show
-    errata = stub
-    errata.stubs(:repoids).returns([@repo.pulp_id])
-    Errata.expects(:find).once.with("RHSA-2010").returns(errata)
-    get :show, :repository_id => @repo.id, :id => "RHSA-2010"
+    errata = @repo.errata.first
+    get :show, :repository_id => @repo.id, :id => errata.errata_id
 
     assert_response :success
     assert_template %w(katello/api/v2/errata/show)
   end
 
   def test_show_group_not_found
-    errata = stub
-    errata.stubs(:repoids).returns([@repo.pulp_id])
-    Errata.expects(:find).once.with("RHSA-2010").returns(nil)
-    Errata.expects(:find_by_errata_id).returns(nil)
+    errata = @repo.errata.first
+    Erratum.expects(:find_by_uuid).once.with(errata.errata_id).returns(nil)
+    Erratum.expects(:find_by_errata_id).returns(nil)
 
-    get :show, :repository_id => @repo.id, :id => "RHSA-2010"
+    get :show, :repository_id => @repo.id, :id => errata.errata_id
     assert_response 404
   end
 
   def test_show_protected
-    errata = stub
-    errata.stubs(:repoids).returns([@repo.pulp_id])
-    Errata.stubs(:find).with("RHSA-2010").returns(errata)
+    errata = @repo.errata.first
+    Erratum.stubs(:find).with(errata.errata_id).returns(errata)
 
     assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
-      get :show, :repository_id => @repo.id, :id => "RHSA-2010"
+      get :show, :repository_id => @repo.id, :id => errata.errata_id
     end
   end
 

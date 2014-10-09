@@ -157,13 +157,6 @@ module Glue::Pulp::Repos
       Util::Package.find_latest_packages packs
     end
 
-    def has_erratum?(env, id)
-      self.repos(env).each do |repo|
-        return true if repo.has_erratum? id
-      end
-      false
-    end
-
     def promoted_to?(target_env)
       target_env.products.include? self
     end

@@ -67,7 +67,6 @@ module Util
 
     def self.pulp_backend_search_classes
       [Katello::Package,
-       Katello::Errata,
        Katello::PuppetModule,
        Katello::Distribution,
        Katello::PackageGroup]

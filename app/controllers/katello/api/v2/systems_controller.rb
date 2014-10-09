@@ -194,12 +194,19 @@ class Api::V2::SystemsController < Api::V2::ApiController
 
   api :GET, "/systems/:id/errata", N_("List errata available for the content host"), :deprecated => true
   param :id, String, :desc => N_("UUID of the content host"), :required => true
+  param :content_view_id, :number
+  param :environment_id, :number
   def errata
-    errata = @system.errata
+    if params[:content_view_id] && params[:environment_id]
+      find_content_view
+      find_environment_and_content_view
+    end
+
+    errata = @system.available_errata(@environment, @content_view)
     response = {
       :records  => errata.sort_by{ |e| e.issued }.reverse,
-      :subtotal => errata.size,
-      :total    => errata.size
+      :subtotal => errata.count,
+      :total    => errata.count
     }
 
     respond_for_index :collection => response

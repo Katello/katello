@@ -58,7 +58,7 @@ describe ContentSearchController do
     after do
       reset_search
     end
-    [:packages, :errata, :puppet_modules].each do |content_type|
+    [:packages, :puppet_modules].each do |content_type|
       [:all, :shared, :unique].each do |mode|
         context "#{content_type} #{mode} case" do
           before do

@@ -18,7 +18,7 @@ class ContentViewFilter < Katello::Model
 
   PACKAGE         = Package::CONTENT_TYPE
   PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE
-  ERRATA          = Errata::CONTENT_TYPE
+  ERRATA          = Erratum::CONTENT_TYPE
   CONTENT_TYPES   = [PACKAGE, PACKAGE_GROUP, ERRATA]
   CONTENT_OPTIONS = { _('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA }
 

@@ -40,6 +40,12 @@ class System < Katello::Model
   belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :systems
   belongs_to :foreman_host, :class_name => "::Host", :foreign_key => :host_id, :inverse_of => :content_host
 
+  has_many :applicable_errata, :through => :system_errata, :class_name => "Katello::Erratum", :source => :erratum
+  has_many :system_errata, :class_name => "Katello::SystemErratum", :dependent => :destroy, :inverse_of => :system
+
+  has_many :bound_repositories, :through => :system_repositories, :class_name => "Katello::Repository", :source => :repository
+  has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy, :inverse_of => :system
+
   has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
   has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
   has_many :activation_keys, {
@@ -129,6 +135,16 @@ class System < Katello::Model
     self.pools.collect {|t| t['id']}
   end
 
+  def available_errata(env = nil, content_view = nil)
+    if env.nil? || content_view.nil?
+      self.applicable_errata.in_repositories(self.bound_repositories)
+    else
+      repos = Katello::Repository.in_environment(env).in_content_views([content_view])
+      self.applicable_errata.in_repositories(repos)
+    end
+
+  end
+
   def available_releases
     self.content_view.version(self.environment).available_releases
   end
@@ -177,6 +193,26 @@ class System < Katello::Model
     end
 
     return pools
+  end
+
+  def save_bound_repos_by_path!(paths)
+    repos = []
+    paths.each do |path|
+      possible_repos = Repository.where(:relative_path => path.gsub('/pulp/repos/', ''))
+      if possible_repos.empty?
+        unknown_paths << path
+        Rails.logger.warn("System #{self.name} (#{self.id}) requested binding to unknown repo #{path}")
+      else
+        repos << possible_repos.first
+        Rails.logger.warn("System #{self.name} (#{self.id}) requested binding to path #{path} matching \
+                     #{possible_repos.size} repositories.") if possible_repos.size > 1
+      end
+    end
+
+    self.bound_repositories = repos
+    self.save!
+    self.propagate_yum_repos
+    self.generate_applicability
   end
 
   def install_packages(packages)
@@ -294,7 +330,7 @@ class System < Katello::Model
   end
 
   def to_action_input
-    super.merge(uuid: uuid)
+    super.merge(uuid => uuid)
   end
 
   private

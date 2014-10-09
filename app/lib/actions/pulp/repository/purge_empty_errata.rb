@@ -26,7 +26,7 @@ module Actions
           filenames = package_lists[:filenames]
 
           errata_to_delete = repo.errata.collect do |erratum|
-            erratum.errata_id if filenames.intersection(erratum.package_filenames).empty?
+            erratum.errata_id if filenames.intersection(erratum.packages.pluck(:filename)).empty?
           end
           errata_to_delete.compact!
           repo.unassociate_by_filter(::Katello::ContentViewErratumFilter::CONTENT_TYPE,

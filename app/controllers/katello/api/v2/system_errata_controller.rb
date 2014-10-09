@@ -32,7 +32,7 @@ class Api::V2::SystemErrataController < Api::V2::ApiController
   param :system_id, :identifier, :desc => N_("System UUID"), :required => true
   param :id, String, :desc => N_("Errata id of the erratum (RHSA-2012:108)"), :required => true
   def show
-    errata = Errata.find_by_errata_id(params[:id])
+    errata = Erratum.find_by_errata_id(params[:id])
     respond_for_show :resource => errata
   end
 

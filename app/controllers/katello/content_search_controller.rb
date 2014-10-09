@@ -15,8 +15,8 @@ class ContentSearchController < Katello::ApplicationController
 
   include ContentSearchHelper
 
-  before_filter :find_repo, :only => [:repo_packages, :repo_errata, :repo_puppet_modules]
-  before_filter :find_repos, :only => [:repo_compare_packages, :repo_compare_errata, :repo_compare_puppet_modules]
+  before_filter :find_repo, :only => [:repo_packages, :repo_puppet_modules]
+  before_filter :find_repos, :only => [:repo_compare_packages, :repo_compare_puppet_modules]
   before_filter :setup_utils
 
   def section_id
@@ -125,37 +125,6 @@ class ContentSearchController < Katello::ApplicationController
     to_ret
   end
 
-  def errata
-    repo_ids = process_params(:repos)
-    product_ids = process_params(:products)
-    views = process_views(process_params(:views))
-    repos = process_repos(repo_ids, product_ids)
-    errata_ids = process_params(:errata)
-
-    #construct a structure   view => { product => [repos] } for each view
-    view_product_repo_map = view_product_repo_map(views, repos)
-
-    view_hash = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
-                                                     :views => views,
-                                                     :organization => current_organization)
-    view_hash = view_hash.row_object_hash
-
-    rows = []
-    view_product_repo_map.each do |view, product_repo_map|
-
-      prod_rows = []
-      product_repo_map.each do |product, reps|
-        prod_rows.concat(spanned_product_content(view, product, reps, 'errata', errata_ids))
-      end
-
-      if !prod_rows.empty?
-        rows << view_hash[view.id]
-        rows.concat(prod_rows)
-      end
-    end
-    render :json => { :rows => rows, :name => _('Errata') }
-  end
-
   def puppet_modules
     repo_ids = process_params(:repos)
     product_ids = process_params(:products)
@@ -238,23 +207,6 @@ class ContentSearchController < Katello::ApplicationController
     render :json => { :rows => comparison.unit_rows + comparison.metadata_rows }
   end
 
-  #similar to :errata, but only returns errata rows with an offset for a specific repo
-  def errata_items
-    view = ContentView.readable.where(:id => params[:view_id]).first
-    repo = Repository.libraries_content_readable(current_organization).where(:id => params[:repo_id]).first
-    offset = params[:offset].try(:to_i) || 0
-
-    errata = spanned_repo_content(view, repo, 'errata', process_params(:errata),
-                                  params[:offset], process_search_mode, process_env_ids)
-    errata = { :content_rows => [] } unless errata
-
-    meta = metadata_row(errata[:total], offset + errata[:content_rows].length,
-                        { :repo_id => repo.id, :view_id => view.id },
-                          "#{view.id}_#{repo.id}", ContentSearch::RepoSearch.id(view, repo))
-
-    render :json => { :rows => (errata[:content_rows] + [meta]) }
-  end
-
   #similar to :puppet_modules, but only returns puppet modules rows with an offset for a specific repo
   def puppet_modules_items
     view = ContentView.readable.where(:id => params[:view_id]).first
@@ -291,27 +243,6 @@ class ContentSearchController < Katello::ApplicationController
     render :json => { :rows => rows, :name => @repo.name }
   end
 
-  def repo_errata
-    offset = params[:offset] || 0
-    errata = Errata.legacy_search('', :start => offset, :page_size => current_user.page_size,
-                               :filters => {:repoids => [@repo.pulp_id]})
-
-    rows = errata.collect do |e|
-      { :name => errata_display(e), :id => e.id, :data_type => "errata", :value => e.id,
-        :cols => { :title => { :display => e[:title] },
-                   :type => { :display => e[:type] },
-                   :severity => { :display => e[:severity] || '' }
-                 }
-      }
-    end
-
-    if errata.total > current_user.page_size
-      rows += [metadata_row(errata.total, offset.to_i + rows.length, { :repo_id => @repo.id }, @repo.id)]
-    end
-
-    render :json => { :rows => rows, :name => @repo.name }
-  end
-
   def repo_puppet_modules
     offset = params[:offset] || 0
     puppet_modules = PuppetModule.legacy_search('', { :start => offset, :page_size => current_user.page_size,
@@ -339,24 +270,12 @@ class ContentSearchController < Katello::ApplicationController
     repo_compare_content(:package, params[:offset] || 0)
   end
 
-  def repo_compare_errata
-    repo_compare_content(:errata, params[:offset] || 0)
-  end
-
   def repo_compare_puppet_modules
     repo_compare_content(:puppet_module, params[:offset] || 0)
   end
 
   def view_compare_packages
     options = { :unit_type => :package,
-                :cv_env_ids => params[:views].values,
-                :offset => params[:offset].try(:to_i) || 0 }
-
-    render :json => ContentSearch::ContentViewComparison.new(options)
-  end
-
-  def view_compare_errata
-    options = { :unit_type => :errata,
                 :cv_env_ids => params[:views].values,
                 :offset => params[:offset].try(:to_i) || 0 }
 
@@ -384,9 +303,6 @@ class ContentSearchController < Katello::ApplicationController
             when :package
               Package.legacy_search('', offset, current_user.page_size,
                              repo_map.keys, [:nvrea_sort, "ASC"], process_search_mode)
-            when :errata
-              Errata.legacy_search('', :start => offset, :page_size => current_user.page_size,
-                                :filters => {:repoids =>  repo_map.keys}, :search_mode => process_search_mode)
             when :puppet_module
               PuppetModule.legacy_search('', { :start => offset, :page_size => current_user.page_size,
                                                :repoids => repo_map.keys, :search_mode => process_search_mode })
@@ -402,9 +318,6 @@ class ContentSearchController < Katello::ApplicationController
       when :package
         name = package_display(unit)
         data_type = "package"
-      when :errata
-        name = errata_display(unit)
-        data_type = "errata"
       when :puppet_module
         name = puppet_module_display(unit)
         data_type = "puppet_module"
@@ -615,8 +528,6 @@ class ContentSearchController < Katello::ApplicationController
   def get_search_info(content_type)
     if content_type.to_sym == :package
       return Package, 'nvrea'
-    elsif content_type.to_sym == :errata
-      return Errata, 'errata_id'
     else
       return PuppetModule, 'name'
     end
@@ -678,9 +589,6 @@ class ContentSearchController < Katello::ApplicationController
       if id_prefix == 'package'
         display = package_display(item)
         value = item.nvrea
-      elsif id_prefix == 'errata'
-        display = errata_display(item)
-        value = item.id
       else
         display = puppet_module_display(item)
         value = item.name

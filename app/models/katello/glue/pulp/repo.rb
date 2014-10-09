@@ -309,24 +309,27 @@ module Glue::Pulp::Repo
       @repo_packages
     end
 
-    def errata
-      if @repo_errata.nil?
-        #we fetch ids and then fetch errata by id, because repo errata
-        #  do not contain all the info we need (bz 854260)
-        tmp_errata = []
-        self.errata_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
-          tmp_errata.concat(Katello.pulp_server.extensions.errata.find_all_by_unit_ids(sub_list))
+    def index_db_errata(force = false)
+      if self.content_view.default? || force
+        errata_json.each do |erratum_json|
+          erratum = Erratum.find_or_create_by_uuid(:uuid => erratum_json['_id'])
+          erratum.update_from_json(erratum_json)
         end
-        self.errata = tmp_errata
       end
-      @repo_errata
+      ActiveRecord::Base.transaction do
+        Katello::RepositoryErratum.where(:repository_id => self.id).delete_all
+        Katello::Erratum.insert_repository_associations(self, errata_ids)
+      end
     end
 
-    def errata=(attrs)
-      @repo_errata = attrs.collect do |erratum|
-        Katello::Errata.new(erratum)
+    def errata_json
+      tmp_errata = []
+      #we fetch ids and then fetch errata by id, because repo errata
+      #  do not contain all the info we need (bz 854260)
+      self.errata_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        tmp_errata.concat(Katello.pulp_server.extensions.errata.find_all_by_unit_ids(sub_list))
       end
-      @repo_errata
+      tmp_errata
     end
 
     def distributions
@@ -455,13 +458,6 @@ module Glue::Pulp::Repo
       Util::Package.find_latest_packages(packages)
     end
 
-    def has_erratum?(errata_id)
-      self.errata.each do |err|
-        return true if err.errata_id == errata_id
-      end
-      return false
-    end
-
     def pulp_update_needed?
       unless redhat?
         allowed_changes = %w(url unprotected checksum_type)
@@ -489,7 +485,7 @@ module Glue::Pulp::Repo
       content_classes = {
           Katello::Package::CONTENT_TYPE => :rpm,
           Katello::PackageGroup::CONTENT_TYPE => :package_group,
-          Katello::Errata::CONTENT_TYPE => :errata,
+          Katello::Erratum::CONTENT_TYPE => :errata,
           Katello::PuppetModule::CONTENT_TYPE => :puppet_module
       }
       fail "Invalid content type #{content_type} sent. It needs to be one of #{content_classes.keys}"\

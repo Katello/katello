@@ -9,14 +9,13 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
 
 module Katello
-class Errata
-  include Glue::Pulp::Errata if Katello.config.use_pulp
-  include Glue::ElasticSearch::Errata if Katello.config.use_elasticsearch
-  CONTENT_TYPE = "erratum"
+class ErratumPackage < Katello::Model
+  self.include_root_in_json = false
 
-  attr_accessor :applicable_consumers
+  belongs_to :erratum, :inverse_of => :system_errata, :class_name => 'Katello::Erratum'
 
 end
 end

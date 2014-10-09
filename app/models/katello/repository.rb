@@ -48,6 +48,13 @@ class Repository < Katello::Model
   has_many :content_view_repositories, :class_name => "Katello::ContentViewRepository",
            :dependent => :destroy
   has_many :content_views, :through => :content_view_repositories
+
+  has_many :repository_errata, :class_name => "Katello::RepositoryErratum", :dependent => :destroy
+  has_many :errata, :through => :repository_errata
+
+  has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy
+  has_many :systems, :through => :system_repositories
+
   # rubocop:disable HasAndBelongsToMany
   # TODO: change this into has_many :through association
   has_and_belongs_to_many :filters, :class_name => "Katello::ContentViewFilter",
@@ -257,24 +264,8 @@ class Repository < Katello::Model
   end
 
   def errata_filenames
-    repo = self
-    bulk_size = Katello.config.pulp.bulk_load_size
-    initial_list = Errata.search do
-      size 1
-      fields ['pkglist.packages.filename']
-      filter :term, {:repoids => repo.pulp_id}
-    end
-
-    found_errata = (0..initial_list.total).step(bulk_size).flat_map do |offset|
-      Errata.search do
-        size bulk_size
-        fields ['pkglist.packages.filename']
-        filter :term, {:repoids => repo.pulp_id}
-        from offset
-      end
-    end
-
-    found_errata.map{|e| e['pkglist.packages.filename']}.flatten.uniq
+    Katello::ErratumPackage.joins(:erratum => :repository_errata).
+        where("#{RepositoryErratum.table_name}.repository_id" => self.id).pluck(:filename)
   end
 
   def packages_without_filenames(filenames)
@@ -425,6 +416,18 @@ class Repository < Katello::Model
       end
     else
       false
+    end
+  end
+
+  def systems_with_applicability
+    ::Katello::System.joins(:bound_repositories).
+            where("#{::Katello::Repository.table_name}.id" => (self.clones.pluck(:id) + [self.id]))
+  end
+
+  def import_system_applicability
+    fail "Can only calculate applicability for Library repositories" unless self.content_view.default?
+    systems_with_applicability.find_each do |system|
+      system.import_applicability
     end
   end
 
