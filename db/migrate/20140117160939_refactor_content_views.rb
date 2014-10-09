@@ -1,4 +1,5 @@
 class RefactorContentViews < ActiveRecord::Migration
+  # rubocop:disable MethodLength
   def up
     remove_foreign_key "katello_component_content_views", :name => "component_content_views_content_view_definition_id_fk"
     remove_foreign_key "katello_content_view_definition_bases", :name => "content_view_definition_bases_source_id_fk"
@@ -42,20 +43,20 @@ class RefactorContentViews < ActiveRecord::Migration
 
   def down
     create_table "katello_content_view_definition_bases", :force => true do |t|
-      t.string   "name"
-      t.string   "label",                              :null => false
-      t.text     "description"
-      t.integer  "organization_id"
+      t.string "name"
+      t.string "label",                              :null => false
+      t.text "description"
+      t.integer "organization_id"
       t.datetime "created_at",                         :null => false
       t.datetime "updated_at",                         :null => false
-      t.boolean  "composite",       :default => false, :null => false
-      t.string   "type"
-      t.integer  "source_id"
+      t.boolean "composite",       :default => false, :null => false
+      t.string "type"
+      t.integer "source_id"
     end
 
     create_table "katello_content_view_definition_products", :force => true do |t|
-      t.integer  "content_view_definition_id"
-      t.integer  "product_id"
+      t.integer "content_view_definition_id"
+      t.integer "product_id"
       t.datetime "created_at",                 :null => false
       t.datetime "updated_at",                 :null => false
     end
@@ -66,17 +67,17 @@ class RefactorContentViews < ActiveRecord::Migration
     end
 
     create_table "katello_filter_rules", :force => true do |t|
-      t.string   "type"
-      t.text     "parameters"
-      t.integer  "filter_id",                    :null => false
-      t.boolean  "inclusion",  :default => true
+      t.string "type"
+      t.text "parameters"
+      t.integer "filter_id",                    :null => false
+      t.boolean "inclusion",  :default => true
       t.datetime "created_at",                   :null => false
       t.datetime "updated_at",                   :null => false
     end
 
     create_table "katello_content_view_version_environments", :force => true do |t|
-      t.integer  "content_view_version_id"
-      t.integer  "environment_id"
+      t.integer "content_view_version_id"
+      t.integer "environment_id"
       t.datetime "created_at",              :null => false
       t.datetime "updated_at",              :null => false
     end

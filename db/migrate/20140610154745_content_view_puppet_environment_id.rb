@@ -15,9 +15,9 @@ class ContentViewPuppetEnvironmentId < ActiveRecord::Migration
 
   class ::Katello::ContentViewPuppetEnvironment < ActiveRecord::Base
     belongs_to :environment, :class_name => "Katello::KTEnvironment",
-               :inverse_of => :content_view_puppet_environments
+                             :inverse_of => :content_view_puppet_environments
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",
-               :inverse_of => :content_view_puppet_environments
+                                      :inverse_of => :content_view_puppet_environments
 
     def content_view
       self.content_view_version.content_view

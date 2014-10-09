@@ -41,8 +41,8 @@ templates = [{:name => "Katello Kickstart Default",           :source => "kickst
              {:name => "subscription_manager_registration",   :source => "snippets/_subscription_manager_registration.erb", :snippet => true}]
 
 templates.each do |template|
- template[:template] = File.read(File.join(Katello::Engine.root, "app/views/foreman/unattended", template.delete(:source)))
- ConfigTemplate.find_or_create_by_name(template).update_attributes(defaults.merge(template))
+  template[:template] = File.read(File.join(Katello::Engine.root, "app/views/foreman/unattended", template.delete(:source)))
+  ConfigTemplate.find_or_create_by_name(template).update_attributes(defaults.merge(template))
 end
 
 # Take ownership of Foreman templates we rely on
@@ -118,8 +118,8 @@ permissions.each do |resource, permission|
 end
 
 default_permissions = {
-    :Viewer => [:view_activation_keys, :view_content_hosts, :view_content_views, :view_gpg_keys, :view_host_collections,
-                :view_lifecycle_environments, :view_products, :view_subscriptions, :view_sync_plans]
+  :Viewer => [:view_activation_keys, :view_content_hosts, :view_content_views, :view_gpg_keys, :view_host_collections,
+              :view_lifecycle_environments, :view_products, :view_subscriptions, :view_sync_plans]
 }
 
 Role.without_auditing do
