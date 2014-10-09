@@ -1,7 +1,7 @@
 -# children, parent_set
 - for child in children.sort{|a,b| a[:name] <=> b[:name]}
   - new_set = parent_set + [child[:id]]
-  %tr{:id=>set_id(new_set), :class=>parent_set_class(parent_set) + " #{cycle_class}"}
+  %tr{:id=>id(new_set), :class=>parent_set_class(parent_set) + " #{cycle_class}"}
     %td
       #{child[:name]}
     %td

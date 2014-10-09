@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module HostCollectionEventsHelper
-  def format_description(description)
-    description.is_a?(String) ? description.gsub("\n", "<br/>") : description
+  module HostCollectionEventsHelper
+    def format_description(description)
+      description.is_a?(String) ? description.gsub("\n", "<br/>") : description
+    end
   end
-end
 end
