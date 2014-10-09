@@ -27,10 +27,9 @@
 angular.module('Bastion.repositories').controller('NewRepositoryController',
     ['$scope', 'Repository', 'GPGKey', 'FormUtils', 'translate',
     function ($scope, Repository, GPGKey, FormUtils, translate) {
-
         $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true,
             'checksum_type': null});
-        $scope.repositoryTypes = [{}, {name: 'yum'}, {name: 'puppet'}];
+        $scope.repositoryTypes = [{}, {name: 'yum'}, {name: 'puppet'}, {name: 'docker'}];
 
         $scope.$watch('repository.name', function () {
             if ($scope.repositoryForm.name) {

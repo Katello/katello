@@ -30,9 +30,7 @@ module Actions
                         :type => repository.content_type)
           end
 
-          allowed_changes = %w(url unprotected checksum_type)
-          if ::Katello.config.use_pulp && (allowed_changes & repository.previous_changes.keys).any? &&
-              !repository.product.provider.redhat_provider?
+          if ::Katello.config.use_pulp && repository.pulp_update_needed?
             plan_action(::Actions::Pulp::Repository::Refresh, repository)
           end
 
@@ -62,6 +60,8 @@ module Actions
                           Runcible::Models::PuppetInstallDistributor
                         when ::Katello::Repository::FILE_TYPE
                           Runcible::Models::IsoDistributor
+                        when ::Katello::Repository::DOCKER_TYPE
+                          Runcible::Models::DockerDistributor
                         end
           distributor.type_id
         end

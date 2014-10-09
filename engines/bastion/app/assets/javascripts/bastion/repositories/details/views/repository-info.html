@@ -211,11 +211,15 @@
             </a>
           </td>
         </tr>
+        <tr ng-show="repository.content_type == 'docker'">
+          <td translate>Docker Images</td>
+          <td class="align-center">{{ repository.content_counts.docker_image || 0 }}</td>
+        </tr>
       </tbody>
     </table>
   </section>
 
-  <section class="well" ng-show="permitted('edit_products', product)">
+  <section class="well" ng-show="permitted('edit_products', product) && repository.content_type != 'docker'">
     <h5 translate ng-show="repository.content_type == 'puppet'">Upload Puppet Module</h5>
     <h5 translate ng-show="repository.content_type == 'yum'">Upload Package</h5>
 

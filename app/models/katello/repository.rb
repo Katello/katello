@@ -16,6 +16,7 @@ class Repository < Katello::Model
 
   validates_lengths_from_database :except => [:label]
   before_destroy :assert_deletable
+  before_create :downcase_pulp_id
 
   include ForemanTasks::Concerns::ActionSubject
   include Glue::Candlepin::Content if (Katello.config.use_cp && Katello.config.use_pulp)
@@ -31,8 +32,9 @@ class Repository < Katello::Model
   YUM_TYPE = 'yum'
   FILE_TYPE = 'file'
   PUPPET_TYPE = 'puppet'
-  TYPES = [YUM_TYPE, FILE_TYPE, PUPPET_TYPE]
-  SELECTABLE_TYPES = [YUM_TYPE, PUPPET_TYPE]
+  DOCKER_TYPE = 'docker'
+  TYPES = [YUM_TYPE, FILE_TYPE, PUPPET_TYPE, DOCKER_TYPE]
+  SELECTABLE_TYPES = [YUM_TYPE, PUPPET_TYPE, DOCKER_TYPE]
   CHECKSUM_TYPES = %w(sha1 sha256)
 
   belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
@@ -78,6 +80,7 @@ class Repository < Katello::Model
   scope :yum_type, where(:content_type => YUM_TYPE)
   scope :file_type, where(:content_type => FILE_TYPE)
   scope :puppet_type, where(:content_type => PUPPET_TYPE)
+  scope :docker_type, where(:content_type => DOCKER_TYPE)
   scope :non_puppet, where("content_type != ?", PUPPET_TYPE)
   scope :non_archived, where('environment_id is not NULL')
   scope :archived, where('environment_id is NULL')
@@ -109,6 +112,10 @@ class Repository < Katello::Model
 
   def puppet?
     content_type == PUPPET_TYPE
+  end
+
+  def docker?
+    content_type == DOCKER_TYPE
   end
 
   def archive?
@@ -439,6 +446,14 @@ class Repository < Katello::Model
 
         return false
       end
+    end
+  end
+
+  def downcase_pulp_id
+    # Docker doesn't support uppercase letters in repository names.  Since the pulp_id
+    # is currently being used for the name, it will be downcased for this content type.
+    if self.content_type == Repository::DOCKER_TYPE
+      self.pulp_id = self.pulp_id.downcase
     end
   end
 end

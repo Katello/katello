@@ -47,17 +47,22 @@ module Actions
                        Runcible::Models::IsoImporter.new
                      when ::Katello::Repository::PUPPET_TYPE
                        Runcible::Models::PuppetImporter.new
+                     when ::Katello::Repository::DOCKER_TYPE
+                       Runcible::Models::DockerImporter.new
                      end
 
           if input[:with_importer]
             case input[:content_type]
             when ::Katello::Repository::YUM_TYPE,
-                  ::Katello::Repository::FILE_TYPE
+                 ::Katello::Repository::FILE_TYPE
               importer.feed            = input[:feed]
               importer.ssl_ca_cert     = input[:ssl_ca_cert]
               importer.ssl_client_cert = input[:ssl_client_cert]
               importer.ssl_client_key  = input[:ssl_client_key]
             when ::Katello::Repository::PUPPET_TYPE
+              importer.feed            = input[:feed]
+            when ::Katello::Repository::DOCKER_TYPE
+              importer.upstream_name   = input[:name]
               importer.feed            = input[:feed]
             end
           end
@@ -72,6 +77,8 @@ module Actions
             [iso_distributor]
           when ::Katello::Repository::PUPPET_TYPE
             input[:path].blank? ? [] : [puppet_install_distributor, nodes_distributor]
+          when ::Katello::Repository::DOCKER_TYPE
+            [docker_distributor, nodes_distributor]
           else
             fail _("Unexpected repo type %s") % input[:content_type]
           end
@@ -107,6 +114,13 @@ module Actions
           Runcible::Models::PuppetInstallDistributor.new(input[:path],
                                                          id: input[:pulp_id],
                                                          auto_publish: true)
+        end
+
+        def docker_distributor
+          options = { protected: !input[:unprotected] || false,
+                      id: input[:pulp_id],
+                      auto_publish: true }
+          Runcible::Models::DockerDistributor.new(options)
         end
       end
     end

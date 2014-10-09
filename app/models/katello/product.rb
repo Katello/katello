@@ -163,7 +163,7 @@ class Product < Katello::Model
   end
 
   def anonymous?
-    provider.anonymouns_provider?
+    provider.anonymous_provider?
   end
 
   def gpg_key_name=(name)

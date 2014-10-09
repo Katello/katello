@@ -3,13 +3,23 @@
     <h4 translate>Red Hat Provider Details</h4>
 
     <div class="detail">
-      <span class="info-label" translate>Repository URL</span>
+      <span class="info-label" translate>Red Hat CDN URL</span>
       <span class="info-value"
         alch-edit-text="organization.redhat_repository_url"
         on-save="saveCdnUrl(organization)"
         readonly="organization.readonly">
       </span>
     </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Red Hat Docker Registry URL</span>
+      <span class="info-value"
+        alch-edit-text="organization.redhat_docker_registry_url"
+        on-save="saveCdnUrl(organization)"
+        readonly="organization.readonly">
+      </span>
+    </div>
+
   </div>
 </section>
 
