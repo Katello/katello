@@ -14,7 +14,6 @@ require 'strong_parameters'
 
 module Katello
   class Api::V2::ApiController < Api::ApiController
-
     include Api::Version2
     include Api::V2::Rendering
     include Api::V2::ErrorHandling
@@ -23,7 +22,6 @@ module Katello
     include Foreman::ThreadSession::Cleaner
 
     before_filter :load_search_service, :only => [:index]
-    before_filter :turn_on_strong_params
 
     resource_description do
       api_version 'v2'
@@ -173,16 +171,5 @@ module Katello
         fail HttpErrors::NotFound, _("You have not set a default organization on the user %s.") % current_user.login
       end
     end
-
-    def param_rules
-      # we're using strong params in v2
-      {}
-    end
-
-    def turn_on_strong_params
-      # prevent create and update_attributes from being called without strong params
-      Thread.current[:strong_parameters] = true
-    end
-
   end
 end

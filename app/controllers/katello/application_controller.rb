@@ -28,7 +28,6 @@ module Katello
     before_filter :set_gettext_locale
     helper_method :current_organization
     before_filter :require_org
-    before_filter :turn_off_strong_params
     #before_filter :check_deleted_org
 
     protect_from_forgery # See ActionController::RequestForgeryProtection for details
@@ -732,10 +731,5 @@ module Katello
         Thread.current[key] = nil
       end
     end
-
-    def turn_off_strong_params
-      Thread.current[:strong_parameters] = false
-    end
-
   end
 end

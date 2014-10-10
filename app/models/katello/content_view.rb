@@ -57,7 +57,6 @@ module Katello
     validates :label, :uniqueness => {:scope => :organization_id},
                       :presence => true
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
-    validates :description, :length => {:maximum => 255}
     validates :organization_id, :presence => true
     validate :check_repo_conflicts
     validate :check_puppet_conflicts

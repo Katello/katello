@@ -15,7 +15,7 @@ module Katello
 
     include Katello::Authentication::ClientAuthentication
 
-    skip_before_filter :turn_on_strong_params
+    before_filter :disable_strong_params
 
     wrap_parameters false
 
@@ -269,6 +269,10 @@ module Katello
     end
 
     private
+
+    def disable_strong_params
+      params.permit!
+    end
 
     def deny_access
       fail HttpErrors::Forbidden, 'Access denied'

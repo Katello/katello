@@ -15,7 +15,6 @@ module Katello
     include ForemanTasks::Triggers
 
     respond_to :json
-    before_filter :turn_off_strong_params
     before_filter :set_gettext_locale
 
     # override warden current_user (returns nil because there is no user in that scope)
@@ -33,10 +32,6 @@ module Katello
     end
 
     protected
-
-    def turn_off_strong_params
-      Thread.current[:strong_parameters] = false
-    end
 
     def request_from_katello_cli?
       request.user_agent.to_s =~ /^katello-cli/
