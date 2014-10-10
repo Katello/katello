@@ -34,5 +34,26 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
                 templateUrl: 'errata/views/errata-table-full.html'
             }
         }
+    })
+    .state('errata.details', {
+        abstract: true,
+        url: '/errata/:errataId',
+        permission: 'view_errata',
+        collapsed: true,
+        views: {
+            'table': {
+                templateUrl: 'errata/views/errata-table-collapsed.html'
+            },
+            'action-panel': {
+                controller: 'ErrataDetailsController',
+                templateUrl: 'errata/details/views/errata-details.html'
+            }
+        }
+    })
+    .state('errata.details.info', {
+        url: '/info',
+        collapsed: true,
+        permission: 'view_errata',
+        templateUrl: 'errata/details/views/errata-details-info.html'
     });
 }]);

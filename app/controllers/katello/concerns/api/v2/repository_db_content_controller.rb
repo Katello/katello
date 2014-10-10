@@ -17,13 +17,13 @@ module Katello
 
       def index
         collection = if @repo && !@repo.puppet?
-                       filter_by_repos([@repo])
+                       filter_by_repos([@repo]).uniq
                      elsif @filter
-                       filter_by_content_view_filter(@filter)
+                       filter_by_content_view_filter(@filter).uniq
                      elsif @version
-                       filter_by_content_view_version(@version)
+                       filter_by_content_view_version(@version).uniq
                      else
-                       filter_by_repos(Repository.readable)
+                       filter_by_repos(Repository.readable).uniq
                      end
 
         respond(:collection => scoped_search(collection, default_sort[0], default_sort[1]))

@@ -1,0 +1,43 @@
+<span page-title ng-model="errata">{{ 'Errata: ' | translate }} {{ errata.title }}</span>
+
+<section>
+
+  <div class="details-full">
+    <section>
+      <div class="detail">
+        <span class="info-label" translate>Advisory</span>
+        <span class="info-value">{{ errata.errata_id }}</span>
+      </div>
+      <div class="detail">
+        <span class="info-label" translate>Type</span>
+        <span class="info-value">{{ errata.type | errataType }}</span>
+      </div>
+      <div class="detail">
+        <span class="info-label" translate>Severity</span>
+        <span class="info-value">{{ errata.severity | errataSeverity }}</span>
+      </div>
+      <div class="detail">
+        <span class="info-label" translate>Issued</span>
+        <span class="info-value">{{ errata.issued | date:'shortDate' }}</span>
+      </div>
+      <div class="detail">
+        <span class="info-label" translate>Last Updated On</span>
+        <span class="info-value">{{ errata.updated | date:'shortDate' }}</span>
+      </div>
+      <div class="detail">
+        <span class="info-label" translate>Reboot Suggested?</span>
+        <span class="info-value">{{ errata.reboot_suggested | booleanToYesNo }}</span>
+      </div>
+
+      <h3 translate>Topic</h3>
+      <p class="info-value">{{ errata.summary }}</p>
+
+
+      <h3 translate>Description</h3>
+      <p class="info-value">{{ errata.description }}</p>
+
+      <h3 translate>Solution</h3>
+      <p class="info-value">{{ errata.solution }}</p>
+    </section>
+  </div>
+</section>

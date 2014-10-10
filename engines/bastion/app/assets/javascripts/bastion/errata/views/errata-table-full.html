@@ -12,13 +12,13 @@
   <tbody>
     <tr alch-table-row ng-repeat="errata in table.rows" row-select="errata">
       <td alch-table-cell>
+        <a ui-sref="errata.details.info({errataId: errata.id})">
           {{ errata.errata_id }}
+        </a>
         <i class="icon-chevron-right selected-icon" ng-show="errata.selected"></i>
       </td>
       <td alch-table-cell>
-        <a>
-          {{ errata.title }}
-        </a>
+        {{ errata.title }}
       </td>
       <td alch-table-cell>
           <span ng-show="errata.type == 'security'">
@@ -33,8 +33,8 @@
             <i class="icon-plus-sign-alt inline-icon" title="{{ 'Enhancement' | translate }}"></i>
           </span>
 
-        {{ errata.type }}
-        <span ng-show="errata.severity">- {{ errata.severity }}</span>
+        {{ errata.type | errataType}}
+        <span ng-show="errata.severity">- {{ errata.severity | errataSeverity}}</span>
       </td>
       <td alch-table-cell>{{ errata.systems_available_count || 0 }}</td>
       <td alch-table-cell>{{ errata.updated | date:'shortDate'}}</td>
