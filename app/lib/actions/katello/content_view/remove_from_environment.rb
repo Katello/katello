@@ -20,7 +20,7 @@ module Actions
           content_view.check_remove_from_environment!(environment)
 
           cv_env = ::Katello::ContentViewEnvironment.where(:content_view_id => content_view.id,
-                                                        :environment_id => environment.id).first
+                                                           :environment_id => environment.id).first
 
           if cv_env.nil?
             fail _("Cannot remove content view from environment. Content view '%{view}' is not in lifecycle environment '%{env}'.") %

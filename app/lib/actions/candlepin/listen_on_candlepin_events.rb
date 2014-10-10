@@ -104,7 +104,7 @@ module Actions
         end
       end
 
-      def poll_listening_service(event)
+      def poll_listening_service(_event)
         output[:connection] = "Connected"
         suspend do |suspended_action|
           CandlepinListeningService.instance.poll_for_messages(SuspendedAction.new(suspended_action))
@@ -151,7 +151,7 @@ module Actions
           error!(e)
       end
 
-      def on_event(event, ouput)
+      def on_event(event, _ouput)
         message = CandlepinListeningService.instance.messages.message(event.message_id)
         Actions::Candlepin::ReindexPoolSubscriptionHandler.new(Rails.logger).handle(message)
         CandlepinListeningService.instance.acknowledge_message(event.message_id)

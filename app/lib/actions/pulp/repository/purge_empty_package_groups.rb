@@ -32,7 +32,7 @@ module Actions
           package_groups_to_delete.compact!
 
           repo.unassociate_by_filter(::Katello::ContentViewPackageGroupFilter::CONTENT_TYPE,
-                                  { "id" => { "$in" => package_groups_to_delete } })
+                                   "id" => { "$in" => package_groups_to_delete })
         end
       end
     end

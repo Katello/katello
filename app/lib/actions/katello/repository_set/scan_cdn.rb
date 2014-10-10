@@ -47,7 +47,7 @@ module Actions
           product.cdn_resource.substitutor
         end
 
-        def prepare_result(substitutions, path)
+        def prepare_result(substitutions, _path)
           mapper = repository_mapper(substitutions)
           repo = mapper.find_repository
           { substitutions: substitutions,
@@ -55,7 +55,7 @@ module Actions
             repo_name:     mapper.name,
             pulp_id:       mapper.pulp_id,
             enabled:       !repo.nil?,
-            promoted:      !!(repo && repo.promoted?)}
+            promoted:      (!repo.nil? && repo.promoted?)}
         end
 
         def product

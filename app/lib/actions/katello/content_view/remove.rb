@@ -81,7 +81,7 @@ module Actions
           end
         end
 
-        def validate_options(content_view, cv_envs, versions, options)
+        def validate_options(_content_view, cv_envs, versions, options)
           if cv_envs.empty? && versions.empty?
             fail _("Either environments or versions must be specified.")
           end
@@ -106,13 +106,13 @@ module Actions
 
         def system_cve(options)
           ::Katello::ContentViewEnvironment.where(:environment_id => options[:system_environment_id],
-                                       :content_view_id => options[:system_content_view_id]
+                                                  :content_view_id => options[:system_content_view_id]
                                       ).first
         end
 
         def activation_key_cve(options)
           ::Katello::ContentViewEnvironment.where(:environment_id => options[:key_environment_id],
-                                       :content_view_id => options[:key_content_view_id]
+                                                  :content_view_id => options[:key_content_view_id]
                                       ).first
         end
       end

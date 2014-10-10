@@ -11,73 +11,73 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Util
-  module Search
+  module Util
+    module Search
 
-    DISABLED_LUCENE_SPECIAL_CHARS = ['-', ':']
+      DISABLED_LUCENE_SPECIAL_CHARS = ['-', ':']
 
-    def self.custom_analyzers
-      {
-        "kt_name_analyzer" => {
-          "type"      => "custom",
-          "tokenizer" => "keyword"
-        },
-        "autcomplete_name_analyzer" => {
+      def self.custom_analyzers
+        {
+          "kt_name_analyzer" => {
+            "type"      => "custom",
+            "tokenizer" => "keyword"
+          },
+          "autcomplete_name_analyzer" => {
             "type"      => "custom",
             "tokenizer" => "keyword",
             "filter"    => %w(standard lowercase ngram_filter)
-        }
-      }
-    end
-
-    def self.custom_filters
-      {
-          "ngram_filter"  => {
-              "type"      => "edgeNGram",
-              "side"      => "front",
-              "min_gram"  => 1,
-              "max_gram"  => 30
           }
-      }
-    end
-
-    # Filter the search input, escaping unsupported lucene syntax (e.g. usage of - operator)
-    def self.filter_input(search)
-      return nil if search.nil?
-      DISABLED_LUCENE_SPECIAL_CHARS.each do |chr|
-        search = search.gsub(chr, '\\' + chr)
+        }
       end
-      return search
+
+      def self.custom_filters
+        {
+          "ngram_filter"  => {
+            "type"      => "edgeNGram",
+            "side"      => "front",
+            "min_gram"  => 1,
+            "max_gram"  => 30
+          }
+        }
+      end
+
+      # Filter the search input, escaping unsupported lucene syntax (e.g. usage of - operator)
+      def self.filter_input(search)
+        return nil if search.nil?
+        DISABLED_LUCENE_SPECIAL_CHARS.each do |chr|
+          search = search.gsub(chr, '\\' + chr)
+        end
+        return search
+      end
+
+      def self.active_record_search_classes
+        ignore_list =  %w(Katello::CpConsumerUser Katello::Pool)
+        classes = get_subclasses(ActiveRecord::Base)
+        classes = classes.select{ |c| !ignore_list.include?(c.name) && c.respond_to?(:index) }
+
+        #we need index base classes first (TaskStatus) before child classes (PulpTaskStatus)
+        initial_list = classes.select{|c| c.superclass == ActiveRecord::Base}
+        subclass_list = classes - initial_list
+        initial_list + subclass_list
+      end
+
+      def self.backend_search_classes
+        pulp_backend_search_classes + [Katello::Pool]
+      end
+
+      def self.pulp_backend_search_classes
+        [Katello::Package,
+         Katello::PuppetModule,
+         Katello::Distribution,
+         Katello::PackageGroup]
+      end
+
+      def self.get_subclasses(obj_class)
+        classes = obj_class.subclasses
+        subs = classes.collect {|c| get_subclasses(c) }.flatten
+        classes + subs
+      end
+
     end
-
-    def self.active_record_search_classes
-      ignore_list =  %w(Katello::CpConsumerUser Katello::Pool)
-      classes = get_subclasses(ActiveRecord::Base)
-      classes = classes.select{ |c| !ignore_list.include?(c.name) && c.respond_to?(:index) }
-
-      #we need index base classes first (TaskStatus) before child classes (PulpTaskStatus)
-      initial_list = classes.select{|c| c.superclass == ActiveRecord::Base}
-      subclass_list = classes - initial_list
-      initial_list + subclass_list
-    end
-
-    def self.backend_search_classes
-      pulp_backend_search_classes + [Katello::Pool]
-    end
-
-    def self.pulp_backend_search_classes
-      [Katello::Package,
-       Katello::PuppetModule,
-       Katello::Distribution,
-       Katello::PackageGroup]
-    end
-
-    def self.get_subclasses(obj_class)
-      classes = obj_class.subclasses
-      subs = classes.collect {|c| get_subclasses(c) }.flatten
-      classes + subs
-    end
-
   end
-end
 end

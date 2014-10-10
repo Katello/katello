@@ -20,7 +20,7 @@ module Actions
 
         input_format do
           param :consumer_uuid, String
-          param :type, %w[rpm package_group]
+          param :type, %w(rpm package_group)
           param :args, array_of(String)
         end
 

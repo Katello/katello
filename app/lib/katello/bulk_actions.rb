@@ -11,77 +11,77 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class BulkActions
+  class BulkActions
 
-  attr_accessor :systems, :user, :organization
+    attr_accessor :systems, :user, :organization
 
-  def initialize(user, org, systems)
-    self.systems = systems
-    self.organization = org
-    self.user = user
-  end
-
-  def install_errata(errata_ids)
-    perform_bulk_action do |consumer_group|
-      consumer_group.install_consumer_errata(errata_ids)
+    def initialize(user, org, systems)
+      self.systems = systems
+      self.organization = org
+      self.user = user
     end
-  end
 
-  def install_packages(packages)
-    fail Errors::HostCollectionEmptyException if self.systems.empty?
-    perform_bulk_action do |consumer_group|
-      consumer_group.install_package(packages)
+    def install_errata(errata_ids)
+      perform_bulk_action do |consumer_group|
+        consumer_group.install_consumer_errata(errata_ids)
+      end
     end
-  end
 
-  def uninstall_packages(packages)
-    fail Errors::HostCollectionEmptyException if self.systems.empty?
-    perform_bulk_action do |consumer_group|
-      consumer_group.uninstall_package(packages)
+    def install_packages(packages)
+      fail Errors::HostCollectionEmptyException if self.systems.empty?
+      perform_bulk_action do |consumer_group|
+        consumer_group.install_package(packages)
+      end
     end
-  end
 
-  def update_packages(packages = nil)
-    # if no packages are provided, a full system update will be performed (e.g ''yum update' equivalent)
-    fail Errors::HostCollectionEmptyException if self.systems.empty?
-    perform_bulk_action do |consumer_group|
-      consumer_group.update_package(packages)
+    def uninstall_packages(packages)
+      fail Errors::HostCollectionEmptyException if self.systems.empty?
+      perform_bulk_action do |consumer_group|
+        consumer_group.uninstall_package(packages)
+      end
     end
-  end
 
-  def install_package_groups(groups)
-    fail Errors::HostCollectionEmptyException if self.systems.empty?
-    perform_bulk_action do |consumer_group|
-      consumer_group.install_package_group(groups)
+    def update_packages(packages = nil)
+      # if no packages are provided, a full system update will be performed (e.g ''yum update' equivalent)
+      fail Errors::HostCollectionEmptyException if self.systems.empty?
+      perform_bulk_action do |consumer_group|
+        consumer_group.update_package(packages)
+      end
     end
-  end
 
-  def update_package_groups(groups)
-    fail Errors::HostCollectionEmptyException if self.systems.empty?
-    perform_bulk_action do |consumer_group|
-      consumer_group.install_package_group(groups)
+    def install_package_groups(groups)
+      fail Errors::HostCollectionEmptyException if self.systems.empty?
+      perform_bulk_action do |consumer_group|
+        consumer_group.install_package_group(groups)
+      end
     end
-  end
 
-  def uninstall_package_groups(groups)
-    fail Errors::HostCollectionEmptyException if self.systems.empty?
-    perform_bulk_action do |consumer_group|
-      consumer_group.uninstall_package_group(groups)
+    def update_package_groups(groups)
+      fail Errors::HostCollectionEmptyException if self.systems.empty?
+      perform_bulk_action do |consumer_group|
+        consumer_group.install_package_group(groups)
+      end
     end
+
+    def uninstall_package_groups(groups)
+      fail Errors::HostCollectionEmptyException if self.systems.empty?
+      perform_bulk_action do |consumer_group|
+        consumer_group.uninstall_package_group(groups)
+      end
+    end
+
+    private
+
+    def perform_bulk_action
+      consumer_ids = self.systems.collect{|i| i.uuid}
+      group = Glue::Pulp::ConsumerGroup.new
+      group.pulp_id = ::UUIDTools::UUID.random_create.to_s
+      group.consumer_ids = consumer_ids
+      group.set_pulp_consumer_group
+      yield(group)
+    ensure
+      group.del_pulp_consumer_group
+    end
+
   end
-
-  private
-
-  def perform_bulk_action
-    consumer_ids = self.systems.collect{|i| i.uuid}
-    group = Glue::Pulp::ConsumerGroup.new
-    group.pulp_id = ::UUIDTools::UUID.random_create.to_s
-    group.consumer_ids = consumer_ids
-    group.set_pulp_consumer_group
-    yield(group)
-  ensure
-    group.del_pulp_consumer_group
-  end
-
-end
 end

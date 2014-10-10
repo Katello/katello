@@ -33,7 +33,7 @@ module Katello
           try_specific_resource_template(options[:template] || params[:action], "async", options)
         end
 
-        def respond_with_template(action, resource_name, options = {}, &block)
+        def respond_with_template(action, resource_name, options = {}, &_block)
           yield if block_given?
           status = options[:status] || 200
 

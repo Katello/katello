@@ -26,7 +26,7 @@ module Actions
                                                    input[:unit_type_id],
                                                    input[:upload_id],
                                                    {},
-                                                   { unit_metadata: {} })
+                                                    unit_metadata: {})
         end
 
         def rescue_strategy

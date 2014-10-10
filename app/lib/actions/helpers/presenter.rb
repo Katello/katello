@@ -19,9 +19,7 @@ module Actions
         fail NotImplementedError
       end
 
-      def humanized_output
-        presenter.humanized_output
-      end
+      delegate :humanized_output, to: :presenter
 
       class Base
         include Algebrick::TypeCheck
@@ -39,7 +37,7 @@ module Actions
 
       # Use sub-actions for presenting the data of the task
       class Delegated < Base
-        def initialize(action, delegated_actions)
+        def initialize(_action, delegated_actions)
           (Type! delegated_actions, Array).all? { |a| Type! a, Presenter }
           @delegated_actions = delegated_actions
         end

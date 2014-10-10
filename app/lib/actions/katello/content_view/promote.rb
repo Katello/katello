@@ -22,8 +22,8 @@ module Actions
           fail ::Katello::HttpErrors::BadRequest, _("Cannot promote environment out of sequence. Use force to bypass restriction.") if !is_force && !version.promotable?(environment)
 
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
-                                                :environment => environment, :task => self.task,
-                                                :status => ::Katello::ContentViewHistory::IN_PROGRESS)
+                                                          :environment => environment, :task => self.task,
+                                                          :status => ::Katello::ContentViewHistory::IN_PROGRESS)
           sequence do
             plan_action(ContentView::AddToEnvironment, version, environment)
             concurrence do

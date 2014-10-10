@@ -20,7 +20,7 @@ module Actions
         def plan(system, activation_keys = [])
           system.disable_auto_reindex!
 
-          if !activation_keys.empty?
+          unless activation_keys.empty?
             activation_key_plan = plan_action(Katello::System::ActivationKeys, system, activation_keys)
             return if activation_key_plan.error
           end

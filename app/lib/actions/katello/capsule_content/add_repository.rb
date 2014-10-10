@@ -18,12 +18,12 @@ module Actions
         # @param capsule_content [::Katello::CapsuleContent]
         # @param pulp_repo [::Katello::Glue::Pulp::Repo]
         def plan(capsule_content, pulp_repo)
-            fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
+          fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
 
-            plan_action(Pulp::Consumer::BindNodeDistributor,
-                        consumer_uuid: capsule_content.consumer_uuid,
-                        repo_id: pulp_repo.pulp_id,
-                        bind_options: bind_options)
+          plan_action(Pulp::Consumer::BindNodeDistributor,
+                      consumer_uuid: capsule_content.consumer_uuid,
+                      repo_id: pulp_repo.pulp_id,
+                      bind_options: bind_options)
         end
 
         private

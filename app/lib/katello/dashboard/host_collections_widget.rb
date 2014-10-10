@@ -11,22 +11,22 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Dashboard::HostCollectionsWidget < Dashboard::Widget
+  class Dashboard::HostCollectionsWidget < Dashboard::Widget
 
-  def accessible?
-    User.current.admin? ||
-     (current_organization &&
-      User.current.allowed_organizations.include?(current_organization) &&
-      HostCollection.readable?)
+    def accessible?
+      User.current.admin? ||
+       (current_organization &&
+        User.current.allowed_organizations.include?(current_organization) &&
+        HostCollection.readable?)
+    end
+
+    def title
+      _("Host Collections")
+    end
+
+    def content_path
+      host_collections_dashboard_index_path
+    end
+
   end
-
-  def title
-    _("Host Collections")
-  end
-
-  def content_path
-    host_collections_dashboard_index_path
-  end
-
-end
 end

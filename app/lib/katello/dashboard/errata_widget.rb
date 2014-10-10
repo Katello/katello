@@ -11,22 +11,22 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Dashboard::ErrataWidget < Dashboard::Widget
+  class Dashboard::ErrataWidget < Dashboard::Widget
 
-  def accessible?
-    User.current.admin? ||
-     (current_organization &&
-      User.current.allowed_organizations.include?(current_organization) &&
-      System.readable?)
+    def accessible?
+      User.current.admin? ||
+       (current_organization &&
+        User.current.allowed_organizations.include?(current_organization) &&
+        System.readable?)
+    end
+
+    def title
+      _("Errata Overview")
+    end
+
+    def content_path
+      errata_dashboard_index_path
+    end
+
   end
-
-  def title
-    _("Errata Overview")
-  end
-
-  def content_path
-    errata_dashboard_index_path
-  end
-
-end
 end
