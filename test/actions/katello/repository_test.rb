@@ -18,7 +18,6 @@ class Dynflow::Testing::DummyPlannedAction
 
 end
 
-
 module ::Actions::Katello::Repository
 
   class TestBase < ActiveSupport::TestCase
@@ -51,7 +50,6 @@ module ::Actions::Katello::Repository
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:error).returns("ERROR")
     end
 
-
     it 'fails to plan' do
       repository.expects(:save!).never
     end
@@ -73,7 +71,7 @@ module ::Actions::Katello::Repository
 
   class DyscoverTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Discover }
-    let(:action_planned) { create_and_plan_action action_class, url = 'http://' }
+    let(:action_planned) { create_and_plan_action action_class, 'http://' }
 
     it 'plans' do
       assert_run_phase action_planned

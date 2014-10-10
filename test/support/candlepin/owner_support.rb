@@ -21,8 +21,8 @@ module CandlepinOwnerSupport
     @organization.id
   end
 
-  def self.organization
-    @organization
+  class << self
+    attr_reader :organization
   end
 
   def self.set_owner(org)
@@ -49,13 +49,13 @@ module CandlepinOwnerSupport
     VCR.use_cassette('support/candlepin/organization', :match_requests_on => [:path, :params, :method, :body_json]) do
       set_owner(@organization)
     end
+    return @organization
   rescue => e
     puts e
-  ensure
     return @organization
   end
 
-  def self.destroy_organization(id=@organization_id, cassette='support/candlepin/organization')
+  def self.destroy_organization(id = @organization_id, cassette = 'support/candlepin/organization')
     VCR.use_cassette(cassette, :match_requests_on => [:path, :params, :method, :body_json]) do
       Resources::Candlepin::Owner.destroy(@organization.label)
     end

@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Katello
 module ConsumerSupport
 
@@ -25,7 +24,7 @@ end
 module Katello
 module TaskSupport
 
-  def self.wait_on_tasks(task_list, options={})
+  def self.wait_on_tasks(task_list, options = {})
     task_list = [task_list] unless task_list.is_a?(Array)
     ignore_exception = options.fetch(:ignore_exception, false)
     PulpTaskStatus.wait_for_tasks(task_list)

@@ -22,7 +22,7 @@ module Katello
       end
 
       it 'reindex the pool' do
-        pool = rand(1100);
+        pool = rand(1100)
         ::Katello::Pool.stubs(:find_pool).returns(pool)
         ::Katello::Pool.expects(:index_pools).with([pool])
 

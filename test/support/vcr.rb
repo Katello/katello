@@ -1,3 +1,4 @@
+# rubocop:disable Lint/HandleExceptions
 require "vcr"
 
 module VCR
@@ -37,11 +38,12 @@ module VCR
   end
 end
 
+# rubocop:disable Style/MethodLength
 def configure_vcr
   mode = ENV['mode'] ? ENV['mode'].to_sym : :none
 
   if ENV['record'] == "false" && mode == :none
-    raise "Record flag is not applicable for mode 'none', please use with 'mode=all'"
+    fail "Record flag is not applicable for mode 'none', please use with 'mode=all'"
   end
 
   if mode != :none
@@ -76,7 +78,7 @@ def configure_vcr
           request_1.body == request_2.body
         end
       end
-    rescue => e
+    rescue
       #ignore the warning thrown about this matcher already being registered
     end
 
@@ -84,7 +86,7 @@ def configure_vcr
       c.register_request_matcher :params do |request_1, request_2|
         URI(request_1.uri).query == URI(request_2.uri).query
       end
-    rescue => e
+    rescue
       #ignore the warning thrown about this matcher already being registered
     end
 

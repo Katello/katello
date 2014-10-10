@@ -63,7 +63,7 @@ module Katello
 
     def test_update
       mock_pulp_server(:upload_bits => true)
-      put :update, :id => "1" , :offset => "0", :content => "/tmp/my_file.rpm", :repository_id => @repo.id
+      put :update, :id => "1", :offset => "0", :content => "/tmp/my_file.rpm", :repository_id => @repo.id
 
       assert_response :success
     end

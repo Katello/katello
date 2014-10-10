@@ -31,7 +31,6 @@ module Katello
     end
 
     def test_update_label
-      org = get_organization
       staging = KTEnvironment.find(katello_environments(:staging).id)
       assert_raises ActiveRecord::RecordInvalid do
         staging.update_attributes!(:label => "crazy")

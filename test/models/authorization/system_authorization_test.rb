@@ -94,9 +94,7 @@ class SystemAuthorizationWithPermsTest < AuthorizationTestBase
     sys = System.find(katello_systems(:simple_server_3))
     systems = System.where(:content_view_id => sys.content_view_id, :environment_id => sys.environment)
 
-    clause = systems.map do |system|
-      "name=\"#{system.name}\""
-    end.join(" or ")
+    clause = systems.map { |system| "name=\"#{system.name}\"" }.join(" or ")
 
     setup_current_user_with_permissions(:name => "edit_content_hosts",
                                         :search => clause)

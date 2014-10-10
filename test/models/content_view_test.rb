@@ -51,7 +51,7 @@ class ContentViewTest < ActiveSupport::TestCase
 
   def test_create_with_name
     content_view = FactoryGirl.build(:katello_content_view)
-    content_view.name = (?a * 256)
+    content_view.name = ('a' * 256)
     refute content_view.valid?
     assert_equal 1, content_view.errors.size
 
@@ -96,7 +96,7 @@ class ContentViewTest < ActiveSupport::TestCase
     User.current = User.find(users(:admin))
     ContentViewPuppetEnvironment.any_instance.stubs(:clear_content_indices)
     env = @dev
-    cve = env.content_views.first.content_view_environments.where(:environment_id=>env.id).first
+    cve = env.content_views.first.content_view_environments.where(:environment_id => env.id).first
     assert_raises(RuntimeError) do
       env.destroy!
     end
@@ -125,7 +125,7 @@ class ContentViewTest < ActiveSupport::TestCase
     assert ContentView.exists?(@library_dev_view.id)
     assert_equal count, ContentView.count
     assert @library_view.destroy
-    assert_equal count-1, ContentView.count
+    assert_equal count - 1, ContentView.count
   end
 
   def test_copy
@@ -154,7 +154,7 @@ class ContentViewTest < ActiveSupport::TestCase
     skip "TODO: Fix content views"
     view = @library_view
     view.delete(@library)
-    assert_empty ContentView.where(:label=>view.label)
+    assert_empty ContentView.where(:label => view.label)
   end
 
   def test_default_scope

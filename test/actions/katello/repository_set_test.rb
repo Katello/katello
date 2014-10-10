@@ -34,11 +34,13 @@ module ::Actions::Katello::RepositorySet
     let(:content_url) { '/product/$basearch/$releasever' }
     let(:action) { create_action action_class }
     let(:product) { katello_products(:redhat) }
-    let(:content) { ::Katello::Candlepin::Content.new(id: 'content-123',
-                                                      name: 'Content 123',
-                                                      type: 'yum',
-                                                      label: 'content-123',
-                                                      contentUrl: content_url) }
+    let(:content) do
+      ::Katello::Candlepin::Content.new(id: 'content-123',
+                                        name: 'Content 123',
+                                        type: 'yum',
+                                        label: 'content-123',
+                                        contentUrl: content_url)
+    end
     let(:substitutions) { { basearch: 'x86_64', releasever: '6Server' } }
     let(:expected_pulp_id) { "Empty_Organization-redhat_label-Content_123_x86_64_6Server" }
     let(:expected_relative_path) { "Empty_Organization/library_label/product/x86_64/6Server" }
@@ -64,9 +66,10 @@ module ::Actions::Katello::RepositorySet
 
     it 'fails when repository already enabled' do
       repository_already_enabled!
-      lambda do
+      failed = lambda do
         plan_action(action, product, content, substitutions)
-      end.must_raise(::Katello::Errors::ConflictException)
+      end
+      failed.must_raise(::Katello::Errors::ConflictException)
     end
   end
 
@@ -85,9 +88,10 @@ module ::Actions::Katello::RepositorySet
     end
 
     it 'fails when repository not enabled' do
-      lambda do
+      failed = lambda do
         plan_action(action, product, content, substitutions)
-      end.must_raise(::Katello::Errors::NotFound)
+      end
+      failed.must_raise(::Katello::Errors::NotFound)
     end
   end
 
@@ -113,12 +117,12 @@ module ::Actions::Katello::RepositorySet
       action = simulate_run
       action.output.
           must_equal({ "results" =>
-                       [{"substitutions"=>{"basearch"=>"x86_64", "releasever"=>"6Server"},
-                          "path"=>"/product/x86_64/6Server",
-                          "repo_name"=>"Content 123 x86_64 6Server",
-                          "pulp_id"=>"Empty_Organization-redhat_label-Content_123_x86_64_6Server",
-                          "enabled"=>false,
-                          "promoted"=>false}]})
+                       [{"substitutions" => {"basearch" => "x86_64", "releasever" => "6Server"},
+                          "path" => "/product/x86_64/6Server",
+                          "repo_name" => "Content 123 x86_64 6Server",
+                          "pulp_id" => "Empty_Organization-redhat_label-Content_123_x86_64_6Server",
+                          "enabled" => false,
+                          "promoted" => false}]})
     end
 
     it 'considers the repo being enabled when the repository object is present' do

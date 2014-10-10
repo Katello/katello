@@ -9,9 +9,6 @@ AllCops:
     - db/migrate/20131014135042_katello_tables.rb
     - engines/bastion/node_modules/**/*
     - engines/bastion/vendor/assets/dev-components/**/*
-    # TODO: remove these other paths as we fix them
-    - test/**/*
-    - config/navigation.rb
   Include:
     - app/views/**/*.rabl
 
@@ -90,3 +87,6 @@ Style/GuardClause:
 
 Style/StringLiterals:
   Enabled: false # dont't enforce
+
+Style/WordArray:
+  Enabled: false # don't force usage of %w()

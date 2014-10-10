@@ -34,17 +34,17 @@ class ContentViewPuppetEnvironmentTest < ActiveSupport::TestCase
   end
 
   def test_create
-    assert        @puppet_env.save
-    refute_empty  ContentViewPuppetEnvironment.where(:id => @puppet_env.id)
+    assert @puppet_env.save
+    refute_empty ContentViewPuppetEnvironment.where(:id => @puppet_env.id)
   end
 
   def test_content_type
-    assert       @puppet_env.save
+    assert @puppet_env.save
     assert_equal "puppet", ContentViewPuppetEnvironment.find(@puppet_env.id).content_type
   end
 
   def test_in_content_view
-    assert       @puppet_env.save
+    assert @puppet_env.save
     refute_empty ContentViewPuppetEnvironment.in_content_view(@content_view_version.content_view)
 
     library_dev_view = ContentView.find(katello_content_views(:library_dev_view))
@@ -52,7 +52,7 @@ class ContentViewPuppetEnvironmentTest < ActiveSupport::TestCase
   end
 
   def test_in_environment
-    assert       @puppet_env.save
+    assert @puppet_env.save
     refute_empty ContentViewPuppetEnvironment.in_environment(@library)
 
     dev = KTEnvironment.find(katello_environments(:staging).id)

@@ -21,8 +21,8 @@ module CandlepinConsumerSupport
     @system.id
   end
 
-  def self.system
-    @system
+  class << self
+    attr_reader :system
   end
 
   def self.create_system(name, env, cv)
@@ -47,8 +47,8 @@ module CandlepinConsumerSupport
     @distributor.id
   end
 
-  def self.distributor
-    @distributor
+  class << self
+    attr_reader :distributor
   end
 
   def self.create_distributor(name, env, cv)

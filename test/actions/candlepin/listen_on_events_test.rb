@@ -22,11 +22,10 @@ class Actions::Candlepin::ListenOnCandlepinEventsTest < ActiveSupport::TestCase
       create_and_plan_action action_class
     end
 
-
     it 'reindexes and acknowledges messages' do
       Actions::Candlepin::ListenOnCandlepinEvents.any_instance.stubs(:suspend)
       Actions::Candlepin::CandlepinListeningService.any_instance.stubs(:create_connection)
-      listening_service = Actions::Candlepin::CandlepinListeningService.new(nil,nil,nil)
+      listening_service = Actions::Candlepin::CandlepinListeningService.new(nil, nil, nil)
       listening_service.messages.add(123, OpenStruct.new(:subject => 'entitlement.created'))
       Actions::Candlepin::CandlepinListeningService.stubs(:instance).returns(listening_service)
 

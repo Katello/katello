@@ -20,7 +20,7 @@ module Katello
       User.current = User.find(users('admin'))
       @host_collection = HostCollection.find(katello_host_collections(:simple_host_collection))
     end
-    
+
     def test_readable
       refute_empty HostCollection.readable
     end
@@ -36,7 +36,7 @@ module Katello
     def test_deletable
       refute_empty HostCollection.deletable
     end
-    
+
     def test_host_collection_readable?
       assert @host_collection.readable?
     end
@@ -77,7 +77,7 @@ module Katello
     def test_deletable
       assert_empty HostCollection.deletable
     end
-   
+
     def test_host_collection_readable?
       refute @host_collection.readable?
     end

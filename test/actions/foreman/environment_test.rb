@@ -20,7 +20,7 @@ module ::Actions::Foreman::Environment
     include Support::Actions::RemoteAction
     include FactoryGirl::Syntax::Methods
 
-    let( :action ) { create_action action_class }
+    let(:action) { create_action action_class }
 
     before :all do
       @production = environments(:production)
@@ -29,9 +29,9 @@ module ::Actions::Foreman::Environment
   end
 
   class DestroyTest < TestBase
-    let( :action_class ) { ::Actions::Foreman::Environment::Destroy }
-    let( :product ) do
-      katello_products( :fedora )
+    let(:action_class) { ::Actions::Foreman::Environment::Destroy }
+    let(:product) do
+      katello_products(:fedora)
     end
 
     it 'fails to destroy when there are hosts' do

@@ -19,7 +19,7 @@ module Katello
       @repo = katello_repositories(:rhel_6_x86_64)
       @security = katello_errata(:security)
       @bugfix = katello_errata(:bugfix)
-      @enhancement= katello_errata(:enhancement)
+      @enhancement = katello_errata(:enhancement)
       @errata_server = katello_systems(:errata_server)
       @simple_server = katello_systems(:simple_server)
     end
@@ -67,9 +67,9 @@ module Katello
     end
 
     def test_systems_available
-      assert_includes  @security.systems_available, @errata_server
-      refute_includes  @security.systems_available, @simple_server
-      refute_includes  @bugfix.systems_available, @simple_server
+      assert_includes @security.systems_available, @errata_server
+      refute_includes @security.systems_available, @simple_server
+      refute_includes @bugfix.systems_available, @simple_server
     end
 
     def test_available_for_systems

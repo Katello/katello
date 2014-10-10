@@ -31,17 +31,17 @@ FactoryGirl.define do
     factory :katello_environment_with_library, :traits => [:with_library]
 
     trait :dev do
-      name          "Dev"
-      description   "Dev environment."
-      label         "dev_label"
-      association   :priors
+      name "Dev"
+      description "Dev environment."
+      label "dev_label"
+      association :priors
     end
 
     trait :staging do
-      name          "Staging"
-      description   "Staging environment."
-      label         "staging_label"
-      association   :priors
+      name "Staging"
+      description "Staging environment."
+      label "staging_label"
+      association :priors
     end
 
   end

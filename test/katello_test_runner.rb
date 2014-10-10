@@ -14,29 +14,24 @@ module KatelloMiniTestRunner
     end
 
     def _run_suites(suites, type)
-      begin
-        if ENV['suite']
-          suites = suites.select do |suite|
-                     suite.name == ENV['suite']
-                   end
+      if ENV['suite']
+        suites = suites.select do |suite|
+          suite.name == ENV['suite']
         end
-
-        before_suites
-        super(suites, type)
-      ensure
-        after_suites
       end
+      before_suites
+      super(suites, type)
+    ensure
+      after_suites
     end
 
     def _run_suite(suite, type)
-      begin
-        User.current = nil  #reset User.current
-        suite.before_suite if suite.respond_to?(:before_suite)
-        super(suite, type)
-      ensure
-        suite.after_suite if suite.respond_to?(:after_suite)
-        restore_glue_layers
-      end
+      User.current = nil  #reset User.current
+      suite.before_suite if suite.respond_to?(:before_suite)
+      super(suite, type)
+    ensure
+      suite.after_suite if suite.respond_to?(:after_suite)
+      restore_glue_layers
     end
 
   end

@@ -36,11 +36,10 @@ class KTEnvironmentTestBase < ActiveSupport::TestCase
 
 end
 
-
 class KTEnvironmentTest < KTEnvironmentTestBase
 
   def test_create_and_validate_default_content_view
-    env = KTEnvironment.create(:organization=>@acme_corporation, :name=>"SomeEnv", :prior=>@library)
+    env = KTEnvironment.create(:organization => @acme_corporation, :name => "SomeEnv", :prior => @library)
     assert_nil env.default_content_view
     assert_nil env.default_content_view_version
   end
@@ -89,7 +88,7 @@ class KTEnvironmentTest < KTEnvironmentTestBase
                                                   :prior => @library)
     refute env.save
     assert_equal 1, env.errors.size
-    assert env.errors.has_key?(:label)
+    assert env.errors.has_key?(:label) # rubocop:disable Style/DeprecatedHashMethods
   end
 end
 end

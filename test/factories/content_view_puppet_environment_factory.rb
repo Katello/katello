@@ -7,8 +7,8 @@ FactoryGirl.define do
     association :content_view_version, :factory => :katello_content_view_version
 
     trait :library_content_view_puppet_environment do
-      name          "Library View Puppet Environment"
-      pulp_id       "library-view"
+      name "Library View Puppet Environment"
+      pulp_id "library-view"
     end
   end
 end

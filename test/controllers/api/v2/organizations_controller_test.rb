@@ -117,7 +117,7 @@ module Katello
       end
 
       url = "http://www.redhat.com"
-      redhat_provider = mock()
+      redhat_provider = mock
       redhat_provider.expects(:update_attributes!).with do |arg_hash|
         arg_hash[:repository_url] == url
       end

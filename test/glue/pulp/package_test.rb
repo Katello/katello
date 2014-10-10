@@ -46,8 +46,8 @@ class GluePulpPackageTest < GluePulpPackageTestBase
   def test_find
     package = Package.find(@@package_id)
 
-    refute_nil      package
-    assert_kind_of  Package, package
+    refute_nil package
+    assert_kind_of Package, package
   end
 
   def test_nvrea

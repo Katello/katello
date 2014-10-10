@@ -78,13 +78,13 @@ module ::Actions::Katello::Product
     include Support::Actions::RemoteAction
     include FactoryGirl::Syntax::Methods
 
-    let( :action ) { create_action action_class }
+    let(:action) { create_action action_class }
   end
 
   class CreateTest < TestBase
-    let( :action_class ) { ::Actions::Katello::Product::Create }
-    let( :product ) do
-      katello_products( :fedora )
+    let(:action_class) { ::Actions::Katello::Product::Create }
+    let(:product) do
+      katello_products(:fedora)
     end
 
     it 'plans' do
@@ -96,7 +96,7 @@ module ::Actions::Katello::Product
       end
 
       product.expects(:disable_auto_reindex!).returns
-      product.expects(:save!).returns( [] )
+      product.expects(:save!).returns([])
 
       plan_action(action, product, product.organization)
 
@@ -104,10 +104,10 @@ module ::Actions::Katello::Product
                                 ::Actions::Candlepin::Product::Create,
                                 :name => product.name,
                                 :multiplier => 1,
-                                :attributes=>[{:name=>"arch", :value=>"ALL"}])
+                                :attributes => [{:name => "arch", :value => "ALL"}])
 
-      # TODO figure out how to specify the candlepin id or a placeholder
-      assert_action_planed( action, ::Actions::Candlepin::Product::CreateUnlimitedSubscription)
+      # TODO: figure out how to specify the candlepin id or a placeholder
+      assert_action_planed(action, ::Actions::Candlepin::Product::CreateUnlimitedSubscription)
       assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, product)
     end
   end
@@ -137,13 +137,13 @@ module ::Actions::Katello::Product
   end
 
   class DestroyTest < TestBase
-    let( :action_class ) { ::Actions::Katello::Product::Destroy }
+    let(:action_class) { ::Actions::Katello::Product::Destroy }
     let(:candlepin_destroy_class) { ::Actions::Candlepin::Product::Destroy }
     let(:candlepin_delete_pools_class) { ::Actions::Candlepin::Product::DeletePools }
     let(:candlepin_delete_subscriptions_class) { ::Actions::Candlepin::Product::DeleteSubscriptions }
 
-    let( :product ) do
-      katello_products( :fedora )
+    let(:product) do
+      katello_products(:fedora)
     end
 
     it 'plans' do
@@ -158,7 +158,7 @@ module ::Actions::Katello::Product
 
       plan_action(action, product)
 
-      assert_action_planed_with(action, candlepin_destroy_class, cp_id: product.cp_id )
+      assert_action_planed_with(action, candlepin_destroy_class, cp_id: product.cp_id)
       assert_action_planed_with(action, ::Actions::Katello::Repository::Destroy) do |repo|
         default_view_repos.include?(repo.first.id)
       end

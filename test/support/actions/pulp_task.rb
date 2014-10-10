@@ -22,7 +22,7 @@ module Support
       end
 
       def task_finished_hash
-        { 'finish_time' => (Time.now-5).getgm.iso8601 }
+        { 'finish_time' => (Time.now - 5).getgm.iso8601 }
       end
 
       def task_base(id = '76fb4115-2ec4-4945-815b-0f9d216b4183')

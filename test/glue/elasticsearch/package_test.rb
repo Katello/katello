@@ -29,7 +29,7 @@ class PackageTest < ActiveSupport::TestCase
 
   def setup
     @repo = Repository.new(:pulp_id => "abcrepo")
-    @packages = YAML::load_file(FIXTURES_FILE).values.map(&:with_indifferent_access)
+    @packages = YAML.load_file(FIXTURES_FILE).values.map(&:with_indifferent_access)
     @packages.each_with_index do |package, idx|
       package.merge!(:repoids => [@repo.pulp_id],
                      :sortable_version => Util::Package.sortable_version(package[:version]),
@@ -94,7 +94,7 @@ class PackageTest < ActiveSupport::TestCase
 
   # helper methods
 
-  def search_version_range(min=nil, max=nil)
+  def search_version_range(min = nil, max = nil)
     filters = Util::Package.version_filter(min, max)
     filter_search(filters)
   end

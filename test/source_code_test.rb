@@ -10,10 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# rubocop:disable Style/RegexpLiteral
+
 # encoding: UTF-8
 require 'ripper'
 
-unless ENV['RAILS_ENV'] == 'build' # ok
+if ENV['RAILS_ENV'] != 'build' # ok
   require_relative 'katello_test_helper'
 else
   # if we are in build environment of RPM we have only the bare minimum
@@ -31,7 +33,7 @@ class SourceCodeTest < ActiveSupport::TestCase
 
     # @param [Array<Regexp>] ignores
     def initialize(pattern, *ignores)
-      @pattern = pattern || raise
+      @pattern = pattern || fail
       root     = File.expand_path File.join(File.dirname(__FILE__), '..')
       @files   = Dir.glob("#{root}/#{pattern}").select { |path| ignores.all? { |i| path !~ i } }
     end
@@ -44,14 +46,15 @@ class SourceCodeTest < ActiveSupport::TestCase
     def each_line(&it)
       return to_enum :each_line unless it
       each_file do |content, file_path|
-        content.each_line.each_with_index { |line, line_number| it[line, line_number+1, file_path] }
+        content.each_line.each_with_index { |line, line_number| it[line, line_number + 1, file_path] }
       end
     end
 
     def check_lines(message = nil, &condition)
       bad_lines = each_line.map do |line, line_number, file_path|
         [line, line_number, file_path] unless condition.call line
-      end.compact
+      end
+      bad_lines.compact!
 
       assert_empty bad_lines,
              "#{message + "\n" if message}check lines:\n" + bad_lines.
@@ -65,13 +68,15 @@ class SourceCodeTest < ActiveSupport::TestCase
         bad_tokens_in_file = []
         lexed_file.each_with_index do |entry, index|
           bad_tokens_in_file << [file_path, entry[0][0], entry[0][1]] if condition.call(lexed_file, index, entry)
-        end.compact
-        bad_tokens_in_file
-      end.flatten(1)
-      assert_empty bad_tokens,
-        "#{message + "\n" if message}" + bad_tokens.collect { |file_path, line_no, column_no|
+        end
+        bad_tokens_in_file.compact
+      end
+      bad_tokens.flatten!(1)
+
+      bad_tokens.map! do |file_path, line_no, column_no|
           " - %s: [%d, %d]" % [file_path, line_no, column_no]
-        }.join("\n")
+      end
+      assert_empty bad_tokens, "#{message + "\n" if message}" + bad_tokens.join("\n")
     end
 
     def self.token_is_keyword?(str, lex, index, token)
@@ -115,7 +120,7 @@ for more info.
               %r'engines/bastion/test/test_helper\.rb',
               %r'test/support/vcr\.rb',
               %r'test/support/runcible\.rb',
-              %r'test/katello_test_runner\.rb', # TODO clean up minitest_helper
+              %r'test/katello_test_runner\.rb', # TODO: clean up minitest_helper
               %r'app/services/katello/authentication/client_authentication\.rb',
               %r'lib/util/puppet\.rb').
           check_lines(<<-DOC) { |line| (line !~ /ENV\[[^\]]+\]/) ? true : line =~ /#\s?ok/ }

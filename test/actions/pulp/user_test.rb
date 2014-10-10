@@ -33,6 +33,7 @@ class Actions::Pulp::UserTest < ActiveSupport::TestCase
     configure_runcible
     ::Katello.pulp_server.resources.user.delete('user_id')
   rescue RestClient::ResourceNotFound => e
+    puts "Failed to delete user #{e.message}"
   end
 
   def test_create
