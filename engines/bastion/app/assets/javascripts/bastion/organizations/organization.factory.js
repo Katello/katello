@@ -47,11 +47,8 @@ angular.module('Bastion.organizations').factory('Organization',
                         // to [[{id, name, select: true}]]
                         return _.map(angular.fromJson(data)["results"], function (path) {
                             return _.map(path["environments"], function (env) {
-                                return {
-                                    id: env.id,
-                                    name: env.name,
-                                    select: env.permissions["readable"]
-                                };
+                                env.select = env.permissions["readable"];
+                                return env;
                             });
                         });
                     }

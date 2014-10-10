@@ -1,50 +1,46 @@
 <span page-title ng-model="contentHost">{{ 'Errata for: ' | translate }} {{ contentHost.name }}</span>
-<h4 translate>Applicable Errata</h4>
 
-<div class="nutupane-bar">
-  <input type="text"
-         class="form-control filter-input"
-         placeholder="{{ 'Filter' | translate }}"
-         ng-model="errataTable.errataFilterTerm"/>
-  <span class="result-count" translate>Showing {{ errataTable.resource.total }} Errata</span>
+<p class="alert alert-info" ng-hide="contentHost.katello_agent_installed" translate>
+  The katello-agent package is required to manage errata on this Host.
+  Please install the katello-agent package to manage errata on
+  {{ contentHost.name }}.
+</p>
 
-  <div ng-hide="contentHost.readonly" class="fr">
-     <button class="btn btn-primary"
-             translate
-             ng-hide="denied('edit_content_hosts', contentHost)"
-             ng-disabled="errataTable.getSelected().length == 0"
-             ng-click="applySelected()">
-       Apply Selected
-     </button>
-  </div>
+<div data-extend-template="layouts/details-nutupane.html">
+  <div data-block="header" translate>Applicable Errata</div>
 
-  <div class="fr select-action">
-    <span translate>{{ errataTable.numSelected }} Selected</span>
-    <span>|</span>
-    <a class="deselect-action"
-       translate
-       ng-class="{ 'disabled-link' : errataTable.numSelected == 0 }"
-       ng-click="errataTable.selectAll(false)">
-      Deselect All
-    </a>
-  </div>
-</div>
+  <span data-block="filters">
+    <form class="well form-horizontal col-sm-12">
+      <div class="form-group">
+        <label translate class="control-label col-sm-1">
+          Show from:
+        </label>
+        <div class="col-sm-3">
+          <select class="form-control"
+                  ng-model="selectedErrataOption"
+                  ng-change="refreshErrata(selectedErrataOption)"
+                  ng-options="option.label as option.name for option in errataOptions | orderBy: 'order'"></select>
+        </div>
+      </div>
+    </form>
+  </span>
 
-<div alch-table="errataTable">
-  <p class="alert alert-info" ng-hide="contentHost.katello_agent_installed" translate>
-    The katello-agent package is required to manage errata on this Host.
-    Please install the katello-agent package to manage errata on
-    {{ contentHost.name }}.
-  </p>
+  <span data-block="actions">
+      <div ng-hide="contentHost.readonly" class="fr">
+         <button class="btn btn-primary"
+                 translate
+                 ng-hide="denied('edit_content_hosts', contentHost)"
+                 ng-disabled="errataTable.getSelected().length == 0"
+                 ng-click="applySelected()">
+           Apply Selected
+         </button>
+      </div>
+  </span>
 
-  <p class="alert alert-info" ng-show="errataTable.rows.length === 0">There are no Errata to display.</p>
+  <div data-block="table">
+    <p translate class="alert alert-info" ng-show="errataTable.rows.length === 0">There are no Errata to display.</p>
 
-  <div alch-container-scroll 
-       alch-infinite-scroll="errataTable.nextPage()"
-       data="errataTable.rows" 
-       ng-show="errataTable.rows.length > 0">
-       
-    <table ng-class="{'table-mask': errataTable.working}" class="table table-striped">
+    <table class="table table-striped table-bordered" ng-class="{'table-mask': detailsTable.working}">
       <thead>
         <tr alch-table-head row-select>
           <th alch-table-column="type" translate>Type</th>
@@ -53,19 +49,34 @@
           <th alch-table-column="issued" translate>Issued</th>
         </tr>
       </thead>
-
       <tbody>
-        <tr alch-table-row ng-repeat="erratum in errataTable.rows | filter:errataTable.errataCompare" row-select="erratum">
-          <td alch-table-cell >{{ erratum.type }}</td>
+        <tr alch-table-row ng-repeat="erratum in detailsTable.rows | filter:errataTable.errataCompare" row-select="erratum">
+          <td alch-table-cell>
+              <span ng-show="erratum.type == 'security'">
+                <i class="icon-warning-sign inline-icon" title="{{ 'Security' | translate }}"></i>
+              </span>
+    
+              <span ng-show="erratum.type == 'bugfix'">
+                <i class="icon-bug inline-icon" title="{{ 'Bug Fix' | translate }}"></i>
+              </span>
+    
+              <span ng-show="erratum.type == 'enhancement'">
+                <i class="icon-plus-sign-alt inline-icon" title="{{ 'Enhancement' | translate }}"></i>
+              </span>
+    
+            {{ erratum.type | errataType}}
+            <span ng-show="erratum.severity">- {{ erratum.severity | errataSeverity}}</span>
+          </td>
           <td alch-table-cell >
             <a ng-click="transitionToErratum(erratum)">
               {{ erratum.errata_id }}
             </a>
           </td>
           <td alch-table-cell >{{ erratum.title }}</td>
-          <td alch-table-cell >{{ erratum.issued }}</td>
+          <td alch-table-cell >{{ erratum.updated | date:'shortDate' }}</td>
         </tr>
       </tbody>
     </table>
   </div>
+
 </div>

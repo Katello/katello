@@ -24,6 +24,7 @@ module Katello
 
     def models
       @system = katello_systems(:simple_server)
+      @errata_system = katello_systems(:errata_server)
       @host_collections = katello_host_collections
       @organization = get_organization
       @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_dev_view_library))
@@ -174,6 +175,21 @@ module Katello
       assert_protected_action(:available_host_collections, allowed_perms, denied_perms) do
         get :available_host_collections, :id => @system.uuid
       end
+    end
+
+    def test_errata
+      get :errata, :id => @errata_system.uuid
+
+      assert_response :success
+      assert_template 'api/v2/systems/errata'
+    end
+
+    def test_errata_other_env
+      get :errata, :id => @errata_system.uuid, :content_view_id => @errata_system.organization.default_content_view.id,
+          :environment_id => @errata_system.organization.library.id
+
+      assert_response :success
+      assert_template 'api/v2/systems/errata'
     end
 
   end

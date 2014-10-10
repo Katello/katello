@@ -6,3 +6,7 @@ node :packages do |e|
 end
 
 attributes :errata_type => :type
+
+node :available do |e|
+  @available_errata_ids.include?(e.id) if @available_errata_ids
+end
