@@ -8,5 +8,5 @@ glue :content do
 end
 
 child @resource.repositories => :repositories do
-    attributes :id, :name
+  attributes :id, :name
 end

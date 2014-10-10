@@ -17,7 +17,7 @@ module Katello
     describe 'when notified with entitlement.deleted' do
       let(:mymessage) do
         result = {:subject => "entitlement.deleted" }
-        result[:content] = JSON.generate({:referenceId => 123})
+        result[:content] = JSON.generate(:referenceId => 123)
         OpenStruct.new(result)
       end
 

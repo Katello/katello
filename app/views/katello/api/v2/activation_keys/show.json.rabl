@@ -14,7 +14,7 @@ attributes :usage_count, :user_id, :max_content_hosts, :pools, :system_template_
            :service_level
 attributes :get_key_pools => :pools
 
-child :products => :products do |product|
+child :products => :products do |_product|
   attributes :id, :name
 end
 

@@ -2,7 +2,7 @@ object @resource
 
 attributes :user, :status
 
-child :environment => :environment do |h|
+child :environment => :environment do |_h|
   attributes :id, :name
 end
 

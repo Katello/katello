@@ -71,11 +71,11 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
     next # we can't scan binary files, skipping
   end
   if options[:interpolations]
-    found_strings = gettext_strings.find_all do |(s, suffix)|
+    found_strings = gettext_strings.find_all do |(s, _suffix)|
       s =~ /#\{.*?\}/
     end
     malformed_strings[relative_file].concat(found_strings.map(&:first))
-    found_strings.each do |(malformed, malformed_suffix)|
+    found_strings.each do |(malformed, _malformed_suffix)|
       puts "#{relative_file}: #{malformed}"
       if options[:fix]
         variables = malformed.scan(/#\{(.*?)\}/).map(&:first)
@@ -95,7 +95,7 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
   end
 
   if options[:multivars]
-    found_strings = gettext_strings.find_all do |(s, suffix)|
+    found_strings = gettext_strings.find_all do |(s, _suffix)|
       s.scan(/%[a-z]/).size > 1
     end
     malformed_strings[relative_file].concat(found_strings)

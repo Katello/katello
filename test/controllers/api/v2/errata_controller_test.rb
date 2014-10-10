@@ -13,100 +13,100 @@
 require "katello_test_helper"
 
 module Katello
-class Api::V2::ErrataControllerTest < ActionController::TestCase
+  class Api::V2::ErrataControllerTest < ActionController::TestCase
 
-  def before_suite
-    models = ["Organization", "KTEnvironment", "Errata", "Repository", "Product", "Provider"]
-    services = ["Candlepin", "Pulp", "ElasticSearch"]
-    disable_glue_layers(services, models)
-    super
-  end
+    def before_suite
+      models = ["Organization", "KTEnvironment", "Errata", "Repository", "Product", "Provider"]
+      services = ["Candlepin", "Pulp", "ElasticSearch"]
+      disable_glue_layers(services, models)
+      super
+    end
 
-  def models
-    @repo = Repository.find(katello_repositories(:rhel_6_x86_64))
-  end
+    def models
+      @repo = Repository.find(katello_repositories(:rhel_6_x86_64))
+    end
 
-  def permissions
-    @read_permission = :view_products
-    @create_permission = :create_products
-    @update_permission = :edit_products
-    @destroy_permission = :destroy_products
-    @sync_permission = :sync_products
+    def permissions
+      @read_permission = :view_products
+      @create_permission = :create_products
+      @update_permission = :edit_products
+      @destroy_permission = :destroy_products
+      @sync_permission = :sync_products
 
-    @auth_permissions = [@read_permission]
-    @unauth_permissions = [@create_permission, @update_permission, @destroy_permission, @sync_permission]
-  end
+      @auth_permissions = [@read_permission]
+      @unauth_permissions = [@create_permission, @update_permission, @destroy_permission, @sync_permission]
+    end
 
-  def setup
-    setup_controller_defaults_api
-    @request.env['HTTP_ACCEPT'] = 'application/json'
-    @request.env['CONTENT_TYPE'] = 'application/json'
-    @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
-    models
-    permissions
-  end
+    def setup
+      setup_controller_defaults_api
+      @request.env['HTTP_ACCEPT'] = 'application/json'
+      @request.env['CONTENT_TYPE'] = 'application/json'
+      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
+      models
+      permissions
+    end
 
-  def test_index
-    get :index, :repository_id => @repo.id
-
-    assert_response :success
-    assert_template %w(katello/api/v2/errata/index)
-
-    get :index
-
-    assert_response :success
-    assert_template %w(katello/api/v2/errata/index)
-  end
-
-  def test_index_with_content_view_version
-    @content_view_version = ContentViewVersion.first
-    ContentViewVersion.expects(:readable).returns(stub(:find_by_id => @content_view_version))
-
-    get :index, :content_view_version_id => @content_view_version.id
-
-    assert_response :success
-    assert_template %w(katello/api/v2/errata/index)
-  end
-
-  def test_index_with_filters
-    errata_filter = ContentViewFilter.find(katello_content_view_filters(:populated_erratum_filter))
-    get :index, :content_view_filter_id => errata_filter
-
-    package_group_filter = ContentViewFilter.find(katello_content_view_filters(:populated_package_group_filter))
-    get :index, :content_view_filter_id => package_group_filter
-  end
-
-  def test_index_protected
-    assert_protected_action(:index, @auth_permissions, @unauth_permissions) do
+    def test_index
       get :index, :repository_id => @repo.id
+
+      assert_response :success
+      assert_template %w(katello/api/v2/errata/index)
+
+      get :index
+
+      assert_response :success
+      assert_template %w(katello/api/v2/errata/index)
     end
-  end
 
-  def test_show
-    errata = @repo.errata.first
-    get :show, :repository_id => @repo.id, :id => errata.errata_id
+    def test_index_with_content_view_version
+      @content_view_version = ContentViewVersion.first
+      ContentViewVersion.expects(:readable).returns(stub(:find_by_id => @content_view_version))
 
-    assert_response :success
-    assert_template %w(katello/api/v2/errata/show)
-  end
+      get :index, :content_view_version_id => @content_view_version.id
 
-  def test_show_group_not_found
-    errata = @repo.errata.first
-    Erratum.expects(:find_by_uuid).once.with(errata.errata_id).returns(nil)
-    Erratum.expects(:find_by_errata_id).returns(nil)
+      assert_response :success
+      assert_template %w(katello/api/v2/errata/index)
+    end
 
-    get :show, :repository_id => @repo.id, :id => errata.errata_id
-    assert_response 404
-  end
+    def test_index_with_filters
+      errata_filter = ContentViewFilter.find(katello_content_view_filters(:populated_erratum_filter))
+      get :index, :content_view_filter_id => errata_filter
 
-  def test_show_protected
-    errata = @repo.errata.first
-    Erratum.stubs(:find).with(errata.errata_id).returns(errata)
+      package_group_filter = ContentViewFilter.find(katello_content_view_filters(:populated_package_group_filter))
+      get :index, :content_view_filter_id => package_group_filter
+    end
 
-    assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
+    def test_index_protected
+      assert_protected_action(:index, @auth_permissions, @unauth_permissions) do
+        get :index, :repository_id => @repo.id
+      end
+    end
+
+    def test_show
+      errata = @repo.errata.first
       get :show, :repository_id => @repo.id, :id => errata.errata_id
-    end
-  end
 
-end
+      assert_response :success
+      assert_template %w(katello/api/v2/errata/show)
+    end
+
+    def test_show_group_not_found
+      errata = @repo.errata.first
+      Erratum.expects(:find_by_uuid).once.with(errata.errata_id).returns(nil)
+      Erratum.expects(:find_by_errata_id).returns(nil)
+
+      get :show, :repository_id => @repo.id, :id => errata.errata_id
+      assert_response 404
+    end
+
+    def test_show_protected
+      errata = @repo.errata.first
+      Erratum.stubs(:find).with(errata.errata_id).returns(errata)
+
+      assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
+        get :show, :repository_id => @repo.id, :id => errata.errata_id
+      end
+    end
+
+  end
 end

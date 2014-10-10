@@ -42,7 +42,7 @@ module ::Actions::Katello::CapsuleContent
 
     it 'plans' do
       action = create_and_plan_action(action_class, capsule_content, environment)
-      assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::AddRepository) do |capsule_content, repository|
+      assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::AddRepository) do |capsule_content, _repository|
         capsule_content.capsule.id == proxy_with_pulp.id
       end
     end
@@ -70,7 +70,7 @@ module ::Actions::Katello::CapsuleContent
       capsule_content.add_lifecycle_environment(environment)
 
       action = create_and_plan_action(action_class, capsule_content, environment)
-      assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::RemoveRepository) do |capsule_content, repository|
+      assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::RemoveRepository) do |capsule_content, _repository|
         capsule_content.capsule.id == proxy_with_pulp.id
       end
     end
@@ -157,10 +157,10 @@ module ::Actions::Katello::CapsuleContent
     it 'plans' do
       action = create_and_plan_action(action_class, capsule_content, repository)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::BindNodeDistributor) do |(input)|
-        input.must_equal({ consumer_uuid: @capsule_system.uuid,
-                           repo_id: repository.pulp_id,
-                           bind_options:
-                           { notify_agent: false, binding_config: { strategy: 'mirror' }}})
+        input.must_equal(consumer_uuid: @capsule_system.uuid,
+                         repo_id: repository.pulp_id,
+                         bind_options:
+                           { notify_agent: false, binding_config: { strategy: 'mirror' }})
       end
     end
   end
@@ -171,8 +171,8 @@ module ::Actions::Katello::CapsuleContent
     it 'plans' do
       action = create_and_plan_action(action_class, capsule_content, repository)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::UnbindNodeDistributor) do |(input)|
-        input.must_equal({ consumer_uuid: @capsule_system.uuid,
-                           repo_id: repository.pulp_id })
+        input.must_equal(consumer_uuid: @capsule_system.uuid,
+                         repo_id: repository.pulp_id)
       end
     end
   end

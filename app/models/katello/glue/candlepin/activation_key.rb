@@ -10,78 +10,79 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# rubocop:disable Style/AccessorMethodName
 module Katello
-module Glue::Candlepin::ActivationKey
+  module Glue::Candlepin::ActivationKey
 
-  def self.included(base)
-    base.send :include, LazyAccessor
-    base.send :include, InstanceMethods
+    def self.included(base)
+      base.send :include, LazyAccessor
+      base.send :include, InstanceMethods
 
-    base.class_eval do
-      before_save :save_activation_key_orchestration
+      base.class_eval do
+        before_save :save_activation_key_orchestration
 
-      lazy_accessor :service_level,
-                    :initializer => (lambda do |s|
-                                      Resources::Candlepin::ActivationKey.get(cp_id)[0][:serviceLevel] if cp_id
-                                     end)
-      lazy_accessor :cp_name,
-                    :initializer => (lambda do |s|
-                                      Resources::Candlepin::ActivationKey.get(cp_id)[0][:name] if cp_id
-                                     end)
-    end
-  end
-
-  module InstanceMethods
-
-    def get_pools
-      Resources::Candlepin::ActivationKey.pools(self.organization.label)
-    end
-
-    def get_keys
-      Resources::Candlepin::ActivationKey.get
-    end
-
-    def get_key_pools
-      key_pools = Resources::Candlepin::ActivationKey.get(self.cp_id)[0][:pools]
-      pools = []
-      key_pools.each do |key_pool|
-        key_pool[:pool][:amount] = (key_pool[:quantity] ? key_pool[:quantity] : 0)
-        pools << key_pool[:pool]
-      end
-      pools
-    end
-
-    def update_activation_key
-      Rails.logger.debug "Updating an activation key in candlepin: #{name}"
-      Resources::Candlepin::ActivationKey.update(self.cp_id, self.release_version, @service_level)
-    rescue => e
-      Rails.logger.error _("Failed to update candlepin activation_key %s") % "#{self.name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
-    def save_activation_key_orchestration
-      case self.orchestration_for
-      when :update
-        pre_queue.create(:name => "update candlepin activation_key: #{self.name}", :priority => 2, :action => [self, :update_activation_key])
+        lazy_accessor :service_level,
+                      :initializer => (lambda do |_s|
+                                         Resources::Candlepin::ActivationKey.get(cp_id)[0][:serviceLevel] if cp_id
+                                       end)
+        lazy_accessor :cp_name,
+                      :initializer => (lambda do |_s|
+                                         Resources::Candlepin::ActivationKey.get(cp_id)[0][:name] if cp_id
+                                       end)
       end
     end
 
-    def subscribe(pool_id, quantity = 1)
-      Resources::Candlepin::ActivationKey.add_pools self.cp_id, pool_id, quantity
-    end
+    module InstanceMethods
 
-    def unsubscribe(pool_id)
-      Resources::Candlepin::ActivationKey.remove_pools self.cp_id, pool_id
-    end
+      def get_pools
+        Resources::Candlepin::ActivationKey.pools(self.organization.label)
+      end
 
-    def set_content_override(content_label, name, value = nil)
-      Resources::Candlepin::ActivationKey.update_content_override(self.cp_id, content_label, name, value)
-    end
+      def get_keys
+        Resources::Candlepin::ActivationKey.get
+      end
 
-    def content_overrides
-      Resources::Candlepin::ActivationKey.content_overrides(self.cp_id)
-    end
+      def get_key_pools
+        key_pools = Resources::Candlepin::ActivationKey.get(self.cp_id)[0][:pools]
+        pools = []
+        key_pools.each do |key_pool|
+          key_pool[:pool][:amount] = (key_pool[:quantity] ? key_pool[:quantity] : 0)
+          pools << key_pool[:pool]
+        end
+        pools
+      end
 
+      def update_activation_key
+        Rails.logger.debug "Updating an activation key in candlepin: #{name}"
+        Resources::Candlepin::ActivationKey.update(self.cp_id, self.release_version, @service_level)
+      rescue => e
+        Rails.logger.error _("Failed to update candlepin activation_key %s") % "#{self.name}: #{e}, #{e.backtrace.join("\n")}"
+        raise e
+      end
+
+      def save_activation_key_orchestration
+        case self.orchestration_for
+        when :update
+          pre_queue.create(:name => "update candlepin activation_key: #{self.name}", :priority => 2, :action => [self, :update_activation_key])
+        end
+      end
+
+      def subscribe(pool_id, quantity = 1)
+        Resources::Candlepin::ActivationKey.add_pools self.cp_id, pool_id, quantity
+      end
+
+      def unsubscribe(pool_id)
+        Resources::Candlepin::ActivationKey.remove_pools self.cp_id, pool_id
+      end
+
+      def set_content_override(content_label, name, value = nil)
+        Resources::Candlepin::ActivationKey.update_content_override(self.cp_id, content_label, name, value)
+      end
+
+      def content_overrides
+        Resources::Candlepin::ActivationKey.content_overrides(self.cp_id)
+      end
+
+    end
   end
-end
 end

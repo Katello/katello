@@ -57,7 +57,7 @@ module Katello
       end
 
       it "should associate the foreman host with the content host" do
-        System.expects(:new).with({ 'facts' => @facts, 'host_id' => @foreman_host.id }).returns(@system)
+        System.expects(:new).with('facts' => @facts, 'host_id' => @foreman_host.id).returns(@system)
 
         assert_sync_task(::Actions::Katello::System::Create, @system, [@activation_key])
 
@@ -70,7 +70,7 @@ module Katello
         @system2 = katello_systems(:simple_server)
         Host.any_instance.stubs(:content_host).returns(@system2)
 
-        System.expects(:new).with({ 'facts' => @facts, 'host_id' => @foreman_host.id }).returns(@system)
+        System.expects(:new).with('facts' => @facts, 'host_id' => @foreman_host.id).returns(@system)
 
         assert_sync_task(::Actions::Katello::System::Destroy, @system2)
 
@@ -92,11 +92,11 @@ module Katello
       end
 
       it "should associate the foreman host with the content host" do
-        System.expects(:new).with({ 'environment' => @content_view_environment.environment,
-                                    'content_view' => @content_view_environment.content_view,
-                                    'serviceLevel' => nil,
-                                    'facts' => @facts,
-                                    'host_id' => @foreman_host.id }).returns(@system)
+        System.expects(:new).with('environment' => @content_view_environment.environment,
+                                  'content_view' => @content_view_environment.content_view,
+                                  'serviceLevel' => nil,
+                                  'facts' => @facts,
+                                  'host_id' => @foreman_host.id).returns(@system)
 
         assert_sync_task(::Actions::Katello::System::Create, @system)
 
@@ -109,11 +109,11 @@ module Katello
         @system2 = katello_systems(:simple_server)
         Host.any_instance.stubs(:content_host).returns(@system2)
 
-        System.expects(:new).with({ 'environment' => @content_view_environment.environment,
-                                    'content_view' => @content_view_environment.content_view,
-                                    'serviceLevel' => nil,
-                                    'facts' => @facts,
-                                    'host_id' => @foreman_host.id }).returns(@system)
+        System.expects(:new).with('environment' => @content_view_environment.environment,
+                                  'content_view' => @content_view_environment.content_view,
+                                  'serviceLevel' => nil,
+                                  'facts' => @facts,
+                                  'host_id' => @foreman_host.id).returns(@system)
 
         assert_sync_task(::Actions::Katello::System::Destroy, @system2)
 
@@ -129,19 +129,19 @@ module Katello
         System.stubs(:first).returns(@system)
         uuid = @system.uuid
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid))
-        Repository.stubs(:where).with(:relative_path => 'foo').returns([OpenStruct.new({ :pulp_id => 'a' })])
-        Repository.stubs(:where).with(:relative_path => 'bar').returns([OpenStruct.new({ :pulp_id => 'b' })])
+        Repository.stubs(:where).with(:relative_path => 'foo').returns([OpenStruct.new(:pulp_id => 'a')])
+        Repository.stubs(:where).with(:relative_path => 'bar').returns([OpenStruct.new(:pulp_id => 'b')])
       end
       let(:enabled_repos) do
         {
-            "repos" => [
-              {
-                  "baseurl" => ["https://hostname/pulp/repos/foo"],
-              },
-              {
-                  "baseurl" => ["https://hostname/pulp/repos/bar"],
-              },
-            ]
+          "repos" => [
+            {
+              "baseurl" => ["https://hostname/pulp/repos/foo"],
+            },
+            {
+              "baseurl" => ["https://hostname/pulp/repos/bar"],
+            },
+          ]
         }
       end
 
@@ -246,7 +246,7 @@ module Katello
 
     describe "consumer show" do
       before do
-        Resources::Candlepin::Consumer.stubs(:get).returns(Resources::Candlepin::Consumer.new({:id => 1, :uuid => 2 }))
+        Resources::Candlepin::Consumer.stubs(:get).returns(Resources::Candlepin::Consumer.new(:id => 1, :uuid => 2))
       end
 
       it "can be accessed by user" do

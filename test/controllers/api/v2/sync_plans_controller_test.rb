@@ -68,10 +68,10 @@ module Katello
 
     def test_create
       post :create, :organization_id => @organization.id,
-           :sync_plan => {:name => 'Hourly Sync Plan',
-                          :sync_date => '2014-01-09 17:46:00',
-                          :interval => 'hourly',
-                          :description => 'This is my cool new product.'}
+                    :sync_plan => {:name => 'Hourly Sync Plan',
+                                   :sync_date => '2014-01-09 17:46:00',
+                                   :interval => 'hourly',
+                                   :description => 'This is my cool new product.'}
 
       assert_response :success
       assert_template 'api/v2/sync_plans/show'
@@ -79,8 +79,8 @@ module Katello
 
     def test_create_fail
       post :create, :organization_id => @organization.id,
-           :sync_plan => {:sync_date => '2014-01-09 17:46:00',
-                          :description => 'This is my cool new sync plan.'}
+                    :sync_plan => {:sync_date => '2014-01-09 17:46:00',
+                                   :description => 'This is my cool new sync plan.'}
 
       assert_response :unprocessable_entity
     end
@@ -91,9 +91,9 @@ module Katello
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
         post :create, :organization_id => @organization.id,
-             :sync_plan => {:name => 'Hourly Sync Plan',
-                            :sync_date => '2014-01-09 17:46:00',
-                            :interval => 'hourly'}
+                      :sync_plan => {:name => 'Hourly Sync Plan',
+                                     :sync_date => '2014-01-09 17:46:00',
+                                     :interval => 'hourly'}
       end
     end
 
@@ -153,7 +153,7 @@ module Katello
         ::ForemanTasks.expects(:sync_task).
           with(::Actions::Katello::Product::Update,
                product,
-               {:sync_plan_id => @sync_plan.id})
+               :sync_plan_id => @sync_plan.id)
       end
 
       put :add_products, :id => @sync_plan.id, :organization_id => @organization.id,

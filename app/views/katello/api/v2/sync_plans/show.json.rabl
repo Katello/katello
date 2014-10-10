@@ -6,7 +6,7 @@ attributes :sync_date, :interval, :next_sync
 attributes :created_at, :updated_at
 attributes :enabled
 
-child :products => :products do |product|
+child :products => :products do |_product|
   attributes :id, :cp_id, :name, :label, :description
 
   node :repository_count do |prod|

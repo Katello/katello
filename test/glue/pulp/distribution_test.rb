@@ -14,37 +14,37 @@ require 'katello_test_helper'
 require 'support/pulp/repository_support'
 
 module Katello
-class GluePulpDistributionTestBase < ActiveSupport::TestCase
-  include RepositorySupport
+  class GluePulpDistributionTestBase < ActiveSupport::TestCase
+    include RepositorySupport
 
-  def self.before_suite
-    super
-    configure_runcible
+    def self.before_suite
+      super
+      configure_runcible
 
-    services  = ['Candlepin', 'ElasticSearch', 'Foreman']
-    models    = ['Repository', 'Distribution']
-    disable_glue_layers(services, models)
+      services  = ['Candlepin', 'ElasticSearch', 'Foreman']
+      models    = ['Repository', 'Distribution']
+      disable_glue_layers(services, models)
 
-    VCR.insert_cassette('pulp/content/distribution')
+      VCR.insert_cassette('pulp/content/distribution')
 
-    RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
+      RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
+    end
+
+    def self.after_suite
+      RepositorySupport.destroy_repo
+      VCR.eject_cassette
+    end
+
   end
 
-  def self.after_suite
-    RepositorySupport.destroy_repo
-    VCR.eject_cassette
+  class GluePulpDistributionTest < GluePulpDistributionTestBase
+
+    def test_find
+      distribution = Distribution.find("ks-Test Family-TestVariant-16-x86_64")
+
+      refute_nil distribution
+      assert_kind_of Distribution, distribution
+    end
+
   end
-
-end
-
-class GluePulpDistributionTest < GluePulpDistributionTestBase
-
-  def test_find
-    distribution = Distribution.find("ks-Test Family-TestVariant-16-x86_64")
-
-    refute_nil distribution
-    assert_kind_of Distribution, distribution
-  end
-
-end
 end

@@ -43,14 +43,14 @@ node :systems, :if => (params[:action] == "show") do |subscription|
       autoheal: sys.autoheal,
       facts: {
         memory: {
-            memtotal: facts['memory.memtotal']
+          memtotal: facts['memory.memtotal']
         },
         cpu: {
           'cpu_socket(s)' => facts['cpu.cpu_socket(s)'],
           'core(s)_per_socket' => facts['cpu.core(s)_per_socket']
         },
         virt: {
-            is_guest: facts['virt.is_guest']
+          is_guest: facts['virt.is_guest']
         }
       }
     }

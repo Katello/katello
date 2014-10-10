@@ -14,32 +14,32 @@
 require 'katello_test_helper'
 
 module Katello
-class OrganizationTestBase < ActiveSupport::TestCase
+  class OrganizationTestBase < ActiveSupport::TestCase
 
-  def self.before_suite
-    services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['Organization', 'KTEnvironment', 'ContentView', 'ContentViewVersion',
-                 'ContentViewEnvironment']
-    disable_glue_layers(services, models, true)
+    def self.before_suite
+      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
+      models    = ['Organization', 'KTEnvironment', 'ContentView', 'ContentViewVersion',
+                   'ContentViewEnvironment']
+      disable_glue_layers(services, models, true)
+    end
+
+    def setup
+    end
+
   end
 
-  def setup
+  class OrganizationTestDelete < OrganizationTestBase
+    def test_org_being_deleted
+      Organization.any_instance.stubs(:being_deleted?).returns(true)
+      User.current = User.find(users(:admin))
+      org = get_organization(:organization2)
+      org.content_view_environments.first.destroy!
+      org.reload.library.destroy!
+      org.reload.kt_environments.destroy_all
+      id = org.id
+      org.destroy!
+      assert_nil Organization.find_by_id(id)
+    end
+
   end
-
-end
-
-class OrganizationTestDelete < OrganizationTestBase
-  def test_org_being_deleted
-    Organization.any_instance.stubs(:being_deleted?).returns(true)
-    User.current = User.find(users(:admin))
-    org = get_organization(:organization2)
-    org.content_view_environments.first.destroy!
-    org.reload.library.destroy!
-    org.reload.kt_environments.destroy_all
-    id = org.id
-    org.destroy!
-    assert_nil Organization.find_by_id(id)
-  end
-
-end
 end

@@ -79,6 +79,8 @@ module Katello
       :message => (_("must be one of the following: %s") % TYPES.join(', '))
     }
 
+    # TODO: remove this default scope
+    # rubocop:disable Rails/DefaultScope
     default_scope order("#{Katello::Repository.table_name}.name ASC")
     scope :has_url, where('url IS NOT NULL')
     scope :in_default_view, joins(:content_view_version => :content_view).

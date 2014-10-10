@@ -216,7 +216,7 @@ module Katello
     end
 
     def test_available_puppet_module_names
-      Support::SearchService::FakeSearchService.any_instance.stubs(:facets).returns({'facet_search' => {'terms' => []}})
+      Support::SearchService::FakeSearchService.any_instance.stubs(:facets).returns('facet_search' => {'terms' => []})
 
       get :available_puppet_module_names, :id => @library_dev_staging_view.id
 
@@ -375,8 +375,8 @@ module Katello
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do
         put :remove, :id => @library_dev_staging_view.id,
-                      :content_view_version_ids => [@library_dev_staging_view.version(@dev).id,
-                                                    @library_dev_staging_view.version(@staging).id]
+                     :content_view_version_ids => [@library_dev_staging_view.version(@dev).id,
+                                                   @library_dev_staging_view.version(@staging).id]
       end
     end
 
@@ -396,15 +396,15 @@ module Katello
 
       alternate_cv = @library_dev_staging_view
       alternate_cv_read_permission = {:name => :view_content_views,
-                                       :search => "name=\"#{alternate_cv.name}\"" }
+                                      :search => "name=\"#{alternate_cv.name}\"" }
 
       bad_cv = ContentView.find(katello_content_views(:candlepin_default_cv))
       bad_cv_read_permission = {:name => :view_content_views,
-                                       :search => "name=\"#{bad_cv.name}\"" }
+                                :search => "name=\"#{bad_cv.name}\"" }
 
       bad_env = KTEnvironment.find(katello_environments(:dev_path1))
       bad_env_read_permission = {:name => :view_lifecycle_environments,
-                                       :search => "name=\"#{bad_env.name}\"" }
+                                 :search => "name=\"#{bad_env.name}\"" }
 
       allowed_perms = [[:edit_content_hosts, :promote_or_remove_content_views, :view_content_views,
                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
@@ -439,10 +439,10 @@ module Katello
       ak_edit_permission = {:name => :edit_activation_keys, :search  => "name=\"#{ak.name}\"" }
 
       ak_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments,
-                                   :search => "name=\"#{ak.environment.name}\"" }
+                                  :search => "name=\"#{ak.environment.name}\"" }
 
       ak_cv_remove_permission = {:name => :promote_or_remove_content_views,
-                                  :search => "name=\"#{ak.content_view.name}\"" }
+                                 :search => "name=\"#{ak.content_view.name}\"" }
 
       alternate_env = @staging
       alternate_env_read_permission = {:name => :view_lifecycle_environments,
@@ -450,15 +450,15 @@ module Katello
 
       alternate_cv = @library_dev_staging_view
       alternate_cv_read_permission = {:name => :view_content_views,
-                                       :search => "name=\"#{alternate_cv.name}\"" }
+                                      :search => "name=\"#{alternate_cv.name}\"" }
 
       bad_cv = ContentView.find(katello_content_views(:candlepin_default_cv))
       bad_cv_read_permission = {:name => :view_content_views,
-                                       :search => "name=\"#{bad_cv.name}\"" }
+                                :search => "name=\"#{bad_cv.name}\"" }
 
       bad_env = KTEnvironment.find(katello_environments(:dev_path1))
       bad_env_read_permission = {:name => :view_lifecycle_environments,
-                                       :search => "name=\"#{bad_env.name}\"" }
+                                 :search => "name=\"#{bad_env.name}\"" }
 
       allowed_perms = [[:edit_activation_keys, :promote_or_remove_content_views, :view_content_views,
                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],

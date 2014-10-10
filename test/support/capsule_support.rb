@@ -11,23 +11,23 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Support
-module CapsuleSupport
+  module CapsuleSupport
 
-  def pulp_feature
-    @pulp_feture ||= Feature.create(name: SmartProxy::PULP_NODE_FEATURE)
-  end
+    def pulp_feature
+      @pulp_feture ||= Feature.create(name: SmartProxy::PULP_NODE_FEATURE)
+    end
 
-  def proxy_with_pulp
-    @proxy_with_pulp ||= smart_proxies(:four).tap do |proxy|
-      unless proxy.features.include?(pulp_feature)
-        proxy.features << pulp_feature
+    def proxy_with_pulp
+      @proxy_with_pulp ||= smart_proxies(:four).tap do |proxy|
+        unless proxy.features.include?(pulp_feature)
+          proxy.features << pulp_feature
+        end
       end
     end
-  end
 
-  def capsule_content
-    @capsule_content ||= Katello::CapsuleContent.new(proxy_with_pulp)
-  end
+    def capsule_content
+      @capsule_content ||= Katello::CapsuleContent.new(proxy_with_pulp)
+    end
 
-end
+  end
 end

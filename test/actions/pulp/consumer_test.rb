@@ -87,7 +87,7 @@ module ::Actions::Pulp
                                       repo_ids: nil,
                                       skip_content: true)
       it_runs(action, :extensions, :consumer, :update_content) do |stub|
-        stub.with(uuid, 'node', nil, { skip_content_update: true })
+        stub.with(uuid, 'node', nil, skip_content_update: true)
       end
 
       action = create_and_plan_action(::Actions::Pulp::Consumer::SyncNode,

@@ -42,7 +42,7 @@ def generate_entry(entry)
   dash = title.index(" - ")
   title = title[dash + 3..-1] if dash
 
-  colon = title.index(": ") if !dash
+  colon = title.index(": ") unless dash
   title = title[colon + 2..-1] if colon
 
   comma = title.index(", ") if !dash && !colon
@@ -63,15 +63,15 @@ def generate_entry(entry)
 
   list_item += ')'
 
-  issue = get_issue(issues.first) if !issues.empty?
+  issue = get_issue(issues.first) unless issues.empty?
   tracker = issue ? issue['tracker']['name'] : 'Bug'
   category = (issue && issue['category']) ? issue['category']['name'] : 'Other'
 
   if tracker == 'Bug'
-    @bugs[category] = [] if !@bugs.key?(category)
+    @bugs[category] = [] unless @bugs.key?(category)
     @bugs[category] << list_item
   elsif tracker == 'Feature'
-    @features[category] = [] if !@features.key?(category)
+    @features[category] = [] unless @features.key?(category)
     @features[category] << list_item
   end
 end

@@ -18,8 +18,8 @@ module Katello
 
     def setup
       Katello::PuppetModule.stubs(:exists?).returns(true)
-      @base_record = { :errors => { :base => [] }, :content_view => OpenStruct.new({ :puppet_repos => [] }) }
-      @validator = Validators::ContentViewPuppetModuleValidator.new({:attributes => [:name]})
+      @base_record = { :errors => { :base => [] }, :content_view => OpenStruct.new(:puppet_repos => []) }
+      @validator = Validators::ContentViewPuppetModuleValidator.new(:attributes => [:name])
     end
 
     test "fails if both name and uuid blank" do

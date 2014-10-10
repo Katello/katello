@@ -10,7 +10,7 @@ attributes :distribution
 attributes :katello_agent_installed? => :katello_agent_installed
 attributes :registered_by
 
-child :products => :products do |product|
+child :products => :products do |_product|
   attributes :id, :name
 end
 attributes :content_overrides
@@ -91,7 +91,7 @@ if params[:fields] == "full"
   end
 end
 
-node :permissions do |activation_key|
+node :permissions do |_activation_key|
   {
     :editable => true
   }

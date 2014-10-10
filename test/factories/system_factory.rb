@@ -13,7 +13,7 @@ FactoryGirl.define do
       name 'capsule'
       uuid '1234-1234-1234-1234'
       cp_type 'system'
-      facts({ 'ip' => '192.168.0.1' })
+      facts('ip' => '192.168.0.1')
     end
   end
 end

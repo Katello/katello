@@ -35,7 +35,7 @@ module Support
 
       def assert_foreman_task(async, expected_action_class, *args_expected, &block)
         block      ||= if args_expected.empty?
-                         lambda { |*args| true }
+                         lambda { |*_args| true }
                        else
                          lambda { |*args|  args == args_expected }
                        end
