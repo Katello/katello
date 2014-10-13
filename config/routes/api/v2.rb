@@ -34,6 +34,7 @@ Katello::Engine.routes.draw do
         api_resources :activation_keys, :only => [:index, :create, :show, :update, :destroy] do
           member do
             match '/content_override' => 'activation_keys#content_override', :via => :put
+            post :copy
             put :add_subscriptions
             put :remove_subscriptions
           end

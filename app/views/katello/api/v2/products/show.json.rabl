@@ -14,8 +14,7 @@ attributes :redhat? => :redhat
 
 attributes :productContent => :product_content
 
-child :available_content => :available_content, :object_root => false do
-end
+attributes :available_content => :available_content
 
 node :repository_count do |product|
   if product.library_repositories.to_a.any?

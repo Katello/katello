@@ -16,7 +16,7 @@ module Katello
     before_filter :verify_presence_of_organization_or_environment, :only => [:index]
     before_filter :find_environment, :only => [:index, :create, :update]
     before_filter :find_optional_organization, :only => [:index, :create, :show]
-    before_filter :find_activation_key, :only => [:update, :destroy, :available_releases,
+    before_filter :find_activation_key, :only => [:update, :destroy, :available_releases, :copy,
                                                   :available_host_collections, :add_host_collections, :remove_host_collections,
                                                   :content_override, :add_subscriptions, :remove_subscriptions]
     before_filter :authorize
@@ -54,7 +54,7 @@ module Katello
       end
       sync_task(::Actions::Katello::ActivationKey::Create, @activation_key)
       @activation_key.reload
-      respond
+      respond(:resource => @activation_key)
     end
 
     api :PUT, "/activation_keys/:id", N_("Update an activation key")
@@ -84,7 +84,29 @@ module Katello
     param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     def show
-      respond
+      respond(:resource => @activation_key)
+    end
+
+    api :POST, "/activation_keys/:id/copy", N_("Copy an activation key")
+    param :new_name, String, :desc => N_("Name of new activation key"), :required => true
+    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => false
+    def copy
+      @new_activation_key = @activation_key.copy(params[:new_name])
+      @new_activation_key.user = current_user
+      sync_task(::Actions::Katello::ActivationKey::Create, @new_activation_key)
+      @new_activation_key.reload
+      @new_activation_key.update_attributes!(
+                                             :service_level => @activation_key.service_level,
+                                             :release_version => @activation_key.release_version
+                                            )
+      @activation_key.content_overrides.each do |content|
+        @new_activation_key.set_content_override(content['contentLabel'], content[:name], content[:value])
+      end
+      @activation_key.get_key_pools.each do |pool|
+        @new_activation_key.subscribe(pool[:id], pool[:amount])
+      end
+      respond_for_show(:resource => @new_activation_key)
     end
 
     api :GET, "/activation_keys/:id/host_collections/available", N_("List host collections the system does not belong to")
@@ -122,7 +144,7 @@ module Katello
       ids = activation_key_params[:host_collection_ids]
       @activation_key.host_collection_ids = (@activation_key.host_collection_ids + ids).uniq
       @activation_key.save!
-      respond_for_show
+      respond_for_show(:resource => @activation_key)
     end
 
     api :PUT, "/activation_keys/:id/host_collections"
@@ -132,7 +154,7 @@ module Katello
       ids = activation_key_params[:host_collection_ids]
       @activation_key.host_collection_ids = (@activation_key.host_collection_ids - ids).uniq
       @activation_key.save!
-      respond_for_show
+      respond_for_show(:resource => @activation_key)
     end
 
     api :PUT, "/activation_keys/:id/add_subscriptions", N_("Attach a subscription")
@@ -173,7 +195,7 @@ module Katello
       content_override = params[:content_override]
       @activation_key.set_content_override(content_override[:content_label],
                                            content_override[:name], content_override[:value]) if content_override
-      respond_for_show
+      respond_for_show(:resource => @activation_key)
     end
 
     private

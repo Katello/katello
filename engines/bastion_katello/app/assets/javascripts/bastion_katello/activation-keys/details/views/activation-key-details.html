@@ -17,7 +17,9 @@
       </button>
 
       <!-- RFE copy activation key - http://projects.theforeman.org/issues/4407 -->
-      <button class="btn btn-default" ng-click="showCopy = true" ng-hide="true">
+      <button class="btn btn-default"
+              ng-click="showCopy = true"
+              ng-hide="denied('create_activation_key')">
         <i class="icon-copy"></i>
         {{ "Copy Activation Key" | translate }}
       </button>

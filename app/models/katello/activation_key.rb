@@ -196,6 +196,14 @@ module Katello
       end
     end
 
+    def copy(new_name)
+      new_key = ActivationKey.new
+      new_key.name = new_name
+      new_key.attributes = self.attributes.slice("description", "environment_id", "organization_id", "content_view_id", "max_content_hosts", "unlimited_content_hosts")
+      new_key.host_collection_ids = self.host_collection_ids
+      new_key
+    end
+
     private
 
     def set_default_content_view
