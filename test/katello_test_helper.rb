@@ -200,7 +200,7 @@ def stub_lazy_accessors(model, stubs)
   target.stubs(stubs)
 end
 
-# rubocop:disable Style/MethodLength
+# rubocop:disable Metrics/MethodLength
 def disable_glue_layers(services = [], models = [], force_reload = false)
   @@glue_touched_models ||= Set.new
   @@model_service_cache ||= {}

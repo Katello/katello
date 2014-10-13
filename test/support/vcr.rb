@@ -38,7 +38,7 @@ module VCR
   end
 end
 
-# rubocop:disable Style/MethodLength
+# rubocop:disable Metrics/MethodLength
 def configure_vcr
   mode = ENV['mode'] ? ENV['mode'].to_sym : :none
 
