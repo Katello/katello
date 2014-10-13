@@ -38,6 +38,7 @@ require "monkeys/anemone"
 
 module Katello
 
+  require "katello/version"
   require "katello/app_config"
   require "katello/engine"
   require "katello/load_configuration"
