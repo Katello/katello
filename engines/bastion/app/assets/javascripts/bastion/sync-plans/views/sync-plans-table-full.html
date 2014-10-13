@@ -25,7 +25,7 @@
         </a>
       </td>
       <td alch-table-cell>{{ syncPlan.description }}</td>
-      <td alch-table-cell>{{ syncPlan.sync_date | date:'medium' }}</td>
+      <td alch-table-cell>{{ syncPlan.sync_date.time | date:'medium' }}</td>
       <td alch-table-cell>{{ syncPlan.enabled }}</td>
       <td alch-table-cell>{{ syncPlan.interval | capitalize }}</td>
       <td alch-table-cell>{{ syncPlan.next_sync | date:'medium' }}</td>
