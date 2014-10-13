@@ -1,7 +1,7 @@
 Bastion::Engine.routes.draw do
   class BastionPagesConstraint
     def initialize
-      @pages = %w[
+      @pages = %w(
         activation_keys
         content_hosts
         content_views
@@ -13,7 +13,7 @@ Bastion::Engine.routes.draw do
         sync_plans
         host_collections
         katello_tasks
-      ]
+      )
     end
 
     def matches?(request)

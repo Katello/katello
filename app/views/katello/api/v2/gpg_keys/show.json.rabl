@@ -25,7 +25,7 @@ child :repositories => :repositories do
   attribute :name
   attribute :content_type
 
-  child :product do |product|
+  child :product do |_product|
     attributes :cp_id => :id
     attribute :name
   end

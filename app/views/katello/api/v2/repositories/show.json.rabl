@@ -26,7 +26,7 @@ node :permissions do |repo|
   }
 end
 
-child :gpg_key do |gpg|
+child :gpg_key do |_gpg|
   attribute :name
   attribute :id
 end
@@ -35,12 +35,12 @@ child :product do |product|
   attribute :id
   attribute :cp_id
   attribute :name
-  node :sync_plan do |sync_plan|
+  node :sync_plan do |_sync_plan|
     partial('katello/api/v2/sync_plans/show', :object => product.sync_plan)
   end
 end
 
-child :environment => :environment do |repo|
+child :environment => :environment do |_repo|
   attribute :id
 end
 
@@ -48,7 +48,7 @@ child :gpg_key do
   attributes :id, :name
 end
 
-child :latest_dynflow_sync => :last_sync do |object|
+child :latest_dynflow_sync => :last_sync do |_object|
   attributes :id, :username, :started_at, :ended_at, :state, :result, :progress
 end
 

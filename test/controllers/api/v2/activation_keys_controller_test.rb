@@ -121,7 +121,7 @@ module Katello
       end
 
       post :create, :organization_id => @organization.id,
-           :activation_key => {:name => 'Unlimited Key', :unlimited_content_hosts => true}
+                    :activation_key => {:name => 'Unlimited Key', :unlimited_content_hosts => true}
 
       assert_response :success
       assert_template 'katello/api/v2/common/create'

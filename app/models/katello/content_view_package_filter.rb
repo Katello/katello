@@ -40,7 +40,7 @@ module Katello
     end
 
     def original_packages=(value)
-      write_attribute(:original_packages, value)
+      self[:original_packages] = value
     end
 
     protected

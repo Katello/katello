@@ -36,7 +36,7 @@ module ::Actions::Katello::System
     it 'plans' do
       stub_remote_user
       system.expects(:save!)
-      action.stubs(:action_subject).with do |subject, params|
+      action.stubs(:action_subject).with do |subject, _params|
         subject.must_equal(system)
       end
       #::Actions::Katello::System::ActivationKeys.any_instance.stubs(:error).returns(nil)
@@ -46,7 +46,7 @@ module ::Actions::Katello::System
       assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, system)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::Create) do |params, *_|
         params[:uuid].must_be_kind_of Dynflow::ExecutionPlan::OutputReference
-        params[:uuid].subkeys.must_equal %w[response uuid]
+        params[:uuid].subkeys.must_equal %w(response uuid)
       end
     end
 

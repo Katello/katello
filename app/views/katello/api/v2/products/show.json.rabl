@@ -25,8 +25,8 @@ node :repository_count do |product|
   end
 end
 
-child :library_repositories => :repositories do |repo|
-    extends 'katello/api/v2/repositories/show'
+child :library_repositories => :repositories do |_repo|
+  extends 'katello/api/v2/repositories/show'
 end
 
 node(:gpg_key, :unless => lambda { |product| product.gpg_key.nil? }) do |product|

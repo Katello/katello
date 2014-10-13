@@ -74,7 +74,7 @@ class SourceCodeTest < ActiveSupport::TestCase
       bad_tokens.flatten!(1)
 
       bad_tokens.map! do |file_path, line_no, column_no|
-          " - %s: [%d, %d]" % [file_path, line_no, column_no]
+        " - %s: [%d, %d]" % [file_path, line_no, column_no]
       end
       assert_empty bad_tokens, "#{message + "\n" if message}" + bad_tokens.join("\n")
     end
@@ -89,14 +89,14 @@ class SourceCodeTest < ActiveSupport::TestCase
     it 'does not have trailing whitespaces' do
       SourceCode.
           new('**/*.{rb,js,scss,haml}',
-              %r'coverage|engines/bastion/node_modules|engines/bastion/vendor|(public|vendor)/assets/.*\.js').
+              %r{coverage|engines/bastion/node_modules|engines/bastion/vendor|(public|vendor)/assets/.*\.js}).
           check_lines { |line| line !~ / +\z/ }
     end
 
     it 'does use soft-tabs' do
       SourceCode.
           new('**/*.{rb,js,scss,haml}',
-              %r'coverage|engines/bastion/node_modules|engines/bastion/vendor|(public|vendor)/assets/.*\.js').
+              %r{coverage|engines/bastion/node_modules|engines/bastion/vendor|(public|vendor)/assets/.*\.js}).
           check_lines { |line| line !~ /\t/ }
     end
   end
@@ -115,14 +115,14 @@ for more info.
     it 'does not use ENV variables' do
       SourceCode.
           new('**/*.rb',
-              %r'db/seeds\.rb',
-              %r'config/(application|boot)\.rb',
-              %r'engines/bastion/test/test_helper\.rb',
-              %r'test/support/vcr\.rb',
-              %r'test/support/runcible\.rb',
-              %r'test/katello_test_runner\.rb', # TODO: clean up minitest_helper
-              %r'app/services/katello/authentication/client_authentication\.rb',
-              %r'lib/util/puppet\.rb').
+              %r{db/seeds\.rb},
+              %r{config/(application|boot)\.rb},
+              %r{engines/bastion/test/test_helper\.rb},
+              %r{test/support/vcr\.rb},
+              %r{test/support/runcible\.rb},
+              %r{test/katello_test_runner\.rb}, # TODO: clean up minitest_helper
+              %r{app/services/katello/authentication/client_authentication\.rb},
+              %r{lib/util/puppet\.rb}).
           check_lines(<<-DOC) { |line| (line !~ /ENV\[[^\]]+\]/) ? true : line =~ /#\s?ok/ }
 Katello.config or Katello.early_config should be always used instead of ENV variables, Katello.config is
 the single entry point to configuration. ENV variables are processed there.
@@ -172,7 +172,7 @@ the single entry point to configuration. ENV variables are processed there.
       doc = "don't forget to remove all your 'debugger' statements"
       SourceCode.
           new('**/*.js',
-              %r'coverage|engines/bastion/node_modules|engines/bastion/vendor|(public|vendor)/assets/.*\.js').
+              %r{coverage|engines/bastion/node_modules|engines/bastion/vendor|(public|vendor)/assets/.*\.js}).
           check_lines(doc) do |line|
         line !~ /\A\s*debugger.*;\n*\z/
       end
@@ -194,9 +194,9 @@ Multiple anonymous placeholders:
       DOC
       SourceCode.
           new('**/*.{rb,js,scss,haml}',
-              %r'script/check-gettext\.rb',
-              %r'engines/bastion/node_modules',
-              %r'test/source_code_test\.rb').
+              %r{script/check-gettext\.rb},
+              %r{engines/bastion/node_modules},
+              %r{test/source_code_test\.rb}).
           check_lines doc do |line|
         line.scan(/_\((".*?"|'.*?')\)/).all? do |match|
           gettext_str = match.first

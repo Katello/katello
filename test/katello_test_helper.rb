@@ -139,6 +139,7 @@ class ActionController::TestCase
 
   alias_method :login_user, :set_user
 
+  # rubocop:disable Style/AccessorMethodName
   def set_organization(org)
     session[:current_organization_id] = org.id
   end

@@ -16,10 +16,10 @@ module Support
 
     class FakeSearchService
 
-      def model=(klass)
+      def model=(_klass)
       end
 
-      def retrieve(*args)
+      def retrieve(*_args)
         return [], 0
       end
 

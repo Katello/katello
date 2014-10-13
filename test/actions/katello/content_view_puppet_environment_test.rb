@@ -53,10 +53,10 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
     let(:source_repo) { katello_content_view_puppet_environments(:dev_view_puppet_environment) }
     let(:module_id) {'bcd'}
     it 'plan' do
-      plan_action action, puppet_env, { source_repo.pulp_id => [module_id] }
+      plan_action action, puppet_env, source_repo.pulp_id => [module_id]
       assert_action_planed_with action, ::Actions::Pulp::Repository::CopyPuppetModule, :source_pulp_id => source_repo.pulp_id,
-                                :target_pulp_id => puppet_env.pulp_id,
-                                :clauses =>  { 'unit_id' => { "$in" => [module_id] } }
+                                                                                       :target_pulp_id => puppet_env.pulp_id,
+                                                                                       :clauses =>  { 'unit_id' => { "$in" => [module_id] } }
     end
   end
 
@@ -135,7 +135,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
       puppet_env.expects(:destroy).returns(true)
       plan_action action, puppet_env
 
-      assert_action_planed_with action, ::Actions::Pulp::Repository::Destroy, {pulp_id: puppet_env.pulp_id}
+      assert_action_planed_with action, ::Actions::Pulp::Repository::Destroy, pulp_id: puppet_env.pulp_id
     end
   end
 end

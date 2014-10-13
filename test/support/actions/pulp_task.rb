@@ -15,10 +15,10 @@ module Support
       def task_progress_hash(left, total)
         { 'task_id'  => '76fb4115-2ec4-4945-815b-0f9d216b4183',
           'progress_report' => {
-              'yum_importer' => {
-                  'content' => {
-                      'size_total' => total,
-                      'size_left'  => left } } } }
+            'yum_importer' => {
+              'content' => {
+                'size_total' => total,
+                'size_left'  => left } } } }
       end
 
       def task_finished_hash

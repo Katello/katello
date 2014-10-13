@@ -1,4 +1,4 @@
-child :organization => :organization do |r|
+child :organization => :organization do |_r|
   attribute :name
   attribute :label
 end

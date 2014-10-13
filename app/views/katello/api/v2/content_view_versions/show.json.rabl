@@ -39,12 +39,12 @@ child :environments => :environments do
   attributes :id, :name, :label
 
   node :permissions do |env|
-  {
-    :readable => env.readable?,
-    :promotable_or_removable => env.promotable_or_removable?,
-    :all_systems_editable => Katello::System.all_editable?(version.content_view_id, env.id),
-    :all_keys_editable => Katello::System.all_editable?(version.content_view_id, env.id)
-  }
+    {
+      :readable => env.readable?,
+      :promotable_or_removable => env.promotable_or_removable?,
+      :all_systems_editable => Katello::System.all_editable?(version.content_view_id, env.id),
+      :all_keys_editable => Katello::System.all_editable?(version.content_view_id, env.id)
+    }
   end
 
   node :system_count do |env|

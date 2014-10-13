@@ -30,8 +30,8 @@ module ::Actions::Katello::ContentViewPuppetModule
 
     it 'plans' do
       puppet_module = ::Katello::ContentViewPuppetModule.find(katello_content_view_puppet_modules(:library_view_module_by_uuid))
-      puppet_repository.stubs(:puppet_modules).returns([OpenStruct.new({ :id => puppet_module.uuid,
-                                                                         :repoids => [puppet_repository.pulp_id] })])
+      puppet_repository.stubs(:puppet_modules).returns([OpenStruct.new(:id => puppet_module.uuid,
+                                                                       :repoids => [puppet_repository.pulp_id])])
       action.expects(:action_subject).with(puppet_repository)
       plan_action action, puppet_repository
 

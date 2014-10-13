@@ -27,7 +27,7 @@ module ::Actions::Katello::RepositorySet
 
     let(:cdn_resource) do
       ::Katello::Resources::CDN::CdnResource.new(content_url).tap do |cdn_resource|
-         cdn_resource.stubs(:get).returns('x86_64', '6Server')
+        cdn_resource.stubs(:get).returns('x86_64', '6Server')
       end
     end
 
@@ -48,7 +48,7 @@ module ::Actions::Katello::RepositorySet
     def repository_already_enabled!
       katello_repositories(:rhel_6_x86_64).
           update_attributes!(relative_path: "#{expected_relative_path}",
-                               pulp_id: expected_pulp_id)
+                             pulp_id: expected_pulp_id)
     end
   end
 
@@ -116,13 +116,13 @@ module ::Actions::Katello::RepositorySet
     it 'runs' do
       action = simulate_run
       action.output.
-          must_equal({ "results" =>
+          must_equal("results" =>
                        [{"substitutions" => {"basearch" => "x86_64", "releasever" => "6Server"},
-                          "path" => "/product/x86_64/6Server",
-                          "repo_name" => "Content 123 x86_64 6Server",
-                          "pulp_id" => "Empty_Organization-redhat_label-Content_123_x86_64_6Server",
-                          "enabled" => false,
-                          "promoted" => false}]})
+                         "path" => "/product/x86_64/6Server",
+                         "repo_name" => "Content 123 x86_64 6Server",
+                         "pulp_id" => "Empty_Organization-redhat_label-Content_123_x86_64_6Server",
+                         "enabled" => false,
+                         "promoted" => false}])
     end
 
     it 'considers the repo being enabled when the repository object is present' do

@@ -13,89 +13,89 @@
 require "katello_test_helper"
 
 module Katello
-class Api::V2::PuppetModulesControllerTest < ActionController::TestCase
+  class Api::V2::PuppetModulesControllerTest < ActionController::TestCase
 
-  def self.before_suite
-    models = ["Organization", "KTEnvironment", "Repository", "Product", "Provider"]
-    services = ["Candlepin", "Pulp", "ElasticSearch"]
-    disable_glue_layers(services, models)
-    super
-  end
+    def self.before_suite
+      models = ["Organization", "KTEnvironment", "Repository", "Product", "Provider"]
+      services = ["Candlepin", "Pulp", "ElasticSearch"]
+      disable_glue_layers(services, models)
+      super
+    end
 
-  def models
-    @library = katello_environments(:library)
-    @repo = Repository.find(katello_repositories(:p_forge))
-  end
+    def models
+      @library = katello_environments(:library)
+      @repo = Repository.find(katello_repositories(:p_forge))
+    end
 
-  def permissions
-    @read_permission = :view_products
-    @create_permission = :create_products
-    @update_permission = :edit_products
-    @destroy_permission = :destroy_products
-    @sync_permission = :sync_products
+    def permissions
+      @read_permission = :view_products
+      @create_permission = :create_products
+      @update_permission = :edit_products
+      @destroy_permission = :destroy_products
+      @sync_permission = :sync_products
 
-    @auth_permissions = [@read_permission, :view_content_views]
-    @unauth_permissions = [@create_permission, @update_permission, @destroy_permission, @sync_permission]
-  end
+      @auth_permissions = [@read_permission, :view_content_views]
+      @unauth_permissions = [@create_permission, @update_permission, @destroy_permission, @sync_permission]
+    end
 
-  def setup
-    setup_controller_defaults_api
-    @request.env['HTTP_ACCEPT'] = 'application/json'
-    @request.env['CONTENT_TYPE'] = 'application/json'
-    @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
-    models
-    permissions
-  end
+    def setup
+      setup_controller_defaults_api
+      @request.env['HTTP_ACCEPT'] = 'application/json'
+      @request.env['CONTENT_TYPE'] = 'application/json'
+      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
+      models
+      permissions
+    end
 
-  def test_index_by_env
-    get :index, :environment_id => @library.id
+    def test_index_by_env
+      get :index, :environment_id => @library.id
 
-    assert_response :success
-    assert_template %w(katello/api/v2/puppet_modules/index)
-  end
+      assert_response :success
+      assert_template %w(katello/api/v2/puppet_modules/index)
+    end
 
-  def test_index_by_repo
-    get :index, :repository_id => @repo.id
-
-    assert_response :success
-    assert_template %w(katello/api/v2/puppet_modules/index)
-  end
-
-  def test_index_protected
-    assert_protected_action(:index, @read_permission, @unauth_permissions) do
+    def test_index_by_repo
       get :index, :repository_id => @repo.id
+
+      assert_response :success
+      assert_template %w(katello/api/v2/puppet_modules/index)
     end
-  end
 
-  def test_show
-    PuppetModule.expects(:find).once.returns(PuppetModule.new({:repoids => [@repo.pulp_id]}))
-    get :show, :repository_id => @repo.id, :id => "abc-123"
+    def test_index_protected
+      assert_protected_action(:index, @read_permission, @unauth_permissions) do
+        get :index, :repository_id => @repo.id
+      end
+    end
 
-    assert_response :success
-    assert_template %w(katello/api/v2/puppet_modules/show)
-  end
-
-  def test_show_protected
-    puppet_module = stub
-    puppet_module.stubs(:repoids).returns([@repo.pulp_id])
-    PuppetModule.stubs(:find).with("abc-123").returns(puppet_module)
-
-    assert_protected_action(:show, @read_permission, @unauth_permissions) do
+    def test_show
+      PuppetModule.expects(:find).once.returns(PuppetModule.new(:repoids => [@repo.pulp_id]))
       get :show, :repository_id => @repo.id, :id => "abc-123"
+
+      assert_response :success
+      assert_template %w(katello/api/v2/puppet_modules/show)
     end
-  end
 
-  def test_show_module_not_in_repo
-    PuppetModule.expects(:find).once.returns(mock({:repoids => ['uh-oh']}))
-    get :show, :repository_id => @repo.id, :id => "abc-123"
-    assert_response 404
-  end
+    def test_show_protected
+      puppet_module = stub
+      puppet_module.stubs(:repoids).returns([@repo.pulp_id])
+      PuppetModule.stubs(:find).with("abc-123").returns(puppet_module)
 
-  def test_show_module_not_found
-    PuppetModule.expects(:find).once.returns(nil)
-    get :show, :repository_id => @repo.id, :id => "abc-123"
-    assert_response 404
-  end
+      assert_protected_action(:show, @read_permission, @unauth_permissions) do
+        get :show, :repository_id => @repo.id, :id => "abc-123"
+      end
+    end
 
-end
+    def test_show_module_not_in_repo
+      PuppetModule.expects(:find).once.returns(mock(:repoids => ['uh-oh']))
+      get :show, :repository_id => @repo.id, :id => "abc-123"
+      assert_response 404
+    end
+
+    def test_show_module_not_found
+      PuppetModule.expects(:find).once.returns(nil)
+      get :show, :repository_id => @repo.id, :id => "abc-123"
+      assert_response 404
+    end
+
+  end
 end

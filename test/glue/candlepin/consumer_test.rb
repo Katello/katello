@@ -15,125 +15,125 @@ require 'support/candlepin/owner_support'
 require 'support/candlepin/consumer_support'
 
 module Katello
-class GlueCandlepinConsumerTestBase < ActiveSupport::TestCase
-  include CandlepinConsumerSupport
+  class GlueCandlepinConsumerTestBase < ActiveSupport::TestCase
+    include CandlepinConsumerSupport
 
-  @@dev = nil
-  @@org = nil
-  @@dev_cv = nil
-  @@dev_cve = nil
+    @@dev = nil
+    @@org = nil
+    @@dev_cv = nil
+    @@dev_cve = nil
 
-  def self.before_suite
-    super
+    def self.before_suite
+      super
 
-    services  = ['Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['System', 'KTEnvironment', 'Organization', 'Product', 'ContentView', 'ContentViewEnvironment', 'ContentViewVersion', "Distributor"]
-    disable_glue_layers(services, models)
+      services  = ['Pulp', 'ElasticSearch', 'Foreman']
+      models    = ['System', 'KTEnvironment', 'Organization', 'Product', 'ContentView', 'ContentViewEnvironment', 'ContentViewVersion', "Distributor"]
+      disable_glue_layers(services, models)
 
-    User.current = User.find(@loaded_fixtures['users']['admin']['id'])
-    VCR.insert_cassette('glue_candlepin_consumer', :match_requests_on => [:path, :params, :method, :body_json])
+      User.current = User.find(@loaded_fixtures['users']['admin']['id'])
+      VCR.insert_cassette('glue_candlepin_consumer', :match_requests_on => [:path, :params, :method, :body_json])
 
-    @@dev      = KTEnvironment.find(@loaded_fixtures['katello_environments']['candlepin_dev']['id'])
+      @@dev      = KTEnvironment.find(@loaded_fixtures['katello_environments']['candlepin_dev']['id'])
 
-    @@org      = Organization.find(@loaded_fixtures['taxonomies']['organization2']['id'])
-    @@org.setup_label_from_name
-    @@org.stubs(:label_not_changed).returns(true)
-    @@org.save!
+      @@org      = Organization.find(@loaded_fixtures['taxonomies']['organization2']['id'])
+      @@org.setup_label_from_name
+      @@org.stubs(:label_not_changed).returns(true)
+      @@org.save!
 
-    @@dev_cv   = ContentView.find(@loaded_fixtures['katello_content_views']['candlepin_library_dev_cv']['id'])
-    @@dev_cve  = ContentViewEnvironment.find(@loaded_fixtures['katello_content_view_environments']['candlepin_library_dev_cve']['id'])
-    @@dev_cve.cp_id = @@dev_cv.cp_environment_id @@dev
+      @@dev_cv   = ContentView.find(@loaded_fixtures['katello_content_views']['candlepin_library_dev_cv']['id'])
+      @@dev_cve  = ContentViewEnvironment.find(@loaded_fixtures['katello_content_view_environments']['candlepin_library_dev_cve']['id'])
+      @@dev_cve.cp_id = @@dev_cv.cp_environment_id @@dev
 
-    # Create the environment in candlepin
-    CandlepinOwnerSupport.set_owner(@@org)
+      # Create the environment in candlepin
+      CandlepinOwnerSupport.set_owner(@@org)
 
-    User.current.remote_id =  User.current.login
-    ForemanTasks.sync_task(::Actions::Katello::ContentView::EnvironmentCreate, @@dev_cve)
-  end
-
-  def self.after_suite
-    unless @@dev_cve.nil?
       User.current.remote_id =  User.current.login
-      # To prevent deletion of the fixture object
-      @@dev_cve.stubs(:destroy).returns(true)
-      ForemanTasks.sync_task(::Actions::Katello::ContentViewEnvironment::Destroy, @@dev_cve)
+      ForemanTasks.sync_task(::Actions::Katello::ContentView::EnvironmentCreate, @@dev_cve)
     end
-    Resources::Candlepin::Owner.destroy(@@org.label) unless @@org.nil?
-  ensure
-    VCR.eject_cassette
+
+    def self.after_suite
+      unless @@dev_cve.nil?
+        User.current.remote_id =  User.current.login
+        # To prevent deletion of the fixture object
+        @@dev_cve.stubs(:destroy).returns(true)
+        ForemanTasks.sync_task(::Actions::Katello::ContentViewEnvironment::Destroy, @@dev_cve)
+      end
+      Resources::Candlepin::Owner.destroy(@@org.label) unless @@org.nil?
+    ensure
+      VCR.eject_cassette
+    end
+
   end
 
-end
+  class GlueCandlepinConsumerTestSystem < GlueCandlepinConsumerTestBase
 
-class GlueCandlepinConsumerTestSystem < GlueCandlepinConsumerTestBase
+    def setup
+      super
+    end
 
-  def setup
-    super
+    def self.before_suite
+      super
+      @@sys = CandlepinConsumerSupport.create_system('GlueCandlepinConsumerTestSystem_1', @@dev, @@dev_cv)
+    end
+
+    def setup
+      @@sys.facts['memory.memtotal'] = '256 MB'
+      @@sys.facts.delete 'dmi.memory.size'
+      @@sys.facts['cpu.cpu_socket(s)'] = '2'
+      @@sys.facts['uname.machine'] = 'x86_64'
+    end
+
+    # Socket values
+    def test_sockets_candlepin_consumer
+      assert_equal 2, @@sys.sockets
+
+      @@sys.sockets = '1'
+      assert_equal 1, @@sys.sockets
+
+      @@sys.sockets = 1.1
+      assert_equal 1, @@sys.sockets
+
+      @@sys.sockets = 1
+      assert_equal 1, @@sys.sockets
+
+      @@sys.sockets = 'abc'
+      assert_equal 0, @@sys.sockets
+    end
+
+    # Memory values
+    def test_memory_candlepin_consumer
+      assert_equal((256.0 / 1024.0), @@sys.memory)
+
+      @@sys.facts['memory.memtotal'] = '2 GB'
+      @@sys.facts['dmi.memory.size'] = '4 GB'
+      assert_equal 2, @@sys.memory
+      @@sys.facts['memory.memtotal'] = nil
+      assert_equal 4, @@sys.memory
+
+      @@sys.memory = 'abc'
+      assert_equal 0, @@sys.memory
+      @@sys.facts['memory.memtotal'] = 3_145_728 # 3MB
+      assert_equal 3, @@sys.memory
+    end
+
+    def test_candlepin_system_export
+      assert true
+      #  assert @dist.export
+    end
   end
 
-  def self.before_suite
-    super
-    @@sys = CandlepinConsumerSupport.create_system('GlueCandlepinConsumerTestSystem_1', @@dev, @@dev_cv)
+  class GlueCandlepinConsumerTestDistributor < GlueCandlepinConsumerTestBase
+
+    def self.before_suite
+      super
+      @@dist = CandlepinConsumerSupport.create_distributor('GlueCandlepinConsumerTestDistributor_1', @@dev, @@dev_cv)
+    end
+
+    def test_candlepin_distributor_export
+      skip "Not ready to test"
+      assert true
+      #  assert @@dist.export
+    end
+
   end
-
-  def setup
-    @@sys.facts['memory.memtotal'] = '256 MB'
-    @@sys.facts.delete 'dmi.memory.size'
-    @@sys.facts['cpu.cpu_socket(s)'] = '2'
-    @@sys.facts['uname.machine'] = 'x86_64'
-  end
-
-  # Socket values
-  def test_sockets_candlepin_consumer
-    assert_equal 2, @@sys.sockets
-
-    @@sys.sockets = '1'
-    assert_equal 1, @@sys.sockets
-
-    @@sys.sockets = 1.1
-    assert_equal 1, @@sys.sockets
-
-    @@sys.sockets = 1
-    assert_equal 1, @@sys.sockets
-
-    @@sys.sockets = 'abc'
-    assert_equal 0, @@sys.sockets
-  end
-
-  # Memory values
-  def test_memory_candlepin_consumer
-    assert_equal((256.0 / 1024.0), @@sys.memory)
-
-    @@sys.facts['memory.memtotal'] = '2 GB'
-    @@sys.facts['dmi.memory.size'] = '4 GB'
-    assert_equal 2, @@sys.memory
-    @@sys.facts['memory.memtotal'] = nil
-    assert_equal 4, @@sys.memory
-
-    @@sys.memory = 'abc'
-    assert_equal 0, @@sys.memory
-    @@sys.facts['memory.memtotal'] = 3_145_728 # 3MB
-    assert_equal 3, @@sys.memory
-  end
-
-  def test_candlepin_system_export
-    assert true
-    #  assert @dist.export
-  end
-end
-
-class GlueCandlepinConsumerTestDistributor < GlueCandlepinConsumerTestBase
-
-  def self.before_suite
-    super
-    @@dist = CandlepinConsumerSupport.create_distributor('GlueCandlepinConsumerTestDistributor_1', @@dev, @@dev_cv)
-  end
-
-  def test_candlepin_distributor_export
-    skip "Not ready to test"
-    assert true
-    #  assert @@dist.export
-  end
-
-end
 end

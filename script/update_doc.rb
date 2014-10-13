@@ -2,7 +2,7 @@
 
 root = File.expand_path '..', File.dirname(__FILE__)
 
-unless (ARGV & %w[-h --help]).empty?
+unless (ARGV & %w(-h --help)).empty?
   print <<-USAGE
 Usage: update_doc.rb [push]
 

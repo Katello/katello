@@ -22,7 +22,7 @@ module Katello
       # instead of calling nested_attribute_for(:content_source_id) in Foreman, define the methods explictedly
       def inherited_content_source_id
         if ancestry.present?
-          read_attribute(:content_source_id) || self.class.sort_by_ancestry(ancestors.where("content_source_id is not NULL")).last.try(:content_source_id)
+          self[:content_source_id] || self.class.sort_by_ancestry(ancestors.where("content_source_id is not NULL")).last.try(:content_source_id)
         else
           self.content_source_id
         end

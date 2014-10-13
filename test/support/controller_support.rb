@@ -48,7 +48,7 @@ module ControllerSupport
         :request => block
     )
 
-    if !denied_perms.empty?
+    unless denied_perms.empty?
       refute_authorized(
           :permission => denied_perms,
           :action => action_name,

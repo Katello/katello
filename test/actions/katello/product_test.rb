@@ -39,7 +39,7 @@ module Katello
         action.stubs(:action_subject).with(@repository)
         plan_action action, @repository
         assert_action_planed_with action, candlepin_remove_class, product_id: @product.cp_id,
-                                  content_id: @repository.content_id
+                                                                  content_id: @repository.content_id
         assert_action_planed_with action, candlepin_destroy_class, content_id: @repository.content_id
       end
 
@@ -92,7 +92,7 @@ module ::Actions::Katello::Product
       action.stubs(:action_subject).with do |subject, params|
         subject.must_equal(product)
         params[:cp_id].must_be_kind_of Dynflow::ExecutionPlan::OutputReference
-        params[:cp_id].subkeys.must_equal %w[response id]
+        params[:cp_id].subkeys.must_equal %w(response id)
       end
 
       product.expects(:disable_auto_reindex!).returns
@@ -147,7 +147,7 @@ module ::Actions::Katello::Product
     end
 
     it 'plans' do
-      action.stubs(:action_subject).with do |subject, params|
+      action.stubs(:action_subject).with do |subject, _params|
         subject.must_equal(product)
       end
       product.expects(:user_deletable?).returns(true)
