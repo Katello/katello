@@ -34,7 +34,7 @@
 </div>
 
 <section class="nutupane-sub-section row">
-  <div class="details details-full">
+  <div class="nutupane-bar">
     
     <h3 class="col-sm-12" translate>Results</h3>
 
@@ -45,29 +45,27 @@
              ng-model="discoveryTable.filterTerm"/>
     </div>
 
-    <div class="col-sm-8 fr">
-      <div ng-hide="system.readonly" class="fr">
-         <button class="btn btn-primary"
-                 translate
-                 ng-hide="denied('create_products')"
-                 ng-disabled="discoveryTable.getSelected().length == 0"
-                 ng-click="setupSelected()">
-           Create Selected
-         </button>
-      </div>
-
-      <div class="fr select-action">
+    <div class="fr">
+      <div class="fl nutupane-info">
         <span translate>{{ discoveryTable.numSelected }} Selected</span>
-        <span>|</span>
-        <span>
+        <span>|</span>        
           <a class="deselect-action"
              translate
              ng-class="{ 'disabled-link' : discoveryTable.numSelected == 0 }"
              ng-click="discoveryTable.selectAll(false)">
             Deselect All
           </a>
-        </span>
-      </div>
+      </div>   
+
+      <div ng-hide="system.readonly" class="nutupane-actions fr">
+        <button class="btn btn-primary"
+                translate
+                ng-hide="denied('create_products')"
+                ng-disabled="discoveryTable.getSelected().length == 0"
+                ng-click="setupSelected()">
+            Create Selected
+        </button>
+      </div>      
     </div>
 
   </div>
