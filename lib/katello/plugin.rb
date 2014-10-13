@@ -86,6 +86,14 @@ Foreman::Plugin.register :katello do
          :url_hash => {:controller => 'katello/content_search',
                        :action => 'index'},
          :engine => Katello::Engine
+    divider :top_menu, :parent => :content_menu
+    menu :top_menu,
+         :errata,
+         :caption => N_('Errata'),
+         :url => '/errata',
+         :url_hash => {:controller => 'katello/api/v2/errata',
+                       :action => 'index'},
+         :engine => Katello::Engine
   end
 
   menu :top_menu,
