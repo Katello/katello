@@ -243,6 +243,7 @@ angular.module('alchemy')
             scope: {
                 model: '=alchEditSelect',
                 displayValueDefault: '=displayValueDefault',
+                formatter: '@formatter',
                 readonly: '=',
                 selector: '=',
                 handleOptions: '&options',
