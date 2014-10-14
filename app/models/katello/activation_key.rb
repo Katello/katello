@@ -125,6 +125,10 @@ module Katello
       all_products
     end
 
+    def available_content
+      self.products.map(&:available_content).flatten
+    end
+
     # sets up system when registering with this activation key - must be executed in a transaction
     def apply_to_system(system)
       if !max_content_hosts.nil? && !self.unlimited_content_hosts && usage_count >= max_content_hosts

@@ -184,6 +184,22 @@ module Katello
       end
     end
 
+    def test_product_content_protected
+      allowed_perms = [@view_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+      assert_protected_action(:product_content, allowed_perms, denied_perms) do
+        get(:product_content, :id => @activation_key.id)
+      end
+    end
+
+    def test_product_content
+      get :product_content, :id => @activation_key.id, :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/activation_keys/product_content'
+    end
+
     def test_content_override_protected
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
