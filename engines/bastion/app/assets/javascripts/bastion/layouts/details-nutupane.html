@@ -25,11 +25,6 @@
       <span class="nutupane-info" data-block="result-count" translate>Showing {{ detailsTable.rows.length }} of {{ detailsTable.resource.subtotal }} ({{ detailsTable.resource.total }} Total)</span>
     </div>
 
-    <div class="col-sm-2" ng-show="detailsTable.working">
-      <i class="icon-spinner icon-spin"></i>
-      <span translate>Working...</span>
-    </div>
-
     <div class="col-sm-4 fr">
       <div class="fr">
         <span class="nutupane-info fl" data-block="selection-summary">
@@ -67,6 +62,11 @@
       </div>
 
       <div data-block="table"></div>
+
+      <div class="text-center col-md-12 loading-indicator icon-3x" ng-show="detailsTable.working">
+        <i class="icon-spinner icon-spin"></i>
+        <span class="h1" translate>Working...</span>
+      </div>
     </div>
   </div>
 
