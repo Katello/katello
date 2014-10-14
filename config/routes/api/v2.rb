@@ -34,6 +34,8 @@ Katello::Engine.routes.draw do
         api_resources :activation_keys, :only => [:index, :create, :show, :update, :destroy] do
           member do
             match '/content_override' => 'activation_keys#content_override', :via => :put
+            put :add_subscriptions
+            put :remove_subscriptions
           end
           match '/releases' => 'activation_keys#available_releases', :via => :get, :on => :member
           api_resources :host_collections, :only => [:index]
@@ -43,9 +45,8 @@ Katello::Engine.routes.draw do
             match '/host_collections/available' => 'activation_keys#available_host_collections', :via => :get
           end
           api_resources :products, :only => [:index]
-          api_resources :subscriptions, :only => [:create, :index, :destroy] do
+          api_resources :subscriptions, :only => [:index] do
             collection do
-              match '/' => 'subscriptions#destroy', :via => :put
               match '/available' => 'subscriptions#available', :via => :get
             end
           end

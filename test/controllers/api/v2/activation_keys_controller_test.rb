@@ -204,5 +204,23 @@ module Katello
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
     end
+
+    def test_add_subscriptions_protected
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission]
+
+      assert_protected_action(:add_subscriptions, allowed_perms, denied_perms) do
+        post(:add_subscriptions, :organization_id => @organization.id, :id => @activation_key.id, :subscription_id => 123)
+      end
+    end
+
+    def test_remove_subscriptions_protected
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission]
+
+      assert_protected_action(:remove_subscriptions, allowed_perms, denied_perms) do
+        post(:remove_subscriptions, :organization_id => @organization.id, :id => @activation_key.id, :subscription_id => 123)
+      end
+    end
   end
 end

@@ -10,9 +10,8 @@ child :environment => :environment do
 end
 attributes :environment_id
 
-attributes :usage_count, :user_id, :max_content_hosts, :pools, :system_template_id, :release_version,
+attributes :usage_count, :user_id, :max_content_hosts, :system_template_id, :release_version,
            :service_level
-attributes :get_key_pools => :pools
 
 child :products => :products do |_product|
   attributes :id, :name
