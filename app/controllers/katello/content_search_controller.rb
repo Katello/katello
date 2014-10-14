@@ -293,7 +293,7 @@ module Katello
     private
 
     # TODO: break up this method
-    def repo_compare_content(unit_type, offset) # rubocop:disable Style/MethodLength
+    def repo_compare_content(unit_type, offset) # rubocop:disable Metrics/MethodLength
       repo_map = @repos.inject({}) do |map, repo|
         map[repo.pulp_id] = repo
         map

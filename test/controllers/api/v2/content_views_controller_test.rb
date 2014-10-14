@@ -13,7 +13,7 @@
 
 require "katello_test_helper"
 
-# rubocop:disable Style/MethodLength
+# rubocop:disable Metrics/MethodLength
 module Katello
   class Api::V2::ContentViewsControllerTest < ActionController::TestCase
 
