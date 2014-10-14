@@ -31,6 +31,10 @@ module Katello
 
       private
 
+      def default_sort
+        %w(id desc)
+      end
+
       def filter_by_content_view_filter(filter)
         resource_class.where(:uuid => filter.send("#{singular_resource_name}_rules").pluck(:uuid))
       end
@@ -44,7 +48,7 @@ module Katello
       end
 
       def find_content_resource
-        @resource = resource_class.find_by_uuid(params[:id])
+        @resource = resource_class.with_uuid(params[:id]).first
         if resource_class == Katello::Erratum
           # also try to look up erratum by errata_id
           @resource ||= Erratum.find_by_errata_id(params[:id])

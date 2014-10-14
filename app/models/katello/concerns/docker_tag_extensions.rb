@@ -11,8 +11,13 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-  class DockerImage
-    include Glue::Pulp::DockerImage if Katello.config.use_pulp
-    CONTENT_TYPE = "docker"
+  module Concerns
+    module DockerTagExtensions
+      extend ActiveSupport::Concern
+
+      included do
+        belongs_to :repository, :inverse_of => :docker_tags, :foreign_key => :katello_repository_id
+      end
+    end
   end
 end

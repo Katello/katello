@@ -14,6 +14,7 @@ require "rest_client"
 require "justified/standard_error"
 require "anemone"
 require "securerandom"
+require 'foreman_docker'
 
 require "runcible"
 

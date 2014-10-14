@@ -24,7 +24,7 @@ module Katello
     #  Class#update_from_json
 
     def backend_data
-      self.class.pulp_data(self.uuid)
+      self.class.pulp_data(uuid)
     end
 
     module ClassMethods
@@ -33,8 +33,13 @@ module Katello
         Katello.pulp_server.extensions.send(self.name.demodulize.pluralize.underscore)
       end
 
+      def repository_association
+        repository_association_class.name.demodulize.pluralize.underscore
+      end
+
       def in_repositories(repos)
-        self.joins(:repository_errata).where("#{repository_association_class.table_name}.repository_id" => repos)
+        self.joins(repository_association.to_sym)
+          .where("#{repository_association_class.table_name}.repository_id" => repos)
       end
 
       def pulp_data(uuid)
@@ -58,7 +63,7 @@ module Katello
       end
 
       def insert_repository_associations(repository, unit_uuids)
-        associated_ids = self.where(:uuid => unit_uuids).pluck(:id)
+        associated_ids = with_uuid(unit_uuids).pluck(:id)
         table_name = self.repository_association_class.table_name
         attribute_name = "#{self.name.demodulize.underscore}_id"
 
@@ -67,6 +72,10 @@ module Katello
           sql = "INSERT INTO #{table_name} (#{attribute_name}, repository_id) VALUES #{inserts.join(', ')}"
           ActiveRecord::Base.connection.execute(sql)
         end
+      end
+
+      def with_uuid(unit_uuids)
+        where(:uuid => unit_uuids)
       end
 
       def fetch_all(offset, page_size)
@@ -92,8 +101,6 @@ module Katello
           end
         end
       end
-
     end
-
   end
 end
