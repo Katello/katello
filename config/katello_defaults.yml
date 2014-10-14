@@ -84,6 +84,7 @@ common:
     default_login: admin
     sync_KBlimit:
     upload_chunk_size: 1048575 # upload size in bytes to pulp. see SSLRenegBufferSize in apache
+    skip_checksum_validation: false
 
   # Setup proxy to use when accessing CDN.
   # Katello calls CDN to retrieve list of repositories for a product

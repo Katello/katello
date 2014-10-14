@@ -37,6 +37,7 @@ module Actions
               # set threads per sync
               sync_options[:num_threads] ||= ::Katello.config.pulp.sync_threads
             end
+            sync_options[:validate] = !(::Katello.config.pulp.skip_checksum_validation)
 
             output[:pulp_tasks] = pulp_tasks =
                 pulp_resources.repository.sync(input[:pulp_id],  override_config: sync_options)
