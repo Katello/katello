@@ -100,16 +100,16 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::UploadFiles }
 
     it 'plans' do
-      files = ['/tmp/cheetah.rpm']
+      file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
       action.expects(:action_subject).with(custom_repository)
       action.execution_plan.stub_planned_action(::Actions::Pulp::Repository::CreateUploadRequest) do |content_create|
         content_create.stubs(output: { upload_id: 123 })
       end
 
-      plan_action action, custom_repository, files
+      plan_action action, custom_repository, [file]
       assert_action_planed(action, ::Actions::Pulp::Repository::CreateUploadRequest)
       assert_action_planed_with(action, ::Actions::Pulp::Repository::UploadFile,
-                                upload_id: 123, file: "/tmp/cheetah.rpm")
+                                upload_id: 123, file: File.join(Rails.root, 'tmp', 'uploads', 'puppet_module.tar.gz'))
       assert_action_planed_with(action, ::Actions::Pulp::Repository::DeleteUploadRequest,
                                 upload_id: 123)
       assert_action_planed_with(action, ::Actions::Katello::Repository::FinishUpload,
