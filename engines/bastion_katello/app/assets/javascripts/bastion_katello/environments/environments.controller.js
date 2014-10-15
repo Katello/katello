@@ -33,6 +33,7 @@ angular.module('Bastion.environments').controller('EnvironmentsController',
 
             Organization.paths({id: CurrentOrganization}, function (paths) {
                 $scope.environmentsTable.rows = paths;
+                $scope.library = paths[0].environments[0];
             });
 
             $scope.initiateCreatePath = function () {

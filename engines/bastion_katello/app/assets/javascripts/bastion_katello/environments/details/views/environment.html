@@ -1,0 +1,39 @@
+<section class="details-page">
+
+  <ol class="breadcrumb">
+    <li>
+      <a ui-sref="environments" translate>Environments List</a>
+    </li>
+    
+    <li class="active">
+      <a translate>
+        {{ environment.name }} Environment
+      </a>
+    </li>
+  </ol>
+
+  <h1 translate>Environment: {{ environment.name }}</h1>
+
+  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+  <nav>
+    <ul class="nav nav-tabs">
+
+      <li ng-class="{active: isState('environment.errata')}">
+        <a ui-sref="environment.errata({environmentId: environment.id})">
+          <span translate>Errata</span>
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('environment.details')}">
+        <a ui-sref="environment.details({environmentId: environment.id})">
+          <span translate>Details</span>
+        </a>
+      </li>
+
+    </ul>
+  </nav>
+
+  <div ui-view></div>
+
+</section>
