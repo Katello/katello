@@ -25,7 +25,12 @@ module Actions
             else
               plan_action(Repository::Clear, clone)
             end
-            plan_action(Repository::CloneContent, repository, clone, [], false)
+
+            if repository.yum?
+              plan_action(Repository::CloneYumContent, repository, clone, [], false)
+            elsif repository.docker?
+              plan_action(Repository::CloneDockerContent, repository, clone)
+            end
           end
         end
 

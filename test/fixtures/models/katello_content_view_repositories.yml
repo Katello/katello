@@ -5,3 +5,11 @@ library_view_fedora_17_x86_64:
 library_view_rhel_6_x86_64:
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
   repository_id:   <%= ActiveRecord::Fixtures.identify(:rhel_6_x86_64) %>
+
+library_view_docker:
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
+  repository_id:   <%= ActiveRecord::Fixtures.identify(:docker) %>
+
+library_view_docker2:
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
+  repository_id:   <%= ActiveRecord::Fixtures.identify(:docker2) %>

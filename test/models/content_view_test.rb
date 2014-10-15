@@ -230,11 +230,11 @@ module Katello
       composite = ContentView.find(katello_content_views(:composite_view))
       v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
       composite.update_attributes(:component_ids => [v1.id])
-      repo_ids = composite.repositories_to_publish.map(&:library_instance_id)
-      assert_equal v1.content_view.repository_ids, repo_ids
+      repo_ids = composite.repositories_to_publish.map(&:id)
+      assert_equal v1.repositories.archived.pluck(:id), repo_ids
 
       repo = Repository.find(katello_repositories(:fedora_17_x86_64))
-      assert_equal [repo.id], @library_view.repositories_to_publish.map(&:id)
+      assert_includes @library_view.repositories_to_publish.map(&:id), repo.id
     end
 
     def test_repo_conflicts

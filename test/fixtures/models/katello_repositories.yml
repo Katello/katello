@@ -204,3 +204,39 @@ docker:
   product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+
+docker2:
+  name:                 redis2
+  pulp_id:              "Default_Organization-Test-redis2"
+  content_id:           1
+  content_type:         docker
+  label:                redis2
+  relative_path:        '/ACME_Corporation/library/redis2'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+
+docker2_view1:
+  name:                 redis2
+  pulp_id:              "Default_Organization-Test-redis2"
+  content_id:           1
+  content_type:         docker
+  label:                redis2
+  relative_path:        '/ACME_Corporation/library/redis2'
+  environment_id:
+  product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>
+
+docker2_view2:
+  name:                 redis2
+  pulp_id:              "Default_Organization-Test-redis2"
+  content_id:           1
+  content_type:         docker
+  label:                redis2
+  relative_path:        '/ACME_Corporation/library/redis2'
+  environment_id:
+  product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>

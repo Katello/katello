@@ -59,6 +59,13 @@
           <div translate>
             {{ version.puppet_modules.length || 0 }} Puppet Modules
           </div>
+          <div translate>
+            {{ version.docker_image_count || 0 }} Docker Images
+          </div>
+          <div translate>
+            {{ version.docker_tag_count || 0 }} Docker Tags
+          </div>
+
         </td>
         <td bst-table-cell>{{ version.user }}</td>
         <td class="col-sm-2">

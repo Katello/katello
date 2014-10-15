@@ -8,6 +8,8 @@ attributes :content_view_id
 attributes :default
 attributes :description
 attributes :package_count
+attributes :docker_image_count
+attributes :docker_tag_count
 
 node :errata_counts do |version|
   partial('katello/api/v2/errata/counts', :object => Katello::RelationPresenter.new(version.errata))

@@ -338,16 +338,14 @@ module Katello
         tmp_errata
       end
 
-      def index_db_docker_images(force = false)
+      def index_db_docker_images
         ActiveRecord::Base.transaction do
           docker_tags.destroy_all
 
-          if self.content_view.default? || force
-            docker_images_json.each do |image_json|
-              image = DockerImage.find_or_create_by_katello_uuid(image_json[:_id])
-              image.update_from_json(image_json)
-              create_docker_tags(image, image_json[:tags])
-            end
+          docker_images_json.each do |image_json|
+            image = DockerImage.find_or_create_by_katello_uuid(image_json[:_id])
+            image.update_from_json(image_json)
+            create_docker_tags(image, image_json[:tags])
           end
 
           Katello::RepositoryDockerImage.where(:repository_id => self.id).delete_all
@@ -469,6 +467,16 @@ module Katello
 
       def docker_image_ids
         Katello.pulp_server.extensions.repository.docker_image_ids(self.pulp_id)
+      end
+
+      def docker_image_count
+        self.docker_images.count
+      end
+
+      def docker_image_tag_hash
+        docker_tags.map do |tag|
+          {:tag => tag.tag, :image_id => tag.image.image_id}
+        end
       end
 
       def distribution?(id)
