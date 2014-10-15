@@ -3,7 +3,7 @@ object @resource
 attributes :uuid => :id
 attributes :title, :errata_id
 attributes :issued, :updated
-attributes :severity
+attributes :severity, :description, :solution, :summary, :reboot_suggested
 attributes :_href
 
 attributes :errata_type => :type
