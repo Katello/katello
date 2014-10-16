@@ -30,14 +30,21 @@
       </div>
 
       <h3 translate>Topic</h3>
-      <p class="info-value">{{ errata.summary }}</p>
+      <p class="info-paragraph">{{ errata.summary }}</p>
 
 
       <h3 translate>Description</h3>
-      <p class="info-value">{{ errata.description }}</p>
+      <p class="info-paragraph">{{ errata.description }}</p>
 
       <h3 translate>Solution</h3>
-      <p class="info-value">{{ errata.solution }}</p>
+      <p class="info-paragraph">{{ errata.solution }}</p>
+
+      <h3 translate>Affected Packages</h3>
+      <ul>
+        <li ng-repeat="package in errata.packages">
+          {{ package }}
+        </li>
+      </ul>
     </section>
   </div>
 </section>
