@@ -12,6 +12,9 @@
 
 module Katello
   module Glue::Candlepin::Content
+
+    CANDLEPIN_DOCKER_TYPE = "containerImage"
+
     def self.included(base)
       base.send :include, InstanceMethods
       # required for GPG key url generation
