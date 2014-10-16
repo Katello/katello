@@ -34,8 +34,8 @@ module Katello
       subscriptions = Resources::Candlepin::Subscription.get_for_owner(current_organization.label)
       subscriptions.each do |sub|
         subscription_product_ids << sub['product']['id'] if sub['product']['id']
-        subscription_product_ids += sub['providedProducts'].map{|p| p['id']} if sub['providedProducts']
-        subscription_product_ids += sub['derivedProvidedProducts'].map{|p| p['id']} if sub['derivedProvidedProducts']
+        subscription_product_ids += sub['providedProducts'].map { |p| p['id'] } if sub['providedProducts']
+        subscription_product_ids += sub['derivedProvidedProducts'].map { |p| p['id'] } if sub['derivedProvidedProducts']
       end
 
       orphaned_product_ids = current_organization.redhat_provider.products.engineering.

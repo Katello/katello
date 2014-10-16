@@ -10,17 +10,17 @@ Foreman::Plugin.find(:katello).security_block :lifecycle_environments do
              :resource_type => 'Katello::KTEnvironment'
   permission :create_lifecycle_environments,
              {
-               'katello/api/v2/environments' => [:create],
+               'katello/api/v2/environments' => [:create]
              },
              :resource_type => 'Katello::KTEnvironment'
   permission :edit_lifecycle_environments,
              {
-               'katello/api/v2/environments' => [:update],
+               'katello/api/v2/environments' => [:update]
              },
              :resource_type => 'Katello::KTEnvironment'
   permission :destroy_lifecycle_environments,
              {
-               'katello/api/v2/environments' => [:destroy],
+               'katello/api/v2/environments' => [:destroy]
              },
              :resource_type => 'Katello::KTEnvironment'
 

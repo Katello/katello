@@ -22,8 +22,8 @@ module ::Actions::Candlepin::Owner
       stub_remote_user
     end
 
-    let(:label) { "foo"}
-    let(:name) { "boo"}
+    let(:label) { "foo" }
+    let(:name) { "boo" }
   end
 
   class CreateTest < TestBase

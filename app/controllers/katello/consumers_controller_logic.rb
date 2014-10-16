@@ -34,7 +34,7 @@ module Katello
     # Note: Finding the provider is necessary for cross-linking in the UI
     def available_subscriptions(cp_pools, organization = current_organization)
       if cp_pools
-        pools = cp_pools.collect{|cp_pool| ::Katello::Pool.find_pool(cp_pool['id'], cp_pool)}
+        pools = cp_pools.collect { |cp_pool| ::Katello::Pool.find_pool(cp_pool['id'], cp_pool) }
 
         subscriptions = pools.collect do |pool|
           product = Product.where(:cp_id => pool.product_id).all.select do |p|

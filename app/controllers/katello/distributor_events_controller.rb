@@ -24,7 +24,7 @@ module Katello
     end
 
     def rules
-      read_distributor = lambda{@distributor.readable?}
+      read_distributor = lambda { @distributor.readable? }
 
       {
         :index => read_distributor,

@@ -22,9 +22,9 @@ module Katello
             :presence => true,
             :format => { :with => /^[\w-]*$/ }
 
-        lazy_accessor :events, :initializer => lambda {|_s| Resources::Candlepin::Owner.events(label) }
-        lazy_accessor :service_levels, :initializer => lambda {|_s| Resources::Candlepin::Owner.service_levels(label) }
-        lazy_accessor :debug_cert, :initializer => lambda {|_s| load_debug_cert}
+        lazy_accessor :events, :initializer => lambda { |_s| Resources::Candlepin::Owner.events(label) }
+        lazy_accessor :service_levels, :initializer => lambda { |_s| Resources::Candlepin::Owner.service_levels(label) }
+        lazy_accessor :debug_cert, :initializer => lambda { |_s| load_debug_cert }
       end
     end
 

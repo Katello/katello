@@ -26,7 +26,7 @@ module Katello
       end
 
       def content_ids
-        self.candlepin_info['environmentContent'].collect{ |c| c['id'] }
+        self.candlepin_info['environmentContent'].collect { |c| c['id'] }
       end
     end
   end

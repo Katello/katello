@@ -17,7 +17,7 @@ child :environments => :environments do
   attributes :id, :name, :label
   node :permissions do |env|
     {
-      :readable => env.readable?,
+      :readable => env.readable?
     }
   end
 end

@@ -50,7 +50,7 @@ module Katello
 
     def content_view_select(_org, env)
       views = ContentView.readable.non_default.in_environment(env)
-      choices = views.map {|v| [v.name, v.id]}
+      choices = views.map { |v| [v.name, v.id] }
       select(:distributor, "content_view_id", choices,
                {:id => "content_view_field"},
                :tabindex => 2)

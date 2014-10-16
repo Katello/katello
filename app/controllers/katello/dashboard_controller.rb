@@ -45,7 +45,7 @@ module Katello
       systems = System.in_organization(current_organization).readable
       errata = Erratum.applicable_to_systems(systems)
 
-      errata = errata.sort_by{|e| e.systems_applicable.in_organization(current_organization).readable.count}.reverse[0...quantity]
+      errata = errata.sort_by { |e| e.systems_applicable.in_organization(current_organization).readable.count }.reverse[0...quantity]
 
       render :partial => "errata", :locals => { :quantity => quantity,
                                                 :errata => errata }

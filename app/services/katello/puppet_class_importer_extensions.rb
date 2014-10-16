@@ -28,7 +28,7 @@ module Katello
           #prevent the puppet environment from being deleted, by removing special '_destroy_' String
           if changed['obsolete'][environment.name]
             changed['obsolete'][environment.name] =
-              changed['obsolete'][environment.name].select{|klass| klass != '_destroy_'}
+              changed['obsolete'][environment.name].select { |klass| klass != '_destroy_' }
           end
 
           # PuppetClassImporter expects [kind][env] to be in json format

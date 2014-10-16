@@ -16,7 +16,7 @@ module Katello
       base.send :include, InstanceMethods
       base.send :include, LazyAccessor
       base.class_eval do
-        lazy_accessor :pulp_name, :initializer => lambda {|_s| Katello.pulp_server.resources.user.retrieve(self.remote_id) }
+        lazy_accessor :pulp_name, :initializer => lambda { |_s| Katello.pulp_server.resources.user.retrieve(self.remote_id) }
       end
     end
 

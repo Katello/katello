@@ -31,7 +31,7 @@ module Katello
       if [environment, product, repo_label].any?(&:nil?)
         return nil # can't generate valid path
       end
-      prefix = [environment.organization.label, environment.label].map{|x| x.gsub(/[^-\w]/, "_") }.join("/")
+      prefix = [environment.organization.label, environment.label].map { |x| x.gsub(/[^-\w]/, "_") }.join("/")
       prefix + custom_content_path(product, repo_label)
     end
 
@@ -43,7 +43,7 @@ module Katello
       # There we prefix custom content/repo url with "/custom/..."
       parts << "custom"
       parts += [product.label, repo_label]
-      "/" + parts.map{|x| x.gsub(/[^-\w]/, "_") }.join("/")
+      "/" + parts.map { |x| x.gsub(/[^-\w]/, "_") }.join("/")
     end
 
     def self.prepopulate!(products, environment, repos = [], content_view = nil)
@@ -139,7 +139,7 @@ module Katello
 
       def get_distribution(env, id)
         distribution = self.repos(env).map do |repo|
-          repo.distributions.find_all {|d| d.id == id }
+          repo.distributions.find_all { |d| d.id == id }
         end
         distribution.flatten(1)
       end
@@ -184,7 +184,7 @@ module Katello
       def sync_status
         return @status if @status
 
-        statuses = repos(self.library, nil, false).map {|r| r.sync_status}
+        statuses = repos(self.library, nil, false).map { |r| r.sync_status }
         return PulpSyncStatus.new(:state => PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
 
         #if any of repos sync still running -> product sync running

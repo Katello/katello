@@ -40,8 +40,8 @@ module Katello
       options ||= {}
       ret = super(options.except(:details))
       if options[:details]
-        ret[:products] = products.map {|p| {:name => p.name}}
-        ret[:repositories] = repositories.map {|r| {:product => {:name => r.product.name}, :name => r.name}}
+        ret[:products] = products.map { |p| {:name => p.name} }
+        ret[:repositories] = repositories.map { |r| {:product => {:name => r.product.name}, :name => r.name} }
       end
       ret
     end

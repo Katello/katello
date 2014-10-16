@@ -21,7 +21,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     def index
       options = {
-        :filters => [{:terms => {:repoids => [@repo.pulp_id]}}],
+        :filters => [{:terms => {:repoids => [@repo.pulp_id]}}]
       }
       collection = item_search(Distribution, params, options)
 

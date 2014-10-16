@@ -21,7 +21,7 @@ module Katello
             "lscpu.virtualization_type" => "full",
             "virt.is_guest" => "true",
             "virt.host_type" => "kvm",
-            "virt.uuid" => "5ac4f5df-49c9-2d1e-30f6-c84022deda65",
+            "virt.uuid" => "5ac4f5df-49c9-2d1e-30f6-c84022deda65"
           },
           "name" => "f16-2",
           "entitlementCount" => 0,

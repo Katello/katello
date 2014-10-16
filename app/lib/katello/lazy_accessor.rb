@@ -41,8 +41,8 @@ module Katello
         @lazy_attributes = [] if @lazy_attributes.nil?
         @lazy_attributes = @lazy_attributes.concat args
         @lazy_attributes_options ||= {}
-        fail ArgumentError, "Attribute names must be symbols" if args.any?{ |attribute| !attribute.is_a?(Symbol) }
-        redefined_attr = args.find{ |attribute| instance_methods.include?(attribute.to_s) }
+        fail ArgumentError, "Attribute names must be symbols" if args.any? { |attribute| !attribute.is_a?(Symbol) }
+        redefined_attr = args.find { |attribute| instance_methods.include?(attribute.to_s) }
         Rails.logger.warn "Remote attribute '#{redefined_attr}' has already been defined" if redefined_attr
 
         fail ArgumentError, "Please provide an initializer" if options[:initializer].nil?
@@ -186,7 +186,7 @@ module Katello
         if self.respond_to?(:load_remote_data)
           load_remote_data(remote_values)
         else
-          remote_values.each_pair {|k, v| instance_variable_set("@#{k.to_s}", v) if (attrs && attrs.include?(k.to_sym) && respond_to?("#{k.to_s}="))}
+          remote_values.each_pair { |k, v| instance_variable_set("@#{k.to_s}", v) if (attrs && attrs.include?(k.to_sym) && respond_to?("#{k.to_s}=")) }
         end
       end
     end

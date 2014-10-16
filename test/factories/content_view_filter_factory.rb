@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :katello_content_view_filter, :class => Katello::ContentViewFilter do
-    sequence(:name) {|n| "Database_filter#{n}" }
+    sequence(:name) { |n| "Database_filter#{n}" }
     association :content_view, :factory => :katello_content_view
   end
 

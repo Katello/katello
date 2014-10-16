@@ -28,15 +28,15 @@ module Katello
       def build_rows
         rows = []
 
-        env_ids = SearchUtils.search_envs(mode).collect{|e| e.id}
+        env_ids = SearchUtils.search_envs(mode).collect { |e| e.id }
         filtered_repos.each do |repo|
           all_repos = repo.environmental_instances(view).pluck(:pulp_id)
 
           cols = {}
           Repository.non_archived.where(:pulp_id => all_repos).each do |r|
             cols[r.environment.id] = if env_ids.include?(r.environment_id)
-                                       Cell.new(:hover => lambda{repo_hover_html(r)},
-                                                :hover_details => lambda{repo_hover_html(r, true)})
+                                       Cell.new(:hover => lambda { repo_hover_html(r) },
+                                                :hover_details => lambda { repo_hover_html(r, true) })
                                      end
           end
 
@@ -56,11 +56,11 @@ module Katello
       def filtered_repos
         filtered = repos
         envs = SearchUtils.search_envs(mode)
-        filtered = filtered.select{|repo| !repo.environmental_instances(view).empty?}
+        filtered = filtered.select { |repo| !repo.environmental_instances(view).empty? }
         if mode == :shared
-          filtered = filtered.select{|repo| (envs - repo.environmental_instances(view).collect(&:environment)).empty?}
+          filtered = filtered.select { |repo| (envs - repo.environmental_instances(view).collect(&:environment)).empty? }
         elsif mode == :unique
-          filtered = filtered.select{|repo| !(envs - repo.environmental_instances(view).collect(&:environment)).empty?}
+          filtered = filtered.select { |repo| !(envs - repo.environmental_instances(view).collect(&:environment)).empty? }
         end
         filtered
       end

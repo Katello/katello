@@ -22,7 +22,7 @@ module Katello
             "Red Hat Enterprise Linux 6" => ["RHEL-6", 0],
             "Red Hat Enterprise Linux* 6.0" => ["RHEL-6", 0],
             "Red Hat Enterprise Linux* 5.5" => ["RHEL-5", "U5"],
-            "Fedora 15" => %w(Fedora 15),
+            "Fedora 15" => %w(Fedora 15)
           }
       }
     end

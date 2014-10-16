@@ -15,7 +15,7 @@ module Katello
     include SearchHelper
 
     def rules
-      pass = lambda{true}
+      pass = lambda { true }
       {
         :show => pass,
         :create_favorite => pass,

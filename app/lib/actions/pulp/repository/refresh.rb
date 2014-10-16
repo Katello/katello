@@ -24,7 +24,7 @@ module Actions
           existing_distributors = repository.distributors
           concurrence do
             repository.generate_distributors.each do |distributor|
-              found = existing_distributors.find{ |i| i['distributor_type_id'] == distributor.type_id }
+              found = existing_distributors.find { |i| i['distributor_type_id'] == distributor.type_id }
               if found
                 plan_action(::Actions::Pulp::Repository::RefreshDistributor,
                             :repo_id => repository.pulp_id,

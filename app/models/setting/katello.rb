@@ -9,8 +9,8 @@ class Setting::Katello < Setting
         self.set('katello_default_user_data', N_("Default user data for new Operating Systems"), 'Katello Kickstart Default User Data'),
         self.set('katello_default_PXELinux', N_("Default PXElinux template for new Operating Systems"), 'Kickstart default PXELinux'),
         self.set('katello_default_iPXE', N_("Default iPXE template for new Operating Systems"), 'Kickstart default iPXE'),
-        self.set('katello_default_ptable', N_("Default partitioning table for new Operating Systems"), 'Kickstart default'),
-      ].each { |s| self.create! s.update(:category => "Setting::Katello")}
+        self.set('katello_default_ptable', N_("Default partitioning table for new Operating Systems"), 'Kickstart default')
+      ].each { |s| self.create! s.update(:category => "Setting::Katello") }
     end
     true
   end

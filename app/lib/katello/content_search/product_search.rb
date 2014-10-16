@@ -28,8 +28,8 @@ module Katello
             cols = {}
             prod.environments_for_view(view).each do |env|
               if readable_env_ids(organization).include?(env.id)
-                cols[env.id] = Cell.new(:hover => lambda{container_hover_html(prod, env, view)},
-                                        :hover_details => lambda{container_hover_html(prod, env, view, true)})
+                cols[env.id] = Cell.new(:hover => lambda { container_hover_html(prod, env, view) },
+                                        :hover_details => lambda { container_hover_html(prod, env, view, true) })
               end
             end
             rows << Row.new(:id => "view_#{view.id}_product_#{prod.id}",
@@ -50,9 +50,9 @@ module Katello
         filtered = products & view.all_version_products
         envs = SearchUtils.search_envs(mode)
         if mode == :shared
-          filtered = filtered.select{|p|  (envs - p.environments_for_view(view)).empty? }
+          filtered = filtered.select { |p|  (envs - p.environments_for_view(view)).empty? }
         elsif mode == :unique
-          filtered = filtered.select{|p|  !(envs - p.environments_for_view(view)).empty? }
+          filtered = filtered.select { |p|  !(envs - p.environments_for_view(view)).empty? }
         end
         filtered
       end

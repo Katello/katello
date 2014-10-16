@@ -68,7 +68,7 @@ module Actions
         private
 
         def repos_to_delete(version, environment)
-          archived_library_instance_ids = version.archived_repos.collect{|archived| archived.library_instance_id}
+          archived_library_instance_ids = version.archived_repos.collect { |archived| archived.library_instance_id }
           version.content_view.repos(environment).find_all do |repo|
             !archived_library_instance_ids.include?(repo.library_instance_id)
           end

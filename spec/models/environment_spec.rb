@@ -82,7 +82,7 @@ module Katello
                                       :prior => @organization.library)
           id = env.id
           env.destroy!
-          lambda { KTEnvironment.find(id)}.must_raise(ActiveRecord::RecordNotFound)
+          lambda { KTEnvironment.find(id) }.must_raise(ActiveRecord::RecordNotFound)
         end
       end
 

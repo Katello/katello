@@ -34,7 +34,7 @@ module Katello
           :elasticsearch => {},
           :pulp_auth => {},
           :candlepin_auth => {},
-          :foreman_tasks => {},
+          :foreman_tasks => {}
         }}
 
         # pulp - ping without oauth

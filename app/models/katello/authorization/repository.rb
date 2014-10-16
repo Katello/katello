@@ -48,12 +48,12 @@ module Katello
       def libraries_content_readable(_org)
         repos = Repository.readable
         lib_ids = []
-        repos.each{|r|  lib_ids << (r.library_instance_id || r.id)}
+        repos.each { |r|  lib_ids << (r.library_instance_id || r.id) }
         where(:id => lib_ids)
       end
 
       def content_readable(org)
-        prod_ids = Katello::Product.readable.collect{|p| p.id}
+        prod_ids = Katello::Product.readable.collect { |p| p.id }
         env_ids = KTEnvironment.content_readable(org)
         where(environment_id: env_ids, product_id: prod_ids)
       end

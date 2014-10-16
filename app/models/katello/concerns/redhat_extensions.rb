@@ -106,7 +106,7 @@ module Katello
           distributions = Katello::Distribution.search do
             filter :and, filters
           end
-          distributions = distributions.select{ |dist| Katello::Distribution.new(dist.as_json).bootable? }
+          distributions = distributions.select { |dist| Katello::Distribution.new(dist.as_json).bootable? }
           distribution_repo_ids = distributions.map(&:repoids).flatten
 
           ::Katello::Repository.where(:pulp_id => (repo_ids & distribution_repo_ids))

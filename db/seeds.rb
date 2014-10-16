@@ -58,7 +58,7 @@ ConfigTemplate.where(:default => true).each do |template|
   template.locations << Location.first unless template.locations.include?(Location.first) || Location.count.zero?
 end
 
-Katello::Util::Search.backend_search_classes.each{|c| c.create_index}
+Katello::Util::Search.backend_search_classes.each { |c| c.create_index }
 
 # Proxy features
 feature = Feature.find_or_create_by_name('Pulp')
@@ -110,7 +110,7 @@ permissions = [
   %w(Organization attach_subscriptions),
   %w(Organization unattach_subscriptions),
   %w(Organization import_manifest),
-  %w(Organization delete_manifest),
+  %w(Organization delete_manifest)
 ]
 
 permissions.each do |resource, permission|

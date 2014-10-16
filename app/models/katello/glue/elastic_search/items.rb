@@ -69,7 +69,7 @@ module Katello
 
           if query_string.blank?
             all_rows = true
-          elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any?{|s| search.downcase.match(s)}
+          elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any? { |s| search.downcase.match(s) }
             query_string  = search_options[:simple_query]
           end
 
@@ -90,7 +90,7 @@ module Katello
                 string query_string, query_options
               end
             end
-            sort {by sort_by, sort_order.to_s.downcase } if sort_by && sort_order
+            sort { by sort_by, sort_order.to_s.downcase } if sort_by && sort_order
 
             fields [:id] if search_options[:load_records?]
             fields search_options[:fields] if search_options[:fields]
@@ -133,8 +133,8 @@ module Katello
         #
         # @return [Array] a list of ActiveRecord objects
         def load_records
-          collection = @obj_class.where(:id => @results.collect{|r| r.id}).
-              order(@results.collect{|r| "id = #{r.id} DESC"})
+          collection = @obj_class.where(:id => @results.collect { |r| r.id }).
+              order(@results.collect { |r| "id = #{r.id} DESC" })
 
           #set total since @items will be just an array
           @total = @results.empty? ? 0 : @results.total

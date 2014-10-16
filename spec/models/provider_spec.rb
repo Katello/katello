@@ -135,11 +135,11 @@ module Katello
           end
 
           # product specified on the pool
-          let(:pool_product) {ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "rhel6-server")}
+          let(:pool_product) { ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "rhel6-server") }
           # derived product specified on the pool
-          let(:derived_product) {ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "200")}
+          let(:derived_product) { ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "200") }
           # derived provided product specified on the pool
-          let(:derived_provided_product) {ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "700")}
+          let(:derived_provided_product) { ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "700") }
 
           before do
             Glue::Candlepin::Product.stubs(:import_from_cp => [], :import_marketing_from_cp => true)
@@ -282,8 +282,8 @@ module Katello
         @product_with_change = create_product_with_content("product-with-change", ["1.0"])
         set_upstream_releases(@product_with_change, ["1.0", "1.1"])
 
-        @product_without_change.productContent.each{|pc| pc.product = @product_without_change}
-        @product_with_change.productContent.each{|pc| pc.product = @product_with_change}
+        @product_without_change.productContent.each { |pc| pc.product = @product_without_change }
+        @product_with_change.productContent.each { |pc| pc.product = @product_with_change }
 
         engineering = stub
         engineering.stubs(:engineering).returns([@product_without_change, @product_with_change])
@@ -392,7 +392,7 @@ module Katello
         @provider = Provider.create(to_create_custom)
         id = @provider.id
         @provider.destroy
-        lambda{Provider.find(id)}.must_raise(ActiveRecord::RecordNotFound)
+        lambda { Provider.find(id) }.must_raise(ActiveRecord::RecordNotFound)
       end
 
     end

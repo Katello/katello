@@ -42,7 +42,7 @@ module Actions
 
         def external_task=(external_task_data)
           external_task_data = [external_task_data] if external_task_data.is_a?(Hash)
-          super(external_task_data.map{ |task| task.except('result')})
+          super(external_task_data.map { |task| task.except('result') })
         end
 
       end

@@ -24,7 +24,7 @@ module Katello
         self.data = params[:data]
         self.renamed_columns = {}
         self.column_hash = {}
-        column_names.each{ |name| column_hash[name] = {:name => name}}
+        column_names.each { |name| column_hash[name] = {:name => name} }
       end
 
       def rename_column(original, new)
@@ -67,11 +67,11 @@ module Katello
         text = ""
         total = calculate_column_size(transformed_data) + column_names.size - 1
         text += text_separator(total)
-        text += "|#{column_names.collect{ |name| pad(column_hash[name][:name], column_hash[name][:size]) }.join("|")}|\n"
+        text += "|#{column_names.collect { |name| pad(column_hash[name][:name], column_hash[name][:size]) }.join("|")}|\n"
         text += text_separator(total)
 
         transformed_data.each do |row|
-          text += "|#{column_names.collect{ |name| pad(row.send(name), column_hash[name][:size]) }.join("|")}|\n"
+          text += "|#{column_names.collect { |name| pad(row.send(name), column_hash[name][:size]) }.join("|")}|\n"
           text += text_separator(total)
         end
 

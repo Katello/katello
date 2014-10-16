@@ -102,7 +102,7 @@ module Katello
     param :id, :identifier, :desc => N_("content view numeric identifier"), :required => true
     param :name, String, :desc => N_("module name to restrict modules for"), :required => false
     def available_puppet_modules
-      current_ids = @view.content_view_puppet_modules.map(&:uuid).reject{|p| p.nil?}
+      current_ids = @view.content_view_puppet_modules.map(&:uuid).reject { |p| p.nil? }
 
       repo_ids = @view.organization.library.puppet_repositories.pluck(:pulp_id)
       search_filters = [{ :terms => { :repoids => repo_ids }}]
@@ -114,7 +114,7 @@ module Katello
       options = { :filters => search_filters, :sort_by => 'sortable_version', :sort_order => 'DESC' }
 
       collection = item_search(PuppetModule, params, options)
-      collection[:results] = collection[:results].map{|i| PuppetModule.new(i.as_json) }
+      collection[:results] = collection[:results].map { |i| PuppetModule.new(i.as_json) }
 
       respond_for_index :template => 'puppet_modules', :collection => collection
     end
@@ -123,7 +123,7 @@ module Katello
         N_("Get puppet modules names that are available to be added to the content view")
     param :id, :identifier, :desc => N_("content view numeric identifier"), :required => true
     def available_puppet_module_names
-      current_names = @view.content_view_puppet_modules.map(&:name).reject{|p| p.nil?}
+      current_names = @view.content_view_puppet_modules.map(&:name).reject { |p| p.nil? }
       repo_ids = @view.organization.library.puppet_repositories.pluck(:pulp_id)
       search_filters = [{ :terms => { :repoids => repo_ids } }]
 

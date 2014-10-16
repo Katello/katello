@@ -130,13 +130,13 @@ module Katello
     def as_json(options = {})
       result = self.attributes
       result['organization'] = self.organization.try(:name)
-      result['environments'] = environments.map{|e| e.try(:name)}
+      result['environments'] = environments.map { |e| e.try(:name) }
       result['versions'] = versions.map(&:version)
       result['versions_details'] = versions.map do |v|
         {
           :version => v.version,
           :published => v.created_at.to_s,
-          :environments => v.environments.map{|e| e.name}
+          :environments => v.environments.map { |e| e.name }
         }
       end
 
@@ -163,11 +163,11 @@ module Katello
     def version_environment(env)
       # TODO: rewrite this into SQL or use content_view_environment when that
       # points to environment
-      version(env).content_view_version_environments.select {|cvve| cvve.environment_id == env.id}
+      version(env).content_view_version_environments.select { |cvve| cvve.environment_id == env.id }
     end
 
     def resulting_products
-      (self.repositories.collect{|r| r.product}).uniq
+      (self.repositories.collect { |r| r.product }).uniq
     end
 
     def puppet_repos
@@ -519,7 +519,7 @@ module Katello
       distributions = Distribution.search do
         filter :terms, :repoids => repo_ids
       end
-      distributions = distributions.select{ |dist| Katello::Distribution.new(dist.as_json).bootable? }
+      distributions = distributions.select { |dist| Katello::Distribution.new(dist.as_json).bootable? }
 
       release_arches = {}
       distributions.each do |dist|
@@ -527,8 +527,8 @@ module Katello
         release_arches[key] ||= []
         release_arches[key] << dist
       end
-      conflicts = release_arches.map{|key, value| {:version => key[0], :arch => key[1], :distributions => value}}
-      conflicts.select{|conflict| conflict[:distributions].length > 1}
+      conflicts = release_arches.map { |key, value| {:version => key[0], :arch => key[1], :distributions => value} }
+      conflicts.select { |conflict| conflict[:distributions].length > 1 }
     end
 
     def duplicate_distributions
@@ -537,8 +537,8 @@ module Katello
       distributions = Distribution.search do
         filter :terms, :repoids => repo_ids
       end
-      distributions = distributions.select{ |dist| Katello::Distribution.new(dist.as_json).bootable? }
-      distributions.find_all{|dist| (dist.repoids & repo_ids).length > 1}
+      distributions = distributions.select { |dist| Katello::Distribution.new(dist.as_json).bootable? }
+      distributions.find_all { |dist| (dist.repoids & repo_ids).length > 1 }
     end
 
     protected

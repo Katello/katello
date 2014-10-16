@@ -20,7 +20,7 @@ module Katello
     end
 
     def initialize(attrs = {})
-      attrs.each {|key, val| self.send("#{key}=", val)}
+      attrs.each { |key, val| self.send("#{key}=", val) }
     end
 
     def display_attributes

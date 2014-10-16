@@ -46,7 +46,7 @@ module Katello
             "INNER JOIN #{job_task_table} ON #{job_task_table}.task_status_id = #{task_status_table}.id").joins(
             "INNER JOIN #{job_table} ON #{job_table}.id = #{job_task_table}.job_id")
 
-        ids = tasks.select("#{task_status_table}.id").collect{|row| row[:id]}
+        ids = tasks.select("#{task_status_table}.id").collect { |row| row[:id] }
 
         # retrieve the jobs associated with those tasks
         jobs = Job.where("#{task_status_table}.id" => ids).joins(:task_statuses)

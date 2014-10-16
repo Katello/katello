@@ -23,8 +23,8 @@ module Katello
 
       attr_writer :run_b_initializer
 
-      lazy_accessor :a, :initializer => lambda {|_s| init_a }
-      lazy_accessor :b, :initializer => lambda {|_s| init_b }, :unless => lambda {|_s| true }
+      lazy_accessor :a, :initializer => lambda { |_s| init_a }
+      lazy_accessor :b, :initializer => lambda { |_s| init_b }, :unless => lambda { |_s| true }
       def init_a
         DEFAULT_VALUE
       end

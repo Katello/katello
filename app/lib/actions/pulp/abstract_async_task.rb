@@ -59,7 +59,7 @@ module Actions
       end
 
       def done?
-        external_task.all?{ |task| task[:finish_time] || FINISHED_STATES.include?(task[:state]) }
+        external_task.all? { |task| task[:finish_time] || FINISHED_STATES.include?(task[:state]) }
       end
 
       def external_task
@@ -71,7 +71,7 @@ module Actions
           task_resource.cancel(pulp_task['task_id'])
           if pulp_task['spawned_tasks']
             #the main task may have completed, so cancel spawned tasks too
-            pulp_task['spawned_tasks'].each{|spawned| task_resource.cancel(spawned['task_id'])}
+            pulp_task['spawned_tasks'].each { |spawned| task_resource.cancel(spawned['task_id']) }
           end
         end
         self.external_task = poll_external_task
@@ -88,13 +88,13 @@ module Actions
         new_tasks = []
         external_task_data.each do |task|
           if task['spawned_tasks'].length > 0
-            spawned_ids = task['spawned_tasks'].map{|spawned| spawned['task_id']}
+            spawned_ids = task['spawned_tasks'].map { |spawned| spawned['task_id'] }
             new_tasks.concat(get_new_tasks(external_task_data, spawned_ids))
           end
         end
 
         #Combine new tasks and remove call reports
-        output[:pulp_tasks] = external_task_data.reject{ |task| task['task_id'].nil?} + new_tasks
+        output[:pulp_tasks] = external_task_data.reject { |task| task['task_id'].nil? } + new_tasks
         output[:pulp_tasks].each do |pulp_task|
           if pulp_exception = ::Katello::Errors::PulpError.from_task(pulp_task)
             fail pulp_exception
@@ -103,7 +103,7 @@ module Actions
       end
 
       def get_new_tasks(current_list, spawned_task_ids)
-        (spawned_task_ids - current_list.map{ |task| task['task_id'] }).map do |task_id|
+        (spawned_task_ids - current_list.map { |task| task['task_id'] }).map do |task_id|
           task_resource.poll(task_id)
         end
       end

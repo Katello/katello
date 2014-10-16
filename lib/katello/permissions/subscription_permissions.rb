@@ -10,12 +10,12 @@ Foreman::Plugin.find(:katello).security_block :subscriptions do
              :resource_type => 'Organization'
   permission :attach_subscriptions,
              {
-               'katello/api/v2/subscriptions' => [:create],
+               'katello/api/v2/subscriptions' => [:create]
              },
              :resource_type => 'Organization'
   permission :unattach_subscriptions,
              {
-               'katello/api/v2/subscriptions' => [:destroy],
+               'katello/api/v2/subscriptions' => [:destroy]
              },
              :resource_type => 'Organization'
   permission :import_manifest,
@@ -28,7 +28,7 @@ Foreman::Plugin.find(:katello).security_block :subscriptions do
              :resource_type => 'Organization'
   permission :delete_manifest,
              {
-               'katello/api/v2/subscriptions' => [:delete_manifest],
+               'katello/api/v2/subscriptions' => [:delete_manifest]
              },
              :resource_type => 'Organization'
 end

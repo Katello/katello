@@ -60,7 +60,7 @@ module Katello
         filter :terms, :id => readable_ids
       end
 
-      render :json => products.collect{|s| {:label => s.name, :value => s.name, :id => s.id}}
+      render :json => products.collect { |s| {:label => s.name, :value => s.name, :id => s.id} }
     rescue Tire::Search::SearchRequestFailed
       render :json => Util::Support.array_with_total
     end

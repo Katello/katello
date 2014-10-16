@@ -53,10 +53,10 @@ module Katello
       def self.active_record_search_classes
         ignore_list =  %w(Katello::CpConsumerUser Katello::Pool)
         classes = get_subclasses(ActiveRecord::Base)
-        classes = classes.select{ |c| !ignore_list.include?(c.name) && c.respond_to?(:index) }
+        classes = classes.select { |c| !ignore_list.include?(c.name) && c.respond_to?(:index) }
 
         #we need index base classes first (TaskStatus) before child classes (PulpTaskStatus)
-        initial_list = classes.select{|c| c.superclass == ActiveRecord::Base}
+        initial_list = classes.select { |c| c.superclass == ActiveRecord::Base }
         subclass_list = classes - initial_list
         initial_list + subclass_list
       end
@@ -74,7 +74,7 @@ module Katello
 
       def self.get_subclasses(obj_class)
         classes = obj_class.subclasses
-        subs = classes.collect {|c| get_subclasses(c) }.flatten
+        subs = classes.collect { |c| get_subclasses(c) }.flatten
         classes + subs
       end
 

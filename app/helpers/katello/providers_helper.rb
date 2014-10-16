@@ -29,7 +29,7 @@ module Katello
 
     def redhat_repo_tab(provider, tab_id)
       tabs = {}.with_indifferent_access
-      redhat_repo_tabs.each{|tab| tabs[tab[:id]] = tab}
+      redhat_repo_tabs.each { |tab| tabs[tab[:id]] = tab }
 
       provider.products.engineering.each do |product|
         product.productContent.each do |prod_content|

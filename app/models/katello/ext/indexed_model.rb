@@ -21,7 +21,7 @@ module Katello
         cattr_accessor :class_index_options
 
         def self.display_attributes
-          self.class_index_options[:display_attrs].sort{|a, b| a.to_s <=> b.to_s}
+          self.class_index_options[:display_attrs].sort { |a, b| a.to_s <=> b.to_s }
         end
 
         if Rails.env.development? || Rails.env.production?
@@ -80,9 +80,9 @@ module Katello
         #   relation - the association for the other model
         #   attribute - the attribute on the current model, which if changes needs to trigger the index update
         def self.update_related_indexes(relation, attribute)
-          after_save lambda{|_record| reindex_on_update(relation, attribute)}
-          before_destroy lambda{|_record| save_indexed_relation(relation)}
-          after_destroy lambda{|_record| reindex_relation}
+          after_save lambda { |_record| reindex_on_update(relation, attribute) }
+          before_destroy lambda { |_record| save_indexed_relation(relation) }
+          after_destroy lambda { |_record| reindex_relation }
         end
 
         # If this model (e.g. host_collection) has an association (e.g. has_many) to another model (e.g. system)
@@ -145,7 +145,7 @@ module Katello
     end
 
     def indexed_attributes
-      attrs = self.attributes.keys.collect{|key| key.to_sym}
+      attrs = self.attributes.keys.collect { |key| key.to_sym }
       attrs += self.lazy_attributes if self.respond_to?(:lazy_attributes)
       if self.class.class_index_options[:json]
         options = self.class.class_index_options[:json]

@@ -281,7 +281,7 @@ module Katello
     def content_view_select_labels(_organization, environment)
       if environment
         labels = ContentView.readable.
-            in_environment(environment).collect {|cv| [cv.name, cv.id]}
+            in_environment(environment).collect { |cv| [cv.name, cv.id] }
       else
         labels = []
       end
@@ -305,7 +305,7 @@ module Katello
     end
 
     def repo_selector(repositories, url, field = :repository_id, record = nil)
-      products = repositories.map(&:product).uniq.sort_by{ |product| product[:name] }
+      products = repositories.map(&:product).uniq.sort_by { |product| product[:name] }
       repo_ids = repositories.map(&:id)
 
       content_tag "select", :id => "repo_select", :name => field, "data-url" => url do
@@ -314,7 +314,7 @@ module Katello
 
         groups = products.map do |prod|
           content_tag("optgroup", :label => "#{h(prod.name)}") do
-            options = prod.repositories.select { |repo| repo_ids.include?(repo.id)}.map do |repo|
+            options = prod.repositories.select { |repo| repo_ids.include?(repo.id) }.map do |repo|
               selected = record && record.send(field) == repo.id
 
               content_tag("option", :value => repo.id, :selected => selected) do

@@ -46,7 +46,7 @@ module Katello
                 :family       => { :type => 'string', :index => :not_analyzed},
                 :variant      => { :type => 'string', :index => :not_analyzed},
                 :version      => { :type => 'string', :index => :not_analyzed},
-                :repoids      => { :type => 'string', :index => :not_analyzed},
+                :repoids      => { :type => 'string', :index => :not_analyzed}
               }
             }
           }

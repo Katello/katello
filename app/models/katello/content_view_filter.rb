@@ -140,7 +140,7 @@ module Katello
     end
 
     def resulting_products
-      repositories.collect{|r| r.product}.uniq
+      repositories.collect { |r| r.product }.uniq
     end
 
     def applicable_repos

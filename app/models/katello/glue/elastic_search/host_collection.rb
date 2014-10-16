@@ -36,7 +36,7 @@ module Katello
 
     def extended_index_attrs
       {:name_sort => name.downcase, :name_autocomplete => self.name,
-       :system => self.systems.collect{|s| s.name}
+       :system => self.systems.collect { |s| s.name }
       }
     end
 

@@ -4,7 +4,7 @@ FactoryGirl.define do
     sequence(:label) { |n| "repo_#{n}" }
     sequence(:pulp_id) { |n| "pulp-#{n}" }
     sequence(:content_id)
-    sequence(:relative_path) {|n| "/ACME_Corporation/DEV/Repo#{n}"}
+    sequence(:relative_path) { |n| "/ACME_Corporation/DEV/Repo#{n}" }
     url "http://localhost/foo"
 
     ignore do

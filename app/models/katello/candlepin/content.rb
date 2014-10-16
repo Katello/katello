@@ -45,7 +45,7 @@ module Katello
     end
 
     def load_attributes(params)
-      params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
+      params.each_pair { |k, v| instance_variable_set("@#{k}", v) unless v.nil? }
     end
 
     class RepositoryMapper
@@ -101,7 +101,7 @@ module Katello
       end
 
       def name
-        sorted_substitutions = substitutions.sort_by {|k, _| k.to_s}.map(&:last)
+        sorted_substitutions = substitutions.sort_by { |k, _| k.to_s }.map(&:last)
         repo_name_parts = [content.name,
                            sorted_substitutions].flatten.compact
         repo_name_parts.join(" ").gsub(/[^a-z0-9\-\._ ]/i, "")

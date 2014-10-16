@@ -109,7 +109,7 @@ module Katello
 
       cp_pools = self.get_key_pools
       if cp_pools
-        pools = cp_pools.collect{|cp_pool| Pool.find_pool(cp_pool['id'], cp_pool)}
+        pools = cp_pools.collect { |cp_pool| Pool.find_pool(cp_pool['id'], cp_pool) }
 
         pools.each do |pool|
           Product.where(:cp_id => pool.product_id).each do |product|
@@ -171,7 +171,7 @@ module Katello
           product = Product.find_by_cp_id(product_id, self.organization)
           consumption = calculate_consumption(product, pools, allocate)
 
-          Rails.logger.debug "Autosubscribing pools: #{consumption.map { |pool, amount| "#{pool.cp_id} => #{amount}"}.join(", ")}"
+          Rails.logger.debug "Autosubscribing pools: #{consumption.map { |pool, amount| "#{pool.cp_id} => #{amount}" }.join(", ")}"
           consumption.each do |pool, amount|
             Rails.logger.debug "Subscribing #{system.name} to product: #{product_id}, consuming pool #{pool.cp_id} of amount: #{amount}"
             if entitlements_array = system.subscribe(pool.cp_id, amount)

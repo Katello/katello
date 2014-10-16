@@ -93,27 +93,27 @@ module Katello
 
     describe "actions (katello)" do
       it "should raise exception on package install, if no systems in host collection" do
-        lambda{ @host_collection.install_packages("pkg1")}.must_raise(Errors::HostCollectionEmptyException)
+        lambda { @host_collection.install_packages("pkg1") }.must_raise(Errors::HostCollectionEmptyException)
       end
 
       it "should raise exception on package update, if no systems in host collection" do
-        lambda{ @host_collection.update_packages("pkg1")}.must_raise(Errors::HostCollectionEmptyException)
+        lambda { @host_collection.update_packages("pkg1") }.must_raise(Errors::HostCollectionEmptyException)
       end
 
       it "should raise exception on package remove, if no systems in host collection" do
-        lambda{ @host_collection.uninstall_packages("pkg1")}.must_raise(Errors::HostCollectionEmptyException)
+        lambda { @host_collection.uninstall_packages("pkg1") }.must_raise(Errors::HostCollectionEmptyException)
       end
 
       it "should raise exception on package group install, if no systems in host collection" do
-        lambda{ @host_collection.install_package_groups("grp1")}.must_raise(Errors::HostCollectionEmptyException)
+        lambda { @host_collection.install_package_groups("grp1") }.must_raise(Errors::HostCollectionEmptyException)
       end
 
       it "should raise exception on package group remove, if no systems in host collection" do
-        lambda{ @host_collection.uninstall_package_groups("grp1")}.must_raise(Errors::HostCollectionEmptyException)
+        lambda { @host_collection.uninstall_package_groups("grp1") }.must_raise(Errors::HostCollectionEmptyException)
       end
 
       it "should raise exception on errata install, if no systems in host collection" do
-        lambda{ @host_collection.install_errata("errata1")}.must_raise(Errors::HostCollectionEmptyException)
+        lambda { @host_collection.install_errata("errata1") }.must_raise(Errors::HostCollectionEmptyException)
       end
     end
 

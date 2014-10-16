@@ -51,7 +51,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
     let(:action_class) { ::Actions::Katello::ContentViewPuppetEnvironment::CloneContent }
     let(:action) { create_action action_class }
     let(:source_repo) { katello_content_view_puppet_environments(:dev_view_puppet_environment) }
-    let(:module_id) {'bcd'}
+    let(:module_id) { 'bcd' }
     it 'plan' do
       plan_action action, puppet_env, source_repo.pulp_id => [module_id]
       assert_action_planed_with action, ::Actions::Pulp::Repository::CopyPuppetModule, :source_pulp_id => source_repo.pulp_id,
@@ -64,9 +64,9 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
     let(:action_class) { ::Actions::Katello::ContentViewPuppetEnvironment::CloneToEnvironment }
     let(:action) { create_action action_class }
     let(:dev) { katello_environments(:dev) }
-    let(:dev_puppet_env) {katello_content_view_puppet_environments(:dev_view_puppet_environment)}
+    let(:dev_puppet_env) { katello_content_view_puppet_environments(:dev_view_puppet_environment) }
 
-    let(:source_puppet_env) {katello_content_view_puppet_environments(:archive_view_puppet_environment)}
+    let(:source_puppet_env) { katello_content_view_puppet_environments(:archive_view_puppet_environment) }
 
     it 'plans with existing puppet environment' do
 
@@ -109,7 +109,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
   class CreateForVersionTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentViewPuppetEnvironment::CreateForVersion }
     let(:action) { create_action action_class }
-    let(:version) {katello_content_view_versions(:library_view_version_2) }
+    let(:version) { katello_content_view_versions(:library_view_version_2) }
     let(:module_map) { {'some_source_repo' => ['asdf']} }
 
     it 'plan' do
@@ -128,7 +128,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentViewPuppetEnvironment::Destroy }
     let(:action) { create_action action_class }
-    let(:puppet_env) {katello_content_view_puppet_environments(:dev_view_puppet_environment)}
+    let(:puppet_env) { katello_content_view_puppet_environments(:dev_view_puppet_environment) }
 
     it 'plans' do
       action.expects(:action_subject).with(puppet_env)

@@ -52,7 +52,7 @@ module Katello
       def initialize(params = {}, _options = {})
         params['id'] = params['id'] || params.delete('_id')
         params['repoids'] = params.delete(:repository_memberships) if params.key?(:repository_memberships)
-        params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
+        params.each_pair { |k, v| instance_variable_set("@#{k}", v) unless v.nil? }
       end
 
       def sortable_version

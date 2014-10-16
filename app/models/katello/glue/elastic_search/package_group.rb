@@ -48,7 +48,7 @@ module Katello
                 :package_group_id => {:type => 'string', :index => :not_analyzed},
                 :name          => { :type => 'string', :analyzer => :kt_name_analyzer},
                 :name_sort    => { :type => 'string', :index => :not_analyzed },
-                :repo_id       => { :type => 'string', :index => :not_analyzed},
+                :repo_id       => { :type => 'string', :index => :not_analyzed}
               }
             }
           }

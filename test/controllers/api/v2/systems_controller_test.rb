@@ -91,7 +91,7 @@ module Katello
 
     def test_index_with_system_id_only
       mock = Api::V2::SystemsController.any_instance.expects(:item_search).with do |_model, _params, options|
-        terms = options[:filters].inject({}){|all_terms, filter| all_terms.merge(filter[:terms]) }
+        terms = options[:filters].inject({}) { |all_terms, filter| all_terms.merge(filter[:terms]) }
         terms[:environment_id] ==  @system.environment.id.to_s
       end
       mock.returns({})
@@ -104,7 +104,7 @@ module Katello
 
     def test_index_with_org_id_only
       mock = Api::V2::SystemsController.any_instance.expects(:item_search).with do |_model, _params, options|
-        terms = options[:filters].inject({}){|all_terms, filter| all_terms.merge(filter[:terms]) }
+        terms = options[:filters].inject({}) { |all_terms, filter| all_terms.merge(filter[:terms]) }
         terms[:environment_id] == @organization.kt_environments.pluck(:id)
       end
       mock.returns({})
@@ -117,7 +117,7 @@ module Katello
 
     def test_index_with_system_id_and_org_id
       mock = Api::V2::SystemsController.any_instance.expects(:item_search).with do |_model, _params, options|
-        terms = options[:filters].inject({}){|all_terms, filter| all_terms.merge(filter[:terms]) }
+        terms = options[:filters].inject({}) { |all_terms, filter| all_terms.merge(filter[:terms]) }
         terms[:environment_id] == [@system.environment.id]
       end
       mock.returns({})

@@ -42,7 +42,7 @@ module Katello
         Tire.index Katello::PuppetModule.index do
           create :settings => Katello::PuppetModule.index_settings, :mappings => Katello::PuppetModule.index_mapping
         end
-        puppet_modules = self.puppet_modules.collect{|puppet_module| puppet_module.as_json.merge(puppet_module.index_options)}
+        puppet_modules = self.puppet_modules.collect { |puppet_module| puppet_module.as_json.merge(puppet_module.index_options) }
         puppet_modules.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
           Tire.index Katello::PuppetModule.index do
             import sublist

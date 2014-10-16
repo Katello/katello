@@ -44,7 +44,7 @@ module Katello
     end
 
     describe "in invalid state" do
-      before {@akey = ActivationKey.new}
+      before { @akey = ActivationKey.new }
 
       it "should be invalid without name" do
         @akey.wont_be :valid?

@@ -47,12 +47,12 @@ module Katello
           notifs = resource.list
 
           #delete any similar tasks with the wrong url (in case it changed)
-          notifs.select{|n| n['event_types'] == [type] && n['notifier_config']['url'] != url}.each do |e|
+          notifs.select { |n| n['event_types'] == [type] && n['notifier_config']['url'] != url }.each do |e|
             resource.delete(e['id'])
           end
 
           #only create a notifier if one doesn't exist with the correct url
-          exists = notifs.select{ |n| n['event_types'] == [type] && n['notifier_config']['url'] == url }
+          exists = notifs.select { |n| n['event_types'] == [type] && n['notifier_config']['url'] == url }
           resource.create(Runcible::Resources::EventNotifier::NotifierTypes::REST_API, {:url => url}, [type]) if exists.empty?
         end
 
@@ -214,7 +214,7 @@ module Katello
 
         existing_distributors = self.distributors
         generate_distributors.each do |distributor|
-          found = existing_distributors.select{ |i| i['distributor_type_id'] == distributor.type_id }.first
+          found = existing_distributors.select { |i| i['distributor_type_id'] == distributor.type_id }.first
           if found
             Katello.pulp_server.extensions.repository.update_distributor(self.pulp_id, found['id'], distributor.config)
           else
@@ -354,7 +354,7 @@ module Katello
 
       def bootable_distribution
         return unless self.unprotected
-        self.distributions.find{|distribution| distribution.bootable? }
+        self.distributions.find { |distribution| distribution.bootable? }
       end
 
       def package_groups
@@ -377,7 +377,7 @@ module Katello
         unless search_args.empty?
           groups.delete_if do |group|
             group_attrs = group.as_json
-            search_args.any?{ |attr, value| group_attrs[attr] != value }
+            search_args.any? { |attr, value| group_attrs[attr] != value }
           end
         end
         groups
@@ -387,7 +387,7 @@ module Katello
         categories = Katello.pulp_server.extensions.repository.package_categories(self.pulp_id)
         unless search_args.empty?
           categories.delete_if do |category_attrs|
-            search_args.any?{ |attr, value| category_attrs[attr] != value }
+            search_args.any? { |attr, value| category_attrs[attr] != value }
           end
         end
         categories
@@ -462,7 +462,7 @@ module Katello
         unless redhat?
           allowed_changes = %w(url unprotected checksum_type)
           allowed_changes << "name" if docker?
-          allowed_changes.any? {|key| previous_changes.key?(key)}
+          allowed_changes.any? { |key| previous_changes.key?(key) }
         end
       end
 
@@ -634,7 +634,7 @@ module Katello
       end
 
       def find_node_distributor
-        self.distributors.detect{|i| i["distributor_type_id"] == Runcible::Models::NodesHttpDistributor.type_id}
+        self.distributors.detect { |i| i["distributor_type_id"] == Runcible::Models::NodesHttpDistributor.type_id }
       end
 
       def sort_sync_status(statuses)

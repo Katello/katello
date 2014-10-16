@@ -204,7 +204,7 @@ module Katello
 
       errata = @system.available_errata(@environment, @content_view)
       response = {
-        :records  => errata.sort_by{ |e| e.issued }.reverse,
+        :records  => errata.sort_by { |e| e.issued }.reverse,
         :subtotal => errata.count,
         :total    => errata.count
       }
@@ -284,7 +284,7 @@ module Katello
     api :GET, "/systems/:id/events", N_("List Candlepin events for the content host")
     param :id, String, :desc => N_("UUID of the content host"), :required => true
     def events
-      @events = @system.events.map{ |e| OpenStruct.new(e) }
+      @events = @system.events.map { |e| OpenStruct.new(e) }
       respond_for_index :collection => @events
     end
 
