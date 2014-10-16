@@ -24,10 +24,15 @@ describe('Controller: NewSyncPlanController', function() {
 
         SyncPlan = $injector.get('MockResource').$new()
         $scope = $injector.get('$rootScope').$new();
-        $scope.transitionBack = function () {};
-        $scope.product = {};
+        $scope.$state = {go: function () {}};
 
         translate = function (string) { return string; };
+
+        $scope.syncPlanTable = {
+            rows: {
+                unshift: function () {}
+            }
+        };
 
         $controller('NewSyncPlanController', {
             $scope: $scope,
@@ -41,17 +46,34 @@ describe('Controller: NewSyncPlanController', function() {
         expect($scope.syncPlan).toBeDefined();
     });
 
-    it('should save a new sync plan resource', function() {
-        var syncPlan = {startDate: '11/17/1982', endDate: '14:40'};
+    it('should save a new sync plan resource and transform to the newly created sync plan', function() {
+        var syncPlan = {id: 1, startDate: '11/17/1982', endDate: '14:40'};
         syncPlan.$save = new SyncPlan().$save;
 
-        spyOn($scope, 'transitionBack');
+        spyOn($scope.$state, 'go');
         spyOn(syncPlan, '$save').andCallThrough();
+        spyOn($scope.syncPlanTable.rows, 'unshift');
 
         $scope.createSyncPlan(syncPlan);
 
         expect($scope.working).toBe(false);
         expect($scope.successMessages.length).toBe(1);
-        expect($scope.transitionBack).toHaveBeenCalled();
+        expect($scope.syncPlanTable.rows.unshift).toHaveBeenCalledWith(syncPlan);
+        expect($scope.$state.go).toHaveBeenCalledWith('sync-plans.details.info', {syncPlanId: syncPlan.id});
+    });
+
+    it('should save a new sync plan resource and transform to the product if called from there', function() {
+        var syncPlan = {startDate: '11/17/1982', endDate: '14:40'};
+        syncPlan.$save = new SyncPlan().$save;
+
+        spyOn($scope.$state, 'go');
+        spyOn(syncPlan, '$save').andCallThrough();
+
+        $scope.product = {id: 1};
+        $scope.createSyncPlan(syncPlan);
+
+        expect($scope.working).toBe(false);
+        expect($scope.successMessages.length).toBe(1);
+        expect($scope.$state.go).toHaveBeenCalledWith('products.details.info', {productId: $scope.product.id});
     });
 });
