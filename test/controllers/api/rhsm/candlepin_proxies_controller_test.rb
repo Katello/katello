@@ -136,11 +136,11 @@ module Katello
         {
           "repos" => [
             {
-              "baseurl" => ["https://hostname/pulp/repos/foo"],
+              "baseurl" => ["https://hostname/pulp/repos/foo"]
             },
             {
-              "baseurl" => ["https://hostname/pulp/repos/bar"],
-            },
+              "baseurl" => ["https://hostname/pulp/repos/bar"]
+            }
           ]
         }
       end

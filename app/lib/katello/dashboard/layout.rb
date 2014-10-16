@@ -58,8 +58,8 @@ module Katello
 
       def setup_default_layout
         @columns << []
-        @widgets.each_with_index{ |w, i| @columns[0] << w if i.even? }
-        @columns << @widgets.select{ |w| !@columns[0].include?(w) }
+        @widgets.each_with_index { |w, i| @columns[0] << w if i.even? }
+        @columns << @widgets.select { |w| !@columns[0].include?(w) }
       end
 
       def to_hash

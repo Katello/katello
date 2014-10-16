@@ -283,9 +283,9 @@ module Katello
     end
 
     describe "find system by a pool id" do
-      let(:pool_id_1) {"POOL_ID_123"}
-      let(:pool_id_2) {"POOL_ID_456"}
-      let(:pool_id_3) {"POOL_ID_789"}
+      let(:pool_id_1) { "POOL_ID_123" }
+      let(:pool_id_2) { "POOL_ID_456" }
+      let(:pool_id_3) { "POOL_ID_789" }
       let(:common_attrs) do
         {:environment => @environment,
          :cp_type => cp_type,
@@ -307,7 +307,7 @@ module Katello
       end
 
       it "should find all systems that are subscribed to the pool" do
-        pool_uuids = System.all_by_pool(pool_id_1).map{ |sys| sys.uuid}
+        pool_uuids = System.all_by_pool(pool_id_1).map { |sys| sys.uuid }
         pool_uuids.must_equal([@system_1.uuid, @system_2.uuid])
       end
 

@@ -71,10 +71,10 @@ module Katello
             fields [:id]
             size ID_FETCH_BATCH_SIZE
             from start
-            sort {by :id, 'asc'}
+            sort { by :id, 'asc' }
           end
 
-          search.perform.results.collect{|p| p.id}
+          search.perform.results.collect { |p| p.id }
         end
       end
 
@@ -85,8 +85,8 @@ module Katello
       def update_array(object_ids, field, add_ids, remove_ids)
         obj_class = self
         script = ""
-        add_ids.each{ |add_id| script += "ctx._source.#{field}.add(\"#{add_id}\");" }
-        remove_ids.each{ |remove_id| script +=  "ctx._source.#{field}.remove(\"#{remove_id}\");" }
+        add_ids.each { |add_id| script += "ctx._source.#{field}.add(\"#{add_id}\");" }
+        remove_ids.each { |remove_id| script +=  "ctx._source.#{field}.remove(\"#{remove_id}\");" }
 
         documents = object_ids.map do |id|
           {

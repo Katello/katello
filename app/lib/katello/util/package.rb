@@ -28,7 +28,7 @@ module Katello
         return unless arch
 
         if nvre = parse_nvre(name)
-          nvre.merge(:suffix => suffix, :arch => arch).delete_if {|_k, v| v.nil?}
+          nvre.merge(:suffix => suffix, :arch => arch).delete_if { |_k, v| v.nil? }
         end
       end
 
@@ -42,7 +42,7 @@ module Katello
            :epoch => match[1],
            :name => match[2],
            :version => match[3],
-           :release => match[4]}.delete_if {|_k, v| v.nil?}
+           :release => match[4]}.delete_if { |_k, v| v.nil? }
         end
       end
 

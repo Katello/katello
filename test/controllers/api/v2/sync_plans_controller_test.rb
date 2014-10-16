@@ -157,7 +157,7 @@ module Katello
       end
 
       put :add_products, :id => @sync_plan.id, :organization_id => @organization.id,
-          :product_ids => @products.collect{ |p| p.id}
+          :product_ids => @products.collect { |p| p.id }
 
       assert_response :success
       assert_template 'api/v2/sync_plans/show'
@@ -169,13 +169,13 @@ module Katello
 
       assert_protected_action(:add_products, allowed_perms, denied_perms) do
         put :add_products, :id => @sync_plan.id, :organization_id => @organization.id,
-          :product_ids => @products.collect{ |p| p.id}
+          :product_ids => @products.collect { |p| p.id }
       end
     end
 
     def test_remove_products
       put :remove_products, :id => @sync_plan.id, :organization_id => @organization.id,
-          :product_ids => @products.collect{ |p| p.id}
+          :product_ids => @products.collect { |p| p.id }
 
       assert_response :success
       assert_template 'api/v2/sync_plans/show'
@@ -187,7 +187,7 @@ module Katello
 
       assert_protected_action(:remove_products, allowed_perms, denied_perms) do
         put :remove_products, :id => @sync_plan.id, :organization_id => @organization.id,
-            :product_ids => @products.collect{ |p| p.id}
+            :product_ids => @products.collect { |p| p.id }
       end
     end
   end

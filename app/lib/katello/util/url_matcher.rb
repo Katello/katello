@@ -38,7 +38,7 @@ module Katello
 
       def self.match(path, routes)
         path     = Path.new(path)
-        patterns = routes.map {|route| Pattern.new(Array(route).first) }
+        patterns = routes.map { |route| Pattern.new(Array(route).first) }
 
         patterns.each do |pattern|
           return [pattern.to_s] + pattern.vars if pattern == path
@@ -64,7 +64,7 @@ module Katello
           path  = path.to_s
           ext   = Pathname(path).extname
           path  = path.sub(/#{ext}$/, '')
-          parts = path.split('/').reject {|part| part.empty? }
+          parts = path.split('/').reject { |part| part.empty? }
           [parts, ext]
         end
       end

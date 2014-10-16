@@ -163,7 +163,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @update_permission, @destroy_permission,
                       @env_promote_permission, @cv_promote_permission,
                       [diff_env_promote_permission, @cv_promote_permission],
-                      [@env_promote_permission, diff_view_promote_permission],
+                      [@env_promote_permission, diff_view_promote_permission]
                      ]
       assert_protected_action(:promote, allowed_perms, denied_perms) do
         post :promote, :id => @library_dev_staging_view.versions.first.id, :environment_id => @dev.id

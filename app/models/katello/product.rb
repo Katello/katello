@@ -166,7 +166,7 @@ module Katello
       end
     end
 
-    scope :all_in_org, lambda{|org| Product.joins(:provider).where("#{Katello::Provider.table_name}.organization_id = ?", org.id)}
+    scope :all_in_org, lambda { |org| Product.joins(:provider).where("#{Katello::Provider.table_name}.organization_id = ?", org.id) }
 
     def assign_unique_label
       self.label = Util::Model.labelize(self.name) if self.label.blank?
@@ -185,7 +185,7 @@ module Katello
     end
 
     def delete_repos(repos)
-      repos.each{|repo| repo.destroy}
+      repos.each { |repo| repo.destroy }
     end
 
     def delete_from_env(from_env)
@@ -198,8 +198,8 @@ module Katello
     end
 
     def environments_for_view(view)
-      versions = view.versions.select{|version| version.products.include?(self)}
-      versions.collect{|v|v.environments}.flatten
+      versions = view.versions.select { |version| version.products.include?(self) }
+      versions.collect { |v|v.environments }.flatten
     end
 
     def environments

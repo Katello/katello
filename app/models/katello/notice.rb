@@ -23,7 +23,7 @@ module Katello
     TYPES = [:message, :warning, :success, :error]
 
     validates_lengths_from_database
-    validates :level, :inclusion => {:in => TYPES + TYPES.collect{|type| type.to_s}}
+    validates :level, :inclusion => {:in => TYPES + TYPES.collect { |type| type.to_s }}
     validates :text, :presence => true, :length => {:maximum => 1024}
     validates :user_notices, :length => {:minimum => 1}
     validates :level, :length => {:maximum => 255}

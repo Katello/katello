@@ -42,7 +42,7 @@ module Actions
 
             if content_view_puppet_modules.any?
               puppet_repoids = ::Katello::Repository.puppet_type.in_environment(repository.organization.library).
-                  pluck(:pulp_id).reject{ |repoid| repoid == repository.pulp_id }
+                  pluck(:pulp_id).reject { |repoid| repoid == repository.pulp_id }
               found_puppet_module = ::Katello::PuppetModule.latest_modules_search([{:name => puppet_module.name,
                                                                                     :author => puppet_module.author}],
                                                                                   puppet_repoids).first

@@ -15,7 +15,7 @@ Foreman::Plugin.find(:katello).security_block :content_hosts do
   permission :create_content_hosts,
              {
                'katello/api/v2/systems' => [:create],
-               'katello/api/rhsm/candlepin_proxies' => [:consumer_create, :consumer_show],
+               'katello/api/rhsm/candlepin_proxies' => [:consumer_create, :consumer_show]
              },
              :resource_type => 'Katello::System'
   permission :edit_content_hosts,
@@ -27,7 +27,7 @@ Foreman::Plugin.find(:katello).security_block :content_hosts do
                                                          :remove_content, :environment_content_view,
                                                          :bulk_add_host_collections, :bulk_remove_host_collections],
                'katello/api/rhsm/candlepin_proxies' => [:upload_package_profile, :regenerate_identity_certificates,
-                                                        :hypervisors_update],
+                                                        :hypervisors_update]
              },
              :resource_type => 'Katello::System'
   permission :destroy_content_hosts,

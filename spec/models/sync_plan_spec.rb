@@ -107,7 +107,7 @@ module Katello
         pid = p.id
         p.destroy
 
-        lambda{SyncPlan.find(pid)}.must_raise(ActiveRecord::RecordNotFound)
+        lambda { SyncPlan.find(pid) }.must_raise(ActiveRecord::RecordNotFound)
       end
 
       it "should have proper pulp duration format" do

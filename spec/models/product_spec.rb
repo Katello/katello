@@ -38,7 +38,7 @@ module Katello
       @substitutor_mock = Util::CdnVarSubstitutor.new(@cdn_mock)
       @substitutor_mock.stubs(:precalculate).returns do |_paths|
         # we pretend, that all paths are substituted to themseves
-        @substitutor_mock.instance_variable_set("@substitutions", Hash.new {|_h, k| {{} => k} })
+        @substitutor_mock.instance_variable_set("@substitutions", Hash.new { |_h, k| {{} => k} })
       end
       @cdn_mock.stubs(:substitutor).returns(@substitutor_mock)
 
@@ -110,7 +110,7 @@ module Katello
       specify { Product.new(:label => "goo", :name => 'contains /', :provider => @provider).must_be :valid? }
       specify { Product.new(:label => "boo", :name => 'contains #', :provider => @provider).must_be :valid? }
       specify { Product.new(:label => "shoo", :name => 'contains space', :provider => @provider).must_be :valid? }
-      specify { Product.new(:label => "bar foo", :name => "foo", :provider => @provider).wont_be :valid?}
+      specify { Product.new(:label => "bar foo", :name => "foo", :provider => @provider).wont_be :valid? }
       it "should not be successful when creating a product with a duplicate name in one organization" do
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge(:organization_id => @organization.id))
 

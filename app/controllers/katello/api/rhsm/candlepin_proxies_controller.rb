@@ -362,8 +362,8 @@ module Katello
     def find_foreman_host(organization)
       if params[:facts].present? && params[:facts]['network.hostname'].present?
         mac_addresses =  System.interfaces(params[:facts]).
-                                map{ |interface| interface[:mac].downcase if interface[:mac] }.
-                                reject{ |mac| mac.nil? }
+                                map { |interface| interface[:mac].downcase if interface[:mac] }.
+                                reject { |mac| mac.nil? }
 
         foreman_host = Host.where(:name => params[:facts]['network.hostname'],
                                   :organization_id => organization.id,

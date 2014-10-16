@@ -26,8 +26,8 @@ module Katello
 
     describe "viewing notices" do
       before :each do
-        20.times{|a| Notice.create!(:text => "bar#{a}", :level => :success, :user_notices => [UserNotice.new(:user => @user)])}
-        @notices = Notice.select(:id).where("text like 'bar%'").order("id desc").all.collect{|s| s.id}
+        20.times { |a| Notice.create!(:text => "bar#{a}", :level => :success, :user_notices => [UserNotice.new(:user => @user)]) }
+        @notices = Notice.select(:id).where("text like 'bar%'").order("id desc").all.collect { |s| s.id }
       end
 
       it 'should show all user notices (katello)' do #TODO: headpin

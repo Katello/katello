@@ -38,10 +38,10 @@ module Katello
                                            convert_from_cp_fields(consumer_json)
                                          end
                                        end)
-        lazy_accessor :entitlements, :initializer => lambda {|_s| Resources::Candlepin::Consumer.entitlements(uuid) }
-        lazy_accessor :pools, :initializer => lambda {|_s| entitlements.collect { |ent| Resources::Candlepin::Pool.find ent["pool"]["id"]} }
-        lazy_accessor :available_pools, :initializer => lambda {|_s| Resources::Candlepin::Consumer.available_pools(uuid, false) }
-        lazy_accessor :all_available_pools, :initializer => lambda {|_s| Resources::Candlepin::Consumer.available_pools(uuid, true) }
+        lazy_accessor :entitlements, :initializer => lambda { |_s| Resources::Candlepin::Consumer.entitlements(uuid) }
+        lazy_accessor :pools, :initializer => lambda { |_s| entitlements.collect { |ent| Resources::Candlepin::Pool.find ent["pool"]["id"] } }
+        lazy_accessor :available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(uuid, false) }
+        lazy_accessor :all_available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(uuid, true) }
         lazy_accessor :virtual_host, :initializer => (lambda do |_s|
                                                         host_attributes = Resources::Candlepin::Consumer.virtual_host(self.uuid)
                                                         (System.find_by_uuid(host_attributes['uuid']) || System.new(host_attributes)) if host_attributes
@@ -52,8 +52,8 @@ module Katello
                                                             System.find_by_uuid(attr['uuid']) || System.new(attr)
                                                           end
                                                         end)
-        lazy_accessor :compliance, :initializer => lambda {|_s| Resources::Candlepin::Consumer.compliance(uuid) }
-        lazy_accessor :events, :initializer => lambda {|_s| Resources::Candlepin::Consumer.events(uuid) }
+        lazy_accessor :compliance, :initializer => lambda { |_s| Resources::Candlepin::Consumer.compliance(uuid) }
+        lazy_accessor :events, :initializer => lambda { |_s| Resources::Candlepin::Consumer.events(uuid) }
 
         validates :cp_type, :inclusion => {:in => CP_TYPES},
                             :if => :new_record?
@@ -210,11 +210,11 @@ module Katello
       # when updating (PUT) objects.
       def remove_hibernate_fields(elements)
         return nil unless elements
-        elements.collect{ |e| e.except(:id, :created, :updated)}
+        elements.collect { |e| e.except(:id, :created, :updated) }
       end
 
       def reject_db_columns(cp_json)
-        cp_json.reject {|k, _v| self.class.column_defaults.keys.member?(k.to_s) }
+        cp_json.reject { |k, _v| self.class.column_defaults.keys.member?(k.to_s) }
       end
 
       def save_candlepin_orchestration
@@ -404,7 +404,7 @@ module Katello
                          :multiEntitlement => multi_entitlement,
                          :providedProducts => provided_products)
         end
-        avail_pools.sort! {|a, b| a.poolName <=> b.poolName}
+        avail_pools.sort! { |a, b| a.poolName <=> b.poolName }
         avail_pools
       end
 
@@ -500,13 +500,13 @@ module Katello
 
       def all_by_pool(pool_id)
         entitlements = Resources::Candlepin::Entitlement.get
-        system_uuids = entitlements.delete_if{|ent| ent["pool"]["id"] != pool_id }.map{|ent| ent["consumer"]["uuid"]}
+        system_uuids = entitlements.delete_if { |ent| ent["pool"]["id"] != pool_id }.map { |ent| ent["consumer"]["uuid"] }
         return where(:uuid => system_uuids)
       end
 
       def all_by_pool_uuid(pool_id)
         entitlements = Resources::Candlepin::Entitlement.get
-        system_uuids = entitlements.delete_if{|ent| ent["pool"]["id"] != pool_id }.map{|ent| ent["consumer"]["uuid"]}
+        system_uuids = entitlements.delete_if { |ent| ent["pool"]["id"] != pool_id }.map { |ent| ent["consumer"]["uuid"] }
         return system_uuids
       end
 

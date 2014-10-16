@@ -196,7 +196,7 @@ module Katello
     end
 
     def test_install_consumer_errata
-      erratum_id = RepositorySupport.repo.errata_json.select{ |errata| errata['id'] == 'RHEA-2010:0002' }.first['id']
+      erratum_id = RepositorySupport.repo.errata_json.select { |errata| errata['id'] == 'RHEA-2010:0002' }.first['id']
       tasks = @@simple_server.install_consumer_errata([erratum_id])
 
       assert tasks[:spawned_tasks].first['task_id']

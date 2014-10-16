@@ -43,10 +43,10 @@ class Actions::Candlepin::Product::DestroyTest < ActiveSupport::TestCase
 
   describe "Delete Pools" do
     let(:action_class) { ::Actions::Candlepin::Product::DeletePools }
-    let(:label) { "foo"}
-    let(:cp_id) {"foo_boo"}
-    let(:pool_id) {"100"}
-    let(:pools) {[{"id" => pool_id}]}
+    let(:label) { "foo" }
+    let(:cp_id) { "foo_boo" }
+    let(:pool_id) { "100" }
+    let(:pools) { [{"id" => pool_id}] }
 
     let(:planned_action) do
       create_and_plan_action(action_class,
@@ -66,8 +66,8 @@ class Actions::Candlepin::Product::DestroyTest < ActiveSupport::TestCase
 
   describe "Delete Subscriptions" do
     let(:action_class) { ::Actions::Candlepin::Product::DeleteSubscriptions }
-    let(:label) { "foo"}
-    let(:cp_id) {"foo_boo"}
+    let(:label) { "foo" }
+    let(:cp_id) { "foo_boo" }
     let(:planned_action) do
       create_and_plan_action(action_class,
                              organization_label: label,
@@ -83,7 +83,7 @@ class Actions::Candlepin::Product::DestroyTest < ActiveSupport::TestCase
 
   describe "Destroy" do
     let(:action_class) { ::Actions::Candlepin::Product::Destroy }
-    let(:cp_id) {"foo_boo"}
+    let(:cp_id) { "foo_boo" }
     let(:planned_action) do
       create_and_plan_action(action_class,
                              cp_id: cp_id)

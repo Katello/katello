@@ -63,7 +63,7 @@ module Katello
         attribute_name = "#{self.name.demodulize.underscore}_id"
 
         unless associated_ids.empty?
-          inserts = associated_ids.map{|unit_id| "(#{unit_id.to_i}, #{repository.id.to_i})"}
+          inserts = associated_ids.map { |unit_id| "(#{unit_id.to_i}, #{repository.id.to_i})" }
           sql = "INSERT INTO #{table_name} (#{attribute_name}, repository_id) VALUES #{inserts.join(', ')}"
           ActiveRecord::Base.connection.execute(sql)
         end

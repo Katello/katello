@@ -304,7 +304,7 @@ module Katello
                       :promote_or_remove_content_views_to_environments,
                       :promote_or_remove_content_views,
                       [diff_env_remove_permission, :promote_or_remove_content_views],
-                      [:promote_or_remove_content_views_to_environments, diff_view_remove_permission],
+                      [:promote_or_remove_content_views_to_environments, diff_view_remove_permission]
                      ]
 
       assert_protected_action(:remove_from_environment, allowed_perms, denied_perms) do
@@ -341,7 +341,7 @@ module Katello
                       :promote_or_remove_content_views,
                       [diff_env_remove_permission, :promote_or_remove_content_views],
                       [single_env_remove_permission, :promote_or_remove_content_views],
-                      [:promote_or_remove_content_views_to_environments, diff_view_remove_permission],
+                      [:promote_or_remove_content_views_to_environments, diff_view_remove_permission]
                      ]
 
       env_ids = [@dev.id.to_s, @staging.id.to_s]
@@ -409,7 +409,7 @@ module Katello
       allowed_perms = [[:edit_content_hosts, :promote_or_remove_content_views, :view_content_views,
                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
                        [system_edit_permission, sys_cv_remove_permission, sys_env_remove_permission,
-                        alternate_env_read_permission, alternate_cv_read_permission],
+                        alternate_env_read_permission, alternate_cv_read_permission]
                       ]
 
       denied_perms = [[:edit_content_hosts, :promote_or_remove_content_views,
@@ -463,7 +463,7 @@ module Katello
       allowed_perms = [[:edit_activation_keys, :promote_or_remove_content_views, :view_content_views,
                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
                        [ak_edit_permission, ak_cv_remove_permission, ak_env_remove_permission,
-                        alternate_env_read_permission, alternate_cv_read_permission],
+                        alternate_env_read_permission, alternate_cv_read_permission]
                       ]
 
       denied_perms = [[:edit_activation_keys, :promote_or_remove_content_views,

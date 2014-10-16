@@ -103,7 +103,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     param :name, String, :desc => N_("product name to filter by")
     def available_products
-      enabled_product_ids = Product.where(:organization_id => @organization).readable.select{|p| p.enabled?}.collect(&:id)
+      enabled_product_ids = Product.where(:organization_id => @organization).readable.select { |p| p.enabled? }.collect(&:id)
 
       filters = [:terms => {:id => enabled_product_ids - @sync_plan.product_ids}]
       filters << {:term => {:name => params[:name]}} if params[:name]

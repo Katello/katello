@@ -18,8 +18,8 @@ module Katello
 
     def rules
       {
-        :auto_complete_search => lambda{Organization.any_readable?},
-        :default_label => lambda{Organization.creatable?}
+        :auto_complete_search => lambda { Organization.any_readable? },
+        :default_label => lambda { Organization.creatable? }
       }
     end
 

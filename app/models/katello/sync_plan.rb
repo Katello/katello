@@ -26,7 +26,7 @@ module Katello
     WEEKLY = 'weekly'
     TYPES = [HOURLY, DAILY, WEEKLY]
     DURATION = {HOURLY => 'T1H', DAILY => 'T24H', WEEKLY => '7D' }
-    WEEK_DAYS = (%w(Sunday Monday Tuesday Wednesday Thursday Friday)).collect{|d| N_(d)}
+    WEEK_DAYS = (%w(Sunday Monday Tuesday Wednesday Thursday Friday)).collect { |d| N_(d) }
 
     belongs_to :organization, :inverse_of => :sync_plans
     has_many :products, :class_name => "Katello::Product", :dependent => :nullify

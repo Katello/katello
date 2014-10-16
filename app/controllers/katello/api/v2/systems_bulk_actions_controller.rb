@@ -32,7 +32,7 @@ module Katello
       },
       :update_content => {
         :package => :update_packages,
-        :package_group => :update_package_groups,
+        :package_group => :update_package_groups
       },
       :remove_content => {
         :package => :uninstall_packages,
@@ -209,12 +209,12 @@ module Katello
         :full_result => true,
         :fields => [:id]
       }
-      item_search(System, {:search => search}, options)[:results].collect{|i| i.id}
+      item_search(System, {:search => search}, options)[:results].collect { |i| i.id }
     end
 
     def validate_host_collection_membership_limit
       max_content_hosts_exceeded = []
-      system_ids = @systems.collect{|i| i.id}
+      system_ids = @systems.collect { |i| i.id }
 
       @host_collections.each do |host_collection|
         computed_count = (host_collection.system_ids + system_ids).uniq.length

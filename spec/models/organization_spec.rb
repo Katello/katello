@@ -53,13 +53,13 @@ module Katello
     end
 
     describe "create an organization" do
-      specify {@organization.name.must_equal('test_org_name')}
-      specify {@organization.label.must_equal('test_org_label')}
-      specify {@organization.library.wont_be_nil}
-      specify {@organization.redhat_provider.wont_be_nil}
-      specify {@organization.kt_environments.size.must_equal(1)}
-      specify {Organization.where(:name => @organization.name).size.must_equal(1)}
-      specify {Organization.where(:name => @organization.name).first.must_equal(@organization)}
+      specify { @organization.name.must_equal('test_org_name') }
+      specify { @organization.label.must_equal('test_org_label') }
+      specify { @organization.library.wont_be_nil }
+      specify { @organization.redhat_provider.wont_be_nil }
+      specify { @organization.kt_environments.size.must_equal(1) }
+      specify { Organization.where(:name => @organization.name).size.must_equal(1) }
+      specify { Organization.where(:name => @organization.name).first.must_equal(@organization) }
 
       it "should complain on duplicate name" do
         update = lambda do

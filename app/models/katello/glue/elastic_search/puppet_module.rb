@@ -117,7 +117,7 @@ module Katello
 
         # multi_search will return a result set for each query.
         # since each query will have a single document, return a list of those individual results
-        multi_search.reject{ |results| results[0].nil? }.map{ |results| results[0] }
+        multi_search.reject { |results| results[0].nil? }.map { |results| results[0] }
       end
 
       def exists?(options)

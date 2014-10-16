@@ -19,13 +19,13 @@ module Katello
 
       base.class_eval do
         lazy_accessor :productContent, :multiplier, :href, :attrs,
-          :initializer => lambda {|_s| convert_from_cp_fields(Resources::Candlepin::Product.get(cp_id)[0]) }
+          :initializer => lambda { |_s| convert_from_cp_fields(Resources::Candlepin::Product.get(cp_id)[0]) }
         # Entitlement Certificate for this product
         lazy_accessor :certificate,
-          :initializer => lambda {|_s| Resources::Candlepin::Product.certificate(cp_id, self.organization.label) },
-          :unless => lambda {|_s| cp_id.nil? }
+          :initializer => lambda { |_s| Resources::Candlepin::Product.certificate(cp_id, self.organization.label) },
+          :unless => lambda { |_s| cp_id.nil? }
         # Entitlement Key for this product
-        lazy_accessor :key, :initializer => lambda {|_s| Resources::Candlepin::Product.key(cp_id, self.organization.label) }, :unless => lambda {|_s| cp_id.nil? }
+        lazy_accessor :key, :initializer => lambda { |_s| Resources::Candlepin::Product.key(cp_id, self.organization.label) }, :unless => lambda { |_s| cp_id.nil? }
 
         # we must store custom logger object during product importing so we can log status
         # from various places like callbacks
@@ -145,7 +145,7 @@ module Katello
       # when updating (PUT) objects.
       def remove_hibernate_fields(elements)
         return nil unless elements
-        elements.collect{ |e| e.except(:id, :created, :updated)}
+        elements.collect { |e| e.except(:id, :created, :updated) }
       end
 
       def add_content(content)
@@ -158,32 +158,32 @@ module Katello
       end
 
       def product_content_by_id(content_id)
-        self.productContent.find{|pc| pc.content.id == content_id}
+        self.productContent.find { |pc| pc.content.id == content_id }
       end
 
       def product_content_by_name(content_name)
-        self.productContent.find{|pc| pc.content.name == content_name}
+        self.productContent.find { |pc| pc.content.name == content_name }
       end
 
       protected
 
       def added_content
-        old_content_ids = productContent_change[0].nil? ? [] : productContent_change[0].map {|pc| pc.content.label}
-        new_content_ids = productContent_change[1].map {|pc| pc.content.label}
+        old_content_ids = productContent_change[0].nil? ? [] : productContent_change[0].map { |pc| pc.content.label }
+        new_content_ids = productContent_change[1].map { |pc| pc.content.label }
 
         added_content_ids = new_content_ids - old_content_ids
 
-        added_content = productContent_change[1].select {|pc| added_content_ids.include?(pc.content.label)}
+        added_content = productContent_change[1].select { |pc| added_content_ids.include?(pc.content.label) }
         added_content
       end
 
       def deleted_content
-        old_content_ids = productContent_change[0].nil? ? [] : productContent_change[0].map {|pc| pc.content.label}
-        new_content_ids = productContent_change[1].map {|pc| pc.content.label}
+        old_content_ids = productContent_change[0].nil? ? [] : productContent_change[0].map { |pc| pc.content.label }
+        new_content_ids = productContent_change[1].map { |pc| pc.content.label }
 
         deleted_content_ids = old_content_ids - new_content_ids
 
-        deleted_content = productContent_change[0].select {|pc| deleted_content_ids.include?(pc.content.label)}
+        deleted_content = productContent_change[0].select { |pc| deleted_content_ids.include?(pc.content.label) }
         deleted_content
       end
 

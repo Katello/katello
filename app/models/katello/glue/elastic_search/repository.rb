@@ -59,7 +59,7 @@ module Katello
         Katello::Package.create_index
 
         if self.content_view.default? || force
-          pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
+          pkgs = self.packages.collect { |pkg| pkg.as_json.merge(pkg.index_options) }
           pkgs.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
             Tire.index ::Katello::Package.index do
               import sublist
@@ -75,7 +75,7 @@ module Katello
       end
 
       def index_package_groups
-        package_groups_map = self.package_groups.collect{|pg| pg.as_json.merge(pg.index_options)}
+        package_groups_map = self.package_groups.collect { |pg| pg.as_json.merge(pg.index_options) }
 
         unless package_groups_map.empty?
           Tire.index Katello::PackageGroup.index do
@@ -92,7 +92,7 @@ module Katello
         Tire.index Katello::PuppetModule.index do
           create :settings => Katello::PuppetModule.index_settings, :mappings => Katello::PuppetModule.index_mapping
         end
-        puppet_modules = self.puppet_modules.collect{|puppet_module| puppet_module.as_json.merge(puppet_module.index_options)}
+        puppet_modules = self.puppet_modules.collect { |puppet_module| puppet_module.as_json.merge(puppet_module.index_options) }
         puppet_modules.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
           Tire.index Katello::PuppetModule.index do
             import sublist
@@ -103,7 +103,7 @@ module Katello
       def index_distributions
         Katello::Distribution.create_index
 
-        distributions = self.distributions.collect{ |distribution| distribution.as_json.merge(distribution.index_options) }
+        distributions = self.distributions.collect { |distribution| distribution.as_json.merge(distribution.index_options) }
         distributions.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
           Tire.index Katello::Distribution.index do
             import sublist

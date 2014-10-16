@@ -16,7 +16,7 @@ module Katello
   module TaxonomyHelper
 
     def service_level_options
-      options = @taxonomy.service_levels.collect{ |level| [_("Service Level %s") % level, level] }
+      options = @taxonomy.service_levels.collect { |level| [_("Service Level %s") % level, level] }
       options.unshift([_("No Service Level Preference"), ""])
       options
     end

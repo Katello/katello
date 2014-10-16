@@ -159,13 +159,13 @@ module Katello
 
     def test_default_scope
       refute_empty ContentView.default
-      assert_empty ContentView.default.select{|v| !v.default}
+      assert_empty ContentView.default.select { |v| !v.default }
       assert_includes ContentView.default, @library.default_content_view
     end
 
     def test_non_default_scope
       refute_empty ContentView.non_default
-      assert_empty ContentView.non_default.select{|v| v.default}
+      assert_empty ContentView.non_default.select { |v| v.default }
     end
 
     def test_destroy_content_view_versions

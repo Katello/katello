@@ -103,7 +103,7 @@ module Katello
         end
 
         def manifest_history
-          imports.map{ |i| OpenStruct.new(i) }
+          imports.map { |i| OpenStruct.new(i) }
         end
 
         def repo_discovery_task

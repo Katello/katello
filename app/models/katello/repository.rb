@@ -63,7 +63,7 @@ module Katello
     belongs_to :content_view_version, :inverse_of => :repositories
 
     validates :product_id, :presence => true
-    validates :pulp_id, :presence => true, :uniqueness => true, :if => proc {|r| r.name.present?}
+    validates :pulp_id, :presence => true, :uniqueness => true, :if => proc { |r| r.name.present? }
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES, :allow_blank => true}
     #validates :content_id, :presence => true #add back after fixing add_repo orchestration
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label

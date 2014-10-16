@@ -118,7 +118,7 @@ module Actions
           end
 
           def cancelled?
-            task_details.nil? ? false : task_details.values.map{|item| item['state']}.include?('CANCELLED')
+            task_details.nil? ? false : task_details.values.map { |item| item['state'] }.include?('CANCELLED')
           end
 
           def content_started?

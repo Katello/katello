@@ -81,7 +81,7 @@ module Katello
             "distributors" => @distributors,
             "host" => @host,
             "account_number"   => @account_number,
-            "contract_number"  => @contract_number,
+            "contract_number"  => @contract_number
           }
         end
 

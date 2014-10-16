@@ -20,9 +20,9 @@ module Katello
     def destroy_repositories
       deletion_authorized_repositories = @repositories.deletable
 
-      unpromoted_repos = deletion_authorized_repositories.reject {|repo| repo.promoted?}
+      unpromoted_repos = deletion_authorized_repositories.reject { |repo| repo.promoted? }
 
-      deletable_repositories = unpromoted_repos.reject {|repo| repo.redhat?}
+      deletable_repositories = unpromoted_repos.reject { |repo| repo.redhat? }
 
       deletable_repositories.each do |repository|
         trigger(::Actions::Katello::Repository::Destroy, repository)

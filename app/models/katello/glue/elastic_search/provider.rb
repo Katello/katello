@@ -29,7 +29,7 @@ module Katello
 
     def extended_index_attrs
       products = self.products.map do |prod|
-        {:product => prod.name, :repo => prod.repos(self.organization.library).collect{|repo| repo.name}}
+        {:product => prod.name, :repo => prod.repos(self.organization.library).collect { |repo| repo.name }}
       end
 
       {

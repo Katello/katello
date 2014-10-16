@@ -49,7 +49,7 @@ module Katello
       end
 
       def build_rows(repos, cols = [])
-        library_repos = repos.map{|repo| repo.library_instance || repo}.uniq
+        library_repos = repos.map { |repo| repo.library_instance || repo }.uniq
         products = library_repos.map(&:product).uniq
 
         # build product rows
@@ -60,7 +60,7 @@ module Katello
 
         # remove the product rows if they have no repos
         rows = rows.reject do |r|
-          child_rows = rows.select {|cr| cr.parent_id == r.id}
+          child_rows = rows.select { |cr| cr.parent_id == r.id }
           r.data_type == "product" && child_rows.empty?
         end
 
@@ -82,7 +82,7 @@ module Katello
             env = KTEnvironment.find(env_id)
             version = ContentView.find(view_id).version(env)
             field = "#{unit_type.to_s}_count".to_sym
-            count = version.repos(env).select{|r| r.product == product}.map(&field).inject(:+)
+            count = version.repos(env).select { |r| r.product == product }.map(&field).inject(:+)
             count ? sum + count : sum
           end
 
@@ -169,7 +169,7 @@ module Katello
           unit_row = UnitRow.new(:unit => unit, :parent_id => repo_row.id)
           cols.each do |key, _col|
             view_id = key.split("_").first.to_i
-            repo = repos.detect {|r| r.content_view.id == view_id && r.library_instance_id == repo_row.repo.id}
+            repo = repos.detect { |r| r.content_view.id == view_id && r.library_instance_id == repo_row.repo.id }
             if repo && unit.repoids.include?(repo.pulp_id)
               unit_row[:cols][key] = {:id => key}
             end
@@ -189,11 +189,11 @@ module Katello
       end
 
       def unit_rows
-        rows.select{|row| row.data_type == unit_type.to_s}
+        rows.select { |row| row.data_type == unit_type.to_s }
       end
 
       def metadata_rows
-        rows.select{|row| row.data_type == "metadata"}
+        rows.select { |row| row.data_type == "metadata" }
       end
     end
 

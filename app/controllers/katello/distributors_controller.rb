@@ -32,11 +32,11 @@ module Katello
     # TODO: break up this method
     # rubocop:disable MethodLength
     def rules
-      read_distributor = lambda{Distributor.find(params[:id]).readable?}
-      env_distributor = lambda{@environment && @environment.distributors_readable?}
-      any_readable = lambda{current_organization && Distributor.any_readable?(current_organization)}
-      delete_distributors = lambda{@distributor.deletable?}
-      bulk_delete_distributors = lambda{@distributors.collect{|s| false unless s.deletable?}.compact.empty?}
+      read_distributor = lambda { Distributor.find(params[:id]).readable? }
+      env_distributor = lambda { @environment && @environment.distributors_readable? }
+      any_readable = lambda { current_organization && Distributor.any_readable?(current_organization) }
+      delete_distributors = lambda { @distributor.deletable? }
+      bulk_delete_distributors = lambda { @distributors.collect { |s| false unless s.deletable? }.compact.empty? }
       register_distributor = lambda do
         if current_organization
           if params.key?(:distributor) && !params[:distributor][:content_view_id].blank?
@@ -251,14 +251,14 @@ module Katello
       end
 
       @products_count = @distributor.installedProducts.size
-      @products, @offset = first_objects @distributor.installedProducts.sort {|a, b| a['productName'].downcase <=> b['productName'].downcase}
+      @products, @offset = first_objects @distributor.installedProducts.sort { |a, b| a['productName'].downcase <=> b['productName'].downcase }
       render :partial => "products",
              :locals => {:distributor => @distributor, :products => @products, :offset => @offset, :products_count => @products_count}
     end
 
     def more_products
       # offset is computed in javascript but this one is used in tests
-      @products, @offset = more_objects @distributor.installedProducts.sort {|a, b| a['productName'].downcase <=> b['productName'].downcase}
+      @products, @offset = more_objects @distributor.installedProducts.sort { |a, b| a['productName'].downcase <=> b['productName'].downcase }
       render :partial => "more_products", :locals => {:distributor => @distributor, :products => @products}
     end
 
@@ -414,7 +414,7 @@ module Katello
                        :consumed => pool["consumed"],
                        :quantity => pool["quantity"])
       end
-      consumed_pools.sort! {|a, b| a.poolName <=> b.poolName}
+      consumed_pools.sort! { |a, b| a.poolName <=> b.poolName }
       consumed_pools
     end
 
@@ -428,7 +428,7 @@ module Katello
                        :consumed => pool["consumed"],
                        :quantity => pool["quantity"])
       end
-      avail_pools.sort! {|a, b| a.poolName <=> b.poolName}
+      avail_pools.sort! { |a, b| a.poolName <=> b.poolName }
       avail_pools
     end
 
@@ -440,7 +440,7 @@ module Katello
     # to filter readable distributors that can be
     # passed to search
     def readable_filters
-      {:environment_id => KTEnvironment.distributors_readable(current_organization).collect{|item| item.id}}
+      {:environment_id => KTEnvironment.distributors_readable(current_organization).collect { |item| item.id }}
     end
 
     def search_filter

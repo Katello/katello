@@ -44,13 +44,13 @@ module Katello
 
     after_create :init_default_custom_info
 
-    scope :in_environment, lambda { |env| where('environment_id = ?', env) unless env.nil?}
-    scope :completer_scope, lambda { |options| readable(options[:organization_id])}
+    scope :in_environment, lambda { |env| where('environment_id = ?', env) unless env.nil? }
+    scope :completer_scope, lambda { |options| readable(options[:organization_id]) }
 
     delegate :organization, to: :environment
 
     def consumed_pool_ids
-      self.pools.collect {|t| t['id']}
+      self.pools.collect { |t| t['id'] }
     end
 
     def available_releases

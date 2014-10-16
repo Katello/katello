@@ -79,7 +79,7 @@ module Katello
       end
 
       it "should raise exception if requested method doesn't exist" do
-        lambda {@orchestrated.execute(:action => [@object, "blah"])}.must_raise(Errors::OrchestrationException)
+        lambda { @orchestrated.execute(:action => [@object, "blah"]) }.must_raise(Errors::OrchestrationException)
       end
     end
 

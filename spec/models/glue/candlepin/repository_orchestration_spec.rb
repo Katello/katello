@@ -24,7 +24,7 @@ module Katello
     end
 
     it "should contain delete Candlepin::Content orchestration" do
-      repository._destroy_callbacks.select {|cb| cb.kind.eql?(:before)}.collect(&:filter).include?(:destroy_content_orchestration)
+      repository._destroy_callbacks.select { |cb| cb.kind.eql?(:before) }.collect(&:filter).include?(:destroy_content_orchestration)
     end
 
     it "should retrieve remote content first time it's accessed (katello)" do #TODO: headpin

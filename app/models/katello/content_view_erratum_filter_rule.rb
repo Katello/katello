@@ -28,7 +28,7 @@ module Katello
     validates_with Validators::ContentViewErratumFilterRuleValidator
 
     def filter_has_date_or_type_rule?
-      filter.erratum_rules.any?{ |rule| rule.start_date || rule.end_date || !rule.types.blank? }
+      filter.erratum_rules.any? { |rule| rule.start_date || rule.end_date || !rule.types.blank? }
     end
   end
 end

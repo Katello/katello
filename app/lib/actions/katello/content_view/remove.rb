@@ -61,9 +61,9 @@ module Actions
 
             plan_self(content_view_id: content_view.id,
                       environment_ids: cv_envs.map(&:environment_id),
-                      environment_names: cv_envs.map{ |cve| cve.environment.name },
+                      environment_names: cv_envs.map { |cve| cve.environment.name },
                       version_ids: versions.map(&:id),
-                      content_view_history_ids: cv_histories.map{ |history| history.id })
+                      content_view_history_ids: cv_histories.map { |history| history.id })
           end
         end
 

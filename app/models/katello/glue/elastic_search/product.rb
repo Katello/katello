@@ -45,13 +45,13 @@ module Katello
     end
 
     def total_package_count(env, view)
-      repo_ids = view.repos(env).in_product(self).collect{ |r| r.pulp_id }
+      repo_ids = view.repos(env).in_product(self).collect { |r| r.pulp_id }
       result = Katello::Package.legacy_search('*', 0, 1, repo_ids)
       result.length > 0 ? result.total : 0
     end
 
     def total_puppet_module_count(env, view)
-      repo_ids = view.repos(env).in_product(self).collect{ |r| r.pulp_id }
+      repo_ids = view.repos(env).in_product(self).collect { |r| r.pulp_id }
       results = Katello::PuppetModule.legacy_search('', :page_size => 1, :repoids => repo_ids)
       results.empty? ? 0 : results.total
     end

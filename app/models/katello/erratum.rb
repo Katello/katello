@@ -72,43 +72,43 @@ module Katello
 
     def update_from_json(json)
       keys = %w(title id severity issued type description reboot_suggested solution updated summary)
-      custom_json = json.clone.delete_if {|key, _value| !keys.include?(key) }
+      custom_json = json.clone.delete_if { |key, _value| !keys.include?(key) }
 
       custom_json['errata_id'] = custom_json.delete('id')
       custom_json['errata_type'] = custom_json.delete('type')
       self.update_attributes!(custom_json)
-      update_bugzillas(json['references'].select{|r| r['type'] == 'bugzilla'})
-      update_cves(json['references'].select{|r| r['type'] == 'cve'})
+      update_bugzillas(json['references'].select { |r| r['type'] == 'bugzilla' })
+      update_cves(json['references'].select { |r| r['type'] == 'cve' })
       update_packages(json['pkglist'])
     end
 
     def self.list_filenames_by_clauses(clauses)
       errata = Katello.pulp_server.extensions.errata.search(Katello::Erratum::CONTENT_TYPE, :filters => clauses)
-      Katello::ErratumPackage.joins(:erratum).where("#{Erratum.table_name}.uuid" => errata.map{|e| e['_id']}).pluck(:filename)
+      Katello::ErratumPackage.joins(:erratum).where("#{Erratum.table_name}.uuid" => errata.map { |e| e['_id'] }).pluck(:filename)
     end
 
     private
 
     def update_bugzillas(json)
       existing_names = self.bugzillas.pluck(:bug_id)
-      needed = json.select{|bz| !existing_names.include?(bz['id'])}
-      self.bugzillas.create!(needed.map{|bug| {:bug_id => bug['id'], :href => bug['href']}})
+      needed = json.select { |bz| !existing_names.include?(bz['id']) }
+      self.bugzillas.create!(needed.map { |bug| {:bug_id => bug['id'], :href => bug['href']} })
     end
 
     def update_cves(json)
       existing_names = self.cves.pluck(:cve_id)
-      needed = json.select{|cve| !existing_names.include?(cve['id'])}
-      self.cves.create!(needed.map{|cve| {:cve_id => cve['id'], :href => cve['href']}})
+      needed = json.select { |cve| !existing_names.include?(cve['id']) }
+      self.cves.create!(needed.map { |cve| {:cve_id => cve['id'], :href => cve['href']} })
     end
 
     def update_packages(json)
-      package_hashes = json.map{ |list| list['packages']}.flatten
+      package_hashes = json.map { |list| list['packages'] }.flatten
       package_attributes = package_hashes.map do |hash|
         nvrea = "#{hash['name']}-#{hash['version']}-#{hash['release']}.#{hash['arch']}"
         {'name' => hash['name'], 'nvrea' => nvrea, 'filename' => hash['filename']}
       end
       existing_nvreas = self.packages.pluck(:nvrea)
-      package_attributes.delete_if{|pkg| existing_nvreas.include?(pkg['nvrea'])}
+      package_attributes.delete_if { |pkg| existing_nvreas.include?(pkg['nvrea']) }
 
       self.packages.create!(package_attributes)
     end

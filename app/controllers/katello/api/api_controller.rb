@@ -97,7 +97,7 @@ module Katello
       unauthorized = models - authorized
 
       messages[:success] << args.fetch(:success) % authorized.length if authorized.present?
-      unauthorized.each{|item| messages[:error] << args.fetch(:error) % item }
+      unauthorized.each { |item| messages[:error] << args.fetch(:error) % item }
 
       messages
     end

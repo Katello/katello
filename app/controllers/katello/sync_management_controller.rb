@@ -54,7 +54,7 @@ module Katello
 
     def sync_status
       repos = Repository.where(:id => params[:repoids]).readable
-      statuses = repos.map{ |repo| format_sync_progress(repo) }
+      statuses = repos.map { |repo| format_sync_progress(repo) }
       render :json => statuses.flatten.to_json
     end
 

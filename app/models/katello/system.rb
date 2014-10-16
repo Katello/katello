@@ -77,9 +77,9 @@ module Katello
 
     before_update :update_foreman_host, :if => proc { |r| r.environment_id_changed? || r.content_view_id_changed? }
 
-    scope :in_environment, lambda { |env| where('environment_id = ?', env) unless env.nil?}
-    scope :completer_scope, lambda { |options| readable(options[:organization_id])}
-    scope :by_uuids, lambda { |uuids| where(:uuid => uuids)}
+    scope :in_environment, lambda { |env| where('environment_id = ?', env) unless env.nil? }
+    scope :completer_scope, lambda { |options| readable(options[:organization_id]) }
+    scope :by_uuids, lambda { |uuids| where(:uuid => uuids) }
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :in => :environment, :on => :organization_id, :complete_value => true, :rename => :organization_id
@@ -130,7 +130,7 @@ module Katello
     delegate :organization, to: :environment
 
     def consumed_pool_ids
-      self.pools.collect {|t| t['id']}
+      self.pools.collect { |t| t['id'] }
     end
 
     def available_errata(env = nil, content_view = nil)
@@ -314,7 +314,7 @@ module Katello
     def reportable_data(options = {})
       hash = self.as_json(options.slice(:only, :except))
       if options[:methods]
-        options[:methods].each{ |method| hash[method] = self.send(method) }
+        options[:methods].each { |method| hash[method] = self.send(method) }
       end
       hash.with_indifferent_access
     end

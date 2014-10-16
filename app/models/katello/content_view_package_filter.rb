@@ -26,7 +26,7 @@ module Katello
     # @param repo [Repository] a repository containing packages to filter
     # @return [Array] an array of hashes with MongoDB conditions
     def generate_clauses(repo)
-      package_filenames = package_rules.reject{ |rule| rule.name.blank? }.flat_map do |rule|
+      package_filenames = package_rules.reject { |rule| rule.name.blank? }.flat_map do |rule|
         filter = version_filter(rule)
         Package.legacy_search(rule.name, 0, repo.package_count, [repo.pulp_id], [:nvrea_sort, "asc"],
                        :all, 'name', filter).map(&:filename).compact

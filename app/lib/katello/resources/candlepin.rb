@@ -254,7 +254,7 @@ module Katello
             if response.present?
               json = JSON.parse(response).with_indifferent_access
               if json['reasons']
-                json['reasons'].sort!{|x, y| x['attributes']['name'] <=> y['attributes']['name']}
+                json['reasons'].sort! { |x, y| x['attributes']['name'] <=> y['attributes']['name'] }
               else
                 json['reasons'] = []
               end
@@ -492,7 +492,7 @@ module Katello
           end
 
           def all
-            JSON.parse(self.get(path, self.default_headers).body).collect{|a| a.with_indifferent_access}
+            JSON.parse(self.get(path, self.default_headers).body).collect { |a| a.with_indifferent_access }
           end
 
           def create(owner_id, id, name, description)
@@ -512,13 +512,13 @@ module Katello
 
           def add_content(env_id, content_ids)
             path = self.path(env_id) + "/content"
-            params = content_ids.map {|content_id| {:contentId => content_id} }
+            params = content_ids.map { |content_id| {:contentId => content_id} }
             JSON.parse(self.post(path, params.to_json, self.default_headers).body).with_indifferent_access
           end
 
           def delete_content(env_id, content_ids)
             path = self.path(env_id) + "/content"
-            params = content_ids.map {|content_id| {:content => content_id}.to_param }.join("&")
+            params = content_ids.map { |content_id| {:content => content_id}.to_param }.join("&")
             self.delete("#{path}?#{params}", self.default_headers).code.to_i
           end
         end
@@ -724,7 +724,7 @@ module Katello
           end
 
           def pools(owner_key, product_id)
-            Candlepin::Pool.get_for_owner(owner_key).find_all {|pool| pool['productId'] == product_id }
+            Candlepin::Pool.get_for_owner(owner_key).find_all { |pool| pool['productId'] == product_id }
           end
 
           def delete_subscriptions(owner_key, product_id)

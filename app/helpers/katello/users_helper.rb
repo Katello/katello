@@ -21,7 +21,7 @@ module Katello
       else
         orgs = Organization.all
       end
-      choices = orgs.map {|a| [a.name, a.id]}
+      choices = orgs.map { |a| [a.name, a.id] }
       if optional
         selected = org_id
         prompt = nil

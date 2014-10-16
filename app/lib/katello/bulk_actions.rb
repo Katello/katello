@@ -73,7 +73,7 @@ module Katello
     private
 
     def perform_bulk_action
-      consumer_ids = self.systems.collect{|i| i.uuid}
+      consumer_ids = self.systems.collect { |i| i.uuid }
       group = Glue::Pulp::ConsumerGroup.new
       group.pulp_id = ::UUIDTools::UUID.random_create.to_s
       group.consumer_ids = consumer_ids

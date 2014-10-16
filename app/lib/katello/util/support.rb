@@ -38,7 +38,7 @@ module Katello
       # a collection of objects to their
       # string representation (mostly to be used internally)
       def self.stringify(col)
-        col.collect{|c| c.to_s}
+        col.collect { |c| c.to_s }
       end
 
       # Given a rules hash in the format
@@ -66,7 +66,7 @@ module Katello
         diff_data = rule.keys.collect do |k|
           if params[k]
             if (params[k].is_a?(Array)) && (rule[k].first.is_a?(Array))
-              diffs = params[k].collect {|pk| diff_hash_params(rule[k].first, pk)}.flatten
+              diffs = params[k].collect { |pk| diff_hash_params(rule[k].first, pk) }.flatten
               diffs
             elsif params[k].is_a?(Hash)
               keys = stringify(params[k].keys) - stringify(rule[k])

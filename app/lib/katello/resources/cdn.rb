@@ -136,7 +136,7 @@ module Katello
         end
 
         def log(level, *args)
-          [Rails.logger, @logger].compact.each { |logger| logger.send(level, *args)}
+          [Rails.logger, @logger].compact.each { |logger| logger.send(level, *args) }
         end
 
       end

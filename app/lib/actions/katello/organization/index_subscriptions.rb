@@ -37,7 +37,7 @@ module Actions
 
           if cp_pools
             # Pool objects
-            pools = cp_pools.collect{|cp_pool| Katello::Pool.find_pool(cp_pool['id'], cp_pool)}
+            pools = cp_pools.collect { |cp_pool| Katello::Pool.find_pool(cp_pool['id'], cp_pool) }
 
             # Limit subscriptions to just those from Red Hat provider
             subscriptions = pools.collect do |pool|

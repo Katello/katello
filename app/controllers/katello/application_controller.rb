@@ -73,8 +73,8 @@ module Katello
       log_exception e, :info
 
       respond_to do |f|
-        f.html { render :text => e.to_s, :layout => !request.xhr?, :status => :unprocessable_entity}
-        f.json { render :json => e.record.errors, :status => :unprocessable_entity}
+        f.html { render :text => e.to_s, :layout => !request.xhr?, :status => :unprocessable_entity }
+        f.json { render :json => e.record.errors, :status => :unprocessable_entity }
       end
       execute_after_filters
     end
@@ -287,7 +287,7 @@ module Katello
     end
 
     def matches_no_redirect?(url)
-      ["logout", "notices/get_new"].any? {|path| url.include? path}
+      ["logout", "notices/get_new"].any? { |path| url.include? path }
     end
 
     def require_user
@@ -429,10 +429,10 @@ module Katello
       next_env = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
 
       @paths = []
-      @paths = org.promotion_paths.collect{|tmp_path| [org.library] + tmp_path}
+      @paths = org.promotion_paths.collect { |tmp_path| [org.library] + tmp_path }
 
       # reject any paths that don't have accessible envs
-      @paths.reject!{|path|  (path & accessible).empty?}
+      @paths.reject! { |path|  (path & accessible).empty? }
 
       @paths = [[org.library]] if @paths.empty?
 
@@ -503,7 +503,7 @@ module Katello
         query_options[:default_field] = default if default
 
         results = obj_class.search do
-          query { string search, query_options}
+          query { string search, query_options }
           filter :terms, :id => [id]
         end
         results.total > 0
@@ -530,7 +530,7 @@ module Katello
 
       if search.nil? || search == ''
         all_rows = true
-      elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any?{|s| search.downcase.match(s)}
+      elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any? { |s| search.downcase.match(s) }
         search = search_options[:simple_query]
       end
       #search = Util::Search::filter_input search
@@ -565,7 +565,7 @@ module Katello
         end
 
         if load
-          @items = obj_class.where(:id => results.collect{|r| r.id})
+          @items = obj_class.where(:id => results.collect { |r| r.id })
           #set total since @items will be just an array
           panel_options[:total_count] = results.empty? ? 0 : results.total
           if @items.length != results.length

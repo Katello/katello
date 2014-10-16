@@ -130,9 +130,9 @@ module Katello
       attrs = {
         :facts => self.facts,
         :organization_id => self.organization.id,
-        :host_collection => self.host_collections.collect{|g| g.name},
+        :host_collection => self.host_collections.collect { |g| g.name },
         :host_collection_ids => self.host_collection_ids,
-        :activation_key => self.activation_keys.collect{|g| g.name},
+        :activation_key => self.activation_keys.collect { |g| g.name },
         :activation_key_ids => self.activation_key_ids,
         :installed_products => collect_installed_product_names,
         :sockets => self.sockets,
@@ -159,7 +159,7 @@ module Katello
     def update_host_collections
       system_id = self.id #save the system id for the block
       id_update = "ctx._source.host_collection_ids = [#{self.host_collection_ids.join(",")}]; "
-      names = self.host_collections.pluck(:name).map{|name| "\"#{name}\""}
+      names = self.host_collections.pluck(:name).map { |name| "\"#{name}\"" }
       name_update = "ctx._source.host_collection = [#{names.join(",")}];"
       Tire.index System.index.name do
         update System.document_type, system_id, :script => id_update + name_update
@@ -169,7 +169,7 @@ module Katello
     def update_activation_keys
       system_id = self.id #save the system id for the block
       id_update = "ctx._source.activation_key_ids = [#{self.activation_key_ids.join(",")}]; "
-      names = self.activation_keys.pluck(:name).map{|name| "\"#{name}\""}
+      names = self.activation_keys.pluck(:name).map { |name| "\"#{name}\"" }
       name_update = "ctx._source.activation_key = [#{names.join(",")}];"
       Tire.index System.index.name do
         update System.document_type, system_id, :script => id_update + name_update

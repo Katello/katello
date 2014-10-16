@@ -245,7 +245,7 @@ module Katello
         humanized_parameters.concat(packages)
       end
       if groups = self.parameters[:groups]
-        humanized_parameters.concat(groups.map {|g| g =~ /^@/ ? g : "@#{g}"})
+        humanized_parameters.concat(groups.map { |g| g =~ /^@/ ? g : "@#{g}" })
       end
       if errata = self.parameters[:errata_ids]
         humanized_parameters.concat(errata)

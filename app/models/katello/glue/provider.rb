@@ -64,7 +64,7 @@ module Katello
 
       # Get the most relavant status for all the repos in this Provider
       def sync_status
-        statuses = self.products.reject{|r| r.empty?}.map{|r| r.sync_status}
+        statuses = self.products.reject { |r| r.empty? }.map { |r| r.sync_status }
         return PulpSyncStatus.new(:state => PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
 
         #if any of repos sync still running -> provider sync running
@@ -270,7 +270,7 @@ module Katello
       end
 
       def refresh_existing_products
-        self.products.each{|p| p.update_repositories}
+        self.products.each { |p| p.update_repositories }
       end
 
       # TODO: break up method
@@ -310,7 +310,7 @@ module Katello
             end
           end
 
-          product_in_katello_ids.concat(adjusted_eng_products.map{|p| p["id"]})
+          product_in_katello_ids.concat(adjusted_eng_products.map { |p| p["id"] })
 
           unless product_in_katello_ids.include?(marketing_product_id)
             engineering_product_in_katello_ids = Product.in_org(self.organization).
@@ -360,7 +360,7 @@ module Katello
         cp_pools = Resources::Candlepin::Owner.pools(self.organization.label)
         if cp_pools
           # Pool objects
-          pools = cp_pools.collect{|cp_pool| Katello::Pool.find_pool(cp_pool['id'], cp_pool)}
+          pools = cp_pools.collect { |cp_pool| Katello::Pool.find_pool(cp_pool['id'], cp_pool) }
 
           # Limit subscriptions to just those from Red Hat provider
           subscriptions = pools.collect do |pool|

@@ -32,8 +32,8 @@ module Katello
                 version = view.version(env).try(:version)
                 display = version ? (_("version %s") % version) : ""
               end
-              cols[env.id] = Cell.new(:hover => lambda{container_hover_html(view, env)},
-                                      :hover_details => lambda{container_hover_html(view, env, nil, true)},
+              cols[env.id] = Cell.new(:hover => lambda { container_hover_html(view, env) },
+                                      :hover_details => lambda { container_hover_html(view, env, nil, true) },
                                       :display => display)
             end
           end
@@ -51,11 +51,11 @@ module Katello
 
       def view_versions
         @view_versions ||= begin
-          versions = views.map{|v| v.versions.in_environment(search_envs)}.flatten
+          versions = views.map { |v| v.versions.in_environment(search_envs) }.flatten
           if @mode == :unique
-            versions = versions.select {|v| !(search_envs - v.environments).empty?}
+            versions = versions.select { |v| !(search_envs - v.environments).empty? }
           elsif @mode == :shared
-            versions = versions.select {|v| (search_envs - v.environments).empty?}
+            versions = versions.select { |v| (search_envs - v.environments).empty? }
           end
           versions
         end
@@ -63,7 +63,7 @@ module Katello
 
       # views that have been filtered by search_mode
       def filtered_views
-        @filtered_views ||= @views.select {|v| view_versions.map(&:content_view_id).include?(v.id)}
+        @filtered_views ||= @views.select { |v| view_versions.map(&:content_view_id).include?(v.id) }
       end
 
     end

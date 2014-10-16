@@ -45,7 +45,7 @@ module Katello
       def initialize(params = {}, _options = {})
         params['package_group_id'] = params['id']
         params['id'] = params.delete('_id')
-        params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
+        params.each_pair { |k, v| instance_variable_set("@#{k}", v) unless v.nil? }
 
         [:default_package_names, :conditional_package_names,
          :optional_package_names, :mandatory_package_names].each do |attr|

@@ -28,7 +28,7 @@ module Katello
         filter :terms, :id => readable_ids
       end
 
-      render :json => content_views.collect{|s| {:label => s.name, :value => s.name, :id => s.id}}
+      render :json => content_views.collect { |s| {:label => s.name, :value => s.name, :id => s.id} }
     rescue Tire::Search::SearchRequestFailed
       render :json => Support.array_with_total
     end

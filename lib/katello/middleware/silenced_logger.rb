@@ -24,7 +24,7 @@ module Katello
 
       def call(env)
         old_level = Rails.logger.level
-        if prefixes.any? {|path|  env["PATH_INFO"].include?(path) }
+        if prefixes.any? { |path|  env["PATH_INFO"].include?(path) }
           Rails.logger.level = Logger::WARN
         end
         @app.call(env)

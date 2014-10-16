@@ -19,11 +19,11 @@ module Katello
       base.class_eval do
         before_save :save_pulp_orchestration
 
-        lazy_accessor :pulp_facts, :initializer => lambda {|_s| Katello.pulp_server.extensions.consumer.retrieve(uuid) }
-        lazy_accessor :package_profile, :initializer => lambda{|_s| fetch_package_profile}
+        lazy_accessor :pulp_facts, :initializer => lambda { |_s| Katello.pulp_server.extensions.consumer.retrieve(uuid) }
+        lazy_accessor :package_profile, :initializer => lambda { |_s| fetch_package_profile }
         lazy_accessor :simple_packages, :initializer => (lambda do |_s|
                                                            fetch_package_profile["profile"].
-                                                             collect{|package| Glue::Pulp::SimplePackage.new(package)}
+                                                             collect { |package| Glue::Pulp::SimplePackage.new(package) }
                                                          end)
       end
     end
@@ -36,7 +36,7 @@ module Katello
 
       def bindings(type_id)
         bindings = Katello.pulp_server.extensions.consumer.retrieve_bindings(uuid)
-        bindings.select{ |b| b['type_id'] == type_id }.collect{ |repo| repo["repo_id"] }
+        bindings.select { |b| b['type_id'] == type_id }.collect { |repo| repo["repo_id"] }
       end
 
       def enable_node_repos(repo_ids)
@@ -49,7 +49,7 @@ module Katello
       end
 
       def propagate_yum_repos
-        pulp_ids = self.bound_repositories.map{|repo| repo.library_instance.try(:pulp_id) || repo.pulp_id}
+        pulp_ids = self.bound_repositories.map { |repo| repo.library_instance.try(:pulp_id) || repo.pulp_id }
         enable_repos(Runcible::Models::YumDistributor.type_id, pulp_bound_yum_repositories, pulp_ids, :notify_agent => false)
       end
 
@@ -110,7 +110,7 @@ module Katello
         ActiveRecord::Base.transaction do
           Katello::SystemErratum.where(:system_id => self.id).delete_all
           unless applicable_errata_ids.empty?
-            inserts = applicable_errata_ids.map{|erratum_id| "(#{erratum_id.to_i}, #{id.to_i})"}
+            inserts = applicable_errata_ids.map { |erratum_id| "(#{erratum_id.to_i}, #{id.to_i})" }
             sql = "INSERT INTO katello_system_errata (erratum_id, system_id) VALUES #{inserts.join(', ')}"
             ActiveRecord::Base.connection.execute(sql)
           end

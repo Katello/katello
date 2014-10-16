@@ -57,7 +57,7 @@ module Katello
         @product_hash = {}
         options[:readable_products].sort_by(&:name).each do |prod|
           repos = prod.repos(current_organization.library).where(:content_type => options[:content_types])
-            .sort{|a, b| a.name <=> b.name}
+            .sort { |a, b| a.name <=> b.name }
           repos = repos.map { |repo| {:name => repo.name, :id => repo.id} }
           if repos.any?
             @product_hash[prod.id] = {:name => prod.name, :repos => repos, :id => prod.id,

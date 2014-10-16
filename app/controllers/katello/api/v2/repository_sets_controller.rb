@@ -29,7 +29,7 @@ module Katello
       collection = {}
       collection[:results] = @product.productContent
       # filter on name if it is provided
-      collection[:results] = collection[:results].select {|pc| pc.content.name == params[:name]} if params[:name]
+      collection[:results] = collection[:results].select { |pc| pc.content.name == params[:name] } if params[:name]
       collection[:subtotal] = collection[:results].size
       collection[:total] = collection[:subtotal]
       respond_for_index :collection => collection

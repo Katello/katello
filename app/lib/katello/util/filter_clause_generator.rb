@@ -68,7 +68,7 @@ module Katello
         if filters.any?
           # generate the clauses from filters to be implemented by subclasses
           clauses = collect_clauses(@repo, filters) # abstract
-          clauses.delete_if {|cls| cls.blank?}
+          clauses.delete_if { |cls| cls.blank? }
           if clauses.any?
             clauses
           elsif list_type == :whitelist

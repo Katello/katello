@@ -328,7 +328,7 @@ module Katello
 
       cols = {}
 
-      sort_repos(@repos).each{ |r| cols[r.id] = { :id => r.id, :content => repo_compare_name_display(r) } }
+      sort_repos(@repos).each { |r| cols[r.id] = { :id => r.id, :content => repo_compare_name_display(r) } }
 
       if !units.empty? && units.total > current_user.page_size
         rows += [metadata_row(units.total, offset.to_i + rows.length,
@@ -348,7 +348,7 @@ module Katello
 
       envs = [current_organization.library] + current_organization.promotion_paths.flatten
       to_ret = []
-      envs.each{ |e|  to_ret += (env_to_repo[e.id] || []) }
+      envs.each { |e|  to_ret += (env_to_repo[e.id] || []) }
       to_ret
     end
 
@@ -357,7 +357,7 @@ module Katello
       params[:repos].values.each do |item|
         view = ContentView.readable.where(:id => item[:view_id]).first
         library_instance = Repository.find(item[:repo_id])
-        @repos += library_instance.environmental_instances(view).select{ |r| r.environment_id.to_s == item[:env_id] }
+        @repos += library_instance.environmental_instances(view).select { |r| r.environment_id.to_s == item[:env_id] }
       end
     end
 
@@ -392,7 +392,7 @@ module Katello
     #  this could either be a search string, or array of ids
 
     def process_params(type)
-      ids = params[type][:autocomplete].collect{ |p| p["id"] } if params[type] && params[type][:autocomplete]
+      ids = params[type][:autocomplete].collect { |p| p["id"] } if params[type] && params[type][:autocomplete]
       search = params[type][:search] if params[type] && params[type][:search]
       if search && !search.empty?
         return search
@@ -483,7 +483,7 @@ module Katello
         []
       else
         cols = {}
-        product_envs.each{ |env_id, count| cols[env_id] = { :id => env_id, :display => count } if accessible_env_ids.include?(env_id) }
+        product_envs.each { |env_id, count| cols[env_id] = { :id => env_id, :display => count } if accessible_env_ids.include?(env_id) }
         [{ :name => product.name, :id => "view_#{view.id}_product_#{product.id}", :parent_id => "view_#{view.id}",
            :cols => cols, :data_type => "product", :value => product.name }] + rows + content_rows
       end
@@ -566,7 +566,7 @@ module Katello
         end
       end
 
-      repoids = repos.collect{ |r| r.pulp_id }
+      repoids = repos.collect { |r| r.pulp_id }
       Util::Package.setup_shared_unique_filter(repoids, search_mode, search)
       search.perform.results
 
