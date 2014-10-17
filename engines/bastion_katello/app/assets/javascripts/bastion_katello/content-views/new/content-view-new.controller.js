@@ -42,7 +42,7 @@ angular.module('Bastion.content-views').controller('NewContentViewController',
         });
 
         function success(response) {
-            var successState = 'content-views.details.repositories.available';
+            var successState = 'content-views.details.repositories.yum.available';
 
             if (response.composite) {
                 successState = 'content-views.details.composite-content-views.available';

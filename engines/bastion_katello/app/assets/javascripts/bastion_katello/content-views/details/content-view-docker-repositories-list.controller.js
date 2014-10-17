@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc object
- * @name  Bastion.content-views.controller:ContentViewAvailableRepositoriesController
+ * @name  Bastion.content-views.controller:ContentViewDockerRepositoriesListController
  *
  * @requires $scope
  * @requires Repository
@@ -22,34 +22,26 @@
  * @requires ContentViewRepositoriesUtil
  *
  * @description
- *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
- *   Defines the columns to display and the transform function for how to generate each row
- *   within the table.
+ *    Provides UI functionality list/remove docker repositories from a content view
  */
-angular.module('Bastion.content-views').controller('ContentViewAvailableRepositoriesController',
+angular.module('Bastion.content-views').controller('ContentViewDockerRepositoriesListController',
     ['$scope', 'Repository', 'Nutupane', 'CurrentOrganization', 'ContentViewRepositoriesUtil',
     function ($scope, Repository, Nutupane, CurrentOrganization, ContentViewRepositoriesUtil) {
-
         var nutupane;
 
         ContentViewRepositoriesUtil($scope);
 
         nutupane = new Nutupane(Repository, {
             'organization_id': CurrentOrganization,
-            'library': true,
-            'content_type': 'yum'
+            'content_view_id': $scope.$stateParams.contentViewId,
+            'content_type': 'docker'
+
         },
         'queryUnpaged');
-
-        nutupane.searchTransform = function () {
-            return "NOT ( content_view_ids:" + $scope.$stateParams.contentViewId + " )";
-        };
-
         $scope.repositoriesTable = nutupane.table;
 
-        $scope.addRepositories = function (contentView) {
-            $scope.addSelectedRepositoriesToContentView(nutupane, contentView);
+        $scope.removeRepositories = function () {
+            $scope.removeSelectedRepositoriesFromContentView(nutupane, $scope.contentView);
         };
-
     }]
 );

@@ -78,15 +78,15 @@
       </li>
 
       <li class="dropdown"
-          ng-class="{active: stateIncludes('content-views.details.repositories') || stateIncludes('content-views.details.filters')}"
+          ng-class="{active: stateIncludes('content-views.details.repositories.yum') || stateIncludes('content-views.details.filters')}"
           ng-hide="contentView.composite">
         <a class="dropdown-toggle">
-          <span translate>Content</span>
+          <span translate>Yum Content</span>
           <i class="icon-chevron-down"></i>
         </a>
         <ul class="dropdown-menu">
           <li>
-            <a ui-sref="content-views.details.repositories.list" translate>
+            <a ui-sref="content-views.details.repositories.yum.list" translate>
               Repositories
             </a>
           </li>
@@ -102,6 +102,12 @@
           ng-hide="contentView.composite">
         <a ui-sref="content-views.details.puppet-modules.list" translate>
           Puppet Modules
+        </a>
+      </li>
+
+      <li ng-class="{active: stateIncludes('content-views.details.repositories.docker')}">
+        <a ui-sref="content-views.details.repositories.docker.list" translate>
+          Docker Images
         </a>
       </li>
 
