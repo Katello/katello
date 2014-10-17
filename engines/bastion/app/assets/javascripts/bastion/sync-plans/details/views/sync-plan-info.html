@@ -49,10 +49,11 @@
       <span class="info-label" translate>Interval</span>
       <span class="info-value"
             alch-edit-select="syncPlan.interval"
+            formatter="translate"
             readonly="denied('edit_sync_plans', syncPlan)"
             selector="syncPlan.interval"
             options="intervals"
-            options-format="value for value in options"
+            options-format="value.id as value.value for value in options"
             on-save="save(syncPlan)">
       </span>
     </div>

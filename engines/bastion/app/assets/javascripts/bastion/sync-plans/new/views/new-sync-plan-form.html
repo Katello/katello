@@ -17,12 +17,11 @@
    </textarea>
  </div>
 
-
  <div alch-form-group label="{{ 'Interval' | translate }}">
    <select id="interval"
            name="interval"
            ng-model="syncPlan.interval"
-           ng-options="interval for interval in intervals"
+           ng-options="interval.id as interval.value for interval in intervals"
            tabindex="3"
            required>
       <option value="" translate>-- select an interval --</option>
