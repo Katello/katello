@@ -29,7 +29,11 @@ module Katello
         render_bad_parameters _('Repository sets are not available for custom products.')
       else
         task = sync_task(::Actions::Katello::RepositorySet::ScanCdn, @product, params[:content_id])
-        render :partial => 'katello/providers/redhat/repos', :locals => { :scan_cdn => task }
+        if task.result == 'warning'
+          render :partial => 'katello/providers/redhat/errors', :locals => { :error_message => task_error(task), :task => task}
+        else
+          render :partial => 'katello/providers/redhat/repos', :locals => { :scan_cdn => task }
+        end
       end
     end
 
@@ -41,6 +45,8 @@ module Katello
                      end
       task = sync_task(action_class, @product, @content, substitutions)
       render :json => { :task_id => task.id }
+    rescue => e
+      render :partial => 'katello/providers/redhat/enable_errors', :locals => { :error_message => e.message}, :status => 500
     end
 
     def auto_complete
@@ -86,6 +92,10 @@ module Katello
 
     def substitutions
       params.slice(:basearch, :releasever)
+    end
+
+    def task_error(task)
+      task.failed_steps.first.action(task.execution_plan).steps.map { |s| s.try(:error).try(:message) }.reject(&:blank?).join(', ')
     end
 
   end

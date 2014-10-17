@@ -1,0 +1,9 @@
+%span.errors
+  %br
+  %i.icon-exclamation-sign
+  = _("There was an error attempting to enable or disable this repository:")
+  %pre
+    = error_message
+  = _("For more information see ")
+  %a{:href => main_app.foreman_tasks_tasks_path}
+    = _("the related failed task.")

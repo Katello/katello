@@ -67,6 +67,7 @@ KT.redhat_provider_page = (function($) {
 
         $(checkbox).hide();
         $('#spinner_'+id).removeClass('hidden').show();
+        checkbox.parent().parent().siblings().first().find('.errors').remove();
         $.ajax({
             type: "PUT",
             url: url,
@@ -80,6 +81,11 @@ KT.redhat_provider_page = (function($) {
               else {
                 set_checkbox.attr('disabled','disabled');
               }
+            },
+            error: function(data) {
+                checkbox.parent().parent().siblings().first().append(data.responseText);
+                $(checkbox).removeClass('hidden').show().attr('checked', false);
+                $('#spinner_'+id).addClass('hidden').hide();
             }
         });
         return false;

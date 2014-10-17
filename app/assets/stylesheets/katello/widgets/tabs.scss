@@ -17,6 +17,26 @@
   padding: 0px;
   .ui-tabs-nav {
     background: $lightergrey_color;
+    a {
+      cursor: pointer;
+      text-transform: none;
+      text-decoration: none;
+      @include text-shadow(0 1px 0 rgba($white_color, 1));
+      display: block;
+      margin: 0;
+      padding: 8px 16px 6px;
+      color: $taboff_color;
+      float: left;
+      font-weight: bold;
+      &.selected {
+        color: $tabon_color;
+        font-weight: bold;
+        border-bottom: 3px solid $kselected_color;
+        padding-bottom: 3px;
+      }
+
+      &:hover { color: lighten($kselected_color,10%); }
+    }
   }
   .ui-tabs-panel {
     padding: 0px;
@@ -36,26 +56,6 @@
     float: left;
     color: $tabon_color;
     font-weight: bold;
-  }
-  a {
-    cursor: pointer;
-    text-transform: none;
-    text-decoration: none;
-    @include text-shadow(0 1px 0 rgba($white_color, 1));
-    display: block;
-    margin: 0;
-    padding: 8px 16px 6px;
-    color: $taboff_color;
-    float: left;
-    font-weight: bold;
-    &.selected {
-      color: $tabon_color;
-      font-weight: bold;
-      border-bottom: 3px solid $kselected_color;
-      padding-bottom: 3px;
-    }
-
-    &:hover { color: lighten($kselected_color,10%); }
   }
 
   .icon_wrap {
