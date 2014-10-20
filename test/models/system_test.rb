@@ -89,7 +89,7 @@ module Katello
   class SystemUpdateTest < SystemTestBase
     def setup
       super
-      foreman_host = Host.find(hosts(:one))
+      foreman_host = FactoryGirl.create(:host)
       @system.host_id = foreman_host.id
       @system.save!
 
@@ -140,7 +140,7 @@ module Katello
     end
 
     def test_update_does_not_update_foreman_host
-      foreman_host = Host.find(hosts(:one))
+      foreman_host = FactoryGirl.create(:host)
       @system2 = System.find(katello_systems(:simple_server2))
       @system2.host_id = foreman_host.id
       @system2.save!

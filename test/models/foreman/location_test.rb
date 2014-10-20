@@ -34,7 +34,7 @@ module Katello
       loc = Location.default_location
       loc.katello_default = false
 
-      assert_raises(ActiveRecord::RecordInvalid) do
+      assert_raises(RuntimeError) do
         loc.save!
       end
     end

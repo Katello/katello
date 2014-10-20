@@ -35,6 +35,7 @@ module ::Actions::Foreman::Environment
     end
 
     it 'fails to destroy when there are hosts' do
+      FactoryGirl.create(:host, :environment => @production)
       assert @production.hosts.count > 0
 
       @production.hostgroups = []

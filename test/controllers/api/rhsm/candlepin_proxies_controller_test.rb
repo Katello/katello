@@ -48,7 +48,7 @@ module Katello
     describe "register with activation key" do
 
       before do
-        @foreman_host = Host.find(hosts(:one))
+        @foreman_host = FactoryGirl.create(:host, :organization => @organization)
         @facts = { 'network.hostname' => @foreman_host.name }
 
         @activation_key = ActivationKey.create!(:name => "key 1", :organization => @foreman_host.organization)
@@ -82,7 +82,7 @@ module Katello
 
     describe "register with a lifecycle environment" do
       before do
-        @foreman_host = Host.find(hosts(:one))
+        @foreman_host = FactoryGirl.create(:host, :organization => @organization)
         @facts = { 'network.hostname' => @foreman_host.name }
 
         @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment))

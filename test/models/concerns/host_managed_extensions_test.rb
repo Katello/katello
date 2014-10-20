@@ -29,7 +29,7 @@ module Katello
       disable_orchestration # disable foreman orchestration
 
       content_host = Katello::System.find(katello_systems(:simple_server))
-      @foreman_host = Host.find(hosts(:one))
+      @foreman_host = FactoryGirl.create(:host)
       @foreman_host.puppetclasses = []
       @foreman_host.content_host = content_host
       @foreman_host.save!
@@ -63,7 +63,7 @@ module Katello
 
     def test_update_does_not_update_content_host
       content_host = System.find(katello_systems(:simple_server2))
-      @foreman_host2 = Host.find(hosts(:two))
+      @foreman_host2 = FactoryGirl.create(:host)
       @foreman_host2.content_host = content_host
       @foreman_host2.save!
 
