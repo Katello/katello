@@ -21,7 +21,6 @@ module Katello
       included do
 
         include Glue::Pulp::User if Katello.config.use_pulp
-        include Glue::ElasticSearch::User if Katello.config.use_elasticsearch
         include Glue if Katello.config.use_cp || Katello.config.use_pulp
         include ForemanTasks::Concerns::ActionSubject
         include ForemanTasks::Concerns::ActionTriggering
@@ -31,23 +30,10 @@ module Katello
           ::Actions::Katello::User::Create
         end
 
-        def update_action
-          # The fact that only last_login_in and update_at is changed means that the
-          # update was caused by loging into the system: no need to run
-          # orchestration for that, as it causes locking troubles and might
-          # lead to performance issues as well
-          unless (changes.keys - %w(last_login_on updated_at)).empty?
-            sync_action!
-            ::Actions::Katello::User::Update
-          end
-        end
-
         def destroy_action
           sync_action!
           ::Actions::Katello::User::Destroy
         end
-
-        include Ext::IndexedModel
 
         include Util::ThreadSession::UserModel
 

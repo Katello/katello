@@ -16,14 +16,11 @@ module Actions
       class Create < Actions::EntryAction
 
         def plan(user)
-          user.disable_auto_reindex!
           action_subject user
           sequence do
             plan_action(Pulp::User::Create, remote_id: user.remote_id)
             plan_action(Pulp::Superuser::Add, remote_id: user.remote_id)
           end
-
-          plan_action(ElasticSearch::Reindex, user)
         end
 
       end

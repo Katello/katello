@@ -18,7 +18,7 @@ module ::Actions::Katello::User
     include Dynflow::Testing
     include Support::Actions::Fixtures
 
-    actions = [Create, Update, Destroy]
+    actions = [Create, Destroy]
 
     actions.each do |action_class|
       describe action_class.to_s.demodulize do
@@ -31,7 +31,6 @@ module ::Actions::Katello::User
           action = create_action action_class
           action.stubs(:action_subject).with(user)
           plan_action(action, user)
-          assert_action_planed_with action, ::Actions::ElasticSearch::Reindex, user
 
           case action_class
           when Create
