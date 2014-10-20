@@ -17,12 +17,12 @@ module Actions
         @suspended_action = suspended_action
       end
 
-      def notify_message_recieved(id)
-        @suspended_action << Actions::Candlepin::ListenOnCandlepinEvents::Event[id]
+      def notify_message_recieved(id, subject, content)
+        @suspended_action << Actions::Candlepin::ListenOnCandlepinEvents::Event[id, subject, content]
       end
 
-      def notify_fatal(id)
-        @suspended_action << Actions::Candlepin::ListenOnCandlepinEvents::Fatal[id]
+      def notify_fatal(error)
+        @suspended_action << Actions::Candlepin::ListenOnCandlepinEvents::Fatal[error.backtrace && error.backtrace.join('\n'), error.message, error.class.name]
       end
 
       def notify_connected
@@ -43,11 +43,11 @@ module Actions
       end
 
       Event = Algebrick.type do
-        fields! message_id: Integer
+        fields! message_id: String, subject: String, content: String
       end
 
       Fatal = Algebrick.type do
-        fields! id: Integer
+        fields! backtrace: String, message: String, kind: String
       end
 
       Close = Algebrick.atom
@@ -81,18 +81,23 @@ module Actions
                  close_service
                end),
               (on Fatal do
-                 begin
-                   error!(error_message(event.id))
-                 ensure
-                   close_service
-                 end
+                 close_service_with_error(event)
                end),
               (on Dynflow::Action::Skip do
                  # do nothing, just skip
                end))
       rescue => e
         action_logger.error(e.message)
+        close_service
         error!(e)
+      end
+
+      def close_service_with_error(event)
+        error = Exception.new("#{event.kind}: #{event.message}")
+        error.set_backtrace([event.backtrace])
+        error!(error)
+      ensure
+        close_service
       end
 
       def connect_listening_service(event)
@@ -108,6 +113,9 @@ module Actions
         output[:connection] = "Connected"
         suspend do |suspended_action|
           CandlepinListeningService.instance.poll_for_messages(SuspendedAction.new(suspended_action))
+          at_exit do
+            suspended_action << Close
+          end
         end
       end
 
@@ -132,7 +140,7 @@ module Actions
       def act_on_event(event)
         begin
           output[:connection] = "Connected"
-          on_event(event, output)
+          on_event(event)
         rescue => e
           error!(e)
           raise e
@@ -151,12 +159,13 @@ module Actions
           error!(e)
       end
 
-      def on_event(event, _ouput)
-        message = CandlepinListeningService.instance.messages.message(event.message_id)
-        Actions::Candlepin::ReindexPoolSubscriptionHandler.new(Rails.logger).handle(message)
-        CandlepinListeningService.instance.acknowledge_message(event.message_id)
-        output[:last_message] = "#{event.message_id} - #{message.subject}"
-        output[:messages] = message.message_id
+      def on_event(event)
+        Actions::Candlepin::ReindexPoolSubscriptionHandler.new(Rails.logger).handle(event)
+        output[:last_message] = "#{event.message_id} - #{event.subject}"
+        output[:messages] = event.message_id
+      rescue => e
+        close_service
+        error!(e)
       end
 
       def error_message(error_id)
@@ -164,6 +173,7 @@ module Actions
       end
 
       def close_service
+        output[:connection] = 'disconnected'
         CandlepinListeningService.close
       end
     end

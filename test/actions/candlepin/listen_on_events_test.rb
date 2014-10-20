@@ -26,14 +26,12 @@ class Actions::Candlepin::ListenOnCandlepinEventsTest < ActiveSupport::TestCase
       Actions::Candlepin::ListenOnCandlepinEvents.any_instance.stubs(:suspend)
       Actions::Candlepin::CandlepinListeningService.any_instance.stubs(:create_connection)
       listening_service = Actions::Candlepin::CandlepinListeningService.new(nil, nil, nil)
-      listening_service.messages.add(123, OpenStruct.new(:subject => 'entitlement.created'))
       Actions::Candlepin::CandlepinListeningService.stubs(:instance).returns(listening_service)
 
       Actions::Candlepin::ReindexPoolSubscriptionHandler.any_instance.expects(:handle)
-      Actions::Candlepin::CandlepinListeningService.any_instance.expects(:acknowledge_message)
 
       action = run_action planned_action
-      action.run(Actions::Candlepin::ListenOnCandlepinEvents::Event[123])
+      action.run(Actions::Candlepin::ListenOnCandlepinEvents::Event['123', 'subject.subject', 'json'])
     end
   end
 end
