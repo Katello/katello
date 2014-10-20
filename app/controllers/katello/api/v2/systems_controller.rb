@@ -194,12 +194,14 @@ module Katello
 
     api :GET, "/systems/:id/errata", N_("List errata available for the content host"), :deprecated => true
     param :id, String, :desc => N_("UUID of the content host"), :required => true
-    param :content_view_id, :number
-    param :environment_id, :number
+    param :content_view_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Content View"), :required => false
+    param :environment_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Environment"), :required => false
     def errata
       if params[:content_view_id] && params[:environment_id]
         find_content_view
         find_environment_and_content_view
+      elsif params[:content_view_id] || params[:environment_id]
+        fail _("either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified")
       end
 
       errata = @system.available_errata(@environment, @content_view)
@@ -209,6 +211,7 @@ module Katello
         :total    => errata.count
       }
 
+      @available_errata_ids = @system.available_errata.pluck(:id)
       respond_for_index :collection => response
     end
 

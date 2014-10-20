@@ -24,7 +24,13 @@ angular.module('Bastion.content-hosts').factory('ContentHostErratum',
     ['BastionResource', function (BastionResource) {
 
         return BastionResource('/api/v2/systems/:id/errata/:errata_id/:action', {id: '@uuid'}, {
-            get: {method: 'GET', isArray: false},
+            get: {method: 'GET', isArray: false, transformResponse: function (data) {
+                data = angular.fromJson(data);
+                angular.forEach(data.results, function (errata) {
+                    errata.unselectable = !errata.available;
+                });
+                return data;
+            }},
             apply: {method: 'PUT', params: {action: 'apply'}}
         });
 
