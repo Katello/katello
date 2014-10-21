@@ -27,6 +27,7 @@ module Katello
 
     describe "GET 'index'" do
       it "should be successful" do
+        FactoryGirl.create(:host) # Dashboard needs a host or it renders differently
         @controller.expects(:render)
         get 'index'
         must_respond_with(:success)

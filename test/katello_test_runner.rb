@@ -27,6 +27,7 @@ module KatelloMiniTestRunner
 
     def _run_suite(suite, type)
       User.current = nil  #reset User.current
+      puts suite
       suite.before_suite if suite.respond_to?(:before_suite)
       super(suite, type)
     ensure
