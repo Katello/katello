@@ -126,6 +126,15 @@ module Katello
       assert_response :success
     end
 
+    def test_update_description
+      new_description = "this is a new exciting description"
+      put :update, :id => @organization.id, :organization => { :description => new_description }
+
+      @organization.reload
+      assert_response :success
+      assert_equal new_description, @organization.description
+    end
+
     def test_update_protected
       allowed_perms = [@update_permission]
       denied_perms = [@create_permission, @read_permission, @delete_permission]
