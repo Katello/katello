@@ -58,9 +58,9 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "less-rails", "~> 2.5.0"
 
   # Testing
-  gem.add_development_dependency "factory_girl_rails", "~> 1.4.0"
+  gem.add_development_dependency "factory_girl_rails"
   gem.add_development_dependency "minitest-tags"
-  gem.add_development_dependency "mocha", "~> 0.14.0"
+  gem.add_development_dependency "mocha"
   gem.add_development_dependency "vcr"
   gem.add_development_dependency "webmock"
   gem.add_development_dependency "rubocop-checkstyle_formatter"
