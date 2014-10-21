@@ -1,9 +1,0 @@
-<div class="nutupane-select-all" ng-show="table.selectAllResultsEnabled && table.allSelected() && !table.allResultsSelected">
-  <span translate>All {{ table.rows.length }} items on this page are selected.</span>
-  <a ng-click="table.selectAllResults(true)" translate>Select all {{ table.resource.subtotal }}.</a>
-</div>
-
-<div class="nutupane-select-all-selected" ng-show="table.selectAllResultsEnabled && table.allResultsSelected">
-  <span translate>{{ table.allResultsSelectCount() }} results are selected.</span>
-  <a ng-click="table.selectAllResults(false)" translate>Deselect all</a>
-</div>

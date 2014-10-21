@@ -46,7 +46,7 @@ task 'assets:precompile:katello' do
 
   def compile_fonts
     compile_assets(
-      precompile: [/bastion\S+.(?:svg|eot|woff|ttf)$/],
+      precompile: [/bastion_katello\S+.(?:svg|eot|woff|ttf)$/],
       digest: false
     )
   end
@@ -57,8 +57,8 @@ task 'assets:precompile:katello' do
 
     precompile = [
       'katello/katello.css',
-      'bastion/bastion.css',
-      'bastion/bastion.js',
+      'bastion_katello/bastion_katello.css',
+      'bastion_katello/bastion_katello.js',
     ]
     precompile.concat(javascripts)
     precompile.concat(images)

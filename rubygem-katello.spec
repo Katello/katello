@@ -104,6 +104,7 @@ Requires: postgresql-server
 Requires: v8
 Requires: %{?scl_prefix}rubygems
 Requires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
+Requires: %{?scl_prefix}rubygem-bastion
 Requires: %{?scl_prefix}rubygem-rails
 Requires: %{?scl_prefix}rubygem-json
 Requires: %{?scl_prefix}rubygem-oauth
@@ -136,6 +137,7 @@ Requires: %{?scl_prefix}rubygem-qpid_messaging >= 0.26.1
 Requires: %{?scl_prefix}rubygem-qpid_messaging <= 0.28.1
 BuildRequires: foreman >= 1.3.0
 BuildRequires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
+BuildRequires: %{?scl_prefix}rubygem-bastion
 BuildRequires: %{?scl_prefix}rubygem-sqlite3
 BuildRequires: %{?scl_prefix}rubygem-tire => 0.6.2
 BuildRequires: %{?scl_prefix}rubygem-tire < 0.7
@@ -223,7 +225,7 @@ GEMFILE
 
 mkdir -p %{buildroot}%{foreman_dir}/public/assets
 ln -s %{gem_instdir}/public/assets/katello %{buildroot}%{foreman_dir}/public/assets/katello
-ln -s %{gem_instdir}/public/assets/bastion %{buildroot}%{foreman_dir}/public/assets/bastion
+ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/public/assets/bastion_katello
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -235,7 +237,7 @@ ln -s %{gem_instdir}/public/assets/bastion %{buildroot}%{foreman_dir}/public/ass
 %{gem_spec}
 %{foreman_bundlerd_dir}/%{gem_name}.rb
 %{foreman_dir}/public/assets/katello
-%{foreman_dir}/public/assets/bastion
+%{foreman_dir}/public/assets/bastion_katello
 
 %files doc
 %{gem_dir}/doc/%{gem_name}-%{version}

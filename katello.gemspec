@@ -14,10 +14,8 @@ Gem::Specification.new do |gem|
   gem.description = "Content and Subscription Management plugin for Foreman"
 
   gem.files = Dir["{app,vendor,lib,db,ca,config,locale}/**/*"] + ["LICENSE.txt", "README.md"]
-  gem.files += Dir["engines/bastion/{app,vendor,lib,config}/**/*"]
-  gem.files += Dir["engines/bastion/{README.md,Bastion.gemspec}"]
-  gem.files += Dir["engines/fort/{app,config,db,lib}/**/*"]
-  gem.files += Dir["engines/bastion/{README.md,fort.gemspec}"]
+  gem.files += Dir["engines/bastion_katello/{app,vendor,lib,config}/**/*"]
+  gem.files += Dir["engines/bastion_katello/{README.md,bastion_katello.gemspec}"]
 
   gem.require_paths = ["lib"]
 
@@ -49,8 +47,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "anemone"
 
   # UI
-  gem.add_dependency "angular-rails-templates", "~> 0.0.4"
-  gem.add_dependency "less-rails"
   gem.add_dependency "sass-rails"
   gem.add_development_dependency "compass-rails", "< 1.1.4"
   gem.add_development_dependency "compass-960-plugin"
@@ -58,6 +54,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency "ui_alchemy-rails", '1.0.12'
   gem.add_dependency "deface", '< 1.0.0'
   gem.add_dependency "jquery-ui-rails"
+  gem.add_dependency "bastion"
+  gem.add_development_dependency "less-rails", "~> 2.5.0"
 
   # Testing
   gem.add_development_dependency "factory_girl_rails", "~> 1.4.0"
