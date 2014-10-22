@@ -1,6 +1,6 @@
 <span page-title>{{ 'Content Host Bulk Host Collections' | translate }}</span>
 
-<div class="alert alert-info" ng-show="hostCollections.action == 'add'">
+<div bst-alert="info" ng-show="hostCollections.action == 'add'">
   <div translate>
     Are you sure you want to add the {{ table.numSelected }} content host(s) selected to the host collection(s) chosen?
   </div>
@@ -8,7 +8,7 @@
   <button class="btn btn-default" ng-click="performHostCollectionAction()" translate>Yes</button>
 </div>
 
-<div class="alert alert-info" ng-show="hostCollections.action == 'remove'">
+<div bst-alert="info" ng-show="hostCollections.action == 'remove'">
   <div translate>
     Are you sure you want to remove the {{ table.numSelected }} content host(s) selected from the host collection(s) chosen?
   </div>
@@ -28,7 +28,7 @@
               ng-hide="denied('edit_content_hosts', contentHost)"
               ng-disabled="table.numSelected == 0 || detailsTable.numSelected == 0"
               ng-click="hostCollections.action = 'add'; hostCollections.working = true">
-        <i class="icon-plus"></i>
+        <i class="fa fa-plus"></i>
         {{ "Add To" | translate }}
       </button>
 
@@ -36,14 +36,16 @@
               ng-hide="denied('edit_content_hosts', contentHost)"
               ng-disabled="table.numSelected == 0 || detailsTable.numSelected == 0"
               ng-click="hostCollections.action = 'remove'; hostCollections.working = true">
-        <i class="icon-minus"></i>
+        <i class="fa fa-minus"></i>
         {{ "Remove From" | translate }}
       </button>
     </div>
 
     <div data-block="table">
-      <p class="alert alert-info" ng-show="detailsTable.rows.length === 0">
-        There are no Host Collections available. You can create new Host Collections after selecting 'Host Collections' under 'Hosts' in main menu.
+      <p bst-alert="info" ng-show="detailsTable.rows.length === 0">
+        <span translate>
+          There are no Host Collections available. You can create new Host Collections after selecting 'Host Collections' under 'Hosts' in main menu.
+        </span>
       </p>
 
 

@@ -4,7 +4,7 @@
 </div>
 
 <div class="loading-mask loading-mask-panel" ng-show="displayArea.working">
-  <i class="icon-spinner icon-spin"></i>
+  <i class="fa fa-spinner fa-spin"></i>
   {{ "Loading..." | translate }}
 </div>
 
@@ -16,7 +16,7 @@
 
     <div ng-repeat="product in products" ng-hide="product.available_content.length < 1"
          ng-controller="SubscriptionProductDetailsController">
-      <i ng-class="{'icon-plus': !expanded, 'icon-minus': expanded}"
+      <i ng-class="{'fa fa-plus': !expanded, fa fa--minus': expanded}"
          class="expand-icon" ng-click="expanded = !expanded"></i>
       <b>{{ product.name }}</b>
 

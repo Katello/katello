@@ -1,5 +1,5 @@
 <section class="nutupane-sub-section">
-  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
   <div class="row">
 
@@ -38,13 +38,12 @@
 
       <div ng-show="productsTable.rows.length == 0">
         <div class="loading-mask" ng-show="productsTable.working">
-          <i class="icon-spinner icon-spin"></i>
+          <i class="fa fa-spinner fa-spin"></i>
           {{ "Loading..." | translate }}
         </div>
 
-        <p class="alert alert-info" 
-           ng-hide="productsTable.working" 
-           translate>No Products to show. 
+        <p bst-alert="info" ng-hide="productsTable.working">
+          <span translate>No Products to show.</span>
         </p>
       </div>
 

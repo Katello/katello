@@ -1,7 +1,7 @@
 <span page-title ng-model="hostCollection">{{ 'Host Collection: ' | translate }} {{ hostCollection.name }}</span>
 
 <div class="loading-mask loading-mask-panel" ng-show="panel.loading">
-  <i class="icon-spinner icon-spin"></i>
+  <i class="fa fa-spinner fa-spin"></i>
   {{ "Loading..." | translate }}
 </div>
 
@@ -21,12 +21,12 @@
       <button class="btn btn-default"
               ng-hide="denied('create_host_collections')"
               ng-click="showCopy = true">
-        <i class="icon-copy"></i>
+        <i class="fa fa-copy"></i>
         {{ "Copy Collection" | translate }}
       </button>
 
       <button class="btn btn-default" ui-sref="host-collections.index">
-        <i class="icon-remove"></i>
+        <i class="fa fa-remove"></i>
         {{ "Close" | translate }}
       </button>
 
@@ -41,7 +41,7 @@
     <form>
       <h5 translate>Copy</h5>
       <div class="input">
-        <div bst-alert error-messages="copyErrorMessages"></div>
+        <div bst-alerts error-messages="copyErrorMessages"></div>
         <div class="info-label">
           <label for="copy_name" translate>New Name:</label>
         </div>
@@ -91,7 +91,7 @@
     </ul>
   </nav>
 
-  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
   <section class="nutupane-sub-section" ui-view></section>
 </section>

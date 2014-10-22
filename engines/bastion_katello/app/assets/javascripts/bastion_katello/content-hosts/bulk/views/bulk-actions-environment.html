@@ -4,7 +4,7 @@
   <section>
     <h4 translate>Assign Environment and Content View</h4>
 
-    <div class="alert alert-info" ng-show="confirm">
+    <div bst-alert="info" ng-show="confirm">
       <p translate>
         Are you sure you want to assign the {{ table.numSelected }} content host(s) selected to {{ selected.contentView.name }} in {{ selected.environment.name }}?
       </p>
@@ -23,7 +23,7 @@
       <div>
         <label translate>Content View:</label>
 
-        <i ng-show="fetchingContentViews" class="icon-spinner inline-icon icon-spin"></i>
+        <i ng-show="fetchingContentViews" class="fa fa-spinner inline-icon fa-spin"></i>
         <select ng-hide="fetchingContentViews || contentViews.length === 0 || !selected.environment"
                 type="select"
                 ng-options="cv as cv.name for cv in contentViews"

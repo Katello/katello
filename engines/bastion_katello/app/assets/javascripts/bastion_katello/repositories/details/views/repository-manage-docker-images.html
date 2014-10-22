@@ -1,7 +1,7 @@
 <span page-title ng-model="repository">{{ 'Manage Docker Images for Repository:' | translate }} {{ repository.name }}</span>
 
 <a ui-sref="products.details.repositories.info({productId: product.id, repositoryId: repository.id})">
-  <i class="icon-double-angle-left"></i>
+  <i class="fa fa-angle-double-left"></i>
   {{ "Back to Repository Details" | translate }}
 </a>
 
@@ -10,9 +10,9 @@
   <div data-block="pane-loading"></div>
 
   <div data-block="messages">
-    <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+    <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-    <div class="alert alert-success" ng-hide="generationTaskId === undefined">
+    <div bst-alert="success" ng-hide="generationTaskId === undefined">
       <button type="button" class="close" ng-click="clearTaskId()">×</button>
       <p translate>
         Docker metadata generation has been initiated in the background.  Click
@@ -29,7 +29,7 @@
     <button class="btn btn-default"
             ng-click="removeContent()"
             ng-disabled="detailsTable.working || detailsTable.numSelected === 0">
-      <i class="icon-trash" ng-hide="detailsTable.working"></i>
+      <i class="fa fa-trash-o" ng-hide="detailsTable.working"></i>
       <span translate>Remove Docker Images</span>
     </button>
   </div>

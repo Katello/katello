@@ -1,7 +1,7 @@
 <span page-title ng-model="product">{{ 'Repositories for Product:' | translate }} {{ product.name }}</span>
 
 <section class="details details-full">
-  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
   <h4 translate>Repositories</h4>
 
   <input type="text"
@@ -16,13 +16,13 @@
            modal-body='Are you sure you want to remove the {{ repositoriesTable.numSelected }} repositories selected?'></div>
 
       <span ng-switch="getRepositoriesNonDeletableReason(product)" bst-feature-flag="custom_products">
-        <i class="icon-question-sign" ng-switch-when="permissions"
+        <i class="fa fa-question-sign" ng-switch-when="permissions"
            tooltip="{{ 'You cannot remove these repositories because you do not have permission.' | translate }}"
            tooltip-animation="false"
            tooltip-placement="left"
            tooltip-append-to-body="true">
         </i>
-        <i class="icon-question-sign" ng-switch-when="redhat"
+        <i class="fa fa-question-sign" ng-switch-when="redhat"
            tooltip="{{ 'You cannot remove these repositories because they belong to a Red Hat product.' | translate }}"
            tooltip-animation="false"
            tooltip-placement="left"
@@ -35,11 +35,11 @@
               ng-show="canRemoveRepositories(product)"
               ng-disabled="removingRepositories || repositoriesTable.numSelected == 0">
         <span ng-show="removingRepositories">
-          <i class="icon-spinner inline-icon icon-spin"></i>
+          <i class="fa fa-spinner inline-icon fa-spin"></i>
           <span>{{ "Removing Repositories" | translate }}</span>
         </span>
         <span ng-hide="removingRepositories">
-          <i class="icon-trash"></i>
+          <i class="fa fa-trash-o"></i>
           {{ "Remove Repositories" | translate }}
         </span>
 
@@ -49,9 +49,9 @@
             ng-click="syncSelectedRepositories()"
             ng-hide="denied('sync_products', product)"
             ng-disabled="syncInProgress || repositoriesTable.numSelected == 0">
-      <i class="icon-spinner icon-spin" ng-show="syncInProgress"></i>
+      <i class="fa fa-spinner fa-spin" ng-show="syncInProgress"></i>
       <span ng-show="syncInProgress" translate>Syncing...</span>
-      <i ng-hide="syncInProgress" class="icon-refresh"></i>
+      <i ng-hide="syncInProgress" class="fa fa-refresh"></i>
       <span ng-hide="syncInProgress" translate>Sync Now</span>
     </button>
     <button class="btn btn-primary"
@@ -135,6 +135,8 @@
   </table>
 </section>
 
-<p class="alert alert-info" ng-show="repositoriesTable.rows.length === 0" translate>
-  You currently don't have any Repositories included in this Product, you can add Repositories using the button on the right.
+<p bst-alert="info" ng-show="repositoriesTable.rows.length === 0">
+  <span translate>
+    You currently don't have any Repositories included in this Product, you can add Repositories using the button on the right.
+  </span>
 </p>

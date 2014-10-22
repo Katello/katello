@@ -39,13 +39,13 @@
       <button class="btn btn-default"
               ng-hide="denied('delete_manifest')"
               ng-click="deleteManifest()">
-         <i class="icon-spinner icon-spin" ng-show="deleteTask.pending"></i>
+         <i class="fa fa-spinner fa-spin" ng-show="deleteTask.pending"></i>
           <span ng-show="deleteTask.pending" translate>Deleting Manifest...</span>
           <span ng-hide="deleteTask.pending" translate>Delete Manifest</span>
       </button>
       <button class="btn btn-default" ng-disabled="upstream.idCert == undefined || upstream.idCert.cert == undefined"
         ng-click="refreshManifest()">
-         <i class="icon-spinner icon-spin" ng-show="refreshTask.pending"></i>
+         <i class="fa fa-spinner fa-spin" ng-show="refreshTask.pending"></i>
           <span ng-show="refreshTask.pending" translate>Refreshing Manifest...</span>
           <span ng-hide="refreshTask.pending" translate>Refresh Manifest</span>
       </button>
@@ -60,7 +60,7 @@
 <section>
   <h4 translate>Upload New Manifest</h4>
 
-  <div bst-alert error-messages="uploadErrorMessages"></div>
+  <div bst-alerts error-messages="uploadErrorMessages"></div>
 
   <form role="form"
         action="{{ uploadURL }}"
@@ -78,7 +78,7 @@
     <div class="control-group">
       <div class="control-button">
         <button class="primary" upload-submit>
-          <i class="icon-spinner icon-spin" ng-show="task.pending"></i>
+          <i class="fa fa-spinner fa-spin" ng-show="task.pending"></i>
           <span ng-show="task.pending" translate>Uploading...</span>
           <span ng-hide="task.pending" translate>Upload</span>
         </button>

@@ -30,8 +30,8 @@
 
       <tr ng-show="working">
         <td colspan="9" translate>
-          <div class="loading-mask icon-3x" ng-show="working">
-            <i class="icon-spinner icon-spin"></i>
+          <div class="loading-mask fa-3x" ng-show="working">
+            <i class="fa fa-spinner fa-spin"></i>
             {{ "Loading..." | translate }}
           </div>
         </td>
@@ -45,7 +45,7 @@
           </a>
         </td>
         <td bst-table-cell>
-          <span class="icon-circle" ng-class="getStatusColor(contentHost['entitlement_status'])">
+          <span class="fa fa-circle" ng-class="getStatusColor(contentHost['entitlement_status'])">
           </span>
         </td>
         <td bst-table-cell>{{ virtual(contentHost.facts) | booleanToYesNo }}</td>

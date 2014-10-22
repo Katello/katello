@@ -12,7 +12,7 @@
                ng-model="addSubscriptionsTable.searchTerm"
                bst-on-enter="addSubscriptionsTable.search(addSubscriptionsTable.searchTerm)"/>
         <span class="input-group-btn">
-          <button ng-click="addSubscriptionsTable.search(addSubscriptionsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
+          <button ng-click="addSubscriptionsTable.search(addSubscriptionsTable.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
         </span>
       </div>
     </div>
@@ -41,8 +41,8 @@
   <div bst-table="addSubscriptionsTable" class="nutupane">
     <div bst-container-scroll bst-infinite-scroll="addSubscriptionsTable.nextPage()">
 
-      <div class="loading-mask icon-3x" ng-show="addSubscriptionsTable.working && addSubscriptionsTable.rows.length == 0">
-        <i class="icon-spinner icon-spin"></i>
+      <div class="loading-mask fa-3x" ng-show="addSubscriptionsTable.working && addSubscriptionsTable.rows.length == 0">
+        <i class="fa fa-spinner fa-spin"></i>
         {{ "Loading..." | translate }}
       </div>
 

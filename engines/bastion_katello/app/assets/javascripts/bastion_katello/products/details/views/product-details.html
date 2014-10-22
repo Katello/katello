@@ -1,7 +1,7 @@
 <span page-title ng-model="product">{{ 'Details for Product:' | translate }} {{ product.name }}</span>
 
 <div class="loading-mask loading-mask-panel" ng-show="panel.loading">
-  <i class="icon-spinner icon-spin"></i>
+  <i class="fa fa-spinner fa-spin"></i>
   {{ "Loading..." | translate }}
 </div>
 
@@ -17,17 +17,17 @@
            modal-body='Are you sure you want to remove product "{{ product.name }}"?'></div>
 
       <span ng-switch="getReadOnlyReason(product)" bst-feature-flag="custom_products">
-        <i class="icon-question-sign" ng-switch-when="permissions"
+        <i class="fa fa-question-sign" ng-switch-when="permissions"
            tooltip="{{ 'You cannot remove this product because you do not have permission.' | translate }}"
            tooltip-animation="false"
            tooltip-append-to-body="true">
         </i>
-        <i class="icon-question-sign" ng-switch-when="published"
+        <i class="fa fa-question-sign" ng-switch-when="published"
            tooltip="{{ 'You cannot remove this product because it was published to a content view.' | translate }}"
            tooltip-animation="false"
            tooltip-append-to-body="true">
         </i>
-        <i class="icon-question-sign" ng-switch-when="redhat"
+        <i class="fa fa-question-sign" ng-switch-when="redhat"
            tooltip="{{ 'You cannot remove this product because it is a Red Hat product.' | translate }}"
            tooltip-animation="false"
            tooltip-append-to-body="true">
@@ -37,11 +37,11 @@
       <button class="btn btn-default" bst-feature-flag="custom_products"
               ng-hide="denied('delete_products', product) || product.readonly || product.published_content_view_ids.length > 0"
               ng-click="openModal()">
-        <i class="icon-trash"></i>
+        <i class="fa fa-trash-o"></i>
         {{ "Remove Product" | translate }}
       </button>
       <button class="btn btn-default" ui-sref="products.index">
-        <i class="icon-remove"></i>
+        <i class="fa fa-remove"></i>
         {{ "Close" | translate }}
       </button>
     </div>

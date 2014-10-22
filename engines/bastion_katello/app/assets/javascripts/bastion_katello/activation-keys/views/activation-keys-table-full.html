@@ -1,5 +1,7 @@
-<p class="alert alert-info" ng-show="table.rows.length === 0" translate>
-  You currently don't have any Activation Keys, you can add Activation Keys using the button on the right.
+<p bst-alert="info" ng-show="table.rows.length === 0">
+  <span translate>
+    You currently don't have any Activation Keys, you can add Activation Keys using the button on the right.
+  </span>
 </p>
 
 <table class="table table-striped" ng-class="{'table-mask': table.working}" ng-show="table.rows.length > 0">
@@ -18,7 +20,7 @@
         <a ui-sref="activation-keys.details.info({activationKeyId: activationKey.id})">
           {{ activationKey.name }}
         </a>
-        <i class="icon-chevron-right selected-icon" ng-show="activationKey.selected"></i>
+        <i class="fa fa-chevron-right selected-icon" ng-show="activationKey.selected"></i>
       </td>
       <td bst-table-cell>{{ activationKey | activationKeyConsumedFilter }}</td>
       <td bst-table-cell>{{ activationKey.environment.name || "" }}</td>

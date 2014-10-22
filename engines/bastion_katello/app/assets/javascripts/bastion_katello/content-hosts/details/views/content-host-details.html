@@ -1,7 +1,7 @@
 <span page-title ng-model="contentHost">{{ 'Content Host:' | translate }} {{ contentHost.name }}</span>
 
 <div class="loading-mask loading-mask-panel" ng-show="panel.loading">
-  <i class="icon-spinner icon-spin"></i>
+  <i class="fa fa-spinner fa-spin"></i>
   {{ "Loading..." | translate }}
 </div>
 
@@ -20,7 +20,7 @@
               ng-hide="denied('destroy_content_hosts', contentHost)"
               ng-click="openModal()" translate>Unregister Content Host</button>
       <button class="btn btn-default" ui-sref="content-hosts.index">
-        <i class="icon-remove"></i>
+        <i class="fa fa-remove"></i>
         {{ "Close" | translate }}
       </button>
     </div>
@@ -45,7 +45,7 @@
           ng-class="{active: stateIncludes('content-hosts.details.subscriptions.list') || stateIncludes('content-hosts.details.events')}">
         <a class="dropdown-toggle">
           <span translate>Subscriptions</span>
-          <i class="icon-chevron-down"></i>
+          <i class="fa fa-chevron-down"></i>
         </a>
         <ul class="dropdown-menu">
           <li>
@@ -98,7 +98,7 @@
     </ul>
   </nav>
 
-  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
   <section class="nutupane-sub-section" ui-view></section>
 </section>

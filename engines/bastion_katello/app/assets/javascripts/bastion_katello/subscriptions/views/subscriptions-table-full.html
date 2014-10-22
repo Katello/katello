@@ -1,5 +1,7 @@
-<p class="alert alert-info" ng-show="table.rows.length === 0" translate>
-  You currently don't have any Subscriptions, you can add Subscriptions by importing a manifest using the button on the right labeled 'Manage Manifest'.
+<p bst-alert="info" ng-show="table.rows.length === 0">
+  <span translate>
+    You currently don't have any Subscriptions, you can add Subscriptions by importing a manifest using the button on the right labeled 'Manage Manifest'.
+  </span>
 </p>
 <table class="table table-striped" ng-class="{'table-mask': table.working}" ng-show="table.rows.length > 0">
   <thead>

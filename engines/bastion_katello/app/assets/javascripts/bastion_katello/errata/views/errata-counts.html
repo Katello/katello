@@ -3,7 +3,7 @@
     <span>
       {{ errataCounts.security || 0 }}
     </span>
-    <i class="icon-warning-sign inline-icon"
+    <i class="fa fa-warning inline-icon"
        ng-class="{black: errataCounts.security === 0, red: errataCounts.security > 0}"
        title="{{ 'Security' | translate }}"></i>
   </span>
@@ -11,7 +11,7 @@
     <span>
       {{ errataCounts.bugfix || 0 }}
     </span>
-    <i class="icon-bug inline-icon"
+    <i class="fa fa-bug inline-icon"
        ng-class="{black: errataCounts.bugfix === 0, yellow: errataCounts.bugfix > 0}"
        title="{{ 'Bug Fix' | translate }}"></i>
   </span>
@@ -19,7 +19,7 @@
     <span>
       {{ errataCounts.enhancement || 0 }}
     </span>
-    <i class="icon-plus-sign-alt inline-icon"
+    <i class="fa fa-plus-square inline-icon"
        ng-class="{black: errataCounts.enhancement === 0, yellow: errataCounts.enhancement > 0}"
        title="{{ 'Enhancement' | translate }}"></i>
   </span>

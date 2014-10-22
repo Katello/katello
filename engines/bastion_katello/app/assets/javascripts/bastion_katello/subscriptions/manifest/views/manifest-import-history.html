@@ -8,7 +8,7 @@
   <tbody>
     <tr ng-repeat="status in statuses track by $index">
         <td>
-          <i ng-class="status.status == 'FAILURE' ? 'icon-warning-sign' : 'icon-ok'" />
+          <i ng-class="status.status == 'FAILURE' ? 'fa fa-warning' : fa fa--ok'" />
           {{ status.statusMessage }}
         </td>
         <td>{{ status.created | date:"short" }}</td>

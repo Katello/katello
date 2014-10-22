@@ -2,7 +2,7 @@
 
 <section class="details details-full">
 
-  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
   <input type="text"
          class="form-control filter-input"
@@ -20,18 +20,18 @@
     <button class="btn btn-default"
             ng-hide="denied('edit_products')"
             ng-click="removeSyncPlan()">
-      <i class="icon-spinner icon-spin" ng-show="updatingSyncPlans && !syncPlanTable.chosenRow"></i>
+      <i class="fa fa-spinner fa-spin" ng-show="updatingSyncPlans && !syncPlanTable.chosenRow"></i>
       <span ng-show="updatingSyncPlans && !syncPlanTable.chosenRow" translate>Unattaching...</span>
-      <i ng-hide="updatingSyncPlans && !syncPlanTable.chosenRow" class="icon-remove"></i>
+      <i ng-hide="updatingSyncPlans && !syncPlanTable.chosenRow" class="fa fa-remove"></i>
       <span ng-hide="updatingSyncPlans && !syncPlanTable.chosenRow" translate>Unattach Sync Plan</span>
     </button>
     <button class="btn btn-primary"
             ng-hide="denied('edit_products')"
             ng-click="updateSyncPlan()"
             ng-disabled="!syncPlanTable.chosenRow">
-      <i class="icon-spinner icon-spin" ng-show="updatingSyncPlans && syncPlanTable.chosenRow"></i>
+      <i class="fa fa-spinner fa-spin" ng-show="updatingSyncPlans && syncPlanTable.chosenRow"></i>
       <span ng-show="updatingSyncPlans && syncPlanTable.chosenRow" translate>Updating...</span>
-      <i ng-hide="updatingSyncPlans && syncPlanTable.chosenRow" class="icon-refresh"></i>
+      <i ng-hide="updatingSyncPlans && syncPlanTable.chosenRow" class="fa fa-refresh"></i>
       <span ng-hide="updatingSyncPlans && syncPlanTable.chosenRow" translate>Update Sync Plan</span>
     </button>
   </span>

@@ -1,4 +1,4 @@
-<div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+<div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
 <div class="details-header">
   <div>
@@ -26,7 +26,7 @@
           ng-disabled="getSelectedRules(filter).length === 0"
           ng-hide="denied('edit_content_views', contentView)"
           ng-click="removeRules(filter)">
-    <i class="icon-trash"></i>
+    <i class="fa fa-trash-o"></i>
     <span translate>Remove Packages</span>
   </button>
 </div>
@@ -100,7 +100,7 @@
               ng-click="addRule(rule, filter)"
               ng-hide="denied('edit_content_views', contentView)"
               ng-disabled="!valid(rule)">
-        <i class="icon-plus"></i>
+        <i class="fa fa-plus"></i>
         <span translate>Add</span>
       </button>
     </td>
@@ -163,7 +163,7 @@
     </td>
     <td class="action-cell">
       <button class="btn btn-default" ng-click="rule.editMode = true; backupPrevious(rule)" ng-hide="rule.editMode">
-        <i class="icon-edit"></i>
+        <i class="fa fa-edit"></i>
         <span translate>Edit</span>
       </button>
 

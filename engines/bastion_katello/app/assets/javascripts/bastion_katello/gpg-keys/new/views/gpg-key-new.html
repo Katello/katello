@@ -1,5 +1,5 @@
-<div class="loading-mask loading-mask-panel icon-3x" ng-show="panel.loading">
-  <i class="icon-spinner icon-spin"></i>
+<div class="loading-mask loading-mask-panel fa-3x" ng-show="panel.loading">
+  <i class="fa fa-spinner fa-spin"></i>
   {{ "Loading..." | translate }}
 </div>
 
@@ -9,13 +9,13 @@
     <h2 class="fl" translate>New GPG Key</h2>
     <div class="fr">
       <button class="btn btn-default" ui-sref="gpgKeys.index">
-        <i class="icon-remove"></i>
+        <i class="fa fa-remove"></i>
         {{ "Close" | translate }}
       </button>
     </div>
   </header>
   <div>
-    <div bst-alert error-messages="errorMessages"></div>
+    <div bst-alerts error-messages="errorMessages"></div>
 
     <form name="gpgKeyForm" class="form form-horizontal" novalidate role="form"
           action="{{ uploadURL }}"

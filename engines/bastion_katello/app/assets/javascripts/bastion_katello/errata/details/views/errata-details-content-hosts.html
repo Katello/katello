@@ -31,7 +31,7 @@
 
         <div class="col-md-1">
           <a ng-show="environmentFilter" ng-click="selectEnvironment(null)">
-            <i class="icon-remove"></i>
+            <i class="fa fa-remove"></i>
           </a>
         </div>
       </div>
@@ -39,13 +39,13 @@
   </div>
 
   <div data-block="table">
-    <p class="alert alert-warning" data-i18n
+    <p bst-alert="warning" data-i18n
        ng-show="detailsTable.rows.length > 0 && stateIncludes('errata.details.content-hosts.unavailable')">
       The Content View or Lifecycle Environment needs to be updated in order to make errata available to these hosts.
     </p>
 
-    <p class="alert alert-info" ng-show="detailsTable.rows.length === 0" translate>
-      No Content Hosts match this Erratum.
+    <p bst-alert="info" ng-show="detailsTable.rows.length === 0">
+      <span translate>No Content Hosts match this Erratum.</span>
     </p>
 
     <table class="table table-striped table-bordered"

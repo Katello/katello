@@ -13,14 +13,14 @@
             ng-show="isState('content-views.details.filters.details.erratum.list') && permitted('edit_content_views', contentView)"
             ng-disabled="detailsTable.working || detailsTable.numSelected === 0"
             ng-click="removeErrata(contentView)">
-      <i class="icon-trash"></i>
+      <i class="fa fa-trash-o"></i>
       <span translate>Remove Errata</span>
     </button>
     <button class="btn btn-primary fr"
             ng-show="isState('content-views.details.filters.details.erratum.available') && permitted('edit_content_views', contentView)"
             ng-disabled="detailsTable.working || detailsTable.numSelected === 0"
             ng-click="addErrata(filter)">
-      <i class="icon-plus"></i>
+      <i class="fa fa-plus"></i>
       <span translate>Add Errata</span>
     </button>
   </div>

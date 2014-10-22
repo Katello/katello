@@ -2,8 +2,8 @@
 
 <div class="details details-full nutupane">
 
-  <div class="loading-mask loading-mask-panel icon-3x" ng-show="loadingVersions">
-    <i class="icon-spinner icon-spin"></i>
+  <div class="loading-mask loading-mask-panel fa-3x" ng-show="loadingVersions">
+    <i class="fa fa-spinner fa-spin"></i>
     {{ "Loading..." | translate }}
   </div>
   <div class="details-header">
@@ -75,7 +75,7 @@
                   ui-sref="content-views.details.promotion({contentViewId: contentView.id, versionId: version.id})"
                   ng-hide="denied('promote_or_remove_content_views', contentView)"
                   ng-disabled="taskInProgress(version) || taskFailed(version)">
-            <i class="icon-share-alt"></i>
+            <i class="fa fa-share-alt"></i>
             <span translate>
               Promote
             </span>
@@ -84,7 +84,7 @@
                   ui-sref="content-views.details.version-deletion.environments({contentViewId: contentView.id, versionId: version.id})"
                   ng-hide="denied('promote_or_remove_content_views', contentView)"
                   ng-disabled="taskInProgress(version) || taskFailed(version)">
-            <i class="icon-trash"></i>
+            <i class="fa fa-trash-o"></i>
             <span translate>
               Remove
             </span>

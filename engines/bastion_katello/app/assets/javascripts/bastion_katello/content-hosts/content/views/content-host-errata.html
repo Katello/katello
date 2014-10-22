@@ -1,6 +1,6 @@
 <span page-title ng-model="contentHost">{{ 'Errata for: ' | translate }} {{ contentHost.name }}</span>
 
-<p class="alert alert-info" ng-hide="contentHost.katello_agent_installed" bst-feature-flag="remote_actions">
+<p bst-alert="info" ng-hide="contentHost.katello_agent_installed" bst-feature-flag="remote_actions">
   <span translate>
     The katello-agent package is required to manage errata on this Host.
     Please install the katello-agent package to manage errata on
@@ -43,7 +43,9 @@
   </span>
 
   <div data-block="table">
-    <p translate class="alert alert-info" ng-show="detailsTable.rows.length === 0">There are no Errata to display.</p>
+    <p bst-alert="info" ng-show="detailsTable.rows.length === 0">
+      <span translate>There are no Errata to display.</span>
+    </p>
 
     <table class="table table-striped table-bordered" ng-class="{'table-mask': detailsTable.working}">
       <thead>
@@ -58,15 +60,15 @@
         <tr bst-table-row ng-repeat="erratum in detailsTable.rows | filter:detailsTable.errataCompare" row-select="erratum">
           <td bst-table-cell>
               <span ng-show="erratum.type == 'security'">
-                <i class="icon-warning-sign inline-icon" title="{{ 'Security' | translate }}"></i>
+                <i class="fa fa-warning inline-icon" title="{{ 'Security' | translate }}"></i>
               </span>
 
               <span ng-show="erratum.type == 'bugfix'">
-                <i class="icon-bug inline-icon" title="{{ 'Bug Fix' | translate }}"></i>
+                <i class="fa fa-bug inline-icon" title="{{ 'Bug Fix' | translate }}"></i>
               </span>
 
               <span ng-show="erratum.type == 'enhancement'">
-                <i class="icon-plus-sign-alt inline-icon" title="{{ 'Enhancement' | translate }}"></i>
+                <i class="fa fa-plus-square inline-icon" title="{{ 'Enhancement' | translate }}"></i>
               </span>
 
             {{ erratum.type | errataType}}
