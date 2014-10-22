@@ -17,10 +17,10 @@ attributes :content_overrides
 
 node :errata_counts do |system|
   {
-    :security => system.applicable_errata.security.count,
-    :bugfix => system.applicable_errata.bugfix.count,
-    :enhancement => system.applicable_errata.enhancement.count,
-    :total => system.applicable_errata.count
+    :security => system.available_errata.security.count,
+    :bugfix => system.available_errata.bugfix.count,
+    :enhancement => system.available_errata.enhancement.count,
+    :total => system.available_errata.count
   }
 end
 

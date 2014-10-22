@@ -11,7 +11,7 @@
         {{ "Subscription Status" | translate }}
       </th>
       <th alch-table-column="status">
-        <span translate>Applicable Errata</span>
+        <span translate>Available Errata</span>
       </th>
       <th alch-table-column="os"><span translate>OS</span></th>
       <th alch-table-column="environment" sortable><span translate>Environment</span></th>
@@ -36,7 +36,9 @@
         </span>
       </td>
       <td>
-        <span errata-counts="contentHost.errata_counts"></span>
+        <a ui-sref="content-hosts.details.errata.index({contentHostId: contentHost.uuid})">
+          <span errata-counts="contentHost.errata_counts"></span>
+        </a>
       </td>
       <td alch-table-cell>{{ contentHost.distribution }}</td>
       <td alch-table-cell>{{ contentHost.environment.name }}</td>
