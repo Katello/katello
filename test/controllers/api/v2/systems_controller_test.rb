@@ -47,6 +47,9 @@ module Katello
       System.any_instance.stubs(:products).returns([{:id => 1, :name => 'product', :available_content => []}])
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
 
+      Katello::Package.stubs(:package_count).returns(0)
+      Katello::PuppetModule.stubs(:module_count).returns(0)
+
       models
       permissions
     end

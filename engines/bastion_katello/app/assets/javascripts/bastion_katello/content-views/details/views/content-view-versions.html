@@ -52,7 +52,7 @@
           <div translate>
             {{ version.package_count || 0 }} Packages
           </div>
-	  <span translate>{{ errataCounts.total || 0 }} Errata</span>
+	  <span translate>{{ version.errata_counts.total || 0 }} Errata</span>
           (<span errata-counts="version.errata_counts"></span>)
           <div translate>
             {{ version.puppet_modules.length || 0 }} Puppet Modules

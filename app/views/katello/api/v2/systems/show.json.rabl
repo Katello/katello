@@ -16,12 +16,7 @@ end
 attributes :content_overrides
 
 node :errata_counts do |system|
-  {
-    :security => system.available_errata.security.count,
-    :bugfix => system.available_errata.bugfix.count,
-    :enhancement => system.available_errata.enhancement.count,
-    :total => system.available_errata.count
-  }
+  partial('katello/api/v2/errata/counts', :object => Katello::RelationPresenter.new(system.available_errata))
 end
 
 child :foreman_host => :host do
