@@ -19,6 +19,8 @@ module Katello
         before_filter :find_optional_organization, :only => [:index]
       end
 
+      extend ::Apipie::DSL::Concern
+
       def index
         collection = if @repo && !@repo.puppet?
                        filter_by_repos([@repo]).uniq
@@ -33,6 +35,26 @@ module Katello
                      end
 
         respond(:collection => scoped_search(collection, default_sort[0], default_sort[1]))
+      end
+
+      api :GET, "/compare/", N_("List :resource_id")
+      param :content_view_version_ids, Array, :desc => N_("content view versions to compare")
+      param :repository_id, :identifier, :desc => N_("Library repository id to restrict comparisons to")
+      def compare
+        fail _("No content_view_version_ids provided") if params[:content_view_version_ids].empty?
+        @versions = ContentViewVersion.readable.where(:id => params[:content_view_version_ids])
+
+        if @versions.count != params[:content_view_version_ids].uniq.length
+          missing = params[:content_view_version_ids] - @versions.pluck(:id)
+          fail HttpErrors::NotFound, _("Couldn't find content view versions '%s'") % missing.join(',')
+        end
+
+        repos = Katello::Repository.where(:content_view_version_id => @versions.pluck(:id))
+        repos = repos.where(:library_instance_id => @repo.id) if @repo
+
+        collection = scoped_search(filter_by_repos(repos).uniq, default_sort[0], default_sort[1])
+        collection[:results] = collection[:results].map { |item| ContentViewVersionComparePresenter.new(item, @versions, @repo) }
+        respond_for_index(:collection => collection)
       end
 
       private
