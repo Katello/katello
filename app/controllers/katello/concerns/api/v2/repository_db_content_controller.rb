@@ -15,6 +15,10 @@ module Katello
     module Api::V2::RepositoryDbContentController
       extend ActiveSupport::Concern
 
+      included do
+        before_filter :find_optional_organization, :only => [:index]
+      end
+
       def index
         collection = if @repo && !@repo.puppet?
                        filter_by_repos([@repo]).uniq
@@ -22,6 +26,8 @@ module Katello
                        filter_by_content_view_filter(@filter).uniq
                      elsif @version
                        filter_by_content_view_version(@version).uniq
+                     elsif @organization
+                       filter_by_repos(Repository.readable.in_organization(@organization)).uniq
                      else
                        filter_by_repos(Repository.readable).uniq
                      end

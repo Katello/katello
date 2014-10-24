@@ -106,6 +106,10 @@ module Katello
       self.content_view_version.content_view
     end
 
+    def self.in_organization(org)
+      where(:environment_id => org.environments)
+    end
+
     def self.in_environment(env_id)
       where(environment_id: env_id)
     end
