@@ -90,9 +90,9 @@ module Katello
     param :name, String, :desc => N_("name of the environment"), :required => true
     param :label, String, :desc => N_("label of the environment"), :required => false
     param :description, String, :desc => N_("description of the environment")
-    param :prior, String, :required => true, :desc => <<-DESC
-      Name of an environment that is prior to the new environment in the chain. It has to be
-      either 'Library' or an environment at the end of a chain.
+    param :prior, Integer, :required => true, :desc => <<-DESC
+      ID of an environment that is prior to the new environment in the chain. It has to be
+      either the ID of Library or the ID of an environment at the end of a chain.
     DESC
     def create
       create_params = environment_params
@@ -111,9 +111,9 @@ module Katello
     param :organization_id, :number, :desc => N_("name of the organization")
     param :new_name, String, :desc => N_("new name to be given to the environment")
     param :description, String, :desc => N_("description of the environment")
-    param :prior, String, :desc => <<-DESC
-      Name of an environment that is prior to the new environment in the chain. It has to be
-      either 'Library' or an environment at the end of a chain.
+    param :prior, Integer, :desc => <<-DESC
+      ID of an environment that is prior to the new environment in the chain. It has to be
+      either the ID of Library or the ID of an environment at the end of a chain.
     DESC
     def update
       fail HttpErrors::BadRequest, _("Can't update the '%s' environment") % "Library" if @environment.library?
