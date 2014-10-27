@@ -55,5 +55,12 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
         collapsed: true,
         permission: 'view_errata',
         templateUrl: 'errata/details/views/errata-details-info.html'
+    })
+    .state('errata.details.content-hosts', {
+        url: '/content-hosts',
+        collapsed: true,
+        permission: 'view_errata',
+        controller: 'ErrataContentHostsController',
+        templateUrl: 'errata/details/views/errata-details-content-hosts.html'
     });
 }]);

@@ -19,10 +19,9 @@
  * @requires Errata
  *
  * @description
- *   Provides the functionality for the host collection details action pane.
+ *   Provides the functionality for the errata details action pane.
  */
-angular.module('Bastion.errata').controller('ErrataDetailsController',
-    ['$scope', 'Erratum',
+angular.module('Bastion.errata').controller('ErrataDetailsController', ['$scope', 'Erratum',
     function ($scope, Erratum) {
         if ($scope.errata) {
             $scope.panel = {loading: false};
@@ -30,11 +29,8 @@ angular.module('Bastion.errata').controller('ErrataDetailsController',
             $scope.panel = {loading: true};
         }
 
-        $scope.errata = Erratum.get({id: $scope.$stateParams.errataId}, function (errata) {
-            $scope.$broadcast('errata.loaded', errata);
+        $scope.errata = Erratum.get({id: $scope.$stateParams.errataId}, function () {
             $scope.panel.loading = false;
         });
-
-
-    }]
-);
+    }
+]);

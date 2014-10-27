@@ -61,12 +61,14 @@ module Katello
     param :organization_id, :number, :desc => N_("Specify the organization"), :required => true
     param :environment_id, String, :desc => N_("Filter by environment")
     param :host_collection_id, String, :desc => N_("Filter by host collection")
-    param :erratum_id, String, :desc => N_("Filter by systems applicable to an Erratum")
-    param :erratum_restrict_available, String, :desc => N_("Return only systems where the Erratum specified by erratum_id is available to systems (default True)")
+    param :erratum_id, String, :desc => N_("Filter by systems that need an Erratum")
+    param :erratum_restrict_available, String, :desc => N_("Return only systems where the Erratum specified by erratum_id is available to systems (default False)")
+    param :erratum_restrict_unavailable, String, :desc => N_("Return only systems where the Erratum specified by erratum_id is unavailable to systems (default False)")
     param_group :search, Api::V2::ApiController
     def index
       if params[:erratum_id]
-        systems = systems_by_erratum(params[:erratum_id], params[:erratum_restrict_available]).readable
+        systems = systems_by_erratum(params[:erratum_id], params[:erratum_restrict_available],
+            params[:erratum_restrict_unavailable]).readable
       else
         systems = System.readable
       end
@@ -219,7 +221,7 @@ module Katello
       respond_for_index :collection => response
     end
 
-    # TODO: break this mehtod up
+    # TODO: break this method up
     api :GET, "/environments/:environment_id/systems/report", N_("Get content host reports for the environment"), :deprecated => true
     api :GET, "/organizations/:organization_id/systems/report", N_("Get content host reports for the organization"), :deprecated => true
     def report # rubocop:disable MethodLength
@@ -401,13 +403,17 @@ module Katello
       end
     end
 
-    def systems_by_erratum(erratum_id, available)
-      available = available.nil? ? true : available.to_bool
+    def systems_by_erratum(erratum_id, available, unavailable)
+      available = available.nil? ? false : available.to_bool
+      unavailable = unavailable.nil? ? false : unavailable.to_bool
+
       erratum = Katello::Erratum.find_by_uuid(erratum_id)
       fail _("Unable to find erratum %s.") % erratum_id unless erratum
 
       if available
         erratum.systems_available
+      elsif unavailable
+        erratum.systems_unavailable
       else
         erratum.systems_applicable
       end

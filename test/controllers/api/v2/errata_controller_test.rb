@@ -42,6 +42,10 @@ module Katello
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @request.env['CONTENT_TYPE'] = 'application/json'
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
+
+      Katello::Erratum.any_instance.stubs(:systems_applicable).returns([])
+      Katello::Erratum.any_instance.stubs(:systems_available).returns([])
+
       models
       permissions
     end
