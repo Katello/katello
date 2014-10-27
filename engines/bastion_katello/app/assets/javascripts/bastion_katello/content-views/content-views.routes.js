@@ -125,19 +125,43 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         collapsed: true,
         template: '<div ui-view></div>'
     })
-    .state('content-views.details.repositories.list', {
+    .state('content-views.details.repositories.yum', {
+        abstract: true,
         collapsed: true,
-        url: '/repositories',
+        template: '<div ui-view></div>'
+    })
+    .state('content-views.details.repositories.yum.list', {
+        collapsed: true,
+        url: '/repositories/yum',
         permission: 'view_content_views',
         controller: 'ContentViewRepositoriesListController',
         templateUrl: 'content-views/details/views/content-view-repositories.html'
     })
-    .state('content-views.details.repositories.available', {
+    .state('content-views.details.repositories.yum.available', {
         collapsed: true,
-        url: '/repositories/available',
+        url: '/repositories/yum/available',
         permission: 'view_content_views',
         controller: 'ContentViewAvailableRepositoriesController',
         templateUrl: 'content-views/details/views/content-view-repositories.html'
+    })
+    .state('content-views.details.repositories.docker', {
+        abstract: true,
+        collapsed: true,
+        template: '<div ui-view></div>'
+    })
+    .state('content-views.details.repositories.docker.list', {
+        collapsed: true,
+        url: '/repositories/docker',
+        permission: 'view_content_views',
+        controller: 'ContentViewDockerRepositoriesListController',
+        templateUrl: 'content-views/details/views/content-view-docker-repositories.html'
+    })
+    .state('content-views.details.repositories.docker.available', {
+        collapsed: true,
+        url: '/repositories/docker/available',
+        permission: 'view_content_views',
+        controller: 'ContentViewAvailableDockerRepositoriesController',
+        templateUrl: 'content-views/details/views/content-view-docker-repositories.html'
     })
     .state('content-views.details.history', {
         collapsed: true,

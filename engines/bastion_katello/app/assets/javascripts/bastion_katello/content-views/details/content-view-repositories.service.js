@@ -72,6 +72,33 @@ angular.module('Bastion.content-views').service('ContentViewRepositoriesUtil',
                 return products;
             }
 
+            scope.removeSelectedRepositoriesFromContentView = function (nutupane, contentView) {
+                var ids = [],
+                    selected = scope.getSelected(nutupane);
+
+                angular.forEach(contentView['repository_ids'], function (id) {
+                    if (selected.indexOf(id) === -1) {
+                        ids.push(id);
+                    }
+                });
+
+                contentView['repository_ids'] = ids;
+
+                scope.save(contentView).then(function () {
+                    nutupane.refresh();
+                });
+            };
+
+            scope.addSelectedRepositoriesToContentView = function (nutupane, contentView) {
+                var selected = scope.getSelected(nutupane);
+
+                contentView['repository_ids'] = contentView['repository_ids'].concat(selected);
+
+                scope.save(contentView).then(function () {
+                    nutupane.refresh();
+                });
+            };
+
         };
 
     }]

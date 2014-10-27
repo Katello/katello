@@ -8,16 +8,16 @@
 
   <nav>
     <ul class="nav nav-tabs">
-      <li ng-class="{active: isState('content-views.details.repositories.yum.list')}">
-        <a ui-sref="content-views.details.repositories.yum.list">
+      <li ng-class="{active: isState('content-views.details.repositories.docker.list')}">
+        <a ui-sref="content-views.details.repositories.docker.list">
           <span translate>
             List/Remove
           </span>
         </a>
       </li>
 
-      <li ng-class="{active: isState('content-views.details.repositories.yum.available')}" ng-show="!contentView.permissions.editable">
-        <a ui-sref="content-views.details.repositories.yum.available" translate>
+      <li ng-class="{active: isState('content-views.details.repositories.docker.available')}" ng-show="!contentView.permissions.editable">
+        <a ui-sref="content-views.details.repositories.docker.available" translate>
           Add
         </a>
       </li>
@@ -44,14 +44,14 @@
     <div class="col-sm-4">
       <button class="btn btn-primary fr"
               ng-disabled="repositoriesTable.numSelected === 0"
-              ng-show="isState('content-views.details.repositories.yum.list') && permitted('edit_content_views', contentView)"
+              ng-show="isState('content-views.details.repositories.docker.list') && permitted('edit_content_views', contentView)"
               ng-click="removeRepositories(contentView)">
         <i class="icon-trash"></i>
         <span translate>Remove Repositories</span>
       </button>
       <button class="btn btn-primary fr"
               ng-disabled="repositoriesTable.numSelected === 0"
-              ng-show="isState('content-views.details.repositories.yum.available') && permitted('edit_content_views', contentView)"
+              ng-show="isState('content-views.details.repositories.docker.available') && permitted('edit_content_views', contentView)"
               ng-click="addRepositories(contentView)">
         <i class="icon-plus"></i>
         <span translate>Add Repositories</span>
@@ -62,10 +62,10 @@
   <div alch-table="repositoriesTable" class="nutupane">
 
     <div ng-show="repositoriesTable.rows.length === 0 && !repositoriesTable.working">
-      <p class="alert alert-info" ng-show="isState('content-views.details.repositories.yum.list')" translate>
+      <p class="alert alert-info" ng-show="isState('content-views.details.repositories.docker.list')" translate>
         There are currently no repositories associated with this Content View, you can add some by clicking on the "Add" tab above.
       </p>
-      <p class="alert alert-info" ng-show="isState('content-views.details.repositories.yum.available')">
+      <p class="alert alert-info" ng-show="isState('content-views.details.repositories.docker.available')">
         <span translate>There are currently no repositories to add to this Content View,</span>
         <a ui-sref="products.index" translate>add some repositories.</a>
       </p>
@@ -113,24 +113,9 @@
             </td>
             <td alch-table-cell>
               <div>
-                <a ng-href="/katello/content_search#/!=&search[packages][search]=&search[content_type]=packages&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages"
-                   ng-show="repository.content_type == 'yum'"
+                <a ng-show="repository.content_type == 'docker'"
                    translate>
-                  {{ repository.content_counts.rpm || 0 }} Packages
-                </a>
-              </div>
-              <div>
-                <a ng-href="/katello/content_search#/!=&search[errata][search]=&search[content_type]=errata&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata"
-                   ng-show="repository.content_type == 'yum'"
-                   translate>
-                  {{ repository.content_counts.erratum || 0 }} Errata
-                </a>
-              </div>
-              <div>
-                <a ng-href="/katello/content_search#/!=&search[puppet_modules][search]=&search[content_type]=puppet_modules&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_puppet_modules"
-                   ng-show="repository.content_type == 'puppet'"
-                   translate>
-                  {{ repository.content_counts.puppet_module || 0 }} Puppet Modules
+                  {{ repository.content_counts.docker_image || 0 }} Docker Images
                 </a>
               </div>
             </td>

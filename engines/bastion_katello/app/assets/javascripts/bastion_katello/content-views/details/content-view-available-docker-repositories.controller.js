@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc object
- * @name  Bastion.content-views.controller:ContentViewAvailableRepositoriesController
+ * @name  Bastion.content-views.controller:ContentViewAvailableDockerRepositoriesController
  *
  * @requires $scope
  * @requires Repository
@@ -22,11 +22,9 @@
  * @requires ContentViewRepositoriesUtil
  *
  * @description
- *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
- *   Defines the columns to display and the transform function for how to generate each row
- *   within the table.
+ *    Provides UI functionality add docker repositories to a content view
  */
-angular.module('Bastion.content-views').controller('ContentViewAvailableRepositoriesController',
+angular.module('Bastion.content-views').controller('ContentViewAvailableDockerRepositoriesController',
     ['$scope', 'Repository', 'Nutupane', 'CurrentOrganization', 'ContentViewRepositoriesUtil',
     function ($scope, Repository, Nutupane, CurrentOrganization, ContentViewRepositoriesUtil) {
 
@@ -37,7 +35,7 @@ angular.module('Bastion.content-views').controller('ContentViewAvailableReposito
         nutupane = new Nutupane(Repository, {
             'organization_id': CurrentOrganization,
             'library': true,
-            'content_type': 'yum'
+            'content_type': 'docker'
         },
         'queryUnpaged');
 
@@ -50,6 +48,5 @@ angular.module('Bastion.content-views').controller('ContentViewAvailableReposito
         $scope.addRepositories = function (contentView) {
             $scope.addSelectedRepositoriesToContentView(nutupane, contentView);
         };
-
     }]
 );

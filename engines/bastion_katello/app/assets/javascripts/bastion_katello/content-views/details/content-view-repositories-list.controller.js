@@ -35,26 +35,14 @@ angular.module('Bastion.content-views').controller('ContentViewRepositoriesListC
 
         nutupane = new Nutupane(Repository, {
             'organization_id': CurrentOrganization,
-            'content_view_id': $scope.$stateParams.contentViewId
+            'content_view_id': $scope.$stateParams.contentViewId,
+            'content_type': 'yum'
         },
         'queryUnpaged');
         $scope.repositoriesTable = nutupane.table;
 
         $scope.removeRepositories = function () {
-            var ids = [],
-                selected = $scope.getSelected(nutupane);
-
-            angular.forEach($scope.contentView['repository_ids'], function (id) {
-                if (selected.indexOf(id) === -1) {
-                    ids.push(id);
-                }
-            });
-
-            $scope.contentView['repository_ids'] = ids;
-
-            $scope.save($scope.contentView).then(function () {
-                nutupane.refresh();
-            });
+            $scope.removeSelectedRepositoriesFromContentView(nutupane, $scope.contentView);
         };
 
     }]
