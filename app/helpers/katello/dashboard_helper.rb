@@ -103,12 +103,11 @@ module Katello
         end
       end
 
-      syncing_products.sort do |a, b|
-        a.sync_status.start_time <=> b.sync_status.start_time
+      syncing_products = syncing_products.sort do |a, b|
+        b.sync_status.start_time <=> a.sync_status.start_time
       end
 
       return (syncing_products + synced_products)[0..num]
-
     end
 
     def sync_percentage(product)
