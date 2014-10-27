@@ -48,12 +48,14 @@ module Katello
 
     def test_index
       get :index, :repository_id => @repo.id
-
       assert_response :success
       assert_template %w(katello/api/v2/errata/index)
 
       get :index
+      assert_response :success
+      assert_template %w(katello/api/v2/errata/index)
 
+      get :index, :organization_id => @repo.organization.id
       assert_response :success
       assert_template %w(katello/api/v2/errata/index)
     end
