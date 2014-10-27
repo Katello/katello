@@ -175,6 +175,15 @@ module Katello
       end
     end
 
+    def test_copy_protected
+      allowed_perms = [@create_permission]
+      denied_perms = [@view_permission, @destroy_permission, @update_permission]
+
+      assert_protected_action(:copy, allowed_perms, denied_perms) do
+        post(:copy, :id => @activation_key.id, :new_name => "new name")
+      end
+    end
+
     def test_content_override_protected
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]

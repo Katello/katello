@@ -9,7 +9,7 @@ Foreman::Plugin.find(:katello).security_block :activation_keys do
              :resource_type => 'Katello::ActivationKey'
   permission :create_activation_keys,
              {
-               'katello/api/v2/activation_keys' => [:create]
+               'katello/api/v2/activation_keys' => [:create, :copy]
              },
              :resource_type => 'Katello::ActivationKey'
   permission :edit_activation_keys,

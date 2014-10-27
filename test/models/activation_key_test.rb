@@ -64,5 +64,15 @@ module Katello
       assert ActivationKey.new(:name => original_name, :organization => org).valid?
     end
 
+    test "key can be copied" do
+      new_key = @dev_key.copy("new key name")
+      assert_equal new_key.name, "new key name"
+      assert_equal new_key.description, @dev_key.description
+      assert_equal new_key.host_collections, @dev_key.host_collections
+      assert_equal new_key.content_view, @dev_key.content_view
+      assert_equal new_key.organization, @dev_key.organization
+      assert_equal new_key.max_content_hosts, @dev_key.max_content_hosts
+    end
+
   end
 end

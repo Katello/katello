@@ -1,4 +1,4 @@
-object @activation_key
+object @resource
 
 attributes :id, :name, :description, :unlimited_content_hosts
 
