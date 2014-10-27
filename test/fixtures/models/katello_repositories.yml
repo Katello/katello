@@ -192,3 +192,15 @@ iso:
   product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>
+
+docker:
+  name:                 redis
+  pulp_id:              "Default_Organization-Test-redis"
+  content_id:           1
+  content_type:         docker
+  label:                redis
+  relative_path:        '/ACME_Corporation/library/redis'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>

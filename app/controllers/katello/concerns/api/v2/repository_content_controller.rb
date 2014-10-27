@@ -153,7 +153,6 @@ module Katello
       def filter_by_content_view_version(version)
         filter_by_repo_ids(version.archived_repos.map(&:pulp_id))
       end
-
     end
   end
 end

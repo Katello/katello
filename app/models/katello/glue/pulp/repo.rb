@@ -332,6 +332,46 @@ module Katello
         tmp_errata
       end
 
+      def index_db_docker_images(force = false)
+        if self.content_view.default? || force
+          docker_images_json.each do |image_json|
+            image = DockerImage.find_or_create_by_katello_uuid(image_json[:_id])
+            image.update_from_json(image_json)
+            create_docker_tags(image, image_json[:tags])
+          end
+        end
+        ActiveRecord::Base.transaction do
+          Katello::RepositoryDockerImage.where(:repository_id => self.id).delete_all
+          DockerImage.insert_repository_associations(self, docker_image_ids)
+        end
+      end
+
+      def docker_images_json
+        docker_images = []
+
+        # retrieve the docker image tags
+        repo_attrs = Katello.pulp_server.extensions.repository.retrieve_with_details(pulp_id)
+        tags = repo_attrs.try(:[], :scratchpad).try(:[], :tags) || []
+
+        docker_image_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+          docker_images.concat(Katello.pulp_server.extensions.docker_image.find_all_by_unit_ids(sub_list))
+        end
+        # add the docker tags in
+        docker_images.each do |attrs|
+          attrs[:tags] = tags.select { |tag| tag[:image_id] == attrs[:image_id] }.map { |tag| tag[:tag] }
+        end
+
+        docker_images
+      end
+
+      def create_docker_tags(image, tags)
+        return if tags.empty?
+
+        tags.each do |tag|
+          DockerTag.find_or_create_by_katello_repository_id_and_docker_image_id_and_tag!(id, image.id, tag)
+        end
+      end
+
       def distributions
         if @repo_distributions.nil?
           # we fetch ids and then fetch distributions by id, because repo distributions do not contain
@@ -420,10 +460,6 @@ module Katello
 
       def docker_image_ids
         Katello.pulp_server.extensions.repository.docker_image_ids(self.pulp_id)
-      end
-
-      def docker_images
-        @repo_docker_images ||= Katello::DockerImage.find_all(self.pulp_id)
       end
 
       def distribution?(id)

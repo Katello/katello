@@ -128,6 +128,7 @@ module Katello
       def index_content
         self.index_packages
         self.index_db_errata
+        self.index_db_docker_images
         self.index_package_groups
         self.index_puppet_modules
         self.index_distributions

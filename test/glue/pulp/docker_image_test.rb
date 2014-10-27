@@ -22,24 +22,10 @@ module Katello
       @images = YAML.load_file(IMAGES).values.map(&:symbolize_keys)
       @tags = YAML.load_file(TAGS).values.map(&:symbolize_keys)
       @repo_attrs = {:scratchpad => {:tags => @tags}}
+      @repo = Repository.find(katello_repositories(:docker))
     end
 
-    def test_find
-      id = @images.first[:_id]
-      Runcible::Extensions::Repository.any_instance.stubs(:retrieve_with_details).
-        with(REPO_ID).returns(@repo_attrs)
-      Runcible::Extensions::DockerImage.any_instance.stubs(:find_by_unit_id).
-        with(id).returns(@images.first)
-
-      image = DockerImage.find(id)
-      assert_equal id, image.id
-      assert_empty image.tags
-
-      image = DockerImage.find(id, REPO_ID)
-      assert_equal ["latest"], image.tags
-    end
-
-    def test_find_all
+    def test_index_db_docker_images
       ids = @images.map { |attrs| attrs[:_id] }
       Runcible::Extensions::Repository.any_instance.stubs(:docker_image_ids).
         with(REPO_ID).returns(ids)
@@ -48,36 +34,14 @@ module Katello
       Runcible::Extensions::Repository.any_instance.stubs(:retrieve_with_details).
         with(REPO_ID).returns(@repo_attrs)
 
-      images = DockerImage.find_all(REPO_ID)
+      @repo.index_db_docker_images
+      assert_equal 3, DockerImage.count
+      assert_equal 3, @repo.docker_images.count
+      assert_equal [0, 0, 42], DockerImage.all.map(&:size).sort
 
-      assert_equal 3, images.length
-      assert_equal ["2.5.1", "1.2", "latest", "latest"].sort, images.flat_map(&:tags).sort
-      assert_equal ["Default_Organization-Test-redis"], images.first.repoids
-      assert_equal 42, images.last.size
-    end
-
-    def test_find_all_no_tags
-      # test to make sure that even without a tags key, the code works
-      ids = @images.map { |attrs| attrs[:_id] }
-      Runcible::Extensions::Repository.any_instance.stubs(:docker_image_ids).
-        with(REPO_ID).returns(ids)
-      Runcible::Extensions::DockerImage.any_instance.stubs(:find_all_by_unit_ids).
-        with(ids).returns(@images)
-      Runcible::Extensions::Repository.any_instance.stubs(:retrieve_with_details).
-        with(REPO_ID).returns({})
-
-      images = DockerImage.find_all(REPO_ID)
-
-      assert_equal 3, images.length
-      assert_equal [], images.flat_map(&:tags).compact
-      assert_equal ["Default_Organization-Test-redis"], images.last.repoids
-    end
-
-    def test_get_tags
-      Runcible::Extensions::Repository.any_instance.stubs(:retrieve_with_details).
-        with(REPO_ID).returns(@repo_attrs)
-      tags = DockerImage.get_tags(REPO_ID, "2cffbad5f0fbc38ba7e82d1440042e57bfa5c89a41a5e99cd42bcd4968705f5d")
-      assert_equal ["2.5.1", "1.2", "latest"], tags
+      image = DockerImage.find_by_image_id("2cffbad5f0fbc38ba7e82d1440042e57bfa5c89a41a5e99cd42bcd4968705f5d")
+      tags = image.tags.map(&:tag).sort
+      assert_equal ["1.2", "2.5.1", "latest"], tags
     end
   end
 end
