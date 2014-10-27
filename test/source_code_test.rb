@@ -85,33 +85,7 @@ class SourceCodeTest < ActiveSupport::TestCase
 
   end
 
-  describe 'formatting' do
-    it 'does not have trailing whitespaces' do
-      SourceCode.
-          new('**/*.{rb,js,scss,haml}',
-              %r{coverage|engines/bastion/node_modules|engines/bastion/vendor|(public|vendor)/assets/.*\.js}).
-          check_lines { |line| line !~ / +\z/ }
-    end
-
-    it 'does use soft-tabs' do
-      SourceCode.
-          new('**/*.{rb,js,scss,haml}',
-              %r{coverage|engines/bastion/node_modules|engines/bastion/vendor|(public|vendor)/assets/.*\.js}).
-          check_lines { |line| line !~ /\t/ }
-    end
-  end
-
   describe 'best practices' do
-    it 'does not use rescue Exception => e' do # ok
-      SourceCode.
-          new('**/*.rb').
-          check_lines(<<-DOC) { |line| (line !~ /rescue +Exception/) ? true : line =~ /#\s?ok/ }
-always rescue a specific exception or at least `rescue` which evaluates to `rescue StandardError`
-see http://stackoverflow.com/questions/10048173/why-is-it-bad-style-to-rescue-exception-e-in-ruby
-for more info.
-      DOC
-    end
-
     it 'does not use ENV variables' do
       SourceCode.
           new('**/*.rb',
@@ -128,56 +102,6 @@ Katello.config or Katello.early_config should be always used instead of ENV vari
 the single entry point to configuration. ENV variables are processed there.
       DOC
     end
-
-    it 'does not use general rescue => e' do
-      skip 'to be enabled'
-    end
-
-    it "does not use 'and' in boolean expressions" do
-      doc = "don't use 'and' in boolean expressions https://github.com/styleguide/ruby"
-      SourceCode.new('**/*.rb').fail_on_ruby_keyword(doc) do |lex, index, token|
-        SourceCode.token_is_keyword?("and", lex, index, token)
-      end
-    end
-
-    it "does not use 'or' in boolean expressions" do
-      doc = "don't use 'or' in boolean expressions https://github.com/styleguide/ruby"
-      SourceCode.new('**/*.rb').fail_on_ruby_keyword(doc) do |lex, index, token|
-        SourceCode.token_is_keyword?("or", lex, index, token)
-      end
-    end
-
-    it "does not use 'not' in boolean expresssions" do
-      doc = "don't use 'not' in boolean expressions https://github.com/styleguide/ruby"
-      SourceCode.new("**/*.rb").fail_on_ruby_keyword(doc) do |lex, index, token|
-        SourceCode.token_is_keyword?("not", lex, index, token)
-      end
-    end
-
-    it "does not have any 'debugger' statements accidentally included in the ruby source" do
-      doc = "don't forget to remove all your 'debugger' statements"
-      SourceCode.new("**/*.rb").fail_on_ruby_keyword(doc) do |lex, index, token|
-        SourceCode.token_is_keyword?("debugger", lex, index, token)
-      end
-    end
-
-    it "does not have any 'debugger' statements accidentally left in the haml" do
-      doc = "don't forget to remove all your 'debugger' statements"
-      SourceCode.new("**/*.haml").check_lines(doc) do |line|
-        line !~ /\A\s+-\s+debugger(\s+[if|unless]\s+.+)?\z/
-      end
-    end
-
-    it "does not have any 'debugger' statements accidentally left in the JS" do
-      doc = "don't forget to remove all your 'debugger' statements"
-      SourceCode.
-          new('**/*.js',
-              %r{coverage|engines/bastion/node_modules|engines/bastion/vendor|(public|vendor)/assets/.*\.js}).
-          check_lines(doc) do |line|
-        line !~ /\A\s*debugger.*;\n*\z/
-      end
-    end
-
   end
 
   describe 'gettext' do
