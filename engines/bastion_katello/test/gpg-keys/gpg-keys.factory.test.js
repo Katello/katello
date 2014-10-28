@@ -41,7 +41,7 @@ describe('Factory: GPGKey', function() {
     });
 
     it('provides a way to get a list of repositorys', function() {
-        $httpBackend.expectGET('/api/v2/gpg_keys?organization_id=ACME').respond(gpgKeys);
+        $httpBackend.expectGET('/katello/api/v2/gpg_keys?organization_id=ACME').respond(gpgKeys);
 
         GPGKey.queryPaged(function(gpgKeys) {
             expect(gpgKeys.records.length).toBe(1);

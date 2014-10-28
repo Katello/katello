@@ -48,31 +48,31 @@ describe('Factory: Organization', function() {
     });
 
     it('provides a way retrieve an organization', function() {
-        $httpBackend.expectGET('/api/v2/organizations').respond(organizations);
+        $httpBackend.expectGET('/katello/api/v2/organizations').respond(organizations);
         Organization.queryPaged(function(organizations) {
             expect(organizations.records.length).toBe(2);
         });
     });
 
     it('provides a way to auto attach available subscriptions to systems', function() {
-        $httpBackend.expectPOST('/api/v2/organizations/ACME/autoattach_subscriptions').respond(task);
+        $httpBackend.expectPOST('/katello/api/v2/organizations/ACME/autoattach_subscriptions').respond(task);
         Organization.autoAttachSubscriptions({id: 'ACME'}, function(results) {
             expect(results.id).toBe(task.id);
         });
     });
 
     it('provides a way to get repo discover', function() {
-        $httpBackend.expectPOST('/api/v2/organizations/ACME/repo_discover').respond(task);
+        $httpBackend.expectPOST('/katello/api/v2/organizations/ACME/repo_discover').respond(task);
         Organization.repoDiscover({ id: 'ACME' , url: '/foo'});
     });
 
     it('provides a way to cancel repo discover', function() {
-        $httpBackend.expectPOST('/api/v2/organizations/ACME/repo_discover').respond(task);
+        $httpBackend.expectPOST('/katello/api/v2/organizations/ACME/repo_discover').respond(task);
         Organization.repoDiscover({ id: 'ACME' , url: '/foo'});
     });
 
     it('provides a way to get an org', function() {
-        $httpBackend.expectGET('/api/v2/organizations/ACME').respond(organizations.records[0]);
+        $httpBackend.expectGET('/katello/api/v2/organizations/ACME').respond(organizations.records[0]);
 
         Organization.get({ id: 'ACME' }, function(response) {
             expect(response.id).toBe(1);
@@ -136,7 +136,7 @@ describe('Factory: Organization', function() {
         //testing the transform
         // from [{environments : [{id, name, permissions: {readable : true}}]}]
         // to [[{id, name, select: true}]]
-        $httpBackend.expectGET('/api/v2/organizations/ACME/environments/paths').respond(response);
+        $httpBackend.expectGET('/katello/api/v2/organizations/ACME/environments/paths').respond(response);
         readableEnvs = Organization.readableEnvironments({"id":"ACME"});
         $httpBackend.flush ();
         flushAfterFunction = false;

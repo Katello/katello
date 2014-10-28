@@ -46,7 +46,7 @@ describe('Factory: ContentViewPuppetModule', function() {
     });
 
     it('provides a way to get a collection of content views', function() {
-        $httpBackend.expectGET('/api/v2/content_views/content_view_puppet_modules?full_result=true&organization_id=ACME')
+        $httpBackend.expectGET('/katello/api/v2/content_views/content_view_puppet_modules?full_result=true&organization_id=ACME')
             .respond(ContentViewPuppetModules);
 
         ContentViewPuppetModule.queryUnpaged(function (response) {
@@ -60,7 +60,7 @@ describe('Factory: ContentViewPuppetModule', function() {
     });
 
     it('provides a way to get a single content view', function() {
-        $httpBackend.expectGET('/api/v2/content_views/content_view_puppet_modules/1?organization_id=ACME')
+        $httpBackend.expectGET('/katello/api/v2/content_views/content_view_puppet_modules/1?organization_id=ACME')
             .respond(ContentViewPuppetModules.results[0]);
 
         ContentViewPuppetModule.get({id: 1}, function (contentViewPuppetModule) {
@@ -72,7 +72,7 @@ describe('Factory: ContentViewPuppetModule', function() {
     it('provides a way to create a content view', function() {
         var contentViewPuppetModule = {id: 1, name: 'Content View'};
 
-        $httpBackend.expectPOST('/api/v2/content_views/content_view_puppet_modules/1?organization_id=ACME')
+        $httpBackend.expectPOST('/katello/api/v2/content_views/content_view_puppet_modules/1?organization_id=ACME')
             .respond(contentViewPuppetModule);
 
         ContentViewPuppetModule.save(contentViewPuppetModule, function (contentViewPuppetModule) {
@@ -82,7 +82,7 @@ describe('Factory: ContentViewPuppetModule', function() {
     });
 
     it('provides a way to update a content view', function() {
-        $httpBackend.expectPUT('/api/v2/content_views/content_view_puppet_modules/1?organization_id=ACME')
+        $httpBackend.expectPUT('/katello/api/v2/content_views/content_view_puppet_modules/1?organization_id=ACME')
             .respond(ContentViewPuppetModules.results[0]);
 
         ContentViewPuppetModule.update({id: 1, name: 'NewCVName'}, function (contentViewPuppetModule) {;

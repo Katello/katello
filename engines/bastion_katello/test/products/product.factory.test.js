@@ -42,7 +42,7 @@ describe('Factory: Product', function() {
     });
 
     it('provides a way to get a list of products', function() {
-        $httpBackend.expectGET('/api/products').respond(products);
+        $httpBackend.expectGET('/katello/api/products').respond(products);
 
         Product.queryPaged(function(products) {
             expect(products.records.length).toBe(2);
@@ -53,7 +53,7 @@ describe('Factory: Product', function() {
         var updatedProduct = products.records[0];
 
         updatedProduct.name = 'NewProductName';
-        $httpBackend.expectPUT('/api/products/1').respond(updatedProduct);
+        $httpBackend.expectPUT('/katello/api/products/1').respond(updatedProduct);
 
         Product.update({ id: 1 }, function(product) {
             expect(product).toBeDefined();
@@ -62,7 +62,7 @@ describe('Factory: Product', function() {
     });
 
     it('provides a way to sync a product', function() {
-        $httpBackend.expectPOST('/api/products/1/sync').respond(products[0]);
+        $httpBackend.expectPOST('/katello/api/products/1/sync').respond(products[0]);
 
         Product.sync({ id: 1 });
     });
@@ -71,7 +71,7 @@ describe('Factory: Product', function() {
         var updatedProduct = products.records[0];
 
         updatedProduct.sync_plan_id = 2;
-        $httpBackend.expectPOST('/api/products/1/sync_plan').respond(updatedProduct);
+        $httpBackend.expectPOST('/katello/api/products/1/sync_plan').respond(updatedProduct);
 
         Product.updateSyncPlan({ id: 1, plan_id: 2 }, function(product) {
             expect(product).toBeDefined();
@@ -104,17 +104,17 @@ describe('Factory: ProductBulkAction', function() {
     });
 
     it('provides a way to remove products', function() {
-        $httpBackend.expect('PUT', '/api/products/bulk/destroy', productParams).respond();
+        $httpBackend.expect('PUT', '/katello/api/products/bulk/destroy', productParams).respond();
         ProductBulkAction.removeProducts(productParams);
     });
 
     it('provides a way to sync products', function() {
-        $httpBackend.expect('PUT', '/api/products/bulk/sync', productParams).respond();
+        $httpBackend.expect('PUT', '/katello/api/products/bulk/sync', productParams).respond();
         ProductBulkAction.syncProducts(productParams);
     });
 
     it('provides a way to update product sync plans', function() {
-        $httpBackend.expect('PUT', '/api/products/bulk/sync_plan', productParams).respond();
+        $httpBackend.expect('PUT', '/katello/api/products/bulk/sync_plan', productParams).respond();
         ProductBulkAction.updateProductSyncPlan(productParams);
     });
 });

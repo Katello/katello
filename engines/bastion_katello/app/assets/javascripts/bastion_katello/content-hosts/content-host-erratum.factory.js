@@ -23,7 +23,7 @@
 angular.module('Bastion.content-hosts').factory('ContentHostErratum',
     ['BastionResource', function (BastionResource) {
 
-        return BastionResource('/api/v2/systems/:id/errata/:errata_id/:action', {id: '@uuid'}, {
+        return BastionResource('/katello/api/v2/systems/:id/errata/:errata_id/:action', {id: '@uuid'}, {
             get: {method: 'GET', isArray: false, transformResponse: function (data) {
                 data = angular.fromJson(data);
                 angular.forEach(data.results, function (errata) {

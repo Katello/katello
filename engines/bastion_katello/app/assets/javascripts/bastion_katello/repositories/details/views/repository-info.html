@@ -186,7 +186,7 @@
         <tr ng-show="repository.content_type == 'yum'">
           <td translate>Packages</td>
           <td class="align-center">
-            <a ng-href="{{ RootURL }}/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages">
+            <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages">
               {{ repository.content_counts.rpm || 0 }}
             </a>
           </td>
@@ -194,7 +194,7 @@
         <tr ng-show="repository.content_type == 'yum'">
           <td translate>Errata</td>
           <td class="align-center">
-            <a ng-href="{{ RootURL }}/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata">
+            <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata">
             {{ repository.content_counts.erratum || 0 }}
             </a>
           </td>
@@ -206,7 +206,7 @@
         <tr ng-show="repository.content_type == 'puppet'">
           <td translate>Puppet Modules</td>
           <td class="align-center">
-            <a ng-href="{{ RootURL }}/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_puppet_modules">
+            <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_puppet_modules">
             {{ repository.content_counts.puppet_module || 0 }}
             </a>
           </td>

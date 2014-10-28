@@ -41,7 +41,7 @@ describe('Factory: Capsule', function() {
     });
 
     it('provides a way to get a list of products', function() {
-        $httpBackend.expectGET('/api/capsules?full_result=true').respond(capsules);
+        $httpBackend.expectGET('/katello/api/capsules?full_result=true').respond(capsules);
 
         Capsule.queryUnpaged(function(capsules) {
             expect(capsules.records.length).toBe(2);

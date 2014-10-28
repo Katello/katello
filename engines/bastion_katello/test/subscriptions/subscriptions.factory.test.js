@@ -45,7 +45,7 @@ describe('Factory: Subscription', function() {
     });
 
     it('provides a way to get a list of subscriptions', function() {
-        $httpBackend.expectGET('/api/v2/organizations/ACME/subscriptions').respond(subscriptions);
+        $httpBackend.expectGET('/katello/api/v2/organizations/ACME/subscriptions').respond(subscriptions);
 
         Subscription.queryPaged(function(subscriptions) {
             expect(subscriptions.results.length).toBe(2);
@@ -53,14 +53,14 @@ describe('Factory: Subscription', function() {
     });
 
     it('provides a way to get a subscription', function() {
-        $httpBackend.expectGET('/api/v2/organizations/ACME/subscriptions/1').respond(subscription);
+        $httpBackend.expectGET('/katello/api/v2/organizations/ACME/subscriptions/1').respond(subscription);
         Subscription.get({ id: 1 }, function(results) {
             expect(results.id).toBe(subscription.id);
         });
     });
 
     it('provides a way to get a manifest history', function() {
-        $httpBackend.expectGET('/api/v2/organizations/ACME/subscriptions/manifest_history?').respond([]);
+        $httpBackend.expectGET('/katello/api/v2/organizations/ACME/subscriptions/manifest_history?').respond([]);
         Subscription.manifestHistory(function(result){
             expect(result).not.toBeUndefined();
         });

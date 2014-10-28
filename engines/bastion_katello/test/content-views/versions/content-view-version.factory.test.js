@@ -39,7 +39,7 @@ describe('Factory: ContentViewVersion', function () {
     });
 
     it('provides a way to get a list of repositorys', function () {
-        $httpBackend.expectGET('/api/v2/content_view_versions').respond(contentViewVersion);
+        $httpBackend.expectGET('/katello/api/v2/content_view_versions').respond(contentViewVersion);
 
         ContentViewVersion.queryPaged(function (contentViewVersion) {
             expect(contentViewVersion.records.length).toBe(1);

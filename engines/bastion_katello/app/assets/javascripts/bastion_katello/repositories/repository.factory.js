@@ -25,7 +25,7 @@ angular.module('Bastion.repositories').factory('Repository',
     ['BastionResource', 'CurrentOrganization',
     function (BastionResource, CurrentOrganization) {
 
-        return BastionResource('/api/v2/repositories/:id/:action',
+        return BastionResource('/katello/api/v2/repositories/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 update: { method: 'PUT' },
@@ -50,7 +50,7 @@ angular.module('Bastion.repositories').factory('Repository',
 angular.module('Bastion.repositories').factory('RepositoryBulkAction',
     ['BastionResource', 'CurrentOrganization', function (BastionResource, CurrentOrganization) {
 
-        return BastionResource('/api/v2/repositories/bulk/:action',
+        return BastionResource('/katello/api/v2/repositories/bulk/:action',
             {'organization_id': CurrentOrganization},
             {
                 removeRepositories: {method: 'PUT', params: {action: 'destroy'}},

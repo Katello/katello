@@ -23,7 +23,7 @@
  */
 angular.module('Bastion.organizations').factory('Organization',
     ['BastionResource', 'CurrentOrganization', function (BastionResource, CurrentOrganization) {
-        return BastionResource('/api/v2/organizations/:id/:action',
+        return BastionResource('/katello/api/v2/organizations/:id/:action',
             {id: '@id'},
             {
                 update: { method: 'PUT'},
@@ -32,7 +32,7 @@ angular.module('Bastion.organizations').factory('Organization',
                 autoAttachSubscriptions: {method: 'POST', params: {action: 'autoattach_subscriptions'}},
                 paths: {
                     method: 'GET',
-                    url: '/api/v2/organizations/:id/environments/paths',
+                    url: '/katello/api/v2/organizations/:id/environments/paths',
                     isArray: true,
                     transformResponse: function (data) {
                         return angular.fromJson(data)["results"];
@@ -40,7 +40,7 @@ angular.module('Bastion.organizations').factory('Organization',
                 },
                 readableEnvironments: {
                     method: 'GET',
-                    url: '/api/v2/organizations/:id/environments/paths',
+                    url: '/katello/api/v2/organizations/:id/environments/paths',
                     isArray: true,
                     transformResponse: function (data) {
                         // transform [{environments : [{id, name, permissions: {readable : true}}]}]
@@ -55,7 +55,7 @@ angular.module('Bastion.organizations').factory('Organization',
                 },
                 redhatProvider: {
                     method: 'GET',
-                    url: '/api/v2/organizations/:organization_id/redhat_provider',
+                    url: '/katello/api/v2/organizations/:organization_id/redhat_provider',
                     params: {'organization_id': CurrentOrganization}
                 }
             }

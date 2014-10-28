@@ -25,7 +25,7 @@
 angular.module('Bastion.content-views').factory('ContentView',
     ['BastionResource', 'translate', 'CurrentOrganization',
     function (BastionResource, translate, CurrentOrganization) {
-        return BastionResource('/api/v2/content_views/:id/:action',
+        return BastionResource('/katello/api/v2/content_views/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 copy: {method: 'POST', params: {action: 'copy'}},

@@ -31,7 +31,7 @@ angular.module('Bastion.gpg-keys').controller('NewGPGKeyController',
         $scope.CurrentOrganization = CurrentOrganization;
         $scope.progress = {uploading: false};
         $scope.contentFormType = 'paste';
-        $scope.uploadURL = $scope.RootURL + '/api/v2/gpg_keys?organization_id=' + CurrentOrganization;
+        $scope.uploadURL = '/katello/api/v2/gpg_keys?organization_id=' + CurrentOrganization;
 
         $scope.uploadContent = function (content) {
             if (content) {

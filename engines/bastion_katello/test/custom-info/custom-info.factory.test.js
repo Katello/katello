@@ -28,7 +28,7 @@ describe('Factory: CustomInfo', function() {
     });
 
     it('provides a way to update custom info', function() {
-        $httpBackend.expectPUT('/api/v2/custom_info/system/1/newKey')
+        $httpBackend.expectPUT('/katello/api/v2/custom_info/system/1/newKey')
                     .respond({});
 
         CustomInfo.update({
@@ -43,7 +43,7 @@ describe('Factory: CustomInfo', function() {
     });
 
     it('provides a way to create custom info', function() {
-        $httpBackend.expectPOST('/api/v2/custom_info/system/1')
+        $httpBackend.expectPOST('/katello/api/v2/custom_info/system/1')
                     .respond({});
 
         CustomInfo.save({
@@ -57,7 +57,7 @@ describe('Factory: CustomInfo', function() {
     });
 
     it('provides a way to delete custom info', function() {
-        $httpBackend.expectDELETE('/api/v2/custom_info/system/1/newKey')
+        $httpBackend.expectDELETE('/katello/api/v2/custom_info/system/1/newKey')
                     .respond();
 
         CustomInfo.delete({

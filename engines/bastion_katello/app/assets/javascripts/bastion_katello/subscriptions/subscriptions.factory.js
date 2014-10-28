@@ -23,24 +23,24 @@
  */
 angular.module('Bastion.subscriptions').factory('Subscription', ['BastionResource', 'CurrentOrganization',
     function (BastionResource, CurrentOrganization) {
-        return BastionResource('/api/v2/organizations/:org/subscriptions/:id/:action',
+        return BastionResource('/katello/api/v2/organizations/:org/subscriptions/:id/:action',
             {org: CurrentOrganization, id: '@id'},
             {
                 deleteManifest: {
                     method: 'POST',
-                    url: '/api/v2/organizations/:org/subscriptions/delete_manifest',
+                    url: '/katello/api/v2/organizations/:org/subscriptions/delete_manifest',
                     params: {'org': CurrentOrganization}
                 },
 
                 refreshManifest: {
                     method: 'PUT',
-                    url: '/api/v2/organizations/:org/subscriptions/refresh_manifest',
+                    url: '/katello/api/v2/organizations/:org/subscriptions/refresh_manifest',
                     params: {'org': CurrentOrganization}
                 },
 
                 manifestHistory: {
                     method: 'GET',
-                    url:  '/api/v2/organizations/:org/subscriptions/:action',
+                    url:  '/katello/api/v2/organizations/:org/subscriptions/:action',
                     params: {action: 'manifest_history'},
                     isArray: true
                 }

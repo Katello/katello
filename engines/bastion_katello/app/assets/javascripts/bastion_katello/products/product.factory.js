@@ -23,7 +23,7 @@
 angular.module('Bastion.products').factory('Product',
     ['BastionResource', function (BastionResource) {
 
-        return BastionResource('/api/products/:id/:action', {id: '@id'}, {
+        return BastionResource('/katello/api/products/:id/:action', {id: '@id'}, {
             update: { method: 'PUT'},
             sync: { method: 'POST', params: { action: 'sync' }},
             updateSyncPlan: { method: 'POST', params: { action: 'sync_plan' }}
@@ -43,7 +43,7 @@ angular.module('Bastion.products').factory('Product',
  */
 angular.module('Bastion.products').factory('ProductBulkAction',
     ['BastionResource', function (BastionResource) {
-        return BastionResource('/api/products/bulk/:action', {}, {
+        return BastionResource('/katello/api/products/bulk/:action', {}, {
             removeProducts: {method: 'PUT', params: {action: 'destroy'}},
             syncProducts: {method: 'PUT', params: {action: 'sync'}},
             updateProductSyncPlan: {method: 'PUT', params: {action: 'sync_plan'}}

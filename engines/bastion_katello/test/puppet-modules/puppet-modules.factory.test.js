@@ -39,7 +39,7 @@ describe('Factory: PuppetModules', function () {
     });
 
     it('provides a way to get a list of puppet modules', function () {
-        $httpBackend.expectGET('/api/v2/puppet_modules').respond(puppetModules);
+        $httpBackend.expectGET('/katello/api/v2/puppet_modules').respond(puppetModules);
 
         PuppetModule.queryPaged(function (puppetModules) {
             expect(puppetModules.records.length).toBe(1);
