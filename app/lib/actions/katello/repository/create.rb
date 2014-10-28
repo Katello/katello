@@ -68,8 +68,9 @@ module Actions
               if !repository.puppet? && !repository.redhat?
                 plan_action(Katello::Repository::MetadataGenerate, repository)
               end
-              plan_action(ElasticSearch::Reindex, repository)
             end
+
+            plan_action(ElasticSearch::Reindex, repository)
           end
         end
 

@@ -1,0 +1,75 @@
+<span page-title ng-model="version">{{ 'Version:' | translate }} {{ version.version }}</span>
+
+<div class="loading-mask loading-mask-panel icon-3x" ng-show="version.id === undefined">
+    <i class="icon-spinner icon-spin"></i>
+    {{ "Loading..." | translate }}
+</div>
+
+<div class="details details-full" ng-show="version.id !== undefined">
+
+  <ol class="breadcrumb">
+    <li ng-class="{active: isState('content-views.details.versions')}">
+      <a ui-sref="content-views.details.versions" translate>Versions</a>
+    </li>
+
+    <li>
+      <span translate>Version {{ version.version }}</span>
+    </li>
+  </ol>
+
+  <h3 translate>
+    Version {{ version.version }}
+  </h3>
+
+  <h4>
+    <span translate>Environments: </span>
+    <span ng-repeat="environment in version.environments" ng-if="environment.permissions.readable">
+      {{ environment.name }} <span ng-if="!$last">,</span>
+    </span>
+  </h4>
+
+  <nav class="details-navigation">
+    <ul>
+
+      <li ng-class="{active: isState('content-views.details.version.repositories')}">
+        <a ui-sref="content-views.details.version.repositories({versionId: version.id})">
+          <span translate>Repositories</span>
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('content-views.details.version.packages')}">
+        <a ui-sref="content-views.details.version.packages({versionId: version.id})">
+          <span translate>Packages</span>
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('content-views.details.version.package-groups')}">
+        <a ui-sref="content-views.details.version.package-groups({versionId: version.id})">
+          <span translate>Package Groups</span>
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('content-views.details.version.errata')}">
+        <a ui-sref="content-views.details.version.errata({versionId: version.id})">
+          <span translate>Errata</span>
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('content-views.details.version.puppet-modules')}">
+        <a ui-sref="content-views.details.version.puppet-modules({versionId: version.id})">
+          <span translate>Puppet Modules</span>
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('content-views.details.version.details')}">
+        <a ui-sref="content-views.details.version.details({versionId: version.id})">
+          <span translate>Details</span>
+        </a>
+      </li>
+
+    </ul>
+  </nav>
+
+  <div ui-view></div>
+
+</div>

@@ -1,0 +1,22 @@
+<div data-extend-template="layouts/details-nutupane.html">
+
+  <div data-block="header"></div>
+  <div data-block="selection-summary"></div>
+
+  <table data-block="table" class="table table-striped table-bordered">
+    <thead>
+      <tr alch-table-head>
+        <th alch-table-column translate>Name</th>
+        <th alch-table-column translate>Repository</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr alch-table-row ng-repeat="packageGroup in detailsTable.rows">
+        <td alch-table-cell>{{ packageGroup.name }}</td>
+        <td alch-table-cell>{{ packageGroup.repository.name }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>

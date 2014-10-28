@@ -22,11 +22,10 @@
  *   Provides a BastionResource for interacting with Content View Versions.
  */
 angular.module('Bastion.content-views.versions').factory('ContentViewVersion',
-    ['BastionResource', 'CurrentOrganization',
-    function (BastionResource, CurrentOrganization) {
+    ['BastionResource', function (BastionResource) {
 
         return BastionResource('/api/v2/content_view_versions/:id/:action',
-            {id: '@id', 'organization_id': CurrentOrganization},
+            {id: '@id'},
             {
                 update: {method: 'PUT'},
                 promote: {method: 'POST', params: {action: 'promote'}}

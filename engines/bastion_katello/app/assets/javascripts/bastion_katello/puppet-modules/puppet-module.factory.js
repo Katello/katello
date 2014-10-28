@@ -11,21 +11,27 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-/**
- * @ngdoc module
- * @name  Bastion.content-views.versions
- *
- * @description
- *   Module for content view version related functionality.
- */
-angular.module('Bastion.content-views.versions', [
-    'ngResource',
-    'ui.router',
-    'Bastion',
-    'Bastion.widgets',
-    'Bastion.repositories',
-    'Bastion.packages',
-    'Bastion.errata',
-    'Bastion.package-groups',
-    'Bastion.puppet-modules'
-]);
+(function () {
+    'use strict';
+
+    /**
+     * @ngdoc factory
+     * @name  Bastion.puppet-modules.factory:PuppetModule
+     *
+     * @description
+     *   Provides a BastionResource for interacting with Puppet Modules
+     */
+    function PuppetModule(BastionResource) {
+        return BastionResource('/api/v2/puppet_modules/:id',
+            {'id': '@id'}
+        );
+
+    }
+
+    angular
+        .module('Bastion.puppet-modules')
+        .factory('PuppetModule', PuppetModule);
+
+    PuppetModule.$inject = ['BastionResource'];
+
+})();

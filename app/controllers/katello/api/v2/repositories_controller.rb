@@ -46,6 +46,7 @@ module Katello
     param :product_id, :number, :desc => N_("ID of a product to show repositories of")
     param :environment_id, :number, :desc => N_("ID of an environment to show repositories in")
     param :content_view_id, :number, :desc => N_("ID of a content view to show repositories in")
+    param :content_view_version_id, :number, :desc => N_("ID of a content view version to show repositories in")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :content_type, String, :desc => N_("limit to only repositories of this time")
     param :name, String, :desc => N_("name of the repository"), :required => false
@@ -63,8 +64,11 @@ module Katello
 
       options[:filters] << {:terms => {:id => ids}} if ids
       options[:filters] << {:term => {:environment_id => params[:environment_id]}} if params[:environment_id]
-      options[:filters] << {:term => {:content_view_ids => params[:content_view_id]}} if params[:content_view_id]
-      if params[:library] || params[:environment_id].nil?
+      if params[:content_view_version_id]
+        options[:filters] << {:term => {:content_view_version_id => params[:content_view_version_id]}}
+        options[:filters] << {:missing => {:field => :environment_id, :existence => true, :null_value => true}}
+      end
+      if params[:library] || (params[:environment_id].nil? && params[:content_view_version_id].blank?)
         options[:filters] << {:term => {:content_view_version_id => @organization.default_content_view.versions.first.id}}
       end
       options[:filters] << {:term => {:content_type => params[:content_type]}} if params[:content_type]
