@@ -27,6 +27,7 @@ module Katello
       @errata_system = katello_systems(:errata_server)
       @host_collections = katello_host_collections
       @organization = get_organization
+      @repo = Repository.find(katello_repositories(:rhel_6_x86_64))
       @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_dev_view_library))
     end
 
@@ -58,10 +59,21 @@ module Katello
       assert_template 'api/v2/systems/index'
     end
 
-    def test_errata
-      get :errata, :id => @system.uuid
+    def test_index_errata
+      errata = @repo.errata.first
+      get :index, :organization_id => get_organization.id, :erratum_id => errata.uuid
+
       assert_response :success
-      assert_template 'api/v2/systems/errata'
+      assert_template 'api/v2/systems/index'
+    end
+
+    def test_index_errata_applicable
+      @controller.load_search_service(Support::SearchService::FakeSearchService.new)
+      errata = @repo.errata.first
+      get :index, :organization_id => get_organization.id, :erratum_id => errata.uuid, :available => "false"
+
+      assert_response :success
+      assert_template 'api/v2/systems/index'
     end
 
     def test_index_protected

@@ -61,13 +61,17 @@ module Katello
     param :organization_id, :number, :desc => N_("Specify the organization"), :required => true
     param :environment_id, String, :desc => N_("Filter by environment")
     param :host_collection_id, String, :desc => N_("Filter by host collection")
+    param :erratum_id, String, :desc => N_("Filter by systems applicable to an Erratum")
+    param :erratum_restrict_available, String, :desc => N_("Return only systems where the Erratum specified by erratum_id is available to systems (default True)")
     param_group :search, Api::V2::ApiController
     def index
-      filters = []
+      if params[:erratum_id]
+        systems = systems_by_erratum(params[:erratum_id], params[:erratum_restrict_available]).readable
+      else
+        systems = System.readable
+      end
 
-      uuids = System.readable.pluck(:uuid).compact
-      filters << {:terms => {:uuid => uuids}}
-
+      filters = [{:terms => {:uuid => systems.pluck(:uuid).compact}}]
       environment_ids = params[:organization_id] ? Organization.find(params[:organization_id]).kt_environments.pluck(:id) : []
       environment_ids = environment_ids.empty? ? params[:environment_id] : environment_ids & [params[:environment_id].to_i] if params[:environment_id]
       unless environment_ids.empty?
@@ -394,6 +398,18 @@ module Katello
         fail HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
       else
         @content_view = nil
+      end
+    end
+
+    def systems_by_erratum(erratum_id, available)
+      available = available.nil? ? true : available.to_bool
+      erratum = Katello::Erratum.find_by_uuid(erratum_id)
+      fail _("Unable to find erratum %s.") % erratum_id unless erratum
+
+      if available
+        erratum.systems_available
+      else
+        erratum.systems_applicable
       end
     end
 
