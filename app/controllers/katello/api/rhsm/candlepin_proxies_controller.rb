@@ -12,8 +12,12 @@
 
 module Katello
   class Api::Rhsm::CandlepinProxiesController < Api::V2::ApiController
-
     include Katello::Authentication::ClientAuthentication
+
+    resource_description do
+      api_version 'vrhsm'
+      api_base_url '/rhsm'
+    end
 
     before_filter :disable_strong_params
 
@@ -82,6 +86,8 @@ module Katello
       render :json => r
     end
 
+    api :DELETE, '/consumers/:uuid/deletionrecord', N_("Remove a previously deleted content-host's deletion record."), :deprecated => true
+    param :uuid, :identifier, :desc => _("UUID of the previously deleted content-host."), :required => true
     def delete
       r = Resources::Candlepin::Proxy.delete(@request_path, @request_body.read)
       logger.debug r
@@ -163,17 +169,17 @@ module Katello
       render :json => Resources::Candlepin::Consumer.get(@system.uuid)
     end
 
-    api :PUT, "/systems/:id/enabled_repos", N_("Update the information about enabled repositories")
-    desc <<-DESC
-      Used by katello-agent to keep the information about enabled repositories up to date.
-      This information is then used for computing the errata available for the system.
-    DESC
-    param :enabled_repos, Hash, :required => true do
-      param :repos, Array, :required => true do
-        param :baseurl, Array, :desc => N_("List of enabled repo urls for the repo (Only first is used.)"), :required => false
-      end
-    end
-    param :id, String, :desc => N_("UUID of the system"), :required => true
+    # api :PUT, "/systems/:id/enabled_repos", N_("Update the information about enabled repositories")
+    # desc <<-DESC
+    #   Used by katello-agent to keep the information about enabled repositories up to date.
+    #   This information is then used for computing the errata available for the system.
+    # DESC
+    # param :enabled_repos, Hash, :required => true do
+    #   param :repos, Array, :required => true do
+    #     param :baseurl, Array, :desc => N_("List of enabled repo urls for the repo (Only first is used.)"), :required => false
+    #   end
+    # end
+    # param :id, String, :desc => N_("UUID of the system"), :required => true
     def enabled_repos # rubocop:disable Metrics/MethodLength
       repos_params = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
       repos_params = repos_params['repos'] || []
@@ -465,7 +471,7 @@ module Katello
       # route names are defined in routes.rb (:as => :name)
       case route.name
       when "rhsm_proxy_consumer_deletionrecord_delete_path"
-        User.consumer? || Organization.deletable?
+        User.current.admin?
       when "rhsm_proxy_owner_pools_path"
         find_organization
         if params[:consumer]
