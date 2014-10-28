@@ -43,6 +43,9 @@ module Katello
       Repository.any_instance.stubs(:last_sync).returns(Time.now.asctime)
       models
       permissions
+      [:package_group_count, :package_count, :puppet_module_count].each do |content_type_count|
+        Repository.any_instance.stubs(content_type_count).returns(0)
+      end
     end
 
     def test_index
@@ -99,7 +102,6 @@ module Katello
 
     def test_update_name
       put :update, :content_view_id => @filter.content_view_id, :id => @filter, :name => "New Filter Name"
-
       assert_response :success
       assert_template 'api/v2/common/update'
       assert_equal @filter.reload.name, "New Filter Name"

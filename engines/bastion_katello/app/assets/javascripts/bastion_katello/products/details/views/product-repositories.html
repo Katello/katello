@@ -61,8 +61,8 @@
             ui-sref="products.details.repositories.new({productId: product.id})">
       Create Repository
     </button>
-  </span> 
-  
+  </span>
+
   <table bst-table="repositoriesTable"
          class="table table-striped"
          ng-class="{'table-mask': repositoriesTable.working}"
@@ -119,9 +119,14 @@
 
           <span ng-show="repository.content_type == 'docker'">
             <div>
-              <a translate>
+              <span translate>
                 {{ repository.content_counts.docker_image || 0 }} Docker Images
-              </a>
+              </span>
+            </div>
+           <div>
+              <span translate>
+                {{ repository.content_counts.docker_tag || 0 }} Docker Tags
+              </span>
             </div>
           </span>
         </td>

@@ -113,10 +113,14 @@
             </td>
             <td bst-table-cell>
               <div>
-                <a ng-show="repository.content_type == 'docker'"
-                   translate>
+                <span translate>
                   {{ repository.content_counts.docker_image || 0 }} Docker Images
-                </a>
+                </span>
+              </div>
+              <div>
+                <span translate>
+                  {{ repository.content_counts.docker_tag || 0 }} Docker Tags
+                </span>
               </div>
             </td>
           </tr>

@@ -15,9 +15,15 @@ attributes :product_type
 attributes :promoted? => :promoted
 
 node :content_counts do |repo|
-  if repo.respond_to?(:pulp_repo_facts)
-    repo.pulp_repo_facts['content_unit_counts']
-  end
+  {
+    :docker_image => repo.docker_images.count,
+    :docker_tag => repo.docker_tags.count,
+    :rpm => repo.package_count,
+    :package => repo.package_count,
+    :package_group => repo.package_group_count,
+    :erratum => repo.errata.count,
+    :puppet_module => repo.puppet_module_count
+  }
 end
 
 node :permissions do |repo|

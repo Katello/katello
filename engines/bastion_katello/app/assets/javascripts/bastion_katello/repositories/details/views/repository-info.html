@@ -215,6 +215,10 @@
           <td translate>Docker Images</td>
           <td class="align-center">{{ repository.content_counts.docker_image || 0 }}</td>
         </tr>
+        <tr ng-show="repository.content_type == 'docker'">
+          <td translate>Docker Tags</td>
+          <td class="align-center">{{ repository.content_counts.docker_tag || 0 }}</td>
+        </tr>
       </tbody>
     </table>
   </section>
