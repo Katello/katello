@@ -259,7 +259,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
         template: '<div ui-view></div>'
     })
     .state('content-hosts.details.errata.index', {
-        url: '/errata',
+        url: '/errata?search',
         permission: 'view_content_hosts',
         collapsed: true,
         templateUrl: 'content-hosts/content/views/content-host-errata.html'

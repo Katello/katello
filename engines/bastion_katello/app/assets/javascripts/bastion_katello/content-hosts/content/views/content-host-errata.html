@@ -30,7 +30,7 @@
          <button class="btn btn-primary"
                  translate
                  ng-hide="denied('edit_content_hosts', contentHost)"
-                 ng-disabled="errataTable.getSelected().length == 0"
+                 ng-disabled="detailsTable.getSelected().length == 0"
                  ng-click="applySelected()">
            Apply Selected
          </button>
@@ -38,7 +38,7 @@
   </span>
 
   <div data-block="table">
-    <p translate class="alert alert-info" ng-show="errataTable.rows.length === 0">There are no Errata to display.</p>
+    <p translate class="alert alert-info" ng-show="detailsTable.rows.length === 0">There are no Errata to display.</p>
 
     <table class="table table-striped table-bordered" ng-class="{'table-mask': detailsTable.working}">
       <thead>
@@ -50,7 +50,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr alch-table-row ng-repeat="erratum in detailsTable.rows | filter:errataTable.errataCompare" row-select="erratum">
+        <tr alch-table-row ng-repeat="erratum in detailsTable.rows | filter:detailsTable.errataCompare" row-select="erratum">
           <td alch-table-cell>
               <span ng-show="erratum.type == 'security'">
                 <i class="icon-warning-sign inline-icon" title="{{ 'Security' | translate }}"></i>
