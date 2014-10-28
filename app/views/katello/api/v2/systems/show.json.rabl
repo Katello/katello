@@ -44,7 +44,7 @@ child :foreman_host => :host do
 end
 
 child :host_collections => :hostCollections do
-  attributes :id, :name, :description, :max_content_hosts, :total_content_hosts
+  attributes :id, :name, :description, :max_content_hosts, :unlimited_content_hosts, :total_content_hosts
 end
 
 child :custom_info => :customInfo do
