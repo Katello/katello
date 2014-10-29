@@ -95,6 +95,20 @@ module Katello
         search.to_a
       end
 
+      def module_count(repos)
+        return Util::Support.array_with_total unless index_exists?
+        repo_ids = repos.map(&:pulp_id)
+        search = PuppetModule.search do
+          query do
+            all
+          end
+          fields [:id]
+          size 1
+          filter :terms, :repoids => repo_ids
+        end
+        search.total
+      end
+
       # Find the 'latest' version of the puppet modules provided across
       # the list of repos provided.
       def latest_modules_search(names_and_authors, repoids)

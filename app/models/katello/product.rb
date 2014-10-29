@@ -65,6 +65,7 @@ module Katello
     scope :marketing, where(:type => "Katello::MarketingProduct")
     scope :syncable_content, uniq.where(Katello::Repository.arel_table[:url].not_eq(nil))
       .joins(:repositories)
+    scope :enabled, joins(:repositories).uniq
 
     before_create :assign_unique_label
 

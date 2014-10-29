@@ -10,12 +10,7 @@ attributes :description
 attributes :package_count
 
 node :errata_counts do |version|
-  {
-    :security => version.errata.security.count,
-    :bugfix => version.errata.bugfix.count,
-    :enhancement => version.errata.enhancement.count,
-    :total => version.errata.count
-  }
+  partial('katello/api/v2/errata/counts', :object => Katello::RelationPresenter.new(version.errata))
 end
 
 child :content_view => :content_view do

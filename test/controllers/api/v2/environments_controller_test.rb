@@ -41,6 +41,8 @@ module Katello
       login_user(User.find(users(:admin)))
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
+      Katello::Package.stubs(:package_count).returns(0)
+      Katello::PuppetModule.stubs(:module_count).returns(0)
       models
       permissions
     end

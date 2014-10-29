@@ -6,7 +6,7 @@ extends 'katello/api/v2/common/org_reference'
 
 attributes :content_view, :content_view_id
 child :environment => :environment do
-  extends 'katello/api/v2/environments/show'
+  attributes :name, :id
 end
 attributes :environment_id
 

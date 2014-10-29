@@ -20,6 +20,8 @@ module Katello
     include Support::ForemanTasks::Task
 
     def setup
+      Katello::Package.stubs(:package_count).returns(0)
+      Katello::PuppetModule.stubs(:module_count).returns(0)
       setup_controller_defaults_api
     end
 

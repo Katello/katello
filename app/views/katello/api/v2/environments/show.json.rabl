@@ -11,7 +11,23 @@ node :prior do |env|
   else
     nil
   end
+end
 
+node :counts do |env|
+  counts = {
+    :content_hosts => env.systems.readable.count,
+    :content_views => env.content_views.non_default.count
+  }
+  if env.library?
+    repos = env.repositories.in_default_view
+    counts[:packages] = Katello::Package.package_count(repos)
+    counts[:puppet_modules] = Katello::PuppetModule.module_count(repos)
+    counts[:errata] = partial('katello/api/v2/errata/counts', :object => Katello::RelationPresenter.new(Katello::Erratum.in_repositories(repos)))
+    counts[:yum_repositories] = repos.yum_type.count
+    counts[:docker_repositories] = repos.docker_type.count
+    counts[:products] = env.organization.products.enabled.count
+  end
+  counts
 end
 
 node :permissions do |env|

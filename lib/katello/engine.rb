@@ -50,6 +50,7 @@ module Katello
     initializer "katello.load_app_instance_data" do |app|
       app.config.paths['db/migrate'] += Katello::Engine.paths['db/migrate'].existent
       app.config.autoload_paths += Dir["#{config.root}/app/lib"]
+      app.config.autoload_paths += Dir["#{config.root}/app/presenters"]
       app.config.autoload_paths += Dir["#{config.root}/app/services/katello"]
       app.config.autoload_paths += Dir["#{config.root}/app/views/foreman"]
     end
