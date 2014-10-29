@@ -1,0 +1,26 @@
+<div class="details">
+
+  <div class="detail">
+    <span class="info-label" translate>Name</span>
+      <span class="info-value"
+            alch-edit-text="environment.name"
+            on-save="save(environment)"
+            readonly="denied('edit_lifecycle_environments', environment) || environment.library">
+      </span>
+  </div>
+
+  <div class="detail">
+    <span class="info-label" translate>Label</span>
+    <span class="info-value">{{ environment.label }}</span>
+  </div>
+
+  <div class="detail">
+    <span class="info-label" translate>Description</span>
+    <span class="info-value"
+          alch-edit-textarea="environment.description"
+          on-save="save(environment)"
+          readonly="denied('edit_lifecycle_environments', environment) || environment.library">
+     </span>
+  </div>
+
+</div>
