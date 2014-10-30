@@ -267,6 +267,7 @@ module Katello
     end
 
     def test_index_db_errata
+      @@fedora_17_x86_64.errata.destroy_all
       assert_empty @@fedora_17_x86_64.errata
       @@fedora_17_x86_64.index_db_errata
       @@fedora_17_x86_64.reload

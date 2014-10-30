@@ -28,7 +28,7 @@ module Katello
   class ErratumTest < ErratumTestBase
 
     def test_repositories
-      assert_equal @repo, @security.repositories.first
+      assert_includes @security.repositories, @repo
     end
 
     def test_create

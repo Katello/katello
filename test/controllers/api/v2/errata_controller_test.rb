@@ -101,6 +101,20 @@ module Katello
       assert_response 404
     end
 
+    def test_compare
+      @lib_repo = katello_repositories(:rhel_6_x86_64)
+      @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
+
+      get :compare, :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id]
+      assert_response :success
+      assert_template %w(katello/api/v2/errata/compare)
+
+      get :compare, :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id],
+                    :repository_id => @lib_repo.id
+      assert_response :success
+      assert_template %w(katello/api/v2/errata/compare)
+    end
+
     def test_show_protected
       errata = @repo.errata.first
       Erratum.stubs(:find).with(errata.errata_id).returns(errata)

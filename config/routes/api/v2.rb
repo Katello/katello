@@ -105,7 +105,11 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :errata, :only => [:index, :show]
+        api_resources :errata, :only => [:index, :show] do
+          collection do
+            get :compare
+          end
+        end
 
         api_resources :gpg_keys, :only => [:index, :show, :create, :update, :destroy] do
           post :content, :on => :member
