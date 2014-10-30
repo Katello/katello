@@ -219,9 +219,10 @@
     </table>
   </section>
 
-  <section class="well" ng-show="permitted('edit_products', product) && repository.content_type != 'docker'">
+  <section class="well" ng-show="permitted('edit_products', product)">
     <h5 translate ng-show="repository.content_type == 'puppet'">Upload Puppet Module</h5>
     <h5 translate ng-show="repository.content_type == 'yum'">Upload Package</h5>
+    <h5 translate ng-show="repository.content_type == 'docker'">Upload Docker Image</h5>
 
     <div alch-alert success-messages="uploadSuccessMessages" error-messages="uploadErrorMessages"></div>
 
