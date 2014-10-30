@@ -47,6 +47,32 @@ module Katello
       refute @repo2.valid?
     end
 
+    def test_docker_repository_name_format
+      @repo.content_type = 'docker'
+      @repo.name = 'valid'
+      assert @repo.valid?
+      @repo.name = 'Invalid'
+      refute @repo.valid?
+      @repo.name = '-_ok/valid'
+      assert @repo.valid?
+      @repo.name = 'Invalid/valid'
+      refute @repo.valid?
+      @repo.name = 'Invalid/Invalid'
+      refute @repo.valid?
+      @repo.name = 'abcd/.-_'
+      assert @repo.valid?
+      @repo.name = 'abc/valid'
+      refute @repo.valid?
+      @repo.name = 'abcd/ab'
+      refute @repo.valid?
+      @repo.name = '/valid'
+      refute @repo.valid?
+      @repo.name = 'thisisnotvalidbecauseitistoolong/valid'
+      refute @repo.valid?
+      @repo.name = 'valid/thisisnotvalidbecauseitistoolong'
+      refute @repo.valid?
+    end
+
     def test_unique_repository_label_per_product_and_environment
       @repo.save
       @repo2 = build(:katello_repository,
@@ -75,6 +101,7 @@ module Katello
 
     def test_docker_pulp_id
       # for docker repos, the pulp_id should be downcased
+      @repo.name = 'docker_repo'
       @repo.pulp_id = 'PULP-ID'
       @repo.content_type = Repository::DOCKER_TYPE
       assert @repo.save

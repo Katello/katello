@@ -69,6 +69,10 @@ module Katello
     validates :product_id, :presence => true
     validates :pulp_id, :presence => true, :uniqueness => true, :if => proc { |r| r.name.present? }
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES, :allow_blank => true}
+    validates :name, :if => :docker?, :format => {
+      :with => /^([a-z0-9\-_]{4,30}\/)?[a-z0-9\-_\.]{3,30}$/,
+      :message => (_("must be a valid docker name"))
+    }
     #validates :content_id, :presence => true #add back after fixing add_repo orchestration
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name

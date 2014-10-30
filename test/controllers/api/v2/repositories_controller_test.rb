@@ -185,6 +185,7 @@ module Katello
 
     def test_create_without_label_or_name
       post :create, :product_id => @product.id
+      # TODO: fix this test, returns 500 because of undefined method add_repo for Katello::Product
       assert_response 500 # should be 400 but dynflow doesn't raise RecordInvalid
     end
 

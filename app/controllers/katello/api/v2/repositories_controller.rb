@@ -85,7 +85,6 @@ module Katello
       unless repo_params[:gpg_key_id].blank?
         gpg_key = @gpg_key
       end
-
       repo_params[:label] = labelize_params(repo_params)
       repo_params[:url] = nil if repo_params[:url].blank?
 
