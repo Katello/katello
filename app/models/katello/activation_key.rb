@@ -38,6 +38,7 @@ module Katello
     validates :name, :presence => true
     validates :name, :uniqueness => {:scope => :organization_id}
     validate :environment_exists
+    validates :max_content_hosts, :numericality => {:less_than => 2**31, :allow_nil => true}
     validates_each :max_content_hosts do |record, attr, value|
       unless record.unlimited_content_hosts
         if value.nil?
