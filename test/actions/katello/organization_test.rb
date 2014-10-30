@@ -62,15 +62,13 @@ module ::Actions::Katello::Organization
 
       organization.expects(:label).returns("ACME_Corporation")
       organization.expects(:validate_destroy).returns([])
-      organization.expects(:products).returns([])
+      organization.expects(:products).twice.returns([])
       organization.expects(:systems).returns([])
       organization.expects(:activation_keys).returns([])
       organization.expects(:content_views).returns(stub(:non_default => []))
       organization.expects(:default_content_view).twice.returns(default_view)
-      organization.expects(:content_view_environments).returns(stub(:non_default => []))
-      organization.expects(:reload)
-      organization.expects(:destroy!).returns(true)
       organization.expects(:promotion_paths).returns([[env]])
+      organization.expects(:providers).returns([])
       organization.expects(:library).returns(library)
 
       plan_action(action, organization)
@@ -78,8 +76,8 @@ module ::Actions::Katello::Organization
       assert_action_planed_with(action,
                                 ::Actions::Candlepin::Owner::Destroy,
                                 label: "ACME_Corporation")
-      assert_action_planed_with(action, ::Actions::Katello::ContentView::Destroy, default_view)
-      assert_action_planed_with(action, ::Actions::Katello::Environment::Destroy, env)
+      assert_action_planed_with(action, ::Actions::Katello::ContentView::Destroy, default_view, :check_ready_to_destroy => false, :organization_destroy => true)
+      assert_action_planed_with(action, ::Actions::Katello::Environment::Destroy, env, :skip_repo_destroy => true, :organization_destroy => true)
     end
   end
 

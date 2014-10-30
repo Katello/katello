@@ -60,9 +60,9 @@ module ::Actions::Katello::Repository
     let(:pulp_action_class) { ::Actions::Pulp::Repository::Destroy }
 
     it 'plans' do
-      repository.expects(:destroy!)
       action       = create_action action_class
       action.stubs(:action_subject).with(repository)
+      action.expects(:plan_self)
       plan_action action, repository
       assert_action_planed_with action, pulp_action_class, pulp_id: repository.pulp_id
       assert_action_planed_with action, ::Actions::Katello::Product::ContentDestroy, repository

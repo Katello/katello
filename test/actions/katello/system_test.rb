@@ -68,7 +68,7 @@ module ::Actions::Katello::System
     let(:system) { Katello::System.find(katello_systems(:simple_server)) }
 
     it 'plans' do
-      system.expects(:destroy!)
+      action.expects(:plan_self)
       action.stubs(:action_subject).with(system)
 
       plan_action(action, system)

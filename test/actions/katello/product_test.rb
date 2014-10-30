@@ -153,7 +153,7 @@ module ::Actions::Katello::Product
       product.expects(:user_deletable?).returns(true)
       default_view_repos = product.repositories.in_default_view.map(&:id)
 
-      product.expects(:destroy!)
+      action.expects(:plan_self)
       product.expects(:disable_auto_reindex!)
 
       plan_action(action, product)

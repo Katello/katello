@@ -20,7 +20,7 @@ module Actions
         end
 
         def invoke_external_task
-          ::Katello::Resources::Candlepin::Product.delete_subscriptions(input[:organization_label], input[:cp_id])
+          output[:response] = ::Katello::Resources::Candlepin::Product.delete_subscriptions(input[:organization_label], input[:cp_id])
         end
       end
     end

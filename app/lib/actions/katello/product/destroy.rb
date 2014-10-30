@@ -16,9 +16,11 @@ module Actions
       class Destroy < Actions::EntryAction
 
         # rubocop:disable MethodLength
-        def plan(product)
+        def plan(product, options = {})
 
-          unless product.user_deletable?
+          organization_destroy = options.fetch(:organization_destroy, false)
+
+          unless organization_destroy || product.user_deletable?
             fail _("Cannot delete a Red Hat Products or Products with Repositories published in a Content View")
           end
 
@@ -27,9 +29,11 @@ module Actions
           action_subject(product)
 
           sequence do
-            concurrence do
-              product.repositories.in_default_view.each do |repo|
-                plan_action(Katello::Repository::Destroy, repo)
+            unless organization_destroy
+              concurrence do
+                product.repositories.in_default_view.each do |repo|
+                  plan_action(Katello::Repository::Destroy, repo, options)
+                end
               end
             end
             concurrence do
@@ -53,15 +57,21 @@ module Actions
               plan_action(Candlepin::Product::Destroy, cp_id: product.cp_id)
             end
 
-            product.reload.destroy!
+            plan_self
             plan_action(ElasticSearch::Reindex, product)
-            plan_action(ElasticSearch::Provider::ReindexSubscriptions, product.provider)
+            plan_action(ElasticSearch::Provider::ReindexSubscriptions, product.provider) unless organization_destroy
           end
+        end
+
+        def finalize
+          product = ::Katello::Product.find(input[:product][:id])
+          product.destroy!
         end
 
         def humanized_name
           _("Delete Product")
         end
+
       end
     end
   end

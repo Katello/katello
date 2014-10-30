@@ -128,12 +128,10 @@ module Katello
     param :id, :number, :desc => N_("ID of the environment"), :required => true
     param :organization_id, :number, :desc => N_("organization identifier")
     def destroy
-      if @environment.deletable?
-        sync_task(::Actions::Katello::Environment::Destroy, @environment)
-        respond_for_destroy
-      else
-        fail HttpErrors::BadRequest, @environment.errors.full_messages.join(" ")
-      end
+      sync_task(::Actions::Katello::Environment::Destroy, @environment)
+      respond_for_destroy
+    rescue RuntimeError => e
+      raise HttpErrors::BadRequest, e.message
     end
 
     api :GET, "/organizations/:organization_id/environments/paths", N_("List environment paths")

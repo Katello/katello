@@ -19,7 +19,16 @@ module Actions
           action_subject(puppet_env)
           plan_action(Pulp::Repository::Destroy, pulp_id: puppet_env.pulp_id)
           plan_action(ElasticSearch::Repository::Destroy, pulp_id: puppet_env.pulp_id)
-          puppet_env.destroy
+          plan_self
+        end
+
+        def finalize
+          puppet_env = ::Katello::ContentViewPuppetEnvironment.
+            find(input[:content_view_puppet_environment][:id])
+
+          puppet_env.destroy!
+        rescue ActiveRecord::RecordNotFound => e
+          output[:response] = e.message
         end
 
         def humanized_name
