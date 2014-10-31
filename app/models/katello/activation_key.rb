@@ -39,7 +39,11 @@ module Katello
     validates :name, :uniqueness => {:scope => :organization_id}
     validate :environment_exists
     validates_each :max_content_hosts do |record, attr, value|
-      unless record.unlimited_content_hosts
+      if record.unlimited_content_hosts
+        unless value.nil?
+          record.errors[attr] << _("cannot be set because unlimited content hosts is set")
+        end
+      else
         if value.nil?
           record.errors[attr] << _("cannot be nil")
         elsif value <= 0

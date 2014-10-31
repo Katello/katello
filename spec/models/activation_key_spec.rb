@@ -30,7 +30,8 @@ module Katello
       @environment_1 = katello_environments(:dev)
       @environment_2 = katello_environments(:staging)
       @akey = ActivationKey.create(:name => aname, :description => adesc, :organization => @organization,
-                                   :environment_id => @environment_1.id, :max_content_hosts => 1)
+                                   :environment_id => @environment_1.id, :unlimited_content_hosts => false,
+                                   :max_content_hosts => 1)
     end
 
     describe "in valid state" do
