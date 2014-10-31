@@ -41,6 +41,7 @@ module Katello
     }.with_indifferent_access
 
     def_param_group :bulk_params do
+      param :organization_id, :identifier, :required => true, :desc => N_("ID of the organization")
       param :include, Hash, :required => true, :action_aware => true do
         param :search, String, :required => false, :desc => N_("Search string for systems to perform an action on")
         param :ids, Array, :required => false, :desc => N_("List of system ids to perform an action on")
