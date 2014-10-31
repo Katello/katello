@@ -143,5 +143,8 @@ module Katello
       %w(id label)
     end
 
+    def skip_nested_id
+      ["default_content_view_id", "library_id"]
+    end
   end
 end
