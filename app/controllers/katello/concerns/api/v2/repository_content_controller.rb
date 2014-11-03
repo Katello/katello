@@ -120,6 +120,10 @@ module Katello
           _("Package Group")
         when "Katello::PuppetModule"
           _("Puppet Module")
+        when "DockerImage"
+          _("Docker Image")
+        when "DockerTag"
+          _("Docker Tag")
         else
           fail "Can't find resource class: #{resource_class}"
         end
