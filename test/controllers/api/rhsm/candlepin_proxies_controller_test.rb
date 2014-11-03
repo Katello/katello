@@ -213,10 +213,31 @@ module Katello
       end
     end
 
-    it "test_hypervisors_update" do
-      perms = [[:edit_content_hosts, :view_content_views, :view_lifecycle_environments]]
-      assert_protected_action(:hypervisors_update, perms) do
-        post :hypervisors_update, :env => @organization.library.content_view_environments.first.label
+    describe "hypervisors_update" do
+      it "hypervisors_update_correct_env_cv" do
+        @controller.stubs(:authorize_client_or_admin)
+        System.stubs(:first).returns(@system)
+        uuid = @system.uuid
+        User.stubs(:consumer?).returns(true)
+        User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid))
+        System.stubs(:register_hypervisors).returns({})
+        System.expects(:register_hypervisors).with(@system.environment, @system.content_view,
+            "owner" => "Empty_Organization", "env" => "library_default_view_library")
+        post :hypervisors_update
+        assert_response 200
+      end
+
+      it "hypervisors_update_ignore_params" do
+        @controller.stubs(:authorize_client_or_admin)
+        System.stubs(:first).returns(@system)
+        uuid = @system.uuid
+        User.stubs(:consumer?).returns(true)
+        User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid))
+        System.stubs(:register_hypervisors).returns({})
+        System.expects(:register_hypervisors).with(@system.environment, @system.content_view,
+            "owner" => "Empty_Organization", "env" => "library_default_view_library")
+        post(:hypervisors_update, :owner => 'owner', :env => 'dev/dev')
+        assert_response 200
       end
     end
 

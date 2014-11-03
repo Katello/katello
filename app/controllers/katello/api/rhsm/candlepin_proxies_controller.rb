@@ -24,8 +24,8 @@ module Katello
                                           :upload_package_profile, :regenerate_identity_certificates, :facts,
                                           :available_releases]
     before_filter :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
-    before_filter :authorize_client_or_user, :only => [:consumer_show, :upload_package_profile, :regenerate_identity_certificates,
-                                                       :hypervisors_update]
+    before_filter :authorize_client_or_user, :only => [:consumer_show, :upload_package_profile, :regenerate_identity_certificates]
+    before_filter :authorize_client_or_admin, :only => [:hypervisors_update]
     before_filter :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
     before_filter :authorize_client, :only => [:consumer_destroy, :consumer_checkin,
                                                :enabled_repos, :facts, :available_releases]
@@ -282,8 +282,8 @@ module Katello
       params[:organization_id] = params[:owner] if params[:owner]
     end
 
-    def find_system
-      @system = System.first(:conditions => { :uuid => params[:id] })
+    def find_system(uuid = nil)
+      @system = System.first(:conditions => { :uuid => uuid || params[:id] })
       if @system.nil?
         # check with candlepin if consumer is Gone, raises RestClient::Gone
         Resources::Candlepin::Consumer.get params[:id]
@@ -309,10 +309,14 @@ module Katello
       environment
     end
 
+    # Hypervisors are restricted to the content host's environment and content view
     def find_hypervisor_environment_and_content_view
-      cve = get_content_view_environment_by_label(params[:env])
-      @environment = cve.environment
-      @content_view = cve.content_view
+      find_system(User.consumer? ? User.current.uuid : params[:id])
+      @organization = @system.organization
+      @environment = @system.environment
+      @content_view = @system.content_view
+      params[:owner] = @organization.label
+      params[:env] = @content_view.cp_environment_label(@environment)
     end
 
     def find_organization
@@ -370,10 +374,6 @@ module Katello
                                   :mac => mac_addresses).first
       end
       foreman_host
-    end
-
-    def get_content_view_environment_by_label(label)
-      get_content_view_environment("label", label)
     end
 
     def get_content_view_environment(key, value)
@@ -442,6 +442,10 @@ module Katello
 
     def authorize_client_or_user
       client_authorized? || authorize
+    end
+
+    def authorize_client_or_admin
+      client_authorized? || User.current.admin?
     end
 
     def authorize_client
