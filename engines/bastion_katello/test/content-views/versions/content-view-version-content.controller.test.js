@@ -15,7 +15,8 @@ describe('Controller: ContentViewsVersionContentController', function() {
     var $scope,
         Package,
         PackageGroup,
-        Nutupane;
+        Nutupane,
+        ContentViewVersion;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'));
 
@@ -27,7 +28,10 @@ describe('Controller: ContentViewsVersionContentController', function() {
             };
             this.removeRow = function() {};
             this.get = function() {};
-            this.enableSelectAllResults = function() {}
+            this.enableSelectAllResults = function() {};
+            this.refresh = function () {};
+            this.getParams = function () { return {'repository_id': 1} };
+            this.setParams = function () {};
         };
     });
 
@@ -40,10 +44,13 @@ describe('Controller: ContentViewsVersionContentController', function() {
             PackageGroup = $injector.get('MockResource').$new();
             Erratum = $injector.get('MockResource').$new();
             PuppetModule = $injector.get('MockResource').$new();
+            ContentViewVersion = $injector.get('MockResource').$new();
 
             $scope = $injector.get('$rootScope').$new();
             $scope.$stateParams = {versionId: '1'};
             $scope.$state = {current: {name: state}};
+            $scope.version = ContentViewVersion.get({id: 1});
+            $scope.version.repositories = [{id: 1}];
 
             $controller('ContentViewVersionContentController', {
                 $scope: $scope,
@@ -79,6 +86,25 @@ describe('Controller: ContentViewsVersionContentController', function() {
     it("setups up Package resource when is state is 'puppet modules'", function() {
         SetupController('content-views.details.version.puppet-modules');
         expect($scope.nutupane.resource).toBe(PuppetModule);
+    });
+
+    it("setups up Package resource when is state is 'puppet modules'", function() {
+        SetupController('content-views.details.version.puppet-modules');
+        expect($scope.nutupane.resource).toBe(PuppetModule);
+    });
+
+    it("builds a list of repositories from the version", function() {
+        SetupController('content-views.details.version.packages');
+        expect($scope.repositories.length).toBe(2);
+    });
+
+    it("builds a list of repositories from the version", function() {
+        SetupController('content-views.details.version.packages');
+        spyOn($scope.nutupane, 'refresh');
+
+        $scope.repositories = {id: 2};
+        $scope.$digest();
+        expect($scope.nutupane.refresh).toHaveBeenCalled();
     });
 
 });
