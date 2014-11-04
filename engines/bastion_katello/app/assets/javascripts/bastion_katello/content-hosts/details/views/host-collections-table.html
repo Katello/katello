@@ -15,13 +15,6 @@
     <div class="fr select-action">
       <span class="nutupane-info">
         <span translate>{{ hostCollectionsTable.numSelected }} Selected</span>
-        <span>|</span>
-        <a class="deselect-action"
-           translate
-           ng-class="{ 'disabled-link' : hostCollectionsTable.numSelected == 0 }"
-           ng-click="hostCollectionsTable.selectAll(false)">
-          Deselect All
-        </a>
       </span>
 
       <button ng-if="isState('content-hosts.details.host-collections.list')"

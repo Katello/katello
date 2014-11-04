@@ -22,13 +22,6 @@
     <div class="fr">
       <div class="fl nutupane-info">
         <span translate>{{ subscriptionsTable.numSelected }} Selected</span>
-        <span>|</span>
-        <a class="deselect-action"
-           translate
-           ng-class="{ 'disabled-link' : subscriptionsTable.numSelected == 0 }"
-           ng-click="subscriptionsTable.selectAll(false)">
-          Deselect All
-        </a>
       </div>
 
       <div ng-hide="system.readonly" class="nutupane-actions fr">

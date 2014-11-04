@@ -24,13 +24,6 @@
     <div class="pull-right">
       <div class="pull-left nutupane-info">
         <span translate>{{ addSubscriptionsTable.numSelected }} Selected</span>
-        <span>|</span>
-        <a class="deselect-action"
-           translate
-           ng-class="{ 'disabled-link' : addSubscriptionsTable.numSelected == 0 }"
-           ng-click="addSubscriptionsTable.selectAll(false)">
-          Deselect All
-        </a>
       </div>
 
       <div ng-hide="denied('edit_activation_keys', activationKey)" class="nutupane-actions pull-right">
