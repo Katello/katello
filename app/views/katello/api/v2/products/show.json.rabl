@@ -49,7 +49,8 @@ node :permissions do |product|
   }
 end
 
-child :published_content_views => :published_content_views, :object_root => false do
+node(:published_content_view_ids) do |product|
+  product.published_content_views.map(&:id).uniq
 end
 
 node :readonly do |product|

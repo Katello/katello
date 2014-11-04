@@ -53,7 +53,7 @@ angular.module('Bastion.products').controller('ProductDetailsController',
             if (product.$resolved) {
                 if ($scope.denied('delete_products', product)) {
                     readOnlyReason = 'permissions';
-                } else if (product['published_content_views'].length > 0) {
+                } else if (product['published_content_view_ids'].length > 0) {
                     readOnlyReason = 'published';
                 } else if (product.redhat) {
                     readOnlyReason = 'redhat';
