@@ -614,7 +614,7 @@ module Katello
       ContentSearch::SearchUtils.current_user = current_user
       ContentSearch::SearchUtils.env_ids = params[:environments]
       ContentSearch::SearchUtils.offset = params[:offset] || 0
-      @mode = params[:mode].try(:to_sym) || :all
+      @mode = params[:mode] || 'all'
     end
 
     def process_views(view_ids)

@@ -31,7 +31,7 @@ module Katello
       end
 
       def mode
-        @mode || :all
+        @mode || 'all'
       end
 
       def offset
