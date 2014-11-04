@@ -86,13 +86,35 @@ module ::Actions::Katello::Repository
     end
   end
 
-  class RemovePackagesTest < TestBase
-    let(:action_class) { ::Actions::Katello::Repository::RemovePackages }
+  class RemoveContentTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::RemoveContent }
 
     it 'plans' do
       uuids = ['troy', 'and', 'abed', 'in_the_morning']
       action.expects(:action_subject).with(custom_repository)
       plan_action action, custom_repository, uuids
+      assert_action_planed_with action, ::Actions::Pulp::Repository::RemoveRpm,
+        pulp_id: custom_repository.pulp_id, clauses: {:association => {'unit_id' => {'$in' => uuids}}}
+      assert_action_planed_with action, ::Actions::ElasticSearch::Repository::RemovePackages,
+        pulp_id: custom_repository.pulp_id, uuids: uuids
+    end
+  end
+
+  class RemoveDockerImagesTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::RemoveDockerImages }
+    let(:docker_repo) { katello_repositories(:docker) }
+    let(:uuids) { ["abc123", "def123", "ghi123"] }
+
+    it 'runs' do
+      uuids.each do |str|
+        docker_repo.docker_images.create!(:image_id => str) do |image|
+          image.katello_uuid = str
+        end
+      end
+      action = create_and_plan_action action_class, pulp_id: docker_repo.pulp_id, uuids: uuids
+      assert_run_phase action
+      run_action action
+      assert_empty docker_repo.docker_images.reload
     end
   end
 

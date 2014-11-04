@@ -1,4 +1,4 @@
-<span page-title ng-model="repository">{{ 'Manage Packages for Repository:' | translate }} {{ repository.name }}</span>
+<span page-title ng-model="repository">{{ 'Manage Docker Images for Repository:' | translate }} {{ repository.name }}</span>
 
 <a ui-sref="products.details.repositories.info({productId: product.id, repositoryId: repository.id})">
   <i class="icon-double-angle-left"></i>
@@ -15,13 +15,14 @@
     <div class="alert alert-success" ng-hide="generationTaskId === undefined">
       <button type="button" class="close" ng-click="clearTaskId()">×</button>
       <p translate>
-        Yum metadata generation has been initiated in the background.  Click <a href="{{ taskUrl() }}">Here</a> to monitor the progress.
+        Docker metadata generation has been initiated in the background.  Click
+        <a ng-href="{{ taskUrl() }}">Here</a> to monitor the progress.
       </p>
     </div>
   </div>
 
   <div data-block="header">
-    <h3 translate>Packages in {{ repository.name }}</h3>
+    <h3 translate>Docker Images in {{ repository.name }}</h3>
   </div>
 
   <div data-block="actions">
@@ -29,7 +30,7 @@
             ng-click="removeContent()"
             ng-disabled="detailsTable.working || detailsTable.numSelected === 0">
       <i class="icon-trash" ng-hide="detailsTable.working"></i>
-      <span translate>Remove Packages</span>
+      <span translate>Remove Docker Images</span>
     </button>
   </div>
 
@@ -38,14 +39,14 @@
 
       <thead>
         <tr bst-table-head row-select>
-          <th bst-table-column><span translate>Name</span></th>
+          <th bst-table-column><span translate>Image ID</span></th>
         </tr>
       </thead>
 
       <tbody>
-        <tr bst-table-row ng-repeat="package in detailsTable.rows" row-select="package">
+        <tr bst-table-row ng-repeat="item in detailsTable.rows" row-select="item">
           <td bst-table-cell>
-            {{ package.nvrea }}
+            {{ item.image_id }}
           </td>
         </tr>
       </tbody>

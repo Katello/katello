@@ -18,7 +18,7 @@ module Katello
     before_filter :find_product_for_create, :only => [:create]
     before_filter :find_organization_from_product, :only => [:create]
     before_filter :find_repository, :only => [:show, :update, :destroy, :sync,
-                                              :remove_packages, :upload_content,
+                                              :remove_content, :upload_content,
                                               :import_uploads, :gpg_key_content]
     before_filter :find_organization_from_repo, :only => [:update]
     before_filter :find_gpg_key, :only => [:create, :update]
@@ -159,13 +159,16 @@ module Katello
       render :json => {}
     end
 
-    api :POST, "/repositories/:id/remove_packages"
-    desc "Remove rpms from a repository"
+    api :PUT, "/repositories/:id/remove_packages"
+    api :PUT, "/repositories/:id/remove_docker_images"
+    api :PUT, "/repositories/:id/remove_puppet_modules"
+    api :PUT, "/repositories/:id/remove_content"
+    desc "Remove content from a repository"
     param :id, :identifier, :required => true, :desc => "repository ID"
-    param 'uuids', Array, :required => true, :desc => "Array of package uuids to remove"
-    def remove_packages
+    param 'uuids', Array, :required => true, :desc => "Array of content uuids to remove"
+    def remove_content
       fail _("No package uuids provided") if params[:uuids].blank?
-      respond_for_async :resource => sync_task(::Actions::Katello::Repository::RemovePackages, @repository, params[:uuids])
+      respond_for_async :resource => sync_task(::Actions::Katello::Repository::RemoveContent, @repository, params[:uuids])
     end
 
     api :POST, "/repositories/:id/upload_content", N_("Upload content into the repository")

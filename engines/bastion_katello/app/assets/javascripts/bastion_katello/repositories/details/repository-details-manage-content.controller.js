@@ -13,32 +13,45 @@
 
 /**
  * @ngdoc object
- * @name  Bastion.repositories.controller:RepositoryManagePackagesController
+ * @name  Bastion.repositories.controller:RepositoryManageContentController
  *
  * @requires $scope
- * @requires Nutupane
+ * @requries $state
  * @requires translate
- * @requires Package
+ * @requires Nutupane
  * @requires Repository
+ * @requires Package
+ * @requires PuppetModule
+ * @requires DockerImage
  *
  * @description
  *   Provides the functionality for the repository details pane.
  */
-angular.module('Bastion.repositories').controller('RepositoryManagePackagesController',
-    ['$scope', 'Nutupane', 'translate', 'Package', 'Repository',
-    function ($scope, Nutupane, translate, Package, Repository) {
+angular.module('Bastion.repositories').controller('RepositoryManageContentController',
+    ['$scope', '$state', 'translate', 'Nutupane', 'Repository', 'Package', 'PuppetModule', 'DockerImage',
+    function ($scope, $state, translate, Nutupane, Repository, Package, PuppetModule, DockerImage) {
+        var currentState, contentTypes;
+
         $scope.repository = Repository.get({id: $scope.$stateParams.repositoryId});
-        $scope.packagesNutupane = new Nutupane(Package, {
+
+        currentState = $state.current.name.split('.').pop();
+
+        contentTypes = {
+            'packages': { type: Package },
+            'puppet-modules': { type: PuppetModule },
+            'docker-images': { type: DockerImage }
+        };
+
+        $scope.contentNutupane = new Nutupane(contentTypes[currentState].type, {
             'repository_id': $scope.$stateParams.repositoryId
         });
-
-        $scope.detailsTable = $scope.packagesNutupane.table;
+        $scope.detailsTable = $scope.contentNutupane.table;
         $scope.detailsTable.closeItem = function () {};
 
-        $scope.removePackages = function () {
+        $scope.removeContent = function () {
             var selected = $scope.detailsTable.getSelected();
             $scope.detailsTable.working = true;
-            Repository.removePackages({id: $scope.repository.id, uuids : _.pluck(selected, 'id')},
+            Repository.removeContent({id: $scope.repository.id, uuids : _.pluck(selected, 'id')},
                 function (response) {
                     success(response, selected);
                 }, error);
@@ -52,22 +65,25 @@ angular.module('Bastion.repositories').controller('RepositoryManagePackagesContr
         function success(response, selected) {
             var message;
 
-            $scope.packagesNutupane.refresh();
-            $scope.detailsTable.working = false;
+            $scope.contentNutupane.refresh();
+            $scope.detailsTable.working = true;
 
             if (selected.length === 1) {
-                message = translate("Successfully removed 1 package.");
+                message = translate("Successfully removed 1 item.");
             } else {
-                message = translate("Successfully removed %s package.").replace('%s', selected.length);
+                message = translate("Successfully removed %s items.").replace('%s', selected.length);
             }
             $scope.successMessages = [message];
             $scope.generationTaskId = response.output['task_id'];
         }
 
         function error(data) {
-            $scope.detailsTable.working = false;
+            $scope.detailsTable.working = true;
             $scope.errorMessages = [data.response.displayMessage];
         }
 
+        $scope.clearTaskId = function () {
+            $scope.generationTaskId = undefined;
+        };
     }]
 );

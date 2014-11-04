@@ -245,21 +245,21 @@ module Katello
       end
     end
 
-    def test_remove_packages
+    def test_remove_content
       uuids = ['foo', 'bar']
-      @controller.expects(:sync_task).with(::Actions::Katello::Repository::RemovePackages,
+      @controller.expects(:sync_task).with(::Actions::Katello::Repository::RemoveContent,
                                            @repository, uuids).once.returns(::ForemanTasks::Task.new)
 
-      put :remove_packages, :id => @repository.id, :uuids => uuids
+      put :remove_content, :id => @repository.id, :uuids => uuids
       assert_response :success
     end
 
-    def test_remove_packages_protected
+    def test_remove_content_protected
       allowed_perms = [@update_permission]
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:remove_packages, allowed_perms, denied_perms) do
-        put :remove_packages, :id => @repository.id, :uuids =>  ['foo', 'bar']
+      assert_protected_action(:remove_content, allowed_perms, denied_perms) do
+        put :remove_content, :id => @repository.id, :uuids =>  ['foo', 'bar']
       end
     end
 

@@ -10,9 +10,21 @@
   <div class="fr">
 
     <button class="btn btn-default"
-            ui-sref="products.details.repositories.manage-packages({productId: product.id, repositoryId: repository.id})"
+            ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})"
             ng-hide="repository.content_type !== 'yum' || product.readonly">
       <span translate>Manage Packages</span>
+    </button>
+
+    <button class="btn btn-default"
+            ui-sref="products.details.repositories.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})"
+            ng-hide="repository.content_type !== 'puppet' || product.readonly">
+      <span translate>Manage Puppet Modules</span>
+    </button>
+
+    <button class="btn btn-default"
+            ui-sref="products.details.repositories.manage-content.docker-images({productId: product.id, repositoryId: repository.id})"
+            ng-hide="repository.content_type !== 'docker' || product.readonly">
+      <span translate>Manage Docker Images</span>
     </button>
 
     <button class="btn btn-default"

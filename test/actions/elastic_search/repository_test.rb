@@ -13,7 +13,6 @@
 require 'katello_test_helper'
 
 module Actions::ElasticSearch
-
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::RemoteAction
@@ -65,4 +64,13 @@ module Actions::ElasticSearch
     end
   end
 
+  class RemovePuppetModulesTest < TestBase
+    let(:action_class) { ::Actions::ElasticSearch::Repository::RemovePuppetModules }
+
+    it 'calls remove_indexed_repoid' do
+      action = create_and_plan_action(action_class, uuids: [1, 2, 3], pulp_id: 'repo-6')
+      ::Katello::PuppetModule.expects(:remove_indexed_repoid).with([1, 2, 3], 'repo-6')
+      run_action action
+    end
+  end
 end

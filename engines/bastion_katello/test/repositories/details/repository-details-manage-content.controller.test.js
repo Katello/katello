@@ -11,8 +11,8 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-describe('Controller: RepositoryManagePackagesController', function() {
-    var $scope, translate, Nutupane, Repository;
+describe('Controller: RepositoryManageContentController', function() {
+    var $scope, translate, Repository, Nutupane, PuppetModule, Package, DockerImage;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -22,16 +22,18 @@ describe('Controller: RepositoryManagePackagesController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q'),
+            $state = $injector.get('$state'),
             Package = $injector.get('MockResource').$new();
 
         Repository = $injector.get('MockResource').$new();
-        Repository.removePackages = function() {};
+        Repository.removeContent = function() {};
 
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {
             productId: 1,
-            repositoryId: 1
+            repositoryId: 1,
         };
+        $state = { current: { name: 'products.details.repositories.manage-content.packages' } };
 
         Nutupane = function() {
             this.table = {
@@ -44,31 +46,33 @@ describe('Controller: RepositoryManagePackagesController', function() {
             return message;
         };
 
-        $controller('RepositoryManagePackagesController', {
+        $controller('RepositoryManageContentController', {
             $scope: $scope,
-            Nutupane: Nutupane,
+            $state: $state,
             translate: translate,
+            Repository: Repository,
+            PuppetModule: PuppetModule,
             Package: Package,
-            Repository: Repository
+            DockerImage: DockerImage,
         });
     }));
 
     it('sets up a nutupane', function() {
-        expect($scope.packagesNutupane).not.toBe(undefined);
+        expect($scope.contentNutupane).not.toBe(undefined);
         expect($scope.detailsTable).not.toBe(undefined);
     });
 
-    it('can remove a package', function() {
-        spyOn(Repository, 'removePackages');
-        $scope.reopsitory = {id: 'doh!'};
+    it('can remove content', function() {
+        spyOn(Repository, 'removeContent');
+        $scope.repository = {id: 'doh!'};
         $scope.detailsTable.getSelected = function() {
             return [{id: 'foo'}];
         };
 
-        $scope.removePackages();
+        $scope.removeContent();
 
-        expect(Repository.removePackages).toHaveBeenCalledWith({id: $scope.repository.id, uuids: ['foo']},
+        expect(Repository.removeContent).toHaveBeenCalledWith({id: $scope.repository.id, uuids: ['foo']},
             jasmine.any(Function), jasmine.any(Function));
-    })
+    });
 
 });
