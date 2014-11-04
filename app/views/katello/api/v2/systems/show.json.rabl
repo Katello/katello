@@ -10,6 +10,10 @@ attributes :distribution
 attributes :katello_agent_installed? => :katello_agent_installed
 attributes :registered_by
 
+glue :environment do
+  attributes :organization_id
+end
+
 child :products => :products do |_product|
   attributes :id, :name
 end
