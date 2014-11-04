@@ -359,7 +359,7 @@
     <div ng-show="showAdvanced" class="details fl">
       <section ng-show="showAdvanced" ng-repeat="(sectionName, subSection) in advancedInfoLeft">
         <h4>{{ sectionName }}</h4>
-        <div ng-repeat="(key, value) in subSection" >
+        <div ng-repeat="(key, value) in subSection track by $index" >
           <div ng-include="getTemplateForType(value)"></div>
         </div>
         <div class="divider" ng-show="!$last"></div>
@@ -368,7 +368,7 @@
     <div ng-show="showAdvanced" class="details fr">
       <section ng-show="showAdvanced" ng-repeat="(sectionName, subSection) in advancedInfoRight">
         <h4>{{ sectionName }}</h4>
-        <div ng-repeat="(key, value) in subSection" >
+        <div ng-repeat="(key, value) in subSection track by $index" >
           <div ng-include="getTemplateForType(value)"></div>
         </div>
         <div class="divider" ng-show="!$last"></div>
