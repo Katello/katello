@@ -18,8 +18,8 @@ module Katello
 
     private
 
-    def filter_by_content_view_version(version)
-      filter_by_repo_ids([version.archive_puppet_environment.try(:pulp_id)])
+    def filter_by_content_view_version(version, options)
+      filter_by_repo_ids([version.archive_puppet_environment.try(:pulp_id)], options)
     end
 
   end

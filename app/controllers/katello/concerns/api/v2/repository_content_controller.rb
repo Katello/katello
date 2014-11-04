@@ -32,17 +32,15 @@ module Katello
       param :content_view_filter_id, :identifier, :desc => N_("content view filter identifier")
       param :repository_id, :number, :desc => N_("repository identifier")
       def index
-        collection = if @repo && !@repo.puppet?
-                       filter_by_repo_ids([@repo.pulp_id])
-                     elsif @filter
-                       filter_by_content_view_filter(@filter)
-                     elsif @version
-                       filter_by_content_view_version(@version)
-                     else
-                       filter_by_repo_ids(Repository.readable.map(&:pulp_id))
-                     end
+        options = sort_params
+        options[:filters] = []
 
-        respond(:collection => collection)
+        options = filter_by_repo_ids(Repository.readable.map(&:pulp_id), options)
+        options = filter_by_repo_ids([@repo.pulp_id], options) if @repo && !@repo.puppet?
+        options = filter_by_content_view_version(@version, options) if @version
+        options = filter_by_content_view_filter(@filter, options) if @filter
+
+        respond(:collection => item_search(resource_class, params, options))
       end
 
       api :GET, "/:resource_id/:id", N_("Show :a_resource")
@@ -140,22 +138,21 @@ module Katello
         end
       end
 
-      def filter_by_content_view_filter(filter)
+      def filter_by_content_view_filter(filter, options)
         ids = filter.send("#{singular_resource_name}_rules").map(&:uuid)
         repo_ids = filter.applicable_repos.readable.select([:pulp_id, "#{Katello::Repository.table_name}.name"])
-        options = sort_params
-        options[:filters] = [{ :terms => { :id => ids } }, { :terms => { repo_association => repo_ids }}]
-        item_search(resource_class, params, options)
+
+        options[:filters] << { :terms => { :id => ids } }
+        filter_by_repo_ids(repo_ids, options)
       end
 
-      def filter_by_repo_ids(repo_ids = [])
-        options = sort_params
-        options[:filters] = [{ :terms => { repo_association => repo_ids }}]
-        item_search(resource_class, params, options)
+      def filter_by_repo_ids(repo_ids = [], options)
+        options[:filters] << { :terms => { repo_association => repo_ids }}
+        options
       end
 
-      def filter_by_content_view_version(version)
-        filter_by_repo_ids(version.archived_repos.map(&:pulp_id))
+      def filter_by_content_view_version(version, options)
+        filter_by_repo_ids(version.archived_repos.map(&:pulp_id), options)
       end
     end
   end
