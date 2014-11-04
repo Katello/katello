@@ -224,6 +224,7 @@ KT.content = (function(){
             element.find('.size').data('size', size);
             element.find('.info-tipsy').attr('href', '/foreman_tasks/tasks/' + task_id);
             progress = progress === 100 ? 99 : progress;
+            value.show();
             value.animate({'width': progress },{ queue:false,
                                            duration:"slow", easing:"easeInSine" });
         },
