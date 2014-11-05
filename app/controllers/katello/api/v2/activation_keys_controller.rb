@@ -16,7 +16,7 @@ module Katello
     before_filter :verify_presence_of_organization_or_environment, :only => [:index]
     before_filter :find_environment, :only => [:index, :create, :update]
     before_filter :find_optional_organization, :only => [:index, :create, :show]
-    before_filter :find_activation_key, :only => [:update, :destroy, :available_releases, :copy,
+    before_filter :find_activation_key, :only => [:update, :destroy, :available_releases, :copy, :product_content,
                                                   :available_host_collections, :add_host_collections, :remove_host_collections,
                                                   :content_override, :add_subscriptions, :remove_subscriptions]
     before_filter :authorize
@@ -137,6 +137,18 @@ module Katello
       respond_for_index :collection => response
     end
 
+    api :GET, "/activation_keys/:id/product_content", N_("Show content available for an activation key")
+    param :id, String, :desc => N_("ID of the activation key"), :required => true
+    def product_content
+      content = @activation_key.available_content
+      response = {
+        :results => content,
+        :total => content.size,
+        :subtotal => content.size
+      }
+      respond_for_index :collection => response
+    end
+
     api :POST, "/activation_keys/:id/host_collections"
     param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
     param :host_collection_ids, Array, :required => true, :desc => N_("List of host collection IDs to associate with activation key")
@@ -191,7 +203,17 @@ module Katello
       respond_for_index(:collection => subscription_index, :template => 'subscriptions')
     end
 
+    api :PUT, "/activation_keys/:id/content_override", N_("Override content for activation_key")
+    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :label, String, :desc => N_("Label of the content"), :required => false
+    param :value, :number, :desc => N_("Override value 0/1"), :required => false
     def content_override
+      if params[:label]
+        params[:content_override] = {}
+        params[:content_override][:content_label] = params[:label]
+        params[:content_override][:name] = "enabled"
+        params[:content_override][:value] = params[:value]
+      end
       content_override = params[:content_override]
       @activation_key.set_content_override(content_override[:content_label],
                                            content_override[:name], content_override[:value]) if content_override
