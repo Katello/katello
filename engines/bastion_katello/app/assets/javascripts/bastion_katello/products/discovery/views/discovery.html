@@ -48,13 +48,6 @@
     <div class="fr">
       <div class="fl nutupane-info">
         <span translate>{{ discoveryTable.numSelected }} Selected</span>
-        <span>|</span>        
-          <a class="deselect-action"
-             translate
-             ng-class="{ 'disabled-link' : discoveryTable.numSelected == 0 }"
-             ng-click="discoveryTable.selectAll(false)">
-            Deselect All
-          </a>
       </div>   
 
       <div ng-hide="system.readonly" class="nutupane-actions fr">

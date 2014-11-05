@@ -13,13 +13,6 @@
     <div class="fr select-action">
       <span class="nutupane-info">
         <span translate>{{ productsTable.numSelected }} Selected</span>
-        <span>|</span>
-        <a class="deselect-action"
-           translate
-           ng-class="{ 'disabled-link' : productsTable.numSelected == 0 }"
-           ng-click="productsTable.selectAll(false)">
-          Deselect All
-        </a>
       </span>
 
       <button ng-if="isState('sync-plans.details.products.list')"
