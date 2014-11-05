@@ -18,9 +18,7 @@ module Actions
         class PuppetPresenter < AbstractSyncPresenter
 
           def progress
-            #TODO: Add proper progress reporting
-            # Requires https://bugzilla.redhat.com/show_bug.cgi?id=1128274 to be fixed
-            0
+            total_count == 0 ? 0 : finished_count.to_f / total_count
           end
 
           private
@@ -40,12 +38,8 @@ module Actions
             ret.join("\n")
           end
 
-          def added_count
-            task_result['added_count']
-          end
-
-          def updated_count
-            task_result['updated_count']
+          def finished_count
+            task_result['finished_count']
           end
 
           def total_count
