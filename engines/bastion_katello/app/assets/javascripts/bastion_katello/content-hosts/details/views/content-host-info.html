@@ -175,6 +175,47 @@
 
   <div class="fr details">
     <section>
+      <h4 translate>Errata</h4>
+
+      <div class="detail">
+        <span class="info-label" translate>Security</span>
+        <span class="info-value">
+          <a ui-sref="content-hosts.details.errata.index({search: 'type:security'})">
+            {{ contentHost.errata_counts.security || 0 }}
+            <i class="icon-warning-sign inline-icon"
+               ng-class="{green: contentHost.errata_counts.security === 0, red: contentHost.errata_counts.security > 0}"
+               title="{{ 'Security' | translate }}"></i>
+          </a>
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Bug Fix</span>
+        <span class="info-value">
+          <a ui-sref="content-hosts.details.errata.index({search: 'type:bugfix'})">
+            {{ contentHost.errata_counts.bugfix || 0 }}
+            <i class="icon-bug inline-icon"
+               ng-class="{green: contentHost.errata_counts.bugfix === 0, yellow: contentHost.errata_counts.bugfix > 0}"
+               title="{{ 'Bug Fix' | translate }}"></i>
+          </a>
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Enhancement</span>
+        <span class="info-value">
+          <a ui-sref="content-hosts.details.errata.index({search: 'type:enhancement'})">
+            {{ errataCounts.enhancement || 0 }}
+            <i class="icon-plus-sign-alt inline-icon"
+               ng-class="{green: contentHost.errata_counts.enhancement === 0, yellow: contentHost.errata_counts.enhancement > 0}"
+               title="{{ 'Enhancement' | translate }}"></i>
+          </a>
+        </span>
+      </div>
+      <div class="divider"></div>
+    </section>
+
+    <section>
       <h4 translate>Content Host Content</h4>
 
       <div class="detail">
