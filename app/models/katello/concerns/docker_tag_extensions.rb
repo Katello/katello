@@ -16,7 +16,26 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
-        belongs_to :repository, :inverse_of => :docker_tags, :foreign_key => :katello_repository_id
+        belongs_to :repository, :inverse_of => :docker_tags, :foreign_key => :katello_repository_id,
+          :class_name => "Katello::Repository"
+
+        scoped_search :on => [:id, :tag]
+      end
+
+      # docker tag only has one repo
+      def repositories
+        [repository]
+      end
+
+      module ClassMethods
+        def in_repositories(repos)
+          where(:katello_repository_id => repos)
+        end
+
+        # docker tag doesn't have a uuid in pulp
+        def with_uuid(uuid)
+          where(:id => uuid)
+        end
       end
     end
   end

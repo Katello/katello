@@ -97,6 +97,7 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :docker_images, :only => [:index, :show]
+        api_resources :docker_tags, :only => [:index, :show]
 
         api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
           api_resources :activation_keys, :only => [:index, :create]
