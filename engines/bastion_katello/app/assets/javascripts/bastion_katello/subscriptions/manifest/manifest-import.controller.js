@@ -32,7 +32,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
 
         $scope.uploadErrorMessages = [];
         $scope.progress = {uploading: false};
-        $scope.uploadURL = $scope.RootURL + '/api/v2/organizations/' + CurrentOrganization + '/subscriptions/upload';
+        $scope.uploadURL = '/katello/api/v2/organizations/' + CurrentOrganization + '/subscriptions/upload';
         $scope.organization = Organization.get({id: CurrentOrganization});
 
         $q.all([$scope.organization.$promise]).then(function () {

@@ -3,7 +3,7 @@
     Last synced {{ product.last_sync_words }} ago
   </p>
   <li ng-repeat="(key, value) in product.repositoriesByState">
-    <a ng-href="{{ RootURL }}/sync_management">{{ key | capitalize }}</a>:
+    <a ng-href="/katello/sync_management">{{ key | capitalize }}</a>:
             <span translate
                   translate-n="value.length"
                   translate-plural="{{ value.length }} repositories">

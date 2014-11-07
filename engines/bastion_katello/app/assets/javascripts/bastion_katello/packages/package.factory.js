@@ -23,7 +23,7 @@
 angular.module('Bastion.packages').factory('Package',
     ['BastionResource', 'CurrentOrganization', function (BastionResource) {
 
-        return BastionResource('/api/v2/packages/:id',
+        return BastionResource('/katello/api/v2/packages/:id',
             {'id': '@id'},
             {
                 autocomplete: {

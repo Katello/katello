@@ -41,14 +41,14 @@ describe('Factory: ContentHostErratum', function($provide) {
     });
 
     it('provides a way to get a list of errata', function() {
-        $httpBackend.expectGET('/api/v2/systems/SYS_ID/errata').respond(errata);
+        $httpBackend.expectGET('/katello/api/v2/systems/SYS_ID/errata').respond(errata);
         ContentHostErratum.get({ id: 'SYS_ID' }, function(results) {
             expect(results.total).toBe(2);
         });
     });
 
     it('provides a way to apply a list of errata', function() {
-        $httpBackend.expectPUT('/api/v2/systems/SYS_ID/errata/apply').respond(task);
+        $httpBackend.expectPUT('/katello/api/v2/systems/SYS_ID/errata/apply').respond(task);
         ContentHostErratum.apply({ uuid: 'SYS_ID', errata_ids: ['RHSA-1'] }, function(results) {
             expect(results.id).toBe(task.id);
         });

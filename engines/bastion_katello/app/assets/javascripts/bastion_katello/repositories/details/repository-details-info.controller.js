@@ -42,7 +42,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
         });
 
         $scope.repository.$promise.then(function () {
-            $scope.uploadURL = $scope.RootURL + '/api/v2/repositories/' + $scope.repository.id + '/upload_content';
+            $scope.uploadURL = '/katello/api/v2/repositories/' + $scope.repository.id + '/upload_content';
         });
 
         $scope.gpgKeys = function () {

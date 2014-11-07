@@ -41,7 +41,7 @@ describe('Factory: Task', function() {
     });
 
     it('provides a way to get a list of tasks', function() {
-        $httpBackend.expectGET('/api/v2/tasks?full_result=true&organization_id=ACME')
+        $httpBackend.expectGET('/katello/api/v2/tasks?full_result=true&organization_id=ACME')
                     .respond(tasks);
 
         Task.queryUnpaged(function(tasks) {

@@ -42,7 +42,7 @@ describe('Factory: ContentHost', function() {
     it("provides a way to update a content host", function() {
         var contentHost = contentHostsCollection.results[0];
         contentHost.name = 'NewContentHostName';
-        $httpBackend.expectPUT('/api/systems').respond(contentHost);
+        $httpBackend.expectPUT('/katello/api/systems').respond(contentHost);
 
         ContentHost.update({name: 'NewContentHostName', id: 1}, function (contentHost) {
             expect(contentHost.name).toEqual('NewContentHostName');
@@ -50,7 +50,7 @@ describe('Factory: ContentHost', function() {
     });
 
     it("provides a way to get the possible release versions for a content host", function() {
-        $httpBackend.expectGET('/api/systems').respond(contentHostsCollection.results[0]);
+        $httpBackend.expectGET('/katello/api/systems').respond(contentHostsCollection.results[0]);
 
         ContentHost.releaseVersions({ id: contentHostsCollection.results[0].id }, function (data) {
             expect(data).toEqual(releaseVersions);
@@ -58,7 +58,7 @@ describe('Factory: ContentHost', function() {
     });
 
     it("provides a way to get the available subscriptions for a content host", function() {
-        $httpBackend.expectGET('/api/systems').respond(availableSubscriptions);
+        $httpBackend.expectGET('/katello/api/systems').respond(availableSubscriptions);
 
         ContentHost.subscriptions({ id: contentHostsCollection.results[0].id }, function (data) {
             expect(data).toEqual(availableSubscriptions);
@@ -66,7 +66,7 @@ describe('Factory: ContentHost', function() {
     });
 
     it('ContentHost.contentOverride PUT /api/v2/content_hosts/1/content_override', function() {
-        $httpBackend.expectPUT('/api/v2/content_hosts/1/content_override').respond(contentHostsCollection.results[0]);
+        $httpBackend.expectPUT('/katello/api/v2/content_hosts/1/content_override').respond(contentHostsCollection.results[0]);
 
         ContentHost.contentOverride({id: 1},
                         {'content_override': { 'content_label': 'my-repository-label',

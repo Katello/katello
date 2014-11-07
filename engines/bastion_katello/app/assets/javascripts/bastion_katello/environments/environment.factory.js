@@ -25,7 +25,7 @@ angular.module('Bastion.environments').factory('Environment',
     ['BastionResource', 'CurrentOrganization',
     function (BastionResource, CurrentOrganization) {
 
-        return BastionResource('/api/v2/environments/:id/:action',
+        return BastionResource('/katello/api/v2/environments/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 update: {method: 'PUT'},

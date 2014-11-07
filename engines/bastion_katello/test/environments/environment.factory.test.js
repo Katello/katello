@@ -36,7 +36,7 @@ describe('Factory: Environment', function() {
     }));
 
     it('provides a way to get a collection of environments', function() {
-        $httpBackend.expectGET('/api/environments').respond(environments.results);
+        $httpBackend.expectGET('/katello/api/environments').respond(environments.results);
 
         Environment.query(function (environments) {
             expect(environments.results.length).toBe(2);
@@ -47,7 +47,7 @@ describe('Factory: Environment', function() {
     });
 
     it('provides a way to get a single environment', function() {
-        $httpBackend.expectGET('/api/environments').respond(environments.results[0]);
+        $httpBackend.expectGET('/katello/api/environments').respond(environments.results[0]);
 
         Environment.get({ id: 1 }, function (environment) {
             expect(environment).toBeDefined();
@@ -58,7 +58,7 @@ describe('Factory: Environment', function() {
     it('provides a way to update an environment', function() {
         var environment = environments.results[0];
         environment.name = 'NewEnvName';
-        $httpBackend.expectPUT('/api/environments').respond(environment);
+        $httpBackend.expectPUT('/katello/api/environments').respond(environment);
 
         Environment.update({ id: 1, name: 'NewEnvName' }, function (environment) {
             expect(environment).toBeDefined();

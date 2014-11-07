@@ -23,7 +23,7 @@
 angular.module('Bastion.content-hosts').factory('ContentHost',
     ['BastionResource', function (BastionResource) {
 
-        return BastionResource('/api/v2/systems/:id/:action/:action2', {id: '@uuid'}, {
+        return BastionResource('/katello/api/v2/systems/:id/:action/:action2', {id: '@uuid'}, {
             get: {method: 'GET', params: {fields: 'full'}},
             update: {method: 'PUT'},
             releaseVersions: {method: 'GET', params: {action: 'releases'}},
@@ -58,7 +58,7 @@ angular.module('Bastion.content-hosts').factory('ContentHost',
 angular.module('Bastion.content-hosts').factory('ContentHostBulkAction',
     ['BastionResource', function (BastionResource) {
 
-        return BastionResource('/api/v2/systems/bulk/:action', {}, {
+        return BastionResource('/katello/api/v2/systems/bulk/:action', {}, {
             addHostCollections: {method: 'PUT', params: {action: 'add_host_collections'}},
             applicableErrata: {method: 'POST', params: {action: 'applicable_errata'}},
             removeHostCollections: {method: 'PUT', params: {action: 'remove_host_collections'}},

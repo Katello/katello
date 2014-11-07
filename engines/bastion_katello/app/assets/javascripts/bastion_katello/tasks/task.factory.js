@@ -37,7 +37,7 @@ angular.module('Bastion.tasks').factory('Task',
         var bulkSearchRunning = false, searchIdGenerator = 0,
             searchParamsById = {},  callbackById = {};
 
-        var resource = BastionResource('/api/v2/tasks/:id/:action',
+        var resource = BastionResource('/katello/api/v2/tasks/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization}, {});
 
         var foremanTasksResource = BastionResource('/foreman_tasks/api/tasks/:id/:action',
