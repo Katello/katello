@@ -74,12 +74,19 @@ module Katello
       keys = %w(title id severity issued type description reboot_suggested solution updated summary)
       custom_json = json.clone.delete_if { |key, _value| !keys.include?(key) }
 
-      custom_json['errata_id'] = custom_json.delete('id')
-      custom_json['errata_type'] = custom_json.delete('type')
-      self.update_attributes!(custom_json)
-      update_bugzillas(json['references'].select { |r| r['type'] == 'bugzilla' })
-      update_cves(json['references'].select { |r| r['type'] == 'cve' })
-      update_packages(json['pkglist'])
+      if self.updated.blank? || (custom_json['updated'].to_datetime != self.updated.to_datetime)
+        custom_json['errata_id'] = custom_json.delete('id')
+        custom_json['errata_type'] = custom_json.delete('type')
+
+        self.update_attributes!(custom_json)
+
+        unless json['references'].blank?
+          update_bugzillas(json['references'].select { |r| r['type'] == 'bugzilla' })
+          update_cves(json['references'].select { |r| r['type'] == 'cve' })
+        end
+
+        update_packages(json['pkglist']) unless json['pkglist'].blank?
+      end
     end
 
     def self.list_filenames_by_clauses(clauses)

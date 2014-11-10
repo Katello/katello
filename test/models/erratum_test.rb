@@ -54,6 +54,20 @@ module Katello
       assert_empty Erratum.applicable_to_systems([@simple_server])
     end
 
+    def test_update_from_json
+      errata = katello_errata(:security)
+      json = errata.attributes.merge('description' => 'an update', 'updated' => DateTime.now)
+      errata.update_from_json(json)
+      assert_equal Erratum.find(errata).description, json['description']
+    end
+
+    def test_update_from_json_is_idempotent
+      errata = katello_errata(:security)
+      last_updated = errata.updated_at
+      json = errata.attributes
+      errata.update_from_json(json)
+      assert_equal Erratum.find(errata).updated_at, last_updated
+    end
   end
 
   class ErratumAvailableTest < ErratumTestBase
