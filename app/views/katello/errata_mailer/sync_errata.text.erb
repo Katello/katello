@@ -1,0 +1,33 @@
+<%= _("Katello Sync Summary") %>
+
+<%= _("The synchronization of \"%s\" has completed.  Below is a summary of new errata.") % @repo.name %>
+<% if @errata_counts[:total] > 100 %>
+<%= _("A large number of errata were synced for this repository, so only the first 100 are shown.") %>
+<% end -%>
+
+<%= _("Repository") %>:    <%= @repo.name %>
+New Errata:    <%= @errata_counts[:total] %>
+  <%= _("Security") %>:    <%= @errata_counts[:security] %>
+  <%= _("Bugfix") %>:      <%= @errata_counts[:bugfix] %>
+  <%= _("Enhancement") %>: <%= @errata_counts[:enhancement] %>
+
+<% ['security', 'bugfix', 'enhancement'].each do |errata_type| %>
+<% next if @errata[errata_type].nil? %>
+
+<% title = _("%s Errata") % errata_type.titleize %>
+<%= title %>
+<%= '=' * title.length %>
+
+<% @errata[errata_type].each do |erratum| %>
+------------------------------------------------------------------------------
+<%= errata_type.titleize %> Advisory - <%= erratum.errata_id %>
+------------------------------------------------------------------------------
+<% if !erratum.severity.blank? -%>
+Severity: <%= erratum.severity %>
+
+<% end %>
+Summary:
+<%= erratum.summary %>
+
+<% end -%>
+<% end -%>

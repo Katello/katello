@@ -43,6 +43,7 @@ module Actions
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view)
             plan_action(Katello::Repository::CorrectChecksum, repo)
             plan_action(Katello::Repository::UpdateMedia, repo)
+            plan_action(Katello::Repository::ErrataMail, repo)
           end
           plan_self(:id => repo.id, :sync_result => sync_task.output)
           plan_action(Pulp::Repository::RegenerateApplicability, :pulp_id => repo.pulp_id)

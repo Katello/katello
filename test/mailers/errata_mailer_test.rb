@@ -24,7 +24,15 @@ module Katello
                          :method => 'host_errata',
                          :subscription_type => 'report')
 
+      FactoryGirl.create(:mail_notification,
+                         :name => 'katello_sync_errata',
+                         :description => 'A summary of new errata after a repository is synchronized',
+                         :mailer => 'Katello::ErrataMailer',
+                         :method => 'sync_errata',
+                         :subscription_type => 'alert')
+
       @user.mail_notifications << MailNotification[:katello_host_advisory]
+      @user.mail_notifications << MailNotification[:katello_sync_errata]
 
       @errata_system = katello_systems(:errata_server)
     end
@@ -35,6 +43,15 @@ module Katello
       email = ActionMailer::Base.deliveries.first
       assert email.body.encoded.include? @errata_system.name
       assert email.body.encoded.include? 'http://foreman.some.host.fqdn/content_hosts/010E99C0-3276-11E2-81C1-0800200Czzzzz/errata'
+    end
+
+    def test_sync_errata
+      ActionMailer::Base.deliveries = []
+      repo = katello_repositories(:rhel_6_x86_64)
+      last_updated = 10.years.ago
+      MailNotification[:katello_sync_errata].deliver(:repo => repo.id, :last_updated => last_updated.to_s)
+      email = ActionMailer::Base.deliveries.first
+      assert email.body.encoded.include? katello_errata(:security).errata_id
     end
   end
 end

@@ -17,10 +17,18 @@ module Katello
       "#{Setting[:foreman_url]}/content_hosts/#{uuid}/errata"
     end
 
+    def erratum_path(erratum)
+      "#{Setting[:foreman_url]}/errata/#{erratum.uuid}/info"
+    end
+
     def errata_count(host, errata_type)
       available = host.available_errata.send(errata_type.to_sym).count
       applicable = host.applicable_errata.send(errata_type.to_sym).count - available
       "#{available} (#{applicable})"
+    end
+
+    def format_summary(summary)
+      summary.gsub(/\n\n/, '<p>').gsub(/\n/, ' ').html_safe
     end
 
     def host_count(hosts, errata_type)

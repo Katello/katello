@@ -26,6 +26,23 @@ module Katello
            :date      => Time.zone.now)
     end
 
+    def sync_errata(options)
+      return unless (@repo = Katello::Repository.find(options[:repo])) && (last_updated = options[:last_updated].to_datetime)
+
+      recipients = User.all.select do |user|
+        user.receives?(:katello_sync_errata) && user.can?(:view_products, @repo.product)
+      end
+
+      fail Errors::NotFound, N_("No recipients found for %s sync report") % @repo.name unless recipients.any?
+
+      all_errata = Katello::Erratum.where(:id => @repo.repository_errata.where('katello_repository_errata.updated_at > ?', last_updated).pluck(:erratum_id))
+
+      @errata_counts = errata_counts(all_errata)
+      @errata = all_errata.take(100).group_by(&:errata_type)
+
+      group_mail(recipients, :subject => (_("Katello Sync Summary for %s") % @repo.name))
+    end
+
     private
 
     def errata_counts(errata)

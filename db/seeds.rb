@@ -143,6 +143,13 @@ notifications = [
    :mailer            => 'Katello::ErrataMailer',
    :method            => 'host_errata',
    :subscription_type => 'report'
+  },
+
+  {:name              => :katello_sync_errata,
+   :description       => N_('A summary of new errata after a repository is synchronized'),
+   :mailer            => 'Katello::ErrataMailer',
+   :method            => 'sync_errata',
+   :subscription_type => 'alert'
   }
 ]
 
