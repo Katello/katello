@@ -37,6 +37,8 @@ module Actions
               repos_to_delete(version, environment).each do |repo|
                 plan_action(Repository::Destroy, repo)
               end
+
+              plan_action(ContentView::ErrataMail, version.content_view, environment)
             end
 
             plan_action(ContentView::UpdateEnvironment, version.content_view, environment)

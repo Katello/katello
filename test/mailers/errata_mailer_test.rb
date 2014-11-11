@@ -31,8 +31,16 @@ module Katello
                          :method => 'sync_errata',
                          :subscription_type => 'alert')
 
+      FactoryGirl.create(:mail_notification,
+                         :name => 'katello_promote_errata',
+                         :description => 'A post-promotion summary of hosts with available errata',
+                         :mailer => 'Katello::ErrataMailer',
+                         :method => 'promote_errata',
+                         :subscription_type => 'alert')
+
       @user.mail_notifications << MailNotification[:katello_host_advisory]
       @user.mail_notifications << MailNotification[:katello_sync_errata]
+      @user.mail_notifications << MailNotification[:katello_promote_errata]
 
       @errata_system = katello_systems(:errata_server)
     end
@@ -52,6 +60,13 @@ module Katello
       MailNotification[:katello_sync_errata].deliver(:repo => repo.id, :last_updated => last_updated.to_s)
       email = ActionMailer::Base.deliveries.first
       assert email.body.encoded.include? katello_errata(:security).errata_id
+    end
+
+    def test_promote_errata
+      ActionMailer::Base.deliveries = []
+      MailNotification[:katello_promote_errata].deliver(:content_view => @errata_system.content_view_id, :environment => @errata_system.environment_id)
+      email = ActionMailer::Base.deliveries.first
+      assert email.body.encoded.include? 'RHSA-1999-1231'
     end
   end
 end

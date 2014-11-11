@@ -1,0 +1,41 @@
+<%= _("Katello Promotion Summary") %>
+
+<% all_errata = @content_hosts.authorized_as(@user).map(&:available_errata).flatten.sort_by(&:id).uniq %>
+
+<%= (_("The promotion of %{content_view} to %{environment} has completed.  %{count} errata are available to your hosts.") %
+      {:content_view         => @content_view.name,
+       :environment          => @environment.name,
+       :count                => all_errata.count}) %>
+
+<%= _("Content View") %>: <%= @content_view.name %> (<%= content_view_path(@content_view) %>)
+<%= _("Environment") %>:  <%= @environment %>
+
+Hosts with available errata:
+  <%= _("Security") %>:    <%= host_count(@content_hosts, :security) %>
+  <%= _("Bugfix") %>:      <%= host_count(@content_hosts, :bugfix) %>
+  <%= _("Enhancement") %>: <%= host_count(@content_hosts, :enhancement) %>
+
+<% @errata = all_errata.take(100).group_by(&:errata_type) %>
+
+<%= _("Unapplied Errata") %>:
+
+<% ['security', 'bugfix', 'enhancement'].each do |errata_type| %>
+<% next if @errata[errata_type].nil? %>
+
+<% title = _("%s Errata") % errata_type.titleize %>
+<%= title %>
+<%= '=' * title.length %>
+
+<% @errata[errata_type].each do |erratum| %>
+------------------------------------------------------------------------------
+<%= errata_type.titleize %> Advisory - <%= erratum.errata_id %>
+------------------------------------------------------------------------------
+<% if !erratum.severity.blank? -%>
+Severity: <%= erratum.severity %>
+
+<% end %>
+Summary:
+<%= erratum.summary %>
+
+<% end -%>
+<% end -%>

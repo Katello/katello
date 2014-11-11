@@ -1,0 +1,29 @@
+<table class="errata" style="border: 1px solid #cccccc; padding: 5px; background-color: #ffffff; border-collapse: collapse; text-align: justify; width: 100%;" bgcolor="#ffffff">
+  <tr>
+    <td width="18%" style="text-align: left; border-collapse: collapse; background-image: linear-gradient(#f5f5f5, #e8e8e8); padding: 4px; border: 1px solid #cccccc;" align="left">
+      <b><%= _("Errata ID") %></b>
+    </td>
+
+    <td width="32%" style="border-collapse: collapse; text-align: left; background-color: #FFFFFF; padding: 4px; border: 1px solid #cccccc;" align="center" bgcolor="#FFFFFF">
+      <%= link_to erratum.errata_id, erratum_path(erratum) %>
+    </td>
+
+    <td width="18%" style="text-align: left; border-collapse: collapse; background-image: linear-gradient(#f5f5f5, #e8e8e8); padding: 4px; border: 1px solid #cccccc;" align="left">
+      <b><%= _("Severity") %></b>
+    </td>
+
+    <td width="32%" style="border-collapse: collapse; text-align: left; background-color: #FFFFFF; padding: 4px; border: 1px solid #cccccc;" align="center" bgcolor="#FFFFFF">
+      <%= erratum.severity.blank? ? "-" : erratum.severity %>
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="1" style="text-align: left; border-collapse: collapse; background-image: linear-gradient(#f5f5f5, #e8e8e8); padding: 4px; border: 1px solid #cccccc;" valign="top" align="left">
+      <b><%= _("Summary") %></b>
+    </td>
+
+    <td colspan="3" style="border-collapse: collapse; text-align: left; background-color: #FFFFFF; padding: 4px; border: 1px solid #cccccc;" align="center" bgcolor="#FFFFFF">
+      <%= format_summary(erratum.summary) %>
+    </td>
+  </tr>
+</table>

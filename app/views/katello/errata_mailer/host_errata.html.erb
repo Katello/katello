@@ -23,29 +23,7 @@
               <table border="0" width="100%" id="emailHeader" style="background-color: #e1e2e3;" bgcolor="#e1e2e3">
                 <tr>
                   <td align="left" valign="top" style="padding: 0px 20px;">
-                    <h4>Hosts with Available Errata:</h4>
-
-                    <div align="center" style="margin: 10px 0px;">
-                      <table class="summary" style="border: 1px solid; padding: 5px; background-color: #ffffff; border-collapse: collapse; text-align: center; width: 100%;" bgcolor="#ffffff">
-                        <tr>
-                          <td style="width: 33%; padding: 5px; border: 1px solid #ccc;">
-                            <b class="counter" style="color: #6bb5df;"><%= host_count(@content_hosts, :security) %></b>
-
-                            <p class="summary-title" style="font-size: 80%; font-weight: bold; margin: 5px; padding: 0px;"><%= _("Security").upcase %></p>
-                          </td>
-                          <td style="width: 33%; padding: 5px; border: 1px solid #ccc;">
-                            <b class="counter" style="color: #6bb5df;"><%= host_count(@content_hosts, :bugfix) %></b>
-
-                            <p class="summary-title" style="font-size: 80%; font-weight: bold; margin: 5px; padding: 0px;"><%= _("Bugfix").upcase %></p>
-                          </td>
-                          <td style="width: 33%; padding: 5px; border: 1px solid #ccc;">
-                            <b class="counter" style="color: #6bb5df;"><%= host_count(@content_hosts, :enhancement) %></b>
-
-                            <p class="summary-title" style="font-size: 80%; font-weight: bold; margin: 5px; padding: 0px;"><%= _("Enhancement").upcase %></p>
-                          </td>
-                        </tr>
-                      </table>
-                    </div>
+                    <%= render :partial => 'host_dashboard', :locals => {:content_hosts => @content_hosts, :title => _("Hosts with Available Errata")} %>
                   </td>
                 </tr>
               </table>

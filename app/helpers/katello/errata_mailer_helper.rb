@@ -17,6 +17,15 @@ module Katello
       "#{Setting[:foreman_url]}/content_hosts/#{uuid}/errata"
     end
 
+    def content_view_environment_errata_path(content_view, environment)
+      version = Katello::ContentViewEnvironment.find_by_content_view_id_and_environment_id(content_view.id, environment.id).content_view_version_id
+      "#{Setting[:foreman_url]}/content_views/#{content_view.id}/versions/#{version}/errata"
+    end
+
+    def content_view_path(content_view)
+      "#{Setting[:foreman_url]}/content_views/#{content_view.id}/versions"
+    end
+
     def erratum_path(erratum)
       "#{Setting[:foreman_url]}/errata/#{erratum.uuid}/info"
     end
@@ -28,11 +37,11 @@ module Katello
     end
 
     def format_summary(summary)
-      summary.gsub(/\n\n/, '<p>').gsub(/\n/, ' ').html_safe
+      summary.blank? ? summary : summary.gsub(/\n\n/, '<p>').gsub(/\n/, ' ').html_safe
     end
 
     def host_count(hosts, errata_type)
-      hosts.count { |host| host.available_errata.send(errata_type.to_sym).any? }
+      hosts.to_a.count { |host| host.available_errata.send(errata_type.to_sym).any? }
     end
   end
 end

@@ -43,6 +43,24 @@ module Katello
       group_mail(recipients, :subject => (_("Katello Sync Summary for %s") % @repo.name))
     end
 
+    def promote_errata(options)
+      return unless (content_view = Katello::ContentView.find(options[:content_view])) &&
+        (environment = Katello::KTEnvironment.find(options[:environment]))
+
+      recipients = User.all.select do |user|
+        user.receives?(:katello_promote_errata) && user.can?(:view_content_views, content_view)
+      end
+
+      fail Errors::NotFound, N_("No recipients found for %s promotion summary") % content_view.name unless recipients.any?
+
+      @content_view = content_view
+      @environment = environment
+
+      @content_hosts = Katello::System.where(:environment_id => environment.id, :content_view_id => content_view.id)
+
+      group_mail(recipients, :subject => (_("Katello Promotion Summary for %{content_view}") % {:content_view => content_view.name}))
+    end
+
     private
 
     def errata_counts(errata)
