@@ -5,6 +5,7 @@ attributes :title, :errata_id
 attributes :issued, :updated
 attributes :severity, :description, :solution, :summary, :reboot_suggested
 attributes :_href
+attributes :cves
 
 attributes :errata_type => :type
 

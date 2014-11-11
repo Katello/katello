@@ -9,6 +9,15 @@
         <span class="info-value">{{ errata.errata_id }}</span>
       </div>
       <div class="detail">
+        <span class="info-label" translate>CVEs</span>
+        <span class="info-value">
+          <span ng-repeat="cve in errata.cves">
+            <a href="cve.href">{{ cve.cve_id }}</a>
+            <span ng-show="!$last">,</span>
+          </span>
+        </span>
+      </div>
+      <div class="detail">
         <span class="info-label" translate>Type</span>
         <span class="info-value">{{ errata.type | errataType }}</span>
       </div>
