@@ -52,9 +52,9 @@ module Katello
       def view_versions
         @view_versions ||= begin
           versions = views.map { |v| v.versions.in_environment(search_envs) }.flatten
-          if @mode == :unique
+          if @mode == 'unique'
             versions = versions.select { |v| !(search_envs - v.environments).empty? }
-          elsif @mode == :shared
+          elsif @mode == 'shared'
             versions = versions.select { |v| (search_envs - v.environments).empty? }
           end
           versions
