@@ -215,7 +215,7 @@ module Katello
         :total    => errata.count
       }
 
-      @available_errata_ids = @system.available_errata.pluck(:id)
+      @available_errata_ids = @system.available_errata.pluck("#{Katello::Erratum.table_name}.id")
       respond_for_index :collection => response
     end
 
