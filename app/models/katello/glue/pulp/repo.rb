@@ -764,7 +764,11 @@ module Katello
     def full_path(smart_proxy = nil)
       pulp_uri = URI.parse(smart_proxy ? smart_proxy.url : Katello.config.pulp.url)
       scheme   = (self.unprotected ? 'http' : 'https')
-      "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
+      if docker?
+        "#{pulp_uri.host.downcase}:5000/#{relative_path}"
+      else
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
+      end
     end
   end
 end

@@ -256,6 +256,24 @@ module Katello
       assert_equal "/library_default_view_library/library/fedora_17_label", path
     end
 
+    def test_docker_clone_repo_path
+      @repo = build(:katello_repository, :docker,
+                    :environment => @library,
+                    :product => katello_products(:fedora),
+                    :content_view_version => @library.default_content_view_version
+                    )
+      path = Repository.clone_docker_repo_path(:repository => @repo,
+                                               :version => @repo.content_view_version,
+                                               :content_view => @repo.content_view
+                                               )
+      assert_equal "empty_organization-org_default_label-1-fedora_label-dockeruser_repo", path
+      path = Repository.clone_docker_repo_path(:repository => @repo,
+                                               :environment => @repo.organization.library,
+                                               :content_view => @repo.content_view
+                                               )
+      assert_equal 'empty_organization-library_default_view_library-org_default_label-fedora_label-dockeruser_repo', path
+    end
+
     def test_clone_repo_path_for_component
       # validate that clone repo path for a component view does not include the component view label
       library = KTEnvironment.find(katello_environments(:library).id)

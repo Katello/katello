@@ -27,6 +27,13 @@ FactoryGirl.define do
       relative_path "/ACME_Corporation/DEV/fedora_17_el6_label"
     end
 
+    trait :docker do
+      content_type "docker"
+      name "dockeruser/repo"
+      label "dockeruser_repo"
+      relative_path "empty_organization-fedora_label-dockeruser_repo"
+    end
+
     trait :puppet do
       content_type "puppet"
     end
