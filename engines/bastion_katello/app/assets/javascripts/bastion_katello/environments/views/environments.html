@@ -33,7 +33,7 @@
               <td class="info-block" translate>Yum Repositories <div>{{ library.counts.yum_repositories || 0 }}</div></td>
               <td class="info-block" translate>Docker Repositories <div>{{ library.counts.docker_repositories || 0 }}</div></td>
               <td class="info-block" translate>Packages <div>{{ library.counts.packages || 0 }}</div></td>
-              <td class="info-block" translate>Errata <div>{{ library.counts.errata.total || 0 }}</div></td>
+              <td class="info-block" translate>Errata <div><span errata-counts="library.counts.errata"></span></div></td>
               <td class="info-block" translate>Puppet Modules <div>{{ library.counts.puppet_modules || 0 }}</div></td>
             </tr>
           </tbody>
