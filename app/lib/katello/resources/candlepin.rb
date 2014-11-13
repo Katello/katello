@@ -786,8 +786,8 @@ module Katello
             JSON.parse(self.post(url, {:name => name}.to_json, self.default_headers).body).with_indifferent_access
           end
 
-          def update(id, release_version, service_level)
-            attrs = { :releaseVer => release_version, :serviceLevel => service_level }.delete_if { |_k, v| v.nil? }
+          def update(id, release_version, service_level, auto_attach)
+            attrs = { :releaseVer => release_version, :serviceLevel => service_level, :autoAttach => auto_attach }.delete_if { |_k, v| v.nil? }
             if attrs.empty?
               return true
             else
