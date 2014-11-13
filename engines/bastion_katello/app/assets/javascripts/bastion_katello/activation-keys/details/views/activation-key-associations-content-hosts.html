@@ -6,17 +6,17 @@
     Attached to Content Hosts
   </h3>
 
-  <table class="table table-striped" alch-table="table" ng-class="{'table-mask': table.working}">
+  <table class="table table-striped" bst-table="table" ng-class="{'table-mask': table.working}">
     <thead>
-      <tr alch-table-head>
-        <th alch-table-column="name" sortable><span translate>Name</span></th>
-        <th alch-table-column="status">
+      <tr bst-table-head>
+        <th bst-table-column="name" sortable><span translate>Name</span></th>
+        <th bst-table-column="status">
           {{ "Subscription Status" | translate }}
         </th>
-        <th alch-table-column="environment" sortable><span translate>Environment</span></th>
-        <th alch-table-column="contentView"><span translate>Content View</span></th>
-        <th alch-table-column="serviceLevel"><span translate>Service Level</span></th>
-        <th alch-table-column="releaseVersion"><span translate>Release Version</span></th>
+        <th bst-table-column="environment" sortable><span translate>Environment</span></th>
+        <th bst-table-column="contentView"><span translate>Content View</span></th>
+        <th bst-table-column="serviceLevel"><span translate>Service Level</span></th>
+        <th bst-table-column="releaseVersion"><span translate>Release Version</span></th>
       </tr>
     </thead>
 
@@ -25,21 +25,21 @@
         <td colspan="6" translate>This activation key is not associated with any content hosts.</td>
       </tr>
 
-      <tr alch-table-row ng-repeat="contentHost in contentHosts"
+      <tr bst-table-row ng-repeat="contentHost in contentHosts"
           ng-controller="ContentHostStatusController">
-        <td alch-table-cell>
+        <td bst-table-cell>
           <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
             {{ contentHost.name }}
           </a>
         </td>
-        <td alch-table-cell>
+        <td bst-table-cell>
           <span class="icon-circle" ng-class="getStatusColor(contentHost.entitlementStatus)">
           </span>
         </td>
-        <td alch-table-cell>{{ contentHost.environment.name }}</td>
-        <td alch-table-cell>{{ contentHost.content_view.name || "" }}</td>
-        <td alch-table-cell>{{ contentHost.service_level }}</td>
-        <td alch-table-cell>{{ contentHost.release_ver }}</td>
+        <td bst-table-cell>{{ contentHost.environment.name }}</td>
+        <td bst-table-cell>{{ contentHost.content_view.name || "" }}</td>
+        <td bst-table-cell>{{ contentHost.service_level }}</td>
+        <td bst-table-cell>{{ contentHost.release_ver }}</td>
       </tr>
     </tbody>
   </table>

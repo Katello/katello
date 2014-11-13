@@ -59,7 +59,7 @@
     </div>
   </div>
 
-  <div alch-table="repositoriesTable" class="nutupane">
+  <div bst-table="repositoriesTable" class="nutupane">
 
     <div ng-show="repositoriesTable.rows.length === 0 && !repositoriesTable.working">
       <p class="alert alert-info" ng-show="isState('content-views.details.repositories.docker.list')" translate>
@@ -76,42 +76,42 @@
       {{ "Loading..." | translate }}
     </div>
 
-    <div alch-infinite-scroll="repositoriesTable.nextPage()" data="repositoriesTable.rows">
+    <div bst-infinite-scroll="repositoriesTable.nextPage()" data="repositoriesTable.rows">
 
       <table ng-show="repositoriesTable.rows.length > 0"  class="table table-bordered table-striped">
         <thead>
-          <tr alch-table-head row-select>
-            <th alch-table-column translate>Name</th>
-            <th alch-table-column translate>Product</th>
-            <th alch-table-column translate>Last Sync</th>
-            <th alch-table-column translate>Sync State</th>
-            <th alch-table-column translate>Content</th>
+          <tr bst-table-head row-select>
+            <th bst-table-column translate>Name</th>
+            <th bst-table-column translate>Product</th>
+            <th bst-table-column translate>Last Sync</th>
+            <th bst-table-column translate>Sync State</th>
+            <th bst-table-column translate>Content</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr alch-table-row
+          <tr bst-table-row
               row-select="repository"
               ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch | filter:repositoryFilter | as:'filteredItems'">
-            <td alch-table-cell>
+            <td bst-table-cell>
               <a ui-sref="products.details.repositories.info({productId: repository.product.id, repositoryId: repository.id})">
                 {{ repository.name }}
               </a>
             </td>
-            <td alch-table-cell>{{ repository.product.name }}</td>
-            <td alch-table-cell>
+            <td bst-table-cell>{{ repository.product.name }}</td>
+            <td bst-table-cell>
               <span ng-show="repository.url">
                 {{ repository.last_sync.ended_at | date:"short" }}
               </span>
               <span ng-hide="repository.url" translate>N/A</span>
             </td>
-            <td alch-table-cell>
+            <td bst-table-cell>
               <span ng-show="repository.url">
                 <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result | capitalize }}</a>
               </span>
               <span ng-hide="repository.url" translate>N/A</span>
             </td>
-            <td alch-table-cell>
+            <td bst-table-cell>
               <div>
                 <a ng-show="repository.content_type == 'docker'"
                    translate>

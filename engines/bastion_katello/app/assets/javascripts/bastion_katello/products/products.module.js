@@ -20,11 +20,10 @@
  */
 angular.module('Bastion.products', [
     'ngResource',
-    'alchemy',
-    'alch-templates',
     'ui.router',
     'Bastion',
-    'Bastion.widgets',
+    'Bastion.utils',
+    'Bastion.components',
     'Bastion.sync-plans',
     'Bastion.gpg-keys',
     'Bastion.tasks'

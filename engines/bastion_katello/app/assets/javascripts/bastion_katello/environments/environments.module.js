@@ -20,10 +20,9 @@
  */
 angular.module('Bastion.environments', [
     'ngResource',
-    'alchemy',
-    'alch-templates',
     'ui.router',
     'Bastion',
-    'Bastion.widgets',
+    'Bastion.utils',
+    'Bastion.components',
     'Bastion.errata'
 ]);

@@ -10,7 +10,7 @@
                class="form-control"
                placeholder="{{ 'Search...' | translate }}"
                ng-model="addSubscriptionsTable.searchTerm"
-               on-enter="addSubscriptionsTable.search(addSubscriptionsTable.searchTerm)"/>
+               bst-on-enter="addSubscriptionsTable.search(addSubscriptionsTable.searchTerm)"/>
         <span class="input-group-btn">
           <button ng-click="addSubscriptionsTable.search(addSubscriptionsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
         </span>
@@ -38,8 +38,8 @@
     </div>
   </div>
 
-  <div alch-table="addSubscriptionsTable" class="nutupane">
-    <div alch-container-scroll alch-infinite-scroll="addSubscriptionsTable.nextPage()">
+  <div bst-table="addSubscriptionsTable" class="nutupane">
+    <div bst-container-scroll bst-infinite-scroll="addSubscriptionsTable.nextPage()">
 
       <div class="loading-mask icon-3x" ng-show="addSubscriptionsTable.working && addSubscriptionsTable.rows.length == 0">
         <i class="icon-spinner icon-spin"></i>
@@ -48,27 +48,27 @@
 
       <table ng-class="{'table-mask': subscriptionsTable.working}" class="table table-full table-striped">
         <thead>
-          <tr alch-table-head row-select>
-            <th alch-table-column="quantity" sortable class="align-center"><span translate>Quantity</span></th>
-            <th alch-table-column="attached" sortable><span translate>Attached</span></th>
-            <th alch-table-column="startDate" sortable><span translate>Starts</span></th>
-            <th alch-table-column="endDate" sortable><span translate>Expires</span></th>
-            <th alch-table-column="supportLevel"><span translate>Support Level</span></th>
-            <th alch-table-column="contractNumber" sortable><span translate>Contract</span></th>
-            <th alch-table-column="accountNumber" sortable><span translate>Account</span></th>
+          <tr bst-table-head row-select>
+            <th bst-table-column="quantity" sortable class="align-center"><span translate>Quantity</span></th>
+            <th bst-table-column="attached" sortable><span translate>Attached</span></th>
+            <th bst-table-column="startDate" sortable><span translate>Starts</span></th>
+            <th bst-table-column="endDate" sortable><span translate>Expires</span></th>
+            <th bst-table-column="supportLevel"><span translate>Support Level</span></th>
+            <th bst-table-column="contractNumber" sortable><span translate>Contract</span></th>
+            <th bst-table-column="accountNumber" sortable><span translate>Account</span></th>
           </tr>
         </thead>
 
         <tbody>
-          <tr alch-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
-            <td alch-table-cell colspan="8">
+          <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
+            <td bst-table-cell colspan="8">
               <a href='/subscriptions?search=product_name:"{{ name }}"'>
                 {{ name }}
               </a>
             </td>
           </tr>
-          <tr alch-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
-            <td alch-table-cell>
+          <tr bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
+            <td bst-table-cell>
               <span ng-hide="subscription.multi_entitlement">
                 1
               </span>
@@ -79,12 +79,12 @@
                 <option value="">{{ "Automatic" | translate }}</option>
               </select>
             </td>
-            <td alch-table-cell>{{ subscription | subscriptionConsumedFilter }}</td>
-            <td alch-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
-            <td alch-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
-            <td alch-table-cell>{{ subscription.support_level }}</td>
-            <td alch-table-cell>{{ subscription.contract_number }}</td>
-            <td alch-table-cell>{{ subscription.account_number }}</td>
+            <td bst-table-cell>{{ subscription | subscriptionConsumedFilter }}</td>
+            <td bst-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
+            <td bst-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
+            <td bst-table-cell>{{ subscription.support_level }}</td>
+            <td bst-table-cell>{{ subscription.contract_number }}</td>
+            <td bst-table-cell>{{ subscription.account_number }}</td>
           </tr>
         </tbody>
 

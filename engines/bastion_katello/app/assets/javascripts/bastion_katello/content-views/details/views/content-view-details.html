@@ -1,6 +1,6 @@
 <span page-title ng-model="contentView">{{ 'Content View:' | translate }} {{ contentView.name }}</span>
 
-<section class="nutupane-details" ng-cloak alch-container-scroll>
+<section class="nutupane-details" ng-cloak bst-container-scroll>
 
   <header class="details-header row">
     <h2 class="col-sm-6" ng-hide="contentView.composite">{{ contentView.name }}</h2>
@@ -40,7 +40,7 @@
     <form>
       <h5 translate>Copy</h5>
       <div class="input">
-        <div alch-alert error-messages="copyErrorMessages"></div>
+        <div bst-alert error-messages="copyErrorMessages"></div>
         <div class="info-label">
           <label for="copy_name" translate>New Name:</label>
         </div>
@@ -130,7 +130,7 @@
     </ul>
   </nav>
 
-  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
   <div ui-view></div>
 
 </section>

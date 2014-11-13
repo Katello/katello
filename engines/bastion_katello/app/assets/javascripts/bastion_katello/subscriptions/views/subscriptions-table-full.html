@@ -3,35 +3,35 @@
 </p>
 <table class="table table-striped" ng-class="{'table-mask': table.working}" ng-show="table.rows.length > 0">
   <thead>
-    <tr alch-table-head>
-      <th alch-table-column="consumed" class="align-center"><span translate>Consumed</span></th>
-      <th alch-table-column="type"><span translate>Type</span></th>
-      <th alch-table-column="startDate"><span translate>Starts</span></th>
-      <th alch-table-column="endDate"><span translate>Expires</span></th>
-      <th alch-table-column="supportLevel"><span translate>Support Level</span></th>
-      <th alch-table-column="contractNumber"><span translate>Contract</span></th>
-      <th alch-table-column="accountNumber"><span translate>Account</span></th>
+    <tr bst-table-head>
+      <th bst-table-column="consumed" class="align-center"><span translate>Consumed</span></th>
+      <th bst-table-column="type"><span translate>Type</span></th>
+      <th bst-table-column="startDate"><span translate>Starts</span></th>
+      <th bst-table-column="endDate"><span translate>Expires</span></th>
+      <th bst-table-column="supportLevel"><span translate>Support Level</span></th>
+      <th bst-table-column="contractNumber"><span translate>Contract</span></th>
+      <th bst-table-column="accountNumber"><span translate>Account</span></th>
     </tr>
   </thead>
 
   <tbody>
-    <tr alch-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
-      <td alch-table-cell colspan="7">
+    <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
+      <td bst-table-cell colspan="7">
         <b>{{ name }}</b>
       </td>
     </tr>
-    <tr alch-table-row ng-repeat-end ng-repeat="subscription in subscriptions">
-      <td alch-table-cell>
+    <tr bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions">
+      <td bst-table-cell>
         <a ui-sref="subscriptions.details.info({subscriptionId: subscription.id})">
           {{ subscription | subscriptionConsumedFilter }}
         </a>
       </td>
-      <td alch-table-cell>{{ subscriptionType(subscription) }}</td>
-      <td alch-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
-      <td alch-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
-      <td alch-table-cell>{{ subscription.support_level }}</td>
-      <td alch-table-cell>{{ subscription.contract_number }}</td>
-      <td alch-table-cell>{{ subscription.account_number }}</td>
+      <td bst-table-cell>{{ subscriptionType(subscription) }}</td>
+      <td bst-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
+      <td bst-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
+      <td bst-table-cell>{{ subscription.support_level }}</td>
+      <td bst-table-cell>{{ subscription.contract_number }}</td>
+      <td bst-table-cell>{{ subscription.account_number }}</td>
     </tr>
   </tbody>
 </table>

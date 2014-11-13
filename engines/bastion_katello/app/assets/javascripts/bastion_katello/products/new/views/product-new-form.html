@@ -1,6 +1,6 @@
 <form name="productForm" class="form-horizontal" novalidate role="form">
 
-  <div alch-form-group label="{{ 'Name' | translate }}">
+  <div bst-form-group label="{{ 'Name' | translate }}">
     <input id="name"
            name="name"
            ng-model="product.name"
@@ -10,7 +10,7 @@
            required/>
   </div>
 
-  <div alch-form-group label="{{ 'Label' | translate }}">
+  <div bst-form-group label="{{ 'Label' | translate }}">
     <input id="label"
            name="label"
            ng-model="product.label"
@@ -19,7 +19,7 @@
            required/>
   </div>
 
-  <div alch-form-group label="{{ 'GPG Key' | translate }}">
+  <div bst-form-group label="{{ 'GPG Key' | translate }}">
     <select id="gpg_key_id"
             name="gpg_key_id"
             ng-model="product.gpg_key_id"
@@ -29,7 +29,7 @@
     </select>
   </div>
 
-  <div alch-form-group label="{{ 'Sync Plan' | translate }}">
+  <div bst-form-group label="{{ 'Sync Plan' | translate }}">
     <select id="sync_plan_id"
             name="sync_plan_id"
             ng-model="product.sync_plan_id"
@@ -40,14 +40,14 @@
     <a ui-sref="products.new.sync-plan" translate>+ New Sync Plan</a>
   </div>
 
-  <div alch-form-group label="{{ 'Description' | translate }}">
+  <div bst-form-group label="{{ 'Description' | translate }}">
     <textarea id="description"
               name="description"
               ng-model="product.description">
     </textarea>
   </div>
 
-  <div alch-form-buttons
+  <div bst-form-buttons
        on-cancel="transitionTo('products.index')"
        on-save="save(product)"
        working="working">

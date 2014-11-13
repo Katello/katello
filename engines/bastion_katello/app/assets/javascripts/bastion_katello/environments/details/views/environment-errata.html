@@ -5,26 +5,26 @@
 
   <table data-block="table" class="table table-striped table-bordered">
     <thead>
-      <tr alch-table-head>
-        <th alch-table-column="errataId" sortable>{{ "Errata ID" | translate }}</th>
-        <th alch-table-column="title">{{ "Title" | translate }}</th>
-        <th alch-table-column="type">{{ "Type" | translate }}</th>
-        <th alch-table-column="numberOfContentHosts">{{ "Affected Content Hosts" | translate }}</th>
-        <th alch-table-column="updated">{{ "Updated" | translate }}</th>
+      <tr bst-table-head>
+        <th bst-table-column="errataId" sortable>{{ "Errata ID" | translate }}</th>
+        <th bst-table-column="title">{{ "Title" | translate }}</th>
+        <th bst-table-column="type">{{ "Type" | translate }}</th>
+        <th bst-table-column="numberOfContentHosts">{{ "Affected Content Hosts" | translate }}</th>
+        <th bst-table-column="updated">{{ "Updated" | translate }}</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr alch-table-row ng-repeat="errata in detailsTable.rows">
-        <td alch-table-cell>
+      <tr bst-table-row ng-repeat="errata in detailsTable.rows">
+        <td bst-table-cell>
           <a ui-sref="errata.details.info({errataId: errata.id})">
             {{ errata.errata_id }}
           </a>
         </td>
-        <td alch-table-cell>
+        <td bst-table-cell>
           {{ errata.title }}
         </td>
-        <td alch-table-cell>
+        <td bst-table-cell>
             <span ng-show="errata.type == 'security'">
               <i class="icon-warning-sign inline-icon" title="{{ 'Security' | translate }}"></i>
             </span>
@@ -40,8 +40,8 @@
           {{ errata.type | errataType}}
           <span ng-show="errata.severity">- {{ errata.severity | errataSeverity}}</span>
         </td>
-        <td alch-table-cell>{{ errata.systems_available_count || 0 }}</td>
-        <td alch-table-cell>{{ errata.updated | date:'shortDate'}}</td>
+        <td bst-table-cell>{{ errata.systems_available_count || 0 }}</td>
+        <td bst-table-cell>{{ errata.updated | date:'shortDate'}}</td>
       </tr>
     </tbody>
   </table>

@@ -2,7 +2,7 @@
 
 <section class="details details-full">
 
-  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
   <input type="text"
          class="form-control filter-input"
@@ -37,26 +37,26 @@
   </span>
 
   <div class="nutupane">
-    <table alch-table="syncPlanTable"
+    <table bst-table="syncPlanTable"
            class="table table-striped"
            ng-class="{'table-mask': syncPlanTable.working}">
       <thead>
-        <tr alch-table-head row-choice>
-          <th alch-table-column="name" translate>Name</th>
-          <th alch-table-column="description" translate>Description</th>
-          <th alch-table-column="interval" translate>Interval</th>
-          <th alch-table-column="sync-date" translate>Start Date</th>
+        <tr bst-table-head row-choice>
+          <th bst-table-column="name" translate>Name</th>
+          <th bst-table-column="description" translate>Description</th>
+          <th bst-table-column="interval" translate>Interval</th>
+          <th bst-table-column="sync-date" translate>Start Date</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr alch-table-row
+        <tr bst-table-row
             row-choice="syncPlan"
             ng-repeat="syncPlan in syncPlanTable.rows | filter:syncPlanSearch">
-          <td alch-table-cell>{{ syncPlan.name }}</td>
-          <td alch-table-cell>{{ syncPlan.description }}</td>
-          <td alch-table-cell>{{ syncPlan.interval | capitalize }}</td>
-          <td alch-table-cell>{{ syncPlan.sync_date }}</td>
+          <td bst-table-cell>{{ syncPlan.name }}</td>
+          <td bst-table-cell>{{ syncPlan.description }}</td>
+          <td bst-table-cell>{{ syncPlan.interval | capitalize }}</td>
+          <td bst-table-cell>{{ syncPlan.sync_date }}</td>
         </tr>
       </tbody>
     </table>

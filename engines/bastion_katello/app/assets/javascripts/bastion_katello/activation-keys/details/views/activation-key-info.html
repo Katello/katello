@@ -16,7 +16,7 @@
       <div class="detail">
         <span class="info-label" translate>Name</span>
         <span class="info-value"
-              alch-edit-text="activationKey.name"
+              bst-edit-text="activationKey.name"
               readonly="denied('edit_activation_keys', activationKey)"
               on-save="save(activationKey)">
         </span>
@@ -25,7 +25,7 @@
       <div class="detail">
         <span class="info-label" translate>Description</span>
         <span class="info-value"
-              alch-edit-textarea="activationKey.description"
+              bst-edit-textarea="activationKey.description"
               readonly="denied('edit_activation_keys', activationKey)"
               on-save="save(activationKey)">
         </span>
@@ -36,7 +36,7 @@
         <span class="info-label" translate>Content Host Limit</span>
 
         <span class="info-value"
-              alch-edit-custom="activationKey.max_content_hosts"
+              bst-edit-custom="activationKey.max_content_hosts"
               formatter="unlimitedFilter"
               formatter-options="activationKey.unlimited_content_hosts"
               readonly="denied('edit_activation_keys', activationKey)"
@@ -67,7 +67,7 @@
       <div class="detail">
         <span class="info-label" translate>Service Level</span>
         <span class="info-value"
-              alch-edit-select="activationKey.service_level"
+              bst-edit-select="activationKey.service_level"
               readonly="denied('edit_activation_keys', activationKey)"
               selector="activationKey.service_level"
               options="serviceLevels()"
@@ -87,7 +87,7 @@
       <div class="detail">
         <span class="info-label" translate>Release Version</span>
         <span class="info-value"
-              alch-edit-select="activationKey.release_version"
+              bst-edit-select="activationKey.release_version"
               readonly="denied('edit_activation_keys', activationKey)"
               selector="activationKey.release_version"
               options="releaseVersions()"
@@ -114,7 +114,7 @@
       <div class="detail">
         <span class="info-label" translate>Content View</span>
         <span class="info-value"
-              alch-edit-select="activationKey.content_view.name"
+              bst-edit-select="activationKey.content_view.name"
               readonly="denied('edit_activation_keys', activationKey)"
               selector="activationKey.content_view.id"
               options="contentViews()"

@@ -5,7 +5,7 @@
   {{ "Loading..." | translate }}
 </div>
 
-<section class="nutupane-details" ng-cloak alch-container-scroll>
+<section class="nutupane-details" ng-cloak bst-container-scroll>
   <header class="new-header details-header">
     <h2 class="pull-left" translate>New Activation Key</h2>
 
@@ -19,7 +19,7 @@
 
   <form name="activationKeyForm" class="form-horizontal" novalidate role="form">
 
-    <div alch-form-group label="{{ 'Name' | translate }}">
+    <div bst-form-group label="{{ 'Name' | translate }}">
       <input id="name"
              name="name"
              ng-model="activationKey.name"
@@ -29,13 +29,13 @@
              required/>
     </div>
 
-    <div alch-form-group label="{{ 'Content Host Limit' | translate }}" field="max_content_hosts">
+    <div bst-form-group label="{{ 'Content Host Limit' | translate }}" field="max_content_hosts">
       <span translate>Unlimited Content Hosts:</span>
       <input type="checkbox"
              name="limit"
              ng-model="activationKey.unlimited_content_hosts"/>
 
-      <div alch-form-group label="{{ 'Limit' | translate }}" ng-hide="activationKey.unlimited_content_hosts">
+      <div bst-form-group label="{{ 'Limit' | translate }}" ng-hide="activationKey.unlimited_content_hosts">
         <input id="max_content_hosts"
                name="max_content_hosts"
                class="form-control"
@@ -47,7 +47,7 @@
       </div>
     </div>
 
-    <div alch-form-group label="{{ 'Description' | translate }}">
+    <div bst-form-group label="{{ 'Description' | translate }}">
       <textarea id="description"
                 name="description"
                 ng-model="activationKey.description"
@@ -66,7 +66,7 @@
       </div>
     </div>
 
-    <div alch-form-group label="{{ 'Content View' | translate }}">
+    <div bst-form-group label="{{ 'Content View' | translate }}">
       <select ng-hide="contentViews.length === 0 || activationKey.environment === undefined "
               id="content_view_id"
               name="content_view_id"
@@ -84,7 +84,7 @@
     </div>
 
 
-    <div alch-form-buttons
+    <div bst-form-buttons
          on-cancel="transitionTo('activation-keys.index')"
          on-save="save(activationKey)"
          working="working">

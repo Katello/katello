@@ -9,11 +9,11 @@
     </h5>
   </header>
 
-  <div alch-alert error-messages="errorMessages" success-messages="successMessages"></div>
+  <div bst-alert error-messages="errorMessages" success-messages="successMessages"></div>
 
   <form name="repositoryForm" class="form-horizontal" novalidate role="form">
 
-    <div alch-form-group label="{{ 'Name' | translate }}">
+    <div bst-form-group label="{{ 'Name' | translate }}">
       <input id="name"
              name="name"
              ng-model="repository.name"
@@ -23,7 +23,7 @@
              required/>
     </div>
 
-    <div alch-form-group label="{{ 'Label' | translate }}">
+    <div bst-form-group label="{{ 'Label' | translate }}">
       <input id="label"
              name="label"
              ng-model="repository.label"
@@ -32,7 +32,7 @@
              required/>
     </div>
 
-    <div alch-form-group label="{{ 'Type' | translate }}">
+    <div bst-form-group label="{{ 'Type' | translate }}">
       <select required
               tabindex="3"
               id="content_type"
@@ -42,7 +42,7 @@
       </select>
     </div>
 
-    <div alch-form-group label="{{ 'Checksum' | translate }}" ng-show="repository.content_type == 'yum'">
+    <div bst-form-group label="{{ 'Checksum' | translate }}" ng-show="repository.content_type == 'yum'">
       <select tabindex="4"
               id="checksum_type"
               name="checksum_type"
@@ -54,7 +54,7 @@
       </h6>
     </div>
 
-    <div alch-form-group label="{{ 'URL' | translate }}">
+    <div bst-form-group label="{{ 'URL' | translate }}">
       <input id="url"
              name="url"
              ng-model="repository.url"
@@ -62,7 +62,7 @@
              tabindex="5"/>
     </div>
 
-    <div alch-form-group label="{{ 'Publish via HTTP' | translate }}" ng-show="repository.content_type == 'yum'">
+    <div bst-form-group label="{{ 'Publish via HTTP' | translate }}" ng-show="repository.content_type == 'yum'">
       <input id="unprotected"
              name="unprotected"
              ng-model="repository.unprotected"
@@ -70,7 +70,7 @@
              tabindex="6"/>
     </div>
 
-    <div alch-form-group label="{{ 'GPG Key' | translate }}" ng-show="repository.content_type == 'yum'">
+    <div bst-form-group label="{{ 'GPG Key' | translate }}" ng-show="repository.content_type == 'yum'">
       <select id="gpg_key_id"
               name="gpg_key_id"
               ng-model="repository.gpg_key_id"
@@ -80,7 +80,7 @@
       </select>
     </div>
 
-    <div alch-form-buttons
+    <div bst-form-buttons
          on-cancel="transitionTo('products.details.repositories.index', {productId: repository.product_id})"
          on-save="save(repository)"
          working="working">

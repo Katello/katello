@@ -5,33 +5,33 @@
        ng-class="{'table-mask': contentHostTable.working}"
        ng-show="contentHostTable.rows.length > 0">
   <thead>
-    <tr alch-table-head row-select>
-      <th alch-table-column="name" sortable><span translate>Name</span></th>
-      <th alch-table-column="status">
+    <tr bst-table-head row-select>
+      <th bst-table-column="name" sortable><span translate>Name</span></th>
+      <th bst-table-column="status">
         {{ "Subscription Status" | translate }}
       </th>
-      <th alch-table-column="status">
+      <th bst-table-column="status">
         <span translate>Available Errata</span>
       </th>
-      <th alch-table-column="os"><span translate>OS</span></th>
-      <th alch-table-column="environment" sortable><span translate>Environment</span></th>
-      <th alch-table-column="contentView"><span translate>Content View</span></th>
-      <th alch-table-column="registered"><span translate>Registered</span></th>
-      <th alch-table-column="lastCheckin" sortable><span translate>Last Checkin</span></th>
+      <th bst-table-column="os"><span translate>OS</span></th>
+      <th bst-table-column="environment" sortable><span translate>Environment</span></th>
+      <th bst-table-column="contentView"><span translate>Content View</span></th>
+      <th bst-table-column="registered"><span translate>Registered</span></th>
+      <th bst-table-column="lastCheckin" sortable><span translate>Last Checkin</span></th>
     </tr>
   </thead>
 
   <div data-extend-template="layouts/select-all-results.html"></div>
 
   <tbody>
-    <tr alch-table-row ng-repeat="contentHost in contentHostTable.rows" row-select="contentHost"
+    <tr bst-table-row ng-repeat="contentHost in contentHostTable.rows" row-select="contentHost"
         ng-controller="ContentHostStatusController">
-      <td alch-table-cell>
+      <td bst-table-cell>
         <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
           {{ contentHost.name }}
         </a>
       </td>
-      <td alch-table-cell>
+      <td bst-table-cell>
         <span class="icon-circle" ng-class="contentHostTable.getStatusColor(contentHost.entitlementStatus)">
         </span>
       </td>
@@ -40,11 +40,11 @@
           <span errata-counts="contentHost.errata_counts"></span>
         </a>
       </td>
-      <td alch-table-cell>{{ contentHost.distribution }}</td>
-      <td alch-table-cell>{{ contentHost.environment.name }}</td>
-      <td alch-table-cell>{{ contentHost.content_view.name || "" }}</td>
-      <td alch-table-cell>{{ contentHost.created | date:'short' }}</td>
-      <td alch-table-cell>{{ (contentHost.checkin_time | date:'short') || ("Never checked in" | translate) }}</td>
+      <td bst-table-cell>{{ contentHost.distribution }}</td>
+      <td bst-table-cell>{{ contentHost.environment.name }}</td>
+      <td bst-table-cell>{{ contentHost.content_view.name || "" }}</td>
+      <td bst-table-cell>{{ contentHost.created | date:'short' }}</td>
+      <td bst-table-cell>{{ (contentHost.checkin_time | date:'short') || ("Never checked in" | translate) }}</td>
     </tr>
   </tbody>
 </table>

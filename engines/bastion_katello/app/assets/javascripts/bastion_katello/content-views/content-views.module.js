@@ -22,7 +22,8 @@ angular.module('Bastion.content-views', [
     'ngResource',
     'ui.router',
     'Bastion',
+    'Bastion.utils',
     'Bastion.content-views.versions',
-    'Bastion.widgets',
+    'Bastion.components',
     'Bastion.packages'
 ]);

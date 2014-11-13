@@ -5,27 +5,27 @@
        ng-class="{'table-mask': table.working}"
        ng-show="table.rows.length > 0">
   <thead>
-    <tr alch-table-head row-select>
-      <th alch-table-column="name" sortable><span translate>Name</span></th>
-      <th alch-table-column="content-hosts"><span translate>Content Hosts</span></th>
-      <th alch-table-column="limit"><span translate>Limit</span></th>
+    <tr bst-table-head row-select>
+      <th bst-table-column="name" sortable><span translate>Name</span></th>
+      <th bst-table-column="content-hosts"><span translate>Content Hosts</span></th>
+      <th bst-table-column="limit"><span translate>Limit</span></th>
     </tr>
   </thead>
 
   <tbody>
-    <tr alch-table-row ng-repeat="hostCollection in table.rows" row-select="hostCollection">
-      <td alch-table-cell>
+    <tr bst-table-row ng-repeat="hostCollection in table.rows" row-select="hostCollection">
+      <td bst-table-cell>
         <a ui-sref="host-collections.details.info({hostCollectionId: hostCollection.id})">
           {{ hostCollection.name }}
         </a>
         <i class="icon-chevron-right selected-icon" ng-show="hostCollection.selected"></i>
       </td>
-      <td alch-table-cell>
+      <td bst-table-cell>
         <a ui-sref="host-collections.details.content-hosts.list({hostCollectionId: hostCollection.id})">
           {{ hostCollection.total_content_hosts }}
         </a>
       </td>
-      <td alch-table-cell>{{ hostCollection.max_content_hosts | unlimitedFilter:hostCollection.unlimited_content_hosts }}</td>
+      <td bst-table-cell>{{ hostCollection.max_content_hosts | unlimitedFilter:hostCollection.unlimited_content_hosts }}</td>
     </tr>
   </tbody>
 </table>

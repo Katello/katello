@@ -9,7 +9,7 @@
       <div class="detail">
         <span class="info-label" translate>Name</span>
         <span class="info-value"
-              alch-edit-text="contentHost.name"
+              bst-edit-text="contentHost.name"
               readonly="denied('edit_content_hosts', contentHost)"
               on-save="save(contentHost)">
         </span>
@@ -23,7 +23,7 @@
       <div class="detail">
         <span class="info-label" translate>Description</span>
         <span class="info-value"
-              alch-edit-textarea="contentHost.description"
+              bst-edit-textarea="contentHost.description"
               readonly="denied('edit_content_hosts', contentHost)"
               on-save="save(contentHost)">
         </span>
@@ -90,7 +90,7 @@
       <div class="detail">
         <span class="info-label" translate>Auto-Attach</span>
         <span class="info-value"
-              alch-edit-checkbox="contentHost.autoheal"
+              bst-edit-checkbox="contentHost.autoheal"
               readonly="denied('edit_content_hosts', contentHost)"
               formatter="booleanToYesNo"
               on-save="save(contentHost)">
@@ -99,7 +99,7 @@
       <div class="detail">
         <span class="info-label" translate>Service Level</span>
         <span class="info-value"
-              alch-edit-select="contentHost.service_level"
+              bst-edit-select="contentHost.service_level"
               readonly="denied('edit_content_hosts', contentHost)"
               selector="contentHost.service_level"
               options="serviceLevels()"
@@ -221,7 +221,7 @@
       <div class="detail">
         <span class="info-label" translate>Release Version</span>
         <span class="info-value"
-              alch-edit-select="contentHost.release_ver"
+              bst-edit-select="contentHost.release_ver"
               readonly="denied('edit_content_hosts', contentHost)"
               selector="contentHost.release_ver"
               options="releaseVersions()"
@@ -241,7 +241,7 @@
       <div class="detail">
         <span class="info-label" translate>Content View</span>
         <span class="info-value"
-              alch-edit-select="contentHost.content_view.name"
+              bst-edit-select="contentHost.content_view.name"
               readonly="denied('edit_content_hosts', contentHost)"
               selector="contentHost.content_view.id"
               options="contentViews()"
@@ -361,9 +361,9 @@
     <section class="custom-information">
       <h4 translate>Custom Information</h4>
 
-      <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+      <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
-      <span alch-edit-add-item="contentHost.customInfo"
+      <span bst-edit-add-item="contentHost.customInfo"
             ng-show="perimtted('edit_content_hosts', contentHost)"
             on-add="addCustomInfo(value)">
       </span>
@@ -377,7 +377,7 @@
           <div class="detail" ng-repeat="customInfo in contentHost.customInfo | filter:searchTerm">
             <span class="info-label">{{ customInfo.keyname }}</span>
           <span class="info-value"
-                alch-edit-text="customInfo.value"
+                bst-edit-text="customInfo.value"
                 on-save="saveCustomInfo(customInfo)"
                 readonly="denied('edit_content_hosts', contentHost)"
                 deletable="true"

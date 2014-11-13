@@ -10,7 +10,7 @@
   <div data-block="pane-loading"></div>
 
   <div data-block="messages">
-    <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+    <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
     <div class="alert alert-success" ng-hide="generationTaskId === undefined">
       <button type="button" class="close" ng-click="generationTaskId = undefined">×</button>
@@ -43,14 +43,14 @@
       </div>
 
       <thead ng-hide="detailsTable.working">
-        <tr alch-table-head row-select>
-          <th alch-table-column><span translate>Name</span></th>
+        <tr bst-table-head row-select>
+          <th bst-table-column><span translate>Name</span></th>
         </tr>
       </thead>
 
       <tbody ng-hide="detailsTable.working">
-        <tr alch-table-row ng-repeat="package in detailsTable.rows" row-select="package">
-          <td alch-table-cell>
+        <tr bst-table-row ng-repeat="package in detailsTable.rows" row-select="package">
+          <td bst-table-cell>
             {{ package.nvrea }}
           </td>
         </tr>

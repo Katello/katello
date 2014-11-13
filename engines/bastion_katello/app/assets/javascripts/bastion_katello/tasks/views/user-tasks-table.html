@@ -1,28 +1,28 @@
 <section class="nutupane-sub-section">
-  <div alch-table="tasksTable">
+  <div bst-table="tasksTable">
     <table ng-class="{'table-mask': tasksTable.working}" class="table table-full table-striped">
       <thead>
-      <tr alch-table-head>
-        <th alch-table-column="Status" style="width: 20%" translate>Status</th>
-        <th alch-table-column="Event" translate>Event</th>
-        <th alch-table-column="Date" style="width: 10em" translate>Date</th>
+      <tr bst-table-head>
+        <th bst-table-column="Status" style="width: 20%" translate>Status</th>
+        <th bst-table-column="Event" translate>Event</th>
+        <th bst-table-column="Date" style="width: 10em" translate>Date</th>
       </tr>
       </thead>
 
       <tbody>
-        <tr alch-table-row ng-repeat="task in tasksTable.rows">
-          <td alch-table-cell>
+        <tr bst-table-row ng-repeat="task in tasksTable.rows">
+          <td bst-table-cell>
             <div ng-class="{ active: (task.state === 'pending' || task.state === 'running') }" class="progress progress-striped">
               <span progressbar value="task.progressbar.value" type="{{task.progressbar.type}}"></span>
             </div>
           </td>
-          <td alch-table-cell>
+          <td bst-table-cell>
             <a class="active" ng-click="tasksTable.gotoDetails(task.id)">
               {{ task.humanized.action }}
               {{ task.humanized.input | taskInputShort | taskInputCompile }}
             </a>
           </td>
-          <td alch-table-cell>{{ task.started_at | date:"short" }}</td>
+          <td bst-table-cell>{{ task.started_at | date:"short" }}</td>
         </tr>
       </tbody>
     </table>

@@ -5,7 +5,7 @@
     <div class="detail">
       <span class="info-label" translate>Red Hat CDN URL</span>
       <span class="info-value"
-        alch-edit-text="organization.redhat_repository_url"
+        bst-edit-text="organization.redhat_repository_url"
         on-save="saveCdnUrl(organization)"
         readonly="organization.readonly">
       </span>
@@ -14,7 +14,7 @@
     <div class="detail">
       <span class="info-label" translate>Red Hat Docker Registry URL</span>
       <span class="info-value"
-        alch-edit-text="organization.redhat_docker_registry_url"
+        bst-edit-text="organization.redhat_docker_registry_url"
         on-save="saveCdnUrl(organization)"
         readonly="organization.readonly">
       </span>
@@ -60,7 +60,7 @@
 <section>
   <h4 translate>Upload New Manifest</h4>
 
-  <div alch-alert error-messages="uploadErrorMessages"></div>
+  <div bst-alert error-messages="uploadErrorMessages"></div>
 
   <form role="form"
         action="{{ uploadURL }}"

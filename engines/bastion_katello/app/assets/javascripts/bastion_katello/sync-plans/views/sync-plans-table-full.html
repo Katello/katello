@@ -5,30 +5,30 @@
        ng-class="{'table-mask': syncPlanTable.working}" 
        ng-show="syncPlanTable.rows.length > 0">
   <thead>
-    <tr alch-table-head row-select>
-      <th alch-table-column="name" sortable><span translate>Name</span></th>
-      <th alch-table-column="description"><span translate>Description</span></th>
-      <th alch-table-column="syncDate"><span translate>Original Sync Date</span></th>
-      <th alch-table-column="enabled"><span translate>Sync Enabled</span></th>
-      <th alch-table-column="interval"><span translate>Interval</span></th>
-      <th alch-table-column="nextSync"><span translate>Next Sync</span></th>
+    <tr bst-table-head row-select>
+      <th bst-table-column="name" sortable><span translate>Name</span></th>
+      <th bst-table-column="description"><span translate>Description</span></th>
+      <th bst-table-column="syncDate"><span translate>Original Sync Date</span></th>
+      <th bst-table-column="enabled"><span translate>Sync Enabled</span></th>
+      <th bst-table-column="interval"><span translate>Interval</span></th>
+      <th bst-table-column="nextSync"><span translate>Next Sync</span></th>
     </tr>
   </thead>
 
   <div data-extend-template="layouts/select-all-results.html"></div>
 
   <tbody>
-    <tr alch-table-row ng-repeat="syncPlan in syncPlanTable.rows" row-select="syncPlan">
-      <td alch-table-cell>
+    <tr bst-table-row ng-repeat="syncPlan in syncPlanTable.rows" row-select="syncPlan">
+      <td bst-table-cell>
         <a ui-sref="sync-plans.details.info({syncPlanId: syncPlan.id})">
           {{ syncPlan.name }}
         </a>
       </td>
-      <td alch-table-cell>{{ syncPlan.description }}</td>
-      <td alch-table-cell>{{ syncPlan.sync_date | date:'medium' }}</td>
-      <td alch-table-cell>{{ syncPlan.enabled }}</td>
-      <td alch-table-cell>{{ syncPlan.interval | translate | capitalize }}</td>
-      <td alch-table-cell>{{ syncPlan.next_sync | date:'medium' }}</td>
+      <td bst-table-cell>{{ syncPlan.description }}</td>
+      <td bst-table-cell>{{ syncPlan.sync_date | date:'medium' }}</td>
+      <td bst-table-cell>{{ syncPlan.enabled }}</td>
+      <td bst-table-cell>{{ syncPlan.interval | translate | capitalize }}</td>
+      <td bst-table-cell>{{ syncPlan.next_sync | date:'medium' }}</td>
     </tr>
   </tbody>
 </table>

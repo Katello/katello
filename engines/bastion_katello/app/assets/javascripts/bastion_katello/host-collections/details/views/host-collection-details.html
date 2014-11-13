@@ -5,7 +5,7 @@
   {{ "Loading..." | translate }}
 </div>
 
-<section class="nutupane-details" ng-cloak alch-container-scroll>
+<section class="nutupane-details" ng-cloak bst-container-scroll>
 
   <header class="details-header">
     <h2 class="fl" translate>Host Collection: {{ hostCollection.name }}</h2>
@@ -30,7 +30,7 @@
         {{ "Close" | translate }}
       </button>
 
-      <div alch-modal="removeHostCollection(hostCollection)" model="hostCollection"
+      <div bst-modal="removeHostCollection(hostCollection)" model="hostCollection"
            modal-header="{{ 'Remove Host Collection ' + hostCollection.name + '?' | translate }}"
            modal-body="{{ 'Are you sure you want to remove host collection ' + hostCollection.name + '?' | translate }}"></div>
 
@@ -41,7 +41,7 @@
     <form>
       <h5 translate>Copy</h5>
       <div class="input">
-        <div alch-alert error-messages="copyErrorMessages"></div>
+        <div bst-alert error-messages="copyErrorMessages"></div>
         <div class="info-label">
           <label for="copy_name" translate>New Name:</label>
         </div>
@@ -91,7 +91,7 @@
     </ul>
   </nav>
 
-  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
   <section class="nutupane-sub-section" ui-view></section>
 </section>

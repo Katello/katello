@@ -7,7 +7,7 @@
       <div class="detail">
         <span class="info-label" translate>Name</span>
         <span class="info-value"
-              alch-edit-text="hostCollection.name"
+              bst-edit-text="hostCollection.name"
               readonly="denied('edit_host_collection', hostCollection)"
               on-save="save(hostCollection)">
         </span>
@@ -16,7 +16,7 @@
       <div class="detail">
         <span class="info-label" translate>Description</span>
         <span class="info-value"
-              alch-edit-textarea="hostCollection.description"
+              bst-edit-textarea="hostCollection.description"
               readonly="denied('edit_host_collection', hostCollection)"
               on-save="save(hostCollection)">
         </span>
@@ -27,7 +27,7 @@
         <span class="info-label" translate>Content Host Limit</span>
 
         <span class="info-value"
-              alch-edit-custom="hostCollection.max_content_hosts"
+              bst-edit-custom="hostCollection.max_content_hosts"
               readonly="denied('edit_host_collection', hostCollection)"
               formatter="unlimitedFilter"
               formatter-options="hostCollection.unlimited_content_hosts"

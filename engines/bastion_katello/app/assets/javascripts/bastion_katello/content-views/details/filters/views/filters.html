@@ -33,18 +33,18 @@
            ng-class="{'table-mask': detailsTable.working}">
 
       <thead>
-        <tr alch-table-head row-select>
-          <th alch-table-column><span translate>Name</span></th>
-          <th alch-table-column><span translate>Description</span></th>
-          <th alch-table-column><span translate>Updated</span></th>
-          <th alch-table-column><span translate>Content Type</span></th>
-          <th alch-table-column><span translate>Type</span></th>
+        <tr bst-table-head row-select>
+          <th bst-table-column><span translate>Name</span></th>
+          <th bst-table-column><span translate>Description</span></th>
+          <th bst-table-column><span translate>Updated</span></th>
+          <th bst-table-column><span translate>Content Type</span></th>
+          <th bst-table-column><span translate>Type</span></th>
         </tr>
       </thead>
 
       <tbody>
-        <tr alch-table-row ng-repeat="filter in detailsTable.rows" row-select="filter">
-          <td alch-table-cell>
+        <tr bst-table-row ng-repeat="filter in detailsTable.rows" row-select="filter">
+          <td bst-table-cell>
             <a ng-if="filter.type === 'erratum' && !filter.rules[0].types"
                ui-sref="content-views.details.filters.details.erratum.list({filterId: filter.id})">
               {{ filter.name }}
@@ -62,13 +62,13 @@
               {{ filter.name }}
             </a>
           </td>
-          <td alch-table-cell>{{ filter.description }}</td>
-          <td alch-table-cell>{{ filter.updated_at | date:"short" }}</td>
-          <td alch-table-cell>
+          <td bst-table-cell>{{ filter.description }}</td>
+          <td bst-table-cell>{{ filter.updated_at | date:"short" }}</td>
+          <td bst-table-cell>
             {{ filter.type | filterContentType }}
             <span ng-if="filter.type === 'erratum' && filter.rules[0].types">{{ '- Date and Type' | translate }}</span>
           </td>
-          <td alch-table-cell>{{ filter.inclusion | filterType }}</td>
+          <td bst-table-cell>{{ filter.inclusion | filterType }}</td>
         </tr>
       </tbody>
 

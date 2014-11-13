@@ -4,7 +4,7 @@
   {{ "Changing default settings for content hosts that register with this activation key requires subscription-manager version 1.10 or newer to be installed on that host." | translate }}
 </div>
 
-<div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+<div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
 <div class="loading-mask loading-mask-panel" ng-show="displayArea.working">
   <i class="icon-spinner icon-spin"></i>
@@ -35,7 +35,7 @@
           <div class="detail row">
             <span class="col-sm-4" translate>Enabled?</span>
             <span class="col-sm-3"
-                  alch-edit-select="content.enabledText"
+                  bst-edit-select="content.enabledText"
                   readonly="denied('edit_activation_keys', activationKey)"
                   selector="content.overrideEnabled"
                   options="overrideEnableChoices(content)"

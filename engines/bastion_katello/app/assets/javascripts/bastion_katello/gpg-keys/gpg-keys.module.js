@@ -20,11 +20,9 @@
  */
 angular.module('Bastion.gpg-keys', [
     'ngResource',
-    'alchemy',
-    'alch-templates',
     'ui.router',
     'Bastion',
-    'Bastion.widgets',
+    'Bastion.components',
     'ngUpload'
 ]);
 

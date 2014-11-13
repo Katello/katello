@@ -1,5 +1,5 @@
 <form name="syncPlanForm" class="form-horizontal" novalidate role="form">
- <div alch-form-group label="{{ 'Name' | translate }}">
+ <div bst-form-group label="{{ 'Name' | translate }}">
    <input id="name"
           name="name"
           ng-model="syncPlan.name"
@@ -9,7 +9,7 @@
           required/>
  </div>
 
- <div alch-form-group label="{{ 'Description' | translate }}">
+ <div bst-form-group label="{{ 'Description' | translate }}">
    <textarea id="description"
              name="description"
              ng-model="syncPlan.description"
@@ -17,7 +17,7 @@
    </textarea>
  </div>
 
- <div alch-form-group label="{{ 'Interval' | translate }}">
+ <div bst-form-group label="{{ 'Interval' | translate }}">
    <select id="interval"
            name="interval"
            ng-model="syncPlan.interval"
@@ -28,7 +28,7 @@
    </select>
  </div>
 
- <div alch-form-group label="{{ 'Start Date' | translate }}">
+ <div bst-form-group label="{{ 'Start Date' | translate }}">
    <input type="text" datepicker-popup
           id="startDate"
           name="startDate"
@@ -38,7 +38,7 @@
           required/>
  </div>
 
- <div alch-form-group label="{{ 'Start Time' | translate }}">
+ <div bst-form-group label="{{ 'Start Time' | translate }}">
    <timepicker type="time" show-meridian="false"
           id="startTime"
           name="startTime"
@@ -47,7 +47,7 @@
    </timepicker>
  </div>
 
- <div alch-form-buttons
+ <div bst-form-buttons
       on-cancel="transitionBack()"
       on-save="createSyncPlan(syncPlan)"
       working="working">
