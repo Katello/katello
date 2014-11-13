@@ -56,10 +56,13 @@ module Katello
     end
 
     initializer "katello.assets.paths", :group => :all do |app|
-      app.config.sass.load_paths << "#{::UIAlchemy::Engine.root}/vendor/assets/ui_alchemy/alchemy-forms"
-      app.config.sass.load_paths << "#{::UIAlchemy::Engine.root}/vendor/assets/ui_alchemy/alchemy-buttons"
-      app.config.sass.load_paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion',
-                                                           'font-awesome', 'scss')
+      if Rails.env.production?
+        app.config.assets.paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion',
+                                                             'font-awesome', 'scss')
+      else
+        app.config.sass.load_paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion',
+                                                                'font-awesome', 'scss')
+      end
     end
 
     initializer "katello.paths" do |app|

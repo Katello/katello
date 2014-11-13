@@ -3,7 +3,7 @@
     - for note in user_notices(quantity)
       %li
         %span.icon_wrap.fl
-          %span.fl{:class=>(note[:level]=="error" ? "error_icon" : "check_icon")}
+          %span.fl{:class=>(note[:level]=="error" ? "icon-remove" : "icon-ok")}
             &nbsp;&nbsp;
         %span
           %h5

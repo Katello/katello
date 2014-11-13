@@ -231,7 +231,7 @@ KT.content_search = function(paths_in){
 
         if( KT.permissions.current_organization.editable ){
             footer = $('<a/>', { "href" : "/lifecycle_environments"});
-            footer.append($('<i/>', { "class" : "gears_icon", "data-change_on_hover" : "dark" }));
+            footer.append($('<i/>', { "class" : "icon-gears", "data-change_on_hover" : "dark" }));
             footer.append($('<span/>').html(katelloI18n.manage_environments));
             footer = footer[0].outerHTML;
         } else {

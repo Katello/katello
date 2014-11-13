@@ -35,7 +35,7 @@ $col_width: (($static_width) * 0.5);
     border:1px solid $border_color;
     padding: 10px 10px 0 15px;
     margin-bottom: 10px;
-    @include background-image(linear-gradient(#F7F7F7, #EEEEEE));
+    background-image: linear-gradient(#F7F7F7, #EEEEEE);
     position: relative;
     h1, h2, h3 {
         margin-top: 3px;
@@ -61,13 +61,12 @@ $col_width: (($static_width) * 0.5);
     #dashboard_subscriptions {
       height: $height;
       .sub_count {
-        font-family: $headlinefont;
         font-size: 100%;
       }
       .sys_count {
         font-size: 100%;
         font-weight: bold;
-        @include text-shadow(0 1px 0 rgba($white_color, 1));
+        text-shadow: 0 1px 0 rgba($white_color, 1);
         margin-left: 20px;
       }
       #sub_graph {
@@ -188,7 +187,6 @@ $col_width: (($static_width) * 0.5);
           min-height: inherit;
           text-align: left;
           font-size: 85%;
-          font-family: $headlinefont;
           color: lighten($header_color,20%);
           text-transform: uppercase;
           white-space:nowrap;
@@ -202,7 +200,6 @@ $col_width: (($static_width) * 0.5);
           font-weight: bold;
           margin-top:5px;
           font-size: 85%;
-          font-family: $headlinefont;
           color: lighten($header_color,20%);
           text-transform: uppercase;
       }
@@ -249,7 +246,7 @@ $col_width: (($static_width) * 0.5);
         float: left;
         width: 16px;
         height: 16px;
-        background: $arrow_min_img_small;
+        @extend .icon-arrow-right;
         margin-top: 2px;
         margin-right: 2px;
       }
@@ -257,7 +254,7 @@ $col_width: (($static_width) * 0.5);
         float: left;
         width: 16px;
         height: 16px;
-        background: $arrow_max_img_small;
+        @extend .icon-arrow-down;
         margin-top: 2px;
         margin-right: 2px;
       }
@@ -333,14 +330,6 @@ $col_width: (($static_width) * 0.5);
         height: 15px;
 
       }
-      .check_icon {
-        display: inline;
-        margin-right: 2px;
-      }
-      .error_icon {
-        display: inline;
-        margin-right: 2px;
-      }
 
     }
 
@@ -411,7 +400,6 @@ $col_width: (($static_width) * 0.5);
           min-height: inherit;
           text-align: left;
           font-size: 85%;
-          font-family: $headlinefont;
           color: lighten($header_color,20%);
           text-transform: uppercase;
           white-space:nowrap;
@@ -425,7 +413,6 @@ $col_width: (($static_width) * 0.5);
           font-weight: bold;
           margin-top:5px;
           font-size: 85%;
-          font-family: $headlinefont;
           color: lighten($header_color,20%);
           text-transform: uppercase;
       }
@@ -471,38 +458,14 @@ $col_width: (($static_width) * 0.5);
       margin-right: 15px;
 
     }
-    .check_icon {
-      width: 16px;
-      height: 16px;
-      @include action-icon($check_icon_black);
-      margin-left: 0px;
-    }
-    .error_icon {
-      width: 16px;
-      @include action-icon($warning_icon_black);
-      margin-left: 0px;
-    }
-    .gears_icon {
-      width: 16px;
-      @include action-icon($gears_icon_black);
-      margin-left: 0px;
-    }
-    .clock_icon {
-      width: 16px;
-      @include action-icon($clock_icon_black);
-      margin-left: 0px;
-    }
     .widget {
-        overflow: hidden;
-        height: $height;
+        overflow: auto;
+        //height: $height;
         width: $width;
         list-style: None;
         li {
           margin-bottom: 5px;
           @include border-radius(10px);
-          &:hover {
-            background-color: $g1;
-          }
         }
         h5 {
           margin-bottom: -1px;
@@ -528,16 +491,18 @@ $col_width: (($static_width) * 0.5);
     background: #f0f0f0;
     position: relative;
     z-index: 0;
+
+    &.button {
+      padding: 3px 8px;
+    }
+
     &:hover, &.active{
         background: #dcdcdc;
     }
     span {
-        height: 16px;
-        width: 32px;
-        display: block;
-        position: relative;
-        background: $gear_icon_dark;
-        margin: 0;
+        @extend .icon-gear;
+        margin-left: 7px;
+        font-size: 14px;
     }
 
 }

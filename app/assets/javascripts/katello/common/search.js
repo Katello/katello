@@ -17,7 +17,7 @@ KT.favorite = function(form, input) {
             form.find(".qdropdown").html(data);
 
             // process the elements of the list and truncate any that are too long with ellipsis (...) (e.g. jquery.text-overflow.js)
-            $(".one-line-ellipsis").ellipsis();
+            $(".one-line-ellipsis").trunk8({lines: 1});
         },
         error =  function(data) {
         },

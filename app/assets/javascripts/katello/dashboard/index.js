@@ -11,7 +11,4 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "alchemy/jquery/plugins/flot-0.7/jquery.flot.js"
-//= require "alchemy/jquery/plugins/flot-0.7/jquery.flot.pie"
-//= require "katello/widgets/scroll_pane"
 //= require "katello/dashboard/dashboard"

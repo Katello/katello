@@ -14,11 +14,6 @@
 $(document).ready(function() {
     var spinner = '<i class="icon-spinner inline-icon icon-spin"></i>';
 
-    KT.common.jscroll_init($('.scroll-pane'));
-    KT.common.jscroll_resize($('.jspPane'));
-
-
-
     $("#content_tabs").tabs({
         cache: true,
         load: function(event, ui) {
@@ -156,7 +151,6 @@ KT.redhat_provider_page = (function($) {
       $('#input_repo_'+id).show();
     },
     on_node_show = function(a, b, c){
-        $.sparkline_display_visible();
     },
     hide_repos = function(content_id){
         var row = $('#repo_set_' + content_id);
