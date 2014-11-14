@@ -2,7 +2,7 @@
 
   <ol class="breadcrumb">
     <li>
-      <a ui-sref="environments" translate>Environments List</a>
+      <a ui-sref="environments.index" translate>Environments List</a>
     </li>
     
     <li class="active">
@@ -12,21 +12,31 @@
     </li>
   </ol>
 
-  <h1 translate>Environment: {{ environment.name }}</h1>
+  <div class="row">
+    <h1 class="col-sm-12">
+      <span translate>Environment: {{ environment.name }}</span>
+      <button ng-show="!environment.library && !environment.successor"
+              ng-click="remove(environment)"
+              class="btn btn-default fr">
+        <i class="icon-trash inline-icon"></i>
+        Remove Environment
+      </button>
+    </h1>
+  </div>
 
   <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
   <nav>
     <ul class="nav nav-tabs">
 
-      <li ng-class="{active: isState('environment.errata')}">
-        <a ui-sref="environment.errata({environmentId: environment.id})">
+      <li ng-class="{active: isState('environments.environment.errata')}">
+        <a ui-sref="environments.environment.errata({environmentId: environment.id})">
           <span translate>Errata</span>
         </a>
       </li>
 
-      <li ng-class="{active: isState('environment.details')}">
-        <a ui-sref="environment.details({environmentId: environment.id})">
+      <li ng-class="{active: isState('environments.environment.details')}">
+        <a ui-sref="environments.environment.details({environmentId: environment.id})">
           <span translate>Details</span>
         </a>
       </li>

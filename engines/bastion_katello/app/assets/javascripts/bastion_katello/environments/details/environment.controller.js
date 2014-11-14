@@ -47,6 +47,25 @@
             return promise;
         };
 
+        $scope.remove = function (environment) {
+            var promise;
+
+            function success() {
+                $scope.successMessages.push(translate('Remove Successful.'));
+                $scope.transitionTo('environments.index');
+            }
+
+            function error(response) {
+                $scope.errorMessages.push(translate("An error occurred removing the environment: ") +
+                    response.data.displayMessage);
+            }
+
+            promise = environment.$delete();
+            promise.then(success, error);
+
+            return promise;
+        };
+
     }
 
     angular
