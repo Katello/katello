@@ -22,7 +22,7 @@
      *   Handles fetching content view version content and populating Nutupane based on the current
      *   ui-router state.
      */
-    function ContentViewVersionContentController($scope, Nutupane, Package, Erratum, PackageGroup, PuppetModule, Repository) {
+    function ContentViewVersionContentController($scope, translate, Nutupane, Package, Erratum, PackageGroup, PuppetModule, Repository) {
         var nutupane, contentTypes, currentState, params;
 
         currentState = $scope.$state.current.name.split('.').pop();
@@ -55,13 +55,35 @@
 
         $scope.nutupane = nutupane;
         $scope.detailsTable = nutupane.table;
+
+        $scope.repository = {name: translate('All Repositories'), id: 'all'};
+        $scope.repositories = [];
+
+        $scope.version.$promise.then(function (version) {
+            $scope.repositories = version.repositories;
+            $scope.repositories.unshift($scope.repository);
+        });
+
+        $scope.$watch('repository', function (repository) {
+            var params = nutupane.getParams();
+
+            if (repository.id === 'all') {
+                params['repository_id'] = null;
+                nutupane.setParams(params);
+            } else {
+                params['repository_id'] = repository.id;
+                nutupane.setParams(params);
+            }
+
+            nutupane.refresh();
+        });
     }
 
     angular
         .module('Bastion.content-views.versions')
         .controller('ContentViewVersionContentController', ContentViewVersionContentController);
 
-    ContentViewVersionContentController.$inject = ['$scope', 'Nutupane', 'Package', 'Erratum',
+    ContentViewVersionContentController.$inject = ['$scope', 'translate', 'Nutupane', 'Package', 'Erratum',
                                                    'PackageGroup', 'PuppetModule', 'Repository'];
 
 })();

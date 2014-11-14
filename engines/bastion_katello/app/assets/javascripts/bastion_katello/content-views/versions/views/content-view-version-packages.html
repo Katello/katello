@@ -3,6 +3,11 @@
   <div data-block="header"></div>
   <div data-block="selection-summary"></div>
 
+  <span class="input-group-addon" data-block="search-filter">
+    <select ng-model="repository" ng-options="repository.name for (id, repository) in repositories">
+    </select>
+  </span>
+
   <table data-block="table" class="table table-striped table-bordered">
     <thead>
       <tr alch-table-head>
