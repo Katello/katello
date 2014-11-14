@@ -22,19 +22,14 @@ module Katello
       extend ::Apipie::DSL::Concern
 
       def index
-        collection = if @repo && !@repo.puppet?
-                       filter_by_repos([@repo]).uniq
-                     elsif @filter
-                       filter_by_content_view_filter(@filter).uniq
-                     elsif @version
-                       filter_by_content_view_version(@version).uniq
-                     elsif @organization
-                       filter_by_repos(Repository.readable.in_organization(@organization)).uniq
-                     else
-                       filter_by_repos(Repository.readable).uniq
-                     end
+        collection = resource_class.scoped
+        collection = filter_by_repos(Repository.readable, collection)
+        collection = filter_by_repos([@repo], collection) if @repo && !@repo.puppet?
+        collection = filter_by_content_view_filter(@filter, collection) if @filter
+        collection = filter_by_content_view_version(@version, collection) if @version
+        collection = filter_by_repos(Repository.readable.in_organization(@organization), collection) if @organization
 
-        respond(:collection => scoped_search(collection, default_sort[0], default_sort[1]))
+        respond(:collection => scoped_search(collection.uniq, default_sort[0], default_sort[1]))
       end
 
       api :GET, "/compare/", N_("List :resource_id")
@@ -49,10 +44,11 @@ module Katello
           fail HttpErrors::NotFound, _("Couldn't find content view versions '%s'") % missing.join(',')
         end
 
+        collection = resource_class.scoped
         repos = Katello::Repository.where(:content_view_version_id => @versions.pluck(:id))
         repos = repos.where(:library_instance_id => @repo.id) if @repo
 
-        collection = scoped_search(filter_by_repos(repos).uniq, default_sort[0], default_sort[1])
+        collection = scoped_search(filter_by_repos(repos, collection).uniq, default_sort[0], default_sort[1])
         collection[:results] = collection[:results].map { |item| ContentViewVersionComparePresenter.new(item, @versions, @repo) }
         respond_for_index(:collection => collection)
       end
@@ -63,16 +59,16 @@ module Katello
         %w(id desc)
       end
 
-      def filter_by_content_view_filter(filter)
-        resource_class.where(:uuid => filter.send("#{singular_resource_name}_rules").pluck(:uuid))
+      def filter_by_content_view_filter(filter, collection)
+        collection.where(:uuid => filter.send("#{singular_resource_name}_rules").pluck(:uuid))
       end
 
-      def filter_by_repos(repos)
-        resource_class.in_repositories(repos)
+      def filter_by_repos(repos, collection)
+        collection.in_repositories(repos)
       end
 
-      def filter_by_content_view_version(version)
-        version.send(controller_name)
+      def filter_by_content_view_version(version, collection)
+        collection.where(:id => version.send(controller_name))
       end
 
       def find_content_resource
