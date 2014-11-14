@@ -333,14 +333,17 @@ module Katello
       end
 
       def index_db_docker_images(force = false)
-        if self.content_view.default? || force
-          docker_images_json.each do |image_json|
-            image = DockerImage.find_or_create_by_katello_uuid(image_json[:_id])
-            image.update_from_json(image_json)
-            create_docker_tags(image, image_json[:tags])
-          end
-        end
         ActiveRecord::Base.transaction do
+          docker_tags.destroy_all
+
+          if self.content_view.default? || force
+            docker_images_json.each do |image_json|
+              image = DockerImage.find_or_create_by_katello_uuid(image_json[:_id])
+              image.update_from_json(image_json)
+              create_docker_tags(image, image_json[:tags])
+            end
+          end
+
           Katello::RepositoryDockerImage.where(:repository_id => self.id).delete_all
           DockerImage.insert_repository_associations(self, docker_image_ids)
         end

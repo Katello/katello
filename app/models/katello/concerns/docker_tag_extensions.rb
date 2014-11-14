@@ -19,6 +19,8 @@ module Katello
         belongs_to :repository, :inverse_of => :docker_tags, :foreign_key => :katello_repository_id,
           :class_name => "Katello::Repository"
 
+        validates :tag, :uniqueness => {:scope => :katello_repository_id}
+
         scoped_search :on => [:id, :tag]
       end
 
