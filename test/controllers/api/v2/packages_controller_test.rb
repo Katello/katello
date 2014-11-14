@@ -58,6 +58,16 @@ module Katello
       assert_template %w(katello/api/v2/packages/index)
     end
 
+    def test_index_with_environment_id
+      environment = KTEnvironment.first
+      KTEnvironment.expects(:readable).returns(stub(:find_by_id => environment))
+
+      get :index, :environment_id => environment.id
+
+      assert_response :success
+      assert_template %w(katello/api/v2/packages/index)
+    end
+
     def test_index_parameters
       get :index
 

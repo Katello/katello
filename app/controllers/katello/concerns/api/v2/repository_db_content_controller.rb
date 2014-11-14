@@ -27,6 +27,7 @@ module Katello
         collection = filter_by_repos([@repo], collection) if @repo && !@repo.puppet?
         collection = filter_by_content_view_filter(@filter, collection) if @filter
         collection = filter_by_content_view_version(@version, collection) if @version
+        collection = filter_by_environment(@environment, collection) if @environment
         collection = filter_by_repos(Repository.readable.in_organization(@organization), collection) if @organization
 
         respond(:collection => scoped_search(collection.uniq, default_sort[0], default_sort[1]))
@@ -71,6 +72,10 @@ module Katello
         collection.where(:id => version.send(controller_name))
       end
 
+      def filter_by_environment(environment, collection)
+        filter_by_repos(environment.repositories, collection)
+      end
+
       def find_content_resource
         @resource = resource_class.with_uuid(params[:id]).first
         if resource_class == Katello::Erratum
@@ -88,6 +93,7 @@ module Katello
             {content: resource_name, id: params[:id]}
         end
       end
+
     end
   end
 end

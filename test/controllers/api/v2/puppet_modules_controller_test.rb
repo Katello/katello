@@ -61,6 +61,16 @@ module Katello
       assert_template %w(katello/api/v2/puppet_modules/index)
     end
 
+    def test_index_with_environment_id
+      environment = KTEnvironment.first
+      KTEnvironment.expects(:readable).returns(stub(:find_by_id => environment))
+
+      get :index, :environment_id => environment.id
+
+      assert_response :success
+      assert_template %w(katello/api/v2/puppet_modules/index)
+    end
+
     def test_index_protected
       assert_protected_action(:index, @read_permission, @unauth_permissions) do
         get :index, :repository_id => @repo.id
