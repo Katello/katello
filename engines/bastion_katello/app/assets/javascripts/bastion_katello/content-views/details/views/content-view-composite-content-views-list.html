@@ -25,21 +25,21 @@
   <div data-block="table">
     <table class="table table-bordered table-striped">
       <thead>
-      <tr alch-table-head row-select>
-        <th alch-table-column translate>Name</th>
-        <th alch-table-column translate>Version</th>
-        <th alch-table-column translate>Environment</th>
-        <th alch-table-column translate>Description</th>
-        <th alch-table-column translate>Content</th>
+      <tr bst-table-head row-select>
+        <th bst-table-column translate>Name</th>
+        <th bst-table-column translate>Version</th>
+        <th bst-table-column translate>Environment</th>
+        <th bst-table-column translate>Description</th>
+        <th bst-table-column translate>Content</th>
       </tr>
       </thead>
 
       <tbody>
-      <tr alch-table-row ng-repeat="contentViewVersion in detailsTable.rows | filter:contentViewVersionFilter | orderBy:'name'"
+      <tr bst-table-row ng-repeat="contentViewVersion in detailsTable.rows | filter:contentViewVersionFilter | orderBy:'name'"
           row-select="contentViewVersion">
-        <td alch-table-cell>{{ contentViewVersion.content_view.name }}</td>
-        <td alch-table-cell>
-          <span alch-edit-select="contentViewVersion.id"
+        <td bst-table-cell>{{ contentViewVersion.content_view.name }}</td>
+        <td bst-table-cell>
+          <span bst-edit-select="contentViewVersion.id"
                 display-value="getVersionString(contentViewVersion)"
                 display-value-default="getVersionString(contentViewVersion)"
                 readonly="denied('edit_content_views', contentView)"
@@ -49,7 +49,7 @@
                 on-save="saveContentViewVersion(contentViewVersion)">
           </span>
         </td>
-        <td alch-table-cell>
+        <td bst-table-cell>
         <span ng-show="contentViewVersions.environments.length !== 0"
               ng-repeat="environment in contentViewVersion.environments">
           {{ environment.name }}<span ng-if="!$last">, </span>
@@ -58,8 +58,8 @@
           Not yet published
         </span>
         </td>
-        <td alch-table-cell>{{ contentViewVersion.content_view.description }}</td>
-        <td alch-table-cell>
+        <td bst-table-cell>{{ contentViewVersion.content_view.description }}</td>
+        <td bst-table-cell>
           <div>
             <a ui-sref="content-views.details.repositories.yum.list({contentViewId: contentViewVersion.content_view.id})" translate>
               {{ contentViewVersion.repositories.length || 0 }} Repositories

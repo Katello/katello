@@ -1,6 +1,6 @@
 <span page-title>{{ 'New Content View' | translate }}</span>
 
-<section class="nutupane-details" ng-cloak alch-container-scroll>
+<section class="nutupane-details" ng-cloak bst-container-scroll>
 
   <header class="new-header details-header">
     <h2 class="fl" translate>New Content View</h2>
@@ -38,7 +38,7 @@
     <h3 class="col-sm-12" translate>View Details</h3>
 
     <form name="contentViewForm" class="form-horizontal col-sm-8" novalidate role="form">
-      <div alch-form-group label="{{ 'Name' | translate }}">
+      <div bst-form-group label="{{ 'Name' | translate }}">
         <input id="name"
                name="name"
                ng-model="contentView.name"
@@ -48,7 +48,7 @@
                required/>
       </div>
 
-      <div alch-form-group label="{{ 'Label' | translate }}">
+      <div bst-form-group label="{{ 'Label' | translate }}">
         <input id="label"
                name="label"
                ng-model="contentView.label"
@@ -57,7 +57,7 @@
                required/>
       </div>
 
-      <div alch-form-group label="{{ 'Description' | translate }}">
+      <div bst-form-group label="{{ 'Description' | translate }}">
         <textarea id="description"
                   name="description"
                   ng-model="contentView.description"
@@ -65,7 +65,7 @@
         </textarea>
       </div>
 
-      <div alch-form-group label="{{ 'Composite View?' | translate }}">
+      <div bst-form-group label="{{ 'Composite View?' | translate }}">
         <input id="composite"
                name="composite"
                ng-model="contentView.composite"
@@ -74,7 +74,7 @@
         <p class="help-block" translate>A composite view contains other content views.</p>
       </div>
 
-      <div alch-form-buttons
+      <div bst-form-buttons
            on-cancel="transitionTo('content-views.index')"
            on-save="save(contentView)"
            working="working">

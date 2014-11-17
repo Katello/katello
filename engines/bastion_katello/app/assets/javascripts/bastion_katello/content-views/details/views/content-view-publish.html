@@ -15,11 +15,11 @@
 
   <form name="versionForm" class="form-horizontal" role="form" novalidate>
 
-    <div alch-form-group label="{{ 'Version' | translate }}">
+    <div bst-form-group label="{{ 'Version' | translate }}">
       <span>{{ contentView['next_version'] }}</span>
     </div>
 
-    <div alch-form-group label="{{ 'Description' | translate }}">
+    <div bst-form-group label="{{ 'Description' | translate }}">
       <textarea id="description"
                 name="description"
                 ng-model="version.description"
@@ -27,7 +27,7 @@
       </textarea>
     </div>
 
-    <div alch-form-buttons
+    <div bst-form-buttons
          on-cancel="transitionTo('content-views.details.versions', {contentViewId: contentView.id})"
          on-save="publish(contentView)"
          working="working">

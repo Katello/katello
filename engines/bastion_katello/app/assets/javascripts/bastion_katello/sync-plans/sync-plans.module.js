@@ -21,7 +21,8 @@
 angular.module('Bastion.sync-plans', [
     'ngResource',
     'ui.router',
-    'Bastion'
+    'Bastion',
+    'Bastion.components.formatters'
 ]);
 
 /**

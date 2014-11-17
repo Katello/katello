@@ -1,6 +1,6 @@
 <span page-title ng-model="contentHost">{{ 'Packages for: ' | translate }} {{ contentHost.name }}</span>
 <section ng-hide="denied('edit_content_hosts', contentHost)">
-  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
   <h4 translate>Package Actions</h4>
   <p class="alert alert-info" ng-hide="contentHost.katello_agent_installed" translate>
     The katello-agent package is required to manage packages on this Host.
@@ -65,22 +65,22 @@
     You currently do not have any Packages installed. You can use Package Actions above this message to install new Packages. 
   </p>
 
-  <div alch-table="currentPackagesTable" ng-show="currentPackagesTable.rows.length > 0">
-    <div alch-container-scroll control-width="table" alch-infinite-scroll="currentPackagesTable.loadMorePackages()" data="currentPackagesTable.rows">
+  <div bst-table="currentPackagesTable" ng-show="currentPackagesTable.rows.length > 0">
+    <div bst-container-scroll control-width="table" bst-infinite-scroll="currentPackagesTable.loadMorePackages()" data="currentPackagesTable.rows">
 
       <table ng-class="{'table-mask': currentPackagesTable.working}" class="table table-striped">
         <thead>
-          <tr alch-table-head>
-            <th alch-table-column="name" translate>Installed Package</th>
-            <th alch-table-column="remove" translate ng-hide="currentPackagesTable.contentHost.readonly">Remove</th>
+          <tr bst-table-head>
+            <th bst-table-column="name" translate>Installed Package</th>
+            <th bst-table-column="remove" translate ng-hide="currentPackagesTable.contentHost.readonly">Remove</th>
           </tr>
         </thead>
 
         <tbody>
 
-            <tr alch-table-row ng-repeat="package in currentPackagesTable.rows | filter: currentPackagesTable.filter | limitTo: currentPackagesTable.limit" >
-            <td alch-table-cell>{{ package.nvrea }}</td>
-            <td alch-table-cell ng-hide="currentPackagesTable.contentHost.readonly">
+            <tr bst-table-row ng-repeat="package in currentPackagesTable.rows | filter: currentPackagesTable.filter | limitTo: currentPackagesTable.limit" >
+            <td bst-table-cell>{{ package.nvrea }}</td>
+            <td bst-table-cell ng-hide="currentPackagesTable.contentHost.readonly">
 
                 <i class="active icon-remove-sign" ng-hide="package.removeTask" tooltip="{{ 'Remove' | translate }}"
                    ng-click="currentPackagesTable.removePackage(package)"></i>

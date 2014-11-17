@@ -1,19 +1,19 @@
 <table class="table table-striped" ng-class="{'table-mask': contentHostTable.working}">
   <thead>
-    <tr alch-table-head row-select>
-      <th alch-table-column sortable><span translate>Name</span></th>
+    <tr bst-table-head row-select>
+      <th bst-table-column sortable><span translate>Name</span></th>
     </tr>
   </thead>
 
   <div data-extend-template="layouts/select-all-results.html"></div>
 
   <tbody>
-    <tr alch-table-row
+    <tr bst-table-row
         ng-repeat="contentHost in contentHostTable.rows"
         row-select="contentHost"
         active-row="stateIncludes('content-hosts.details', {contentHostId: contentHost.uuid})"
         ng-controller="ContentHostStatusController">
-      <td alch-table-cell>
+      <td bst-table-cell>
         <span class="icon-circle" ng-class="contentHostTable.getStatusColor(contentHost.entitlementStatus)">
         </span>
         <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">

@@ -1,6 +1,6 @@
 <span page-title ng-model="repository">{{ 'Repository:' | translate }} {{ repository.name }}</span>
 <div>
-  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
   <a ui-sref="products.details.repositories.index({productId: product.id})">
     <i class="icon-double-angle-left"></i>
@@ -23,7 +23,7 @@
       <span translate>Sync Now</span>
     </button>
 
-    <div alch-modal="removeRepository(repository)" model="repository"
+    <div bst-modal="removeRepository(repository)" model="repository"
          modal-header='Remove Repository "{{repository.name}}"?'
          modal-body='Are you sure you want to remove repository "{{ repository.name }}"?'></div>
 
@@ -65,7 +65,7 @@
     <div class="detail">
       <span class="info-label" translate>Name</span>
       <span class="info-value"
-            alch-edit-text="repository.name"
+            bst-edit-text="repository.name"
             on-save="save(repository)"
             readonly="product.readonly || denied('edit_products', product)">
       </span>
@@ -84,7 +84,7 @@
     <div class="detail">
       <span class="info-label" translate>URL</span>
       <span class="info-value"
-            alch-edit-text="repository.url"
+            bst-edit-text="repository.url"
             on-save="save(repository)"
             readonly="product.readonly || denied('edit_products', product)">
       </span>
@@ -93,7 +93,7 @@
     <div class="detail" ng-show="repository.content_type == 'yum'">
       <span class="info-label" translate>Yum Metadata Checksum</span>
       <span class="info-value"
-            alch-edit-select="checksumTypeDisplay(repository.checksum_type)"
+            bst-edit-select="checksumTypeDisplay(repository.checksum_type)"
             readonly="product.readonly || denied('edit_products', product)"
             selector="repository.checksum_type"
             options="checksums"
@@ -109,7 +109,7 @@
     <div class="detail" ng-show="repository.content_type == 'yum'">
       <span class="info-label" translate>Publish via HTTP</span>
       <span class="info-value"
-            alch-edit-checkbox="repository.unprotected"
+            bst-edit-checkbox="repository.unprotected"
             formatter="booleanToYesNo"
             on-save="save(repository)"
             readonly="product.readonly || denied('edit_products', product)">
@@ -127,7 +127,7 @@
     <div class="detail" ng-show="repository.content_type == 'yum'">
       <span class="info-label" translate>GPG Key</span>
       <span class="info-value"
-            alch-edit-select="repository.gpg_key.name"
+            bst-edit-select="repository.gpg_key.name"
             readonly="product.readonly || denied('edit_products', product)"
             selector="repository.gpg_key_id"
             options="gpgKeys()"
@@ -224,7 +224,7 @@
     <h5 translate ng-show="repository.content_type == 'yum'">Upload Package</h5>
     <h5 translate ng-show="repository.content_type == 'docker'">Upload Docker Image</h5>
 
-    <div alch-alert success-messages="uploadSuccessMessages" error-messages="uploadErrorMessages"></div>
+    <div bst-alert success-messages="uploadSuccessMessages" error-messages="uploadErrorMessages"></div>
 
     <form role="form"
           action="{{ uploadURL }}"

@@ -1,7 +1,7 @@
 <span page-title ng-model="product">{{ 'Repositories for Product:' | translate }} {{ product.name }}</span>
 
 <section class="details details-full">
-  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
   <h4 translate>Repositories</h4>
 
   <input type="text"
@@ -11,7 +11,7 @@
 
   <span class="pull-right">
 
-      <div alch-modal="removeSelectedRepositories()" model="table"
+      <div bst-modal="removeSelectedRepositories()" model="table"
            modal-header='Remove {{ repositoriesTable.numSelected  }} Repositories?'
            modal-body='Are you sure you want to remove the {{ repositoriesTable.numSelected }} repositories selected?'></div>
 
@@ -63,28 +63,28 @@
     </button>
   </span> 
   
-  <table alch-table="repositoriesTable"
+  <table bst-table="repositoriesTable"
          class="table table-striped"
          ng-class="{'table-mask': repositoriesTable.working}"
          ng-show="repositoriesTable.rows.length > 0">
     <thead>
-      <tr alch-table-head row-select>
-        <th alch-table-column="name" translate>Name</th>
-        <th alch-table-column="type" translate>Type</th>
-        <th alch-table-column="sync-status" translate>Sync Status</th>
-        <th alch-table-column="content" translate>Content</th>
+      <tr bst-table-head row-select>
+        <th bst-table-column="name" translate>Name</th>
+        <th bst-table-column="type" translate>Type</th>
+        <th bst-table-column="sync-status" translate>Sync Status</th>
+        <th bst-table-column="content" translate>Content</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr alch-table-row
+      <tr bst-table-row
           row-select="repository"
           ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch">
-        <td alch-table-cell>
+        <td bst-table-cell>
           <a ng-href="/products/{{ product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
         </td>
-        <td alch-table-cell>{{ repository.content_type }}</td>
-        <td alch-table-cell>
+        <td bst-table-cell>{{ repository.content_type }}</td>
+        <td bst-table-cell>
           <span ng-show="repository.url">
             <span ng-show="repository.last_sync == null" translate>
               Not Synced
@@ -96,7 +96,7 @@
           </span>
           <span ng-hide="repository.url" translate>N/A</span>
         </td>
-        <td alch-table-cell>
+        <td bst-table-cell>
           <span ng-show="repository.content_type == 'puppet'">
             <a translate ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_puppet_modules">
               {{ repository.content_counts.puppet_module || 0 }} Puppet Modules

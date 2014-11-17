@@ -20,12 +20,11 @@
  */
 angular.module('Bastion.subscriptions', [
     'ngResource',
-    'alchemy',
-    'alch-templates',
     'ui.router',
     'Bastion',
     'Bastion.organizations',
-    'Bastion.widgets'
+    'Bastion.components',
+    'Bastion.components.formatters'
 ]);
 
 /**

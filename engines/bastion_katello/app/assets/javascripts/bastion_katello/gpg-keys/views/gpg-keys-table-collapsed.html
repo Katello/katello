@@ -1,15 +1,15 @@
-<table alch-table="table" class="table table-striped" ng-class="{'table-mask': table.working}">
+<table bst-table="table" class="table table-striped" ng-class="{'table-mask': table.working}">
   <thead>
-    <tr alch-table-head>
-      <th alch-table-column="name" sortable><span translate>Name</span></th>
+    <tr bst-table-head>
+      <th bst-table-column="name" sortable><span translate>Name</span></th>
     </tr>
   </thead>
 
   <tbody>
-    <tr alch-table-row
+    <tr bst-table-row
         ng-repeat="gpgKey in table.rows"
         active-row="stateIncludes('gpg-keys.details', {gpgKeyId: gpgKey.id})">
-      <td alch-table-cell>
+      <td bst-table-cell>
         <a class="clickable" ng-click="table.openGPGKey(gpgKey)">{{ gpgKey.name }}</a>
       </td>
     </tr>

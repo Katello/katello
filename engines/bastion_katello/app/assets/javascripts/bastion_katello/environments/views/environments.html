@@ -1,6 +1,6 @@
 <span page-title>{{ 'Lifecycle Environment Paths' | translate }}</span>
 
-<section ng-cloak alch-container-scroll class="row">
+<section ng-cloak bst-container-scroll class="row">
 
   <div class="nutupane-bar">
     <h2 class="col-sm-4">
@@ -21,7 +21,7 @@
 
     <div class="col-sm-12">
 
-      <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+      <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
       <div class="col-sm-12">
         <table class="table table-bordered info-blocks">
@@ -88,7 +88,7 @@
                   <div>
                     <form name="environmentForm" class="form-horizontal" novalidate role="form">
 
-                      <div alch-form-group label="{{ 'Name' | translate }}">
+                      <div bst-form-group label="{{ 'Name' | translate }}">
                         <input id="name"
                                name="name"
                                ng-model="environment.name"
@@ -98,7 +98,7 @@
                                required/>
                       </div>
 
-                      <div alch-form-group label="{{ 'Label' | translate }}">
+                      <div bst-form-group label="{{ 'Label' | translate }}">
                         <input id="label"
                                name="label"
                                ng-model="environment.label"
@@ -107,7 +107,7 @@
                                required/>
                       </div>
 
-                      <div alch-form-group label="{{ 'Description' | translate }}">
+                      <div bst-form-group label="{{ 'Description' | translate }}">
                         <textarea id="description"
                                   name="description"
                                   ng-model="environment.description"
@@ -115,7 +115,7 @@
                         </textarea>
                       </div>
 
-                      <div alch-form-buttons
+                      <div bst-form-buttons
                            on-cancel="close()"
                            on-save="create(environment)"
                            working="working">
@@ -131,7 +131,7 @@
 
                     <div class="fr">
 
-                      <div alch-modal="remove(workingOn.environment)" model="environment"
+                      <div bst-modal="remove(workingOn.environment)" model="environment"
                            modal-header='Remove Environment "{{workingOn.environment.name}}"?'
                            modal-body='Are you sure you want to remove environment "{{ workingOn.environment.name }}"?'></div>
 
@@ -152,7 +152,7 @@
                     <div class="detail">
                       <span class="info-label" translate>Name</span>
                       <span class="info-value"
-                            alch-edit-text="workingOn.environment.name"
+                            bst-edit-text="workingOn.environment.name"
                             readonly="denied('edit_lifecycle_environments', workingOn.environment)"
                             on-save="update(workingOn.environment)">
                       </span>
@@ -166,7 +166,7 @@
                     <div class="detail">
                       <span class="info-label" translate>Description</span>
                       <span class="info-value"
-                            alch-edit-textarea="workingOn.environment.description"
+                            bst-edit-textarea="workingOn.environment.description"
                             readonly="denied('edit_lifecycle_environments', workingOn.environment)"
                             on-save="update(workingOn.environment)">
                       </span>

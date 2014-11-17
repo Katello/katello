@@ -20,12 +20,11 @@
  */
 angular.module('Bastion.content-hosts', [
     'ngResource',
-    'alchemy',
-    'alch-templates',
     'ui.router',
     'Bastion',
+    'Bastion.components',
+    'Bastion.components.formatters',
     'Bastion.organizations',
-    'Bastion.widgets',
     'Bastion.subscriptions',
     'Bastion.capsules',
     'Bastion.errata',

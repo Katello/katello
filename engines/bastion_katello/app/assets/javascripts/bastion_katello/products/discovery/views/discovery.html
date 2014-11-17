@@ -64,18 +64,18 @@
   </div>
 
   <div class="col-sm-12">
-    <table alch-table="discoveryTable" class="table table-striped">
+    <table bst-table="discoveryTable" class="table table-striped">
       <thead>
-        <tr alch-table-head row-select>
-          <th alch-table-column translate>Discovered URLs</th>
+        <tr bst-table-head row-select>
+          <th bst-table-column translate>Discovered URLs</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr alch-table-row
+        <tr bst-table-row
             row-select="urlRow"
             ng-repeat="urlRow in discoveryTable.rows | filter:discoveryTable.filterTerm">
-          <td alch-table-cell>{{ urlRow.path }}</td>
+          <td bst-table-cell>{{ urlRow.path }}</td>
         </tr>
       </tbody>
     </table>

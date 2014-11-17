@@ -22,11 +22,11 @@
     Select the Lifecycle Environments you would like to remove Version {{ version.version }} from:
   </p>
 
-  <table alch-table="environmentsTable"
+  <table bst-table="environmentsTable"
          class="table table-striped table-bordered"
          ng-class="{'table-mask': environmentsTable.working}">
     <thead>
-      <tr alch-table-head row-select>
+      <tr bst-table-head row-select>
         <th translate>Name</th>
         <th translate>Affected Systems</th>
         <th translate>Affected Activation Keys</th>
@@ -38,7 +38,7 @@
         <td colspan="4" translate>This Version is not associated with any Lifecycle Environments.</td>
       </tr>
 
-      <tr alch-table-row
+      <tr bst-table-row
           row-select="environment"
           ng-repeat="environment in environmentsTable.rows">
         <td>{{ environment.name }}</td>

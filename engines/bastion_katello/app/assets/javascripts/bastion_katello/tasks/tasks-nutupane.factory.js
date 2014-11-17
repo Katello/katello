@@ -12,8 +12,8 @@
  */
 
 /**
- * @ngdoc service
- * @name  Bastion.widgets.service:TaskNutupane
+ * @ngdoc factory
+ * @name  Bastion.tasks.factory:TaskNutupane
  *
  * @requires Task
  * @requires Nutupane

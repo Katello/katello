@@ -1,27 +1,27 @@
 <p class="alert alert-info" ng-show="table.rows.length === 0" translate>
       You currently don't have any Gpg keys, you can add Gpg keys using the button on the right.
 </p>
-<table alch-table="table"
+<table bst-table="table"
        class="table table-striped"
        ng-class="{'table-mask': table.working}"
        ng-show="table.rows.length > 0">
   <thead>
-    <tr alch-table-head>
-      <th alch-table-column="name" sortable><span translate>Name</span></th>
-      <th alch-table-column="organization"><span translate>Organization</span></th>
-      <th alch-table-column="products" class="number-cell"><span translate>Product Count</span></th>
-      <th alch-table-column class="number-cell"><span translate>Repository Count</span></th>
+    <tr bst-table-head>
+      <th bst-table-column="name" sortable><span translate>Name</span></th>
+      <th bst-table-column="organization"><span translate>Organization</span></th>
+      <th bst-table-column="products" class="number-cell"><span translate>Product Count</span></th>
+      <th bst-table-column class="number-cell"><span translate>Repository Count</span></th>
     </tr>
   </thead>
 
   <tbody>
-    <tr alch-table-row ng-repeat="gpgKey in table.rows">
-      <td alch-table-cell>
+    <tr bst-table-row ng-repeat="gpgKey in table.rows">
+      <td bst-table-cell>
         <a class="clickable" ng-click="table.openGPGKey(gpgKey)">{{ gpgKey.name }}</a>
       </td>
-      <td alch-table-cell>{{ gpgKey.organization.name }}</td>
-      <td alch-table-cell class="number-cell">{{ gpgKey.products.length || 0 }}</td>
-      <td alch-table-cell class="number-cell">{{ gpgKey.repositories.length || 0 }}</td>
+      <td bst-table-cell>{{ gpgKey.organization.name }}</td>
+      <td bst-table-cell class="number-cell">{{ gpgKey.products.length || 0 }}</td>
+      <td bst-table-cell class="number-cell">{{ gpgKey.repositories.length || 0 }}</td>
     </tr>
   </tbody>
 </table>

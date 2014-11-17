@@ -5,7 +5,7 @@
   {{ "Loading..." | translate }}
 </div>
 
-<section class="nutupane-details" ng-cloak alch-container-scroll>
+<section class="nutupane-details" ng-cloak bst-container-scroll>
 
   <header class="details-header">
     <h2 class="pull-left" translate>Activation Key: {{ activationKey.name }}</h2>
@@ -29,7 +29,7 @@
         {{ "Close" | translate }}
       </button>
 
-      <div alch-modal="removeActivationKey(activationKey)" model="activationKey"
+      <div bst-modal="removeActivationKey(activationKey)" model="activationKey"
            modal-header="{{ 'Remove Activation Key ' + activationKey.name + '?' | translate }}"
            modal-body="{{ 'Are you sure you want to remove activation key ' + activationKey.name + '?' | translate }}"></div>
 
@@ -40,7 +40,7 @@
     <form>
       <h5 translate>Copy</h5>
       <div class="input">
-        <div alch-alert error-messages="copyErrorMessages"></div>
+        <div bst-alert error-messages="copyErrorMessages"></div>
         <div class="info-label">
           <label for="copy_name" translate>New Name:</label>
         </div>
@@ -109,7 +109,7 @@
     </ul>
   </nav>
 
-  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
   <section class="nutupane-sub-section" ui-view></section>
 </section>

@@ -1,4 +1,4 @@
-<section class="nutupane-details" ng-cloak alch-container-scroll>
+<section class="nutupane-details" ng-cloak bst-container-scroll>
 
   <header class="details-header new-header">
     <h2 class="fl" translate>
@@ -18,7 +18,7 @@
         <span translate>Close</span>
       </button>
 
-      <div alch-modal="removeGPGKey(gpgKey)"
+      <div bst-modal="removeGPGKey(gpgKey)"
            model="gpgKey"
            modal-header="{{ 'Remove GPG Key ' + gpgKey.name + '?' | translate }}"
            modal-body="{{ 'Are you sure you want to remove GPG key ' + gpgKey.name + '?' | translate }}">
@@ -42,7 +42,7 @@
       </li>
     </ul>
   </nav>
-  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
   <section class="nutupane-sub-section" ui-view></section>
 </section>

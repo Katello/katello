@@ -1,5 +1,5 @@
 <section class="nutupane-sub-section">
-  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
   <div class="nutupane-bar">
 
@@ -33,8 +33,8 @@
     </div>
   </div>
 
-  <div alch-table="productsTable" class="nutupane">
-    <div alch-container-scroll alch-infinite-scroll="productsTable.nextPage()">
+  <div bst-table="productsTable" class="nutupane">
+    <div bst-container-scroll bst-infinite-scroll="productsTable.nextPage()">
 
       <div ng-show="productsTable.rows.length == 0">
         <div class="loading-mask" ng-show="productsTable.working">
@@ -51,26 +51,26 @@
       <table ng-show="productsTable.rows.length > 0"
              ng-class="{'table-mask': productsTable.working}" class="table table-full table-striped">
         <thead>
-        <tr alch-table-head row-select="product">
-          <th alch-table-column="name" translate>Name</th>
-          <th alch-table-column="description" translate>Description</th>
-          <th alch-table-column="sync_status" translate>Sync Status</th>
-          <th alch-table-column class="number-cell"><span translate>Repositories</span></th>
+        <tr bst-table-head row-select="product">
+          <th bst-table-column="name" translate>Name</th>
+          <th bst-table-column="description" translate>Description</th>
+          <th bst-table-column="sync_status" translate>Sync Status</th>
+          <th bst-table-column class="number-cell"><span translate>Repositories</span></th>
         </tr>
         </thead>
 
         <tbody>
-        <tr alch-table-row ng-repeat="product in productsTable.rows | filter:productFilter" row-select="product">
-          <td alch-table-cell>
+        <tr bst-table-row ng-repeat="product in productsTable.rows | filter:productFilter" row-select="product">
+          <td bst-table-cell>
             <a ui-sref="products.details.info({productId: product.id})">
               {{ product.name }}
             </a>
           </td>
-          <td alch-table-cell>{{ product.description }}</td>
-          <td alch-table-cell>
+          <td bst-table-cell>{{ product.description }}</td>
+          <td bst-table-cell>
             <div ng-include="'products/views/partials/product-table-sync-status.html'"></div>
           </td>
-          <td alch-table-cell class="number-cell">{{ product.repository_count }}</td>
+          <td bst-table-cell class="number-cell">{{ product.repository_count }}</td>
         </tr>
         </tbody>
       </table>

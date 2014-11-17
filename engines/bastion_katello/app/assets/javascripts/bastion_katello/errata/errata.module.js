@@ -20,5 +20,6 @@
  */
 angular.module('Bastion.errata', [
     'ngResource',
-    'Bastion'
+    'Bastion',
+    'Bastion.components.formatters'
 ]);

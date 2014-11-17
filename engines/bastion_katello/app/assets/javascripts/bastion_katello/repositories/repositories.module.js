@@ -20,12 +20,12 @@
  */
 angular.module('Bastion.repositories', [
     'ngResource',
-    'alchemy',
-    'alch-templates',
     'ui.router',
     'ngUpload',
     'Bastion',
-    'Bastion.widgets',
+    'Bastion.utils',
+    'Bastion.components',
+    'Bastion.components.formatters',
     'Bastion.packages'
 ]);
 

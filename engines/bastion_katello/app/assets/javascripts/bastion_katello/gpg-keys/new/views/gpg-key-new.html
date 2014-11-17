@@ -3,7 +3,7 @@
   {{ "Loading..." | translate }}
 </div>
 
-<section class="nutupane-details" ng-cloak alch-container-scroll>
+<section class="nutupane-details" ng-cloak bst-container-scroll>
 
   <header class="new-header details-header">
     <h2 class="fl" translate>New GPG Key</h2>
@@ -15,14 +15,14 @@
     </div>
   </header>
   <div>
-    <div alch-alert error-messages="errorMessages"></div>
+    <div bst-alert error-messages="errorMessages"></div>
 
     <form name="gpgKeyForm" class="form form-horizontal" novalidate role="form"
           action="{{ uploadURL }}"
           ng-upload="uploadContent(content)"
           upload-options-enable-rails-csrf>
 
-      <div alch-form-group label="{{ 'Name' | translate }}">
+      <div bst-form-group label="{{ 'Name' | translate }}">
         <input id="name"
                name="name"
                ng-model="gpgKey.name"
@@ -32,7 +32,7 @@
                required/>
       </div>
 
-      <div alch-form-group label="{{ 'Contents' | translate }}">
+      <div bst-form-group label="{{ 'Contents' | translate }}">
         <div>
           <div class="radio">
              <input type="radio"
@@ -63,7 +63,7 @@
         </div>
       </div>
 
-      <div alch-form-buttons upload-submit
+      <div bst-form-buttons upload-submit
            on-cancel="transitionTo('gpgKeys.index')"
            ng-disabled="gpgKey.name == undefined"
            working="progress.uploading">

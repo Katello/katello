@@ -17,7 +17,7 @@ describe('Controller: SubscriptionsController', function() {
         unlimitedFilterFilter,
         translate;
 
-    beforeEach(module('Bastion.subscriptions', 'Bastion.test-mocks', 'alchemy.format'));
+    beforeEach(module('Bastion.subscriptions', 'Bastion.test-mocks', 'Bastion.components.formatters'));
 
     beforeEach(function() {
         Nutupane = function() {

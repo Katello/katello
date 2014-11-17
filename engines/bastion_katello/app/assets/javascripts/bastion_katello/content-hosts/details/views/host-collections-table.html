@@ -1,5 +1,5 @@
 <section class="nutupane-sub-section">
-  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
   <div class="nutupane-bar">
 
@@ -35,8 +35,8 @@
     </div>
   </div>
 
-  <div alch-table="hostCollectionsTable" class="nutupane">
-    <div alch-container-scroll alch-infinite-scroll="hostCollectionsTable.nextPage()">
+  <div bst-table="hostCollectionsTable" class="nutupane">
+    <div bst-container-scroll bst-infinite-scroll="hostCollectionsTable.nextPage()">
 
       <div ng-show="hostCollectionsTable.rows.length == 0">
         <div class="loading-mask" ng-show="hostCollectionsTable.working">
@@ -61,22 +61,22 @@
       <table ng-show="hostCollectionsTable.rows.length > 0"
              ng-class="{'table-mask': hostCollectionsTable.working}" class="table table-full table-striped">
         <thead>
-          <tr alch-table-head row-select="hostCollection">
-            <th alch-table-column="name" translate>Name</th>
-            <th alch-table-column="description" translate>Description</th>
-            <th alch-table-column="capacity" translate>Capacity</th>
+          <tr bst-table-head row-select="hostCollection">
+            <th bst-table-column="name" translate>Name</th>
+            <th bst-table-column="description" translate>Description</th>
+            <th bst-table-column="capacity" translate>Capacity</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr alch-table-row ng-repeat="hostCollection in hostCollectionsTable.rows | filter:hostCollectionFilter" row-select="hostCollection">
-            <td alch-table-cell>
+          <tr bst-table-row ng-repeat="hostCollection in hostCollectionsTable.rows | filter:hostCollectionFilter" row-select="hostCollection">
+            <td bst-table-cell>
               <a ui-sref="host-collections.details.info({hostCollectionId: hostCollection.id})">
                 {{ hostCollection.name }}
               </a>
             </td>
-            <td alch-table-cell>{{ hostCollection.description }}</td>
-            <td alch-table-cell>{{ hostCollection.total_content_hosts }} / {{ hostCollection.max_content_hosts | unlimitedFilter:hostCollection.unlimited_content_hosts }}</td>
+            <td bst-table-cell>{{ hostCollection.description }}</td>
+            <td bst-table-cell>{{ hostCollection.total_content_hosts }} / {{ hostCollection.max_content_hosts | unlimitedFilter:hostCollection.unlimited_content_hosts }}</td>
           </tr>
         </tbody>
       </table>

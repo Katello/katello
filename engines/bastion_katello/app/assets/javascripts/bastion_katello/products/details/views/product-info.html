@@ -1,5 +1,5 @@
 <span page-title ng-model="product">{{ 'Product information for:' | translate }} {{ product.name }}</span>
-<div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+<div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
 <div class="details fl">
   <section>
@@ -8,7 +8,7 @@
     <div class="detail">
       <span class="info-label" translate>Name</span>
       <span class="info-value"
-            alch-edit-text="product.name"
+            bst-edit-text="product.name"
             on-save="save(product)"
             readonly="product.readonly || denied('edit_products', product)">
       </span>
@@ -22,7 +22,7 @@
     <div class="detail">
       <span class="info-label" translate>GPG Key</span>
       <span class="info-value"
-            alch-edit-select="product.gpg_key.name"
+            bst-edit-select="product.gpg_key.name"
             readonly="product.readonly || denied('edit_products', product)"
             selector="product.gpg_key_id"
             options="gpgKeys()"
@@ -33,7 +33,7 @@
     <div class="detail">
       <span class="info-label" translate>Description</span>
       <span class="info-value"
-            alch-edit-textarea="product.description"
+            bst-edit-textarea="product.description"
             on-save="save(product)"
             readonly="product.readonly || denied('edit_products', product)">
        </span>
@@ -51,7 +51,7 @@
     <div class="detail">
       <span class="info-label" translate>Sync Plan</span>
       <span class="info-value"
-            alch-edit-select="product.sync_plan.name"
+            bst-edit-select="product.sync_plan.name"
             options="syncPlans()"
             options-format="option.id as option.name for option in options.results"
             selector="product.sync_plan_id"

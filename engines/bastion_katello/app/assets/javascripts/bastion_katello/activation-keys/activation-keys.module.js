@@ -23,7 +23,7 @@ angular.module('Bastion.activation-keys', [
     'ui.router',
     'Bastion',
     'Bastion.utils',
-    'Bastion.widgets',
+    'Bastion.components',
     'Bastion.host-collections'
 ]);
 

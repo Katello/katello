@@ -10,7 +10,7 @@
                class="form-control"
                placeholder="{{ 'Search...' | translate }}"
                ng-model="contentHostsTable.searchTerm"
-               on-enter="contentHostsTable.search(contentHostsTable.searchTerm)"/>
+               bst-on-enter="contentHostsTable.search(contentHostsTable.searchTerm)"/>
         <span class="input-group-btn">
           <button ng-click="contentHostsTable.search(contentHostsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
         </span>
@@ -37,8 +37,8 @@
     </div>
   </div>
 
-  <div alch-table="contentHostsTable" class="nutupane">
-    <div alch-container-scroll alch-infinite-scroll="contentHostsTable.nextPage()" data="contentHostsTable.rows">
+  <div bst-table="contentHostsTable" class="nutupane">
+    <div bst-container-scroll bst-infinite-scroll="contentHostsTable.nextPage()" data="contentHostsTable.rows">
 
       <div class="loading-mask" ng-show="contentHostsTable.working && contentHostsTable.rows.length == 0">
         <i class="icon-spinner icon-spin"></i>
@@ -53,22 +53,22 @@
              class="table table-full table-striped"
              ng-show="contentHostTable.rows.length > 0">
         <thead>
-          <tr alch-table-head row-select>
-            <th alch-table-column="name" translate>Name</th>
-            <th alch-table-column="environment" translate>Environment</th>
-            <th alch-table-column="content_view" translate>Content View</th>
+          <tr bst-table-head row-select>
+            <th bst-table-column="name" translate>Name</th>
+            <th bst-table-column="environment" translate>Environment</th>
+            <th bst-table-column="content_view" translate>Content View</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr alch-table-row ng-repeat="contentHost in contentHostsTable.rows" row-select="contentHost">
-            <td alch-table-cell >
+          <tr bst-table-row ng-repeat="contentHost in contentHostsTable.rows" row-select="contentHost">
+            <td bst-table-cell >
               <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
                 {{ contentHost.name}}
               </a>
             </td>
-            <td alch-table-cell >{{ contentHost.environment.name}}</td>
-            <td alch-table-cell >{{ contentHost.content_view.name}}</td>
+            <td bst-table-cell >{{ contentHost.environment.name}}</td>
+            <td bst-table-cell >{{ contentHost.content_view.name}}</td>
           </tr>
 
         </tbody>

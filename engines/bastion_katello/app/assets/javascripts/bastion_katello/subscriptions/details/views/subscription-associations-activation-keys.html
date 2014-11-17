@@ -6,14 +6,14 @@
     Included in Activation Keys
   </h3>
 
-  <table class="table table-striped" alch-table="table" ng-class="{'table-mask': working}">
+  <table class="table table-striped" bst-table="table" ng-class="{'table-mask': working}">
     <thead>
-      <tr alch-table-head>
-        <th alch-table-column="name" sortable><span translate>Name</span></th>
-        <th alch-table-column="environment"><span translate>Environment</span></th>
-        <th alch-table-column="contentView"><span translate>Content View</span></th>
-        <th alch-table-column="contentView"><span translate>Service Level</span></th>
-        <th alch-table-column="contentView"><span translate>Release Version</span></th>
+      <tr bst-table-head>
+        <th bst-table-column="name" sortable><span translate>Name</span></th>
+        <th bst-table-column="environment"><span translate>Environment</span></th>
+        <th bst-table-column="contentView"><span translate>Content View</span></th>
+        <th bst-table-column="contentView"><span translate>Service Level</span></th>
+        <th bst-table-column="contentView"><span translate>Release Version</span></th>
       </tr>
     </thead>
 
@@ -31,16 +31,16 @@
         </td>
       </tr>
 
-      <tr alch-table-row ng-repeat="activationKey in activationKeys">
-        <td alch-table-cell>
+      <tr bst-table-row ng-repeat="activationKey in activationKeys">
+        <td bst-table-cell>
           <a ui-sref="activation-keys.details.info({activationKeyId: activationKey.id})">
             {{ activationKey.name }}
           </a>
         </td>
-        <td alch-table-cell>{{ activationKey.environment.name || "" }}</td>
-        <td alch-table-cell>{{ activationKey.content_view.name || "" }}</td>
-        <td alch-table-cell>{{ activationKey.service_level || "" }}</td>
-        <td alch-table-cell>{{ activationKey.release_version || "" }}</td>
+        <td bst-table-cell>{{ activationKey.environment.name || "" }}</td>
+        <td bst-table-cell>{{ activationKey.content_view.name || "" }}</td>
+        <td bst-table-cell>{{ activationKey.service_level || "" }}</td>
+        <td bst-table-cell>{{ activationKey.release_version || "" }}</td>
       </tr>
     </tbody>
   </table>
