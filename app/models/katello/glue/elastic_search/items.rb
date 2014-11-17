@@ -60,6 +60,7 @@ module Katello
           facet_filters  = search_options[:facet_filters] || {}
           total_count   = 0
 
+          validate_sort_order! sort_order
           sort_by = format_sort(sort_by)
 
           # set the query default field, if one was provided.
@@ -122,7 +123,15 @@ module Katello
 
           return @results, total_count
         rescue Tire::Search::SearchRequestFailed => e
-          Rails.logger.error(e.class)
+          return handle_search_request_fail(e, total_count, sort_by)
+        end
+
+        def handle_search_request_fail(error, total_count, sort_by)
+          if error.message[/No mapping found/]
+            fail "Unable to order by column '#{sort_by}'."
+          end
+
+          Rails.logger.error(error.class)
 
           @results = []
           return @results, total_count
@@ -179,12 +188,18 @@ module Katello
 
         private
 
+        def validate_sort_order!(sort_order)
+          fail "sort_order must be ASC or DESC." unless ["asc", "desc"].include? sort_order.to_s.downcase
+        end
+
         def format_sort(sort_by)
           mapping = @obj_class.mapping || {}
           if mapping[sort_by.to_sym] && mapping[sort_by.to_sym][:type] == 'date'
             sort_by
-          else
+          elsif sort_by == 'name'
             sort_by + '_sort' unless sort_by.to_s.include?('_sort')
+          else
+            sort_by
           end
         end
 
