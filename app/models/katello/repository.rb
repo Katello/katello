@@ -111,7 +111,7 @@ module Katello
     end
 
     def self.in_organization(org)
-      where(:environment_id => org.environments)
+      where(:environment_id => org.kt_environments)
     end
 
     def self.in_environment(env_id)
