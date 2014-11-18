@@ -57,6 +57,13 @@ module Katello
           @net.key = options[:ssl_client_key]
           @net.ca_file = options[:ssl_ca_file]
 
+          # NOTE: This was added because some proxies dont support SSLv23 and do not handle TLS 1.2
+          # Valid values in ruby 1.9.3 are 'SSLv23' or 'TLSV1'
+          # Run the following command in rails console to figure out other
+          # valid constants in other ruby versions
+          # "OpenSSL::SSL::SSLContext::METHODS"
+          @net.ssl_version = Katello.config.cdn_ssl_version if Katello.config.key?(:cdn_ssl_version)
+
           if (options[:verify_ssl] == false) || (options[:verify_ssl] == OpenSSL::SSL::VERIFY_NONE)
             @net.verify_mode = OpenSSL::SSL::VERIFY_NONE
           elsif options[:verify_ssl].is_a? Integer
