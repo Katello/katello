@@ -18,7 +18,8 @@ module Katello
     private
 
     def filter_by_content_view_version(version, options)
-      filter_by_repo_ids([version.archive_puppet_environment.try(:pulp_id)], options)
+      repo_ids = version.default? ? version.repositories.map(&:pulp_id) : [version.archive_puppet_evironment.try(:pulp_id)]
+      filter_by_repo_ids(repo_ids, options)
     end
   end
 end

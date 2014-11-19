@@ -76,11 +76,11 @@ module Katello
       if params[:environment_id] && !params[:library]
         repositories = repositories.where(:environment_id => params[:environment_id])
       elsif params[:environment_id] && params[:library]
-        instance_ids = Repository.where(:environment_id => params[:environment_id]).pluck(:library_instance_id)
-        repositories = repositories.where(:id => instance_ids)
-      end
-
-      if params[:library] || (params[:environment_id].blank? && params[:content_view_version_id].blank? && params[:content_view_id].blank?)
+        instances = repositories.where(:environment_id => params[:environment_id])
+        instance_ids = instances.pluck(:library_instance_id).reject(&:blank?)
+        instance_ids += instances.where(:library_instance_id => nil)
+        repositories = Repository.where(:id => instance_ids)
+      elsif (params[:library] && !params[:environment_id]) || (params[:environment_id].blank? && params[:content_view_version_id].blank? && params[:content_view_id].blank?)
         repositories = repositories.where(:content_view_version_id => @organization.default_content_view.versions.first.id)
       end
 

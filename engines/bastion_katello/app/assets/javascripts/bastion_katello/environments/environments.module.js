@@ -24,5 +24,9 @@ angular.module('Bastion.environments', [
     'Bastion',
     'Bastion.utils',
     'Bastion.components',
-    'Bastion.errata'
+    'Bastion.errata',
+    'Bastion.packages',
+    'Bastion.puppet-modules',
+    'Bastion.repositories',
+    'Bastion.content-views'
 ]);
