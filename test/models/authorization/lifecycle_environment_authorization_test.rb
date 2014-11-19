@@ -40,6 +40,32 @@ module Katello
 
   end
 
+  class EnvironmentAuthorizationAsUserTest < AuthorizationTestBase
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @as_user = User.find(users('restricted'))
+      @env = @dev
+      @org = @acme_corporation
+    end
+
+    def test_readable
+      assert_empty KTEnvironment.readable(@as_user)
+    end
+
+    def test_promotable?
+      refute @env.promotable_or_removable?(@as_user)
+    end
+
+    def test_promotable
+      assert_empty KTEnvironment.promotable(@as_user)
+    end
+
+    def test_any_promotable?
+      refute KTEnvironment.any_promotable?(@as_user)
+    end
+  end
+
   class EnvironmentAuthorizationNoPermsTest < AuthorizationTestBase
 
     def setup

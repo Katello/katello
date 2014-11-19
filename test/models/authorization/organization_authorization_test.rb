@@ -38,6 +38,31 @@ module Katello
 
   end
 
+  class OrganizationAuthorizationAsUserTest < AuthorizationTestBase
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @as_user = User.find(users('restricted'))
+      @org = @acme_corporation
+    end
+
+    def def_class_creatable?
+      refute Organization.creatable?(@as_user)
+    end
+
+    def test_read_promotion_paths
+      assert_empty @org.readable_promotion_paths(@as_user)
+    end
+
+    def test_manifest_importable?
+      refute @org.manifest_importable?(@as_user)
+    end
+
+    def test_subscriptions_readable?
+      refute @org.subscriptions_readable?(@as_user)
+    end
+  end
+
   class OrganizationAuthorizationNoPermsTest < AuthorizationTestBase
 
     def setup

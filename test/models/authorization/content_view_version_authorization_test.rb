@@ -24,6 +24,18 @@ module Katello
     end
   end
 
+  class ContentViewVersionAuthorizationAsUserTest < AuthorizationTestBase
+    def setup
+      super
+      User.current = User.find(users(:admin))
+      @as_user = User.find(users(:restricted))
+    end
+
+    def test_readable
+      assert_empty ContentViewVersion.readable(@as_user)
+    end
+  end
+
   class ContentViewVersionAuthorizationNonAuthUserTest < AuthorizationTestBase
     def setup
       super

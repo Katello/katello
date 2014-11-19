@@ -21,28 +21,28 @@ module Katello
 
     delegate :editable?, to: :product
 
-    def deletable?
-      product.editable? && !promoted?
+    def deletable?(user = User.current)
+      product.editable?(user) && !promoted?
     end
 
-    def redhat_deletable?
-      !self.promoted? && self.product.editable?
+    def redhat_deletable?(user = User.current)
+      !self.promoted? && self.product.editable?(user)
     end
 
     delegate :syncable?, to: :product
 
     module ClassMethods
 
-      def readable
-        where(:product_id => Katello::Product.authorized(:view_products))
+      def readable(user = User.current)
+        where(:product_id => Katello::Product.authorized_as(user, :view_products))
       end
 
-      def deletable
-        where(:product_id => Katello::Product.authorized(:destroy_products))
+      def deletable(user = User.current)
+        where(:product_id => Katello::Product.authorized_as(user, :destroy_products))
       end
 
-      def syncable
-        where(:product_id => Katello::Product.authorized(:sync_products))
+      def syncable(user = User.current)
+        where(:product_id => Katello::Product.authorized_as(user, :sync_products))
       end
 
       def libraries_content_readable(_org)
@@ -66,8 +66,6 @@ module Katello
           where(environment_id: KTEnvironment.content_readable(org).non_library)
         end
       end
-
     end
-
   end
 end

@@ -17,18 +17,6 @@ module Katello
     include Authorizable
     include Katello::Authorization
 
-    def readable?
-      authorized?(:view_content_hosts)
-    end
-
-    def editable?
-      authorized?(:edit_content_hosts)
-    end
-
-    def deletable?
-      authorized?(:destroy_content_hosts)
-    end
-
     module ClassMethods
 
       def readable_search_filters(_org)
@@ -38,29 +26,17 @@ module Katello
         }
       end
 
-      def readable
-        authorized(:view_content_hosts)
+      def readable?(user = User.current)
+        user.can?(:view_content_hosts)
       end
 
-      def readable?
-        User.current.can?(:view_content_hosts)
+      def any_editable?(user = User.current)
+        authorized_as(user, :edit_content_hosts).count > 0
       end
 
-      def editable
-        authorized(:edit_content_hosts)
-      end
-
-      def deletable
-        authorized(:destroy_content_hosts)
-      end
-
-      def any_editable?
-        authorized(:edit_content_hosts).count > 0
-      end
-
-      def all_editable?(content_view, environments)
+      def all_editable?(content_view, environments, user = User.current)
         systems_query = System.where(:content_view_id => content_view, :environment_id => environments)
-        systems_query.count == systems_query.editable.count
+        systems_query.count == systems_query.editable(user).count
       end
     end
 

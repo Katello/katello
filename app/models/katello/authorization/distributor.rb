@@ -14,45 +14,45 @@ module Katello
   module Authorization::Distributor
     extend ActiveSupport::Concern
 
-    def readable?
-      environment.distributors_readable?
+    def readable?(user = User.current)
+      environment.distributors_readable?(user)
     end
 
-    def editable?
-      environment.distributors_editable?
+    def editable?(user = User.current)
+      environment.distributors_editable?(user)
     end
 
-    def deletable?
-      environment.distributors_deletable?
+    def deletable?(user = User.current)
+      environment.distributors_deletable?(user)
     end
 
     module ClassMethods
 
-      def readable(org)
+      def readable(org, user)
         fail "scope requires an organization" if org.nil?
-        if org.distributors_readable?
+        if org.distributors_readable?(user)
           where(:environment_id => org.kt_environment_ids) #list all distributors in an org
         else #just list for environments the user can access
-          where("distributors.environment_id in (#{KTEnvironment.distributors_readable(org).select(:id).to_sql})")
+          where("distributors.environment_id in (#{KTEnvironment.distributors_readable(org, user).select(:id).to_sql})")
         end
       end
 
-      def any_readable?(org)
-        org.distributors_readable? ||
-            KTEnvironment.distributors_readable(org).count > 0
+      def any_readable?(org, user = User.current)
+        org.distributors_readable?(user) ||
+            KTEnvironment.distributors_readable(org, user).count > 0
       end
 
       # TODO: these two functions are somewhat poorly written and need to be redone
-      def any_deletable?(env, org)
+      def any_deletable?(env, org, user)
         if env
-          env.distributors_deletable?
+          env.distributors_deletable?(user)
         else
-          org.distributors_deletable?
+          org.distributors_deletable?(user)
         end
       end
 
-      def registerable?(env, org)
-        (env || org).distributors_registerable?
+      def registerable?(env, org, user)
+        (env || org).distributors_registerable?(user)
       end
     end
 

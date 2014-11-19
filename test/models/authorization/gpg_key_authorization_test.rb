@@ -38,6 +38,31 @@ module Katello
     end
   end
 
+  class GpgKeyAuthorizationAsUserTest < AuthorizationTestBase
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @as_user = User.find(users('restricted'))
+      @key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
+    end
+
+    def test_readable
+      assert_empty GpgKey.readable(@as_user)
+    end
+
+    def test_key_readable?
+      refute @key.readable?(@as_user)
+    end
+
+    def test_key_editable?
+      refute @key.editable?(@as_user)
+    end
+
+    def test_key_deletable?
+      refute @key.deletable?(@as_user)
+    end
+  end
+
   class GpgKeyAuthorizationNoPermsTest < AuthorizationTestBase
 
     def setup

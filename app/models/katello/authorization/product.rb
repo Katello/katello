@@ -18,46 +18,26 @@ module Katello
       include Authorizable
       include Katello::Authorization
 
-      def readable?
-        authorized?(:view_products)
+      def syncable?(user = User.current)
+        authorized_as?(:sync_products, user)
       end
 
-      def syncable?
-        authorized?(:sync_products)
-      end
-
-      def editable?
-        authorized?(:edit_products)
-      end
-
-      def deletable?
+      def deletable?(user = User.current)
         promoted_repos = repositories.select { |repo| repo.promoted? }
-        authorized?(:destroy_products) && promoted_repos.empty?
+        authorized_as?(:destroy_products, user) && promoted_repos.empty?
       end
 
       module ClassMethods
 
-        def readable
-          authorized(:view_products)
+        def syncable(user = User.current)
+          authorized(:sync_products, user)
         end
 
-        def editable
-          authorized(:edit_products)
+        def readable?(user = User.current)
+          user.can?(:view_products)
         end
 
-        def deletable
-          authorized(:destroy_products)
-        end
-
-        def syncable
-          authorized(:sync_products)
-        end
-
-        def readable?
-          ::User.current.can?(:view_products)
-        end
-
-        def readable_repositories(repo_ids = nil)
+        def readable_repositories(repo_ids = nil, user = User.current)
           query = Katello::Repository.scoped
 
           if repo_ids
@@ -67,15 +47,13 @@ module Katello
           query.joins(:product)
                .joins(:content_view_version)
                .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => Katello::ContentView.default.pluck(:id))
-               .where(:product_id => Katello::Product.readable.pluck(:id))
+               .where(:product_id => Katello::Product.readable(user).pluck(:id))
         end
 
-        def syncable?
-          ::User.current.can?(:sync_products)
+        def syncable?(user = User.current)
+          user.can?(:sync_products)
         end
-
-      end # ClassMethods
-
-    end # Product
-  end # Authorization
-end # Katello
+      end
+    end
+  end
+end

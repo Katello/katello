@@ -65,6 +65,48 @@ module Katello
 
   end
 
+  class ProductAuthorizationAsUserTest < AuthorizationTestBase
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @as_user = User.find(users('restricted'))
+      @prod = @fedora
+      @org = @acme_corporation
+    end
+
+    def test_readable
+      assert_empty Product.readable(@as_user)
+    end
+
+    def test_editable
+      assert_empty Product.editable(@as_user)
+    end
+
+    def test_syncable
+      assert_empty Product.syncable(@as_user)
+    end
+
+    def test_deletable
+      assert_empty Product.deletable(@as_user)
+    end
+
+    def test_readable?
+      refute @prod.readable?(@as_user)
+    end
+
+    def test_syncable?
+      refute @prod.syncable?(@as_user)
+    end
+
+    def test_editable?
+      refute @prod.editable?(@as_user)
+    end
+
+    def test_deletable?
+      refute @prod.deletable?(@as_user)
+    end
+  end
+
   class ProductAuthorizationNoPermsTest < AuthorizationTestBase
 
     def setup

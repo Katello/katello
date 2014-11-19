@@ -17,53 +17,35 @@ module Katello
     include Authorizable
     include Katello::Authorization
 
-    def readable?
-      authorized?(:view_lifecycle_environments)
-    end
-
-    def creatable?
-      self.class.creatable?
-    end
-
-    def editable?
-      authorized?(:edit_lifecycle_environments)
-    end
-
-    def deletable?
-      authorized?(:destroy_lifecycle_environments)
-    end
-
-    def promotable_or_removable?
-      authorized?(:promote_or_remove_content_views_to_environments)
+    def promotable_or_removable?(user = User.current)
+      authorized_as?(:promote_or_remove_content_views_to_environments, user)
     end
 
     module ClassMethods
 
-      def readable
-        authorized(:view_lifecycle_environments)
+      def resource_permission
+        :lifecycle_environments
       end
 
-      def promotable
-        authorized(:promote_or_remove_content_views_to_environments)
+      def promotable(user = User.current)
+        authorized_as(user, :promote_or_remove_content_views_to_environments)
       end
 
-      def promotable?
-        User.current.can?(:promote_or_remove_content_views_to_environments)
+      def promotable?(user = User.current)
+        user.can?(:promote_or_remove_content_views_to_environments)
       end
 
-      def any_promotable?
-        promotable.count > 0
+      def any_promotable?(user = User.current)
+        promotable(user).count > 0
       end
 
-      def creatable?
-        ::User.current.can?(:create_lifecycle_environments)
+      def creatable?(user = User.current)
+        user.can?(:create_lifecycle_environments)
       end
 
-      def content_readable(org)
-        readable.where(:organization_id => org)
+      def content_readable(org, user = User.current)
+        readable(user).where(:organization_id => org)
       end
-
     end
-
   end
 end

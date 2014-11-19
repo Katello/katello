@@ -17,20 +17,16 @@ module Katello
     include Authorizable
     include Katello::Authorization
 
-    def editable?
-      authorized?(:edit_organizations)
+    def manifest_importable?(user = User.current)
+      authorized_as?(:import_manifest, user)
     end
 
-    def manifest_importable?
-      authorized?(:import_manifest)
+    def readable_promotion_paths(user = User.current)
+      permissible_promotion_paths(KTEnvironment.readable(user))
     end
 
-    def readable_promotion_paths
-      permissible_promotion_paths(KTEnvironment.readable)
-    end
-
-    def promotable_promotion_paths
-      permissible_promotion_paths(KTEnvironment.promotable)
+    def promotable_promotion_paths(user = User.current)
+      permissible_promotion_paths(KTEnvironment.promotable(user))
     end
 
     def permissible_promotion_paths(permissible_environments)
@@ -41,8 +37,8 @@ module Katello
       end
     end
 
-    def subscriptions_readable?
-      User.current.can?(:view_subscriptions)
+    def subscriptions_readable?(user = User.current)
+      user.can?(:view_subscriptions)
     end
 
   end

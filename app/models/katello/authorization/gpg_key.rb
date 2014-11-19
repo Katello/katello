@@ -17,23 +17,5 @@ module Katello
     include Authorizable
     include Katello::Authorization
 
-    def readable?
-      authorized?(:view_gpg_keys)
-    end
-
-    def editable?
-      authorized?(:edit_gpg_keys)
-    end
-
-    def deletable?
-      authorized?(:destroy_gpg_keys)
-    end
-
-    module ClassMethods
-      def readable
-        authorized(:view_gpg_keys)
-      end
-    end
-
   end
 end

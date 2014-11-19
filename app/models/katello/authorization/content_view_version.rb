@@ -15,8 +15,8 @@ module Katello
     extend ActiveSupport::Concern
 
     module ClassMethods
-      def readable
-        view_ids = ContentView.readable.collect { |v| v.id }
+      def readable(user = User.current)
+        view_ids = ContentView.readable(user).map(&:id)
         joins(:content_view).where("#{Katello::ContentView.table_name}.id" => view_ids)
       end
     end

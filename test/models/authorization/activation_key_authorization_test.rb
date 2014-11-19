@@ -77,6 +77,37 @@ module Katello
     end
   end
 
+  class ActivationKeyAuthorizationAsUserTest  < AuthorizationTestBase
+
+    def setup
+      super
+      User.current = User.find(users(:admin))
+      @as_user = User.find(users(:restricted))
+      @key = ActivationKey.find(katello_activation_keys('simple_key'))
+    end
+
+    def test_readable?
+      refute @key.readable?(@as_user)
+    end
+
+    def test_editable?
+      refute @key.editable?(@as_user)
+    end
+
+    def test_deletable?
+      refute @key.deletable?(@as_user)
+    end
+
+    def test_any_editable?
+      refute ActivationKey.any_editable?(@as_user)
+    end
+
+    def test_all_editable?
+      ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key))
+      refute ActivationKey.all_editable?(ak.content_view, ak.environment, @as_user)
+    end
+  end
+
   class ActivationKeyAuthorizationWithPermsTest < AuthorizationTestBase
     def setup
       super

@@ -54,6 +54,47 @@ module Katello
     end
   end
 
+  class HostCollectionAuthorizationAsUserTest < AuthorizationTestBase
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @as_user = User.find(users('restricted'))
+      @host_collection = HostCollection.find(katello_host_collections(:simple_host_collection))
+    end
+
+    def test_readable
+      assert_empty HostCollection.readable(@as_user)
+    end
+
+    def test_creatable
+      assert_empty HostCollection.creatable(@as_user)
+    end
+
+    def test_editable
+      assert_empty HostCollection.editable(@as_user)
+    end
+
+    def test_deletable
+      assert_empty HostCollection.deletable(@as_user)
+    end
+
+    def test_host_collection_readable?
+      refute @host_collection.readable?(@as_user)
+    end
+
+    def test_host_collection_creatable?
+      refute @host_collection.creatable?(@as_user)
+    end
+
+    def test_host_collection_editable?
+      refute @host_collection.editable?(@as_user)
+    end
+
+    def test_host_collection_deletable?
+      refute @host_collection.deletable?(@as_user)
+    end
+  end
+
   class HostCollectionAuthorizationNoPermsTest < AuthorizationTestBase
 
     def setup

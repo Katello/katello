@@ -49,6 +49,42 @@ module Katello
     end
   end
 
+  class SystemAuthorizationAsUserTest < AuthorizationTestBase
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @as_user = User.find(users('restricted'))
+      @sys = @system
+      @org = @acme_corporation
+      @env = @dev
+    end
+
+    def test_readable
+      assert_empty System.readable(@as_user)
+    end
+
+    def test_readable?
+      refute @sys.readable?(@as_user)
+    end
+
+    def test_editable?
+      refute @sys.editable?(@as_user)
+    end
+
+    def test_deletable?
+      refute @sys.deletable?(@as_user)
+    end
+
+    def test_any_editable?
+      refute System.any_editable?(@as_user)
+    end
+
+    def test_all_editable?
+      sys = System.find(katello_systems(:simple_server_3))
+      refute System.all_editable?(sys.content_view, sys.environment, @as_user)
+    end
+  end
+
   class SystemAuthorizationNoPermsTest < AuthorizationTestBase
     def setup
       super

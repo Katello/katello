@@ -62,6 +62,45 @@ module Katello
     end
   end
 
+  class ContentViewAuthorizationAsUserTest < AuthorizationTestBase
+
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @as_user = User.find(users('restricted'))
+      @view = ContentView.find(katello_content_views('acme_default'))
+    end
+
+    def test_readable
+      assert_empty ContentView.readable(@as_user)
+    end
+
+    def test_content_view_readable?
+      refute @view.readable?(@as_user)
+    end
+
+    def test_content_view_editable?
+      refute @view.editable?(@as_user)
+    end
+
+    def test_content_view_deletable?
+      refute @view.deletable?(@as_user)
+    end
+
+    def test_content_view_publishable?
+      refute @view.publishable?(@as_user)
+    end
+
+    def test_promotable?
+      refute @view.promotable_or_removable?(@as_user)
+    end
+
+    def test_promotable_perm
+      cv = katello_content_views(:library_dev_staging_view)
+      refute cv.promotable_or_removable?(@as_user)
+    end
+  end
+
   class ContentViewAuthorizationNoPermsTest < AuthorizationTestBase
 
     def setup

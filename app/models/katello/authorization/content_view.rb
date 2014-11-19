@@ -17,46 +17,18 @@ module Katello
     include Authorizable
     include Katello::Authorization
 
-    def readable?
-      authorized?(:view_content_views)
+    def publishable?(user = User.current)
+      authorized_as?(:publish_content_views, user)
     end
 
-    def editable?
-      authorized?(:edit_content_views)
-    end
-
-    def deletable?
-      authorized?(:destroy_content_views)
-    end
-
-    def publishable?
-      authorized?(:publish_content_views)
-    end
-
-    def promotable_or_removable?
-      authorized?(:promote_or_remove_content_views) && Katello::KTEnvironment.any_promotable?
+    def promotable_or_removable?(user = User.current)
+      authorized_as?(:promote_or_remove_content_views, user) && Katello::KTEnvironment.any_promotable?
     end
 
     module ClassMethods
 
-      def readable
-        authorized(:view_content_views)
-      end
-
-      def readable?
-        ::User.current.can?(:view_content_views)
-      end
-
-      def editable
-        authorized(:edit_content_views)
-      end
-
-      def deletable
-        authorized(:destroy_content_views)
-      end
-
-      def deletable
-        authorized(:publish_content_views)
+      def readable?(user = User.current)
+        user.can?(:view_content_views)
       end
 
       def readable_repositories(repo_ids = nil)

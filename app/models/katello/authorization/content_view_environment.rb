@@ -14,8 +14,8 @@ module Katello
   module Authorization::ContentViewEnvironment
     extend ActiveSupport::Concern
 
-    def readable?
-      self.content_view.readable? && self.environment.readable?
+    def readable?(user = User.current)
+      self.content_view.readable?(user) && self.environment.readable?(user)
     end
 
   end
