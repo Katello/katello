@@ -16,21 +16,14 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
+        include Katello::Concerns::FilteredAutoCompleteSearch
         before_filter :find_optional_organization, :only => [:index]
       end
 
       extend ::Apipie::DSL::Concern
 
       def index
-        collection = resource_class.scoped
-        collection = filter_by_repos(Repository.readable, collection)
-        collection = filter_by_repos([@repo], collection) if @repo && !@repo.puppet?
-        collection = filter_by_content_view_filter(@filter, collection) if @filter
-        collection = filter_by_content_view_version(@version, collection) if @version
-        collection = filter_by_environment(@environment, collection) if @environment
-        collection = filter_by_repos(Repository.readable.in_organization(@organization), collection) if @organization
-
-        respond(:collection => scoped_search(collection.uniq, default_sort[0], default_sort[1]))
+        respond(:collection => scoped_search(index_relation.uniq, default_sort[0], default_sort[1]))
       end
 
       api :GET, "/compare/", N_("List :resource_id")
@@ -52,6 +45,17 @@ module Katello
         collection = scoped_search(filter_by_repos(repos, collection).uniq, default_sort[0], default_sort[1])
         collection[:results] = collection[:results].map { |item| ContentViewVersionComparePresenter.new(item, @versions, @repo) }
         respond_for_index(:collection => collection)
+      end
+
+      def index_relation
+        collection = resource_class.scoped
+        collection = filter_by_repos(Repository.readable, collection)
+        collection = filter_by_repos([@repo], collection) if @repo && !@repo.puppet?
+        collection = filter_by_content_view_filter(@filter, collection) if @filter
+        collection = filter_by_content_view_version(@version, collection) if @version
+        collection = filter_by_environment(@environment, collection) if @environment
+        collection = filter_by_repos(Repository.readable.in_organization(@organization), collection) if @organization
+        collection
       end
 
       private
