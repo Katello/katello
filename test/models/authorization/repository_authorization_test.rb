@@ -52,6 +52,32 @@ module Katello
 
   end
 
+  class RepositoryAuthorizationAsUserTest < AuthorizationTestBase
+    def setup
+      super
+      User.current = User.find(users(:admin))
+      @as_user = User.find(users(:restricted))
+    end
+
+    def test_editable
+      refute @fedora_17_x86_64.editable?(@as_user)
+    eletable?
+      refute @fedora_17_x86_64.deletable?(@as_user)
+    end
+
+    def test_syncable?
+      refute @fedora_17_x86_64.syncable?(@as_user)
+    end
+
+    def test_readable
+      assert_empty Repository.readable(@as_user)
+    end
+
+    def test_deletable
+      assert_empty Repository.deletable(@as_user)
+    end
+  end
+
   class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
 
     def setup

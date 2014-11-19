@@ -68,6 +68,9 @@ module Katello
         end
       end
 
+      def self.model_to_underscored(model)
+        model_to_controller_path(model).split('/').last
+      end
     end
 
   end

@@ -37,6 +37,19 @@ module Katello
     end
   end
 
+  class ContentViewEnvironmentAuthorizationAsUserTest < AuthorizationTestBase
+    def setup
+      super
+      User.current = User.find(users(:admin))
+      @as_user = User.find(users(:restricted))
+      @content_view_environment = katello_content_view_environments(:library_default_view_environment)
+    end
+
+    def test_readable?
+      refute @content_view_environment.readable?(@as_user)
+    end
+  end
+
   class ContentViewEnvironmentAuthorizationAuthorizedUserTest < AuthorizationTestBase
     def setup
       super
