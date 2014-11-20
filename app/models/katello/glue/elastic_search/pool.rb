@@ -77,7 +77,6 @@ module Katello
             "provided_products" => @provided_products,
             "systems" => @systems,
             "distributors" => @distributors,
-            "host" => @host,
             "account_number"   => @account_number,
             "contract_number"  => @contract_number
           }
@@ -137,6 +136,7 @@ module Katello
             # details
             organization = pool.organization
             json_pool[:organization] = {:id => organization.id, :name => organization.name, :label => organization.label}
+            json_pool[:host] = { :id => pool.host.uuid, :name => pool.host.name } if pool.host if pool.host
             json_pool.merge(pool.index_options)
           end
 

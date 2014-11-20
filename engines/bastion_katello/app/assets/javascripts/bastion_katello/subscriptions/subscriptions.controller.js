@@ -71,13 +71,6 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
             return translate("Yes");
         };
 
-        $scope.subscriptionType = function (subscription) {
-            if (subscription['virt_only']) {
-                return translate('Virtual');
-            } else {
-                return translate('Physical');
-            }
-        };
         $scope.redhatProvider =  Organization.redhatProvider();
 
         $scope.subscriptions = Subscription.queryPaged();

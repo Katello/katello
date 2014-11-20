@@ -77,5 +77,5 @@ node :activation_keys, :if => (params[:action] == "show") do |subscription|
 end
 
 node :host, :if => lambda { |sub| sub && sub.host } do |subscription|
-  {id: subscription.host.id, name: subscription.host.name}
+  {id: subscription.host.uuid, name: subscription.host.name}
 end

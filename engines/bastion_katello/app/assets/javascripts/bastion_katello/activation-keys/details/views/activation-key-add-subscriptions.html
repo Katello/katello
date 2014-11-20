@@ -51,6 +51,7 @@
           <tr bst-table-head row-select>
             <th bst-table-column="quantity" sortable class="align-center"><span translate>Quantity</span></th>
             <th bst-table-column="attached" sortable><span translate>Attached</span></th>
+            <th bst-table-column="type"><span translate>Type</span></th>
             <th bst-table-column="startDate" sortable><span translate>Starts</span></th>
             <th bst-table-column="endDate" sortable><span translate>Expires</span></th>
             <th bst-table-column="supportLevel"><span translate>Support Level</span></th>
@@ -80,6 +81,7 @@
               </select>
             </td>
             <td bst-table-cell>{{ subscription | subscriptionConsumedFilter }}</td>
+            <td bst-table-cell><div subscription-type="subscription"></div></td>
             <td bst-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
             <td bst-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
             <td bst-table-cell>{{ subscription.support_level }}</td>

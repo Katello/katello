@@ -74,14 +74,4 @@ describe('Controller: SubscriptionsController', function() {
         var subscription = {consumed: 4, quantity: 10};
         expect($scope.formatConsumed(subscription)).toEqual("4 out of 10");
     });
-
-    it('returns "Physical" for non-virtual subscriptions', function() {
-        var subscription = {'virt_only': false};
-        expect($scope.subscriptionType(subscription)).toEqual("Physical");
-    });
-
-    it('returns "Virtual" for virtual subscriptions', function() {
-        var subscription = {'virt_only': true};
-        expect($scope.subscriptionType(subscription)).toEqual("Virtual");
-    });
 });

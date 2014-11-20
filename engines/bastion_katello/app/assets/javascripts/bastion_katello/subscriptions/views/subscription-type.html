@@ -1,0 +1,13 @@
+
+<div ng-if="subscription.virt_only === false">
+  {{ 'Physical' | translate }}
+</div>
+<div ng-if="subscription.virt_only === true && !subscription.host">
+  {{ 'Virtual' | translate }}
+</div>
+<div ng-if="subscription.virt_only === true && subscription.host">
+  <span translate> Guests of </span>
+  <a href='/content_hosts/{{ subscription.host.id }}/info' translate>
+    {{ subscription.host.name }}
+  </a>
+</div>
