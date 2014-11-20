@@ -32,7 +32,7 @@ module Katello
     has_many :cves, :class_name => "Katello::ErratumCve", :dependent => :destroy, :inverse_of => :erratum
     has_many :packages, :class_name => "Katello::ErratumPackage", :dependent => :destroy, :inverse_of => :erratum
 
-    scoped_search :on => :errata_id, :rename => :id
+    scoped_search :on => :errata_id, :rename => :id, :complete_value => true
     scoped_search :on => :title, :only_explicit => true
     scoped_search :on => :severity, :complete_value => true
     scoped_search :on => :errata_type, :rename => :type, :complete_value => true

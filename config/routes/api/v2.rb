@@ -110,6 +110,7 @@ Katello::Engine.routes.draw do
         api_resources :errata, :only => [:index, :show] do
           collection do
             get :compare
+            get :auto_complete_search
           end
         end
 

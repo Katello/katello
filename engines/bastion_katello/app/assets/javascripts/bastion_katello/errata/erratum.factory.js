@@ -25,7 +25,9 @@ angular.module('Bastion.errata').factory('Erratum',
 
         return BastionResource('/katello/api/v2/errata/:id/',
             {id: '@id', 'sort_by': 'issued', 'sort_order': 'DESC'},
-            {}
+            {
+                autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
+            }
         );
 
     }]
