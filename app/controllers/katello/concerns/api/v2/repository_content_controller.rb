@@ -17,6 +17,7 @@ module Katello
 
       included do
         before_filter :find_repository
+        before_filter :find_environment, :only => [:index]
         before_filter :find_content_view_version, :only => [:index]
         before_filter :find_filter, :only => [:index]
         before_filter :find_content_resource, :only => [:show]
@@ -31,6 +32,7 @@ module Katello
       param :content_view_version_id, :identifier, :desc => N_("content view version identifier")
       param :content_view_filter_id, :identifier, :desc => N_("content view filter identifier")
       param :repository_id, :number, :desc => N_("repository identifier")
+      param :environment_id, :number, :desc => N_("environment identifier")
       def index
         options = sort_params
         options[:filters] = []
@@ -38,6 +40,7 @@ module Katello
         options = filter_by_repo_ids(Repository.readable.map(&:pulp_id), options)
         options = filter_by_repo_ids([@repo.pulp_id], options) if @repo && !@repo.puppet?
         options = filter_by_content_view_version(@version, options) if @version
+        options = filter_by_environment(@environment, options) if @environment
         options = filter_by_content_view_filter(@filter, options) if @filter
 
         respond(:collection => item_search(resource_class, params, options))
@@ -57,6 +60,14 @@ module Katello
         if params[:repository_id]
           @repo = Repository.readable.find_by_id(params[:repository_id])
           fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
+        end
+      end
+
+      def find_environment
+        if params[:environment_id]
+          @environment = KTEnvironment.readable.find_by_id(params[:environment_id])
+          fail HttpErrors::NotFound, _("Could not find Lifecycle Environment with id '%{id}'.") %
+            {id: params[:environment_id]} if @environment.nil?
         end
       end
 
@@ -154,6 +165,11 @@ module Katello
       def filter_by_content_view_version(version, options)
         filter_by_repo_ids(version.archived_repos.map(&:pulp_id), options)
       end
+
+      def filter_by_environment(environment, options)
+        filter_by_repo_ids(environment.repositories.map(&:pulp_id), options)
+      end
+
     end
   end
 end
