@@ -28,7 +28,7 @@ angular.module('Bastion.packages').factory('Package',
             {
                 autocomplete: {
                     method: 'GET',
-                    url: '/packages/auto_complete',
+                    url: '/katello/packages/auto_complete',
                     transformResponse: function (data) {
                         data = angular.fromJson(data);
                         return {results: data};
