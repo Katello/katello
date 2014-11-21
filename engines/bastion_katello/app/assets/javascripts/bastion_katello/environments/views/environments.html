@@ -2,185 +2,76 @@
 
 <section ng-cloak bst-container-scroll class="row">
 
-  <div class="nutupane-bar">
-    <h2 class="col-sm-4">
-      <div data-block="header" translate>
-        Lifecycle Environment Paths
-      </div>
-    </h2>
+  <h2 class="col-sm-12">
+    <span data-block="header" translate>
+      Lifecycle Environment Paths
+    </span>
 
-    <button class="fr btn btn-primary"
-            ng-click="initiateCreatePath()"
-            ng-hide="denied('create_lifecycle_environments')">
+    <a class="fr btn btn-default"
+        ui-sref="environments.new({priorId: library.id})"
+        ng-hide="denied('create_lifecycle_environments')">
       <i class="icon-plus"></i>
       {{ "New Environment Path" | translate }}
-    </button>
-  </div>
+    </a>
+  </h2>
 
   <section class="row nutupane-sub-section">
 
     <div class="col-sm-12">
 
-      <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
-
       <div class="col-sm-12">
         <table class="table table-bordered info-blocks">
           <tbody>
             <tr>
-              <td class="info-block-head"><a ui-sref="environment.details({environmentId: library.id})" translate>Library</a></td>
+              <td class="info-block-head"><a ui-sref="environments.environment.details({environmentId: library.id})" translate>Library</a></td>
               <td class="info-block" translate>Content Views <div>{{ library.counts.content_views || 0 }}</div></td>
               <td class="info-block" translate>Products <div>{{ library.counts.products || 0 }}</div></td>
               <td class="info-block" translate>Yum Repositories <div>{{ library.counts.yum_repositories || 0 }}</div></td>
               <td class="info-block" translate>Docker Repositories <div>{{ library.counts.docker_repositories || 0 }}</div></td>
               <td class="info-block" translate>Packages <div>{{ library.counts.packages || 0 }}</div></td>
-              <td class="info-block" translate>Errata <div><span errata-counts="library.counts.errata"></span></div></td>
+              <td class="info-block" translate>Errata <div>{{ library.counts.errata.total || 0 }}</div></td>
               <td class="info-block" translate>Puppet Modules <div>{{ library.counts.puppet_modules || 0 }}</div></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="col-sm-12">
-        <table class="table">
+      <div class="col-sm-12 environment" ng-repeat="path in paths">
+        <div class="row">
+          <div class="col-sm-12">
+            <a ui-sref="environments.new({priorId: lastEnvironment(path).id})" class="btn btn-default fr">
+              <i class="icon-plus inline-icon"></i>
+              <span translate>Add New Environment</span>
+            </a>
+          </div>
+        </div>
+
+        <table class="table table-bordered environment-table">
           <thead>
             <tr>
-              <th translate>Environment Path</th>
+              <th></th>
+              <th ng-repeat="environment in path.environments">
+                <a ui-sref="environments.environment.details({environmentId: environment.id})"
+                   ng-hide="denied('create_lifecycle_environments')">
+                  {{ environment.name }}
+                </a>
+              </th>
             </tr>
           </thead>
 
           <tbody>
-            <tr ng-repeat="row in environmentsTable.rows"
-                ng-controller="PathController"
-                ng-show="row.environments.length > 0"
-                path-id="{{ row.pathId = $index }}">
-
-              <td class="path-selector">
-                <ul class="path-list">
-                  <li class="path-list-item" ng-repeat="env in row.environments" ng-class="{ 'disabled-item': denied('view_lifecycle_environments', env)}">
-                    <label ng-click="selectEnvironment(env)"
-                           ng-class="{active: workingOn === env}"
-                           class="path-list-item-label"
-                           ng-hide="denied('view_lifecycle_environments', env)">
-                      <div>
-                        {{ env.name }}
-                      </div>
-                    </label>
-
-                  </li>
-                  <li class="path-list-item" ng-show="permitted('create_lifecycle_environments')">
-                    <label ng-click="initiateCreateEnvironment()" class="path-list-item-label">
-                      <i class="icon-plus"></i>
-                    </label>
-                  </li>
-                </ul>
-
-                <section ng-show="row.showCreate && permitted('create_lifecycle_environments')">
-                  <header class="details-header">
-                    <h2 class="fl" translate>Create Environment</h2>
-
-                    <div class="fr">
-                      <button class="btn btn-default"
-                              ng-click="close()" translate>Close</button>
-                    </div>
-                  </header>
-
-                  <br/>
-                  <div>
-                    <form name="environmentForm" class="form-horizontal" novalidate role="form">
-
-                      <div bst-form-group label="{{ 'Name' | translate }}">
-                        <input id="name"
-                               name="name"
-                               ng-model="environment.name"
-                               type="text"
-                               tabindex="1"
-                               autofocus
-                               required/>
-                      </div>
-
-                      <div bst-form-group label="{{ 'Label' | translate }}">
-                        <input id="label"
-                               name="label"
-                               ng-model="environment.label"
-                               type="text"
-                               tabindex="2"
-                               required/>
-                      </div>
-
-                      <div bst-form-group label="{{ 'Description' | translate }}">
-                        <textarea id="description"
-                                  name="description"
-                                  ng-model="environment.description"
-                                  tabindex="3">
-                        </textarea>
-                      </div>
-
-                      <div bst-form-buttons
-                           on-cancel="close()"
-                           on-save="create(environment)"
-                           working="working">
-                      </div>
-                    </form>
-                  </div>
-                </section>
-
-                <section ng-show="row.showEdit">
-
-                  <header class="details-header">
-                    <h2 class="fl" translate>Environment {{ workingOn.environment.name }}</h2>
-
-                    <div class="fr">
-
-                      <div bst-modal="remove(workingOn.environment)" model="environment"
-                           modal-header='Remove Environment "{{workingOn.environment.name}}"?'
-                           modal-body='Are you sure you want to remove environment "{{ workingOn.environment.name }}"?'></div>
-
-                      <button class="btn btn-default"
-                              ng-show="isLastEnvironment(workingOn.environment) && permitted('destroy_lifecycle_environments', workingOn.environment)"
-                              ng-click="openModal()"
-                              translate>
-                        Remove Environment
-                      </button>
-
-                      <button class="btn btn-default"
-                              ng-click="close()" translate>Close</button>
-                    </div>
-                  </header>
-
-                  <br/>
-                  <div class="details">
-                    <div class="detail">
-                      <span class="info-label" translate>Name</span>
-                      <span class="info-value"
-                            bst-edit-text="workingOn.environment.name"
-                            readonly="denied('edit_lifecycle_environments', workingOn.environment)"
-                            on-save="update(workingOn.environment)">
-                      </span>
-                    </div>
-
-                    <div class="detail">
-                      <span class="info-label" translate>Label</span>
-                      <span class="info-value">{{ workingOn.environment.label }}</span>
-                    </div>
-
-                    <div class="detail">
-                      <span class="info-label" translate>Description</span>
-                      <span class="info-value"
-                            bst-edit-textarea="workingOn.environment.description"
-                            readonly="denied('edit_lifecycle_environments', workingOn.environment)"
-                            on-save="update(workingOn.environment)">
-                      </span>
-                    </div>
-                  </div>
-                </section>
-
-              </td>
+            <tr>
+              <td translate>Content Views</td>
+              <td ng-repeat="environment in path.environments">{{ environment.counts.content_views || 0 }}</td>
             </tr>
-
+            <tr>
+              <td translate>Content Hosts</td>
+              <td ng-repeat="environment in path.environments">{{ environment.counts.content_hosts || 0 }}</td>
+            </tr>
           </tbody>
         </table>
-
       </div>
+
     </div>
   </section>
 

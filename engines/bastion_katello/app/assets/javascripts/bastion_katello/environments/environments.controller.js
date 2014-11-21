@@ -16,7 +16,6 @@
  * @name  Bastion.environments.controller:EnvironmentsController
  *
  * @requires $scope
- * @requires $timeout
  * @requires Organization
  * @requires CurrentOrganization
  *
@@ -24,26 +23,28 @@
  *   Provides the functionality for the environments path page.
  */
 angular.module('Bastion.environments').controller('EnvironmentsController',
-    ['$scope', '$timeout', 'Organization', 'CurrentOrganization',
-        function ($scope, $timeout, Organization, CurrentOrganization) {
-
-            $scope.successMessages = [];
-            $scope.errorMessages = [];
-            $scope.environmentsTable = {rows: []};
+    ['$scope', 'Organization', 'CurrentOrganization',
+        function ($scope, Organization, CurrentOrganization) {
 
             Organization.paths({id: CurrentOrganization}, function (paths) {
-                $scope.environmentsTable.rows = paths;
+                var actualPaths = [];
+
                 $scope.library = paths[0].environments[0];
+
+                angular.forEach(paths, function (path, index) {
+                    paths[index].environments.splice(0, 1);
+
+                    if (paths[index].environments.length !== 0) {
+                        actualPaths.push(path);
+                    }
+                });
+
+                $scope.paths = actualPaths;
             });
 
-            $scope.initiateCreatePath = function () {
-                if ($scope.environmentsTable.rows[0].environments.length > 1) {
-                    $scope.environmentsTable.rows.unshift([]);
-                    $scope.environmentsTable.rows[0].environments = [$scope.environmentsTable.rows[1].environments[0]];
-                    $scope.environmentsTable.rows[0].permissions = $scope.environmentsTable.rows[1].permissions;
-                }
-                $scope.environmentsTable.rows[0].pathId = 0;
-                $scope.environmentsTable.rows[0].showCreate = true;
+            $scope.lastEnvironment = function (path) {
+                return path.environments[path.environments.length - 1];
             };
+
         }]
 );

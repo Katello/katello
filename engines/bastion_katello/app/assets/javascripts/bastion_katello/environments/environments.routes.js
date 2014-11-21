@@ -22,23 +22,36 @@
  */
 angular.module('Bastion.environments').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('environments', {
+        abstract: true,
+        permission: 'view_lifecycle_environments',
+        template: '<div ui-view></div>'
+    });
+
+    $stateProvider.state('environments.index', {
         url: '/lifecycle_environments',
         permission: 'view_lifecycle_environments',
         controller: 'EnvironmentsController',
         templateUrl: 'environments/views/environments.html'
     })
-    .state('environment', {
+    .state('environments.new', {
+        url: '/lifecycle_environments/:priorId/new',
+        permission: 'create_lifecycle_environments',
+        controller: 'NewEnvironmentController',
+        templateUrl: 'environments/views/new-environment.html'
+    });
+
+    $stateProvider.state('environments.environment', {
         url: '/lifecycle_environments/:environmentId',
         permission: 'view_lifecycle_environments',
         controller: 'EnvironmentController',
         templateUrl: 'environments/details/views/environment.html'
     })
-    .state('environment.details', {
+    .state('environments.environment.details', {
         url: '/details',
         permission: 'view_lifecycle_environments',
         templateUrl: 'environments/details/views/environment-details.html'
     })
-    .state('environment.errata', {
+    .state('environments.environment.errata', {
         url: '/errata',
         permission: 'view_lifecycle_environments',
         controller: 'EnvironmentContentController',

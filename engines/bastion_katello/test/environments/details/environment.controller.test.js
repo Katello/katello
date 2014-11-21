@@ -17,7 +17,7 @@ describe('Controller: EnvrionmentController', function () {
     beforeEach(module('Bastion.environments', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
-        var $controller = $injector.get('$controller');
+        var $controller = $injector.get('$controller'),
             Envrionment = $injector.get('MockResource').$new(),
             translate = $injector.get('translateMock');
 
@@ -33,6 +33,20 @@ describe('Controller: EnvrionmentController', function () {
 
     it("puts an environment on the scope", function() {
         expect($scope.environment).toBeDefined();
+    });
+
+    it("should provide ability to save an environment and return a promise", function() {
+        spyOn($scope.environment, '$update').andCallThrough();
+
+        expect($scope.save($scope.environment).then).toBeDefined();
+        expect($scope.environment.$update).toHaveBeenCalled();
+    });
+
+    it("should provide ability to remove an environment and return a promise", function() {
+        spyOn($scope.environment, '$delete').andCallThrough();
+
+        expect($scope.remove($scope.environment).then).toBeDefined();
+        expect($scope.environment.$delete).toHaveBeenCalled();
     });
 
 });

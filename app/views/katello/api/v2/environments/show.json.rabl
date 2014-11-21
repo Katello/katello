@@ -13,6 +13,14 @@ node :prior do |env|
   end
 end
 
+node :successor do |env|
+  if !env.library && env.successor
+    {name: env.successor.name, :id => env.successor.id}
+  else
+    nil
+  end
+end
+
 node :counts do |env|
   counts = {
     :content_hosts => env.systems.readable.count,

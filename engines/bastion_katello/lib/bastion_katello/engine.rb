@@ -19,6 +19,7 @@ module BastionKatello
       Bastion.register_plugin(
         :name => 'bastion_katello',
         :javascript => 'bastion_katello/bastion_katello',
+        :stylesheet => 'bastion_katello/bastion_katello',
         :pages => %w(
           activation_keys
           content_hosts

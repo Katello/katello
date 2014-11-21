@@ -1,0 +1,67 @@
+<span page-title>{{ 'New Environment' | translate }}</span>
+
+<section class="details-page" ng-cloak>
+
+  <ol class="breadcrumb">
+    <li>
+      <a ui-sref="environments.index" translate>Environments List</a>
+    </li>
+    
+    <li class="active">
+      <a translate>
+        New Environment
+      </a>
+    </li>
+  </ol>
+
+  <header>
+    <h1 translate>New Environment</h1>
+  </header>
+  
+  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+  <div ng-show="priorEnvironment.successor && !loading">
+    <p translate>Lifecycle Environment "{{ priorEnvironment.name }}" exists within the middle of a path. New Lifecycle Environments can only be added to the end of a path.</p>
+  </div>
+
+  <div ng-show="!priorEnvironment.successor && !loading" class="row">
+
+    <p class="col-sm-12" translate>Adding Lifecycle Environment to the end of "{{ priorEnvironment.name }}"</p>
+
+    <form name="environmentForm" class="form-horizontal col-sm-8" novalidate role="form">
+      <div bst-form-group label="{{ 'Name' | translate }}">
+        <input id="name"
+               name="name"
+               ng-model="environment.name"
+               type="text"
+               tabindex="1"
+               autofocus
+               required/>
+      </div>
+
+      <div bst-form-group label="{{ 'Label' | translate }}">
+        <input id="label"
+               name="label"
+               ng-model="environment.label"
+               type="text"
+               tabindex="2"
+               required/>
+      </div>
+
+      <div bst-form-group label="{{ 'Description' | translate }}">
+        <textarea id="description"
+                  name="description"
+                  ng-model="environment.description"
+                  tabindex="3">
+        </textarea>
+      </div>
+
+      <div bst-form-buttons
+           on-cancel="transitionTo('environments.index')"
+           on-save="save(environment)"
+           working="working">
+      </div>
+    </form>
+  </div>
+
+</section>
