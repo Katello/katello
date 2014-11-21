@@ -260,6 +260,22 @@ module Katello
       end
     end
 
+    def self.clone_docker_repo_path(options)
+      repo = options[:repository]
+      org = repo.organization.label.downcase
+      if options[:environment]
+        cve = ContentViewEnvironment.where(:environment_id => options[:environment],
+                                           :content_view_id => options[:content_view]).first
+        view = repo.content_view.label
+        product = repo.product.label
+        env, _ = cve.label.split('/')
+        "#{org}-#{env.downcase}-#{view}-#{product}-#{repo.label}"
+      else
+        content_path = repo.relative_path.gsub("#{org}-", '')
+        "#{org}-#{options[:content_view].label}-#{options[:version].version}-#{content_path}"
+      end
+    end
+
     def self.repo_id(product_label, repo_label, env_label, organization_label, view_label, version)
       [organization_label, env_label, view_label, version, product_label, repo_label].compact.join("-").gsub(/[^-\w]/, "_")
     end
@@ -346,10 +362,17 @@ module Katello
 
         clone.checksum_type = self.checksum_type
         clone.pulp_id = clone.clone_id(to_env, content_view, version.try(:version))
-        clone.relative_path = Repository.clone_repo_path(:repository => self,
-                                                         :environment => to_env,
-                                                         :content_view => content_view,
-                                                         :version => version)
+        options = {
+          :repository => self,
+          :environment => to_env,
+          :content_view => content_view,
+          :version => version
+        }
+        clone.relative_path = if clone.docker?
+                                Repository.clone_docker_repo_path(options)
+                              else
+                                Repository.clone_repo_path(options)
+                              end
       end
 
     end

@@ -35,6 +35,14 @@ module Katello
       prefix + custom_content_path(product, repo_label)
     end
 
+    def self.custom_docker_repo_path(environment, product, repo_label)
+      if [environment, product, repo_label].any?(&:nil?)
+        return nil # can't generate valid path
+      end
+      parts = [environment.organization.label, product.label, repo_label]
+      parts.map { |x| x.gsub(/[^-\w]/, "_") }.join("-").downcase
+    end
+
     def self.custom_content_path(product, repo_label)
       parts = []
       # We generate repo path only for custom product content. We add this
@@ -291,11 +299,15 @@ module Katello
 
       def add_repo(label, name, url, repo_type, unprotected = false, gpg = nil, checksum_type = nil)
         unprotected = unprotected.nil? ? false : unprotected
-
+        rel_path = if repo_type == 'docker'
+                     Glue::Pulp::Repos.custom_docker_repo_path(self.library, self, label)
+                   else
+                     Glue::Pulp::Repos.custom_repo_path(self.library, self, label)
+                   end
         Repository.new(:environment => self.organization.library,
                        :product => self,
                        :pulp_id => repo_id(label),
-                       :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, label),
+                       :relative_path => rel_path,
                        :arch => arch,
                        :name => name,
                        :label => label,
