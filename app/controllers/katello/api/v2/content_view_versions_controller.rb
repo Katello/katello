@@ -26,6 +26,7 @@ module Katello
     def index
       versions = @view.versions.where(params.permit(:version))
       versions = versions.in_environment(@environment) if @environment
+      versions = versions.includes(:content_view).includes(:environments).includes(:composite_content_views).includes(:history => :task)
 
       collection = {:results  => versions.order('version desc'),
                     :subtotal => versions.count,
@@ -35,7 +36,7 @@ module Katello
       params[:sort_by] = 'version'
       params[:sort_order] = 'desc'
 
-      respond(:collection => collection)
+      respond(:collection => collection, :layout => 'index')
     end
 
     api :GET, "/content_view_versions/:id", N_("Show content view version")

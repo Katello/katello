@@ -1,0 +1,12 @@
+{
+  "total": <%= @collection[:total] %>,
+  "subtotal": <%= @collection[:subtotal] %>,
+  "page": <%= @collection[:page] || 0 %>,
+  "per_page": "<%= @collection[:per_page].try(:html_safe) %>",
+  "search": "<%= params[:search].try(:html_safe) %>",
+  "sort": {
+    "by": "<%= params[:sort_by].try(:html_safe) %>",
+    "order": "<%= params[:sort_order].try(:html_safe) %>"
+  },
+  "results": <%= yield %>
+}
