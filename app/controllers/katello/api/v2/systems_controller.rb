@@ -200,6 +200,7 @@ module Katello
     param :id, String, :desc => N_("UUID of the content host"), :required => true
     param :content_view_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Content View"), :required => false
     param :environment_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Environment"), :required => false
+    param_group :search, Api::V2::ApiController
     def errata
       if params[:content_view_id] && params[:environment_id]
         find_content_view
