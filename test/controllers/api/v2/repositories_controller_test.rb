@@ -28,6 +28,7 @@ module Katello
       @repository = Repository.find(katello_repositories(:fedora_17_unpublished))
       @redhat_repository = katello_repositories(:rhel_6_x86_64)
       @product = katello_products(:fedora)
+      @view = ContentView.find(katello_content_views(:library_view))
     end
 
     def permissions
@@ -50,6 +51,17 @@ module Katello
 
     def test_index
       get :index, :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+    end
+
+    def test_index_with_content_view_id
+      expectation = @controller.expects(:item_search) do |_, _, options|
+        options[:term].includes?(:content_view_ids)
+      end
+      expectation.returns({})
+      get :index, :content_view_id => @view.id, :organization_id => @organization.id
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
