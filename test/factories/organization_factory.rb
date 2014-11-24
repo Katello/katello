@@ -12,7 +12,7 @@ FactoryGirl.define do
     end
 
     trait :with_library do
-      library
+      association :library, :factory => :katello_library
     end
 
     factory :acme_corporation,  :traits => [:acme_corporation]
