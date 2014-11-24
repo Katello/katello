@@ -126,7 +126,6 @@ Requires: %{?scl_prefix}rubygem-apipie-rails >= 0.1.1
 Requires: %{?scl_prefix}rubygem-maruku
 Requires: %{?scl_prefix}rubygem-runcible >= 1.3.0
 Requires: %{?scl_prefix}rubygem-anemone
-Requires: %{?scl_prefix}rubygem-sass-rails
 Requires: %{?scl_prefix}rubygem-less-rails
 Requires: %{?scl_prefix}rubygem-compass-rails
 Requires: %{?scl_prefix}rubygem-compass-960-plugin
@@ -138,6 +137,7 @@ Requires: %{?scl_prefix}rubygem-strong_parameters
 Requires: %{?scl_prefix}rubygem-qpid_messaging >= 0.26.1
 Requires: %{?scl_prefix}rubygem-qpid_messaging <= 0.28.1
 BuildRequires: foreman >= 1.3.0
+BuildRequires: foreman-assets >= 1.7.0
 BuildRequires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
 BuildRequires: %{?scl_prefix}rubygem-bastion
 BuildRequires: %{?scl_prefix}rubygem-sqlite3
@@ -154,7 +154,6 @@ BuildRequires: %{?scl_prefix}rubygem-apipie-rails >= 0.1.1
 BuildRequires: %{?scl_prefix}rubygem-maruku
 BuildRequires: %{?scl_prefix}rubygem-runcible >= 1.3.0
 BuildRequires: %{?scl_prefix}rubygem-anemone
-BuildRequires: %{?scl_prefix}rubygem-sass-rails
 BuildRequires: %{?scl_prefix}rubygem-less-rails
 BuildRequires: %{?scl_prefix}rubygem-compass-rails
 BuildRequires: %{?scl_prefix}rubygem-compass-960-plugin
@@ -204,7 +203,6 @@ export GEM_PATH=%{gem_dir}:%{buildroot}%{gem_dir}
 cat <<GEMFILE > ./bundler.d/%{gem_name}.rb
 group :katello do
   gem '%{gem_name}'
-  gem 'sass-rails'
 end
 GEMFILE
 
@@ -223,7 +221,6 @@ mkdir -p %{buildroot}%{foreman_bundlerd_dir}
 cat <<GEMFILE > %{buildroot}%{foreman_bundlerd_dir}/%{gem_name}.rb
 group :katello do
   gem '%{gem_name}'
-  gem 'sass-rails'
 end
 GEMFILE
 
