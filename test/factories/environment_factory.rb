@@ -14,14 +14,14 @@ FactoryGirl.define do
       sequence(:label) { |n| "library_label_#{n}" }
       library true
 
-      after_build do |lib|
+      after(:build) do |lib|
         lib.organization.library = lib
       end
     end
     factory :katello_library, :traits => [:library]
 
     trait :with_library do
-      after_build do |env|
+      after(:build) do |env|
         unless env.library || env.prior
           library = FactoryGirl.build(:library, :organization => env.organization)
           env.priors = [library]
