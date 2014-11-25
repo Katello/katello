@@ -203,6 +203,7 @@ export GEM_PATH=%{gem_dir}:%{buildroot}%{gem_dir}
 cat <<GEMFILE > ./bundler.d/%{gem_name}.rb
 group :katello do
   gem '%{gem_name}'
+  gem 'less-rails'
 end
 GEMFILE
 
@@ -212,6 +213,12 @@ cp %{buildroot}%{gem_instdir}/config/katello_defaults.yml %{buildroot}%{gem_inst
 export BUNDLER_EXT_NOSTRICT=1
 export BUNDLER_EXT_GROUPS="default assets katello"
 %{scl_rake} assets:precompile:katello RAILS_ENV=production --trace
+
+cat <<GEMFILE > ./bundler.d/%{gem_name}.rb
+group :katello do
+  gem '%{gem_name}'
+end
+GEMFILE
 
 popd
 rm -rf ./usr
