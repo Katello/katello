@@ -16,7 +16,27 @@ module Katello
     include Katello::Concerns::Api::V2::RepositoryContentController
     include Katello::Concerns::Api::V2::RepositoryDbContentController
 
+    api :GET, "/errata", N_("List errata")
+    param :content_view_version_id, :identifier, :desc => N_("content view version identifier")
+    param :content_view_filter_id, :identifier, :desc => N_("content view filter identifier")
+    param :repository_id, :number, :desc => N_("repository identifier")
+    param :environment_id, :number, :desc => N_("environment identifier")
+    param :cve, String, :desc => N_("CVE identifier")
+    param_group :search, Api::V2::ApiController
+    def index
+      super
+    end
+
+    def custom_index_relation(collection)
+      collection = filter_by_cve(params[:cve], collection) if params[:cve]
+      collection
+    end
+
     private
+
+    def filter_by_cve(cve, collection)
+      collection.joins(:cves).where('katello_erratum_cves.cve_id' => cve)
+    end
 
     def filter_by_content_view_filter(filter)
       resource_class.where(:errata_id => filter.erratum_rules.pluck(:errata_id))

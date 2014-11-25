@@ -55,6 +55,7 @@ module Katello
         collection = filter_by_content_view_version(@version, collection) if @version
         collection = filter_by_environment(@environment, collection) if @environment
         collection = filter_by_repos(Repository.readable.in_organization(@organization), collection) if @organization
+        collection = self.custom_index_relation(collection) if self.respond_to?(:custom_index_relation)
         collection
       end
 
