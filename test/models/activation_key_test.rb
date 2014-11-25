@@ -74,5 +74,21 @@ module Katello
       assert_equal new_key.max_content_hosts, @dev_key.max_content_hosts
     end
 
+    test "unlimited hosts requires no max hosts" do
+      key1 = ActivationKey.find(katello_activation_keys(:simple_key))
+      org = key1.organization
+      new_key = ActivationKey.new(:name => "JarJar", :organization => org)
+      new_key.unlimited_content_hosts = false
+      new_key.max_content_hosts = 100
+      assert new_key.valid?
+
+      new_key.unlimited_content_hosts = true
+      new_key.max_content_hosts = nil
+      assert new_key.valid?
+
+      new_key.max_content_hosts = 100
+      assert !new_key.valid?
+    end
+
   end
 end
