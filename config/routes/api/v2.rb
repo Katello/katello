@@ -313,6 +313,8 @@ Katello::Engine.routes.draw do
           api_resources :puppet_modules, :only => [:index, :show] do
             get :search, :on => :collection
           end
+          api_resources :docker_images, :only => [:index, :show]
+          api_resources :docker_tags, :only => [:index, :show]
 
           api_resources :content_uploads, :controller => :content_uploads, :only => [:create, :destroy, :update]
 
