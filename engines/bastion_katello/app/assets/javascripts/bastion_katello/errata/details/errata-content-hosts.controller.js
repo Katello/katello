@@ -19,14 +19,15 @@
  * @requires Nutupane
  * @requires ContentHost
  * @requires ContentHostBulkAction
+ * @requires Environment
  * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality for the available host collection details action pane.
  */
 angular.module('Bastion.errata').controller('ErrataContentHostsController',
-    ['$scope', 'translate', 'Nutupane', 'ContentHost', 'ContentHostBulkAction', 'CurrentOrganization',
-    function ($scope, translate, Nutupane, ContentHost, ContentHostBulkAction, CurrentOrganization) {
+    ['$scope', 'translate', 'Nutupane', 'ContentHost', 'ContentHostBulkAction', 'Environment', 'CurrentOrganization',
+    function ($scope, translate, Nutupane, ContentHost, ContentHostBulkAction, Environment, CurrentOrganization) {
         var nutupane, params;
 
         $scope.successMessages = [];
@@ -44,11 +45,21 @@ angular.module('Bastion.errata').controller('ErrataContentHostsController',
         $scope.nutupane = nutupane;
         $scope.detailsTable = nutupane.table;
 
+        Environment.queryUnpaged(function (response) {
+            $scope.environments = response.results;
+        });
+
         $scope.toggleAvailable = function () {
             nutupane.table.params['erratum_restrict_available'] = $scope.errata.showAvailable;
             nutupane.refresh();
         };
-        
+
+        $scope.selectEnvironment = function (environmentId) {
+            params['environment_id'] = environmentId;
+            nutupane.setParams(params);
+            nutupane.refresh();
+        };
+
         $scope.applyErrata = function () {
             var params = $scope.nutupane.getAllSelectedResults(),
                 success, error;
