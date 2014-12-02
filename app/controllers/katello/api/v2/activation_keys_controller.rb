@@ -23,7 +23,7 @@ module Katello
     before_filter :load_search_service, :only => [:show, :index, :available_host_collections]
     before_filter :search_for_activation_key, :only => [:show]
 
-    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level content_view_environment))
+    wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach content_view_environment))
 
     api :GET, "/activation_keys", N_("List activation keys")
     api :GET, "/environments/:environment_id/activation_keys"
@@ -68,6 +68,7 @@ module Katello
     param :unlimited_content_hosts, :bool, :desc => N_("can the activation key have unlimited content hosts")
     param :release_version, String, :desc => N_("content release version")
     param :service_level, String, :desc => N_("service level")
+    param :auto_attach, :bool, :desc => N_("auto attach subscriptions upon registration")
     def update
       @activation_key.update_attributes!(activation_key_params)
       respond_for_show(:resource => @activation_key)
@@ -304,6 +305,7 @@ module Katello
                                                           :content_view_id,
                                                           :release_version,
                                                           :service_level,
+                                                          :auto_attach,
                                                           :max_content_hosts,
                                                           :unlimited_content_hosts,
                                                           :content_overrides => [],

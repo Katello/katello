@@ -54,7 +54,7 @@ module Katello
 
       def update_activation_key
         Rails.logger.debug "Updating an activation key in candlepin: #{name}"
-        Resources::Candlepin::ActivationKey.update(self.cp_id, self.release_version, @service_level)
+        Resources::Candlepin::ActivationKey.update(self.cp_id, self.release_version, @service_level, self.auto_attach)
       rescue => e
         Rails.logger.error _("Failed to update candlepin activation_key %s") % "#{self.name}: #{e}, #{e.backtrace.join("\n")}"
         raise e
