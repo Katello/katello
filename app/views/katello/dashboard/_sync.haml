@@ -18,11 +18,11 @@
           - else
             .col_2
               - if product.sync_status.state == Katello::PulpSyncStatus::ERROR
-                .error_icon.fl
+                .icon-remove.fl
                   &nbsp;
                 #{_("Error")}
               - elsif product.sync_status.state == Katello::PulpSyncStatus::FINISHED
-                .check_icon.fl
+                .icon-ok.fl
                   &nbsp;
                 #{_("Success")}
               - elsif product.sync_status.state == Katello::PulpSyncStatus::CANCELED

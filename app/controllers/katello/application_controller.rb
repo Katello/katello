@@ -22,7 +22,6 @@ module Katello
 
     clear_helpers
 
-    helper UIAlchemy::TranslationHelper
     helper ::ApplicationHelper
     helper ::TaxonomyHelper
     before_filter :set_gettext_locale

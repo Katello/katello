@@ -19,9 +19,6 @@ require 'foreman_docker'
 require "runcible"
 
 require "haml-rails"
-require "compass-rails"
-require "ninesixty"
-require "ui_alchemy-rails"
 require "deface"
 require 'jquery-ui-rails'
 require 'qpid_messaging'

@@ -816,7 +816,7 @@ KT.comparison_grid.templates = (function(i18n) {
 
             if ( data['hover_details'] ) {
                 hover_details = $('<span/>', {
-                    'class' : 'details-icon hover_details',
+                    'class' : 'icon-circle hover_details',
                     'original-title' : data['hover_details']
                 });
             }

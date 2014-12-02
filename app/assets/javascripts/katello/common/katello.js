@@ -314,7 +314,6 @@ $(document).ready(function (){
     $(".helptip-close").live('click', KT.helptip.handle_open);
 
     // Add a handler for ellipsis
-    $(".one-line-ellipsis").ellipsis(true);
     $(".tipsify").tipsy({ live : true, gravity: 's', fade: true, delayIn : 350 });
     $(".tipsify-west").tipsy({ gravity: 'w', hoverable : 'true' });
 
@@ -336,7 +335,6 @@ $(window).ready(function(){
       $(this).hide();
       $('body').css('cursor', 'default');
     });
-    $().UItoTop({ easingType: 'easeOutQuart' });
 
     //allow all buttons with class .button to be clicked via enter or space button
     $('.button').live('keyup', function(e){

@@ -33,13 +33,13 @@ $grid_row_level_2-color:                    saturate(lighten($primary_color, 66%
 $grid_row_level_3-color:                    saturate(lighten($primary_color, 70%), 17%);
 $grid_cell_hover-background-color:          #585E64;
 $grid_cell_hover_link-color:                lighten($primary_color, 40%);
-//@mixin grid_row_level_1-color { background: #91CFED; @include background-image(linear-gradient(#91CFED, #77C4E9)); }
+//@mixin grid_row_level_1-color { background: #91CFED; background-image: linear-gradient(#91CFED, #77C4E9); }
 @mixin grid_row_level_1-color {
   background: saturate(lighten($primary_color, 72%), 3%);
-  @include background-image(linear-gradient(lighten($primary_color, 64%), lighten($primary_color, 58%)));
+  background-image: linear-gradient(lighten($primary_color, 64%), lighten($primary_color, 58%));
 }
 @mixin collapse_button-background-color {
-    @include background-image(linear-gradient(#F1F1F1, #C9C9C9));
+  background-image: linear-gradient(#F1F1F1, #C9C9C9);
 }
 
 .no_border { border: none !important; }
@@ -133,17 +133,6 @@ table.changelog {
   @include border-radius(3px);
   @include widget-background-color;
 
-  .help-icon {
-    background: $details_icon_grey;
-    @extend .errata_icon;
-    float: right;
-    &:hover { background: $details_icon_black; }
-    padding: 0px;
-    margin-left: 0;
-    margin-top: 5px;
-    margin-right: 3px;
-  }
-
   header {
     height: $browse_box_header-height;
     border-bottom: 1px solid $comparison_grid-border-color;
@@ -171,10 +160,10 @@ table.changelog {
     min-height: $browse_box-height - $browse_box_header-height - 5;
     border: 2px solid $widget-border-color;
 
-    .primary label { 
+    .primary label {
       font-weight: normal;
-      color: #333;      
-    }    
+      color: #333;
+    }
 
     fieldset:first-child {
       margin: 20px 6px 20px 8px;
@@ -192,7 +181,7 @@ table.changelog {
         width: 148px;
         border-color: $widget-border-color;
         margin-left: 6px;
-        @include box-shadow(inset 0 0 1px rgba(0, 0, 0, 0.05));
+        box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.05);
         padding: 4px;
 
         &:focus { padding: 4px }
@@ -201,7 +190,7 @@ table.changelog {
       div:nth-child(2) {
         border: 1px solid $comparison_grid-border-color;
         @include border-radius(3px 3px 0 0);
-        @include background-image(linear-gradient(#F7F7F7, #F9F9F9));
+        background-image: linear-gradient(#F7F7F7, #F9F9F9);
       }
 
       div {
@@ -244,7 +233,6 @@ table.changelog {
   position: relative;
   @include border-radius(3px);
   @include widget-background-color;
-  font-family: $screenfont;
 
   .icon-chevron-down, .icon-chevron-right {
     padding: 0 4px;
@@ -352,7 +340,7 @@ table.changelog {
         right: 0;
         z-index: 1;
         height: 35px;
-        @include background-image(linear-gradient(right, rgba(255, 255, 255, 1) 40%, rgba(255, 255, 255, 0) 100%));
+        background-image: linear-gradient(right, rgba(255, 255, 255, 1) 40%, rgba(255, 255, 255, 0) 100%);
       }
 
 

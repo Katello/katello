@@ -56,11 +56,11 @@ module Katello
     def content_view_history_class(history)
       case history.status
       when ContentViewHistory::IN_PROGRESS
-        "gears_icon"
+        "icon-gears"
       when ContentViewHistory::FAILED
-        "error_icon"
+        "icon-remove"
       when ContentViewHistory::SUCCESSFUL
-        "check_icon"
+        "icon-ok"
       end
     end
 
@@ -123,11 +123,11 @@ module Katello
     def errata_type_class(errata)
       case errata.errata_type
       when Erratum::SECURITY
-        return "security_icon"
+        return "icon-warning-sign"
       when Erratum::ENHANCEMENT
-        return "enhancement_icon"
+        return "icon-plus-sign-alt"
       when Erratum::BUGZILLA
-        return "bugzilla_icon"
+        return "icon-bug"
       end
     end
 
@@ -190,7 +190,7 @@ module Katello
       column.each do |widget|
         has_dropbutton = dropbutton_quantity?(widget.name)
         if widget.content_path
-          output += dashboard_ajax_entry(widget.title, widget.name, widget.content_path, "widget", has_dropbutton)
+          output += dashboard_ajax_entry(widget.title, widget.name, widget.content_path, "", has_dropbutton)
         else
           output += dashboard_entry(widget.title, widget.name, has_dropbutton)
         end

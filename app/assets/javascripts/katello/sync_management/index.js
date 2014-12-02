@@ -11,5 +11,5 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "alchemy/jquery/plugins/jquery.treeTable"
+//= require "katello/jquery.treeTable"
 //= require "katello/sync_management/sync_management"

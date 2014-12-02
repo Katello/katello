@@ -109,8 +109,6 @@ Requires: %{?scl_prefix}rubygem-rails
 Requires: %{?scl_prefix}rubygem-json
 Requires: %{?scl_prefix}rubygem-oauth
 Requires: %{?scl_prefix}rubygem-rest-client
-Requires: %{?scl_prefix}rubygem-foreigner => 1.4.2
-Requires: %{?scl_prefix}rubygem-foreigner < 1.5
 Requires: %{?scl_prefix}rubygem-uuidtools
 Requires: %{?scl_prefix}rubygem-rabl
 Requires: %{?scl_prefix}rubygem-tire => 0.6.2
@@ -127,11 +125,8 @@ Requires: %{?scl_prefix}rubygem-maruku
 Requires: %{?scl_prefix}rubygem-runcible >= 1.3.0
 Requires: %{?scl_prefix}rubygem-anemone
 Requires: %{?scl_prefix}rubygem-less-rails
-Requires: %{?scl_prefix}rubygem-compass-rails
-Requires: %{?scl_prefix}rubygem-compass-960-plugin
 Requires: %{?scl_prefix}rubygem-haml-rails
 Requires: %{?scl_prefix}rubygem-jquery-ui-rails
-Requires: %{?scl_prefix}rubygem-ui_alchemy-rails = 1.0.12
 Requires: %{?scl_prefix}rubygem-deface < 1.0.0
 Requires: %{?scl_prefix}rubygem-strong_parameters
 Requires: %{?scl_prefix}rubygem-qpid_messaging >= 0.26.1
@@ -155,11 +150,8 @@ BuildRequires: %{?scl_prefix}rubygem-maruku
 BuildRequires: %{?scl_prefix}rubygem-runcible >= 1.3.0
 BuildRequires: %{?scl_prefix}rubygem-anemone
 BuildRequires: %{?scl_prefix}rubygem-less-rails
-BuildRequires: %{?scl_prefix}rubygem-compass-rails
-BuildRequires: %{?scl_prefix}rubygem-compass-960-plugin
 BuildRequires: %{?scl_prefix}rubygem-haml-rails
 BuildRequires: %{?scl_prefix}rubygem-jquery-ui-rails
-BuildRequires: %{?scl_prefix}rubygem-ui_alchemy-rails = 1.0.12
 BuildRequires: %{?scl_prefix}rubygem-deface < 1.0.0
 BuildRequires: %{?scl_prefix}rubygem(uglifier) >= 1.0.3
 BuildRequires: %{?scl_prefix}rubygem-strong_parameters

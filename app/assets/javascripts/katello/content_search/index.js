@@ -11,8 +11,10 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "alchemy/jquery/plugins/chosen.jquery"
+//= require "katello/chosen.jquery"
+//= require "katello/jquery.hoverIntent"
+//= require "katello/common/env_select_scroll"
+//= require "katello/widgets/path_selector"
 //= require "katello/widgets/comparison_grid"
 //= require "katello/content_search/content_search"
 //= require "katello/widgets/auto_complete"
-//= require "alchemy/jquery/plugins/jquery.trunk8"

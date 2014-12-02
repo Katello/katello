@@ -112,10 +112,7 @@ KT.dashboard = (function(){
                 parent.parent().parent().find('.dropbutton').fadeIn();
 
                 // Add a handler for ellipsis
-                parent.find(".one-line-ellipsis").ellipsis();
-
-                KT.common.jscroll_init(parent.find('.scroll-pane'));
-                KT.common.jscroll_resize(parent.find('.jspPane'));
+                parent.find(".one-line-ellipsis").trunk8({lines: 1});
 
                 var proc = KT.dashboard.widget_map[id];
                 if (proc) {
@@ -128,14 +125,12 @@ KT.dashboard = (function(){
         $("#dashboard_errata").delegate(".collapsed", "click", function() {
             var btn = $(this);
             btn.parents(".errata_item").siblings().show();
-            KT.common.jscroll_init($("#dashboard_errata").find('.scroll-pane'));
             btn.removeClass("collapsed").addClass("expanded");
         });
 
         $("#dashboard_errata").delegate(".expanded", "click", function() {
             var btn = $(this);
             btn.parents(".errata_item").siblings().hide();
-            KT.common.jscroll_init($("#dashboard_errata").find('.scroll-pane'));
             btn.removeClass("expanded").addClass("collapsed");
         });
     },
