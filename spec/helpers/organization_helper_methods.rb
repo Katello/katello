@@ -48,7 +48,7 @@ module Katello
                                    :organization => env.organization)
 
         version = ContentViewVersion.new(:content_view => view,
-                                         :version => 1)
+                                         :major => 1)
         view.add_environment(env, version)
         version.save!
         view.save!

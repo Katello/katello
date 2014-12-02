@@ -36,7 +36,8 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         $scope.taskTypes = {
             publish: "Actions::Katello::ContentView::Publish",
             promotion: "Actions::Katello::ContentView::Promote",
-            deletion:  "Actions::Katello::ContentView::Remove"
+            deletion:  "Actions::Katello::ContentView::Remove",
+            incrementalUpdate:  "Actions::Katello::ContentView::IncrementalUpdates"
         };
 
         $scope.copy = function (newName) {

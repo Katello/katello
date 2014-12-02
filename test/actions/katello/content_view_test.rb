@@ -45,12 +45,12 @@ module ::Actions::Katello::ContentView
         cve.environment.must_equal environment
         cve.content_view.must_equal content_view
       end
-      content_view_environment.content_view_version.version.must_equal 1
+      content_view_environment.content_view_version.version.must_equal "1.0"
 
       version = content_view.create_new_version
       action = create_and_plan_action(action_class, version, environment)
       refute_action_planed(action, EnvironmentCreate)
-      content_view_environment.content_view_version.version.must_equal 2
+      content_view_environment.content_view_version.version.must_equal "2.0"
     end
   end
 
@@ -133,7 +133,7 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans' do
-      version = Katello::ContentViewVersion.create!(:version => 2,
+      version = Katello::ContentViewVersion.create!(:major => 2,
                                                     :content_view => content_view)
       task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
       action.stubs(:task).returns(task)
@@ -219,13 +219,32 @@ module ::Actions::Katello::ContentView
                                           :organization => content_view.organization
                                          )
       version = Katello::ContentViewVersion.create!(:content_view => view,
-                                                    :version => 1
+                                                    :major => 1
                                                    )
 
       action.expects(:action_subject).with(view.reload)
       action.expects(:plan_self)
       plan_action(action, view)
       assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version, {})
+    end
+  end
+
+  class IncrementalUpdatesTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::IncrementalUpdates }
+
+    let(:content_view) do
+      katello_content_views(:library_dev_view)
+    end
+
+    let(:library) do
+      katello_environments(:library)
+    end
+
+    it 'plans' do
+      plan_action(action, [{:content_view_version => content_view.version(library), :environments => [library]}],
+                  {:errata_ids => ["FOO"]}, true, "BadDescription")
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, content_view.version(library), [library],
+                                {:errata_ids => ["FOO"]}, true, "BadDescription")
     end
   end
 end

@@ -57,7 +57,9 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
 
             if (!env.prior) {
                 env.prior = {};
-            } else if (envIds.indexOf(env.id) !== -1) {
+            }
+
+            if (envIds.indexOf(env.id) !== -1) {
                 //if version is already promoted to the environment
                 enabled = false;
             } else if (env.library) {

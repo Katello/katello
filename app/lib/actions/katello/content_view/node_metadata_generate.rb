@@ -19,7 +19,7 @@ module Actions
         end
 
         def humanized_name
-          _("Generate Capsule Metadata and Synchronize Capsules for %s") % input[:environment_name]
+          _("Generate and Synchronize Capsule Metadata for %s") % input[:environment_name]
         end
 
         def plan(content_view, environment)

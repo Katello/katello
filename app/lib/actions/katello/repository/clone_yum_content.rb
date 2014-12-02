@@ -15,7 +15,10 @@ module Actions
     module Repository
       class CloneYumContent < Actions::Base
         # rubocop:disable MethodLength
-        def plan(source_repo, target_repo, filters, purge_empty_units)
+        def plan(source_repo, target_repo, filters, purge_empty_units, options = {})
+          generate_metadata = options.fetch(:generate_metadata, true)
+          index_content = options.fetch(:index_content, true)
+
           copy_clauses = nil
           remove_clauses = nil
           process_errata_and_groups = false
@@ -31,6 +34,9 @@ module Actions
           sequence do
             if filters.empty? || copy_clauses
               plan_copy(Pulp::Repository::CopyRpm, source_repo, target_repo, copy_clauses)
+              process_errata_and_groups = true
+            elsif options[:simple_clone]
+              plan_copy(Pulp::Repository::CopyRpm, source_repo, target_repo)
               process_errata_and_groups = true
             end
             if remove_clauses
@@ -50,8 +56,8 @@ module Actions
               plan_action(Pulp::Repository::PurgeEmptyPackageGroups, :pulp_id => target_repo.pulp_id)
             end
 
-            plan_action(Katello::Repository::MetadataGenerate, target_repo, filters.empty? ? source_repo : nil)
-            plan_action(ElasticSearch::Repository::IndexContent, id: target_repo.id)
+            plan_action(Katello::Repository::MetadataGenerate, target_repo, filters.empty? ? source_repo : nil) if generate_metadata
+            plan_action(ElasticSearch::Repository::IndexContent, id: target_repo.id) if index_content
           end
         end
 

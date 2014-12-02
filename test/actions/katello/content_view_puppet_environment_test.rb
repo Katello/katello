@@ -60,7 +60,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
   end
 
   class CloneToEnvironmentTest < TestBase
-    let(:action_class) { ::Actions::Katello::ContentViewPuppetEnvironment::CloneToEnvironment }
+    let(:action_class) { ::Actions::Katello::ContentViewPuppetEnvironment::Clone }
     let(:action) { create_action action_class }
     let(:dev) { katello_environments(:dev) }
     let(:dev_puppet_env) { katello_content_view_puppet_environments(:dev_view_puppet_environment) }
@@ -69,7 +69,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
 
     it 'plans with existing puppet environment' do
 
-      plan_action action, puppet_env.content_view_version, dev
+      plan_action action, puppet_env.content_view_version, :environment => dev
 
       assert_action_planed_with action, ::Actions::Katello::ContentViewPuppetEnvironment::Clear, dev_puppet_env
       refute_action_planed action, ::Actions::Katello::ContentViewPuppetEnvironment::Create
@@ -84,7 +84,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
 
     it 'plans capsule related actions' do
       capsule_content.add_lifecycle_environment(dev)
-      plan_action action, puppet_env.content_view_version, dev
+      plan_action action, puppet_env.content_view_version, :environment => dev
       assert_action_planed_with action, ::Actions::Katello::CapsuleContent::AddRepository do |(current_capsule_content, repo)|
         current_capsule_content.capsule.id == capsule_content.capsule.id &&
             dev_puppet_env == repo
@@ -95,7 +95,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
       dev_puppet_env.delete
       action.execution_plan.stub_planned_action(::Actions::Katello::ContentViewPuppetEnvironment::Create)
 
-      plan_action action, puppet_env.content_view_version, dev
+      plan_action action, puppet_env.content_view_version, :environment => dev
 
       assert_action_planed action, ::Actions::Katello::ContentViewPuppetEnvironment::Create
       refute_action_planed action, ::Actions::Katello::ContentViewPuppetEnvironment::Clear

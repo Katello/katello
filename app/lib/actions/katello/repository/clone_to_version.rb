@@ -17,15 +17,17 @@ module Actions
         # allows accessing the build object from the superior action
         attr_accessor :new_repository
 
-        def plan(repository, content_view_version)
+        def plan(repository, content_view_version, incremental = false)
           content_view = content_view_version.content_view
-          filters = content_view.filters.applicable(repository)
+          filters = incremental ? [] : content_view.filters.applicable(repository)
           self.new_repository = repository.build_clone(content_view: content_view,
                                                        version: content_view_version)
           sequence do
             plan_action(Repository::Create, new_repository, true)
+
             if new_repository.yum?
-              plan_action(Repository::CloneYumContent, repository, new_repository, filters, true)
+              plan_action(Repository::CloneYumContent, repository, new_repository, filters, !incremental,
+                          :generate_metadata => !incremental, :index_content => !incremental, :simple_clone => incremental)
             elsif new_repository.docker?
               plan_action(Repository::CloneDockerContent, repository, new_repository)
             end

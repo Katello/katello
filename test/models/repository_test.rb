@@ -245,7 +245,7 @@ module Katello
                                         :version => @fedora_17_x86_64.content_view_version,
                                         :content_view => @fedora_17_x86_64.content_view
                                        )
-      assert_equal "/content_views/org_default_label/1/library/fedora_17_label", path
+      assert_equal "/content_views/org_default_label/1.0/library/fedora_17_label", path
 
       path = Repository.clone_repo_path(:repository => @fedora_17_x86_64,
                                         :environment => @fedora_17_x86_64.organization.library,
@@ -264,7 +264,7 @@ module Katello
                                                :version => @repo.content_view_version,
                                                :content_view => @repo.content_view
                                                )
-      assert_equal "empty_organization-org_default_label-1-fedora_label-dockeruser_repo", path
+      assert_equal "empty_organization-org_default_label-1.0-fedora_label-dockeruser_repo", path
       path = Repository.clone_docker_repo_path(:repository => @repo,
                                                :environment => @repo.organization.library,
                                                :content_view => @repo.content_view

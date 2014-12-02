@@ -13,10 +13,12 @@
 module Katello
   class Api::V2::ContentViewVersionsController < Api::V2::ApiController
     before_filter :find_content_view_version, :only => [:show, :promote, :destroy]
-    before_filter :find_content_view
+    before_filter :find_content_view, :except => [:incremental_update]
     before_filter :find_environment, :only => [:promote, :index]
     before_filter :authorize_promotable, :only => [:promote]
     before_filter :authorize_destroy, :only => [:destroy]
+
+    before_filter :find_version_environments, :only => [:incremental_update]
 
     api :GET, "/content_view_versions", N_("List content view versions")
     api :GET, "/content_views/:content_view_id/content_view_versions", N_("List content view versions")
@@ -24,16 +26,18 @@ module Katello
     param :environment_id, :identifier, :desc => N_("Filter versions by environment"), :required => false
     param :version, String, :desc => N_("Filter versions by version number"), :required => false
     def index
-      versions = @view.versions.where(params.permit(:version))
+      version_number = params.permit(:version)[:version]
+      versions = @view.versions
+      versions = versions.for_version(version_number) if version_number
       versions = versions.in_environment(@environment) if @environment
       versions = versions.includes(:content_view).includes(:environments).includes(:composite_content_views).includes(:history => :task)
 
-      collection = {:results  => versions.order('version desc'),
+      collection = {:results  => versions.order('major desc, minor desc'),
                     :subtotal => versions.count,
                     :total    => versions.count
                    }
 
-      params[:sort_by] = 'version'
+      params[:sort_by] = 'major'
       params[:sort_order] = 'desc'
 
       respond(:collection => collection, :layout => 'index')
@@ -63,6 +67,25 @@ module Katello
       respond_for_async :resource => task
     end
 
+    api :POST, "/content_view_versions/incremental_update", N_("Perform an Incremental Update on one or more Content View Versions")
+    param :content_view_version_environments, Array do
+      param :content_view_version_id, :identifier, :desc => N_("Content View Version Ids to perform an incremental update on.")
+      param :environment_ids, Array, :desc => N_("The list of environments to promote the specified Content View Version to (replacing the older version).")
+    end
+    param :description, String, :desc => N_("The description for the new generated Content View Versions")
+    param :resolve_dependencies, :bool, :desc => N_("If true, when adding the specified errata or packages, any needed dependencies will be copied as well.")
+    param :add_content, Hash  do
+      param :errata_ids, Array, :desc => "Errata uuids to copy into the new versions."
+      param :package_ids, Array, :desc => "Package uuids to copy into the new versions."
+      param :puppet_module_ids, Array, :desc => "Puppet Modules to copy into the new versions."
+    end
+    def incremental_update
+      validate_content(params[:add_content])
+      task = async_task(::Actions::Katello::ContentView::IncrementalUpdates, @version_environments, params[:add_content],
+                        params[:resolve_dependencies], params[:description])
+      respond_for_async :resource => task
+    end
+
     private
 
     def find_content_view_version
@@ -76,9 +99,50 @@ module Katello
       end
     end
 
+    def find_version_environments
+      list = params[:content_view_version_environments]
+      fail _("At least one Content View Version must be specified") if list.empty?
+
+      @version_environments = []
+      list.each do |combination|
+        version_environment = {
+          :content_view_version => ContentViewVersion.find(combination[:content_view_version_id]),
+          :environments =>  KTEnvironment.where(:id => combination[:environment_ids])
+        }
+
+        view = version_environment[:content_view_version].content_view
+        return deny_access(_("You are not allowed to publish Content View %s") % view.name) unless view.publishable? && view.promotable_or_removable?
+
+        not_promotable = version_environment[:environments].select { |env| !env.promotable_or_removable? }
+        unless not_promotable.empty?
+          return deny_access(_("You are not allowed to promote to Environments %s") % un_promotable.map(&:name).join(', '))
+        end
+
+        not_found = combination[:environment_ids].map(&:to_s) - version_environment[:environments].map { |env| env.id.to_s }
+        fail _("Could not find Environment with ids: %s") % not_found.join(', ') unless not_found.empty?
+        @version_environments << version_environment
+      end
+    end
+
     def find_environment
       return unless params.key?(:environment_id)
       @environment = KTEnvironment.find(params[:environment_id])
+    end
+
+    def validate_content(content)
+      if content[:errata_ids]
+        errata = Erratum.where(:uuid => content[:errata_ids])
+        not_found = content[:errata_ids] - errata.pluck(:uuid)
+        fail _("Could not find errata with id: %s") % not_found.join(", ") unless not_found.empty?
+      end
+
+      if content[:package_ids]
+        fail _("package_ids is not an array") unless content[:package_ids].is_a?(Array)
+      end
+
+      if content[:puppet_module_ids]
+        fail _("puppet_module_ids is not an array") unless content[:puppet_module_ids].is_a?(Array)
+      end
     end
 
     def authorize_promotable

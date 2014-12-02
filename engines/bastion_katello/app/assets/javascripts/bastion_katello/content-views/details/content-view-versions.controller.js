@@ -55,6 +55,8 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
                 message = translate("Promoted to %s").replace('%s', version['last_event'].environment.name);
             } else if (taskType === taskTypes.publish) {
                 message = translate("Published");
+            } else if (taskType === taskTypes.incrementalUpdate) {
+                message = translate("Incremental Update");
             }
             return message;
         };
