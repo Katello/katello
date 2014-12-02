@@ -27,8 +27,8 @@
  *   within the table.
  */
 angular.module('Bastion.errata').controller('ErrataController',
-    ['$scope', '$location', 'Nutupane', 'Erratum', 'CurrentOrganization',
-    function ($scope, $location, Nutupane, Erratum, CurrentOrganization) {
+    ['$scope', '$location', 'Nutupane', 'Erratum', 'Repository', 'CurrentOrganization', 'translate',
+    function ($scope, $location, Nutupane, Erratum, Repository, CurrentOrganization, translate) {
 
         var params = {
             'organization_id':  CurrentOrganization,
@@ -38,13 +38,34 @@ angular.module('Bastion.errata').controller('ErrataController',
             'paged':            true
         };
 
-        var nutupane = new Nutupane(Erratum, params);
+        var nutupane = $scope.nutupane = new Nutupane(Erratum, params);
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
 
         $scope.table.closeItem = function () {
             $scope.transitionTo('errata.index');
         };
+
+        $scope.repository = {name: translate('All Repositories'), id: 'all'};
+
+        Repository.queryUnpaged({'organization_id': CurrentOrganization, 'content_type': 'yum'}, function (response) {
+            $scope.repositories = [$scope.repository];
+            $scope.repositories = $scope.repositories.concat(response.results);
+        });
+
+        $scope.$watch('repository', function (repository) {
+            var params = nutupane.getParams();
+
+            if (repository.id === 'all') {
+                params['repository_id'] = null;
+                nutupane.setParams(params);
+            } else {
+                params['repository_id'] = repository.id;
+                nutupane.setParams(params);
+            }
+
+            nutupane.refresh();
+        });
 
     }]
 );
