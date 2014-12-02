@@ -257,6 +257,14 @@ module Katello
         end
       end
 
+      def package_group_count
+        self.pulp_repo_facts[:content_unit_counts][:package_group] || 0
+      end
+
+      def puppet_module_count
+        self.pulp_repo_facts[:content_unit_counts][:puppet_module] || 0
+      end
+
       # remove errata and groups from this repo
       # that have no packages
       def purge_empty_groups_errata
