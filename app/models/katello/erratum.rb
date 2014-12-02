@@ -63,6 +63,10 @@ module Katello
         where("#{Katello::SystemRepository.table_name}.repository_id = #{Katello::RepositoryErratum.table_name}.repository_id")
     end
 
+    def systems_unavailable
+      self.systems_applicable.where("#{Katello::System.table_name}.id not in (#{self.systems_available.select("#{Katello::System.table_name}.id").to_sql})")
+    end
+
     def self.available_for_systems(systems)
       Katello::Erratum.joins(:system_errata).joins(:repository_errata).joins("INNER JOIN #{Katello::SystemRepository.table_name} on \
         #{Katello::SystemRepository.table_name}.system_id = #{Katello::SystemErratum.table_name}.system_id").

@@ -26,7 +26,12 @@ angular.module('Bastion.errata').factory('Erratum',
         return BastionResource('/katello/api/v2/errata/:id/',
             {id: '@id', 'sort_by': 'issued', 'sort_order': 'DESC'},
             {
-                autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
+                autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
+                applicableContentHosts: {method: 'GET', transformResponse: function (data) {
+                    var erratum = angular.fromJson(data),
+                        systems = erratum['systems_applicable'];
+                    return {results: systems, subtotal: systems.length, total: systems.length};
+                }}
             }
         );
 
