@@ -192,7 +192,7 @@ module Katello
           end
         end
       rescue => e
-        Rails.logger.error "Autosubscribtion failed, rolling back: #{already_subscribed.inspect}"
+        Rails.logger.error "Autosubscription failed, rolling back: #{already_subscribed.inspect}"
         already_subscribed.each do |entitlement_id|
           begin
             Rails.logger.debug "Rolling back: #{entitlement_id}"
@@ -211,6 +211,12 @@ module Katello
       new_key.attributes = self.attributes.slice("description", "environment_id", "organization_id", "content_view_id", "max_content_hosts", "unlimited_content_hosts")
       new_key.host_collection_ids = self.host_collection_ids
       new_key
+    end
+
+    def subscribe(pool_id, quantity = 1)
+      Resources::Candlepin::ActivationKey.add_pools(self.cp_id, pool_id, quantity)
+    rescue RestClient::ResourceNotFound, RestClient::BadRequest => e
+      raise JSON.parse(e.response)['displayMessage']
     end
 
     private
