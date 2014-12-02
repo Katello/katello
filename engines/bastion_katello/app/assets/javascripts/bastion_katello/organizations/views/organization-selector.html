@@ -1,0 +1,34 @@
+<div class="well col-sm-6 col-sm-offset-3">
+
+  <form name="organizationSelectorForm" class="form-horizontal" novalidate role="form">
+
+    <h1 class="center-header" translate>Select an Organization</h1>
+
+    <p class="center-paragraph" translate>
+      The page you are attempting to access requires selecting a specific organization.
+    </p>
+
+    <p class="center-paragraph" translate>
+      Please select one from the list below and you will be redirected.
+    </p>
+
+    <div class="form-group">
+      <div class="col-sm-5 col-sm-offset-3">
+        <select id="organization"
+                name="organization"
+                class="form-control"
+                ng-model="selectedOrganization.organization"
+                ng-options="organization as organization.name for organization in organizations"
+                tabindex="1">
+          <option value="">Select an Organization</option>
+        </select>
+      </div>
+
+      <div class="col-sm-4">
+        <button class="btn btn-primary" ng-disabled="!selectedOrganization.organization" ng-click="selectOrganization(selectedOrganization.organization)">Select</button>
+      </div>
+    </div>
+
+  </form>
+
+</div>
