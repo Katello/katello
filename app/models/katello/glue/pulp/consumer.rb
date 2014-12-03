@@ -17,8 +17,6 @@ module Katello
       base.send :include, LazyAccessor
 
       base.class_eval do
-        before_save :save_pulp_orchestration
-
         lazy_accessor :pulp_facts, :initializer => lambda { |_s| Katello.pulp_server.extensions.consumer.retrieve(uuid) }
         lazy_accessor :package_profile, :initializer => lambda { |_s| fetch_package_profile }
         lazy_accessor :simple_packages, :initializer => (lambda do |_s|
@@ -207,14 +205,6 @@ module Katello
 
       def deactivate_pulp_node
         Katello.pulp_server.extensions.consumer.deactivate_node(self.uuid)
-      end
-
-      def save_pulp_orchestration
-        return true if self.is_a? Hypervisor
-        case orchestration_for
-        when :update
-          pre_queue.create(:name => "update pulp consumer: #{self.name}", :priority => 3, :action => [self, :update_pulp_consumer])
-        end
       end
 
       def katello_agent_installed?
