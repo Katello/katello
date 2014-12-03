@@ -12,7 +12,6 @@
 
 module Katello
   class Foreman
-
     def self.create_puppet_environment(org, env, content_view)
       unless content_view.default?
         Environment.find_or_create_by_katello_id(org, env, content_view)

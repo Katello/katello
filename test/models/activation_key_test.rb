@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class ActivationKeyTest < ActiveSupport::TestCase
-
     def self.before_suite
       models = ["ActivationKey", "KTEnvironment", "ContentViewEnvironment", "ContentView", "Organization"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
@@ -89,6 +88,5 @@ module Katello
       new_key.max_content_hosts = 100
       assert !new_key.valid?
     end
-
   end
 end

@@ -20,7 +20,6 @@ require 'digest/sha2'
 # Please note this module is required either from Rails and from Puppet.
 #
 module Password
-
   # Generates a new salt and rehashes the password
   def self.update(password)
     salt = self.salt

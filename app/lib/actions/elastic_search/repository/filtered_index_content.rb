@@ -14,7 +14,6 @@ module Actions
   module ElasticSearch
     module Repository
       class FilteredIndexContent < ElasticSearch::Abstract
-
         input_format do
           param :id, Integer
           param :filter

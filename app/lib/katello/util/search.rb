@@ -13,7 +13,6 @@
 module Katello
   module Util
     module Search
-
       DISABLED_LUCENE_SPECIAL_CHARS = ['-', ':']
 
       def self.custom_analyzers
@@ -77,7 +76,6 @@ module Katello
         subs = classes.collect { |c| get_subclasses(c) }.flatten
         classes + subs
       end
-
     end
   end
 end

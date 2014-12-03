@@ -33,6 +33,5 @@ module Katello
       }
       to_ret
     end
-
   end
 end

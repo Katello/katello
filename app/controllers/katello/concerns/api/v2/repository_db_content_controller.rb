@@ -98,7 +98,6 @@ module Katello
             {content: resource_name, id: params[:id]}
         end
       end
-
     end
   end
 end

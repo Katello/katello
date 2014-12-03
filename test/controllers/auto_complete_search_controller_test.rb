@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class AutoCompleteSearchControllerTest < ActionController::TestCase
-
     def setup
       setup_controller_defaults
       login_user(User.find(users(:admin)))

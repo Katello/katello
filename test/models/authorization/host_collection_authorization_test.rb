@@ -14,7 +14,6 @@ require 'models/authorization/authorization_base'
 
 module Katello
   class HostCollectionAuthorizationAdminTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users('admin'))
@@ -55,7 +54,6 @@ module Katello
   end
 
   class HostCollectionAuthorizationNoPermsTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users('restricted'))
@@ -93,6 +91,5 @@ module Katello
     def test_host_collection_deletable?
       refute @host_collection.deletable?
     end
-
   end
 end

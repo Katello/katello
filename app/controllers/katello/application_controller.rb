@@ -290,7 +290,6 @@ module Katello
     end
 
     def require_user
-
       if current_user
         #don't redirect if the user is trying to set an org
         if params[:action] != 'set_org' && params[:controller] != 'user_sessions'
@@ -518,7 +517,6 @@ module Katello
     #   is OR'd, whereas each HASH itself is AND'd together
     # @option search_options [true, false] :load whether or not to load the active record object (defaults to false)
     def render_panel_direct(obj_class, panel_options, search, start, sort, search_options = {}) # rubocop:disable Metrics/MethodLength
-
       filters = search_options[:filter] || []
       load = search_options[:load] || false
       all_rows = false
@@ -617,7 +615,6 @@ module Katello
                        :current_items => options[:collection].length}
 
       retain_search_history unless options[:no_search_history]
-
     end
 
     # TODO: break up method

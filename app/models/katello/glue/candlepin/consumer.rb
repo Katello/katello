@@ -62,7 +62,6 @@ module Katello
     end
 
     module InstanceMethods
-
       def initialize(attrs = nil, options = {})
         if attrs.nil?
           super
@@ -363,7 +362,6 @@ module Katello
       # TODO: break up method
       # rubocop:disable MethodLength
       def available_pools_full(listall = false)
-
         # The available pools can be constrained to match the system (number of sockets, etc.), or
         # all of the pools that could be applied to the system, even if not a perfect match.
         if listall
@@ -487,11 +485,9 @@ module Katello
 
         return all_products
       end
-
     end
 
     module ClassMethods
-
       def prepopulate!(systems)
         uuids = systems.collect { |system| [:uuid, system.uuid] }
         items = Resources::Candlepin::Consumer.get(uuids)

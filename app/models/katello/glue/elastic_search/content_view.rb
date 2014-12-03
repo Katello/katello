@@ -54,6 +54,5 @@ module Katello
       result = Katello::PuppetModule.legacy_search('*', :page_size => 1, :repoids => repoids)
       result.length > 0 ? result.total : 0
     end
-
   end
 end

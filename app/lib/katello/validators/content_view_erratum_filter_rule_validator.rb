@@ -81,7 +81,6 @@ module Katello
           record.errors[:base] << _("The erratum type must be an array. Invalid value provided")
         end
       end
-
     end
   end
 end

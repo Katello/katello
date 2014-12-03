@@ -34,6 +34,5 @@ module Katello
         :user_ids     => self.users.collect { |u| u.id },
         :organization => organization.try(:name) }
     end
-
   end
 end

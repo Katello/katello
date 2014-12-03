@@ -13,7 +13,6 @@
 require 'katello_test_helper'
 
 module ::Actions::Katello::RepositorySet
-
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
@@ -141,7 +140,5 @@ module ::Actions::Katello::RepositorySet
         run_action.stubs(cdn_var_substitutor: substitutor)
       end
     end
-
   end
-
 end

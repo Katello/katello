@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::ContentViewFiltersController < Api::V2::ApiController
-
     before_filter :find_content_view
     before_filter :find_filter, :except => [:index, :create]
     before_filter :load_search_service, :only => [:index, :available_errata, :available_package_groups]
@@ -140,6 +139,5 @@ module Katello
     def filter_params
       params.require(:content_view_filter).permit(:name, :inclusion, :original_packages, :description, :repository_ids => [])
     end
-
   end
 end

@@ -15,7 +15,6 @@ require 'katello_test_helper'
 
 module Katello
   class OrganizationTestBase < ActiveSupport::TestCase
-
     def self.before_suite
       services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
       models    = ['Organization', 'KTEnvironment', 'ContentView', 'ContentViewVersion',
@@ -25,7 +24,6 @@ module Katello
 
     def setup
     end
-
   end
 
   class OrganizationTestDelete < OrganizationTestBase
@@ -40,6 +38,5 @@ module Katello
       org.destroy!
       assert_nil Organization.find_by_id(id)
     end
-
   end
 end

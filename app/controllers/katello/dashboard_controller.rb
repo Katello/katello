@@ -12,7 +12,6 @@
 
 module Katello
   class DashboardController < Katello::ApplicationController
-
     before_filter :update_preferences_quantity, :except => [:index, :section_id]
 
     def index

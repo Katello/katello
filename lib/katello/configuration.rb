@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-
   # Katello::Configuration module contains all necessary code for Katello configuration.
   # Configuration is not dependent on any gem which allows loading configuration very early
   # (even before Rails). Therefore this configuration can be used anywhere

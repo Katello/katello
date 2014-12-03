@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class GluePulpUserTest < ActiveSupport::TestCase
-
     def self.before_suite
       super
       configure_runcible
@@ -34,6 +33,5 @@ module Katello
 
       refute_includes attributes, :backend_attribute_only
     end
-
   end
 end

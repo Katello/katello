@@ -93,6 +93,5 @@ module Katello
         post :sync_repositories, :ids => @repositories.collect(&:id), :organization_id => @organization.id
       end
     end
-
   end
 end

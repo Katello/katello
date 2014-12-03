@@ -14,7 +14,6 @@ module Actions
   module Katello
     module CapsuleContent
       class RemoveRepository < ::Actions::EntryAction
-
         # @param capsule_content [::Katello::CapsuleContent]
         # @param pulp_repo [::Katello::Glue::Pulp::Repo]
         def plan(capsule_content, pulp_repo)
@@ -29,7 +28,6 @@ module Actions
             Rails.logger.error("Could not find node distributor for repository %s" % pulp_repo.pulp_id)
           end
         end
-
       end
     end
   end

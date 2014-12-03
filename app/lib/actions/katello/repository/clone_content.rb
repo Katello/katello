@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class CloneContent < Actions::Base
-
         # rubocop:disable MethodLength
         def plan(source_repo, target_repo, filters, purge_empty_units)
           copy_clauses = nil
@@ -68,7 +67,6 @@ module Actions
                       pulp_id:        target_repo.pulp_id,
                       clauses:        clauses)
         end
-
       end
     end
   end

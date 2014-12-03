@@ -41,6 +41,5 @@ module Katello
     def current_organization
       @organization
     end
-
   end
 end

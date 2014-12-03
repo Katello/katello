@@ -3,7 +3,6 @@ require File.expand_path("support/vcr", File.dirname(__FILE__))
 
 module KatelloMiniTestRunner
   class Unit < CI::Reporter::Runner
-
     def before_suites
       # code to run before the first test
       configure_vcr
@@ -34,7 +33,6 @@ module KatelloMiniTestRunner
       suite.after_suite if suite.respond_to?(:after_suite)
       restore_glue_layers
     end
-
   end
 end
 

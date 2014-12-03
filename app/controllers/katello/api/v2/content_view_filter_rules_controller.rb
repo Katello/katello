@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::ContentViewFilterRulesController < Api::V2::ApiController
-
     before_filter :find_filter
     before_filter :find_rule, :except => [:index, :create]
 

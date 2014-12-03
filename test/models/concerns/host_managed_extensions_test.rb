@@ -15,7 +15,6 @@ require 'katello_test_helper'
 
 module Katello
   class HostManagedExtensionsTest < ActiveSupport::TestCase
-
     def self.before_suite
       services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
       models    = ['User', 'KTEnvironment', 'Organization',
@@ -70,6 +69,5 @@ module Katello
       @foreman_host2.expects(:update_content_host).never
       @foreman_host2.save!
     end
-
   end
 end

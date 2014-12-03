@@ -305,6 +305,5 @@ module Katello
 
       return subscriptions
     end
-
   end
 end

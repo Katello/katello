@@ -60,7 +60,6 @@ module Katello
           return { '$and' => rule_clauses }
         end
       end
-
     end
 
     def filter_by_id?

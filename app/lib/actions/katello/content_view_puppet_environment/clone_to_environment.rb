@@ -13,9 +13,7 @@
 module Actions
   module Katello
     module ContentViewPuppetEnvironment
-
       class CloneToEnvironment < Actions::Base
-
         def plan(version, environment)
           source = version.content_view_puppet_environments.archived.first
           clone = find_or_build_puppet_env(version, environment)
@@ -57,7 +55,6 @@ module Actions
           end
           puppet_env
         end
-
       end
     end
   end

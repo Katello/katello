@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class ContentViewFilterTest < ActiveSupport::TestCase
-
     def self.before_suite
       models = ["Organization", "KTEnvironment", "User", "ContentViewFilter", "ContentViewVersion",
                 "ContentViewEnvironment", "ContentView", "Product", "Repository"]
@@ -94,6 +93,5 @@ module Katello
       view.save!
       assert_empty view.filters.first.repositories
     end
-
   end
 end

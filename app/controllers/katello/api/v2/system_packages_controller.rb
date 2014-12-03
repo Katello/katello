@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::SystemPackagesController < Api::V2::ApiController
-
     before_filter :require_packages_or_groups, :only => [:install, :remove]
     before_filter :require_packages_only, :only => [:upgrade]
     before_filter :find_system
@@ -43,7 +42,6 @@ module Katello
         task   = async_task(::Actions::Katello::System::PackageGroup::Install, @system, groups)
         respond_for_async :resource => task
       end
-
     end
 
     api :PUT, "/systems/:system_id/packages/upgrade", N_("Update packages remotely"), :deprecated => true
@@ -125,6 +123,5 @@ module Katello
         group.gsub(/^@/, "")
       end
     end
-
   end
 end

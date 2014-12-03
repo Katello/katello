@@ -28,6 +28,5 @@ module Katello
         filename.include?("vmlinuz") || filename.include?("pxeboot")
       end
     end
-
   end
 end

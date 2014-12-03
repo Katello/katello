@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class CapsuleContentTest < ActiveSupport::TestCase
-
     include Support::CapsuleSupport
 
     let(:organization) { taxonomies(:empty_organization) }
@@ -32,6 +31,5 @@ module Katello
       capsule_content.lifecycle_environments.must_include(environment)
       capsule_content.lifecycle_environments(organization.id).wont_include(environment)
     end
-
   end
 end

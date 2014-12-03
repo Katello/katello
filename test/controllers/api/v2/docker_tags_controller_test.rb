@@ -14,7 +14,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::DockerTagsControllerTest < ActionController::TestCase
-
     def before_suite
       models = ["Organization", "KTEnvironment", "DockerTag", "Repository", "Product", "Provider"]
       services = ["Candlepin", "Pulp", "ElasticSearch"]

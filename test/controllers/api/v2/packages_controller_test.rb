@@ -14,7 +14,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::PackagesControllerTest < ActionController::TestCase
-
     def before_suite
       models = ["Organization", "KTEnvironment", "Package", "Repository", "Product"]
       services = ["Candlepin", "Pulp", "ElasticSearch"]
@@ -105,6 +104,5 @@ module Katello
         get :show, :repository_id => @repo.id, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f"
       end
     end
-
   end
 end

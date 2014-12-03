@@ -13,7 +13,6 @@
 # rubocop:disable CaseEquality, HashMethods
 module Katello
   module Configuration
-
     # defines small dsl for validating configuration
     class Validator
       attr_reader :config, :environment, :path

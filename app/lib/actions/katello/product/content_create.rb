@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Product
       class ContentCreate < Actions::Base
-
         middleware.use Actions::Middleware::RemoteAction
 
         def plan(repository)

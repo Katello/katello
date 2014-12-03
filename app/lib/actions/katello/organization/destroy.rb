@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Organization
       class Destroy < Actions::EntryAction
-
         middleware.use ::Actions::Middleware::RemoteAction
 
         def plan(organization, current_org = nil)

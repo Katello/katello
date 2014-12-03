@@ -101,6 +101,5 @@ module Katello
 
       messages
     end
-
   end
 end

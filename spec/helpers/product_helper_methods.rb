@@ -15,7 +15,6 @@ require File.expand_path("product_test_data", File.dirname(__FILE__))
 
 module Katello
   module ProductHelperMethods
-
     def self.included(base)
       base.send :include, RepositoryHelperMethods
     end

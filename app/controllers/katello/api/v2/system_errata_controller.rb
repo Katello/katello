@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::SystemErrataController < Api::V2::ApiController
-
     before_filter :find_system
 
     resource_description do

@@ -14,7 +14,6 @@ module Actions
   module Katello
     module RepositorySet
       class EnableRepository < Actions::EntryAction
-
         def humanized_name
           _("Enable")
         end
@@ -38,7 +37,6 @@ module Actions
                                                               content,
                                                               substitutions)
         end
-
       end
     end
   end

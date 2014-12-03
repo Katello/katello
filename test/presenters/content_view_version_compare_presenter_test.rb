@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class ContentVIewVersionComparePresenterTest < ActiveSupport::TestCase
-
     def setup
       @complete_version = katello_content_view_versions(:library_default_version)
       @incomplete_version = katello_content_view_versions(:library_view_version_1)
@@ -46,6 +45,5 @@ module Katello
       refute_includes present.comparison, @incomplete_version.id
       assert_equal 1, present.comparison.size
     end
-
   end
 end

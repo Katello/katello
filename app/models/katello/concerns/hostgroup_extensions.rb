@@ -32,7 +32,6 @@ module Katello
         return super unless ancestry.present?
         SmartProxy.find_by_id(inherited_content_source_id)
       end
-
     end
   end
 end

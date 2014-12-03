@@ -15,7 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::CapsuleContentControllerTest < ActionController::TestCase
-
     include Support::CapsuleSupport
     include Support::ForemanTasks::Task
 
@@ -108,6 +107,5 @@ module Katello
         post :sync, :id => proxy_with_pulp.id, :environment_id => environment.id
       end
     end
-
   end
 end

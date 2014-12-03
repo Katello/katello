@@ -12,7 +12,6 @@
 
 module Katello
   module Errors
-
     class InvalidRepositoryContent < StandardError; end
 
     class InvalidPuppetModuleError < InvalidRepositoryContent; end
@@ -89,7 +88,6 @@ module Katello
     end
 
     class CandlepinError < StandardError
-
       # Return a CandlepinError with the displayMessage
       # as the message set it
       def self.from_exception(exception)
@@ -100,7 +98,6 @@ module Katello
       rescue StandardError
         return nil
       end
-
     end
 
     class PulpError < StandardError
@@ -117,6 +114,5 @@ module Katello
         end
       end
     end
-
   end
 end

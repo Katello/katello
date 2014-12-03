@@ -14,7 +14,6 @@ require 'models/authorization/authorization_base'
 
 module Katello
   class ProductAuthorizationAdminTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users('admin'))
@@ -62,11 +61,9 @@ module Katello
     def test_readable_repositories_with_ids
       refute_empty Product.readable_repositories([Repository.first.id])
     end
-
   end
 
   class ProductAuthorizationNoPermsTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users('restricted'))
@@ -121,6 +118,5 @@ module Katello
       assert_equal([Repository.first], Product.readable_repositories([Repository.first.id]))
       assert_empty(Product.readable_repositories([Repository.where('product_id != ?', Katello::Product.readable.pluck(:id)).first]))
     end
-
   end
 end

@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Consumer
       class BindNodeDistributor < AbstractNodeDistributorTask
-
         input_format do
           param :consumer_uuid, String
           param :repo_id, String
@@ -27,7 +26,6 @@ module Actions
                                        distributor['id'],
                                        input[:bind_options])
         end
-
       end
     end
   end

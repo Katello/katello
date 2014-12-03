@@ -12,7 +12,6 @@
 
 module Katello
   class KatelloFormBuilder < ActionView::Helpers::FormBuilder
-
     delegate :content_tag, :tag, :to => :@template
 
     %w(text_field text_area select file_field).each do |m|
@@ -160,6 +159,5 @@ module Katello
     def objectify_options(options)
       super.except(:label, :label_wrapper, :input_wrapper, :grid, :wrapper)
     end
-
   end
 end

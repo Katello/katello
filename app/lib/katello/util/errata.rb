@@ -57,7 +57,6 @@ module Katello
           return errata_list
         end
       end
-
     end
   end
 end

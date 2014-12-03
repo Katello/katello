@@ -14,7 +14,6 @@ module Actions
   module Katello
     module ContentViewPuppetEnvironment
       class Create < Actions::EntryAction
-
         # rubocop:disable MethodLength
         def plan(puppet_environment, clone = false)
           puppet_environment.disable_auto_reindex!
@@ -44,7 +43,6 @@ module Actions
         def humanized_name
           _("Create")
         end
-
       end
     end
   end

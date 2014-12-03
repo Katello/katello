@@ -12,7 +12,6 @@
 
 module Katello
   module DistributorsHelper
-
     def render_rows(options)
       render :partial => "distributors/list_distributors",
              :locals => {:accessor => options[:accessor], :columns => options[:columns], :collection => options[:collection], :name => options[:name]}
@@ -66,6 +65,5 @@ module Katello
 
       keys.to_json
     end
-
   end
 end

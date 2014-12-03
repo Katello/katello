@@ -14,7 +14,6 @@ module Actions
   module Katello
     module ContentView
       class NodeMetadataGenerate < Actions::EntryAction
-
         def resource_locks
           :link
         end
@@ -37,7 +36,6 @@ module Actions
           end
           plan_self(:environment_name => environment.name)
         end
-
       end
     end
   end

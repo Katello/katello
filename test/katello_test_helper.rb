@@ -96,7 +96,6 @@ module FixtureTestCase
   end
 
   module ClassMethods
-
     def before_suite
       @loaded_fixtures = load_fixtures
 
@@ -172,7 +171,6 @@ class ActiveSupport::TestCase
       record.stubs(:reload).returns(record)
     end
   end
-
 end
 
 def disable_lazy_accessors
@@ -265,7 +263,6 @@ def disable_glue_layers(services = [], models = [], force_reload = false)
   if change
     constants_updated
   end
-
 end
 
 def constants_updated

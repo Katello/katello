@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Product
       class ContentDestroy < Actions::Base
-
         def plan(repository)
           if !repository.product.provider.redhat_provider? &&
                repository.other_repos_with_same_product_and_content.empty?
@@ -29,7 +28,6 @@ module Actions
             end
           end
         end
-
       end
     end
   end

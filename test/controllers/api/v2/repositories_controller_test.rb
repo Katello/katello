@@ -14,7 +14,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::RepositoriesControllerTest < ActionController::TestCase
-
     include Support::ForemanTasks::Task
 
     def self.before_suite
@@ -391,6 +390,5 @@ module Katello
 
       assert_response 404
     end
-
   end
 end

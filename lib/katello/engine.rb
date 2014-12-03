@@ -1,7 +1,5 @@
 module Katello
-
   class Engine < ::Rails::Engine
-
     isolate_namespace Katello
 
     initializer 'katello.silenced_logger', :before => :build_middleware_stack do |app|
@@ -170,7 +168,5 @@ module Katello
 
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.1/import_errata.rake"
     end
-
   end
-
 end

@@ -160,6 +160,5 @@ module Katello
         post :autoattach_subscriptions, :id => @organization.id
       end
     end
-
   end
 end

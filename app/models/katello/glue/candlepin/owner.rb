@@ -12,7 +12,6 @@
 
 module Katello
   module Glue::Candlepin::Owner
-
     def self.included(base)
       base.send :include, LazyAccessor
       base.send :include, InstanceMethods
@@ -29,7 +28,6 @@ module Katello
     end
 
     module InstanceMethods
-
       def serializable_hash(options = {})
         hash = super(options)
         hash = hash.merge(:service_levels => self.service_levels)
@@ -76,6 +74,5 @@ module Katello
         Resources::Candlepin::Owner.imports(self.label)
       end
     end
-
   end
 end

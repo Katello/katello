@@ -12,7 +12,6 @@
 
 module Katello
   module Util
-
     class PackageFilter
       FILTER_COLUMNS = { :epoch => :epoch,
                          :version => :sortable_version,

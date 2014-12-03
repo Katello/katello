@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Organization
       class IndexSubscriptions < Actions::Base
-
         middleware.use Actions::Middleware::RemoteAction
 
         input_format do

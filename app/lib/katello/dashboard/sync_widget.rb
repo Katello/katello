@@ -12,7 +12,6 @@
 
 module Katello
   class Dashboard::SyncWidget < Dashboard::Widget
-
     def accessible?
       User.current.admin? ||
        (current_organization &&

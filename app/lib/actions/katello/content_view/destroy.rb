@@ -14,7 +14,6 @@ module Actions
   module Katello
     module ContentView
       class Destroy < Actions::EntryAction
-
         middleware.use ::Actions::Middleware::RemoteAction
 
         def plan(content_view, options = {})
@@ -44,7 +43,6 @@ module Actions
         def humanized_name
           _("Delete")
         end
-
       end
     end
   end

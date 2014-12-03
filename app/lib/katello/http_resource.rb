@@ -15,7 +15,6 @@ require 'cgi'
 
 module Katello
   class HttpResource
-
     class NetworkException < StandardError
     end
 
@@ -196,7 +195,6 @@ module Katello
           :headers => added_header,
           :open_timeout => Katello.config.rest_client_timeout,
           :timeout => Katello.config.rest_client_timeout
-
       end
 
       # Encode url element if its not nil. This helper method is used mainly in resource path methods.
@@ -213,7 +211,6 @@ module Katello
           so_far << "#{current[0].to_s}=#{url_encode(current[1])}"
         end
       end
-
     end
   end
 end

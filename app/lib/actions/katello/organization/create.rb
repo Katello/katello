@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Organization
       class Create < Actions::EntryAction
-
         def plan(organization)
           organization.setup_label_from_name
           organization.create_library

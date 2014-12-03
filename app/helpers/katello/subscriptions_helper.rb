@@ -12,7 +12,6 @@
 
 module Katello
   module SubscriptionsHelper
-
     def subscriptions_product_helper(product_id)
       cp_product = Resources::Candlepin::Product.get(product_id).first
       product = OpenStruct.new cp_product

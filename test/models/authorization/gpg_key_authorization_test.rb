@@ -14,7 +14,6 @@ require 'models/authorization/authorization_base'
 
 module Katello
   class GpgKeyAuthorizationAdminTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users('admin'))
@@ -39,7 +38,6 @@ module Katello
   end
 
   class GpgKeyAuthorizationNoPermsTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users('restricted'))
@@ -61,6 +59,5 @@ module Katello
     def test_key_deletable?
       refute @key.deletable?
     end
-
   end
 end

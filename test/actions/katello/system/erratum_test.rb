@@ -13,7 +13,6 @@
 require 'katello_test_helper'
 
 module ::Actions::Katello::System::Erratum
-
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
@@ -61,6 +60,5 @@ libotf-0.9.9-3.1.el6.x86_64
         end
       end
     end
-
   end
 end

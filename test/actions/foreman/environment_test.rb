@@ -13,7 +13,6 @@
 require 'katello_test_helper'
 
 module ::Actions::Foreman::Environment
-
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
@@ -25,7 +24,6 @@ module ::Actions::Foreman::Environment
     before :all do
       @production = environments(:production)
     end
-
   end
 
   class DestroyTest < TestBase
@@ -57,6 +55,5 @@ module ::Actions::Foreman::Environment
       env = ::Environment.create(:name => "subdev")
       assert plan_action(action, env)
     end
-
   end
 end

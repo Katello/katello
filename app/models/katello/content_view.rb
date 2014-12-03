@@ -510,7 +510,6 @@ module Katello
                  {:release => failed_distribution.version, :arch => failed_distribution.arch,
                   :repos => Repository.where(:pulp_id => pulp_repo_ids).pluck(:name).join(', ')}
       end
-
     end
 
     def distribution_conflicts
@@ -663,6 +662,5 @@ module Katello
     def self.humanize_class_name(_name = nil)
       _("Content Views")
     end
-
   end
 end

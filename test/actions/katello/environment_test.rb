@@ -13,7 +13,6 @@
 require 'katello_test_helper'
 
 module ::Actions::Katello::Environment
-
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
@@ -78,5 +77,4 @@ module ::Actions::Katello::Environment
       assert_action_planed_with(action, ::Actions::Katello::ContentView::Remove, content_view, :content_view_environments => [cve], :skip_repo_destroy => false, :organization_destroy => false)
     end
   end
-
 end

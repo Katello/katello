@@ -14,7 +14,6 @@ module Actions
   module Katello
     module System
       class HostDestroy < Actions::EntryAction
-
         def plan(host)
           action_subject(host)
           sequence do

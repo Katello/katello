@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Repository
       class DistributorPublish < Pulp::AbstractAsyncTask
-
         input_format do
           param :pulp_id
           param :distributor_type_id
@@ -54,7 +53,6 @@ module Actions
         def humanized_name
           _("Repository metadata publish")
         end
-
       end
     end
   end

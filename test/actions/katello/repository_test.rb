@@ -13,13 +13,10 @@
 require 'katello_test_helper'
 
 class Dynflow::Testing::DummyPlannedAction
-
   attr_accessor :error
-
 end
 
 module ::Actions::Katello::Repository
-
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures

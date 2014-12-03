@@ -12,7 +12,6 @@
 
 module Katello
   class Dashboard::SubscriptionsTotalsWidget < Dashboard::Widget
-
     def accessible?
       User.current.admin? ||
        (current_organization &&
@@ -26,6 +25,5 @@ module Katello
     def content_path
       subscriptions_totals_dashboard_index_path
     end
-
   end
 end

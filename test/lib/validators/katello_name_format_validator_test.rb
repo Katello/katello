@@ -15,7 +15,6 @@ require 'katello_test_helper'
 
 module Katello
   class KatelloNameFormatValidatorTest < ActiveSupport::TestCase
-
     def setup
       @validator = Validators::KatelloNameFormatValidator.new(:attributes => [:name])
       @model = OpenStruct.new(:errors => {:name => []})
@@ -62,6 +61,5 @@ module Katello
 
       assert_empty @model.errors[:name]
     end
-
   end
 end

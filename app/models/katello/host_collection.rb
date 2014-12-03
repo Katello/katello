@@ -196,6 +196,5 @@ module Katello
     def self.humanize_class_name(_name = nil)
       _("Host Collections")
     end
-
   end
 end

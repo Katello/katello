@@ -14,7 +14,6 @@ module Actions
   module Katello
     module ContentViewPuppetModule
       class Destroy < Actions::EntryAction
-
         def plan(repository)
           action_subject(repository)
 

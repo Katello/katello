@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Repository
       class UploadFile < Pulp::Abstract
-
         input_format do
           param :upload_id
           param :file
@@ -35,7 +34,6 @@ module Actions
         def upload_chunk_size
           ::Katello.config.pulp.upload_chunk_size
         end
-
       end
     end
   end

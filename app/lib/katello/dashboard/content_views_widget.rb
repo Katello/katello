@@ -12,7 +12,6 @@
 
 module Katello
   class Dashboard::ContentViewsWidget < Dashboard::Widget
-
     def accessible?
       User.current.admin? ||
        (current_organization &&
@@ -27,6 +26,5 @@ module Katello
     def content_path
       content_views_dashboard_index_path
     end
-
   end
 end

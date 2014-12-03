@@ -35,11 +35,9 @@ module Katello
     def test_subscriptions_readable?
       assert @org.subscriptions_readable?
     end
-
   end
 
   class OrganizationAuthorizationNoPermsTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users('restricted'))
@@ -79,6 +77,5 @@ module Katello
     def test_subscriptions_readable?
       refute @org.subscriptions_readable?
     end
-
   end
 end

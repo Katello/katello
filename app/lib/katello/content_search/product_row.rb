@@ -30,7 +30,6 @@ module Katello
       def build_id
         [parent_id, data_type, product.id].select(&:present?).join("_")
       end
-
     end
   end
 end

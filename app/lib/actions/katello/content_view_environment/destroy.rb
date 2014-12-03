@@ -14,7 +14,6 @@ module Actions
   module Katello
     module ContentViewEnvironment
       class Destroy < Actions::Base
-
         def plan(cv_env, options = {})
           skip_cp_update = options.fetch(:skip_candlepin_update, false)
           skip_repo_destroy = options.fetch(:skip_repo_destroy, false)
@@ -51,7 +50,6 @@ module Actions
             cv_env.destroy!
           end
         end
-
       end
     end
   end

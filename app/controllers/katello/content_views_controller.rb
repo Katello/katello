@@ -12,7 +12,6 @@
 
 module Katello
   class ContentViewsController < Katello::ApplicationController
-
     def auto_complete
       query = "name_autocomplete:#{params[:term]}"
       org = current_organization
@@ -32,6 +31,5 @@ module Katello
     rescue Tire::Search::SearchRequestFailed
       render :json => Support.array_with_total
     end
-
   end
 end

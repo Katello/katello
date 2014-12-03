@@ -14,7 +14,6 @@ module Actions
   module Katello
     module System
       class GenerateApplicability < Actions::Base
-
         def plan(systems)
           plan_action(Pulp::Consumer::GenerateApplicability, :uuids => systems.map(&:uuid))
           plan_self(:system_ids => systems.map(&:id))
@@ -29,7 +28,6 @@ module Actions
         ensure
           ::User.current = nil
         end
-
       end
     end
   end

@@ -23,7 +23,6 @@ module Actions
         def humanized_name
           _("Create")
         end
-
       end
     end
   end

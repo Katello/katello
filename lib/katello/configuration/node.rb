@@ -13,7 +13,6 @@
 # rubocop:disable HashMethods
 module Katello
   module Configuration
-
     # Hash like container for configuration
     # @example allows access by method
     #     Node.new('a' => {:b => 2}).a.b # => 2

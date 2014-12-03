@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class Api::V2::UebercertsControllerTest < ActionController::TestCase
-
     OWNER_KEY = "some_org"
 
     def setup
@@ -25,6 +24,5 @@ module Katello
     def test_show
       get :show, :organization_id => @org.id
     end
-
   end
 end

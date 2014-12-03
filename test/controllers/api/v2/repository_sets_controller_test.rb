@@ -14,7 +14,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::RepositorySetsControllerTest < ActionController::TestCase
-
     include Support::ForemanTasks::Task
 
     def models
@@ -114,6 +113,5 @@ module Katello
             basearch: 'x86_64', releasever: '6Server'
       end
     end
-
   end
 end

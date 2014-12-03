@@ -14,7 +14,6 @@ require 'models/authorization/authorization_base'
 
 module Katello
   class ActivationKeyAuthorizationAdminTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users('admin'))
@@ -48,7 +47,6 @@ module Katello
   end
 
   class ActivationKeyAuthorizationNoPermsTest  < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users(:restricted))

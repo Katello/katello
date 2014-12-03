@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class PulpSyncStatusTest < ActiveSupport::TestCase
-
     def test_convert_history
       item = [{
         'started' => Time.now.to_s,
@@ -26,6 +25,5 @@ module Katello
       assert_equal item.first['completed'], returned['finish_time']
       assert_equal 'error', returned['state']
     end
-
   end
 end

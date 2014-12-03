@@ -16,7 +16,6 @@ module Actions
       # Clones the contnet of the repository into the environment
       # effectively promotion the repository to the environment
       class CloneToEnvironment < Actions::Base
-
         def plan(repository, environment)
           clone = find_or_build_environment_clone(repository, environment)
 
@@ -44,7 +43,6 @@ module Actions
           end
           return clone
         end
-
       end
     end
   end

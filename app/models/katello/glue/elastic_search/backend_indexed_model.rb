@@ -20,11 +20,9 @@ module Katello
     end
 
     module InstanceMethods
-
     end
 
     module ClassMethods
-
       def index_all
         self.create_index
 
@@ -113,8 +111,6 @@ module Katello
           end
         end
       end
-
     end
-
   end
 end

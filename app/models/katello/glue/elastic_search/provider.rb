@@ -37,6 +37,5 @@ module Katello
         :name_sort => name.downcase
       }
     end
-
   end
 end

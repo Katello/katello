@@ -15,7 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::SystemsControllerTest < ActionController::TestCase
-
     def self.before_suite
       models = ["System", "KTEnvironment",  "ContentViewEnvironment", "ContentView"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
@@ -206,6 +205,5 @@ module Katello
       assert_response :success
       assert_template 'api/v2/systems/errata'
     end
-
   end
 end

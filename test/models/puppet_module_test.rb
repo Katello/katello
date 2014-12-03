@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class PuppetModuleTest < ActiveSupport::TestCase
-
     def test_parse_metadata
       filepath = File.join(Katello::Engine.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
       metadata = PuppetModule.parse_metadata(filepath)

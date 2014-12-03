@@ -34,17 +34,14 @@ module Katello
       RepositorySupport.destroy_repo
       VCR.eject_cassette
     end
-
   end
 
   class GluePulpDistributionTest < GluePulpDistributionTestBase
-
     def test_find
       distribution = Distribution.find("ks-Test Family-TestVariant-16-x86_64")
 
       refute_nil distribution
       assert_kind_of Distribution, distribution
     end
-
   end
 end

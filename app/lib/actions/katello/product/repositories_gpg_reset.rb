@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Product
       class RepositoriesGpgReset < Actions::AbstractAsyncTask
-
         def plan(product)
           key_id = product.gpg_key_id
           # Plan Repository::Update only for repositories which have different gpg key
@@ -26,7 +25,6 @@ module Actions
             end
           end
         end
-
       end
     end
   end

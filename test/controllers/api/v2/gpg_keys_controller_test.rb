@@ -14,7 +14,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::GpgKeysControllerTest < ActionController::TestCase
-
     def self.before_suite
       models = ["GpgKey"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
@@ -59,6 +58,5 @@ module Katello
         get :index, :organization_id => @organization.id
       end
     end
-
   end
 end

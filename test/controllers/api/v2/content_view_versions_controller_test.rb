@@ -14,7 +14,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::ContentViewVersionsControllerTest < ActionController::TestCase
-
     def self.before_suite
       models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion", "KTEnvironment",
                 "Repository"]
@@ -193,8 +192,6 @@ module Katello
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         post :destroy, :id => @library_dev_staging_view.versions.first.id
       end
-
     end
-
   end
 end

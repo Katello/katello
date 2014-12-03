@@ -12,7 +12,6 @@
 
 module Katello
   module Glue::Pulp::Package
-
     #fields we use to trim down our unit association calls to pulp
     PULP_SELECT_FIELDS = %w(name epoch version release arch checksumtype checksum)
 
@@ -45,7 +44,6 @@ module Katello
     end
 
     module InstanceMethods
-
       def initialize(params = {})
         params.delete(:repodata)
         params[:repoids] =  params.delete(:repository_memberships) if params.key?(:repository_memberships)
@@ -75,6 +73,5 @@ module Katello
                             )
       end
     end
-
   end
 end

@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class ContentViewTest < ActiveSupport::TestCase
-
     def self.before_suite
       models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment",
                 "Repository", "ContentView", "ContentViewVersion",

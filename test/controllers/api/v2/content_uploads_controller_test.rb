@@ -15,7 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::ContentUploadsControllerTest < ActionController::TestCase
-
     def self.before_suite
       models = ["Organization", "KTEnvironment", "Repository", "Product", "Provider", "Package"]
       services = ["Candlepin", "Pulp", "ElasticSearch"]

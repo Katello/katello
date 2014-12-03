@@ -38,11 +38,9 @@ module Katello
       RepositorySupport.destroy_repo
       VCR.eject_cassette
     end
-
   end
 
   class GluePulpPackageTest < GluePulpPackageTestBase
-
     def test_find
       package = Package.find(@@package_id)
 
@@ -61,6 +59,5 @@ module Katello
       refute_includes Package::PULP_SELECT_FIELDS, 'repodata'
       refute_includes Package::PULP_SELECT_FIELDS, 'filelist'
     end
-
   end
 end

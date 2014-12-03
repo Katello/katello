@@ -13,7 +13,6 @@
 
 module Katello
   class ProvidersController < Katello::ApplicationController
-
     before_filter :find_rh_provider, :only => [:redhat_provider, :redhat_provider_tab]
     before_filter :search_filter, :only => [:auto_complete_search]
 
@@ -60,6 +59,5 @@ module Katello
     def title
       _('Repositories')
     end
-
   end
 end

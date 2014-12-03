@@ -15,7 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::HostCollectionsControllerTest < ActionController::TestCase
-
     def self.before_suite
       models = ["System", "HostCollection"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
@@ -89,6 +88,5 @@ module Katello
       assert_response :success
       assert_template 'api/v2/host_collections/create'
     end
-
   end
 end

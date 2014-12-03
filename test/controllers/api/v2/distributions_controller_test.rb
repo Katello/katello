@@ -14,7 +14,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::DistributionsControllerTest < ActionController::TestCase
-
     def before_suite
       models = ["Organization", "KTEnvironment", "Distribution", "Repository", "Product"]
       services = ["Candlepin", "Pulp", "ElasticSearch"]
@@ -83,6 +82,5 @@ module Katello
         get :show, :repository_id => @repo.id, :id => "ks-Test Family-TestVariant-16-x86_64"
       end
     end
-
   end
 end

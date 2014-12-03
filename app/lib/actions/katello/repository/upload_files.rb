@@ -17,7 +17,6 @@ module Actions
   module Katello
     module Repository
       class UploadFiles < Actions::EntryAction
-
         def plan(repository, files)
           action_subject(repository)
           tmp_files = prepare_tmp_files(files)

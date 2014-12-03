@@ -53,7 +53,6 @@ module Katello
             return family.gsub(' ', '_')
           end
         end
-
       end
 
       def assign_templates!
@@ -123,7 +122,6 @@ module Katello
           "#{medium_uri(host)}/#{pxedir}/#{img}"
         end
       end
-
     end
   end
 end

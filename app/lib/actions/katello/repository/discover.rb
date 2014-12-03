@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class Discover < Actions::Base
-
         input_format do
           param :url, String
         end
@@ -57,7 +56,6 @@ module Actions
 
           proxy
         end
-
       end
     end
   end

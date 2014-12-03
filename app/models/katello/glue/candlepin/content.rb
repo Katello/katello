@@ -12,7 +12,6 @@
 
 module Katello
   module Glue::Candlepin::Content
-
     CANDLEPIN_DOCKER_TYPE = "containerImage"
 
     def self.included(base)
@@ -67,6 +66,5 @@ module Katello
         "#{organization.label} #{product.label} #{label}".gsub(/\s/, "_")
       end
     end
-
   end
 end

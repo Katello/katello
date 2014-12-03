@@ -14,7 +14,6 @@ module Actions
   module Katello
     module CapsuleContent
       class Sync < ::Actions::EntryAction
-
         def humanized_name
           _("Sychronize capsule content")
         end
@@ -34,7 +33,6 @@ module Actions
                       consumer_uuid: capsule_content.consumer_uuid,
                       repo_ids: repository_ids)
         end
-
       end
     end
   end

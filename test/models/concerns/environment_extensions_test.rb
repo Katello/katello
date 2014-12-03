@@ -15,7 +15,6 @@ require 'katello_test_helper'
 
 module Katello
   class EnvironmentExtensionsTest < ActiveSupport::TestCase
-
     def self.before_suite
       models = ["Organization", "ContentView", "User"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
@@ -57,6 +56,5 @@ module Katello
       assert_nil Environment.find_by_katello_id(@org, @env, @content_view)
       refute_nil Environment.find_or_create_by_katello_id(@org, @env, @content_view)
     end
-
   end
 end

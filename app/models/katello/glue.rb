@@ -30,7 +30,6 @@ module Katello
     end
 
     module InstanceMethods
-
       def on_save
         Glue.logger.debug "Processing on save pre-queue: #{pre_queue.to_log}" if pre_queue.count > 0
         process pre_queue
@@ -187,7 +186,6 @@ module Katello
           @old.send "#{key}=", changed_attributes[key]
         end
       end
-
     end
   end
 end

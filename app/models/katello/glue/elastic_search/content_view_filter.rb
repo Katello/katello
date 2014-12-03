@@ -36,6 +36,5 @@ module Katello
         :content_view_id => self.content_view_id
       }
     end
-
   end
 end

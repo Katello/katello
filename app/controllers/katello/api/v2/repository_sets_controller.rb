@@ -95,6 +95,5 @@ module Katello
     def substitutions
       params.slice(:basearch, :releasever)
     end
-
   end
 end

@@ -15,7 +15,6 @@ module Actions
   module Pulp
     module Repository
       class UpdateSchedule < Candlepin::Abstract
-
         input_format do
           param :repo_id
           param :schedule
@@ -25,7 +24,6 @@ module Actions
           repo = ::Katello::Repository.find(input[:repo_id])
           output[:response] = repo.sync_schedule(input[:schedule])
         end
-
       end
     end
   end

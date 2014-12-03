@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class DistributorTest < ActiveSupport::TestCase
-
     def self.before_suite
       models = ["Organization", "KTEnvironment", "User", "Distributor"]
       services = ["Candlepin", "Pulp", "ElasticSearch"]
@@ -39,6 +38,5 @@ module Katello
     def test_update
       assert @distributor.save!
     end
-
   end
 end

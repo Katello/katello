@@ -35,6 +35,5 @@ module Katello
     def file_prefix?(url)
       !FILEPREFIX.match(url).nil?
     end
-
   end
 end

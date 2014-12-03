@@ -12,7 +12,6 @@
 
 module Katello
   module AuthorizationSupportMethods
-
     # permissions => Array of hashes in the following format
     #   [{:name => :view_lifecycle_environment, :search => 'name=Dev'}, ..]
     def create_role_with_permissions(permissions)
@@ -55,6 +54,5 @@ module Katello
       fail("setup_current_user_with_permissions called with current user not set") unless User.current
       setup_user_with_permissions(permissions, User.current)
     end
-
   end
 end

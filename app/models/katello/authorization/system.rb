@@ -30,7 +30,6 @@ module Katello
     end
 
     module ClassMethods
-
       def readable_search_filters(_org)
         {:or => [
           {:terms => {:environment_id => KTEnvironment.readable.pluck(:id) }}
@@ -63,6 +62,5 @@ module Katello
         systems_query.count == systems_query.editable.count
       end
     end
-
   end
 end

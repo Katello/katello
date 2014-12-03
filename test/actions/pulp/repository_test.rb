@@ -13,7 +13,6 @@
 require 'katello_test_helper'
 
 module ::Actions::Pulp::Repository
-
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::PulpTask
@@ -21,7 +20,6 @@ module ::Actions::Pulp::Repository
   end
 
   class SyncProgressTest < TestBase
-
     let(:action_class) { ::Actions::Pulp::Repository::Sync }
 
     before do

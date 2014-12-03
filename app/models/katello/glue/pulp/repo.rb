@@ -12,7 +12,6 @@
 
 module Katello
   module Glue::Pulp::Repo
-
     # TODO: move into submodules
     # rubocop:disable MethodLength
     def self.included(base)
@@ -64,7 +63,6 @@ module Katello
     end
 
     module InstanceMethods
-
       def last_sync
         self.importers.first["last_sync"] if self.importers.first
       end
@@ -586,7 +584,6 @@ module Katello
       end
 
       def unassociate_by_filter(content_type, filter_clauses)
-
         criteria = {:type_ids => [content_type], :filters => {:unit => filter_clauses}}
         if content_type == Katello.pulp_server.extensions.rpm.content_type
           criteria[:fields] = { :unit => Package::PULP_SELECT_FIELDS}
@@ -766,7 +763,6 @@ module Katello
           return PulpSyncStatus.pulp_task(history.first.with_indifferent_access)
         end
       end
-
     end
 
     def full_path(smart_proxy = nil)

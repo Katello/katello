@@ -1,5 +1,4 @@
 class DeferredGarbageCollection
-
   DEFERRED_GC_THRESHOLD = Katello.config.rspec_gc_defer_time.to_f
 
   @last_gc_run = Time.now
@@ -16,5 +15,4 @@ class DeferredGarbageCollection
       @last_gc_run = Time.now
     end
   end
-
 end

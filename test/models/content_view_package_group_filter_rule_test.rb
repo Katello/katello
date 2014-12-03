@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class ContentViewPackageGroupFilterRuleTest < ActiveSupport::TestCase
-
     def self.before_suite
       models = ["Organization", "KTEnvironment", "User", "ContentView",
                 "ContentViewVersion", "ContentViewEnvironment", "ContentViewFilter",
@@ -52,6 +51,5 @@ module Katello
       refute rule_item.persisted?
       refute rule_item.save
     end
-
   end
 end

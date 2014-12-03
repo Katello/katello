@@ -1,5 +1,4 @@
 class AddSyncPlanEnabledToSyncPlan < ActiveRecord::Migration
-
   def up
     add_column :katello_sync_plans, :enabled, :boolean, :default => true, :null => false
   end

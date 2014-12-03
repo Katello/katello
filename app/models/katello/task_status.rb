@@ -317,7 +317,6 @@ module Katello
       else
         self.result
       end
-
     end
 
     def self.refresh(ids)
@@ -394,6 +393,5 @@ module Katello
       end
       ret.sort
     end
-
   end
 end

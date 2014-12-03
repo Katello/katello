@@ -12,7 +12,6 @@
 
 module Katello
   module ContentSearchHelper
-
     def content_types
       types = [
         [_("Products"), "products"],
@@ -59,6 +58,5 @@ module Katello
         :custom => true
       }
     end
-
   end
 end

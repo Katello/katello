@@ -15,7 +15,6 @@ require 'katello_test_helper'
 
 module Katello
   class MediumExtensionsTest < ActiveSupport::TestCase
-
     def self.before_suite
       models = ["Organization", "Repository", "User"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)

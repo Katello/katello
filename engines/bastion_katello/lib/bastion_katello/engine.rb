@@ -1,6 +1,5 @@
 module BastionKatello
   class Engine < ::Rails::Engine
-
     isolate_namespace BastionKatello
 
     initializer 'bastion.assets_dispatcher', :before => :build_middleware_stack do |app|
@@ -35,6 +34,5 @@ module BastionKatello
         )
       )
     end
-
   end
 end

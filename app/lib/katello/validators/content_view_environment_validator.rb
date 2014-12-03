@@ -13,7 +13,6 @@
 module Katello
   module Validators
     class ContentViewEnvironmentValidator < ActiveModel::Validator
-
       def validate(record)
         if record.content_view_id && record.environment_id
           view = ContentView.find(record.content_view_id)
@@ -24,7 +23,6 @@ module Katello
           end
         end
       end
-
     end
   end
 end

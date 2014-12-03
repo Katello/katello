@@ -15,7 +15,6 @@ require 'katello_test_helper'
 # rubocop:disable Style/AccessorMethodName
 module Katello
   module CandlepinOwnerSupport
-
     @organization = nil
 
     def self.organization_id
@@ -63,6 +62,5 @@ module Katello
     rescue RestClient::ResourceNotFound => e
       puts e
     end
-
   end
 end

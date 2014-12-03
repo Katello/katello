@@ -15,7 +15,6 @@
 module Katello
   class Ping
     class << self
-
       OK_RETURN_CODE = 'ok'
       FAIL_RETURN_CODE = 'FAIL'
       PACKAGES = %w(katello candlepin pulp thumbslug qpid elasticsearch)

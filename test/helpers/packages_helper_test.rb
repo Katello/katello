@@ -15,7 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class PackagesHelperTest < ActionView::TestCase
-
     def test_format_package_details
       package = { :name => 'package-a' }
       assert_equal "package-a", format_package_details(package)

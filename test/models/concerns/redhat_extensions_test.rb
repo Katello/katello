@@ -15,7 +15,6 @@ require 'katello_test_helper'
 
 module Katello
   class RedhatExtensionsTest < ActiveSupport::TestCase
-
     def self.before_suite
       models = ["User"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)

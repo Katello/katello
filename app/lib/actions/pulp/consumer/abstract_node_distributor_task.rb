@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Consumer
       class AbstractNodeDistributorTask <  Pulp::AbstractAsyncTask
-
         def invoke_external_task
           fail NotImplementedError
         end
@@ -34,7 +33,6 @@ module Actions
         def repo_details
           pulp_extensions.repository.retrieve_with_details(input[:repo_id])
         end
-
       end
     end
   end

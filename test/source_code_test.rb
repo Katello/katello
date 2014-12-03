@@ -26,7 +26,6 @@ else
 end
 
 class SourceCodeTest < ActiveSupport::TestCase
-
   class SourceCode
     include MiniTest::Assertions
     attr_reader :files
@@ -82,7 +81,6 @@ class SourceCodeTest < ActiveSupport::TestCase
     def self.token_is_keyword?(str, lex, index, token)
       token[1] == :on_kw && token[2] == str && lex[index - 1][1] != :on_symbeg
     end
-
   end
 
   describe 'best practices' do
@@ -129,5 +127,4 @@ Multiple anonymous placeholders:
       end
     end
   end
-
 end

@@ -13,7 +13,6 @@
 require File.expand_path("repository_base", File.dirname(__FILE__))
 
 module Katello
-
   class ErratumTestBase < ActiveSupport::TestCase
     def setup
       @repo = katello_repositories(:rhel_6_x86_64)
@@ -26,7 +25,6 @@ module Katello
   end
 
   class ErratumTest < ErratumTestBase
-
     def test_repositories
       assert_includes @security.repositories, @repo
     end
@@ -71,7 +69,6 @@ module Katello
   end
 
   class ErratumAvailableTest < ErratumTestBase
-
     def setup
       super
       Katello::System.any_instance.stubs(:save_candlepin_orchestration).returns(:true)
@@ -92,6 +89,5 @@ module Katello
       refute_includes errata, @bugfix
       refute_includes errata, @enhancement
     end
-
   end
 end

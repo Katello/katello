@@ -37,6 +37,5 @@ module Katello
         :content_view => self.content_view.name
       }
     end
-
   end
 end

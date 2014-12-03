@@ -34,6 +34,5 @@ module Katello
         authorized(:view_sync_plans)
       end
     end
-
   end
 end

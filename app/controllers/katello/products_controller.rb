@@ -97,6 +97,5 @@ module Katello
     def task_error(task)
       task.failed_steps.first.action(task.execution_plan).steps.map { |s| s.try(:error).try(:message) }.reject(&:blank?).join(', ')
     end
-
   end
 end

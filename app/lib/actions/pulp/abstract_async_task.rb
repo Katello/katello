@@ -112,7 +112,6 @@ module Actions
         external_task.map do |task|
           task_resource.poll(task[:task_id])
         end
-
       end
 
       def task_resource

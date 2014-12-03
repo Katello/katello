@@ -13,7 +13,6 @@
 module Katello
   module Validators
     class ProductUniqueAttributeValidator < ActiveModel::EachValidator
-
       def validate_each(record, attribute, value)
         unique = self.unique_attribute?(record, attribute, value)
 
@@ -35,7 +34,6 @@ module Katello
 
         unique
       end
-
     end
   end
 end

@@ -12,7 +12,6 @@
 
 module Katello
   class Glue::Pulp::ConsumerGroup
-
     attr_accessor :pulp_id, :consumer_ids
 
     def set_pulp_consumer_group
@@ -102,6 +101,5 @@ module Katello
       Rails.logger.error "Failed to schedule errata install for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
-
   end
 end

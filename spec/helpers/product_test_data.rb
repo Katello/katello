@@ -360,6 +360,5 @@ module Katello
     #   }
     #
     #
-
   end
 end

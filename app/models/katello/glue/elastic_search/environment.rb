@@ -12,7 +12,6 @@
 
 module Katello
   module Glue::ElasticSearch::Environment
-
     def self.included(base)
       base.class_eval do
         include Ext::IndexedModel
@@ -47,6 +46,5 @@ module Katello
         ActivationKey.index.import(self.activation_keys) unless self.activation_keys.empty?
       end
     end
-
   end
 end

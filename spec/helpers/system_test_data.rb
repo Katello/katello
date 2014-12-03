@@ -14,7 +14,6 @@
 module Katello
   module SystemTestData
     class << self
-
       def virtual_guests
         [{"href" => "/consumers/fcba65f1-5fe4-42e0-8f7b-6c719ec2bc42",
           "facts" =>       {
@@ -125,7 +124,6 @@ module Katello
                      "id" => "4028fa81346539d601346539f4470001",
                      "key" => "ACME_Corporation"}}.with_indifferent_access
       end
-
     end
   end
 end

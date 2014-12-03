@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class Create < Actions::EntryAction
-
         # rubocop:disable MethodLength
         def plan(repository, clone = false, plan_create = false)
           repository.disable_auto_reindex!
@@ -77,7 +76,6 @@ module Actions
         def humanized_name
           _("Create")
         end
-
       end
     end
   end

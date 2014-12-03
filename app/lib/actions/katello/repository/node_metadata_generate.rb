@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class NodeMetadataGenerate < Actions::Base
-
         def plan(repo, dependency = nil)
           return if (repo.content_type == ::Katello::Repository::FILE_TYPE) || !repo.environment
 
@@ -34,7 +33,6 @@ module Actions
             end
           end
         end
-
       end
     end
   end

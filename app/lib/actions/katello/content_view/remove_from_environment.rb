@@ -14,7 +14,6 @@ module Actions
   module Katello
     module ContentView
       class RemoveFromEnvironment < Actions::EntryAction
-
         def plan(content_view, environment)
           action_subject(content_view)
           content_view.check_remove_from_environment!(environment)

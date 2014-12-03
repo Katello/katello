@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class Sync < Actions::EntryAction
-
         include Helpers::Presenter
 
         input_format do
@@ -75,7 +74,6 @@ module Actions
         ensure
           ::User.current = nil
         end
-
       end
     end
   end

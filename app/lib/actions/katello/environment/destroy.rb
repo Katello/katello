@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Environment
       class Destroy < Actions::EntryAction
-
         middleware.use ::Actions::Middleware::RemoteAction
 
         input_format do
@@ -57,7 +56,6 @@ module Actions
           environment.disable_auto_reindex!
           environment.destroy!
         end
-
       end
     end
   end

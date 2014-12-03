@@ -12,7 +12,6 @@
 
 module Katello
   module Glue::Candlepin::Pool
-
     def self.included(base)
       base.send :include, LazyAccessor
       base.send :include, InstanceMethods
@@ -59,7 +58,6 @@ module Katello
     end
 
     module InstanceMethods
-
       def initialize(attrs = nil, options = {})
         if !attrs.nil? && attrs.member?('id')
           # initializing from candlepin json
@@ -193,7 +191,6 @@ module Katello
       end
 
       attr_reader :amount
-
     end
   end
 end

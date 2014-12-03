@@ -14,7 +14,6 @@ require 'models/authorization/authorization_base'
 
 module Katello
   class RepositoryAuthorizationAdminTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users(:admin))
@@ -49,11 +48,9 @@ module Katello
     def test_deletable
       refute_empty Repository.deletable
     end
-
   end
 
   class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users(:restricted))
@@ -82,6 +79,5 @@ module Katello
     def test_deletable
       assert_empty Repository.deletable
     end
-
   end
 end
