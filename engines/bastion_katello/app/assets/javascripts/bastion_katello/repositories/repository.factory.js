@@ -30,7 +30,8 @@ angular.module('Bastion.repositories').factory('Repository',
             {
                 update: { method: 'PUT' },
                 sync: { method: 'POST', params: { action: 'sync' } },
-                removePackages: { method: 'PUT', params: { action: 'remove_packages'}}
+                removePackages: { method: 'PUT', params: { action: 'remove_packages'}},
+                removeContent: { method: 'PUT', params: { action: 'remove_content'}}
             }
         );
 

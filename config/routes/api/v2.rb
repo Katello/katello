@@ -322,7 +322,10 @@ Katello::Engine.routes.draw do
             get :package_groups
             get :package_group_categories
             get :gpg_key_content
-            put :remove_packages
+            put :remove_packages, :action => :remove_content
+            put :remove_puppet_modules, :action => :remove_content
+            put :remove_docker_images, :action => :remove_content
+            put :remove_content
             post :sync
             post :upload_content
             put :import_uploads
