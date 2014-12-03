@@ -84,6 +84,7 @@ module FixtureTestCase
     self.set_fixture_class :katello_user_notices => "Katello::UserNotice"
     self.set_fixture_class :katello_errata => "Katello::Erratum"
     self.set_fixture_class :katello_erratum_packages => "Katello::ErratumPackage"
+    self.set_fixture_class :katello_erratum_cves => "Katello::ErratumCve"
     self.set_fixture_class :katello_repository_errata => "Katello::RepositoryErratum"
     self.set_fixture_class :katello_system_errata => "Katello::SystemErratum"
 

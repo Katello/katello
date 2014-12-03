@@ -92,6 +92,14 @@ module Katello
       get :index, :content_view_filter_id => package_group_filter
     end
 
+    def test_index_with_cve
+      cve = katello_erratum_cves(:cve)
+
+      get :index, :cve => cve.cve_id
+      assert_response :success
+      assert_template %w(katello/api/v2/errata/index)
+    end
+
     def test_index_protected
       assert_protected_action(:index, @auth_permissions, @unauth_permissions) do
         get :index, :repository_id => @repo.id
