@@ -143,8 +143,7 @@ module Katello
     param :host_collection_ids, Array, :desc => N_("Specify the host collections as an array")
     def update
       system_params = system_params(params)
-      @system.update_attributes!(system_params)
-      @system.refresh_subscriptions if system_params[:autoheal]
+      sync_task(::Actions::Katello::System::Update, @system, system_params)
       respond_for_update
     end
 
