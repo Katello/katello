@@ -75,7 +75,7 @@ module Katello
       options[:filters] << {:term => {:content_type => params[:content_type]}} if params[:content_type]
       options[:filters] << {:term => {:name => params[:name]}} if params[:name]
 
-      respond :collection => item_search(Repository, params, options)
+      respond :collection => item_search(Repository.includes(:product, :environment, :gpg_key), params, options)
     end
 
     api :POST, "/repositories", N_("Create a custom repository")

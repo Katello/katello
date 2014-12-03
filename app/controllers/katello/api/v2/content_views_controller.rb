@@ -54,7 +54,8 @@ module Katello
       options[:filters] << {:term => {:composite => false}} if params[:noncomposite]
       options[:filters] << {:term => {:name => params[:name]}} if params[:name]
 
-      respond(:collection => item_search(ContentView, params, options))
+      respond(:collection => item_search(ContentView.includes(:repository => [:product, :environment, :gpg_key]),
+                                         params, options))
     end
 
     api :POST, "/organizations/:organization_id/content_views", N_("Create a content view")

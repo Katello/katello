@@ -58,7 +58,9 @@ module Katello
       options[:filters] << {:term => {:enabled => params[:enabled].to_bool}} if params[:enabled]
       options.merge!(sort_params)
 
-      respond(:collection => item_search(Product, params, options))
+      respond(:collection => item_search(Product.includes(:provider, :sync_plan,
+                                                          :repositories => [:environment, :gpg_key, :product]),
+                                                           params, options))
     end
 
     api :POST, "/products", N_("Create a product")
