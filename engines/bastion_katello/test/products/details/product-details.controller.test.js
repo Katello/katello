@@ -62,12 +62,12 @@ describe('Controller: ProductDetailsController', function() {
         });
 
         it("if the product was published in a content view", function() {
-            product['published_content_views'] = [1, 2];
+            product['published_content_view_ids'] = [1, 2];
             expect($scope.getReadOnlyReason(product)).toBe('published');
         });
 
         it("if the product is a Red Hat product", function() {
-            product['published_content_views'] = [];
+            product['published_content_view_ids'] = [];
             product.redhat = true;
             expect($scope.getReadOnlyReason(product)).toBe('redhat');
         });
