@@ -69,7 +69,7 @@ module Katello
     param :service_level, String, :desc => N_("service level")
     param :auto_attach, :bool, :desc => N_("auto attach subscriptions upon registration")
     def update
-      @activation_key.update_attributes!(activation_key_params)
+      sync_task(::Actions::Katello::ActivationKey::Update, @activation_key, activation_key_params)
       respond_for_show(:resource => @activation_key)
     end
 

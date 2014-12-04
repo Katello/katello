@@ -18,8 +18,6 @@ module Katello
       base.send :include, InstanceMethods
 
       base.class_eval do
-        before_save :save_activation_key_orchestration
-
         lazy_accessor :service_level,
                       :initializer => (lambda do |_s|
                                          Resources::Candlepin::ActivationKey.get(cp_id)[0][:serviceLevel] if cp_id
@@ -48,21 +46,6 @@ module Katello
           pools << key_pool[:pool]
         end
         pools
-      end
-
-      def update_activation_key
-        Rails.logger.debug "Updating an activation key in candlepin: #{name}"
-        Resources::Candlepin::ActivationKey.update(self.cp_id, self.release_version, @service_level, self.auto_attach)
-      rescue => e
-        Rails.logger.error _("Failed to update candlepin activation_key %s") % "#{self.name}: #{e}, #{e.backtrace.join("\n")}"
-        raise e
-      end
-
-      def save_activation_key_orchestration
-        case self.orchestration_for
-        when :update
-          pre_queue.create(:name => "update candlepin activation_key: #{self.name}", :priority => 2, :action => [self, :update_activation_key])
-        end
       end
 
       def subscribe(pool_id, quantity = 1)
