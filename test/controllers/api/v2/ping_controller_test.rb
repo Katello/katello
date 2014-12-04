@@ -15,7 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::PingControllerTest < ActionController::TestCase
-
     def self.before_suite
       models = ["Ping"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)

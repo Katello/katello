@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class Util::PackageClauseGeneratorTest < ActiveSupport::TestCase
-
     INCLUDE_ALL_PACKAGES = {"filename" => {"$exists" => true}}
 
     def self.before_suite
@@ -216,6 +215,5 @@ module Katello
       clause_gen.generate
       clause_gen
     end
-
   end
 end

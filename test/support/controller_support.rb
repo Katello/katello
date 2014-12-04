@@ -66,5 +66,4 @@ module ControllerSupport
     check_params = params.merge(authorized: false)
     check_permission(check_params)
   end
-
 end

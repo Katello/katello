@@ -12,7 +12,6 @@
 
 module Katello
   class Erratum < Katello::Model
-
     include Glue::Pulp::PulpContentUnit
 
     SECURITY = "security"
@@ -125,6 +124,5 @@ module Katello
 
       self.packages.create!(package_attributes)
     end
-
   end
 end

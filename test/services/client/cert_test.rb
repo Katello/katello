@@ -15,7 +15,6 @@ require File.expand_path('../../../../app/services/client/cert.rb', __FILE__)
 
 module Client
   class CertTest < MiniTest::Unit::TestCase
-
     CERT = '
       -----BEGIN CERTIFICATE-----
       MIIEaTCCA1GgAwIBAgIIMAikOB+/HpowDQYJKoZIhvcNAQEFBQAwezELMAkGA1UE
@@ -60,6 +59,5 @@ module Client
         Cert.new('This is not a real cert string.')
       end
     end
-
   end
 end

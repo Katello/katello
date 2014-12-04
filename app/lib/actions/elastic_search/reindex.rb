@@ -13,7 +13,6 @@
 module Actions
   module ElasticSearch
     class Reindex < ElasticSearch::Abstract
-
       def plan(record)
         plan_self(id: record.id,
                   class_name: record.class.name)
@@ -34,7 +33,6 @@ module Actions
           model_class.index.remove(type: input[:class_name], id: input[:id])
         end
       end
-
     end
   end
 end

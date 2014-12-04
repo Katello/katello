@@ -15,7 +15,6 @@ module Actions
   module Pulp
     module Repos
       class Update < Pulp::Abstract
-
         def plan(product)
           schedule = (product.sync_plan && product.sync_plan.schedule_format) || nil
           product.repos(product.library).each do |repo|
@@ -24,7 +23,6 @@ module Actions
                         :schedule => schedule)
           end
         end
-
       end
     end
   end

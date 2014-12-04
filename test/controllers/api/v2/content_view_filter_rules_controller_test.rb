@@ -15,7 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::ContentViewFilterRulesControllerTest < ActionController::TestCase
-
     def self.before_suite
       models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion",
                 "Repository", "ContentViewFilter", "ContentViewPackageFilter",

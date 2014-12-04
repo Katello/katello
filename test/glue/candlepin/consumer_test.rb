@@ -62,11 +62,9 @@ module Katello
     ensure
       VCR.eject_cassette
     end
-
   end
 
   class GlueCandlepinConsumerTestSystem < GlueCandlepinConsumerTestBase
-
     def setup
       super
     end
@@ -123,7 +121,6 @@ module Katello
   end
 
   class GlueCandlepinConsumerTestDistributor < GlueCandlepinConsumerTestBase
-
     def self.before_suite
       super
       @@dist = CandlepinConsumerSupport.create_distributor('GlueCandlepinConsumerTestDistributor_1', @@dev, @@dev_cv)
@@ -134,6 +131,5 @@ module Katello
       assert true
       #  assert @@dist.export
     end
-
   end
 end

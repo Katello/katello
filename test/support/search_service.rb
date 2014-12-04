@@ -13,9 +13,7 @@
 
 module Support
   module SearchService
-
     class FakeSearchService
-
       def model=(_klass)
       end
 
@@ -30,8 +28,6 @@ module Support
       def total_items
         0
       end
-
     end
-
   end
 end

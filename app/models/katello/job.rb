@@ -212,6 +212,5 @@ module Katello
       end
       summary
     end
-
   end
 end

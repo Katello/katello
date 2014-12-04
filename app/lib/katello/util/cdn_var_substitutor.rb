@@ -12,7 +12,6 @@
 
 module Katello
   module Util
-
     class CdnVarSubstitutor
       attr_reader :good_listings
       attr_reader :bad_listings
@@ -154,7 +153,6 @@ module Katello
         @resource.log :error, e.message
         [] # return no substitution for unreachable listings
       end
-
     end
   end
 end

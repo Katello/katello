@@ -12,7 +12,6 @@
 
 module Katello
   module ContentSearch::Element
-
     def self.included(base)
       base.class_eval do
         extend ClassMethods
@@ -45,7 +44,6 @@ module Katello
     end
 
     module ClassMethods
-
       def display_attributes(*attrs)
         if attrs.empty?
           @display_attributes || self.superclass.display_attributes
@@ -54,8 +52,6 @@ module Katello
           attr_accessor(*attrs)
         end
       end
-
     end
-
   end
 end

@@ -12,7 +12,6 @@
 
 module Katello
   module OrganizationsHelper
-
     def organization_servicelevel(org)
       _("%{sla}") %
         { :sla => ((org.service_level.nil? || org.service_level.empty?) ? _("No Service Level Preference") : (_("Service Level %s") % org.service_level))}
@@ -31,6 +30,5 @@ module Katello
 
       return levels.to_json
     end
-
   end
 end

@@ -29,7 +29,6 @@ module Katello
         end
         render :json => items
       end
-
     end
   end
 end

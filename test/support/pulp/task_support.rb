@@ -12,7 +12,6 @@
 
 module Katello
   module ConsumerSupport
-
     @consumer = nil
 
     def self.consumer_id
@@ -23,7 +22,6 @@ end
 
 module Katello
   module TaskSupport
-
     def self.wait_on_tasks(task_list, options = {})
       task_list = [task_list] unless task_list.is_a?(Array)
       ignore_exception = options.fetch(:ignore_exception, false)
@@ -51,10 +49,8 @@ module Katello
           VCR.live? ? any_task_running_without_vcr(async_tasks) : false
         end
       end
-
     end
 
     Katello::PulpTaskStatus.send(:include, TaskRunningWithVcr)
-
   end
 end

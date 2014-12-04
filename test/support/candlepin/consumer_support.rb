@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   module CandlepinConsumerSupport
-
     @system = nil
 
     def self.system_id
@@ -62,6 +61,5 @@ module Katello
 
       return @distributor
     end
-
   end
 end

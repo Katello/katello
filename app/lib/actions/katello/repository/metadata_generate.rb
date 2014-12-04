@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class MetadataGenerate < Actions::Base
-
         def plan(repository, source_repository = nil, dependency = nil)
           plan_action(Pulp::Repository::DistributorPublish,
                       pulp_id: repository.pulp_id,
@@ -39,7 +38,6 @@ module Actions
             Runcible::Models::DockerDistributor
           end
         end
-
       end
     end
   end

@@ -14,7 +14,6 @@ module Actions
   module Katello
     module ContentViewPuppetEnvironment
       class Destroy < Actions::EntryAction
-
         def plan(puppet_env)
           action_subject(puppet_env)
           plan_action(Pulp::Repository::Destroy, pulp_id: puppet_env.pulp_id)

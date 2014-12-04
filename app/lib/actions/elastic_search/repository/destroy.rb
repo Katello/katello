@@ -14,7 +14,6 @@ module Actions
   module ElasticSearch
     module Repository
       class Destroy < ElasticSearch::Abstract
-
         input_format do
           param :pulp_id, Integer
         end

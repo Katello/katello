@@ -58,11 +58,9 @@ module Katello
                               path: repository.relative_path,
                               with_importer: true)
     end
-
   end
 
   class GluePulpRepoTestCreateDestroy < GluePulpRepoTestBase
-
     def setup
       super
       @fedora_17_x86_64 = @@fedora_17_x86_64
@@ -77,11 +75,9 @@ module Katello
       assert create_repo(@fedora_17_x86_64)
       delete_repo(@fedora_17_x86_64)
     end
-
   end
 
   class GluePulpRepoTest < GluePulpRepoTestBase
-
     def self.before_suite
       super
       VCR.insert_cassette('pulp/repository/repository')
@@ -146,7 +142,6 @@ module Katello
   end
 
   class GluePulpRepoAfterSyncTest < GluePulpRepoTestBase
-
     def self.before_suite
       super
       VCR.insert_cassette('pulp/repository/after_sync')
@@ -166,7 +161,6 @@ module Katello
   end
 
   class GluePulpChangeFeedTest < GluePulpRepoTestBase
-
     def self.before_suite
       super
       VCR.insert_cassette('pulp/repository/feed_change')
@@ -177,11 +171,9 @@ module Katello
       delete_repo(@@fedora_17_x86_64)
       VCR.eject_cassette
     end
-
   end
 
   class GluePulpPuppetRepoTest < GluePulpRepoTestBase
-
     @@p_forge = nil
 
     def self.before_suite
@@ -210,7 +202,6 @@ module Katello
   end
 
   class GluePulpRepoContentsTest < GluePulpRepoTestBase
-
     def self.before_suite
       super
       VCR.insert_cassette('pulp/repository/contents')
@@ -310,7 +301,6 @@ module Katello
   end
 
   class GluePulpRepoOperationsTest < GluePulpRepoTestBase
-
     def self.before_suite
       super
       VCR.insert_cassette('pulp/repository/operations')
@@ -351,6 +341,5 @@ module Katello
     ensure
       delete_repo(@@fedora_17_x86_64_dev)
     end
-
   end
 end

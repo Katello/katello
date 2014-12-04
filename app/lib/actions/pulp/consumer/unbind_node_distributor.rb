@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Consumer
       class UnbindNodeDistributor < AbstractNodeDistributorTask
-
         input_format do
           param :consumer_uuid, String
           param :repo_id, String

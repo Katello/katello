@@ -44,7 +44,6 @@ module Katello
           end
         end
       end
-
     end
 
     def reset_search

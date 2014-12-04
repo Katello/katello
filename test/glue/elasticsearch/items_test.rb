@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class GlueElasticSearchTest < ActiveSupport::TestCase
-
     def setup
       @fake_class = Class.new do
         def self.search
@@ -71,6 +70,5 @@ module Katello
         assert_equal 10, total
       end
     end
-
   end
 end

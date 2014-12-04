@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class KatelloLabelFormatValidatorTest < ActiveSupport::TestCase
-
     def setup
       @validator = Validators::KatelloLabelFormatValidator.new(:attributes => [:name])
       @model = OpenStruct.new(:errors => {:name => []})
@@ -51,6 +50,5 @@ module Katello
 
       refute_empty @model.errors[:name]
     end
-
   end
 end

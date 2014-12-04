@@ -114,7 +114,6 @@ module Katello
       errors[:messages] << details[:error] if details[:error].present?
       errors[:details].concat(details[:error_details]) if details[:error_details].present?
     end
-
   end
 end
 
@@ -186,6 +185,5 @@ module Katello
         }.with_indifferent_access
       end
     end
-
   end
 end

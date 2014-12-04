@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::UebercertsController < Api::V2::ApiController
-
     before_filter :find_organization, :only => [:show]
 
     resource_description do
@@ -26,6 +25,5 @@ module Katello
       @organization.generate_debug_cert if (params[:regenerate] || '').downcase == 'true'
       respond :resource => @organization.debug_cert
     end
-
   end
 end

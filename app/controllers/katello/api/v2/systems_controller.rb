@@ -424,6 +424,5 @@ module Katello
       return deny_access unless @environment.readable?
       true
     end
-
   end
 end

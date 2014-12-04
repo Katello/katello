@@ -14,7 +14,6 @@ module Actions
   module Katello
     module User
       class Create < Actions::EntryAction
-
         def plan(user)
           action_subject user
           sequence do
@@ -22,7 +21,6 @@ module Actions
             plan_action(Pulp::Superuser::Add, remote_id: user.remote_id)
           end
         end
-
       end
     end
   end

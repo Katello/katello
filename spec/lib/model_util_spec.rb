@@ -16,7 +16,6 @@ require 'katello_test_helper'
 
 module Katello
   class UtilModelSpec < ActiveSupport::TestCase
-
     include OrchestrationHelper
 
     describe "labelize tests" do
@@ -43,6 +42,5 @@ module Katello
         @product.label.must_equal("AOL4")
       end
     end
-
   end
 end

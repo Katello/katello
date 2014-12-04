@@ -31,6 +31,5 @@ module Katello
 
       @dev                = KTEnvironment.find(katello_environments(:dev).id)
     end
-
   end
 end

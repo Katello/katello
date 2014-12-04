@@ -34,7 +34,6 @@ module Katello
     end
 
     module ClassMethods
-
       def readable
         authorized(:view_host_collections)
       end
@@ -54,8 +53,6 @@ module Katello
       def deletable
         authorized(:destroy_host_collections)
       end
-
     end
-
   end
 end

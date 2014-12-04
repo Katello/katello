@@ -128,6 +128,5 @@ module Katello
     def self.humanize_class_name(_name = nil)
       _("Sync Plans")
     end
-
   end
 end

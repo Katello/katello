@@ -53,11 +53,9 @@ module Katello
       assert set_pulp_consumer(@simple_server)
       @simple_server.del_pulp_consumer
     end
-
   end
 
   class GluePulpConsumerDeleteTest < GluePulpConsumerTestBase
-
     def setup
       VCR.insert_cassette('pulp/consumer/delete')
       @simple_server = System.find(katello_systems(:simple_server).id)

@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class SyncManagementControllerTest < ActionController::TestCase
-
     def permissions
       @sync_permission = :sync_products
     end
@@ -102,6 +101,5 @@ module Katello
         delete :destroy, :id => @repository.id
       end
     end
-
   end
 end

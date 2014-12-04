@@ -14,9 +14,7 @@ module Actions
   module Pulp
     module Repository
       module Presenters
-
         class PuppetPresenter < AbstractSyncPresenter
-
           def progress
             total_count == 0 ? 0 : finished_count.to_f / total_count
           end
@@ -58,9 +56,7 @@ module Actions
           def task_progress_details
             task_progress && task_progress['puppet_importer']
           end
-
         end
-
       end
     end
   end

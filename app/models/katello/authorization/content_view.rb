@@ -38,7 +38,6 @@ module Katello
     end
 
     module ClassMethods
-
       def readable
         authorized(:view_content_views)
       end
@@ -80,8 +79,6 @@ module Katello
         query.joins(:repositories => :content_view_version)
              .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => ContentView.readable.pluck(:id))
       end
-
     end
-
   end
 end

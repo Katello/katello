@@ -13,9 +13,7 @@ end
 module Katello
   module Apipie
     module Validators
-
       class UndefValidator < ::Apipie::Validator::BaseValidator
-
         def validate(_value)
           true
         end
@@ -32,7 +30,6 @@ module Katello
       end
 
       class NumberValidator < ::Apipie::Validator::BaseValidator
-
         def validate(value)
           value.to_s =~ /^(0|[1-9]\d*)$/
         end
@@ -53,7 +50,6 @@ module Katello
       end
 
       class IdentifierValidator < ::Apipie::Validator::BaseValidator
-
         def validate(value)
           value = value.to_s
           value =~ /\A[\w| |_|-]*\Z/ && value.strip == value && (2..128).include?(value.length)
@@ -75,7 +71,6 @@ module Katello
       end
 
       class BooleanValidator < ::Apipie::Validator::BaseValidator
-
         def validate(value)
           %w(true false True False).include?(value.to_s)
         end

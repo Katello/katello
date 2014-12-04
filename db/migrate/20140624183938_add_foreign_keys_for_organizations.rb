@@ -31,5 +31,4 @@ class AddForeignKeysForOrganizations < ActiveRecord::Migration
     remove_foreign_key('katello_host_collections', :name => 'katello_host_collections_organization_fk')
     remove_foreign_key('katello_environments', :name => 'katello_environments_organization_fk')
   end
-
 end

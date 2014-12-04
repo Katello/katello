@@ -16,7 +16,6 @@
 # rubocop:disable SymbolName
 module Katello
   module Glue::ElasticSearch::System
-
     # rubocop:disable MethodLength
     def self.included(base)
       base.class_eval do
@@ -175,6 +174,5 @@ module Katello
         update System.document_type, system_id, :script => id_update + name_update
       end
     end
-
   end
 end

@@ -15,7 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::SyncControllerTest < ActionController::TestCase
-
     def self.before_suite
       models = ["Product"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
@@ -65,6 +64,5 @@ module Katello
         get :index, :repository_id => @repository.id
       end
     end
-
   end
 end

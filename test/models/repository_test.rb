@@ -14,7 +14,6 @@ require File.expand_path("repository_base", File.dirname(__FILE__))
 
 module Katello
   class RepositoryCreateTest < RepositoryTestBase
-
     def setup
       super
       User.current = @admin
@@ -124,7 +123,6 @@ module Katello
   end
 
   class RepositoryInstanceTest < RepositoryTestBase
-
     def setup
       super
       User.current = @admin
@@ -351,11 +349,9 @@ module Katello
       refute_empty rhel.errata_filenames
       assert_includes rhel.errata_filenames, rhel.errata.first.packages.first.filename
     end
-
   end
 
   class RepositoryApplicabilityTest < RepositoryTestBase
-
     def setup
       super
       @lib_system = System.find(katello_systems(:simple_server))
@@ -381,7 +377,5 @@ module Katello
       @view_system.expects(:import_applicability)
       @lib_repo.import_system_applicability
     end
-
   end
-
 end

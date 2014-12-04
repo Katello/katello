@@ -13,7 +13,6 @@
 module Katello
   module Util
     module TaskStatus
-
       # The types hash below was introduced to simplify rendering of the status of various tasks/actions.  It was
       # initially introduced to support System Event history and was later refactored, so that it may be used
       # for system groups...etc.  Refer to the job.rb and system_task.rb for examples of it's usage.
@@ -140,7 +139,6 @@ module Katello
       TYPES.each_pair do |_name, value|
         value[:name] = _(value[:english_name])
       end
-
     end
   end
 end

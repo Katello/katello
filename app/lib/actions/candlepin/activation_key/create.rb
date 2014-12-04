@@ -13,7 +13,6 @@
 module Actions
   module Candlepin
     class ActivationKey::Create < Candlepin::Abstract
-
       input_format do
         param :organization_label
       end

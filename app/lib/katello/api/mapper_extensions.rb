@@ -1,8 +1,6 @@
 module Katello
   module Routing
-
     module MapperExtensions
-
       def api_resources(*args, &block)
         options          = args.extract_options!
         options[:except] = Array(options[:except])
@@ -27,8 +25,6 @@ module Katello
           delete :destroy, params.merge(options)
         end
       end
-
     end
-
   end
 end

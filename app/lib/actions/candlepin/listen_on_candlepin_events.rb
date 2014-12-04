@@ -35,7 +35,6 @@ module Actions
     end
 
     class ListenOnCandlepinEvents < Actions::Base
-
       Connected = Algebrick.atom
 
       NotConnected = Algebrick.type do

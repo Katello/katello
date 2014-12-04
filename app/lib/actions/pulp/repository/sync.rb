@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Repository
       class Sync < Pulp::AbstractAsyncTask
-
         include Helpers::Presenter
 
         input_format do
@@ -73,7 +72,6 @@ module Actions
           # in the warning state, but not locking further syncs
           Dynflow::Action::Rescue::Skip
         end
-
       end
     end
   end

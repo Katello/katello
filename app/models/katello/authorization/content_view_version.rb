@@ -20,6 +20,5 @@ module Katello
         joins(:content_view).where("#{Katello::ContentView.table_name}.id" => view_ids)
       end
     end
-
   end
 end

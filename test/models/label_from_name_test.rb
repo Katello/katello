@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class LabelFromNameTest < ActiveSupport::TestCase
-
     def self.before_suite
       services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
       models    = ['Repository', 'KTEnvironment', 'ContentView', 'ContentViewVersion',
@@ -36,6 +35,5 @@ module Katello
         staging.update_attributes!(:label => "crazy")
       end
     end
-
   end
 end

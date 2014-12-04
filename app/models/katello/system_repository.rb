@@ -17,6 +17,5 @@ module Katello
 
     belongs_to :system, :inverse_of => :system_repositories, :class_name => 'Katello::System'
     belongs_to :repository, :inverse_of => :system_repositories, :class_name => 'Katello::Repository'
-
   end
 end

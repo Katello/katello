@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class ImportUpload < Actions::EntryAction
-
         def plan(repository, upload_id)
           action_subject(repository)
           import_upload = plan_action(Pulp::Repository::ImportUpload,
@@ -28,7 +27,6 @@ module Actions
         def humanized_name
           _("Upload into")
         end
-
       end
     end
   end

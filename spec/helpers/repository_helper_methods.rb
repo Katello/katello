@@ -1,6 +1,5 @@
 module Katello
   module RepositoryHelperMethods
-
     def stub_repos(repos)
       repos.stub(:where).returns(repos)
       where = stub
@@ -30,6 +29,5 @@ module Katello
       repo.save!
       repo
     end
-
   end
 end

@@ -15,7 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::ContentViewFiltersControllerTest < ActionController::TestCase
-
     def self.before_suite
       models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion",
                 "Repository"]
@@ -183,6 +182,5 @@ module Katello
         get :available_package_groups, :content_view_id => @filter.content_view_id, :id => @filter.id
       end
     end
-
   end
 end

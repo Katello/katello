@@ -179,6 +179,5 @@ module Katello
     def remove_environment(env)
       content_view.remove_environment(env) unless content_view.content_view_versions.in_environment(env).count > 1
     end
-
   end
 end

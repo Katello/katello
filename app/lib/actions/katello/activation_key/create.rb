@@ -14,7 +14,6 @@ module Actions
   module Katello
     module ActivationKey
       class Create < Actions::EntryAction
-
         def plan(activation_key)
           activation_key.disable_auto_reindex!
           activation_key.save!
@@ -38,7 +37,6 @@ module Actions
           activation_key.cp_id = input[:cp_id]
           activation_key.save!
         end
-
       end
     end
   end

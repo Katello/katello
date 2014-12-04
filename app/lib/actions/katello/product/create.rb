@@ -13,7 +13,6 @@ module Actions
   module Katello
     module Product
       class Create < Actions::EntryAction
-
         def plan(product, organization)
           product.disable_auto_reindex!
           product.provider = organization.anonymous_provider
@@ -47,9 +46,7 @@ module Actions
         def humanized_name
           _("Create")
         end
-
       end
-
     end
   end
 end

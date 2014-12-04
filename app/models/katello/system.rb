@@ -140,7 +140,6 @@ module Katello
         repos = Katello::Repository.in_environment(env).in_content_views([content_view])
         self.applicable_errata.in_repositories(repos)
       end
-
     end
 
     def available_releases
@@ -385,6 +384,5 @@ module Katello
     def self.humanize_class_name(_name = nil)
       _('Content Host')
     end
-
   end
 end

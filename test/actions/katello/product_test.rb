@@ -13,7 +13,6 @@
 require 'katello_test_helper'
 
 module Katello
-
   describe ::Actions::Katello::Product do
     include Dynflow::Testing
     include Support::Actions::Fixtures
@@ -71,7 +70,6 @@ module Katello
 end
 
 module ::Actions::Katello::Product
-
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures

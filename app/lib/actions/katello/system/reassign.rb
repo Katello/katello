@@ -14,7 +14,6 @@ module Actions
   module Katello
     module System
       class Reassign < Actions::Base
-
         def plan(system, content_view_id, environment_id)
           system.content_view_id = content_view_id
           system.environment_id = environment_id
@@ -31,7 +30,6 @@ module Actions
           # TODO: update cp
           system.save!
         end
-
       end
     end
   end

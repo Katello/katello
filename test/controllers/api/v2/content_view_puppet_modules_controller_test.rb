@@ -15,7 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::ContentViewPuppetModulesControllerTest < ActionController::TestCase
-
     def self.before_suite
       models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion",
                 "ContentViewPuppetModule", "Repository"]

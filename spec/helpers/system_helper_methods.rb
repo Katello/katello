@@ -81,6 +81,5 @@ module Katello
       Katello.pulp_server.extensions.consumer.stubs(:install_content).returns(expected_response)
       Katello.pulp_server.resources.task.stubs(:poll).returns(refresh_response)
     end
-
   end
 end

@@ -38,6 +38,5 @@ module Katello
       @unassigned_gpg_key   = GpgKey.find(katello_gpg_keys(:unassigned_gpg_key).id)
       @system               = System.find(katello_systems(:simple_server))
     end
-
   end
 end

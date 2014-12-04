@@ -13,7 +13,6 @@
 module Katello
   module Util
     module Package
-
       SUFFIX_RE = /\.(rpm)$/
       ARCH_RE = /\.([^.\-]*)$/
       EPOCH_RE = /([0-9]+):/
@@ -54,7 +53,6 @@ module Katello
         else
           return self.parse_nvre(name)
         end
-
       end
 
       def self.extract_suffix(name)

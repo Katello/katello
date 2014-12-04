@@ -15,7 +15,6 @@
 
 module Katello
   module ContentSearch
-
     class Search
       include Element
       display_attributes :rows, :name, :cols
@@ -42,6 +41,5 @@ module Katello
         SearchUtils.page_size
       end
     end
-
   end
 end

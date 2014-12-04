@@ -15,7 +15,6 @@ require 'support/candlepin/owner_support'
 
 module Katello
   class GlueCandlepinOwnerTestBase < ActiveSupport::TestCase
-
     def self.before_suite
       @loaded_fixtures = load_fixtures
 
@@ -25,7 +24,6 @@ module Katello
 
       User.current = User.find(@loaded_fixtures['users']['admin']['id'])
       VCR.insert_cassette('glue_candlepin_owner', :match_requests_on => [:path, :params, :method, :body_json])
-
     end
 
     def self.after_suite
@@ -33,11 +31,9 @@ module Katello
     ensure
       VCR.eject_cassette
     end
-
   end
 
   class GlueCandlepinOwnerTestSLA < GlueCandlepinOwnerTestBase
-
     def self.before_suite
       super
       @@org = CandlepinOwnerSupport.create_organization('GlueCandlepinOwnerTestSystem_1', 'GlueCandlepinOwnerTestSystem_1')
@@ -65,6 +61,5 @@ module Katello
       @@org.service_level = nil
       assert_equal nil, @@org.service_level
     end
-
   end
 end

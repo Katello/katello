@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::EnvironmentsController < Api::V2::ApiController
-
     resource_description do
       resource_id 'lifecycle_environments'
       description <<-DESC
@@ -204,5 +203,4 @@ module Katello
       @content_view = ContentView.readable.find_by_id(params[:content_view_id])
     end
   end
-
 end

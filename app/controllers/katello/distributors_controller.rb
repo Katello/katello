@@ -187,7 +187,6 @@ module Katello
       end
       render_panel_direct(Distributor, @panel_options, search, params[:offset], order,
                           :default_field => :name, :filter => filters, :load => true)
-
     end
 
     def auto_complete
@@ -214,7 +213,6 @@ module Katello
       else
         [:name_sort, "ASC"]
       end
-
     end
 
     def subscriptions
@@ -499,6 +497,5 @@ module Katello
 
       return next_objects, offset + size
     end
-
   end
 end

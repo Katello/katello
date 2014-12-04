@@ -30,6 +30,5 @@ module Katello
     def extended_index_attrs
       {:name_sort => name.downcase}
     end
-
   end
 end

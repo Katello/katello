@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Repository
       class CreateUploadRequest < Pulp::Abstract
-
         input_format do
         end
 
@@ -27,7 +26,6 @@ module Actions
           output[:response] = pulp_resources.content.create_upload_request
           output[:upload_id] = output[:response][:upload_id]
         end
-
       end
     end
   end

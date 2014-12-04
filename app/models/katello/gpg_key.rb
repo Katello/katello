@@ -49,6 +49,5 @@ module Katello
     def self.humanize_class_name(_name = nil)
       _("GPG Keys")
     end
-
   end
 end

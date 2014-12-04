@@ -15,7 +15,6 @@ module Actions
   module Candlepin
     module Product
       class Update < Candlepin::Abstract
-
         def plan(product)
           product.deleted_content.each do |product_content|
             plan_action(::Actions::Candlepin::Product::ContentRemove,
@@ -36,7 +35,6 @@ module Actions
                         :content_id => content_create.output[:response][:id])
           end
         end
-
       end
     end
   end

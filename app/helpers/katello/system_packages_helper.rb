@@ -12,7 +12,6 @@
 
 module Katello
   module SystemPackagesHelper
-
     def adding_package
       _("Adding Package...")
     end

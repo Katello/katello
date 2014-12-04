@@ -29,7 +29,6 @@ module Katello
     end
 
     module InstanceMethods
-
       def bound_node_repos
         bindings(Runcible::Models::NodesHttpDistributor.type_id)
       end
@@ -115,7 +114,6 @@ module Katello
             ActiveRecord::Base.connection.execute(sql)
           end
         end
-
       end
 
       def generate_applicability
@@ -232,7 +230,6 @@ module Katello
         Rails.logger.error "Failed to find profile for #{uuid}: #{e}, #{e.backtrace.join("\n")}"
         {:profile => []}.with_indifferent_access
       end
-
     end
   end
 end

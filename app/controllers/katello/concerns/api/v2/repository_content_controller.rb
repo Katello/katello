@@ -169,7 +169,6 @@ module Katello
       def filter_by_environment(environment, options)
         filter_by_repo_ids(environment.repositories.map(&:pulp_id), options)
       end
-
     end
   end
 end

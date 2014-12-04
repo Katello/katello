@@ -13,7 +13,6 @@
 require 'katello_test_helper'
 
 module ::Actions::Katello::ActivationKey
-
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::RemoteAction
@@ -22,7 +21,6 @@ module ::Actions::Katello::ActivationKey
 
     let(:action) { create_action action_class }
     let(:activation_key) { katello_activation_keys(:simple_key) }
-
   end
 
   class CreateTest < TestBase
@@ -55,5 +53,4 @@ module ::Actions::Katello::ActivationKey
       assert_action_planed(action, ::Actions::Candlepin::ActivationKey::Destroy)
     end
   end
-
 end

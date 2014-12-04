@@ -12,7 +12,6 @@
 
 module Katello
   class RepositoriesController < Katello::ApplicationController
-
     respond_to :html, :js
 
     def auto_complete_library
@@ -36,6 +35,5 @@ module Katello
         {:id => repo.id, :label => label, :value => repo.name}
       end)
     end
-
   end
 end

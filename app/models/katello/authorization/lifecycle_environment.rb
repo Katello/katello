@@ -38,7 +38,6 @@ module Katello
     end
 
     module ClassMethods
-
       def readable
         authorized(:view_lifecycle_environments)
       end
@@ -62,8 +61,6 @@ module Katello
       def content_readable(org)
         readable.where(:organization_id => org)
       end
-
     end
-
   end
 end

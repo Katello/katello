@@ -15,7 +15,6 @@ require 'katello_test_helper'
 module Katello
   module Util
     class ModelTest < ActiveSupport::TestCase
-
       test "should return controller path for given model" do
         assert_equal Katello::Util::Model.model_to_controller_path(Katello::ActivationKey), "katello/activation_keys"
         assert_equal Katello::Util::Model.model_to_controller_path(Katello::KTEnvironment), "katello/environments"

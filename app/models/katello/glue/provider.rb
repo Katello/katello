@@ -13,7 +13,6 @@
 # rubocop:disable SymbolName
 module Katello
   module Glue::Provider
-
     def self.included(base)
       base.send :include, InstanceMethods
       base.class_eval do
@@ -22,7 +21,6 @@ module Katello
     end
 
     module InstanceMethods
-
       def import_manifest(zip_file_path, options = {})
         options = {:zip_file_path => zip_file_path}.merge(options)
         options.assert_valid_keys(:force, :zip_file_path)
@@ -156,7 +154,6 @@ module Katello
       end
 
       def owner_upstream_update(upstream, _options)
-
         if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
           Rails.logger.error "Upstream identity certificate not available"
           fail _("Upstream identity certificate not available")
@@ -175,11 +172,9 @@ module Katello
         end
         Resources::Candlepin::UpstreamConsumer.update("#{url}#{upstream['uuid']}", upstream['idCert']['cert'],
                                                       upstream['idCert']['key'], ca_file, :capabilities => capabilities)
-
       end
 
       def owner_upstream_export(upstream, zip_file_path, _options)
-
         if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
           Rails.logger.error "Upstream identity certificate not available"
           fail _("Upstream identity certificate not available")
@@ -275,7 +270,6 @@ module Katello
 
       # TODO: break up method
       def import_products_from_cp(options = {}) # rubocop:disable MethodLength
-
         import_logger = options[:import_logger]
         product_in_katello_ids = self.organization.providers.redhat.first.products.pluck("cp_id")
         products_in_candlepin_ids = []
@@ -427,7 +421,6 @@ module Katello
       # TODO: break up this method
       # rubocop:disable MethodLength
       def display_manifest_message(type, error, options)
-
         # Clean up response from candlepin
         types = {'import' => _('import'), 'delete' => _('delete'), 'refresh' => _('refresh')}  # For i18n
         begin
@@ -504,8 +497,6 @@ module Katello
       def candlepin_ping
         @candlepin_ping ||= Resources::Candlepin::CandlepinPing.ping
       end
-
     end
-
   end
 end

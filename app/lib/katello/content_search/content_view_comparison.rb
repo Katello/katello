@@ -12,7 +12,6 @@
 
 module Katello
   module ContentSearch
-
     class ContentViewComparison < Search
       attr_accessor :cv_env_ids,
                     :unit_type, # :package, :errata, :puppet_module
@@ -196,6 +195,5 @@ module Katello
         rows.select { |row| row.data_type == "metadata" }
       end
     end
-
   end
 end

@@ -15,7 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::SystemPackagesControllerTest < ActionController::TestCase
-
     include Support::ForemanTasks::Task
 
     def self.before_suite
@@ -133,6 +132,5 @@ module Katello
         put :remove, :system_id => @system.uuid, :packages => ["foo*"]
       end
     end
-
   end
 end

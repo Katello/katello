@@ -39,6 +39,5 @@ module Katello
         :environment_id => self.katello_environment_id
       }
     end
-
   end
 end

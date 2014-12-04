@@ -12,7 +12,6 @@
 
 module Katello
   class Dashboard::HostCollectionsWidget < Dashboard::Widget
-
     def accessible?
       User.current.admin? ||
        (current_organization &&
@@ -27,6 +26,5 @@ module Katello
     def content_path
       host_collections_dashboard_index_path
     end
-
   end
 end

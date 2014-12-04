@@ -158,6 +158,5 @@ module Katello
         get :paths, :organization_id => @organization.id
       end
     end
-
   end
 end

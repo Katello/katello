@@ -14,7 +14,6 @@ require 'models/authorization/authorization_base'
 
 module Katello
   class ContentViewAuthorizationAdminTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users('admin'))
@@ -63,7 +62,6 @@ module Katello
   end
 
   class ContentViewAuthorizationNoPermsTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users('restricted'))
@@ -124,6 +122,5 @@ module Katello
       assert_empty(ContentView.readable_products - view.products)
       assert_empty(ContentView.readable_products(view2.products.pluck(:id)))
     end
-
   end
 end

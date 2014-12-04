@@ -14,7 +14,6 @@
 require 'katello_test_helper'
 
 class DockerTagTest < ActiveSupport::TestCase
-
   extend ActiveRecord::TestFixtures
 
   def self.before_suite

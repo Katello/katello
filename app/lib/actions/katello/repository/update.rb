@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class Update < Actions::EntryAction
-
         def plan(repository, repo_params)
           repository.disable_auto_reindex!
           action_subject repository
@@ -65,7 +64,6 @@ module Actions
                         end
           distributor.type_id
         end
-
       end
     end
   end

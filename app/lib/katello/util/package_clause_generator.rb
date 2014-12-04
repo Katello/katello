@@ -75,7 +75,6 @@ module Katello
         pkg_names = Katello::PackageGroup.list_by_filter_clauses(group_clauses).collect(&:package_names).flatten
         {'name' => {"$in" => pkg_names}} unless pkg_names.empty?
       end
-
     end
   end
 end

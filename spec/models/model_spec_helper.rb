@@ -14,7 +14,6 @@ require File.expand_path("../helpers/repo_test_data", File.dirname(__FILE__))
 
 module Katello
   module OrchestrationHelper
-
     CERT = <<EOCERT
 -----BEGIN CERTIFICATE-----
 MIIF7DCCBVWgAwIBAgIIB1AMflT0SrswDQYJKoZIhvcNAQEFBQAwRjElMCMGA1UE

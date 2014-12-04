@@ -12,7 +12,6 @@
 
 module Katello
   module ApplicationHelper
-
     include Katello::LayoutHelper
 
     def current_user
@@ -24,7 +23,6 @@ module Katello
     end
 
     def link_to_authorized(*args, &block)
-
       if block_given?
         options      = args.first || {}
         html_options = args.second
@@ -43,7 +41,6 @@ module Katello
           end
         end
       end
-
     end
 
     def help_tip(text, key = nil)
@@ -206,7 +203,6 @@ module Katello
     # @option options [String] :by the name of the named scope. This helper will prepend this value with "ascend_by_" and "descend_by_"
     # @option options [String] :as the text used in the link, defaults to whatever is passed to :by
     def sort(field, options = {}, html_options = {})
-
       unless options[:as]
         id           = field.to_s.downcase == "id"
         options[:as] = id ? field.to_s.upcase : field.to_s.humanize
@@ -335,7 +331,6 @@ module Katello
     # with the given product.
     # For example: {product1 => [repo1, repo2]}
     def get_product_and_repos(record, content_types)
-
       products_hash = record.resulting_products.inject({}) do |hash, product|
         if record.repositories.empty?
           hash[product] = []
@@ -357,6 +352,5 @@ module Katello
       anchor = {:search => {:errata => {:search => "errata_id:\"#{erratum_id}\""}, :content_type => "errata"}}
       path + "#/!=&" +  anchor.to_param
     end
-
   end
 end

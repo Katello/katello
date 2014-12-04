@@ -15,7 +15,6 @@ require 'mocha/setup'
 
 module Katello
   class GlueCandlepinProviderTestBase < ActiveSupport::TestCase
-
     def self.before_suite
       @loaded_fixtures = load_fixtures
 
@@ -38,11 +37,9 @@ module Katello
     ensure
       VCR.eject_cassette
     end
-
   end
 
   class GlueCandlepinProviderTestImport < GlueCandlepinProviderTestBase
-
     def self.before_suite
       super
     end
@@ -82,13 +79,10 @@ module Katello
       VCR.use_cassette("support/candlepin/provider_#{manifest}", :match_requests_on => [:path, :params, :method]) do
         @@provider.queue_delete_manifest
       end
-
     end
-
   end
 
   class GlueCandlepinProviderTestDelete < GlueCandlepinProviderTestBase
-
     #until we can import a fake manifest into candlepin, this the best we can do
     def test_manifest_delete
       @@provider.stubs(:index_subscriptions).returns(true)

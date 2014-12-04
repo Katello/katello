@@ -12,7 +12,6 @@
 
 module Katello
   class ErrataController < Katello::ApplicationController
-
     def auto_complete
       repo_ids = readable_repos(:pulp_id)
 
@@ -30,6 +29,5 @@ module Katello
       repos += ContentView.readable_repositories.pluck(attribute)
       repos
     end
-
   end
 end

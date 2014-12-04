@@ -18,7 +18,6 @@ require 'katello/app_config'
 require 'util/password'
 
 module Katello
-
   # TODO: clean up this method
   # rubocop:disable MethodLength, BlockAlignment, HashMethods
   # @return [Configuration::Loader] configured for Katello

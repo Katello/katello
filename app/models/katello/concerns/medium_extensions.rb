@@ -17,7 +17,6 @@ module Katello
       extend ActiveSupport::Concern
 
       module ClassMethods
-
         def update_media(repo)
           return if repo.puppet?
 
@@ -42,7 +41,6 @@ module Katello
               medium.destroy
             end
           end
-
         end
 
         def find_or_create_medium(org, medium_name, medium_path)

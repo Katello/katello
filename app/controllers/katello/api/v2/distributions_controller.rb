@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::DistributionsController < Api::V2::ApiController
-
     before_filter :find_repository
     before_filter :find_distribution, :only => [:show]
 
@@ -47,6 +46,5 @@ module Katello
       fail HttpErrors::NotFound, _("Distribution with id '%s' not found") % params[:id] if @distribution.nil?
       fail HttpErrors::NotFound, _("Distribution '%s' not found within the repository") % params[:id] unless @distribution.repoids.include? @repo.pulp_id
     end
-
   end
 end

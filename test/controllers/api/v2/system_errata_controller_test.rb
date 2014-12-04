@@ -15,7 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::SystemErrataControllerTest < ActionController::TestCase
-
     include Support::ForemanTasks::Task
 
     def self.before_suite
@@ -58,6 +57,5 @@ module Katello
         put :apply, :system_id => @system.uuid, :errata => ["foo*"]
       end
     end
-
   end
 end

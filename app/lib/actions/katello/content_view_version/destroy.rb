@@ -14,7 +14,6 @@ module Actions
   module Katello
     module ContentViewVersion
       class Destroy < Actions::Base
-
         def plan(version, options = {})
           version.check_ready_to_destroy!
 
@@ -37,7 +36,6 @@ module Actions
           version = ::Katello::ContentViewVersion.find(input[:id])
           version.destroy!
         end
-
       end
     end
   end

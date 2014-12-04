@@ -12,7 +12,6 @@
 
 module Katello
   class Api::V2::PingController < Api::V2::ApiController
-
     resource_description do
       api_version "v2"
     end
@@ -34,6 +33,5 @@ module Katello
                  :timeUTC    => Time.now.getutc }
       respond_for_show :resource => status, :template => "server_status"
     end
-
   end
 end

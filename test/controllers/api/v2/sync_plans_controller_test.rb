@@ -15,7 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::SyncPlansControllerTest < ActionController::TestCase
-
     include Support::ForemanTasks::Task
 
     def self.before_suite

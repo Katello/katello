@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class RepositoryTest < ActiveSupport::TestCase
-
     def self.before_suite
       disable_glue_layers(["Pulp"], ["Package", "Repository"])
     end

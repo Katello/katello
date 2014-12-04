@@ -201,6 +201,5 @@ module Katello
             :environment_id => @library.id, :content_view_id => @view.id
       end
     end
-
   end
 end

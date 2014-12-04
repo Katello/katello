@@ -46,7 +46,6 @@ module Katello
   end
 
   class SystemCreateTest < SystemTestBase
-
     def setup
       super
     end
@@ -148,11 +147,9 @@ module Katello
       @system2.expects(:udpate_foreman_host).never
       @system2.save!
     end
-
   end
 
   class SystemTest < SystemTestBase
-
     def setup
       super
     end
@@ -206,7 +203,5 @@ module Katello
       assert_equal 1, available_in_view.length
       assert_include available_in_view, Erratum.find(katello_errata(:security))
     end
-
   end
-
 end

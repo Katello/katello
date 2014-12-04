@@ -13,7 +13,6 @@
 module Actions
   module Candlepin
     class ReindexPoolSubscriptionHandler
-
       def initialize(logger)
         @logger = logger
       end

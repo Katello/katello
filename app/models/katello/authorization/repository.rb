@@ -32,7 +32,6 @@ module Katello
     delegate :syncable?, to: :product
 
     module ClassMethods
-
       def readable
         where(:product_id => Katello::Product.authorized(:view_products))
       end
@@ -66,8 +65,6 @@ module Katello
           where(environment_id: KTEnvironment.content_readable(org).non_library)
         end
       end
-
     end
-
   end
 end

@@ -12,7 +12,6 @@
 module Support
   module ForemanTasks
     module Task
-
       def stub_tasks!
         @controller.stubs(:sync_task).returns(build_task_stub)
         @controller.stubs(:async_task).returns(build_task_stub)
@@ -48,7 +47,6 @@ module Support
             returns(task_stub)
         return task_stub
       end
-
     end
   end
 end

@@ -29,7 +29,6 @@ module Katello
           indexes :result, :type => 'string', :analyzer => 'snowball'
         end
       end
-
     end
 
     def extended_index_attrs
@@ -61,6 +60,5 @@ module Katello
       end
       ret
     end
-
   end
 end

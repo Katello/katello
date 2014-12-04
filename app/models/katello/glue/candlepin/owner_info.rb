@@ -12,7 +12,6 @@
 
 module Katello
   class Glue::Candlepin::OwnerInfo
-
     def initialize(organization)
       @info = Resources::Candlepin::OwnerInfo.find(organization.label)
     end
@@ -50,6 +49,5 @@ module Katello
       end
       nil
     end
-
   end
 end

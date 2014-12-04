@@ -33,9 +33,7 @@ require 'pathname'
 
 module Katello
   module Util
-
     module UrlMatcher
-
       def self.match(path, routes)
         path     = Path.new(path)
         patterns = routes.map { |route| Pattern.new(Array(route).first) }
@@ -70,7 +68,6 @@ module Katello
       end
 
       class Pattern < Path
-
         def variables
           return [] unless @match
 

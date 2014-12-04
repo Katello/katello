@@ -16,7 +16,6 @@ require "katello_test_helper"
 # rubocop:disable Metrics/MethodLength
 module Katello
   class Api::V2::ContentViewsControllerTest < ActionController::TestCase
-
     def self.before_suite
       models = ["ContentViewEnvironment", "ContentViewVersion",
                 "Repository", "ContentViewComponent", "ContentView", "System",
@@ -490,6 +489,5 @@ module Katello
                      :key_environment_id => alternate_env.id
       end
     end
-
   end
 end

@@ -11,7 +11,6 @@
 
 module Support
   module Actions
-
     # Module for creating actions based on yaml fixtures.
     #
     # Usage:

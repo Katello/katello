@@ -13,7 +13,6 @@
 require 'katello_test_helper'
 
 module ::Actions::Pulp
-
   class ConsumerTestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::PulpTask
@@ -51,7 +50,6 @@ module ::Actions::Pulp
   end
 
   class ConsumerTest < ConsumerTestBase
-
     def test_create
       configure_runcible
       consumer = ::Katello.pulp_server.resources.consumer.retrieve(uuid)
@@ -107,7 +105,6 @@ module ::Actions::Pulp
   end
 
   class NodeBindingsTest < ConsumerTestBase
-
     let(:repository) do
       katello_repositories(:fedora_17_x86_64_dev)
     end
@@ -139,6 +136,5 @@ module ::Actions::Pulp
         stub.with(uuid, repository.pulp_id, "#{repository.pulp_id}_nodes")
       end
     end
-
   end
 end

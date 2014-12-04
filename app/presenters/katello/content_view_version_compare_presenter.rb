@@ -12,7 +12,6 @@
 
 module Katello
   class ContentViewVersionComparePresenter
-
     def initialize(content_item, content_view_versions, repository)
       @item = content_item
       @versions = content_view_versions
@@ -32,6 +31,5 @@ module Katello
     def method_missing(*args, &block)
       @item.send(*args, &block)
     end
-
   end
 end

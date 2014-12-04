@@ -15,7 +15,6 @@ module Actions
     module System
       module PackageGroup
         class Remove < Actions::EntryAction
-
           include Helpers::Presenter
 
           def plan(system, groups)
@@ -38,7 +37,6 @@ module Actions
             Helpers::Presenter::Delegated.new(
                 self, planned_actions(Pulp::Consumer::ContentUninstall))
           end
-
         end
       end
     end

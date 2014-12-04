@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class IndexErrata < Actions::EntryAction
-
         def plan(repository)
           plan_self(:user_id => ::User.current.id, :id => repository.id)
         end
@@ -26,7 +25,6 @@ module Actions
         ensure
           ::User.current = nil
         end
-
       end
     end
   end

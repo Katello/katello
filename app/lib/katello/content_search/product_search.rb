@@ -12,7 +12,6 @@
 
 module Katello
   module ContentSearch
-
     class ProductSearch < ContainerSearch
       attr_accessor :products, :views, :organization
 

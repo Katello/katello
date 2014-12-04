@@ -224,6 +224,5 @@ module Katello
     def self.humanize_class_name(_name = nil)
       _("Activation Keys")
     end
-
   end
 end

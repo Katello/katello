@@ -67,6 +67,5 @@ module Katello
       end
       @product_hash
     end
-
   end
 end

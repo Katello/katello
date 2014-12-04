@@ -15,7 +15,6 @@ require 'katello_test_helper'
 
 module Katello
   class KTEnvironmentTestBase < ActiveSupport::TestCase
-
     extend ActiveRecord::TestFixtures
 
     def self.before_suite
@@ -33,11 +32,9 @@ module Katello
       @dev                  = KTEnvironment.find(katello_environments(:dev).id)
       @staging              = KTEnvironment.find(katello_environments(:staging).id)
     end
-
   end
 
   class KTEnvironmentTest < KTEnvironmentTestBase
-
     def test_create_and_validate_default_content_view
       env = KTEnvironment.create(:organization => @acme_corporation, :name => "SomeEnv", :prior => @library)
       assert_nil env.default_content_view

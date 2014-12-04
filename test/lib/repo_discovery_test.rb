@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class FileRepoDiscoveryTest < ActiveSupport::TestCase
-
     def test_run
       base_url = "file://#{Katello::Engine.root}/test/fixtures/"
 
@@ -28,6 +27,5 @@ module Katello
       assert_equal 1, found.size
       assert_equal found.first, base_url + 'test_repos/zoo'
     end
-
   end
 end

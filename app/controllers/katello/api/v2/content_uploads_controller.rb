@@ -50,6 +50,5 @@ module Katello
     def find_repository
       @repository = Repository.find(params[:repository_id])
     end
-
   end
 end

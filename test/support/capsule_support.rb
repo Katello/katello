@@ -12,7 +12,6 @@
 
 module Support
   module CapsuleSupport
-
     def pulp_feature
       @pulp_feture ||= Feature.create(name: SmartProxy::PULP_NODE_FEATURE)
     end
@@ -28,6 +27,5 @@ module Support
     def capsule_content
       @capsule_content ||= Katello::CapsuleContent.new(proxy_with_pulp)
     end
-
   end
 end

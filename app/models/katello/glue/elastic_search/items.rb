@@ -14,7 +14,6 @@ module Katello
   module Glue
     module ElasticSearch
       class Items
-
         attr_accessor :obj_class, :query_string, :results, :total, :filters, :search_options, :facets
         alias_method :model=, :obj_class=
 
@@ -202,7 +201,6 @@ module Katello
             sort_by
           end
         end
-
       end
     end
   end

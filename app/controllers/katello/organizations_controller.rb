@@ -13,7 +13,6 @@
 
 module Katello
   class OrganizationsController < Katello::ApplicationController
-
     before_filter :search_filter, :only => [:auto_complete_search]
 
     def rules
@@ -42,6 +41,5 @@ module Katello
     def default_notify_options
       super.merge :organization => nil
     end
-
   end
 end

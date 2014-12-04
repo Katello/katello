@@ -14,7 +14,6 @@ module Actions
   module Pulp
     module Repository
       class CreateInPlan < Create
-
         alias_method :perform_run, :run
 
         def plan(input)
@@ -36,7 +35,6 @@ module Actions
         def run
           self.output = input
         end
-
       end
     end
   end

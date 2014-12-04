@@ -14,7 +14,6 @@ module Actions
   module Katello
     module Repository
       class Destroy < Actions::EntryAction
-
         middleware.use ::Actions::Middleware::RemoteAction
 
         # options:

@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class PoolTest < ActiveSupport::TestCase
-
     def test_active
       active_pool = FactoryGirl.build(:katello_pool, :active)
       inactive_pool = FactoryGirl.build(:katello_pool, :inactive)
@@ -64,5 +63,4 @@ module Katello
       assert_equal active_pool.systems, systems
     end
   end
-
 end

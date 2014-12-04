@@ -15,7 +15,6 @@ require 'support/pulp/repository_support'
 
 module Katello
   class GluePulpPuppetModuleTest < ActiveSupport::TestCase
-
     def setup
       configure_runcible
 
@@ -29,7 +28,6 @@ module Katello
       RepositorySupport.create_and_sync_repo(@repository)
 
       @names = ["cron", "httpd", "pureftpd", "samba"]
-
     end
 
     def teardown

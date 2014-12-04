@@ -13,7 +13,6 @@
 # rubocop:disable SymbolName
 module Katello
   module Glue::ElasticSearch::Distributor
-
     # TODO: break this up into modules
     # rubocop:disable MethodLength
     def self.included(base)

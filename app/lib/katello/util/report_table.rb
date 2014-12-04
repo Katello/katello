@@ -15,7 +15,6 @@ require 'csv'
 module Katello
   module Util
     class ReportTable
-
       attr_accessor :transform, :column_names, :data, :renamed_columns, :column_hash
 
       def initialize(params)

@@ -69,6 +69,5 @@ module Katello
     rescue RestClient::ResourceNotFound => e
       puts "Failed to sync repo destroy #{e.message}"
     end
-
   end
 end

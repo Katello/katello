@@ -28,7 +28,6 @@ module Katello
     end
 
     module ClassMethods
-
       def unit_handler
         Katello.pulp_server.extensions.send(self.name.demodulize.pluralize.underscore)
       end

@@ -14,10 +14,8 @@ module Actions
   module Katello
     module Product
       class Destroy < Actions::EntryAction
-
         # rubocop:disable MethodLength
         def plan(product, options = {})
-
           organization_destroy = options.fetch(:organization_destroy, false)
 
           unless organization_destroy || product.user_deletable?
@@ -71,7 +69,6 @@ module Actions
         def humanized_name
           _("Delete Product")
         end
-
       end
     end
   end

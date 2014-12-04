@@ -95,7 +95,6 @@ module Katello
         end
         a
       end
-
     end
   end
 end

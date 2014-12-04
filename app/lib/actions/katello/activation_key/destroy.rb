@@ -15,7 +15,6 @@ module Actions
   module Katello
     module ActivationKey
       class Destroy < Actions::EntryAction
-
         def plan(activation_key, options = {})
           skip_candlepin = options.fetch(:skip_candlepin, false)
           action_subject(activation_key)

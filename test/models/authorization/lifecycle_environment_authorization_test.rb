@@ -14,7 +14,6 @@ require 'models/authorization/authorization_base'
 
 module Katello
   class EnvironmentAuthorizationAdminTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users('admin'))
@@ -37,11 +36,9 @@ module Katello
     def test_any_promotable?
       assert KTEnvironment.any_promotable?
     end
-
   end
 
   class EnvironmentAuthorizationNoPermsTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users('restricted'))

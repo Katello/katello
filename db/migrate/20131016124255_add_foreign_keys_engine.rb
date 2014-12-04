@@ -96,5 +96,4 @@ class AddForeignKeysEngine < ActiveRecord::Migration
     add_foreign_key "katello_user_notices", "katello_notices", :name => "user_notices_notice_id_fk", :column => 'notice_id'
     add_foreign_key "katello_user_notices", "users", :name => "user_notices_user_id_fk", :column => 'user_id'
   end
-
 end

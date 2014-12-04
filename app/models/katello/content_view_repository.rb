@@ -50,6 +50,5 @@ module Katello
         errors.add(:base, _("Repositories from published Content Views are not allowed."))
       end
     end
-
   end
 end

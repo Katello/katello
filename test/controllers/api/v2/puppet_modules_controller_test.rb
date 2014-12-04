@@ -14,7 +14,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::PuppetModulesControllerTest < ActionController::TestCase
-
     def self.before_suite
       models = ["Organization", "KTEnvironment", "Repository", "Product", "Provider"]
       services = ["Candlepin", "Pulp", "ElasticSearch"]
@@ -109,6 +108,5 @@ module Katello
       get :show, :repository_id => @repo.id, :id => "abc-123"
       assert_response 404
     end
-
   end
 end

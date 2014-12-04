@@ -38,11 +38,9 @@ module Katello
       RepositorySupport.destroy_repo
       VCR.eject_cassette
     end
-
   end
 
   class GlueErratumTest < GlueErratumTestBase
-
     def test_backend_data
       RepositorySupport.repo.index_db_errata
       assert @@full_errata_id, Erratum.find_by_errata_id(@@full_errata_id).backend_data['id']
@@ -77,6 +75,5 @@ module Katello
       refute_empty erratum.cves.first.cve_id
       refute_empty erratum.cves.first.href
     end
-
   end
 end

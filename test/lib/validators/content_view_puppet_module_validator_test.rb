@@ -15,7 +15,6 @@ require 'katello_test_helper'
 
 module Katello
   class ContentViewPuppetModuleValidatorTest < ActiveSupport::TestCase
-
     def setup
       Katello::PuppetModule.stubs(:exists?).returns(true)
       @base_record = { :errors => { :base => [] }, :content_view => OpenStruct.new(:puppet_repos => []) }

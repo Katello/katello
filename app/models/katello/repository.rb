@@ -374,7 +374,6 @@ module Katello
                                 Repository.clone_repo_path(options)
                               end
       end
-
     end
 
     def cancel_dynflow_sync

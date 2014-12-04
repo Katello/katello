@@ -14,7 +14,6 @@ require 'models/authorization/authorization_base'
 
 module Katello
   class SystemAuthorizationAdminTest < AuthorizationTestBase
-
     def setup
       super
       User.current = User.find(users('admin'))
@@ -101,5 +100,4 @@ module Katello
       assert System.all_editable?(sys.content_view, sys.environment)
     end
   end
-
 end

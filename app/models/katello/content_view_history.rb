@@ -12,7 +12,6 @@
 
 module Katello
   class ContentViewHistory < Katello::Model
-
     include Glue::ElasticSearch::ContentViewHistory if Katello.config.use_elasticsearch
 
     belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :content_view_histories,
@@ -35,6 +34,5 @@ module Katello
     def content_view
       self.content_view_version.try(:content_view)
     end
-
   end
 end
