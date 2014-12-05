@@ -16,8 +16,8 @@
 # vim: sw=2:ts=2:et
 
 if [ "$1" != "status" ] && [ $EUID -ne 0 ]; then
-    echo -e "This script must be run as root!\n"
-    exit 1
+  echo -e "This script must be run as root!\n"
+  exit 1
 fi
 
 if [ -x /etc/init.d/tomcat6 -o -x /lib/systemd/system/tomcat6.service ]; then
