@@ -322,10 +322,8 @@ module Katello
             erratum.update_from_json(erratum_json)
           end
         end
-        ActiveRecord::Base.transaction do
-          Katello::RepositoryErratum.where(:repository_id => self.id).delete_all
-          Katello::Erratum.insert_repository_associations(self, errata_ids)
-        end
+
+        Katello::Erratum.sync_repository_associations(self, errata_ids)
       end
 
       def errata_json
@@ -339,18 +337,15 @@ module Katello
       end
 
       def index_db_docker_images
-        ActiveRecord::Base.transaction do
-          docker_tags.destroy_all
+        docker_tags.destroy_all
 
-          docker_images_json.each do |image_json|
-            image = DockerImage.find_or_create_by_katello_uuid(image_json[:_id])
-            image.update_from_json(image_json)
-            create_docker_tags(image, image_json[:tags])
-          end
-
-          Katello::RepositoryDockerImage.where(:repository_id => self.id).delete_all
-          DockerImage.insert_repository_associations(self, docker_image_ids)
+        docker_images_json.each do |image_json|
+          image = DockerImage.find_or_create_by_katello_uuid(image_json[:_id])
+          image.update_from_json(image_json)
+          create_docker_tags(image, image_json[:tags])
         end
+
+        DockerImage.sync_repository_associations(self, docker_image_ids)
       end
 
       def docker_images_json

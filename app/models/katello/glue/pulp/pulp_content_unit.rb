@@ -61,15 +61,30 @@ module Katello
         all_items.count
       end
 
-      def insert_repository_associations(repository, unit_uuids)
+      def sync_repository_associations(repository, unit_uuids)
         associated_ids = with_uuid(unit_uuids).pluck(:id)
         table_name = self.repository_association_class.table_name
         attribute_name = "#{self.name.demodulize.underscore}_id"
 
-        unless associated_ids.empty?
-          inserts = associated_ids.map { |unit_id| "(#{unit_id.to_i}, #{repository.id.to_i})" }
-          sql = "INSERT INTO #{table_name} (#{attribute_name}, repository_id) VALUES #{inserts.join(', ')}"
-          ActiveRecord::Base.connection.execute(sql)
+        existing_ids = self.repository_association_class.where(:repository_id => repository).pluck(attribute_name)
+        new_ids = associated_ids - existing_ids
+        delete_ids = existing_ids - associated_ids
+
+        queries = []
+
+        unless delete_ids.empty?
+          queries << "DELETE FROM #{table_name} WHERE repository_id=#{repository.id} AND #{attribute_name} IN (#{delete_ids.join(', ')})"
+        end
+
+        unless new_ids.empty?
+          inserts = new_ids.map { |unit_id| "(#{unit_id.to_i}, #{repository.id.to_i}, '#{Time.now.utc}', '#{Time.now.utc}')" }
+          queries << "INSERT INTO #{table_name} (#{attribute_name}, repository_id, created_at, updated_at) VALUES #{inserts.join(', ')}"
+        end
+
+        ActiveRecord::Base.transaction do
+          queries.each do |query|
+            ActiveRecord::Base.connection.execute(query)
+          end
         end
       end
 
@@ -86,7 +101,6 @@ module Katello
 
       def update_repository_associations(units_json)
         ActiveRecord::Base.transaction do
-          self.repository_association_class.delete_all
           repo_unit_id = {}
           units_json.each do |unit_json|
             unit_json['repository_memberships'].each do |repo_pulp_id|
@@ -96,7 +110,7 @@ module Katello
           end
 
           repo_unit_id.each do |repo_pulp_id, unit_uuids|
-            insert_repository_associations(Repository.find_by_pulp_id(repo_pulp_id), unit_uuids)
+            sync_repository_associations(Repository.find_by_pulp_id(repo_pulp_id), unit_uuids)
           end
         end
       end
