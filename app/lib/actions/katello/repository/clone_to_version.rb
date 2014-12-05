@@ -24,7 +24,11 @@ module Actions
                                                        version: content_view_version)
           sequence do
             plan_action(Repository::Create, new_repository, true)
-            plan_action(Repository::CloneContent, repository, new_repository, filters, true)
+            if new_repository.yum?
+              plan_action(Repository::CloneYumContent, repository, new_repository, filters, true)
+            elsif new_repository.docker?
+              plan_action(Repository::CloneDockerContent, repository, new_repository)
+            end
           end
         end
       end

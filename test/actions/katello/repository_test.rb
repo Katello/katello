@@ -26,6 +26,7 @@ module ::Actions::Katello::Repository
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
     let(:custom_repository) { katello_repositories(:fedora_17_x86_64) }
     let(:puppet_repository) { katello_repositories(:p_forge) }
+    let(:docker_repository) { katello_repositories(:docker) }
   end
 
   class CreateTest < TestBase
@@ -222,6 +223,43 @@ module ::Actions::Katello::Repository
           action.humanized_output.must_equal "Processing metadata"
         end
       end
+    end
+  end
+
+  class CloneDockerContentTest  < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::CloneDockerContent }
+    let(:source_repo) { katello_repositories(:docker) }
+    let(:target_repo) { katello_repositories(:docker2) }
+
+    it 'plans' do
+      action = create_action action_class
+      plan_action(action, source_repo, target_repo)
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::CopyDockerImage,
+                                source_pulp_id: source_repo.pulp_id,
+                                target_pulp_id: target_repo.pulp_id)
+
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::CopyDockerTag,
+                                source_pulp_id: source_repo.pulp_id,
+                                target_pulp_id: target_repo.pulp_id)
+
+      assert_action_planed_with(action, ::Actions::Katello::Repository::MetadataGenerate, target_repo)
+      assert_action_planed_with(action, ::Actions::ElasticSearch::Repository::IndexContent, id: target_repo.id)
+    end
+  end
+
+  class CloneDockerContentEnvironmentTest  < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::CloneToEnvironment }
+    let(:source_repo) { katello_repositories(:docker) }
+
+    it 'plans' do
+      action = create_action action_class
+      env = mock
+      clone = mock
+      action.expects(:find_or_build_environment_clone).returns(clone)
+      clone.expects(:new_record?).returns(false)
+      plan_action(action, source_repo, env)
+      assert_action_planed_with(action, ::Actions::Katello::Repository::Clear, clone)
+      assert_action_planed_with(action, ::Actions::Katello::Repository::CloneDockerContent, source_repo, clone)
     end
   end
 end

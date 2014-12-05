@@ -157,6 +157,20 @@ module Katello
       Package.package_count(self.repositories.archived)
     end
 
+    def docker_image_count
+      image_counts = repositories.archived.docker_type.map do |repo|
+        repo.docker_images.count
+      end
+      image_counts.sum
+    end
+
+    def docker_tag_count
+      tag_counts = repositories.archived.docker_type.map do |repo|
+        repo.docker_tags.count
+      end
+      tag_counts.sum
+    end
+
     def errata(errata_type = nil)
       errata = Erratum.in_repositories(self.repositories.archived).uniq
       errata = errata.of_type(errata_type) if errata_type
