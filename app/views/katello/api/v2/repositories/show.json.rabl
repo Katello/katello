@@ -46,12 +46,16 @@ child :product do |product|
   end
 end
 
-child :environment => :environment do |_repo|
-  attribute :id
+if @object && @object.library_instance_id.nil?
+
+  node :content_view_environments do |repository|
+    Katello::RepositoryPresenter.new(repository).content_view_environments
+  end
+
 end
 
-child :gpg_key do
-  attributes :id, :name
+child :environment => :environment do |_repo|
+  attribute :id
 end
 
 child :latest_dynflow_sync => :last_sync do |_object|

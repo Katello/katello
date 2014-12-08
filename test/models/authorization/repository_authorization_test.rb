@@ -37,7 +37,7 @@ module Katello
     end
 
     def test_redhat_deletable?
-      repository = Repository.find(katello_repositories(:rhel_6_x86_64))
+      repository = Repository.find(katello_repositories(:rhel_7_x86_64))
       assert repository.redhat_deletable?
     end
 
