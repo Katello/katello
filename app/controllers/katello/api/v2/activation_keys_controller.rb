@@ -76,8 +76,9 @@ module Katello
     api :DELETE, "/activation_keys/:id", N_("Destroy an activation key")
     param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
     def destroy
-      sync_task(::Actions::Katello::ActivationKey::Destroy, @activation_key)
-      respond :message => _("Deleted activation key '%s'") % params[:id], :status => 204
+      task = sync_task(::Actions::Katello::ActivationKey::Destroy,
+                       @activation_key)
+      respond_for_async(:resource => task)
     end
 
     api :GET, "/activation_keys/:id", N_("Show an activation key")
