@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #3f3f3f; background-color: #f1f1f1;">
+<body>
+<style type="text/css">
+  a, a:visited {
+    color: #6bb5df !important;
+  }
+
+  a:hover {
+    color: #CCCCCC !important;
+  }
+</style>
+<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #3f3f3f; background-color: #f1f1f1;">
+  <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable" bgcolor="#f1f1f1">
+    <tr>
+      <td align="center" valign="top">
+        <table border="0" id="emailContainer" style="max-width: 600px;">
+          <tr>
+            <td align="center" valign="top">
+              <div align="left">
+                <h2 style="font-weight: normal;"><b>KATELLO</b> SYNC SUMMARY</h2>
+                <p><%= _("The synchronization of \"%s\" has completed.  Below is a summary of new errata.") % @repo.name %>
+                   <% if @errata_counts[:total] > 100 %>
+                     <%= _("A large number of errata were synced for this repository, so only the first 100 are shown.") %>
+                   <% end -%></p>
+               </div>
+              <table border="0" width="100%" id="emailHeader" style="background-color: #e1e2e3;" bgcolor="#e1e2e3">
+                <tr>
+                  <td align="left" valign="top" style="padding: 0px 20px;">
+                      <h4><%= _("New Errata") %></h4>
+
+                      <div align="center" style="margin: 10px 0px;">
+                      <table class="summary" style="border: 1px solid; padding: 5px; background-color: #ffffff; border-collapse: collapse; text-align: center; width: 100%;" bgcolor="#ffffff">
+                        <tr>
+                          <td style="width: 33%; padding: 5px; border: 1px solid #ccc;">
+                            <b class="counter" style="color: #6bb5df;"><%= @errata_counts[:security] %></b>
+
+                            <p class="summary-title" style="font-size: 80%; font-weight: bold; margin: 5px; padding: 0px;">SECURITY</p>
+                          </td>
+                          <td style="width: 33%; padding: 5px; border: 1px solid #ccc;">
+                            <b class="counter" style="color: #6bb5df;"><%= @errata_counts[:bugfix] %></b>
+
+                            <p class="summary-title" style="font-size: 80%; font-weight: bold; margin: 5px; padding: 0px;">BUGFIX</p>
+                          </td>
+                          <td style="width: 33%; padding: 5px; border: 1px solid #ccc;">
+                            <b class="counter" style="color: #6bb5df;"><%= @errata_counts[:enhancement] %></b>
+
+                            <p class="summary-title" style="font-size: 80%; font-weight: bold; margin: 5px; padding: 0px;">ENHANCEMENT</p>
+                          </td>
+                        </tr>
+                      </table>
+                   </div>
+                 </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top">
+              <table border="0" width="100%" id="emailBody" style="background-color: #fff; margin-top: 10px; padding: 0px 0px 15px;" bgcolor="#fff">
+                <tr>
+                  <td align="center" valign="top" style="padding: 0px 20px 5px;">
+                    <% ['security', 'bugfix', 'enhancement'].each do |errata_type| %>
+                      <% next if @errata[errata_type].nil? %>
+                      <h3 style="text-align: left; margin: 10px 0px 5px;" align="left"><%= _("%s Errata") % errata_type.titleize %></h3>
+                      <% @errata[errata_type].each do |erratum| %>
+                        <%= render :partial => 'erratum', :locals => {:erratum => erratum} %>
+                        <p></p>
+                      <% end -%>
+                    <% end -%>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" valign="top">
+              <table border="0" cellpadding="20" cellspacing="0" width="100%" id="emailFooter" style="background-color: #e1e2e3;" bgcolor="#e1e2e3">
+                <tr>
+                  <td align="left" valign="top" style="font-size: 82%; padding: 0px 20px;">
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

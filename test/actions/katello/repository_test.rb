@@ -166,6 +166,8 @@ module ::Actions::Katello::Repository
                                 pulp_id: repository.pulp_id, task_id: nil)
       assert_action_planed action, ::Actions::ElasticSearch::Repository::IndexContent
       assert_action_planed_with action, ::Actions::ElasticSearch::Reindex, repository
+      assert_action_planed action, ::Actions::Katello::Repository::ErrataMail
+      assert_action_planed_with action, ::Actions::Katello::Repository::ErrataMail, repository
     end
 
     it 'passes the task id to pulp sync action when provided' do

@@ -1,0 +1,15 @@
+<%= _("The following hosts have errata that apply to them: ") %>
+
+<% @content_hosts.group_by(&:organization).each do |org, hosts| %>
+
+<%= _("Organization") %>: <%= org %>
+
+<% hosts.each do |host| %>
+  <%= host %>:
+    <%= _("Security") %>:    <%= errata_count(host, :security) %>
+    <%= _("Bugfix") %>:      <%= errata_count(host, :bugfix) %>
+    <%= _("Enhancement") %>: <%= errata_count(host, :enhancement) %>
+  <% end -%>
+<% end -%>
+
+<%= _("Note: The number in parentheses reflects all applicable errata from the Library environment that are unavailable to the host. You will need to promote this content to the relevant content view in order to make it available.") %>
