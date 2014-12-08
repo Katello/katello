@@ -82,8 +82,9 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyProductDetail
                         {'content_override': {'content_label': content.content.label,
                                               name: "enabled"}
                         },
-                        function () {
+                        function (response) {
                             $scope.success(content);
+                            $scope.setActivationKey(response);
                         },
                         $scope.error);
             } else {
@@ -92,8 +93,9 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyProductDetail
                                                name: "enabled",
                                                value: content.overrideEnabled}
                         },
-                        function () {
+                        function (response) {
                             $scope.success(content);
+                            $scope.setActivationKey(response);
                         },
                         $scope.error);
             }
