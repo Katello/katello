@@ -33,6 +33,7 @@ module Katello
       param :content_view_filter_id, :identifier, :desc => N_("content view filter identifier")
       param :repository_id, :number, :desc => N_("repository identifier")
       param :environment_id, :number, :desc => N_("environment identifier")
+      param_group :search, ::Katello::Api::V2::ApiController
       def index
         options = sort_params
         options[:filters] = []
