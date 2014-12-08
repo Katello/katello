@@ -35,7 +35,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "justified"
   gem.add_dependency "strong_parameters", "~> 0.2.1" # remove after we upgrade to Rails 4
 
-  gem.add_dependency "qpid_messaging", ">= 0.26.1", '<= 0.28.1'
+  gem.add_dependency "qpid_messaging", ">= 0.22.0", '<= 0.28.1'
 
   gem.add_dependency "gettext_i18n_rails"
   gem.add_dependency "i18n_data", ">= 0.2.6"
