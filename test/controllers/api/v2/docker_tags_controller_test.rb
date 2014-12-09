@@ -23,10 +23,10 @@ module Katello
 
     def models
       @repo = Repository.find(katello_repositories(:docker))
-      @image = @repo.docker_images.create!({:image_id => "abc123", :katello_uuid => "123"},
+      @image = @repo.docker_images.create!({:image_id => "abc123", :uuid => "123"},
                                            :without_protection => true
                                           )
-      @tag = @repo.docker_tags.create!(:tag => "wat", :image => @image)
+      @tag = @repo.docker_tags.create!(:name => "wat", :docker_image => @image)
     end
 
     def setup

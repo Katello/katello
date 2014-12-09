@@ -1,9 +1,10 @@
 object @resource
 
-attributes :id, :tag
+attributes :id, :name
+attributes :repository_id
 
-child :image => :image do
-  attributes :katello_uuid => :id
+child :docker_image => :image do
+  attributes :uuid => :id
   attributes :image_id
 end
 

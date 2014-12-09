@@ -340,7 +340,7 @@ module Katello
         docker_tags.destroy_all
 
         docker_images_json.each do |image_json|
-          image = DockerImage.find_or_create_by_katello_uuid(image_json[:_id])
+          image = DockerImage.find_or_create_by_uuid(image_json[:_id])
           image.update_from_json(image_json)
           create_docker_tags(image, image_json[:tags])
         end
@@ -370,7 +370,7 @@ module Katello
         return if tags.empty?
 
         tags.each do |tag|
-          DockerTag.find_or_create_by_katello_repository_id_and_docker_image_id_and_tag!(id, image.id, tag)
+          DockerTag.find_or_create_by_repository_id_and_docker_image_id_and_name!(id, image.id, tag)
         end
       end
 
@@ -470,7 +470,7 @@ module Katello
 
       def docker_image_tag_hash
         docker_tags.map do |tag|
-          {:tag => tag.tag, :image_id => tag.image.image_id}
+          {:tag => tag.name, :image_id => tag.docker_image.image_id}
         end
       end
 
