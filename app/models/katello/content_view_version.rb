@@ -81,10 +81,6 @@ module Katello
       self.content_view_puppet_environments.in_environment(env).first
     end
 
-    def puppet_modules
-      self.content_view_puppet_environments.first.puppet_modules
-    end
-
     def archived_repos
       self.repos(nil)
     end
@@ -151,6 +147,10 @@ module Katello
 
     def packages
       repositories.archived.flat_map(&:packages)
+    end
+
+    def puppet_module_count
+      PuppetModule.module_count([self.archive_puppet_environment])
     end
 
     def package_count

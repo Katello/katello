@@ -49,6 +49,7 @@ module Katello
       permissions
       ContentViewVersion.any_instance.stubs(:package_count).returns(0)
       ContentViewVersion.any_instance.stubs(:errata_count).returns(0)
+      ContentViewVersion.any_instance.stubs(:puppet_module_count).returns(0)
     end
 
     def test_index
