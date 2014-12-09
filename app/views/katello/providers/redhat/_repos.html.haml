@@ -5,7 +5,7 @@
     %th
       = _('Repository')
   %tbody
-    - scan_cdn.output[:results].each do |result|
+    - repos.each do |result|
       %tr.repo{:id=>"repo_#{result[:pulp_id]}"}
         %td
           %label

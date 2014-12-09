@@ -18,6 +18,7 @@ module Katello
     def redhat_repo_tabs
       [
         {:id => :rpms, :name => _('RPMs'), :products => {}},
+        {:id => :kickstarts, :name => _('Kickstarts'), :products => {}},
         {:id => :srpms, :name => _('Source RPMs'), :products => {}},
         {:id => :debug, :name => _('Debug RPMs'), :products => {}},
         {:id => :beta, :name => _('Beta'), :products => {}},
@@ -44,8 +45,10 @@ module Katello
             key = :debug
           elsif name.include?("(ISOs)") || name.include?("Source ISOs")
             key = :isos
-          elsif name.include?("(RPMs)") || name.include?("(Kickstart)")
+          elsif name.include?("(RPMs)")
             key = :rpms
+          elsif name.include?("(Kickstart)")
+            key = :kickstarts
           else
             key = :other
           end
