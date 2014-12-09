@@ -43,7 +43,16 @@ module Katello
         options = filter_by_environment(@environment, options) if @environment
         options = filter_by_content_view_filter(@filter, options) if @filter
 
-        respond(:collection => item_search(resource_class, params, options))
+        results = item_search(resource_class, params, options)
+        results[:results] = results[:results].map do  |item|
+          if resource_class.respond_to?(:new_from_search)
+            resource_class.new_from_search(item.as_json)
+          else
+            resource_class.new(item.as_json)
+          end
+        end
+
+        respond(:collection => results)
       end
 
       api :GET, "/:resource_id/:id", N_("Show :a_resource")

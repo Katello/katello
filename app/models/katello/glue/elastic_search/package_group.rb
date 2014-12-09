@@ -78,6 +78,14 @@ module Katello
           search.results
         end
 
+        def self.new_from_search(params)
+          group_name = params.delete('package_group_id')
+          id = params.delete('id')
+          params['id'] = group_name
+          params['_id'] = id
+          self.new(params)
+        end
+
         def self.legacy_search(query, start, page_size, repoid = nil, sort = [:name_sort, "asc"],
                                default_field = 'name')
           return Util::Support.array_with_total unless Tire.index(self.index).exists?
