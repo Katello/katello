@@ -129,7 +129,7 @@ Requires: %{?scl_prefix}rubygem-haml-rails
 Requires: %{?scl_prefix}rubygem-jquery-ui-rails
 Requires: %{?scl_prefix}rubygem-deface < 1.0.0
 Requires: %{?scl_prefix}rubygem-strong_parameters
-Requires: %{?scl_prefix}rubygem-qpid_messaging >= 0.26.1
+Requires: %{?scl_prefix}rubygem-qpid_messaging >= 0.22.0
 Requires: %{?scl_prefix}rubygem-qpid_messaging <= 0.28.1
 BuildRequires: foreman >= 1.3.0
 BuildRequires: foreman-assets >= 1.7.0
@@ -155,7 +155,7 @@ BuildRequires: %{?scl_prefix}rubygem-jquery-ui-rails
 BuildRequires: %{?scl_prefix}rubygem-deface < 1.0.0
 BuildRequires: %{?scl_prefix}rubygem(uglifier) >= 1.0.3
 BuildRequires: %{?scl_prefix}rubygem-strong_parameters
-BuildRequires: %{?scl_prefix}rubygem-qpid_messaging >= 0.26.1
+BuildRequires: %{?scl_prefix}rubygem-qpid_messaging >= 0.22.0
 BuildRequires: %{?scl_prefix}rubygem-qpid_messaging <= 0.28.1
 BuildRequires: %{?scl_prefix}rubygems
 BuildArch: noarch
