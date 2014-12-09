@@ -32,7 +32,17 @@ module Katello
         if task.result == 'warning'
           render :partial => 'katello/providers/redhat/errors', :locals => { :error_message => task_error(task), :task => task}
         else
-          render :partial => 'katello/providers/redhat/repos', :locals => { :scan_cdn => task }
+          repos = task.output[:results]
+
+          repos = repos.select do |repo|
+            if repo[:path].include?('kickstart')
+              repo[:substitutions][:releasever].include?('Server') ? repo[:enabled] : true
+            else
+              true
+            end
+          end
+
+          render :partial => 'katello/providers/redhat/repos', :locals => {:scan_cdn => task, :repos => repos}
         end
       end
     end

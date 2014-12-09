@@ -47,10 +47,20 @@ module Katello
     param :product_id, :number, :required => true, :desc => N_("ID of a product to list repository sets from")
     def available_repositories
       scan_cdn = sync_task(::Actions::Katello::RepositorySet::ScanCdn, @product, @product_content.content.id)
+      repos = scan_cdn.output[:results]
+
+      repos = repos.select do |repo|
+        if repo[:path].include?('kickstart')
+          repo[:substitutions][:releasever].include?('Server') ? repo[:enabled] : true
+        else
+          true
+        end
+      end
+
       collection = {
-        :results  => scan_cdn.output[:results],
-        :subtotal => scan_cdn.output[:results].size,
-        :total    => scan_cdn.output[:results].size
+        :results  => repos,
+        :subtotal => repos.size,
+        :total    => repos.size
       }
       respond_for_index :collection => collection
     end
