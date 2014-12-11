@@ -115,9 +115,18 @@ module Katello
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
 
+      ::Container.send :include, Katello::Concerns::ContainerExtensions
+      ::DockerContainerWizardState.send :include, Katello::Concerns::DockerContainerWizardStateExtensions
+
       #Controller extensions
       ::OperatingsystemsController.send :include, Katello::Concerns::OperatingsystemsControllerExtensions
       ::HostsController.send :include, Katello::Concerns::HostsControllerExtensions
+      ::Containers::StepsController.send :include, Katello::Concerns::Containers::StepsControllerExtensions
+
+      #Helper Extensions
+      ::Containers::StepsController.class_eval do
+        helper Katello::Concerns::ForemanDocker::ContainerStepsHelperExtensions
+      end
 
       #Handle Smart Proxy items separately
       begin

@@ -1,0 +1,38 @@
+<%= javascript "katello/containers/container.js" %>
+<%= stylesheet "katello/containers/container" %>
+<div>
+  <div class="form-group">
+    <%= hidden_field_tag :katello, true %>
+    <% if Organization.current -%>
+      <%= hidden_field_tag :organization_id, Organization.current.id%>
+    <% else -%>
+      <div>
+        <%= select_organizations(f) -%>
+      </div>
+    <% end -%>
+    <div id="container_lifecycle_environments">
+      <%= select_container_life_cycle_environments(f) -%>
+      <span id="no_content_views" class="hide"> <%= _("Selected lifecycle environment has no content views. Please choose a different life cycle environment.")-%></span>
+       <span id="error_environments" class="hide"> <%= _("Unable to fetch any life cycle environments. Please try again.")-%></span>
+    </div>
+    <div  id="container_content_views">
+      <%= select_container_content_views(f) -%>
+      <span id="no_repositories" class="hide"> <%= _("Selected content view has no repositories with Docker images. Please choose a different content view or life cycle environment.")-%></span>
+        <span id="error_content_views" class="hide"> <%= _("Unable to fetch content views. Please try again.")-%></span>
+    </div>
+    <div id="container_content_view_repos">
+      <%= select_container_cv_repositories(f) -%>
+      <span id="error_repositories" class="hide"> <%= _("Unable to fetch any repositories. Please try again.")-%></span>
+    </div>
+    <div id="container_content_view_repo_tags">
+      <%= select_container_cv_tags(f) -%>
+      <span id="error_tags" class="hide"> <%= _("Unable to fetch any tags. Please try again.")-%></span>
+    </div>
+    <div>
+      <%= select_container_capsule(f) -%>
+      <span id="no_capsules" class="hide"> <%= _("Selected organization has no capsules with Pulp or Pulp Node features. Please choose a different organization.")-%></span>
+      <span id="error_capsules" class="hide"> <%= _("Unable to fetch any capsules. Please try again.")-%></span>
+    </div>
+
+  </div>
+</div>
