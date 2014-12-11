@@ -136,7 +136,7 @@
       </span>
     </div>
 
-    <div class="detail" ng-show="repository.content_type == 'yum'">
+    <div class="detail" ng-if="repository.content_type == 'yum' && !product.redhat">
       <span class="info-label" translate>GPG Key</span>
       <span class="info-value"
             bst-edit-select="repository.gpg_key.name"
@@ -235,7 +235,7 @@
     </table>
   </section>
 
-  <section class="well" ng-show="permitted('edit_products', product)">
+  <section class="well" ng-if="permitted('edit_products', product) && !product.redhat">
     <h5 translate ng-show="repository.content_type == 'puppet'">Upload Puppet Module</h5>
     <h5 translate ng-show="repository.content_type == 'yum'">Upload Package</h5>
     <h5 translate ng-show="repository.content_type == 'docker'">Upload Docker Image</h5>

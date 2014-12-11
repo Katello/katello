@@ -25,13 +25,14 @@
     </button>
 
     <button class="btn btn-default"
+            bst-feature-flag="custom_products"
             ng-hide="denied('edit_products')"
             ui-sref="products.discovery.scan">
       <i class="icon-screenshot"></i>
       {{ "Repo Discovery" | translate }}
     </button>
 
-    <button class="btn btn-primary" ui-sref="products.new.form" ng-hide="denied('create_products')">
+    <button class="btn btn-primary" bst-feature-flag="custom_products" ui-sref="products.new.form" ng-hide="denied('create_products')">
       <i class="icon-plus"></i>
       {{ "New Product" | translate }}
     </button>

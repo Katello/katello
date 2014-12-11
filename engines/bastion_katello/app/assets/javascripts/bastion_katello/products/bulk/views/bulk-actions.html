@@ -6,6 +6,7 @@
 
     <div class="fr">
       <button class="btn btn-default"
+              bst-feature-flag="custom_products"
               ng-disabled="product.readonly || removeProducts.workingMode"
               ng-click="openModal()"
               ng-hide="denied('delete_products')">
@@ -47,7 +48,7 @@
            ng-class="{active: stateIncludes('products.bulk-actions.sync-plan')}">
           Alter Sync Plans
         </a>
-      </li>    
+      </li>
     </ul>
   </nav>
 
