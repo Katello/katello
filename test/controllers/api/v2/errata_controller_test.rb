@@ -14,14 +14,16 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::ErrataControllerTest < ActionController::TestCase
-    def before_suite
-      models = ["Organization", "KTEnvironment", "Errata", "Repository", "Product", "Provider"]
+    def self.before_suite
+      models = ["Organization", "KTEnvironment", "Erratum", "Repository", "Product", "Provider"]
       services = ["Candlepin", "Pulp", "ElasticSearch"]
-      disable_glue_layers(services, models)
+      disable_glue_layers(services, models, true)
+      ::Katello::Erratum.any_instance.stubs(:repositories).returns([])
       super
     end
 
     def models
+      ::Katello::Product.any_instance.stubs(:as_json).returns([])
       @repo = Repository.find(katello_repositories(:rhel_6_x86_64))
     end
 

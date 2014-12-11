@@ -46,6 +46,7 @@ module Katello
     param :environment_id, :number, :desc => N_("ID of an environment to show repositories in")
     param :content_view_id, :number, :desc => N_("ID of a content view to show repositories in")
     param :content_view_version_id, :number, :desc => N_("ID of a content view version to show repositories in")
+    param :erratum_id, String, :desc => N_("Filter by systems that need an Erratum")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :content_type, String, :desc => N_("limit to only repositories of this time")
     param :name, String, :desc => N_("name of the repository"), :required => false
@@ -58,15 +59,22 @@ module Katello
       if @product
         options[:filters] << {:term => {:product_id => @product.id}}
       else
-        ids = Repository.where(:product_id => Product.readable.where(:organization_id => @organization.id)).pluck(:id)
+        if params[:erratum_id]
+          ids = repositories_by_erratum(params[:erratum_id]).pluck(:id)
+        else
+          ids = Repository.where(:product_id => Product.readable.where(:organization_id => @organization.id)).pluck(:id)
+        end
       end
 
       options[:filters] << {:terms => {:id => ids}} if ids
       options[:filters] << {:term => {:environment_id => params[:environment_id]}} if params[:environment_id]
       options[:filters] << {:term => {:content_view_ids => params[:content_view_id]}} if params[:content_view_id]
       if params[:content_view_version_id]
-        options[:filters] << {:term => {:content_view_version_id => params[:content_view_version_id]}}
-        options[:filters] << {:missing => {:field => :environment_id, :existence => true, :null_value => true}}
+        params[:content_view_version_id] = [params[:content_view_version_id]] unless params[:content_view_version_id].is_a?(Array)
+        options[:filters] << {:terms => {:content_view_version_id => params[:content_view_version_id]}}
+        unless params[:environment_id]
+          options[:filters] << {:missing => {:field => :environment_id, :existence => true, :null_value => true}}
+        end
       end
       if params[:library] || (params[:environment_id].nil? && params[:content_view_version_id].blank?)
         options[:filters] << {:term => {:content_view_version_id => @organization.default_content_view.versions.first.id}}
@@ -220,6 +228,14 @@ module Katello
       else
         head(404)
       end
+    end
+
+    private
+
+    def repositories_by_erratum(erratum_id)
+      erratum = Katello::Erratum.find_by_uuid(erratum_id)
+      fail _("Unable to find erratum %s.") % erratum_id unless erratum
+      erratum.repositories
     end
 
     protected
