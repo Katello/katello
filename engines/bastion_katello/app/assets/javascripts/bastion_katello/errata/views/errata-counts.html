@@ -1,18 +1,24 @@
 <span>
-  <span>
-    {{ errataCounts.security || 0 }}
+  <span class="errata-count">
+    <span>
+      {{ errataCounts.security || 0 }}
+    </span>
     <i class="icon-warning-sign inline-icon"
        ng-class="{black: errataCounts.security === 0, red: errataCounts.security > 0}"
        title="{{ 'Security' | translate }}"></i>
   </span>
-  <span>
-    {{ errataCounts.bugfix || 0 }}
+  <span class="errata-count">
+    <span>
+      {{ errataCounts.bugfix || 0 }}
+    </span>
     <i class="icon-bug inline-icon"
        ng-class="{black: errataCounts.bugfix === 0, yellow: errataCounts.bugfix > 0}"
        title="{{ 'Bug Fix' | translate }}"></i>
   </span>
-  <span>
-    {{ errataCounts.enhancement || 0 }}
+  <span class="errata-count">
+    <span>
+      {{ errataCounts.enhancement || 0 }}
+    </span>
     <i class="icon-plus-sign-alt inline-icon"
        ng-class="{black: errataCounts.enhancement === 0, yellow: errataCounts.enhancement > 0}"
        title="{{ 'Enhancement' | translate }}"></i>
