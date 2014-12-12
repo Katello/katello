@@ -121,7 +121,6 @@ Requires: %{?scl_prefix}rubygem-justified
 Requires: %{?scl_prefix}rubygem-gettext_i18n_rails
 Requires: %{?scl_prefix}rubygem-i18n_data >= 0.2.6
 Requires: %{?scl_prefix}rubygem-apipie-rails >= 0.1.1
-Requires: %{?scl_prefix}rubygem-maruku
 Requires: %{?scl_prefix}rubygem-runcible >= 1.3.0
 Requires: %{?scl_prefix}rubygem-anemone
 Requires: %{?scl_prefix}rubygem-less-rails
@@ -146,7 +145,6 @@ BuildRequires: %{?scl_prefix}rubygem-justified
 BuildRequires: %{?scl_prefix}rubygem-gettext_i18n_rails
 BuildRequires: %{?scl_prefix}rubygem-i18n_data >= 0.2.6
 BuildRequires: %{?scl_prefix}rubygem-apipie-rails >= 0.1.1
-BuildRequires: %{?scl_prefix}rubygem-maruku
 BuildRequires: %{?scl_prefix}rubygem-runcible >= 1.3.0
 BuildRequires: %{?scl_prefix}rubygem-anemone
 BuildRequires: %{?scl_prefix}rubygem-less-rails
