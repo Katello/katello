@@ -80,6 +80,10 @@ module Katello
       self.repositories.pluck(:minor).compact.uniq.sort
     end
 
+    def next_incremental_version
+      self.content_view.versions.where(:major => self.major).maximum(:minor) + 1
+    end
+
     def version
       "#{major}.#{minor}"
     end
