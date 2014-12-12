@@ -111,6 +111,14 @@ module Katello
           end
         end
       end
+
+      def tire
+        Tire.index(self.index)
+      end
+
+      def remove_from_index(id, options = {})
+        tire.remove(search_type.to_s, id, options)
+      end
     end
   end
 end
