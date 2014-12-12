@@ -12,28 +12,27 @@
 
 module Katello
   module KatelloUrlHelper
-    include Rails.application.routes.url_helpers
-
     unless defined? CONSTANTS_DEFINED
-      PORT = /(([:]\d{1,5})?)/
-      PROTOCOLS = %r{(https?|ftp)://}ix
-      FILEPREFIX = %r{(^file://)|^/}ix # is this a file based url
-      # validation of hostname according to RFC952 and RFC1123
-      DOMAIN = /(?:(?:(?:(?:[a-z0-9][-a-z0-9]{0,61})?[a-z0-9])[.])*(?:[a-z][-a-z0-9]{0,61}[a-z0-9]|[a-z])[.]?)/
-      IPV4 = /(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/
-      #TODO: ipv6 support
-      #IPV6 = /(?:[0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4}/
-      URLREG = /^#{PROTOCOLS}((localhost)|#{DOMAIN}|#{IPV4})#{PORT}(\/.*)?$/ix
-      FILEREG = /#{FILEPREFIX}([\w-]*\/?)*/ix # match file based urls
+      FILEPREFIX = 'file'
+      PROTOCOLS = ['http', 'https', 'ftp', FILEPREFIX]
+
       CONSTANTS_DEFINED = true
     end
 
     def kurl_valid?(url)
-      !(file_prefix?(url) ? FILEREG.match(url).nil? : URLREG.match(url).nil?)
+      valid_for_prefixes(url, PROTOCOLS)
     end
 
     def file_prefix?(url)
-      !FILEPREFIX.match(url).nil?
+      valid_for_prefixes(url, [FILEPREFIX])
+    end
+
+    private
+
+    def valid_for_prefixes(url, prefixes)
+      prefixes.include?(URI.parse(url).scheme)
+    rescue URI::InvalidURIError
+      return false
     end
   end
 end
