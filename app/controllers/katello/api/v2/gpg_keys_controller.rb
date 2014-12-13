@@ -12,8 +12,9 @@
 
 module Katello
   class Api::V2::GpgKeysController < Api::V2::ApiController
+    include Katello::Concerns::FilteredAutoCompleteSearch
     before_filter :authorize
-    before_filter :find_organization, :only => [:create, :index]
+    before_filter :find_organization, :only => [:create, :index, :auto_complete_search]
     before_filter :find_gpg_key, :only => [:show, :update, :destroy, :content]
 
     def_param_group :gpg_key do
@@ -34,14 +35,13 @@ module Katello
     param :name, String, :desc => N_("name of the GPG key"), :required => false
     param_group :search, Api::V2::ApiController
     def index
-      options = sort_params
-      options[:load_records?] = true
+      respond(:collection => scoped_search(index_relation.uniq, :name, :desc))
+    end
 
-      ids = GpgKey.readable.where(:organization_id => @organization.id).pluck(:id)
-
-      options[:filters] = [{:terms => {:id => ids}}]
-      options[:filters] << {:term => {:name => params[:name]}} if params[:name]
-      respond_for_index(:collection => item_search(GpgKey, params, options))
+    def index_relation
+      query = GpgKey.readable.where(:organization_id => @organization.id)
+      query = query.where(:name => params[:name]) if params[:name]
+      query
     end
 
     api :POST, "/gpg_keys", N_("Create a gpg key")

@@ -14,7 +14,6 @@ module Katello
   class GpgKey < Katello::Model
     self.include_root_in_json = false
 
-    include Glue::ElasticSearch::GpgKey if Katello.config.use_elasticsearch
     include Katello::Authorization::GpgKey
     MAX_CONTENT_LENGTH = 100_000
     MAX_CONTENT_LINE_LENGTH = 65
