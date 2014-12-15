@@ -468,11 +468,6 @@ module Katello
           @provider.wont_be :valid?
         end
 
-        it "'https://.bogus'" do
-          @provider.repository_url = "https://.bogus"
-          @provider.wont_be :valid?
-        end
-
         it "'repo.fedorahosted.org/reposity'" do
           @provider.repository_url = "repo.fedorahosted.org/reposity"
           @provider.wont_be :valid?
