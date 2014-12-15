@@ -22,7 +22,7 @@ module Actions
 
           ::Katello::ContentViewVersion.create! do |v|
             v.content_view = library_view
-            v.version = 1
+            v.major = 1
           end
 
           version = library_view.versions.first

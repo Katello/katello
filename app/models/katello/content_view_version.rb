@@ -47,6 +47,13 @@ module Katello
       joins(:repositories).where("#{Katello::Repository.table_name}.library_instance_id" => repo)
     end
 
+    def self.for_version(version)
+      major, minor = version.to_s.split('.')
+      query = where(:major => major)
+      query.where(:minor => minor) if minor
+      query
+    end
+
     def to_s
       name
     end
@@ -71,6 +78,10 @@ module Katello
 
     def available_releases
       self.repositories.pluck(:minor).compact.uniq.sort
+    end
+
+    def version
+      "#{major}.#{minor}"
     end
 
     def repos(env)

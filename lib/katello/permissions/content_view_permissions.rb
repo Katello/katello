@@ -63,7 +63,8 @@ Foreman::Plugin.find(:katello).security_block :content_views do
              :resource_type => 'Katello::ContentView'
   permission :publish_content_views,
              {
-               'katello/api/v2/content_views' => [:publish]
+               'katello/api/v2/content_views' => [:publish],
+               'katello/api/v2/content_view_versions' => [:incremental_update]
              },
              :resource_type => 'Katello::ContentView'
   permission :promote_or_remove_content_views,

@@ -288,7 +288,7 @@ module Katello
 
     def test_unique_environments
       3.times do |i|
-        ContentViewVersion.create!(:version => i + 2,
+        ContentViewVersion.create!(:major => i + 2,
                                    :content_view => @library_dev_view)
       end
       @library_dev_view.add_environment(@library_dev_view.organization.library, ContentViewVersion.last)
@@ -325,12 +325,12 @@ module Katello
       assert_equal 1, cv.next_version
 
       assert_equal 2, @library_dev_view.next_version
-      assert_equal @library_dev_view.next_version - 1, @library_dev_view.versions.maximum(:version)
+      assert_equal @library_dev_view.next_version - 1, @library_dev_view.versions.maximum(:major)
 
       assert @library_dev_view.create_new_version
       @library_dev_view.reload
       assert_equal 3, @library_dev_view.next_version
-      assert_equal @library_dev_view.next_version - 1, @library_dev_view.versions.reload.maximum(:version)
+      assert_equal @library_dev_view.next_version - 1, @library_dev_view.versions.reload.maximum(:major)
     end
 
     def test_check_distribution_conflicts_conflict
@@ -421,7 +421,7 @@ module Katello
 
       ::Katello::ContentViewVersion.create! do |v|
         v.content_view = library_view
-        v.version = 1
+        v.major = 1
       end
 
       product = create(:katello_product, :organization => other_org, :provider => other_org.anonymous_provider)

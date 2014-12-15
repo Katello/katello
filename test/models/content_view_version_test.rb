@@ -24,7 +24,7 @@ module Katello
 
     def setup
       User.current = User.find(users(:admin))
-      @cvv = create(:katello_content_view_version)
+      @cvv = create(:katello_content_view_version, :major => 1, :minor => 0)
       @cvv.organization.kt_environments << Katello::KTEnvironment.find_by_name(:Library)
       @dev = create(:katello_environment,  :organization => @cvv.organization, :prior => @cvv.organization.library,     :name => 'dev')
       @beta = create(:katello_environment, :organization => @cvv.organization, :prior => @dev,                         :name => 'beta')
@@ -48,6 +48,14 @@ module Katello
     def test_promotoable_without_environments2
       @cvv.expects(:environments).returns([]).at_least_once
       refute @cvv.promotable?(@dev)
+    end
+
+    def test_of_version
+      version = @cvv
+      assert_equal [version], version.content_view.versions.for_version("1.0")
+      assert_equal [version], version.content_view.versions.for_version("1")
+      assert_equal [version], version.content_view.versions.for_version(1)
+      assert_equal [version], version.content_view.versions.for_version(1.0)
     end
 
     def test_docker_count

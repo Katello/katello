@@ -18,6 +18,8 @@ module Actions
           param :source_pulp_id
           param :target_pulp_id
           param :clauses
+          param :full_clauses
+          param :override_config
         end
 
         # @api override - pulp extension representing the content type to copy
@@ -26,13 +28,17 @@ module Actions
         end
 
         def invoke_external_task
+          optional = criteria
+          optional[:override_config] = input[:override_config] if input[:override_config]
           content_extension.copy(input[:source_pulp_id],
                                  input[:target_pulp_id],
                                  criteria)
         end
 
         def criteria
-          if input[:clauses]
+          if input[:full_clauses]
+            input[:full_clauses]
+          elsif input[:clauses]
             { filters: {:unit => input[:clauses] } }
           else
             {}

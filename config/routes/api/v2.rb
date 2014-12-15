@@ -94,6 +94,9 @@ Katello::Engine.routes.draw do
           member do
             post :promote
           end
+          collection do
+            post :incremental_update
+          end
         end
 
         api_resources :docker_images, :only => [:index, :show]

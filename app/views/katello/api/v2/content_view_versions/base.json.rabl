@@ -3,7 +3,7 @@ object @resource
 
 extends 'katello/api/v2/common/identifier'
 
-attributes :version
+attributes :version, :major, :minor
 attributes :composite_content_view_ids
 attributes :content_view_id
 attributes :default
