@@ -27,6 +27,7 @@ angular.module('Bastion.gpg-keys').factory('GPGKey',
         return BastionResource('/katello/api/v2/gpg_keys/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
+                autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
                 update: {method: 'PUT'}
             }
         );

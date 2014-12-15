@@ -119,6 +119,7 @@ Katello::Engine.routes.draw do
 
         api_resources :gpg_keys, :only => [:index, :show, :create, :update, :destroy] do
           post :content, :on => :member
+          get :auto_complete_search, :on => :collection
         end
 
         api_resources :host_collections, :only => [:index, :show, :create, :update, :destroy] do
