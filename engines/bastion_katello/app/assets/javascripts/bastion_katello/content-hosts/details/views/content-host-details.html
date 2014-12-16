@@ -34,7 +34,8 @@
           Details
         </a>
       </li>
-      <li ng-class="{active: isState('content-hosts.details.provisioning')}">
+      <li ng-class="{active: isState('content-hosts.details.provisioning')}"
+          bst-feature-flag="remote_actions">
         <a translate
            ui-sref="content-hosts.details.provisioning">
           Provisioning Details

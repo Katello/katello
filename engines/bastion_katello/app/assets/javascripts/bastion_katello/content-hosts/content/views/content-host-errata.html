@@ -1,15 +1,19 @@
 <span page-title ng-model="contentHost">{{ 'Errata for: ' | translate }} {{ contentHost.name }}</span>
 
-<p class="alert alert-info" ng-hide="contentHost.katello_agent_installed" translate>
-  The katello-agent package is required to manage errata on this Host.
-  Please install the katello-agent package to manage errata on
-  {{ contentHost.name }}.
+<p class="alert alert-info" ng-hide="contentHost.katello_agent_installed" bst-feature-flag="remote_actions">
+  <span translate>
+    The katello-agent package is required to manage errata on this Host.
+    Please install the katello-agent package to manage errata on
+    {{ contentHost.name }}.
+  </span>
 </p>
 
 <div data-extend-template="layouts/details-nutupane.html">
-  <div data-block="header" translate>Applicable Errata</div>
+  <div data-block="header" bst-feature-flag="remote_actions">
+    <span translate>Applicable Errata</span>
+  </div>
 
-  <span data-block="filters">
+  <span data-block="filters" bst-feature-flag="remote_actions">
     <form class="well form-horizontal col-sm-12">
       <div class="form-group">
         <label translate class="control-label col-sm-1">
@@ -25,7 +29,7 @@
     </form>
   </span>
 
-  <span data-block="actions">
+  <span data-block="actions" bst-feature-flag="remote_actions">
       <div ng-hide="contentHost.readonly" class="fr">
          <button class="btn btn-primary"
                  translate
@@ -55,15 +59,15 @@
               <span ng-show="erratum.type == 'security'">
                 <i class="icon-warning-sign inline-icon" title="{{ 'Security' | translate }}"></i>
               </span>
-    
+
               <span ng-show="erratum.type == 'bugfix'">
                 <i class="icon-bug inline-icon" title="{{ 'Bug Fix' | translate }}"></i>
               </span>
-    
+
               <span ng-show="erratum.type == 'enhancement'">
                 <i class="icon-plus-sign-alt inline-icon" title="{{ 'Enhancement' | translate }}"></i>
               </span>
-    
+
             {{ erratum.type | errataType}}
             <span ng-show="erratum.severity">- {{ erratum.severity | errataSeverity}}</span>
           </td>

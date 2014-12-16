@@ -32,14 +32,16 @@
 
   <nav class="details-navigation">
     <ul>
-      <li ng-class="{active: isState('content-hosts.bulk-actions.packages')}">
+      <li ng-class="{active: isState('content-hosts.bulk-actions.packages')}"
+          bst-feature-flag="remote_actions">
         <a translate
            ui-sref="content-hosts.bulk-actions.packages">
           Packages
         </a>
       </li>
 
-      <li ng-class="{active: stateIncludes('content-hosts.bulk-actions.errata')}">
+      <li ng-class="{active: stateIncludes('content-hosts.bulk-actions.errata')}"
+          bst-feature-flag="remote_actions">
         <a translate
            ui-sref="content-hosts.bulk-actions.errata.list">
           Errata
