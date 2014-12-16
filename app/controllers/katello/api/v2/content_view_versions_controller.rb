@@ -22,14 +22,17 @@ module Katello
 
     api :GET, "/content_view_versions", N_("List content view versions")
     api :GET, "/content_views/:content_view_id/content_view_versions", N_("List content view versions")
-    param :content_view_id, :identifier, :desc => N_("Content view identifier"), :required => true
+    param :content_view_id, :identifier, :desc => N_("Content view identifier"), :required => false
     param :environment_id, :identifier, :desc => N_("Filter versions by environment"), :required => false
     param :version, String, :desc => N_("Filter versions by version number"), :required => false
+    param :composite_version_id, :identifier, :desc => N_("Filter versions that are components in the specified composite version"), :required => false
     def index
       version_number = params.permit(:version)[:version]
-      versions = @view.versions
+      versions = ContentViewVersion
+      versions = versions.where(:content_view_id => @view.id) if @view
       versions = versions.for_version(version_number) if version_number
       versions = versions.in_environment(@environment) if @environment
+      versions = versions.component_of(params[:composite_version_id]) if params[:composite_version_id]
       versions = versions.includes(:content_view).includes(:environments).includes(:composite_content_views).includes(:history => :task)
 
       collection = {:results  => versions.order('major desc, minor desc'),
@@ -93,8 +96,8 @@ module Katello
     end
 
     def find_content_view
-      @view = @version ? @version.content_view : ContentView.find(params[:content_view_id])
-      if @view.default? && params[:action] == "promote"
+      @view = @version ? @version.content_view : ContentView.where(:id => params[:content_view_id]).first
+      if @view && @view.default? && params[:action] == "promote"
         fail HttpErrors::BadRequest, _("The default content view cannot be promoted")
       end
     end

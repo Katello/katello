@@ -29,6 +29,7 @@ module Katello
       @beta = KTEnvironment.find(katello_environments(:beta))
       @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view))
       @library_view = ContentView.find(katello_content_views(:library_view))
+      @composite_version = ContentViewVersion.find(katello_content_view_versions(:composite_view_version_1))
     end
 
     def permissions
@@ -56,7 +57,7 @@ module Katello
     def test_index
       get :index
 
-      assert_response 404
+      assert_response :success
     end
 
     def test_index_with_content_view
@@ -77,6 +78,19 @@ module Katello
       assert_equal ['page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total'], results.keys.sort
       assert_equal 1, results['results'].size
       assert_equal expected_version.id, results['results'][0]['id']
+    end
+
+    def test_index_with_composite_id
+      component = @library_dev_staging_view.versions.first
+      @composite_version.components = [component]
+      @composite_version.save!
+
+      results = JSON.parse(get(:index, :composite_version_id => @composite_version.id).body)
+
+      assert_response :success
+      assert_template 'api/v2/content_view_versions/index'
+      assert_equal 1, results['results'].size
+      assert_equal component.id, results['results'][0]['id']
     end
 
     def test_index_with_content_view_by_version

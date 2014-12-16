@@ -36,12 +36,26 @@ module Katello
     has_many :content_view_components, :inverse_of => :content_view_version, :dependent => :destroy
     has_many :composite_content_views, :through => :content_view_components, :source => :content_view
 
+    has_many :content_view_version_components, :inverse_of => :composite_version, :dependent => :destroy, :foreign_key => :composite_version_id,
+             :class_name => "Katello::ContentViewVersionComponent"
+    has_many :components, :through => :content_view_version_components, :source => :component_version,
+             :class_name => "Katello::ContentViewVersion", :inverse_of => :composites
+
+    has_many :content_view_version_composites, :inverse_of => :component_version, :dependent => :destroy, :foreign_key => :component_version_id,
+             :class_name => "Katello::ContentViewVersionComponent"
+    has_many :composites, :through => :content_view_version_composites, :source => :composite_version,
+             :class_name => "Katello::ContentViewVersion", :inverse_of => :components
+
     delegate :default, :default?, to: :content_view
 
     validates_lengths_from_database
 
     scope :default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true)
     scope :non_default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false)
+
+    def self.component_of(versions)
+      joins(:content_view_version_composites).where("#{Katello::ContentViewVersionComponent.table_name}.composite_version_id" => versions)
+    end
 
     def self.with_library_repo(repo)
       joins(:repositories).where("#{Katello::Repository.table_name}.library_instance_id" => repo)

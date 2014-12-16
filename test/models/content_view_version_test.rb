@@ -28,6 +28,7 @@ module Katello
       @cvv.organization.kt_environments << Katello::KTEnvironment.find_by_name(:Library)
       @dev = create(:katello_environment,  :organization => @cvv.organization, :prior => @cvv.organization.library,     :name => 'dev')
       @beta = create(:katello_environment, :organization => @cvv.organization, :prior => @dev,                         :name => 'beta')
+      @composite_version = ContentViewVersion.find(katello_content_view_versions(:composite_view_version_1))
     end
 
     def test_promotable_in_sequence
@@ -76,6 +77,26 @@ module Katello
       assert cvv.repositories.archived.docker_type.count > 0
       assert_equal image_count, cvv.docker_image_count
       assert_equal tag_count, cvv.docker_tag_count
+    end
+  end
+
+  def test_components
+    @composite_version.components = [@cvv]
+    @composite_version.save!
+
+    assert_equal [@cvv], @composite_version.reload.components
+  end
+
+  def test_component_default
+    default_view = content_view_versions(:library_default_version)
+    assert_raises do
+      @composite_version.components = [default_view]
+    end
+  end
+
+  def test_component_non_composite
+    assert_raises do
+      @cvv.components = [@composite_version]
     end
   end
 end

@@ -22,7 +22,8 @@
      *   Handles fetching content view version content and populating Nutupane based on the current
      *   ui-router state.
      */
-    function ContentViewVersionContentController($scope, translate, Nutupane, Package, Erratum, PackageGroup, PuppetModule, Repository) {
+    function ContentViewVersionContentController($scope, translate, Nutupane, Package, Erratum,
+                                                 PackageGroup, PuppetModule, Repository, ContentViewVersion) {
         var nutupane, contentTypes, currentState, params;
 
         currentState = $scope.$state.current.name.split('.').pop();
@@ -38,7 +39,8 @@
                 type: PackageGroup,
                 params: {
                     'sort_by': 'name',
-                    'sort_order': 'DESC'
+                    'sort_order': 'DESC',
+                    'content_view_version_id': $scope.$stateParams.versionId
                 }
             },
             'errata': {
@@ -46,10 +48,16 @@
             },
             'puppet-modules': {
                 type: PuppetModule
+            },
+            'components': {
+                type: ContentViewVersion,
+                params: {
+                    'composite_version_id': $scope.$stateParams.versionId
+                }
             }
         };
 
-        params = angular.extend({'content_view_version_id': $scope.$stateParams.versionId}, contentTypes[currentState].params);
+        params = contentTypes[currentState].params || {'content_view_version_id': $scope.$stateParams.versionId};
         nutupane = new Nutupane(contentTypes[currentState].type, params, 'queryPaged');
         nutupane.masterOnly = true;
 
@@ -84,6 +92,6 @@
         .controller('ContentViewVersionContentController', ContentViewVersionContentController);
 
     ContentViewVersionContentController.$inject = ['$scope', 'translate', 'Nutupane', 'Package', 'Erratum',
-                                                   'PackageGroup', 'PuppetModule', 'Repository'];
+                                                   'PackageGroup', 'PuppetModule', 'Repository', 'ContentViewVersion'];
 
 })();

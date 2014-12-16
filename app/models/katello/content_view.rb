@@ -374,10 +374,11 @@ module Katello
       version = ContentViewVersion.create!(:major => major,
                                            :minor => minor,
                                            :content_view => self,
-                                           :description => description
+                                           :description => description,
+                                           :components => self.components
                                           )
-      increment!(:next_version) if minor == 0
 
+      increment!(:next_version) if minor == 0
       version
     end
 
