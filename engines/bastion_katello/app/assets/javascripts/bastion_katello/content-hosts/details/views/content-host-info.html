@@ -238,7 +238,7 @@
         </div>
       </div>
 
-      <div class="detail">
+      <div class="detail" bst-feature-flag="lifecycle_environments">
         <span class="info-label" translate>Content View</span>
         <span class="info-value"
               bst-edit-select="contentHost.content_view.name"
@@ -251,7 +251,7 @@
         </span>
       </div>
 
-      <div class="detail">
+      <div class="detail" bst-feature-flag="lifecycle_environments">
         <div alert type="'info'" ng-show="editContentView">
           <p translate ng-show="contentViews.length === 0">
             The host requires being attached to a content view and the environment you have chosen has no content views promoted to it.
