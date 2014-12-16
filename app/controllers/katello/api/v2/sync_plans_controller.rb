@@ -14,7 +14,8 @@ module Katello
   class Api::V2::SyncPlansController < Api::V2::ApiController
     respond_to :json
 
-    before_filter :find_organization, :only => [:create, :index]
+    include Katello::Concerns::FilteredAutoCompleteSearch
+    before_filter :find_organization, :only => [:create, :index, :auto_complete_search]
     before_filter :find_plan, :only => [:update, :show, :destroy, :available_products, :add_products, :remove_products]
     before_filter :load_search_service, :only => [:index, :available_products]
 
@@ -33,17 +34,15 @@ module Katello
     param :sync_date, String, :desc => N_("filter by sync date")
     param :interval, SyncPlan::TYPES, :desc => N_("filter by interval")
     def index
-      ids = SyncPlan.readable.where(:organization_id => @organization.id).pluck(:id)
-      filters = [:terms => {:id => ids }]
-      filters << {:terms => {:sync_date => [params[:sync_date]] }} if params[:sync_date]
-      filters << {:terms => {:interval => [params[:interval]] }} if params[:interval]
+      respond_for_index(:collection => scoped_search(index_relation.uniq, :name, :desc))
+    end
 
-      options = {
-        :filters => filters,
-        :load_records? => true
-      }
-
-      respond_for_index(:collection => item_search(SyncPlan, params, options))
+    def index_relation
+      query = SyncPlan.readable.where(:organization_id => @organization.id)
+      query = query.where(:name => params[:name]) if params[:name]
+      query = query.where(:sync_date => params[:sync_date]) if params[:sync_date]
+      query = query.where(:interval => params[:interval]) if params[:interval]
+      query
     end
 
     api :GET, "/organizations/:organization_id/sync_plans/:id", N_("Show a sync plan")

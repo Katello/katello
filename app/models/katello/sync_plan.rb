@@ -17,8 +17,6 @@ module Katello
     self.include_root_in_json = false
 
     include Glue
-
-    include Glue::ElasticSearch::SyncPlan if Katello.config.use_elasticsearch
     include Katello::Authorization::SyncPlan
 
     HOURLY = 'hourly'
@@ -42,6 +40,8 @@ module Katello
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true
+    scoped_search :on => :interval, :complete_value => true
+    scoped_search :on => :enabled, :complete_value => true
 
     def reassign_sync_plan_to_products
       # triggers orchestration in products
