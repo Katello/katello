@@ -27,11 +27,17 @@
           </span>
         </a>
       </li>
-
       <li ng-class="{active: isState('errata.details.content-hosts')}">
         <a ui-sref="errata.details.content-hosts">
           <span translate>
             Content Hosts
+          </span>
+        </a>
+      </li>
+      <li ng-class="{active: isState('errata.details.repositories')}">
+        <a ui-sref="errata.details.repositories">
+          <span translate>
+            Repositories
           </span>
         </a>
       </li>
@@ -40,5 +46,5 @@
 
   <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <section class="nutupane-sub-section" ui-view></section>
+  <section ui-view></section>
 </section>

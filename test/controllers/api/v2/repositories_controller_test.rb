@@ -28,6 +28,7 @@ module Katello
       @redhat_repository = katello_repositories(:rhel_6_x86_64)
       @product = katello_products(:fedora)
       @view = ContentView.find(katello_content_views(:library_view))
+      @errata = Erratum.find(katello_errata(:bugfix))
     end
 
     def permissions
@@ -64,6 +65,17 @@ module Katello
       end
       expectation.returns({})
       get :index, :content_view_id => @view.id, :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+    end
+
+    def test_index_with_errata_id
+      expectation = @controller.expects(:item_search) do |_, _, options|
+        options[:term].includes?(:errata_id)
+      end
+      expectation.returns({})
+      get :index, :errata_id => @errata.errata_id, :organization_id => @organization.id
 
       assert_response :success
       assert_template 'api/v2/repositories/index'

@@ -17,8 +17,9 @@ module Katello
   class Api::V2::ContentViewFiltersControllerTest < ActionController::TestCase
     def self.before_suite
       models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion",
-                "Repository"]
+                "Repository", "Product"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
+      ::Katello::Erratum.any_instance.stubs(:repositories).returns([])
       super
     end
 

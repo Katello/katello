@@ -28,7 +28,7 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
     })
     .state('errata.index', {
         url: '/errata',
-        permission: 'view_errata',
+        permission: ['view_products', 'view_content_views'],
         views: {
             'table': {
                 templateUrl: 'errata/views/errata-table-full.html'
@@ -38,7 +38,7 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
     .state('errata.details', {
         abstract: true,
         url: '/errata/:errataId',
-        permission: 'view_errata',
+        permission: ['view_products', 'view_content_views'],
         collapsed: true,
         views: {
             'table': {
@@ -53,14 +53,21 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
     .state('errata.details.info', {
         url: '/info',
         collapsed: true,
-        permission: 'view_errata',
+        permission:  ['view_products', 'view_content_views'],
         templateUrl: 'errata/details/views/errata-details-info.html'
     })
     .state('errata.details.content-hosts', {
         url: '/content-hosts',
         collapsed: true,
-        permission: 'view_errata',
+        permission:  ['view_products', 'view_content_views'],
         controller: 'ErrataContentHostsController',
         templateUrl: 'errata/details/views/errata-details-content-hosts.html'
+    })
+    .state('errata.details.repositories', {
+        url: '/repositories',
+        collapsed: true,
+        permission:  ['view_products', 'view_content_views'],
+        controller: 'ErrataDetailsRepositoriesController',
+        templateUrl: 'errata/details/views/errata-details-repositories.html'
     });
 }]);
