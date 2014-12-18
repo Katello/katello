@@ -47,8 +47,8 @@ module Katello
       else
         if value.nil?
           record.errors[attr] << _("cannot be nil")
-        elsif value <= 0
-          record.errors[attr] << _("cannot be less than one")
+        elsif value < 0
+          record.errors[attr] << _("cannot be less than zero")
         elsif value < record.systems.length
           # we don't let users to set usage limit lower than current in-use
           record.errors[attr] << _("cannot be lower than current usage count (%s)" % record.systems.length)
