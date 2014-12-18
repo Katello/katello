@@ -63,6 +63,16 @@ module Katello
 
     private
 
+    # FIXME: Remove in Katello 2.2/Foreman 1.8, which has this @user fix in #8348
+    def group_mail(users, options)
+      mails = users.map do |user|
+        @user = user
+        set_locale_for user
+        mail(options.merge(:to => user.mail)) unless user.mail.blank?
+      end
+      GroupMail.new(mails.compact)
+    end
+
     def errata_counts(errata)
       counts = {:total => errata.count}
       counts.merge(Hash[[:security, :bugfix, :enhancement].collect do |errata_type|
