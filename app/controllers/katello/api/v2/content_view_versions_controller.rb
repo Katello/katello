@@ -77,6 +77,7 @@ module Katello
     end
     param :description, String, :desc => N_("The description for the new generated Content View Versions")
     param :resolve_dependencies, :bool, :desc => N_("If true, when adding the specified errata or packages, any needed dependencies will be copied as well.")
+    param :propagate_to_composites, :bool, :desc => N_("If true, will publish a new composite version using any specified content_view_version_id that has been promoted to a lifecycle environment.")
     param :add_content, Hash  do
       param :errata_ids, Array, :desc => "Errata uuids to copy into the new versions."
       param :package_ids, Array, :desc => "Package uuids to copy into the new versions."
@@ -85,7 +86,7 @@ module Katello
     def incremental_update
       validate_content(params[:add_content])
       task = async_task(::Actions::Katello::ContentView::IncrementalUpdates, @version_environments, params[:add_content],
-                        params[:resolve_dependencies], params[:description])
+                        params[:resolve_dependencies], params[:propagate_to_composites], params[:description])
       respond_for_async :resource => task
     end
 

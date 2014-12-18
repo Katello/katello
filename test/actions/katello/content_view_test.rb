@@ -229,6 +229,11 @@ module ::Actions::Katello::ContentView
     end
   end
 
+  class Dynflow::Testing::DummyPlannedAction
+    def new_content_view_version
+    end
+  end
+
   class IncrementalUpdatesTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::IncrementalUpdates }
 
@@ -242,9 +247,9 @@ module ::Actions::Katello::ContentView
 
     it 'plans' do
       plan_action(action, [{:content_view_version => content_view.version(library), :environments => [library]}],
-                  {:errata_ids => ["FOO"]}, true, "BadDescription")
+                  {:errata_ids => ["FOO"]}, true, false, "BadDescription")
       assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, content_view.version(library), [library],
-                                {:errata_ids => ["FOO"]}, true, "BadDescription")
+                                :content => {:errata_ids => ["FOO"]}, :resolve_dependencies => true, :description => "BadDescription")
     end
   end
 end
