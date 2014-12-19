@@ -35,8 +35,6 @@ module Actions
           sequence do
             sync_task = plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id, task_id: pulp_sync_task_id)
             concurrence do
-              plan_action(Katello::Repository::NodeMetadataGenerate, repo, sync_task.output[:pulp_tasks])
-
               plan_action(ElasticSearch::Repository::IndexContent, dependency: sync_task.output[:pulp_tasks], id: repo.id)
             end
             plan_action(ElasticSearch::Reindex, repo)
@@ -45,12 +43,17 @@ module Actions
             plan_action(Katello::Repository::UpdateMedia, repo)
             plan_action(Katello::Repository::ErrataMail, repo)
           end
-          plan_self(:id => repo.id, :sync_result => sync_task.output)
+          plan_self(:id => repo.id, :sync_result => sync_task.output, :user_id => ::User.current.id)
           plan_action(Pulp::Repository::RegenerateApplicability, :pulp_id => repo.pulp_id)
         end
 
         def run
           output[:sync_result] = input[:sync_result]
+          ::User.current = ::User.find(input[:user_id])
+
+          ForemanTasks.async_task(Repository::NodeMetadataGenerate, ::Katello::Repository.find(input[:id]))
+        ensure
+          ::User.current = nil
         end
 
         def humanized_name
