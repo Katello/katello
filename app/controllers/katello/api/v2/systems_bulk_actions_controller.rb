@@ -19,7 +19,8 @@ module Katello
     before_filter :load_search_service
     before_filter :find_editable_systems, :except => [:destroy_systems, :applicable_errata]
     before_filter :find_deletable_systems, :only => [:destroy_systems]
-    before_filter :find_readable_systems, :only => [:applicable_errata]
+    before_filter :find_readable_systems, :only => [:applicable_errata, :available_incremental_updates]
+    before_filter :find_errata, :only => [:available_incremental_updates]
 
     before_filter :validate_content_action, :only => [:install_content, :update_content, :remove_content]
 
@@ -158,7 +159,30 @@ module Katello
                        :resource => { 'displayMessages' => [display_message] }
     end
 
+    api :POST, "/systems/bulk/available_incremental_updates", N_("Given a set of systems and errata, lists the content view versions \
+                                                                  and environments that need updating."), :deprecated => true
+    param_group :bulk_params
+    param :errata_ids, :identifier, :desc => N_("List of Errata ids")
+    def available_incremental_updates
+      version_environments = {}
+      systems = System.with_unavailable_errata(@errata).where("#{System.table_name}.id" => @systems)
+      systems.each do |system|
+        version = system.content_view.version(system.environment)
+        version_environment = version_environments[version] || {:content_view_version => version, :environments => []}
+        version_environment[:environments] << system.environment unless version_environment[:environments].include?(system.environment)
+        version_environment[:next_version] ||= version.next_incremental_version
+        version_environments[version] = OpenStruct.new(version_environment)
+      end
+      respond_for_index :collection => version_environments.values, :template => :available_incremental_updates
+    end
+
     private
+
+    def find_errata
+      @errata = Katello::Erratum.where(:uuid => params[:errata_ids])
+      not_found = params[:errata_ids] - @errata.pluck(:uuid)
+      fail _("Could not find all specified errata ids: %s") % not_found.join(', ') unless not_found.empty?
+    end
 
     def find_host_collections
       @host_collections = HostCollection.where(:id => params[:host_collection_ids])

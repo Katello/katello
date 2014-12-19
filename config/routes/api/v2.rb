@@ -272,6 +272,7 @@ Katello::Engine.routes.draw do
             match '/bulk/remove_content' => 'systems_bulk_actions#remove_content', :via => :put
             match '/bulk/destroy' => 'systems_bulk_actions#destroy_systems', :via => :put
             match '/bulk/environment_content_view' => 'systems_bulk_actions#environment_content_view', :via => :put
+            match '/bulk/available_incremental_updates' => 'systems_bulk_actions#available_incremental_updates', :via => :post
           end
           resource :packages, :only => [], :controller => :system_packages do
             collection do

@@ -58,6 +58,15 @@ module Katello
       assert_equal [version], version.content_view.versions.for_version(1.0)
     end
 
+    def test_next_incremental_version
+      version = katello_content_view_versions(:composite_view_version_1)
+      assert version.next_incremental_version, "1.1"
+
+      version.minor = 5
+      version.save!
+      assert version.next_incremental_version, "1.6"
+    end
+
     def test_docker_count
       cv = katello_content_views(:library_view)
       cvv = cv.versions.first

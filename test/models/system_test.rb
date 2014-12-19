@@ -198,6 +198,20 @@ module Katello
       assert_include @errata_system.available_errata, Erratum.find(katello_errata(:security))
     end
 
+    def test_with_unavailable_errata
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
+      @errata_system.bound_repositories = [@view_repo]
+      @errata_system.save!
+
+      unavailable = @errata_system.applicable_errata - @errata_system.available_errata
+      refute_empty unavailable
+      systems = System.with_unavailable_errata([unavailable.first])
+      assert_include systems, @errata_system
+
+      systems = System.with_unavailable_errata([@errata_system.available_errata.first])
+      refute systems.include?(@errata_system)
+    end
+
     def test_available_errata_other_view
       available_in_view = @errata_system.available_errata(@library, @library_view)
       assert_equal 1, available_in_view.length

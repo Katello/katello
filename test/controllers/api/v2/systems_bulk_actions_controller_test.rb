@@ -48,7 +48,6 @@ module Katello
       permissions
 
       System.any_instance.stubs(:update_host_collections)
-      System.stubs(:find).returns(@systems)
     end
 
     def test_add_host_collection
@@ -200,6 +199,24 @@ module Katello
         put :environment_content_view, :included => {:ids => @system_ids}, :organization_id => @org.id,
             :environment_id => @library.id, :content_view_id => @view.id
       end
+    end
+
+    def test_available_incremental_updates
+      ContentViewVersion.any_instance.stubs(:package_count).returns(0)
+      ContentViewVersion.any_instance.stubs(:errata_count).returns(0)
+      ContentViewVersion.any_instance.stubs(:puppet_module_count).returns(0)
+
+      @errata_system = System.find(katello_systems(:errata_server))
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
+      @errata_system.bound_repositories = [@view_repo]
+      @errata_system.save!
+
+      unavailable = @errata_system.applicable_errata - @errata_system.available_errata
+      @missing_erratum = unavailable.first
+
+      assert @missing_erratum
+      post :available_incremental_updates, :included => {:ids => [@errata_system.uuid]}, :organization_id => @org.id, :errata_ids => [@missing_erratum.uuid]
+      assert_response :success
     end
   end
 end
