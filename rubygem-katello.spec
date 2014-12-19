@@ -235,6 +235,9 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 
 %changelog
 * Fri Dec 19 2014 David Davis <daviddavis@redhat.com> 2.2.0-1
+- fatal: bad revision 'rubygem-katello-2.2.0-1..HEAD'
+
+* Fri Dec 19 2014 David Davis <daviddavis@redhat.com> 2.2.0-1
 - Merge pull request #4887 from jlsherrill/8770 (jlsherrill@gmail.com)
 - Merge pull request #4870 from jlsherrill/inc_update_api
   (jlsherrill@gmail.com)
