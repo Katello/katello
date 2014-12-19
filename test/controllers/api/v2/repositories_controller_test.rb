@@ -29,6 +29,7 @@ module Katello
       @product = katello_products(:fedora)
       @view = ContentView.find(katello_content_views(:library_view))
       @errata = Erratum.find(katello_errata(:bugfix))
+      @environment = katello_environments(:dev)
     end
 
     def permissions
@@ -59,11 +60,56 @@ module Katello
       assert_template 'api/v2/repositories/index'
     end
 
+    def test_index_with_product_id
+      ids = Repository.where(:product_id => @product.id, :library_instance_id => nil).pluck(:id)
+
+      @controller
+          .expects(:item_search)
+          .with(anything, anything, has_entry(:filters => [{:terms => {:id => ids}}]))
+          .returns({})
+
+      get :index, :product_id => @product.id, :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+    end
+
+    def test_index_with_environment_id
+      ids = @environment.repositories.pluck(:id)
+
+      @controller
+          .expects(:item_search)
+          .with(anything, anything, has_entry(:filters => [{:terms => {:id => ids}}]))
+          .returns({})
+
+      get :index, :environment_id => @environment.id, :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+    end
+
+    def test_index_with_environment_id_and_library
+      ids = @environment.repositories.pluck(:library_instance_id)
+
+      @controller
+          .expects(:item_search)
+          .with(anything, anything, has_entry(:filters => [{:terms => {:id => ids}}]))
+          .returns({})
+
+      get :index, :environment_id => @environment.id, :library => true, :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+    end
+
     def test_index_with_content_view_id
-      expectation = @controller.expects(:item_search) do |_, _, options|
-        options[:term].includes?(:content_view_ids)
-      end
-      expectation.returns({})
+      ids = @view.repositories.pluck(:id)
+
+      @controller
+          .expects(:item_search)
+          .with(anything, anything, has_entry(:filters => [{:terms => {:id => ids}}]))
+          .returns({})
+
       get :index, :content_view_id => @view.id, :organization_id => @organization.id
 
       assert_response :success
@@ -71,11 +117,74 @@ module Katello
     end
 
     def test_index_with_errata_id
-      expectation = @controller.expects(:item_search) do |_, _, options|
-        options[:term].includes?(:errata_id)
-      end
-      expectation.returns({})
-      get :index, :errata_id => @errata.errata_id, :organization_id => @organization.id
+      ids = @errata.repositories.pluck(:id)
+
+      @controller
+          .expects(:item_search)
+          .with(anything, anything, has_entry(:filters => [{:terms => {:id => ids}}]))
+          .returns({})
+
+      get :index, :errata_id => @errata.uuid, :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+    end
+
+    def test_index_with_content_view_version_id
+      ids = @view.versions.first.repositories.pluck(:id)
+
+      @controller
+          .expects(:item_search)
+          .with(anything, anything, has_entry(:filters => [{:terms => {:id => ids}}]))
+          .returns({})
+
+      get :index, :content_view_version_id => @view.versions.first.id, :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+    end
+
+    def test_index_with_library
+      ids = @organization.default_content_view.versions.first.repositories.pluck(:id)
+
+      @controller
+          .expects(:item_search)
+          .with(anything, anything, has_entry(:filters => [{:terms => {:id => ids}}]))
+          .returns({})
+
+      get :index, :library => true, :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+    end
+
+    def test_index_with_content_type
+      ids = Repository.where(
+              :content_type => 'yum',
+              :content_view_version_id => @organization.default_content_view.versions.first.id
+            )
+      ids = ids.pluck(:id)
+
+      @controller
+          .expects(:item_search)
+          .with(anything, anything, has_entry(:filters => [{:terms => {:id => ids}}]))
+          .returns({})
+
+      get :index, :content_type => 'yum', :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+    end
+
+    def test_index_with_name
+      ids = Repository.where(:name => katello_repositories(:fedora_17_x86_64).name, :library_instance_id => nil).pluck(:id)
+
+      @controller
+          .expects(:item_search)
+          .with(anything, anything, has_entry(:filters => [{:terms => {:id => ids}}]))
+          .returns({})
+
+      get :index, :name => katello_repositories(:fedora_17_x86_64).name, :organization_id => @organization.id
 
       assert_response :success
       assert_template 'api/v2/repositories/index'

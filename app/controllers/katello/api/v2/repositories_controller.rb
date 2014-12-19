@@ -46,7 +46,6 @@ module Katello
     param :environment_id, :number, :desc => N_("ID of an environment to show repositories in")
     param :content_view_id, :number, :desc => N_("ID of a content view to show repositories in")
     param :content_view_version_id, :number, :desc => N_("ID of a content view version to show repositories in")
-    param :erratum_id, String, :desc => N_("Filter by systems that need an Erratum")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :content_type, String, :desc => N_("limit to only repositories of this time")
     param :name, String, :desc => N_("name of the repository"), :required => false
@@ -54,33 +53,33 @@ module Katello
     def index
       options = sort_params
       options[:load_records?] = true
-      options[:filters] = []
 
-      if @product
-        options[:filters] << {:term => {:product_id => @product.id}}
-      else
-        if params[:erratum_id]
-          ids = repositories_by_erratum(params[:erratum_id]).pluck(:id)
-        else
-          ids = Repository.where(:product_id => Product.readable.where(:organization_id => @organization.id)).pluck(:id)
-        end
+      repositories = Repository.where(:product_id => Product.readable.where(:organization_id => @organization.id))
+      repositories = repositories.where(:product_id => @product.id) if @product
+
+      if params[:content_view_id]
+        repositories = repositories
+                         .joins(:content_view_repositories)
+                         .where("#{ContentViewRepository.table_name}.content_view_id" => params[:content_view_id])
       end
 
-      options[:filters] << {:terms => {:id => ids}} if ids
-      options[:filters] << {:term => {:environment_id => params[:environment_id]}} if params[:environment_id]
-      options[:filters] << {:term => {:content_view_ids => params[:content_view_id]}} if params[:content_view_id]
-      if params[:content_view_version_id]
-        params[:content_view_version_id] = [params[:content_view_version_id]] unless params[:content_view_version_id].is_a?(Array)
-        options[:filters] << {:terms => {:content_view_version_id => params[:content_view_version_id]}}
-        unless params[:environment_id]
-          options[:filters] << {:missing => {:field => :environment_id, :existence => true, :null_value => true}}
-        end
+      repositories = repositories.where(:content_view_version_id => params[:content_view_version_id]) if params[:content_view_version_id]
+      repositories = repositories.where(:content_type => params[:content_type]) if params[:content_type]
+      repositories = repositories.where(:name => params[:name]) if params[:name]
+      repositories = repositories.joins(:errata).where("#{Erratum.table_name}.uuid" => params[:errata_id]) if params[:errata_id]
+
+      if params[:environment_id] && !params[:library]
+        repositories = repositories.where(:environment_id => params[:environment_id])
+      elsif params[:environment_id] && params[:library]
+        instance_ids = Repository.where(:environment_id => params[:environment_id]).pluck(:library_instance_id)
+        repositories = repositories.where(:id => instance_ids)
       end
-      if params[:library] || (params[:environment_id].nil? && params[:content_view_version_id].blank?)
-        options[:filters] << {:term => {:content_view_version_id => @organization.default_content_view.versions.first.id}}
+
+      if params[:library] || (params[:environment_id].blank? && params[:content_view_version_id].blank? && params[:content_view_id].blank?)
+        repositories = repositories.where(:content_view_version_id => @organization.default_content_view.versions.first.id)
       end
-      options[:filters] << {:term => {:content_type => params[:content_type]}} if params[:content_type]
-      options[:filters] << {:term => {:name => params[:name]}} if params[:name]
+
+      options[:filters] = [{:terms => {:id => repositories.pluck(:id)}}]
 
       respond :collection => item_search(Repository, params, options)
     end
@@ -228,14 +227,6 @@ module Katello
       else
         head(404)
       end
-    end
-
-    private
-
-    def repositories_by_erratum(erratum_id)
-      erratum = Katello::Erratum.find_by_uuid(erratum_id)
-      fail _("Unable to find erratum %s.") % erratum_id unless erratum
-      erratum.repositories
     end
 
     protected
