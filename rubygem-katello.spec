@@ -29,7 +29,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.1.0
-Release: 1%{dist}
+Release: 2%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -234,6 +234,550 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Fri Dec 19 2014 David Davis <daviddavis@redhat.com> 2.1.0-2
+- Fixes #8771 - Remove katello_api from comps (daviddavis@redhat.com)
+- Bumping for 2.1 release (daviddavis@redhat.com)
+- Merge pull request #4887 from jlsherrill/8770 (jlsherrill@gmail.com)
+- Merge pull request #4870 from jlsherrill/inc_update_api
+  (jlsherrill@gmail.com)
+- Merge pull request #4888 from jlsherrill/8598 (jlsherrill@gmail.com)
+- Merge pull request #4886 from jlsherrill/8768 (jlsherrill@gmail.com)
+- Merge pull request #4866 from ehelms/fixes-8655 (eric.d.helms@gmail.com)
+- Merge pull request #4876 from steveloranz/8687 (jlsherrill@gmail.com)
+- Merge pull request #4885 from daviddavis/temp/20141218174536
+  (daviddavis@redhat.com)
+- fixes #8768 - fixing pulp glue tests in live mode (jsherril@redhat.com)
+- fixes #8598 - fixing repository delete current user was not set during
+  finalize phase (jsherril@redhat.com)
+- fixes #8770 - delay node metadata sync to 2nd action (jsherril@redhat.com)
+- Merge pull request #4881 from stbenjam/8354 (stephen@bitbin.de)
+- Merge pull request #4882 from stbenjam/8703 (stephen@bitbin.de)
+- Fixes #8655: Show content view and environment pairings for library
+  repositories. (ericdhelms@gmail.com)
+- Fixes #8763 - Remove unnecessary ignore blocks (daviddavis@redhat.com)
+- Merge pull request #4829 from stbenjam/7480-fix (stephen@bitbin.de)
+- fixes #8703 - fix promotion notification mail (stbenjam@redhat.com)
+- fixes #8354 - truncate long erratum titles (stbenjam@redhat.com)
+- fixes #8687 - rewire sync_plan for scoped search (sloranz@xantham.com)
+- Merge pull request #4818 from waldenraines/7953 (walden@redhat.com)
+- Fixes #7953: add product/repositories list for an erratum.
+  (walden@redhat.com)
+- Merge pull request #4875 from steveloranz/rm7892 (jlsherrill@gmail.com)
+- Merge pull request #4873 from ehelms/refs-8679 (eric.d.helms@gmail.com)
+- fixes #8686 - rewire gpg_keys for scoped search (sloranz@xantham.com)
+- fixes #8188 - adding api to determine what inc update is needed
+  (jsherril@redhat.com)
+- Merge pull request #4844 from jlsherrill/inc_update (jlsherrill@gmail.com)
+- Merge pull request #4871 from jlsherrill/6637 (jlsherrill@gmail.com)
+- fixes #8306,8177,8180 - adding incremnetal update api (jsherril@redhat.com)
+- Merge pull request #4867 from ehelms/fixes-8668 (eric.d.helms@gmail.com)
+- Merge pull request #4872 from jlsherrill/maruku (jlsherrill@gmail.com)
+- Refs #8679: Update comps for new katello installer breakout.
+  (ericdhelms@gmail.com)
+- fixes #8681 - removing requirements for maruku (jsherril@redhat.com)
+- fixes #6637 - loosening url validation restrictions (jsherril@redhat.com)
+- Merge pull request #4863 from dustints/bonus_subs (dtsang@redhat.com)
+- Merge pull request #4869 from jlsherrill/8675 (jlsherrill@gmail.com)
+- Merge pull request #4862 from waldenraines/8626 (walden@redhat.com)
+- Fixes #8519 - Bonus subs not being reindexed (dtsang@redhat.com)
+- fixes #8675 - updating rubocop.yml for bastion_katello (jsherril@redhat.com)
+- Fixes #8626: ensure errata icons line up, BZ 1171310. (walden@redhat.com)
+- Merge pull request #4848 from cfouant/actkey-dynflow-update
+  (cfouant@redhat.com)
+- Fixes #8668: Hide 'Server' kickstart repositories from enablement.
+  (ericdhelms@gmail.com)
+- refs #8596 - adding foreman_sam and hammer-cli-sam to comps
+  (komidore64@gmail.com)
+- Merge pull request #4860 from komidore64/foreman-gutterball-comps
+  (komidore64@gmail.com)
+- Merge pull request #4859 from jlsherrill/8606 (jlsherrill@gmail.com)
+- refs #8584 - foreman-gutterball and gutterball to comps
+  (komidore64@gmail.com)
+- Merge pull request #4839 from cfouant/errors (cfouant@redhat.com)
+- Merge pull request #4855 from daviddavis/temp/20141208110820
+  (daviddavis@redhat.com)
+- Merge pull request #4833 from jlsherrill/8491 (jlsherrill@gmail.com)
+- fixes #7480 - disown foreman templates (stbenjam@redhat.com)
+- Merge pull request #4858 from jmontleon/relax-qpid_messagining-dependency
+  (jlsherrill@gmail.com)
+- fixes #8606 - fixing puppet module index (jsherril@redhat.com)
+- Fixes #8615 - relax qpid_messaging dependency (jmontleo@redhat.com)
+- Merge pull request #4852 from thomasmckay/7176-sub-host-guest
+  (thomasmckay@redhat.com)
+- fixes #7176 - display hypervisor/guest info for subscription
+  (thomasmckay@redhat.com)
+- BuildRequires needs to be updated as well (jmontleo@redhat.com)
+- Fixes #8610 - Adding search param to repo content api (daviddavis@redhat.com)
+- fixes #7667 - promotion errata mail notification (stbenjam@redhat.com)
+- fixes #7666 - sync errata mail notification (stbenjam@redhat.com)
+- fixes #7668 - host errata mail notification (stbenjam@redhat.com)
+- fixes #8480 - Adds default setting for act key autoattach, BZ 1166889
+  (cfouant@redhat.com)
+- fixes #8491 - removing puppet modules list from content view version api
+  (jsherril@redhat.com)
+- fixes #8588 - make repo indexing idempotent (stbenjam@redhat.com)
+- Fixes #7603,7792,7789 - Code to promote/publish dockered cv's
+  (paji@redhat.com)
+- Merge pull request #4845 from ehelms/fixes-8553 (eric.d.helms@gmail.com)
+- Merge pull request #4842 from daviddavis/temp/20141203185737
+  (daviddavis@redhat.com)
+- fixes #8549 - Fixes subscription error messages for act key, BZ 1154619
+  (cfouant@redhat.com)
+- Merge pull request #4841 from stbenjam/7695 (stephen@bitbin.de)
+- Fixes #7845 - Allows user to delete custom product (aruzicka@redhat.com)
+- fixes #7695, #7677 - enable searching errata by issued/updated times
+  (stbenjam@redhat.com)
+- Fixes #8579 - Enabling EmptyLinesAroundBody cop (daviddavis@redhat.com)
+- Merge pull request #4817 from daviddavis/remove-img (daviddavis@redhat.com)
+- Merge pull request #4836 from stbenjam/7697 (stephen@bitbin.de)
+- Fixes #7810 - Remove docker and puppet content from a repository
+  (daviddavis@redhat.com)
+- Merge pull request #4772 from parthaa/docker-tags (parthaa@gmail.com)
+- Merge pull request #4813 from cfouant/actkey-feature (cfouant@redhat.com)
+- Merge pull request #4771 from waldenraines/7688 (walden@redhat.com)
+- Fixes #7688: add content hosts tab to the errata details page.
+  (walden@redhat.com)
+- Fixes #8553: Fix broken table layouts. (ericdhelms@gmail.com)
+- Fixes #8384: Remove dependence on ui-alchemy_rails and compass.
+  (ericdhelms@gmail.com)
+- Merge pull request #4831 from stbenjam/7706 (stephen@bitbin.de)
+- fixes #7697 - enable searching by CVE (stbenjam@redhat.com)
+- refs #7706 - extend errata rabl in systems API (stbenjam@redhat.com)
+- Fixes #8113 - Docker tags count now displayed for Repositories
+  (paji@redhat.com)
+- Merge pull request #4832 from shlomizadok/7233 (eric.d.helms@gmail.com)
+- Merge pull request #4834 from daviddavis/temp/20141124145330
+  (daviddavis@redhat.com)
+- Merge pull request #4820 from daviddavis/temp/20141118104354
+  (daviddavis@redhat.com)
+- Merge pull request #4828 from thomasmckay/sub-sku (thomasmckay@redhat.com)
+- Merge pull request #4790 from bkearney/bkearney/8237
+  (bryan.kearney@gmail.com)
+- Fixes #8494 - Re-adding the content view filter line (daviddavis@redhat.com)
+- refs #7233 - refactor FactoryGirl methods to after(:action) and use
+  assocation for library (shlomi@ben-hanna.com)
+- Fixes #8483: Require foreman-assets RPM. (ericdhelms@gmail.com)
+- Merge pull request #4825 from thomasmckay/8451-rel-eng-csv
+  (komidore64@gmail.com)
+- Merge pull request #4819 from adamruzicka/docker-pull-url
+  (daviddavis@redhat.com)
+- Merge pull request #4816 from ehelms/fixes-8404 (eric.d.helms@gmail.com)
+- Fixes #8404: Re-factor environments UI to show environment counts.
+  (ericdhelms@gmail.com)
+- Merge pull request #4826 from jlsherrill/7904 (jlsherrill@gmail.com)
+- fixes #6939 - Sets autoattach flag for act key, BZ 1126924
+  (cfouant@redhat.com)
+- Merge pull request #4822 from ehelms/fixes-8440 (eric.d.helms@gmail.com)
+- fixes #7904 - adding autocomplete for errata (jsherril@redhat.com)
+- Merge pull request #4814 from ehelms/fixes-8406 (eric.d.helms@gmail.com)
+- fixes #8454 - display product id (sku) (thomasmckay@redhat.com)
+- Fixes #8101 - Show docker pull url for repository details page
+  (aruzicka@redhat.com)
+- fixes #8451 - add hammer-cli-csv to nightly builds (thomasmckay@redhat.com)
+- Fixes #8406: Allow content to be filtered by environment.
+  (ericdhelms@gmail.com)
+- Merge pull request #4784 from adamruzicka/docker-repo-validation
+  (daviddavis@redhat.com)
+- Fixes #8018 - Performs docker repository name validation on repo create
+  (aruzicka@redhat.com)
+- Merge pull request #4823 from parthaa/cdn-fix (parthaa@gmail.com)
+- Fixes #8441 - Can specify cdn ssl version via config (paji@redhat.com)
+- Fixes #8440: Fix broken auto_complete URL in Package Filter UI.
+  (ericdhelms@gmail.com)
+- fixes #8438 - using correct environments for repository lookup
+  (jsherril@redhat.com)
+- Fixes #8436 - Fixing broken apidoc route and field (daviddavis@redhat.com)
+- Refs #8396: Remove use of 'alchemy' namespace from Bastion re-facotring.
+  (ericdhelms@gmail.com)
+- Merge pull request #4669 from adamruzicka/sort-by-fix
+  (eric.d.helms@gmail.com)
+- Refs #7883: Adds repository filter to tabs on content view version details.
+  (ericdhelms@gmail.com)
+- Merge pull request #4795 from ehelms/fixes-7883 (eric.d.helms@gmail.com)
+- Fixes #7883: Allow filtering content by a content view version and
+  repository. (ericdhelms@gmail.com)
+- Fixes #8222 - Prevent duplicate docker tags for repos (daviddavis@redhat.com)
+- Merge pull request #4812 from ehelms/fixes-8397 (eric.d.helms@gmail.com)
+- Fixes #8397: Display errata counts for Library environment counts.
+  (ericdhelms@gmail.com)
+- Fixes #5059 - Returns error message when sorting by wrong column.
+  (aruzicka@redhat.com)
+- Merge pull request #4792 from bkearney/bkearney/8238
+  (bryan.kearney@gmail.com)
+- Merge pull request #4810 from stbenjam/8355 (stephen@bitbin.de)
+- Merge pull request #4809 from waldenraines/8338 (walden@redhat.com)
+- fixes #8355 - remove ambigious column plucks for older rails
+  (stbenjam@redhat.com)
+- Merge pull request #4802 from ehelms/fixes-8263 (eric.d.helms@gmail.com)
+- Fixes #8338: add CVE numbers to errata details. (walden@redhat.com)
+- Merge pull request #4808 from jlsherrill/closure (jlsherrill@gmail.com)
+- Refs #8340 - remove uneeded packages from comps (jsherril@redhat.com)
+- Merge pull request #4806 from stbenjam/8318 (stephen@bitbin.de)
+- Fixes #8322: display black icons if no errata needs to be applied.
+  (walden@redhat.com)
+- fixes #8318 - make errata indexing idempotent (stbenjam@redhat.com)
+- Merge pull request #4776 from ehelms/refs-8138 (eric.d.helms@gmail.com)
+- Merge pull request #4793 from daviddavis/temp/20141103142917
+  (daviddavis@redhat.com)
+- Refs #8242 - Create docker tag API (daviddavis@redhat.com)
+- Merge pull request #4805 from komidore64/host-collection-actions
+  (komidore64@gmail.com)
+- Merge pull request #4785 from cfouant/limit-validation (cfouant@redhat.com)
+- Merge pull request #4778 from waldenraines/8127 (walden@redhat.com)
+- Merge pull request #4804 from ehelms/fixes-8283 (eric.d.helms@gmail.com)
+- refs #8292 - adding org_id param b/c it's required, BZ 1135125
+  (komidore64@gmail.com)
+- Fixes #8237 : Validate that the user can not set max_content_hosts if
+  unlimited_content_hosts is true (bryan.kearney@gmail.com)
+- Merge pull request #4800 from waldenraines/8265 (walden@redhat.com)
+- Fixes #8283: Require jquery-ui-rails for the RPM spec and bump Runcible.
+  (ericdhelms@gmail.com)
+- Fixes #8127: add errata counts to the content host details page.
+  (walden@redhat.com)
+- Merge pull request #4803 from waldenraines/8273 (walden@redhat.com)
+- Merge pull request #4797 from jlsherrill/8255 (jlsherrill@gmail.com)
+- Merge pull request #4799 from jlsherrill/8262 (jlsherrill@gmail.com)
+- Merge pull request #4801 from jlsherrill/8268 (jlsherrill@gmail.com)
+- Merge pull request #4781 from cfouant/content-override (cfouant@redhat.com)
+- Fixes #8273/BZ1138868: fix JS error on content hosts page.
+  (walden@redhat.com)
+- fixes #8268 - adding progress reporting for puppet sync (jsherril@redhat.com)
+- Fixes #8263: Remove usage of to_sym on user input params.
+  (ericdhelms@gmail.com)
+- Merge pull request #4789 from bkearney/bkearney/8235
+  (bryan.kearney@gmail.com)
+- Fixes #8265/BZ1154380: remove deselect all link from tables.
+  (walden@redhat.com)
+- fixes #8262 - fixing progress updating on sync status page
+  (jsherril@redhat.com)
+- fixes #6060 - Fixes activation-key content override, BZ 1104638
+  (cfouant@redhat.com)
+- fixes #8255 - properly display new version for publish after just publishing
+  old version (jsherril@redhat.com)
+- fixes #8253 - updating requirements for foreman_docker (jsherril@redhat.com)
+- fixes #8220 - Throw error for act key content host limit beyond max, BZ
+  1139576 (cfouant@redhat.com)
+- Fixes #8235: Add orgzanization_id to the systems json which is generated
+  (bryan.kearney@gmail.com)
+- Merge pull request #4779 from thomasmckay/8131-virt-who
+  (thomasmckay@redhat.com)
+- Fixes #8238 : Mark content_type parameter as required, since it is for POSTS
+  (bryan.kearney@gmail.com)
+- Merge pull request #4788 from parthaa/8225 (parthaa@gmail.com)
+- Fixes #8225 - RH Cdn url can now be updated (paji@redhat.com)
+- fixes #8232 - fixing db:seed when called twice with seed organization
+  (jsherril@redhat.com)
+- fixes #8131 - hypervisors forced into content host's org, env, and cv
+  (thomasmckay@redhat.com)
+- Merge pull request #4786 from daviddavis/temp/20141030132721
+  (daviddavis@redhat.com)
+- Refs #8138: Removes use of RootURL removed from Bastion.
+  (ericdhelms@gmail.com)
+- Merge pull request #4767 from jlsherrill/7701 (jlsherrill@gmail.com)
+- Fixes #7604 - Enable docker image uploads (daviddavis@redhat.com)
+- Merge pull request #4571 from adamruzicka/fix-phases (daviddavis@redhat.com)
+- Merge pull request #4761 from daviddavis/temp/20141023155402
+  (daviddavis@redhat.com)
+- Merge pull request #4782 from daviddavis/temp/20141029165526
+  (daviddavis@redhat.com)
+- fixes #7711 - adding api errata comparison for content view versions
+  (jsherril@redhat.com)
+- Fixes #8209 - Hammer repo create doesn't require url (aruzicka@redhat.com)
+- Merge pull request #4751 from ehelms/fixes-7961 (eric.d.helms@gmail.com)
+- Fixes #7554 - Show user friendly error message on 413 (daviddavis@redhat.com)
+- Merge pull request #4768 from komidore64/rmi8116-apidoc-lc-env-prior-id
+  (komidore64@gmail.com)
+- Merge pull request #4762 from jlsherrill/7885 (jlsherrill@gmail.com)
+- Fixes #7961: Able to view the Errata in the Library Environment
+  (ericdhelms@gmail.com)
+- Merge pull request #4774 from waldenraines/8126 (walden@redhat.com)
+- fixes #7885 - adding counts to lifecycle environments (jsherril@redhat.com)
+- Merge pull request #4707 from ehelms/fixes-7609 (eric.d.helms@gmail.com)
+- Merge pull request #4775 from jlsherrill/7690 (jlsherrill@gmail.com)
+- Fixes #7126 - Upload docker images to the API (daviddavis@redhat.com)
+- Merge pull request #4773 from ehelms/fixes-8132 (eric.d.helms@gmail.com)
+- fixes #7690 - adding errata applicable/available systems api
+  (jsherril@redhat.com)
+- Fixes #8126:  add color to errata icons based on errata count.
+  (walden@redhat.com)
+- Fixes #8132: Remove unused styling and import to fix asset compile.
+  (ericdhelms@gmail.com)
+- Merge pull request #4765 from bbuckingham/issue-8094 (bbuckingham@redhat.com)
+- fixes #8116 - correcting prior env description in apidoc, BZ 1130258
+  (komidore64@gmail.com)
+- Fixes #7609: View the details of a Content View Version
+  (ericdhelms@gmail.com)
+- Merge pull request #4766 from jlsherrill/7680 (jlsherrill@gmail.com)
+- Merge pull request #4770 from daviddavis/temp/20141027120251
+  (daviddavis@redhat.com)
+- Merge pull request #4744 from daviddavis/temp/20141014085342
+  (daviddavis@redhat.com)
+- Fixes #7642 - Added backend/api for docker images (daviddavis@redhat.com)
+- Merge pull request #4740 from cfouant/copy (komidore64@gmail.com)
+- Fixes #8119 - Remove tests covered by rubocop (daviddavis@redhat.com)
+- Merge pull request #4758 from parthaa/cv-ui (parthaa@gmail.com)
+- Fixes #7951 - Add/Remove Docker repos to Content Views (paji@redhat.com)
+- Merge pull request #4747 from daviddavis/temp/20141014174658
+  (daviddavis@redhat.com)
+- Merge pull request #4763 from bbuckingham/issue-8087 (bbuckingham@redhat.com)
+- fixes #7680 - filter errata optionally by organization id from api
+  (jsherril@redhat.com)
+- fixes #8094 - Content Host - fix the host collection capacity
+  (bbuckingham@redhat.com)
+- fixes #8089 - Content Dashboard - fix the sorting of items in Sync Overview
+  (bbuckingham@redhat.com)
+- fixes #8087 - Locations - update to allow proper use of nested locations
+  (bbuckingham@redhat.com)
+- fixes #7754 - Adds cloning of activation key, BZ 531307 (cfouant@redhat.com)
+- Merge pull request #4755 from jlsherrill/7993 (jlsherrill@gmail.com)
+- Merge pull request #4756 from stbenjam/7996 (stephen@bitbin.de)
+- Merge pull request #4759 from ehelms/fixes-8013 (eric.d.helms@gmail.com)
+- Fixes #6187,BZ1125358 - Deleting a resource and creation a new one wont lead
+  to conflicts (aruzicka@redhat.com)
+- fixes #7996 - don't index users in elasticsearch (stbenjam@redhat.com)
+- Merge pull request #4748 from komidore64/rmi6463-organization-
+  desccriptification-station (komidore64@gmail.com)
+- Fixes #8013: Rely on factory_girl_rails and mocha version from Foreman.
+  (ericdhelms@gmail.com)
+- fixes #7993 - showing available errata and not all applicable
+  (jsherril@redhat.com)
+- Merge pull request #4757 from ehelms/refs-7733 (eric.d.helms@gmail.com)
+- Merge pull request #4754 from ehelms/refs-7423 (eric.d.helms@gmail.com)
+- Refs #7733: Remove usage of Host fixtures in favor of Host factories.
+  (ericdhelms@gmail.com)
+- Refs #7423: Convert to using Bastion core to provide the Katello UI.
+  (ericdhelms@gmail.com)
+- Fixes #7846 - remove critcal section from cp events task (dtsang@redhat.com)
+- Merge pull request #4743 from jlsherrill/errata_switch (jlsherrill@gmail.com)
+- Merge pull request #4753 from jlsherrill/7979 (jlsherrill@gmail.com)
+- fixes #7701,7702,7703 - adding selector for type of applicability view
+  (jsherril@redhat.com)
+- Merge pull request #4752 from waldenraines/7949 (walden@redhat.com)
+- Fixes #7949: show affected packages of errata on details page.
+  (walden@redhat.com)
+-  fixes #7979 - adding better error reporting for repo enable ui
+  (jsherril@redhat.com)
+- Merge pull request #4696 from adamruzicka/7630-product_description
+  (eric.d.helms@gmail.com)
+- Merge pull request #4737 from waldenraines/7919 (walden@redhat.com)
+- fixes #7834 - properly process incoming and updated hypervisors
+  (thomasmckay@redhat.com)
+- Merge pull request #4750 from daviddavis/temp/20141016113818
+  (daviddavis@redhat.com)
+- Merge pull request #4732 from parthaa/enable2 (parthaa@gmail.com)
+- Fixes #7796 - Added code to enable docker repos (paji@redhat.com)
+- Refs #7156 - Addressing more rubocop cops (daviddavis@redhat.com)
+- Fixes #7919/BZ1151633: fix translations of sync plan intervals.
+  (walden@redhat.com)
+- Fixes #7947 - Validating package checksums when syncing
+  (daviddavis@redhat.com)
+- Merge pull request #4746 from waldenraines/7942 (walden@redhat.com)
+- refs #6463 - hammer was unable to update the org's desc, BZ 1114136
+  (komidore64@gmail.com)
+- Merge pull request #4739 from waldenraines/errata-details (walden@redhat.com)
+- Fixes #7685: add errata details page. (walden@redhat.com)
+- Fixes #7942: redirect to correct place after creating a sync plan.
+  (walden@redhat.com)
+- fixes #7813 - adds arguments to activation-key functions, BZ 1110475
+  (cfouant@redhat.com)
+- Merge pull request #4736 from iNecas/issue/7915 (inecas@redhat.com)
+- Fixes #7630 - Creating new product saves its description
+  (aruzicka@redhat.com)
+- Merge pull request #4741 from daviddavis/temp/20141013151500
+  (daviddavis@redhat.com)
+- Merge pull request #4742 from jlsherrill/7927 (jlsherrill@gmail.com)
+- Merge pull request #4734 from daviddavis/temp/20141010134450
+  (daviddavis@redhat.com)
+- fixes 7927 - fix subscription-manager registration for missing constant
+  (jsherril@redhat.com)
+- Fixes #7929 - Update the MethodLength namespaces (daviddavis@redhat.com)
+- Merge pull request #4631 from xprazak2/repo-discovery-format-bug5015
+  (walden@redhat.com)
+- Merge pull request #4730 from waldenraines/errata-list (walden@redhat.com)
+- Fixes #7915 - copy uploaded files to shared tmp directory in plan phase
+  (inecas@redhat.com)
+- Fixes #5015 - Repo discovery display format (oprazak@redhat.com)
+- Fixes #7679: add the errata list page and menu item. (walden@redhat.com)
+- Fixes #7903 - Remove call to undefined class (daviddavis@redhat.com)
+- Fixes #7156 - Fixing up rubocop errors across katello (daviddavis@redhat.com)
+- Merge pull request #4733 from ehelms/fixes-7900 (eric.d.helms@gmail.com)
+- Merge pull request #4704 from daviddavis/temp/20141004162439
+  (daviddavis@redhat.com)
+- Fixes #7863 - Upgrade rubocop to 0.26.1 (daviddavis@redhat.com)
+- Fixes #7900: Bastion pages couldn't load due to unparseable User.to_json
+  (ericdhelms@gmail.com)
+- Merge pull request #4721 from daviddavis/temp/20141009111753
+  (daviddavis@redhat.com)
+- Fixes #7816 - Refactor strong_params code (daviddavis@redhat.com)
+- Refs #6421 - Turning on rubocop for the test directory
+  (daviddavis@redhat.com)
+- Merge pull request #4720 from ehelms/refs-7156 (daviddavis@redhat.com)
+- Merge pull request #4716 from ehelms/fixes-7852 (eric.d.helms@gmail.com)
+- Merge pull request #4719 from ehelms/refs-6421 (eric.d.helms@gmail.com)
+- Refs #7156: Fixing app/lib for Rubocop. (ericdhelms@gmail.com)
+- Merge pull request #4731 from jlsherrill/7493 (daviddavis@redhat.com)
+- Merge pull request #4698 from waldenraines/errata-management
+  (walden@redhat.com)
+- Fixes #7852: Refactor puppet modules controller to use content concern.
+  (ericdhelms@gmail.com)
+- Refs #6421: Fix spec directory rubocop offenses. (ericdhelms@gmail.com)
+- Merge pull request #4729 from jlsherrill/models (jlsherrill@gmail.com)
+- Merge pull request #4727 from daviddavis/temp/20141009120316
+  (daviddavis@redhat.com)
+- refs #7493 - fixing test that is randomly failing (jsherril@redhat.com)
+- Fixes #7704: show applicable Errata count for Content Host list.
+  (walden@redhat.com)
+- Refs #7156 - Disable some cops (daviddavis@redhat.com)
+- Merge pull request #4723 from ehelms/refs-7156-lib (eric.d.helms@gmail.com)
+- Merge pull request #4728 from komidore64/rubocop-views-dir
+  (komidore64@gmail.com)
+- refs #7156 - test updates for model changes (jsherril@redhat.com)
+- Merge pull request #4722 from bbuckingham/issue-7156 (bbuckingham@redhat.com)
+- Merge pull request #4725 from ehelms/refs-7156-cleanup
+  (eric.d.helms@gmail.com)
+- Merge pull request #4724 from ehelms/refs-7156-config
+  (eric.d.helms@gmail.com)
+- Refs #7156: Fix lib/ Rubocop offenses. (ericdhelms@gmail.com)
+- refs #7156 - rubocop - adding to app/views/*.rabl files
+  (komidore64@gmail.com)
+- refs #7156 - updating rubocop style for migrations (jsherril@redhat.com)
+- Refs #7156: fix rubocop offenses in app/controllers. (walden@redhat.com)
+- Refs #7156: Removing unneeded files Rubocop was checking.
+  (ericdhelms@gmail.com)
+- refs #7156 - updating models for new rubocop style (jsherril@redhat.com)
+- Refs #7156: Fix config/ Rubocop offenses. (ericdhelms@gmail.com)
+- refs #7156 - rubocop fixes for katello/helpers (bbuckingham@redhat.com)
+- Merge pull request #4705 from jlsherrill/db_errata (jlsherrill@gmail.com)
+- fixes #7705 - adding errata counts to content host details
+  (jsherril@redhat.com)
+- Merge pull request #4641 from ehelms/fixes-4121 (eric.d.helms@gmail.com)
+- Merge pull request #4717 from Katello/docker (daviddavis@redhat.com)
+- Merge pull request #4694 from daviddavis/7642 (daviddavis@redhat.com)
+- Refs #7642 - Back-end code for viewing docker images (daviddavis@redhat.com)
+- Fixes #7798 - adding editable redhat registry url (paji@redhat.com)
+- Merge pull request #4713 from daviddavis/temp/20141007182754
+  (daviddavis@redhat.com)
+- Merge pull request #4714 from dustint-rh/lockdownqpidmessaging
+  (dtsang@redhat.com)
+- Fixes #7844 - lockdown qpid_messaging rpms (dtsang@redhat.com)
+- Fixes #7526 - Fixing crane dependency (daviddavis@redhat.com)
+- Merge pull request #4709 from daviddavis/temp/20141007152750
+  (daviddavis@redhat.com)
+- Ref# #7124 - Improved a complicated if statement (paji@redhat.com)
+- Merge branch 'master' into master-merge (paji@redhat.com)
+- Fixes #7844 - lockdown qpid_messaging >= 0.26.1 && (dtsang@redhat.com)
+- Fixes #7526 - Add pulp-docker dependencies for pulp 2.5 upgrade
+  (daviddavis@redhat.com)
+- Merge branch 'master' into master-merge (paji@redhat.com)
+- Merge pull request #4706 from eLobato/7818 (jlsherrill@gmail.com)
+- refs #7818 - render permissions to fix oj 2.10.3 error (elobatocs@gmail.com)
+- refs #7814 - adding one last client package to comps (jsherril@redhat.com)
+- fixes #7814 - adding a few client pages to comps (jsherril@redhat.com)
+- refs #7124 - docker - downcase pulp_id when creating docker repository
+  (bbuckingham@redhat.com)
+- Merge pull request #4691 from parthaa/sync (parthaa@gmail.com)
+- Fixes #7606 - Added code to sync docker repos (paji@redhat.com)
+- refs #7124 - docker - fix issue where repo was always created as protected
+  (bbuckingham@redhat.com)
+- Merge pull request #4608 from dustint-rh/in_sequence_promotion
+  (dtsang@redhat.com)
+- Merge pull request #4431 from dustint-rh/qpid_events_dynflow
+  (dtsang@redhat.com)
+- Fixes #6543 - updt index on cp event bz1115602 (inecas@redhat.com)
+- Fixes #7243 - CVV promotion out of sequence (dtsang@redhat.com)
+- Merge pull request #4682 from adamruzicka/bz1127090-activation_key
+  (eric.d.helms@gmail.com)
+- Merge pull request #4690 from mccun934/20140929-0549 (mmccune@gmail.com)
+- Fixes #7730,BZ1127090 - Activation key max host count can be set from finite
+  number to infinite (aruzicka@redhat.com)
+- fixes #7627 - handle cases where this codte is ran outside of rails
+  (mmccune@redhat.com)
+- Fixes #4121: Removes unused configuration values. (ericdhelms@gmail.com)
+- Fixes #7493 - Store the description entered during publish
+  (daviddavis@redhat.com)
+- Merge pull request #4680 from daviddavis/temp/20140923164704
+  (daviddavis@redhat.com)
+- Merge pull request #4681 from jlsherrill/4056 (jlsherrill@gmail.com)
+- Merge pull request #4685 from waldenraines/7641 (walden@redhat.com)
+- fixes #4056 - add checksum selection for custom repos (jsherril@redhat.com)
+- Merge pull request #4626 from iNecas/bulk-actions (inecas@redhat.com)
+- Merge pull request #4686 from jlsherrill/7621 (jlsherrill@gmail.com)
+- fixes #7621 - treat a nil minor OS version as empty string
+  (jsherril@redhat.com)
+- fixes #7598 - Docker - initial ui chgs to support CRUD
+  (bbuckingham@redhat.com)
+- Fixes #7641: add errata icon tooltips on content view versions page.
+  (walden@redhat.com)
+- Fixes #7616 - Use validates_lengths_from_database (daviddavis@redhat.com)
+- fixes #7155 - ensure displayMessage is present (thomasmckay@redhat.com)
+- Merge pull request #4676 from stbenjam/7542 (stephen@bitbin.de)
+- fixes #7124 - Docker - initial backend/api changes to support repository CRUD
+  actions (bbuckingham@redhat.com)
+- Merge pull request #4647 from parthaa/new-label (parthaa@gmail.com)
+- Fixes #7304 - use dynflow for repository sync bulk actions
+  (inecas@redhat.com)
+- Fixes #6946: Update organization to disallow modifying label
+  (paji@redhat.com)
+- Merge pull request #4651 from xprazak2/bug6912-sync-plan-model-change
+  (walden@redhat.com)
+- Fixes #6912/BZ 1126446 - Sync Plan enabled by default, checkbox to disable on
+  edit (oprazak@redhat.com)
+- Merge pull request #4673 from iNecas/issue/7527 (inecas@redhat.com)
+- Merge pull request #4666 from parthaa/host-delete (parthaa@gmail.com)
+- fixes #7542 - add ability to delete a Hypervisor (stbenjam@redhat.com)
+- Merge pull request #4632 from mbacovsky/7322_accept_whitespace
+  (eric.d.helms@gmail.com)
+- Fixes #7527 - don't require less in production unless from rake
+  (inecas@redhat.com)
+- Merge pull request #4672 from stbenjam/BZ1142315 (stephen@bitbin.de)
+- fixes #7521 - fix import of virt-who subscription information
+  (stbenjam@redhat.com)
+- Fixes #7446/bz1140653 - Host delete dynflowed (paji@redhat.com)
+- Merge pull request #4657 from daviddavis/temp/20140912130842
+  (daviddavis@redhat.com)
+- Merge pull request #4671 from jlsherrill/7481 (jlsherrill@gmail.com)
+- fixes #7481 - fix taxonomy association on smart proxy create
+  (jsherril@redhat.com)
+- Fixes #7428,BZ1120314 - Show user friendly error when no repo name
+  (daviddavis@redhat.com)
+- Merge pull request #4667 from waldenraines/7465 (walden@redhat.com)
+- Merge pull request #4665 from komidore64/rmi7422-label-on-env-create
+  (komidore64@gmail.com)
+- Fixes #7322 - Fixed handling of empty body (just whitespaces)
+  (martin.bacovsky@gmail.com)
+- fixes #7422 - documenting the `label` param for env creation, BZ 883170
+  (komidore64@gmail.com)
+- Merge pull request #4619 from ehelms/fixes-7282 (eric.d.helms@gmail.com)
+- Merge pull request #4488 from adamruzicka/fixes-6186 (eric.d.helms@gmail.com)
+- Fixes #7465: display message when there aren't any subscriptions.
+  (walden@redhat.com)
+- Merge pull request #4575 from xprazak2/empty-bastion-tables5229
+  (walden@redhat.com)
+- Fixes #6186 - Dynflowize product update. (aruzicka@redhat.com)
+- Merge pull request #4633 from xprazak2/sync-checkbox-4633 (walden@redhat.com)
+- Merge pull request #4642 from parthaa/new-org (parthaa@gmail.com)
+- refs 7207 - fixing comps for el7 candlepin (jsherril@redhat.com)
+- Merge pull request #4660 from jlsherrill/candlepin (jlsherrill@gmail.com)
+- Merge pull request #4659 from daviddavis/temp/20140912155328
+  (daviddavis@redhat.com)
+- Merge pull request #4656 from daviddavis/temp/20140912125518
+  (daviddavis@redhat.com)
+- fixes #7441 - add candlepin-common to comps (jsherril@redhat.com)
+- Merge pull request #4655 from cfouant/spinner (walden@redhat.com)
+- Fixes #4633 - Select all checkbox deselected after sync (oprazak@redhat.com)
+- Refs #7156 - Fixing some small rubocop items (daviddavis@redhat.com)
+- Fixes #7362 - Update org create dynflow (paji@redhat.com)
+- Fixes #7427 - Avoid use of params local variables (daviddavis@redhat.com)
+- fixes #7426 - Adds a spinner to the repository tabs, BZ 1129526
+  (cfouant@redhat.com)
+- Refs #7242: Add 1.5-2.0 Changelog. (ericdhelms@gmail.com)
+- Automatic commit of package [katello] minor release [2.1.0-1].
+  (jsherril@redhat.com)
+- bumping to katello version to 2.1 (jsherril@redhat.com)
+- Fixes #5229 - Messages for empty tables in Bastion (oprazak@redhat.com)
+- Fixes #7282: Use apipie packages provided by Foreman repos.
+  (ericdhelms@gmail.com)
+
 * Fri Sep 12 2014 Justin Sherrill <jsherril@redhat.com> 2.1.0-1
 - bumping to version to 2.1 (jsherril@redhat.com)
 
