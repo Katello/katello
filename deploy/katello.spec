@@ -149,6 +149,11 @@ usermod -a -G katello-shared katello
 exit 0
 
 %changelog
+* Fri Dec 19 2014 David Davis <daviddavis@redhat.com> 2.2.0-1
+- Automatic commit of package [rubygem-katello] minor release [2.2.0-1].
+  (daviddavis@redhat.com)
+- Fixes #6543 - updt index on cp event bz1115602 (inecas@redhat.com)
+
 * Fri Sep 12 2014 Justin Sherrill <jsherril@redhat.com> 2.1.0-1
 - bumping to katello version to 2.1 (jsherril@redhat.com)
 
