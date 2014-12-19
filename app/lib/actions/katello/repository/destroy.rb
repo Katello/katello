@@ -32,12 +32,15 @@ module Actions
           if !skip_environment_update && ::Katello.config.use_cp && view_env
             plan_action(ContentView::UpdateEnvironment, repository.content_view, repository.environment)
           end
-          plan_self
+          plan_self(:user_id => ::User.current.id)
         end
 
         def finalize
+          ::User.current = ::User.find(input[:user_id])
           repository = ::Katello::Repository.find(input[:repository][:id])
           repository.destroy!
+        ensure
+          ::User.current = nil
         end
 
         def humanized_name
