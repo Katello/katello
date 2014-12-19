@@ -7,10 +7,6 @@ FactoryGirl.define do
     sequence(:relative_path) { |n| "/ACME_Corporation/DEV/Repo#{n}" }
     url "http://localhost/foo"
 
-    ignore do
-      stubbed = true
-    end
-
     trait :fedora_17_el6 do
       name "Fedora 17 el6"
       label "fedora_17_el6_label"
