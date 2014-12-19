@@ -16,11 +16,10 @@ module Katello
   class GluePulpUserTest < ActiveSupport::TestCase
     def self.before_suite
       super
-      configure_runcible
-
       services  = ['Candlepin', 'ElasticSearch', 'Foreman']
       models    = ['User']
       disable_glue_layers(services, models)
+      configure_runcible
     end
 
     def setup
