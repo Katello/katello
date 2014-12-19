@@ -27,6 +27,7 @@ angular.module('Bastion.sync-plans').factory('SyncPlan',
 
         return BastionResource('/katello/api/v2/organizations/:organizationId/sync_plans/:id/:action',
             {id: '@id', organizationId: CurrentOrganization}, {
+                autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
                 update: { method: 'PUT' },
                 availableProducts: {method: 'GET', params: {action: 'available_products'}},
                 addProducts: {method: 'PUT', params: {action: 'add_products'}},

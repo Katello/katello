@@ -230,6 +230,9 @@ Katello::Engine.routes.draw do
               put :add_products
               put :remove_products
             end
+            collection do
+              get :auto_complete_search
+            end
           end
           api_resources :systems, :only => [:create] do
             get :report, :on => :collection
@@ -371,7 +374,9 @@ Katello::Engine.routes.draw do
           get :report, :on => :collection
         end
 
-        api_resources :sync_plans, :only => [:index, :show, :update, :destroy]
+        api_resources :sync_plans, :only => [:index, :show, :update, :destroy] do
+          get :auto_complete_search, :on => :collection
+        end
 
       end # module v2
 
