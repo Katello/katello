@@ -42,6 +42,8 @@ module Katello
     scoped_search :in => :packages, :on => :nvrea, :rename => :package, :complete_value => true
     scoped_search :in => :packages, :on => :name, :rename => :package_name, :complete_value => true
 
+    before_save lambda { |erratum| erratum.title = erratum.title.truncate(255) unless erratum.title.blank? }
+
     def self.of_type(type)
       where(:errata_type => type)
     end
