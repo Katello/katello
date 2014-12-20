@@ -137,12 +137,13 @@ module Katello
     end
 
     def available_errata(env = nil, content_view = nil)
-      if env.nil? || content_view.nil?
-        self.applicable_errata.in_repositories(self.bound_repositories)
-      else
-        repos = Katello::Repository.in_environment(env).in_content_views([content_view])
-        self.applicable_errata.in_repositories(repos)
-      end
+      repos = if env && content_view
+                Katello::Repository.in_environment(env).in_content_views([content_view])
+              else
+                self.bound_repositories
+              end
+
+      self.applicable_errata.in_repositories(repos).uniq
     end
 
     def available_releases
