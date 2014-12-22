@@ -25,7 +25,7 @@
 
 Name:           katello
 Version:        2.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -149,6 +149,9 @@ usermod -a -G katello-shared katello
 exit 0
 
 %changelog
+* Sun Dec 21 2014 Justin Sherrill <jsherril@redhat.com> 2.1.0-2
+- Fixes #6543 - updt index on cp event bz1115602 (inecas@redhat.com)
+
 * Fri Sep 12 2014 Justin Sherrill <jsherril@redhat.com> 2.1.0-1
 - bumping to katello version to 2.1 (jsherril@redhat.com)
 
