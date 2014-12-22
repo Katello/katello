@@ -18,7 +18,8 @@ describe('Controller: ErrataContentHostsController', function() {
     beforeEach(module('Bastion.errata', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
-        var $controller = $injector.get('$controller');
+        var $controller = $injector.get('$controller'),
+            MockResource = $injector.get('MockResource');
 
         translate = function (string) {
             return string;
@@ -33,7 +34,13 @@ describe('Controller: ErrataContentHostsController', function() {
             this.getAllSelectedResults = function () {
                 return {include: [1, 2, 3]};
             };
+            this.setParams = function (params) {
+                this.table.params = params;
+            };
             this.refresh = function () {};
+            this.load = function () {
+                return {then: function () {}}
+            };
         };
 
         ContentHost = {};
@@ -49,7 +56,7 @@ describe('Controller: ErrataContentHostsController', function() {
             }
         };
 
-
+        Environment = MockResource.$new();
         CurrentOrganization = 'foo';
         
         $scope = $injector.get('$rootScope').$new();
@@ -60,6 +67,7 @@ describe('Controller: ErrataContentHostsController', function() {
             translate: translate,
             Nutupane: Nutupane,
             ContentHost: ContentHost,
+            Environment: Environment,
             ContentHostBulkAction: ContentHostBulkAction,
             CurrentOrganization: CurrentOrganization                      
         });
@@ -76,6 +84,19 @@ describe('Controller: ErrataContentHostsController', function() {
         
         $scope.toggleAvailable();
         expect($scope.detailsTable.params['erratum_restrict_available']).toBe(true)
+    });
+
+    it("provides a way to filter on environment", function () {
+        var nutupane = $scope.nutupane;
+
+        spyOn(nutupane, 'setParams').andCallThrough();
+        spyOn(nutupane, 'refresh');
+
+        $scope.selectEnvironment('foo');
+
+        expect(nutupane.setParams).toHaveBeenCalled();
+        expect(nutupane.refresh).toHaveBeenCalled();
+        expect($scope.detailsTable.params['environment_id']).toBe('foo');
     });
 
     describe("can apply errata", function () {

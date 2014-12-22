@@ -9,13 +9,33 @@
   <div data-block="actions"></div>
 
   <div data-block="filters">
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" ng-model="errata.showAvailable" ng-change="toggleAvailable()"/>
-        <span translate>Only show content hosts where {{ errata.title }} is currently available in the host's Lifecycle Environment.</span>
+    <form>
+      <div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng-model="errata.showAvailable" ng-change="toggleAvailable()"/>
+            <span translate>Only show content hosts where {{ errata.title }} is currently available in the host's Lifecycle Environment.</span>
+          </label>
+        </div>
+      </div>
 
-      </label>
-    </div>
+      <div class="row">
+        <div class="col-md-4">
+          <select class="form-control"
+                  ng-model="environmentFilter"
+                  ng-options="environment.id as environment.name for environment in environments"
+                  ng-change="selectEnvironment(environmentFilter)">
+            <option value="" disabled selected >Filter by Environment</option>
+          </select>
+        </div>
+
+        <div class="col-md-1">
+          <a ng-show="environmentFilter" ng-click="selectEnvironment(null)">
+            <i class="icon-remove"></i>
+          </a>
+        </div>
+      </div>
+    </form>
   </div>
 
   <div data-block="table">
