@@ -4,9 +4,9 @@
 
   <%= text_f f, :label, :disabled => true, :class => 'input-xlarge' %>
 
-  <%= textarea_f f, :description, :class => 'input-xlarge', :rows => 4 %>
-
-  <%= selectable_f(f, :service_level, options_for_select(service_level_options, service_level_selected), {}, :label => _('Default System SLA')) %>
+  <% if ::Katello.config.use_cp %>
+    <%= selectable_f(f, :service_level, options_for_select(service_level_options, service_level_selected), {}, :label => _('Default System SLA')) %>
+  <% end %>
 
   <%= field(f, _('Debug Certificate'),
             :help_inline => _('This certificate allows a user to view the repositories in any environment from a browser.')) do

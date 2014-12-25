@@ -1,5 +1,5 @@
 collection @taxonomies
 
 extends "api/v2/taxonomies/base"
-attributes :label, :description
+attributes :label
 attributes :created_at, :updated_at
