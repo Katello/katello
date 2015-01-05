@@ -32,6 +32,10 @@ module Actions
       def notify_not_connected(message)
         @suspended_action << Actions::Candlepin::ListenOnCandlepinEvents::NotConnected[message]
       end
+
+      def notify_finished
+        @suspended_action << Actions::Candlepin::ListenOnCandlepinEvents::Close
+      end
     end
 
     class ListenOnCandlepinEvents < Actions::Base
@@ -127,6 +131,7 @@ module Actions
           begin
             initialize_listening_service(SuspendedAction.new(suspended_action))
           rescue => e
+            error!(e)
             raise e
           end
           at_exit do
@@ -147,11 +152,22 @@ module Actions
         suspend
       end
 
+      def configured?
+        ::Katello.config.respond_to?(:qpid) &&
+          ::Katello.config.qpid.respond_to?(:url) &&
+          ::Katello.config.qpid.respond_to?(:subscriptions_queue_address)
+      end
+
       def initialize_listening_service(suspended_action)
-        CandlepinListeningService.initialize(world.logger,
+        if configured?
+          CandlepinListeningService.initialize(world.logger,
                                              ::Katello.config.qpid.url,
                                              ::Katello.config.qpid.subscriptions_queue_address)
-        suspended_action.notify_not_connected("initialized...have not connected yet")
+          suspended_action.notify_not_connected("initialized...have not connected yet")
+        else
+          action_logger.error("katello has not been configured for qpid.url and qpid.subscriptions_queue_address")
+          suspended_action.notify_finished
+        end
         rescue => e
           Rails.logger.error(e.message)
           Rails.logger.error(e.backtrace)
