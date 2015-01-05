@@ -33,6 +33,7 @@ module Katello
       param :content_view_filter_id, :identifier, :desc => N_("content view filter identifier")
       param :repository_id, :number, :desc => N_("repository identifier")
       param :environment_id, :number, :desc => N_("environment identifier")
+      param :ids, Array, :desc => N_("ids to filter content by")
       param_group :search, ::Katello::Api::V2::ApiController
       def index
         options = sort_params
@@ -163,7 +164,7 @@ module Katello
         ids = filter.send("#{singular_resource_name}_rules").map(&:uuid)
         repo_ids = filter.applicable_repos.readable.select([:pulp_id, "#{Katello::Repository.table_name}.name"])
 
-        options[:filters] << { :terms => { :id => ids } }
+        filter_by_ids(ids, options)
         filter_by_repo_ids(repo_ids, options)
       end
 
@@ -178,6 +179,10 @@ module Katello
 
       def filter_by_environment(environment, options)
         filter_by_repo_ids(environment.repositories.map(&:pulp_id), options)
+      end
+
+      def filter_by_ids(ids, options)
+        options[:filters].tap { |filters| filters << { :terms => { :id => ids } } }
       end
     end
   end

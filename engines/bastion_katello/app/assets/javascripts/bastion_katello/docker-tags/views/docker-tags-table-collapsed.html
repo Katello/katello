@@ -1,0 +1,19 @@
+<table bst-table="table" class="table table-striped table-full" ng-class="{'table-mask': table.working}">
+  <thead>
+    <tr bst-table-head>
+      <th bst-table-column sortable>{{ "Name" | translate }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr bst-table-row
+        ng-repeat="tag in table.rows"
+        active-row="stateIncludes('docker-tags.details', {tagId: tag.id})">
+      <td bst-table-cell>
+        <a ui-sref="docker-tags.details({tagId: tag.id})">
+          {{ tag.full_name }}
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

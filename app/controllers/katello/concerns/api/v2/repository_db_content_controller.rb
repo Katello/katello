@@ -55,6 +55,7 @@ module Katello
         collection = filter_by_content_view_version(@version, collection) if @version
         collection = filter_by_environment(@environment, collection) if @environment
         collection = filter_by_repos(Repository.readable.in_organization(@organization), collection) if @organization
+        collection = filter_by_ids(params[:ids], collection) if params[:ids]
         collection = self.custom_index_relation(collection) if self.respond_to?(:custom_index_relation)
         collection
       end
@@ -66,7 +67,8 @@ module Katello
       end
 
       def filter_by_content_view_filter(filter, collection)
-        collection.where(:uuid => filter.send("#{singular_resource_name}_rules").pluck(:uuid))
+        ids = filter.send("#{singular_resource_name}_rules").pluck(:uuid)
+        filter_by_ids(ids, collection)
       end
 
       def filter_by_repos(repos, collection)
@@ -97,6 +99,10 @@ module Katello
           fail HttpErrors::NotFound, _("Could not find %{content} with id '%{id}' in repository.") %
             {content: resource_name, id: params[:id]}
         end
+      end
+
+      def filter_by_ids(ids, collection)
+        collection.with_uuid(ids)
       end
     end
   end

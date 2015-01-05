@@ -28,6 +28,9 @@
 //= require "bastion_katello/docker-images/docker-images.module.js"
 //= require_tree "./docker-images"
 
+//= require "bastion_katello/docker-tags/docker-tags.module.js"
+//= require_tree "./docker-tags"
+
 //= require "bastion_katello/errata/errata.module"
 //= require_tree "./errata"
 

@@ -64,7 +64,7 @@ module Katello
     has_and_belongs_to_many :filters, :class_name => "Katello::ContentViewFilter",
                                       :join_table => :katello_content_view_filters_repositories,
                                       :foreign_key => :content_view_filter_id
-    belongs_to :content_view_version, :inverse_of => :repositories
+    belongs_to :content_view_version, :inverse_of => :repositories, :class_name => "Katello::ContentViewVersion"
 
     validates :product_id, :presence => true
     validates :pulp_id, :presence => true, :uniqueness => true, :if => proc { |r| r.name.present? }
@@ -102,6 +102,8 @@ module Katello
     scope :non_puppet, where("content_type != ?", PUPPET_TYPE)
     scope :non_archived, where('environment_id is not NULL')
     scope :archived, where('environment_id is NULL')
+
+    scope :completer_scope, lambda { |options| options[table_name].call(self) }
 
     def organization
       if self.environment

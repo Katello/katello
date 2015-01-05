@@ -1,0 +1,25 @@
+<table class="table table-striped" ng-class="{'table-mask': table.working}">
+  <thead>
+    <tr bst-table-head>
+      <th bst-table-column="name">{{ "Name" | translate }}</th>
+      <th bst-table-column="product">{{ "Product Name" | translate }}</th>
+      <th bst-table-column="repository">{{ "Repository Name" | translate }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr bst-table-row ng-repeat="tag in table.rows">
+      <td bst-table-cell>
+        <a ui-sref="docker-tags.details({tagId: tag.id})">
+          {{ tag.name }}
+        </a>
+      </td>
+      <td bst-table-cell>
+        {{ tag.product.name }}
+      </td>
+      <td bst-table-cell>
+        {{ tag.repository.name }}
+      </td>
+    </tr>
+  </tbody>
+</table>
