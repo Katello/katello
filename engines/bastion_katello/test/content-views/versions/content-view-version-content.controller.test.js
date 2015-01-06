@@ -58,7 +58,8 @@ describe('Controller: ContentViewsVersionContentController', function() {
                 Package: Package,
                 Erratum: Erratum,
                 PackageGroup: PackageGroup,
-                PuppetModule: PuppetModule
+                PuppetModule: PuppetModule,
+                ContentViewVersion: ContentViewVersion
             });
         });
     }
@@ -91,6 +92,11 @@ describe('Controller: ContentViewsVersionContentController', function() {
     it("setups up Package resource when is state is 'puppet modules'", function() {
         SetupController('content-views.details.version.puppet-modules');
         expect($scope.nutupane.resource).toBe(PuppetModule);
+    });
+
+    it("setups up ContentViewVersion resource when is state is 'components'", function() {
+        SetupController('content-views.details.version.components');
+        expect($scope.nutupane.resource).toBe(ContentViewVersion);
     });
 
     it("builds a list of repositories from the version", function() {

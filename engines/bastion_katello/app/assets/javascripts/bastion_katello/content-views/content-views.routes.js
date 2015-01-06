@@ -86,6 +86,13 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         permission: 'view_content_views',
         templateUrl: 'content-views/versions/views/content-view-version-details.html'
     })
+    .state('content-views.details.version.components', {
+        collapsed: true,
+        url: '/components',
+        permission: 'view_content_views',
+        controller: 'ContentViewVersionContentController',
+        templateUrl: 'content-views/versions/views/content-view-version-components.html'
+    })
     .state('content-views.details.version.repositories', {
         collapsed: true,
         url: '/repositories',
