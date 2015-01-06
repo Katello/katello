@@ -109,6 +109,14 @@ module Katello
       end
     end
 
+    def test_create_with_non_json_request
+      @request.env['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
+      post :create, :name => "My View", :description => "Cool",
+        :organization_id => @organization.id
+
+      assert_response 415
+    end
+
     def test_show
       get :show, :id => @library_dev_staging_view.id
 
