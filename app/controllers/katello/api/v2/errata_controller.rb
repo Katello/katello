@@ -38,8 +38,8 @@ module Katello
       collection.joins(:cves).where('katello_erratum_cves.cve_id' => cve)
     end
 
-    def filter_by_content_view_filter(filter)
-      resource_class.where(:errata_id => filter.erratum_rules.pluck(:errata_id))
+    def filter_by_content_view_filter(filter, collection)
+      collection.where(:errata_id => filter.erratum_rules.pluck(:errata_id))
     end
 
     def default_sort
