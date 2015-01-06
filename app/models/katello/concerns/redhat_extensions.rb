@@ -91,8 +91,8 @@ module Katello
       private
 
       def distribution_repositories(host)
-        content_view = host.environment.content_view
-        lifecycle_environment = host.environment.lifecycle_environment
+        content_view = host.content_view
+        lifecycle_environment = host.lifecycle_environment
 
         if content_view && lifecycle_environment
           version = content_view.version(lifecycle_environment)

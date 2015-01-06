@@ -12,6 +12,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
+require 'support/host_support'
 
 module Katello
   class HostManagedExtensionsTest < ActiveSupport::TestCase
@@ -26,6 +27,10 @@ module Katello
 
     def setup
       disable_orchestration # disable foreman orchestration
+      @dev = KTEnvironment.find(katello_environments(:dev).id)
+      @library = KTEnvironment.find(katello_environments(:library).id)
+      @view = ContentView.find(katello_content_views(:library_dev_staging_view))
+      @library_view = ContentView.find(katello_content_views(:library_view))
 
       content_host = Katello::System.find(katello_systems(:simple_server))
       @foreman_host = FactoryGirl.create(:host)
@@ -44,10 +49,12 @@ module Katello
     end
 
     def test_update_puppet_environment_updates_content_host
+      Support::HostSupport.setup_host_for_view(@foreman_host, @view, @library, true)
       Environment.any_instance.stubs(:content_view_puppet_environment).returns(
           ContentViewPuppetEnvironment.find(katello_content_view_puppet_environments(:dev_view_puppet_environment)))
 
       # we are making an update to the foreman host that should result in a change to the content host
+      @foreman_host.lifecycle_environment = @dev
       @foreman_host.content_host.expects(:save!)
       @foreman_host.save!
     end
@@ -68,6 +75,22 @@ module Katello
 
       @foreman_host2.expects(:update_content_host).never
       @foreman_host2.save!
+    end
+
+    def test_update_with_cv_env
+      host = FactoryGirl.create(:host)
+      host.content_view = @library_view
+      host.lifecycle_environment = @library
+      assert host.save!
+    end
+
+    def test_update_with_invalid_cv_env_combo
+      host = FactoryGirl.create(:host)
+      host.content_view = @library_view
+      host.lifecycle_environment = @dev
+      assert_raises(ActiveRecord::RecordInvalid) do
+        host.save!
+      end
     end
   end
 end

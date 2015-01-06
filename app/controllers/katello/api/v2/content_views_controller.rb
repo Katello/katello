@@ -14,7 +14,8 @@ module Katello
   class Api::V2::ContentViewsController < Api::V2::ApiController
     include Concerns::Authorization::Api::V2::ContentViewsController
     before_filter :find_content_view, :except => [:index, :create]
-    before_filter :find_organization, :only => [:index, :create]
+    before_filter :find_organization, :only => [:create]
+    before_filter :find_optional_organization, :only => [:index]
     before_filter :load_search_service, :only => [:index, :history, :available_puppet_modules,
                                                   :available_puppet_module_names]
     before_filter :find_environment, :only => [:index, :remove_from_environment]
@@ -43,7 +44,8 @@ module Katello
       options = sort_params
       options[:load_records?] = true
 
-      readable_cvs = ContentView.readable.where(:organization_id => @organization.id)
+      readable_cvs = ContentView.readable
+      readable_cvs = readable_cvs.where(:organization_id => @organization.id) if @organization
       readable_cvs = readable_cvs.in_environment(@environment) if @environment
       ids = readable_cvs.pluck("#{Katello::ContentView.table_name}.id")
 

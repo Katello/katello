@@ -114,10 +114,10 @@ class ActionController::TestCase
     @routes = Katello::Engine.routes
   end
 
-  def setup_controller_defaults(is_api = false)
+  def setup_controller_defaults(is_api = false, load_engine_routes = true)
     set_user(User.current, is_api)
     set_default_locale
-    setup_engine_routes
+    setup_engine_routes if load_engine_routes
     @controller.stubs(:require_org).returns({})
   end
 
@@ -200,6 +200,20 @@ def stub_lazy_accessors(model, stubs)
   target.stubs(stubs)
 end
 
+def reload_host_model
+  Object.send(:remove_const, 'Host')
+  load "#{Rails.root}/app/models/host.rb"
+  load "#{Rails.root}/app/models/host/base.rb"
+  load "#{Rails.root}/app/models/host/managed.rb"
+
+  Host.first
+  Host::Managed.first
+  # include the concern again after Organization reloading
+  Host::Managed.send :include, Katello::Concerns::HostManagedExtensions
+
+  constants_updated
+end
+
 # rubocop:disable Metrics/MethodLength
 def disable_glue_layers(services = [], models = [], force_reload = false)
   @@glue_touched_models ||= Set.new
@@ -238,6 +252,10 @@ def disable_glue_layers(services = [], models = [], force_reload = false)
 
         # include the concern again after User reloading
         User.send :include, Katello::Concerns::UserExtensions
+      end
+      if model == 'Environment'
+        Environment.first
+        Environment.send :include, Katello::Concerns::EnvironmentExtensions
       end
       if model == 'Organization'
         # Ugly hack to force the model to be loaded properly
