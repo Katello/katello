@@ -1,3 +1,4 @@
+# encoding: utf-8
 #
 # Copyright 2014 Red Hat, Inc.
 #
@@ -10,15 +11,18 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-Foreman::Application.routes.draw do
-  match "/api/v2/organizations/*all", to: proc { [404, {}, ['']] }
-  match "/api/v1/organizations/:id", via: :delete, to: proc { [404, {}, ['']] }
+module Support
+  class HostSupport
+    def self.setup_host_for_view(host, view, environment, assign_to_puppet)
+      puppet_env = ::Environment.create!(:name => 'blahblah')
 
-  resources :operatingsystems, :only => [] do
-    get 'available_kickstart_repo', :on => :member
-  end
+      cvpe = view.version(environment).puppet_env(environment)
+      cvpe.puppet_environment = puppet_env
+      cvpe.save!
 
-  resources :hosts, :only => [] do
-    get 'puppet_environment_for_content_view', :on => :collection
+      host.update_column(:content_view_id, view.id)
+      host.update_column(:lifecycle_environment_id, environment.id)
+      host.update_column(:environment_id, cvpe.puppet_environment.id) if assign_to_puppet
+    end
   end
 end

@@ -75,6 +75,8 @@ module Katello
     before_create :fill_defaults
     after_create :init_default_custom_info
 
+    before_update :update_foreman_host, :if => proc { |r| r.environment_id_changed? || r.content_view_id_changed? }
+
     scope :in_environment, lambda { |env| where('environment_id = ?', env) unless env.nil? }
     scope :completer_scope, lambda { |options| readable(options[:organization_id]) }
     scope :by_uuids, lambda { |uuids| where(:uuid => uuids) }
@@ -335,6 +337,25 @@ module Katello
     end
 
     private
+
+    def update_foreman_host
+      if foreman_host && foreman_host.lifecycle_environment && foreman_host.content_view
+        new_puppet_env = self.content_view.puppet_env(self.environment).try(:puppet_environment)
+
+        set_puppet_env = foreman_host.content_and_puppet_match?
+        foreman_host.content_view = self.content_view
+        foreman_host.lifecycle_environment = self.environment
+        foreman_host.environment = new_puppet_env if set_puppet_env
+
+        if set_puppet_env && new_puppet_env.nil?
+          fail Errors::NotFound,
+               _("Couldn't find puppet environment associated with lifecycle environment '%{env}' and content view '%{view}'") %
+                   { :env => self.environment.name, :view => self.content_view.name }
+        end
+
+        self.foreman_host.save!
+      end
+    end
 
     def refresh_running_tasks
       ids = self.task_statuses.where(:state => [:waiting, :running]).pluck(:id)

@@ -108,12 +108,13 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
   class CreateForVersionTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentViewPuppetEnvironment::CreateForVersion }
     let(:action) { create_action action_class }
-    let(:version) { katello_content_view_versions(:library_view_version_2) }
+    let(:version) { katello_content_view_versions(:library_view_version_1) }
     let(:module_map) { {'some_source_repo' => ['asdf']} }
 
     it 'plan' do
       new_puppet_env = ::Katello::ContentViewPuppetEnvironment.new
       ::Katello::ContentViewPuppetEnvironment.stubs(:new).returns(new_puppet_env)
+      version.content_view_puppet_environments.destroy_all
       assert_empty version.content_view_puppet_environments
 
       version.content_view.stubs(:computed_module_ids_by_repoid).returns(module_map)

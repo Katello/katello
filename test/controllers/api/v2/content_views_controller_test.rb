@@ -74,7 +74,8 @@ module Katello
     def test_index_fail_without_organization_id
       get :index
 
-      assert_response :not_found
+      assert_response :success
+      assert_template 'api/v2/content_views/index'
     end
 
     def test_index_protected

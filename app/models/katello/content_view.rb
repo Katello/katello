@@ -53,6 +53,11 @@ module Katello
     has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict
     has_many :systems, :class_name => "Katello::System", :dependent => :restrict
 
+    has_many :hosts,      :class_name => "::Host::Managed", :foreign_key => :content_view_id,
+                          :inverse_of => :content_view, :dependent => :restrict
+    has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :lifecycle_environment_id,
+                          :inverse_of => :content_view, :dependent => :restrict
+
     validates_lengths_from_database :except => [:label]
     validates :label, :uniqueness => {:scope => :organization_id},
                       :presence => true

@@ -12,6 +12,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require File.expand_path("system_base", File.dirname(__FILE__))
+require 'support/host_support'
 
 module Katello
   class SystemClassTest < SystemTestBase
@@ -181,6 +182,68 @@ module Katello
       available_in_view = @errata_system.available_errata(@library, @library_view)
       assert_equal 1, available_in_view.length
       assert_include available_in_view, Erratum.find(katello_errata(:security))
+    end
+  end
+
+  class SystemHostTest < SystemTestBase
+    def setup
+      super
+      foreman_host = FactoryGirl.create(:host)
+      @system.host_id = foreman_host.id
+      @system.content_view = @library_view
+      @system.environment = @library
+      @system.save!
+    end
+
+    def setup_puppet_env(view, environment)
+      puppet_env = ::Environment.create!(:name => 'blah')
+
+      cvpe = view.version(environment).puppet_env(environment)
+      cvpe.puppet_environment = puppet_env
+      cvpe.save!
+    end
+
+    def test_update_lifecycle_environment_and_content_view_updates_foreman_host
+      setup_puppet_env(@library_dev_staging_view, @dev)
+      Support::HostSupport.setup_host_for_view(@system.foreman_host, @library_view, @library, true)
+      @system.reload
+      @system.environment = @dev
+      @system.content_view = @library_dev_staging_view
+      @system.save!
+
+      host = Host.find(@system.foreman_host)
+      assert_equal host.lifecycle_environment, @dev
+      assert_equal host.content_view, @library_dev_staging_view
+      assert_equal host.environment.content_view, @library_dev_staging_view
+      assert_equal host.environment.lifecycle_environment, @dev
+    end
+
+    def test_update_content_view_mistmatch
+      Support::HostSupport.setup_host_for_view(@system.foreman_host, @library_dev_staging_view, @dev, true)
+
+      @system.foreman_host.update_column(:lifecycle_environment_id, @library) #now the host's puppet environment doesn't match its cv and lifecycle env
+      @system.reload
+
+      @system.content_view = @library_dev_staging_view
+      @system.save!
+
+      host = Host.find(@system.foreman_host)
+      assert_equal host.lifecycle_environment, @library
+      assert_equal host.content_view, @library_dev_staging_view
+      assert_equal host.environment.content_view, @library_dev_staging_view #puppet environment is not updated
+      assert_equal host.environment.lifecycle_environment, @dev
+    end
+
+    def test_update_lifecycle_environment_and_content_view_raises_error
+      Support::HostSupport.setup_host_for_view(@system.foreman_host, @library_dev_staging_view, @dev, true)
+
+      @system.content_view = @acme_default
+      @system.environment = @library
+      # If a puppet environment cannot be found for the lifecycle environment + content view
+      # combination, then an error should be raised
+      assert_raises Errors::NotFound do
+        @system.save!
+      end
     end
   end
 end

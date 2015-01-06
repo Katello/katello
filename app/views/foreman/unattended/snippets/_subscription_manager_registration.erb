@@ -1,10 +1,10 @@
-<% if @host.params['kt_org'] && @host.params['kt_activation_keys'] %>
+<% if @host.params['kt_activation_keys'] %>
 # add subscription manager
 yum -t -y -e 0 install subscription-manager
 rpm -ivh <%= subscription_manager_configuration_url %>
 
 echo "Registering the System"
-subscription-manager register --org="<%= @host.params['kt_org']%>" --name="<%= @host.name %>" --activationkey="<%= @host.params['kt_activation_keys'] %>"
+subscription-manager register --org="<%= @host.rhsm_organization_label %>" --name="<%= @host.name %>" --activationkey="<%= @host.params['kt_activation_keys'] %>"
 
 <% if @host.content_source %>
   subscription-manager config --rhsm.baseurl=https://<%= @host.content_source.hostname %>/pulp/repos
