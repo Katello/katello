@@ -5,7 +5,10 @@ attributes :title, :errata_id
 attributes :issued, :updated, :version, :status, :release
 attributes :severity, :description, :solution, :summary, :reboot_suggested
 attributes :_href
-attributes :cves
+
+node :cves do |e|
+  e.cves.pluck(:cve_id)
+end
 
 attributes :errata_type => :type
 
