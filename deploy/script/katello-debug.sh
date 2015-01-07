@@ -11,8 +11,10 @@ add_files "/var/log/audit/audit.log"
 # Candlepin
 add_files "/var/log/candlepin/*"
 add_files "/var/log/tomcat6/*"
+add_files "/var/log/tomcat/*"
 add_files "/etc/candlepin/candlepin.conf"
 add_files "/etc/tomcat6/server.xml"
+add_files "/etc/tomcat/server.xml"
 
 # Elastic Search
 add_files "/var/log/elasticsearch/*"
