@@ -17,13 +17,6 @@ module Katello
   class Api::V2::ActivationKeysControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
-    def self.before_suite
-      models = ["ActivationKey", "KTEnvironment",
-                "ContentView", "ContentViewEnvironment", "ContentViewVersion"]
-      disable_glue_layers(["Candlepin"], models)
-      super
-    end
-
     def models
       ActivationKey.any_instance.stubs(:products).returns([])
       ActivationKey.any_instance.stubs(:content_overrides).returns([])
@@ -34,6 +27,7 @@ module Katello
       @library = @organization.library
 
       @activation_key.stubs(:get_key_pools).returns([])
+      @activation_key.stubs(:auto_attach).returns(nil)
 
       ::Katello::ActivationKey.stubs(:find).returns(@activation_key)
 

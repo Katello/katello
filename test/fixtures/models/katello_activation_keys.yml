@@ -4,6 +4,7 @@ simple_key:
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+  auto_attach: true
 
 another_simple_key:
   name: Another Simple Activation Key
@@ -11,6 +12,7 @@ another_simple_key:
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+  auto_attach: true
 
 yet_another_simple_key:
   name: Yet Another Activation Key
@@ -18,6 +20,7 @@ yet_another_simple_key:
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+  auto_attach: true
 
 and_yet_another_simple_key:
   name: And Yet Another Simple Activation Key
@@ -25,6 +28,7 @@ and_yet_another_simple_key:
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+  auto_attach: true
 
 dev_key:
   name: DevKey
@@ -32,6 +36,7 @@ dev_key:
   updated_at: <%= Time.now %>
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
   environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+  auto_attach: true
 
 library_dev_staging_view_key:
   name: Lib Dev Stating Activation Key
@@ -39,3 +44,4 @@ library_dev_staging_view_key:
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
   environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view) %>
+  auto_attach: true
