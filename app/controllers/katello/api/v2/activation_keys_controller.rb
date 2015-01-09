@@ -59,7 +59,7 @@ module Katello
     api :PUT, "/activation_keys/:id", N_("Update an activation key")
     param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
-    param :name, String, :desc => N_("name"), :required => true
+    param :name, String, :desc => N_("name"), :required => false
     param :description, String, :desc => N_("description")
     param :environment_id, :identifier, :desc => N_("environment id")
     param :content_view_id, :identifier, :desc => N_("content view id")
