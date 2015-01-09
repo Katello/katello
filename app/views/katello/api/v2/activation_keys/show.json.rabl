@@ -1,6 +1,6 @@
 object @resource
 
-attributes :id, :name, :description, :unlimited_content_hosts
+attributes :id, :name, :description, :unlimited_content_hosts, :auto_attach
 
 extends 'katello/api/v2/common/org_reference'
 
