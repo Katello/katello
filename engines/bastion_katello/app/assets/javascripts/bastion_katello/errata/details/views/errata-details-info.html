@@ -15,6 +15,7 @@
             <a href="{{ cve.href }}">{{ cve.cve_id }}</a>
             <span ng-show="!$last">,</span>
           </span>
+          <span ng-show="errata.cves.length === 0" translate>N/A</span>
         </span>
       </div>
       <div class="detail">
