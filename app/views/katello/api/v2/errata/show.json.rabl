@@ -6,8 +6,8 @@ attributes :issued, :updated, :version, :status, :release
 attributes :severity, :description, :solution, :summary, :reboot_suggested
 attributes :_href
 
-node :cves do |e|
-  e.cves.pluck(:cve_id)
+child :cves => :cves do
+  attributes :cve_id, :href
 end
 
 attributes :errata_type => :type
