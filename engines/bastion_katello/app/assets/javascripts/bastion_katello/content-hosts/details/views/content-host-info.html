@@ -34,7 +34,8 @@
         <span class="info-value">{{ contentHost.type }}</span>
       </div>
 
-      <div class="detail">
+      <div class="detail"
+           bst-feature-flag="remote_actions">
         <span class="info-label" translate>Katello Agent</span>
         <span class="info-value" ng-show="contentHost.katello_agent_installed">
           <span class="icon-circle green"></span>
