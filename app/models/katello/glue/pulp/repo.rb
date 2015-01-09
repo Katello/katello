@@ -735,12 +735,15 @@ module Katello
       def package_lists_for_publish
         names = []
         filenames = []
-        rpms = Katello.pulp_server.extensions.repository.unit_search(self.pulp_id,
-                                                                     :type_ids => ['rpm'],
-                                                                     :fields => {:unit => %w(filename name)})
+        rpms = []
+        self.package_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+          rpms.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
+                                  sub_list, %w(filename name)))
+        end
+
         rpms.each do |rpm|
-          filenames << rpm["metadata"]["filename"]
-          names << rpm["metadata"]["name"]
+          filenames << rpm["filename"]
+          names << rpm["name"]
         end
         {:names => names.to_set,
          :filenames => filenames.to_set}
