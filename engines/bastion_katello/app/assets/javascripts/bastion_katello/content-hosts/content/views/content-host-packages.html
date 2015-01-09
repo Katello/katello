@@ -1,5 +1,5 @@
 <span page-title ng-model="contentHost">{{ 'Packages for: ' | translate }} {{ contentHost.name }}</span>
-<section ng-hide="denied('edit_content_hosts', contentHost)">
+<section ng-hide="denied('edit_content_hosts', contentHost)" bst-feature-flag="remote_actions">
   <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
   <h4 translate>Package Actions</h4>
   <p class="alert alert-info" ng-hide="contentHost.katello_agent_installed" translate>
@@ -51,7 +51,7 @@
     </form>
     <span class="nutupane-info" translate>Showing {{ currentPackagesTable.resource.total }} Packages</span>
 
-    <div class="fr" ng-hide="denied('edit_content_hosts', contentHost)">
+    <div class="fr" ng-hide="denied('edit_content_hosts', contentHost)" bst-feature-flag="remote_actions">
        <button class="btn btn-primary"
                translate
                ng-click="updateAll()"
@@ -62,7 +62,7 @@
   </div>
 
   <p class="alert alert-info" ng-show="currentPackagesTable.rows.length === 0">
-    You currently do not have any Packages installed. You can use Package Actions above this message to install new Packages. 
+    You currently do not have any Packages installed. You can use Package Actions above this message to install new Packages.
   </p>
 
   <div bst-table="currentPackagesTable" ng-show="currentPackagesTable.rows.length > 0">
@@ -72,7 +72,9 @@
         <thead>
           <tr bst-table-head>
             <th bst-table-column="name" translate>Installed Package</th>
-            <th bst-table-column="remove" translate ng-hide="currentPackagesTable.contentHost.readonly">Remove</th>
+            <th bst-table-column="remove" bst-feature-flag="remote_actions" ng-hide="currentPackagesTable.contentHost.readonly">
+              <span translate>Remove</span>
+            </th>
           </tr>
         </thead>
 
@@ -80,7 +82,7 @@
 
             <tr bst-table-row ng-repeat="package in currentPackagesTable.rows | filter: currentPackagesTable.filter | limitTo: currentPackagesTable.limit" >
             <td bst-table-cell>{{ package.nvrea }}</td>
-            <td bst-table-cell ng-hide="currentPackagesTable.contentHost.readonly">
+            <td bst-table-cell ng-hide="currentPackagesTable.contentHost.readonly" bst-feature-flag="remote_actions">
 
                 <i class="active icon-remove-sign" ng-hide="package.removeTask" tooltip="{{ 'Remove' | translate }}"
                    ng-click="currentPackagesTable.removePackage(package)"></i>
