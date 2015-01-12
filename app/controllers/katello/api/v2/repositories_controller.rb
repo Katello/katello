@@ -82,7 +82,7 @@ module Katello
         repositories = repositories.where(:content_view_version_id => @organization.default_content_view.versions.first.id)
       end
 
-      options[:filters] = [{:terms => {:id => repositories.pluck(:id)}}]
+      options[:filters] = [{:terms => {:id => repositories.pluck("#{Repository.table_name}.id")}}]
 
       respond :collection => item_search(Repository, params, options)
     end
