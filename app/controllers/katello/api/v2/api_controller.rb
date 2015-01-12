@@ -13,7 +13,8 @@
 require 'strong_parameters'
 
 module Katello
-  class Api::V2::ApiController < Api::ApiController
+  class Api::V2::ApiController < ::Api::V2::BaseController
+    include Concerns::Api::ApiController
     include Api::Version2
     include Api::V2::Rendering
     include Api::V2::ErrorHandling
@@ -22,6 +23,7 @@ module Katello
     include Foreman::ThreadSession::Cleaner
 
     before_filter :load_search_service, :only => [:index]
+    skip_before_filter :setup_has_many_params # TODO: get this working #8862
 
     resource_description do
       api_version 'v2'
