@@ -51,9 +51,6 @@ module Katello
     # This is because name substitutions of the param group's name from :resource to :organization are limited
     # to the inclusion of a modules.
     param :id, :identifier, :desc => N_("organization ID"), :required => true
-    param :organization, Hash, :desc => N_("organization hash") do
-      param :description, String, :desc => N_("description of the organization"), :required => false
-    end
     param :redhat_repository_url, String, :desc => N_("Red Hat CDN URL")
     param :redhat_docker_registry_url,  String, :desc => N_("Red Hat Docker Registry URL")
     param_group :resource, ::Api::V2::TaxonomiesController
