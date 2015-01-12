@@ -14,6 +14,7 @@
 describe('Controller: ErrataController', function() {
     var $scope,
         Errata,
+        Repository,
         Nutupane;
 
     beforeEach(module('Bastion.errata', 'Bastion.test-mocks'));
@@ -24,11 +25,15 @@ describe('Controller: ErrataController', function() {
                 showColumns: function() {}
             };
             this.get = function() {};
+            this.setParams = function (params) {};
+            this.getParams = function (params) { return {}; };
+            this.refresh = function () {};
         };
         Errata = {};
     });
 
-    beforeEach(inject(function($controller, $rootScope, $location) {
+    beforeEach(inject(function($controller, $rootScope, $location, MockResource, translateMock) {
+        Repository = MockResource.$new();
         $scope = $rootScope.$new();
 
         $controller('ErrataController', {
@@ -36,7 +41,9 @@ describe('Controller: ErrataController', function() {
             $location: $location,
             Nutupane: Nutupane,
             Errata: Errata,
-            CurrentOrganization: 'CurrentOrganization'
+            Repository: Repository,
+            CurrentOrganization: 'CurrentOrganization',
+            translate: translateMock
         });
     }));
 
@@ -49,6 +56,26 @@ describe('Controller: ErrataController', function() {
         $scope.table.closeItem();
 
         expect($scope.transitionTo).toHaveBeenCalledWith('errata.index');
+    });
+
+    it('gets a list of yum repositories for the organization', function () {
+        expect($scope.repositories[0]).toBe($scope.repository);
+        expect($scope.repositories.length).toBe(2);
+    });
+
+    it('shoud have a list of repositories that include an all option', function () {
+        expect($scope.repositories[0]['id']).toBe('all');
+    });
+
+    it('should set the repository_id param on Nutupane when a repository is chosen', function () {
+        spyOn($scope.nutupane, 'setParams');
+        spyOn($scope.nutupane, 'refresh');
+
+        $scope.repository = {id: 1};
+        $scope.$apply();
+
+        expect($scope.nutupane.setParams).toHaveBeenCalledWith({'repository_id': 1});
+        expect($scope.nutupane.refresh).toHaveBeenCalled();
     });
 
 });
