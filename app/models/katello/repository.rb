@@ -54,7 +54,7 @@ module Katello
 
     has_many :repository_docker_images, :class_name => "Katello::RepositoryDockerImage", :dependent => :destroy
     has_many :docker_images, :through => :repository_docker_images
-    has_many :docker_tags, :dependent => :destroy, :foreign_key => "katello_repository_id"
+    has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag"
 
     has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy
     has_many :systems, :through => :system_repositories

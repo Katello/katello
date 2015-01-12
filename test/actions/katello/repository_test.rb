@@ -106,7 +106,7 @@ module ::Actions::Katello::Repository
     it 'runs' do
       uuids.each do |str|
         docker_repo.docker_images.create!(:image_id => str) do |image|
-          image.katello_uuid = str
+          image.uuid = str
         end
       end
       action = create_and_plan_action action_class, pulp_id: docker_repo.pulp_id, uuids: uuids

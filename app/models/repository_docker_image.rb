@@ -11,19 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-  class Api::V2::DockerImagesController < Api::V2::ApiController
-    apipie_concern_subst(:a_resource => N_("a docker image"), :resource => "docker_images")
-    include Katello::Concerns::Api::V2::RepositoryContentController
-    include Katello::Concerns::Api::V2::RepositoryDbContentController
-
-    private
-
-    def resource_class
-      DockerImage
-    end
-
-    def filter_by_content_view_filter(filter)
-      resource_class.where(:uuid => filter.send("#{singular_resource_name}_rules").pluck(:uuid))
-    end
+  class RepositoryDockerImage
+    belongs_to :docker_image, :inverse_of => :repository_docker_images
+    belongs_to :repository, :inverse_of => :repository_docker_images
   end
 end
