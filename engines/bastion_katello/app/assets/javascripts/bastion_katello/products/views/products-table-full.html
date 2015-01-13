@@ -6,7 +6,7 @@
   <thead>
     <tr bst-table-head row-select>
       <th bst-table-column="name" sortable><span translate>Name</span></th>
-      <th bst-table-column="description" bst-feature-flag="custom_products"><span translate>Description</span></th>
+      <th bst-table-column="description"><span translate>Description</span></th>
       <th bst-table-column="sync_status"><span translate>Sync Status</span></th>
       <th bst-table-column="sync_plan"><span translate>Sync Plan</span></th>
       <th bst-table-column class="number-cell"><span translate>Repositories</span></th>
@@ -21,7 +21,7 @@
         </a>
         <i class="icon-chevron-right selected-icon" ng-show="product.selected"></i>
       </td>
-      <td bst-table-cell bst-feature-flag="custom_products">{{ product.description }}</td>
+      <td bst-table-cell>{{ product.description }}</td>
       <td bst-table-cell>
         <div ng-include="'products/views/partials/product-table-sync-status.html'"></div>
       </td>
