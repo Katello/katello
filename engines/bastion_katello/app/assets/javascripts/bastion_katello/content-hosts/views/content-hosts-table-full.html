@@ -14,8 +14,8 @@
         <span translate>Available Errata</span>
       </th>
       <th bst-table-column="os"><span translate>OS</span></th>
-      <th bst-table-column="environment" bst-feature-flag="lifecycle_environments"><span sortable translate>Environment</span></th>
-      <th bst-table-column="contentView" bst-feature-flag="lifecycle_environments"><span translate>Content View</span></th>
+      <th bst-table-column="environment"><span sortable translate>Environment</span></th>
+      <th bst-table-column="contentView"><span translate>Content View</span></th>
       <th bst-table-column="registeredBy"><span translate>Registered By</span></th>
       <th bst-table-column="registered"><span translate>Registered</span></th>
       <th bst-table-column="lastCheckin" sortable><span translate>Last Checkin</span></th>
@@ -42,8 +42,8 @@
         </a>
       </td>
       <td bst-table-cell>{{ contentHost.distribution }}</td>
-      <td bst-table-cell bst-feature-flag="lifecycle_environments">{{ contentHost.environment.name }}</td>
-      <td bst-table-cell bst-feature-flag="lifecycle_environments">{{ contentHost.content_view.name || "" }}</td>
+      <td bst-table-cell>{{ contentHost.environment.name }}</td>
+      <td bst-table-cell>{{ contentHost.content_view.name || "" }}</td>
       <td bst-table-cell>
         <span class="info-value" ng-show="contentHost.activation_keys.length == 0">{{ contentHost.registered_by }}</span>
         <span class="info-value" ng-show="contentHost.activation_keys.length > 0"

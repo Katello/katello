@@ -7,8 +7,8 @@
     <tr bst-table-head>
       <th bst-table-column="name" sortable><span translate>Name</span></th>
       <th bst-table-column="consumed"><span translate>Consumed</span></th>
-      <th bst-table-column="environment" bst-feature-flag="lifecycle_environments"><span translate>Environment</span></th>
-      <th bst-table-column="contentView" bst-feature-flag="lifecycle_environments"><span translate>Content View</span></th>
+      <th bst-table-column="environment"><span translate>Environment</span></th>
+      <th bst-table-column="contentView"><span translate>Content View</span></th>
     </tr>
   </thead>
 
@@ -21,8 +21,8 @@
         <i class="icon-chevron-right selected-icon" ng-show="activationKey.selected"></i>
       </td>
       <td bst-table-cell>{{ activationKey | activationKeyConsumedFilter }}</td>
-      <td bst-table-cell bst-feature-flag="lifecycle_environments">{{ activationKey.environment.name || "" }}</td>
-      <td bst-table-cell bst-feature-flag="lifecycle_environments">{{ activationKey.content_view.name || "" }}</td>
+      <td bst-table-cell>{{ activationKey.environment.name || "" }}</td>
+      <td bst-table-cell>{{ activationKey.content_view.name || "" }}</td>
     </tr>
   </tbody>
 </table>
