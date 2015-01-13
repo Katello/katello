@@ -76,7 +76,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
         };
 
         $scope.deleteManifest = function () {
-            Subscription.deleteManifest(function (returnData) {
+            Subscription.deleteManifest({}, function (returnData) {
                 $scope.deleteTask =  returnData;
                 $scope.searchId = Task.registerSearch({ 'type': 'task', 'task_id':  $scope.deleteTask.id }, $scope.deleteManifestTask);
             }, function (response) {
@@ -109,7 +109,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
         };
 
         $scope.refreshManifest = function () {
-            Subscription.refreshManifest(function (returnData) {
+            Subscription.refreshManifest({}, function (returnData) {
                 $scope.refreshTask =  returnData;
                 $scope.searchId = Task.registerSearch({ 'type': 'task', 'task_id':  $scope.refreshTask.id }, $scope.refreshManifestTask);
             }, function (response) {
