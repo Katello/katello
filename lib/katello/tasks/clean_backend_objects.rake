@@ -3,37 +3,38 @@ namespace :katello do
   task :clean_backend_objects => ["environment"] do
     def cleanup_systems
       Katello::System.find_each do |system|
+
         next if system.is_a? Katello::Hypervisor
 
-        cp_fail = false
-        pulp_fail = false
-        begin
-          system.facts
-        rescue  RestClient::ResourceNotFound => e
+        if system.uuid.nil?
           cp_fail = true
-        rescue  RestClient::Gone => e
-          cp_fail = true
-        end
-
-        begin
-          system.pulp_facts
-        rescue  RestClient::ResourceNotFound => e
           pulp_fail = true
-        rescue  RestClient::Gone => e
-          pulp_fail = true
-        rescue  RestClient::Conflict => e
-          pulp_fail = true
+        else
+          cp_fail = test_method { system.facts }
+          pulp_fail = test_method { system.pulp_facts }
         end
 
         if cp_fail || pulp_fail
           print "System #{system.id} #{system.name} #{system.uuid} is partially missing.  Cleaning.\n"
-          system.del_candlepin_consumer unless cp_fail
+          ::Katello::Resources::Candlepin::Consumer.destroy(system.uuid) unless cp_fail
           system.del_pulp_consumer unless pulp_fail
           Katello::System.index.remove system
           system.system_activation_keys.destroy_all
+          system.system_host_collections.destroy_all
           system.delete
         end
       end
+    end
+
+    def test_method
+      yield
+      false
+    rescue RestClient::ResourceNotFound => e
+      true
+    rescue RestClient::Gone => e
+      true
+    rescue RestClient::Conflict => e
+      true
     end
 
     def cleanup_host_delete_artifacts
