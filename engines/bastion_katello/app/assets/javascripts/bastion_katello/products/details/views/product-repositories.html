@@ -15,7 +15,7 @@
            modal-header='Remove {{ repositoriesTable.numSelected  }} Repositories?'
            modal-body='Are you sure you want to remove the {{ repositoriesTable.numSelected }} repositories selected?'></div>
 
-      <span ng-switch="getRepositoriesNonDeletableReason(product)">
+      <span ng-switch="getRepositoriesNonDeletableReason(product)" bst-feature-flag="custom_products">
         <i class="icon-question-sign" ng-switch-when="permissions"
            tooltip="{{ 'You cannot remove these repositories because you do not have permission.' | translate }}"
            tooltip-animation="false"
@@ -55,11 +55,11 @@
       <span ng-hide="syncInProgress" translate>Sync Now</span>
     </button>
     <button class="btn btn-primary"
-            translate
+            bst-feature-flag="custom_products"
             ng-hide="denied('edit_products', product)"
             ng-disabled="product.readonly"
             ui-sref="products.details.repositories.new({productId: product.id})">
-      Create Repository
+      <span translate>Create Repository</span>
     </button>
   </span>
 

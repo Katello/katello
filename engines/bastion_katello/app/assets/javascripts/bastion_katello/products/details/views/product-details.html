@@ -16,7 +16,7 @@
            modal-header='Remove Product "{{product.name}}"?'
            modal-body='Are you sure you want to remove product "{{ product.name }}"?'></div>
 
-      <span ng-switch="getReadOnlyReason(product)">
+      <span ng-switch="getReadOnlyReason(product)" bst-feature-flag="custom_products">
         <i class="icon-question-sign" ng-switch-when="permissions"
            tooltip="{{ 'You cannot remove this product because you do not have permission.' | translate }}"
            tooltip-animation="false"
@@ -34,7 +34,7 @@
         </i>
       </span>
 
-      <button class="btn btn-default"
+      <button class="btn btn-default" bst-feature-flag="custom_products"
               ng-hide="denied('delete_products', product) || product.readonly || product.published_content_view_ids.length > 0"
               ng-click="openModal()">
         <i class="icon-trash"></i>

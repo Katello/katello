@@ -19,7 +19,7 @@
       <span class="info-value">{{ product.label }}</span>
     </div>
 
-    <div class="detail">
+    <div class="detail" ng-if="!product.redhat">
       <span class="info-label" translate>GPG Key</span>
       <span class="info-value"
             bst-edit-select="product.gpg_key.name"
@@ -30,7 +30,7 @@
       </span>
     </div>
 
-    <div class="detail">
+    <div class="detail" ng-if="!product.redhat">
       <span class="info-label" translate>Description</span>
       <span class="info-value"
             bst-edit-textarea="product.description"
