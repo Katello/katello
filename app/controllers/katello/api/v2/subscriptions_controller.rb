@@ -24,6 +24,8 @@ module Katello
 
     before_filter :load_search_service, :only => [:index, :available]
 
+    skip_before_filter :check_content_type, :only => [:upload]
+
     resource_description do
       description "Subscriptions management."
       api_version 'v2'

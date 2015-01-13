@@ -27,6 +27,7 @@ module Katello
     skip_before_filter :authorize, :only => [:sync_complete, :gpg_key_content]
     skip_before_filter :require_org, :only => [:sync_complete]
     skip_before_filter :require_user, :only => [:sync_complete]
+    skip_before_filter :check_content_type, :only => [:upload_content]
 
     def_param_group :repo do
       param :name, String, :required => true
