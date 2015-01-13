@@ -69,6 +69,7 @@ module Actions
               end
             end
 
+            plan_action(::Actions::Pulp::Repos::Update, repository.product) if repository.product.sync_plan
             plan_action(ElasticSearch::Reindex, repository)
           end
         end
