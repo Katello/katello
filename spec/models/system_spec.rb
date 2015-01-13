@@ -149,20 +149,6 @@ module Katello
         @system.save!
       end
 
-      it "should give facts to Resources::Candlepin::Consumer" do
-        @system.facts = facts
-        @system.installedProducts = nil # simulate it's not loaded in memory
-        Resources::Candlepin::Consumer.expects(:update).once.with(uuid, facts, nil, nil, nil, nil, nil, anything, nil, nil).returns(true)
-        @system.save!
-      end
-
-      it "should give installeProducts to Resources::Candlepin::Consumer" do
-        @system.installedProducts = installed_products
-        @system.facts = nil # simulate it's not loaded in memory
-        Resources::Candlepin::Consumer.expects(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil, anything, nil, nil).returns(true)
-        @system.save!
-      end
-
       it "should fail if the content view is not in the enviornment" do
         content_view = FactoryGirl.build_stubbed(:katello_content_view)
         @system.stubs(:content_view_id).returns(content_view.id)
