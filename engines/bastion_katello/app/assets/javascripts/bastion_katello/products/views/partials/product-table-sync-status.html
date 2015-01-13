@@ -1,4 +1,4 @@
-<ul class="list-unstyled" ng-show="product.sync_status.finish_time">
+<ul class="list-unstyled" ng-show="product.last_sync_words">
   <p translate>
     Last synced {{ product.last_sync_words }} ago
   </p>
@@ -11,4 +11,4 @@
             </span>
   </li>
 </ul>
-<span ng-hide="product.sync_status.finish_time" translate>Never synced</span>
+<span ng-hide="product.last_sync_words" translate>Never synced</span>

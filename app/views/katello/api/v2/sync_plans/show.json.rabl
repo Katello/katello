@@ -7,6 +7,7 @@ attributes :created_at, :updated_at
 attributes :enabled
 
 child :products => :products do |_product|
+  extends 'katello/api/v2/common/syncable'
   attributes :id, :cp_id, :name, :label, :description
 
   node :repository_count do |prod|
