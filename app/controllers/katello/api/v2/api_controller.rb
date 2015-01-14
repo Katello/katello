@@ -83,7 +83,10 @@ module Katello
       total = query.count
       sub_total = query.search_for(*search_options).count
       query = query.search_for(*search_options)
-      query = query.order("#{params[:sort_by] || default_sort_by} #{params[:sort_order] || default_sort_order}")
+      sort_attr = params[:sort_by] || default_sort_by
+      sort_attr = "#{query.table_name}.#{sort_attr}" unless sort_attr.to_s.include?('.')
+
+      query = query.order("#{sort_attr} #{params[:sort_order] || default_sort_order}")
 
       if params[:full_result]
         params[:per_page] = total

@@ -33,7 +33,7 @@ angular.module('Bastion.errata').controller('ErrataController',
         var params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
-            'sort_by':          'issued',
+            'sort_by':          'updated',
             'sort_order':       'DESC',
             'paged':            true
         };
