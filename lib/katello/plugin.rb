@@ -8,14 +8,16 @@ Foreman::Plugin.register :katello do
          :url => '/lifecycle_environments',
          :url_hash => {:controller => 'katello/api/v2/environments',
                        :action => 'index'},
-         :engine => Katello::Engine
+         :engine => Katello::Engine,
+         :turbolinks => false
     menu :top_menu,
          :red_hat_subscriptions,
          :caption => N_('Red Hat Subscriptions'),
          :url => '/subscriptions',
          :url_hash => {:controller => 'katello/api/v2/subscriptions',
                        :action => 'index'},
-         :engine => Katello::Engine
+         :engine => Katello::Engine,
+         :turbolinks => false
     # TODO
     # Refs http://projects.theforeman.org/issues/4883
     # menu :top_menu,
@@ -29,7 +31,8 @@ Foreman::Plugin.register :katello do
          :url => '/activation_keys',
          :url_hash => {:controller => 'katello/api/v2/activation_keys',
                        :action => 'index'},
-         :engine => Katello::Engine
+         :engine => Katello::Engine,
+         :turbolinks => false
 
     divider :top_menu, :parent => :content_menu
     menu :top_menu,
@@ -37,7 +40,8 @@ Foreman::Plugin.register :katello do
          :caption => N_('Red Hat Repositories'),
          :url_hash => {:controller => 'katello/providers',
                        :action => 'redhat_provider'},
-         :engine => Katello::Engine
+         :engine => Katello::Engine,
+         :turbolinks => false
 
     menu :top_menu,
          :products,
@@ -45,7 +49,8 @@ Foreman::Plugin.register :katello do
          :url => '/products',
          :url_hash => {:controller => 'katello/api/v2/products',
                        :action => 'index'},
-         :engine => Katello::Engine
+         :engine => Katello::Engine,
+         :turbolinks => false
 
     menu :top_menu,
          :gpg_keys,
@@ -53,7 +58,8 @@ Foreman::Plugin.register :katello do
          :url => '/gpg_keys',
          :url_hash => {:controller => 'katello/api/v2/gpg_keys',
                        :action => 'index'},
-         :engine => Katello::Engine
+         :engine => Katello::Engine,
+         :turbolinks => false
 
     divider :top_menu, :parent => :content_menu
     menu :top_menu,
@@ -61,7 +67,8 @@ Foreman::Plugin.register :katello do
          :caption => N_('Sync Status'),
          :url_hash => {:controller => 'katello/sync_management',
                        :action => 'index'},
-         :engine => Katello::Engine
+         :engine => Katello::Engine,
+         :turbolinks => false
 
     menu :top_menu,
          :sync_plans,
@@ -69,7 +76,8 @@ Foreman::Plugin.register :katello do
          :url => '/sync_plans',
          :url_hash => {:controller => 'katello/api/v2/sync_plans',
                        :action => 'index'},
-         :engine => Katello::Engine
+         :engine => Katello::Engine,
+         :turbolinks => false
 
     divider :top_menu, :parent => :content_menu
     menu :top_menu,
@@ -78,14 +86,16 @@ Foreman::Plugin.register :katello do
          :url => '/content_views',
          :url_hash => {:controller => 'katello/api/v2/content_views',
                        :action => 'index'},
-         :engine => Katello::Engine
+         :engine => Katello::Engine,
+         :turbolinks => false
 
     menu :top_menu,
          :content_search,
          :caption => N_('Content Search'),
          :url_hash => {:controller => 'katello/content_search',
                        :action => 'index'},
-         :engine => Katello::Engine
+         :engine => Katello::Engine,
+         :turbolinks => false
     divider :top_menu, :parent => :content_menu
     menu :top_menu,
          :errata,
@@ -93,7 +103,8 @@ Foreman::Plugin.register :katello do
          :url => '/errata',
          :url_hash => {:controller => 'katello/api/v2/errata',
                        :action => 'index'},
-         :engine => Katello::Engine
+         :engine => Katello::Engine,
+         :turbolinks => false
   end
 
   menu :top_menu,
@@ -104,7 +115,8 @@ Foreman::Plugin.register :katello do
                      :action => 'index'},
        :engine => Katello::Engine,
        :parent => :hosts_menu,
-       :after => :hosts
+       :after => :hosts,
+       :turbolinks => false
 
   menu :top_menu,
        :host_collections,
@@ -114,7 +126,8 @@ Foreman::Plugin.register :katello do
                      :action => 'index'},
        :engine => Katello::Engine,
        :parent => :hosts_menu,
-       :after => :content_hosts
+       :after => :content_hosts,
+       :turbolinks => false
 
   menu :top_menu,
        :content_dashboard,
@@ -123,7 +136,8 @@ Foreman::Plugin.register :katello do
                      :action => 'index'},
        :engine => Katello::Engine,
        :parent => :monitor_menu,
-       :after => :dashboard
+       :after => :dashboard,
+       :turbolinks => false
 
   menu :admin_menu,
        :notices,
@@ -132,7 +146,8 @@ Foreman::Plugin.register :katello do
                      :action => 'show'},
        :engine => Katello::Engine,
        :parent => :administer_menu,
-       :after => :organizations
+       :after => :organizations,
+       :turbolinks => false
 
   allowed_template_helpers :subscription_manager_configuration_url
 
