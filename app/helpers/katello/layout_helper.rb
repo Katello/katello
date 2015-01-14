@@ -26,5 +26,11 @@ module Katello
       end
       return ""
     end
+
+    def trunc_with_tooltip(text, length = 32)
+      text    = text.to_s
+      options = text.size > length ? { :'data-original-title' => text, :rel => 'twipsy' } : {}
+      content_tag(:span, truncate(text, :length => length), options).html_safe
+    end
   end
 end
