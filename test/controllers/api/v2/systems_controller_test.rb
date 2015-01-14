@@ -162,8 +162,14 @@ module Katello
     end
 
     def test_refresh_subscriptions
-      put :refresh_subscriptions, :id => @system.uuid
-
+      input = {
+        :id => @system.id
+      }
+      System.expects(:first).returns(@system)
+      assert_sync_task(::Actions::Katello::System::AutoAttachSubscriptions) do |sys|
+        sys.must_equal @system
+      end
+      put :refresh_subscriptions, input
       assert_response :success
       assert_template 'api/v2/systems/show'
     end
@@ -172,7 +178,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@create_permission, @view_permission, @destroy_permission]
 
-      assert_protected_action(:show, allowed_perms, denied_perms) do
+      assert_protected_action(:refresh_subscriptions, allowed_perms, denied_perms) do
         put :refresh_subscriptions, :id => @system.uuid
       end
     end
