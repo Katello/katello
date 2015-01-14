@@ -50,5 +50,34 @@ describe('Controller: ProductsController', function() {
         expect($scope.transitionTo).toHaveBeenCalledWith('products.index');
     });
 
+    it('properly detects most important sync state error', function () {
+        var product = {
+            'sync_summary': {
+                'error': 1,
+                'success': 5
+            }
+        };
+        expect($scope.mostImportantSyncState(product)).toBe('error');
+    });
+
+    it('properly detects most important sync state pending', function () {
+        var product = {
+            'sync_summary': {
+                'pending': 1,
+                'error': 1,
+                'success': 5
+            }
+        };
+        expect($scope.mostImportantSyncState(product)).toBe('pending');
+    });
+
+    it('properly detects most important sync state success', function () {
+        var product = {
+            'sync_summary': {
+                'success': 5
+            }
+        };
+        expect($scope.mostImportantSyncState(product)).toBe('success');
+    });
 });
 
