@@ -1,5 +1,5 @@
 #
-# Copyright 2014 Red Hat, Inc.
+# Copyright 2015 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,19 +11,16 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Candlepin
-    module Consumer
-      class RefreshSubscriptions < Candlepin::Abstract
-        input_format do
-          param :uuid, String
-        end
+  module Katello
+    module System
+      class AutoAttachSubscriptions < Actions::EntryAction
+        middleware.use ::Actions::Middleware::RemoteAction
 
-        def plan(system, sys_params)
-          plan_self(:uuid => system.uuid) if sys_params[:autoheal]
-        end
-
-        def run
-          ::Katello::Resources::Candlepin::Consumer.refresh_entitlements(input[:uuid])
+        def plan(system)
+          system.disable_auto_reindex!
+          action_subject system
+          plan_action(::Actions::Candlepin::Consumer::AutoAttachSubscriptions, system) if ::Katello.config.use_cp
+          plan_action(ElasticSearch::Reindex, system) if ::Katello.config.use_elasticsearch
         end
       end
     end

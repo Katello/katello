@@ -22,8 +22,10 @@ module Actions
           system.update_attributes!(sys_params)
           plan_action(::Actions::Pulp::Consumer::Update, system) if ::Katello.config.use_pulp
           plan_action(::Actions::Candlepin::Consumer::Update, system) if ::Katello.config.use_cp
+          if sys_params[:autoheal] && ::Katello.config.use_cp
+            plan_action(::Actions::Candlepin::Consumer::AutoAttachSubscriptions, system)
+          end
           plan_action(ElasticSearch::Reindex, system) if ::Katello.config.use_elasticsearch
-          plan_action(::Actions::Candlepin::Consumer::RefreshSubscriptions, system, sys_params) if ::Katello.config.use_cp
         end
       end
     end

@@ -193,7 +193,7 @@ module Katello
     api :PUT, "/systems/:id/refresh_subscriptions", N_("Trigger a refresh of subscriptions, auto-attaching if enabled"), :deprecated => true
     param :id, String, :desc => N_("UUID of the content host"), :required => true
     def refresh_subscriptions
-      @system.refresh_subscriptions
+      sync_task(::Actions::Katello::System::AutoAttachSubscriptions, @system)
       respond_for_show(:resource => @system)
     end
 
