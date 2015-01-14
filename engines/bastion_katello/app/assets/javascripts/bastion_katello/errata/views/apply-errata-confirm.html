@@ -1,0 +1,75 @@
+<span page-title>{{ 'Apply Errata' | translate }}</span>
+
+<ol class="breadcrumb">
+  <li>
+    <a ui-sref="errata.index" translate>Errata List</a>
+  </li>
+  <li>
+    <a ng-show="errata" ui-sref="errata.details.apply" translate>Select Content Hosts</a>
+    <a ng-hide="errata" ui-sref="errata.apply.select-content-hosts" translate>Select Content Hosts</a>
+  </li>
+  <li class="active" translate>Confirm</li>
+</ol>
+
+<section class="col-md-4" ng-hide="selectedContentHosts">
+  <p class="alert alert-warning" translate>You must select at least one Content Host in order to apply Errata.</p>
+</section>
+
+<section class="details details-full" ng-show="selectedContentHosts">
+  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <h3 ng-show="errata" translate>Apply {{ errata.errata_id }}</h3>
+
+  <section ng-hide="updates">
+    <p translate ng-show="errata">
+      Apply {{ errata.errata_id }} to {{ selectedContentHosts.included.ids.length }} Content Host(s)?
+    </p>
+    <p translate ng-hide="errata">
+      Apply {{ errataIds.length }} Errata to {{ selectedContentHosts.included.ids.length }} Content Host(s)?
+    </p>
+  </section>
+
+  <section ng-show="updates">
+    <p translate>
+      These Errata are not Installable via your published Content View versions running on the selected hosts.  The new Content View Versions (specified below)
+      will be created which will make this Errata Installable in the host's Environment.  This new version will replace the current version in your host's Lifecycle
+      Environment.
+    </p>
+  
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th translate>Content View</th>
+          <th translate>Version</th>
+          <th translate>Environment</th>
+          <th translate>Host Count</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr ng-repeat="update in updates">
+          <td>
+            <a ng-href="/content_views/{{ update.content_view_version.content_view.id }}/versions">{{ update.content_view_version.content_view.name }}</a>
+          </td>
+          <td>{{ update.next_version }}</td>
+          <td>
+            <span ng-repeat="environment in update.environments">
+              <a ng-href="/lifecycle_environments/{{ environment.id }}/details">
+                {{ environment.name }}
+              </a>
+              <span ng-show="!$last">, </span>
+            </span>
+          </td>
+          <td>
+            {{ update.content_host_count }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <form role="form" ng-submit="confirmApply()">
+    <button type="button" class="btn btn-default" ng-click="transitionBack()" translate>Cancel</button>
+    <button type="submit" class="btn btn-primary" translate>Confirm</button>
+  </form>
+</section>
+

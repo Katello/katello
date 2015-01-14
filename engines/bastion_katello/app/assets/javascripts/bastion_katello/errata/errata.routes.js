@@ -35,6 +35,35 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
             }
         }
     })
+
+    .state('errata.apply', {
+        url: '/errata/apply',
+        abstract: true,
+        collapsed: true,
+        views: {
+            'table': {
+                templateUrl: 'errata/views/errata-table-collapsed.html'
+            },
+            'action-panel': {
+                templateUrl: 'errata/views/apply-errata.html'
+            }
+        }
+    })
+    .state('errata.apply.select-content-hosts', {
+        url: '/select-content-hosts',
+        collapsed: true,
+        permission: 'edit_content_hosts',
+        controller: 'ErrataContentHostsController',
+        templateUrl: 'errata/views/apply-errata-select-content-hosts.html'
+    })
+    .state('errata.apply.confirm', {
+        url: '/confirm',
+        collapsed: true,
+        permission: 'edit_content_hosts',
+        controller: 'ApplyErrataController',
+        templateUrl: 'errata/views/apply-errata-confirm.html'
+    })
+
     .state('errata.details', {
         abstract: true,
         url: '/errata/:errataId',
@@ -49,6 +78,13 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
                 templateUrl: 'errata/details/views/errata-details.html'
             }
         }
+    })
+    .state('errata.details.apply', {
+        url: '/apply',
+        collapsed: true,
+        permission: 'edit_content_hosts',
+        controller: 'ApplyErrataController',
+        templateUrl: 'errata/views/apply-errata-confirm.html'
     })
     .state('errata.details.info', {
         url: '/info',

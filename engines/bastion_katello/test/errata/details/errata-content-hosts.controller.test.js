@@ -99,40 +99,25 @@ describe('Controller: ErrataContentHostsController', function() {
         expect($scope.detailsTable.params['environment_id']).toBe('foo');
     });
 
-    describe("can apply errata", function () {
-        var expectedParams;
-
+    describe("provides a way to go to the next apply step", function () {
         beforeEach(function () {
-            $scope.errata = {'errata_id': 10},
-            expectedParams = {
-                include: [1, 2, 3],
-                'content_type': 'errata',
-                content: [$scope.errata['errata_id']],
-                'organization_id': CurrentOrganization
-
-            };
-            spyOn(ContentHostBulkAction, 'installContent').andCallThrough();
+            spyOn($scope.nutupane, 'getAllSelectedResults');
+            spyOn($scope, 'transitionTo');
         });
 
-        afterEach(function () {
-            expect(ContentHostBulkAction.installContent).toHaveBeenCalledWith(expectedParams, jasmine.any(Function),
-                jasmine.any(Function));
+        afterEach(function() {
+            expect($scope.nutupane.getAllSelectedResults).toHaveBeenCalled();
         });
 
-        it("and succeed", function () {
-            $scope.applyErrata();
-
-            expect($scope.successMessages.length).toBe(1);
-            expect($scope.errorMessages.length).toBe(0);
+        it("and goes to the errata details apply page if there is an errata", function () {
+            $scope.errata = {id: 1};
+            $scope.goToNextStep();
+            expect($scope.transitionTo).toHaveBeenCalledWith('errata.details.apply', {errataId: $scope.errata.id})
         });
 
-        it("and fail", function () {
-            ContentHostBulkAction.failed = true;
-            $scope.applyErrata();
-
-            expect($scope.successMessages.length).toBe(0);
-            expect($scope.errorMessages.length).toBe(1);
-            expect($scope.errorMessages[0]).toBe('error');
+        it("and goes to the errata apply page if there is not an errata", function () {
+            $scope.goToNextStep();
+            expect($scope.transitionTo).toHaveBeenCalledWith('errata.apply.confirm');
         });
     });
 });

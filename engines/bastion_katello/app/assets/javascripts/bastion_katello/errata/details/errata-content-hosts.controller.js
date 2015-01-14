@@ -18,7 +18,6 @@
  * @requires $scope
  * @requires Nutupane
  * @requires ContentHost
- * @requires ContentHostBulkAction
  * @requires Environment
  * @requires CurrentOrganization
  *
@@ -26,8 +25,8 @@
  *   Provides the functionality for the available host collection details action pane.
  */
 angular.module('Bastion.errata').controller('ErrataContentHostsController',
-    ['$scope', 'translate', 'Nutupane', 'ContentHost', 'ContentHostBulkAction', 'Environment', 'CurrentOrganization',
-    function ($scope, translate, Nutupane, ContentHost, ContentHostBulkAction, Environment, CurrentOrganization) {
+    ['$scope', 'Nutupane', 'ContentHost', 'Environment', 'CurrentOrganization',
+    function ($scope, Nutupane, ContentHost, Environment, CurrentOrganization) {
         var nutupane, params;
 
         $scope.successMessages = [];
@@ -37,6 +36,10 @@ angular.module('Bastion.errata').controller('ErrataContentHostsController',
             'erratum_id': $scope.$stateParams.errataId,
             'organization_id': CurrentOrganization
         };
+
+        if (!params['erratum_id']) {
+            params['errata_ids[]'] = _.pluck($scope.table.getSelected(), 'id');
+        }
 
         nutupane = new Nutupane(ContentHost, params);
         nutupane.table.closeItem = function () {};
@@ -60,24 +63,13 @@ angular.module('Bastion.errata').controller('ErrataContentHostsController',
             nutupane.refresh();
         };
 
-        $scope.applyErrata = function () {
-            var params = $scope.nutupane.getAllSelectedResults(),
-                success, error;
-
-            params['content_type'] = 'errata';
-            params.content = [$scope.errata['errata_id']];
-            params['organization_id'] = CurrentOrganization;
-
-            success = function () {
-                $scope.successMessages = [translate("Successfully scheduled installation of errata")];
-                $scope.nutupane.refresh();
-            };
-
-            error = function (data) {
-                $scope.errorMessages = data.errors;
-            };
-
-            ContentHostBulkAction.installContent(params, success, error);
+        $scope.goToNextStep = function () {
+            $scope.$parent.selectedContentHosts = nutupane.getAllSelectedResults();
+            if ($scope.errata) {
+                $scope.transitionTo('errata.details.apply', {errataId: $scope.errata.id});
+            } else {
+                $scope.transitionTo('errata.apply.confirm');
+            }
         };
     }
 ]);

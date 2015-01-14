@@ -95,7 +95,7 @@ module Katello
     end
 
     def next_incremental_version
-      self.content_view.versions.where(:major => self.major).maximum(:minor) + 1
+      "#{major}.#{minor + 1}"
     end
 
     def version

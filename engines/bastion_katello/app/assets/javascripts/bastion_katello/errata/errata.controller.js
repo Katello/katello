@@ -17,11 +17,11 @@
  *
  * @requires $scope
  * @requires $location
+ * @requires translate
  * @requires Nutupane
  * @requires Erratum
  * @requires Repository
  * @requires CurrentOrganization
- * @requires translate
  *
  * @description
  *   Provides the functionality specific to errata for use with the Nutupane UI pattern.
@@ -29,9 +29,8 @@
  *   within the table.
  */
 angular.module('Bastion.errata').controller('ErrataController',
-    ['$scope', '$location', 'Nutupane', 'Erratum', 'Repository', 'CurrentOrganization', 'translate',
-    function ($scope, $location, Nutupane, Erratum, Repository, CurrentOrganization, translate) {
-
+    ['$scope', '$location', 'translate', 'Nutupane', 'Erratum', 'Repository', 'CurrentOrganization',
+    function ($scope, $location, translate, Nutupane, Erratum, Repository, CurrentOrganization) {
         var nutupane, params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
@@ -90,5 +89,9 @@ angular.module('Bastion.errata').controller('ErrataController',
             nutupane.refresh();
         });
 
+        $scope.goToNextStep = function () {
+            $scope.selectedErrata = nutupane.getAllSelectedResults();
+            $scope.transitionTo('errata.apply.select-content-hosts');
+        };
     }]
 );

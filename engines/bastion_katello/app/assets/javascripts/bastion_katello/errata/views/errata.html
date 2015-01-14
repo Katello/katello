@@ -6,7 +6,15 @@
     {{ 'Errata' | translate }}
   </div>
 
-  <div data-block="actions"></div>
+  <div data-block="actions">
+    <button class="btn btn-primary"
+            ng-click="goToNextStep()"
+            ng-hide="denied('edit_content_hosts')"
+            ng-disabled="table.numSelected == 0">
+      <i class="icon-plus"></i>
+      <span translate>Apply Errata</span>
+    </button>
+  </div>
 
   <div data-block="search-filter">
     <div class="col-sm-3">
