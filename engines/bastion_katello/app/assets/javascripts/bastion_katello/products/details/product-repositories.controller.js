@@ -49,6 +49,9 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
 
             RepositoryBulkAction.syncRepositories(params, function (task) {
                 $state.go('products.details.tasks.details', {taskId: task.id});
+            },
+            function (response) {
+                $scope.errorMessages = response.data.errors;
             });
         };
 
