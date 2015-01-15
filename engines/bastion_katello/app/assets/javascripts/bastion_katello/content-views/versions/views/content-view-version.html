@@ -37,9 +37,9 @@
         </a>
       </li>
 
-      <li ng-class="{active: isState('content-views.details.version.repositories')}">
-        <a ui-sref="content-views.details.version.repositories({versionId: version.id})">
-          <span translate>Repositories</span>
+      <li ng-class="{active: isState('content-views.details.version.yum')}">
+        <a ui-sref="content-views.details.version.yum({versionId: version.id})">
+          <span translate>Yum Repositories</span>
         </a>
       </li>
 
@@ -64,6 +64,12 @@
       <li ng-class="{active: isState('content-views.details.version.puppet-modules')}">
         <a ui-sref="content-views.details.version.puppet-modules({versionId: version.id})">
           <span translate>Puppet Modules</span>
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('content-views.details.version.docker')}">
+        <a ui-sref="content-views.details.version.docker({versionId: version.id})">
+          <span translate>Docker Repositories</span>
         </a>
       </li>
 

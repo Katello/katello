@@ -45,6 +45,7 @@ describe('Controller: ContentViewsVersionContentController', function() {
             Erratum = $injector.get('MockResource').$new();
             PuppetModule = $injector.get('MockResource').$new();
             ContentViewVersion = $injector.get('MockResource').$new();
+            Repository = $injector.get('MockResource').$new();
 
             $scope = $injector.get('$rootScope').$new();
             $scope.$stateParams = {versionId: '1'};
@@ -59,7 +60,8 @@ describe('Controller: ContentViewsVersionContentController', function() {
                 Erratum: Erratum,
                 PackageGroup: PackageGroup,
                 PuppetModule: PuppetModule,
-                ContentViewVersion: ContentViewVersion
+                ContentViewVersion: ContentViewVersion,
+                Repository: Repository
             });
         });
     }
@@ -74,24 +76,29 @@ describe('Controller: ContentViewsVersionContentController', function() {
         expect($scope.nutupane.resource).toBe(Package);
     });
 
-    it("setups up Package resource when is state is 'package groups'", function() {
+    it("setups up PackageGroup resource when is state is 'package groups'", function() {
         SetupController('content-views.details.version.package-groups');
         expect($scope.nutupane.resource).toBe(PackageGroup);
     });
 
-    it("setups up Package resource when is state is 'errata'", function() {
+    it("setups up Erratum resource when is state is 'errata'", function() {
         SetupController('content-views.details.version.errata');
         expect($scope.nutupane.resource).toBe(Erratum);
     });
 
-    it("setups up Package resource when is state is 'puppet modules'", function() {
+    it("setups up PuppetModule resource when is state is 'puppet modules'", function() {
         SetupController('content-views.details.version.puppet-modules');
         expect($scope.nutupane.resource).toBe(PuppetModule);
     });
 
-    it("setups up Package resource when is state is 'puppet modules'", function() {
-        SetupController('content-views.details.version.puppet-modules');
-        expect($scope.nutupane.resource).toBe(PuppetModule);
+    it("setups up docker Repo resource when is state is 'docker content'", function() {
+        SetupController('content-views.details.version.docker');
+        expect($scope.nutupane.resource).toBe(Repository);
+    });
+
+    it("setups up yum Repo resource when is state is 'yum content'", function() {
+        SetupController('content-views.details.version.yum');
+        expect($scope.nutupane.resource).toBe(Repository);
     });
 
     it("setups up ContentViewVersion resource when is state is 'components'", function() {
