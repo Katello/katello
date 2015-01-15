@@ -13,7 +13,7 @@
 module Actions
   module Candlepin
     module Consumer
-      class RefreshSubscrpitions < Candlepin::Abstract
+      class RefreshSubscriptions < Candlepin::Abstract
         input_format do
           param :uuid, String
         end
