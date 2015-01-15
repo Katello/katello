@@ -88,6 +88,8 @@ Requires: pulp-server
 Requires: mongodb >= 2.4
 Requires: mongodb-server >= 2.4
 Requires: cyrus-sasl-plain
+Requires: python-crane
+Requires: qpid-cpp-client-devel
 
 Requires: candlepin-selinux
 Requires: createrepo >= 0.9.9-18%{?dist}
