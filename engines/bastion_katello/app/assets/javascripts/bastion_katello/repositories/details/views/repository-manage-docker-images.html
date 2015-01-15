@@ -40,6 +40,7 @@
       <thead>
         <tr bst-table-head row-select>
           <th bst-table-column><span translate>Image ID</span></th>
+          <th bst-table-column><span translate>Tags</span></th>
         </tr>
       </thead>
 
@@ -47,6 +48,9 @@
         <tr bst-table-row ng-repeat="item in detailsTable.rows" row-select="item">
           <td bst-table-cell>
             {{ item.image_id }}
+          </td>
+          <td bst-table-cell>
+            {{ formatRepoDockerTags(item, repository.id) }}
           </td>
         </tr>
       </tbody>
