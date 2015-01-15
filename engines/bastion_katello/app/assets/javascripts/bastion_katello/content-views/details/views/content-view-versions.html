@@ -51,19 +51,21 @@
           </ul>
         </td>
         <td bst-table-cell>
-          <div translate>
-            {{ version.package_count || 0 }} Packages
+          <div translate ng-if="version.package_count && version.package_count > 0">
+            {{ version.package_count }} Packages
           </div>
-	  <span translate>{{ version.errata_counts.total || 0 }} Errata</span>
+          <div  ng-if="version.errata_counts.total && version.errata_counts.total > 0">
+	  <span translate>{{ version.errata_counts.total }} Errata</span>
           (<span errata-counts="version.errata_counts"></span>)
-          <div translate>
-            {{ version.puppet_module_count || 0 }} Puppet Modules
           </div>
-          <div translate>
-            {{ version.docker_image_count || 0 }} Docker Images
+          <div translate ng-if="version.puppet_module_count && version.puppet_module_count > 0">
+            {{ version.puppet_module_count }} Puppet Modules
           </div>
-          <div translate>
-            {{ version.docker_tag_count || 0 }} Docker Tags
+          <div translate ng-if="version.docker_image_count && version.docker_image_count > 0">
+            {{ version.docker_image_count }} Docker Images
+          </div>
+          <div translate ng-if="version.docker_tag_count && version.docker_tag_count > 0">
+            {{ version.docker_tag_count }} Docker Tags
           </div>
 
         </td>

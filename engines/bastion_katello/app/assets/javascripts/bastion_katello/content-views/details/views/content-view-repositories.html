@@ -112,25 +112,18 @@
               <span ng-hide="repository.url" translate>N/A</span>
             </td>
             <td bst-table-cell>
-              <div>
+              <div ng-if="repository.content_counts.rpm && repository.content_counts.rpm > 0">
                 <a ng-href="/katello/content_search#/!=&search[packages][search]=&search[content_type]=packages&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages"
                    ng-show="repository.content_type == 'yum'"
                    translate>
-                  {{ repository.content_counts.rpm || 0 }} Packages
+                  {{ repository.content_counts.rpm }} Packages
                 </a>
               </div>
-              <div>
+              <div ng-if="repository.content_counts.erratum && repository.content_counts.erratum > 0">
                 <a ng-href="/katello/content_search#/!=&search[errata][search]=&search[content_type]=errata&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata"
                    ng-show="repository.content_type == 'yum'"
                    translate>
-                  {{ repository.content_counts.erratum || 0 }} Errata
-                </a>
-              </div>
-              <div>
-                <a ng-href="/katello/content_search#/!=&search[puppet_modules][search]=&search[content_type]=puppet_modules&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_puppet_modules"
-                   ng-show="repository.content_type == 'puppet'"
-                   translate>
-                  {{ repository.content_counts.puppet_module || 0 }} Puppet Modules
+                  {{ repository.content_counts.erratum }} Errata
                 </a>
               </div>
             </td>
