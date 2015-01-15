@@ -61,6 +61,31 @@ module ::Actions::Katello::System
     end
   end
 
+  class UpdateTest < TestBase
+    let(:action_class) { ::Actions::Katello::System::Update }
+    let(:input) { { :name => 'newname' } }
+
+    let(:system) do
+      env = build(:katello_k_t_environment,
+                  :library,
+                  organization: build(:katello_organization, :acme_corporation))
+      build(:katello_system, :alabama, environment: env)
+    end
+
+    it 'plans' do
+      stub_remote_user
+      system.expects(:disable_auto_reindex!)
+      action.expects(:action_subject).with(system)
+      system.expects(:update_attributes!).with(input)
+
+      plan_action(action, system, input)
+      assert_action_planed(action, ::Actions::Katello::Foreman::HostUpdate)
+      assert_action_planed(action, ::Actions::Pulp::Consumer::Update)
+      assert_action_planed(action, ::Actions::Candlepin::Consumer::Update)
+      assert_action_planed(action, ::Actions::ElasticSearch::Reindex)
+    end
+  end
+
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::System::Destroy }
 

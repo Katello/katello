@@ -57,7 +57,10 @@ module Katello
       repositories = Repository.where(:product_id => Product.readable.where(:organization_id => @organization.id))
       repositories = repositories.where(:product_id => @product.id) if @product
 
-      if params[:content_view_id]
+      if params[:content_view_id] && params[:environment_id]
+        version = ContentViewVersion.in_environment(params[:environment_id]).where(:content_view_id => params[:content_view_id])
+        repositories = repositories.where(:content_view_version_id => version)
+      elsif params[:content_view_id]
         repositories = repositories
                          .joins(:content_view_repositories)
                          .where("#{ContentViewRepository.table_name}.content_view_id" => params[:content_view_id])
@@ -79,7 +82,7 @@ module Katello
         repositories = repositories.where(:content_view_version_id => @organization.default_content_view.versions.first.id)
       end
 
-      options[:filters] = [{:terms => {:id => repositories.pluck(:id)}}]
+      options[:filters] = [{:terms => {:id => repositories.pluck("#{Repository.table_name}.id")}}]
 
       respond :collection => item_search(Repository, params, options)
     end

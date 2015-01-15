@@ -114,9 +114,6 @@ module Katello
       ::Redhat.send :include, Katello::Concerns::RedhatExtensions
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
-      ::DockerImage.send :include, Glue::Pulp::PulpContentUnit # need to include this before DockerImageExtensions
-      ::DockerImage.send :include, Katello::Concerns::DockerImageExtensions
-      ::DockerTag.send :include, Katello::Concerns::DockerTagExtensions
 
       #Controller extensions
       ::OperatingsystemsController.send :include, Katello::Concerns::OperatingsystemsControllerExtensions

@@ -58,6 +58,7 @@ module Katello
           if repo.content_view && !repo.content_view.default?
             parts << repo.content_view.label
           end
+          parts << repo.product.label
           parts << repo.label
           return normalize_name(parts.compact.join('/'))
         end

@@ -10,20 +10,23 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-  class Api::V2::DockerImagesController < Api::V2::ApiController
-    apipie_concern_subst(:a_resource => N_("a docker image"), :resource => "docker_images")
-    include Katello::Concerns::Api::V2::RepositoryContentController
-    include Katello::Concerns::Api::V2::RepositoryDbContentController
+module Actions
+  module Pulp
+    module Consumer
+      class Update < Pulp::Abstract
+        input_format do
+          param :uuid, String
+          param :display_name, String
+        end
 
-    private
+        def plan(system)
+          plan_self(:uuid => system.uuid, :display_name => system.name)
+        end
 
-    def resource_class
-      DockerImage
-    end
-
-    def filter_by_content_view_filter(filter)
-      resource_class.where(:uuid => filter.send("#{singular_resource_name}_rules").pluck(:uuid))
+        def run
+          ::Katello.pulp_server.extensions.consumer.update(input[:uuid], :display_name => input[:name])
+        end
+      end
     end
   end
 end

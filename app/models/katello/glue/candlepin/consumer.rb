@@ -24,20 +24,18 @@ module Katello
       base.send :extend, ClassMethods
 
       base.class_eval do
-        before_save :save_candlepin_orchestration
-
         as_json_hook :consumer_as_json
 
         attr_accessible :cp_type, :owner, :serviceLevel, :installedProducts, :facts, :guestIds, :releaseVer, :autoheal
 
         lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds,
-                      :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities, :entitlementStatus,
-                      :initializer => (lambda do |_s|
-                                         if uuid
-                                           consumer_json = Resources::Candlepin::Consumer.get(uuid)
-                                           convert_from_cp_fields(consumer_json)
-                                         end
-                                       end)
+        :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities, :entitlementStatus,
+        :initializer => (lambda do |_s|
+                           if uuid
+                             consumer_json = Resources::Candlepin::Consumer.get(uuid)
+                             convert_from_cp_fields(consumer_json)
+                           end
+                         end)
         lazy_accessor :entitlements, :initializer => lambda { |_s| Resources::Candlepin::Consumer.entitlements(uuid) }
         lazy_accessor :pools, :initializer => lambda { |_s| entitlements.collect { |ent| Resources::Candlepin::Pool.find ent["pool"]["id"] } }
         lazy_accessor :available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(uuid, false) }
@@ -105,28 +103,11 @@ module Katello
         end
       end
 
-      def update_candlepin_consumer
-        Rails.logger.debug "Updating consumer in candlepin: #{name}"
-        Resources::Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal,
-                                              @releaseVer, self.serviceLevel, self.cp_environment_id, @capabilities, @lastCheckin)
-      rescue => e
-        Rails.logger.error "Failed to update candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
-        raise e
-      end
-
       def checkin(checkin_time)
         Rails.logger.debug "Updating consumer check-in time: #{name}"
         Resources::Candlepin::Consumer.checkin(self.uuid, checkin_time)
       rescue => e
         Rails.logger.error "Failed to update consumer check-in time in candlepin for #{name}: #{e}, #{e.backtrace.join("\n")}"
-        raise e
-      end
-
-      def refresh_subscriptions
-        Rails.logger.debug "Refreshing consumer subscriptions in candlepin: #{name}"
-        Resources::Candlepin::Consumer.refresh_entitlements(self.uuid)
-      rescue => e
-        Rails.logger.error "Failed to refresh consumer subscriptions in candlepin for #{name}: #{e}, #{e.backtrace.join("\n")}"
         raise e
       end
 
@@ -214,15 +195,6 @@ module Katello
 
       def reject_db_columns(cp_json)
         cp_json.reject { |k, _v| self.class.column_defaults.keys.member?(k.to_s) }
-      end
-
-      def save_candlepin_orchestration
-        case orchestration_for
-        when :hypervisor
-          # it's already saved = do nothing
-        when :update
-          pre_queue.create(:name => "update candlepin consumer: #{self.name}", :priority => 3, :action => [self, :update_candlepin_consumer])
-        end
       end
 
       def cp_environment_id

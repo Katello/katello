@@ -116,6 +116,22 @@ module Katello
       assert_template 'api/v2/repositories/index'
     end
 
+    def test_index_with_content_view_id_and_environment_id
+      repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
+      ids = repo.content_view_version.repository_ids
+
+      @controller
+         .expects(:item_search)
+         .with(anything, anything, has_entry(:filters => [{:terms => {:id => ids}}]))
+         .returns({})
+
+      get :index, :content_view_id => repo.content_view_version.content_view_id, :environment_id => repo.environment_id,
+                 :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+    end
+
     def test_index_with_errata_id
       ids = @errata.repositories.pluck(:id)
 

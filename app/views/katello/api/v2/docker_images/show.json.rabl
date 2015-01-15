@@ -1,6 +1,6 @@
 object @resource
 
-attributes :katello_uuid => :id
+attributes :uuid => :id
 attributes :size, :image_id
 
 child :tags => :tags do
