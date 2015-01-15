@@ -29,7 +29,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.1.0
-Release: 2%{dist}
+Release: 3%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -236,6 +236,26 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Thu Jan 15 2015 Justin Sherrill <jsherril@redhat.com> 2.1.0-3
+- fixes #8353 - require all neccessary pulp packages in RPM
+  (stbenjam@redhat.com)
+- Fixes #8887: returning correct CVE structure in rabl. (walden@redhat.com)
+- fixes #8775 - ensure available errata are unique (stbenjam@redhat.com)
+- fixes #8848 - fixing content host errata list (jsherril@redhat.com)
+- Fixes #8594: Fix errata listing for content view filter regression.
+  (ericdhelms@gmail.com)
+- Fixes #8743 - Repo Index returns promoted repos (paji@redhat.com)
+- Fixes #8858: Collect candlepin logs on RHEL7 (bkearney@redhat.com)
+- fixes #8904 - fixing query breaking content view repo list
+  (jsherril@redhat.com)
+- Fixes #6184 - Dynflowizes system update. (aruzicka@redhat.com)
+- fixes #8326 - fixing errata queries due to ambiguous sort
+  (jsherril@redhat.com)
+- Fixes #7755: Use product label to make media unique. (ericdhelms@gmail.com)
+- Fixes #8632 - Redoing docker tables/fields (daviddavis@redhat.com)
+- refs #8575 - adding python-qpid-common to comps (jsherril@redhat.com)
+- Add rubygem-bastion to comps files (daviddavis@redhat.com)
+
 * Fri Dec 19 2014 David Davis <daviddavis@redhat.com> 2.1.0-2
 - Fixes #8771 - Remove katello_api from comps (daviddavis@redhat.com)
 - Bumping for 2.1 release (daviddavis@redhat.com)
