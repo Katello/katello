@@ -28,6 +28,7 @@ module Actions
           param :checksum_type
           param :path
           param :with_importer
+          param :docker_upstream_name
         end
 
         def run
@@ -61,7 +62,7 @@ module Actions
             when ::Katello::Repository::PUPPET_TYPE
               importer.feed            = input[:feed]
             when ::Katello::Repository::DOCKER_TYPE
-              importer.upstream_name   = input[:name]
+              importer.upstream_name   = input[:docker_upstream_name] if input[:docker_upstream_name]
               importer.feed            = input[:feed]
             end
           end

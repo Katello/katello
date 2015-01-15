@@ -30,6 +30,7 @@ module Actions
                                         content_type: repository.content_type,
                                         pulp_id: repository.pulp_id,
                                         name: repository.name,
+                                        docker_upstream_name: repository.docker_upstream_name,
                                         feed: repository.url,
                                         ssl_ca_cert: repository.feed_ca,
                                         ssl_client_cert: repository.feed_cert,
