@@ -33,7 +33,7 @@ module Katello
 
       FactoryGirl.create(:mail_notification,
                          :name => 'katello_promote_errata',
-                         :description => 'A post-promotion summary of hosts with available errata',
+                         :description => 'A post-promotion summary of hosts with installable errata',
                          :mailer => 'Katello::ErrataMailer',
                          :method => 'promote_errata',
                          :subscription_type => 'alert')

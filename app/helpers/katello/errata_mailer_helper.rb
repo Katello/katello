@@ -31,7 +31,7 @@ module Katello
     end
 
     def errata_count(host, errata_type)
-      available = host.available_errata.send(errata_type.to_sym).count
+      available = host.installable_errata.send(errata_type.to_sym).count
       applicable = host.applicable_errata.send(errata_type.to_sym).count - available
       "#{available} (#{applicable})"
     end
@@ -41,7 +41,7 @@ module Katello
     end
 
     def host_count(hosts, errata_type)
-      hosts.to_a.count { |host| host.available_errata.send(errata_type.to_sym).any? }
+      hosts.to_a.count { |host| host.installable_errata.send(errata_type.to_sym).any? }
     end
   end
 end

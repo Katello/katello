@@ -27,7 +27,7 @@ angular.module('Bastion.content-hosts').factory('ContentHostErratum',
             get: {method: 'GET', isArray: false, transformResponse: function (data) {
                 data = angular.fromJson(data);
                 angular.forEach(data.results, function (errata) {
-                    errata.unselectable = !errata.available;
+                    errata.unselectable = !errata.installable;
                 });
                 return data;
             }},

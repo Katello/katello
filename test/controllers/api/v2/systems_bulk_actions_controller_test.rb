@@ -211,7 +211,7 @@ module Katello
       @errata_system.bound_repositories = [@view_repo]
       @errata_system.save!
 
-      unavailable = @errata_system.applicable_errata - @errata_system.available_errata
+      unavailable = @errata_system.applicable_errata - @errata_system.installable_errata
       @missing_erratum = unavailable.first
 
       assert @missing_erratum
