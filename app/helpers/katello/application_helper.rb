@@ -346,11 +346,5 @@ module Katello
 
       products_hash
     end
-
-    def content_search_errata_link(erratum_id)
-      path = content_search_index_path
-      anchor = {:search => {:errata => {:search => "errata_id:\"#{erratum_id}\""}, :content_type => "errata"}}
-      path + "#/!=&" +  anchor.to_param
-    end
   end
 end

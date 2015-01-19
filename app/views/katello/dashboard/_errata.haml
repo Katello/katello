@@ -17,7 +17,5 @@
                 .col_1
                   %div{:class => 'tipsify ' + errata_type_class(erratum),
                        'original-title' => errata_human_type(erratum.errata_type)}
-                .col_2.one-line-ellipsis
-                  %span
-                    %a{:href=>content_search_errata_link(erratum.errata_id)}
-                      #{erratum.errata_id} (#{content_hosts.length} #{_('Content Hosts')})
+                %a{:href=>"/errata/#{erratum.uuid}/info", :class=>"col_2"}
+                  #{erratum.errata_id} (#{content_hosts.length} #{_('Content Hosts')})
