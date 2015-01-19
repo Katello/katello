@@ -58,12 +58,17 @@ module Katello
     param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def sync_repositories
       syncable_repositories = @repositories.syncable.has_url
+      if syncable_repositories.empty?
+        msg = _("Unable to synchronize any repository. You either do not have the permission to"\
+                " synchronize or the selected repositories do not have a feed url.")
+        fail HttpErrors::UnprocessableEntity, msg
+      else
+        task = async_task(::Actions::BulkAction,
+                          ::Actions::Katello::Repository::Sync,
+                          syncable_repositories)
 
-      task = async_task(::Actions::BulkAction,
-                        ::Actions::Katello::Repository::Sync,
-                        syncable_repositories)
-
-      respond_for_async :resource => task
+        respond_for_async :resource => task
+      end
     end
 
     private

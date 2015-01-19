@@ -91,11 +91,13 @@ describe('Controller: ProductRepositoriesController', function() {
     });
 
     it("provides a way to sync all of the selected repositories in the table", function() {
+        var errorFunction = jasmine.any(Function);
+
         spyOn(RepositoryBulkAction, 'syncRepositories').andCallThrough();
 
         $scope.syncSelectedRepositories();
         expect(RepositoryBulkAction.syncRepositories).toHaveBeenCalledWith({ids: expectedIds},
-            jasmine.any(Function));
+            jasmine.any(Function), errorFunction);
     });
 
 
