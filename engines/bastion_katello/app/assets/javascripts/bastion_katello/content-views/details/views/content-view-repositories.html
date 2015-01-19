@@ -120,7 +120,7 @@
                 </a>
               </div>
               <div ng-if="repository.content_counts.erratum && repository.content_counts.erratum > 0">
-                <a ng-href="/katello/content_search#/!=&search[errata][search]=&search[content_type]=errata&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata"
+                <a ui-sref="errata.index({repositoryId: repository.id})"
                    ng-show="repository.content_type == 'yum'"
                    translate>
                   {{ repository.content_counts.erratum }} Errata

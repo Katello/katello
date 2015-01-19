@@ -115,7 +115,7 @@
                 </div>
 
                 <div>
-                  <a translate ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata">
+                  <a ui-sref="errata.index({repositoryId: repository.id})" translate>
                     {{ repository.content_counts.erratum || 0 }} Errata
                   </a>
                 </div>

@@ -51,6 +51,12 @@ angular.module('Bastion.errata').controller('ErrataController',
         Repository.queryUnpaged({'organization_id': CurrentOrganization, 'content_type': 'yum'}, function (response) {
             $scope.repositories = [$scope.repository];
             $scope.repositories = $scope.repositories.concat(response.results);
+
+            if ($location.search().repositoryId) {
+                $scope.repository = _.find($scope.repositories, function (repository) {
+                    return repository.id === parseInt($location.search().repositoryId, 10);
+                });
+            }
         });
 
         $scope.$watch('repository', function (repository) {
@@ -60,6 +66,7 @@ angular.module('Bastion.errata').controller('ErrataController',
                 params['repository_id'] = null;
                 nutupane.setParams(params);
             } else {
+                $location.search('repositoryId', repository.id);
                 params['repository_id'] = repository.id;
                 nutupane.setParams(params);
             }
