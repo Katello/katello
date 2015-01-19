@@ -318,7 +318,10 @@ module Katello
         end
 
         product_to_remove_ids = (product_in_katello_ids - products_in_candlepin_ids).uniq
-        product_to_remove_ids.each { |cp_id| Product.find_by_cp_id(cp_id, self.organization).destroy }
+        product_to_remove_ids.each do |cp_id|
+          product = Product.find_by_cp_id(cp_id, self.organization)
+          Rails.logger.warn "Orphaned Product id #{product.id} found while refreshing/importing manifest."
+        end
 
         self.index_subscriptions
         true

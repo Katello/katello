@@ -114,9 +114,9 @@ module Katello
             @custom_product = Product.create!(:label => "custom-prod", :name => "custom_product", :productContent => [], :provider => @custom_provider, :organization => @organization)
           end
 
-          it "should be removed from the Katello products"  do
+          it "should keep RH products"  do
             @provider.import_products_from_cp
-            Product.find_by_id(@rh_product.id).must_be_nil
+            Product.find_by_id(@rh_product.id).wont_be_nil
           end
 
           it "should keep non-RH products" do
