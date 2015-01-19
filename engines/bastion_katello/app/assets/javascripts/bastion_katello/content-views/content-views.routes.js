@@ -93,12 +93,19 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         controller: 'ContentViewVersionContentController',
         templateUrl: 'content-views/versions/views/content-view-version-components.html'
     })
-    .state('content-views.details.version.repositories', {
+    .state('content-views.details.version.yum', {
         collapsed: true,
-        url: '/repositories',
+        url: '/yum',
         permission: 'view_content_views',
         controller: 'ContentViewVersionContentController',
-        templateUrl: 'content-views/versions/views/content-view-version-repositories.html'
+        templateUrl: 'content-views/versions/views/content-view-version-yum.html'
+    })
+    .state('content-views.details.version.docker', {
+        collapsed: true,
+        url: '/docker',
+        permission: 'view_content_views',
+        controller: 'ContentViewVersionContentController',
+        templateUrl: 'content-views/versions/views/content-view-version-docker.html'
     })
     .state('content-views.details.version.packages', {
         collapsed: true,

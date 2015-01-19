@@ -29,8 +29,20 @@
         currentState = $scope.$state.current.name.split('.').pop();
 
         contentTypes = {
-            'repositories': {
-                type: Repository
+            'docker': {
+                type: Repository,
+                params: {
+                    'content_type' : "docker",
+                    'content_view_version_id': $scope.$stateParams.versionId
+
+                }
+            },
+            'yum': {
+                type: Repository,
+                params: {
+                    'content_type': "yum",
+                    'content_view_version_id': $scope.$stateParams.versionId
+                }
             },
             'packages': {
                 type: Package
