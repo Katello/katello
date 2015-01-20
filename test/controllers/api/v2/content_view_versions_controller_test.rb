@@ -201,7 +201,7 @@ module Katello
       errata_id = Katello::Erratum.first.uuid
       @controller.expects(:async_task).with(::Actions::Katello::ContentView::IncrementalUpdates,
                                             [{:content_view_version => version, :environments => [@beta]}],
-                                            {'errata_ids' => [errata_id]}, true, nil, nil).returns({})
+                                            {'errata_ids' => [errata_id]}, true, nil, [], nil).returns({})
 
       put :incremental_update, :content_view_version_environments => [{:content_view_version_id => version.id, :environment_ids => [@beta.id]}],
                                :add_content => {:errata_ids => [errata_id]}, :resolve_dependencies => true
