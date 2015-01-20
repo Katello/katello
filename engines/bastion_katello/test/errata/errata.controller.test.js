@@ -22,6 +22,7 @@ describe('Controller: ErrataController', function() {
     beforeEach(function() {
         Nutupane = function() {
             this.table = {
+                params: {},
                 showColumns: function() {}
             };
             this.get = function() {};
@@ -65,6 +66,18 @@ describe('Controller: ErrataController', function() {
 
     it('shoud have a list of repositories that include an all option', function () {
         expect($scope.repositories[0]['id']).toBe('all');
+    });
+
+    it("allows the filtering of applicable errata only", function () {
+        $scope.showApplicable = true;
+        $scope.toggleApplicable();
+        expect($scope.table.params['errata_restrict_applicable']).toBe(true)
+    });
+
+    it("allows the filtering of installable errata only", function () {
+        $scope.showInstallable = false;
+        $scope.toggleInstallable();
+        expect($scope.table.params['errata_restrict_installable']).toBe(false)
     });
 
     it('should set the repository_id param on Nutupane when a repository is chosen', function () {

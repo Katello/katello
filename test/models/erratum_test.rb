@@ -104,8 +104,8 @@ module Katello
       refute_includes @bugfix.systems_available, @simple_server
     end
 
-    def test_available_for_systems
-      errata = Erratum.available_for_systems([@errata_server, @simple_server])
+    def test_installable_for_systems
+      errata = Erratum.installable_for_systems([@errata_server, @simple_server])
       assert_includes errata, @security
       refute_includes errata, @bugfix
       refute_includes errata, @enhancement

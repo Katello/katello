@@ -6,11 +6,23 @@
     {{ 'Errata' | translate }}
   </div>
 
-  <div data-block="actions">
+  <div data-block="actions"></div>
+
+  <div data-block="search-filter">
+    <div class="col-sm-3">
+      <select class="form-control" ng-model="repository" ng-options="repository.name for (id, repository) in repositories"></select>
+    </div>
+
+    <div class="col-sm-3">
+      <label class="checkbox-inline" title="{{ 'Only show Errata that is Applicable to one or more Content Hosts' | translate }}">
+        <input type="checkbox" ng-model="showApplicable" ng-change="toggleApplicable()"/>
+        <span translate>Applicable</span>
+      </label>
+
+      <label class="checkbox-inline" title="{{ 'Only show Errata that is Installable on one or more Content Hosts' | translate }}">
+        <input type="checkbox" ng-model="showInstallable" ng-change="toggleInstallable()"/>
+        <span translate>Installable</span>
+      </label>
+    </div>
   </div>
-
-  <span class="input-group-addon" data-block="search-filter">
-    <select ng-model="repository" ng-options="repository.name for (id, repository) in repositories"></select>
-  </span>
-
 </div>
