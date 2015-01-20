@@ -148,10 +148,10 @@ module Katello
     end
 
     def test_available_and_applicable_errta
-      assert_equal @errata_system.applicable_errata, @errata_system.available_errata
+      assert_equal @errata_system.applicable_errata, @errata_system.installable_errata
     end
 
-    def test_available_errata
+    def test_installable_errata
       lib_applicable = @errata_system.applicable_errata
 
       @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
@@ -159,8 +159,8 @@ module Katello
       @errata_system.save!
 
       assert_equal lib_applicable, @errata_system.applicable_errata
-      refute_equal lib_applicable, @errata_system.available_errata
-      assert_include @errata_system.available_errata, Erratum.find(katello_errata(:security))
+      refute_equal lib_applicable, @errata_system.installable_errata
+      assert_include @errata_system.installable_errata, Erratum.find(katello_errata(:security))
     end
 
     def test_with_unavailable_errata
@@ -168,17 +168,17 @@ module Katello
       @errata_system.bound_repositories = [@view_repo]
       @errata_system.save!
 
-      unavailable = @errata_system.applicable_errata - @errata_system.available_errata
+      unavailable = @errata_system.applicable_errata - @errata_system.installable_errata
       refute_empty unavailable
       systems = System.with_unavailable_errata([unavailable.first])
       assert_include systems, @errata_system
 
-      systems = System.with_unavailable_errata([@errata_system.available_errata.first])
+      systems = System.with_unavailable_errata([@errata_system.installable_errata.first])
       refute systems.include?(@errata_system)
     end
 
     def test_available_errata_other_view
-      available_in_view = @errata_system.available_errata(@library, @library_view)
+      available_in_view = @errata_system.installable_errata(@library, @library_view)
       assert_equal 1, available_in_view.length
       assert_include available_in_view, Erratum.find(katello_errata(:security))
     end

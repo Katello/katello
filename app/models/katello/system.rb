@@ -136,7 +136,7 @@ module Katello
       self.pools.collect { |t| t['id'] }
     end
 
-    def available_errata(env = nil, content_view = nil)
+    def installable_errata(env = nil, content_view = nil)
       repos = if env && content_view
                 Katello::Repository.in_environment(env).in_content_views([content_view])
               else

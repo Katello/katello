@@ -153,7 +153,7 @@ notifications = [
   },
 
   {:name              => :katello_promote_errata,
-   :description       => N_('A post-promotion summary of hosts with available errata'),
+   :description       => N_('A post-promotion summary of hosts with installable errata'),
    :mailer            => 'Katello::ErrataMailer',
    :method            => 'promote_errata',
    :subscription_type => 'alert'

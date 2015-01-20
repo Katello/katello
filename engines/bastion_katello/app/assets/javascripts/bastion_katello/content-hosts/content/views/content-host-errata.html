@@ -10,7 +10,8 @@
 
 <div data-extend-template="layouts/details-nutupane.html">
   <div data-block="header" bst-feature-flag="remote_actions">
-    <span translate>Applicable Errata</span>
+    <span translate ng-hide="selectedErrataOption === 'current'">Applicable Errata</span>
+    <span translate ng-show="selectedErrataOption === 'current'">Installable Errata</span>
   </div>
 
   <span data-block="filters" bst-feature-flag="remote_actions">

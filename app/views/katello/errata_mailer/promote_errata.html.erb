@@ -20,9 +20,9 @@
               <div align="left">
                 <h2 style="font-weight: normal;"><b>KATELLO</b> PROMOTION SUMMARY</h2>
 
-                <% all_errata = @content_hosts.authorized_as(@user, :view_content_hosts).map(&:available_errata).flatten.sort_by(&:id).uniq %>
+                <% all_errata = @content_hosts.authorized_as(@user, :view_content_hosts).map(&:installable_errata).flatten.sort_by(&:id).uniq %>
 
-                <%= (_("The promotion of %{content_view} to <b>%{environment}</b> has completed.  %{count} needed errata are available to your hosts.") %
+                <%= (_("The promotion of %{content_view} to <b>%{environment}</b> has completed.  %{count} needed errata are installable on your hosts.") %
                      {:content_view         => link_to(@content_view.name, content_view_path(@content_view)),
                       :environment          =>  @environment.name,
                       :count                => link_to(all_errata.count, content_view_environment_errata_path(@content_view, @environment))}).html_safe %></p>
@@ -30,7 +30,7 @@
               <table border="0" width="100%" id="emailHeader" style="background-color: #e1e2e3;" bgcolor="#e1e2e3">
                 <tr>
                   <td align="left" valign="top" style="padding: 0px 20px;">
-                      <%= render :partial => 'host_dashboard', :locals => {:content_hosts => @content_hosts.authorized_as(@user, :view_content_hosts), :title => _("Hosts with Available Errata")} %>
+                      <%= render :partial => 'host_dashboard', :locals => {:content_hosts => @content_hosts.authorized_as(@user, :view_content_hosts), :title => _("Hosts with Installable Errata")} %>
 
                       <% if all_errata.count > 100 %>
                         <%= _("A large number of errata are unapplied in this content view, so only the first 100 are shown.") %>

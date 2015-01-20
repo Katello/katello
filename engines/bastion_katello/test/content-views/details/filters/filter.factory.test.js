@@ -86,7 +86,7 @@ describe('Factory: Filter', function() {
         });
     });
 
-    it('provides a way to get available errata for a filter', function() {
+    it('provides a way to get installable errata for a filter', function() {
         $httpBackend.expectGET('/katello/api/v2/content_view_filters/1/available_errata?content_view_id=1')
                     .respond({});
 

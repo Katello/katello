@@ -68,6 +68,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
             var option, params;
             params = {'id': $scope.$stateParams.contentHostId};
 
+            $scope.selectedErrataOption = selected;
+
             if (selected === 'library' || selected === 'prior') {
                 option = _.find($scope.errataOptions, function (option) {return option.label === selected});
                 params['content_view_id'] = option['content_view_id'];

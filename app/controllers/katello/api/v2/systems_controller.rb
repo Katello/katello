@@ -210,14 +210,14 @@ module Katello
         fail _("either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified")
       end
 
-      errata = @system.available_errata(@environment, @content_view)
+      errata = @system.installable_errata(@environment, @content_view)
       response = {
         :records  => errata.sort_by { |e| e.issued }.reverse,
         :subtotal => errata.count,
         :total    => errata.count
       }
 
-      @available_errata_ids = @system.available_errata.pluck("#{Katello::Erratum.table_name}.id")
+      @installable_errata_ids = @system.installable_errata.pluck("#{Katello::Erratum.table_name}.id")
       respond_for_index :collection => response
     end
 

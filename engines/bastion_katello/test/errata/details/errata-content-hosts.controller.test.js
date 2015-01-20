@@ -77,7 +77,7 @@ describe('Controller: ErrataContentHostsController', function() {
         expect($scope.detailsTable).toBeDefined();
     });
 
-    it("allows the filtering of available errata only", function () {
+    it("allows the filtering of installable errata only", function () {
         $scope.errata = {
             showAvailable: true
         };
