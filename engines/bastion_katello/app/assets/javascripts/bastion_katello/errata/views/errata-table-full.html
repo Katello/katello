@@ -4,7 +4,7 @@
       <th bst-table-column="errataId" sortable>{{ "Errata ID" | translate }}</th>
       <th bst-table-column="title">{{ "Title" | translate }}</th>
       <th bst-table-column="type">{{ "Type" | translate }}</th>
-      <th bst-table-column="numberOfContentHosts">{{ "Affected Content Hosts" | translate }}</th>
+      <th bst-table-column="numberOfContentHosts">{{ "Content Host Counts" | translate }}</th>
       <th bst-table-column="updated">{{ "Updated" | translate }}</th>
     </tr>
   </thead>
@@ -36,7 +36,10 @@
         {{ errata.type | errataType}}
         <span ng-show="errata.severity">- {{ errata.severity | errataSeverity}}</span>
       </td>
-      <td bst-table-cell>{{ errata.systems_available_count || 0 }}</td>
+      <td bst-table-cell>
+        <span translate>{{ errata.systems_applicable_count || 0 }} Applicable, </span>
+        <span translate>{{ errata.systems_available_count || 0 }} Installable</span>
+      </td>
       <td bst-table-cell>{{ errata.updated | date:'shortDate'}}</td>
     </tr>
   </tbody>
