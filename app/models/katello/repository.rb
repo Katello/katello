@@ -174,8 +174,7 @@ module Katello
     def yum_gpg_key_url
       # if the repo has a gpg key return a url to access it
       if (self.gpg_key && self.gpg_key.content.present?)
-        host = Facter.value(:fqdn) || SETTINGS[:fqdn]
-        gpg_key_content_api_repository_url(self, :host => host, :protocol => 'https')
+        "../..#{gpg_key_content_api_repository_url(self, :only_path => true)}"
       end
     end
 
