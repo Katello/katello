@@ -13,6 +13,7 @@ end
 attributes :errata_type => :type
 
 node(:systems_available_count) { |m| m.systems_available.count }
+node(:systems_applicable_count) { |m| m.systems_applicable.count }
 
 node :packages do |e|
   e.packages.pluck(:nvrea)
