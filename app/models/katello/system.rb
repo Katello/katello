@@ -95,9 +95,18 @@ module Katello
       systems.pluck(:id)
     end
 
-    def self.with_unavailable_errata(errata)
+    def self.with_non_installable_errata(errata)
       subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems.where("#{Katello::SystemRepository.table_name}.system_id = #{System.table_name}.id").to_sql
       self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata).where("#{Katello::Erratum.table_name}.id NOT IN (#{subquery})").uniq
+    end
+
+    def self.with_applicable_errata(errata)
+      self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata)
+    end
+
+    def self.with_installable_errata(errata)
+      subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems.where("#{Katello::SystemRepository.table_name}.system_id = #{System.table_name}.id")
+      self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata).where("#{Katello::Erratum.table_name}.id" => subquery).uniq
     end
 
     def add_host_collection(host_collection)
