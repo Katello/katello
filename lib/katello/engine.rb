@@ -164,6 +164,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/clean_backend_objects.rake"
 
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.1/import_errata.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.2/update_gpg_key_urls.rake"
     end
   end
 end
