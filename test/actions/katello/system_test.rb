@@ -79,7 +79,6 @@ module ::Actions::Katello::System
       system.expects(:update_attributes!).with(input)
 
       plan_action(action, system, input)
-      assert_action_planed(action, ::Actions::Katello::Foreman::HostUpdate)
       assert_action_planed(action, ::Actions::Pulp::Consumer::Update)
       assert_action_planed(action, ::Actions::Candlepin::Consumer::Update)
       assert_action_planed(action, ::Actions::ElasticSearch::Reindex)

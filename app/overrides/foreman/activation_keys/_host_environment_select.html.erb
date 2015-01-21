@@ -4,53 +4,28 @@
     option.kt-cv  { margin-left: 1em; }
 </style>
 
-<script>
-    $(function () {
-        function ktUpdateContentViews() {
-            var ktEnvId = $("#kt_environment_id").val();
-            var cvSelect = $("#hostgroup_environment_id");
-            if(cvSelect.length === 0) {
-                cvSelect = $("#host_environment_id");
-            }
-            cvSelect.children("option").each(function (i, option) {
-                var option = $(option);
-                var display = false
-                if(ktEnvId &&
-                        option.attr('data-katello-id') &&
-                        option.attr('data-katello-id').indexOf(ktEnvId) == 0) {
-                    display = true;
-                } else if(!ktEnvId && !option.attr('data-katello-id')) {
-                    display = true;
-                }
-                if(display) {
-                    option.show();
-                } else {
-                    if(cvSelect.val() === option.val()) {
-                        cvSelect.val('');
-                    };
-                    option.hide();
-                }
-            });
-        }
-
-        ktUpdateContentViews();
-        $("#kt_environment_id").change(ktUpdateContentViews);
-    });
-</script>
-
-<%= field(f, :kt_environment_id, { :include_blank => true, :label => _("Lifecycle Environment") }) do
-  select_tag :kt_environment_id, grouped_env_options, :class => 'form-control', :onchange => 'update_environment_label(this);'
+<% env_select_id =  @hostgroup ? :hostgroup_lifecycle_environment_id : :host_lifecycle_environment_id %>
+<% env_select_name =  @hostgroup ? 'hostgroup[lifecycle_environment_id]' : 'host[lifecycle_environment_id]' %>
+<%= field(f, env_select_id, {:label => _("Lifecycle Environment")}) do
+  select_tag env_select_id, lifecycle_environment_options(@host || @hostgroup, :include_blank => blank_or_inherit_with_id(f, :lifecycle_environment)),
+             :class => 'form-control',  :name => env_select_name
 end %>
 
-<%= field(f, :environment_id, { :include_blank => true, :label => _("Puppet Environment") }) do
-  f.select :environment_id,
-           content_view_options,
-           { :include_blank => true },
-           { :onchange => 'update_puppetclasses(this);',
-             :"data-url" => environment_selected_hostgroups_path,
-             :'data-host-id' => (@host && @host.id),
-             :class => 'form-control' }
+
+<% cv_select_id =  @hostgroup ? :hostgroup_content_view_id : :host_content_view_id %>
+<% cv_select_name =  @hostgroup ? 'hostgroup[content_view_id]' : 'host[content_view_id]' %>
+<%= field(f, cv_select_id, {:label => _("Content View")}) do
+  select_tag cv_select_id,  content_views_for_host(@host || @hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_view)),
+             :class => 'form-control',  :name => cv_select_name
 end %>
+
+
+<%= select_f f, :environment_id, Environment.all, :id, :to_label, {:include_blank => blank_or_inherit_f(f, :environment)},
+  {:label => _("Puppet Environment"), :onchange => 'update_puppetclasses(this);', 'data-url'=> environment_selected_hostgroups_path,
+   'data-content_puppet_match' => (@host || @hostgroup).new_record? || (@host || @hostgroup).content_and_puppet_match?,
+    :help_inline => %(<a id="reset_puppet_environment">#{_("Reset Puppet Environment to match selected Content View")}</a>).html_safe
+  } %>
+
 
 <% proxies = SmartProxy.with_content.unscoped.with_taxonomy_scope(@location,@organization,:path_ids) %>
 <% if proxies.count > 0 %>
