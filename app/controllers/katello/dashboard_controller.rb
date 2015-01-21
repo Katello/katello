@@ -42,9 +42,7 @@ module Katello
       # but since a system cannot be registered to Library,
       # skip repos in Library
       systems = System.in_organization(current_organization).readable
-      errata = Erratum.applicable_to_systems(systems)
-
-      errata = errata.sort_by { |e| e.systems_applicable.in_organization(current_organization).readable.count }.reverse[0...quantity]
+      errata = Erratum.applicable_to_systems(systems).order('updated desc').limit(quantity)
 
       render :partial => "errata", :locals => { :quantity => quantity,
                                                 :errata => errata }
