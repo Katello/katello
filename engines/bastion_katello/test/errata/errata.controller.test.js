@@ -13,6 +13,9 @@
 
 describe('Controller: ErrataController', function() {
     var $scope,
+        $location,
+        $controller,
+        dependencies,
         Errata,
         Repository,
         Nutupane;
@@ -32,11 +35,13 @@ describe('Controller: ErrataController', function() {
         Errata = {};
     });
 
-    beforeEach(inject(function($controller, $rootScope, $location, MockResource, translateMock) {
+    beforeEach(inject(function(_$controller_, $rootScope, _$location_, MockResource, translateMock) {
         Repository = MockResource.$new();
         $scope = $rootScope.$new();
+        $location = _$location_;
 
-        $controller('ErrataController', {
+        $controller = _$controller_;
+        dependencies = {
             $scope: $scope,
             $location: $location,
             Nutupane: Nutupane,
@@ -44,7 +49,9 @@ describe('Controller: ErrataController', function() {
             Repository: Repository,
             CurrentOrganization: 'CurrentOrganization',
             translate: translateMock
-        });
+        };
+
+        $controller('ErrataController', dependencies);
     }));
 
     it('attaches the nutupane table to the scope', function() {
@@ -63,7 +70,7 @@ describe('Controller: ErrataController', function() {
         expect($scope.repositories.length).toBe(2);
     });
 
-    it('shoud have a list of repositories that include an all option', function () {
+    it('should have a list of repositories that include an all option', function () {
         expect($scope.repositories[0]['id']).toBe('all');
     });
 
@@ -78,4 +85,11 @@ describe('Controller: ErrataController', function() {
         expect($scope.nutupane.refresh).toHaveBeenCalled();
     });
 
+    it('allows the setting of the repositoryId via a query string parameter', function () {
+        $location.search('repositoryId', '1');
+
+        $controller('ErrataController', dependencies);
+
+        expect($scope.repository.id).toBe(1);
+    });
 });

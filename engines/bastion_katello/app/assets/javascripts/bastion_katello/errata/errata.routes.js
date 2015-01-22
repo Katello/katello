@@ -27,7 +27,7 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
         templateUrl: 'errata/views/errata.html'
     })
     .state('errata.index', {
-        url: '/errata',
+        url: '/errata?repositoryId',
         permission: ['view_products', 'view_content_views'],
         views: {
             'table': {

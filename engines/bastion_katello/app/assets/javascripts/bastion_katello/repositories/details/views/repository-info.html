@@ -206,7 +206,7 @@
         <tr ng-show="repository.content_type == 'yum'">
           <td translate>Errata</td>
           <td class="align-center">
-            <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata">
+            <a ui-sref="errata.index({repositoryId: repository.id})">
             {{ repository.content_counts.erratum || 0 }}
             </a>
           </td>
