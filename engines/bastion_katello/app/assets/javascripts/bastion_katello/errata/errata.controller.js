@@ -19,7 +19,9 @@
  * @requires $location
  * @requires Nutupane
  * @requires Erratum
+ * @requires Repository
  * @requires CurrentOrganization
+ * @requires translate
  *
  * @description
  *   Provides the functionality specific to errata for use with the Nutupane UI pattern.
@@ -30,15 +32,16 @@ angular.module('Bastion.errata').controller('ErrataController',
     ['$scope', '$location', 'Nutupane', 'Erratum', 'Repository', 'CurrentOrganization', 'translate',
     function ($scope, $location, Nutupane, Erratum, Repository, CurrentOrganization, translate) {
 
-        var params = {
+        var nutupane, params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
             'sort_by':          'updated',
             'sort_order':       'DESC',
-            'paged':            true
+            'paged':            true,
+            'errata_restrict_applicable': true
         };
 
-        var nutupane = $scope.nutupane = new Nutupane(Erratum, params);
+        nutupane = $scope.nutupane = new Nutupane(Erratum, params);
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
 
@@ -58,6 +61,19 @@ angular.module('Bastion.errata').controller('ErrataController',
                 });
             }
         });
+
+        $scope.showApplicable = true;
+        $scope.showInstallable = false;
+
+        $scope.toggleApplicable = function () {
+            nutupane.table.params['errata_restrict_applicable'] = $scope.showApplicable;
+            nutupane.refresh();
+        };
+
+        $scope.toggleInstallable = function () {
+            nutupane.table.params['errata_restrict_installable'] = $scope.showInstallable;
+            nutupane.refresh();
+        };
 
         $scope.$watch('repository', function (repository) {
             var params = nutupane.getParams();

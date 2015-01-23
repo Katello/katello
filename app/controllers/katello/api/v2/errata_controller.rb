@@ -22,6 +22,8 @@ module Katello
     param :repository_id, :number, :desc => N_("repository identifier")
     param :environment_id, :number, :desc => N_("environment identifier")
     param :cve, String, :desc => N_("CVE identifier")
+    param :errata_restrict_applicable, :bool, :desc => N_("show only errata with one or more applicable systems")
+    param :errata_restrict_installable, :bool, :desc => N_("show only errata with one or more installable systems")
     param_group :search, Api::V2::ApiController
     def index
       super
@@ -29,6 +31,13 @@ module Katello
 
     def custom_index_relation(collection)
       collection = filter_by_cve(params[:cve], collection) if params[:cve]
+      if params[:errata_restrict_applicable] && params[:errata_restrict_applicable].to_bool
+        collection = collection.applicable_to_systems(System.readable)
+      end
+
+      if params[:errata_restrict_installable] && params[:errata_restrict_installable].to_bool
+        collection = collection.installable_for_systems(System.readable)
+      end
       collection
     end
 
