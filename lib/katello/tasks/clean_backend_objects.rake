@@ -47,8 +47,18 @@ namespace :katello do
       katello_consumer_ids = ::Katello::System.pluck(:uuid)
       deletable_ids = cp_consumer_ids - katello_consumer_ids
       deletable_ids.each do |consumer_id|
-        Katello::Resources::Candlepin::Consumer.destroy(consumer_id)
-        Katello.pulp_server.extensions.consumer.delete(consumer_id)
+        begin
+          Katello::Resources::Candlepin::Consumer.destroy(consumer_id)
+        rescue RestClient::Exception => e
+          p "exception when destroying candlepin consumer #{consumer_id}:#{e.inspect}"
+        end
+        begin
+          Katello.pulp_server.extensions.consumer.delete(consumer_id)
+        rescue RestClient::ResourceNotFound => e
+          #do nothing
+        rescue RestClient::Exception => e
+          p "exception when destroying pulp consumer #{consumer_id}:#{e.inspect}"
+        end
       end
     end
 
