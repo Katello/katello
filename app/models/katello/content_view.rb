@@ -375,12 +375,12 @@ module Katello
       ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.try(:cp_id)
     end
 
-    def create_new_version(description = '', major = next_version, minor = 0)
+    def create_new_version(description = '', major = next_version, minor = 0, components = self.components)
       version = ContentViewVersion.create!(:major => major,
                                            :minor => minor,
                                            :content_view => self,
                                            :description => description,
-                                           :components => self.components
+                                           :components => components
                                           )
 
       increment!(:next_version) if minor == 0
