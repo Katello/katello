@@ -9,6 +9,5 @@ FactoryGirl.define do
       mail "batman@wayne.ent.com"
       remote_id "batman"
     end
-
   end
 end

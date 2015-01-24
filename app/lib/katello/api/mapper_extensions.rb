@@ -17,7 +17,6 @@ module Katello
         controller = options.delete(:controller)
 
         api_resources resource_plural_name, :controller => controller, :only => [] do
-
           params = { :on => :collection, :action => "add_" + resource_singular_name.to_s }
           post :index, params.merge(options)
 

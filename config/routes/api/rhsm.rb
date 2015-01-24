@@ -6,13 +6,10 @@ class ActionDispatch::Routing::Mapper
 end
 
 Katello::Engine.routes.draw do
-
   scope :api, :module => :api do
-
     match '/rhsm' => 'v2/root#resource_list', :via => :get
 
     scope :path => :rhsm, :module => :rhsm, :as => :rhsm do
-
       # subscription-manager support
       scope :constraints => Katello::RegisterWithActivationKeyConstraint.new do
         match '/consumers' => 'candlepin_proxies#consumer_activate', :via => :post
@@ -59,7 +56,5 @@ Katello::Engine.routes.draw do
       match '/systems/:id/enabled_repos' => 'candlepin_proxies#enabled_repos', :via => :put
       match '/status' => 'candlepin_proxies#server_status', :via => :get
     end
-
   end
-
 end

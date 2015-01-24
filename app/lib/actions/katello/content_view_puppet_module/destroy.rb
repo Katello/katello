@@ -21,7 +21,6 @@ module Actions
           # only in this repository, then locate and destroy all content view
           # puppet modules that are referring to it
           repository.puppet_modules.each do |puppet_module|
-
             # first, process content view puppet modules that have been specified by version
             library_repos = ::Katello::Repository.in_environment(repository.organization.library).
                                                   where(:pulp_id => puppet_module.repoids)

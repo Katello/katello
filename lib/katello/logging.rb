@@ -54,7 +54,6 @@ module Katello
         unless self.class.const_defined?(:YARDLoggerDelegator)
           # define our logger child for YARD
           self.class.const_set(:YARDLoggerDelegator, Class.new(::YARD::Logger) do
-
             # @return [::Logging::Logger] for yard
             def _logging_logger
               @_logging_logger ||= begin

@@ -15,7 +15,6 @@ require 'helpers/product_test_data'
 
 module Katello
   describe SyncPlan, :katello => true do
-
     include OrchestrationHelper
 
     describe "SyncPlan should" do
@@ -129,6 +128,5 @@ module Katello
         @plan.schedule_format.must_be_nil
       end
     end
-
   end
 end

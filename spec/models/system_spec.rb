@@ -15,7 +15,6 @@ require 'helpers/system_test_data'
 
 module Katello
   describe System do
-
     include OrchestrationHelper
     include OrganizationHelperMethods
     include SystemHelperMethods
@@ -251,7 +250,6 @@ module Katello
           end
           specify { @system.available_pools.must_equal(available_pools) }
         end
-
       end
 
       describe "shouldn't access candlepin if new record" do
@@ -279,7 +277,6 @@ module Katello
       end
 
       before :each do
-
         @system_1 = create_system(common_attrs.merge(:name => "sys_1", :uuid => "sys_1_uuid"))
         @system_2 = create_system(common_attrs.merge(:name => "sys_2", :uuid => "sys_2_uuid"))
         @system_3 = create_system(common_attrs.merge(:name => "sys_3", :uuid => "sys_3_uuid"))
@@ -300,11 +297,9 @@ module Katello
       it "should return empty array if the system isn't subscribed to that pool" do
         System.all_by_pool(pool_id_3).must_equal([])
       end
-
     end
 
     describe "host-guest relation" do
-
       describe "guest without host (before running virt-who)" do
         it "should return no host" do
           response = stub
@@ -313,8 +308,6 @@ module Katello
           @system.virtual_host.must_be_nil
         end
       end
-
     end
-
   end
 end

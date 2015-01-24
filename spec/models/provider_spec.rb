@@ -15,7 +15,6 @@ require 'helpers/product_test_data'
 
 module Katello
   describe Provider do
-
     include OrchestrationHelper
 
     let(:to_create_rh) do
@@ -102,7 +101,6 @@ module Katello
         end
 
         describe "there was a RH product that is not included in the latest manifest" do
-
           before do
             Glue::Candlepin::Product.stubs(:import_from_cp => [], :import_marketing_from_cp => true)
             Resources::Candlepin::Product.stubs(:destroy).returns(true)
@@ -123,7 +121,6 @@ module Katello
             @provider.import_products_from_cp
             Product.find_by_id(@custom_product.id).wont_be_nil
           end
-
         end
 
         describe "there were derived products and derived provided products included in the manifest" do
@@ -168,7 +165,6 @@ module Katello
                                                                    :provider => @provider,
                                                                    :organization => @organization
                                                                  )
-
           end
 
           it 'derived marketing and engineering products should not be removed' do
@@ -176,7 +172,6 @@ module Katello
             Product.find_by_cp_id(@existing_derived_product.cp_id).wont_be_nil
             Product.find_by_cp_id(@existing_derived_provided_product.cp_id).wont_be_nil
           end
-
         end
       end
 
@@ -204,11 +199,9 @@ module Katello
           mapping['200'].must_equal(['700'])
         end
       end
-
     end
 
     describe "products refresh(katello)" do
-
       def product_content(name)
         Candlepin::ProductContent.new(
           "content" => {
@@ -250,7 +243,6 @@ module Katello
                                   :url => 'https://localhost')
             repo.stubs(:create_pulp_repo).returns({})
             repo.save!
-
           end
         end
         product
@@ -293,7 +285,6 @@ module Katello
       after do
         Thread.current[:cdn_var_substitutor_cache] = nil
       end
-
     end
 
     describe "sync provider" do
@@ -361,11 +352,9 @@ module Katello
           subject.wont_be :valid?
         end
       end
-
     end
 
     describe "Provider in valid state" do
-
       it "should be valid for RH provider" do
         @provider = Provider.create(to_create_rh)
         @provider.must_be :valid?
@@ -377,11 +366,9 @@ module Katello
         @provider.must_be :valid?
         @provider.errors[:repository_url].must_be_empty
       end
-
     end
 
     describe "Delete a provider" do
-
       it "should not delete the RH provider" do
         @provider = Provider.create(to_create_rh)
         @provider.destroy
@@ -394,11 +381,9 @@ module Katello
         @provider.destroy
         lambda { Provider.find(id) }.must_raise(ActiveRecord::RecordNotFound)
       end
-
     end
 
     describe "RH provider URL validation" do
-
       before(:each) do
         @provider = Provider.new
         @provider.name = "url test"
@@ -408,7 +393,6 @@ module Katello
       end
 
       describe "should accept" do
-
         it "'https://www.redhat.com'" do
           @provider.repository_url = "https://redhat.com"
           @provider.must_be :valid?
@@ -448,11 +432,9 @@ module Katello
           @provider.repository_url = "https://something"
           @provider.must_be :valid?
         end
-
       end
 
       describe "should refuse" do
-
         it "blank url" do
           @provider.must_be :valid?
           @provider.repository_url = @default_url
@@ -472,9 +454,7 @@ module Katello
           @provider.repository_url = "repo.fedorahosted.org/reposity"
           @provider.wont_be :valid?
         end
-
       end
-
     end
 
     describe "URL with Trailing Space" do
@@ -499,7 +479,6 @@ module Katello
         @provider.repository_url = "notavalidurl"
         @provider.must_be :valid?
       end
-
     end
 
     it 'should be destroyable' do

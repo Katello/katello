@@ -14,9 +14,7 @@ require 'katello_test_helper'
 
 module Katello
   describe Util::Package do
-
     describe "nvrea (katello)" do
-
       shared_examples_for "nvrea parsable string" do
         it "can be parsed" do
           Util::Package.parse_nvrea(subject).must_equal expected
@@ -108,7 +106,6 @@ module Katello
     end
 
     describe "nvre (katello)" do
-
       shared_examples_for "nvre parsable string" do
         it "can be parsed" do
           Util::Package.parse_nvre(subject).must_equal expected
@@ -155,7 +152,6 @@ module Katello
         it_should_behave_like "nvre parsable string"
         it_should_behave_like "nvrea_nvre parsable string"
       end
-
     end
   end
 end

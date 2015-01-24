@@ -19,7 +19,6 @@ module Katello
     end
 
     describe "routing" do
-
       let(:proxies_controller) { "katello/api/rhsm/candlepin_proxies" }
 
       it "should route to the correct controller actions" do
@@ -47,7 +46,6 @@ module Katello
         {:controller => proxies_controller, :action => "delete", :id => "1"}.must_recognize(:method => "delete", :path => "/rhsm/consumers/1/content_overrides/")
         {:controller => proxies_controller, :action => "available_releases", :id => "1"}.must_recognize(:method => "get", :path => "/rhsm/consumers/1/available_releases")
       end
-
     end
   end
 end

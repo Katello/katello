@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   describe ContentSearchController do
-
     include LocaleHelperMethods
     include OrganizationHelperMethods
 

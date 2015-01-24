@@ -15,7 +15,6 @@ require 'katello/util/url_matcher'
 
 module Katello
   describe Util::UrlMatcher do
-
     it "should accept empty string and array" do
       m = Util::UrlMatcher.match('', [])
       m[0].must_be_nil
@@ -49,6 +48,5 @@ module Katello
       m[2].must_match('01')
       m[3].must_match('15')
     end
-
   end
 end

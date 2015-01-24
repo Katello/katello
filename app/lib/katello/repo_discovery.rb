@@ -38,7 +38,6 @@ module Katello
 
     def http_crawl(found_lambda, continue_lambda)
       Anemone.crawl(@uri, @options) do |anemone|
-
         anemone.focus_crawl do |page|
           return false unless continue_lambda.call
           @crawled << page.url.path

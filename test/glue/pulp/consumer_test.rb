@@ -91,8 +91,8 @@ module Katello
 
     def test_upload_package_profile
       profile = [{"vendor" => "FedoraHosted", "name" => "elephant",
-                   "version" => "0.3", "release" => "0.8",
-                   "arch" => "noarch", :epoch => ""}]
+                  "version" => "0.3", "release" => "0.8",
+                  "arch" => "noarch", :epoch => ""}]
 
       assert @simple_server.upload_package_profile(profile)
     end

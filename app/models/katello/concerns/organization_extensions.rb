@@ -16,7 +16,6 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
-
         ALLOWED_DEFAULT_INFO_TYPES = %w(system distributor)
 
         include ForemanTasks::Concerns::ActionSubject
@@ -204,7 +203,6 @@ module Katello
         def parent_id=(_parent_id)
           fail ::Foreman::Exception, N_("You cannot set an organization's parent_id. This feature is disabled.")
         end
-
       end
     end
   end

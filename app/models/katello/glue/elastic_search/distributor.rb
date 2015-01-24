@@ -49,9 +49,7 @@ module Katello
           indexes :name_autocomplete, :type => 'string', :analyzer => 'autcomplete_name_analyzer'
           indexes :custom_info, :path => "just_name" do
           end
-
         end
-
       end
     end
 

@@ -85,7 +85,6 @@ module Katello
         selected_packs = []
 
         packages.each do |pack|
-
           next if pack.nil?
 
           pack = pack.with_indifferent_access

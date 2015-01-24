@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   describe Mapping do
-
     let :map do
       {
         "imagefactory_naming" =>
@@ -46,6 +45,5 @@ module Katello
     it "should ba able to handle wild chars" do
       Mapping::ImageFactoryNaming.translate("Red Hat Enterprise Linux Server", "5.5").must_equal ["RHEL-5", "U5"]
     end
-
   end
 end

@@ -16,5 +16,4 @@ FactoryGirl.define do
     description "This content view is for database content"
     association :organization, :factory => :katello_organization
   end
-
 end

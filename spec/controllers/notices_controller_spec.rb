@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   describe NoticesController do
-
     include LocaleHelperMethods
     include OrganizationHelperMethods
 
@@ -76,6 +75,5 @@ module Katello
         UserNotice.where(:user_id => @user.id).count.must_equal(0)
       end
     end
-
   end
 end

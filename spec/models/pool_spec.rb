@@ -15,7 +15,6 @@ require 'helpers/product_test_data'
 
 module Katello
   describe Pool do
-
     include OrchestrationHelper
 
     describe "Find pool by organization and id" do
@@ -38,6 +37,5 @@ module Katello
       disable_org_orchestration
       @organization = Organization.create!(:name => cp_owner[:displayName], :label => "pool_org", :label => cp_owner[:key])
     end
-
   end
 end

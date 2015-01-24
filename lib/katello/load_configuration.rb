@@ -56,7 +56,6 @@ module Katello
         end
 
         booleans? :use_cp, :use_pulp, :use_elasticsearch
-
       end,
 
       :config_post_process      => lambda do |config, environment|

@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 shared_examples_for "valid tdl" do
-
   let(:xsd_schema_file) { File.expand_path("../TDL.xsd", __FILE__) }
   let(:xsd_schema) { Nokogiri::XML::Schema(File.read(xsd_schema_file)) }
 

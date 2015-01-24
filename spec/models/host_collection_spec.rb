@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   describe HostCollection do
-
     include OrganizationHelperMethods
     include SystemHelperMethods
     include OrchestrationHelper
@@ -34,7 +33,6 @@ module Katello
     end
 
     describe "create should" do
-
       it "should create succesfully with an org (katello)" do
         grp = HostCollection.create!(:name => "TestHostCollection", :organization => @org)
         grp.wont_be_nil
@@ -64,7 +62,6 @@ module Katello
     end
 
     describe "update should" do
-
       it "should allow the name to change" do
         @host_collection.name = "NotATestHostCollection"
         @host_collection.save!
@@ -116,6 +113,5 @@ module Katello
         lambda { @host_collection.install_errata("errata1") }.must_raise(Errors::HostCollectionEmptyException)
       end
     end
-
   end
 end

@@ -11,6 +11,5 @@ FactoryGirl.define do
     end
 
     factory :katello_fedora_hosted_provider, :traits => [:fedora_hosted]
-
   end
 end

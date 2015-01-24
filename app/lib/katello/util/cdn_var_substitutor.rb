@@ -135,7 +135,6 @@ module Katello
         if path =~ /^(.*?)\$([^\/]*)/
           base_path, var = Regexp.last_match[1], Regexp.last_match[2]
           get_substitutions_from(base_path).compact.each do |value|
-
             new_substitutions = substitutions.merge(var => value)
             new_path = path.sub("$#{var}", value)
 

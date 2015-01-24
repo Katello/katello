@@ -19,7 +19,6 @@ module Katello
       base.send :include, InstanceMethods
 
       base.class_eval do
-
         lazy_accessor :pulp_repo_facts,
                       :initializer => (lambda do |_s|
                                          if pulp_id
@@ -58,7 +57,6 @@ module Katello
         def self.delete_orphaned_content
           Katello.pulp_server.resources.content.remove_orphans
         end
-
       end
     end
 

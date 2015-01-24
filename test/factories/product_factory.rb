@@ -8,6 +8,5 @@ FactoryGirl.define do
       description "The open source Linux distribution."
       label "fedora_label"
     end
-
   end
 end

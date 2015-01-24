@@ -16,7 +16,6 @@ module Katello
       base.send :include, Ext::IndexedModel
 
       base.class_eval do
-
         index_options :extended_json => :extended_index_attrs,
                       :json          => { :only => [:text, :created_at, :details, :level] },
                       :display_attrs => [:text, :details, :level, :organization]
@@ -25,7 +24,6 @@ module Katello
           indexes :level_sort, :type => 'string', :index => :not_analyzed
           indexes :created_at, :type => 'date'
         end
-
       end
     end
 

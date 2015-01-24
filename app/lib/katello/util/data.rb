@@ -25,7 +25,6 @@ module Katello
 
           ostructized_hash = {}
           obj.each do |key, value|
-
             if options[:prefix_keys].include? key
               new_key = (options[:prefix].to_s + key.to_s).to_sym
             else

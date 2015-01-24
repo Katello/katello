@@ -59,6 +59,5 @@ module Katello
         must_render_template(:partial => "_content_views")
       end
     end
-
   end
 end

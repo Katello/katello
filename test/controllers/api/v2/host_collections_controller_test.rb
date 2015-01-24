@@ -65,7 +65,7 @@ module Katello
     def test_create
       post :create, :organization_id => @organization,
                     :host_collection => {:name => 'Collection A', :description => 'Collection A, World Cup 2014',
-          :system_ids => [@system.id]}
+                                         :system_ids => [@system.id]}
 
       results = JSON.parse(response.body)
       assert_equal results['name'], 'Collection A'

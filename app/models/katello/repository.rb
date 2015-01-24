@@ -358,7 +358,6 @@ module Katello
                      :content_view_version => to_version,
                      :content_type => self.content_type,
                      :unprotected => self.unprotected) do |clone|
-
         clone.checksum_type = self.checksum_type
         clone.pulp_id = clone.clone_id(to_env, content_view, version.try(:version))
         options = {

@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   describe Resources::CDN::CdnResource do
-
     let(:provider_url) { "https://cdn.redhat.com" }
     let(:path_with_variables) { "/content/dist/rhel/server/5/$releasever/$basearch/os" }
     let(:another_path_with_variables) { "/content/dist/rhel/server/6/$releasever/$basearch/os" }
@@ -86,6 +85,5 @@ module Katello
       end
       Resources::CDN::CdnResource.new(provider_url, connect_options).substitutor.substitute_vars(path_with_variables)
     end
-
   end
 end

@@ -17,7 +17,6 @@ child :products => :products do
     attribute :name
     attribute :id
   end
-
 end
 
 child :repositories => :repositories do

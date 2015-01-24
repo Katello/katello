@@ -15,7 +15,6 @@ module Katello
     # TODO: break up into modules
     def self.included(base) # rubocop:disable MethodLength
       base.class_eval do
-
         include Glue::ElasticSearch::BackendIndexedModel
 
         def index_options

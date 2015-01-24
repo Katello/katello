@@ -16,6 +16,5 @@ FactoryGirl.define do
     end
 
     factory :acme_corporation,  :traits => [:acme_corporation]
-
   end
 end

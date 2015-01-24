@@ -15,7 +15,6 @@ require "katello_test_helper"
 
 module Katello
   describe Api::Rhsm::CandlepinProxiesController do
-
     include Support::ForemanTasks::Task
 
     before do
@@ -46,7 +45,6 @@ module Katello
     end
 
     describe "register with activation key" do
-
       before do
         @foreman_host = FactoryGirl.create(:host, :organization => @organization)
         @facts = { 'network.hostname' => @foreman_host.name }
@@ -242,7 +240,6 @@ module Katello
     end
 
     describe "available releases" do
-
       it "can be listed by matching consumer" do
         # Stub out the current user to simulate consumer auth.
         uuid = @system.uuid

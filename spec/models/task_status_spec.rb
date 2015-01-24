@@ -328,6 +328,5 @@ module Katello
         subject.result_description.must_equal('RequestTimeout')
       end
     end
-
   end
 end
