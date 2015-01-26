@@ -34,27 +34,20 @@ License:        GPLv2
 URL:            http://www.katello.org
 Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
-# service-wait dependency
-Requires:       wget
-Requires:       curl
-Requires:       %{?scl_prefix}rubygem-katello
-Requires:       %{name}-installer
-Requires:       rubygem-hammer_cli 
-Requires:       rubygem-hammer_cli_foreman
-Requires:       rubygem-hammer_cli_katello
-Requires:       rubygem-hammer_cli_import
+BuildRequires: asciidoc
+BuildRequires: util-linux
+
+Requires: %{name}-common = %{version}-%{release}
 
 #foreman plugins and optional packages
-Requires:       ruby193-rubygem-foreman_bootdisk
-Requires:       ruby193-rubygem-foreman_discovery
-Requires:       ruby193-rubygem-foreman_hooks
+Requires:       %{?scl_prefix}rubygem-foreman_bootdisk
+Requires:       %{?scl_prefix}rubygem-foreman_discovery
+Requires:       %{?scl_prefix}rubygem-foreman_hooks
+Requires:       %{name}-installer
 Requires:       foreman-libvirt
 Requires:       foreman-ovirt
 Requires:       foreman-vmware
 Requires:       foreman-gce
-
-BuildRequires: asciidoc
-BuildRequires: util-linux
 
 %description
 Provides a package for managing application life-cycle for Linux systems.
@@ -108,7 +101,32 @@ chmod +x %{buildroot}%{homedir}/script/*
 # install man page
 install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 
-%post
+%clean
+%{__rm} -rf %{buildroot}
+
+%files 
+
+# ------ Common ------------------
+
+%package common
+BuildArch:  noarch
+Summary:    Common runtime components of %{name}
+
+# service-wait dependency
+Requires:       wget
+Requires:       curl
+Requires:       %{?scl_prefix}rubygem-katello
+Requires:       rubygem-hammer_cli 
+Requires:       rubygem-hammer_cli_foreman
+Requires:       rubygem-hammer_cli_katello
+Requires:       rubygem-hammer_cli_import
+Requires:       rubygem-hammer_cli_gutterball
+Requires:       %{?scl_prefix}rubygem-foreman_gutterball
+
+%description common
+Common runtime components of %{name}
+
+%post common
 #Generate secret token if the file does not exist
 #(this must be called both for installation and upgrade)
 TOKEN=/etc/katello/secret_token
@@ -119,7 +137,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 
 usermod -a -G katello-shared tomcat
 
-%files
+%files common
 %attr(600, katello, katello)
 %{_bindir}/katello-*
 %ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
@@ -138,7 +156,7 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}
 %config(missingok) %{_sysconfdir}/cron.weekly/katello-remove-orphans
 
-%pre
+%pre common
 # Add the "katello" user and group
 getent group %{name} >/dev/null || groupadd -r %{name} -g 182
 getent passwd %{name} >/dev/null || \
@@ -147,6 +165,25 @@ getent passwd %{name} >/dev/null || \
 getent group katello-shared > /dev/null || groupadd -r katello-shared
 usermod -a -G katello-shared katello
 exit 0
+
+# ------ SAM ------------------
+
+%package sam
+Summary: Package that installs only the Subscription and basic Content Management parts of Katello
+Group:  Applications/System
+
+# Require the common package and ensure the katello-sam package 
+# can't be installed on the same system as katello
+Requires:       %{name}-common = %{version}-%{release}
+Conflicts:      %{name}
+Requires:       rubygem-hammer_cli_sam
+Requires:       %{?scl_prefix}rubygem-foreman_sam
+Requires:       sam-installer
+
+%description sam
+Package that installs only the Subscription and basic Content Management parts of Katello
+
+%files sam
 
 %changelog
 * Fri Dec 19 2014 David Davis <daviddavis@redhat.com> 2.2.0-1
