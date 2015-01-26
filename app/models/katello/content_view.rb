@@ -447,7 +447,6 @@ module Katello
         else
           fail _("Could not find Repository for module %s.") % puppet_module.name
         end
-
       end
       modules_by_repoid
     end

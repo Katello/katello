@@ -13,7 +13,6 @@ require 'katello_test_helper'
 
 module Katello
   describe Ping do
-
     describe "#ping" do
       before do
         # candlepin - without oauth
@@ -29,7 +28,6 @@ module Katello
       describe "katello mode" do
         subject { Ping.ping[:status] }
         it "(katello)" do
-
           # pulp - without oauth
           stub_request(:get, "#{Katello.config.pulp.url}/services/status/") # gotta have that trailing slash
 
@@ -41,7 +39,6 @@ module Katello
           subject.must_be_instance_of(String)
         end
       end
-
     end
   end
 end

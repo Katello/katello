@@ -126,7 +126,7 @@ module Katello
          .returns({})
 
       get :index, :content_view_id => repo.content_view_version.content_view_id, :environment_id => repo.environment_id,
-                 :organization_id => @organization.id
+                  :organization_id => @organization.id
 
       assert_response :success
       assert_template 'api/v2/repositories/index'

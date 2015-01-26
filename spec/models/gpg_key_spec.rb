@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   describe GpgKey, :katello => true do
-
     include OrchestrationHelper
     include OrganizationHelperMethods
 
@@ -56,7 +55,6 @@ module Katello
       end
 
       it "should be unsuccessful without proper gpg key" do
-
         gpg_key = GpgKey.new(:name => "Gpg Key 1", :content => "foo-bar-baz", :organization => @organization)
         if Katello.config.gpg_strict_validation
           gpg_key.wont_be :valid?
@@ -77,6 +75,5 @@ module Katello
         gpg_key.wont_be :valid?
       end
     end
-
   end
 end

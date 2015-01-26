@@ -6,13 +6,9 @@ class ActionDispatch::Routing::Mapper
 end
 
 Katello::Engine.routes.draw do
-
   scope :katello, :path => '/katello' do
-
     namespace :api do
-
       scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v2/, :constraints => ApiConstraints.new(:version => 2, :default => true) do
-
         ##############################
         # re-routes alphabetical
         ##############################
@@ -287,7 +283,6 @@ Katello::Engine.routes.draw do
               put :apply
             end
           end
-
         end
 
         api_resources :distributors, :only => [:show, :destroy, :create, :index, :update] do
@@ -378,9 +373,7 @@ Katello::Engine.routes.draw do
         api_resources :sync_plans, :only => [:index, :show, :update, :destroy] do
           get :auto_complete_search, :on => :collection
         end
-
       end # module v2
-
     end # '/api' namespace
   end # '/katello' namespace
 end

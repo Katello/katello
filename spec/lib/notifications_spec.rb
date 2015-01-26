@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   describe Notifications do
-
     before :each do
       @notice_string           = 'This is a single string notification.'
       @notice_string_array     = [@notice_string, @notice_string + '2', @notice_string + '3', @notice_string + '4']
@@ -128,6 +127,5 @@ module Katello
         (Notice.count - pre_count).must_equal(1)
       end
     end
-
   end
 end

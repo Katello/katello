@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   describe SearchController do
-
     include LocaleHelperMethods
     include OrganizationHelperMethods
 
@@ -62,7 +61,6 @@ module Katello
     end
 
     describe "POST create favorite" do
-
       it "successfully creates favorite" do
         post :create_favorite, :favorite => @favoriteText
         @user.search_favorites.wont_be_empty
@@ -76,7 +74,6 @@ module Katello
     end
 
     describe "DELETE destroy favorite" do
-
       it "successfully destroys favorite" do
         post :destroy_favorite, :id => @search_favorite.id
         must_respond_with(:success)
@@ -92,6 +89,5 @@ module Katello
         must_render_template("katello/common/_search")
       end
     end
-
   end
 end

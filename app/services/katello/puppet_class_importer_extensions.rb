@@ -42,7 +42,6 @@ module Katello
 
           self.obsolete_and_new(changed)
         end
-
       end
     end
   end

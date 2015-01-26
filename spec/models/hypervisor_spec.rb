@@ -15,7 +15,6 @@ require 'helpers/system_test_data'
 
 module Katello
   describe Hypervisor do
-
     include OrchestrationHelper
     include OrganizationHelperMethods
 
@@ -67,6 +66,5 @@ module Katello
         end
       end
     end
-
   end
 end

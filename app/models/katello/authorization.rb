@@ -17,11 +17,9 @@ module Katello
     extend ActiveSupport::Concern
 
     included do
-
       def authorized?(permission)
         ::User.current.can?(permission, self)
       end
-
     end
   end
 end

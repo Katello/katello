@@ -165,7 +165,6 @@ module Katello
               # set state to warning, but continue searching...
               host_collection_state = :warning
             end
-
           end
         end
 

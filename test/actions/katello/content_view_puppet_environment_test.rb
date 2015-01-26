@@ -68,7 +68,6 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
     let(:source_puppet_env) { katello_content_view_puppet_environments(:archive_view_puppet_environment) }
 
     it 'plans with existing puppet environment' do
-
       plan_action action, puppet_env.content_view_version, :environment => dev
 
       assert_action_planed_with action, ::Actions::Katello::ContentViewPuppetEnvironment::Clear, dev_puppet_env

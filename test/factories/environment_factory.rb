@@ -43,6 +43,5 @@ FactoryGirl.define do
       label "staging_label"
       association :priors
     end
-
   end
 end

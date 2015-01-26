@@ -14,13 +14,11 @@ require 'katello_test_helper'
 
 module Katello
   describe KTEnvironment do
-
     include OrchestrationHelper
     include OrganizationHelperMethods
 
     describe "main" do
       before(:each) do
-
         disable_product_orchestration
         disable_repo_orchestration
         disable_org_orchestration
@@ -87,7 +85,6 @@ module Katello
       end
 
       describe "available products" do
-
         before(:each) do
           @prior_env = create_environment(:name => @environment.name + '-prior', :label => @environment.name + '-prior',
                                           :prior => @environment.id, :organization => @organization)
@@ -122,7 +119,6 @@ module Katello
           @environment.available_products.must_include(@second_product)
           @environment.available_products.must_include(@fourth_product)
         end
-
       end
 
       describe "create environment with invalid parameters" do
@@ -178,7 +174,6 @@ module Katello
           end
           create.must_raise(ActiveRecord::RecordInvalid)
         end
-
       end
 
       describe "libraries" do

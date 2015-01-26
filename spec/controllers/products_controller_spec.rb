@@ -16,12 +16,10 @@ require 'katello_test_helper'
 
 module Katello
   describe ProductsController do
-
     include LocaleHelperMethods
     include OrganizationHelperMethods
 
     describe "(katello)" do
-
       before do
         setup_controller_defaults
         @organization = get_organization
@@ -37,8 +35,6 @@ module Katello
           must_respond_with(:success)
         end
       end
-
     end
-
   end
 end

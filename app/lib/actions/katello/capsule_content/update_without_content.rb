@@ -19,7 +19,6 @@ module Actions
             plan_action(Pulp::Consumer::SyncNode,
                         consumer_uuid: capsule_content.consumer_uuid,
                         skip_content: true)
-
           end
         end
       end

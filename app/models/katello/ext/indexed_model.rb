@@ -16,7 +16,6 @@ module Katello
     # rubocop:disable MethodLength
     def self.included(base)
       base.class_eval do
-
         cattr_accessor :class_index_options
 
         def self.display_attributes

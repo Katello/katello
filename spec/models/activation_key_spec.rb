@@ -76,7 +76,6 @@ module Katello
         @akey.wont_be :valid?
         @akey.errors[:environment].wont_be_empty
       end
-
     end
 
     it "should be able to create" do
@@ -121,7 +120,6 @@ module Katello
     end
 
     describe "#apply_to_system" do
-
       before(:each) do
         Katello.pulp_server.extensions.consumer.stubs(:create).returns(:id => "1234")
         Resources::Candlepin::Consumer.stubs(:create).returns(:uuid => "1234", :owner => {:key => "1234"})
@@ -157,7 +155,6 @@ module Katello
         end
         apply_limit.must_raise Katello::Errors::MaxContentHostsReachedException
       end
-
     end
   end
 end

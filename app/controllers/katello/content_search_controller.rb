@@ -98,7 +98,6 @@ module Katello
 
       rows = []
       view_product_repo_map.each do |view, product_repo_map|
-
         prod_rows = product_repo_map.collect do |product, reps|
           spanned_product_content(view, product, reps, 'package', package_ids)
         end
@@ -584,7 +583,6 @@ module Katello
       env_ids = KTEnvironment.content_readable(current_organization).pluck("#{Katello::KTEnvironment.table_name}.id")
       to_ret = []
       content_list.each do |item|
-
         if id_prefix == 'package'
           display = package_display(item)
           value = item.nvrea

@@ -2,7 +2,6 @@
 
 module ActionDispatch
   Request.class_eval do
-
     # Remove nils from the params hash
     def deep_munge(hash)
       hash ||= {}
@@ -22,6 +21,5 @@ module ActionDispatch
 
       hash
     end
-
   end
 end

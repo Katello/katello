@@ -16,7 +16,6 @@ module Katello
     # rubocop:disable MethodLength
     def self.included(base)
       base.class_eval do
-
         include Glue::ElasticSearch::BackendIndexedModel
 
         def self.search_type
@@ -180,7 +179,6 @@ module Katello
             end
           end
         end
-
       end
     end
   end

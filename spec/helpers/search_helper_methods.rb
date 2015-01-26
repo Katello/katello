@@ -17,7 +17,6 @@ module Katello
         define_method(:exists?) do
           true
         end
-
       end
 
       results = Util::Support.array_with_total.concat(options[:results] || [])

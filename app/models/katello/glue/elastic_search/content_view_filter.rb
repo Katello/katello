@@ -27,7 +27,6 @@ module Katello
         indexes :type, :type => 'string', :index => :not_analyzed
         indexes :inclusion, :type => 'boolean'
       end
-
     end
 
     def extended_index_attrs

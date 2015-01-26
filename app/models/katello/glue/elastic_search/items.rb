@@ -101,7 +101,6 @@ module Katello
               search_options[:facets].each_pair do |name, value|
                 facet(name, :facet_filter => facet_filters) do
                   terms value, :size => facet_size
-
                 end
               end
             end

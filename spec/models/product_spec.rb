@@ -15,7 +15,6 @@ require 'helpers/repo_test_data'
 
 module Katello
   describe Product, :katello => true do
-
     include OrchestrationHelper
     include ProductHelperMethods
     include OrganizationHelperMethods
@@ -144,7 +143,6 @@ module Katello
       end
 
       describe "when importing product from candlepin" do
-
         describe "marketing product" do
           let(:eng_product_after_import) do
             product = Product.new(ProductTestData::PRODUCT_WITH_CP_CONTENT.merge("id" => "20", "name" => "Red Hat Enterprise Server 6")) do |p|

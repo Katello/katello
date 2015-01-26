@@ -69,6 +69,7 @@ module Katello
     end
 
     def generate_puppet_path
+      # rubocop:disable Style/EmptyElse
       if self.environment
         File.join(Katello.config.puppet_repo_root, generate_puppet_env_name, 'modules')
       else

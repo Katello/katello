@@ -66,7 +66,6 @@ module Katello
         def self.mapping
           Tire.index(self.index).mapping
         end
-
       end
     end
   end

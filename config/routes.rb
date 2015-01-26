@@ -1,7 +1,5 @@
 Katello::Engine.routes.draw do
-
   scope :katello, :path => '/katello' do
-
     resources :content_search do
       collection do
         post :errata
@@ -185,7 +183,5 @@ Katello::Engine.routes.draw do
     root :to => "dashboard#index"
 
     match '/403' => 'application#permission_denied', :via => :get
-
   end
-
 end

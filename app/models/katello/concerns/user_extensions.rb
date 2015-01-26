@@ -19,7 +19,6 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
-
         include Glue::Pulp::User if Katello.config.use_pulp
         include Glue if Katello.config.use_cp || Katello.config.use_pulp
         include ForemanTasks::Concerns::ActionSubject
@@ -225,7 +224,6 @@ module Katello
             Util::Model.uuid
           end
         end
-
       end
     end
   end

@@ -96,6 +96,5 @@ module Katello
       subject { object.arches([Repository.new(:arch => 'i386')]).first }
       it { subject.keys.must_include(:id, :name) }
     end
-
   end
 end

@@ -14,7 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   describe Repository do
-
     let(:repository) do
       repository = Repository.new(attributes_for(:katello_repository))
       repository.product = build(:katello_product)

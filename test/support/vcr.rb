@@ -89,6 +89,5 @@ def configure_vcr
     rescue
       #ignore the warning thrown about this matcher already being registered
     end
-
   end
 end
