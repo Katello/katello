@@ -29,7 +29,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.1.0
-Release: 3%{dist}
+Release: 4%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -236,6 +236,17 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Mon Jan 26 2015 David Davis <daviddavis@redhat.com> 2.1.0-4
+- Fixes #8961 - Fixing a typo in the name of an action class (paji@redhat.com)
+- fixes #8943 - do not perform post sync actions until after the sync is
+  finished (jsherril@redhat.com)
+- Fixes #8621: Set sync plan on product during repository creation.
+  (ericdhelms@gmail.com)
+- fixes #8563 - fetch package information in chunks when fetching file lists
+  (jsherril@redhat.com)
+- fixes #8574 - separating host content view & life env from puppet env
+  (jsherril@redhat.com)
+
 * Thu Jan 15 2015 Justin Sherrill <jsherril@redhat.com> 2.1.0-3
 - fixes #8353 - require all neccessary pulp packages in RPM
   (stbenjam@redhat.com)
