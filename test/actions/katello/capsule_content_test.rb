@@ -105,7 +105,7 @@ module ::Actions::Katello::CapsuleContent
       capsule_content.add_lifecycle_environment(environment)
       action = create_and_plan_action(action_class, capsule_content, environment)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncNode) do |(input)|
-        input[:repo_ids].size.must_equal 4
+        input[:repo_ids].size.must_equal 5
       end
     end
     it 'fails when trying to sync to the default capsule' do

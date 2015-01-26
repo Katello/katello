@@ -17,4 +17,8 @@ Foreman::Application.routes.draw do
   resources :operatingsystems, :only => [] do
     get 'available_kickstart_repo', :on => :member
   end
+
+  resources :hosts, :only => [] do
+    get 'puppet_environment_for_content_view', :on => :collection
+  end
 end

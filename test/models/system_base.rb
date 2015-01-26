@@ -17,9 +17,9 @@ module Katello
     def self.before_suite
       services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
       models    = ['User', 'HostCollection', 'KTEnvironment', 'Organization',
-                   'Product', "ContentView", "System", "ContentViewVersion"]
+                   'Product', "ContentView", "System", "ContentViewVersion", "ContentViewPuppetEnvironment", "ContentViewEnvironment", "Environment"]
       disable_glue_layers(services, models)
-
+      reload_host_model
       configure_runcible
     end
 
@@ -30,6 +30,8 @@ module Katello
       @dev                = KTEnvironment.find(katello_environments(:dev).id)
       @library            = KTEnvironment.find(katello_environments(:library).id)
       @library_view       = ContentView.find(katello_content_views(:library_view))
+      @acme_default       = ContentView.find(katello_content_views(:acme_default))
+      @library_dev_staging_view   = ContentView.find(katello_content_views(:library_dev_staging_view))
       @system             = System.find(katello_systems(:simple_server))
       @errata_system      = System.find(katello_systems(:errata_server))
     end

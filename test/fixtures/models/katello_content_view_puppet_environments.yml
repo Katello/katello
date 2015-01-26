@@ -1,12 +1,12 @@
 archive_view_puppet_environment:
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>
   name: Archived
   pulp_id: i'm a lumberjack and i'm okay
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
 library_view_puppet_environment:
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>
   name: View
   environment_id:  <%= ActiveRecord::Fixtures.identify(:library) %>
   pulp_id: I sleep all night
@@ -19,6 +19,24 @@ dev_view_puppet_environment:
   name: DevView
   environment_id:  <%= ActiveRecord::Fixtures.identify(:dev) %>
   pulp_id: and i work all day
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  puppet_environment_id: <%= ActiveRecord::Fixtures.identify(:global_puppetmaster) %>
+
+library_dev_staging_view_library_puppet_env:
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view_version) %>
+  name: DevView
+  environment_id:  <%= ActiveRecord::Fixtures.identify(:library) %>
+  pulp_id: I cut down trees, I skip and jump,
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  puppet_environment_id: <%= ActiveRecord::Fixtures.identify(:global_puppetmaster) %>
+
+dev_dev_staging_view_library_puppet_env:
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view_version) %>
+  name: DevView
+  environment_id:  <%= ActiveRecord::Fixtures.identify(:dev) %>
+  pulp_id: I like to press wild flowers.
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
   puppet_environment_id: <%= ActiveRecord::Fixtures.identify(:global_puppetmaster) %>

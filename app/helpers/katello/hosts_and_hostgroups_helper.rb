@@ -16,6 +16,12 @@ module Katello
       "kt_activation_keys"
     end
 
+    def blank_or_inherit_with_id(f, attr)
+      return true unless f.object.respond_to?(:parent_id) && f.object.parent_id
+      inherited_value  = f.object.send(attr).try(:id) || ''
+      %(<option data-id="#{inherited_value}">#{blank_or_inherit_f(f, attr)}</option>)
+    end
+
     def envs_by_kt_org
       ::Environment.all.find_all(&:katello_id).group_by do |env|
         if env.katello_id
@@ -24,59 +30,52 @@ module Katello
       end
     end
 
-    def grouped_env_options
-      grouped_options = envs_by_kt_org.sort_by(&:first).map do |kt_org_label, envs_by_org|
-        optgroup = %(<optgroup label="#{kt_org_label}">)
-
-        opts = envs_by_org.sort_by(&:katello_id).reduce({}) do |env_options, env|
-          selected = env.id == (@host || @hostgroup).environment_id ? "selected" : ""
-          kt_env_label = env.katello_id.split('/')[1]
-          selected.blank? ? env_options[kt_env_label] ||= selected : env_options[kt_env_label] = selected
-          env_options
-        end
-
-        opts = opts.sort_by(&:first).map do |kt_env_label, selected|
-          kt_env = Katello::KTEnvironment.joins(:organization).
-              where("#{Katello::KTEnvironment.table_name}.label" => kt_env_label).
-              where("#{::Organization.table_name}.label" => kt_org_label).first
-
-          %(<option value="#{kt_org_label}/#{kt_env_label}"
-                    class="kt-env" data-katello-env-id="#{kt_env.try(:id)}"
-                    #{selected}>#{kt_env_label}</option>)
-
-        end
-
-        optgroup << opts.join
-        optgroup << '</optgroup>'
+    def lifecycle_environment_options(host, options = {})
+      include_blank = options.fetch(:include_blank, nil)
+      if include_blank == true #check for true specifically
+        include_blank = '<option></option>'
       end
-      grouped_options = grouped_options.join
-      grouped_options.insert(0, %(<option value=""></option>))
-      grouped_options.html_safe
+      selected_id = host[:lifecycle_environment_id]
+      orgs = Organization.current ? [Organization.current] : Organization.my_organizations
+      all_options = []
+      orgs.each do |org|
+        env_options = ""
+        org.kt_environments.each do |env|
+          selected = selected_id == env.id ? 'selected' : ''
+          env_options << %(<option value="#{env.id}" class="kt-env" #{selected}>#{h(env.name)}</option>)
+        end
+
+        if Organization.current
+          all_options << env_options
+        else
+          all_options <<  %(<optgroup label="#{org.name}">#{env_options}</optgroup>)
+        end
+      end
+
+      all_options = all_options.join
+      all_options.insert(0, include_blank) if include_blank
+      all_options.html_safe
     end
 
-    def content_view_options
-      cv_options = ::Environment.order(:katello_id).all.map do |env|
-        selected = env.id == (@host || @hostgroup).environment_id ? "selected" : ""
-
-        if env.katello_id
-          # rubocop:disable UselessAssignment
-          org_label, kt_env_label, content_view_label = env.katello_id.split('/')
-          option_text = content_view_label
-        else
-          option_text = env.name
-        end
-
-        content_view = Katello::ContentView.joins(:organization).
-            where("#{Katello::ContentView.table_name}.label" => content_view_label).
-            where("#{::Organization.table_name}.label" => org_label).first
-
-        %(<option value="#{env.id}"
-                  data-katello-id="#{env.katello_id}"
-                  data-content_view-id="#{content_view.try(:id)}"
-                  #{selected}>#{option_text}</option>)
+    def content_views_for_host(host, options)
+      include_blank = options.fetch(:include_blank, nil)
+      if include_blank == true #check for true specifically
+        include_blank = '<option></option>'
       end
 
-      return cv_options.join.html_safe
+      views = []
+      if host.lifecycle_environment
+        views = Katello::ContentView.in_environment(host.lifecycle_environment)
+      elsif host.content_view
+        views = [host.content_view]
+      end
+      view_options = views.map do |view|
+        selected = host.content_view == view ? 'selected' : ''
+        %(<option #{selected} value="#{view.id}">#{h(view.name)}</option>)
+      end
+      view_options = view_options.join
+      view_options.insert(0, include_blank) if include_blank
+      view_options.html_safe
     end
   end
 end

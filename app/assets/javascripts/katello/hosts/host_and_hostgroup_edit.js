@@ -1,100 +1,172 @@
-$(document).on('ContentLoad', function(){onKatelloHostEditLoad()});
+var KT = KT ? KT : {};
+KT.hosts = {};
 
-function onKatelloHostEditLoad(){
-  $('#kt_environment_id').live('change', function() {
-    toggle_installation_medium();
-  });
-  $('#host_environment_id').live('change', function() {
-    toggle_installation_medium();
-  });
-  $('#host_content_source_id').live('change', function() {
-    toggle_installation_medium();
-  });
-  $('#host_architecture_id').live('change', function() {
-    toggle_installation_medium();
-  });
-  $('#host_operatingsystem_id').live('change', function() {
-    toggle_installation_medium();
-  });
+$(document).on('ContentLoad', function(){
+    KT.hosts.onKatelloHostEditLoad();
 
-  $('#hostgroup_environment_id').live('change', function() {
-    toggle_installation_medium();
-  });
-  $('#hostgroup_content_source_id').live('change', function() {
-    toggle_installation_medium();
-  });
-  $('#hostgroup_architecture_id').live('change', function() {
-    toggle_installation_medium();
-  });
-  $('#hostgroup_operatingsystem_id').live('change', function() {
-    toggle_installation_medium();
-  });
-}
+    $("#hostgroup_lifecycle_environment_id").change(KT.hosts.fetchContentViews);
+    $("#host_lifecycle_environment_id").change(KT.hosts.fetchContentViews);
 
-function update_environment_label(item) {
-    var lifecycle_env = $(item).val().trim();
-    if (lifecycle_env.length > 0) {
-       $("#host_environment_id").parent().parent().find('label').text('Content View');
-       $("#hostgroup_environment_id").parent().parent().find('label').text('Content View');
-    } else {
-       $("#host_environment_id").parent().parent().find('label').text('Puppet Environment');
-       $("#hostgroup_environment_id").parent().parent().find('label').text('Puppet Environment');
+    $("#hostgroup_content_view_id").change(KT.hosts.contentViewSelected);
+    $("#host_content_view_id").change(KT.hosts.contentViewSelected);
+    $("#reset_puppet_environment").click(function() {
+        KT.hosts.getPuppetEnvironmentSelect().data('content_puppet_match', 'true');
+        KT.hosts.setDefaultPuppetEnvironment(KT.hosts.getSelectedContentView(), KT.hosts.getSelectedEnvironment());
+    });
+
+});
+
+KT.hosts.fetchContentViews = function () {
+    var select = KT.hosts.getContentViewSelect();
+    var envId = KT.hosts.getSelectedEnvironment();
+    select.find('option').remove();
+    if (envId) {
+        KT.hosts.signalContentViewFetch(true);
+        $.get('/katello/api/v2/content_views/', {environment_id: envId, full_result: true}, function (data) {
+            select.find('option').remove();
+            select.append($("<option />"));
+            $.each(data.results, function(index, view) {
+                select.append($("<option />").val(view.id).text(view.name));
+            });
+            KT.hosts.signalContentViewFetch(false);
+        });
     }
-}
+};
 
-function toggle_installation_medium() {
+KT.hosts.signalContentViewFetch = function(fetching) {
+    var select = KT.hosts.getContentViewSelect(),
+        //parent = select.parent(),
+        spinner = $('<img>').attr('src', '/assets/spinner.gif'),
+        spinner_id = "content_view_spinner";
 
-    kt_environment_id = $('#kt_environment_id').val();
+    if(fetching) {
+        select.hide();
+        $(spinner).attr('id', spinner_id).insertAfter(select);
+    } else {
+        select.show();
+        $('#' + spinner_id).remove();
+    }
+};
+
+
+KT.hosts.contentViewSelected = function() {
+    if (KT.hosts.getPuppetEnvironmentSelect().data('content_puppet_match')) {
+        KT.hosts.setDefaultPuppetEnvironment(KT.hosts.getSelectedContentView(), KT.hosts.getSelectedEnvironment());
+    }
+};
+
+KT.hosts.setDefaultPuppetEnvironment = function(view_id, env_id) {
+    if (view_id && env_id) {
+        $.get('/hosts/puppet_environment_for_content_view', {content_view_id: view_id, lifecycle_environment_id: env_id}, function (data) {
+            var select = KT.hosts.getPuppetEnvironmentSelect();
+            select.val(data.id);
+            select.trigger('change');
+        })
+    }
+};
+
+
+KT.hosts.getPuppetEnvironmentSelect = function() {
+    var select = $("#host_environment_id").first();
+    if(select.length === 0) {
+        select = $("#hostgroup_environment_id").first();
+    }
+    return select;
+};
+
+KT.hosts.getContentViewSelect = function() {
+    var select = $("#host_content_view_id").first();
+    if(select.length === 0) {
+        select = $("#hostgroup_content_view_id").first();
+    }
+    return select;
+};
+
+KT.hosts.getSelectedContentView = function() {
+    return KT.hosts.getContentViewSelect().val();
+};
+
+KT.hosts.getSelectedEnvironment = function () {
+    var envId = $("#hostgroup_lifecycle_environment_id").val();
+    if(envId === undefined || envId.length === 0) {
+        envId = $("#host_lifecycle_environment_id").val()
+    }
+    if(envId && envId.length === 0) {
+        envId = undefined;
+    }
+    return envId;
+};
+
+KT.hosts.onKatelloHostEditLoad = function(){
+    var prefxies = ['host', 'hostgroup'],
+        attributes = ['lifecycle_environment_id', 'content_view_id', 'environment_id', 'content_source_id', 'architecture_id', 'operatingsystem_id'];
+
+    $.each(prefxies, function(index, prefix) {
+        $.each(attributes, function(attrIndex, attribute) {
+            $('#' + prefix + '_' + attribute).live('change', function () {
+                KT.hosts.toggle_installation_medium();
+            });
+        });
+    });
+};
+
+
+KT.hosts.toggle_installation_medium = function() {
+    var lifecycle_environment_id, content_source_id, architecture_id, operatingsystem_id, content_view_id;
+
 
     if ($('#hostgroup_parent_id').length > 0) {
-      environment_id = $('#hostgroup_environment_id').val();
+      lifecycle_environment_id = $('#hostgroup_lifecycle_environment_id').val();
+      content_view_id = $('#hostgroup_content_view_id').val();
       content_source_id = $('#hostgroup_content_source_id').val();
       architecture_id = $('#hostgroup_architecture_id').val();
       operatingsystem_id = $('#hostgroup_operatingsystem_id').val();
     } else {
-      environment_id = $('#host_environment_id').val();
+      lifecycle_environment_id = $('#host_lifecycle_environment_id').val();
+      content_view_id = $('#host_content_view_id').val();
       content_source_id = $('#host_content_source_id').val();
       architecture_id = $('#host_architecture_id').val();
       operatingsystem_id = $('#host_operatingsystem_id').val();
     }
 
-    if (kt_environment_id.length > 0 &&
-        environment_id.length > 0 &&
-        content_source_id.length > 0 &&
-        architecture_id.length > 0 &&
-        operatingsystem_id.length > 0) {
-
-      $.ajax({
-        type:'get',
-        url: '/operatingsystems/'+operatingsystem_id+'/available_kickstart_repo?environment_id='+environment_id+'&content_source_id='+content_source_id+'&architecture_id='+architecture_id,
-        error: function(jqXHR, status, error){
-            show_medium_selectbox();
-        },
-        success: function(result){
-          if (result == null) {
-            show_medium_selectbox();
-          } else {
-            // add kickstart_url div after checking that it doesn't exist
-            // since this code is called 3 times
-            if ($("#kt_kickstart_url").length == 0) {
-              $('label[for="medium_id"]').after("<div id='kt_kickstart_url' class='col-md-8'></div>");
+    if (content_view_id && lifecycle_environment_id && content_source_id && architecture_id && operatingsystem_id) {
+        $.ajax({
+            type:'get',
+            url: '/operatingsystems/' + operatingsystem_id + '/available_kickstart_repo',
+            data: {
+                lifecycle_environment_id: lifecycle_environment_id,
+                content_source_id: content_source_id,
+                architecture_id: architecture_id,
+                operatingsystem_id: operatingsystem_id,
+                content_view_id: content_view_id
+            },
+            error: function(jqXHR, status, error){
+                KT.hosts.show_medium_selectbox();
+            },
+            success: function(result){
+                if (result == null) {
+                    KT.hosts.show_medium_selectbox();
+                } else {
+                    // add kickstart_url div after checking that it doesn't exist
+                    // since this code is called 3 times
+                    if ($("#kt_kickstart_url").length == 0) {
+                      $('label[for="medium_id"]').after("<div id='kt_kickstart_url' class='col-md-8'></div>");
+                    }
+                    $("#host_medium_id").hide();
+                    $("#hostgroup_medium_id").hide();
+                    // populate kickstart_url inside div created above
+                    $("#kt_kickstart_url").html(result.name+"<br />"+result.path);
+                }
             }
-            $("#host_medium_id").hide();
-            $("#hostgroup_medium_id").hide();
-            // populate kickstart_url inside div created above
-            $("#kt_kickstart_url").html(result.name+"<br />"+result.path);
-          }
-        }
-      })
-
+        })
     } else {
-      show_medium_selectbox();
+        KT.hosts.show_medium_selectbox();
     }
 
-}
+};
 
-function show_medium_selectbox() {
+KT.hosts.show_medium_selectbox = function() {
     $("#host_medium_id").show();
     $("#hostgroup_medium_id").show();
     $("#kt_kickstart_url").html('');
-}
+};

@@ -1,3 +1,4 @@
+# encoding: utf-8
 #
 # Copyright 2014 Red Hat, Inc.
 #
@@ -10,22 +11,18 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Actions
-  module Candlepin
-    module Consumer
-      class RefreshSubscriptions < Candlepin::Abstract
-        input_format do
-          param :uuid, String
-        end
+module Support
+  class HostSupport
+    def self.setup_host_for_view(host, view, environment, assign_to_puppet)
+      puppet_env = ::Environment.create!(:name => 'blahblah')
 
-        def plan(system, sys_params)
-          plan_self(:uuid => system.uuid) if sys_params[:autoheal]
-        end
+      cvpe = view.version(environment).puppet_env(environment)
+      cvpe.puppet_environment = puppet_env
+      cvpe.save!
 
-        def run
-          ::Katello::Resources::Candlepin::Consumer.refresh_entitlements(input[:uuid])
-        end
-      end
+      host.update_column(:content_view_id, view.id)
+      host.update_column(:lifecycle_environment_id, environment.id)
+      host.update_column(:environment_id, cvpe.puppet_environment.id) if assign_to_puppet
     end
   end
 end
