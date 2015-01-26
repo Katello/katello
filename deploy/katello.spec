@@ -25,7 +25,7 @@
 
 Name:           katello
 Version:        2.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -149,6 +149,9 @@ usermod -a -G katello-shared katello
 exit 0
 
 %changelog
+* Mon Jan 26 2015 David Davis <daviddavis@redhat.com> 2.1.0-3
+- Fixes #8858: Collect candlepin logs on RHEL7 (bkearney@redhat.com)
+
 * Sun Dec 21 2014 Justin Sherrill <jsherril@redhat.com> 2.1.0-2
 - Fixes #6543 - updt index on cp event bz1115602 (inecas@redhat.com)
 
