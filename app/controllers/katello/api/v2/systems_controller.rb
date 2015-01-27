@@ -61,14 +61,17 @@ module Katello
     param :organization_id, :number, :desc => N_("Specify the organization"), :required => true
     param :environment_id, String, :desc => N_("Filter by environment")
     param :host_collection_id, String, :desc => N_("Filter by host collection")
-    param :erratum_id, String, :desc => N_("Filter by systems that need an Erratum")
-    param :erratum_restrict_available, String, :desc => N_("Return only systems where the Erratum specified by erratum_id is available to systems (default False)")
-    param :erratum_restrict_unavailable, String, :desc => N_("Return only systems where the Erratum specified by erratum_id is unavailable to systems (default False)")
+    param :erratum_id, String, :desc => N_("Filter by systems that need an Erratum by uuid")
+    param :errata_ids, Array, :desc => N_("Filter by systems that need any one of multiple Errata by uuid")
+    param :erratum_restrict_installable, String, :desc => N_("Return only systems where the Erratum specified by erratum_id or errata_ids is available to systems (default False)")
+    param :erratum_restrict_non_installable, String, :desc => N_("Return only systems where the Erratum specified by erratum_id or errata_ids is unavailable to systems (default False)")
     param_group :search, Api::V2::ApiController
     def index
-      if params[:erratum_id]
-        systems = systems_by_erratum(params[:erratum_id], params[:erratum_restrict_available],
-            params[:erratum_restrict_unavailable]).readable
+      if params[:erratum_id] || params[:errata_ids]
+        errata_ids = params.fetch(:errata_ids, [])
+        errata_ids << params[:erratum_id] if params[:erratum_id]
+        systems = systems_by_errata(errata_ids, params[:erratum_restrict_installable],
+            params[:erratum_restrict_non_installable]).readable
       else
         systems = System.readable
       end
@@ -403,19 +406,21 @@ module Katello
       end
     end
 
-    def systems_by_erratum(erratum_id, available, unavailable)
-      available = available.nil? ? false : available.to_bool
-      unavailable = unavailable.nil? ? false : unavailable.to_bool
+    def systems_by_errata(errata_uuids, installable, non_installable)
+      installable = installable.nil? ? false : installable.to_bool
+      non_installable = non_installable.nil? ? false : non_installable.to_bool
 
-      erratum = Katello::Erratum.find_by_uuid(erratum_id)
-      fail _("Unable to find erratum %s.") % erratum_id unless erratum
+      errata = Katello::Erratum.where(:uuid => errata_uuids)
+      if errata.count != errata_uuids.count
+        fail _("Unable to find errata with ids: %s.") % (errata_uuids - errata.pluck(:uuid)).join(", ")
+      end
 
-      if available
-        erratum.systems_available
-      elsif unavailable
-        erratum.systems_unavailable
+      if installable
+        System.with_installable_errata(errata)
+      elsif non_installable
+        System.with_non_installable_errata(errata)
       else
-        erratum.systems_applicable
+        System.with_applicable_errata(errata)
       end
     end
 

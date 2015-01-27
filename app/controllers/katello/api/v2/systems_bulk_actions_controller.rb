@@ -165,7 +165,7 @@ module Katello
     param :errata_ids, :identifier, :desc => N_("List of Errata ids")
     def available_incremental_updates
       version_environments = {}
-      systems = System.with_unavailable_errata(@errata).where("#{System.table_name}.id" => @systems)
+      systems = System.with_non_installable_errata(@errata).where("#{System.table_name}.id" => @systems)
       systems.each do |system|
         version = system.content_view.version(system.environment)
         version_environment = version_environments[version] || {:content_view_version => version, :environments => []}
