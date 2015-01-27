@@ -162,7 +162,9 @@ module Katello
     param_group :search, Api::V2::ApiController
     param :name, String, :desc => N_("host collection name to filter by")
     def available_host_collections
-      filters = [:terms => {:id => HostCollection.readable.pluck("#{Katello::HostCollection.table_name}.id") - @system.host_collection_ids}]
+      system_org_id = @system.environment.organization_id
+      pluck_val = "#{Katello::HostCollection.table_name}.id"
+      filters = [:terms => {:id => HostCollection.readable.where(:organization_id => system_org_id).pluck(pluck_val) - @system.host_collection_ids}]
       filters << {:term => {:name => params[:name]}} if params[:name]
 
       options = {
