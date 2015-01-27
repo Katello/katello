@@ -85,5 +85,20 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
         $scope.clearTaskId = function () {
             $scope.generationTaskId = undefined;
         };
+
+        $scope.formatRepoDockerTags =  function (image, repoId) {
+            var tags = '';
+
+            if (!_.isEmpty(image.tags)) {
+                tags = _.filter(image.tags, function (tag) {
+                    return tag["repository_id"] === repoId;
+                });
+
+                tags = _.pluck(tags, 'name').join(', ');
+            }
+
+            return tags;
+        };
+
     }]
 );
