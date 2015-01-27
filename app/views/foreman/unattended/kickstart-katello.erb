@@ -26,7 +26,16 @@ lang en_US.UTF-8
 selinux --enforcing
 keyboard us
 skipx
-network --bootproto <%= @static ? "static --ip=#{@host.ip} --netmask=#{@host.subnet.mask} --gateway=#{@host.subnet.gateway} --nameserver=#{[@host.subnet.dns_primary,@host.subnet.dns_secondary].reject{|n| n.blank?}.join(',')}" : 'dhcp' %> --hostname <%= @host %>
+
+<% subnet = @host.subnet -%>
+<% if subnet.respond_to?(:dhcp_boot_mode?) -%>
+<% dhcp = subnet.dhcp_boot_mode? && !@static -%>
+<% else -%>
+<% dhcp = !@static -%>
+<% end -%>
+
+network --bootproto <%= dhcp ? 'dhcp' : "static --ip=#{@host.ip} --netmask=#{subnet.mask} --gateway=#{subnet.gateway} --nameserver=#{[subnet.dns_primary, subnet.dns_secondary].select(&:present?).join(',')}" %> --device=<%= @host.mac -%> --hostname <%= @host %>
+
 rootpw --iscrypted <%= root_pass %>
 firewall --<%= os_major >= 6 ? 'service=' : '' %>ssh
 authconfig --useshadow --passalgo=sha256 --kickstart
@@ -84,6 +93,10 @@ exec < /dev/tty3 > /dev/tty3
 #changing to VT 3 so that we can see whats going on....
 /usr/bin/chvt 3
 (
+<% if subnet.respond_to?(:dhcp_boot_mode?) -%>
+<%= snippet 'kickstart_networking_setup' %>
+<% end -%>
+
 #update local time
 echo "updating system time"
 /usr/sbin/ntpdate -sub <%= @host.params['ntp-server'] || '0.fedora.pool.ntp.org' %>
