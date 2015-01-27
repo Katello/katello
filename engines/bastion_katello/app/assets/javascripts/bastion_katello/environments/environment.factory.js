@@ -28,6 +28,7 @@ angular.module('Bastion.environments').factory('Environment',
         return BastionResource('/katello/api/v2/environments/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
+                autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
                 update: {method: 'PUT'},
             }
         );

@@ -16,7 +16,6 @@ module Katello
 
     include ForemanTasks::Concerns::ActionSubject
     include Authorization::LifecycleEnvironment
-    include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
 
     self.table_name = "katello_environments"
     include Ext::LabelFromName

@@ -12,6 +12,7 @@
 
 module Katello
   class Api::V2::EnvironmentsController < Api::V2::ApiController
+    include Katello::Concerns::FilteredAutoCompleteSearch
     resource_description do
       resource_id 'lifecycle_environments'
       description <<-DESC
@@ -45,7 +46,7 @@ module Katello
     end
 
     respond_to :json
-    before_filter :find_organization, :only => [:index, :create, :paths]
+    before_filter :find_organization, :only => [:index, :create, :paths, :auto_complete_search]
     before_filter :find_optional_organization, :only => [:show, :update, :destroy]
     before_filter :find_prior, :only => [:create]
     before_filter :find_environment, :only => [:show, :update, :destroy, :repositories]
@@ -60,19 +61,14 @@ module Katello
     param :library, [true, false], :desc => N_("set true if you want to see only library environments")
     param :name, String, :desc => N_("filter only environments containing this name")
     def index
-      filters = []
-      ids = KTEnvironment.readable.pluck(:id)
+      respond(:collection => scoped_search(index_relation.uniq, :name, :desc))
+    end
 
-      filters << {:terms => {:id => ids}}
-      filters << {:terms => {:organization_id => [@organization.id]}}
-      filters << {:terms => {:name => [params[:name]]}} if params[:name]
-      filters << {:terms => {:library => [params[:library]]}} if params[:library].present?
-
-      options = {
-        :filters => filters,
-        :load_records? => true
-      }
-      respond_for_index(:collection => item_search(KTEnvironment, params, options))
+    def index_relation
+      query = KTEnvironment.readable.where(:organization_id => @organization.id)
+      query = query.where(:name => params[:name]) if params[:name]
+      query = query.where(:library => params[:library]) if params[:library]
+      query
     end
 
     api :GET, "/environments/:id", N_("Show an environment")

@@ -133,6 +133,7 @@ Katello::Engine.routes.draw do
           api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
             collection do
               get :paths
+              get :auto_complete_search
             end
           end
           api_resources :host_collections, :only => [:index, :create]
