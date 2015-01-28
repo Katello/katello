@@ -247,7 +247,7 @@ module ::Actions::Katello::ContentView
 
     it 'plans' do
       plan_action(action, [{:content_view_version => content_view.version(library), :environments => [library]}],
-                  {:errata_ids => ["FOO"]}, true, false, "BadDescription")
+                  {:errata_ids => ["FOO"]}, true, false, [], "BadDescription")
       assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, content_view.version(library), [library],
                                 :content => {:errata_ids => ["FOO"]}, :resolve_dependencies => true, :description => "BadDescription")
     end

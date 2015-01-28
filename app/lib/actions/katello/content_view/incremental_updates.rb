@@ -14,7 +14,7 @@ module Actions
   module Katello
     module ContentView
       class IncrementalUpdates < Actions::EntryAction
-        def plan(version_environments, content, dep_solve, propagate_composites, description)
+        def plan(version_environments, content, dep_solve, propagate_composites, systems, description)
           old_new_version_map = {}
           sequence do
             concurrence do
@@ -25,6 +25,10 @@ module Actions
               end
             end
             handle_composites(old_new_version_map, description, content[:puppet_module_ids]) if propagate_composites
+
+            if systems.any? && !content[:errata_ids].blank?
+              plan_action(::Actions::BulkAction, ::Actions::Katello::System::Erratum::ApplicableErrataInstall, systems, content[:errata_ids])
+            end
           end
         end
 

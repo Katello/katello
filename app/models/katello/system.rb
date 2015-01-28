@@ -88,6 +88,16 @@ module Katello
       where(:environment_id => organization.kt_environments.pluck(:id))
     end
 
+    def self.in_content_view_version_environments(version_environments)
+      #takes a structure of [{:content_view_version => ContentViewVersion, :environments => [KTEnvironment]}]
+      queries = version_environments.map do |version_environment|
+        version = version_environment[:content_view_version]
+        env_ids = version_environment[:environments].map(&:id)
+        "(#{table_name}.content_view_id = #{version.content_view_id} AND #{table_name}.environment_id IN (#{env_ids.join(',')}))"
+      end
+      where(queries.join(" OR "))
+    end
+
     def self.uuids_to_ids(uuids)
       systems = by_uuids(uuids)
       ids_not_found = Set.new(uuids).subtract(systems.pluck(:uuid))

@@ -14,29 +14,17 @@ module Actions
   module Katello
     module System
       module Erratum
-        class Install < Actions::EntryAction
+        class ApplicableErrataInstall < Actions::EntryAction
           include Helpers::Presenter
 
-          def plan(system, errata_ids)
-            Type! system, ::Katello::System
-
-            action_subject(system, :errata => errata_ids)
-            plan_action(Pulp::Consumer::ContentInstall,
-                        consumer_uuid: system.uuid,
-                        type:          'erratum',
-                        args:          errata_ids)
+          #takes a list of errata and schedules the installation of those that are applicable
+          def plan(system, errata_uuids)
+            applicable_errata = system.applicable_errata.where(:uuid => errata_uuids)
+            plan_action(Actions::Katello::System::Erratum::Install, system, applicable_errata.pluck(:errata_id))
           end
 
           def humanized_name
-            _("Install erratum")
-          end
-
-          def humanized_input
-            [input[:errata].join(", ")] + super
-          end
-
-          def presenter
-            Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Consumer::ContentInstall))
+            _("Install Applicable Errata")
           end
         end
       end

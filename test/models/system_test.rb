@@ -120,6 +120,15 @@ module Katello
       super
     end
 
+    def test_in_content_view_version_environments
+      first_cvve = {:content_view_version => @system.content_view.version(@system.environment), :environments => [@system.environment]}
+      second_cvve = {:content_view_version => @library_view.version(@library), :environments => [@dev]} #dummy set
+      systems = System.in_content_view_version_environments([first_cvve, second_cvve])
+      assert_includes systems, @system
+      systems = System.in_content_view_version_environments([first_cvve])
+      assert_includes systems, @system
+    end
+
     def test_available_releases
       assert @system.available_releases.include?('6Server')
     end
