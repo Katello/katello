@@ -45,6 +45,12 @@ module Katello
     param :object_root, String, :desc => N_("root-node of single-resource responses (optional)")
     param :root_name, String, :desc => N_("root-node of collection contained in responses (default: 'results')")
 
+    def resource_class
+      @resource_class ||= resource_name.classify.constantize
+    rescue NameError
+      @resource_class ||= "Katello::#{resource_name.classify}".constantize
+    end
+
     def item_search(item_class, param_hash, options)
       fail "@search_service search not defined" if @search_service.nil?
       if param_hash[:order]
@@ -79,10 +85,10 @@ module Katello
       }
     end
 
-    def scoped_search(query, default_sort_by, default_sort_order)
+    def scoped_search(query, default_sort_by, default_sort_order, resource = resource_class)
       total = query.count
-      sub_total = query.search_for(*search_options).count
-      query = query.search_for(*search_options)
+      sub_total = resource.search_for(*search_options).merge(query).count
+      query = resource.search_for(*search_options).merge(query)
       sort_attr = params[:sort_by] || default_sort_by
       sort_attr = "#{query.table_name}.#{sort_attr}" unless sort_attr.to_s.include?('.')
 
