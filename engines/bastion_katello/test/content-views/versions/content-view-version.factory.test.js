@@ -38,7 +38,7 @@ describe('Factory: ContentViewVersion', function () {
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('provides a way to get a list of repositorys', function () {
+    it('provides a way to get a list of repositories', function () {
         $httpBackend.expectGET('/katello/api/v2/content_view_versions').respond(contentViewVersion);
 
         ContentViewVersion.queryPaged(function (contentViewVersion) {
@@ -46,4 +46,8 @@ describe('Factory: ContentViewVersion', function () {
         });
     });
 
+    it('provides a way to get an incremental update', function () {
+        $httpBackend.expectPOST('/katello/api/v2/content_view_versions/incremental_update').respond({});
+        ContentViewVersion.incrementalUpdate();
+    });
 });

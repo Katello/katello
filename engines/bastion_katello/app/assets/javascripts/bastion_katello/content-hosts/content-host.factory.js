@@ -66,7 +66,8 @@ angular.module('Bastion.content-hosts').factory('ContentHostBulkAction',
             updateContent: {method: 'PUT', params: {action: 'update_content'}},
             removeContent: {method: 'PUT', params: {action: 'remove_content'}},
             unregisterContentHosts: {method: 'PUT', params: {action: 'destroy'}},
-            environmentContentView: {method: 'PUT', params: {action: 'environment_content_view'}}
+            environmentContentView: {method: 'PUT', params: {action: 'environment_content_view'}},
+            availableIncrementalUpdates: {method: 'POST', isArray: true, params: {action: 'available_incremental_updates'}}
         });
 
     }]

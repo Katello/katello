@@ -32,6 +32,7 @@ describe('Controller: ErrataController', function() {
             this.setParams = function (params) {};
             this.getParams = function (params) { return {}; };
             this.refresh = function () {};
+            this.getAllSelectedResults = function () {};
         };
         Errata = {};
     });
@@ -98,6 +99,16 @@ describe('Controller: ErrataController', function() {
         expect($scope.nutupane.refresh).toHaveBeenCalled();
     });
 
+    it("provides a way to go to the next apply step", function () {
+        spyOn($scope, 'transitionTo');
+        spyOn($scope.nutupane, 'getAllSelectedResults');
+
+        $scope.goToNextStep();
+
+        expect($scope.nutupane.getAllSelectedResults).toHaveBeenCalled();
+        expect($scope.transitionTo).toHaveBeenCalledWith('errata.apply.select-content-hosts');
+    });
+    
     it('allows the setting of the repositoryId via a query string parameter', function () {
         $location.search('repositoryId', '1');
 

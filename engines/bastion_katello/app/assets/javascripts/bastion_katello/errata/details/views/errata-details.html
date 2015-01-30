@@ -27,7 +27,7 @@
           </span>
         </a>
       </li>
-      <li ng-class="{active: isState('errata.details.content-hosts')}">
+      <li ng-class="{active: isState('errata.details.content-hosts') || isState('errata.details.apply')}">
         <a ui-sref="errata.details.content-hosts">
           <span translate>
             Content Hosts

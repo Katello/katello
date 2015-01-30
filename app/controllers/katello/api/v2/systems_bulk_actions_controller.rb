@@ -173,8 +173,10 @@ module Katello
         version_environment = version_environments[version] || {:content_view_version => version, :environments => []}
         version_environment[:environments] << system.environment unless version_environment[:environments].include?(system.environment)
         version_environment[:next_version] ||= version.next_incremental_version
+        version_environment[:content_host_count] = systems.count
         version_environments[version] = OpenStruct.new(version_environment)
       end
+
       respond_for_index :collection => version_environments.values, :template => :available_incremental_updates
     end
 

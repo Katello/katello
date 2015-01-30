@@ -28,6 +28,7 @@ angular.module('Bastion.content-views.versions').factory('ContentViewVersion',
             {id: '@id'},
             {
                 update: {method: 'PUT'},
+                incrementalUpdate: {method: 'POST', params: {action: 'incremental_update'}},
                 promote: {method: 'POST', params: {action: 'promote'}}
             }
         );
