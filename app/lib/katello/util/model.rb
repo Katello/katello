@@ -36,7 +36,7 @@ module Katello
       end
 
       def self.uuid
-        UUIDTools::UUID.random_create.to_s
+        SecureRandom.uuid
       end
 
       def self.controller_path_to_model_hash

@@ -111,7 +111,6 @@ Requires: %{?scl_prefix}rubygem-rails
 Requires: %{?scl_prefix}rubygem-json
 Requires: %{?scl_prefix}rubygem-oauth
 Requires: %{?scl_prefix}rubygem-rest-client
-Requires: %{?scl_prefix}rubygem-uuidtools
 Requires: %{?scl_prefix}rubygem-rabl
 Requires: %{?scl_prefix}rubygem-tire => 0.6.2
 Requires: %{?scl_prefix}rubygem-tire < 0.7

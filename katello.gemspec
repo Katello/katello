@@ -25,7 +25,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "oauth"
   gem.add_dependency "rest-client"
 
-  gem.add_dependency "uuidtools"
   gem.add_dependency "rabl"
   gem.add_dependency "tire", "~> 0.6.2"
   gem.add_dependency "logging", ">= 1.8.0"

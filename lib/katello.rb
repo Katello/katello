@@ -23,7 +23,7 @@ require "deface"
 require 'jquery-ui-rails'
 require 'qpid_messaging'
 
-require "uuidtools"
+require "securerandom"
 
 # to make Foreman#in_rake? helper available if Foreman's lib is available
 lib_foreman = File.expand_path('lib/foreman', Rails.root)
