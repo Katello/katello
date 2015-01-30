@@ -178,7 +178,7 @@ module Katello
 
     def perform_group_action
       group = Glue::Pulp::ConsumerGroup.new
-      group.pulp_id = ::UUIDTools::UUID.random_create.to_s
+      group.pulp_id = SecureRandom.uuid
       group.consumer_ids = consumer_ids
       group.set_pulp_consumer_group
       yield(group)
