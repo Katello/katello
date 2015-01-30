@@ -229,12 +229,18 @@ module Katello
       composite? ? repositories_to_publish.pluck(&:id) : repository_ids
     end
 
+    # Returns actual puppet modules associated with all components
+    #
+    # @returns array of ElasticSearch::Item objects
+    def component_modules_to_publish
+      composite? ? components.flat_map { |version| version.puppet_modules } : nil
+    end
+
+    # Returns the content view puppet modules associated with the content view
+    #
+    # @returns array of ContentViewPuppetModule
     def puppet_modules_to_publish
-      if composite?
-        components.flat_map { |version| version.puppet_modules }
-      else
-        content_view_puppet_modules
-      end
+      composite? ? nil : content_view_puppet_modules
     end
 
     def repos_in_product(env, product)
@@ -307,7 +313,8 @@ module Katello
     end
 
     def duplicate_puppet_modules
-      counts = puppet_modules_to_publish.each_with_object(Hash.new(0)) do |puppet_module, h|
+      modules = puppet_modules_to_publish || component_modules_to_publish
+      counts = modules.each_with_object(Hash.new(0)) do |puppet_module, h|
         h[puppet_module.name] += 1
       end
       counts.select { |_k, v| v > 1 }.keys
@@ -423,11 +430,15 @@ module Katello
       # repo id to copy content.
       ids = []
       names_and_authors = []
-      puppet_modules_to_publish.each do |cvpm|
-        if cvpm.uuid
-          ids << cvpm.uuid
-        else
-          names_and_authors << { :name => cvpm.name, :author => cvpm.author }
+      if composite?
+        component_modules_to_publish.each { |puppet_module| ids << puppet_module.id }
+      else
+        puppet_modules_to_publish.each do |cvpm|
+          if cvpm.uuid
+            ids << cvpm.uuid
+          else
+            names_and_authors << { :name => cvpm.name, :author => cvpm.author }
+          end
         end
       end
 
