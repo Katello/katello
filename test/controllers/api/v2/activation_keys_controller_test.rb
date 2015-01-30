@@ -159,10 +159,11 @@ module Katello
     end
 
     def test_destroy
-      @controller.stubs(:sync_task).returns(true)
-      delete :destroy, :organization_id => @organization.id, :id => @activation_key.id
+      assert_sync_task(::Actions::Katello::ActivationKey::Destroy, @activation_key)
+      delete :destroy, :id => @activation_key.id
 
       assert_response :success
+      assert_template 'api/v2/common/async'
     end
 
     def test_destroy_protected
