@@ -767,18 +767,14 @@ module Katello
             Util::Data.array_with_indifferent_access akeys
           end
 
-          def create(name, owner_key)
+          def create(name, owner_key, auto_attach)
             url = "/candlepin/owners/#{owner_key}/activation_keys"
-            JSON.parse(self.post(url, {:name => name}.to_json, self.default_headers).body).with_indifferent_access
+            JSON.parse(self.post(url, {:name => name, :autoAttach => auto_attach}.to_json, self.default_headers).body).with_indifferent_access
           end
 
           def update(id, release_version, service_level, auto_attach)
             attrs = { :releaseVer => release_version, :serviceLevel => service_level, :autoAttach => auto_attach }.delete_if { |_k, v| v.nil? }
-            if attrs.empty?
-              return true
-            else
-              JSON.parse(self.put(path(id), attrs.to_json, self.default_headers).body).with_indifferent_access
-            end
+            JSON.parse(self.put(path(id), attrs.to_json, self.default_headers).body).with_indifferent_access
           end
 
           def destroy(id)

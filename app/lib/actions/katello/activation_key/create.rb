@@ -19,7 +19,8 @@ module Actions
           activation_key.save!
           if ::Katello.config.use_cp
             cp_create = plan_action(Candlepin::ActivationKey::Create,
-                                    organization_label: activation_key.organization.label)
+                                    organization_label: activation_key.organization.label,
+                                    auto_attach: activation_key.auto_attach)
             cp_id = cp_create.output[:response][:id]
           end
           action_subject(activation_key, :cp_id => cp_id)

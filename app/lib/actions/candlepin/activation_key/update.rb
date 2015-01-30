@@ -21,7 +21,7 @@ module Actions
           param :auto_attach
         end
 
-        def plan(_activation_key)
+        def run
           ::Katello::Resources::Candlepin::ActivationKey.update(
                                                                 input[:cp_id],
                                                                 input[:release_version],

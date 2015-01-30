@@ -32,13 +32,40 @@ module ::Actions::Katello::ActivationKey
       plan_action action, activation_key
       assert_action_planed_with(action,
                                 ::Actions::Candlepin::ActivationKey::Create,
-                                :organization_label => activation_key.organization.label)
+                                :organization_label => activation_key.organization.label,
+                                :auto_attach => true)
       assert_action_planed action, ::Actions::ElasticSearch::Reindex
     end
 
     it 'raises error when validation fails' do
       activation_key.name = nil
       proc { plan_action action, activation_key }.must_raise(ActiveRecord::RecordInvalid)
+    end
+  end
+
+  class UpdateTest < TestBase
+    let(:action_class) { ::Actions::Katello::ActivationKey::Update }
+    let(:input) { { :auto_attach => 'false' } }
+
+    it 'plans' do
+      activation_key.expects(:disable_auto_reindex!)
+      action.expects(:action_subject).with(activation_key)
+      activation_key.expects(:update_attributes!).with(input)
+      plan_action(action, activation_key, input)
+      assert_action_planed(action, ::Actions::Candlepin::ActivationKey::Update)
+    end
+  end
+
+  class UpdateWithoutCandlepinTest < TestBase
+    let(:action_class) { ::Actions::Katello::ActivationKey::Update }
+    let(:input) { { :name => 'newName' } }
+
+    it 'plans' do
+      activation_key.expects(:disable_auto_reindex!)
+      action.expects(:action_subject).with(activation_key)
+      activation_key.expects(:update_attributes!).with(input)
+      plan_action(action, activation_key, input)
+      refute_action_planed(action, ::Actions::Candlepin::ActivationKey::Update)
     end
   end
 
