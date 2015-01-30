@@ -28,6 +28,7 @@ describe('Controller: ActivationKeyProductDetailsController', function () {
     beforeEach(inject(function (_$controller_, $rootScope, $state) {
         $controller = _$controller_;
         $scope = $rootScope.$new();
+        $scope.setActivationKey = function (activationKey) {};
 
         state = {
             transitionTo: function () {}
@@ -109,7 +110,7 @@ describe('Controller: ActivationKeyProductDetailsController', function () {
                 callback(mockActivationKeyProducts);
                 return mockActivationKeyProducts;
             },
-            contentOverride: function (parmas, content, successCallback, errorCallback) {
+            contentOverride: function (params, content, successCallback, errorCallback) {
                 if (mockActivationKey.mockFailed) {
                     errorCallback({ data: { errors: ['error!'] } });
                 } else {
@@ -121,6 +122,7 @@ describe('Controller: ActivationKeyProductDetailsController', function () {
         spyOn(ActivationKey, 'get').andCallThrough();
         spyOn(ActivationKey, 'products').andCallThrough();
         spyOn(ActivationKey, 'contentOverride').andCallThrough();
+        spyOn($scope, 'setActivationKey')
 
         $scope.activationKey = mockActivationKey;
         $scope.products = mockActivationKeyProducts['results'];
@@ -183,4 +185,11 @@ describe('Controller: ActivationKeyProductDetailsController', function () {
         expect($scope.overrideEnableChoices($scope.details['available_content'][1]).length).toBe(3);
     });
 
+    it('sets activation key when content override saved', function () {
+        $scope.productDetails($scope.products[0]);
+        mockActivationKey.mockContent = $scope.details['available_content'][0];
+        $scope.saveContentOverride(mockActivationKey.mockContent);
+
+        expect($scope.setActivationKey).toHaveBeenCalled();
+    });
 });

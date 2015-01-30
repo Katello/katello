@@ -58,6 +58,10 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
             return deferred.promise;
         };
 
+        $scope.setActivationKey = function (activationKey) {
+            $scope.activationKey = activationKey;
+        };
+
         $scope.copy = function (newName) {
             ActivationKey.copy({id: $scope.activationKey.id, 'new_name': newName}, function (response) {
                 $scope.showCopy = false;
