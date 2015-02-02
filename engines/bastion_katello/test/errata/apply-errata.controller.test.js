@@ -12,19 +12,13 @@
 **/
 
 describe('Controller: ApplyErrataController', function() {
-    var $controller, dependencies, $scope, $window, translate, ContentHostBulkAction, ContentViewVersion,
+    var $controller, dependencies, $scope, translate, ContentHostBulkAction, ContentViewVersion,
         CurrentOrganization;
 
     beforeEach(module('Bastion.errata', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
         $controller = $injector.get('$controller'),
-
-        $window = {
-            location: {
-                href: ''
-            }
-        };
 
         translate = function (string) {
             return string;
@@ -58,7 +52,6 @@ describe('Controller: ApplyErrataController', function() {
 
         dependencies = {
             $scope: $scope,
-            $window: $window,
             translate: translate,
             ContentHostBulkAction: ContentHostBulkAction,
             ContentViewVersion: ContentViewVersion,
@@ -171,7 +164,7 @@ describe('Controller: ApplyErrataController', function() {
 
                 $scope.confirmApply();
 
-                expect($window.location.href).toBe('/foreman_tasks/tasks/1')
+                expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.details', {taskId: 1});
                 expect($scope.errorMessages.length).toBe(0);
             });
 
