@@ -46,29 +46,46 @@ module Katello
       refute @repo2.valid?
     end
 
-    def test_docker_repository_name_format
+    def test_docker_repository_docker_upstream_name_url
       @repo.content_type = 'docker'
-      @repo.name = 'valid'
+      @repo.docker_upstream_name = ""
+      @repo.url = "http://registry.com"
+      refute @repo.valid?
+      @repo.docker_upstream_name = "justin"
       assert @repo.valid?
-      @repo.name = 'Invalid'
+      @repo.url = ""
       refute @repo.valid?
-      @repo.name = '-_ok/valid'
+      @repo.url = "htp://boo.com"
+      #bad url
+      refute @repo.valid?
+      @repo.url = nil
+      @repo.docker_upstream_name = nil
       assert @repo.valid?
-      @repo.name = 'Invalid/valid'
-      refute @repo.valid?
-      @repo.name = 'Invalid/Invalid'
-      refute @repo.valid?
-      @repo.name = 'abcd/.-_'
+    end
+
+    def test_docker_repository_docker_upstream_name_format
+      @repo.content_type = 'docker'
+      @repo.docker_upstream_name = 'valid'
       assert @repo.valid?
-      @repo.name = 'abc/valid'
+      @repo.docker_upstream_name = 'Invalid'
       refute @repo.valid?
-      @repo.name = 'abcd/ab'
+      @repo.docker_upstream_name = '-_ok/valid'
+      assert @repo.valid?
+      @repo.docker_upstream_name = 'Invalid/valid'
       refute @repo.valid?
-      @repo.name = '/valid'
+      @repo.docker_upstream_name = 'Invalid/Invalid'
       refute @repo.valid?
-      @repo.name = 'thisisnotvalidbecauseitistoolong/valid'
+      @repo.docker_upstream_name = 'abcd/.-_'
+      assert @repo.valid?
+      @repo.docker_upstream_name = 'abc/valid'
       refute @repo.valid?
-      @repo.name = 'valid/thisisnotvalidbecauseitistoolong'
+      @repo.docker_upstream_name = 'abcd/ab'
+      refute @repo.valid?
+      @repo.docker_upstream_name = '/valid'
+      refute @repo.valid?
+      @repo.docker_upstream_name = 'thisisnotvalidbecauseitistoolong/valid'
+      refute @repo.valid?
+      @repo.docker_upstream_name = 'valid/thisisnotvalidbecauseitistoolong'
       refute @repo.valid?
     end
 
@@ -103,6 +120,7 @@ module Katello
       @repo.name = 'docker_repo'
       @repo.pulp_id = 'PULP-ID'
       @repo.content_type = Repository::DOCKER_TYPE
+      @repo.docker_upstream_name = "haha"
       assert @repo.save
       assert @repo.pulp_id.ends_with?('pulp-id')
     end

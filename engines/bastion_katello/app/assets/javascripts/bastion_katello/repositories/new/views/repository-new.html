@@ -12,79 +12,105 @@
   <div bst-alert error-messages="errorMessages" success-messages="successMessages"></div>
 
   <form name="repositoryForm" class="form-horizontal" novalidate role="form">
+    <div>
+      <h4 class="form-horizontal" translate> General Information </h4>
+      <div bst-form-group label="{{ 'Name' | translate }}">
+        <input id="name"
+               name="name"
+               ng-model="repository.name"
+               type="text"
+               tabindex="1"
+               autofocus
+               required/>
+      </div>
 
-    <div bst-form-group label="{{ 'Name' | translate }}">
-      <input id="name"
-             name="name"
-             ng-model="repository.name"
-             type="text"
-             tabindex="1"
-             autofocus
-             required/>
+      <div bst-form-group label="{{ 'Label' | translate }}">
+        <input id="label"
+               name="label"
+               ng-model="repository.label"
+               type="text"
+               tabindex="1"
+               required/>
+      </div>
+      <div bst-form-group label="{{ 'Type' | translate }}">
+        <select required
+                tabindex="3"
+                id="content_type"
+                name="content_type"
+                ng-model="repository.content_type"
+                ng-options="type.name as type.name for type in repositoryTypes"
+                autofocus>
+        </select>
+      </div>
+    </div>
+    <div ng-show="repository.content_type !== undefined">
+        <h4 translate> Sync Information </h4>
+        <div bst-form-group label="{{ 'URL' | translate }}">
+          <input id="url"
+                 name="url"
+                 ng-model="repository.url"
+                 type="text"
+                 tabindex="5"/>
+          <h6 ng-show="repository.content_type === 'docker'" translate>
+            URL of the registry you want to sync. Example: https://registry.hub.docker.com
+          </h6>
+
+        </div>
+
+        <div bst-form-group label="{{ 'Upstream Repository Name' | translate }}"  ng-show="repository.content_type === 'docker'">
+          <input id="docker_upstream_name"
+                 name="docker_upstream_name"
+                 ng-model="repository.docker_upstream_name"
+                 type="text"
+                 tabindex="1"/>
+          <h6 translate>
+            Name of the upstream repository you want to sync. Example: 'busybox' or 'fedora/ssh;.
+          </h6>
+
+        </div>
+
     </div>
 
-    <div bst-form-group label="{{ 'Label' | translate }}">
-      <input id="label"
-             name="label"
-             ng-model="repository.label"
-             type="text"
-             tabindex="1"
-             required/>
+    <div ng-show="repository.content_type === 'yum'">
+      <h4 ng-show="repository.content_type !== undefined" translate> Published Repository Information </h4>
+
+      <div bst-form-group label="{{ 'Checksum' | translate }}">
+        <select tabindex="4"
+                id="checksum_type"
+                name="checksum_type"
+                ng-model="repository.checksum_type"
+                ng-options="type.id as type.name for type in checksums">
+        </select>
+        <h6 translate>
+          For older operating systems such as Red Hat Enterprise Linux 5 or CentOS 5 it is recommended to use sha1.
+        </h6>
+      </div>
+
+      <div bst-form-group label="{{ 'Publish via HTTP' | translate }}">
+        <input id="unprotected"
+               name="unprotected"
+               ng-model="repository.unprotected"
+               type="checkbox"
+               tabindex="6"/>
+      </div>
+
+      <div bst-form-group label="{{ 'GPG Key' | translate }}">
+        <select id="gpg_key_id"
+                name="gpg_key_id"
+                ng-model="repository.gpg_key_id"
+                ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys"
+                tabindex="7">
+          <option value=""></option>
+        </select>
+      </div>
     </div>
 
-    <div bst-form-group label="{{ 'Type' | translate }}">
-      <select required
-              tabindex="3"
-              id="content_type"
-              name="content_type"
-              ng-model="repository.content_type"
-              ng-options="type.name as type.name for type in repositoryTypes">
-      </select>
-    </div>
-
-    <div bst-form-group label="{{ 'Checksum' | translate }}" ng-show="repository.content_type == 'yum'">
-      <select tabindex="4"
-              id="checksum_type"
-              name="checksum_type"
-              ng-model="repository.checksum_type"
-              ng-options="type.id as type.name for type in checksums">
-      </select>
-      <h6 translate>
-        For older operating systems such as Red Hat Enterprise Linux 5 or CentOS 5 it is recommended to use sha1.
-      </h6>
-    </div>
-
-    <div bst-form-group label="{{ 'URL' | translate }}">
-      <input id="url"
-             name="url"
-             ng-model="repository.url"
-             type="text"
-             tabindex="5"/>
-    </div>
-
-    <div bst-form-group label="{{ 'Publish via HTTP' | translate }}" ng-show="repository.content_type == 'yum'">
-      <input id="unprotected"
-             name="unprotected"
-             ng-model="repository.unprotected"
-             type="checkbox"
-             tabindex="6"/>
-    </div>
-
-    <div bst-form-group label="{{ 'GPG Key' | translate }}" ng-show="repository.content_type == 'yum'">
-      <select id="gpg_key_id"
-              name="gpg_key_id"
-              ng-model="repository.gpg_key_id"
-              ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys"
-              tabindex="7">
-        <option value=""></option>
-      </select>
-    </div>
-
-    <div bst-form-buttons
+    <div bst-form-buttons ng-show="repository.content_type !== undefined"
          on-cancel="transitionTo('products.details.repositories.index', {productId: repository.product_id})"
          on-save="save(repository)"
          working="working">
     </div>
+
 
   </form>
 </section>

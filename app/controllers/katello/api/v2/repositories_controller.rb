@@ -38,6 +38,7 @@ module Katello
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
       param :content_type, String, :required => true, :desc => N_("type of repo (either 'yum', 'puppet' or 'docker')")
       param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.'")
+      param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
     end
 
     api :GET, "/repositories", N_("List of enabled repositories")
@@ -102,6 +103,7 @@ module Katello
       repository = @product.add_repo(repo_params[:label], repo_params[:name], repo_params[:url],
                                      repo_params[:content_type], repo_params[:unprotected],
                                      gpg_key, repository_params[:checksum_type])
+      repository.docker_upstream_name = params[:docker_upstream_name] if params.key?(:docker_upstream_name)
       sync_task(::Actions::Katello::Repository::Create, repository, false, true)
       repository = Repository.find(repository.id)
       respond_for_show(:resource => repository)
@@ -127,6 +129,7 @@ module Katello
     param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
     param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.'")
     param :url, String, :desc => N_("the feed url of the original repository ")
+    param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
     def update
       repo_params = repository_params
       repo_params[:url] = nil if repository_params[:url].blank?

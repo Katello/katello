@@ -64,25 +64,28 @@ module Katello
       end
 
       def build_repository
-        ::Katello::Repository.new(:environment => product.organization.library,
-                                  :product => product,
-                                  :pulp_id => pulp_id,
-                                  :cp_label => content.label,
-                                  :content_id => content.id,
-                                  :arch => arch,
-                                  :major => major,
-                                  :minor => minor,
-                                  :relative_path => relative_path,
-                                  :name => name,
-                                  :label => label,
-                                  :url => feed_url,
-                                  :feed_ca => ca,
-                                  :feed_cert => product.certificate,
-                                  :feed_key => product.key,
-                                  :content_type => katello_content_type,
-                                  :preserve_metadata => true, #preserve repo metadata when importing from cp
-                                  :unprotected => unprotected?,
-                                  :content_view_version => product.organization.library.default_content_view_version)
+        repository = ::Katello::Repository.new(:environment => product.organization.library,
+                                               :product => product,
+                                               :pulp_id => pulp_id,
+                                               :cp_label => content.label,
+                                               :content_id => content.id,
+                                               :arch => arch,
+                                               :major => major,
+                                               :minor => minor,
+                                               :relative_path => relative_path,
+                                               :name => name,
+                                               :label => label,
+                                               :url => feed_url,
+                                               :feed_ca => ca,
+                                               :feed_cert => product.certificate,
+                                               :feed_key => product.key,
+                                               :content_type => katello_content_type,
+                                               :preserve_metadata => true, #preserve repo metadata when importing from cp
+                                               :unprotected => unprotected?,
+                                               :content_view_version => product.organization.library.default_content_view_version)
+
+        repository.docker_upstream_name = self.name if repository.docker?
+        repository
       end
 
       def check_substitutions!

@@ -94,13 +94,24 @@
     </div>
 
     <div class="detail">
-      <span class="info-label" translate>URL</span>
+      <span ng-show="repository.content_type !== 'docker'" class="info-label" translate>URL</span>
+      <span ng-show="repository.content_type === 'docker'" class="info-label" translate>Registry URL</span>
       <span class="info-value"
             bst-edit-text="repository.url"
             on-save="save(repository)"
             readonly="product.readonly || denied('edit_products', product)">
       </span>
     </div>
+
+    <div class="detail" ng-show="repository.content_type === 'docker'" >
+      <span class="info-label" translate>Upstream Repository Name</span>
+      <span class="info-value"
+            bst-edit-text="repository.docker_upstream_name"
+            on-save="save(repository)"
+            readonly="product.readonly || denied('edit_products', product)">
+      </span>
+    </div>
+
 
     <div class="detail" ng-show="repository.content_type == 'yum'">
       <span class="info-label" translate>Yum Metadata Checksum</span>

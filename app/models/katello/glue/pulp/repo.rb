@@ -137,7 +137,7 @@ module Katello
           Runcible::Models::PuppetImporter.new(options)
         when Repository::DOCKER_TYPE
           options = {}
-          options[:upstream_name] = self.name
+          options[:upstream_name] = self.docker_upstream_name
           options[:feed] = self.url if self.respond_to?(:url)
           Runcible::Models::DockerImporter.new(options)
         else
@@ -506,7 +506,7 @@ module Katello
 
       def pulp_update_needed?
         unless redhat?
-          allowed_changes = %w(url unprotected checksum_type)
+          allowed_changes = %w(url unprotected checksum_type docker_upstream_name)
           allowed_changes << "name" if docker?
           allowed_changes.any? { |key| previous_changes.key?(key) }
         end
