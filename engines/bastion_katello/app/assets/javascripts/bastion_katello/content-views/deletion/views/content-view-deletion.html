@@ -4,7 +4,7 @@
   <h3 translate>Delete {{ contentView.name }}</h3>
 
   <div ng-show="conflictingVersions().length > 0">
-    <i class="icon-warning-sign"></i>
+    <i class="fa fa-warning"></i>
     <span translate>
       {{ contentView.name }} cannot be deleted as one or more Content View Versions are still promoted to a Lifecycle Environment.
       Each Content View Version must be removed from their Lifecycle Environments before the Content View can be deleted.
@@ -26,7 +26,7 @@
           <td>
             <a ui-sref="content-views.details.version-deletion.environments({contentViewId: contentView.id, versionId: version.id})" ng-show="version.permissions.deletable">
               <button class="btn btn-default">
-                <i class="icon-trash"></i>
+                <i class="fa fa-trash-o-o"></i>
                 <span translate>Remove Version</span>
               </button>
             </a>
@@ -42,7 +42,7 @@
     </p>
 
     <div ng-show="versions.length > 0">
-      <i class="icon-warning-sign"></i>
+      <i class="fa fa-warning"></i>
       <span translate translate-n="versions.length" translate-plural=" As part of this deletion, {{ versions.length }} Content View Versions will be deleted.">
         As part of this deletion, 1 Content View Version will be deleted.
       </span>
@@ -51,7 +51,7 @@
     <br/><br/>
     <div class="fr">
       <button ng-disabled="working" class="btn-danger btn-lg" ng-click="delete()" >
-        <i class="icon-spinner icon-spin" ng-show="working"></i>
+        <i class="fa fa-spinner fa-spin" ng-show="working"></i>
         <span translate>Delete</span>
       </button>
 

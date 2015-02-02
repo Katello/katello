@@ -9,7 +9,7 @@
     <button class="btn btn-primary fr"
             ng-hide="denied('edit_content_views', contentView)"
             ui-sref="content-views.details.puppet-modules.names">
-      <i class="icon-plus"></i>
+      <i class="fa fa-plus"></i>
       <span translate>Add New Module</span>
     </button>
   </div>
@@ -22,8 +22,10 @@
   </div>
 
   <div data-block="table">
-    <p class="alert alert-info" ng-show="detailsTable.rows.length === 0" translate>
-      You currently don't have any Puppet Modules included in this Content View, you can add Puppet Modules using the button on the right.
+    <p bst-alert="info" ng-show="detailsTable.rows.length === 0">
+      <span translate>
+        You currently don't have any Puppet Modules included in this Content View, you can add Puppet Modules using the button on the right.
+      </span>
     </p>
 
     <table class="table table-striped table-bordered" ng-show="detailsTable.rows.length > 0">

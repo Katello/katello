@@ -2,7 +2,7 @@
 
 <section>
 
-  <div class="alert alert-info" ng-show="confirm">
+  <div bst-alert="info" ng-show="confirm">
     <p translate>
       Are you sure you want to apply the {{ detailsTable.numSelected }} selected errata to the content hosts chosen?
     </p>
@@ -10,8 +10,8 @@
     <button class="btn btn-default" ng-click="confirm = false; installErrata()" translate>Yes</button>
   </div>
 
-  <div class="alert alert-warning" ng-show="outOfDate && table.numSelected > 0">
-    <i class="inline-icon icon-exclamation"></i>
+  <div bst-alert="warning" ng-show="outOfDate && table.numSelected > 0">
+    <i class="inline-icon fa fa-exclamation"></i>
     <span translate>
       Your selected content hosts have changed, it is highly recommended to refresh the calculated list of errata using the 'Refresh Errata' button below.
     </span>
@@ -28,21 +28,21 @@
       <button class="btn btn-default"
               ng-disabled="table.numSelected === 0 || detailsTable.working"
               ng-click="fetchErrata()">
-        <i class="icon-refresh"></i>
+        <i class="fa fa-refresh"></i>
         {{ "Refresh Table" | translate }}
       </button>
 
       <button class="btn btn-primary"
               ng-disabled="table.numSelected === 0 || detailsTable.working || detailsTable.numSelected === 0"
               ng-click="confirm = true">
-        <i class="icon-plus"></i>
+        <i class="fa fa-plus"></i>
         {{ "Install Selected" | translate }}
       </button>
     </div>
 
 
     <div data-block="table">
-      <p class="alert alert-info" ng-show="detailsTable.rows.length === 0">
+      <p bst-alert="info" ng-show="detailsTable.rows.length === 0">
         There are no Errata associated with this Content Host to display.
       </p>
 

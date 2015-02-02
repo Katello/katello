@@ -1,7 +1,7 @@
 <span page-title ng-model="activationKey">{{ 'Activation Key:' | translate }} {{ activationKey.name }}</span>
 
-<div class="loading-mask loading-mask-panel icon-3x" ng-show="panel.loading">
-  <i class="icon-spinner icon-spin"></i>
+<div class="loading-mask loading-mask-panel fa-3x" ng-show="panel.loading">
+  <i class="fa fa-spinner fa-spin"></i>
   {{ "Loading..." | translate }}
 </div>
 
@@ -20,12 +20,12 @@
       <button class="btn btn-default"
               ng-click="showCopy = true"
               ng-hide="denied('create_activation_key')">
-        <i class="icon-copy"></i>
+        <i class="fa fa-copy"></i>
         {{ "Copy Activation Key" | translate }}
       </button>
 
       <button class="btn btn-default" ui-sref="activation-keys.index">
-        <i class="icon-remove"></i>
+        <i class="fa fa-remove"></i>
         {{ "Close" | translate }}
       </button>
 
@@ -40,7 +40,7 @@
     <form>
       <h5 translate>Copy</h5>
       <div class="input">
-        <div bst-alert error-messages="copyErrorMessages"></div>
+        <div bst-alerts error-messages="copyErrorMessages"></div>
         <div class="info-label">
           <label for="copy_name" translate>New Name:</label>
         </div>
@@ -96,7 +96,7 @@
           ng-class="{active: stateIncludes('activation-keys.details.associations-content-hosts')}">
         <a class="dropdown-toggle">
           <span translate>Associations</span>
-          <i class="icon-chevron-down"></i>
+          <i class="fa fa-chevron-down"></i>
         </a>
         <ul class="dropdown-menu">
           <li>
@@ -109,7 +109,7 @@
     </ul>
   </nav>
 
-  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
   <section class="nutupane-sub-section" ui-view></section>
 </section>

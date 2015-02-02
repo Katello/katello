@@ -46,14 +46,14 @@
               ng-disabled="repositoriesTable.numSelected === 0"
               ng-show="isState('content-views.details.repositories.docker.list') && permitted('edit_content_views', contentView)"
               ng-click="removeRepositories(contentView)">
-        <i class="icon-trash"></i>
+        <i class="fa fa-trash-o"></i>
         <span translate>Remove Repositories</span>
       </button>
       <button class="btn btn-primary fr"
               ng-disabled="repositoriesTable.numSelected === 0"
               ng-show="isState('content-views.details.repositories.docker.available') && permitted('edit_content_views', contentView)"
               ng-click="addRepositories(contentView)">
-        <i class="icon-plus"></i>
+        <i class="fa fa-plus"></i>
         <span translate>Add Repositories</span>
       </button>
     </div>
@@ -62,17 +62,19 @@
   <div bst-table="repositoriesTable" class="nutupane">
 
     <div ng-show="repositoriesTable.rows.length === 0 && !repositoriesTable.working">
-      <p class="alert alert-info" ng-show="isState('content-views.details.repositories.docker.list')" translate>
-        There are currently no repositories associated with this Content View, you can add some by clicking on the "Add" tab above.
+      <p bst-alert="info" ng-show="isState('content-views.details.repositories.docker.list')">
+        <span translate>
+          There are currently no repositories associated with this Content View, you can add some by clicking on the "Add" tab above.
+        </span>
       </p>
-      <p class="alert alert-info" ng-show="isState('content-views.details.repositories.docker.available')">
+      <p bst-alert="info" ng-show="isState('content-views.details.repositories.docker.available')">
         <span translate>There are currently no repositories to add to this Content View,</span>
         <a ui-sref="products.index" translate>add some repositories.</a>
       </p>
     </div>
 
     <div class="loading-mask loading-mask-panel" ng-show="repositoriesTable.working">
-      <i class="icon-spinner icon-spin"></i>
+      <i class="fa fa-spinner fa-spin"></i>
       {{ "Loading..." | translate }}
     </div>
 

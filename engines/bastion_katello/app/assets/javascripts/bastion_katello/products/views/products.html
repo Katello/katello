@@ -7,8 +7,8 @@
   </div>
 
   <div data-block="messages">
-    <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
-    <div class="alert alert-success" ng-hide="productDeletionTaskId === undefined">
+    <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+    <div bst-alert="success" ng-hide="productDeletionTaskId === undefined">
       <button type="button" class="close" ng-click="unsetProductDeletionTaskId()">×</button>
       <p translate>
         Product delete operation has been initiated in the background.  Click <a href="{{ taskUrl(productDeletionTaskId) }}">Here</a> to monitor the progress.
@@ -20,7 +20,7 @@
     <button class="btn btn-default"
             ng-show="permitted('edit_products') || permitted('destroy_products')"
             ui-sref="products.bulk-actions.sync">
-      <i class="icon-group leading-icon"></i>
+      <i class="fa fa-group leading-icon"></i>
       {{ "Bulk Actions" | translate }}
     </button>
 
@@ -28,12 +28,12 @@
             bst-feature-flag="custom_products"
             ng-hide="denied('edit_products')"
             ui-sref="products.discovery.scan">
-      <i class="icon-screenshot"></i>
+      <i class="fa fa-crosshairs"></i>
       {{ "Repo Discovery" | translate }}
     </button>
 
     <button class="btn btn-primary" bst-feature-flag="custom_products" ui-sref="products.new.form" ng-hide="denied('create_products')">
-      <i class="icon-plus"></i>
+      <i class="fa fa-plus"></i>
       {{ "New Product" | translate }}
     </button>
   </div>

@@ -2,8 +2,10 @@
 
 <div data-extend-template="layouts/details-nutupane.html">
   <div data-block="messages">
-    <p class="alert alert-info" ng-show="contentView.components.length === 0" translate>
-      In order to add a content view to a composite view you must first publish an initial version of the content view.
+    <p bst-alert="info" ng-show="contentView.components.length === 0">
+      <span translate>
+        In order to add a content view to a composite view you must first publish an initial version of the content view.
+      </span>
     </p>
   </div>
 
@@ -11,7 +13,7 @@
     <button class="btn btn-primary fr"
             ng-disabled="detailsTable.numSelected === 0"
             ng-click="addContentViews()">
-      <i class="icon-plus"></i>
+      <i class="fa fa-plus"></i>
       <span translate>Add Content Views</span>
     </button>
   </div>

@@ -10,25 +10,25 @@
       <div class="fr">
         <a class="btn btn-primary" ui-sref="content-views.details.publish"
            ng-hide="denied('publish_content_views', contentView)">
-          <i class="icon-paste"></i>
+          <i class="fa fa-paste"></i>
           <span translate>Publish New Version</span>
         </a>
 
         <a class="btn btn-default"
            ng-hide="denied('create_content_views')"
            ng-click="showCopy = true">
-          <i class="icon-copy"></i>
+          <i class="fa fa-copy"></i>
           <span translate>Copy View</span>
         </a>
 
         <button class="btn btn-default" ui-sref="content-views.details.deletion"
                 ng-hide="denied('destroy_content_views', contentView)">
-          <i class="icon-trash"></i>
+          <i class="fa fa-trash-o"></i>
           {{ "Remove View" | translate }}
         </button>
 
         <a class="btn btn-default" ui-sref="content-views.index">
-          <i class="icon-remove"></i>
+          <i class="fa fa-remove"></i>
           <span translate>Close</span>
         </a>
       </div>
@@ -40,7 +40,7 @@
     <form>
       <h5 translate>Copy</h5>
       <div class="input">
-        <div bst-alert error-messages="copyErrorMessages"></div>
+        <div bst-alerts error-messages="copyErrorMessages"></div>
         <div class="info-label">
           <label for="copy_name" translate>New Name:</label>
         </div>
@@ -81,7 +81,7 @@
           ng-hide="contentView.composite">
         <a class="dropdown-toggle">
           <span translate>Yum Content</span>
-          <i class="icon-chevron-down"></i>
+          <i class="fa fa-chevron-down"></i>
         </a>
         <ul class="dropdown-menu">
           <li>
@@ -130,7 +130,7 @@
     </ul>
   </nav>
 
-  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
   <div ui-view></div>
 
 </section>

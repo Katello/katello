@@ -13,22 +13,22 @@
 
     <span ng-show="subscription.runningTask">
       <span ng-show="subscription.runningTask.state === 'starting'">
-        <i class="icon-spinner inline-icon icon-spin"></i>
+        <i class="fa fa-spinner inline-icon fa-spin"></i>
         <span translate>Starting</span>
       </span>
       <span ng-show="subscription.runningTask.state === 'running'">
-        <i class="icon-spinner inline-icon icon-spin"></i>
+        <i class="fa fa-spinner inline-icon fa-spin"></i>
         <span translate>Working</span>
       </span>
       <span ng-show="subscription.runningTask.state === 'paused'">
-        <i class="icon-warning-sign inline-icon"></i>
+        <i class="fa fa-warning inline-icon"></i>
         <span translate>Paused</span>
       </span>
       <span translate ng-show="subscription.runningTask.state != 'starting'">
         (<a href="/foreman_tasks/tasks/{{ subscription.runningTask.task.id }}">{{ "task details" | translate }}</a>)
       </span>
     </span>
-
+`
     <div class="inline-confirmation" ng-show="subscription.confirm">
       <div class="confirmation_text" translate>
         Are you sure you want to auto-attach available subscriptions to all {{ contentHostTable.resource.total }} content hosts?

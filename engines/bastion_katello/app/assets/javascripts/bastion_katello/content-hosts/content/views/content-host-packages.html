@@ -1,12 +1,14 @@
 <span page-title ng-model="contentHost">{{ 'Packages for: ' | translate }} {{ contentHost.name }}</span>
 <section ng-hide="denied('edit_content_hosts', contentHost)" bst-feature-flag="remote_actions">
-  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
   <h4 translate>Package Actions</h4>
-  <p class="alert alert-info" ng-hide="contentHost.katello_agent_installed" translate>
-    The katello-agent package is required to manage packages on this Host.
-    Please install the katello-agent package to manage packages on
-    {{ contentHost.name }}. To install the package, connect directly to the
-    host from a terminal and use yum.
+  <p bst-alert="info" ng-hide="contentHost.katello_agent_installed">
+    <span translate>
+      The katello-agent package is required to manage packages on this Host.
+      Please install the katello-agent package to manage packages on
+      {{ contentHost.name }}. To install the package, connect directly to the
+      host from a terminal and use yum.
+    </span>
   </p>
   <section>
     <form ng-submit="performPackageAction()" role="form" class="row">
@@ -61,12 +63,12 @@
     </div>
   </div>
 
-  <p class="alert alert-info" ng-show="currentPackagesTable.rows.length === 0">
-    You currently do not have any Packages installed. You can use Package Actions above this message to install new Packages.
+  <p bst-alert="info" ng-show="currentPackagesTable.rows.length === 0">
+    <span translate>You currently do not have any Packages installed. You can use Package Actions above this message to install new Packages.</span>
   </p>
 
   <div bst-table="currentPackagesTable" ng-show="currentPackagesTable.rows.length > 0">
-    <div bst-container-scroll control-width="table" bst-infinite-scroll="currentPackagesTable.loadMorePackages()" data="currentPackagesTable.rows">
+    <div bst-container-scroll bst-infinite-scroll="currentPackagesTable.loadMorePackages()" data="currentPackagesTable.rows">
 
       <table ng-class="{'table-mask': currentPackagesTable.working}" class="table table-striped">
         <thead>
@@ -84,14 +86,14 @@
             <td bst-table-cell>{{ package.nvrea }}</td>
             <td bst-table-cell ng-hide="currentPackagesTable.contentHost.readonly" bst-feature-flag="remote_actions">
 
-                <i class="active icon-remove-sign" ng-hide="package.removeTask" tooltip="{{ 'Remove' | translate }}"
+                <i class="active fa fa-remove-sign" ng-hide="package.removeTask" tooltip="{{ 'Remove' | translate }}"
                    ng-click="currentPackagesTable.removePackage(package)"></i>
 
-                <i class="icon-spinner icon-spin" ng-show="package.removeTask.pending"></i>
+                <i class="fa fa-spinner fa-spin" ng-show="package.removeTask.pending"></i>
                 <span ng-show="package.removeTask && !package.removeTask.pending">
 
-                  <i ng-show="currentPackagesTable.taskFailed(package.removeTask)" class="icon-exclamation-sign" tooltip="{{ 'Failed' | translate }}"></i>
-                  <i ng-hide="currentPackagesTable.taskFailed(package.removeTask)" class="icon-check-sign" tooltip="{{ 'Success' | translate }}"></i>
+                  <i ng-show="currentPackagesTable.taskFailed(package.removeTask)" class="fa fa-exclamation-sign" tooltip="{{ 'Failed' | translate }}"></i>
+                  <i ng-hide="currentPackagesTable.taskFailed(package.removeTask)" class="fa fa-check-sign" tooltip="{{ 'Success' | translate }}"></i>
 
                   <a ng-click="currentPackagesTable.openEventInfo(package.removeTask)" >
                     <span translate ng-show="package.removeTask.affected_units == 1">

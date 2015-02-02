@@ -12,7 +12,7 @@
                ng-model="contentHostsTable.searchTerm"
                bst-on-enter="contentHostsTable.search(contentHostsTable.searchTerm)"/>
         <span class="input-group-btn">
-          <button ng-click="contentHostsTable.search(contentHostsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
+          <button ng-click="contentHostsTable.search(contentHostsTable.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
         </span>
       </div>
     </div>
@@ -41,12 +41,14 @@
     <div bst-container-scroll bst-infinite-scroll="contentHostsTable.nextPage()" data="contentHostsTable.rows">
 
       <div class="loading-mask" ng-show="contentHostsTable.working && contentHostsTable.rows.length == 0">
-        <i class="icon-spinner icon-spin"></i>
+        <i class="fa fa-spinner fa-spin"></i>
         {{ "Loading..." | translate }}
       </div>
 
-      <p class="alert alert-info" ng-show="contentHostsTable.rows.length === 0" translate>
-        You currently don't have any Content Hosts in this Host Group, you can add Content Hosts after selecting the 'Add' tab.
+      <p bst-alert="info" ng-show="contentHostsTable.rows.length === 0">
+        <span translate>
+          You currently don't have any Content Hosts in this Host Group, you can add Content Hosts after selecting the 'Add' tab.
+        </span>
       </p>
 
       <table ng-class="{'table-mask': contentHostsTable.working}" 

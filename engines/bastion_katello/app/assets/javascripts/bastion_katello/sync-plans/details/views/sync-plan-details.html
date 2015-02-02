@@ -1,7 +1,7 @@
 <span page-title ng-model="syncPlan">{{ 'Sync Plan:' | translate }} {{ syncPlan.name }}</span>
 
 <div class="loading-mask loading-mask-panel" ng-show="panel.loading">
-  <i class="icon-spinner icon-spin"></i>
+  <i class="fa fa-spinner fa-spin"></i>
   {{ "Loading..." | translate }}
 </div>
 
@@ -18,11 +18,11 @@
 
 
       <button class="btn btn-default" ng-click="openModal()" ng-hide="denied('destroy_sync_plans', syncPlan)">
-        <i class="icon-trash"></i>
+        <i class="fa fa-trash-o"></i>
         {{ "Remove Sync Plan" | translate }}
       </button>
       <button class="btn btn-default" ui-sref="sync-plans.index">
-        <i class="icon-remove"></i>
+        <i class="fa fa-remove"></i>
         {{ "Close" | translate }}
       </button>
     </div>

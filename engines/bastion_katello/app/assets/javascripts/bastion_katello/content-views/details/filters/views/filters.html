@@ -12,21 +12,23 @@
     <button class="btn btn-default"
             ng-hide="denied('edit_content_views', contentView)"
             ui-sref="content-views.details.filters.new">
-      <i class="icon-plus"></i>
+      <i class="fa fa-plus"></i>
       <span translate>New Filter</span>
     </button>
     <button class="btn btn-default"
             ng-hide="denied('edit_content_views', contentView)"
             ng-disabled="detailsTable.numSelected === 0"
             ng-click="removeFilters()">
-      <i class="icon-trash"></i>
+      <i class="fa fa-trash-o"></i>
       <span translate>Remove Filters</span>
     </button>
   </div>
 
   <div data-block="table">
-    <p class="alert alert-info" ng-show="detailsTable.rows.length === 0" translate>
-      You currently don't have any Filters included in this Content View, you can add a new Filter by using the button on the right.
+    <p bst-alert="info" ng-show="detailsTable.rows.length === 0">
+      <span translate>
+        You currently don't have any Filters included in this Content View, you can add a new Filter by using the button on the right.
+      </span>
     </p>
 
     <table class="table table-striped table-bordered" ng-show="detailsTable.rows.length > 0"

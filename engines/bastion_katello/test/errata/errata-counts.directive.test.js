@@ -37,8 +37,8 @@ describe('Directive: errataCounts', function() {
     });
 
     it("displays icons for each type of errata", function() {
-        expect(element.find('.icon-warning-sign').length).toBe(1);
-        expect(element.find('.icon-bug').length).toBe(1);
-        expect(element.find('.icon-plus-sign-alt').length).toBe(1);
+        expect(element.find('.fa-warning').length).toBe(1);
+        expect(element.find('.fa-bug').length).toBe(1);
+        expect(element.find('.fa-plus-square').length).toBe(1);
     });
 });

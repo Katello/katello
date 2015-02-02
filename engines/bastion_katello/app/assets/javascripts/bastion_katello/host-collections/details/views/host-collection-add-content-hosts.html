@@ -11,7 +11,7 @@
                ng-model="addContentHostsTable.searchTerm"
                bst-on-enter="addContentHostsTable.search(addContentHostsTable.searchTerm)"/>
         <span class="input-group-btn">
-          <button ng-click="addContentHostsTable.search(addContentHostsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
+          <button ng-click="addContentHostsTable.search(addContentHostsTable.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
         </span>
       </div>
     </div>
@@ -42,12 +42,14 @@
     <div bst-container-scroll bst-infinite-scroll="addContentHostsTable.nextPage()" data="addContentHostsTable.rows">
 
       <div class="loading-mask" ng-show="addContentHostsTable.working && addContentHostsTable.rows.length == 0">
-        <i class="icon-spinner icon-spin"></i>
+        <i class="fa fa-spinner fa-spin"></i>
         {{ "Loading..." | translate }}
       </div>
 
-      <p class="alert alert-info" ng-show="addContentHostsTable.rows.length === 0" translate>
-        You currently don't have any Content Hosts, you can create new Content Hosts by selecting Contents Host from main menu and then clicking the button on the right.
+      <p bst-alert="info" ng-show="addContentHostsTable.rows.length === 0">
+        <span translate>
+          You currently don't have any Content Hosts, you can create new Content Hosts by selecting Contents Host from main menu and then clicking the button on the right.
+        </span>
       </p>
 
       <table ng-class="{'table-mask': addContentHostsTable.working}"

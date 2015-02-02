@@ -7,8 +7,7 @@
   <div data-extend-template="content-views/deletion/views/version-deletion-breadcrumb.html"></div>
 
   <div class="details details-full">
-    <div alert warning alert-warning ng-hide="allSelectable()">
-      <i class="icon-warning-sign"></i>
+    <div bst-alert="warning" ng-hide="allSelectable()">
        <span translate> This Version cannot be deleted from some of the Lifecycle Environments due to one of the reasons below.</span>
        <ul>
          <li translate> No "Promote/Remove" permissions on the Lifecycle Environment.</li>
@@ -55,8 +54,7 @@
     <span>
       <input type="checkbox" ng-model="deleteOptions.deleteArchive" ng-disabled="!canDeleteArchive()"/>
     </span>
-    <div alert alert-info>
-      <i class="icon-info-sign"></i>
+    <div bst-alert="info">
       <span translate>Selecting this option will result in the Version being completely deleted and no longer being available for promotion.  The version must be removed from all Lifecycle Environments in order to select this option.</span>
     </div>
 

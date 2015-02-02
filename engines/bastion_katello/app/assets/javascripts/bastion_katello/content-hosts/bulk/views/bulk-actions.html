@@ -14,12 +14,12 @@
       </button>
 
       <span ng-show="removingContentHosts">
-        <i class="icon-spinner inline-icon icon-spin"></i>
+        <i class="fa fa-spinner inline-icon fa-spin"></i>
         <span>{{ "Removing Content Hosts" | translate }}</span>
       </span>
 
       <button class="btn btn-default" ui-sref="content-hosts.index">
-        <i class="icon-remove"></i>
+        <i class="fa fa-remove"></i>
         {{ "Close" | translate }}
       </button>
 
@@ -73,15 +73,14 @@
 
   <div>
 
-    <div class="alert warning alert-warning" ng-show="table.numSelected == 0 && !isState('content-hosts.bulk-actions.subscriptions')">
-      <i class="icon-exclamation-sign"></i>
+    <div bst-alert="warning" ng-show="table.numSelected == 0 && !isState('content-hosts.bulk-actions.subscriptions')">
       {{ 'At least one content host needs to be selected in order to perform a bulk action.' | translate }}
     </div>
 
-    <div bst-alert success-messages="state.successMessages" error-messages="state.errorMessages"></div>
+    <div bst-alerts success-messages="state.successMessages" error-messages="state.errorMessages"></div>
 
-    <div class="alert alert-info" ng-show="state.working">
-      <i class="icon-spinner inline-icon icon-spin"></i>
+    <div bst-alert="info" ng-show="state.working">
+      <i class="fa fa-spinner inline-icon fa-spin"></i>
       {{ 'Processing' | translate }}
     </div>
 

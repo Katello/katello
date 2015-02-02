@@ -14,7 +14,7 @@
         active-row="stateIncludes('content-hosts.details', {contentHostId: contentHost.uuid})"
         ng-controller="ContentHostStatusController">
       <td bst-table-cell>
-        <span class="icon-circle" ng-class="contentHostTable.getStatusColor(contentHost.entitlementStatus)">
+        <span class="fa fa-circle" ng-class="contentHostTable.getStatusColor(contentHost.entitlementStatus)">
         </span>
         <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
           {{ contentHost.name }}

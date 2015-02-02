@@ -10,7 +10,7 @@
                ng-model="subscriptionsTable.searchTerm"
                bst-on-enter="subscriptionsTable.search(subscriptionsTable.searchTerm)"/>
         <span class="input-group-btn">
-          <button ng-click="subscriptionsTable.search(subscriptionsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
+          <button ng-click="subscriptionsTable.search(subscriptionsTable.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
         </span>
       </div>
     </div>
@@ -39,13 +39,15 @@
   <div bst-table="subscriptionsTable" class="nutupane">
     <div bst-container-scroll bst-infinite-scroll="subscriptionsTable.nextPage()">
 
-      <div class="loading-mask icon-3x" ng-show="subscriptionsTable.working && subscriptionsTable.rows.length == 0">
-        <i class="icon-spinner icon-spin"></i>
+      <div class="loading-mask fa-3x" ng-show="subscriptionsTable.working && subscriptionsTable.rows.length == 0">
+        <i class="fa fa-spinner fa-spin"></i>
         {{ "Loading..." | translate }}
       </div>
 
-      <p class="alert alert-info" ng-show="subscriptionsTable.rows.length === 0" translate>
-        You currently don't have any Subscriptions associated with this Content Host, you can add Subscriptions after selecting the 'Add' tab.
+      <p bst-alert="info" ng-show="subscriptionsTable.rows.length === 0">
+        <span translate>
+          You currently don't have any Subscriptions associated with this Content Host, you can add Subscriptions after selecting the 'Add' tab.
+        </span>
       </p>
 
       <table ng-class="{'table-mask': subscriptionsTable.working}" 

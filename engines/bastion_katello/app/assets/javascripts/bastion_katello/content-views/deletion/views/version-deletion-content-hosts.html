@@ -28,7 +28,7 @@
         <select ng-show="!fetchingViews && selectedEnvironment && contentViewsForEnvironment.length > 0"
                 ng-options="cv.id as cv.name for cv in contentViewsForEnvironment"
                 ng-model="selectedContentViewId"></select>
-        <i ng-show="fetchingViews" class="icon-spinner icon-spin"></i>
+        <i ng-show="fetchingViews" class="fa fa-spinner fa-spin"></i>
         <span translate ng-hide="selectedEnvironment">
           Please select an environment.
         </span>

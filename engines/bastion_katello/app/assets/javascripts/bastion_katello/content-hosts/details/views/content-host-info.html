@@ -38,11 +38,11 @@
            bst-feature-flag="remote_actions">
         <span class="info-label" translate>Katello Agent</span>
         <span class="info-value" ng-show="contentHost.katello_agent_installed">
-          <span class="icon-circle green"></span>
+          <span class="fa fa-circle green"></span>
           <span translate>Installed</span>
         </span>
         <span class="info-value" ng-hide="contentHost.katello_agent_installed">
-          <span class="icon-circle yellow"></span>
+          <span class="fa fa-circle yellow"></span>
           <span translate>Not installed</span>
         </span>
       </div>
@@ -74,7 +74,7 @@
       <div class="detail">
         <span class="info-label" translate>Subscription Status</span>
         <span class="info-value">
-          <i class="icon-circle" ng-class="contentHostTable.getStatusColor(contentHost.compliance.status)"></i>
+          <i class="fa fa-circle" ng-class="contentHostTable.getStatusColor(contentHost.compliance.status)"></i>
           {{ contentHost.compliance.status }}
         </span>
       </div>
@@ -182,7 +182,7 @@
         <span class="info-label" translate>Security</span>
         <span class="info-value">
           <a ui-sref="content-hosts.details.errata.index({search: 'type:security'})">
-            <i class="icon-warning-sign inline-icon"
+            <i class="fa fa-warning inline-icon"
                ng-class="{black: contentHost.errata_counts.security === 0, red: contentHost.errata_counts.security > 0}"
                title="{{ 'Security' | translate }}"></i>
             {{ contentHost.errata_counts.security || 0 }}
@@ -194,7 +194,7 @@
         <span class="info-label" translate>Bug Fix</span>
         <span class="info-value">
           <a ui-sref="content-hosts.details.errata.index({search: 'type:bugfix'})">
-            <i class="icon-bug inline-icon"
+            <i class="fa fa-bug inline-icon"
                ng-class="{black: contentHost.errata_counts.bugfix === 0, yellow: contentHost.errata_counts.bugfix > 0}"
                title="{{ 'Bug Fix' | translate }}"></i>
             {{ contentHost.errata_counts.bugfix || 0 }}
@@ -206,7 +206,7 @@
         <span class="info-label" translate>Enhancement</span>
         <span class="info-value">
           <a ui-sref="content-hosts.details.errata.index({search: 'type:enhancement'})">
-            <i class="icon-plus-sign-alt inline-icon"
+            <i class="fa fa-plus-square inline-icon"
                ng-class="{black: contentHost.errata_counts.enhancement === 0, yellow: contentHost.errata_counts.enhancement > 0}"
                title="{{ 'Enhancement' | translate }}"></i>
             {{ errataCounts.enhancement || 0 }}
@@ -343,7 +343,7 @@
         <span class="info-label" translate>Interfaces</span>
         <div class="info-value">
           <div ng-repeat="(interfaceName, interface) in contentHostFacts.net.interface" >
-            <i ng-class="{'icon-plus': !expanded, 'icon-minus': expanded}" class="expand-icon"
+            <i ng-class="{'fa fa-plus': !expanded, 'fa fa-minus': expanded}" class="expand-icon"
                ng-hide="editMode" ng-click="expanded = !expanded"></i>
             {{ interfaceName }}
             <div class="sub-detail" ng-show="expanded">
@@ -362,7 +362,7 @@
     <section class="custom-information">
       <h4 translate>Custom Information</h4>
 
-      <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+      <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
       <span bst-edit-add-item="contentHost.customInfo"
             ng-show="perimtted('edit_content_hosts', contentHost)"
@@ -393,7 +393,7 @@
   <div class="advanced-info" ng-show="hasAdvancedInfo">
     <header class="details-sub-header">
        <h3>
-        <i class="expand-icon" ng-class="{'icon-plus': !showAdvanced, 'icon-minus': showAdvanced}"
+        <i class="expand-icon" ng-class="{'fa fa-plus': !showAdvanced, 'fa fa-minus': showAdvanced}"
            ng-click="showAdvanced = !showAdvanced"></i>
          <span translate>Advanced Information</span>
        </h3>
