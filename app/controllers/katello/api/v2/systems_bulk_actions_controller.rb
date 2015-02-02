@@ -44,11 +44,11 @@ module Katello
 
     def_param_group :bulk_params do
       param :organization_id, :identifier, :required => true, :desc => N_("ID of the organization")
-      param :include, Hash, :required => true, :action_aware => true do
+      param :included, Hash, :required => true, :action_aware => true do
         param :search, String, :required => false, :desc => N_("Search string for systems to perform an action on")
         param :ids, Array, :required => false, :desc => N_("List of system ids to perform an action on")
       end
-      param :exclude, Hash, :required => true, :action_aware => true do
+      param :excluded, Hash, :required => true, :action_aware => true do
         param :ids, Array, :required => false, :desc => N_("List of system ids to exclude and not run an action on")
       end
     end
@@ -164,7 +164,7 @@ module Katello
     api :POST, "/systems/bulk/available_incremental_updates", N_("Given a set of systems and errata, lists the content view versions \
                                                                   and environments that need updating."), :deprecated => true
     param_group :bulk_params
-    param :errata_ids, :identifier, :desc => N_("List of Errata ids")
+    param :errata_ids, Array, :desc => N_("List of Errata ids")
     def available_incremental_updates
       version_environments = {}
       systems = System.with_non_installable_errata(@errata).where("#{System.table_name}.id" => @systems)
