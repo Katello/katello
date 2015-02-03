@@ -80,7 +80,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyProductDetail
             if (content.overrideEnabled === null) {
                 ActivationKey.contentOverride({id: $scope.activationKey.id},
                         {'content_override': {'content_label': content.content.label,
-                                              name: "enabled"}
+                                              value: 'default'}
                         },
                         function (response) {
                             $scope.success(content);
@@ -90,7 +90,6 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyProductDetail
             } else {
                 ActivationKey.contentOverride({id: $scope.activationKey.id},
                         {'content_override': { 'content_label': content.content.label,
-                                               name: "enabled",
                                                value: content.overrideEnabled}
                         },
                         function (response) {

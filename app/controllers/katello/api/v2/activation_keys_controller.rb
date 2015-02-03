@@ -208,22 +208,35 @@ module Katello
 
     api :PUT, "/activation_keys/:id/content_override", N_("Override content for activation_key")
     param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
-    param :label, String, :desc => N_("Label of the content"), :required => false
-    param :value, :number, :desc => N_("Override value 0/1"), :required => false
+    param :content_override, Hash, :desc => N_("Content override parameters") do
+      param :content_label, String, :desc => N_("Label of the content"), :required => true
+      param :value, [0, 1, "default"], :desc => N_("Override to 0/1, or 'default'"), :required => true
+    end
     def content_override
-      if params[:label]
-        params[:content_override] = {}
-        params[:content_override][:content_label] = params[:label]
-        params[:content_override][:name] = "enabled"
-        params[:content_override][:value] = params[:value]
-      end
-      content_override = params[:content_override]
-      @activation_key.set_content_override(content_override[:content_label],
-                                           content_override[:name], content_override[:value]) if content_override
+      content_override = validate_content_overrides(params[:content_override])
+      @activation_key.set_content_override(content_override[:content_label], 'enabled', content_override[:value])
       respond_for_show(:resource => @activation_key)
     end
 
     private
+
+    def validate_content_overrides(content_params)
+      case content_params[:value].to_s
+      when 'default'
+        content_params[:value] = nil
+      when '1'
+        content_params[:value] = 1
+      when '0'
+        content_params[:value] = 0
+      else
+        fail HttpErrors::BadRequest, _("Value must be 0/1, or 'default'")
+      end
+
+      unless @activation_key.available_content.map(&:content).any? { |content| content.label == content_params[:content_label] }
+        fail HttpErrors::BadRequest, _("Invalid content label: %s") % content_params[:content_label]
+      end
+      content_params
+    end
 
     def subscription_index
       subs = @activation_key.subscriptions
