@@ -183,6 +183,13 @@ describe('Controller: ApplyErrataController', function() {
                 expect($scope.errorMessages.length).toBe(1);
                 expect($scope.errorMessages[0]).toBe('error');
             });
+
+            it("can pass a parameter to update the content hosts", function () {
+                expectedParams['update_systems'] = {include: [1, 2, 3]};
+                $scope.errataConfirm = {applyErrata: true};
+
+                $scope.confirmApply();
+            });
         });
     });
 });

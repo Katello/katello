@@ -32,7 +32,7 @@
     <p translate>
       These Errata are not Installable via your published Content View versions running on the selected hosts.  The new Content View Versions (specified below)
       will be created which will make this Errata Installable in the host's Environment.  This new version will replace the current version in your host's Lifecycle
-      Environment.
+      Environment.  To install these errata immediately on hosts after publishing check the box below.
     </p>
   
     <table class="table table-striped table-bordered">
@@ -67,7 +67,14 @@
     </table>
   </section>
 
-  <form role="form" ng-submit="confirmApply()">
+  <form name="errataConfirm" role="form" ng-submit="confirmApply()">
+    <div class="checkbox" ng-show="updates">
+      <label>
+        <input name="applyErrata" ng-model="applyErrata" type="checkbox"/>
+        <span translate>Apply Errata to Content Hosts immediately after publishing.</span>
+      </label>
+    </div>
+
     <button type="button" class="btn btn-default" ng-click="transitionBack()" translate>Cancel</button>
     <button type="submit" class="btn btn-primary" translate>Confirm</button>
   </form>
