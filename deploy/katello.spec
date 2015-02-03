@@ -122,6 +122,7 @@ Requires:       rubygem-hammer_cli_katello
 Requires:       rubygem-hammer_cli_import
 Requires:       rubygem-hammer_cli_gutterball
 Requires:       %{?scl_prefix}rubygem-foreman_gutterball
+Requires:       %{name}-debug
 
 %description common
 Common runtime components of %{name}
@@ -143,7 +144,6 @@ usermod -a -G katello-shared tomcat
 %ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
 
 %{homedir}/script
-/usr/share/foreman/script/foreman-debug.d/katello-debug.sh
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{_mandir}/man8/katello-service.8*
 %{_sbindir}/service-wait
@@ -165,6 +165,18 @@ getent passwd %{name} >/dev/null || \
 getent group katello-shared > /dev/null || groupadd -r katello-shared
 usermod -a -G katello-shared katello
 exit 0
+
+# ------ Debug ----------------
+%package debug
+Summary: Katello Debug utilities
+Group: Applications/System
+Requires: foreman-debug
+
+%description debug
+Useful utilities for debug info collecting
+
+%files debug
+%{_datadir}/foreman/script/foreman-debug.d/katello-debug.sh
 
 # ------ SAM ------------------
 
