@@ -48,13 +48,11 @@ module Katello
     end
 
     def self.with_environment(environment, include_default = false)
-      scope = SmartProxy.joins(:capsule_lifecycle_environments).
-          where(katello_capsule_lifecycle_environments: { lifecycle_environment_id: environment.id })
+      features = [SmartProxy::PULP_NODE_FEATURE]
+      features << SmartProxy::PULP_FEATURE if include_default
 
-      unless include_default
-        server_fqdn = Facter.value(:fqdn) || SETTINGS[:fqdn]
-        scope = scope.where("#{ SmartProxy.table_name }.name not in (?)", server_fqdn)
-      end
+      scope = SmartProxy.with_features(features).joins(:capsule_lifecycle_environments).
+          where(katello_capsule_lifecycle_environments: { lifecycle_environment_id: environment.id })
 
       scope.map { |proxy| self.new(proxy) }
     end

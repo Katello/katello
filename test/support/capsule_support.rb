@@ -13,7 +13,7 @@
 module Support
   module CapsuleSupport
     def pulp_feature
-      @pulp_feture ||= Feature.create(name: SmartProxy::PULP_NODE_FEATURE)
+      @pulp_feature ||= Feature.create(name: SmartProxy::PULP_NODE_FEATURE)
     end
 
     def proxy_with_pulp
