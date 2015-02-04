@@ -41,7 +41,7 @@ Requires: %{name}-common = %{version}-%{release}
 
 #foreman plugins and optional packages
 Requires:       %{?scl_prefix}rubygem-foreman_bootdisk
-Requires:       %{?scl_prefix}rubygem-foreman_discovery
+#Requires:       %{?scl_prefix}rubygem-foreman_discovery #http://projects.theforeman.org/issues/9200
 Requires:       %{?scl_prefix}rubygem-foreman_hooks
 Requires:       %{name}-installer
 Requires:       foreman-libvirt
