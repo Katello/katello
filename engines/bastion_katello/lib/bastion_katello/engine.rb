@@ -23,6 +23,7 @@ module BastionKatello
           activation_keys
           content_hosts
           content_views
+          docker_tags
           errata
           gpg_keys
           lifecycle_environments

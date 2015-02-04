@@ -105,6 +105,15 @@ Foreman::Plugin.register :katello do
                        :action => 'index'},
          :engine => Katello::Engine,
          :turbolinks => false
+
+    menu :top_menu,
+         :docker_tags,
+         :caption => N_('Docker Tags'),
+         :url => '/docker_tags',
+         :url_hash => {:controller => 'katello/api/v2/docker_tags',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false
   end
 
   menu :top_menu,

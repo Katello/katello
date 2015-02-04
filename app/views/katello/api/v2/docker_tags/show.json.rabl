@@ -1,13 +1,12 @@
 object @resource
 
-attributes :id, :name
-attributes :repository_id
+extends 'katello/api/v2/docker_tags/base'
 
 child :docker_image => :image do
   attributes :uuid => :id
   attributes :image_id
 end
 
-child :repository => :repository do
+child :related_tags => :related_tags do
   attributes :id, :name
 end

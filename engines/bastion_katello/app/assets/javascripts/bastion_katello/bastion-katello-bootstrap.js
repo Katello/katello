@@ -16,6 +16,7 @@ BASTION_MODULES.push(
     'Bastion.content-views',
     'Bastion.content-views.versions',
     'Bastion.custom-info',
+    'Bastion.docker-tags',
     'Bastion.environments',
     'Bastion.gpg-keys',
     'Bastion.capsules',

@@ -16,6 +16,16 @@ module Katello
     include Katello::Concerns::Api::V2::RepositoryContentController
     include Katello::Concerns::Api::V2::RepositoryDbContentController
 
+    def index
+      if params[:grouped]
+        # group docker tags by name, repo, and product
+        collection = Katello::DockerTag.grouped
+        respond(:collection => scoped_search(collection, "name", "DESC"))
+      else
+        super
+      end
+    end
+
     private
 
     def resource_class
