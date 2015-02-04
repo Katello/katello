@@ -122,6 +122,18 @@ module Katello
       end
     end
 
+    def test_index
+      get :index, :organization_id => @organization.id
+
+      assert_response :success
+    end
+
+    def test_index_with_name
+      get :index, :organization_id => @organization.id, :name => @organization.library.name
+
+      assert_response :success
+    end
+
     def test_destroy
       destroyable_env = KTEnvironment.create!(:name => "DestroyAble",
                                               :organization => @staging.organization,
