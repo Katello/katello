@@ -61,7 +61,7 @@ module Katello
     param :library, [true, false], :desc => N_("set true if you want to see only library environments")
     param :name, String, :desc => N_("filter only environments containing this name")
     def index
-      respond(:collection => scoped_search(index_relation.uniq, :name, :desc))
+      respond(:collection => scoped_search(index_relation.uniq, :name, :desc, KTEnvironment))
     end
 
     def index_relation
