@@ -34,7 +34,7 @@ describe('Controller: ApplyErrataController', function() {
             failed: false,
             installContent: function (params, success, error) {
                 if (this.failed) {
-                    error({errors: ['error']});
+                    error({data: {errors: ['error']}});
                 } else {
                     success();
                 }
@@ -45,7 +45,7 @@ describe('Controller: ApplyErrataController', function() {
         ContentViewVersion = {
             incrementalUpdate: function (params, success, error) {
                 if (this.failed) {
-                    error({errors: ['error']});
+                    error({data: {errors: ['error']}});
                 } else {
                     success({id: 1});
                 }

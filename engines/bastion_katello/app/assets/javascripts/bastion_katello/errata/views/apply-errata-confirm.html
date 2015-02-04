@@ -11,12 +11,13 @@
   <li class="active" translate>Confirm</li>
 </ol>
 
+<div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+
 <section class="col-md-4" ng-hide="selectedContentHosts">
   <p class="alert alert-warning" translate>You must select at least one Content Host in order to apply Errata.</p>
 </section>
 
 <section class="details details-full" ng-show="selectedContentHosts">
-  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
   <h3 ng-show="errata" translate>Apply {{ errata.errata_id }}</h3>
 
   <section ng-hide="updates">
@@ -76,7 +77,12 @@
     </div>
 
     <button type="button" class="btn btn-default" ng-click="transitionBack()" translate>Cancel</button>
-    <button type="submit" class="btn btn-primary" translate>Confirm</button>
+    <button type="submit" class="btn btn-primary"
+            ng-disabled="applyingErrata">
+      <i class="fa fa-spinner fa-spin" ng-show="applyingErrata"></i>
+      <span ng-show="applyingErrata" translate>Applying</span>
+      <span ng-hide="applyingErrata" translate>Confirm</span>
+    </button>
   </form>
 </section>
 

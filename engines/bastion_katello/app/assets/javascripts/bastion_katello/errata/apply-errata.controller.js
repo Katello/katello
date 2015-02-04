@@ -32,9 +32,12 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
 
             $scope.successMessages = [];
             $scope.errorMessages = [];
+            $scope.applyingErrata = false;
 
             incrementalUpdate = function () {
                 var success, error, params = {};
+
+                $scope.applyingErrata = true;
 
                 params['add_content'] = {
                     'errata_ids': $scope.errataIds
@@ -58,10 +61,12 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
 
                 success = function (response) {
                     $window.location.href = '/foreman_tasks/tasks/' + response['id'];
+                    $scope.applyingErrata = false;
                 };
 
                 error = function (response) {
-                    $scope.errorMessages = response.errors;
+                    $scope.errorMessages = response.data.errors;
+                    $scope.applyingErrata = false;
                 };
 
                 ContentViewVersion.incrementalUpdate(params, success, error);
@@ -70,6 +75,8 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
             applyErrata = function () {
                 var params = $scope.selectedContentHosts, success, error;
 
+                $scope.applyingErrata = true;
+
                 params['content_type'] = 'errata';
                 params.content = $scope.errataIds;
                 params['organization_id'] = CurrentOrganization;
@@ -77,17 +84,16 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 success = function () {
                     $scope.transitionTo('errata.index');
                     $scope.successMessages = [translate("Successfully scheduled installation of errata")];
+                    $scope.applyingErrata = false;
                 };
 
-                error = function (data) {
-                    $scope.errorMessages = data.errors;
+                error = function (response) {
+                    $scope.errorMessages = response.data.errors;
+                    $scope.applyingErrata = false;
                 };
 
                 ContentHostBulkAction.installContent(params, success, error);
             };
-
-            $scope.errorMessages = [];
-            $scope.successMessages = [];
 
             if ($scope.$stateParams.hasOwnProperty('errataId')) {
                 $scope.errataIds = [$scope.$stateParams.errataId];

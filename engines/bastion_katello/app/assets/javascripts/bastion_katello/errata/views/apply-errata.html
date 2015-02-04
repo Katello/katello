@@ -2,8 +2,6 @@
 
 <section class="nutupane-details" ng-cloak bst-container-scroll>
 
-  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
-
   <header class="details-header">
     <h2 class="fl" translate>Apply Errata</h2>
 
@@ -20,8 +18,6 @@
       <i class="icon-exclamation-sign"></i>
       {{ 'At least one Errata needs to be selected to Apply.' | translate }}
     </div>
-
-    <div bst-alert success-messages="state.successMessages" error-messages="state.errorMessages"></div>
 
     <div class="alert alert-info" ng-show="state.working">
       <i class="icon-spinner inline-icon icon-spin"></i>
