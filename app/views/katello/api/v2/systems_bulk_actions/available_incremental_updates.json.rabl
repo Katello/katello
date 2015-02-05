@@ -13,3 +13,9 @@ child :environments => :environments do
 end
 
 attributes :next_version, :content_host_count
+
+child :components => :components do
+  attributes :name, :id
+  attributes :next_incremental_version => :next_version
+  attributes :content_view_id
+end

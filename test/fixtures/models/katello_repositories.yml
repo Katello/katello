@@ -259,3 +259,16 @@ busybox_view2:
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>
 
+rhel_6_x86_64_composite_view_version_1:
+  name:                 RHEL 6 x86_64
+  pulp_id:              8
+  content_id:           1
+  major:                6
+  minor:                6Server
+  content_type:         yum
+  label:                rhel_6_x86_64_label_composite_view_version_1
+  relative_path:        '/ACME_Corporation/library/composite/rhel_6_label'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:redhat) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:composite_view_version_1) %>

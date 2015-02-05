@@ -174,6 +174,13 @@ module Katello
       end
     end
 
+    def components_needing_errata(errata)
+      component_repos = Repository.where(:content_view_version_id => self.components)
+      library_repos = Repository.where(:id => component_repos.pluck(:library_instance_id)).with_errata(errata)
+      component_repos -= component_repos.with_errata(errata) #find component repos without the errata
+      component_repos.select { |repo| library_repos.include?(repo.library_instance) }.map(&:content_view_version).uniq
+    end
+
     def packages
       repositories.archived.flat_map(&:packages)
     end

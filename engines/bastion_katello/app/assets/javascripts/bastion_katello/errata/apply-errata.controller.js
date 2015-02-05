@@ -33,8 +33,22 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
             $scope.errorMessages = [];
             $scope.applyingErrata = false;
 
+            $scope.hasComposites = function (updates) {
+                if (updates) {
+                    var composite = _.find(updates, function (update) {
+                        return update.components;
+                    });
+                    return composite;
+                }
+                return false;
+            };
+
+            $scope.toggleComponents = function (update) {
+                update.componentsVisible = !update.componentsVisible;
+            };
+
             incrementalUpdate = function () {
-                var success, error, params = {};
+                var success, error, params = {}, cvIdEnvIds = {};
 
                 $scope.applyingErrata = true;
 
@@ -46,13 +60,31 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 params['propagate_to_composites'] = true;
                 params['resolve_dependencies'] = true;
 
+                //get a list of unique content view verion ids with their environments
                 angular.forEach($scope.updates, function (update) {
-                    var incrementalUpdate = {
-                        'content_view_version_id': update['content_view_version'].id,
-                        'environment_ids': _.pluck(update.environments, 'id')
-                    };
+                    var versionId = update['content_view_version'].id;
 
-                    params['content_view_version_environments'].push(incrementalUpdate);
+                    if (update.components) {
+                        angular.forEach(_.pluck(update.components, 'id'), function (componentId) {
+                            if (cvIdEnvIds[componentId] === undefined) {
+                                cvIdEnvIds[componentId] = [];
+                            }
+                        });
+                    }
+                    else {
+
+                        if (cvIdEnvIds[versionId] === undefined) {
+                            cvIdEnvIds[versionId] = [];
+                        }
+                        cvIdEnvIds[versionId] = _.uniq(cvIdEnvIds[versionId].concat(_.pluck(update.environments, 'id')));
+                    }
+                });
+
+                angular.forEach(cvIdEnvIds, function (envIds, cvId) {
+                    params['content_view_version_environments'].push({
+                        'content_view_version_id': parseInt(cvId, 10),
+                        'environment_ids': envIds
+                    });
                 });
 
                 if ($scope.applyErrata) {

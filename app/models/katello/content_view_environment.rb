@@ -32,6 +32,11 @@ module Katello
 
     scope :non_default, joins(:content_view).where("katello_content_views.default" => false)
 
+    def self.for_systems(systems)
+      joins("INNER JOIN #{System.table_name} on #{System.table_name}.environment_id = #{ContentViewEnvironment.table_name}.environment_id").
+           where("#{System.table_name}.content_view_id = #{ContentViewEnvironment.table_name}.content_view_id").where("#{System.table_name}.id" => systems)
+    end
+
     # retrieve the owning environment for this content view environment.
     def owner
       self.environment
