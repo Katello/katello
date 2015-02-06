@@ -64,8 +64,7 @@ module Actions
                             org.library, content_create.input[:content_id])
               end
 
-              #skip metadata generation until https://bugzilla.redhat.com/show_bug.cgi?id=1127793 is resolved
-              if !repository.puppet? && !repository.redhat?
+              unless repository.puppet?
                 plan_action(Katello::Repository::MetadataGenerate, repository)
               end
             end
