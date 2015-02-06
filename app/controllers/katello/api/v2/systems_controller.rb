@@ -76,7 +76,7 @@ module Katello
         systems = System.readable
       end
 
-      filters = [{:terms => {:uuid => systems.pluck(:uuid).compact}}]
+      filters = [{:terms => {:uuid => systems.pluck("#{Katello::System.table_name}.uuid").compact}}]
       environment_ids = params[:organization_id] ? Organization.find(params[:organization_id]).kt_environments.pluck(:id) : []
       environment_ids = environment_ids.empty? ? params[:environment_id] : environment_ids & [params[:environment_id].to_i] if params[:environment_id]
       unless environment_ids.empty?
