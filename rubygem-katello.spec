@@ -29,7 +29,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.1.0
-Release: 4%{dist}
+Release: 5%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -236,6 +236,15 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Fri Feb 06 2015 Justin Sherrill <jsherril@redhat.com> 2.1.0-5
+- fixes #9105 - set default org for initial admin user (jsherril@redhat.com)
+- fixes #8941 - dynflow refresh subscriptions (auto-attach)
+  (thomasmckay@redhat.com)
+- fixes #9131 - publish content view was always using latest puppet module
+  (jsherril@redhat.com)
+- Automatic commit of package [katello] minor release [2.1.0-3].
+  (daviddavis@redhat.com)
+
 * Mon Jan 26 2015 David Davis <daviddavis@redhat.com> 2.1.0-4
 - Fixes #8961 - Fixing a typo in the name of an action class (paji@redhat.com)
 - fixes #8943 - do not perform post sync actions until after the sync is
