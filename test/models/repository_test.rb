@@ -194,6 +194,12 @@ module Katello
       assert_includes @fedora_17_x86_64.clones, @fedora_17_x86_64_dev
     end
 
+    def test_group
+      assert_includes @fedora_17_x86_64.group, @fedora_17_x86_64_dev
+      assert_includes @fedora_17_x86_64.group, @fedora_17_x86_64
+      assert_equal @fedora_17_x86_64.clones.count + 1, @fedora_17_x86_64.group.count
+    end
+
     def test_cloned_in?
       assert @fedora_17_x86_64.cloned_in?(@dev)
     end

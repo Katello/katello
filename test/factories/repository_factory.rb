@@ -37,5 +37,7 @@ FactoryGirl.define do
     trait :iso do
       content_type "file"
     end
+
+    factory :docker_repository, traits: [:docker]
   end
 end

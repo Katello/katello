@@ -62,8 +62,7 @@ module Katello
 
     def related_tags
       # tags in the same repo group with the same name
-      repos = Repository.where(:product_id => product.id, :name => repository.name)
-      self.class.where(:repository_id => repos, :name => name)
+      self.class.where(:repository_id => repository.group, :name => name)
     end
 
     def self.completer_scope_options
