@@ -28,14 +28,18 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
         function ($scope, Nutupane, CurrentOrganization, ContentView) {
             var nutupane, params;
 
+            nutupane = new Nutupane(ContentView, params);
+            nutupane.table.initialLoad = false;
+            $scope.detailsTable = nutupane.table;
+
             $scope.contentView.$promise.then(function (contentView) {
                 var filterIds = [];
-                
+
                 if (contentView.components) {
                     filterIds = _.pluck(contentView.components, 'content_view_id');
                 }
                 filterIds.push(contentView.id);
-                
+
                 params = {
                     'organization_id': CurrentOrganization,
                     'full_result': true,
@@ -44,8 +48,8 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
                     "without[]": filterIds
                 };
 
-                nutupane = new Nutupane(ContentView, params);
-                $scope.detailsTable = nutupane.table;
+                nutupane.setParams(params);
+                nutupane.refresh();
             });
 
 

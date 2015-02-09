@@ -34,6 +34,8 @@ describe('Controller: ContentViewCompositeAvailableContentViewsController', func
             };
 
             this.table = {};
+            this.setParams = function () {};
+            this.refresh = function () {};
         };
 
         $scope = $injector.get('$rootScope').$new();
