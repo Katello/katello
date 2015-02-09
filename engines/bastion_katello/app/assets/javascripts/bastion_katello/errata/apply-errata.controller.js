@@ -45,6 +45,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
 
                 params['content_view_version_environments'] = [];
                 params['propagate_to_composites'] = true;
+                params['resolve_dependencies'] = true;
 
                 angular.forEach($scope.updates, function (update) {
                     var incrementalUpdate = {

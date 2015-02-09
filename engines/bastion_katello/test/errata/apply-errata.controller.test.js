@@ -150,7 +150,8 @@ describe('Controller: ApplyErrataController', function() {
                         'content_view_version_id': 1,
                         'environment_ids': [2]
                     }],
-                    'propagate_to_composites': true
+                    'propagate_to_composites': true,
+                    'resolve_dependencies': true
                 };
 
                 $scope.updates = [{
