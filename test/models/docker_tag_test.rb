@@ -24,11 +24,13 @@ module Katello
     end
 
     def setup
-      @repo = Repository.find(katello_repositories(:docker))
-      @image = @repo.docker_images.create!({:image_id => "abc123", :uuid => "123"},
-                                           :without_protection => true
-                                          )
-      @tag = DockerTag.create!(:name => "wat", :docker_image => @image, :repository => @repo)
+      @repo = Repository.find(katello_repositories(:busybox))
+      @tag = create(:docker_tag, :repository => @repo)
+      @image = @tag.docker_image
+
+      @repo.library_instances_inverse.each do |repo|
+        repo.docker_tags << @tag.dup
+      end
     end
 
     def test_in_repositories
@@ -40,6 +42,21 @@ module Katello
       tag = DockerTag.with_uuid(@tag.id).first
       refute_nil tag
       assert_equal @tag.id, tag.id
+    end
+
+    def test_grouped
+      assert_equal 1, DockerTag.grouped.where(:name => @tag.name).count
+
+      create(:docker_tag, :latest, :repository => @repo)
+      assert_equal 2, DockerTag.grouped.where(:name => [@tag.name, "latest"]).count
+    end
+
+    def test_related_tags
+      assert_equal 3, @tag.related_tags.count
+    end
+
+    def test_full_name
+      assert_equal "busybox:#{@tag.name}", @tag.full_name
     end
   end
 end

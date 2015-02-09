@@ -22,7 +22,7 @@ module Katello
     end
 
     def models
-      @repo = Repository.find(katello_repositories(:docker))
+      @repo = Repository.find(katello_repositories(:redis))
       @image = @repo.docker_images.create!({:image_id => "abc123", :uuid => "123"},
                                            :without_protection => true
                                           )

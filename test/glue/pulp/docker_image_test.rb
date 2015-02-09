@@ -22,7 +22,7 @@ module Katello
       @images = YAML.load_file(IMAGES).values.map(&:symbolize_keys)
       @tags = YAML.load_file(TAGS).values.map(&:symbolize_keys)
       @repo_attrs = {:scratchpad => {:tags => @tags}}
-      @repo = Repository.find(katello_repositories(:docker))
+      @repo = Repository.find(katello_repositories(:redis))
 
       ids = @images.map { |attrs| attrs[:_id] }
       Runcible::Extensions::Repository.any_instance.stubs(:docker_image_ids).

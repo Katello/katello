@@ -244,7 +244,7 @@ module Katello
       v2 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2))
 
       refute composite.update_attributes(component_ids: [v1.id, v2.id])
-      assert_equal 1, composite.errors.count
+      assert_equal 2, composite.errors.count # docker and yum repos
       assert composite.errors.full_messages.first =~ /^Repository conflict/
 
       assert_raises(RuntimeError) do

@@ -26,7 +26,7 @@ module ::Actions::Katello::Repository
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
     let(:custom_repository) { katello_repositories(:fedora_17_x86_64) }
     let(:puppet_repository) { katello_repositories(:p_forge) }
-    let(:docker_repository) { katello_repositories(:docker) }
+    let(:docker_repository) { katello_repositories(:redis) }
   end
 
   class CreateTest < TestBase
@@ -100,7 +100,7 @@ module ::Actions::Katello::Repository
 
   class RemoveDockerImagesTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::RemoveDockerImages }
-    let(:docker_repo) { katello_repositories(:docker) }
+    let(:docker_repo) { katello_repositories(:redis) }
     let(:uuids) { ["abc123", "def123", "ghi123"] }
 
     it 'runs' do
@@ -230,8 +230,8 @@ module ::Actions::Katello::Repository
 
   class CloneDockerContentTest  < TestBase
     let(:action_class) { ::Actions::Katello::Repository::CloneDockerContent }
-    let(:source_repo) { katello_repositories(:docker) }
-    let(:target_repo) { katello_repositories(:docker2) }
+    let(:source_repo) { katello_repositories(:redis) }
+    let(:target_repo) { katello_repositories(:busybox) }
 
     it 'plans' do
       action = create_action action_class
@@ -251,7 +251,7 @@ module ::Actions::Katello::Repository
 
   class CloneDockerContentEnvironmentTest  < TestBase
     let(:action_class) { ::Actions::Katello::Repository::CloneToEnvironment }
-    let(:source_repo) { katello_repositories(:docker) }
+    let(:source_repo) { katello_repositories(:redis) }
 
     it 'plans' do
       action = create_action action_class

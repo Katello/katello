@@ -191,9 +191,18 @@ module Katello
       !(redhat?)
     end
 
+    def library_instance?
+      library_instance.nil?
+    end
+
     def clones
       lib_id = self.library_instance_id || self.id
       Repository.where(:library_instance_id => lib_id)
+    end
+
+    def group
+      library_repo = library_instance? ? self : library_instance
+      clones << library_repo
     end
 
     #is the repo cloned in the specified environment
