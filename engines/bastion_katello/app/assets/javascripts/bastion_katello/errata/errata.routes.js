@@ -22,12 +22,13 @@
  */
 angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('errata', {
+        url: '/errata',
         abstract: true,
         controller: 'ErrataController',
         templateUrl: 'errata/views/errata.html'
     })
     .state('errata.index', {
-        url: '/errata?repositoryId',
+        url: '?repositoryId',
         permission: ['view_products', 'view_content_views'],
         views: {
             'table': {
@@ -66,7 +67,7 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
 
     .state('errata.details', {
         abstract: true,
-        url: '/errata/:errataId',
+        url: '/:errataId',
         permission: ['view_products', 'view_content_views'],
         collapsed: true,
         views: {
@@ -105,5 +106,39 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
         permission:  ['view_products', 'view_content_views'],
         controller: 'ErrataDetailsRepositoriesController',
         templateUrl: 'errata/details/views/errata-details-repositories.html'
+    })
+    .state('errata.details.task-details', {
+        url: '/tasks/:taskId',
+        collapsed: true,
+        permission: ['view_products', 'view_content_views'],
+        controller: 'TaskDetailsController',
+        templateUrl: 'errata/views/errata-task-details.html'
+    })
+
+    .state('errata.tasks', {
+        abstract: true,
+        collapsed: true,
+        permission: ['view_products', 'view_content_views'],
+        views: {
+            'table': {
+                templateUrl: 'errata/views/errata-table-collapsed.html'
+            },
+            'action-panel': {
+                templateUrl: 'errata/views/errata-tasks.html'
+            }
+        }
+    })
+    .state('errata.tasks.index', {
+        url: '/tasks',
+        collapsed: true,
+        permission: ['view_products', 'view_content_views'],
+        templateUrl: 'errata/views/errata-tasks-list.html'
+    })
+    .state('errata.tasks.details', {
+        url: '/tasks/:taskId',
+        collapsed: true,
+        permission: ['view_products', 'view_content_views'],
+        controller: 'TaskDetailsController',
+        templateUrl: 'errata/views/errata-task-details.html'
     });
 }]);
