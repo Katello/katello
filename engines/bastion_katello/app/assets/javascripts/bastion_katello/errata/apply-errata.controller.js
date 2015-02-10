@@ -54,7 +54,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                     params['content_view_version_environments'].push(incrementalUpdate);
                 });
 
-                if ($scope.errataConfirm && $scope.errataConfirm.applyErrata) {
+                if ($scope.applyErrata) {
                     params['update_systems'] = $scope.selectedContentHosts;
                 }
 

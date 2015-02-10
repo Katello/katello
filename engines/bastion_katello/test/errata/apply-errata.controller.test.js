@@ -179,7 +179,7 @@ describe('Controller: ApplyErrataController', function() {
 
             it("can pass a parameter to update the content hosts", function () {
                 expectedParams['update_systems'] = {include: [1, 2, 3]};
-                $scope.errataConfirm = {applyErrata: true};
+                $scope.applyErrata = true;
 
                 $scope.confirmApply();
             });
