@@ -87,6 +87,18 @@ module Katello
       errata.update_from_json(json)
       assert_equal Erratum.find(errata).title.size, 255
     end
+
+    def test_update_from_json_duplicate_packages #Issue 9312
+      pkg = {:name => 'foo', :version => 3, :arch => 'x86_64', :epoch => 0, :release => '.el3', :filename => 'blahblah.rpm'}.with_indifferent_access
+      pkg_list = [pkg, pkg]
+      errata = katello_errata(:security)
+
+      pkg_count = errata.packages.count
+      json = errata.attributes.merge('description' => 'an update', 'updated' => DateTime.now, 'pkglist' => [{'packages' => pkg_list}])
+      errata.update_from_json(json)
+
+      assert_equal errata.reload.packages.count, pkg_count + 1
+    end
   end
 
   class ErratumAvailableTest < ErratumTestBase
