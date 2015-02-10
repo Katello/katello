@@ -68,7 +68,6 @@ module ::Actions::Katello::Environment
       content_view = stub
       cve = mock(:content_view => content_view)
       action.stubs(:action_subject).with(environment)
-      environment.expects(:disable_auto_reindex!)
       environment.expects(:content_view_environments).returns([cve])
       environment.expects(:deletable?).returns(true)
       environment.expects(:organization).returns(mock)
