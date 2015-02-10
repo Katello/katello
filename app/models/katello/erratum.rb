@@ -124,7 +124,7 @@ module Katello
       end
       existing_nvreas = self.packages.pluck(:nvrea)
       package_attributes.delete_if { |pkg| existing_nvreas.include?(pkg['nvrea']) }
-
+      package_attributes = package_attributes.uniq { |pkg| pkg['nvrea'] }
       self.packages.create!(package_attributes)
     end
   end
