@@ -129,6 +129,7 @@ Katello::Engine.routes.draw do
             put :add_systems
             put :remove_systems
           end
+          get :auto_complete_search, :on => :collection
           api_resources :systems, :only => [:index, :show, :create, :update, :destroy]
         end
 

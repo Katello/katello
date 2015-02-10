@@ -29,7 +29,8 @@ angular.module('Bastion.host-collections').factory('HostCollection',
             copy: {method: 'POST', params: {action: 'copy'}},
             contentHosts: {method: 'GET', params: {action: 'systems'}},
             removeContentHosts: {method: 'PUT', params: {action: 'remove_systems'}},
-            addContentHosts: {method: 'PUT', params: {action: 'add_systems'}}
+            addContentHosts: {method: 'PUT', params: {action: 'add_systems'}},
+            autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
         });
 
     }]
