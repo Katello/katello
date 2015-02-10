@@ -25,6 +25,12 @@ module Katello
         before_create :associate_lifecycle_environments
         attr_accessible :lifecycle_environment_ids
 
+        has_many :containers,
+                 :class_name => "Container",
+                 :foreign_key => :capsule_id,
+                 :inverse_of => :capsule,
+                 :dependent => :nullify
+
         has_many :capsule_lifecycle_environments,
                  :class_name  => "Katello::CapsuleLifecycleEnvironment",
                  :foreign_key => :capsule_id,
