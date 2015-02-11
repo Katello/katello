@@ -35,17 +35,20 @@ module Katello
     end
 
     def test_index
-      @fake_search_service.stubs(:retrieve).returns([[@host_collection], 1])
-      @fake_search_service.stubs(:total_items).returns(1)
-
       results = JSON.parse(get(:index, :organization_id => @organization.id).body)
 
       assert_response :success
       assert_template 'api/v2/host_collections/index'
 
       assert_equal results.keys.sort, ['page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total']
-      assert_equal results['results'].size, 1
-      assert_equal results['results'][0]['id'], @host_collection.id
+      assert_equal results['results'].size, 3
+      assert_block do
+        ids = []
+        results['results'].each do |r|
+          ids << r['id']
+        end
+        ids.include? @host_collection.id
+      end
     end
 
     def test_show
