@@ -47,7 +47,7 @@ module Actions
         end
 
         def humanized_input
-          ["'#{input['kt_environment']['name']}'" + super]
+          ["'#{input['kt_environment']['name']}'"] + super
         end
 
         def finalize
