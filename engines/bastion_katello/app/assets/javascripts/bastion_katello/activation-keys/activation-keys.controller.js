@@ -32,11 +32,11 @@ angular.module('Bastion.activation-keys').controller('ActivationKeysController',
     function ($scope, $location, translate, Nutupane, ActivationKey, CurrentOrganization) {
 
         var params = {
-            'organization_id':  CurrentOrganization,
-            'search':           $location.search().search || "",
-            'sort_by':          'name',
-            'sort_order':       'ASC',
-            'paged':            true
+            'organization_id': CurrentOrganization,
+            'search': $location.search().search || "",
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'paged': true
         };
 
         var nutupane = new Nutupane(ActivationKey, params);

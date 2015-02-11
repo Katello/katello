@@ -34,7 +34,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostProductDetailsCon
                 angular.forEach($scope.details['available_content'], function (content) {
                     override = _.findWhere($scope.contentHost["content_overrides"],
                                            {"contentLabel": content.content.label, name: "enabled"});
-                    if (override === undefined) {
+                    if (angular.isUndefined(override)) {
                         content.overrideEnabled = null;
                     } else {
                         content.overrideEnabled = Number(override.value);
@@ -54,7 +54,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostProductDetailsCon
             } else {
                 choices = [
                     {name: $scope.getEnabledText(content.enabled, null), id: null},
-                    {name: $scope.getEnabledText(null, 1), id: 1},
+                    {name: $scope.getEnabledText(null, 1), id: 1}
                 ];
             }
             return choices;

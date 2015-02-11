@@ -31,9 +31,9 @@ angular.module('Bastion.tasks')
             return _.reject(humanizedTaskInput, function (part) {
                 if (part.length === 2) {
                     return _.contains(skippedParts, part[0]);
-                } else {
-                    return false;
                 }
+
+                return false;
             });
         };
     });

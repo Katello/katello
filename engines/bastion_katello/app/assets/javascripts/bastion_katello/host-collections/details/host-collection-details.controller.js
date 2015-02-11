@@ -66,7 +66,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
             HostCollection.copy({id: $scope.hostCollection.id, 'host_collection': {name: newName}}, function (response) {
                 $scope.showCopy = false;
                 $scope.table.addRow(response);
-                $scope.transitionTo('host-collections.details.info', {hostCollectionId: response['id']});
+                $scope.transitionTo('host-collections.details.info', {hostCollectionId: response.id});
             }, function (response) {
                 $scope.copyErrorMessages.push(response.data.displayMessage);
             });

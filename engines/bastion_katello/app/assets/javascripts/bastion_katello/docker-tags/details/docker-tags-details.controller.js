@@ -32,17 +32,16 @@ angular.module('Bastion.docker-tags').controller('DockerTagsDetailsController',
             $scope.panel = {loading: true};
         }
 
-        $scope.tag = DockerTag.get({id: $scope.$stateParams.tagId}, function () {
-        });
+        $scope.tag = DockerTag.get({id: $scope.$stateParams.tagId});
 
         $scope.tag.$promise.then(function () {
             var params = {
-                'organization_id':  CurrentOrganization,
-                'search':           $location.search().search || "",
-                'sort_by':          'name',
-                'sort_order':       'ASC',
-                'paged':            false,
-                'ids[]':              _.pluck($scope.tag['related_tags'], 'id')
+                'organization_id': CurrentOrganization,
+                'search': $location.search().search || "",
+                'sort_by': 'name',
+                'sort_order': 'ASC',
+                'paged': false,
+                'ids[]': _.pluck($scope.tag['related_tags'], 'id')
             };
             var nutupane = new Nutupane(DockerTag, params);
             $scope.table = nutupane.table;

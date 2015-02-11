@@ -21,15 +21,18 @@
 angular.module('Bastion.tasks')
     .filter('taskInputCompile', function () {
         return function (humanizedTaskInput) {
+            var parts;
+
             if (!_.isArray(humanizedTaskInput) && !_.isObject(humanizedTaskInput)) {
                 return humanizedTaskInput;
             }
-            var parts = _.map(humanizedTaskInput, function (part) {
+
+            parts = _.map(humanizedTaskInput, function (part) {
                 if (part.length === 2) {
                     return part[1].text;
-                } else {
-                    return part;
                 }
+
+                return part;
             });
 
             return parts.join('; ');

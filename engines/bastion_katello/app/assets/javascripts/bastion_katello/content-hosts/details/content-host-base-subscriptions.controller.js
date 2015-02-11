@@ -29,23 +29,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostBaseSubscriptions
     ['$scope', 'translate', 'CurrentOrganization', 'Subscription', 'ContentHost', 'Nutupane',
     function ($scope, translate, CurrentOrganization, Subscription, ContentHost, Nutupane) {
         var params = {
-            'id':                       $scope.$stateParams.contentHostId,
-            'organization_id':          CurrentOrganization,
-            'sort_by':                  'name',
-            'sort_order':               'ASC',
-            'match_system':             true
-        };
-
-        $scope.subscription = {
-            workingMode: false
-        };
-
-        $scope.addSubscriptionsPane = new Nutupane(ContentHost, params, 'availableSubscriptions');
-        $scope.subscriptionsPane = new Nutupane(ContentHost, params, 'subscriptions');
-
-        $scope.autoAttachSubscriptions = function () {
-            $scope.subscription.workingMode = true;
-            ContentHost.refreshSubscriptions({uuid: $scope.contentHost.uuid}, success, failure);
+            'id': $scope.$stateParams.contentHostId,
+            'organization_id': CurrentOrganization,
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'match_system': true
         };
 
         function success() {
@@ -60,6 +48,18 @@ angular.module('Bastion.content-hosts').controller('ContentHostBaseSubscriptions
             $scope.subscription.workingMode = false;
             $scope.$parent.errorMessages = [translate('An error occurred trying to auto-attach subscriptions.  Please check your log for further information.')];
         }
+
+        $scope.subscription = {
+            workingMode: false
+        };
+
+        $scope.addSubscriptionsPane = new Nutupane(ContentHost, params, 'availableSubscriptions');
+        $scope.subscriptionsPane = new Nutupane(ContentHost, params, 'subscriptions');
+
+        $scope.autoAttachSubscriptions = function () {
+            $scope.subscription.workingMode = true;
+            ContentHost.refreshSubscriptions({uuid: $scope.contentHost.uuid}, success, failure);
+        };
 
     }]
 );

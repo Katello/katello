@@ -41,25 +41,10 @@ angular.module('Bastion.tasks').factory('AggregateTask',
                     progressbar: {}
                 };
 
-            var updateTask = function (task) {
-                taskMap[task.id] = task;
-                if (!task.pending) {
-                    unregisterSearch(task.id);
-                }
-                updateProgress();
-                if (callback) {
-                    callback(task);
-                }
-            },
-            unregisterSearch = function (taskId) {
+            var unregisterSearch = function (taskId) {
                 if (taskSearches[taskId]) {
                     Task.unregisterSearch(taskSearches[taskId]);
                 }
-            },
-            unregisterAll = function () {
-                _.each(taskSearches, function (searchId, taskId) {
-                    unregisterSearch(taskId);
-                });
             },
             greatestType = function () {
                 var found = 'success',
@@ -115,6 +100,21 @@ angular.module('Bastion.tasks').factory('AggregateTask',
                 taskRepresentation.progressbar.type = greatestType();
                 taskRepresentation.state = greatestState();
                 taskRepresentation.result = greatestResult();
+            },
+            updateTask = function (task) {
+                taskMap[task.id] = task;
+                if (!task.pending) {
+                    unregisterSearch(task.id);
+                }
+                updateProgress();
+                if (callback) {
+                    callback(task);
+                }
+            },
+            unregisterAll = function () {
+                _.each(taskSearches, function (searchId, taskId) {
+                    unregisterSearch(taskId);
+                });
             };
 
             taskRepresentation.unregisterAll = unregisterAll;
@@ -122,7 +122,7 @@ angular.module('Bastion.tasks').factory('AggregateTask',
 
 
             _.each(taskIds, function (taskId) {
-                if (taskSearches[taskId] === undefined) {
+                if (angular.isUndefined(taskSearches[taskId])) {
                     taskSearches[taskId] = Task.registerSearch({ 'type': 'task', 'task_id': taskId }, updateTask);
                 }
             });

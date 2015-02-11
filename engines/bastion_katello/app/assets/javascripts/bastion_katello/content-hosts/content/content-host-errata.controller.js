@@ -31,10 +31,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
             'sort_by': 'updated',
             'sort_order': 'DESC',
             'paged': true,
-            searchTerm: $scope.$stateParams.getSearch,
             'errata_restrict_applicable': true
         };
 
+        function loadErratum(errataId) {
+            $scope.erratum = ContentHostErratum.get({'id': $scope.$stateParams.contentHostId,
+                'errata_id': errataId});
+        }
 
         errataNutupane = new Nutupane(ContentHostErratum, params, 'get');
 
@@ -43,7 +46,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         $scope.detailsTable.errataFilterTerm = "";
         $scope.detailsTable.errataCompare = function (item) {
             var searchText = $scope.detailsTable.errataFilterTerm;
-            return item.type.indexOf(searchText)  >= 0 ||
+            return item.type.indexOf(searchText) >= 0 ||
                 item.errata_id.indexOf(searchText) >= 0 ||
                 item.title.indexOf(searchText) >= 0;
         };
@@ -76,18 +79,20 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         $scope.contentHost.$promise.then($scope.setupErrataOptions);
 
         $scope.refreshErrata = function (selected) {
-            var option, params;
-            params = {'id': $scope.$stateParams.contentHostId};
+            var option, errataParams;
+            errataParams = {'id': $scope.$stateParams.contentHostId};
 
             $scope.selectedErrataOption = selected;
 
             if (selected === 'library' || selected === 'prior') {
-                option = _.find($scope.errataOptions, function (option) {return option.label === selected});
-                params['content_view_id'] = option['content_view_id'];
-                params['environment_id'] = option['environment_id'];
+                option = _.find($scope.errataOptions, function (opt) {
+                    return opt.label === selected;
+                });
+                errataParams['content_view_id'] = option['content_view_id'];
+                errataParams['environment_id'] = option['environment_id'];
             }
 
-            errataNutupane.setParams(params);
+            errataNutupane.setParams(errataParams);
             errataNutupane.refresh();
         };
 
@@ -103,18 +108,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
                 angular.forEach(selected, function (value) {
                     errataIds.push(value.errata_id);
                 });
-                ContentHostErratum.apply({uuid: $scope.contentHost.uuid, errata_ids: errataIds},
+                ContentHostErratum.apply({uuid: $scope.contentHost.uuid, 'errata_ids': errataIds},
                                    function (task) {
                                         $scope.detailsTable.selectAll(false);
                                         $scope.transitionTo('content-hosts.details.tasks.details', {taskId: task.id});
                                     });
             }
         };
-
-        function loadErratum(errataId) {
-            $scope.erratum = ContentHostErratum.get({'id': $scope.$stateParams.contentHostId,
-                'errata_id': errataId});
-        }
 
         if ($scope.$stateParams.errataId) {
             loadErratum($scope.$stateParams.errataId);

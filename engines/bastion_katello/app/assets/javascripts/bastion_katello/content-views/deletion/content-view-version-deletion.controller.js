@@ -38,7 +38,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
             confirm: 'content-views.details.version-deletion.confirm'
         };
 
-        if ($scope.deleteOptions === undefined) {
+        if (angular.isUndefined($scope.deleteOptions)) {
             $scope.deleteOptions = {
                 deleteArchive: false,
                 environments: [],
@@ -53,7 +53,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
 
         $scope.transitionToNext = function (currentState) {
             var stepStates = $scope.stepStates;
-            if (currentState === undefined) {
+            if (angular.isUndefined(currentState)) {
                 currentState = $state.current.name;
             }
 
@@ -79,7 +79,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
 
         $scope.transitionBack = function (currentState) {
             var stepStates = $scope.stepStates;
-            if (currentState === undefined) {
+            if (angular.isUndefined(currentState)) {
                 currentState = $state.current.name;
             }
 
@@ -90,16 +90,14 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
                 } else {
                     $scope.transitionBack(stepStates.activationKeys);
                 }
-            }
-            else if (currentState === stepStates.activationKeys) {
+            } else if (currentState === stepStates.activationKeys) {
                 if ($scope.needHosts()) {
                     $scope.transitionTo(stepStates.contentHosts,
                                         {contentViewId: $scope.contentView.id, versionId: $scope.version.id});
                 } else {
                     $scope.transitionBack(stepStates.contentHosts);
                 }
-            }
-            else if (currentState === stepStates.contentHosts) {
+            } else if (currentState === stepStates.contentHosts) {
                 $scope.transitionTo(stepStates.environments,
                                     {contentViewId: $scope.contentView.id, versionId: $scope.version.id});
             }
@@ -126,13 +124,13 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
 
         $scope.totalHostCount = function () {
             return _.reduce($scope.deleteOptions.environments, function (sum, env) {
-                return sum +  env['system_count'];
+                return sum + env['system_count'];
             }, 0);
         };
 
         $scope.totalActivationKeyCount = function () {
             return _.reduce($scope.deleteOptions.environments, function (sum, env) {
-                return sum +  env['activation_key_count'];
+                return sum + env['activation_key_count'];
             }, 0);
         };
 
@@ -150,11 +148,10 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
         $scope.initEnvironmentWatch = function (childScope) {
             var removingEnvironment;
             childScope.$watch('selectedEnvironment', function () {
-                if (childScope.selectedEnvironment === undefined) {
+                if (angular.isUndefined(childScope.selectedEnvironment)) {
                     childScope.contentViewsForEnvironment = [];
                 } else {
-                    removingEnvironment = _.findWhere(childScope.deleteOptions.environments,
-                                                 {id: childScope.selectedEnvironment.id}) !== undefined;
+                    removingEnvironment = angular.isDefined(_.findWhere(childScope.deleteOptions.environments, {id: childScope.selectedEnvironment.id}));
                     $scope.fetchingViews = true;
                     ContentView.queryUnpaged({ 'environment_id': childScope.selectedEnvironment.id },
                         function (response) {

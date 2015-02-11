@@ -27,58 +27,15 @@
 angular.module('Bastion.content-views').controller('ContentViewDetailsController',
     ['$scope', 'ContentView', 'ContentViewVersion', 'AggregateTask', 'translate',
     function ($scope, ContentView, ContentViewVersion, AggregateTask, translate) {
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
 
-        $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId});
-
-        $scope.taskTypes = {
-            publish: "Actions::Katello::ContentView::Publish",
-            promotion: "Actions::Katello::ContentView::Promote",
-            deletion:  "Actions::Katello::ContentView::Remove",
-            incrementalUpdate:  "Actions::Katello::ContentView::IncrementalUpdates"
-        };
-
-        $scope.copy = function (newName) {
-            ContentView.copy({id: $scope.contentView.id, 'content_view': {name: newName}}, function (response) {
-                $scope.showCopy = false;
-                $scope.table.addRow(response);
-                $scope.transitionTo('content-views.details.info', {contentViewId: response['id']});
-            }, function (response) {
-                $scope.copyErrorMessages.push(response.data.displayMessage);
-            });
-        };
-
-        function processTasks(versions) {
-            _.each(versions, function (version) {
-                var taskIds = _.map(version['active_history'], function (history) {
-                                    return history.task.id;
-                                });
-
-                if (taskIds.length > 0) {
-                    version.task = AggregateTask.new(taskIds, function (task) {
-                        taskUpdated(version,  task);
-                        if (task.label === $scope.taskTypes.publish && !task.pending && task.result === 'success') {
-                            updateVersion(version);
-                        }
-                    });
-                }
-            });
+        function saveSuccess() {
+            $scope.successMessages = [translate('Content View updated.')];
         }
 
-        function taskUpdated(version, task) {
-            var taskTypes = $scope.taskTypes;
-
-            if (!task.pending && task.result === 'success') {
-                if (task.label === taskTypes.promotion) {
-                    $scope.successMessages.push(promotionMessage(version, task));
-                } else if (task.label === taskTypes.publish) {
-                    $scope.successMessages.push(publishMessage(version));
-                } else if (task.label === taskTypes.deletion) {
-                    $scope.successMessages.push(deletionMessage(version, task));
-                    $scope.reloadVersions();
-                }
-            }
+        function saveError(response) {
+            angular.forEach(response.data.errors, function (errorMessage) {
+                $scope.errorMessages = [translate("An error occurred updating the Content View: ") + errorMessage];
+            });
         }
 
         function promotionMessage(version, task) {
@@ -110,6 +67,21 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
                 .replace('%ver', version.version);
         }
 
+        function taskUpdated(version, task) {
+            var taskTypes = $scope.taskTypes;
+
+            if (!task.pending && task.result === 'success') {
+                if (task.label === taskTypes.promotion) {
+                    $scope.successMessages.push(promotionMessage(version, task));
+                } else if (task.label === taskTypes.publish) {
+                    $scope.successMessages.push(publishMessage(version));
+                } else if (task.label === taskTypes.deletion) {
+                    $scope.successMessages.push(deletionMessage(version, task));
+                    $scope.reloadVersions();
+                }
+            }
+        }
+
         function updateVersion(version) {
             var versionIds = _.map($scope.contentView.versions, function (ver) {
                     return ver.id;
@@ -121,6 +93,45 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
                 $scope.versions[versionIndex] = newVersion;
             });
         }
+
+        function processTasks(versions) {
+            _.each(versions, function (version) {
+                var taskIds = _.map(version['active_history'], function (history) {
+                                    return history.task.id;
+                                });
+
+                if (taskIds.length > 0) {
+                    version.task = AggregateTask.new(taskIds, function (task) {
+                        taskUpdated(version, task);
+                        if (task.label === $scope.taskTypes.publish && !task.pending && task.result === 'success') {
+                            updateVersion(version);
+                        }
+                    });
+                }
+            });
+        }
+
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
+
+        $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId});
+
+        $scope.taskTypes = {
+            publish: "Actions::Katello::ContentView::Publish",
+            promotion: "Actions::Katello::ContentView::Promote",
+            deletion: "Actions::Katello::ContentView::Remove",
+            incrementalUpdate: "Actions::Katello::ContentView::IncrementalUpdates"
+        };
+
+        $scope.copy = function (newName) {
+            ContentView.copy({id: $scope.contentView.id, 'content_view': {name: newName}}, function (response) {
+                $scope.showCopy = false;
+                $scope.table.addRow(response);
+                $scope.transitionTo('content-views.details.info', {contentViewId: response.id});
+            }, function (response) {
+                $scope.copyErrorMessages.push(response.data.displayMessage);
+            });
+        };
 
         $scope.reloadVersions = function () {
             var contentViewId = $scope.contentView.id || $scope.$stateParams.contentViewId;
@@ -140,16 +151,6 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         $scope.save = function (contentView) {
             return contentView.$update(saveSuccess, saveError);
         };
-
-        function saveSuccess() {
-            $scope.successMessages = [translate('Content View updated.')];
-        }
-
-        function saveError(response) {
-            angular.forEach(response.data.errors, function (errorMessage) {
-                $scope.errorMessages = [translate("An error occurred updating the Content View: ") + errorMessage];
-            });
-        }
 
     }]
 );

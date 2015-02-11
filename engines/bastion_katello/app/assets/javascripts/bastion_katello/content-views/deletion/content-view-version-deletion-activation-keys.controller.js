@@ -33,20 +33,20 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionAc
 
         $scope.validateEnvironmentSelection();
         params = {
-            'organization_id':  CurrentOrganization,
-            'content_view_id':  $scope.contentView.id,
-            'sort_by':          'name',
-            'sort_order':       'ASC'
+            'organization_id': CurrentOrganization,
+            'content_view_id': $scope.contentView.id,
+            'sort_by': 'name',
+            'sort_order': 'ASC'
         };
         nutupane = new Nutupane(ActivationKey, params);
 
         nutupane.searchTransform = function (term) {
             var addition = "(environment_id:(" + $scope.selectedEnvironmentIds().join(" OR ") + "))";
-            if (term === "" || term === undefined) {
+            if (term === "" || angular.isUndefined(term)) {
                 return addition;
-            } else {
-                return term +  " AND " + addition;
             }
+
+            return term + " AND " + addition;
         };
 
         $scope.detailsTable = nutupane.table;

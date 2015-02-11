@@ -61,8 +61,8 @@ angular.module('Bastion.products').controller('ProductsBulkActionController',
                 $scope.transitionTo('products.index');
             };
 
-            error = function (error) {
-                angular.forEach(error.data.errors, function (errorMessage) {
+            error = function (response) {
+                angular.forEach(response.data.errors, function (errorMessage) {
                     $scope.errorMessages.push(translate("An error occurred removing the Products: ") + errorMessage);
                 });
                 $scope.removingProducts = false;

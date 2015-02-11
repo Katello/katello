@@ -58,4 +58,3 @@ angular.module('Bastion.tasks').config(['$stateProvider', function ($stateProvid
     });
 
 }]);
-

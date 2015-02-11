@@ -82,7 +82,9 @@ angular.module('Bastion.tasks').factory('TasksNutupane',
 
             // Removes rows that are no longer valid for the table
             self.deleteOldRows = function (tasks) {
-                var newTaskIds = _.map(tasks, function (task) { return task.id }),
+                var newTaskIds = _.map(tasks, function (task) {
+                        return task.id;
+                    }),
                     oldTaskIds = _.keys(self.existingTasks),
                     taskIdsToDelete = _.difference(oldTaskIds, newTaskIds),
                     rowsToDelete = [];
@@ -104,4 +106,3 @@ angular.module('Bastion.tasks').factory('TasksNutupane',
         };
         return TasksNutupane;
     }]);
-

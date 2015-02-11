@@ -28,7 +28,7 @@
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoController',
     ['$scope', '$q', 'translate', 'ActivationKey', 'ContentView', 'Organization', 'CurrentOrganization',
-        function ($scope, $q, translate, ActivationKey, ContentView, Organization, CurrentOrganization) {
+    function ($scope, $q, translate, ActivationKey, ContentView, Organization, CurrentOrganization) {
 
         $scope.editContentView = false;
         $scope.editEnvironment = false;
@@ -68,8 +68,8 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
         $scope.saveContentView = function (activationKey) {
             $scope.editContentView = false;
             $scope.editEnvironment = false;
-            $scope.save(activationKey).then(function (activationKey) {
-                $scope.originalEnvironment = activationKey.environment;
+            $scope.save(activationKey).then(function (actKey) {
+                $scope.originalEnvironment = actKey.environment;
             });
             $scope.disableEnvironmentSelection = false;
         };

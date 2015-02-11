@@ -32,7 +32,7 @@
             'docker': {
                 type: Repository,
                 params: {
-                    'content_type' : "docker",
+                    'content_type': "docker",
                     'content_view_version_id': $scope.$stateParams.versionId
 
                 }
@@ -85,14 +85,14 @@
         });
 
         $scope.$watch('repository', function (repository) {
-            var params = nutupane.getParams();
+            var nutupaneParams = nutupane.getParams();
 
             if (repository.id === 'all') {
-                params['repository_id'] = null;
-                nutupane.setParams(params);
+                nutupaneParams['repository_id'] = null;
+                nutupane.setParams(nutupaneParams);
             } else {
-                params['repository_id'] = repository.id;
-                nutupane.setParams(params);
+                nutupaneParams['repository_id'] = repository.id;
+                nutupane.setParams(nutupaneParams);
             }
 
             nutupane.refresh();

@@ -31,10 +31,10 @@ angular.module('Bastion.docker-tags').controller('DockerTagsController',
     function ($scope, $location, Nutupane, DockerTag, CurrentOrganization) {
 
         var params = {
-            'organization_id':  CurrentOrganization,
-            'sort_by':          'name',
-            'sort_order':       'ASC',
-            'grouped':          true
+            'organization_id': CurrentOrganization,
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'grouped': true
         };
 
         var nutupane = new Nutupane(DockerTag, params);

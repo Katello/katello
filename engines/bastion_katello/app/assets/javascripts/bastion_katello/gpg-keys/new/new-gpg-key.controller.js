@@ -35,7 +35,7 @@ angular.module('Bastion.gpg-keys').controller('NewGPGKeyController',
 
         $scope.uploadContent = function (content) {
             if (content) {
-                if (content.errors === undefined) {
+                if (angular.isUndefined(content.errors)) {
                     $scope.table.addRow(content);
                     $scope.uploadStatus = 'success';
                     $scope.transitionTo('gpgKeys.index');

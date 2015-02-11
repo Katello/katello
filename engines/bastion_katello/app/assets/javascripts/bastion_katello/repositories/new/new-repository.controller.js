@@ -27,24 +27,6 @@
 angular.module('Bastion.repositories').controller('NewRepositoryController',
     ['$scope', 'Repository', 'GPGKey', 'FormUtils', 'translate',
     function ($scope, Repository, GPGKey, FormUtils, translate) {
-        $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true,
-            'checksum_type': null});
-        $scope.repositoryTypes = [{}, {name: 'yum'}, {name: 'puppet'}, {name: 'docker'}];
-
-        $scope.$watch('repository.name', function () {
-            if ($scope.repositoryForm.name) {
-                $scope.repositoryForm.name.$setValidity('server', true);
-                FormUtils.labelize($scope.repository);
-            }
-        });
-
-        GPGKey.queryUnpaged(function (gpgKeys) {
-            $scope.gpgKeys = gpgKeys.results;
-        });
-
-        $scope.save = function (repository) {
-            repository.$save(success, error);
-        };
 
         function success(response) {
             $scope.repositoriesTable.rows.push(response);
@@ -75,6 +57,25 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                 $scope.errorMessages = [response.data.displayMessage];
             }
         }
+
+        $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true,
+            'checksum_type': null});
+        $scope.repositoryTypes = [{}, {name: 'yum'}, {name: 'puppet'}, {name: 'docker'}];
+
+        $scope.$watch('repository.name', function () {
+            if ($scope.repositoryForm.name) {
+                $scope.repositoryForm.name.$setValidity('server', true);
+                FormUtils.labelize($scope.repository);
+            }
+        });
+
+        GPGKey.queryUnpaged(function (gpgKeys) {
+            $scope.gpgKeys = gpgKeys.results;
+        });
+
+        $scope.save = function (repository) {
+            repository.$save(success, error);
+        };
 
     }]
 );

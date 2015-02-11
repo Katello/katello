@@ -27,14 +27,6 @@ angular.module('Bastion.host-collections').controller('HostCollectionFormControl
     ['$scope', '$q', 'HostCollection', 'CurrentOrganization',
     function ($scope, $q, HostCollection, CurrentOrganization) {
 
-        $scope.hostCollection = $scope.hostCollection || new HostCollection();
-        $scope.hostCollection['unlimited_content_hosts'] = true;
-
-        $scope.save = function (hostCollection) {
-            hostCollection['organization_id'] = CurrentOrganization;
-            hostCollection.$save(success, error);
-        };
-
         function success(response) {
             $scope.table.addRow(response);
             $scope.transitionTo('host-collections.details.info', {hostCollectionId: $scope.hostCollection.id});
@@ -47,6 +39,14 @@ angular.module('Bastion.host-collections').controller('HostCollectionFormControl
                 $scope.hostCollectionForm[field].$error.messages = errors;
             });
         }
+
+        $scope.hostCollection = $scope.hostCollection || new HostCollection();
+        $scope.hostCollection['unlimited_content_hosts'] = true;
+
+        $scope.save = function (hostCollection) {
+            hostCollection['organization_id'] = CurrentOrganization;
+            hostCollection.$save(success, error);
+        };
 
     }]
 );

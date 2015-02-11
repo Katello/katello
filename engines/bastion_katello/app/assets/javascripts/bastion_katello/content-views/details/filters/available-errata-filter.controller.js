@@ -31,6 +31,23 @@ angular.module('Bastion.content-views').controller('AvailableErrataFilterControl
 
         var nutupane, filterByDate;
 
+        function success(data) {
+            $scope.filter.rules = _.union($scope.filter.rules, data.results);
+            $scope.$parent.successMessages = [translate('Errata successfully added.')];
+            nutupane.table.selectAllResults(false);
+            nutupane.refresh();
+        }
+
+        function failure(response) {
+            $scope.$parent.errorMessages = [response.data.displayMessage];
+        }
+
+        function saveRules(rules, filter) {
+            var params = {filterId: filter.id};
+
+            return rules.$save(params, success, failure);
+        }
+
         $scope.nutupane = nutupane = new Nutupane(Filter, {
                 filterId: $scope.$stateParams.filterId,
                 'sort_order': 'DESC',
@@ -88,23 +105,6 @@ angular.module('Bastion.content-views').controller('AvailableErrataFilterControl
                 filterByDate(end, 'end_date');
             }
         });
-
-        function saveRules(rules, filter) {
-            var params = {filterId: filter.id};
-
-            return rules.$save(params, success, failure);
-        }
-
-        function success(data) {
-            $scope.filter.rules = _.union($scope.filter.rules, data.results);
-            $scope.$parent.successMessages = [translate('Errata successfully added.')];
-            nutupane.table.selectAllResults(false);
-            nutupane.refresh();
-        }
-
-        function failure(response) {
-            $scope.$parent.errorMessages = [response.data.displayMessage];
-        }
 
     }]
 );

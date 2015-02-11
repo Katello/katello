@@ -26,7 +26,7 @@ angular.module('Bastion.content-views').factory('Rule',
         return BastionResource('/katello/api/v2/content_view_filters/:filterId/rules/:ruleId',
             {ruleId: '@id', filterId: '@content_view_filter_id'},
             {
-                update: {method: 'PUT'},
+                update: {method: 'PUT'}
             }
         );
 

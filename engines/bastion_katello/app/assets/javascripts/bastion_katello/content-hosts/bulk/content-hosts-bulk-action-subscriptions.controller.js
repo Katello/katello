@@ -33,6 +33,21 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionSubscr
     function ($scope, $q, $location, HostCollection, CurrentOrganization, translate,
         Organization, Task) {
 
+        function watchRunningTasks() {
+            var searchParams = { 'type': 'resource',
+                                 'active_only': true,
+                                 'action_types': ['Actions::Katello::Organization::AutoAttachSubscriptions'],
+                                 'resource_type': 'Organization',
+                                 'resource_id': CurrentOrganization };
+            return Task.registerSearch(searchParams, function (tasks) {
+                if (tasks.length > 0) {
+                    $scope.subscription.monitorTask(tasks[0]);
+                } else {
+                    $scope.subscription.taskRunnable = true;
+                }
+            });
+        }
+
         $scope.actionParams = {
             ids: []
         };
@@ -51,7 +66,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionSubscr
                 promise.catch(function (errors) {
                     $scope.state.errorMessages.push(translate("An error occurred applying Subscriptions: ") + errors.join('; '));
                 });
-                promise['finally'](function () {
+                promise.finally(function () {
                     if ($scope.subscription.runningTask.state === 'stopped') {
                         $scope.subscription.runningTask = null;
                     }
@@ -85,20 +100,5 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionSubscr
             $scope.subscription.confirm = false;
             $scope.subscription.monitorTask(Organization.autoAttachSubscriptions({id: CurrentOrganization}));
         };
-
-        function watchRunningTasks() {
-            var searchParams = { 'type': 'resource',
-                                 'active_only': true,
-                                 'action_types': ['Actions::Katello::Organization::AutoAttachSubscriptions'],
-                                 'resource_type': 'Organization',
-                                 'resource_id': CurrentOrganization };
-            return Task.registerSearch(searchParams, function (tasks) {
-                if (tasks.length > 0) {
-                    $scope.subscription.monitorTask(tasks[0]);
-                } else {
-                    $scope.subscription.taskRunnable = true;
-                }
-            });
-        }
     }]
 );

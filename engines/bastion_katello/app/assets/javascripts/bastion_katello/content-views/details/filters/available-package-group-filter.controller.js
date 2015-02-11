@@ -36,6 +36,22 @@ angular.module('Bastion.content-views').controller('AvailablePackageGroupFilterC
             'availablePackageGroups'
         );
 
+        function success(rule) {
+            nutupane.removeRow(rule.uuid, 'id');
+            $scope.filter.rules.push(rule);
+            $scope.successMessages = [translate('Package Group successfully added.')];
+        }
+
+        function failure(response) {
+            $scope.errorMessages = [response.data.displayMessage];
+        }
+
+        function saveRule(rule, filter) {
+            var params = {filterId: filter.id};
+
+            rule.$save(params, success, failure);
+        }
+
         $scope.detailsTable = nutupane.table;
         nutupane.table.closeItem = function () {};
 
@@ -47,22 +63,6 @@ angular.module('Bastion.content-views').controller('AvailablePackageGroupFilterC
                 saveRule(rule, filter);
             });
         };
-
-        function saveRule(rule, filter) {
-            var params = {filterId: filter.id};
-
-            rule.$save(params, success, failure);
-        }
-
-        function success(rule) {
-            nutupane.removeRow(rule.uuid, 'id');
-            $scope.filter.rules.push(rule);
-            $scope.successMessages = [translate('Package Group successfully added.')];
-        }
-
-        function failure(response) {
-            $scope.errorMessages = [response.data.displayMessage];
-        }
 
     }]
 );

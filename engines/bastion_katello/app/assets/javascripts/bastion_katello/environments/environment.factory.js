@@ -29,7 +29,7 @@ angular.module('Bastion.environments').factory('Environment',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
-                update: {method: 'PUT'},
+                update: {method: 'PUT'}
             }
         );
 

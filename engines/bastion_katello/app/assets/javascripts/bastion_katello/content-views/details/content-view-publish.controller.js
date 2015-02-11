@@ -27,15 +27,6 @@
 angular.module('Bastion.content-views').controller('ContentViewPublishController',
     ['$scope', 'translate', 'ContentView', function ($scope, translate, ContentView) {
 
-        $scope.version = {};
-
-        $scope.publish = function (contentView) {
-            var description = $scope.version.description,
-                data = {'id': contentView.id, 'description': description};
-            $scope.working = true;
-            ContentView.publish(data, success, failure);
-        };
-
         function success() {
             $scope.transitionTo('content-views.details.versions',
                                 {contentViewId: $scope.contentView.id});
@@ -50,6 +41,15 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
             $scope.$parent.errorMessages = [response.data.displayMessage];
             $scope.working = false;
         }
+
+        $scope.version = {};
+
+        $scope.publish = function (contentView) {
+            var description = $scope.version.description,
+                data = {'id': contentView.id, 'description': description};
+            $scope.working = true;
+            ContentView.publish(data, success, failure);
+        };
 
     }]
 );

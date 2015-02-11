@@ -29,9 +29,9 @@
 angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsController',
     ['$scope', '$location', 'translate', 'CurrentOrganization', 'Subscription', 'ContentHost', 'SubscriptionsHelper',
     function ($scope, $location, translate, CurrentOrganization, Subscription, ContentHost, SubscriptionsHelper) {
-        
+
         $scope.addSubscriptionsTable = $scope.addSubscriptionsPane.table;
-        $scope.isAdding  = false;
+        $scope.isAdding = false;
         $scope.addSubscriptionsTable.closeItem = function () {};
 
         $scope.groupedSubscriptions = {};
@@ -59,7 +59,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
                 });
             }, function (response) {
                 $scope.$parent.errorMessages = response.data.displayMessage;
-                $scope.isAdding  = false;
+                $scope.isAdding = false;
             });
         };
 

@@ -32,11 +32,11 @@ angular.module('Bastion.errata').controller('ErrataController',
     ['$scope', '$location', 'translate', 'Nutupane', 'Erratum', 'Task', 'Repository', 'CurrentOrganization',
     function ($scope, $location, translate, Nutupane, Erratum, Task, Repository, CurrentOrganization) {
         var nutupane, params = {
-            'organization_id':  CurrentOrganization,
-            'search':           $location.search().search || "",
-            'sort_by':          'updated',
-            'sort_order':       'DESC',
-            'paged':            true,
+            'organization_id': CurrentOrganization,
+            'search': $location.search().search || "",
+            'sort_by': 'updated',
+            'sort_order': 'DESC',
+            'paged': true,
             'errata_restrict_applicable': true
         };
 
@@ -58,7 +58,7 @@ angular.module('Bastion.errata').controller('ErrataController',
                 "resource_type": "Organization",
                 "resource_id": CurrentOrganization,
                 "action_types": "Actions::Katello::ContentView::IncrementalUpdates",
-                "active_only" : true
+                "active_only": true
             };
 
             taskSearchComplete = function (results) {
@@ -95,15 +95,15 @@ angular.module('Bastion.errata').controller('ErrataController',
         };
 
         $scope.$watch('repository', function (repository) {
-            var params = nutupane.getParams();
+            var nutupaneParams = nutupane.getParams();
 
             if (repository.id === 'all') {
-                params['repository_id'] = null;
-                nutupane.setParams(params);
+                nutupaneParams['repository_id'] = null;
+                nutupane.setParams(nutupaneParams);
             } else {
                 $location.search('repositoryId', repository.id);
-                params['repository_id'] = repository.id;
-                nutupane.setParams(params);
+                nutupaneParams['repository_id'] = repository.id;
+                nutupane.setParams(nutupaneParams);
             }
 
             if (!nutupane.table.initialLoad) {

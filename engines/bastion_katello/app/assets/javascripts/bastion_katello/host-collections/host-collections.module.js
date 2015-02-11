@@ -108,6 +108,4 @@ angular.module('Bastion.host-collections').config(['$stateProvider', function ($
         templateUrl: 'host-collections/details/views/host-collection-actions.html'
     });
 
-
-
 }]);

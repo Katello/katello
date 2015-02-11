@@ -30,14 +30,49 @@
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoController',
     ['$scope', '$q', 'translate', 'CustomInfo', 'ContentHost', 'ContentView', 'Organization', 'CurrentOrganization', 'ContentHostsHelper',
-        function ($scope, $q, translate, CustomInfo, ContentHost, ContentView, Organization, CurrentOrganization, ContentHostsHelper) {
-
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
-
+    function ($scope, $q, translate, CustomInfo, ContentHost, ContentView, Organization, CurrentOrganization, ContentHostsHelper) {
         var customInfoErrorHandler = function (response) {
             $scope.errorMessages = response.data.errors;
         };
+
+        function dotNotationToObj(dotString) {
+            var dotObject = {}, tempObject, parts, part, key, property;
+            for (property in dotString) {
+                if (dotString.hasOwnProperty(property)) {
+                    tempObject = dotObject;
+                    parts = property.split('.');
+                    key = parts.pop();
+                    while (parts.length) {
+                        part = parts.shift();
+                        tempObject = tempObject[part] = tempObject[part] || {};
+                    }
+                    tempObject[key] = dotString[property];
+                }
+            }
+            return dotObject;
+        }
+
+        function populateExcludedFacts() {
+            var index = 0;
+
+            $scope.advancedInfoLeft = {};
+            $scope.advancedInfoRight = {};
+
+            angular.forEach($scope.contentHostFacts, function (value, key) {
+                if (index % 2 === 0) {
+                    $scope.advancedInfoLeft[key] = value;
+                } else {
+                    $scope.advancedInfoRight[key] = value;
+                }
+                index = index + 1;
+            });
+            $scope.hasAdvancedInfo = Object.keys($scope.advancedInfoLeft).length > 0 ||
+                Object.keys($scope.advancedInfoRight).length > 0;
+
+        }
+
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
 
         $scope.showVersionAlert = false;
         $scope.editContentView = false;
@@ -75,8 +110,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
 
         $scope.saveContentView = function (contentHost) {
             $scope.editContentView = false;
-            $scope.save(contentHost).then(function (contentHost) {
-                $scope.originalEnvironment = contentHost.environment;
+            $scope.save(contentHost).then(function (response) {
+                $scope.originalEnvironment = response.environment;
             });
             $scope.disableEnvironmentSelection = false;
         };
@@ -168,45 +203,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
 
         $scope.getTemplateForType = function (value) {
             var template = 'content-hosts/details/views/partials/content-host-detail-value.html';
-            if (typeof(value) === 'object') {
+            if (angular.isObject(value)) {
                 template = 'content-hosts/details/views/partials/content-host-detail-object.html';
             }
             return template;
         };
-
-        function dotNotationToObj(dotString) {
-            var dotObject = {}, tempObject, parts, part, key;
-            for (var property in dotString) {
-                if (dotString.hasOwnProperty(property)) {
-                    tempObject = dotObject;
-                    parts = property.split('.');
-                    key = parts.pop();
-                    while (parts.length) {
-                        part = parts.shift();
-                        tempObject = tempObject[part] = tempObject[part] || {};
-                    }
-                    tempObject[key] = dotString[property];
-                }
-            }
-            return dotObject;
-        }
-
-        function populateExcludedFacts() {
-            $scope.advancedInfoLeft = {};
-            $scope.advancedInfoRight = {};
-            var index = 0;
-            angular.forEach($scope.contentHostFacts, function (value, key) {
-                if (index % 2 === 0) {
-                    $scope.advancedInfoLeft[key] = value;
-                } else {
-                    $scope.advancedInfoRight[key] = value;
-                }
-                index = index + 1;
-            });
-            $scope.hasAdvancedInfo = Object.keys($scope.advancedInfoLeft).length > 0 ||
-                Object.keys($scope.advancedInfoRight).length > 0;
-
-        }
 
         $scope.memory = ContentHostsHelper.memory;
 

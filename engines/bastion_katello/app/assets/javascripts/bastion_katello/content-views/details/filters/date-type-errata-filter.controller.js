@@ -26,6 +26,15 @@
 angular.module('Bastion.content-views').controller('DateTypeErrataFilterController',
     ['$scope', 'translate', 'Rule', function ($scope, translate, Rule) {
 
+        function success() {
+            $scope.successMessages = [translate('Updated errata filter - ' + $scope.filter.name)];
+        }
+
+        function failure(response) {
+            $scope.rule.working = false;
+            $scope.errorMessages = [response.data.displayMessage];
+        }
+
         $scope.filter.$promise.then(function (filter) {
             $scope.types = {
                 enhancement: false,
@@ -56,15 +65,6 @@ angular.module('Bastion.content-views').controller('DateTypeErrataFilterControll
             rule.$update(params, success, failure);
             $scope.filter.rules[0] = rule;
         };
-
-        function success() {
-            $scope.successMessages = [translate('Updated errata filter - ' + $scope.filter.name)];
-        }
-
-        function failure(response) {
-            $scope.rule.working = false;
-            $scope.errorMessages = [response.data.displayMessage];
-        }
 
     }]
 );

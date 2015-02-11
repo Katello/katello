@@ -30,6 +30,78 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
     ['$scope', '$q', 'CurrentOrganization', 'Product', 'Repository', 'GPGKey', 'FormUtils',
     function ($scope, $q, CurrentOrganization, Product, Repository, GPGKey, FormUtils) {
 
+        function productCreateError(response) {
+            $scope.working = false;
+            $scope.createRepoChoices.creating = false;
+            angular.forEach(response.data.errors, function (errors, field) {
+                $scope.productForm[field].$setValidity('server', false);
+                $scope.productForm[field].$error.messages = errors;
+            });
+        }
+
+        function repoCreateError(response) {
+            var currentlyCreating = $scope.currentlyCreating;
+            $scope.currentlyCreating = undefined;
+            $scope.createRepoChoices.creating = false;
+            currentlyCreating.form.$invalid = true;
+            currentlyCreating.form.messages = response.data.errors;
+        }
+
+        function convertToResource(repo) {
+            return new Repository({
+                name: repo.name,
+                label: repo.label,
+                'content_type': 'yum',
+                url: repo.url,
+                'product_id': $scope.createRepoChoices.existingProductId,
+                unprotected: $scope.createRepoChoices.unprotected
+            });
+        }
+
+        function getNextRepoToCreate() {
+            var found;
+            angular.forEach($scope.discovery.selected, function (repo) {
+                if (repo.created !== true && angular.isUndefined(found)) {
+                    found = repo;
+                }
+            });
+            return found;
+        }
+
+        function createNextRepo() {
+            var toCreate, repoObject;
+            toCreate = getNextRepoToCreate();
+
+            if (toCreate) {
+                $scope.currentlyCreating = toCreate;
+                repoObject = convertToResource(toCreate);
+                toCreate.creating = true;
+                toCreate.form.$invalid = false;
+
+                repoObject.$save(function () {
+                    toCreate.creating = false;
+                    toCreate.created = true;
+                    createNextRepo();
+                }, repoCreateError);
+            } else {
+                $scope.transitionTo('products.details.repositories.index',
+                    {productId: $scope.createRepoChoices.existingProductId});
+            }
+        }
+
+        function productCreateSuccess(response) {
+            $scope.createRepoChoices.existingProductId = response.id;
+            $scope.createRepoChoices.newProduct = 'false';
+            $scope.products.unshift(response);
+            //add it to the main products table
+            $scope.productTable.addRow(response);
+            createNextRepo();
+        }
+
+        function filterEditable(items) {
+            return _.where(items, {readonly: false});
+        }
+
         $scope.discovery = $scope.discovery || {selected: []};
         $scope.panel = {loading: true};
         $scope.$watch('createRepoChoices.product.name', function () {
@@ -39,7 +111,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
         $scope.createRepoChoices = {
             existingProductId: undefined,
             newProduct: 'false',
-            product : new Product(),
+            product: new Product(),
             unprotected: true,
             creating: false
         };
@@ -73,17 +145,16 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
         $scope.requiredFieldsEnabled = function () {
             var fieldsEnabled = true;
             if ($scope.createRepoChoices.newProduct === "true") {
-                fieldsEnabled =  $scope.productForm.$valid;
-            } else if ($scope.createRepoChoices.existingProductId === undefined) {
+                fieldsEnabled = $scope.productForm.$valid;
+            } else if (angular.isUndefined($scope.createRepoChoices.existingProductId)) {
                 fieldsEnabled = false;
             }
-            
+
             if (fieldsEnabled) {
                 return $scope.productForm.$valid;
-            } else {
-                return fieldsEnabled;
             }
-      
+
+            return fieldsEnabled;
         };
 
         $scope.gpgKeys = GPGKey.queryUnpaged();
@@ -91,7 +162,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
         $scope.$watch('discovery.selected', function (newList, oldList) {
             if (newList) {
                 angular.forEach(newList, function (newItem, position) {
-                    if (oldList === undefined || newItem.name !== oldList[position].name) {
+                    if (angular.isUndefined(oldList) || newItem.name !== oldList[position].name) {
                         FormUtils.labelize(newItem);
                     }
                 });
@@ -115,78 +186,6 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
                 createNextRepo();
             }
         };
-
-        function productCreateSuccess(response) {
-            $scope.createRepoChoices.existingProductId = response.id;
-            $scope.createRepoChoices.newProduct = 'false';
-            $scope.products.unshift(response);
-            //add it to the main products table
-            $scope.productTable.addRow(response);
-            createNextRepo();
-        }
-
-        function productCreateError(response) {
-            $scope.working = false;
-            $scope.createRepoChoices.creating = false;
-            angular.forEach(response.data.errors, function (errors, field) {
-                $scope.productForm[field].$setValidity('server', false);
-                $scope.productForm[field].$error.messages = errors;
-            });
-        }
-
-        function createNextRepo() {
-            var toCreate, repoObject;
-            toCreate = getNextRepoToCreate();
-
-            if (toCreate) {
-                $scope.currentlyCreating = toCreate;
-                repoObject = convertToResource(toCreate);
-                toCreate.creating = true;
-                toCreate.form.$invalid = false;
-
-                repoObject.$save(function () {
-                    toCreate.creating = false;
-                    toCreate.created = true;
-                    createNextRepo();
-                }, repoCreateError);
-            } else {
-                $scope.transitionTo('products.details.repositories.index',
-                    {productId: $scope.createRepoChoices.existingProductId});
-            }
-        }
-
-        function getNextRepoToCreate() {
-            var found;
-            angular.forEach($scope.discovery.selected, function (repo) {
-                if (repo.created !== true && found === undefined) {
-                    found = repo;
-                }
-            });
-            return found;
-        }
-
-        function convertToResource(repo) {
-            return new Repository({
-                name: repo.name,
-                label: repo.label,
-                'content_type': 'yum',
-                url: repo.url,
-                'product_id': $scope.createRepoChoices.existingProductId,
-                unprotected: $scope.createRepoChoices.unprotected
-            });
-        }
-
-        function repoCreateError(response) {
-            var currentlyCreating = $scope.currentlyCreating;
-            $scope.currentlyCreating = undefined;
-            $scope.createRepoChoices.creating = false;
-            currentlyCreating.form.$invalid = true;
-            currentlyCreating.form.messages = response.data.errors;
-        }
-
-        function filterEditable(items) {
-            return _.where(items, {readonly: false});
-        }
 
     }]
 );

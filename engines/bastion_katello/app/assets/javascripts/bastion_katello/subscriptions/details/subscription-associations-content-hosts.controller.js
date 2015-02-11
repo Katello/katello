@@ -43,7 +43,7 @@ angular.module('Bastion.subscriptions').controller('SubscriptionAssociationsCont
         $scope.memory = ContentHostsHelper.memory;
 
         $scope.virtual = function (facts) {
-            if (facts['virt'] === undefined || facts.virt['is_guest'] === undefined) {
+            if (angular.isUndefined(facts.virt) || angular.isUndefined(facts.virt['is_guest'])) {
                 return false;
             }
             return (facts.virt['is_guest'] === true || facts.virt['is_guest'] === 'true');

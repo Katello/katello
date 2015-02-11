@@ -22,6 +22,7 @@
      *   Provides a BastionResource for interacting with Puppet Modules
      */
     function PuppetModule(BastionResource) {
+
         return BastionResource('/katello/api/v2/puppet_modules/:id',
             {'id': '@id'}
         );

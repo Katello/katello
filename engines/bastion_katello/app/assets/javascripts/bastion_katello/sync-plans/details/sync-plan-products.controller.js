@@ -55,19 +55,19 @@ angular.module('Bastion.sync-plans').controller('SyncPlanProductsController',
                     "product_ids": productsToRemove
                 };
 
-                success = function (data) {
+                success = function (response) {
                     $scope.successMessages = [translate('Removed %x products from sync plan "%y".')
                         .replace('%x', $scope.productsTable.numSelected).replace('%y', $scope.syncPlan.name)];
                     $scope.productsTable.working = false;
                     $scope.productsTable.selectAll(false);
                     productsNutupane.refresh();
                     $scope.syncPlan.$get();
-                    deferred.resolve(data);
+                    deferred.resolve(response);
                 };
 
-                error = function (error) {
-                    deferred.reject(error.data.errors);
-                    $scope.errorMessages = error.data.errors;
+                error = function (response) {
+                    deferred.reject(response.data.errors);
+                    $scope.errorMessages = response.data.errors;
                     $scope.productsTable.working = false;
                 };
 

@@ -30,6 +30,23 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
     ['$scope', '$q', '$location', 'ContentHostBulkAction', 'HostCollection', 'CurrentOrganization', 'translate',
     function ($scope, $q, $location, ContentHostBulkAction, HostCollection, CurrentOrganization, translate) {
 
+        function successMessage(type) {
+            var messages = {
+                install: translate("Succesfully scheduled package installation"),
+                update: translate("Succesfully scheduled package update"),
+                remove: translate("Succesfully scheduled package removal")
+            };
+            return messages[type];
+        }
+
+        function installParams() {
+            var params = $scope.nutupane.getAllSelectedResults();
+            params['content_type'] = $scope.content.contentType;
+            params.content = $scope.content.content.split(/ *, */);
+            params['organization_id'] = CurrentOrganization;
+            return params;
+        }
+
         $scope.setState(false, [], []);
 
         $scope.content = {
@@ -63,9 +80,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
                 $scope.setState(false, [successMessage($scope.content.action)], []);
             };
 
-            error = function (error) {
-                $scope.setState(false, [], error.data.errors);
-                deferred.reject(error.data.errors);
+            error = function (response) {
+                $scope.setState(false, [], response.data.errors);
+                deferred.reject(response.data.errors);
             };
 
             params = installParams();
@@ -79,23 +96,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
 
             return deferred.promise;
         };
-
-        function successMessage(type) {
-            var messages = {
-                install: translate("Succesfully scheduled package installation"),
-                update: translate("Succesfully scheduled package update"),
-                remove: translate("Succesfully scheduled package removal")
-            };
-            return messages[type];
-        }
-
-        function installParams() {
-            var params = $scope.nutupane.getAllSelectedResults();
-            params['content_type'] = $scope.content.contentType;
-            params['content'] = $scope.content.content.split(/ *, */);
-            params['organization_id'] = CurrentOrganization;
-            return params;
-        }
 
     }]
 );

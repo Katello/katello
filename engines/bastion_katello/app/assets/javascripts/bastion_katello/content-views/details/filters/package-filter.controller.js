@@ -24,6 +24,63 @@
 angular.module('Bastion.content-views').controller('PackageFilterController',
     ['$scope', 'translate', 'Rule', 'Package', function ($scope, translate, Rule, Package) {
 
+        function type(rule) {
+            var typeId;
+
+            if (rule.version) {
+                typeId = 'equal';
+            } else if (rule['min_version'] && !rule['max_version']) {
+                typeId = 'greater';
+            } else if (!rule.min && rule['max_version']) {
+                typeId = 'less';
+            } else if (rule.min && rule['max_version']) {
+                typeId = 'range';
+            } else {
+                typeId = 'all';
+            }
+
+            return typeId;
+        }
+
+        function failure(response) {
+            $scope.errorMessages = [response.data.displayMessage];
+        }
+
+        function addType(rules) {
+            angular.forEach(rules, function (rule) {
+                rule.type = type(rule);
+            });
+        }
+
+        function removeRule(rule) {
+            var success,
+                rulesCopy = angular.copy($scope.filter.rules),
+                ruleId = rule.id;
+
+            success = function () {
+                angular.forEach(rulesCopy, function (ruleCopy, index) {
+                    if (ruleCopy.id === ruleId) {
+                        $scope.filter.rules.splice(index, 1);
+                    }
+                });
+                $scope.successMessages = [translate('Package successfully removed.')];
+            };
+
+            Rule.delete({filterId: rule['content_view_filter_id'], ruleId: ruleId}, success, failure);
+        }
+
+        function addSuccess(rule) {
+            $scope.rule = {
+                type: 'all'
+            };
+            $scope.rule.editMode = false;
+            $scope.rule.working = false;
+            addType([rule]);
+            $scope.filter.rules.push(rule);
+
+            $scope.successMessages = [translate('Package successfully added.')];
+        }
+
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
@@ -45,7 +102,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
 
         $scope.updateRule = function (rule, filter) {
             var params = {filterId: filter.id, ruleId: rule.id},
-                success, failure;
+                success, error;
 
             // Need access to the original rule
             success = function () {
@@ -55,11 +112,11 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
                 $scope.successMessages = [translate('Package successfully updated.')];
             };
 
-            failure = function () {
+            error = function () {
                 rule.working = false;
             };
 
-            Rule.update(params, rule, success, failure);
+            Rule.update(params, rule, success, error);
         };
 
         $scope.valid = function (rule) {
@@ -120,63 +177,6 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
                 return data.results;
             });
         };
-
-        function removeRule(rule) {
-            var success,
-                rulesCopy = angular.copy($scope.filter.rules),
-                ruleId = rule.id;
-
-            success = function () {
-                angular.forEach(rulesCopy, function (rule, index) {
-                    if (rule.id === ruleId) {
-                        $scope.filter.rules.splice(index, 1);
-                    }
-                });
-                $scope.successMessages = [translate('Package successfully removed.')];
-            };
-
-            Rule.delete({filterId: rule['content_view_filter_id'], ruleId: ruleId}, success, failure);
-        }
-
-        function addSuccess(rule) {
-            $scope.rule = {
-                type: 'all'
-            };
-            $scope.rule.editMode = false;
-            $scope.rule.working = false;
-            addType([rule]);
-            $scope.filter.rules.push(rule);
-
-            $scope.successMessages = [translate('Package successfully added.')];
-        }
-
-        function failure(response) {
-            $scope.errorMessages = [response.data.displayMessage];
-        }
-
-        function addType(rules) {
-            angular.forEach(rules, function (rule) {
-                rule.type = type(rule);
-            });
-        }
-
-        function type(rule) {
-            var typeId;
-
-            if (rule.version) {
-                typeId = 'equal';
-            } else if (rule['min_version'] && !rule['max_version']) {
-                typeId = 'greater';
-            } else if (!rule.min && rule['max_version']) {
-                typeId = 'less';
-            } else if (rule.min && rule['max_version']) {
-                typeId = 'range';
-            } else {
-                typeId = 'all';
-            }
-
-            return typeId;
-        }
 
     }]
 );

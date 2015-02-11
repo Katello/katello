@@ -30,6 +30,19 @@ angular.module('Bastion.activation-keys').controller('NewActivationKeyController
     ['$scope', '$q', 'FormUtils', 'ActivationKey', 'Organization', 'CurrentOrganization', 'ContentView',
     function ($scope, $q, FormUtils, ActivationKey, Organization, CurrentOrganization, ContentView) {
 
+        function success(response) {
+            $scope.table.addRow(response);
+            $scope.transitionTo('activation-keys.details.info', {activationKeyId: $scope.activationKey.id});
+        }
+
+        function error(response) {
+            $scope.working = false;
+            angular.forEach(response.data.errors, function (errors, field) {
+                $scope.activationKeyForm[field].$setValidity('server', false);
+                $scope.activationKeyForm[field].$error.messages = errors;
+            });
+        }
+
         $scope.activationKey = $scope.activationKey || new ActivationKey();
         $scope.activationKey['unlimited_content_hosts'] = true;
 
@@ -55,19 +68,6 @@ angular.module('Bastion.activation-keys').controller('NewActivationKeyController
             activationKey['organization_id'] = CurrentOrganization;
             activationKey.$save(success, error);
         };
-
-        function success(response) {
-            $scope.table.addRow(response);
-            $scope.transitionTo('activation-keys.details.info', {activationKeyId: $scope.activationKey.id});
-        }
-
-        function error(response) {
-            $scope.working = false;
-            angular.forEach(response.data.errors, function (errors, field) {
-                $scope.activationKeyForm[field].$setValidity('server', false);
-                $scope.activationKeyForm[field].$error.messages = errors;
-            });
-        }
 
     }]
 );

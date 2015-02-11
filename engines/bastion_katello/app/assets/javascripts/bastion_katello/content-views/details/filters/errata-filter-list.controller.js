@@ -30,6 +30,36 @@ angular.module('Bastion.content-views').controller('ErrataFilterListController',
     function ($scope, translate, Nutupane, Filter, Rule) {
         var nutupane;
 
+        function findRules(errataIds) {
+            var rules = [];
+
+            angular.forEach(errataIds, function (id) {
+                var found;
+
+                found = _.find($scope.filter.rules, function (rule) {
+                    return (rule['errata_id'] === id);
+                });
+
+                if (found) {
+                    rules.push(new Rule(found));
+                }
+            });
+
+            return rules;
+        }
+
+        function success(rule) {
+            nutupane.removeRow(rule['errata_id'], 'errata_id');
+            $scope.filter.rules = _.reject($scope.filter.rules, function (filterRule) {
+                return rule.id === filterRule.id;
+            });
+            $scope.$parent.successMessages = [translate('Errata successfully removed.')];
+        }
+
+        function failure(response) {
+            $scope.$parent.errorMessages = [response.data.displayMessage];
+        }
+
         $scope.nutupane = nutupane = new Nutupane(Filter, {
                 filterId: $scope.$stateParams.filterId,
                 'sort_order': 'DESC',
@@ -55,36 +85,6 @@ angular.module('Bastion.content-views').controller('ErrataFilterListController',
         $scope.errataFilter = function () {
             return true;
         };
-
-        function success(rule) {
-            nutupane.removeRow(rule['errata_id'], 'errata_id');
-            $scope.filter.rules = _.reject($scope.filter.rules, function (filterRule) {
-                return rule.id === filterRule.id;
-            });
-            $scope.$parent.successMessages = [translate('Errata successfully removed.')];
-        }
-
-        function failure(response) {
-            $scope.$parent.errorMessages = [response.data.displayMessage];
-        }
-
-        function findRules(errataIds) {
-            var rules = [];
-
-            angular.forEach(errataIds, function (id) {
-                var found;
-
-                found = _.find($scope.filter.rules, function (rule) {
-                    return (rule['errata_id'] === id);
-                });
-
-                if (found) {
-                    rules.push(new Rule(found));
-                }
-            });
-
-            return rules;
-        }
 
     }]
 );

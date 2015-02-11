@@ -23,6 +23,7 @@
  */
 angular.module('Bastion.organizations').factory('Organization',
     ['BastionResource', 'CurrentOrganization', function (BastionResource, CurrentOrganization) {
+
         return BastionResource('/katello/api/v2/organizations/:id/:action',
             {id: '@id'},
             {
@@ -39,7 +40,7 @@ angular.module('Bastion.organizations').factory('Organization',
                     url: '/katello/api/v2/organizations/:id/environments/paths',
                     isArray: true,
                     transformResponse: function (data) {
-                        return angular.fromJson(data)["results"];
+                        return angular.fromJson(data).results;
                     }
                 },
                 readableEnvironments: {
@@ -49,9 +50,9 @@ angular.module('Bastion.organizations').factory('Organization',
                     transformResponse: function (data) {
                         // transform [{environments : [{id, name, permissions: {readable : true}}]}]
                         // to [[{id, name, select: true}]]
-                        return _.map(angular.fromJson(data)["results"], function (path) {
-                            return _.map(path["environments"], function (env) {
-                                env.select = env.permissions["readable"];
+                        return _.map(angular.fromJson(data).results, function (path) {
+                            return _.map(path.environments, function (env) {
+                                env.select = env.permissions.readable;
                                 return env;
                             });
                         });

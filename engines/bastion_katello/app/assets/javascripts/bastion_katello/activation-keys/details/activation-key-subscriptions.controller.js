@@ -31,11 +31,11 @@ angular.module('Bastion.activation-keys').controller('ActivationKeySubscriptions
         var subscriptionsPane, params;
 
         params = {
-            'id':          $scope.$stateParams.activationKeyId,
-            'search':      $location.search().search || "",
-            'sort_by':     'name',
-            'sort_order':  'ASC',
-            'paged':       true
+            'id': $scope.$stateParams.activationKeyId,
+            'search': $location.search().search || "",
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'paged': true
         };
 
         subscriptionsPane = new Nutupane(ActivationKey, params, 'subscriptions');
