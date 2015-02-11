@@ -12,13 +12,14 @@
 
 module Katello
   class Api::V2::HostCollectionsController <  Api::V2::ApiController
+    include Katello::Concerns::FilteredAutoCompleteSearch
     before_filter :find_host_collection, :only => [:copy, :show, :update, :destroy, :destroy_systems,
                                                    :add_systems, :remove_systems, :systems,
                                                    :add_activation_keys, :remove_activation_keys]
     before_filter :find_activation_key
     before_filter :find_system
     before_filter :find_optional_organization, :only => [:index]
-    before_filter :find_organization, :only => [:create]
+    before_filter :find_organization, :only => [:create, :index, :auto_complete_search]
     before_filter :load_search_service, :only => [:index, :systems]
 
     wrap_parameters :include => (HostCollection.attribute_names + %w(system_ids))
@@ -46,15 +47,19 @@ module Katello
     param :activation_key_id, :identifier, :desc => N_("activation key identifier")
     param :system_id, :identifier, :desc => N_("system identifier")
     def index
-      subscriptions = if @system
-                        filter_system
-                      elsif @activation_key
-                        filter_activation_key
-                      else
-                        filter_organization
-                      end
+      respond(:collection => scoped_search(index_relation.uniq, :name, :desc))
+    end
 
-      respond_for_index(:collection => subscriptions)
+    def index_relation
+      query = if @system
+                @system.host_collections
+              elsif @activation_key
+                @activation_key.host_collections
+              else
+                HostCollection.readable.where(:organization_id => @organization.id)
+              end
+      query = query.where(:name => params[:name]) if params[:name]
+      query
     end
 
     api :POST, "/host_collections", N_("Create a host collection")
@@ -158,39 +163,6 @@ module Katello
     end
 
     private
-
-    def filter_system
-      filters = [:terms => {:id => @system.host_collections.pluck("#{Katello::HostCollection.table_name}.id")}]
-
-      options = {
-        :filters       => filters,
-        :load_records? => true
-      }
-      item_search(HostCollection, params, options)
-    end
-
-    def filter_activation_key
-      filters = [:terms => {:id => @activation_key.host_collections.pluck("#{Katello::HostCollection.table_name}.id")}]
-
-      options = {
-        :filters       => filters,
-        :load_records? => true
-      }
-      item_search(HostCollection, params, options)
-    end
-
-    def filter_organization
-      find_organization
-      ids = HostCollection.readable.where(:organization_id => @organization.id).pluck("#{Katello::HostCollection.table_name}.id")
-      filters = [:terms => {:id => ids}]
-      filters << {:term => {:name => params[:name]}} if params[:name]
-
-      options = {
-        :filters       => filters,
-        :load_records? => true
-      }
-      item_search(HostCollection, params, options)
-    end
 
     def find_host_collection
       @organization = @system.organization if @system
