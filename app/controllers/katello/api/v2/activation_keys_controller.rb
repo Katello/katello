@@ -93,6 +93,7 @@ module Katello
     param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     def copy
+      fail HttpErrors::BadRequest, _("New name cannot be blank") unless params[:new_name]
       @new_activation_key = @activation_key.copy(params[:new_name])
       @new_activation_key.user = current_user
       sync_task(::Actions::Katello::ActivationKey::Create, @new_activation_key)
