@@ -74,6 +74,7 @@ module Katello
       end
 
       def self.build_nvra(package)
+        package = package.with_indifferent_access
         nvra = package[:name] + '-' + package[:version] + '-' + package[:release]
         nvra = nvra + '.' + package[:arch] unless package[:arch].nil?
         nvra = nvra + '.' + package[:suffix] unless package[:suffix].nil?
