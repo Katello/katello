@@ -99,7 +99,8 @@ module Katello
       @new_activation_key.reload
       @new_activation_key.update_attributes!(
                                              :service_level => @activation_key.service_level,
-                                             :release_version => @activation_key.release_version
+                                             :release_version => @activation_key.release_version,
+                                             :auto_attach => @activation_key.auto_attach
                                             )
       @activation_key.content_overrides.each do |content|
         @new_activation_key.set_content_override(content['contentLabel'], content[:name], content[:value])
