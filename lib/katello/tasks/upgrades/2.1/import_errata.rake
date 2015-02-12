@@ -4,7 +4,7 @@ namespace :katello do
       task :import_errata => ["environment"]  do
 
         def error(exception)
-          message = _("There was an error updating Content Host %name with id %id") %
+          message = _("There was an error updating Content Host %{name} with id %{id}") %
                                {:name =>system.name, :id => system.id}
           puts message
           Rails.logger.error(message)
