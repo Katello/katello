@@ -7,14 +7,14 @@
   </span>
 
   <ul class="bullet">
-    <li>
+    <li bst-feature-flag="remote_actions">
       <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.packages') }}?select_all=true&search=host_collection:&quot;{{ hostCollection.name }}&quot;">
         Package Installation, Removal, and Update
       </a>
     </li>
 
 
-    <li>
+    <li bst-feature-flag="remote_actions">
       <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.errata.list') }}?select_all=true&search=host_collection:&quot;{{ hostCollection.name }}&quot;">
         Errata Installation
       </a>
@@ -26,7 +26,7 @@
       </a>
     </li>
 
-    <li>
+    <li bst-feature-flag="lifecycle_environments">
       <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.environment') }}?select_all=true&search=host_collection:&quot;{{ hostCollection.name }}&quot;">
         Change assigned Lifecycle Environment or Content View
       </a>
