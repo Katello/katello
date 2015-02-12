@@ -151,6 +151,7 @@ module Katello
 
       #Api controller extensions
       ::Api::V2::HostsController.send :include, Katello::Concerns::Api::V2::HostsControllerExtensions
+      ::Api::V2::HostgroupsController.send :include, Katello::Concerns::Api::V2::HostgroupsControllerExtensions
     end
 
     initializer 'katello.register_plugin', :after => :finisher_hook do
