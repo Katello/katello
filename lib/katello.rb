@@ -1,5 +1,10 @@
 require "rails"
 
+# This requires must be first so that angular-rails-templates, which comes from bastion, is loaded
+# before any other plugin we require is loaded to prevent:
+#   `expire_index!': can't modify immutable index (TypeError)
+# This error is confirmed with Sprockets 2.2.3 from the Rails 3.2.Z line
+require File.expand_path("../engines/bastion_katello/lib/bastion_katello", File.dirname(__FILE__))
 require "apipie-rails"
 
 require "rabl"
@@ -29,7 +34,6 @@ require "securerandom"
 lib_foreman = File.expand_path('lib/foreman', Rails.root)
 require lib_foreman if Dir.exist?(lib_foreman)
 
-require File.expand_path("../engines/bastion_katello/lib/bastion_katello", File.dirname(__FILE__))
 require "monkeys/string_to_bool"
 require "monkeys/anemone"
 
