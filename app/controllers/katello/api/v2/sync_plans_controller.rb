@@ -94,7 +94,7 @@ module Katello
     param :organization_id, :number, :desc => N_("Filter sync plans by organization name or label")
     param :id, :number, :desc => N_("sync plan numeric identifier")
     def destroy
-      @sync_plan.destroy
+      sync_task(::Actions::Katello::SyncPlan::Destroy, @sync_plan)
       respond_for_show(:resource => @sync_plan)
     end
 

@@ -18,6 +18,7 @@ module Katello
 
     include Glue
     include Katello::Authorization::SyncPlan
+    include ForemanTasks::Concerns::ActionSubject
 
     HOURLY = 'hourly'
     DAILY = 'daily'
