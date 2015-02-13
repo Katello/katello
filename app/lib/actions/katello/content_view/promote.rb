@@ -40,6 +40,7 @@ module Actions
             end
 
             plan_action(ContentView::UpdateEnvironment, version.content_view, environment)
+            plan_action(Katello::Foreman::ContentUpdate, environment, version.content_view)
             plan_action(ContentView::ErrataMail, version.content_view, environment)
             plan_self(history_id: history.id, environment_id: environment.id, user_id: ::User.current.id,
                       environment_name: environment.name, content_view_id: version.content_view.id)

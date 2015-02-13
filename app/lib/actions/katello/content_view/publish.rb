@@ -44,6 +44,7 @@ module Actions
             end
 
             plan_action(ContentView::UpdateEnvironment, content_view, library)
+            plan_action(Katello::Foreman::ContentUpdate, library, content_view)
             plan_action(ContentView::ErrataMail, content_view, library)
             plan_self(history_id: history.id, content_view_id: content_view.id,
                       environment_id: library.id, user_id: ::User.current.id)
