@@ -9,7 +9,7 @@
   <div data-block="messages">
     <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
     <div bst-alert="success" ng-hide="productDeletionTaskId === undefined">
-      <button type="button" class="close" ng-click="unsetProductDeletionTaskId()">×</button>
+      <button type="button" class="close" ng-click="unsetProductDeletionTaskId()">&times;</button>
       <p translate>
         Product delete operation has been initiated in the background.  Click <a href="{{ taskUrl(productDeletionTaskId) }}">Here</a> to monitor the progress.
       </p>

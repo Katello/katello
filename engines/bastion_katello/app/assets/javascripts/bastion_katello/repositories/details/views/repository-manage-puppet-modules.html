@@ -13,7 +13,7 @@
     <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
     <div bst-alert="success" ng-hide="generationTaskId === undefined">
-      <button type="button" class="close" ng-click="clearTaskId()">×</button>
+      <button type="button" class="close" ng-click="clearTaskId()">&times;</button>
       <p translate>
         Puppet module metadata generation has been initiated in the background.
         Click <a ng-href="{{ taskUrl() }}">Here</a> to monitor the progress.
