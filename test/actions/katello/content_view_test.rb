@@ -246,6 +246,8 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans' do
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_content_view_version).returns(::Katello::ContentViewVersion.first)
+
       plan_action(action, [{:content_view_version => content_view.version(library), :environments => [library]}],
                   {:errata_ids => ["FOO"]}, true, false, [], "BadDescription")
       assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, content_view.version(library), [library],

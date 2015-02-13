@@ -20,6 +20,7 @@ module Actions
           param :clauses
           param :full_clauses
           param :override_config
+          param :include_result
         end
 
         # @api override - pulp extension representing the content type to copy
@@ -47,7 +48,8 @@ module Actions
 
         def external_task=(external_task_data)
           external_task_data = [external_task_data] if external_task_data.is_a?(Hash)
-          super(external_task_data.map { |task| task.except('result') })
+          external_task_data = external_task_data.map { |task| task.except('result') } unless input[:include_result]
+          super(external_task_data)
         end
       end
     end
