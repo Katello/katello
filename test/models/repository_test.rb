@@ -144,6 +144,7 @@ module Katello
     def setup
       super
       User.current = @admin
+      @rhel6 = Repository.find(katello_repositories(:rhel_6_x86_64))
     end
 
     def test_product
@@ -368,10 +369,15 @@ module Katello
     end
 
     def test_errata_filenames
-      rhel = Repository.find(katello_repositories(:rhel_6_x86_64))
+      @rhel6 = Repository.find(katello_repositories(:rhel_6_x86_64))
 
-      refute_empty rhel.errata_filenames
-      assert_includes rhel.errata_filenames, rhel.errata.first.packages.first.filename
+      refute_empty @rhel6.errata_filenames
+      assert_includes @rhel6.errata_filenames, @rhel6.errata.first.packages.first.filename
+    end
+
+    def test_with_errata
+      errata = @rhel6.errata.first
+      assert_includes Repository.with_errata([errata]), @rhel6
     end
   end
 

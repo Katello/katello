@@ -108,4 +108,10 @@ module Katello
       @cvv.components = [@composite_version]
     end
   end
+
+  def test_components_needing_errata
+    errata = Erratum.find(katello_errata(:security))
+    component = @composite_version.components.first
+    assert_include @composite_version.components_needing_errata([errata]), component
+  end
 end

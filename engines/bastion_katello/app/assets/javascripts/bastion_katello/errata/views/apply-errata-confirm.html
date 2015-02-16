@@ -35,7 +35,7 @@
       will be created which will make this Errata Installable in the host's Environment.  This new version will replace the current version in your host's Lifecycle
       Environment.  To install these errata immediately on hosts after publishing check the box below.
     </p>
-  
+
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
@@ -49,9 +49,33 @@
       <tbody>
         <tr ng-repeat="update in updates">
           <td>
-            <a ng-href="/content_views/{{ update.content_view_version.content_view.id }}/versions">{{ update.content_view_version.content_view.name }}</a>
+            <div>
+              <i class="fa fa-chevron-down" ng-show="update.componentsVisible && update.components" ng-click="toggleComponents(update)"></i>
+              <i class="fa fa-chevron-right" ng-hide="update.componentsVisible && update.components" ng-click="toggleComponents(update)"></i>
+              <a ng-href="/content_views/{{ update.content_view_version.content_view.id }}/versions/{{update.content_view_version.id}}">{{ update.content_view_version.content_view.name }}</a> <span ng-show="{{update.components}}">*</span>
+            </div>
+            <div ng-show="update.componentsVisible">
+              <span translate>
+                Components:
+              </span>
+              <ul>
+                <li ng-repeat="component in update.components" class="row">
+                  <a class="col-sm-offset-1" ng-href="/content_views/{{ component.content_view_id }}/versions/{{component.id}}">{{ component.name }}</a>
+                </li>
+              </ul>
+            </div>
           </td>
-          <td>{{ update.next_version }}</td>
+          <td>
+            <div>
+              {{ update.next_version }}
+            </div>
+            <div ng-show="update.componentsVisible">
+              &nbsp;
+              <ul>
+                <li ng-repeat="component in update.components">{{ component.next_version }}</li>
+              </ul>
+            </div>
+          </td>
           <td>
             <span ng-repeat="environment in update.environments">
               <a ng-href="/lifecycle_environments/{{ environment.id }}/details">
@@ -69,6 +93,11 @@
   </section>
 
   <form name="errataConfirm" role="form" ng-submit="confirmApply()">
+    <div ng-show="updates && hasComposites(updates)">
+      <span translate>
+        * These marked Content View Versions are from Composite Content Views.  Their components needing updating are listed underneath.
+      </span>
+    </div>
     <div class="checkbox" ng-show="updates">
       <label>
         <input name="applyErrata" ng-model="applyErrata" type="checkbox"/>

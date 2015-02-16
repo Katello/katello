@@ -167,6 +167,7 @@ describe('Controller: ApplyErrataController', function() {
 
                 expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.details', {taskId: 1});
                 expect($scope.errorMessages.length).toBe(0);
+                expect($scope.hasComposites($scope.updates)).toBeFalsy();
             });
 
             it("and fail", function () {
@@ -183,6 +184,88 @@ describe('Controller: ApplyErrataController', function() {
                 $scope.applyErrata = true;
 
                 $scope.confirmApply();
+            });
+        });
+
+        describe("if an incremental update is needed with composites", function () {
+            beforeEach(function () {
+                expectedParams = {
+                    'add_content': {
+                        'errata_ids': [10]
+                    },
+                    'content_view_version_environments': [{
+                        'content_view_version_id': 5,
+                        'environment_ids': []
+                    }],
+                    'propagate_to_composites': true,
+                    'resolve_dependencies': true
+                };
+
+                $scope.updates = [{
+                    'content_view_version': {id: 1},
+                    environments: [{id: 2}],
+                    components: [{id: 5}]
+                }];
+
+                spyOn(ContentViewVersion, 'incrementalUpdate').andCallThrough();
+            });
+
+            afterEach(function () {
+                expect(ContentViewVersion.incrementalUpdate).toHaveBeenCalledWith(expectedParams, jasmine.any(Function),
+                    jasmine.any(Function));
+            });
+
+            it("and succeed", function () {
+                spyOn($scope, 'transitionTo');
+
+                $scope.confirmApply();
+
+                expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.details', {taskId: 1});
+                expect($scope.errorMessages.length).toBe(0);
+                expect($scope.hasComposites($scope.updates)).toBeTruthy();
+            });
+        });
+
+        describe("if an incremental update is needed with composites and component", function () {
+            beforeEach(function () {
+                expectedParams = {
+                    'add_content': {
+                        'errata_ids': [10]
+                    },
+                    'content_view_version_environments': [{
+                        'content_view_version_id': 5,
+                        'environment_ids': [99]
+                    }],
+                    'propagate_to_composites': true,
+                    'resolve_dependencies': true
+                };
+
+                $scope.updates = [{
+                    'content_view_version': {id: 1},
+                    environments: [{id: 2}],
+                    components: [{id: 5}]
+                },{
+                    'content_view_version': {id: 5},
+                    environments: [{id: 99}],
+                    components: undefined
+                }];
+
+                spyOn(ContentViewVersion, 'incrementalUpdate').andCallThrough();
+            });
+
+            afterEach(function () {
+                expect(ContentViewVersion.incrementalUpdate).toHaveBeenCalledWith(expectedParams, jasmine.any(Function),
+                    jasmine.any(Function));
+            });
+
+            it("and succeed", function () {
+                spyOn($scope, 'transitionTo');
+
+                $scope.confirmApply();
+
+                expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.details', {taskId: 1});
+                expect($scope.errorMessages.length).toBe(0);
+                expect($scope.hasComposites($scope.updates)).toBeTruthy();
             });
         });
     });

@@ -302,6 +302,10 @@ module Katello
       packages_without_filenames(filenames)
     end
 
+    def self.with_errata(errata)
+      joins(:repository_errata).where("#{Katello::RepositoryErratum.table_name}.erratum_id" => errata)
+    end
+
     def errata_filenames
       Katello::ErratumPackage.joins(:erratum => :repository_errata).
           where("#{RepositoryErratum.table_name}.repository_id" => self.id).pluck(:filename)

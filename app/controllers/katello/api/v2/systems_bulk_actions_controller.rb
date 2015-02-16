@@ -168,12 +168,21 @@ module Katello
     def available_incremental_updates
       version_environments = {}
       systems = System.with_non_installable_errata(@errata).where("#{System.table_name}.id" => @systems)
-      systems.each do |system|
-        version = system.content_view.version(system.environment)
+
+      ContentViewEnvironment.for_systems(systems).each do |cve|
+        version = cve.content_view_version
         version_environment = version_environments[version] || {:content_view_version => version, :environments => []}
-        version_environment[:environments] << system.environment unless version_environment[:environments].include?(system.environment)
+        version_environment[:environments] << cve.environment unless version_environment[:environments].include?(cve.environment)
         version_environment[:next_version] ||= version.next_incremental_version
-        version_environment[:content_host_count] = systems.count
+        version_environment[:content_host_count] ||= 0
+        version_environment[:content_host_count] += systems.where(:content_view_id => cve.content_view).where(:environment_id => cve.environment).count
+
+        if version.content_view.composite?
+          version_environment[:components] = version.components_needing_errata(@errata)
+        else
+          version_environment[:components] = nil
+        end
+
         version_environments[version] = OpenStruct.new(version_environment)
       end
 
