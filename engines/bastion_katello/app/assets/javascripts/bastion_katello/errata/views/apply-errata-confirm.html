@@ -78,7 +78,7 @@
 
     <button type="button" class="btn btn-default" ng-click="transitionBack()" translate>Cancel</button>
     <button type="submit" class="btn btn-primary"
-            ng-disabled="applyingErrata">
+            ng-disabled="applyingErrata || incrementalUpdateInProgress">
       <i class="fa fa-spinner fa-spin" ng-show="applyingErrata"></i>
       <span ng-show="applyingErrata" translate>Applying</span>
       <span ng-hide="applyingErrata" translate>Confirm</span>

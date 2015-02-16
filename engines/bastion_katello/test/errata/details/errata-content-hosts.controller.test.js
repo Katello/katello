@@ -61,6 +61,7 @@ describe('Controller: ErrataContentHostsController', function() {
         
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {errataId: 1};
+        $scope.checkIfIncrementalUpdateRunning = function () {};
 
         $controller('ErrataContentHostsController', {
             $scope: $scope,

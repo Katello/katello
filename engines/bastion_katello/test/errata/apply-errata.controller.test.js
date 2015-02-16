@@ -49,6 +49,7 @@ describe('Controller: ApplyErrataController', function() {
         CurrentOrganization = 'foo';
 
         $scope = $injector.get('$rootScope').$new();
+        $scope.checkIfIncrementalUpdateRunning = function () {};
 
         dependencies = {
             $scope: $scope,

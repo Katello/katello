@@ -2,6 +2,17 @@
 
 <div data-extend-template="layouts/nutupane.html">
 
+  <div data-block="messages">
+    <div bst-alert="info" ng-show="incrementalUpdateInProgress">
+      <div>
+        <p translate>There is currently an Incremental Update task in progress.  This update must finish before applying existing updates.</p>
+        <div>
+          <a href="/foreman_tasks/tasks/{{incrementalUpdates[0].id}}" translate>Click here to check the status of the task.</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div data-block="header">
     {{ 'Errata' | translate }}
   </div>
@@ -10,7 +21,7 @@
     <button class="btn btn-primary"
             ng-click="goToNextStep()"
             ng-hide="denied('edit_content_hosts')"
-            ng-disabled="table.numSelected == 0">
+            ng-disabled="table.numSelected == 0 || incrementalUpdateInProgress">
       <i class="icon-plus"></i>
       <span translate>Apply Errata</span>
     </button>

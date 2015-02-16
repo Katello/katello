@@ -123,5 +123,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                     incrementalUpdate();
                 }
             };
+
+            $scope.checkIfIncrementalUpdateRunning();
         }
     ]);
