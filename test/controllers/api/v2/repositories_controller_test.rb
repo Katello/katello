@@ -396,6 +396,14 @@ module Katello
       end
     end
 
+    def test_update_with_upstream_name
+      repo = katello_repositories(:busybox)
+      assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
+        attributes[:docker_upstream_name] = "helloworld"
+      end
+      put :update, :id => repo.id, :docker_upstream_name => "helloworld"
+    end
+
     def test_remove_content
       uuids = ['foo', 'bar']
       @controller.expects(:sync_task).with(::Actions::Katello::Repository::RemoveContent,
