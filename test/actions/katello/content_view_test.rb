@@ -170,6 +170,12 @@ module ::Actions::Katello::ContentView
       katello_environments(:library)
     end
 
+    let(:library_cv_env) do
+      Katello::ContentViewEnvironment.where(content_view_id: content_view,
+                                            environment_id: library
+                                           ).first
+    end
+
     let(:default_content_view) do
       katello_content_views(:acme_default)
     end
@@ -196,14 +202,14 @@ module ::Actions::Katello::ContentView
                                                       environment_id: environment.id
                                                      ).first.content_view_version
 
-      options = {content_view_environments: [cv_env],
+      options = {content_view_environments: [cv_env, library_cv_env],
                  content_view_versions: [version]
                 }
       action.expects(:action_subject).with(content_view)
 
       plan_action(action, content_view, options)
       assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env, :skip_elastic => false, :skip_repo_destroy => false, :organization_destroy => false)
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version)
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version, :skip_environment_check => true)
     end
   end
 

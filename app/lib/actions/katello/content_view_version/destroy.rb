@@ -15,17 +15,14 @@ module Actions
     module ContentViewVersion
       class Destroy < Actions::Base
         def plan(version, options = {})
-          version.check_ready_to_destroy!
+          version.check_ready_to_destroy! unless options[:skip_environment_check]
 
           sequence do
             concurrence do
-              version.repositories.each do |repo|
+              version.archived_repos.each do |repo|
                 plan_action(Repository::Destroy, repo, options)
               end
-
-              version.content_view_puppet_environments.each do |puppet_env|
-                plan_action(ContentViewPuppetEnvironment::Destroy, puppet_env)
-              end
+              plan_action(ContentViewPuppetEnvironment::Destroy, version.archive_puppet_environment)
             end
           end
 
