@@ -123,7 +123,7 @@ module Katello
       ids = params[:product_ids]
       @products  = Product.where(:id => ids).editable
       @sync_plan.product_ids = (@sync_plan.product_ids + @products.collect { |p| p.id }).uniq
-      @sync_plan.save!
+      sync_task(::Actions::Katello::SyncPlan::UpdateProducts, @sync_plan)
       respond_for_show
     end
 
@@ -134,7 +134,7 @@ module Katello
       ids = params[:product_ids]
       @products  = Product.where(:id => ids).editable
       @sync_plan.product_ids = (@sync_plan.product_ids - @products.collect { |p| p.id }).uniq
-      @sync_plan.save!
+      sync_task(::Actions::Katello::SyncPlan::UpdateProducts, @sync_plan)
       respond_for_show
     end
 

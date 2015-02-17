@@ -18,6 +18,7 @@ module Katello
 
     include Glue
     include Katello::Authorization::SyncPlan
+    include ForemanTasks::Concerns::ActionSubject
 
     HOURLY = 'hourly'
     DAILY = 'daily'
@@ -36,19 +37,10 @@ module Katello
     validate :validate_sync_date
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
-    before_save :reassign_sync_plan_to_products
-
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true
     scoped_search :on => :interval, :complete_value => true
     scoped_search :on => :enabled, :complete_value => true
-
-    def reassign_sync_plan_to_products
-      # triggers orchestration in products
-      self.products.each do |product|
-        ::ForemanTasks.sync_task(::Actions::Katello::Product::Update, product, :sync_plan_id => self.id)
-      end
-    end
 
     def validate_sync_date
       errors.add :base, _("Start Date and Time can't be blank") if self.sync_date.nil?

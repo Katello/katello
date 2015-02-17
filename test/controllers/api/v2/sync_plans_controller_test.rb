@@ -25,7 +25,7 @@ module Katello
 
     def models
       @organization = get_organization
-      @sync_plan = katello_sync_plans(:sync_plan_hourly)
+      @sync_plan = Katello::SyncPlan.find(katello_sync_plans(:sync_plan_hourly))
       @products = katello_products(:fedora, :redhat, :empty_product)
     end
 
@@ -148,12 +148,7 @@ module Katello
     end
 
     def test_add_products
-      @products.each do |product|
-        ::ForemanTasks.expects(:sync_task).
-          with(::Actions::Katello::Product::Update,
-               product,
-               :sync_plan_id => @sync_plan.id)
-      end
+      ::ForemanTasks.expects(:sync_task).with(::Actions::Katello::SyncPlan::UpdateProducts, @sync_plan)
 
       put :add_products, :id => @sync_plan.id, :organization_id => @organization.id,
           :product_ids => @products.collect { |p| p.id }
