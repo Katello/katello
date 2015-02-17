@@ -10,7 +10,7 @@
     <button class="btn btn-primary"
             ng-click="goToNextStep()"
             ng-hide="denied('edit_content_hosts')"
-            ng-disabled="detailsTable.numSelected == 0">
+            ng-disabled="detailsTable.numSelected == 0 || incrementalUpdateInProgress">
       <i class="icon-plus"></i>
       <span translate>Apply to Hosts</span>
     </button>

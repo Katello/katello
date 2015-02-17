@@ -29,8 +29,8 @@
  *   within the table.
  */
 angular.module('Bastion.errata').controller('ErrataController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'Erratum', 'Repository', 'CurrentOrganization',
-    function ($scope, $location, translate, Nutupane, Erratum, Repository, CurrentOrganization) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'Erratum', 'Task', 'Repository', 'CurrentOrganization',
+    function ($scope, $location, translate, Nutupane, Erratum, Task, Repository, CurrentOrganization) {
         var nutupane, params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
@@ -49,6 +49,26 @@ angular.module('Bastion.errata').controller('ErrataController',
         };
 
         $scope.repository = {name: translate('All Repositories'), id: 'all'};
+
+        $scope.checkIfIncrementalUpdateRunning = function () {
+            var searchId, taskSearchParams, taskSearchComplete;
+
+            taskSearchParams = {
+                'type': 'all',
+                "resource_type": "Organization",
+                "resource_id": CurrentOrganization,
+                "action_types": "Actions::Katello::ContentView::IncrementalUpdates",
+                "active_only" : true
+            };
+
+            taskSearchComplete = function (results) {
+                $scope.incrementalUpdates = results;
+                $scope.incrementalUpdateInProgress = results.length > 0;
+                Task.unregisterSearch(searchId);
+            };
+
+            searchId = Task.registerSearch(taskSearchParams, taskSearchComplete);
+        };
 
         Repository.queryUnpaged({'organization_id': CurrentOrganization, 'content_type': 'yum'}, function (response) {
             $scope.repositories = [$scope.repository];
@@ -93,5 +113,7 @@ angular.module('Bastion.errata').controller('ErrataController',
             $scope.selectedErrata = nutupane.getAllSelectedResults();
             $scope.transitionTo('errata.apply.select-content-hosts');
         };
+
+        $scope.checkIfIncrementalUpdateRunning();
     }]
 );

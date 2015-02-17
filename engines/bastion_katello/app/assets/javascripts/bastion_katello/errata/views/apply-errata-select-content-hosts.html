@@ -11,7 +11,7 @@
 
   <div data-block="footer-actions" class="footer-actions">
     <button type="button" class="btn btn-default" ng-click="transitionTo('errata.index')" translate>Cancel</button>
-    <button type="submit" class="btn btn-primary" ng-disabled="detailsTable.numSelected === 0"
+    <button type="submit" class="btn btn-primary" ng-disabled="detailsTable.numSelected === 0 || incrementalUpdateInProgress"
             ng-click="goToNextStep()" translate>Next</button>
   </div>
 </div>

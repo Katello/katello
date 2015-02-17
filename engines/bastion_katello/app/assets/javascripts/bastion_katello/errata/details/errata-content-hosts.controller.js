@@ -71,5 +71,7 @@ angular.module('Bastion.errata').controller('ErrataContentHostsController',
                 $scope.transitionTo('errata.apply.confirm');
             }
         };
+
+        $scope.checkIfIncrementalUpdateRunning();
     }
 ]);

@@ -17,6 +17,7 @@ describe('Controller: ErrataController', function() {
         $controller,
         dependencies,
         Errata,
+        Task,
         Repository,
         Nutupane;
 
@@ -35,6 +36,11 @@ describe('Controller: ErrataController', function() {
             this.getAllSelectedResults = function () {};
         };
         Errata = {};
+
+        Task = {
+            registerSearch: function() {},
+            unregisterSearch: function () {}
+        };
     });
 
     beforeEach(inject(function(_$controller_, $rootScope, _$location_, MockResource, translateMock) {
@@ -48,6 +54,7 @@ describe('Controller: ErrataController', function() {
             $location: $location,
             Nutupane: Nutupane,
             Errata: Errata,
+            Task: Task,
             Repository: Repository,
             CurrentOrganization: 'CurrentOrganization',
             translate: translateMock
@@ -115,5 +122,27 @@ describe('Controller: ErrataController', function() {
         $controller('ErrataController', dependencies);
 
         expect($scope.repository.id).toBe(1);
+    });
+
+    it('sets the incrementalUpdateInProgress to true if an incremental update is in progress', function () {
+        spyOn(Task, 'registerSearch').andCallFake(function (params, callback) {
+            callback([1]);
+        });
+
+        $scope.checkIfIncrementalUpdateRunning();
+
+        expect(Task.registerSearch).toHaveBeenCalled();
+        expect($scope.incrementalUpdateInProgress).toBe(true);
+    });
+
+    it('sets the incrementalUpdateInProgress to false if no incremental update is in progress', function () {
+        spyOn(Task, 'registerSearch').andCallFake(function (params, callback) {
+            callback([]);
+        });
+
+        $scope.checkIfIncrementalUpdateRunning();
+
+        expect(Task.registerSearch).toHaveBeenCalled();
+        expect($scope.incrementalUpdateInProgress).toBe(false);
     });
 });
