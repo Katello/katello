@@ -40,6 +40,7 @@ module Katello
     param :noncomposite, :bool, :desc => N_("Filter out composite content views")
     param :without, Array, :desc => N_("Do not include this array of content views")
     param :name, String, :desc => N_("Name of the content view"), :required => false
+    param_group :search, Api::V2::ApiController
     def index
       options = sort_params
       options[:load_records?] = true
