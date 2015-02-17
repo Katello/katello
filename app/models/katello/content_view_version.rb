@@ -186,7 +186,11 @@ module Katello
     end
 
     def puppet_module_count
-      PuppetModule.module_count([self.archive_puppet_environment])
+      if self.archive_puppet_environment
+        PuppetModule.module_count([self.archive_puppet_environment])
+      else
+        0
+      end
     end
 
     def package_count

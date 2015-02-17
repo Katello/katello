@@ -38,16 +38,8 @@ module Actions
               end
             end
             plan_action(Candlepin::Environment::Destroy, cp_id: cv_env.cp_id) unless skip_cp_update
-            plan_self(:id => cv_env.id)
-          end
-        end
-
-        def finalize
-          cv_env = ::Katello::ContentViewEnvironment.find_by_id(input[:id])
-          if cv_env.nil?
-            output[:response] = "Content view with ID #{input[:id]} is (probably) already deleted"
-          else
             cv_env.destroy!
+            plan_self
           end
         end
       end
