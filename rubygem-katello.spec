@@ -29,7 +29,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.1.1
-Release: 0%{dist}
+Release: 1%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -236,6 +236,26 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Wed Feb 18 2015 Justin Sherrill <jsherril@redhat.com> 2.1.1-1
+- Fixes #9431: Clear system_errata when pruning backend objects.
+  (ericdhelms@gmail.com)
+- fixes #9150 - reindex all distributions on indexing (jsherril@redhat.com)
+- Fixes #8984: Remove sync plan from products when a sync plan is destroyed.
+  (ericdhelms@gmail.com)
+- fixes #9363 - syntax error in hash substitution in errata import task
+  (stbenjam@redhat.com)
+- fixes #9361 - correct logic to hide content hosts list on collection
+  (thomasmckay@redhat.com)
+- fixes #9333 - fix bad action name on lifecycle env delete
+  (jsherril@redhat.com)
+- fixes #9317 - only call foreman content update when needed
+  (jsherril@redhat.com)
+- fixes #9312 - handle errata import with duplicate packages
+  (jsherril@redhat.com)
+- Ref #9300: destroy ktenv should no longer call dis (dtsang@redhat.com)
+- fixes #9218 - extend hostgroups controller create/update to include katello
+  attrs (bbuckingham@redhat.com)
+
 * Fri Feb 06 2015 Justin Sherrill <jsherril@redhat.com> 2.1.0-5
 - fixes #9105 - set default org for initial admin user (jsherril@redhat.com)
 - fixes #8941 - dynflow refresh subscriptions (auto-attach)
