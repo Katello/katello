@@ -1,3 +1,11 @@
+#!/bin/bash
+# :vim:sw=2:ts=2:et:
+#
+# This file is installed in /usr/share/foreman/script/foreman-debug.d where
+# it is picked by foreman-debug reporting tool. This file contains rules for
+# both Katello server and Katello proxy (Satellite 6 / Capsule nodes).
+#
+
 # error out if called directly
 if [ $BASH_SOURCE == $0 ]
 then
@@ -5,8 +13,20 @@ then
   exit 1
 fi
 
-# General stuff
-add_files "/var/log/audit/audit.log"
+# Installer
+add_files "/var/log/{katello,capsule,sam}-installer/*"
+add_files "/etc/{katello,capsule,sam}-installer/*"
+add_cmd "find /root/ssl-build -ls | sort -k 11" "katello_ssl_build_dir"
+add_cmd "find /etc/pki -ls | sort -k 11" "katello_pki_dir"
+
+# Katello
+add_files "/etc/pulp/server/plugins.d/*"
+add_files "/etc/foreman/plugins/katello.yaml"
+
+# Splice
+add_files "/var/log/splice/*"
+add_files "/etc/splice/*"
+add_files "/etc/httpd/conf.d/splice.conf"
 
 # Candlepin
 add_files "/var/log/candlepin/*"
@@ -22,28 +42,34 @@ add_files "/etc/elasticsearch/*"
 
 # Pulp
 add_files "/etc/pulp/*.conf"
-add_files "/etc/pulp/server/plugins.conf.d/nodes/distributor/*"
-add_files "/var/log/mongodb/*"
-add_files "/var/lib/mongodb/mongodb.log*"
 add_files "/etc/httpd/conf.d/pulp.conf"
-add_files "/etc/qpid/qpidd.conf"
-add_cmd "cat /var/log/messages | grep pulp"
+add_files "/etc/pulp/server/plugins.conf.d/nodes/distributor/*"
 
-#Grab the qpid items from syslog
-add_cmd "cat /var/log/messages | grep qpidd" "/var/log/qpidd.log"
+# MongoDB (*)
+if [ $NOGENERIC -eq 0 ]; then
+  add_files "/var/log/mongodb/*"
+  add_files "/var/lib/mongodb/mongodb.log*"
+fi
 
-# Splice
-add_files "/var/log/splice/*"
-add_files "/etc/splice/*"
-add_files "/etc/httpd/conf.d/splice.conf",
-add_files "/etc/cron.d/spacewalk-sst-sync"
-add_files "/etc/cron.d/splice-sst-sync"
+# Qpidd (*)
+if [ $NOGENERIC -eq 0 ]; then
+  add_files "/etc/qpid/*"
+  add_files "/etc/qpidd.conf"
+fi
 
-# Katello
-add_files "/var/log/katello/*"
-add_files "/var/log/katello-installer/*"
-add_files "/etc/katello-installer/*"
-add_files "/etc/pulp/server/plugins.d/*"
-add_cmd "find /root/ssl-build -ls | sort -k 11" "katello_ssl_build_dir"
-add_files "/etc/foreman/plugins/katello.yaml"
-add_files "/var/lib/pgsql/data/pg_log/*"
+# Gofer
+add_files "/etc/gofer"
+add_files "/var/log/gofer"
+
+# FreeIPA (*)
+if [ $NOGENERIC -eq 0 ]; then
+  add_files "/var/log/ipa*-install.log"
+  add_files "/var/log/ipaupgrade.log"
+  add_files "/var/log/dirsrv/slapd-*/logs/access"
+  add_files "/var/log/dirsrv/slapd-*/logs/errors"
+  add_files "/etc/dirsrv/slapd-*/dse.ldif"
+  add_files "/etc/dirsrv/slapd-*/schema/99user.ldif"
+fi
+
+# Legend:
+# * - already collected by sosreport tool (skip when -g option was provided)
