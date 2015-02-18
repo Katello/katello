@@ -21,6 +21,7 @@ namespace :katello do
           Katello::System.index.remove system
           system.system_activation_keys.destroy_all
           system.system_host_collections.destroy_all
+          system.system_errata.destroy_all
           system.delete
         end
       end
