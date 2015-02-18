@@ -3,7 +3,12 @@
   {{ 'Physical' | translate }}
 </div>
 <div ng-if="subscription.virt_only === true && !subscription.host">
-  {{ 'Virtual' | translate }}
+  <div ng-if="subscription.unmapped_guest !== true">
+    {{ 'Virtual' | translate }}
+  </div>
+  <div ng-if="subscription.unmapped_guest === true">
+    {{ 'Temporary' | translate }}
+  </div>
 </div>
 <div ng-if="subscription.virt_only === true && subscription.host">
   <span translate> Guests of </span>

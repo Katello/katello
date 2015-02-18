@@ -32,7 +32,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostBaseSubscriptions
             'id':                       $scope.$stateParams.contentHostId,
             'organization_id':          CurrentOrganization,
             'sort_by':                  'name',
-            'sort_order':               'ASC'
+            'sort_order':               'ASC',
+            'match_system':             true
         };
 
         $scope.subscription = {
