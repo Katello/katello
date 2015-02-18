@@ -31,6 +31,8 @@ namespace :katello do
           system.del_pulp_consumer unless pulp_fail
           Katello::System.index.remove system
           system.system_activation_keys.destroy_all
+          system.system_host_collections.destroy_all
+          system.system_errata.destroy_all
           system.delete
         end
       end
