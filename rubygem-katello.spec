@@ -29,7 +29,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.1.1
-Release: 1%{dist}
+Release: 2%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -236,6 +236,9 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Wed Feb 18 2015 Justin Sherrill <jsherril@redhat.com> 2.1.1-2
+- bumping gem version (jsherril@redhat.com)
+
 * Wed Feb 18 2015 Justin Sherrill <jsherril@redhat.com> 2.1.1-1
 - Fixes #9431: Clear system_errata when pruning backend objects.
   (ericdhelms@gmail.com)
