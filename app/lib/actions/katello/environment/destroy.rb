@@ -29,7 +29,6 @@ module Actions
           skip_repo_destroy = options.fetch(:skip_repo_destroy, false)
           organization_destroy = options.fetch(:organization_destroy, false)
           sequence do
-            env.disable_auto_reindex!
             action_subject(env)
 
             concurrence do
@@ -48,12 +47,11 @@ module Actions
         end
 
         def humanized_input
-          ["'#{input['kt_environment']['name']}'" + super]
+          ["'#{input['kt_environment']['name']}'"] + super
         end
 
         def finalize
           environment = ::Katello::KTEnvironment.find(input['kt_environment']['id'])
-          environment.disable_auto_reindex!
           environment.destroy!
         end
       end

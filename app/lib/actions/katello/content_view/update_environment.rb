@@ -25,9 +25,6 @@ module Actions
                       cp_environment_id: view_env.cp_id,
                       content_ids:       content_ids)
 
-          unless content_view.default?
-            plan_action(Katello::Foreman::ContentUpdate, environment, content_view)
-          end
           plan_action(CapsuleContent::UpdateWithoutContent, environment)
         end
       end

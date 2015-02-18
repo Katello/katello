@@ -116,6 +116,10 @@ module Katello
     end
 
     def test_destroy
+      assert_sync_task(::Actions::Katello::SyncPlan::Destroy) do |sync_plan|
+        sync_plan.id.must_equal @sync_plan.id
+      end
+
       delete :destroy, :organization_id => @organization.id, :id => @sync_plan.id
 
       assert_response :success
