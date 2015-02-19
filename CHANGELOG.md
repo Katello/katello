@@ -1,3 +1,36 @@
+# Katello 2.1.1
+
+### Installer 
+ * Update service wait for EL7, fixing broken installations. ([#9364](http://projects.theforeman.org/issues/9364), [3ba2d25](http://github.com/katello/katello/commit/3ba2d25))
+ * hooks_dir should be hook_dirs ([#9075](http://projects.theforeman.org/issues/9075), [6697b2d](http://github.com/katello/katello/commit/6697b2d))
+ * fixing --reset on broken installation ([#9101](http://projects.theforeman.org/issues/9101), [343c706](http://github.com/katello/katello/commit/343c706))
+
+### Katello Agent
+ * use correct certificate location ([#9403](http://projects.theforeman.org/issues/9403), [d04d43d](http://github.com/katello/katello-agent/commit/d04d43d))
+
+### ElasticSearch
+ * reindex all distributions on indexing ([#9150](http://projects.theforeman.org/issues/9150), [a07ac2a](http://github.com/katello/katello/commit/a07ac2a))
+
+### Upgrades
+ * syntax error in hash substitution in errata import task ([#9363](http://projects.theforeman.org/issues/9363), [9860955](http://github.com/katello/katello/commit/9860955))
+
+### Web UI
+ * correct logic to hide content hosts list on collection ([#9361](http://projects.theforeman.org/issues/9361), [ce70b44](http://github.com/katello/katello/commit/ce70b44))
+
+### Dynflow
+ * fix bad action name on lifecycle env delete ([#9333](http://projects.theforeman.org/issues/9333), [8a4dd44](http://github.com/katello/katello/commit/8a4dd44))
+
+### API
+ * only call foreman content update when needed ([#9317](http://projects.theforeman.org/issues/9317), [f1d2e04](http://github.com/katello/katello/commit/f1d2e04))
+ * handle errata import with duplicate packages ([#9312](http://projects.theforeman.org/issues/9312), [886ef64](http://github.com/katello/katello/commit/886ef64))
+ * extend hostgroups controller create/update to include katello attrs ([#9218](http://projects.theforeman.org/issues/9218), [b989b23](http://github.com/katello/katello/commit/b989b23))
+
+### Other
+ * Clear system_errata when pruning backend objects. ([#9431](http://projects.theforeman.org/issues/9431), [0caeead](http://github.com/katello/katello/commit/0caeead))
+ * Remove sync plan from products when a sync plan is destroyed. ([#8984](http://projects.theforeman.org/issues/8984), [bd44944](http://github.com/katello/katello/commit/bd44944))
+ * Fix for lifecycle environment destroy on org destroy ([32269a0](http://github.com/katello/katello/commit/32269a0))
+
+
 #Winter Warmer (rubygem-katello-2.1.0-5 - 2015-02-06) 
 
 ## Features 
