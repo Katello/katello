@@ -18,9 +18,9 @@ module Actions
           _("Enable")
         end
 
-        def plan(product, content, substitutions)
-          mapper = repository_mapper(product, content, substitutions)
-          mapper.check_substitutions!
+        def plan(product, content, options)
+          mapper = repository_mapper(product, content, options, options[:registry_name])
+          mapper.validate!
           if mapper.find_repository
             fail ::Katello::Errors::ConflictException, _("The repository is already enabled")
           end
@@ -32,10 +32,17 @@ module Actions
 
         private
 
-        def repository_mapper(product, content, substitutions)
-          ::Katello::Candlepin::Content::RepositoryMapper.new(product,
-                                                              content,
-                                                              substitutions)
+        def repository_mapper(product, content, substituions, registry_name)
+          if content.type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
+            ::Katello::Candlepin::Content::DockerRepositoryMapper.new(product,
+                                                                content,
+                                                                registry_name)
+
+          else
+            ::Katello::Candlepin::Content::RepositoryMapper.new(product,
+                                                                content,
+                                                                substituions)
+          end
         end
       end
     end

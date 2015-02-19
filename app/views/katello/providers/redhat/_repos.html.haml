@@ -16,6 +16,7 @@
                                :data => { :url => toggle_repository_product_path(scan_cdn.input[:product_id]),
                                           'content-id' => scan_cdn.input[:content_id],
                                           'pulp-id' => result[:pulp_id],
+                                          'registry-name' => result[:registry_name],
                                           :releasever => result[:substitutions][:releasever],
                                           :basearch => result[:substitutions][:basearch] },
                                :disabled => result[:promoted], :checked=>(:checked if result[:enabled])}
