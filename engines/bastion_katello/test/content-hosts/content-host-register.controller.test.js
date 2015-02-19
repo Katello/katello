@@ -37,7 +37,7 @@ describe('Controller: ContentHostRegisterController', function() {
     });
 
     it('puts the current domain on the scope', function() {
-        expect($scope.baseURL).toBeDefined();
+        expect($scope.katelloHostname).toBeDefined();
     });
 
     it('should fetch a list of capsules', function(){
