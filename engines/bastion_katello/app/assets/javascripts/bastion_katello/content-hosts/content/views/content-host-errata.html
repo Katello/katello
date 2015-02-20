@@ -33,12 +33,18 @@
   </span>
 
   <span data-block="actions" bst-feature-flag="remote_actions">
+
+      <div bst-modal="applySelected()" model="contentHost"
+           modal-header='Apply Errata to Content Host "{{contentHost.name}}"?'
+           modal-body='Are you sure you want to apply Errata to content host "{{ contentHost.name }}"?'
+           modal-confirm="Apply"></div>
+
       <div ng-hide="contentHost.readonly" class="fr">
          <button class="btn btn-primary"
                  translate
                  ng-hide="denied('edit_content_hosts', contentHost)"
                  ng-disabled="detailsTable.getSelected().length == 0"
-                 ng-click="applySelected()">
+                 ng-click="openModal()">
            Apply Selected
          </button>
       </div>
