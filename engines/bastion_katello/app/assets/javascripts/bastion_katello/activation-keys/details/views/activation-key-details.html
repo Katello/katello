@@ -29,10 +29,10 @@
         {{ "Close" | translate }}
       </button>
 
-      <div bst-modal="removeActivationKey(activationKey)" model="activationKey"
-           modal-header="{{ 'Remove Activation Key ' + activationKey.name + '?' | translate }}"
-           modal-body="{{ 'Are you sure you want to remove activation key ' + activationKey.name + '?' | translate }}"></div>
-
+      <div bst-modal="removeActivationKey(activationKey)">
+        <div data-block="modal-header" translate>Remove Activation Key "{{ activationKey.name }}"?</div>
+        <div data-block="modal-body" translate>Are you sure you want to remove Activation Key "{{ activationKey.name }}"?</div>
+      </div>
     </div>
   </header>
 
