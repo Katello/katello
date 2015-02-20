@@ -91,6 +91,7 @@ Requires: cyrus-sasl-plain
 Requires: python-crane
 Requires: qpid-cpp-client-devel
 
+Requires: katello-selinux
 Requires: candlepin-selinux
 Requires: createrepo >= 0.9.9-18%{?dist}
 Requires: elasticsearch

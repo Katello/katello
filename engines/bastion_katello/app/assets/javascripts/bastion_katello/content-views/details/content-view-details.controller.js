@@ -77,6 +77,7 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
                     $scope.successMessages.push(publishMessage(version));
                 } else if (task.label === taskTypes.deletion) {
                     $scope.successMessages.push(deletionMessage(version, task));
+                    $scope.reloadVersions();
                 }
             }
         }

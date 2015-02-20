@@ -93,13 +93,15 @@ module Katello
     param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     def copy
+      fail HttpErrors::BadRequest, _("New name cannot be blank") unless params[:new_name]
       @new_activation_key = @activation_key.copy(params[:new_name])
       @new_activation_key.user = current_user
       sync_task(::Actions::Katello::ActivationKey::Create, @new_activation_key)
       @new_activation_key.reload
       @new_activation_key.update_attributes!(
                                              :service_level => @activation_key.service_level,
-                                             :release_version => @activation_key.release_version
+                                             :release_version => @activation_key.release_version,
+                                             :auto_attach => @activation_key.auto_attach
                                             )
       @activation_key.content_overrides.each do |content|
         @new_activation_key.set_content_override(content['contentLabel'], content[:name], content[:value])

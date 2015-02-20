@@ -17,7 +17,8 @@ module Katello
     def self.before_suite
       services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
       models    = ['User', 'HostCollection', 'KTEnvironment', 'Organization',
-                   'Product', "ContentView", "System", "ContentViewVersion", "ContentViewPuppetEnvironment", "ContentViewEnvironment", "Environment", "Erratum"]
+                   'Product', "ContentView", "System", "ContentViewVersion", "ContentViewPuppetEnvironment", "ContentViewEnvironment", "Environment",
+                   "Erratum", "SystemErratum"]
       disable_glue_layers(services, models)
       reload_host_model
       configure_runcible

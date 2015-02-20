@@ -100,14 +100,9 @@ module Katello
       end
 
       def index_distributions
-        Katello::Distribution.create_index
-
-        distributions = self.distributions.collect { |distribution| distribution.as_json.merge(distribution.index_options) }
-        distributions.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
-          Tire.index Katello::Distribution.index do
-            import sublist
-          end unless sublist.empty?
-        end
+        #reindex all distributions, much simpler
+        Tire.index(Katello::Distribution.index).delete
+        Katello::Distribution.index_all
       end
 
       def indexed_puppet_module_ids
