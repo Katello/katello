@@ -27,6 +27,10 @@ angular.module('Bastion.organizations').factory('Organization',
             {id: '@id'},
             {
                 update: { method: 'PUT'},
+                select: {
+                    method: 'GET',
+                    url: '/organizations/:label/select'
+                },
                 repoDiscover: { method: 'POST', params: {action: 'repo_discover'}},
                 cancelRepoDiscover: {method: 'POST', params: {action: 'cancel_repo_discover'}},
                 autoAttachSubscriptions: {method: 'POST', params: {action: 'autoattach_subscriptions'}},

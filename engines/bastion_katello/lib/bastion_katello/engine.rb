@@ -32,6 +32,7 @@ module BastionKatello
           sync_plans
           host_collections
           katello_tasks
+          select_organization
         )
       )
     end
