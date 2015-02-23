@@ -41,12 +41,17 @@ module Katello
 
     def test_apply
       assert_async_task ::Actions::Katello::System::Erratum::Install do |system, errata|
-        system.id == @system.id && errata == %w(foo)
+        system.id == @system.id && errata == %w(RHSA-1999-1231)
       end
 
-      put :apply, :system_id => @system.uuid, :errata_ids => %w(foo)
+      put :apply, :system_id => @system.uuid, :errata_ids => %w(RHSA-1999-1231)
 
       assert_response :success
+    end
+
+    def test_apply_unknown_errata
+      put :apply, :system_id => @system.uuid, :errata_ids => %w(non-existant-errata)
+      assert_response 404
     end
 
     def test_apply_protected
@@ -54,7 +59,7 @@ module Katello
       bad_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:apply, good_perms, bad_perms) do
-        put :apply, :system_id => @system.uuid, :errata => ["foo*"]
+        put :apply, :system_id => @system.uuid, :errata_ids => %w(RHSA-1999-1231)
       end
     end
   end

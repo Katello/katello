@@ -13,6 +13,7 @@
 module Katello
   class Api::V2::SystemErrataController < Api::V2::ApiController
     before_filter :find_system
+    before_filter :find_errata_ids, :only => :apply
 
     resource_description do
       api_version 'v2'
@@ -41,6 +42,11 @@ module Katello
       @system = System.first(:conditions => { :uuid => params[:system_id] })
       fail HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
       @system
+    end
+
+    def find_errata_ids
+      missing = params[:errata_ids] - Erratum.where(:errata_id => params[:errata_ids]).pluck(:errata_id)
+      fail HttpErrors::NotFound, _("Couldn't find errata ids '%s'") % missing.to_sentence if missing.any?
     end
   end
 end
