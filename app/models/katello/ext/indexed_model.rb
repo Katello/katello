@@ -59,6 +59,14 @@ module Katello
           @disable_auto_reindex = false
         end
 
+        def disable_auto_reindex_on_association!
+          @disable_auto_reindex_on_association = true
+        end
+
+        def enable_auto_reindex_on_association!
+          @disable_auto_reindex_on_association = false
+        end
+
         def refresh_index
           return if @disable_auto_reindex
           self.class.index.refresh if self.class.respond_to?(:index)
@@ -91,6 +99,7 @@ module Katello
         end
 
         def reindex_on_association_change(record)
+          return if @disable_auto_reindex_on_association
           record.update_index if record.respond_to? :update_index
           record.class.index.refresh if record.class.respond_to? :index
         end

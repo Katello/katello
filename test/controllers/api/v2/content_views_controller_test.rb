@@ -16,6 +16,8 @@ require "katello_test_helper"
 # rubocop:disable Metrics/MethodLength
 module Katello
   class Api::V2::ContentViewsControllerTest < ActionController::TestCase
+    include Support::ForemanTasks::Task
+
     def self.before_suite
       models = ["ContentViewEnvironment", "ContentViewVersion",
                 "Repository", "ContentViewComponent", "ContentView", "System",
@@ -135,11 +137,44 @@ module Katello
     end
 
     def test_update
-      put :update, :id => @library_dev_staging_view, :name => "My View"
+      params = { :name => "My View" }
+      assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
+        content_view_params.key?(:name).must_equal true
+        content_view_params[:name].must_equal params[:name]
+      end
+      put :update, :id => @library_dev_staging_view.id, :content_view => params
 
-      assert_equal "My View", @library_dev_staging_view.reload.name
       assert_response :success
-      assert_template 'api/v2/common/update'
+      assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
+    end
+
+    def test_update_repositories
+      repository = katello_repositories(:fedora_17_unpublished)
+
+      params = { :repository_ids => [repository.id.to_s] }
+      assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
+        content_view_params.key?(:repository_ids).must_equal true
+        content_view_params[:repository_ids].must_equal params[:repository_ids]
+      end
+      put :update, :id => @library_dev_staging_view.id, :content_view => params
+
+      assert_response :success
+      assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
+    end
+
+    def test_update_components
+      version = @library_dev_staging_view.versions.first
+      composite = ContentView.find(katello_content_views(:composite_view))
+
+      params = { :component_ids => [version.id.to_s] }
+      assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
+        content_view_params.key?(:component_ids).must_equal true
+        content_view_params[:component_ids].must_equal params[:component_ids]
+      end
+      put :update, :id => composite.id, :content_view => params
+
+      assert_response :success
+      assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
     end
 
     def test_history
@@ -156,50 +191,6 @@ module Katello
       assert_protected_action(:history, allowed_perms, denied_perms) do
         get :history, :id => @library_dev_staging_view.id
       end
-    end
-
-    def test_update_puppet_repositories
-      repository = katello_repositories(:p_forge)
-      refute_includes @library_dev_staging_view.repositories(true).map(&:id), repository.id
-      put :update, :id => @library_dev_staging_view.id, :repository_ids => [repository.id]
-      assert_response 422 # cannot add puppet repos to cv
-    end
-
-    def test_update_repositories
-      repository = katello_repositories(:fedora_17_unpublished)
-      refute_includes @library_dev_staging_view.repositories(true).map(&:id), repository.id
-      put :update, :id => @library_dev_staging_view.id, :repository_ids => [repository.id]
-      assert_response :success
-      assert_includes @library_dev_staging_view.repositories(true).map(&:id), repository.id
-    end
-
-    def test_update_components
-      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
-      version = @library_dev_staging_view.versions.first
-      composite = ContentView.find(katello_content_views(:composite_view))
-      refute_includes composite.components(true).map(&:id), version.id
-      put :update, :id => composite.id, :component_ids => [version.id]
-
-      assert_response :success
-      assert_includes composite.components(true).map(&:id), version.id
-      assert_equal 1, composite.components(true).length
-    end
-
-    def test_update_default_view
-      view = ContentView.find(katello_content_views(:acme_default))
-      name = view.name
-      put :update, :id => view.id, :name => "Luke I am your father"
-      assert_response 400
-      assert_equal name, view.reload.name
-    end
-
-    def test_remove_components
-      version = @library_dev_staging_view.versions.first
-      composite = ContentView.find(katello_content_views(:composite_view))
-      composite.components = [version]
-      refute_empty composite.components(true)
-      put :update, :id => composite.id, :component_ids => []
-      assert_empty composite.components(true)
     end
 
     def test_update_protected

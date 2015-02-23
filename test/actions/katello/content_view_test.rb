@@ -207,6 +207,25 @@ module ::Actions::Katello::ContentView
     end
   end
 
+  class UpdateTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::Update }
+    let(:content_view) { katello_content_views(:library_dev_view) }
+    let(:repository) { katello_repositories(:rhel_6_x86_64) }
+    let(:action) { create_action action_class }
+
+    it 'plans' do
+      action.expects(:action_subject).with(content_view)
+      plan_action action, content_view, 'repository_ids' => [repository.id]
+      assert_action_planed action, ::Actions::ElasticSearch::Reindex
+      assert_action_planed action, ::Actions::ElasticSearch::ReindexOnAssociationChange
+    end
+
+    it 'raises error when validation fails' do
+      ::Actions::Katello::ContentView::Update.any_instance.expects(:action_subject).with(content_view)
+      proc { create_and_plan_action action_class, content_view, :name => '' }.must_raise(ActiveRecord::RecordInvalid)
+    end
+  end
+
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::Destroy }
 

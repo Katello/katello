@@ -81,9 +81,8 @@ module Katello
     param :name, String, :desc => N_("New name for the content view")
     param_group :content_view
     def update
-      @view.update_attributes!(view_params)
-
-      respond :resource => @view
+      sync_task(::Actions::Katello::ContentView::Update, @view, view_params)
+      respond :resource => @view.reload
     end
 
     api :POST, "/content_views/:id/publish", N_("Publish a content view")
