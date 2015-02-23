@@ -10,7 +10,7 @@
        ng-show="table.rows.length > 0">
 
   <thead>
-    <tr bst-table-head row-select>
+    <tr bst-table-head>
       <th bst-table-column><span translate>Name</span></th>
       <th bst-table-column><span translate>Composite View?</span></th>
       <th bst-table-column><span translate>Last Published</span></th>
@@ -20,7 +20,7 @@
   </thead>
 
   <tbody>
-    <tr bst-table-row ng-repeat="contentView in table.rows" row-select="contentView">
+    <tr bst-table-row ng-repeat="contentView in table.rows">
       <td bst-table-cell>
         <a ui-sref="content-views.details.versions({contentViewId: contentView.id})">
           {{ contentView.name }}

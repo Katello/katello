@@ -1,6 +1,6 @@
 <table bst-table="table" class="table table-striped table-full" ng-class="{'table-mask': table.working}">
   <thead>
-    <tr bst-table-head row-select>
+    <tr bst-table-head>
       <th bst-table-column sortable><span translate>Name</span></th>
     </tr>
   </thead>
@@ -8,7 +8,6 @@
   <tbody>
     <tr bst-table-row
         ng-repeat="hostCollection in table.rows"
-        row-select="hostCollection"
         active-row="stateIncludes('host-collections.details', {hostCollectionId: hostCollection.id})">
       <td bst-table-cell>
         <a ui-sref="host-collections.details.info({hostCollectionId: hostCollection.id})">

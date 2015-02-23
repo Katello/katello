@@ -7,7 +7,7 @@
        ng-class="{'table-mask': syncPlanTable.working}" 
        ng-show="syncPlanTable.rows.length > 0">
   <thead>
-    <tr bst-table-head row-select>
+    <tr bst-table-head>
       <th bst-table-column="name" sortable><span translate>Name</span></th>
       <th bst-table-column="description"><span translate>Description</span></th>
       <th bst-table-column="syncDate"><span translate>Original Sync Date</span></th>
@@ -20,7 +20,7 @@
   <div data-extend-template="layouts/select-all-results.html"></div>
 
   <tbody>
-    <tr bst-table-row ng-repeat="syncPlan in syncPlanTable.rows" row-select="syncPlan">
+    <tr bst-table-row ng-repeat="syncPlan in syncPlanTable.rows">
       <td bst-table-cell>
         <a ui-sref="sync-plans.details.info({syncPlanId: syncPlan.id})">
           {{ syncPlan.name }}

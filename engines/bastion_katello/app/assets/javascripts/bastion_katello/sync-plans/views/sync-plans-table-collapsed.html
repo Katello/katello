@@ -1,6 +1,6 @@
 <table class="table table-striped" ng-class="{'table-mask': syncPlanTable.working}">
   <thead>
-    <tr bst-table-head row-select>
+    <tr bst-table-head>
       <th bst-table-column sortable><span translate>Name</span></th>
     </tr>
   </thead>
@@ -10,7 +10,6 @@
   <tbody>
     <tr bst-table-row
         ng-repeat="syncPlan in syncPlanTable.rows"
-        row-select="syncPlan"
         active-row="stateIncludes('sync-plans.details', {syncPlanId: syncPlan.id})">
       <td bst-table-cell>
         <a ui-sref="sync-plans.details.info({syncPlanId: syncPlan.id})">
