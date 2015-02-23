@@ -259,22 +259,18 @@
           upload-options-enable-controls
           upload-options-enable-rails-csrf>
 
-      <div class="control-group">
-        <div class="input">
-          <input type="file" name="content[]" ng-hide="denied('edit_products', product)" multiple/>
-        </div>
+      <div class="form-group">
+        <input type="file" name="content[]" ng-hide="denied('edit_products', product)" multiple/>
       </div>
 
-      <div class="control-group">
-        <div class="control-button">
-          <button class="primary"
-		        ng-hide="denied('edit_products', product)"
-	          upload-submit ng-click="progress.uploading = true">
-            <i class="fa fa-spinner fa-spin" ng-show="progress.uploading"></i>
-            <span ng-show="progress.uploading" translate>Uploading...</span>
-            <span ng-hide="progress.uploading" translate>Upload</span>
-          </button>
-        </div>
+      <div class="form-group">
+        <button class="btn btn-primary"
+          ng-hide="denied('edit_products', product)"
+          upload-submit ng-click="progress.uploading = true">
+          <i class="fa fa-spinner fa-spin" ng-show="progress.uploading"></i>
+          <span ng-show="progress.uploading" translate>Uploading...</span>
+          <span ng-hide="progress.uploading" translate>Upload</span>
+        </button>
       </div>
 
     </form>
