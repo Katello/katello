@@ -54,11 +54,11 @@ angular.module('Bastion.content-views').controller('DateTypeErrataFilterControll
         $scope.save = function (rule, filter) {
             var params = {filterId: filter.id, ruleId: rule.id};
             rule.$update(params, success, failure);
-            $scope.filter = $scope.filter.$get();
         };
 
         function success() {
             $scope.successMessages = [translate('Updated errata filter - ' + $scope.filter.name)];
+            $scope.filter.$get();
         }
 
         function failure(response) {
