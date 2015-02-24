@@ -236,6 +236,9 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Tue Feb 24 2015 Eric D. Helms <ericdhelms@gmail.com> 2.3.0-1
+- Version bump to 2.3.0 (ericdhelms@gmail.com)
+
 * Tue Feb 24 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-2
 - Merge pull request #5041 from jlsherrill/9467 (jlsherrill@gmail.com)
 - Merge pull request #5038 from waldenraines/9511 (walden@redhat.com)
