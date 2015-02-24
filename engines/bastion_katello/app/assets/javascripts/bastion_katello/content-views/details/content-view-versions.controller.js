@@ -50,7 +50,12 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
                 message = "";
 
             if (taskType === taskTypes.deletion) {
-                message = translate("Deletion from %s").replace('%s', version['last_event'].environment.name);
+                if (version['last_event'].environment) {
+                    message = translate("Deletion from %s").replace('%s', version['last_event'].environment.name);
+                }
+                else {
+                    message = translate("Version Deletion");
+                }
             } else if (taskType === taskTypes.promotion) {
                 message = translate("Promoted to %s").replace('%s', version['last_event'].environment.name);
             } else if (taskType === taskTypes.publish) {
