@@ -1,14 +1,26 @@
-<ul class="list-unstyled" ng-show="product.last_sync_words">
-  <p translate>
-    Last synced {{ product.last_sync_words }} ago
-  </p>
-  <li ng-repeat="(key, value) in product.repositoriesByState">
-    <a ng-href="/katello/sync_management">{{ key | capitalize }}</a>:
-            <span translate
-                  translate-n="value.length"
-                  translate-plural="{{ value.length }} repositories">
-              {{ value.length }} repository
-            </span>
-  </li>
-</ul>
+<div class="list-unstyled" ng-show="product.last_sync_words">
+  <div translate>
+    Last synced {{ product.last_sync_words }} ago.
+  </div>
+  <div ng-show="mostImportantSyncState(product) == 'pending'"
+        translate
+        translate-n="product.sync_summary.pending"
+        translate-plural="{{ product.sync_summary.pending}} repository syncs in progress..">
+        1 repository sync in progress.
+  </div>
+
+  <div ng-show="mostImportantSyncState(product) == 'error'"
+        translate
+        translate-n="product.sync_summary.error"
+        translate-plural="{{ product.sync_summary.error}} repository syncs have errors.">
+        1 repository sync has errors.
+  </div>
+
+  <div ng-show="mostImportantSyncState(product) == 'success'"
+        translate
+        translate-n="product.sync_summary.success"
+        translate-plural="{{ product.sync_summary.success}} successfully synced repositories.">
+        1 successfully synced repository.
+  </div>
+</div>
 <span ng-hide="product.last_sync_words" translate>Never synced</span>

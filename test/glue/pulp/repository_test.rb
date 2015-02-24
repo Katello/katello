@@ -216,10 +216,6 @@ module Katello
       VCR.eject_cassette
     end
 
-    def test_last_sync
-      assert @@fedora_17_x86_64.last_sync
-    end
-
     def test_sync_status
       assert_kind_of PulpSyncStatus, @@fedora_17_x86_64.sync_status
     end

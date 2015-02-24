@@ -56,6 +56,7 @@ module Katello
       options[:filters] << {:term => {:name => params[:name]}} if params[:name]
       options[:filters] << {:term => {:enabled => params[:enabled].to_bool}} if params[:enabled]
       options.merge!(sort_params)
+      options[:includes] = [:repositories, :gpg_key, :sync_plan, :provider]
 
       respond(:collection => item_search(Product, params, options))
     end
