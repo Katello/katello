@@ -29,9 +29,9 @@
   <nav>
     <ul class="nav nav-tabs">
 
-      <li ng-class="{active: isState('environments.environment.errata')}">
-        <a ui-sref="environments.environment.errata({environmentId: environment.id})">
-          <span translate>Errata</span>
+      <li ng-repeat="type in contentTypes" ng-class="{active: isState('environments.environment.' + type.state)}">
+        <a ng-href="{{ $state.href('environments.environment.' + type.state, {environmentId: environment.id}) }}">
+          <span translate>{{ type.display }}</span>
         </a>
       </li>
 

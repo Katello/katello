@@ -21,8 +21,9 @@
      * @description
      *   Enter a description!
      */
-    function EnvironmentController($scope, Environment, translate) {
+    function EnvironmentController($scope, Environment, translate, ContentService) {
 
+        $scope.contentTypes = ContentService.contentTypes;
         $scope.errorMessages = [];
         $scope.successMessages = [];
 
@@ -72,6 +73,6 @@
         .module('Bastion.environments')
         .controller('EnvironmentController', EnvironmentController);
 
-    EnvironmentController.$inject = ['$scope', 'Environment', 'translate'];
+    EnvironmentController.$inject = ['$scope', 'Environment', 'translate', 'ContentService'];
 
 })();

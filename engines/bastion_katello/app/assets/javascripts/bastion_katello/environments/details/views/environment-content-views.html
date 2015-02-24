@@ -1,0 +1,41 @@
+<div data-extend-template="layouts/details-nutupane.html">
+
+  <div data-block="header"></div>
+  <div data-block="selection-summary"></div>
+
+<p bst-alert="info" ng-show="productTable.rows.length === 0">
+</p>
+
+  <table data-block="table" class="table table-striped table-bordered">
+    <thead>
+      <tr bst-table-head>
+        <th bst-table-column="name" sortable>{{ "Name" | translate }}</th>
+        <th bst-table-column>{{ "Composite View" | translate }}</th>
+        <th bst-table-column>{{ "Last Published" | translate }}</th>
+        <th bst-table-column>{{ "Repositories" | translate }}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-show="detailsTable.rows.length === 0">
+        <td colspan="4">
+          <span bst-alert="info"><span translate>There are no Content Views that match the criteria.</span></span>
+        </td>
+      </tr>
+      <tr bst-table-row ng-repeat="contentView in detailsTable.rows">
+        <td bst-table-cell>
+          <a ui-sref="content-views.details.versions({contentViewId: contentView.id})">
+            {{ contentView.name }}
+          </a>
+        </td>
+        <td bst-table-cell>
+          <span ng-show="contentView.composite" translate>Yes</span>
+          <span ng-hide="contentView.composite" translate>No</span>
+        </td>
+        <td bst-table-cell>{{ contentView.last_published | date:'longDate' }}</td>
+        <td bst-table-cell class="number-cell">{{ contentView.repositories.length || 0 }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>

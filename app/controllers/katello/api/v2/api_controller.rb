@@ -87,8 +87,8 @@ module Katello
 
     def scoped_search(query, default_sort_by, default_sort_order, resource = resource_class)
       total = query.count
-      sub_total = resource.search_for(*search_options).merge(query).count
-      query = resource.search_for(*search_options).merge(query)
+      query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
+      sub_total = query.count
       sort_attr = params[:sort_by] || default_sort_by
       sort_attr = "#{query.table_name}.#{sort_attr}" unless sort_attr.to_s.include?('.')
 
