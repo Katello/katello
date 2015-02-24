@@ -58,8 +58,6 @@
 </section>
 
 <section>
-  <h4 translate>Upload New Manifest</h4>
-
   <div bst-alerts error-messages="uploadErrorMessages"></div>
 
   <form role="form"
@@ -69,20 +67,17 @@
         upload-options-enable-controls
         upload-options-enable-rails-csrf>
 
-    <div class="control-group">
-      <div class="input">
-        <input type="file" name="content"/>
-      </div>
+    <div class="form-group">
+      <label for="manifestUpload" translate>Upload New Manifest</label>
+      <input id="manifestUpload" type="file" name="content"/>
     </div>
 
-    <div class="control-group">
-      <div class="control-button">
-        <button class="primary" upload-submit>
-          <i class="fa fa-spinner fa-spin" ng-show="task.pending"></i>
-          <span ng-show="task.pending" translate>Uploading...</span>
-          <span ng-hide="task.pending" translate>Upload</span>
-        </button>
-      </div>
+    <div class="form-group">
+      <button class="btn btn-primary" upload-submit>
+        <i class="fa fa-spinner fa-spin" ng-show="task.pending"></i>
+        <span ng-show="task.pending" translate>Uploading...</span>
+        <span ng-hide="task.pending" translate>Upload</span>
+      </button>
     </div>
 
   </form>
