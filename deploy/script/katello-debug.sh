@@ -14,8 +14,8 @@ then
 fi
 
 # Installer
-add_files "/var/log/{katello,capsule,sam}-installer/*"
-add_files "/etc/{katello,capsule,sam}-installer/*"
+add_files /var/log/{katello,capsule,sam}-installer/*
+add_files /etc/{katello,capsule,sam}-installer/*
 add_cmd "find /root/ssl-build -ls | sort -k 11" "katello_ssl_build_dir"
 add_cmd "find /etc/pki -ls | sort -k 11" "katello_pki_dir"
 
