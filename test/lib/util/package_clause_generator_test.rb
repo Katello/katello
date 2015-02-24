@@ -16,13 +16,6 @@ module Katello
   class Util::PackageClauseGeneratorTest < ActiveSupport::TestCase
     INCLUDE_ALL_PACKAGES = {"filename" => {"$exists" => true}}
 
-    def self.before_suite
-      models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment",
-                "ContentViewFilter", "ContentView", "ContentViewPackageFilterRule",
-                "ContentViewPackageGroupFilterRule", "ContentViewErratumFilterRule"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
-    end
-
     def setup
       User.current = User.find(users(:admin))
       organization = get_organization

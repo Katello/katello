@@ -18,14 +18,6 @@ module Katello
   class GluePulpConsumerTestBase < ActiveSupport::TestCase
     include RepositorySupport
 
-    def self.before_suite
-      services  = ['Candlepin', 'ElasticSearch', 'Foreman']
-      models    = ['System', 'Repository', 'User']
-      disable_glue_layers(services, models)
-      configure_runcible
-      super
-    end
-
     def self.set_pulp_consumer(system)
       # TODO: this tests should move to actions tests once we
       # have more actions in Dynflow. For now just peform the

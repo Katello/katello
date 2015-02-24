@@ -14,12 +14,6 @@ require File.expand_path("repository_base", File.dirname(__FILE__))
 
 module Katello
   class ProductCreateTest < ActiveSupport::TestCase
-    def self.before_suite
-      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['Product']
-      disable_glue_layers(services, models, true)
-    end
-
     def setup
       super
       User.current = @admin

@@ -15,15 +15,6 @@ module Katello
   class UserTestBase < ActiveSupport::TestCase
     extend ActiveRecord::TestFixtures
 
-    def self.before_suite
-      configure_runcible
-
-      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['User', 'System', 'KTEnvironment', 'Repository', 'Organization']
-      disable_glue_layers(services, models)
-      super
-    end
-
     def setup
       @no_perms_user      = User.find(users(:one))
       @admin              = User.find(users(:admin))

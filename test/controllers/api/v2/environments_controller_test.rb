@@ -16,12 +16,6 @@ require "katello_test_helper"
 module Katello
   class Api::V2::EnvironmentsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
-    def self.before_suite
-      models = ["KTEnvironment", "ContentViewEnvironment", "Organization"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-      super
-    end
-
     def models
       @organization = get_organization
       @library = katello_environments(:library)

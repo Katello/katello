@@ -17,12 +17,6 @@ module Katello
   class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
-    def self.before_suite
-      models = ["System"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-      super
-    end
-
     def models
       @system = katello_systems(:simple_server)
       @products = katello_products

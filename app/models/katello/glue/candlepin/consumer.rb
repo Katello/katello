@@ -24,18 +24,20 @@ module Katello
       base.send :extend, ClassMethods
 
       base.class_eval do
-        as_json_hook :consumer_as_json
-
         attr_accessible :cp_type, :owner, :serviceLevel, :installedProducts, :facts, :guestIds, :releaseVer, :autoheal
 
-        lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds,
+        lazy_accessor :href, :facts, :cp_type, :idCert, :owner, :lastCheckin, :created, :guestIds,
         :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities, :entitlementStatus,
-        :initializer => (lambda do |_s|
-                           if uuid
-                             consumer_json = Resources::Candlepin::Consumer.get(uuid)
-                             convert_from_cp_fields(consumer_json)
-                           end
-                         end)
+        :initializer => :candlepin_consumer_info
+
+        lazy_accessor :candlepin_consumer_info, :initializer =>
+                        (lambda do |_s|
+                          if uuid
+                            consumer_json = Resources::Candlepin::Consumer.get(uuid)
+                            convert_from_cp_fields(consumer_json)
+                          end
+                        end)
+
         lazy_accessor :entitlements, :initializer => lambda { |_s| Resources::Candlepin::Consumer.entitlements(uuid) }
         lazy_accessor :pools, :initializer => lambda { |_s| entitlements.collect { |ent| Resources::Candlepin::Pool.find ent["pool"]["id"] } }
         lazy_accessor :available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(uuid, false) }
@@ -79,20 +81,6 @@ module Katello
 
           super(attrs_used_by_model, options)
         end
-      end
-
-      def serializable_hash(options = {})
-        hash = super(options)
-        hash = hash.merge(:serviceLevel => self.serviceLevel)
-        hash
-      end
-
-      def consumer_as_json(json = {})
-        json['compliance'] = self.compliance
-        json['registered'] = self.created
-        json['checkin_time'] = self.checkin_time
-        json['distribution'] = self.distribution
-        json
       end
 
       def load_from_cp(consumer_json)

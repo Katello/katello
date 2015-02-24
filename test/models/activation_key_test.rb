@@ -14,11 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class ActivationKeyTest < ActiveSupport::TestCase
-    def self.before_suite
-      models = ["ActivationKey", "KTEnvironment", "ContentViewEnvironment", "ContentView", "Organization"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
-    end
-
     def setup
       @dev_key = ActivationKey.find(katello_activation_keys(:dev_key))
       @dev_view = ContentView.find(katello_content_views(:library_dev_view))

@@ -17,12 +17,6 @@ module Katello
   class Api::V2::SyncPlansControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
-    def self.before_suite
-      models = ["SyncPlan", "Product"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-      super
-    end
-
     def models
       @organization = get_organization
       @sync_plan = Katello::SyncPlan.find(katello_sync_plans(:sync_plan_hourly))
@@ -45,6 +39,8 @@ module Katello
       login_user(User.find(users(:admin)))
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
+      Repository.any_instance.stubs(:sync_status).returns(PulpSyncStatus.new({}))
+      Repository.any_instance.stubs(:last_sync).returns(DateTime.now.to_s)
       models
       permissions
     end

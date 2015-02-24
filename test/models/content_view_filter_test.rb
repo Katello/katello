@@ -14,12 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class ContentViewFilterTest < ActiveSupport::TestCase
-    def self.before_suite
-      models = ["Organization", "KTEnvironment", "User", "ContentViewFilter", "ContentViewVersion",
-                "ContentViewEnvironment", "ContentView", "Product", "Repository"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
-    end
-
     def setup
       User.current = User.find(users(:admin))
       @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)

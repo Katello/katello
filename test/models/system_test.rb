@@ -16,14 +16,6 @@ require 'support/host_support'
 
 module Katello
   class SystemClassTest < SystemTestBase
-    def test_as_json
-      options = {}
-      system_json = @system.as_json options
-
-      assert_equal 'Simple Server', system_json['name']
-      assert_equal 'Library', system_json['environment']['name']
-    end
-
     def test_uuids_to_ids
       @alabama = build(:katello_system, :alabama, :name => 'alabama man', :description => 'Alabama system', :environment => @dev, :uuid => 'alabama')
       @westeros = build(:katello_system, :name => 'westeros', :description => 'Westeros system', :environment => @dev, :uuid => 'westeros')

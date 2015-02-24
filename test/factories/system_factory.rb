@@ -1,7 +1,12 @@
 FactoryGirl.define do
   factory :katello_system, :class => Katello::System do
+    cp_type "system"
+    facts(:foo => 'bar')
+
     trait :alabama do
       name 'Alabama'
+      cp_type "system"
+      facts(:foo => 'bar')
     end
 
     trait :capsule do

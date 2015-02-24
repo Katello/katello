@@ -16,13 +16,6 @@ module Katello
   class AuthorizationTestBase < ActiveSupport::TestCase
     include Katello::AuthorizationSupportMethods
 
-    def self.before_suite
-      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['Repository', 'KTEnvironment', 'ContentViewEnvironment',
-                   'Organization', 'System', 'HostCollection']
-      disable_glue_layers(services, models)
-    end
-
     def setup
       Katello.config[:warden] = 'database'
       @no_perms_user      = User.find(users(:restricted))

@@ -14,12 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class ContentViewEnvironmentTest < ActiveSupport::TestCase
-    def self.before_suite
-      #models = ["Organization", "KTEnvironment", "User", "ContentView",
-      #          "ContentViewEnvironment", "ContentViewPuppetEnvironment", "ContentViewVersion"]
-      #disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
-    end
-
     def setup
       User.current = User.find(users(:admin))
       @system = Katello::System.find(katello_systems(:simple_server))
