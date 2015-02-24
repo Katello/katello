@@ -103,7 +103,7 @@ module Katello
         N_("Fetch applicable errata for a system."), :deprecated => true
     param_group :bulk_params
     def applicable_errata
-      respond_for_index(:collection => scoped_search(Katello::Erratum.installable_for_systems(@systems), 'updated', 'desc'))
+      respond_for_index(:collection => scoped_search(Katello::Erratum.installable_for_systems(@systems), 'updated', 'desc', Erratum))
     end
 
     api :PUT, "/systems/bulk/install_content", N_("Install content on one or more systems"), :deprecated => true
