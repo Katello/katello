@@ -23,10 +23,10 @@
         {{ "Close" | translate }}
       </button>
 
-      <div bst-modal="performUnregisterContentHosts()" model="table"
-           modal-header='Unregister {{ contentHostTable.numSelected  }} Content Hosts?'
-           modal-body='Are you sure you want to unregister the {{ contentHostTable.numSelected }} content host(s) selected?'></div>
-
+      <div bst-modal="performUnregisterContentHosts()">
+        <div data-block="modal-header" translate>Unregister {{ contentHostTable.numSelected  }} Content Hosts?</div>
+        <div data-block="modal-body" translate>Are you sure you want to unregister the {{ contentHostTable.numSelected }} content host(s) selected?</div>
+      </div>
     </div>
   </header>
 
