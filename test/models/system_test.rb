@@ -158,7 +158,7 @@ module Katello
     end
 
     def test_available_and_applicable_errta
-      assert_equal @errata_system.applicable_errata, @errata_system.installable_errata
+      assert_equal_arrays @errata_system.applicable_errata, @errata_system.installable_errata
     end
 
     def test_installable_errata
@@ -168,8 +168,8 @@ module Katello
       @errata_system.bound_repositories = [@view_repo]
       @errata_system.save!
 
-      assert_equal lib_applicable, @errata_system.applicable_errata
-      refute_equal lib_applicable, @errata_system.installable_errata
+      assert_equal_arrays lib_applicable, @errata_system.applicable_errata
+      refute_equal_arrays lib_applicable, @errata_system.installable_errata
       assert_include @errata_system.installable_errata, Erratum.find(katello_errata(:security))
     end
 

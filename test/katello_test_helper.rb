@@ -171,6 +171,14 @@ class ActiveSupport::TestCase
       record.stubs(:reload).returns(record)
     end
   end
+
+  def assert_equal_arrays(array1, array2)
+    assert_equal array1.sort, array2.sort
+  end
+
+  def refute_equal_arrays(array1, array2)
+    refute_equal array1.sort, array2.sort
+  end
 end
 
 def disable_lazy_accessors
