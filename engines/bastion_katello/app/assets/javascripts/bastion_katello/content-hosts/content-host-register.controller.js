@@ -30,16 +30,24 @@ angular.module('Bastion.content-hosts').controller('ContentHostRegisterControlle
     function ($scope, $location, Capsule, Organization, CurrentOrganization, BastionConfig) {
 
         $scope.organization = Organization.get({id: CurrentOrganization});
-        $scope.baseURL = 'http://' + $location.host();
         $scope.consumerCertRPM = BastionConfig.consumerCertRPM;
+        $scope.katelloHostname = $location.host();
+        $scope.noCapsulesFound = true;
 
         $scope.capsules = Capsule.queryUnpaged(function (data) {
-            $scope.selectedCapsule = data.results[0];
+            var defaultCapsule = _.filter(data.results, function (result) {
+                var featureNames = _.pluck(result.features, 'name');
+                return _.contains(featureNames, 'Pulp');
+            });
+
+            $scope.noCapsulesFound = _.isEmpty(data.results);
+            $scope.selectedCapsule = _.isEmpty(defaultCapsule) ? data.results[0] : defaultCapsule[0];
         });
+
 
         $scope.hostname = function (url) {
             if (url) {
-                url = url.split('https://')[1].split(':')[0];
+                url = url.split('://')[1].split(':')[0];
             }
 
             return url;
