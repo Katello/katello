@@ -86,7 +86,7 @@ module Katello
 
       options[:filters] = [{:terms => {:id => repositories.pluck("#{Repository.table_name}.id")}}]
 
-      respond :collection => item_search(Repository, params, options)
+      respond :collection => item_search(Repository.includes(:product, :environment, :gpg_key), params, options)
     end
 
     api :POST, "/repositories", N_("Create a custom repository")

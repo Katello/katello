@@ -58,7 +58,9 @@ module Katello
       options.merge!(sort_params)
       options[:includes] = [:repositories, :gpg_key, :sync_plan, :provider]
 
-      respond(:collection => item_search(Product, params, options))
+      respond(:collection => item_search(Product.includes(:provider, :sync_plan,
+                                                          :repositories => [:environment, :gpg_key, :product]),
+                                                           params, options))
     end
 
     api :POST, "/products", N_("Create a product")
