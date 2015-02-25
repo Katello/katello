@@ -199,14 +199,6 @@ module Katello
         raise e
       end
 
-      def activate_pulp_node
-        Katello.pulp_server.extensions.consumer.activate_node(self.uuid, 'mirror')
-      end
-
-      def deactivate_pulp_node
-        Katello.pulp_server.extensions.consumer.deactivate_node(self.uuid)
-      end
-
       def katello_agent_installed?
         return false if self.is_a? Hypervisor
         simple_packages.any? { |package| package.name == "katello-agent" }

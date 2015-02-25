@@ -31,6 +31,8 @@ module Katello
 
     class ChangesetContentException < StandardError; end
 
+    class CapsuleContentMissingConsumer < StandardError; end
+
     class ConflictException < StandardError; end
 
     class ContentViewRepositoryOverlap < StandardError; end

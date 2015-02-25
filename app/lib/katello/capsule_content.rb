@@ -38,9 +38,15 @@ module Katello
       scope
     end
 
-    # Pulp consumer UUID associated with the capsule
-    def consumer_uuid
-      @consumer_uuid ||= System.where(name: @capsule.name).first!.uuid
+    delegate :uuid, :to => :consumer, :prefix => true
+
+    def consumer
+      @consumer ||= System.where(name: @capsule.name).first
+      unless @consumer
+        fail Errors::CapsuleContentMissingConsumer, _("Could not find Content Host with exact name '%s', verify the Capsule is registered with that name.")  %
+            @capsule.name
+      end
+      @consumer
     end
 
     def default_capsule?
