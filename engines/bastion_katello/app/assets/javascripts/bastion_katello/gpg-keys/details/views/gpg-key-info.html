@@ -16,14 +16,15 @@
               upload-options-enable-controls
               upload-options-enable-rails-csrf>
 
-          <div class="control-group">
+          <div class="form-group">
               <input type="file" name="content"/>
-
-              <button class="btn btn-default" upload-submit ng-click="progress.uploading = true">
-                <i class="fa fa-spinner fa-spin" ng-show="progress.uploading"></i>
-                <span ng-show="progress.uploading" translate>Uploading...</span>
-                <span ng-hide="progress.uploading" translate>Upload</span>
-              </button>
+          </div>
+          <div class="form-group">
+            <button class="btn btn-default" upload-submit ng-click="progress.uploading = true">
+              <i class="fa fa-spinner fa-spin" ng-show="progress.uploading"></i>
+              <span ng-show="progress.uploading" translate>Uploading...</span>
+              <span ng-hide="progress.uploading" translate>Upload</span>
+            </button>
           </div>
         </form>
     </span>

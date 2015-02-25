@@ -242,14 +242,26 @@ module Katello
         end
       end
 
-      def last_sync
-        sync_times = []
-        repos(library).each do |r|
-          sync = r.last_sync
-          sync_times << sync unless sync.nil?
+      def sync_summary
+        summary = {}
+        latest_repo_sync_tasks.each do |task|
+          summary[task.result] ||= 0
+          summary[task.result] += 1
         end
-        sync_times.sort!
-        sync_times.last
+        summary
+      end
+
+      def last_sync
+        task = last_repo_sync_task
+        task.nil? ? nil : task.started_at.to_s
+      end
+
+      def latest_repo_sync_tasks
+        repos(library).map { |repo| repo.latest_dynflow_sync }.compact
+      end
+
+      def last_repo_sync_task
+        latest_repo_sync_tasks.sort_by(&:started_at).last
       end
 
       def cancel_sync

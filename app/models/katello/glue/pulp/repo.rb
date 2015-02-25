@@ -62,7 +62,8 @@ module Katello
 
     module InstanceMethods
       def last_sync
-        self.importers.first["last_sync"] if self.importers.first
+        last = self.latest_dynflow_sync
+        last.nil? ? nil : last.to_s
       end
 
       def initialize(attrs = nil, options = {})

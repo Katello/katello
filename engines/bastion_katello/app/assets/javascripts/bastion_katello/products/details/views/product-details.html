@@ -12,9 +12,10 @@
 
     <div class="fr">
 
-      <div bst-modal="removeProduct(product)" model="product"
-           modal-header='Remove Product "{{product.name}}"?'
-           modal-body='Are you sure you want to remove product "{{ product.name }}"?'></div>
+      <div bst-modal="removeProduct(product)">
+        <div data-block="modal-header" translate>Remove Product "{{ product.name }}"?</div>
+        <div data-block="modal-body" translate>Are you sure you want to remove product "{{ product.name }}"?</div>
+      </div>
 
       <span ng-switch="getReadOnlyReason(product)" bst-feature-flag="custom_products">
         <i class="fa fa-question-sign" ng-switch-when="permissions"

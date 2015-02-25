@@ -35,6 +35,7 @@ module Actions
           validate_options(content_view, cv_envs, versions, options) unless organization_destroy
 
           all_cv_envs = combined_cv_envs(cv_envs, versions)
+          check_version_deletion(versions, cv_envs)
 
           sequence do
             concurrence do
@@ -63,7 +64,7 @@ module Actions
               ::Katello::ContentViewHistory.create!(:content_view_version => version,
                                                     :user => ::User.current.login,
                                                     :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task)
-              plan_action(ContentViewVersion::Destroy, version)
+              plan_action(ContentViewVersion::Destroy, version, :skip_environment_check => true)
             end
 
             plan_self(content_view_id: content_view.id,
@@ -71,6 +72,16 @@ module Actions
                       environment_names: cv_envs.map { |cve| cve.environment.name },
                       version_ids: versions.map(&:id),
                       content_view_history_ids: cv_histories.map { |history| history.id })
+          end
+        end
+
+        def check_version_deletion(versions, cv_envs)
+          versions.each do |version|
+            version.environments.each do |env|
+              if cv_envs.none? { |cv_env| cv_env.content_view_version == version && cv_env.environment == env }
+                fail _("Cannot delete version while it is in environment %s") % env.name
+              end
+            end
           end
         end
 

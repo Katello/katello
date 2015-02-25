@@ -18,10 +18,9 @@
         <span translate>Close</span>
       </button>
 
-      <div bst-modal="removeGPGKey(gpgKey)"
-           model="gpgKey"
-           modal-header="{{ 'Remove GPG Key ' + gpgKey.name + '?' | translate }}"
-           modal-body="{{ 'Are you sure you want to remove GPG key ' + gpgKey.name + '?' | translate }}">
+      <div bst-modal="removeGPGKey(gpgKey)">
+        <div data-block="modal-header" translate>Remove GPG Key {{ gpgKey.name }}</div>
+        <div data-block="modal-body" translate>Are you sure you want to remove GPG key {{ gpgKey.name }}?</div>
       </div>
 
     </div>

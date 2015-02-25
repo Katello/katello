@@ -60,6 +60,10 @@ module Katello
       self.joins(:system_errata).where("#{SystemErratum.table_name}.system_id" => systems)
     end
 
+    def <=>(other)
+      return self.errata_id <=> other.errata_id
+    end
+
     def systems_available
       self.systems_applicable.joins("INNER JOIN #{Katello::RepositoryErratum.table_name} on \
         #{Katello::RepositoryErratum.table_name}.erratum_id = #{self.id}").joins(:system_repositories).

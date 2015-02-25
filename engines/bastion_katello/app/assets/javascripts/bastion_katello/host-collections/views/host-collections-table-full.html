@@ -7,7 +7,7 @@
        ng-class="{'table-mask': table.working}"
        ng-show="table.rows.length > 0">
   <thead>
-    <tr bst-table-head row-select>
+    <tr bst-table-head>
       <th bst-table-column="name" sortable><span translate>Name</span></th>
       <th bst-table-column="content-hosts"><span translate>Content Hosts</span></th>
       <th bst-table-column="limit"><span translate>Limit</span></th>
@@ -15,7 +15,7 @@
   </thead>
 
   <tbody>
-    <tr bst-table-row ng-repeat="hostCollection in table.rows" row-select="hostCollection">
+    <tr bst-table-row ng-repeat="hostCollection in table.rows">
       <td bst-table-cell>
         <a ui-sref="host-collections.details.info({hostCollectionId: hostCollection.id})">
           {{ hostCollection.name }}

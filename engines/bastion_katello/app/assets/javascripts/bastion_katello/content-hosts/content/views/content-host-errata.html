@@ -34,10 +34,11 @@
 
   <span data-block="actions" bst-feature-flag="remote_actions">
 
-      <div bst-modal="applySelected()" model="contentHost"
-           modal-header='Apply Errata to Content Host "{{contentHost.name}}"?'
-           modal-body='Are you sure you want to apply Errata to content host "{{ contentHost.name }}"?'
-           modal-confirm="Apply"></div>
+      <div bst-modal="applySelected()">
+        <div data-block="modal-header" translate>Apply Errata to Content Host "{{contentHost.name}}"?</div>
+        <div data-block="modal-body" translate>Are you sure you want to apply Errata to content host "{{ contentHost.name }}"?</div>
+        <div data-block="modal-confirm-button" translate>Apply</div>
+      </div>
 
       <div ng-hide="contentHost.readonly" class="fr">
          <button class="btn btn-primary"

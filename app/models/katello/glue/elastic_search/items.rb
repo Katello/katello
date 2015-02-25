@@ -114,7 +114,7 @@ module Katello
           @facets = @results.facets
 
           if search_options[:load_records?]
-            @results = load_records
+            @results = load_records(search_options[:includes])
           else
             @results = @results.results
           end
@@ -139,9 +139,11 @@ module Katello
         # the results returned by Elasticsearch
         #
         # @return [Array] a list of ActiveRecord objects
-        def load_records
+        def load_records(includes = nil)
           collection = @obj_class.where(:id => @results.collect { |r| r.id }).
               order(@results.collect { |r| "id = #{r.id} DESC" })
+
+          collection = collection.includes(includes) unless includes.blank?
 
           #set total since @items will be just an array
           @total = @results.empty? ? 0 : @results.total

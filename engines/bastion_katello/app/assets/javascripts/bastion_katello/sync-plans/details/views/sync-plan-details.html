@@ -11,11 +11,10 @@
     <h2 class="fl" translate>Sync Plan {{ syncPlan.name }}</h2>
 
     <div class="fr">
-
-      <div bst-modal="removeSyncPlan(syncPlan)" model="syncPlan"
-           modal-header='Remove Sync Plan "{{syncPlan.name}}"?'
-           modal-body='Are you sure you want to remove the sync plan "{{ syncPlan.name }}"?'></div>
-
+      <div bst-modal="removeSyncPlan(syncPlan)">
+        <div data-block="modal-header" translate>Remove Sync Plan "{{ syncPlan.name }}"?</div>
+        <div data-block="modal-body" translate>Are you sure you want to remove Sync Plan "{{ syncPlan.name }}"?</div>
+      </div>
 
       <button class="btn btn-default" ng-click="openModal()" ng-hide="denied('destroy_sync_plans', syncPlan)">
         <i class="fa fa-trash-o"></i>

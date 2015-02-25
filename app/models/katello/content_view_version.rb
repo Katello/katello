@@ -111,7 +111,7 @@ module Katello
     end
 
     def archived_repos
-      self.repos(nil)
+      self.default? ? self.repositories : self.repos(nil)
     end
 
     def non_archive_repos
@@ -182,7 +182,7 @@ module Katello
     end
 
     def packages
-      repositories.archived.flat_map(&:packages)
+      archived_repos.flat_map(&:packages)
     end
 
     def puppet_module_count
@@ -200,6 +200,10 @@ module Katello
       image_counts.sum
     end
 
+    def docker_tags
+      archived_repos.docker_type.flat_map(&:docker_tags)
+    end
+
     def docker_tag_count
       tag_counts = repositories.archived.docker_type.map do |repo|
         repo.docker_tags.count
@@ -208,7 +212,7 @@ module Katello
     end
 
     def errata(errata_type = nil)
-      errata = Erratum.in_repositories(self.repositories.archived).uniq
+      errata = Erratum.in_repositories(archived_repos).uniq
       errata = errata.of_type(errata_type) if errata_type
       errata
     end

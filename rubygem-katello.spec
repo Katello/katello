@@ -28,7 +28,7 @@
 Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
-Version: 2.2.0
+Version: 2.3.0
 Release: 1%{dist}
 Group: Development/Ruby
 License: Distributable
@@ -236,6 +236,383 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Tue Feb 24 2015 Eric D. Helms <ericdhelms@gmail.com> 2.3.0-1
+- Version bump to 2.3.0 (ericdhelms@gmail.com)
+
+* Tue Feb 24 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-2
+- Merge pull request #5041 from jlsherrill/9467 (jlsherrill@gmail.com)
+- Merge pull request #5038 from waldenraines/9511 (walden@redhat.com)
+- Merge pull request #4827 from ehelms/fixes-8448 (eric.d.helms@gmail.com)
+- Merge pull request #5020 from jlsherrill/9402-2 (jlsherrill@gmail.com)
+- Merge pull request #4928 from jlsherrill/8954 (jlsherrill@gmail.com)
+- Merge pull request #5035 from waldenraines/9484 (walden@redhat.com)
+- Fixes #9511: update manifest upload styling to bootstrap 3, BZ1194531
+  (walden@redhat.com)
+- Merge pull request #5044 from stbenjam/arrayequality (stephen@bitbin.de)
+- Merge pull request #5042 from waldenraines/9522 (walden@redhat.com)
+- Merge pull request #5046 from lzap/debug-expanding-9530
+  (eric.d.helms@gmail.com)
+- Fixed #9530 - installer logs are collected again by debug script
+  (lzap+git@redhat.com)
+- Fixes #8448: Add content tabs to environment details page.
+  (ericdhelms@gmail.com)
+- Fixes #9528: fix JS error on content host errata table, BZ 1195760.
+  (walden@redhat.com)
+- fixes #9525 - add array equality assertion methods (stbenjam@redhat.com)
+- Fixes #9522: no row-select on tables without bulk actions, BZ 1173765.
+  (walden@redhat.com)
+- fixes #9467 - fix bulk errata apply list (jsherril@redhat.com)
+- fixes #8954 - speeding up product rabl rendering (jsherril@redhat.com)
+- Merge pull request #4847 from ehelms/fixes-8387 (eric.d.helms@gmail.com)
+- Merge pull request #5036 from eLobato/patch-1 (walden@redhat.com)
+- Merge pull request #5017 from jlsherrill/9404 (jlsherrill@gmail.com)
+- katello-remove typo 'permanetly' -> 'permanently' (elobatocs@gmail.com)
+- Fixes #8387: Redirect users back to 403 page if no current organization.
+  (ericdhelms@gmail.com)
+- Fixes #9484: fix bastion katello modal translations, BZ 1194691.
+  (walden@redhat.com)
+- Merge pull request #5018 from bbuckingham/issue-9416 (bbuckingham@redhat.com)
+- Fixes #9474: display confirmation when applying errata to CH, BZ1160740.
+  (walden@redhat.com)
+- fixes #9402 - allow removal of cv version with archive deletion
+  (jsherril@redhat.com)
+- Merge pull request #5033 from waldenraines/9471 (walden@redhat.com)
+- fixes #9404 - fix sync_plan add/del product action getting stuck
+  (jsherril@redhat.com)
+- Fixes #9471: fix JS error on content host errata page, BZ1194396
+  (walden@redhat.com)
+- Fixes #9464: fix typo on content host errata counts display, BZ 1179465.
+  (walden@redhat.com)
+- Merge pull request #5025 from waldenraines/7088 (walden@redhat.com)
+- Merge pull request #5010 from cfouant/ui-validation-fix (cfouant@redhat.com)
+- Merge pull request #5022 from jlsherrill/9401 (jlsherrill@gmail.com)
+- Merge pull request #5027 from jlsherrill/9428 (jlsherrill@gmail.com)
+- Merge pull request #4963 from jlsherrill/8683 (jlsherrill@gmail.com)
+- Merge pull request #4998 from cfouant/copy-name-validation
+  (cfouant@redhat.com)
+- Merge pull request #4970 from lzap/debug-capsule-split-8710
+  (jlsherrill@gmail.com)
+- fixes #9455 - fixes validation error, BZ1139576 (cfouant@redhat.com)
+- Merge pull request #5024 from ehelms/fixes-9431 (eric.d.helms@gmail.com)
+- Merge pull request #5026 from jlsherrill/9150 (jlsherrill@gmail.com)
+- refs #9428 - fixing errata loading on the system tests (jsherril@redhat.com)
+- fixes #9150 - reindex all distributions on indexing (jsherril@redhat.com)
+- Fixes #7088: set filter rule to updated rule on save. (walden@redhat.com)
+- Merge pull request #5004 from cfouant/copy-auto-attach (cfouant@redhat.com)
+- Fixes #9431: Clear system_errata when pruning backend objects.
+  (ericdhelms@gmail.com)
+- fixes #9416 - content view update - dynflow'ize it (bbuckingham@redhat.com)
+- fixes #9428 - fixing failing unit test (jsherril@redhat.com)
+- fixes #9401 - refresh content view version list after deletion
+  (jsherril@redhat.com)
+- Merge pull request #5019 from daviddavis/temp/20150217152910
+  (david@memorious.net)
+- Merge pull request #5011 from ehelms/fixes-8984 (eric.d.helms@gmail.com)
+- Merge pull request #5013 from ehelms/fixes-7694 (eric.d.helms@gmail.com)
+- Fixes #9421 - Removing products.json (daviddavis@redhat.com)
+- Merge pull request #4972 from cfouant/cv-search-options (cfouant@redhat.com)
+- Merge pull request #5016 from mccun934/20150216-1957 (mmccune@gmail.com)
+- Merge pull request #5014 from waldenraines/9166 (walden@redhat.com)
+- ref #9179 - adding python-mongoengine for EL7 (mmccune@redhat.com)
+- Fixes #9166: show message if incremental update in progress, BZ 1193185.
+  (walden@redhat.com)
+- Merge pull request #4982 from jlsherrill/9120 (jlsherrill@gmail.com)
+- Fixes #7694: Allow errata to be sorted by updated field.
+  (ericdhelms@gmail.com)
+- Fixes #8984: Remove sync plan from products when a sync plan is destroyed.
+  (ericdhelms@gmail.com)
+- fixes #9120 - better feedback around composites for inc updates
+  (jsherril@redhat.com)
+- Merge pull request #4995 from jlsherrill/9317 (jlsherrill@gmail.com)
+- Merge pull request #5008 from stbenjam/9363 (stephen@bitbin.de)
+- fixes #9317 - only call foreman content update when needed
+  (jsherril@redhat.com)
+- Merge pull request #5007 from thomasmckay/9361-host-collection
+  (thomasmckay@redhat.com)
+- Merge pull request #5003 from jlsherrill/8251 (jlsherrill@gmail.com)
+- Fixes #9370: Switch to ASCII 'x' to fix assets precompile.
+  (ericdhelms@gmail.com)
+- fixes #8251 - keeping track of and showing incremental update content
+  (jsherril@redhat.com)
+- fixes #9363 - syntax error in hash substitution in errata import task
+  (stbenjam@redhat.com)
+- fixes #9361 - correct logic to hide content hosts list on collection
+  (thomasmckay@redhat.com)
+- Refs #8710 - created katello-debug sub-package (lzap+git@redhat.com)
+- Merge pull request #4976 from bbuckingham/issue-9218 (bbuckingham@redhat.com)
+- fixes #9343 - Actkey copies auto-attach preference, BZ1173724
+  (cfouant@redhat.com)
+- fixes #9330 - validates new name presence prior to dynflow, BZ1187539
+  (cfouant@redhat.com)
+- Merge pull request #4999 from jlsherrill/9333 (jlsherrill@gmail.com)
+- Merge pull request #4994 from jlsherrill/9312 (jlsherrill@gmail.com)
+- fixes #9333 - fix bad action name on lifecycle env delete
+  (jsherril@redhat.com)
+- Merge pull request #4989 from jlsherrill/8180 (jlsherrill@gmail.com)
+- fixes #8180 - use dep solving for incremental updates (jsherril@redhat.com)
+- fixes #9312 - handle errata import with duplicate packages
+  (jsherril@redhat.com)
+- Merge pull request #4988 from ehelms/fixes-8938 (eric.d.helms@gmail.com)
+- Merge pull request #4993 from waldenraines/9298 (walden@redhat.com)
+- Fixes #9298: only apply errata if box is checked, bz 1191214.
+  (walden@redhat.com)
+- Merge pull request #4992 from jlsherrill/9309 (jlsherrill@gmail.com)
+- Merge pull request #4913 from parthaa/docker-integration (parthaa@gmail.com)
+- Merge pull request #4991 from ehelms/fixes-8834 (eric.d.helms@gmail.com)
+- fixes #9309 - fix for NotImplementedError on tasks page (jsherril@redhat.com)
+- Merge pull request #4990 from dustints/org_destroy (dtsang@redhat.com)
+- Ref #9300: destroy ktenv should no longer call dis (dtsang@redhat.com)
+- Fixes #9176: display incremental update task in nutupane, bz 1188823.
+  (walden@redhat.com)
+- Fixes #8834: Prevent empty composite list just after creating content view.
+  (ericdhelms@gmail.com)
+- Merge pull request #4980 from waldenraines/9219 (walden@redhat.com)
+- Fixes #8938: Publish Red Hat repositories upon enablement.
+  (ericdhelms@gmail.com)
+- Fixes #9276 - Added some DockerTag tests (daviddavis@redhat.com)
+- fixes #9264 - fix for ambiguous col on errata content hosts
+  (jsherril@redhat.com)
+- Fixes #9238: fix errata icon classes post patternfly upgrade.
+  (walden@redhat.com)
+- Merge pull request #4978 from daviddavis/temp/20150204151524
+  (daviddavis@redhat.com)
+- Fixes #8918 - Katello UI to provision docker container (paji@redhat.com)
+- Fixes #9224 - Not setting docker upstream name on clones
+  (daviddavis@redhat.com)
+- Fixes #9220 - fixing incremental update errors and button disable.
+  (walden@redhat.com)
+- Fixes #9219: close details pane when cancelling content host selection.
+  (walden@redhat.com)
+- Merge pull request #4930 from daviddavis/docker-ui (daviddavis@redhat.com)
+- fixes #9221 - fix scoped search call for environment (jsherril@redhat.com)
+- fixes #9218 - extend hostgroups controller create/update to include katello
+  attrs (bbuckingham@redhat.com)
+- Fixes #7127 - Creating a docker tag page (daviddavis@redhat.com)
+- Merge pull request #4971 from ehelms/refs-9200 (eric.d.helms@gmail.com)
+- Merge pull request #4975 from parthaa/capsule-fix (parthaa@gmail.com)
+- Fixes #9209 - Default capsule now checked using Pulp feature
+  (paji@redhat.com)
+- Merge pull request #4965 from ehelms/fixes-9167 (eric.d.helms@gmail.com)
+- Fixes #9206: Remove border-radius mixin that was removed in Foreman.
+  (ericdhelms@gmail.com)
+- Merge pull request #4967 from waldenraines/9181 (walden@redhat.com)
+- fixes #9201 - adds search options for content views index, BZ1188244
+  (cfouant@redhat.com)
+- Merge pull request #4968 from waldenraines/8192 (walden@redhat.com)
+- Refs #9200: Discovery does not work with Foreman 1.8 currently.
+  (ericdhelms@gmail.com)
+- Merge pull request #4969 from ehelms/refs-8190 (eric.d.helms@gmail.com)
+- Merge pull request #4760 from waldenraines/patternfly-upgrade
+  (walden@redhat.com)
+- Fixes #8192 - allow applying errata to CHs after incremental update.
+  (walden@redhat.com)
+- Refs #8190: Fix API docs to match intended params. (ericdhelms@gmail.com)
+- Merge pull request #4932 from parthaa/docker-repo-create (parthaa@gmail.com)
+- Fixes #9167: Fix chained scopes when using scoped_search in API
+  (ericdhelms@gmail.com)
+- Fixes #9181: fix sorting on Errata ID table column. (walden@redhat.com)
+- Merge pull request #4964 from stbenjam/9158 (eric.d.helms@gmail.com)
+- Merge pull request #4931 from waldenraines/8178-8189 (walden@redhat.com)
+- Fixes #8039 - upgrade patternfly to version 1.1.3. (walden@redhat.com)
+- Merge pull request #4904 from cfouant/actkey-dynflow-fix (cfouant@redhat.com)
+- Merge pull request #4856 from cfouant/ui-product-content (cfouant@redhat.com)
+- Merge pull request #4854 from cfouant/delete-actkey (cfouant@redhat.com)
+- Merge pull request #4956 from jlsherrill/def_org (jlsherrill@gmail.com)
+- Fixes #8178, 8189:  adding UI for incremental update. (walden@redhat.com)
+- Merge pull request #4966 from iNecas/issue/9174 (eric.d.helms@gmail.com)
+- Merge pull request #4960 from jlsherrill/9131 (jlsherrill@gmail.com)
+- Fixes 9174 - replace UUIDTools with SecureRandom (inecas@redhat.com)
+- fixes #9158 - do not find foreman host by mac (stbenjam@redhat.com)
+- Fixes #8959 - Repo create cleanup (paji@redhat.com)
+- refs #8683 - adding support for katello-selinux (jsherril@redhat.com)
+- Merge pull request #4947 from jlsherrill/inc_sys_update
+  (jlsherrill@gmail.com)
+- Merge pull request #4955 from steveloranz/8688 (jlsherrill@gmail.com)
+- fixes #8612 - Makes output consistent for deleting act key, BZ1171092
+  (cfouant@redhat.com)
+- Merge pull request #4941 from daviddavis/temp/20150115185155
+  (daviddavis@redhat.com)
+- fixes #8040 - Product content changes are updated in UI, BZ1112747
+  (cfouant@redhat.com)
+- Merge pull request #4949 from ehelms/refs-8756 (eric.d.helms@gmail.com)
+- Merge pull request #4927 from steveloranz/8951 (eric.d.helms@gmail.com)
+- Fixes #8958 - Show tag info for docker images (daviddavis@redhat.com)
+- fixes #9131 - publish content view was always using latest puppet module
+  (jsherril@redhat.com)
+- fixes #8191 - adding support for updating systems after an incremental update
+  (jsherril@redhat.com)
+- Merge pull request #4953 from jlsherrill/errataids (jlsherrill@gmail.com)
+- fixes #9051 - add errata_ids param to systems index (jsherril@redhat.com)
+- Merge pull request #4957 from daviddavis/rubocop28 (daviddavis@redhat.com)
+- Merge pull request #4954 from jlsherrill/clean (jlsherrill@gmail.com)
+- Merge pull request #4923 from mccun934/20150109-1447 (mmccune@gmail.com)
+- Refs #9099 - Update rubocop to 0.28 (daviddavis@redhat.com)
+- refs #8213 - add sam-installer to comps (mmccune@redhat.com)
+- fixes #9105 - set default org for initial admin user (jsherril@redhat.com)
+- Merge pull request #4883 from jlsherrill/inc_components
+  (jlsherrill@gmail.com)
+- Merge pull request #4951 from waldenraines/8307 (walden@redhat.com)
+- Fixes #8688 - Migrate environment to scoped search (sloranz@xantham.com)
+- Fixes #8307 - allow filtering of Errata by available/installable.
+  (walden@redhat.com)
+- refs 8213 - split out katello package into modular sub-packages
+  (mmccune@redhat.com)
+- refs #8860 - updating clean backend objects to handle missing pulp entries
+  (jsherril@redhat.com)
+- Merge pull request #4944 from daviddavis/9011 (daviddavis@redhat.com)
+- Merge pull request #4952 from bkearney/bkearney/9079 (jlsherrill@gmail.com)
+- Fixes #8951 - add host collection BZ1143029 (sloranz@xantham.com)
+- Merge pull request #4943 from waldenraines/8652 (walden@redhat.com)
+- Fixes #9079 - Add /var/lib/mongodb to the foreman-debug collection
+  (bkearney@redhat.com)
+- Merge pull request #4926 from thomasmckay/8941-auto-attach
+  (thomasmckay@redhat.com)
+- fixes #8941 - dynflow refresh subscriptions (auto-attach)
+  (thomasmckay@redhat.com)
+- Merge pull request #4945 from waldenraines/7676 (walden@redhat.com)
+- Fixes #7676 - order dashboard errata list by errata updated date.
+  (walden@redhat.com)
+- Refs #7745: Support checking for custom header from RHSM proxied requests.
+  (ericdhelms@gmail.com)
+- Merge pull request #4910 from jlsherrill/8563 (jlsherrill@gmail.com)
+- Merge pull request #4946 from waldenraines/8870 (walden@redhat.com)
+- Merge pull request #4898 from jlsherrill/8574 (jlsherrill@gmail.com)
+- fixes #8174 - specify capsule-supported gpg key url (jsherril@redhat.com)
+- fixes #8194 - adding ability to update composites as part of a content view
+  update (jsherril@redhat.com)
+- Fixes #8870 - add applicable systems errata count to errata list.
+  (walden@redhat.com)
+- Merge pull request #4922 from ehelms/fixes-8621 (eric.d.helms@gmail.com)
+- Merge pull request #4940 from waldenraines/8971 (walden@redhat.com)
+- Fixes #9011 - Skip deleting products during manifest actions
+  (daviddavis@redhat.com)
+- Fixes #8652: replace errata content search links (walden@redhat.com)
+- Merge pull request #4936 from parthaa/content-counts (parthaa@gmail.com)
+- Merge pull request #4934 from parthaa/sync-bulk (parthaa@gmail.com)
+- Merge pull request #4933 from parthaa/version-details (parthaa@gmail.com)
+- Fixes #8971: rename "Available" to "Installable" Errata, bz 1182604.
+  (walden@redhat.com)
+- Merge pull request #4939 from dustints/hc_update_name_opt (dtsang@redhat.com)
+- fixes #8574 - separating host content view & life env from puppet env
+  (jsherril@redhat.com)
+- fixes #8867 - fixes activation key dynflow update passing in nil variables
+  (cfouant@redhat.com)
+- Fixes #8895: link to errata page from errata dashboard. (walden@redhat.com)
+- Merge pull request #4921 from cfouant/localization (cfouant@redhat.com)
+- Merge pull request #4908 from cfouant/auto-attach (cfouant@redhat.com)
+- Merge pull request #4917 from jlsherrill/8860 (jlsherrill@gmail.com)
+- Merge pull request #4924 from jlsherrill/8943 (jlsherrill@gmail.com)
+- Fixes #8960 - Handled ISE on bulk repos sync page (paji@redhat.com)
+- Fixes #8962 - CV page shows only non zero content counts in UI
+  (paji@redhat.com)
+- Fixes #8836 - CV Versions page shows docker info (paji@redhat.com)
+- Merge pull request #4915 from bkearney/bkearney/8931
+  (bryan.kearney@gmail.com)
+- Merge pull request #4925 from stbenjam/8353 (stephen@bitbin.de)
+- Fixes #8974 - HC make name optional on update (dtsang@redhat.com)
+- Fixes #8961 - Fixing a typo in the name of an action class (paji@redhat.com)
+- Merge pull request #4929 from ehelms/fixes-7755 (eric.d.helms@gmail.com)
+- Merge pull request #4918 from ehelms/refs-8934 (eric.d.helms@gmail.com)
+- Fixes #7755: Use product label to make media unique. (ericdhelms@gmail.com)
+- Refs #8934: Set menu links to disable turbo links support.
+  (ericdhelms@gmail.com)
+- fixes #8943 - do not perform post sync actions until after the sync is
+  finished (jsherril@redhat.com)
+- Merge pull request #4912 from jlsherrill/8326 (jlsherrill@gmail.com)
+- Merge pull request #4909 from thomasmckay/8893-katello-agent
+  (thomasmckay@redhat.com)
+- fixes #8353 - require all neccessary pulp packages in RPM
+  (stbenjam@redhat.com)
+- Merge pull request #4920 from daviddavis/temp/20150113150533
+  (daviddavis@redhat.com)
+- Fixes #8933 - Turn off content type check for routes (daviddavis@redhat.com)
+- fixes #8326 - fixing errata queries due to ambiguous sort
+  (jsherril@redhat.com)
+- Fixes #8621: Set sync plan on product during repository creation.
+  (ericdhelms@gmail.com)
+- Merge pull request #4919 from cfouant/revert-flags (cfouant@redhat.com)
+- fixes #8936 - fixes localization to help message, BZ1143859
+  (cfouant@redhat.com)
+- Merge pull request #4916 from waldenraines/8924 (walden@redhat.com)
+- fixes #8935 - reverts table columns for SAM feature flags
+  (cfouant@redhat.com)
+- Fixes #8924: add last_sync_words to sync plan rabl, bz 1130300.
+  (walden@redhat.com)
+- Merge pull request #4914 from bkearney/bkearney/8928
+  (bryan.kearney@gmail.com)
+- Merge pull request #4868 from cfouant/custom-products (cfouant@redhat.com)
+- fixes #8860 - fixing clean_backend_objects rake task (jsherril@redhat.com)
+- Fixes #8931 - Update the text for the filter to address typo
+  (bkearney@redhat.com)
+- Fixes #8928 : Text on publish screen is not grammatically correct
+  (bkearney@redhat.com)
+- Merge pull request #4865 from adamruzicka/dynflow-system-update
+  (jlsherrill@gmail.com)
+- Merge pull request #4899 from daviddavis/temp/20150106144038
+  (daviddavis@redhat.com)
+- Merge pull request #4864 from daviddavis/temp/20141209153047
+  (daviddavis@redhat.com)
+- Fixes #8632 - Redoing docker tables/fields (daviddavis@redhat.com)
+- fixes #8671, #8684 - Hides custom products from SAM users, hides gpg keys
+  from red hat products, BZ1173340, BZ1173764 (cfouant@redhat.com)
+- Merge pull request #4896 from orrabin/8764 (daviddavis@redhat.com)
+- Merge pull request #4911 from jlsherrill/8904 (jlsherrill@gmail.com)
+- Merge pull request #4843 from ehelms/fixes-7691 (eric.d.helms@gmail.com)
+- refs #8764 - moving organization description to foreman core
+  (orabin@redhat.com)
+- fixes #8904 - fixing query breaking content view repo list
+  (jsherril@redhat.com)
+- Fixes #7691: Add repository filter to Errata list page.
+  (ericdhelms@gmail.com)
+- Merge pull request #4906 from waldenraines/8886 (walden@redhat.com)
+- refs #8635 - add hammer-cli-gutterball to comps (komidore64@gmail.com)
+- fixes #8563 - fetch package information in chunks when fetching file lists
+  (jsherril@redhat.com)
+- Merge pull request #4907 from waldenraines/8887 (walden@redhat.com)
+- fixes #8893 - hide katello-agent info (thomasmckay@redhat.com)
+- Merge pull request #4877 from cfouant/remote-actions (cfouant@redhat.com)
+- fixes #8891 - adds auto-attach to api/cli output, BZ1180285
+  (cfouant@redhat.com)
+- Merge pull request #4897 from cfouant/required-name (cfouant@redhat.com)
+- Merge pull request #4879 from cfouant/lifecycle-environments
+  (cfouant@redhat.com)
+- Fixes #8887: returning correct CVE structure in rabl. (walden@redhat.com)
+- Fixes #8886: show N/A if no CVEs exist for errata. (walden@redhat.com)
+- Fixes #6184 - Dynflowizes system update. (aruzicka@redhat.com)
+- Fixes #8846 - Have the V2 api controller extend Api::V2::BaseController
+  (daviddavis@redhat.com)
+- Merge pull request #4903 from bkearney/bkearney/8858 (jlsherrill@gmail.com)
+- Merge pull request #4880 from parthaa/repo-index (parthaa@gmail.com)
+- Fixes #8858: Collect candlepin logs on RHEL7 (bkearney@redhat.com)
+- Merge pull request #4901 from ehelms/fixes-8594 (eric.d.helms@gmail.com)
+- Merge pull request #4900 from jlsherrill/8848 (jlsherrill@gmail.com)
+- Fixes #8594: Fix errata listing for content view filter regression.
+  (ericdhelms@gmail.com)
+- fixes #8848 - fixing content host errata list (jsherril@redhat.com)
+- Fixes #8743 - Repo Index returns promoted repos (paji@redhat.com)
+- Merge pull request #4878 from jlsherrill/8730 (jlsherrill@gmail.com)
+- fixes #8730 - keep track of components of composite content view versions
+  (jsherril@redhat.com)
+- fixes #8833 - Removes name requirement for act key update, BZ 1178928
+  (cfouant@redhat.com)
+- Merge pull request #4853 from
+  dustints/check_config_starting_listen_on_cp_event (dtsang@redhat.com)
+- refs #8575 - adding python-qpid-common to comps (jsherril@redhat.com)
+- Merge pull request #4838 from waldenraines/8482 (walden@redhat.com)
+- Merge pull request #4891 from stbenjam/8775 (stephen@bitbin.de)
+- fixes #8775 - ensure available errata are unique (stbenjam@redhat.com)
+- fixes #8776 - bumping gem version (jsherril@redhat.com)
+- Fixes #8771 - Remove katello_api from comps (daviddavis@redhat.com)
+- Automatic commit of package [katello] minor release [2.2.0-1].
+  (daviddavis@redhat.com)
+- fixes #8731 - sets feature flag for lifecycle environments, BZ1174944
+  (cfouant@redhat.com)
+- fixes #8729 - Sets feature flag on remote actions, BZ1174932
+  (cfouant@redhat.com)
+- Fixes #8482: add an environment filter to the errata content hosts page.
+  (walden@redhat.com)
+- Fixes #8552 - Don't initialize cp task if no qpid config (dtsang@redhat.com)
+
 * Fri Dec 19 2014 David Davis <daviddavis@redhat.com> 2.2.0-1
 - fatal: bad revision 'rubygem-katello-2.2.0-1..HEAD'
 

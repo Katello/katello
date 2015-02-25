@@ -24,11 +24,10 @@
         {{ "Close" | translate }}
       </button>
 
-      <div bst-modal="removeProducts()" model="table"
-           modal-header='Remove {{ productTable.getSelected().length }} Products?'
-           modal-body='Are you sure you want to remove the {{ productTable.getSelected().length }} products(s) selected?'>
+      <div bst-modal="removeProducts()">
+        <div data-block="modal-header" translate>Remove {{ productTable.getSelected().length }} Products?</div>
+        <div data-block="modal-body" translate>Are you sure you want to remove the {{ productTable.getSelected().length }} products(s) selected?</div>
       </div>
-
     </div>
   </header>
 

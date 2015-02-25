@@ -5,10 +5,10 @@ attributes :id, :cp_id, :name, :label, :description
 extends 'katello/api/v2/common/org_reference'
 extends 'katello/api/v2/common/syncable'
 
-attributes :marketing_product
 attributes :provider_id
 attributes :sync_plan_id
 attributes :sync_status
+attributes :sync_summary
 attributes :gpg_key_id
 attributes :redhat? => :redhat
 
@@ -16,16 +16,16 @@ attributes :productContent => :product_content
 
 attributes :available_content => :available_content
 
+child :marketing_product do
+  attributes :id, :name
+end
+
 node :repository_count do |product|
-  if product.library_repositories.to_a.any?
-    product.library_repositories.count
-  else
-    0
-  end
+  product.library_repositories.count
 end
 
 child :library_repositories => :repositories do |_repo|
-  extends 'katello/api/v2/repositories/show'
+  attributes :name, :id
 end
 
 node(:gpg_key, :unless => lambda { |product| product.gpg_key.nil? }) do |product|

@@ -1,7 +1,7 @@
 <table class="table table-striped" ng-class="{'table-mask': table.working}">
 
   <thead>
-    <tr bst-table-head row-select>
+    <tr bst-table-head>
       <th bst-table-column sortable><span translate>Name</span></th>
     </tr>
   </thead>
@@ -9,7 +9,6 @@
   <tbody>
     <tr bst-table-row
         ng-repeat="contentView in table.rows"
-        row-select="contentView"
         active-row="stateIncludes('content-views.details', {contentViewId: contentView.id})">
       <td bst-table-cell>
         <a ui-sref="content-views.details.versions({contentViewId: contentView.id})">

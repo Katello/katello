@@ -792,6 +792,17 @@ module Katello
             Util::Data.array_with_indifferent_access key_pools
           end
 
+          def add_product(id, product_id)
+            cppath = join_path(path(id), "product/#{product_id}")
+            product = self.post(cppath, {}, self.default_headers)
+            JSON.parse(product).with_indifferent_access
+          end
+
+          def remove_product(id, product_id)
+            product = self.delete(join_path(path(id), "product/#{product_id}"), self.default_headers)
+            JSON.parse(product).with_indifferent_access
+          end
+
           def add_pools(id, pool_id, quantity)
             cppath = join_path(path(id), "pools/#{pool_id}")
             quantity = Integer(quantity) rescue nil
