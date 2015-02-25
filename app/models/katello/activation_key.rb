@@ -213,8 +213,14 @@ module Katello
       new_key
     end
 
-    def subscribe(pool_id, quantity = 1)
-      Resources::Candlepin::ActivationKey.add_pools(self.cp_id, pool_id, quantity)
+    def subscribe_to_pool(pool_id, quantity = 1)
+      self.subscribe(pool_id, quantity)
+    rescue RestClient::ResourceNotFound, RestClient::BadRequest => e
+      raise JSON.parse(e.response)['displayMessage']
+    end
+
+    def unsubscribe_from_pool(pool_id)
+      self.unsubscribe(pool_id)
     rescue RestClient::ResourceNotFound, RestClient::BadRequest => e
       raise JSON.parse(e.response)['displayMessage']
     end

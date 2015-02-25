@@ -1,5 +1,25 @@
 <span page-title ng-model="activationKey">{{ 'Subscriptions for Activation Key:' | translate }} {{ activationKey.name }}</span>
 
+<section>
+  <h4 translate>Activation Key Type:</h4>
+
+  <div class="details">
+    <span class="info-label" translate>Auto-Attach</span>
+    <span class="info-value"
+          bst-edit-checkbox="activationKey.auto_attach"
+          formatter="booleanToYesNo"
+          readonly="denied('edit_activation_keys', activationKey)"
+          on-save="save(activationKey)">
+    </span>
+  </div>
+  <p bst-alert="info" ng-hide="!activationKey.auto_attach">
+    <span>When Auto Attach is enabled, registering systems will be attached to all associated custom products and only associated Red Hat subscriptions required to satisfy the system's installed products.</span>
+  </p>
+  <p bst-alert="info" ng-hide="activationKey.auto_attach">
+    <span translate>When Auto Attach is disabled, registering systems will be attached to all associated subscriptions.</span>
+  </p>
+</section>
+
 <nav>
   <ul class="nav nav-tabs" ng-show="permitted('edit_activation_keys', activationKey)">
     <li ng-class="{active: isState('activation-keys.details.subscriptions.list')}">
