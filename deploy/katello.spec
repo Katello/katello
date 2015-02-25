@@ -198,6 +198,23 @@ Package that installs only the Subscription and basic Content Management parts o
 %files sam
 
 %changelog
+* Tue Feb 24 2015 Eric D. Helms <ericdhelms@gmail.com> 2.3.0-1
+- Update katello to 2.3.0 (ericdhelms@gmail.com)
+- Fixed #9530 - installer logs are collected again by debug script
+  (lzap+git@redhat.com)
+- katello-remove typo 'permanetly' -> 'permanently' (elobatocs@gmail.com)
+- Merge pull request #4970 from lzap/debug-capsule-split-8710
+  (jlsherrill@gmail.com)
+- Refs #8710 - created katello-debug sub-package (lzap+git@redhat.com)
+- Refs #9200: Discovery does not work with Foreman 1.8 currently.
+  (ericdhelms@gmail.com)
+- Merge pull request #4923 from mccun934/20150109-1447 (mmccune@gmail.com)
+- refs 8213 - split out katello package into modular sub-packages
+  (mmccune@redhat.com)
+- Fixes #9079 - Add /var/lib/mongodb to the foreman-debug collection
+  (bkearney@redhat.com)
+- Fixes #8858: Collect candlepin logs on RHEL7 (bkearney@redhat.com)
+
 * Fri Dec 19 2014 David Davis <daviddavis@redhat.com> 2.2.0-1
 - Automatic commit of package [rubygem-katello] minor release [2.2.0-1].
   (daviddavis@redhat.com)
