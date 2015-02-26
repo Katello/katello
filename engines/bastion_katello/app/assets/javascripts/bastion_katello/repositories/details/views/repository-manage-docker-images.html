@@ -26,8 +26,21 @@
   </div>
 
   <div data-block="actions">
+    <div bst-modal="removeContent()">
+      <div data-block="modal-header"
+           translate-n="detailsTable.numSelected"
+           translate-plural="Remove {{ detailsTable.numSelected  }} Docker Images?">
+        Remove {{ detailsTable.numSelected  }} Docker Image?
+      </div>
+      <div data-block="modal-body"
+           translate-n="detailsTable.numSelected"
+           translate-plural="Are you sure you want to remove the {{ detailsTable.numSelected }} Docker images selected?">
+        Are you sure you want to remove the {{ detailsTable.numSelected }} Docker image selected?
+      </div>
+    </div>
+
     <button class="btn btn-default"
-            ng-click="removeContent()"
+            ng-click="openModal()"
             ng-disabled="detailsTable.working || detailsTable.numSelected === 0">
       <i class="fa fa-trash-o" ng-hide="detailsTable.working"></i>
       <span translate>Remove Docker Images</span>
