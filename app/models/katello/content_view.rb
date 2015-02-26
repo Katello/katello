@@ -243,6 +243,10 @@ module Katello
       composite? ? nil : content_view_puppet_modules
     end
 
+    def component_repositories
+      components.map(&:repositories).flatten
+    end
+
     def repos_in_product(env, product)
       version = version(env)
       if version
