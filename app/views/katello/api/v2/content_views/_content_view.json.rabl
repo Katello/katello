@@ -23,7 +23,7 @@ child :environments => :environments do
 end
 
 child :repositories => :repositories do
-  extends 'katello/api/v2/repositories/show'
+  attributes :id, :name, :label, :content_type
 end
 
 child :puppet_modules => :puppet_modules do
