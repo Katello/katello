@@ -83,7 +83,7 @@ module Katello
     end
 
     def next_sync
-      now = Time.zone.local_to_utc(Time.now)
+      now = Time.now.utc
       next_sync = self.sync_date
 
       if self.sync_date < now
