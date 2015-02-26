@@ -58,11 +58,19 @@ function ktHideParams() {
 }
 
 function getSelectedEnvId() {
-  return $("#hostgroup_lifecycle_environment_id").val();
+    var dataId = $("#hostgroup_lifecycle_environment_id > option:selected").data("id");
+    if (dataId === undefined) {
+        dataId = $("#hostgroup_lifecycle_environment_id").val();
+    }
+    return dataId;
 }
 
 function getSelectedContentViewId() {
-  return $("#hostgroup_content_view_id").val();
+    var dataId = $("#hostgroup_content_view_id > option:selected").data("id");
+    if (dataId === undefined) {
+        dataId = $("#hostgroup_content_view_id").val();
+    }
+    return dataId;
 }
 
 function ktSetParam(name, value) {

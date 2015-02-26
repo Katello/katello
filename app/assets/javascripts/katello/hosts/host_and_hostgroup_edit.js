@@ -83,7 +83,8 @@ KT.hosts.getContentViewSelect = function() {
 };
 
 KT.hosts.getSelectedContentView = function() {
-    return KT.hosts.getContentViewSelect().val();
+    var select = KT.hosts.getContentViewSelect();
+    return select.val() || select.find("option:selected").data("id");
 };
 
 KT.hosts.getSelectedEnvironment = function () {
@@ -91,6 +92,10 @@ KT.hosts.getSelectedEnvironment = function () {
     if(envId === undefined || envId.length === 0) {
         envId = $("#host_lifecycle_environment_id").val()
     }
+    if(envId === undefined || envId.length === 0) {
+        envId = $("#hostgroup_lifecycle_environment_id > option:selected").data("id");
+    }
+
     if(envId && envId.length === 0) {
         envId = undefined;
     }
@@ -108,6 +113,7 @@ KT.hosts.onKatelloHostEditLoad = function(){
             });
         });
     });
+    KT.hosts.toggle_installation_medium();
 };
 
 
@@ -116,14 +122,14 @@ KT.hosts.toggle_installation_medium = function() {
 
 
     if ($('#hostgroup_parent_id').length > 0) {
-      lifecycle_environment_id = $('#hostgroup_lifecycle_environment_id').val();
-      content_view_id = $('#hostgroup_content_view_id').val();
+      lifecycle_environment_id = KT.hosts.getSelectedEnvironment();
+      content_view_id = KT.hosts.getSelectedContentView();
       content_source_id = $('#hostgroup_content_source_id').val();
       architecture_id = $('#hostgroup_architecture_id').val();
       operatingsystem_id = $('#hostgroup_operatingsystem_id').val();
     } else {
-      lifecycle_environment_id = $('#host_lifecycle_environment_id').val();
-      content_view_id = $('#host_content_view_id').val();
+      lifecycle_environment_id = KT.hosts.getSelectedEnvironment();
+      content_view_id = KT.hosts.getSelectedContentView();
       content_source_id = $('#host_content_source_id').val();
       architecture_id = $('#host_architecture_id').val();
       operatingsystem_id = $('#host_operatingsystem_id').val();
