@@ -22,8 +22,14 @@ child :environments => :environments do
   end
 end
 
-child :repositories => :repositories do
-  attributes :id, :name, :label, :content_type
+if @object.composite?
+  child :component_repositories => :repositories do
+    attributes :id, :name, :label, :content_type
+  end
+else
+  child :repositories => :repositories do
+    attributes :id, :name, :label, :content_type
+  end
 end
 
 child :puppet_modules => :puppet_modules do
