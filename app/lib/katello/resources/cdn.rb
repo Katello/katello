@@ -27,6 +27,8 @@ module Katello
       end
 
       class CdnResource
+        CDN_DOCKER_CONTAINER_LISTING = "CONTAINER_REGISTRY_LISTING"
+
         attr_reader :url, :product
         attr_accessor :proxy_host, :proxy_port, :proxy_user, :proxy_password
 
@@ -137,6 +139,40 @@ module Katello
         def parse_host(host_or_url)
           uri = URI.parse(host_or_url)
           return uri.host || uri.path
+        end
+
+        def get_container_listings(content_path)
+          JSON.parse(get(File.join(content_path, CdnResource::CDN_DOCKER_CONTAINER_LISTING)))
+        end
+
+        # eg content url listing file ->
+        # /content/dist/rhel/server/7/7Server/x86_64/containers/CONTAINER_REGISTRY_LISTING
+        # format
+        #   {
+        #   "header": {
+        #       "version": "1.0"
+        #   },
+        #   "payload": {
+        #       "registries": [
+        #           { "name": "rhel",
+        #             "url": "<docker pull url>",
+        #             },
+        #           { "name": "rhel7",
+        #             "url": "test.com:5000/rhel"
+        #             "aliases": [ "redhat/rhel7" ]
+        #             }
+        #       ]
+        #   }
+        # }
+        def get_docker_registries(content_path)
+          docker_listing = get_container_listings(content_path)
+          docker_listing.try(:[], "payload").try(:[], "registries") || []
+        rescue ::Katello::Errors::NotFound => e # some of listing file points to not existing content
+          # If the container listing file was not found
+          # there is probably no content to be had.
+          Rails.logger.warn("Could not get to #{content_path}.")
+          Rails.logger.warn e.to_s
+          []
         end
 
         def log(level, *args)

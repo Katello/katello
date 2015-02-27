@@ -12,7 +12,7 @@
 
 module Katello
   module Glue::Candlepin::Content
-    CANDLEPIN_DOCKER_TYPE = "containerImage"
+    CANDLEPIN_DOCKER_TYPE = "containerimage"
 
     def self.included(base)
       base.send :include, InstanceMethods

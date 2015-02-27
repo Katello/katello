@@ -101,7 +101,7 @@ module Katello
     end
 
     def substitutions
-      params.slice(:basearch, :releasever)
+      params.slice(:basearch, :releasever, :registry_name)
     end
 
     def task_error(task)

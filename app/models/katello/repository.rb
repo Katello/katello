@@ -287,8 +287,18 @@ module Katello
       end
     end
 
-    def self.repo_id(product_label, repo_label, env_label, organization_label, view_label, version)
-      [organization_label, env_label, view_label, version, product_label, repo_label].compact.join("-").gsub(/[^-\w]/, "_")
+    def self.repo_id(product_label, repo_label, env_label, organization_label,
+                     view_label, version, docker_repo_name = nil)
+      actual_repo_id = [organization_label,
+                        env_label,
+                        view_label,
+                        version,
+                        product_label,
+                        repo_label,
+                        docker_repo_name].compact.join("-").gsub(/[^-\w]/, "_")
+      # docker repo names need to be in lower case
+      actual_repo_id = actual_repo_id.downcase if docker_repo_name
+      actual_repo_id
     end
 
     def clone_id(env, content_view, version = nil)

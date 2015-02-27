@@ -68,8 +68,9 @@ module Katello
     api :PUT, "/products/:product_id/repository_sets/:id/enable", N_("Enable a repository from the set")
     param :id, :number, :required => true, :desc => N_("ID of the repository set to enable")
     param :product_id, :number, :required => true, :desc => N_("ID of the product containing the repository set")
-    param :basearch, String, :required => true, :desc => N_("Basearch to enable")
-    param :releasever, String, :required => true, :desc => N_("Releasever to enable")
+    param :basearch, String, :required => false, :desc => N_("Basearch to enable")
+    param :releasever, String, :required => false, :desc => N_("Releasever to enable")
+    param :registry_name, String, :required => false, :desc => N_("Registry name to enable in the case of a docker repository")
     def enable
       task = sync_task(::Actions::Katello::RepositorySet::EnableRepository, @product, @product_content.content, substitutions)
       respond_for_async :resource => task
@@ -78,8 +79,9 @@ module Katello
     api :PUT, "/products/:product_id/repository_sets/:id/disable", N_("Disable a repository form the set")
     param :id, :number, :required => true, :desc => N_("ID of the repository set to enable")
     param :product_id, :number, :required => true, :desc => N_("ID of the product containing the repository set")
-    param :basearch, String, :required => true, :desc => N_("Basearch to disable")
-    param :releasever, String, :required => true, :desc => N_("Releasever to disable")
+    param :basearch, String, :required => false, :desc => N_("Basearch to disable")
+    param :releasever, String, :required => false, :desc => N_("Releasever to disable")
+    param :registry_name, String, :required => false, :desc => N_("Registry name to enable in the case of a docker repository")
     def disable
       task = sync_task(::Actions::Katello::RepositorySet::DisableRepository, @product, @product_content.content, substitutions)
       respond_for_async :resource => task
@@ -103,7 +105,7 @@ module Katello
     end
 
     def substitutions
-      params.slice(:basearch, :releasever)
+      params.slice(:basearch, :releasever, :registry_name)
     end
   end
 end
