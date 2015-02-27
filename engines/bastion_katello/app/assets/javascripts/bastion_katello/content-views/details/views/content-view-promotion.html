@@ -22,7 +22,7 @@
        mode="singleSelect"
        selection-required="false"
        path-attribute="environments"
-       disabled="denied('promote_or_remove_content_views', contentView)"
+       ng-hide="denied('promote_or_remove_content_views', contentView)"
        ng-show="working">
   </div>
 
