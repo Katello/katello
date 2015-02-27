@@ -18,9 +18,14 @@ module Katello
       included do
         def destroy
           sync_task(::Actions::Katello::System::HostDestroy, @host)
-          process_success(:object => @host)
+          process_success(:success_redirect => hosts_path)
         rescue StandardError => ex
           process_error(:object => @host, :error_msg => ex.message)
+        end
+
+        def submit_multiple_destroy
+          task = async_task(::Actions::BulkAction, ::Actions::Katello::System::HostDestroy, @hosts)
+          redirect_to(foreman_tasks_task_path(task.id))
         end
 
         def puppet_environment_for_content_view
