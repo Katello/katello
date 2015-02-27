@@ -181,6 +181,7 @@ module Katello
 
       options = { :unit_type => :package,
                   :cv_env_ids => cv_env_ids,
+                  :organization => current_organization,
                   :offset => params[:offset].try(:to_i) || 0 }
 
       comparison = ContentSearch::ContentViewComparison.new(options)
@@ -198,6 +199,7 @@ module Katello
 
       options = { :unit_type => :puppet_module,
                   :cv_env_ids => cv_env_ids,
+                  :organization => current_organization,
                   :offset => params[:offset].try(:to_i) || 0 }
 
       comparison = ContentSearch::ContentViewComparison.new(options)
@@ -275,6 +277,7 @@ module Katello
     def view_compare_packages
       options = { :unit_type => :package,
                   :cv_env_ids => params[:views].values,
+                  :organization => current_organization,
                   :offset => params[:offset].try(:to_i) || 0 }
 
       render :json => ContentSearch::ContentViewComparison.new(options)
@@ -283,6 +286,7 @@ module Katello
     def view_compare_puppet_modules
       options = { :unit_type => :puppet_module,
                   :cv_env_ids => params[:views].values,
+                  :organization => current_organization,
                   :offset => params[:offset].try(:to_i) || 0 }
 
       render :json => ContentSearch::ContentViewComparison.new(options)
