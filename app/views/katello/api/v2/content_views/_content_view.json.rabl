@@ -49,7 +49,15 @@ node :permissions do |cv|
 end
 
 child :components => :components do
-  extends 'katello/api/v2/content_view_versions/show'
+  attributes :id, :name, :label, :content_view_id, :version
+
+  child :environments => :environments do
+    attributes :id, :name, :label
+  end
+
+  child :content_view => :content_view do
+    attributes :id, :name, :label, :description, :next_version
+  end
 end
 
 child :activation_keys => :activation_keys do

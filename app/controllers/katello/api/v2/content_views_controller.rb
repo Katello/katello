@@ -57,8 +57,8 @@ module Katello
       options[:filters] << {:term => {:composite => false}} if params[:noncomposite]
       options[:filters] << {:term => {:name => params[:name]}} if params[:name]
 
-      content_view_includes = [:activation_keys, :components, :content_view_puppet_modules, :content_view_versions,
-                               :environments, :organization, :repositories]
+      content_view_includes = [:activation_keys, :content_view_puppet_modules, :content_view_versions,
+                               :environments, :organization, :repositories, components: [:content_view, :environments]]
       respond(:collection => item_search(ContentView.includes(content_view_includes), params, options))
     end
 
