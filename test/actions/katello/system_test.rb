@@ -106,8 +106,7 @@ module ::Actions::Katello::System
       host = mock
       content_host = mock
       host.expects(:content_host).at_least(1).returns(content_host)
-      host.expects(:reload).returns(host)
-      host.expects(:destroy).returns(true)
+      host.expects(:id).at_least(1).returns(1)
 
       action.stubs(:action_subject).with(host)
 
