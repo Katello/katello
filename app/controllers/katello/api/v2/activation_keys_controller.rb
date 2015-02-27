@@ -309,7 +309,9 @@ module Katello
         :filters       => filters,
         :load_records? => true
       }
-      item_search(ActivationKey, params, options)
+
+      activation_key_includes = [:content_view, :environment, :host_collections, :organization]
+      item_search(ActivationKey.includes(activation_key_includes), params, options)
     end
 
     def activation_key_params
