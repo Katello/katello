@@ -415,6 +415,10 @@ module Katello
     end
 
     def test_destroy
+      assert_sync_task(::Actions::Katello::Repository::Destroy) do |repo|
+        repo.id == @repository.id
+      end
+
       delete :destroy, :id => @repository.id
 
       assert_response :success
