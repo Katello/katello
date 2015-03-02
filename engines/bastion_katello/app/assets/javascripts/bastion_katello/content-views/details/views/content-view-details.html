@@ -63,7 +63,7 @@
   </div>
 
   <nav>
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" ng-show="contentView.$resolved">
       <li ng-class="{active: stateIncludes('content-views.details.version') || stateIncludes('content-views.details.versions')}">
         <a ui-sref="content-views.details.versions" translate>
           Versions
