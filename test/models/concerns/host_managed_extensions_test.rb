@@ -17,11 +17,6 @@ require 'support/host_support'
 module Katello
   class HostManagedExtensionsTest < ActiveSupport::TestCase
     def self.before_suite
-      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['User', 'KTEnvironment', 'Organization',
-                   "ContentView", "System"]
-      disable_glue_layers(services, models)
-
       configure_runcible
     end
 

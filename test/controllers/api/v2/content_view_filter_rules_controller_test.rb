@@ -15,14 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::ContentViewFilterRulesControllerTest < ActionController::TestCase
-    def self.before_suite
-      models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion",
-                "Repository", "ContentViewFilter", "ContentViewPackageFilter",
-                "ContentViewPackageFilterRule"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
-      super
-    end
-
     def models
       @filter = katello_content_view_filters(:simple_filter)
       @rule = katello_content_view_package_filter_rules(:package_rule)

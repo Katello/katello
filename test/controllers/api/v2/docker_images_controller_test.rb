@@ -14,13 +14,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::DockerImagesControllerTest < ActionController::TestCase
-    def before_suite
-      models = ["Organization", "KTEnvironment", "DockerImage", "Repository", "Product", "Provider"]
-      services = ["Candlepin", "Pulp", "ElasticSearch"]
-      disable_glue_layers(services, models)
-      super
-    end
-
     def models
       @repo = Repository.find(katello_repositories(:redis))
       @image = @repo.docker_images.create!({:image_id => "abc123", :uuid => "123"},

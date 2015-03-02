@@ -16,12 +16,6 @@ module Katello
   class Api::V2::RepositoriesBulkActionsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
-    def self.before_suite
-      models = ["Repository", "Provider"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-      super
-    end
-
     def models
       @organization = get_organization
       @repositories = katello_repositories(:fedora_17_unpublished, :fedora_17_unpublished_2)

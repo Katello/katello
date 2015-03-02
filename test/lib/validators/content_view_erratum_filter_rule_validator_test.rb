@@ -15,13 +15,6 @@ require 'katello_test_helper'
 
 module Katello
   class ContentViewErratumFilterRuleValidatorTest < ActiveSupport::TestCase
-    def self.before_suite
-      models = ["Organization", "KTEnvironment", "User", "ContentView", "ContentViewVersion",
-                "ContentViewEnvironment", "ContentViewFilter",
-                "ContentViewErratumFilter", "ContentViewErratumFilterRule"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
-    end
-
     def setup
       User.current = User.first
       @validator = Validators::ContentViewErratumFilterRuleValidator.new({})

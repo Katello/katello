@@ -17,12 +17,6 @@ module Katello
   class Api::V2::SystemsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
-    def self.before_suite
-      models = ["System", "KTEnvironment",  "ContentViewEnvironment", "ContentView"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
-      super
-    end
-
     def models
       @system = katello_systems(:simple_server)
       @errata_system = katello_systems(:errata_server)
@@ -44,8 +38,11 @@ module Katello
       login_user(User.find(users(:admin)))
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @request.env['CONTENT_TYPE'] = 'application/json'
-      System.any_instance.stubs(:releaseVer).returns(1)
+
+      System.any_instance.stubs(:candlepin_consumer_info).returns(:facts => {})
+      System.any_instance.stubs(:katello_agent_installed?).returns(true)
       System.any_instance.stubs(:refresh_subscriptions).returns(true)
+      System.any_instance.stubs(:content_overrides).returns([])
       System.any_instance.stubs(:products).returns([{:id => 1, :name => 'product', :available_content => []}])
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
 

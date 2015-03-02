@@ -14,14 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class ContentViewVersionTest < ActiveSupport::TestCase
-    def self.before_suite
-      models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment",
-                "Repository", "ContentView", "ContentViewVersion",
-                "System", "ActivationKey"]
-      services = ["Candlepin", "Pulp", "ElasticSearch"]
-      disable_glue_layers(services, models, true)
-    end
-
     def setup
       User.current = User.find(users(:admin))
       @cvv = create(:katello_content_view_version, :major => 1, :minor => 0)

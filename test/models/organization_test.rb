@@ -14,19 +14,7 @@
 require 'katello_test_helper'
 
 module Katello
-  class OrganizationTestBase < ActiveSupport::TestCase
-    def self.before_suite
-      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['Organization', 'KTEnvironment', 'ContentView', 'ContentViewVersion',
-                   'ContentViewEnvironment']
-      disable_glue_layers(services, models, true)
-    end
-
-    def setup
-    end
-  end
-
-  class OrganizationTestDelete < OrganizationTestBase
+  class OrganizationTestDelete < ActiveSupport::TestCase
     def test_org_being_deleted
       Organization.any_instance.stubs(:being_deleted?).returns(true)
       User.current = User.find(users(:admin))

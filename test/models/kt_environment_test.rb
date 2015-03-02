@@ -17,14 +17,6 @@ module Katello
   class KTEnvironmentTestBase < ActiveSupport::TestCase
     extend ActiveRecord::TestFixtures
 
-    def self.before_suite
-      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['Repository', 'KTEnvironment', 'ContentView', 'ContentViewVersion',
-                   'ContentViewEnvironment', 'Organization', 'Product',
-                   'Provider']
-      disable_glue_layers(services, models, true)
-    end
-
     def setup
       @acme_corporation     = get_organization
 

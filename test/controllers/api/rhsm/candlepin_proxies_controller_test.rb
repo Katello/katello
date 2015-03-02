@@ -18,9 +18,6 @@ module Katello
     include Support::ForemanTasks::Task
 
     before do
-      models = ["Organization", "KTEnvironment", "User", "ContentViewFilter",
-                "ContentViewEnvironment", "System", "HostCollection", "ActivationKey"]
-      disable_glue_layers(["Candlepin", "ElasticSearch"], models)
       setup_controller_defaults_api
       login_user(User.find(users(:admin)))
       @system = katello_systems(:simple_server)
@@ -173,6 +170,7 @@ module Katello
       it "should prevent listing owners for unauthenticated requests" do
         User.current = nil
         session[:user] = nil
+        set_basic_auth('100', '100')
         get :list_owners, :login => 100
         assert_response 401
       end

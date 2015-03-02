@@ -14,13 +14,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::PuppetModulesControllerTest < ActionController::TestCase
-    def self.before_suite
-      models = ["Organization", "KTEnvironment", "Repository", "Product", "Provider"]
-      services = ["Candlepin", "Pulp", "ElasticSearch"]
-      disable_glue_layers(services, models)
-      super
-    end
-
     def models
       @library = katello_environments(:library)
       @repo = Repository.find(katello_repositories(:p_forge))

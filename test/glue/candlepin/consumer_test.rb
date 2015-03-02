@@ -25,11 +25,6 @@ module Katello
 
     def self.before_suite
       super
-
-      services  = ['Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['System', 'KTEnvironment', 'Organization', 'Product', 'ContentView', 'ContentViewEnvironment', 'ContentViewVersion', "Distributor"]
-      disable_glue_layers(services, models)
-
       User.current = User.find(@loaded_fixtures['users']['admin']['id'])
       VCR.insert_cassette('glue_candlepin_consumer', :match_requests_on => [:path, :params, :method, :body_json])
 

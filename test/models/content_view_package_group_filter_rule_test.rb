@@ -14,13 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class ContentViewPackageGroupFilterRuleTest < ActiveSupport::TestCase
-    def self.before_suite
-      models = ["Organization", "KTEnvironment", "User", "ContentView",
-                "ContentViewVersion", "ContentViewEnvironment", "ContentViewFilter",
-                "ContentViewPackageGroupFilter", "ContentViewPackageGroupFilterRule"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-    end
-
     def setup
       User.current = User.find(users(:admin))
       @rule = FactoryGirl.build(:katello_content_view_package_group_filter_rule)

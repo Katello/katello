@@ -15,12 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::SyncControllerTest < ActionController::TestCase
-    def self.before_suite
-      models = ["Product"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-      super
-    end
-
     def models
       @product = katello_products(:fedora)
       @repository = katello_repositories(:fedora_17_x86_64)

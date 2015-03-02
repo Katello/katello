@@ -15,13 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::ContentViewPuppetModulesControllerTest < ActionController::TestCase
-    def self.before_suite
-      models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion",
-                "ContentViewPuppetModule", "Repository"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
-      super
-    end
-
     def models
       @content_view = katello_content_views(:library_view)
       @puppet_module = katello_content_view_puppet_modules(:library_view_module_by_name)
@@ -41,6 +34,7 @@ module Katello
       setup_controller_defaults_api
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @request.env['CONTENT_TYPE'] = 'application/json'
+      ContentViewPuppetModule.any_instance.stubs(:computed_version).returns("1.0")
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       models
       permissions
