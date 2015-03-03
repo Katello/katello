@@ -107,7 +107,7 @@ module Katello
         if substituable?(real_path)
           return false
         else
-          is_valid = valid_path?(real_path, 'repodata/') || valid_path?(real_path, 'PULP_MANIFEST')
+          is_valid = valid_path?(real_path, 'repodata/repomd.xml') || valid_path?(real_path, 'PULP_MANIFEST')
           unless is_valid
             @resource.log :error, "No valid metadata files found for #{real_path}"
           end
