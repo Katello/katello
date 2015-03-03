@@ -69,6 +69,7 @@ Requires: mongodb-server >= 2.4
 Requires: cyrus-sasl-plain
 Requires: python-crane
 Requires: qpid-cpp-client-devel
+Requires: qpid-dispatch-router
 
 Requires: katello-selinux
 Requires: candlepin-selinux
