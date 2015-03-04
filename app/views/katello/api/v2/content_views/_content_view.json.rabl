@@ -55,7 +55,7 @@ node :permissions do |cv|
 end
 
 child :components => :components do
-  attributes :id, :name, :label, :content_view_id, :version
+  attributes :id, :name, :label, :content_view_id, :version, :puppet_module_count
 
   child :environments => :environments do
     attributes :id, :name, :label
@@ -63,6 +63,10 @@ child :components => :components do
 
   child :content_view => :content_view do
     attributes :id, :name, :label, :description, :next_version
+  end
+
+  child :repositories => :repositories do
+    attributes :id, :name, :label, :description
   end
 end
 
