@@ -1,11 +1,11 @@
 --- 
 http_interactions: 
 - request: 
-    method: post
-    uri: https://centos.installer/pulp/api/v2/users/
+    method: get
+    uri: https://box.devel.com/pulp/api/v2/users/user_id/
     body: 
       encoding: US-ASCII
-      string: "{\"login\":\"user_id\",\"name\":\"user_id\",\"password\":\"xmas3m3d2YZ27bW0\"}"
+      string: ""
     headers: 
       Accept: 
       - application/json
@@ -14,7 +14,48 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="dalpStDidkrxBSc5Saa9fVZZsGlABWY9Gad9BBXoc", oauth_signature="IughWhXwIT1hLMZ0cDLoS8MLo0Q%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185680", oauth_version="1.0"
+      - OAuth oauth_consumer_key="Q2E2UN5asXZtZnnmQi5VtH4gujfUa4Hp", oauth_nonce="eAfRcjfrKTLb2rQWWGCXgXg4D0EFcNqo9Xana3oWDXE", oauth_signature="g7w5Qr1X9kzDNTfYIQE7DqqwQQ8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1425433824", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 404
+      message: Not Found
+    headers: 
+      Date: 
+      - Wed, 04 Mar 2015 01:50:24 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Encoding: 
+      - utf-8
+      Content-Length: 
+      - "388"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"http_request_method\": \"GET\", \"exception\": null, \"error_message\": \"Missing resource(s): resource_id=user_id\", \"_href\": \"/pulp/api/v2/users/user_id/\", \"http_status\": 404, \"error\": {\"code\": \"PLP0009\", \"data\": {\"resources\": {\"resource_id\": \"user_id\"}}, \"description\": \"Missing resource(s): resource_id=user_id\", \"sub_errors\": []}, \"traceback\": null, \"resources\": {\"resource_id\": \"user_id\"}}"
+    http_version: 
+  recorded_at: Wed, 04 Mar 2015 01:50:24 GMT
+- request: 
+    method: post
+    uri: https://box.devel.com/pulp/api/v2/users/
+    body: 
+      encoding: US-ASCII
+      string: "{\"login\":\"user_id\",\"name\":\"user_id\",\"password\":\"mcbaduwvNsApZQJ6\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="Q2E2UN5asXZtZnnmQi5VtH4gujfUa4Hp", oauth_nonce="RNw8JYH2N2WTubjjdKNEa41BYt9BaHBl4wG88FmWg", oauth_signature="rQwZ7am524XMYYm8z8MXW1o8Hz4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1425433824", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -27,11 +68,13 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Thu, 15 May 2014 20:28:00 GMT
+      - Wed, 04 Mar 2015 01:50:24 GMT
       Server: 
-      - Apache/2.2.15 (CentOS)
+      - Apache/2.2.15 (Red Hat)
       Location: 
       - user_id
+      Vary: 
+      - Accept-Encoding
       Content-Length: 
       - "187"
       Connection: 
@@ -39,13 +82,13 @@ http_interactions:
       Content-Type: 
       - application/json
     body: 
-      encoding: US-ASCII
-      string: "{\"_id\": {\"$oid\": \"5375235086d9a9321c14a5bd\"}, \"name\": \"user_id\", \"roles\": [], \"_ns\": \"users\", \"login\": \"user_id\", \"id\": \"5375235086d9a9321c14a5bd\", \"_href\": \"/pulp/api/v2/users/user_id/\"}"
+      encoding: ASCII-8BIT
+      string: "{\"_id\": {\"$oid\": \"54f664e0470787058dd2273e\"}, \"name\": \"user_id\", \"roles\": [], \"_ns\": \"users\", \"login\": \"user_id\", \"id\": \"54f664e0470787058dd2273e\", \"_href\": \"/pulp/api/v2/users/user_id/\"}"
     http_version: 
-  recorded_at: Thu, 15 May 2014 20:28:00 GMT
+  recorded_at: Wed, 04 Mar 2015 01:50:24 GMT
 - request: 
     method: get
-    uri: https://centos.installer/pulp/api/v2/users/user_id/
+    uri: https://box.devel.com/pulp/api/v2/users/user_id/
     body: 
       encoding: US-ASCII
       string: ""
@@ -57,7 +100,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="27pCb7gMrOMrLE5epAlUpLp5HDd3VR3ITTSqGFXSUw", oauth_signature="3%2BFoCLRKxsPU%2FRmvb094pBIy88E%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185680", oauth_version="1.0"
+      - OAuth oauth_consumer_key="Q2E2UN5asXZtZnnmQi5VtH4gujfUa4Hp", oauth_nonce="vhN0st9MN8zq9gthmMAJsSb77o0gIhvjYC2ulI", oauth_signature="VbI4oOTZXEAq5QmpHK0mD2teFK4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1425433824", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -68,9 +111,11 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 15 May 2014 20:28:00 GMT
+      - Wed, 04 Mar 2015 01:50:24 GMT
       Server: 
-      - Apache/2.2.15 (CentOS)
+      - Apache/2.2.15 (Red Hat)
+      Vary: 
+      - Accept-Encoding
       Content-Length: 
       - "153"
       Connection: 
@@ -78,13 +123,13 @@ http_interactions:
       Content-Type: 
       - application/json
     body: 
-      encoding: US-ASCII
-      string: "{\"_id\": {\"$oid\": \"5375235086d9a9321c14a5bd\"}, \"name\": \"user_id\", \"roles\": [], \"_ns\": \"users\", \"login\": \"user_id\", \"_href\": \"/pulp/api/v2/users/user_id/\"}"
+      encoding: ASCII-8BIT
+      string: "{\"_id\": {\"$oid\": \"54f664e0470787058dd2273e\"}, \"name\": \"user_id\", \"roles\": [], \"_ns\": \"users\", \"login\": \"user_id\", \"_href\": \"/pulp/api/v2/users/user_id/\"}"
     http_version: 
-  recorded_at: Thu, 15 May 2014 20:28:00 GMT
+  recorded_at: Wed, 04 Mar 2015 01:50:24 GMT
 - request: 
     method: delete
-    uri: https://centos.installer/pulp/api/v2/users/user_id/
+    uri: https://box.devel.com/pulp/api/v2/users/user_id/
     body: 
       encoding: US-ASCII
       string: ""
@@ -96,7 +141,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="D8XRjLGlO7xAnn2waG64iuTTeTrsyxru3KKNympfY", oauth_signature="eJx51o6iE5RgTPJn5eSXT%2BOEGBc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185680", oauth_version="1.0"
+      - OAuth oauth_consumer_key="Q2E2UN5asXZtZnnmQi5VtH4gujfUa4Hp", oauth_nonce="zq2cnpdlFfrLKn5HudM8I0nd1vX8rxz6cDqW1J8PtYI", oauth_signature="LXFqNmJfAlZOpqvQhgsOnwkg9%2BU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1425433824", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -107,9 +152,11 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 15 May 2014 20:28:00 GMT
+      - Wed, 04 Mar 2015 01:50:24 GMT
       Server: 
-      - Apache/2.2.15 (CentOS)
+      - Apache/2.2.15 (Red Hat)
+      Vary: 
+      - Accept-Encoding
       Content-Length: 
       - "4"
       Connection: 
@@ -117,8 +164,8 @@ http_interactions:
       Content-Type: 
       - application/json
     body: 
-      encoding: US-ASCII
+      encoding: ASCII-8BIT
       string: "null"
     http_version: 
-  recorded_at: Thu, 15 May 2014 20:28:00 GMT
-recorded_with: VCR 2.9.0
+  recorded_at: Wed, 04 Mar 2015 01:50:24 GMT
+recorded_with: VCR 2.9.3

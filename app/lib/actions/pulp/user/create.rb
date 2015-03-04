@@ -19,15 +19,24 @@ module Actions
         end
 
         def run
-          user_params = { name: input[:remote_id],
-                          password: Password.generate_random_string(16) }
-          output[:response] = pulp_resources.user.create(input[:remote_id], user_params)
+          unless user_exists?(input[:remote_id])
+            user_params = { name: input[:remote_id],
+                            password: Password.generate_random_string(16) }
+            output[:response] = pulp_resources.user.create(input[:remote_id], user_params)
+          end
         rescue RestClient::ExceptionWithResponse => e
           if e.http_code == 409
             action_logger.info "pulp user #{input[:remote_id]}: already exists. continuing"
           else
             raise e
           end
+        end
+
+        def user_exists?(login)
+          pulp_resources.user.retrieve(login)
+          true
+        rescue RestClient::ResourceNotFound
+          return false
         end
       end
     end
