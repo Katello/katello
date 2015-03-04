@@ -50,6 +50,10 @@ module Katello
                               :inverse_of => :content_source
 
         scope :with_content, with_features(PULP_FEATURE, PULP_NODE_FEATURE)
+
+        def self.default_capsule
+          with_features(PULP_FEATURE).first
+        end
       end
 
       def default_capsule?
