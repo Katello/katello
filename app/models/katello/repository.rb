@@ -332,6 +332,10 @@ module Katello
       end
     end
 
+    def container_repository_name
+      pulp_id if docker?
+    end
+
     # TODO: break up method
     # rubocop:disable MethodLength
     def build_clone(options)

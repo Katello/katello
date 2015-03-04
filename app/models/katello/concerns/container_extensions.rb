@@ -25,9 +25,9 @@ module Katello
 
       def repository_pull_url_with_katello
         repo_url = repository_pull_url_without_katello
-
-        if self.katello? && self.capsule && Repository.where(:pulp_id => repository_name).count > 0
-          "#{URI(self.capsule.url).hostname}:5000/#{repo_url}"
+        if Repository.where(:pulp_id => repository_name).count > 0
+          image_capsule = self.capsule  || CapsuleContent.default_capsule.capsule
+          "#{URI(image_capsule.url).hostname}:5000/#{repo_url}"
         else
           repo_url
         end
