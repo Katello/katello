@@ -104,7 +104,8 @@
         </a>
       </li>
 
-      <li ng-class="{active: stateIncludes('content-views.details.repositories.docker')}">
+      <li ng-class="{active: stateIncludes('content-views.details.repositories.docker')}"
+          ng-hide="contentView.composite">
         <a ui-sref="content-views.details.repositories.docker.list" translate>
           Docker Content
         </a>
