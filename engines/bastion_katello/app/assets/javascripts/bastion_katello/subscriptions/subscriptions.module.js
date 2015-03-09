@@ -112,21 +112,21 @@ angular.module('Bastion.subscriptions').config(['$stateProvider', function ($sta
     })
     .state('subscriptions.manifest.import', {
         url: '/subscriptions/manifest/import',
-        permission: 'import_subscriptions',
+        permission: 'import_manifest',
         collapsed: true,
         controller: 'ManifestImportController',
         templateUrl: 'subscriptions/manifest/views/manifest-import.html'
     })
     .state('subscriptions.manifest.details', {
         url: '/subscriptions/manifest/details',
-        permission: 'import_subscriptions',
+        permission: 'import_manifest',
         collapsed: true,
         controller: 'ManifestDetailsController',
         templateUrl: 'subscriptions/manifest/views/manifest-details.html'
     })
     .state('subscriptions.manifest.history', {
         url: '/subscriptions/manifest/history',
-        permission: 'import_subscriptions',
+        permission: 'import_manifest',
         collapsed: true,
         controller: 'ManifestHistoryController',
         templateUrl: 'subscriptions/manifest/views/manifest-import-history.html'
