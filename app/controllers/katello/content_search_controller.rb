@@ -541,12 +541,18 @@ module Katello
     def  multi_repo_content_search(content_class, search_obj, repos, offset, default_field, search_mode = :all, in_repo = nil)
       user = current_user
       search = Tire::Search::Search.new(content_class.index)
+
+      query_options = {
+        :lowercase_expanded_terms => false,
+        :default_field            => default_field
+      }
+
       search.instance_eval do
         query do
           if search_obj.is_a?(Array) || search_obj.nil?
             all
           else
-            string search_obj,  :default_field => default_field
+            string search_obj, query_options
           end
         end
 
