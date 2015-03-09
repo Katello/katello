@@ -10,16 +10,6 @@
         readonly="organization.readonly">
       </span>
     </div>
-
-    <div class="detail">
-      <span class="info-label" translate>Red Hat Docker Registry URL</span>
-      <span class="info-value"
-        bst-edit-text="organization.redhat_docker_registry_url"
-        on-save="saveCdnUrl(organization)"
-        readonly="organization.readonly">
-      </span>
-    </div>
-
   </div>
 </section>
 
@@ -28,7 +18,7 @@
     <h4 translate>Subscription Manifest</h4>
 
     <div class="detail">
-      <span class="info-label" translate>Upstream Subscription Managment Application</span>
+      <span class="info-label" translate>Upstream Subscription Management Application</span>
       <span class="info-value" ng-show="upstream.uuid != undefined">
         <a href="{{ manifestLink }}" target="_blank">{{ manifestName }}</a>
       </span>

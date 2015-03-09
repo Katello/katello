@@ -15,14 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::ContentViewFiltersControllerTest < ActionController::TestCase
-    def self.before_suite
-      models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion",
-                "Repository", "Product"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
-      ::Katello::Erratum.any_instance.stubs(:repositories).returns([])
-      super
-    end
-
     def models
       @content_view = katello_content_views(:library_view)
       @filter = katello_content_view_filters(:simple_filter)
@@ -41,6 +33,7 @@ module Katello
       @request.env['CONTENT_TYPE'] = 'application/json'
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       Repository.any_instance.stubs(:last_sync).returns(Time.now.asctime)
+      ::Katello::Erratum.any_instance.stubs(:repositories).returns([])
       models
       permissions
       [:package_group_count, :package_count, :puppet_module_count].each do |content_type_count|

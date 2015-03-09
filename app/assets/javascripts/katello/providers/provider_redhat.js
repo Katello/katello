@@ -55,10 +55,11 @@ KT.redhat_provider_page = (function($) {
         } else {
             options['repo'] = "0";
         }
-
+        options['pulp_id'] = checkbox.attr("data-pulp-id");
         options['content_id'] = checkbox.attr("data-content-id");
         options['releasever'] = checkbox.attr("data-releasever");
         options['basearch'] = checkbox.attr("data-basearch");
+        options['registry_name'] = checkbox.attr("data-registry-name");
 
         $(checkbox).hide();
         $('#spinner_'+id).removeClass('hidden').show();

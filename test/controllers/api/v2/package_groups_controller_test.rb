@@ -14,13 +14,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
-    def before_suite
-      models = ["Organization", "KTEnvironment", "PackageGroup", "Repository", "Product", "Provider"]
-      services = ["Candlepin", "Pulp", "ElasticSearch"]
-      disable_glue_layers(services, models)
-      super
-    end
-
     def models
       @repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
     end

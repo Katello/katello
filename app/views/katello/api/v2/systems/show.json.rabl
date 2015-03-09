@@ -61,7 +61,7 @@ end
 # Candlepin attributes
 attributes :entitlementStatus
 attributes :autoheal
-attributes :href, :release, :ipv4_address
+attributes :release, :ipv4_address
 attributes :checkin_time, :created
 attributes :installedProducts
 

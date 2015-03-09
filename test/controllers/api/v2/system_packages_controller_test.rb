@@ -17,12 +17,6 @@ module Katello
   class Api::V2::SystemPackagesControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
-    def self.before_suite
-      models = ["System"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-      super
-    end
-
     def permissions
       @view_permission = :view_content_hosts
       @create_permission = :create_content_hosts

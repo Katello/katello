@@ -29,18 +29,18 @@ module Katello
       end
 
       def content_view
-        return super unless ancestry.present?
+        return super if ancestry.nil? || self.content_view_id.present?
         Katello::ContentView.find_by_id(inherited_content_view_id)
       end
 
       def lifecycle_environment
-        return super unless ancestry.present?
+        return super if ancestry.nil? || self.lifecycle_environment_id.present?
         Katello::KTEnvironment.find_by_id(inherited_lifecycle_environment_id)
       end
 
       # instead of calling nested_attribute_for(:content_source_id) in Foreman, define the methods explictedly
       def content_source
-        return super unless ancestry.present?
+        return super if ancestry.nil? || self.content_source_id.present?
         SmartProxy.find_by_id(inherited_content_source_id)
       end
 

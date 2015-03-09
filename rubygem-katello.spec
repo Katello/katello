@@ -90,6 +90,7 @@ Requires: mongodb-server >= 2.4
 Requires: cyrus-sasl-plain
 Requires: python-crane
 Requires: qpid-cpp-client-devel
+Requires: qpid-dispatch-router
 
 Requires: katello-selinux
 Requires: candlepin-selinux
@@ -107,7 +108,7 @@ Requires: postgresql-server
 Requires: v8
 Requires: %{?scl_prefix}rubygems
 Requires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
-Requires: %{?scl_prefix}rubygem-bastion
+Requires: %{?scl_prefix}rubygem-bastion < 1.0.0
 Requires: %{?scl_prefix}rubygem-rails
 Requires: %{?scl_prefix}rubygem-json
 Requires: %{?scl_prefix}rubygem-oauth
@@ -135,7 +136,7 @@ Requires: %{?scl_prefix}rubygem-qpid_messaging <= 0.28.1
 BuildRequires: foreman >= 1.3.0
 BuildRequires: foreman-assets >= 1.7.0
 BuildRequires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
-BuildRequires: %{?scl_prefix}rubygem-bastion
+BuildRequires: %{?scl_prefix}rubygem-bastion < 1.0.0
 BuildRequires: %{?scl_prefix}rubygem-sqlite3
 BuildRequires: %{?scl_prefix}rubygem-tire => 0.6.2
 BuildRequires: %{?scl_prefix}rubygem-tire < 0.7

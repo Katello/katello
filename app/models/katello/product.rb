@@ -177,13 +177,6 @@ module Katello
       end
     end
 
-    def as_json(*args)
-      ret = super
-      ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
-      ret["marketing_product"] = self.is_a? MarketingProduct
-      ret
-    end
-
     def delete_repos(repos)
       repos.each { |repo| repo.destroy }
     end

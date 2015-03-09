@@ -18,7 +18,7 @@ attributes :account_number, :contract_number
 attributes :support_type, :support_level
 attributes :product_id
 
-attributes :arch, :virt_only
+attributes :arch, :virt_only, :unmapped_guest
 attributes :sockets, :cores, :ram
 attributes :instance_multiplier, :stacking_id, :multi_entitlement
 

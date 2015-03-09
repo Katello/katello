@@ -15,12 +15,6 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::HostCollectionsControllerTest < ActionController::TestCase
-    def self.before_suite
-      models = ["System", "HostCollection"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-      super
-    end
-
     def models
       @system = katello_systems(:simple_server)
       @host_collection = katello_host_collections(:simple_host_collection)
@@ -35,22 +29,26 @@ module Katello
       login_user(User.find(users(:admin)))
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
+      System.any_instance.stubs(:update_host_collections)
 
       models
     end
 
     def test_index
-      @fake_search_service.stubs(:retrieve).returns([[@host_collection], 1])
-      @fake_search_service.stubs(:total_items).returns(1)
-
       results = JSON.parse(get(:index, :organization_id => @organization.id).body)
 
       assert_response :success
       assert_template 'api/v2/host_collections/index'
 
       assert_equal results.keys.sort, ['page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total']
-      assert_equal results['results'].size, 1
-      assert_equal results['results'][0]['id'], @host_collection.id
+      assert_equal results['results'].size, 3
+      assert_block do
+        ids = []
+        results['results'].each do |r|
+          ids << r['id']
+        end
+        ids.include? @host_collection.id
+      end
     end
 
     def test_show
@@ -67,6 +65,8 @@ module Katello
                     :host_collection => {:name => 'Collection A', :description => 'Collection A, World Cup 2014',
                                          :system_ids => [@system.id]}
 
+      assert_response :success
+
       results = JSON.parse(response.body)
       assert_equal results['name'], 'Collection A'
       assert_equal results['unlimited_content_hosts'], true
@@ -74,7 +74,6 @@ module Katello
       assert_equal results['description'], 'Collection A, World Cup 2014'
       assert_equal results['system_ids'], [@system.id]
 
-      assert_response :success
       assert_template 'api/v2/host_collections/create'
     end
 

@@ -19,12 +19,6 @@ module Katello
 
     include Support::ForemanTasks::Task
 
-    def self.before_suite
-      models = ["Organization"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-      super
-    end
-
     def permissions
       @read_permission = :view_organizations
       @create_permission = :create_organizations
@@ -40,6 +34,9 @@ module Katello
       setup_controller_defaults_api
       login_user(User.find(users(:admin)))
       @request.env['HTTP_ACCEPT'] = 'application/json'
+      Organization.any_instance.stubs(:service_levels)
+      Organization.any_instance.stubs(:service_level)
+      Organization.any_instance.stubs(:owner_details).returns({})
       models
       permissions
     end
@@ -64,10 +61,9 @@ module Katello
 
     def test_show
       results = JSON.parse(get(:show, :id => @organization.id).body)
+      assert_response :success
 
       assert_equal results['name'], @organization.name
-
-      assert_response :success
       assert_template 'api/v2/organizations/show'
     end
 

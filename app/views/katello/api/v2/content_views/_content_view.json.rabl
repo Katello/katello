@@ -22,8 +22,14 @@ child :environments => :environments do
   end
 end
 
-child :repositories => :repositories do
-  attributes :id, :name, :label, :content_type
+if @object.composite?
+  child :component_repositories => :repositories do
+    attributes :id, :name, :label, :content_type
+  end
+else
+  child :repositories => :repositories do
+    attributes :id, :name, :label, :content_type
+  end
 end
 
 child :puppet_modules => :puppet_modules do
@@ -49,7 +55,7 @@ node :permissions do |cv|
 end
 
 child :components => :components do
-  attributes :id, :name, :label, :content_view_id, :version
+  attributes :id, :name, :label, :content_view_id, :version, :puppet_module_count
 
   child :environments => :environments do
     attributes :id, :name, :label
@@ -57,6 +63,10 @@ child :components => :components do
 
   child :content_view => :content_view do
     attributes :id, :name, :label, :description, :next_version
+  end
+
+  child :repositories => :repositories do
+    attributes :id, :name, :label, :description
   end
 end
 

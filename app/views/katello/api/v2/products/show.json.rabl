@@ -16,10 +16,6 @@ attributes :productContent => :product_content
 
 attributes :available_content => :available_content
 
-child :marketing_product do
-  attributes :id, :name
-end
-
 node :repository_count do |product|
   product.library_repositories.count
 end

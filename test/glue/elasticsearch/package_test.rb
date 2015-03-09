@@ -19,7 +19,6 @@ module Katello
     FIXTURES_FILE = File.join(Katello::Engine.root, "test", "fixtures", "elasticsearch", "packages.yml")
 
     def self.before_suite
-      disable_glue_layers(["Pulp"], ["Package"]) # enable glue layers
       VCR.insert_cassette("elasticsearch/package")
       Tire.index(Package.index).delete
       Tire.index Package.index do

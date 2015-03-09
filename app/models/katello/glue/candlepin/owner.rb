@@ -28,13 +28,6 @@ module Katello
     end
 
     module InstanceMethods
-      def serializable_hash(options = {})
-        hash = super(options)
-        hash = hash.merge(:service_levels => self.service_levels)
-        hash = hash.merge(:service_level => self.service_level)
-        hash
-      end
-
       def owner_info
         Glue::Candlepin::OwnerInfo.new(self)
       end

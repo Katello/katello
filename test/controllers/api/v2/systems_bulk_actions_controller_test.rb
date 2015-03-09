@@ -17,11 +17,6 @@ module Katello
   class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
-    def self.before_suite
-      models = ["System", "KTEnvironment",  "ContentViewEnvironment", "ContentView"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
-    end
-
     def permissions
       @view_permission = :view_content_hosts
       @create_permission = :create_content_hosts

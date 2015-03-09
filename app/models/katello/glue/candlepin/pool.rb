@@ -22,7 +22,7 @@ module Katello
           :start_date, :end_date, :attrs, :owner, :product_id, :account_number, :contract_number,
           :source_pool_id, :host_id, :virt_only, :virt_limit, :multi_entitlement, :stacking_id,
           :arch, :sockets, :cores, :ram, :description, :product_family, :variant, :provided_products,
-          :active, :instance_multiplier, :suggested_quantity,
+          :active, :instance_multiplier, :suggested_quantity, :unmapped_guest,
           :initializer => (lambda do |_s|
                              json = Resources::Candlepin::Pool.find(cp_id)
                              # symbol "attributes" is reserved by Rails and cannot be used
@@ -76,6 +76,7 @@ module Katello
       # to define instance variables
       # TODO: break up method
       # rubocop:disable MethodLength
+      # rubocop:disable CyclomaticComplexity
       def load_remote_data(attrs)
         @amount = attrs["amount"]
         @remote_data = attrs
@@ -101,6 +102,7 @@ module Katello
         @host_id = nil
         @virt_only = false
         @pool_derived = false
+        @unmapped_guest = false
         attrs['attributes'].each do |attr|
           case attr['name']
           when 'source_pool_id'
@@ -111,6 +113,8 @@ module Katello
             @virt_only = attr['value'] == 'true' ? true : false
           when 'pool_derived'
             @pool_derived = attr['value'] == 'true' ? true : false
+          when 'unmapped_guests_only'
+            @unmapped_guest = attr['value'] == 'true' ? true : false
           end
         end if attrs['attributes']
         @virt_limit = 0

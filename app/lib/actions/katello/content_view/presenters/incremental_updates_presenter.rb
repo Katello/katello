@@ -40,7 +40,7 @@ module Actions
                 [::Katello::Erratum, ::Katello::Package, ::Katello::PuppetModule].each do |content_type|
                   unless output[:added_units][content_type::CONTENT_TYPE].blank?
                     humanized_lines << "  #{HUMANIZED_TYPES[content_type::CONTENT_TYPE]}:"
-                    humanized_lines += output[:added_units][content_type::CONTENT_TYPE].map { |unit| "        #{unit}" }
+                    humanized_lines += output[:added_units][content_type::CONTENT_TYPE].sort.map { |unit| "        #{unit}" }
                   end
                 end
                 humanized_lines << ''

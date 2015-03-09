@@ -1,3 +1,4 @@
+#
 # Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -9,18 +10,22 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'katello_test_helper'
+module Actions
+  module Pulp
+    module Consumer
+      class DeactivateNode < Pulp::Abstract
+        input_format do
+          param :uuid, String
+        end
 
-module Katello
-  class UserTestBase < ActiveSupport::TestCase
-    extend ActiveRecord::TestFixtures
+        def plan(system)
+          plan_self(:uuid => system.uuid, :display_name => system.name)
+        end
 
-    def setup
-      @no_perms_user      = User.find(users(:one))
-      @admin              = User.find(users(:admin))
-      @acme_corporation   = get_organization
-
-      @dev                = KTEnvironment.find(katello_environments(:dev).id)
+        def run
+          ::Katello.pulp_server.extensions.consumer.deactivate_node(input[:uuid])
+        end
+      end
     end
   end
 end

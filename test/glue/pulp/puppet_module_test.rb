@@ -16,9 +16,6 @@ require 'support/pulp/repository_support'
 module Katello
   class GluePulpPuppetModuleTest < ActiveSupport::TestCase
     def setup
-      services  = ['Candlepin', 'ElasticSearch', 'Foreman']
-      models    = ['Repository', 'PuppetModule']
-      disable_glue_layers(services, models)
       configure_runcible
 
       VCR.insert_cassette('glue_pulp_puppet_module')

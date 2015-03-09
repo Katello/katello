@@ -75,7 +75,7 @@ module Actions
       def reindex_pool(pool_id)
         @logger.info "re-indexing pool #{pool_id}."
         pool = ::Katello::Pool.find_pool(pool_id)
-        ::Katello::Pool.index_pools([pool])
+        ::Katello::Pool.index_pools([pool]) unless pool.unmapped_guest
       end
 
       def remove_pool_from_index_by_pool_id(pool_id)

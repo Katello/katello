@@ -16,12 +16,6 @@ module Katello
   class Api::V2::ProductsBulkActionsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
-    def self.before_suite
-      disable_models = ["Product", "MarketingProduct", "Provider"]
-      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], disable_models, true)
-      super
-    end
-
     def models
       @organization = get_organization
       @products = Product.where(:id => katello_products(:empty_product, :fedora).map(&:id))

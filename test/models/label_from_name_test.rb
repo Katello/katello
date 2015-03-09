@@ -14,14 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class LabelFromNameTest < ActiveSupport::TestCase
-    def self.before_suite
-      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['Repository', 'KTEnvironment', 'ContentView', 'ContentViewVersion',
-                   'ContentViewEnvironment', 'Organization', 'Product',
-                   'Provider']
-      disable_glue_layers(services, models, true)
-    end
-
     def test_create_wtih_empty_label
       org = get_organization
       library = KTEnvironment.find(katello_environments(:library).id)

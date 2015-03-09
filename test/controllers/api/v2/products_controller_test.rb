@@ -17,12 +17,6 @@ module Katello
   class Api::V2::ProductsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
-    def self.before_suite
-      models = ["Product"]
-      disable_glue_layers(%w(Candlepin Pulp ElasticSearch), models, true)
-      super
-    end
-
     def models
       @organization = get_organization
       @provider = Provider.find(katello_providers(:anonymous))

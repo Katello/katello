@@ -4,7 +4,12 @@ attributes :id, :name, :description, :unlimited_content_hosts, :auto_attach
 
 extends 'katello/api/v2/common/org_reference'
 
-attributes :content_view, :content_view_id
+attributes :content_view_id
+
+child :content_view => :content_view do
+  attributes :id, :name
+end
+
 child :environment => :environment do
   attributes :name, :id
 end

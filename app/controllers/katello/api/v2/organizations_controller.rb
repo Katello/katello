@@ -52,16 +52,10 @@ module Katello
     # to the inclusion of a modules.
     param :id, :identifier, :desc => N_("organization ID"), :required => true
     param :redhat_repository_url, String, :desc => N_("Red Hat CDN URL")
-    param :redhat_docker_registry_url,  String, :desc => N_("Red Hat Docker Registry URL")
     param_group :resource, ::Api::V2::TaxonomiesController
     def update
       if params.key?(:redhat_repository_url)
         @organization.redhat_provider.update_attributes!(:repository_url => params[:redhat_repository_url])
-      end
-
-      if params.key?(:redhat_docker_registry_url)
-        @organization.redhat_provider.update_attributes!(:docker_registry_url =>
-                                                          params[:redhat_docker_registry_url])
       end
       super
     end

@@ -17,12 +17,6 @@ module Katello
   class DockerTagTest < ActiveSupport::TestCase
     extend ActiveRecord::TestFixtures
 
-    def self.before_suite
-      services = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models   = ['Repository']
-      disable_glue_layers(services, models, true)
-    end
-
     def setup
       @repo = Repository.find(katello_repositories(:busybox))
       @tag = create(:docker_tag, :repository => @repo)

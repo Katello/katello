@@ -21,9 +21,6 @@ module Katello
 
     def self.before_suite
       super
-      services  = ['Candlepin', 'ElasticSearch', 'Foreman']
-      models    = ['Repository']
-      disable_glue_layers(services, models)
       configure_runcible
 
       VCR.insert_cassette('pulp/content/erratum')

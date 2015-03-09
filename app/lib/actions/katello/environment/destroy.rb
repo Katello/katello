@@ -25,7 +25,6 @@ module Actions
           unless env.deletable?
             fail env.errors.full_messages.join(" ")
           end
-          skip_elastic = options.fetch(:skip_elastic, false)
           skip_repo_destroy = options.fetch(:skip_repo_destroy, false)
           organization_destroy = options.fetch(:organization_destroy, false)
           sequence do
@@ -38,7 +37,6 @@ module Actions
             end
 
             plan_self
-            plan_action(ElasticSearch::Reindex, env) if env.organization && !skip_elastic
           end
         end
 

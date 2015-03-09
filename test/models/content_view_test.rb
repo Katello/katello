@@ -14,14 +14,6 @@ require 'katello_test_helper'
 
 module Katello
   class ContentViewTest < ActiveSupport::TestCase
-    def self.before_suite
-      models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment",
-                "Repository", "ContentView", "ContentViewVersion",
-                "System", "ActivationKey"]
-      services = ["Candlepin", "Pulp", "ElasticSearch"]
-      disable_glue_layers(services, models, true)
-    end
-
     def setup
       User.current      = User.find(users(:admin))
       @organization     = get_organization
@@ -299,6 +291,8 @@ module Katello
       assert @library_dev_view.check_remove_from_environment!(@dev)
 
       System.create!(:name => "Gregor Somosa",
+                     :cp_type => "system",
+                     :facts => {:foo => :bar},
                      :environment => @dev,
                      :content_view => @library_dev_view
                     )

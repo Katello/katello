@@ -27,7 +27,6 @@
 angular.module('Bastion.content-views').controller('ContentViewDetailsController',
     ['$scope', 'ContentView', 'ContentViewVersion', 'AggregateTask', 'translate',
     function ($scope, ContentView, ContentViewVersion, AggregateTask, translate) {
-
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
