@@ -34,6 +34,7 @@ Katello::Engine.routes.draw do
             post :copy
             put :add_subscriptions
             put :remove_subscriptions
+            match '/service_levels' => 'organizations#service_levels', :via => :get
           end
           match '/releases' => 'activation_keys#available_releases', :via => :get, :on => :member
           api_resources :host_collections, :only => [:index]
@@ -150,6 +151,7 @@ Katello::Engine.routes.draw do
             post :autoattach_subscriptions
             get :download_debug_certificate
             get :redhat_provider
+            get :service_levels
           end
           api_resources :products, :only => [:index]
           api_resources :subscriptions, :only => [:index] do

@@ -20,6 +20,7 @@ module Katello
     before_filter :local_find_taxonomy, :only => %w(repo_discover cancel_repo_discover
                                                     download_debug_certificate
                                                     redhat_provider update
+                                                    service_levels
                                                     autoattach_subscriptions)
 
     resource_description do
@@ -118,10 +119,16 @@ module Katello
                        :resource_name => "providers")
     end
 
+    api :GET, '/activation_keys/:id/service_levels', N_('List available service levels for an activation key')
+    api :GET, '/organizations/:id/service_levels', N_('List service levels available for organization')
+    def service_levels
+      render :json => @organization.service_levels
+    end
+
     protected
 
     def action_permission
-      if %w(download_debug_certificate redhat_provider repo_discover
+      if %w(download_debug_certificate redhat_provider repo_discover service_levels
             cancel_repo_discover autoattach_subscriptions).include?(params[:action])
         :edit
       else
