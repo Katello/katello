@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope, $state, translate, Repository;
+    var $scope, $state, translate, repository;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -25,6 +25,8 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             GPGKey = $injector.get('MockResource').$new(),
             Repository = $injector.get('MockResource').$new();
 
+        repository = new Repository();
+
         $scope = $injector.get('$rootScope').$new();
         $state = $injector.get('$state');
         $scope.$stateParams = {
@@ -33,8 +35,9 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         };
 
         $scope.repositoriesTable = {
-            replaceRow: function (row) {}
-        }
+            replaceRow: function (row) {},
+            removeRow: function () {}
+        };
 
         translate = function(message) {
             return message;
@@ -177,5 +180,17 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         repository.product_type = "custom";
         expect($scope.getRepoNonDeletableReason(repository, product)).toBe(null);
         expect($scope.canRemove(repository, product)).toBe(true);
+    });
+
+    it('should provide a way to remove a repository', function() {
+        repository.id = 1;
+
+        spyOn($scope.repositoriesTable, 'removeRow');
+        spyOn($scope, 'transitionTo');
+
+        $scope.removeRepository(repository);
+
+        expect($scope.repositoriesTable.removeRow).toHaveBeenCalledWith(1);
+        expect($scope.transitionTo).toHaveBeenCalledWith('products.details.repositories.index', {productId: 1});
     });
 });

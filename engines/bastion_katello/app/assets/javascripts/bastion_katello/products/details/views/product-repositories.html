@@ -2,6 +2,15 @@
 
 <section class="details details-full">
   <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+  <div bst-alert="danger" ng-show="warningMessages">
+    <strong translate>There were errors while removing the following Repositories:</strong>
+    <ol>
+      <li data-ng-repeat="message in warningMessages">
+        {{ message }}
+      </li>
+    </ol>
+    <a ui-sref="products.details.tasks.details({taskId: warningTaskId})" translate>Click here to see the task for the successful removals.</a>
+  </div>
   <h4 translate>Repositories</h4>
 
   <input type="text"
