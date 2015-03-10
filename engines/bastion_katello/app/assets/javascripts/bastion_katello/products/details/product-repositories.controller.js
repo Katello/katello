@@ -39,9 +39,9 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
-
         $scope.checksums = [{name: translate('Default'), id: null}, {id: 'sha256', name: 'sha256'}, {id: 'sha1', name: 'sha1'}];
         $scope.repositoriesTable = repositoriesNutupane.table;
+        $scope.repositoriesTable.removeRow = repositoriesNutupane.removeRow;
         repositoriesNutupane.query();
 
         $scope.syncSelectedRepositories = function () {
@@ -56,21 +56,23 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
         };
 
         $scope.removeSelectedRepositories = function () {
-            var params = getParams(), removalPromise;
+            var params = getParams(), removalPromise, removeSuccess;
+
+            removeSuccess = function (response) {
+                if (response.errors && response.errors.length > 0) {
+                    $scope.warningMessages = response.errors;
+                    $scope.warningTaskId = response.task.id;
+                } else {
+                    $state.go('products.details.tasks.details', {taskId: response.task.id});
+                }
+            };
 
             $scope.removingRepositories = true;
-            removalPromise = RepositoryBulkAction.removeRepositories(params, success, error).$promise;
+            removalPromise = RepositoryBulkAction.removeRepositories(params, removeSuccess, error).$promise;
 
             removalPromise["finally"](function () {
                 repositoriesNutupane.refresh();
                 $scope.removingRepositories = false;
-            });
-        };
-
-        $scope.removeRepository = function (repository) {
-            repositoriesNutupane.removeRow(repository.id);
-            repository.$delete(function () {
-                $scope.transitionTo('products.details.repositories.index', {productId: $scope.$stateParams.productId});
             });
         };
 
@@ -98,13 +100,8 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
             };
         }
 
-        function success(response) {
-            $scope.successMessages = response.displayMessages.success;
-            $scope.errorMessages = response.displayMessages.error;
-        }
-
         function error(response) {
-            $scope.successMessages = response.data.errors;
+            $scope.errorMessages = response.data.errors;
         }
     }]
 );

@@ -1,5 +1,16 @@
 <span page-title ng-model="contentHost">{{ 'Errata for: ' | translate }} {{ contentHost.name }}</span>
 
+<div data-block="messages" ng-show="detailsTable.rows.length > 0">
+  <p bst-alert="info" ng-hide="selectedErrataOption === 'current'">
+        <span translate>
+          Some of the Errata shown below may not be installable as they are not in this Content Host's
+          Content View and Lifecycle Environment.  In order to apply such Errata an Incremental Update is required.
+        </span>
+
+    <a ui-sref="errata.index" translate>Click here to select Errata for an Incremental Update.</a>
+  </p>
+</div>
+
 <div bst-feature-flag="remote_actions">
   <p bst-alert="info" ng-hide="contentHost.katello_agent_installed">
     <span translate>
