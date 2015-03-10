@@ -1,12 +1,16 @@
 <span page-title ng-model="subscription">{{ 'Activation Keys for Subscription:' | translate }} {{ subscription.product_name }}</span>
 
-<div class="details details-full">
+<div class="nutupane">
 
   <h3 translate>
     Included in Activation Keys
   </h3>
 
-  <table class="table table-striped" bst-table="table" ng-class="{'table-mask': working}">
+  <div bst-alert="info" ng-show="!working && activationKeys.length === 0">
+    <span translate>This subscription is not associated with any activation keys.</span>
+  </div>
+
+  <table class="table table-bordered table-striped" bst-table="table" ng-show="activationKeys.length > 0" ng-class="{'table-mask': working}">
     <thead>
       <tr bst-table-head>
         <th bst-table-column="name" sortable><span translate>Name</span></th>
@@ -18,10 +22,6 @@
     </thead>
 
     <tbody>
-      <tr ng-show="!working && activationKeys.length === 0">
-        <td colspan="5" translate>This subscription is not associated with any activation keys.</td>
-      </tr>
-
       <tr ng-show="working">
         <td colspan="5" translate>
           <div class="loading-mask fa-3x" ng-show="working">

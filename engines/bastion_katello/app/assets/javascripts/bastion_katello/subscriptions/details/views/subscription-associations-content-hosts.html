@@ -1,12 +1,16 @@
 <span page-title ng-model="subscription">{{ 'Content Hosts for Subscription:' | translate }} {{ subscription.name }}</span>
 
-<div class="details details-full">
+<div class="nutupane">
 
   <h3 translate>
     Attached to Content Hosts
   </h3>
 
-  <table class="table table-striped" bst-table="table" ng-class="{'table-mask': working}">
+  <div bst-alert="info" ng-show="!working && contentHosts.length === 0">
+    <span translate>This subscription is not attached to any content hosts.</span>
+  </div>
+
+  <table class="table table-bordered table-striped" bst-table="table" ng-show="contentHosts.length > 0" ng-class="{'table-mask': working}">
     <thead>
       <tr bst-table-head>
         <th bst-table-column="name" sortable><span translate>Name</span></th>
@@ -24,10 +28,6 @@
     </thead>
 
     <tbody>
-      <tr ng-show="!working && contentHosts.length === 0">
-        <td colspan="9" translate>This subscription is not attached to any content hosts.</td>
-      </tr>
-
       <tr ng-show="working">
         <td colspan="9" translate>
           <div class="loading-mask fa-3x" ng-show="working">
