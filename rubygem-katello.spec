@@ -6,14 +6,7 @@
 %global foreman_dir /usr/share/foreman
 %global foreman_bundlerd_dir %{foreman_dir}/bundler.d
 
-%if !("%{?scl}" == "ruby193" || 0%{?rhel} > 6 || 0%{?fedora} > 16)
-%global gem_dir /usr/lib/ruby/gems/1.8
-%global gem_instdir %{gem_dir}/gems/%{gem_name}-%{version}
-%global gem_libdir %{gem_instdir}/lib
-%global gem_cache %{gem_dir}/cache/%{gem_name}-%{version}.gem
-%global gem_spec %{gem_dir}/specifications/%{gem_name}-%{version}.gemspec
-%global gem_docdir %{gem_dir}/doc/%{gem_name}-%{version}
-%endif
+%define rubyabi 1.9.1
 
 %if "%{?scl}" == "ruby193"
     %global scl_ruby /usr/bin/ruby193-ruby
@@ -35,26 +28,12 @@ License: Distributable
 URL: http://www.katello.org
 Source0: http://rubygems.org/downloads/%{gem_name}-%{version}.gem
 
-%if "%{?scl}" == "ruby193"
-Requires: %{?scl_prefix}ruby-wrapper
-BuildRequires: %{?scl_prefix}ruby-wrapper
-%endif
-%if "%{?scl}" == "ruby193" || 0%{?rhel} > 6 || 0%{?fedora} > 16
-BuildRequires:  %{?scl_prefix}rubygems-devel
-%endif
-
-%if 0%{?fedora} > 19
-Requires: %{?scl_prefix}ruby(release) = 2.0.0
-BuildRequires: %{?scl_prefix}ruby(release) = 2.0.0
+%if 0%{?fedora} > 18
+Requires: %{?scl_prefix}ruby(release)
 %else
-%if "%{?scl}" == "ruby193" || 0%{?rhel} > 6 || 0%{?fedora} > 16
-Requires: %{?scl_prefix}ruby(abi) = 1.9.1
-BuildRequires: %{?scl_prefix}ruby(abi) = 1.9.1
-%else
-Requires: ruby(abi) = 1.8
-BuildRequires: ruby(abi) = 1.8
+Requires: %{?scl_prefix}ruby(abi) >= %{rubyabi}
 %endif
-%endif
+Requires: %{?scl_prefix}rubygems
 
 # service-wait dependency
 Requires: wget
@@ -105,7 +84,6 @@ Requires: lsof
 Requires: postgresql
 Requires: postgresql-server
 Requires: v8
-Requires: %{?scl_prefix}rubygems
 Requires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
 Requires: %{?scl_prefix}rubygem-bastion
 Requires: %{?scl_prefix}rubygem-rails
@@ -157,7 +135,14 @@ BuildRequires: %{?scl_prefix}rubygem(uglifier) >= 1.0.3
 BuildRequires: %{?scl_prefix}rubygem-strong_parameters
 BuildRequires: %{?scl_prefix}rubygem-qpid_messaging >= 0.22.0
 BuildRequires: %{?scl_prefix}rubygem-qpid_messaging <= 0.28.1
+BuildRequires: %{?scl_prefix}rubygems-devel
 BuildRequires: %{?scl_prefix}rubygems
+%if 0%{?fedora} > 18
+BuildRequires: %{?scl_prefix}ruby(release)
+%else
+BuildRequires: %{?scl_prefix}ruby(abi) >= %{rubyabi}
+%endif
+
 BuildArch: noarch
 Provides: %{?scl_prefix}rubygem(katello) = %{version}
 
