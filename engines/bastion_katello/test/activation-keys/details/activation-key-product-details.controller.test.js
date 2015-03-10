@@ -182,7 +182,7 @@ describe('Controller: ActivationKeyProductDetailsController', function () {
 
     it('should give back choices', function () {
         $scope.productDetails($scope.products[0]);
-        expect($scope.overrideEnableChoices($scope.details['available_content'][1]).length).toBe(3);
+        expect($scope.overrideEnableChoices($scope.details['available_content'][1]).length).toBe(2);
     });
 
     it('sets activation key when content override saved', function () {
