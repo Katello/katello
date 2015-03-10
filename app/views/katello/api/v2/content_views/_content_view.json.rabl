@@ -22,8 +22,14 @@ child :environments => :environments do
   end
 end
 
-child :repositories => :repositories do
-  extends 'katello/api/v2/repositories/show'
+if @object.composite?
+  child :component_repositories => :repositories do
+    attributes :id, :name, :label, :content_type
+  end
+else
+  child :repositories => :repositories do
+    attributes :id, :name, :label, :content_type
+  end
 end
 
 child :puppet_modules => :puppet_modules do
@@ -49,7 +55,15 @@ node :permissions do |cv|
 end
 
 child :components => :components do
-  extends 'katello/api/v2/content_view_versions/show'
+  attributes :id, :name, :label, :content_view_id, :version
+
+  child :environments => :environments do
+    attributes :id, :name, :label
+  end
+
+  child :content_view => :content_view do
+    attributes :id, :name, :label, :description, :next_version
+  end
 end
 
 child :activation_keys => :activation_keys do

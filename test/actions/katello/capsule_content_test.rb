@@ -137,6 +137,43 @@ module ::Actions::Katello::CapsuleContent
     end
   end
 
+  class FeaturesRefreshedTest < TestBase
+    let(:action_class) { ::Actions::Katello::CapsuleContent::FeaturesRefreshed }
+    let(:node_feature) { ::Feature.where(:name => SmartProxy::PULP_NODE_FEATURE).first }
+    let(:activation_action) { ::Actions::Pulp::Consumer::ActivateNode }
+    let(:deactivation_action) { ::Actions::Pulp::Consumer::DeactivateNode }
+
+    it 'plans activation' do
+      old_features = []
+      new_features = [node_feature]
+
+      action = create_and_plan_action(action_class, @proxy_with_pulp, old_features, new_features)
+      assert_action_planed_with(action, activation_action) do |(input)|
+        input.must_equal(@capsule_system)
+      end
+    end
+
+    it 'plans activation even if already activated' do
+      old_features = [node_feature]
+      new_features = [node_feature]
+
+      action = create_and_plan_action(action_class, @proxy_with_pulp, old_features, new_features)
+      assert_action_planed_with(action, activation_action) do |(input)|
+        input.must_equal(@capsule_system)
+      end
+    end
+
+    it 'plans deactivation' do
+      old_features = [node_feature]
+      new_features = []
+
+      action = create_and_plan_action(action_class, @proxy_with_pulp, old_features, new_features)
+      assert_action_planed_with(action, deactivation_action) do |(input)|
+        input.must_equal(@capsule_system)
+      end
+    end
+  end
+
   class RepositoryTestBase < TestBase
     include VCR::TestCase
     include FactoryGirl::Syntax::Methods

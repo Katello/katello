@@ -262,7 +262,7 @@ module Katello
                     ]
       attrs[:installedProducts] = [] if attrs.key?(:installedProducts) && attrs[:installedProducts].nil?
 
-      @system.update_attributes!(attrs.slice(*slice_attrs))
+      sync_task(::Actions::Katello::System::Update, @system, attrs.slice(*slice_attrs))
 
       render :json => {:content => _("Facts successfully updated.")}, :status => 200
     end

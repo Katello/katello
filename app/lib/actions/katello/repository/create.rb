@@ -19,7 +19,6 @@ module Actions
           repository.disable_auto_reindex!
           repository.save!
           action_subject(repository)
-          plan_self
 
           org = repository.organization
           path = repository.relative_path unless repository.puppet?
@@ -63,15 +62,22 @@ module Actions
                 plan_action(ContentView::UpdateEnvironment, org.default_content_view,
                             org.library, content_create.input[:content_id])
               end
-
-              unless repository.puppet?
-                plan_action(Katello::Repository::MetadataGenerate, repository)
-              end
             end
 
-            plan_action(::Actions::Pulp::Repos::Update, repository.product) if repository.product.sync_plan
-            plan_action(ElasticSearch::Reindex, repository)
+            concurrence do
+              plan_action(::Actions::Pulp::Repos::Update, repository.product) if repository.product.sync_plan
+              plan_self(:repository_id => repository.id) unless repository.puppet?
+              plan_action(ElasticSearch::Reindex, repository)
+            end
           end
+        end
+
+        def run
+          ::User.current = ::User.anonymous_api_admin
+          repository = ::Katello::Repository.find(input[:repository_id])
+          ForemanTasks.async_task(Katello::Repository::MetadataGenerate, repository)
+        ensure
+          ::User.current = nil
         end
 
         def humanized_name

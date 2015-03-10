@@ -92,7 +92,6 @@ mkdir -p %{buildroot}%{_sbindir}
 mkdir -p %{buildroot}/usr/share/foreman/script/foreman-debug.d/
 ln -sv %{homedir}/script/katello-debug.sh %{buildroot}/usr/share/foreman/script/foreman-debug.d/katello-debug.sh
 ln -sv %{homedir}/script/katello-remove %{buildroot}%{_bindir}/katello-remove
-ln -sv %{homedir}/script/katello-generate-passphrase %{buildroot}%{_bindir}/katello-generate-passphrase
 ln -sv %{homedir}/script/katello-service %{buildroot}%{_bindir}/katello-service
 ln -sv %{homedir}/script/service-wait %{buildroot}%{_sbindir}/service-wait
 
@@ -127,21 +126,8 @@ Requires:       %{name}-debug
 %description common
 Common runtime components of %{name}
 
-%post common
-#Generate secret token if the file does not exist
-#(this must be called both for installation and upgrade)
-TOKEN=/etc/katello/secret_token
-# this file must not be world readable at generation time
-umask 0077
-test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN \
-    && chmod 600 $TOKEN && chown katello:katello $TOKEN)
-
-usermod -a -G katello-shared tomcat
-
 %files common
-%attr(600, katello, katello)
 %{_bindir}/katello-*
-%ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
 
 %{homedir}/script
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
@@ -152,19 +138,8 @@ usermod -a -G katello-shared tomcat
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/service-wait
 %{homedir}/script/service-wait
-%defattr(-, katello, katello)
 %dir %{homedir}
 %config(missingok) %{_sysconfdir}/cron.weekly/katello-remove-orphans
-
-%pre common
-# Add the "katello" user and group
-getent group %{name} >/dev/null || groupadd -r %{name} -g 182
-getent passwd %{name} >/dev/null || \
-    useradd -r -g %{name} -d %{homedir} -u 182 -s /sbin/nologin -c "Katello" %{name}
-# add tomcat & katello to the katello shared group for reading sensitive files
-getent group katello-shared > /dev/null || groupadd -r katello-shared
-usermod -a -G katello-shared katello
-exit 0
 
 # ------ Debug ----------------
 %package debug

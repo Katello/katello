@@ -26,7 +26,7 @@ fi
 
 # qpidd needs to be started prior to tomcat. candlepin currently does not automatically reconnect to qpidd
 # when qpidd is restarted. Order should not mater when Bugzilla 1147263 is resolved.
-SERVICES="qpidd $TOMCAT mongod elasticsearch pulp_resource_manager pulp_workers pulp_celerybeat httpd foreman-tasks"
+SERVICES="qpidd qdrouterd $TOMCAT mongod elasticsearch pulp_resource_manager pulp_workers pulp_celerybeat httpd foreman-tasks"
 if [ -f /etc/katello/service-list ] ; then
   . /etc/katello/service-list
 fi
