@@ -17,7 +17,7 @@ module Katello
     delegate :page_size, :to => :current_user
 
     def self.search_envs(mode)
-      if mode != :all
+      if mode != 'all'
         KTEnvironment.readable.where(:id => self.env_ids)
       else
         KTEnvironment.readable
