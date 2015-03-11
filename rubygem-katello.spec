@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.2.0
-Release: 2%{dist}
+Release: 3%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -221,6 +221,34 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Wed Mar 11 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-3
+- Fixes #9707: Cleanup requirement on rubygems-devel. (ericdhelms@gmail.com)
+- refs #9637 - add python-amqp to client repos (jsherril@redhat.com)
+- fixes #9646 - call dynflow to update facts sent via rhsm and virt-who
+  (thomasmckay@redhat.com)
+- fixes #9647 - speed up puppet class import (jsherril@redhat.com)
+- fixes #9585 - speed up enabling redhat repos (jsherril@redhat.com)
+- fixes #9462,#9557,#9556 - various inherited hostgroup issues
+  (jsherril@redhat.com)
+- Fixes #9345: fix content view promotion in IE, BZ1168457. (walden@redhat.com)
+- Fixes #9376: Calculate next_sync time properly based on UTC.
+  (ericdhelms@gmail.com)
+- Fixes #9564: limit components rabl to fix N+1 queries, BZ 1177609.
+  (walden@redhat.com)
+- Fixes #8964: Show repository count for composite content views.
+  (ericdhelms@gmail.com)
+- fixes #9521 - activate and deactivate pulp nodes (jsherril@redhat.com)
+- refs #8175 - add qpid dispatch router to services list (stbenjam@redhat.com)
+- fixes #9502, #9503 - verify errata exist before application
+  (stbenjam@redhat.com)
+- Fixes #9400 - configure networking in finish template (mhulan@redhat.com)
+- fixes #8956, #9337 - remove unused scripts and files from specfile
+  (mmccune@redhat.com)
+- Fixes #9132 - use networking snippet during provisioning (mhulan@redhat.com)
+- Automatic commit of package [katello] minor release [2.2.0-2].
+  (ericdhelms@gmail.com)
+- Updating rel-eng for 2.2 (ericdhelms@gmail.com)
+
 * Tue Feb 24 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-2
 - Merge pull request #5041 from jlsherrill/9467 (jlsherrill@gmail.com)
 - Merge pull request #5038 from waldenraines/9511 (walden@redhat.com)
