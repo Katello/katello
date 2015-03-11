@@ -19,7 +19,7 @@ module Katello
     def blank_or_inherit_with_id(f, attr)
       return true unless f.object.respond_to?(:parent_id) && f.object.parent_id
       inherited_value  = f.object.send(attr).try(:id) || ''
-      %(<option data-id="#{inherited_value}">#{blank_or_inherit_f(f, attr)}</option>)
+      %(<option data-id="#{inherited_value}" value="">#{blank_or_inherit_f(f, attr)}</option>)
     end
 
     def envs_by_kt_org
@@ -70,7 +70,7 @@ module Katello
         views = [host.content_view]
       end
       view_options = views.map do |view|
-        selected = host.content_view == view ? 'selected' : ''
+        selected = host[:content_view_id] == view.id ? 'selected' : ''
         %(<option #{selected} value="#{view.id}">#{h(view.name)}</option>)
       end
       view_options = view_options.join
