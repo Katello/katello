@@ -20,7 +20,9 @@ module Actions
           sequence do
             concurrence do
               version.archived_repos.each do |repo|
-                plan_action(Repository::Destroy, repo, options)
+                repo_options = options.clone
+                repo_options[:planned_destroy] = true
+                plan_action(Repository::Destroy, repo, repo_options)
               end
               plan_action(ContentViewPuppetEnvironment::Destroy, version.archive_puppet_environment)
             end
