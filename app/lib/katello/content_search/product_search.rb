@@ -48,9 +48,9 @@ module Katello
       def filtered_products(view)
         filtered = products & view.all_version_products
         envs = SearchUtils.search_envs(mode)
-        if mode == :shared
+        if mode == 'shared'
           filtered = filtered.select { |p|  (envs - p.environments_for_view(view)).empty? }
-        elsif mode == :unique
+        elsif mode == 'unique'
           filtered = filtered.select { |p|  !(envs - p.environments_for_view(view)).empty? }
         end
         filtered

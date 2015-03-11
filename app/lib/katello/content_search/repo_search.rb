@@ -56,9 +56,9 @@ module Katello
         filtered = repos
         envs = SearchUtils.search_envs(mode)
         filtered = filtered.select { |repo| !repo.environmental_instances(view).empty? }
-        if mode == :shared
+        if mode == 'shared'
           filtered = filtered.select { |repo| (envs - repo.environmental_instances(view).collect(&:environment)).empty? }
-        elsif mode == :unique
+        elsif mode == 'unique'
           filtered = filtered.select { |repo| !(envs - repo.environmental_instances(view).collect(&:environment)).empty? }
         end
         filtered

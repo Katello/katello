@@ -30,7 +30,9 @@ module Actions
             unless organization_destroy
               concurrence do
                 product.repositories.in_default_view.each do |repo|
-                  plan_action(Katello::Repository::Destroy, repo, options)
+                  repo_options = options.clone
+                  repo_options[:planned_destroy] = true
+                  plan_action(Katello::Repository::Destroy, repo, repo_options)
                 end
               end
             end

@@ -45,11 +45,19 @@ angular.module('Bastion.content-hosts').controller('ContentHostProductDetailsCon
         };
 
         $scope.overrideEnableChoices = function (content) {
-            return [
-                {name: $scope.getEnabledText(content.enabled, null), id: null},
-                {name: $scope.getEnabledText(null, 1), id: 1},
-                {name: $scope.getEnabledText(null, 0), id: 0}
-            ];
+            var choices;
+            if (content.enabled === true) {
+                choices = [
+                    {name: $scope.getEnabledText(content.enabled, null), id: null},
+                    {name: $scope.getEnabledText(null, 0), id: 0}
+                ];
+            } else {
+                choices = [
+                    {name: $scope.getEnabledText(content.enabled, null), id: null},
+                    {name: $scope.getEnabledText(null, 1), id: 1},
+                ];
+            }
+            return choices;
         };
 
         $scope.getEnabledText = function (enabled, overrideEnabled) {
