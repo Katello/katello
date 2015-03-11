@@ -19,41 +19,22 @@
 %endif
 
 Summary: Katello
-Name: %{?scl_prefix}rubygem-%{gem_name}
-
+Name: 	 %{?scl_prefix}rubygem-%{gem_name}
 Version: 2.3.0
 Release: 1%{dist}
-Group: Development/Ruby
+Group:   Development/Ruby
 License: Distributable
-URL: http://www.katello.org
+URL:     http://www.katello.org
 Source0: http://rubygems.org/downloads/%{gem_name}-%{version}.gem
 
-%if 0%{?fedora} > 18
-Requires: %{?scl_prefix}ruby(release)
-%else
-Requires: %{?scl_prefix}ruby(abi) >= %{rubyabi}
-%endif
-Requires: %{?scl_prefix}rubygems
-
-# service-wait dependency
-Requires: wget
-Requires: curl
-
-%if 0%{?rhel} == 6
-Requires: redhat-logos >= 60.0.14
-%endif
-
+#Candlepin Requirements
 %if 0%{?fedora} > 18 || 0%{?rhel} > 6
 Requires(post): candlepin-tomcat
 %else
 Requires(post): candlepin-tomcat6
 %endif
-
-Requires(post): chkconfig
-Requires(postun): initscripts coreutils sed
-Requires(pre): shadow-utils
-Requires(preun): chkconfig
-Requires(preun): initscripts
+Requires: candlepin-selinux
+Requires: java-openjdk >= 1:1.7.0
 
 #Pulp Requirements
 Requires: pulp-katello
@@ -70,21 +51,21 @@ Requires: cyrus-sasl-plain
 Requires: python-crane
 Requires: qpid-cpp-client-devel
 Requires: qpid-dispatch-router
-
-Requires: katello-selinux
-Requires: candlepin-selinux
 Requires: createrepo >= 0.9.9-18%{?dist}
+
+#Elasticsearch Requirements
 Requires: elasticsearch
-Requires: foreman >= 1.7.0
-Requires: java-openjdk >= 1:1.7.0
-# Still Requires katello-common which clashes with
-# new build - will re-enable after fixing
-#Requires: katello-selinux
-Requires: libvirt-devel
-Requires: lsof
-Requires: postgresql
-Requires: postgresql-server
-Requires: v8
+
+#Gem Requirements
+%if 0%{?fedora} > 18
+Requires: %{?scl_prefix}ruby(release)
+%else
+Requires: %{?scl_prefix}ruby(abi) >= %{rubyabi}
+%endif
+Requires: %{?scl_prefix}rubygems
+Requires: katello-selinux
+Requires: foreman >= 1.9.0
+Requires: foreman-postgresql >= 1.9.0
 Requires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
 Requires: %{?scl_prefix}rubygem-bastion < 1.0.0
 Requires: %{?scl_prefix}rubygem-rails
@@ -112,11 +93,10 @@ Requires: %{?scl_prefix}rubygem-deface < 1.0.0
 Requires: %{?scl_prefix}rubygem-strong_parameters
 Requires: %{?scl_prefix}rubygem-qpid_messaging >= 0.30.0
 Requires: %{?scl_prefix}rubygem-qpid_messaging < 0.31.0
-BuildRequires: foreman >= 1.7.0
-BuildRequires: foreman-assets >= 1.7.0
+BuildRequires: foreman >= 1.9.0
+BuildRequires: foreman-assets >= 1.9.0
 BuildRequires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
 BuildRequires: %{?scl_prefix}rubygem-bastion < 1.0.0
-BuildRequires: %{?scl_prefix}rubygem-sqlite3
 BuildRequires: %{?scl_prefix}rubygem-tire => 0.6.2
 BuildRequires: %{?scl_prefix}rubygem-tire < 0.7
 BuildRequires: %{?scl_prefix}rubygem-logging >= 1.8.0
@@ -134,7 +114,6 @@ BuildRequires: %{?scl_prefix}rubygem-less-rails
 BuildRequires: %{?scl_prefix}rubygem-haml-rails
 BuildRequires: %{?scl_prefix}rubygem-jquery-ui-rails
 BuildRequires: %{?scl_prefix}rubygem-deface < 1.0.0
-BuildRequires: %{?scl_prefix}rubygem(uglifier) >= 1.0.3
 BuildRequires: %{?scl_prefix}rubygem-strong_parameters
 BuildRequires: %{?scl_prefix}rubygem-qpid_messaging >= 0.30.0
 BuildRequires: %{?scl_prefix}rubygem-qpid_messaging < 0.31.0
