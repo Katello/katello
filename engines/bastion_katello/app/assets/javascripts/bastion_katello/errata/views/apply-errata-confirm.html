@@ -22,10 +22,10 @@
 
   <section ng-hide="updates">
     <p translate ng-show="errata">
-      Apply {{ errata.errata_id }} to {{ selectedContentHosts.included.ids.length }} Content Host(s)?
+      Apply {{ errata.errata_id }} to {{ numberOfContentHostsToUpdate }} Content Host(s)?
     </p>
     <p translate ng-hide="errata">
-      Apply {{ errataIds.length }} Errata to {{ selectedContentHosts.included.ids.length }} Content Host(s)?
+      Apply {{ errataIds.length }} Errata to {{ numberOfContentHostsToUpdate }} Content Host(s)?
     </p>
   </section>
 
