@@ -96,7 +96,7 @@ module Katello
       param :update_all_systems, :bool, :required => false, :desc => N_("Update all editable and applicable systems, not just ones using the selected Content View Versions and Environments")
     end
     def incremental_update
-      if params[:add_content] && params[:add_content][:errata_ids].any? && params[:update_systems]
+      if params[:add_content] && params[:add_content].key?(:errata_ids) && params[:update_systems]
         systems = calculate_systems_for_incremental(params[:update_systems], params[:propagate_to_composites])
       else
         systems = []
