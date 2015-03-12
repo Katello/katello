@@ -2,12 +2,12 @@
 
 <section>
 
-  <div bst-alert="info" ng-show="confirm">
+  <div bst-alert="info" ng-show="showConfirm">
     <p translate>
       Are you sure you want to apply the {{ detailsTable.numSelected }} selected errata to the content hosts chosen?
     </p>
-    <button class="btn btn-default" ng-click="confirm = false; detailsTable.working = false" translate>No</button>
-    <button class="btn btn-default" ng-click="confirm = false; installErrata()" translate>Yes</button>
+    <button class="btn btn-default" ng-click="hideConfirmDialog(); detailsTable.working = false" translate>No</button>
+    <button class="btn btn-default" ng-click="hideConfirmDialog(); installErrata()" translate>Yes</button>
   </div>
 
   <div bst-alert="warning" ng-show="outOfDate && table.numSelected > 0">
@@ -34,7 +34,7 @@
 
       <button class="btn btn-primary"
               ng-disabled="table.numSelected === 0 || detailsTable.working || detailsTable.numSelected === 0"
-              ng-click="confirm = true">
+              ng-click="showConfirmDialog()">
         <i class="fa fa-plus"></i>
         {{ "Install Selected" | translate }}
       </button>
