@@ -24,6 +24,9 @@
  */
 angular.module('Bastion.content-views').controller('FilterEditController',
     ['$scope', '$q', 'translate', function ($scope, $q, translate) {
+    $scope.successMessages = [];
+    $scope.errorMessages = [];
+
     $scope.save = function (filter) {
         var deferred = $q.defer();
         var success;
