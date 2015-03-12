@@ -125,7 +125,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             var readOnlyReason = null;
 
             if (repo.$resolved && product.$resolved) {
-                if ($scope.denied('delete_products', product)) {
+                if ($scope.denied('destroy_products', product)) {
                     readOnlyReason = 'permissions';
                 } else if (repo.promoted) {
                     readOnlyReason = 'published';
