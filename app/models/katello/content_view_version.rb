@@ -186,7 +186,8 @@ module Katello
     end
 
     def puppet_module_count
-      PuppetModule.module_count([self.archive_puppet_environment])
+      env = self.archive_puppet_environment
+      env.nil? ? 0 : PuppetModule.module_count([env])
     end
 
     def package_count
