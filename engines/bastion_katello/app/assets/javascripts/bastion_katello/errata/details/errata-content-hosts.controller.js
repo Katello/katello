@@ -52,8 +52,8 @@ angular.module('Bastion.errata').controller('ErrataContentHostsController',
             $scope.environments = response.results;
         });
 
-        $scope.toggleAvailable = function () {
-            nutupane.table.params['erratum_restrict_available'] = $scope.errata.showAvailable;
+        $scope.toggleInstallable = function () {
+            nutupane.table.params['erratum_restrict_installable'] = $scope.errata.showInstallable;
             nutupane.refresh();
         };
 
