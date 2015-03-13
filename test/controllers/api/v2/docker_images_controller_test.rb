@@ -48,6 +48,9 @@ module Katello
       get :index, :organization_id => @repo.organization.id
       assert_response :success
       assert_template %w(katello/api/v2/docker_images/index)
+
+      get :index, :content_view_version_id => ContentViewVersion.last
+      assert_response :success
     end
 
     def test_show
