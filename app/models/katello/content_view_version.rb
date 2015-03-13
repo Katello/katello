@@ -217,6 +217,10 @@ module Katello
       errata
     end
 
+    def docker_images
+      DockerImage.in_repositories(archived_repos).uniq
+    end
+
     def check_ready_to_promote!
       fail _("Default content view versions cannot be promoted") if default?
     end
