@@ -1,18 +1,20 @@
 <span page-title ng-model="filter">{{ 'Filter information for:' | translate }} {{ filter.name }}</span>
-    <div class="detail">
-      <span class="info-label" translate>Name</span>
-      <span class="info-value"
-            bst-edit-text="filter.name"
-            on-save="save(filter)"
-            readonly="denied('edit_content_views', contentView)">
-      </span>
-    </div>
+<div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-    <div class="detail">
-      <span class="info-label" translate>Description</span>
-      <span class="info-value"
-            bst-edit-textarea="filter.description"
-            on-save="save(filter)"
-            readonly="denied('edit_content_views', contentView)">
-      </span>
-    </div>
+<div class="detail">
+  <span class="info-label" translate>Name</span>
+  <span class="info-value"
+        bst-edit-text="filter.name"
+        on-save="save(filter)"
+        readonly="denied('edit_content_views', contentView)">
+  </span>
+</div>
+
+<div class="detail">
+  <span class="info-label" translate>Description</span>
+  <span class="info-value"
+        bst-edit-textarea="filter.description"
+        on-save="save(filter)"
+        readonly="denied('edit_content_views', contentView)">
+  </span>
+</div>
