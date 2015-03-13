@@ -86,11 +86,11 @@ module Katello
       param :puppet_module_ids, Array, :desc => "Puppet Modules to copy into the new versions."
     end
     param :update_systems, Hash, :desc => N_("After generating the incremental update, apply the changes to the specified systems.  Only Errata are supported currently.") do
-      param :include, Hash, :required => true, :action_aware => true do
+      param :included, Hash, :required => true, :action_aware => true do
         param :search, String, :required => false, :desc => N_("Search string for systems to perform an action on")
         param :ids, Array, :required => false, :desc => N_("List of system ids to perform an action on")
       end
-      param :exclude, Hash, :required => false, :action_aware => true do
+      param :excluded, Hash, :required => false, :action_aware => true do
         param :ids, Array, :required => false, :desc => N_("List of system ids to exclude and not run an action on")
       end
       param :update_all_systems, :bool, :required => false, :desc => N_("Update all editable and applicable systems, not just ones using the selected Content View Versions and Environments")
