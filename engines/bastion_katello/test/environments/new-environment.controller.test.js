@@ -57,7 +57,7 @@ describe('Controller: NewEnvironmentController', function() {
         $scope.save(environment);
 
         expect(environment.$save).toHaveBeenCalled();
-        expect(environment.prior).toBe(1);
+        expect(environment['prior_id']).toBe(1);
         expect($scope.transitionTo).toHaveBeenCalledWith('environments.index');
     });
 
