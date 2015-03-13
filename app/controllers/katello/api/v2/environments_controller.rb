@@ -53,7 +53,7 @@ module Katello
     before_filter :find_content_view, :only => [:repositories]
     before_filter :load_search_service, :only => [:index]
 
-    wrap_parameters :include => (KTEnvironment.attribute_names + %w(prior new_name))
+    wrap_parameters :include => (KTEnvironment.attribute_names + %w(prior prior_id new_name))
 
     api :GET, "/environments", N_("List environments in an organization")
     api :GET, "/organizations/:organization_id/environments", N_("List environments in an organization")
@@ -85,7 +85,12 @@ module Katello
     param :name, String, :desc => N_("name of the environment"), :required => true
     param :label, String, :desc => N_("label of the environment"), :required => false
     param :description, String, :desc => N_("description of the environment")
-    param :prior, Integer, :required => true, :desc => <<-DESC
+    param :prior, Integer, :deprecated => true, :desc => <<-DESC
+      ID of an environment that is prior to the new environment in the chain. It has to be
+      either the ID of Library or the ID of an environment at the end of a chain.
+      This param exists for backwards compatibility purposes. Please use prior_id.
+    DESC
+    param :prior_id, Integer, :required => true, :desc => <<-DESC
       ID of an environment that is prior to the new environment in the chain. It has to be
       either the ID of Library or the ID of an environment at the end of a chain.
     DESC
@@ -106,7 +111,12 @@ module Katello
     param :organization_id, :number, :desc => N_("name of the organization")
     param :new_name, String, :desc => N_("new name to be given to the environment")
     param :description, String, :desc => N_("description of the environment")
-    param :prior, Integer, :desc => <<-DESC
+    param :prior, Integer, :deprecated => true, :desc => <<-DESC
+      ID of an environment that is prior to the new environment in the chain. It has to be
+      either the ID of Library or the ID of an environment at the end of a chain.
+      This param exists for backwards compatibility purposes. Please use prior_id.
+    DESC
+    param :prior_id, Integer, :desc => <<-DESC
       ID of an environment that is prior to the new environment in the chain. It has to be
       either the ID of Library or the ID of an environment at the end of a chain.
     DESC
@@ -182,7 +192,7 @@ module Katello
     end
 
     def find_prior
-      prior = params.require(:environment).require(:prior)
+      prior = params[:environment][:prior] || params.require(:environment).require(:prior_id)
       @prior = KTEnvironment.readable.find(prior)
       fail HttpErrors::NotFound, _("Couldn't find prior-environment '%s'") % prior.to_s if @prior.nil?
       @prior
@@ -190,7 +200,7 @@ module Katello
 
     def environment_params
       attrs = [:name, :description]
-      attrs.push(:label, :prior) if params[:action] == "create"
+      attrs << :label if params[:action] == "create"
       parms = params.require(:environment).permit(*attrs)
       parms
     end
