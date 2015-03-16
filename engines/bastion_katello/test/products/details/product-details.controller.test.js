@@ -58,7 +58,7 @@ describe('Controller: ProductDetailsController', function() {
         it ("if the permission was denied", function() {
             spyOn($scope, 'denied').andReturn(true);
             expect($scope.getReadOnlyReason(product)).toBe('permissions');
-            expect($scope.denied).toHaveBeenCalledWith('delete_products', product);
+            expect($scope.denied).toHaveBeenCalledWith('destroy_products', product);
         });
 
         it("if the product was published in a content view", function() {
