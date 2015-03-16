@@ -205,7 +205,6 @@ Katello::Engine.routes.draw do
             post :host_collections, :action => :add_host_collections
             delete :host_collections, :action => :remove_host_collections
             get :packages, :action => :package_profile
-            get :errata
             get :pools
             get :releases
             put :refresh_subscriptions
@@ -285,9 +284,10 @@ Katello::Engine.routes.draw do
               put :upgrade_all
             end
           end
-          api_resources :errata, :only => [:show], :controller => :system_errata do
+          api_resources :errata, :only => [:show, :index], :controller => :system_errata do
             collection do
               put :apply
+              get :auto_complete_search
             end
           end
         end

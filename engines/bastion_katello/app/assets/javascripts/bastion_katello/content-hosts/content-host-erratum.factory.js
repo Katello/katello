@@ -31,6 +31,7 @@ angular.module('Bastion.content-hosts').factory('ContentHostErratum',
                 });
                 return data;
             }},
+            autocomplete: {method: 'GET', isArray: true, params: {action: 'auto_complete_search'}},
             apply: {method: 'PUT', params: {action: 'apply'}}
         });
 

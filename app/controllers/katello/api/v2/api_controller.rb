@@ -85,7 +85,10 @@ module Katello
       }
     end
 
-    def scoped_search(query, default_sort_by, default_sort_order, resource = resource_class)
+    def scoped_search(query, default_sort_by, default_sort_order, options = {})
+      resource = options.fetch(:resource_class, resource_class)
+      includes = options.fetch(:includes, [])
+
       total = query.count
       query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
       sub_total = query.count
@@ -93,6 +96,7 @@ module Katello
       sort_attr = "#{query.table_name}.#{sort_attr}" unless sort_attr.to_s.include?('.')
 
       query = query.order("#{sort_attr} #{params[:sort_order] || default_sort_order}")
+      query = query.includes(includes) if includes.length > 0
 
       if params[:full_result]
         params[:per_page] = total

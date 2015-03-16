@@ -196,13 +196,6 @@ module Katello
       end
     end
 
-    def test_errata
-      get :errata, :id => @errata_system.uuid
-
-      assert_response :success
-      assert_template 'api/v2/systems/errata'
-    end
-
     def test_update
       input = {
         :id => @system.id,
@@ -216,14 +209,6 @@ module Katello
       end
       post :update, input
       assert_response :success
-    end
-
-    def test_errata_other_env
-      get :errata, :id => @errata_system.uuid, :content_view_id => @errata_system.organization.default_content_view.id,
-          :environment_id => @errata_system.organization.library.id
-
-      assert_response :success
-      assert_template 'api/v2/systems/errata'
     end
   end
 end

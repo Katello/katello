@@ -98,7 +98,7 @@ module Katello
       scoped = scoped.of_type(params[:types]) if params[:types]
 
       respond_for_index :template => '../errata/index',
-                        :collection => scoped_search(scoped, 'issued', 'desc', Erratum)
+                        :collection => scoped_search(scoped, 'issued', 'desc', :resource_class => Erratum)
     end
 
     api :GET, "/content_views/:content_view_id/filters/:id/available_package_groups",

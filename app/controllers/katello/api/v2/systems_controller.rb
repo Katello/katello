@@ -20,7 +20,7 @@ module Katello
     skip_before_filter :set_default_response_format, :only => :report
 
     before_filter :find_system, :only => [:destroy, :show, :update,
-                                          :package_profile, :errata,
+                                          :package_profile,
                                           :pools, :enabled_repos, :releases,
                                           :available_host_collections,
                                           :refresh_subscriptions, :tasks, :content_override, :events]
@@ -202,30 +202,6 @@ module Katello
     def refresh_subscriptions
       sync_task(::Actions::Katello::System::AutoAttachSubscriptions, @system)
       respond_for_show(:resource => @system)
-    end
-
-    api :GET, "/systems/:id/errata", N_("List errata available for the content host"), :deprecated => true
-    param :id, String, :desc => N_("UUID of the content host"), :required => true
-    param :content_view_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Content View"), :required => false
-    param :environment_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Environment"), :required => false
-    param_group :search, Api::V2::ApiController
-    def errata
-      if params[:content_view_id] && params[:environment_id]
-        find_content_view
-        find_environment_and_content_view
-      elsif params[:content_view_id] || params[:environment_id]
-        fail _("either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified")
-      end
-
-      errata = @system.installable_errata(@environment, @content_view)
-      response = {
-        :records  => errata.sort_by { |e| e.issued }.reverse,
-        :subtotal => errata.count,
-        :total    => errata.count
-      }
-
-      @installable_errata_ids = @system.installable_errata.pluck("#{Katello::Erratum.table_name}.id")
-      respond_for_index :collection => response
     end
 
     # TODO: break this method up
