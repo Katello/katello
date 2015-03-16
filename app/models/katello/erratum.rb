@@ -57,7 +57,7 @@ module Katello
     end
 
     def self.applicable_to_systems(systems)
-      self.joins(:system_errata).where("#{SystemErratum.table_name}.system_id" => systems)
+      self.joins(:system_errata).where("#{SystemErratum.table_name}.system_id" => systems).uniq
     end
 
     def <=>(other)
