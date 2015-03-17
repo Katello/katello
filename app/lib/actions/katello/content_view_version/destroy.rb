@@ -22,7 +22,7 @@ module Actions
               version.archived_repos.each do |repo|
                 plan_action(Repository::Destroy, repo, options)
               end
-              plan_action(ContentViewPuppetEnvironment::Destroy, version.archive_puppet_environment)
+              plan_action(ContentViewPuppetEnvironment::Destroy, version.archive_puppet_environment) unless version.default?
             end
           end
 
