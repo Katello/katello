@@ -31,7 +31,9 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
         function ($scope, $q, translate, ActivationKey, ContentView, Organization, CurrentOrganization) {
 
         $scope.editContentView = false;
+        $scope.editEnvironment = false;
         $scope.disableEnvironmentSelection = false;
+        $scope.selectionRequired = true;
         $scope.environments = [];
 
         $scope.environments = Organization.readableEnvironments({id: CurrentOrganization});
@@ -46,12 +48,18 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
                     $scope.editContentView = true;
                     $scope.disableEnvironmentSelection = true;
                 }
+            } else if (environment) {
+                $scope.editEnvironment = true;
+                $scope.editContentView = true;
+                $scope.disableEnvironmentSelection = true;
             }
         });
 
         $scope.cancelContentViewUpdate = function () {
             if ($scope.editContentView) {
                 $scope.editContentView = false;
+                $scope.editEnvironment = false;
+                $scope.selectionRequired = false;
                 $scope.activationKey.environment = $scope.originalEnvironment;
                 $scope.disableEnvironmentSelection = false;
             }
@@ -59,6 +67,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
 
         $scope.saveContentView = function (activationKey) {
             $scope.editContentView = false;
+            $scope.editEnvironment = false;
             $scope.save(activationKey).then(function (activationKey) {
                 $scope.originalEnvironment = activationKey.environment;
             });
