@@ -50,8 +50,10 @@
         <tr ng-repeat="update in updates">
           <td>
             <div>
-              <i class="fa fa-chevron-down" ng-show="update.componentsVisible && update.components" ng-click="toggleComponents(update)"></i>
-              <i class="fa fa-chevron-right" ng-hide="update.componentsVisible && update.components" ng-click="toggleComponents(update)"></i>
+              <span ng-show="update.components.length > 0">
+                <i class="fa fa-chevron-down" ng-show="update.componentsVisible && update.components" ng-click="toggleComponents(update)"></i>
+                <i class="fa fa-chevron-right" ng-hide="update.componentsVisible && update.components" ng-click="toggleComponents(update)"></i>
+              </span>
               <a ng-href="/content_views/{{ update.content_view_version.content_view.id }}/versions/{{update.content_view_version.id}}">{{ update.content_view_version.content_view.name }}</a> <span ng-show="{{update.components}}">*</span>
             </div>
             <div ng-show="update.componentsVisible">

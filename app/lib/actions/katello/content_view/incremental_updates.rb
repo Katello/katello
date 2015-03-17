@@ -16,7 +16,7 @@ module Actions
       class IncrementalUpdates < Actions::EntryAction
         include Helpers::Presenter
 
-        def plan(version_environments, content, dep_solve, propagate_composites, systems, description)
+        def plan(version_environments, composite_version_environments, content, dep_solve, systems, description)
           old_new_version_map = {}
           output_for_version_ids = []
 
@@ -26,7 +26,7 @@ module Actions
                 version = version_environment[:content_view_version]
                 if version.content_view.composite?
                   fail _("Cannot perform an incremental update on a Composite Content View Version (%{name} version version %{version}") %
-                  {:name => version.content_view.name, :version => version.version}
+                    {:name => version.content_view.name, :version => version.version}
                 end
 
                 action = plan_action(ContentViewVersion::IncrementalUpdate, version,
@@ -35,7 +35,10 @@ module Actions
                 output_for_version_ids << {:version_id => action.new_content_view_version.id, :output => action.output}
               end
             end
-            handle_composites(old_new_version_map, output_for_version_ids, description, content[:puppet_module_ids]) if propagate_composites
+
+            if composite_version_environments.any?
+              handle_composites(old_new_version_map, composite_version_environments, output_for_version_ids, description, content[:puppet_module_ids])
+            end
 
             if systems.any? && !content[:errata_ids].blank?
               plan_action(::Actions::BulkAction, ::Actions::Katello::System::Erratum::ApplicableErrataInstall, systems, content[:errata_ids])
@@ -44,21 +47,20 @@ module Actions
           end
         end
 
-        def handle_composites(old_new_version_map, output_for_version_ids, description, puppet_module_ids)
-          composite_version_map = {}
-          old_new_version_map.each do |old_version, new_version|
-            old_version.composites.each do |composite|
-              if composite.environments.any?
-                composite_version_map[composite] ||= []
-                composite_version_map[composite] << new_version
-              end
-            end
-          end
-
+        def handle_composites(old_new_version_map, composite_version_environments, output_for_version_ids, description, puppet_module_ids)
           concurrence do
-            composite_version_map.each do |composite_version, new_components|
-              action = plan_action(ContentViewVersion::IncrementalUpdate, composite_version,
-                          composite_version.environments, :new_components => new_components, :description => description,
+            composite_version_environments.each do |version_environment|
+              composite_version = version_environment[:content_view_version]
+              environments = version_environment[:environments]
+              new_components = composite_version.components.map { |component| old_new_version_map[component] }.compact
+
+              if new_components.empty?
+                fail _("Incremental update specified for composite %{name} version %{version}, but no components updated.")  %
+                      {:name => composite_version.content_view.name, :version => composite_version.version}
+              end
+
+              action = plan_action(ContentViewVersion::IncrementalUpdate, composite_version, environments,
+                                   :new_components => new_components, :description => description,
                                                            :content => {:puppet_module_ids => puppet_module_ids})
               output_for_version_ids << {:version_id => action.new_content_view_version.id, :output => action.output}
             end
