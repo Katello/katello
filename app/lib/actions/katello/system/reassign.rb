@@ -26,9 +26,8 @@ module Actions
             end
 
           end
-
-          # TODO: update cp
           system.save!
+          plan_action(::Actions::Candlepin::Consumer::Update, system)
         end
       end
     end
