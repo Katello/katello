@@ -15,8 +15,6 @@ module Katello
     end
 
     initializer "katello.apipie" do
-      Apipie.configuration.api_controllers_matcher << "#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"
-      Apipie.configuration.ignored += %w(Api::V2::OrganizationsController)
       Apipie.configuration.checksum_path += ['/katello/api/']
       require 'katello/apipie/validators'
     end
