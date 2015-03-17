@@ -89,11 +89,12 @@ install -p -m0644 etc/service-list %{buildroot}%{_sysconfdir}/%{name}/
 #create symlinks for important scripts
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_sbindir}
-mkdir -p %{buildroot}/usr/share/foreman/script/foreman-debug.d/
-ln -sv %{homedir}/script/katello-debug.sh %{buildroot}/usr/share/foreman/script/foreman-debug.d/katello-debug.sh
 ln -sv %{homedir}/script/katello-remove %{buildroot}%{_bindir}/katello-remove
 ln -sv %{homedir}/script/katello-service %{buildroot}%{_bindir}/katello-service
 ln -sv %{homedir}/script/service-wait %{buildroot}%{_sbindir}/service-wait
+
+#foreman-debug must not be a symlink
+install -Dp -m0755 script/katello-debug.sh %{buildroot}/usr/share/foreman/script/foreman-debug.d/katello-debug.sh
 
 chmod +x %{buildroot}%{homedir}/script/*
 
