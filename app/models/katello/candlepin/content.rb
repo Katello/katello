@@ -228,8 +228,9 @@ module Katello
       end
 
       def feed_url
+        cdn_uri = URI.parse(product.provider.repository_url)
         docker_repo_uri =  URI.parse(registry["url"])
-        docker_repo_uri =  URI.parse("https://" + registry["url"]) unless docker_repo_uri.host
+        docker_repo_uri =  URI.parse("#{cdn_uri.scheme}://#{registry['url']}") unless docker_repo_uri.host
         "#{docker_repo_uri.scheme}://#{docker_repo_uri.host}:#{docker_repo_uri.port}"
       end
 
