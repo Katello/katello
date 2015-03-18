@@ -38,7 +38,8 @@ module Actions
             handle_composites(old_new_version_map, output_for_version_ids, description, content[:puppet_module_ids]) if propagate_composites
 
             if systems.any? && !content[:errata_ids].blank?
-              plan_action(::Actions::BulkAction, ::Actions::Katello::System::Erratum::ApplicableErrataInstall, systems, content[:errata_ids])
+              errata_ids = Katello::Erratum.where(:uuid => content[:errata_ids]).pluck(:errata_id)
+              plan_action(::Actions::BulkAction, ::Actions::Katello::System::Erratum::ApplicableErrataInstall, systems, errata_ids)
             end
             plan_self(:version_outputs => output_for_version_ids)
           end
