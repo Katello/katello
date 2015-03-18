@@ -99,6 +99,22 @@ module Katello
 
       assert_equal errata.reload.packages.count, pkg_count + 1
     end
+
+    def test_update_from_json_new_packages
+      pkg = {:name => 'foo', :version => 3, :arch => 'x86_64', :epoch => 0, :release => '.el3', :filename => 'blahblah.rpm'}.with_indifferent_access
+      pkg2 = {:name => 'bar', :version => 3, :arch => 'x86_64', :epoch => 0, :release => '.el3', :filename => 'foo.rpm'}.with_indifferent_access
+      errata = katello_errata(:security)
+      pkg_count = errata.packages.count
+
+      json = errata.attributes.merge('pkglist' => [{'packages' => [pkg]}])
+      errata.update_from_json(json)
+      assert_equal errata.reload.packages.count, pkg_count + 1
+
+      json = errata.attributes.merge('pkglist' => [{'packages' => [pkg, pkg2]}])
+      errata.update_from_json(json)
+
+      assert_equal errata.reload.packages.count, pkg_count + 2
+    end
   end
 
   class ErratumAvailableTest < ErratumTestBase

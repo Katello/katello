@@ -96,9 +96,8 @@ module Katello
           update_bugzillas(json['references'].select { |r| r['type'] == 'bugzilla' })
           update_cves(json['references'].select { |r| r['type'] == 'cve' })
         end
-
-        update_packages(json['pkglist']) unless json['pkglist'].blank?
       end
+      update_packages(json['pkglist']) unless json['pkglist'].blank?
     end
 
     def self.list_filenames_by_clauses(clauses)
