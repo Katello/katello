@@ -20,12 +20,6 @@ module Katello
       self.user = user
     end
 
-    def install_errata(errata_ids)
-      perform_bulk_action do |consumer_group|
-        consumer_group.install_consumer_errata(errata_ids)
-      end
-    end
-
     def install_packages(packages)
       fail Errors::HostCollectionEmptyException if self.systems.empty?
       perform_bulk_action do |consumer_group|

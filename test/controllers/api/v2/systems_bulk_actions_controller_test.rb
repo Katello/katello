@@ -125,10 +125,13 @@ module Katello
     end
 
     def test_install_errata
-      BulkActions.any_instance.expects(:install_errata).once.returns(Job.new)
+      errata = katello_errata("bugfix")
+
+      @controller.expects(:async_task).with(::Actions::BulkAction, ::Actions::Katello::System::Erratum::ApplicableErrataInstall,
+                                            [@system1, @system2], [errata.uuid]).returns({})
 
       put :install_content, :included => {:ids => @system_ids}, :organization_id => @org.id,
-          :content_type => 'errata', :content => ['RHSA-2013:0123']
+          :content_type => 'errata', :content => [errata.errata_id]
 
       assert_response :success
     end
