@@ -57,7 +57,6 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 };
 
                 params['content_view_version_environments'] = [];
-                params['propagate_to_composites'] = true;
                 params['resolve_dependencies'] = true;
 
                 //get a list of unique content view verion ids with their environments
@@ -71,13 +70,10 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                             }
                         });
                     }
-                    else {
-
-                        if (cvIdEnvIds[versionId] === undefined) {
-                            cvIdEnvIds[versionId] = [];
-                        }
-                        cvIdEnvIds[versionId] = _.uniq(cvIdEnvIds[versionId].concat(_.pluck(update.environments, 'id')));
+                    if (cvIdEnvIds[versionId] === undefined) {
+                        cvIdEnvIds[versionId] = [];
                     }
+                    cvIdEnvIds[versionId] = _.uniq(cvIdEnvIds[versionId].concat(_.pluck(update.environments, 'id')));
                 });
 
                 angular.forEach(cvIdEnvIds, function (envIds, cvId) {

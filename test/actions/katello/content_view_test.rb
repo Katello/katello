@@ -270,13 +270,40 @@ module ::Actions::Katello::ContentView
       katello_environments(:library)
     end
 
+    let(:composite_version) do
+      katello_content_view_versions(:composite_view_version_1)
+    end
+
     it 'plans' do
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_content_view_version).returns(::Katello::ContentViewVersion.first)
 
-      plan_action(action, [{:content_view_version => content_view.version(library), :environments => [library]}],
-                  {:errata_ids => ["FOO"]}, true, false, [], "BadDescription")
+      plan_action(action, [{:content_view_version => content_view.version(library), :environments => [library]}], [],
+                  {:errata_ids => ["FOO"]}, true, [], "BadDescription")
       assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, content_view.version(library), [library],
                                 :content => {:errata_ids => ["FOO"]}, :resolve_dependencies => true, :description => "BadDescription")
+    end
+
+    it 'plans with composite' do
+      component = composite_version.components.first
+      new_version = ::Katello::ContentViewVersion.new
+
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_content_view_version).returns(new_version)
+
+      plan_action(action, [{:content_view_version => component, :environments => []}], [{:content_view_version => composite_version, :environments => [library]}],
+                  {:errata_ids => ["FOO"]}, true, [], "BadDescription")
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, component, [],
+                                :content => {:errata_ids => ["FOO"]}, :resolve_dependencies => true, :description => "BadDescription")
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::IncrementalUpdate, composite_version, [library],
+                                :content => {:puppet_module_ids => nil}, :new_components => [new_version],
+                                :description => "BadDescription")
+    end
+
+    it 'fails with component that does not match composite' do
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_content_view_version).returns(::Katello::ContentViewVersion.first)
+      assert_raises RuntimeError do
+        plan_action(action, [{:content_view_version => content_view.version(library), :environments => []}], [{:content_view_version => composite_version, :environments => [library]}],
+                  {:errata_ids => ["FOO"]}, true, [], "BadDescription")
+      end
     end
   end
 end

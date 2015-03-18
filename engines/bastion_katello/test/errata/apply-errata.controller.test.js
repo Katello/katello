@@ -144,7 +144,6 @@ describe('Controller: ApplyErrataController', function() {
                         'content_view_version_id': 1,
                         'environment_ids': [2]
                     }],
-                    'propagate_to_composites': true,
                     'resolve_dependencies': true
                 };
 
@@ -197,8 +196,10 @@ describe('Controller: ApplyErrataController', function() {
                     'content_view_version_environments': [{
                         'content_view_version_id': 5,
                         'environment_ids': []
+                    },{
+                        'content_view_version_id': 1,
+                        'environment_ids': [2]
                     }],
-                    'propagate_to_composites': true,
                     'resolve_dependencies': true
                 };
 
@@ -236,8 +237,10 @@ describe('Controller: ApplyErrataController', function() {
                     'content_view_version_environments': [{
                         'content_view_version_id': 5,
                         'environment_ids': [99]
+                    },{
+                        'content_view_version_id': 1,
+                        'environment_ids': [2]
                     }],
-                    'propagate_to_composites': true,
                     'resolve_dependencies': true
                 };
 
