@@ -11,12 +11,18 @@
     <description>Katello Server Packages</description>
     <uservisible>true</uservisible>
     <packagelist>
+       <!-- elasticsearch packages -->
        <packagereq type="default">elasticsearch</packagereq>
-       <packagereq type="default">ruby193-rubygem-katello</packagereq>
+       <packagereq type="default">ruby193-rubygem-tire</packagereq>
+       <packagereq type="default">lucene4</packagereq>
+       <packagereq type="default">lucene4-contrib</packagereq>
+       <packagereq type="default">sigar-java</packagereq>
+       <packagereq type="default">sigar</packagereq>
+       <packagereq type="default">snappy-java</packagereq>
+
+       <!-- katello core packages -->
        <packagereq type="default">katello</packagereq>
-       <packagereq type="default">katello-agent</packagereq>
-       <packagereq type="default">katello-all</packagereq>
-       <packagereq type="default">katello-api-docs</packagereq>
+       <packagereq type="default">ruby193-rubygem-katello</packagereq>
        <packagereq type="default">katello-certs-tools</packagereq>
        <packagereq type="default">katello-common</packagereq>
        <packagereq type="default">katello-debug</packagereq>
@@ -25,132 +31,41 @@
        <packagereq type="default">katello-sam</packagereq>
        <packagereq type="default">katello-selinux</packagereq>
        <packagereq type="default">katello-utils</packagereq>
-       <packagereq type="default">lucene4</packagereq>
-       <packagereq type="default">lucene4-contrib</packagereq>
        <packagereq type="default">pulp-katello</packagereq>
-       <packagereq type="default">sigar-java</packagereq>
-       <packagereq type="default">sigar</packagereq>
-       <packagereq type="default">snappy-java</packagereq>
-
-       <packagereq type="default">ruby193-highline</packagereq>
-       <packagereq type="default">ruby193-facter</packagereq>
-       <packagereq type="default">ruby193-hiera</packagereq>
-       <packagereq type="default">ruby193-puppet</packagereq>
-       <packagereq type="default">ruby193-ruby-augeas</packagereq>
-       <packagereq type="default">ruby193-ruby-shadow</packagereq>
-       <packagereq type="default">ruby193-ruby-wrapper</packagereq>
-       <packagereq type="default">ruby193-rubygem-angular-rails-templates</packagereq>
-       <packagereq type="default">ruby193-rubygem-Ascii85</packagereq>
-       <packagereq type="default">ruby193-rubygem-POpen4</packagereq>
-       <packagereq type="default">ruby193-rubygem-Platform</packagereq>
-       <packagereq type="default">ruby193-rubygem-anemone</packagereq>
-       <packagereq type="default">ruby193-rubygem-ansi</packagereq>
-       <packagereq type="default">ruby193-rubygem-algebrick</packagereq>
-       <packagereq type="default">ruby193-rubygem-bundler</packagereq>
-       <packagereq type="default">ruby193-rubygem-bundler_ext</packagereq>
-       <packagereq type="default">ruby193-rubygem-chunky_png</packagereq>
-       <packagereq type="default">ruby193-rubygem-closure-compiler</packagereq>
-       <packagereq type="default">ruby193-rubygem-color</packagereq>
-       <packagereq type="default">ruby193-rubygem-commonjs</packagereq>
-       <packagereq type="default">ruby193-rubygem-daemons</packagereq>
-       <packagereq type="default">ruby193-rubygem-deface</packagereq>
-       <packagereq type="default">ruby193-rubygem-delayed_job</packagereq>
-       <packagereq type="default">ruby193-rubygem-delayed_job_active_record</packagereq>
-       <packagereq type="default">ruby193-rubygem-devel</packagereq>
-       <packagereq type="default">ruby193-rubygem-dynflow</packagereq>
-       <packagereq type="default">ruby193-rubygem-eventmachine</packagereq>
-       <packagereq type="default">ruby193-rubygem-fast_gettext</packagereq>
-       <packagereq type="default">ruby193-rubygem-fastercsv</packagereq>
-       <packagereq type="default">ruby193-rubygem-flexmock</packagereq>
-       <packagereq type="default">ruby193-rubygem-foreigner</packagereq>
-       <packagereq type="default">ruby193-rubygem-foreman_api</packagereq>
-       <packagereq type="default">ruby193-rubygem-foreman_gutterball</packagereq>
-       <packagereq type="default">ruby193-rubygem-foreman_sam</packagereq>
-       <packagereq type="default">ruby193-rubygem-foreman-tasks</packagereq>
-       <packagereq type="default">ruby193-rubygem-fssm</packagereq>
-       <packagereq type="default">ruby193-rubygem-gettext_i18n_rails</packagereq>
-       <packagereq type="default">ruby193-rubygem-haml-rails</packagereq>
-       <packagereq type="default">ruby193-rubygem-haml</packagereq>
-       <packagereq type="default">ruby193-rubygem-hashr</packagereq>
-       <packagereq type="default">ruby193-rubygem-hoe</packagereq>
-       <packagereq type="default">ruby193-rubygem-hooks</packagereq>
-       <packagereq type="default">ruby193-rubygem-hpricot</packagereq>
-       <packagereq type="default">ruby193-rubygem-i18n_data</packagereq>
-       <packagereq type="default">ruby193-rubygem-json_pure</packagereq>
-       <packagereq type="default">ruby193-rubygem-justified</packagereq>
-       <packagereq type="default">ruby193-rubygem-less</packagereq>
-       <packagereq type="default">ruby193-rubygem-less-rails</packagereq>
-       <packagereq type="default">ruby193-rubygem-little-plugger</packagereq>
-       <packagereq type="default">ruby193-rubygem-logging</packagereq>
-       <packagereq type="default">ruby193-rubygem-nokogiri</packagereq>
-       <packagereq type="default">ruby193-rubygem-oauth</packagereq>
-       <packagereq type="default">ruby193-rubygem-open4</packagereq>
-       <packagereq type="default">ruby193-rubygem-pg</packagereq>
-       <packagereq type="default">ruby193-rubygem-po_to_json</packagereq>
-       <packagereq type="default">ruby193-rubygem-rabl</packagereq>
-       <packagereq type="default">ruby193-rubygem-rack-mount</packagereq>
-       <packagereq type="default">ruby193-rubygem-rails_warden</packagereq>
-       <packagereq type="default">ruby193-rubygem-rake-compiler</packagereq>
-       <packagereq type="default">ruby193-rubygem-rcov</packagereq>
-       <packagereq type="default">ruby193-rubygem-regin</packagereq>
-       <packagereq type="default">ruby193-rubygem-rest-client</packagereq>
-       <packagereq type="default">ruby193-rubygem-robotex</packagereq>
-       <packagereq type="default">ruby193-rubygem-ruby-progressbar</packagereq>
-       <packagereq type="default">ruby193-rubygem-ruby-rc4</packagereq>
-       <packagereq type="default">ruby193-rubygem-ruby_parser</packagereq>
-       <packagereq type="default">ruby193-rubygem-rubyforge</packagereq>
-       <packagereq type="default">ruby193-rubygem-runcible</packagereq>
-       <packagereq type="default">ruby193-rubygem-scoped_search</packagereq>
-       <packagereq type="default">ruby193-rubygem-sexp_processor</packagereq>
-       <packagereq type="default">ruby193-rubygem-simplecov</packagereq>
-       <packagereq type="default">ruby193-rubygem-simplecov-html</packagereq>
-       <packagereq type="default">ruby193-rubygem-sprockets</packagereq>
-       <packagereq type="default">ruby193-rubygem-sprockets-rails</packagereq>
-       <packagereq type="default">ruby193-rubygem-strong_parameters</packagereq>
-       <packagereq type="default">ruby193-rubygem-text-format</packagereq>
-       <packagereq type="default">ruby193-rubygem-thin</packagereq>
-       <packagereq type="default">ruby193-rubygem-tire</packagereq>
-       <packagereq type="default">ruby193-rubygem-transaction-simple</packagereq>
-       <packagereq type="default">ruby193-rubygem-ttfunk</packagereq>
-       <packagereq type="default">ruby193-rubygem-warden</packagereq>
-       <packagereq type="default">ruby193-rubygem-yui-compressor</packagereq>
-       <packagereq type="default">rubygem-hammer_cli_csv</packagereq>
-       <packagereq type="default">rubygem-hammer_cli_foreman_tasks</packagereq>
-       <packagereq type="default">rubygem-hammer_cli_import</packagereq>
-       <packagereq type="default">rubygem-hammer_cli_katello</packagereq>
-       <packagereq type="default">rubygem-hammer_cli_sam</packagereq>
-       <packagereq type="default">rubygem-hammer_cli_gutterball</packagereq>
-       <packagereq type="default">ruby193-rubygem-qpid_messaging</packagereq>
-
-       <!-- katello installer packages -->
        <packagereq type="default">katello-installer-base</packagereq>
        <packagereq type="default">katello-installer</packagereq>
        <packagereq type="default">katello-devel-installer</packagereq>
        <packagereq type="default">capsule-installer</packagereq>
+       <packagereq type="default">rubygem-hammer_cli_katello</packagereq>
+       <packagereq type="default">rubygem-hammer_cli_import</packagereq>
+
+       <!-- katello thirdparty rubygem packages -->
+       <packagereq type="default">ruby193-rubygem-anemone</packagereq>
+       <packagereq type="default">ruby193-rubygem-ansi</packagereq>
+       <packagereq type="default">ruby193-rubygem-chunky_png</packagereq>
+       <packagereq type="default">ruby193-rubygem-fssm</packagereq>
+       <packagereq type="default">ruby193-rubygem-haml-rails</packagereq>
+       <packagereq type="default">ruby193-rubygem-haml</packagereq>
+       <packagereq type="default">ruby193-rubygem-hashr</packagereq>
+       <packagereq type="default">ruby193-rubygem-hooks</packagereq>
+       <packagereq type="default">ruby193-rubygem-hpricot</packagereq>
+       <packagereq type="default">ruby193-rubygem-i18n_data</packagereq>
+       <packagereq type="default">ruby193-rubygem-justified</packagereq>
+       <packagereq type="default">ruby193-rubygem-robotex</packagereq>
+       <packagereq type="default">ruby193-rubygem-runcible</packagereq>
+       <packagereq type="default">ruby193-rubygem-sexp_processor</packagereq>
+       <packagereq type="default">ruby193-rubygem-strong_parameters</packagereq>
+       <packagereq type="default">ruby193-rubygem-qpid_messaging</packagereq>
+       <packagereq type="default">rubygem-hammer_cli_csv</packagereq>
+       
+       <!-- sam packages -->
        <packagereq type="default">sam-installer</packagereq>
-       <packagereq type="default">rubygem-ansi</packagereq>
-       <packagereq type="default">rubygem-clamp</packagereq>
-       <packagereq type="default">rubygem-hashie</packagereq>
-       <packagereq type="default">rubygem-kafo</packagereq>
-       <packagereq type="default">rubygem-little-plugger</packagereq>
-       <packagereq type="default">rubygem-logging</packagereq>
-       <packagereq type="default">rubygem-multi_json</packagereq>
-       <packagereq type="default">rubygem-powerbar</packagereq>
-       <packagereq type="default">rubygem-rdoc</packagereq>
-    </packagelist>
-  </group>
-  <group>
-    <id>katello-server-devel</id>
-    <name>Katello Server Development</name>
-    <description>Katello Server Development Packages</description>
-    <uservisible>true</uservisible>
-    <packagelist>
-       <packagereq type="optional">python-inflector</packagereq>
-       <packagereq type="optional">ruby193-rubygem-addressable</packagereq>
-       <packagereq type="optional">ruby193-rubygem-crack</packagereq>
-       <packagereq type="optional">ruby193-rubygem-rspec-rails</packagereq>
-       <packagereq type="optional">ruby193-rubygem-syntax</packagereq>
-       <packagereq type="optional">ruby193-rubygem-webmock</packagereq>
+       <packagereq type="default">ruby193-rubygem-foreman_sam</packagereq>
+       <packagereq type="default">rubygem-hammer_cli_sam</packagereq>
+
+       <!-- gutterball packages -->
+       <packagereq type="default">ruby193-rubygem-foreman_gutterball</packagereq>
+       <packagereq type="default">rubygem-hammer_cli_gutterball</packagereq>
     </packagelist>
   </group>
   <group>
@@ -159,65 +74,11 @@
     <description>Katello Server Documentation Packages</description>
     <uservisible>true</uservisible>
     <packagelist>
-       <packagereq type="optional">ruby193-rubygem-Ascii85-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-POpen4-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-Platform-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-addressable-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-bundler_ext-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-crack-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-deface-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-delayed_job-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-delayed_job_active_record-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-devel</packagereq>
-       <packagereq type="optional">ruby193-rubygem-dynflow-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-eventmachine-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-flexmock-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-foreman_api-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-fssm-doc</packagereq>
        <packagereq type="optional">ruby193-rubygem-haml-doc</packagereq>
        <packagereq type="optional">ruby193-rubygem-hashr-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-hoe-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-hooks-doc</packagereq>
        <packagereq type="optional">ruby193-rubygem-hpricot-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-json_pure-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-little-plugger-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-logging-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-minitest-rails-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-nokogiri-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-open4-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-pg-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-rabl-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-rack-mount-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-rake-compiler-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-rcov-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-regin-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-rspec-rails-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-ruby-progressbar-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-ruby-rc4-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-ruby_parser-doc</packagereq>
        <packagereq type="optional">ruby193-rubygem-runcible-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-scoped_search-doc</packagereq>
        <packagereq type="optional">ruby193-rubygem-sexp_processor-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-sprockets-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-sprockets-rails-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-thin-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-transaction-simple-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-ttfunk-doc</packagereq>
-       <packagereq type="optional">ruby193-rubygem-webmock-doc</packagereq>
-    </packagelist>
-  </group>
-  <group>
-    <id>katello-server-debuginfo</id>
-    <name>Katello Server Debuginfo</name>
-    <description>Katello Server Debuginfo</description>
-    <uservisible>true</uservisible>
-    <packagelist>
-       <packagereq type="optional">ruby193-rubygem-eventmachine-debuginfo</packagereq>
-       <packagereq type="optional">ruby193-rubygem-hpricot-debuginfo</packagereq>
-       <packagereq type="optional">ruby193-rubygem-nokogiri-debuginfo</packagereq>
-       <packagereq type="optional">ruby193-rubygem-pg-debuginfo</packagereq>
-       <packagereq type="optional">ruby193-rubygem-rcov-debugininfo</packagereq>
-       <packagereq type="optional">ruby193-rubygem-thin-debuginfo</packagereq>
     </packagelist>
   </group>
 </comps>
