@@ -44,7 +44,7 @@
         {{ "Loading..." | translate }}
       </div>
 
-      <p bst-alert="info" ng-show="subscriptionsTable.rows.length === 0">
+      <p bst-alert="info" ng-show="subscriptionsTable.rows.length === 0 && !subscriptionsTable.working">
         <span translate>
           You currently don't have any Subscriptions associated with this Content Host, you can add Subscriptions after selecting the 'Add' tab.
         </span>
