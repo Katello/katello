@@ -1,3 +1,22 @@
+# Katello 2.1.2 
+
+## Bug Fixes 
+
+### Web UI
+ * only destroy repo in finalize for direct repo deletes ([#9566](http://projects.theforeman.org/issues/9566), [4835f07](http://github.com/katello/katello/commit/4835f07))
+ * speed up puppet class import ([#9647](http://projects.theforeman.org/issues/9647), [72cbf6c](http://github.com/katello/katello/commit/72cbf6c))
+ * various inherited hostgroup issues ([#9462](http://projects.theforeman.org/issues/9462), [#9557](http://projects.theforeman.org/issues/9557), [#9556](http://projects.theforeman.org/issues/9556), [294f99f](http://github.com/katello/katello/commit/294f99f))
+
+### Content Views
+ * update system env and cv in candlepin on cv remove (cherry picked from commit 5c0446e0b9c6b66f357394f9466ba5b1d290f508) ([#9478](http://projects.theforeman.org/issues/9478), [8608df9](http://github.com/katello/katello/commit/8608df9))
+
+### Candlepin
+ * Don't initialize cp task if no qpid config ([#8552](http://projects.theforeman.org/issues/8552), [cacd17d](http://github.com/katello/katello/commit/cacd17d))
+
+### Dynflow
+ * fix sync_plan add/del product action getting stuck ([#9404](http://projects.theforeman.org/issues/9404), [5970a12](http://github.com/katello/katello/commit/5970a12))
+
+
 # Katello 2.1.1
 
 ### Installer 
