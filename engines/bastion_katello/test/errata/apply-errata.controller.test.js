@@ -30,7 +30,7 @@ describe('Controller: ApplyErrataController', function() {
                 if (this.failed) {
                     error({data: {errors: ['error']}});
                 } else {
-                    success();
+                    success({id: 1});
                 }
             },
             availableIncrementalUpdates: function () {}
@@ -118,9 +118,10 @@ describe('Controller: ApplyErrataController', function() {
             });
 
             it("and succeed", function () {
+                spyOn($scope, 'transitionTo');
                 $scope.confirmApply();
 
-                expect($scope.successMessages.length).toBe(1);
+                expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.details', {taskId: 1});
                 expect($scope.errorMessages.length).toBe(0);
             });
 

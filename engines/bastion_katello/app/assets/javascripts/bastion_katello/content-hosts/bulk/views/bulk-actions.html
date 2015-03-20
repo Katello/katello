@@ -73,7 +73,7 @@
 
   <div>
 
-    <div bst-alert="warning" ng-show="table.numSelected == 0 && !isState('content-hosts.bulk-actions.subscriptions')">
+    <div bst-alert="warning" ng-show="showNoSelectionWarning()">
       {{ 'At least one content host needs to be selected in order to perform a bulk action.' | translate }}
     </div>
 

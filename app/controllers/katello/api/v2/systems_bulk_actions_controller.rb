@@ -230,9 +230,16 @@ module Katello
     end
 
     def content_action
-      action = Katello::BulkActions.new(User.current, @organization, @systems)
-      job = action.send(PARAM_ACTIONS[params[:action]][params[:content_type]],  params[:content])
-      respond_for_show :template => 'job', :resource => job
+      if params[:content_type] == 'errata'
+        errata_uuids = Katello::Erratum.where(:errata_id => params[:content]).pluck(:uuid)
+        errata_uuids += Katello::Erratum.where(:uuid => params[:content]).pluck(:uuid)
+        task = async_task(::Actions::BulkAction, ::Actions::Katello::System::Erratum::ApplicableErrataInstall, @systems, errata_uuids.uniq)
+        respond_for_async :resource => task
+      else
+        action = Katello::BulkActions.new(User.current, @organization, @systems)
+        job = action.send(PARAM_ACTIONS[params[:action]][params[:content_type]],  params[:content])
+        respond_for_show :template => 'job', :resource => job
+      end
     end
 
     def validate_content_action

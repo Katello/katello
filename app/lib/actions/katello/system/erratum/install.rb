@@ -35,6 +35,10 @@ module Actions
             [input[:errata].join(", ")] + super
           end
 
+          def resource_locks
+            :link
+          end
+
           def presenter
             Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Consumer::ContentInstall))
           end
