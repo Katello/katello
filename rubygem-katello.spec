@@ -29,7 +29,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.1.2
-Release: 1%{dist}
+Release: 2%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -236,6 +236,18 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Fri Mar 20 2015 Justin Sherrill <jsherril@redhat.com> 2.1.2-2
+- Adding changelog for Katello 2.1.2 (jsherril@redhat.com)
+- fixes #9566 - only destroy repo in finalize for direct repo deletes
+  (jsherril@redhat.com)
+- fixes #9647 - speed up puppet class import (jsherril@redhat.com)
+- fixes #9478 - update system env and cv in candlepin on cv remove
+- Fixes #8552 - Don't initialize cp task if no qpid config (dtsang@redhat.com)
+- fixes #9404 - fix sync_plan add/del product action getting stuck
+  (jsherril@redhat.com)
+- fixes #9462,#9557,#9556 - various inherited hostgroup issues
+  (jsherril@redhat.com)
+
 * Wed Feb 18 2015 Justin Sherrill <jsherril@redhat.com> 2.1.1-2
 - bumping gem version (jsherril@redhat.com)
 
