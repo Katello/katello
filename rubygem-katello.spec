@@ -29,7 +29,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.1.2
-Release: 2%{dist}
+Release: 3%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -236,6 +236,9 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Fri Mar 20 2015 Justin Sherrill <jsherril@redhat.com> 2.1.2-3
+- bumping gem version (jsherril@redhat.com)
+
 * Fri Mar 20 2015 Justin Sherrill <jsherril@redhat.com> 2.1.2-2
 - Adding changelog for Katello 2.1.2 (jsherril@redhat.com)
 - fixes #9566 - only destroy repo in finalize for direct repo deletes
