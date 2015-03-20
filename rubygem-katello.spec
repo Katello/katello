@@ -28,8 +28,8 @@
 Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
-Version: 2.1.1
-Release: 2%{dist}
+Version: 2.1.2
+Release: 1%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
