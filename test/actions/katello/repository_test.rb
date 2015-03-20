@@ -56,14 +56,15 @@ module ::Actions::Katello::Repository
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Destroy }
     let(:pulp_action_class) { ::Actions::Pulp::Repository::Destroy }
+    let(:unpublished_repository) { katello_repositories(:fedora_17_unpublished) }
 
     it 'plans' do
       action       = create_action action_class
-      action.stubs(:action_subject).with(repository)
+      action.stubs(:action_subject).with(unpublished_repository)
       action.expects(:plan_self)
-      plan_action action, repository
-      assert_action_planed_with action, pulp_action_class, pulp_id: repository.pulp_id
-      assert_action_planed_with action, ::Actions::Katello::Product::ContentDestroy, repository
+      plan_action action, unpublished_repository
+      assert_action_planed_with action, pulp_action_class, pulp_id: unpublished_repository.pulp_id
+      assert_action_planed_with action, ::Actions::Katello::Product::ContentDestroy, unpublished_repository
     end
   end
 
