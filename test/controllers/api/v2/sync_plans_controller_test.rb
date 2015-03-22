@@ -148,10 +148,11 @@ module Katello
     end
 
     def test_add_products
-      ::ForemanTasks.expects(:sync_task).with(::Actions::Katello::SyncPlan::UpdateProducts, @sync_plan)
+      product_ids = @products.collect { |p| p.id.to_s }
+      ::ForemanTasks.expects(:sync_task).with(::Actions::Katello::SyncPlan::AddProducts, @sync_plan, product_ids)
 
       put :add_products, :id => @sync_plan.id, :organization_id => @organization.id,
-          :product_ids => @products.collect { |p| p.id }
+          :product_ids => product_ids
 
       assert_response :success
       assert_template 'api/v2/sync_plans/show'
@@ -168,8 +169,11 @@ module Katello
     end
 
     def test_remove_products
+      product_ids = @products.collect { |p| p.id.to_s }
+      ::ForemanTasks.expects(:sync_task).with(::Actions::Katello::SyncPlan::RemoveProducts, @sync_plan, product_ids)
+
       put :remove_products, :id => @sync_plan.id, :organization_id => @organization.id,
-          :product_ids => @products.collect { |p| p.id }
+          :product_ids => product_ids
 
       assert_response :success
       assert_template 'api/v2/sync_plans/show'
