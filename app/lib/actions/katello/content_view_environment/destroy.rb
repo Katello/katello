@@ -28,7 +28,7 @@ module Actions
                 content_view.repos(environment).each do |repo|
                   # no need to update the content view environment since it's
                   # getting destroyed so skip_environment_update
-                  plan_action(Repository::Destroy, repo, skip_environment_update: true)
+                  plan_action(Repository::Destroy, repo, skip_environment_update: true, :planned_destroy => true)
                 end
               end
 

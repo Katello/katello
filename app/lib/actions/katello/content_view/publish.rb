@@ -39,7 +39,7 @@ module Actions
               end
 
               repos_to_delete(content_view).each do |repo|
-                plan_action(Repository::Destroy, repo)
+                plan_action(Repository::Destroy, repo, :planned_destroy => true)
               end
             end
 
