@@ -45,7 +45,7 @@
         {{ "Loading..." | translate }}
       </div>
 
-      <p bst-alert="info" ng-show="addSubscriptionsTable.rows.length === 0">
+      <p bst-alert="info" ng-show="addSubscriptionsTable.rows.length === 0 && !addSubscriptionsTable.working">
         <span translate>
           You currently don't have any Products to subscribe to, you can add Products after selecting 'Products' under 'Content' in the main menu.
         </span>
