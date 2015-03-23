@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.2.0
-Release: 3%{dist}
+Release: 4%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -221,6 +221,49 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Mon Mar 23 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-4
+- Merge pull request #5127 from ehelms/cherry-pick (eric.d.helms@gmail.com)
+- fixes #9798 - don't plan CVPE deletion if this is the default version,
+  BZ1076568
+- Fixes #9755 - Adding docker_images method to cvv
+- fixes #9802 - convert system bulk errata action to dynflow
+  (jsherril@redhat.com)
+- fixes #9799 - changing structure of incremental update around composites
+  (jsherril@redhat.com)
+- Fixes #9741 - Fixed a puppet module count error in a CVV (paji@redhat.com)
+- fixes #9750 - always reindex errata packages (jsherril@redhat.com)
+- Fixes #9688 - Uses cdn url scheme for docker repo feeds (paji@redhat.com)
+- fixes #9722 - recognize and show errors on host content actions
+- Fixes #9737: fix CH filter for incremental update, BZ 1200441.
+  (walden@redhat.com)
+- Fixes #9735: Fix package/puppet module incremental update.
+- Fixes #9732: Incorrect apiepie docs for incremental update.
+- Fixes #8570: Show modal dialog before deletion.
+- Fixes #9586: Content view comparison will provide results again.
+- fixes #9577 - fixing host single and bulk delete (jsherril@redhat.com)
+- Fixes #9685: Allow searching on capital letters for Packages in CS.
+- Fixes #9583: improve repository deletion responses BZ 1166365.
+  (walden@redhat.com)
+- Fixes #9580: fix N+1 queries on activation key list, BZ 1196742.
+  (walden@redhat.com)
+- Fixes #9610 - Docker Content now hidden for composite cv (paji@redhat.com)
+- fixes #9360 - set feature flag host collection actions
+  (thomasmckay@redhat.com)
+- fixes #9422 - limit 24 hour guest subscription visibility
+  (thomasmckay@redhat.com)
+- Fixes #9344 - Changing descriptions to text fields BZ1177158
+- fixes #9405 - Attaches custom products when registering with activation key
+- fixes #8892, #9340 - Validates content label and override value, BZ1173723,
+  BZ1187750
+- fixes #8728, #8756 - use capsule RPM for registering a content host
+- fixes #9416 - content view update - dynflow'ize it (bbuckingham@redhat.com)
+- fixes #9566 - only destroy repo in finalize for direct repo deletes
+  (jsherril@redhat.com)
+- fixes #9478 - update system env and cv in candlepin on cv remove
+- fixes #9637 - adding qpid-proton-c to client repos (jsherril@redhat.com)
+- refs #8175 - add new proton/dispatcher packages to comps
+  (jsherril@redhat.com)
+
 * Wed Mar 11 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-3
 - Fixes #9707: Cleanup requirement on rubygems-devel. (ericdhelms@gmail.com)
 - refs #9637 - add python-amqp to client repos (jsherril@redhat.com)
