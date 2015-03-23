@@ -255,11 +255,19 @@ module Katello
       end
 
       def package_group_count
-        self.pulp_repo_facts[:content_unit_counts][:package_group] || 0
+        content_unit_counts = 0
+        if self.pulp_repo_facts
+          content_unit_counts = self.pulp_repo_facts[:content_unit_counts][:package_group]
+        end
+        content_unit_counts
       end
 
       def puppet_module_count
-        self.pulp_repo_facts[:content_unit_counts][:puppet_module] || 0
+        content_unit_counts = 0
+        if self.pulp_repo_facts
+          content_unit_counts = self.pulp_repo_facts[:content_unit_counts][:puppet_module]
+        end
+        content_unit_counts
       end
 
       # remove errata and groups from this repo

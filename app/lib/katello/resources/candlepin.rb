@@ -417,7 +417,11 @@ module Katello
 
           def pools(key, filter = {})
             if key
-              json_str = self.get(join_path(path(key), 'pools') + hash_to_query(filter), self.default_headers).body
+              # hash_to_query escapes the ":!" to "%3A%21" which candlepin rejects
+              params = hash_to_query(filter)
+              params += params == '?' ? '' : '&'
+              params += 'attribute=unmapped_guests_only:!true'
+              json_str = self.get(join_path(path(key), 'pools') + params, self.default_headers).body
             else
               json_str = self.get(join_path('candlepin', 'pools') + hash_to_query(filter), self.default_headers).body
             end
@@ -535,18 +539,13 @@ module Katello
           end
 
           def get_for_owner(owner_key)
-            pools_json = self.get("/candlepin/owners/#{owner_key}/pools", self.default_headers).body
+            pools_json = self.get("/candlepin/owners/#{owner_key}/pools?attribute=unmapped_guests_only:!true", self.default_headers).body
             JSON.parse(pools_json)
           end
 
           def destroy(id)
             fail ArgumentError, "pool id has to be specified" unless id
             self.delete(path(id), self.default_headers).code.to_i
-          end
-
-          def all
-            pools_json = self.get(path, self.default_headers).body
-            JSON.parse(pools_json)
           end
 
           def path(id = nil)
@@ -790,6 +789,17 @@ module Katello
             kp_json = Candlepin::CandlepinResource.get(join_path(path(id), "pools"), self.default_headers).body
             key_pools = JSON.parse(kp_json)
             Util::Data.array_with_indifferent_access key_pools
+          end
+
+          def add_product(id, product_id)
+            cppath = join_path(path(id), "product/#{product_id}")
+            product = self.post(cppath, {}, self.default_headers)
+            JSON.parse(product).with_indifferent_access
+          end
+
+          def remove_product(id, product_id)
+            product = self.delete(join_path(path(id), "product/#{product_id}"), self.default_headers)
+            JSON.parse(product).with_indifferent_access
           end
 
           def add_pools(id, pool_id, quantity)

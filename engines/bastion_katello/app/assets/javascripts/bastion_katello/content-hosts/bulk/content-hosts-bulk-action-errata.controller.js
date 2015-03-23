@@ -29,8 +29,8 @@
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionErrataController',
-    ['$scope', '$q', '$location', 'ContentHostBulkAction', 'HostCollection', 'Nutupane', 'CurrentOrganization', 'Erratum', 'translate',
-    function ($scope, $q, $location, ContentHostBulkAction, HostCollection, Nutupane, CurrentOrganization, Erratum, translate) {
+    ['$scope', '$q', '$location', 'ContentHostBulkAction', 'HostCollection', 'Nutupane', 'CurrentOrganization', 'Erratum',
+    function ($scope, $q, $location, ContentHostBulkAction, HostCollection, Nutupane, CurrentOrganization, Erratum) {
 
         var nutupane;
 
@@ -88,9 +88,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionErrata
             var params = installParams();
             $scope.setState(true, [], []);
             ContentHostBulkAction.installContent(params,
-                function () {
-                    $scope.setState(false, [translate("Successfully scheduled installation of %s errata .").replace('%s',
-                                            params.content.length)], []);
+                function (data) {
+                    $scope.setState(false, [], []);
+                    $scope.transitionTo('content-hosts.bulk-actions.task-details', {taskId: data.id});
                 },
                 function (data) {
                     $scope.setState(false, [], data.errors);

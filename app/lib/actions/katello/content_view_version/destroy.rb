@@ -24,7 +24,7 @@ module Actions
                 repo_options[:planned_destroy] = true
                 plan_action(Repository::Destroy, repo, repo_options)
               end
-              plan_action(ContentViewPuppetEnvironment::Destroy, version.archive_puppet_environment)
+              plan_action(ContentViewPuppetEnvironment::Destroy, version.archive_puppet_environment) unless version.default?
             end
           end
 

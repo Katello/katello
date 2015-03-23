@@ -16,7 +16,8 @@ module Katello
       attr_accessor :cv_env_ids,
                     :unit_type, # :package, :errata, :puppet_module
                     :offset,
-                    :repos
+                    :repos,
+                    :organization
 
       def initialize(options)
         super
@@ -27,14 +28,14 @@ module Katello
       end
 
       def build
-        self.cols = build_columns(self.cv_env_ids)
+        self.cols = build_columns(self.cv_env_ids, self.organization)
         self.rows = build_rows(self.repos, self.cols)
       end
 
-      def build_columns(cv_envs)
+      def build_columns(cv_envs, organization)
         cv_envs.inject({}) do |result, item|
           view = ContentView.readable.find(item[:view_id])
-          env = KTEnvironment.content_readable.find(item[:env_id])
+          env = KTEnvironment.content_readable(organization).find(item[:env_id])
           cv_version = view.version(env)
           self.repos += cv_version.repos(env)
 
@@ -127,19 +128,19 @@ module Katello
             # it implies that one of the cv_envs does not have this repo
             # which means that there is nothing shared between them
             # and all rows are "not shared" or "unique"
-            next if mode == :shared
-            search_mode = :all
+            next if mode == 'shared'
+            search_mode = 'all'
           end
 
           # build the rows
           units = case unit_type
                   when :package
                     Package.legacy_search('', offset, page_size, view_repos.map(&:pulp_id),
-                                   [:nvrea_sort, "ASC"], search_mode)
+                                   [:nvrea_sort, "asc"], search_mode.to_sym)
                   when :puppet_module
                     PuppetModule.legacy_search('', :start => offset, :page_size => page_size,
                                                    :repoids => view_repos.map(&:pulp_id),
-                                                   :search_mode => search_mode)
+                                                   :search_mode => search_mode.to_sym)
                   end
 
           next if units.empty? # if we don't have units, don't show repo

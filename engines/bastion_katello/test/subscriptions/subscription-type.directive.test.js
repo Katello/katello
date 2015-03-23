@@ -28,7 +28,7 @@ describe('Directive: subscriptionType', function() {
         element = '<div subscription-type="subscription"></div>';
         element = $compile(element)($scope);
         $scope.$digest();
-        expect(element.text()).toEqual("\n\n\n  Virtual\n\n\n");
+        expect(element.text().trim()).toEqual("Virtual");
     });
 
     it("subscription type Physical when no host", function() {
@@ -44,7 +44,7 @@ describe('Directive: subscriptionType', function() {
         element = '<div subscription-type="subscription"></div>';
         element = $compile(element)($scope);
         $scope.$digest();
-        expect(element.text()).toEqual("\n\n  Physical\n\n\n\n");
+        expect(element.text().trim()).toEqual("Physical");
     });
 
     it("subscription type Guest when host", function() {
@@ -52,6 +52,22 @@ describe('Directive: subscriptionType', function() {
         element = '<div subscription-type="subscription"></div>';
         element = $compile(element)($scope);
         $scope.$digest();
-        expect(element.text()).toEqual("\n\n\n\n  Guests of\n  hypervisor\n\n");
+        expect(element.text().trim()).toEqual("Guests of\n  hypervisor");
+    });
+
+    it("subscription type Temporary when unmapped_guest is true", function() {
+        $scope.subscription = {virt_only: true, unmapped_guest: true};
+        element = '<div subscription-type="subscription"></div>';
+        element = $compile(element)($scope);
+        $scope.$digest();
+        expect(element.text().trim()).toEqual("Temporary");
+    });
+
+    it("subscription type Temporary when unmapped_guest is false", function() {
+        $scope.subscription = {virt_only: true, unmapped_guest: false};
+        element = '<div subscription-type="subscription"></div>';
+        element = $compile(element)($scope);
+        $scope.$digest();
+        expect(element.text().trim()).toEqual("Virtual");
     });
 });

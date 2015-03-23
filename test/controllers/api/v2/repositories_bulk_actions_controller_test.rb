@@ -47,6 +47,10 @@ module Katello
     end
 
     def test_destroy_repositories
+      assert_async_task(::Actions::BulkAction) do |action_class|
+        action_class.must_equal ::Actions::Katello::Repository::Destroy
+      end
+
       put :destroy_repositories, :ids => @repositories.collect(&:id), :organization_id => @organization.id
 
       assert_response :success

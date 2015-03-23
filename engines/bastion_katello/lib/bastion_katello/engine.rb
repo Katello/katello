@@ -33,7 +33,10 @@ module BastionKatello
           host_collections
           katello_tasks
           select_organization
-        )
+        ),
+        :config => {
+          'consumerCertRPM' => Katello.config.consumer_cert_rpm
+        }
       )
     end
   end

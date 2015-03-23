@@ -181,6 +181,7 @@ module Katello
 
       options = { :unit_type => :package,
                   :cv_env_ids => cv_env_ids,
+                  :organization => current_organization,
                   :offset => params[:offset].try(:to_i) || 0 }
 
       comparison = ContentSearch::ContentViewComparison.new(options)
@@ -198,6 +199,7 @@ module Katello
 
       options = { :unit_type => :puppet_module,
                   :cv_env_ids => cv_env_ids,
+                  :organization => current_organization,
                   :offset => params[:offset].try(:to_i) || 0 }
 
       comparison = ContentSearch::ContentViewComparison.new(options)
@@ -275,6 +277,7 @@ module Katello
     def view_compare_packages
       options = { :unit_type => :package,
                   :cv_env_ids => params[:views].values,
+                  :organization => current_organization,
                   :offset => params[:offset].try(:to_i) || 0 }
 
       render :json => ContentSearch::ContentViewComparison.new(options)
@@ -283,6 +286,7 @@ module Katello
     def view_compare_puppet_modules
       options = { :unit_type => :puppet_module,
                   :cv_env_ids => params[:views].values,
+                  :organization => current_organization,
                   :offset => params[:offset].try(:to_i) || 0 }
 
       render :json => ContentSearch::ContentViewComparison.new(options)
@@ -541,12 +545,18 @@ module Katello
     def  multi_repo_content_search(content_class, search_obj, repos, offset, default_field, search_mode = :all, in_repo = nil)
       user = current_user
       search = Tire::Search::Search.new(content_class.index)
+
+      query_options = {
+        :lowercase_expanded_terms => false,
+        :default_field            => default_field
+      }
+
       search.instance_eval do
         query do
           if search_obj.is_a?(Array) || search_obj.nil?
             all
           else
-            string search_obj,  :default_field => default_field
+            string search_obj, query_options
           end
         end
 

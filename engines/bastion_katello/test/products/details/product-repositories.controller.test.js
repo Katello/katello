@@ -72,16 +72,6 @@ describe('Controller: ProductRepositoriesController', function() {
         expect($scope.repositoriesTable).toBe(expectedTable);
     });
 
-    it('should provide a way to remove a repository', function() {
-        var repository = new Repository();
-        repository.id = 1;
-        spyOn($scope, 'transitionTo');
-
-        $scope.removeRepository(repository);
-
-        expect($scope.transitionTo).toHaveBeenCalled();
-    });
-
     it("provides a way to remove all of the selected repositories in the table", function() {
         spyOn(RepositoryBulkAction, 'removeRepositories').andCallThrough();
 

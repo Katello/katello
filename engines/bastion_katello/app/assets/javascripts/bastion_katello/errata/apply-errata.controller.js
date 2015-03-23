@@ -48,7 +48,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
             };
 
             incrementalUpdate = function () {
-                var success, error, params = {}, cvIdEnvIds = {};
+                var error, params = {}, cvIdEnvIds = {};
 
                 $scope.applyingErrata = true;
 
@@ -57,7 +57,6 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 };
 
                 params['content_view_version_environments'] = [];
-                params['propagate_to_composites'] = true;
                 params['resolve_dependencies'] = true;
 
                 //get a list of unique content view verion ids with their environments
@@ -71,13 +70,10 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                             }
                         });
                     }
-                    else {
-
-                        if (cvIdEnvIds[versionId] === undefined) {
-                            cvIdEnvIds[versionId] = [];
-                        }
-                        cvIdEnvIds[versionId] = _.uniq(cvIdEnvIds[versionId].concat(_.pluck(update.environments, 'id')));
+                    if (cvIdEnvIds[versionId] === undefined) {
+                        cvIdEnvIds[versionId] = [];
                     }
+                    cvIdEnvIds[versionId] = _.uniq(cvIdEnvIds[versionId].concat(_.pluck(update.environments, 'id')));
                 });
 
                 angular.forEach(cvIdEnvIds, function (envIds, cvId) {
@@ -91,26 +87,16 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                     params['update_systems'] = $scope.selectedContentHosts;
                 }
 
-                success = function (response) {
-                    if ($scope.$stateParams.hasOwnProperty('errataId')) {
-                        $scope.transitionTo('errata.details.task-details', {errataId: $scope.$stateParams.errataId,
-                            taskId: response.id});
-                    } else {
-                        $scope.transitionTo('errata.tasks.details', {taskId: response.id});
-                    }
-                    $scope.applyingErrata = false;
-                };
-
                 error = function (response) {
                     $scope.errorMessages = response.data.errors;
                     $scope.applyingErrata = false;
                 };
 
-                ContentViewVersion.incrementalUpdate(params, success, error);
+                ContentViewVersion.incrementalUpdate(params, transitionToTask, error);
             };
 
             applyErrata = function () {
-                var params = $scope.selectedContentHosts, success, error;
+                var params = $scope.selectedContentHosts, error;
 
                 $scope.applyingErrata = true;
 
@@ -118,18 +104,12 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 params.content = $scope.errataIds;
                 params['organization_id'] = CurrentOrganization;
 
-                success = function () {
-                    $scope.transitionTo('errata.index');
-                    $scope.successMessages = [translate("Successfully scheduled installation of errata")];
-                    $scope.applyingErrata = false;
-                };
-
                 error = function (response) {
                     $scope.errorMessages = response.data.errors;
                     $scope.applyingErrata = false;
                 };
 
-                ContentHostBulkAction.installContent(params, success, error);
+                ContentHostBulkAction.installContent(params, transitionToTask, error);
             };
 
             if ($scope.$stateParams.hasOwnProperty('errataId')) {
@@ -157,5 +137,16 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
             };
 
             $scope.checkIfIncrementalUpdateRunning();
+
+            function transitionToTask(task) {
+                if ($scope.$stateParams.hasOwnProperty('errataId')) {
+                    $scope.transitionTo('errata.details.task-details', {errataId: $scope.$stateParams.errataId,
+                        taskId: task.id});
+                } else {
+                    $scope.transitionTo('errata.tasks.details', {taskId: task.id});
+                }
+                $scope.applyingErrata = false;
+            }
+
         }
     ]);

@@ -32,6 +32,11 @@ module Katello
           try_specific_resource_template(options[:template] || params[:action], "async", options)
         end
 
+        def respond_for_bulk_async(options = {})
+          options[:status] ||= 202
+          try_specific_resource_template(options[:template] || params[:action], "bulk_async", options)
+        end
+
         def respond_with_template(action, resource_name, options = {}, &_block)
           yield if block_given?
           status = options[:status] || 200

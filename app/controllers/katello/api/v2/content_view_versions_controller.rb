@@ -74,37 +74,37 @@ module Katello
 
     api :POST, "/content_view_versions/incremental_update", N_("Perform an Incremental Update on one or more Content View Versions")
     param :content_view_version_environments, Array do
-      param :content_view_version_id, :identifier, :desc => N_("Content View Version Ids to perform an incremental update on.")
+      param :content_view_version_id, :identifier, :desc => N_("Content View Version Ids to perform an incremental update on.  May contain composites as well as one or more components to update.")
       param :environment_ids, Array, :desc => N_("The list of environments to promote the specified Content View Version to (replacing the older version).")
     end
     param :description, String, :desc => N_("The description for the new generated Content View Versions")
     param :resolve_dependencies, :bool, :desc => N_("If true, when adding the specified errata or packages, any needed dependencies will be copied as well.")
-    param :propagate_to_composites, :bool, :desc => N_("If true, will publish a new composite version using any specified content_view_version_id that has been promoted to a lifecycle environment.")
+    param :propagate_all_composites, :bool, :desc => N_("If true, will publish a new composite version using any specified content_view_version_id that has been promoted to a lifecycle environment.")
     param :add_content, Hash  do
       param :errata_ids, Array, :desc => "Errata uuids to copy into the new versions."
       param :package_ids, Array, :desc => "Package uuids to copy into the new versions."
       param :puppet_module_ids, Array, :desc => "Puppet Modules to copy into the new versions."
     end
     param :update_systems, Hash, :desc => N_("After generating the incremental update, apply the changes to the specified systems.  Only Errata are supported currently.") do
-      param :include, Hash, :required => true, :action_aware => true do
+      param :included, Hash, :required => true, :action_aware => true do
         param :search, String, :required => false, :desc => N_("Search string for systems to perform an action on")
         param :ids, Array, :required => false, :desc => N_("List of system ids to perform an action on")
       end
-      param :exclude, Hash, :required => false, :action_aware => true do
+      param :excluded, Hash, :required => false, :action_aware => true do
         param :ids, Array, :required => false, :desc => N_("List of system ids to exclude and not run an action on")
       end
       param :update_all_systems, :bool, :required => false, :desc => N_("Update all editable and applicable systems, not just ones using the selected Content View Versions and Environments")
     end
     def incremental_update
-      if params[:add_content] && params[:add_content][:errata_ids].any? && params[:update_systems]
+      if params[:add_content] && params[:add_content].key?(:errata_ids) && params[:update_systems]
         systems = calculate_systems_for_incremental(params[:update_systems], params[:propagate_to_composites])
       else
         systems = []
       end
 
       validate_content(params[:add_content])
-      task = async_task(::Actions::Katello::ContentView::IncrementalUpdates, @version_environments, params[:add_content],
-                        params[:resolve_dependencies], params[:propagate_to_composites], systems, params[:description])
+      task = async_task(::Actions::Katello::ContentView::IncrementalUpdates, @version_environments, @composite_version_environments, params[:add_content],
+                        params[:resolve_dependencies], systems, params[:description])
       respond_for_async :resource => task
     end
 
@@ -143,6 +143,7 @@ module Katello
       fail _("At least one Content View Version must be specified") if list.empty?
 
       @version_environments = []
+      @composite_version_environments = []
       list.each do |combination|
         version_environment = {
           :content_view_version => ContentViewVersion.find(combination[:content_view_version_id]),
@@ -159,7 +160,23 @@ module Katello
 
         not_found = combination[:environment_ids].map(&:to_s) - version_environment[:environments].map { |env| env.id.to_s }
         fail _("Could not find Environment with ids: %s") % not_found.join(', ') unless not_found.empty?
-        @version_environments << version_environment
+
+        if view.composite?
+          @composite_version_environments << version_environment
+        else
+          @version_environments << version_environment
+          @composite_version_environments += lookup_all_composites(version) if params[:propagate_all_composites]
+        end
+      end
+      @composite_version_environments.uniq! { |cve| cve[:content_view_version] }
+    end
+
+    def lookup_all_composites(component)
+      component.composites.select { |c| c.environment.any? }.map do |composite|
+        {
+          :content_view_version => composite,
+          :environments =>  composite.environments
+        }
       end
     end
 

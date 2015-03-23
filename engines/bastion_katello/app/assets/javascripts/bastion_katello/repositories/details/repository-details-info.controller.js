@@ -141,6 +141,22 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             return $scope.getRepoNonDeletableReason(repo, product) === null;
         };
 
+        $scope.removeRepository = function (repository) {
+            var success, error, repositoryName = repository.name;
+
+            success = function () {
+                $scope.transitionTo('products.details.repositories.index', {productId: $scope.$stateParams.productId});
+                $scope.$parent.successMessages = [translate('Repository "%s" successfully deleted').replace('%s', repositoryName)];
+            };
+
+            error = function error(response) {
+                $scope.errorMessages = response.data.errors;
+            };
+
+            $scope.repositoriesTable.removeRow(repository.id);
+            repository.$delete(success, error);
+        };
+
         $scope.checksumTypeDisplay = function (checksum) {
             if (checksum === null) {
                 checksum = translate('Default');

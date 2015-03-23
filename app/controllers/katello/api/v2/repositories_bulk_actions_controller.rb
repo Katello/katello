@@ -18,40 +18,39 @@ module Katello
     param :ids, Array, :desc => N_("List of repository ids"), :required => true
     def destroy_repositories
       deletion_authorized_repositories = @repositories.deletable
-
       unpromoted_repos = deletion_authorized_repositories.reject { |repo| repo.promoted? }
-
       deletable_repositories = unpromoted_repos.reject { |repo| repo.redhat? }
 
-      deletable_repositories.each do |repository|
-        trigger(::Actions::Katello::Repository::Destroy, repository)
-      end
-
       messages1 = format_bulk_action_messages(
-        :success    => "",
-        :error      => _("You do not have permissions to delete %s"),
-        :models     => @repositories,
-        :authorized => deletion_authorized_repositories
+          :success    => "",
+          :error      => _("You do not have permissions to delete %s"),
+          :models     => @repositories,
+          :authorized => deletion_authorized_repositories
       )
 
       messages2 = format_bulk_action_messages(
-        :success    => "",
-        :error      => _("Repository %s cannot be deleted since it has already been included in a published Content View."),
-        :models     => deletion_authorized_repositories,
-        :authorized => unpromoted_repos
+          :success    => "",
+          :error      => _("Repository %s cannot be deleted since it has already been included in a published Content View."),
+          :models     => deletion_authorized_repositories,
+          :authorized => unpromoted_repos
       )
 
       messages3 = format_bulk_action_messages(
-        :success    => _("Successfully initiated deletion for %s repositories, you are free to leave this page."),
-        :error      => _("Repository %s cannot be deleted since they are Red Hat repositories."),
-        :models     => unpromoted_repos,
-        :authorized => deletable_repositories
+          :success    => "",
+          :error      => _("Repository %s cannot be deleted since they are Red Hat repositories."),
+          :models     => unpromoted_repos,
+          :authorized => deletable_repositories
       )
 
-      messages3[:error] = messages3[:error] + messages1[:error] + messages2[:error]
+      errors = messages3[:error] + messages1[:error] + messages2[:error]
 
-      respond_for_show :template => 'bulk_action', :resource_name => 'common',
-                       :resource => { 'displayMessages' => messages3 }
+      task = nil
+      if deletable_repositories.count > 0
+        task = async_task(::Actions::BulkAction, ::Actions::Katello::Repository::Destroy, deletable_repositories)
+      else
+        status = 400
+      end
+      respond_for_bulk_async :resource => OpenStruct.new(:task => task, :errors => errors), :status => status
     end
 
     api :POST, "/repositories/bulk/sync", N_("Synchronize repository")

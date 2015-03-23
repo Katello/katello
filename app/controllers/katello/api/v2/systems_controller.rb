@@ -71,7 +71,7 @@ module Katello
         errata_ids = params.fetch(:errata_ids, [])
         errata_ids << params[:erratum_id] if params[:erratum_id]
         systems = systems_by_errata(errata_ids, params[:erratum_restrict_installable],
-            params[:erratum_restrict_non_installable]).readable
+            params[:erratum_restrict_non_installable])
       else
         systems = System.readable
       end
@@ -418,11 +418,11 @@ module Katello
       end
 
       if installable
-        System.with_installable_errata(errata)
+        System.readable.with_installable_errata(errata)
       elsif non_installable
-        System.with_non_installable_errata(errata)
+        System.readable.with_non_installable_errata(errata)
       else
-        System.with_applicable_errata(errata)
+        System.readable.with_applicable_errata(errata)
       end
     end
 
