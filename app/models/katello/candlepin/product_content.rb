@@ -41,5 +41,10 @@ module Katello
     def repositories
       @repos ||= self.product.repos(self.product.organization.library).where(:content_id => self.content.id)
     end
+
+    def content_override(activation_key)
+      override = activation_key.content_overrides.find { |pc| pc[:contentLabel] == content.label }
+      override.nil? ? 'default' : override[:value]
+    end
   end
 end
