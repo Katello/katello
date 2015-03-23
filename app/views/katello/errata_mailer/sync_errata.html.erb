@@ -33,17 +33,17 @@
                       <table class="summary" style="border: 1px solid; padding: 5px; background-color: #ffffff; border-collapse: collapse; text-align: center; width: 100%;" bgcolor="#ffffff">
                         <tr>
                           <td style="width: 33%; padding: 5px; border: 1px solid #ccc;">
-                            <b class="counter" style="color: #6bb5df;"><%= @errata_counts[:security] %></b>
+                            <b class="counter" style="color: #6bb5df;"><%= link_to(@errata_counts[:security], repository_erratum_path(@repo, 'security')).html_safe  %></b>
 
                             <p class="summary-title" style="font-size: 80%; font-weight: bold; margin: 5px; padding: 0px;">SECURITY</p>
                           </td>
                           <td style="width: 33%; padding: 5px; border: 1px solid #ccc;">
-                            <b class="counter" style="color: #6bb5df;"><%= @errata_counts[:bugfix] %></b>
+                            <b class="counter" style="color: #6bb5df;"><%= link_to(@errata_counts[:bugfix], repository_erratum_path(@repo, 'bugfix')).html_safe  %></b>
 
                             <p class="summary-title" style="font-size: 80%; font-weight: bold; margin: 5px; padding: 0px;">BUGFIX</p>
                           </td>
                           <td style="width: 33%; padding: 5px; border: 1px solid #ccc;">
-                            <b class="counter" style="color: #6bb5df;"><%= @errata_counts[:enhancement] %></b>
+                            <b class="counter" style="color: #6bb5df;"><%= link_to(@errata_counts[:enhancement], repository_erratum_path(@repo, 'enhancement')).html_safe  %></b>
 
                             <p class="summary-title" style="font-size: 80%; font-weight: bold; margin: 5px; padding: 0px;">ENHANCEMENT</p>
                           </td>

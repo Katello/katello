@@ -28,7 +28,8 @@ describe('Controller: ErrataContentHostsController', function() {
         Nutupane = function() {
             this.table = {
                 params: {},
-                showColumns: function () {}
+                showColumns: function () {},
+                allResultsSelectCount: function () {}
             };
             this.enableSelectAllResults = function () {};
             this.getAllSelectedResults = function () {
@@ -80,11 +81,11 @@ describe('Controller: ErrataContentHostsController', function() {
 
     it("allows the filtering of installable errata only", function () {
         $scope.errata = {
-            showAvailable: true
+            showInstallable: true
         };
         
-        $scope.toggleAvailable();
-        expect($scope.detailsTable.params['erratum_restrict_available']).toBe(true)
+        $scope.toggleInstallable();
+        expect($scope.detailsTable.params['erratum_restrict_installable']).toBe(true)
     });
 
     it("provides a way to filter on environment", function () {

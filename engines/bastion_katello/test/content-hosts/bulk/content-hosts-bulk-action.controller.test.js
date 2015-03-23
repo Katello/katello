@@ -67,5 +67,18 @@ describe('Controller: ContentHostsBulkActionController', function() {
         );
     });
 
+    it("defaults showConfirm to false", function () {
+        expect($scope.showConfirm).toBe(false);
+    });
 
+    it("provides a way to show a confirmation dialog", function () {
+        $scope.showConfirmDialog();
+        expect($scope.showConfirm).toBe(true);
+    });
+
+    it("provides a way to hide a confirmation dialog", function () {
+        $scope.showConfirmDialog();
+        $scope.hideConfirmDialog();
+        expect($scope.showConfirm).toBe(false);
+    });
 });

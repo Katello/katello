@@ -75,7 +75,7 @@ Requires: katello-selinux
 Requires: candlepin-selinux
 Requires: createrepo >= 0.9.9-18%{?dist}
 Requires: elasticsearch
-Requires: foreman >= 1.3.0
+Requires: foreman >= 1.7.0
 Requires: java-openjdk >= 1:1.7.0
 # Still Requires katello-common which clashes with
 # new build - will re-enable after fixing
@@ -109,9 +109,9 @@ Requires: %{?scl_prefix}rubygem-haml-rails
 Requires: %{?scl_prefix}rubygem-jquery-ui-rails
 Requires: %{?scl_prefix}rubygem-deface < 1.0.0
 Requires: %{?scl_prefix}rubygem-strong_parameters
-Requires: %{?scl_prefix}rubygem-qpid_messaging >= 0.22.0
-Requires: %{?scl_prefix}rubygem-qpid_messaging <= 0.28.1
-BuildRequires: foreman >= 1.3.0
+Requires: %{?scl_prefix}rubygem-qpid_messaging >= 0.30.0
+Requires: %{?scl_prefix}rubygem-qpid_messaging < 0.31.0
+BuildRequires: foreman >= 1.7.0
 BuildRequires: foreman-assets >= 1.7.0
 BuildRequires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
 BuildRequires: %{?scl_prefix}rubygem-bastion < 1.0.0
@@ -134,8 +134,8 @@ BuildRequires: %{?scl_prefix}rubygem-jquery-ui-rails
 BuildRequires: %{?scl_prefix}rubygem-deface < 1.0.0
 BuildRequires: %{?scl_prefix}rubygem(uglifier) >= 1.0.3
 BuildRequires: %{?scl_prefix}rubygem-strong_parameters
-BuildRequires: %{?scl_prefix}rubygem-qpid_messaging >= 0.22.0
-BuildRequires: %{?scl_prefix}rubygem-qpid_messaging <= 0.28.1
+BuildRequires: %{?scl_prefix}rubygem-qpid_messaging >= 0.30.0
+BuildRequires: %{?scl_prefix}rubygem-qpid_messaging < 0.31.0
 BuildRequires: %{?scl_prefix}rubygems-devel
 BuildRequires: %{?scl_prefix}rubygems
 %if 0%{?fedora} > 18
@@ -175,7 +175,39 @@ cp -a .%{gem_dir}/* \
 mkdir -p ./usr/share
 cp -r %{foreman_dir} ./usr/share || echo 0
 
+mkdir -p ./%{_localstatedir}/lib/foreman
+cp -r /var/lib/foreman/db ./%{_localstatedir}/lib/foreman || echo 0
+unlink ./usr/share/foreman/db
+ln -sv `pwd`/%{_localstatedir}/lib/foreman/db ./usr/share/foreman/db
+
+cp -r /var/lib/foreman/public ./%{_localstatedir}/lib/foreman || echo 0
+unlink ./usr/share/foreman/public
+ln -sv `pwd`/%{_localstatedir}/lib/foreman/public ./usr/share/foreman/public
+
+unlink ./usr/share/foreman/config/database.yml
+unlink ./usr/share/foreman/config/settings.yaml
+unlink ./usr/share/foreman/config/initializers/encryption_key.rb
+
+cp /etc/foreman/settings.yaml ./usr/share/foreman/config
+
+cat <<DBPROD >> ./usr/share/foreman/config/database.yml
+production:
+  adapter: sqlite3
+  database: db/production.sqlite3
+  pool: 5
+  timeout: 5000
+
+development:
+  adapter: sqlite3
+  database: db/development.sqlite3
+  pool: 5
+  timeout: 5000
+DBPROD
+
+
 pushd ./usr/share/foreman
+sed -i 's/:locations_enabled: false/:locations_enabled: true/' config/settings.yaml
+sed -i 's/:organizations_enabled: false/:organizations_enabled: true/' config/settings.yaml
 export GEM_PATH=%{gem_dir}:%{buildroot}%{gem_dir}
 
 cat <<GEMFILE > ./bundler.d/%{gem_name}.rb
@@ -189,7 +221,11 @@ cp %{buildroot}%{gem_instdir}/config/katello_defaults.yml %{buildroot}%{gem_inst
 
 export BUNDLER_EXT_NOSTRICT=1
 export BUNDLER_EXT_GROUPS="default assets katello"
+
+%{scl_rake} security:generate_encryption_key
 %{scl_rake} assets:precompile:katello RAILS_ENV=production --trace
+%{scl_rake} db:migrate RAILS_ENV=development --trace
+%{scl_rake} plugin:apipie:cache['katello'] RAILS_ENV=development cache_part=resources OUT=%{buildroot}%{gem_instdir}/public/apipie-cache/plugin/katello --trace
 
 popd
 rm -rf ./usr
@@ -202,9 +238,16 @@ group :katello do
 end
 GEMFILE
 
+
 mkdir -p %{buildroot}%{foreman_dir}/public/assets
+mkdir -p %{buildroot}%{foreman_dir}/public/apipie-cache/plugin
 ln -s %{gem_instdir}/public/assets/katello %{buildroot}%{foreman_dir}/public/assets/katello
 ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/public/assets/bastion_katello
+ln -s %{gem_instdir}/public/apipie-cache/plugin/katello %{buildroot}%{foreman_dir}/public/apipie-cache/plugin/katello
+
+%post
+cp -r %{foreman_dir}/public/apipie-cache/plugin/katello/* %{foreman_dir}/public/apipie-cache/
+chown -R foreman.foreman %{foreman_dir}/public/apipie-cache
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -217,6 +260,7 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{foreman_bundlerd_dir}/%{gem_name}.rb
 %{foreman_dir}/public/assets/katello
 %{foreman_dir}/public/assets/bastion_katello
+%{foreman_dir}/public/apipie-cache/plugin/katello
 
 %files doc
 %{gem_dir}/doc/%{gem_name}-%{version}

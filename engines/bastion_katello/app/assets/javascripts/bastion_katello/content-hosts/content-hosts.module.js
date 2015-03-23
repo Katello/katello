@@ -189,6 +189,13 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
             }
         }
     })
+    .state('content-hosts.bulk-actions.task-details', {
+        url: '/content_hosts/bulk-actions/bulk-tasks/:taskId',
+        collapsed: true,
+        permission: ['view_content_hosts'],
+        controller: 'TaskDetailsController',
+        templateUrl: 'tasks/views/task-details.html'
+    })
     .state('content-hosts.bulk-actions.packages', {
         url: '/content_hosts/bulk-actions/packages',
         permission: 'edit_content_hosts',

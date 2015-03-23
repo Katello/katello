@@ -65,7 +65,7 @@ child :components => :components do
     attributes :id, :name, :label, :description, :next_version
   end
 
-  child :repositories => :repositories do
+  child :archived_repos => :repositories do
     attributes :id, :name, :label, :description
   end
 end

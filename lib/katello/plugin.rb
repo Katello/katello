@@ -159,8 +159,9 @@ Foreman::Plugin.register :katello do
        :turbolinks => false
 
   allowed_template_helpers :subscription_manager_configuration_url
-
   search_path_override("Katello") do |resource|
     "/#{Katello::Util::Model.model_to_controller_path(resource)}/auto_complete_search"
   end
+  apipie_documented_controllers ["#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"]
+  apipie_ignored_controllers %w(::Api::V2::OrganizationsController)
 end

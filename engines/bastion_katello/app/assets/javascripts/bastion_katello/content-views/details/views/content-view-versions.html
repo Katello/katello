@@ -13,7 +13,13 @@
            ng-model="filterTerm"/>
   </div>
 
-  <table class="table table-striped table-bordered" bst-table="table" ng-class="{'table-mask': loadingVersions}">
+  <p bst-alert="info" ng-show="versions.length === 0">
+    <span translate>
+      This Content View does not have any versions, create your first Content View Version by using the "Publish New Version" button on the right.
+    </span>
+  </p>
+
+  <table class="table table-striped table-bordered" ng-show="versions.length > 0" bst-table="table" ng-class="{'table-mask': loadingVersions}">
     <thead>
       <tr bst-table-head>
         <th bst-table-column><span translate>Version</span></th>

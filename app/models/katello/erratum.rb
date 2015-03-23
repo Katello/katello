@@ -57,7 +57,7 @@ module Katello
     end
 
     def self.applicable_to_systems(systems)
-      self.joins(:system_errata).where("#{SystemErratum.table_name}.system_id" => systems)
+      self.joins(:system_errata).where("#{SystemErratum.table_name}.system_id" => systems).uniq
     end
 
     def <=>(other)
@@ -96,9 +96,8 @@ module Katello
           update_bugzillas(json['references'].select { |r| r['type'] == 'bugzilla' })
           update_cves(json['references'].select { |r| r['type'] == 'cve' })
         end
-
-        update_packages(json['pkglist']) unless json['pkglist'].blank?
       end
+      update_packages(json['pkglist']) unless json['pkglist'].blank?
     end
 
     def self.list_filenames_by_clauses(clauses)

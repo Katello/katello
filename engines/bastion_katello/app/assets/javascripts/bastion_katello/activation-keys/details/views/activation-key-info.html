@@ -99,13 +99,17 @@
       </div>
 
       <div class="detail" bst-feature-flag="lifecycle_environments">
-        <div alert type="'info'" ng-show="editContentView">
+        <div alert type="info" ng-show="editEnvironment">
+          <p translate>You must select a content view in order to save your environment.</p>
+        </div>
+        <div alert type="info" ng-show="editContentView && !editEnvironment">
           <p translate>You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.</p>
         </div>
         <span class="info-label" translate>Environment</span>
         <span path-selector="environments"
               ng-model="activationKey.environment"
               mode="singleSelect"
+              selection-required="selectionRequired"
               disabled="denied('edit_activation_keys', activationKey)"
               disable-trigger="disableEnvironmentSelection">
         </span>

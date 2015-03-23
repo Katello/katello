@@ -28,6 +28,8 @@ module Actions
               ret.concat(humanized_errors)
             end
             return ret.join("\n")
+          else
+            humanized_errors #show any errors if no packages were updated
           end
         end
 

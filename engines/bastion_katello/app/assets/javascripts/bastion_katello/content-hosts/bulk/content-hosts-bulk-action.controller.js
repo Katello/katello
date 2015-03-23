@@ -30,6 +30,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionContro
     function ($scope, $q, $location, translate, ContentHostBulkAction, CurrentOrganization) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
+        $scope.showConfirm = false;
 
         $scope.unregisterContentHosts = {
             confirm: false,
@@ -48,8 +49,21 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionContro
             $scope.state.errorMessages = errors;
         };
 
+        $scope.showConfirmDialog = function () {
+            $scope.showConfirm = true;
+        };
+
+        $scope.hideConfirmDialog = function () {
+            $scope.showConfirm = false;
+        };
+
         $scope.actionParams = {
             ids: []
+        };
+
+        $scope.showNoSelectionWarning = function () {
+            return $scope.nutupane.table.numSelected === 0 && !$scope.isState('content-hosts.bulk-actions.subscriptions') &&
+                !$scope.isState('content-hosts.bulk-actions.task-details');
         };
 
         $scope.performUnregisterContentHosts = function () {

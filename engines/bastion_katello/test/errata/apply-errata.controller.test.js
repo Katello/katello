@@ -30,7 +30,7 @@ describe('Controller: ApplyErrataController', function() {
                 if (this.failed) {
                     error({data: {errors: ['error']}});
                 } else {
-                    success();
+                    success({id: 1});
                 }
             },
             availableIncrementalUpdates: function () {}
@@ -118,9 +118,10 @@ describe('Controller: ApplyErrataController', function() {
             });
 
             it("and succeed", function () {
+                spyOn($scope, 'transitionTo');
                 $scope.confirmApply();
 
-                expect($scope.successMessages.length).toBe(1);
+                expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.details', {taskId: 1});
                 expect($scope.errorMessages.length).toBe(0);
             });
 
@@ -144,7 +145,6 @@ describe('Controller: ApplyErrataController', function() {
                         'content_view_version_id': 1,
                         'environment_ids': [2]
                     }],
-                    'propagate_to_composites': true,
                     'resolve_dependencies': true
                 };
 
@@ -197,8 +197,10 @@ describe('Controller: ApplyErrataController', function() {
                     'content_view_version_environments': [{
                         'content_view_version_id': 5,
                         'environment_ids': []
+                    },{
+                        'content_view_version_id': 1,
+                        'environment_ids': [2]
                     }],
-                    'propagate_to_composites': true,
                     'resolve_dependencies': true
                 };
 
@@ -236,8 +238,10 @@ describe('Controller: ApplyErrataController', function() {
                     'content_view_version_environments': [{
                         'content_view_version_id': 5,
                         'environment_ids': [99]
+                    },{
+                        'content_view_version_id': 1,
+                        'environment_ids': [2]
                     }],
-                    'propagate_to_composites': true,
                     'resolve_dependencies': true
                 };
 

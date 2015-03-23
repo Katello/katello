@@ -12,9 +12,14 @@
 
     <div class="fr">
 
-      <div bst-modal="unregisterContentHost(contentHost)" model="contentHost"
-           modal-header='Unregister Content Host "{{contentHost.name}}"?'
-           modal-body='Are you sure you want to unregister content host "{{ contentHost.name }}"?'></div>
+      <div bst-modal="unregisterContentHost(contentHost)">
+        <div data-block="modal-header" translate>
+          Unregister Content Host "{{contentHost.name}}"?
+        </div>
+        <div data-block="modal-body" translate>
+          Are you sure you want to unregister content host "{{ contentHost.name }}"?
+        </div>
+    </div>
 
       <button class="btn btn-default"
               ng-hide="denied('destroy_content_hosts', contentHost)"

@@ -186,7 +186,8 @@ module Katello
     end
 
     def puppet_module_count
-      PuppetModule.module_count([self.archive_puppet_environment])
+      env = self.archive_puppet_environment
+      env.nil? ? 0 : PuppetModule.module_count([env])
     end
 
     def package_count
@@ -215,6 +216,10 @@ module Katello
       errata = Erratum.in_repositories(archived_repos).uniq
       errata = errata.of_type(errata_type) if errata_type
       errata
+    end
+
+    def docker_images
+      DockerImage.in_repositories(archived_repos).uniq
     end
 
     def check_ready_to_promote!

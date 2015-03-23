@@ -30,6 +30,12 @@ module Katello
       "#{Setting[:foreman_url]}/errata/#{erratum.uuid}/info"
     end
 
+    def repository_erratum_path(repository, type = nil)
+      url = "#{Setting[:foreman_url]}/errata?repositoryId=#{repository.id}"
+      url += "&search=type%3D#{type}" if type
+      url
+    end
+
     def errata_count(host, errata_type)
       available = host.installable_errata.send(errata_type.to_sym).count
       applicable = host.applicable_errata.send(errata_type.to_sym).count - available

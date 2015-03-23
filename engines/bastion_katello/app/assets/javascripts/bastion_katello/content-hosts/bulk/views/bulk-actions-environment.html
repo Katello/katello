@@ -4,12 +4,12 @@
   <section>
     <h4 translate>Assign Environment and Content View</h4>
 
-    <div bst-alert="info" ng-show="confirm">
+    <div bst-alert="info" ng-show="showConfirm">
       <p translate>
         Are you sure you want to assign the {{ table.numSelected }} content host(s) selected to {{ selected.contentView.name }} in {{ selected.environment.name }}?
       </p>
-      <button class="btn btn-default" ng-click="confirm = false" translate>No</button>
-      <button class="btn btn-default" ng-click="confirm = false; performAction()" translate>Yes</button>
+      <button class="btn btn-default" ng-click="hideConfirmDialog();" translate>No</button>
+      <button class="btn btn-default" ng-click="hideConfirmDialog(); performAction()" translate>Yes</button>
     </div>
 
     <div path-selector="environments"
@@ -42,7 +42,7 @@
       <button class="btn btn-default fr"
               translate
               ng-hide="denied('edit_content_hosts', contentHost)"
-              ng-click="confirm = true"
+              ng-click="showConfirmDialog();"
               ng-disabled="disableAssignButton(confirm)">
         Assign
       </button>
