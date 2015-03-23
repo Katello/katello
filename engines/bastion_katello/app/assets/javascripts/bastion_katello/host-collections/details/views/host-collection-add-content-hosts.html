@@ -46,7 +46,7 @@
         {{ "Loading..." | translate }}
       </div>
 
-      <p bst-alert="info" ng-show="addContentHostsTable.rows.length === 0">
+      <p bst-alert="info" ng-show="addContentHostsTable.rows.length === 0 && !addContentHostsTable.working">
         <span translate>
           You currently don't have any Content Hosts, you can create new Content Hosts by selecting Contents Host from main menu and then clicking the button on the right.
         </span>
