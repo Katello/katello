@@ -103,7 +103,7 @@ module Katello
       repository = @product.add_repo(repo_params[:label], repo_params[:name], repo_params[:url],
                                      repo_params[:content_type], repo_params[:unprotected],
                                      gpg_key, repository_params[:checksum_type])
-      repository.docker_upstream_name = params[:docker_upstream_name] if params.key?(:docker_upstream_name)
+      repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
       sync_task(::Actions::Katello::Repository::Create, repository, false, true)
       repository = Repository.find(repository.id)
       respond_for_show(:resource => repository)
@@ -257,7 +257,7 @@ module Katello
     end
 
     def repository_params
-      keys = [:url, :gpg_key_id, :unprotected, :name, :checksum_type]
+      keys = [:url, :gpg_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name]
       keys += [:label, :content_type] if params[:action] == "create"
       params.require(:repository).permit(*keys)
     end
