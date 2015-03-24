@@ -257,7 +257,7 @@ module Katello
     end
 
     def repository_params
-      keys = [:url, :gpg_key_id, :unprotected, :name, :checksum_type]
+      keys = [:url, :gpg_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name]
       keys += [:label, :content_type] if params[:action] == "create"
       params.require(:repository).permit(*keys)
     end
