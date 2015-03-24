@@ -61,6 +61,7 @@ module Katello
     param :organization_id, :number, :desc => N_("Specify the organization"), :required => true
     param :environment_id, String, :desc => N_("Filter by environment")
     param :host_collection_id, String, :desc => N_("Filter by host collection")
+    param :content_view_id, String, :desc => N_("Filter by content view")
     param :erratum_id, String, :desc => N_("Filter by systems that need an Erratum by uuid")
     param :errata_ids, Array, :desc => N_("Filter by systems that need any one of multiple Errata by uuid")
     param :erratum_restrict_installable, String, :desc => N_("Return only systems where the Erratum specified by erratum_id or errata_ids is available to systems (default False)")
@@ -76,6 +77,7 @@ module Katello
         systems = System.readable
       end
 
+      systems = systems.where(:content_view_id => params[:content_view_id]) if params[:content_view_id]
       filters = [{:terms => {:uuid => systems.pluck("#{Katello::System.table_name}.uuid").compact}}]
       environment_ids = params[:organization_id] ? Organization.find(params[:organization_id]).kt_environments.pluck(:id) : []
       environment_ids = environment_ids.empty? ? params[:environment_id] : environment_ids & [params[:environment_id].to_i] if params[:environment_id]
