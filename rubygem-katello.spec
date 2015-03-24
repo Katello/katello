@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.2.0
-Release: 4%{dist}
+Release: 5%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -221,6 +221,9 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Tue Mar 24 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-5
+- Fixes #9838 - additional pkgs for .30 qpid (dtsang@redhat.com)
+
 * Mon Mar 23 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-4
 - Merge pull request #5127 from ehelms/cherry-pick (eric.d.helms@gmail.com)
 - fixes #9798 - don't plan CVPE deletion if this is the default version,
