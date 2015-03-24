@@ -72,7 +72,7 @@
               selector="activationKey.service_level"
               options="serviceLevels()"
               options-format="option for option in options"
-              deletable="true"
+              deletable="activationKey.service_level && activationKey.service_level != ''"
               on-delete="clearServiceLevel()"
               on-save="save(activationKey)">
         </span>
@@ -92,7 +92,7 @@
               selector="activationKey.release_version"
               options="releaseVersions()"
               options-format="option for option in options"
-              deletable="true"
+              deletable="activationKey.release_version && activationKey.release_version != ''"
               on-delete="clearReleaseVersion()"
               on-save="save(activationKey)">
         </span>
