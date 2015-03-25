@@ -353,28 +353,14 @@ module Katello
       end
 
       def index_subscriptions
-        # Raw candlepin pools
         cp_pools = Resources::Candlepin::Owner.pools(self.organization.label)
         if cp_pools
-          # Pool objects
-          pools = cp_pools.collect { |cp_pool| Katello::Pool.find_pool(cp_pool['id'], cp_pool) }
-
-          # Limit subscriptions to just those from Red Hat provider
-          subscriptions = pools.collect do |pool|
-            product = Product.in_org(self.organization).where(:cp_id => pool.product_id).first
-            next if product.nil?
-            pool.provider_id = product.provider_id   # Set so it is saved into elastic search
-            pool
-          end
-          subscriptions.compact!
+          subscriptions = cp_pools.collect { |cp_pool| Katello::Pool.find_pool(cp_pool['id'], cp_pool) }
         else
           subscriptions = []
         end
 
-        # Index pools
-        Katello::Pool.index_pools(subscriptions, [{:term => {:org => self.organization.label}},
-                                                  {:term => {:provider_id => self.id}}])
-
+        Katello::Pool.index_pools(subscriptions, [{:term => {:org => self.organization.label}}])
         subscriptions
       end
 
