@@ -15,12 +15,11 @@ module Katello
     before_filter :verify_presence_of_organization_or_environment, :only => [:index]
     before_filter :find_environment, :only => [:index, :create, :update]
     before_filter :find_optional_organization, :only => [:index, :create, :show]
-    before_filter :find_activation_key, :only => [:update, :destroy, :available_releases, :copy, :product_content,
+    before_filter :find_activation_key, :only => [:show, :update, :destroy, :available_releases, :copy, :product_content,
                                                   :available_host_collections, :add_host_collections, :remove_host_collections,
                                                   :content_override, :add_subscriptions, :remove_subscriptions]
     before_filter :authorize
-    before_filter :load_search_service, :only => [:show, :index, :available_host_collections]
-    before_filter :search_for_activation_key, :only => [:show]
+    before_filter :load_search_service, :only => [:index, :available_host_collections]
 
     wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach content_view_environment))
 
@@ -264,14 +263,6 @@ module Katello
     def find_activation_key
       @activation_key = ActivationKey.find(params[:id])
       fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:id] if @activation_key.nil?
-      @activation_key
-    end
-
-    def search_for_activation_key
-      search_result = search_for_activation_keys
-      fail HttpErrors::NotFound, _("Couldn't find activation key") % params[:id] if search_result[:results].empty?
-      fail HttpErrors::NotFound, _("found more than one activation key") % params[:id] if search_result[:results].size > 1
-      @activation_key = search_result[:results].first
       @activation_key
     end
 
