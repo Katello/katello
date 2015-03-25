@@ -55,7 +55,7 @@ module Katello
 
     has_many :hosts,      :class_name => "::Host::Managed", :foreign_key => :content_view_id,
                           :inverse_of => :content_view, :dependent => :restrict
-    has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :lifecycle_environment_id,
+    has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :content_view_id,
                           :inverse_of => :content_view, :dependent => :restrict
 
     validates_lengths_from_database :except => [:label]
