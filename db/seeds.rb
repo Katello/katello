@@ -52,13 +52,6 @@ templates.each do |template|
   ConfigTemplate.find_or_create_by_name(template).update_attributes(defaults.merge(template))
 end
 
-# Make some Foreman templates default so they automatically get added to new orgs like our Katello templates
-templates = ["puppet.conf", "freeipa_register", "Kickstart default iPXE", "Kickstart default PXELinux", "PXELinux global default"]
-
-ConfigTemplate.where(:name => templates).each do |template|
-  template.update_attribute(:default, true)
-end
-
 # Ensure all default templates are seeded into the first org and loc
 ConfigTemplate.where(:default => true).each do |template|
   template.organizations << Organization.first unless template.organizations.include?(Organization.first) || Organization.count.zero?
