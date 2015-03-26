@@ -32,7 +32,7 @@
         });
 
         $scope.save = function (environment) {
-            environment.prior = $scope.$stateParams.priorId;
+            environment['prior_id'] = $scope.$stateParams.priorId;
             environment.$save(success, error);
         };
 
