@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.2.0
-Release: 5%{dist}
+Release: 6%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -221,6 +221,14 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Thu Mar 26 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-6
+- Fixes #9887: remove search on activation key show, BZ1204929.
+  (walden@redhat.com)
+- fixes #9883 - making auto attach run after consumer update
+  (jsherril@redhat.com)
+- refs #9628 - change prior to prior_id, BZ1189478 (komidore64@gmail.com)
+- Fixes #9069 - support mrg31
+
 * Tue Mar 24 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-5
 - Fixes #9838 - additional pkgs for .30 qpid (dtsang@redhat.com)
 
