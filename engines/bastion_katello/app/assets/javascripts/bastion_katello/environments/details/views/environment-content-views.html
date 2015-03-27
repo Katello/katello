@@ -3,8 +3,9 @@
   <div data-block="header"></div>
   <div data-block="selection-summary"></div>
 
-<p bst-alert="info" ng-show="productTable.rows.length === 0">
-</p>
+  <span data-block="no-rows-message" translate>
+    There are no Content Views that match the criteria.
+  </span>
 
   <table data-block="table" class="table table-striped table-bordered">
     <thead>
@@ -17,11 +18,6 @@
     </thead>
 
     <tbody>
-      <tr ng-show="detailsTable.rows.length === 0">
-        <td colspan="4">
-          <span bst-alert="info"><span translate>There are no Content Views that match the criteria.</span></span>
-        </td>
-      </tr>
       <tr bst-table-row ng-repeat="contentView in detailsTable.rows">
         <td bst-table-cell>
           <a ui-sref="content-views.details.versions({contentViewId: contentView.id})">

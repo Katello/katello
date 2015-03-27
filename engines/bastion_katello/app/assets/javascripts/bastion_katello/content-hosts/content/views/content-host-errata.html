@@ -62,11 +62,11 @@
       </div>
   </span>
 
-  <div data-block="table">
-    <p bst-alert="info" ng-show="detailsTable.rows.length === 0">
-      <span translate>There are no Errata to display.</span>
-    </p>
+  <span data-block="no-rows-message" translate>
+    There are no Errata to display.
+  </span>
 
+  <div data-block="table">
     <table class="table table-striped table-bordered" ng-class="{'table-mask': detailsTable.working}">
       <thead>
         <tr bst-table-head row-select>
