@@ -181,7 +181,7 @@
       <div class="detail">
         <span class="info-label" translate>Security</span>
         <span class="info-value">
-          <a ui-sref="content-hosts.details.errata.index({search: 'type:security'})">
+          <a ui-sref="content-hosts.details.errata.index({getSearch: 'type=security'})">
             <i class="fa fa-warning inline-icon"
                ng-class="{black: contentHost.errata_counts.security === 0, red: contentHost.errata_counts.security > 0}"
                title="{{ 'Security' | translate }}"></i>
@@ -193,7 +193,7 @@
       <div class="detail">
         <span class="info-label" translate>Bug Fix</span>
         <span class="info-value">
-          <a ui-sref="content-hosts.details.errata.index({search: 'type:bugfix'})">
+          <a ui-sref="content-hosts.details.errata.index({getSearch: 'type=bugfix'})">
             <i class="fa fa-bug inline-icon"
                ng-class="{black: contentHost.errata_counts.bugfix === 0, yellow: contentHost.errata_counts.bugfix > 0}"
                title="{{ 'Bug Fix' | translate }}"></i>
@@ -205,7 +205,7 @@
       <div class="detail">
         <span class="info-label" translate>Enhancement</span>
         <span class="info-value">
-          <a ui-sref="content-hosts.details.errata.index({search: 'type:enhancement'})">
+          <a ui-sref="content-hosts.details.errata.index({getSearch: 'type=enhancement'})">
             <i class="fa fa-plus-square inline-icon"
                ng-class="{black: contentHost.errata_counts.enhancement === 0, yellow: contentHost.errata_counts.enhancement > 0}"
                title="{{ 'Enhancement' | translate }}"></i>
