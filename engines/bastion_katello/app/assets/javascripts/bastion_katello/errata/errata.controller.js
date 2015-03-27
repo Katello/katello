@@ -106,7 +106,9 @@ angular.module('Bastion.errata').controller('ErrataController',
                 nutupane.setParams(params);
             }
 
-            nutupane.refresh();
+            if (!nutupane.table.initialLoad) {
+                nutupane.refresh();
+            }
         });
 
         $scope.goToNextStep = function () {
