@@ -16,7 +16,7 @@
 
     <div ng-repeat="product in products" ng-hide="product.available_content.length < 1"
          ng-controller="SubscriptionProductDetailsController">
-      <i ng-class="{'fa fa-plus': !expanded, fa fa--minus': expanded}"
+      <i ng-class="{'fa fa-plus': !expanded, 'fa fa-minus': expanded}"
          class="expand-icon" ng-click="expanded = !expanded"></i>
       <b>{{ product.name }}</b>
 
