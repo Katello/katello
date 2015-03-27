@@ -40,9 +40,8 @@ module Actions
               handle_composites(old_new_version_map, composite_version_environments, output_for_version_ids, description, content[:puppet_module_ids])
             end
 
-            if systems.any? && !content[:errata_ids].blank?
-              errata_ids = ::Katello::Erratum.where(:uuid => content[:errata_ids]).pluck(:errata_id)
-              plan_action(::Actions::BulkAction, ::Actions::Katello::System::Erratum::ApplicableErrataInstall, systems, errata_ids)
+            if systems.any? && !content[:errata_ids].blank? #content[:errata_ids] are uuids
+              plan_action(::Actions::BulkAction, ::Actions::Katello::System::Erratum::ApplicableErrataInstall, systems, content[:errata_ids])
             end
             plan_self(:version_outputs => output_for_version_ids)
           end
