@@ -26,7 +26,7 @@
         <th bst-table-column><span translate>Status</span></th>
         <th bst-table-column><span translate>Environments</span></th>
         <th bst-table-column><span translate>Content</span></th>
-        <th bst-table-column><span translate>Author</span></th>
+        <th bst-table-column><span translate>Description</span></th>
         <th class="col-sm-2" bst-table-column><span translate>Actions</span></th>
       </tr>
     </thead>
@@ -75,7 +75,11 @@
           </div>
 
         </td>
-        <td bst-table-cell>{{ version.user }}</td>
+        <td bst-table-cell>
+          <div class="description">
+            {{ version.description }}
+          </div>
+        </td>
         <td class="col-sm-2">
           <button class="btn btn-default"
                   ui-sref="content-views.details.promotion({contentViewId: contentView.id, versionId: version.id})"
