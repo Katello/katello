@@ -120,10 +120,7 @@ module Katello
     param :id, String, :desc => N_("ID of the sync plan"), :required => true
     param :product_ids, Array, :desc => N_("List of product ids to add to the sync plan"), :required => true
     def add_products
-      ids = params[:product_ids]
-      @products  = Product.where(:id => ids).editable
-      @sync_plan.product_ids = (@sync_plan.product_ids + @products.collect { |p| p.id }).uniq
-      sync_task(::Actions::Katello::SyncPlan::UpdateProducts, @sync_plan)
+      sync_task(::Actions::Katello::SyncPlan::AddProducts, @sync_plan, params[:product_ids])
       respond_for_show
     end
 
@@ -131,10 +128,7 @@ module Katello
     param :id, String, :desc => N_("ID of the sync plan"), :required => true
     param :product_ids, Array, :desc => N_("List of product ids to remove from the sync plan"), :required => true
     def remove_products
-      ids = params[:product_ids]
-      @products  = Product.where(:id => ids).editable
-      @sync_plan.product_ids = (@sync_plan.product_ids - @products.collect { |p| p.id }).uniq
-      sync_task(::Actions::Katello::SyncPlan::UpdateProducts, @sync_plan)
+      sync_task(::Actions::Katello::SyncPlan::RemoveProducts, @sync_plan, params[:product_ids])
       respond_for_show
     end
 
