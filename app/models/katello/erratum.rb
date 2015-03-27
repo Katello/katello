@@ -67,7 +67,7 @@ module Katello
     def systems_available
       self.systems_applicable.joins("INNER JOIN #{Katello::RepositoryErratum.table_name} on \
         #{Katello::RepositoryErratum.table_name}.erratum_id = #{self.id}").joins(:system_repositories).
-        where("#{Katello::SystemRepository.table_name}.repository_id = #{Katello::RepositoryErratum.table_name}.repository_id")
+        where("#{Katello::SystemRepository.table_name}.repository_id = #{Katello::RepositoryErratum.table_name}.repository_id").uniq
     end
 
     def systems_unavailable
