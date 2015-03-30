@@ -173,7 +173,7 @@ module Actions
             unless package_uuids.blank?
               copy_outputs << plan_copy(Pulp::Repository::CopyRpm, new_repo.library_instance, new_repo,
                                         { :filters => {:association => {'unit_id' => {'$in' => package_uuids}}}},
-                                        resolve_dependencies => dep_solve).output
+                                        :resolve_dependencies => dep_solve).output
             end
           end
           copy_outputs
