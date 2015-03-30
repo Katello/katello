@@ -1,4 +1,3 @@
-
 #
 # Copyright 2014 Red Hat, Inc.
 #
@@ -12,23 +11,20 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Pulp
-    module Repos
-      class Update < Pulp::Abstract
-        def plan(product)
-          sync_plan = product.sync_plan
-
-          product.repos(product.library).each do |repo|
-            if sync_plan.nil?
-              plan_action(::Actions::Pulp::Repository::RemoveSchedule, :repo_id => repo.id)
-            else
-              plan_action(::Actions::Pulp::Repository::UpdateSchedule,
-                :repo_id => repo.id,
-                :schedule => sync_plan.schedule_format,
-                :enabled => sync_plan.enabled
-              )
-            end
+  module Katello
+    module SyncPlan
+      class Update < Actions::EntryAction
+        def plan(sync_plan, sync_plan_params = nil)
+          action_subject(sync_plan)
+          sync_plan.update_attributes(sync_plan_params) if sync_plan_params
+          sync_plan.save!
+          sync_plan.products.each do |product|
+            plan_action(::Actions::Katello::Product::Update, product, :sync_plan_id => sync_plan.id)
           end
+        end
+
+        def humanized_name
+          _("Update Sync Plan")
         end
       end
     end

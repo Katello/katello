@@ -160,7 +160,7 @@ class ActiveSupport::TestCase
     user ||= users(:admin)
     user = User.find(user) if user.id
     unless user.remote_id
-      user.remote_id = user.login
+      user.remote_id = user.admin? ? 'admin' : user.login
       user.save!
     end
     User.current = user

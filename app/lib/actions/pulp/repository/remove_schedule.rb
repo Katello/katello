@@ -1,5 +1,3 @@
-
-#
 # Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -13,22 +11,15 @@
 
 module Actions
   module Pulp
-    module Repos
-      class Update < Pulp::Abstract
-        def plan(product)
-          sync_plan = product.sync_plan
+    module Repository
+      class RemoveSchedule < Pulp::Abstract
+        input_format do
+          param :repo_id
+        end
 
-          product.repos(product.library).each do |repo|
-            if sync_plan.nil?
-              plan_action(::Actions::Pulp::Repository::RemoveSchedule, :repo_id => repo.id)
-            else
-              plan_action(::Actions::Pulp::Repository::UpdateSchedule,
-                :repo_id => repo.id,
-                :schedule => sync_plan.schedule_format,
-                :enabled => sync_plan.enabled
-              )
-            end
-          end
+        def run
+          repo = ::Katello::Repository.find(input[:repo_id])
+          output[:response] = repo.sync_schedule(nil)
         end
       end
     end
