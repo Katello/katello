@@ -82,10 +82,7 @@ module Katello
         fail _("Date format is incorrect.")
       end
 
-      @sync_plan.update_attributes!(sync_plan_params)
-      @sync_plan.save!
-      @sync_plan.products.each { |p| p.save! }
-
+      sync_task(::Actions::Katello::SyncPlan::Update, @sync_plan, sync_plan_params)
       respond_for_show(:resource => @sync_plan)
     end
 
