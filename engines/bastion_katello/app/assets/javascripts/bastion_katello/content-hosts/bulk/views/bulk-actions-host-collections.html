@@ -41,14 +41,11 @@
       </button>
     </div>
 
+    <span data-block="no-rows-message" translate>
+      There are no Host Collections available. You can create new Host Collections after selecting 'Host Collections' under 'Hosts' in main menu.
+    </span>
+
     <div data-block="table">
-      <p bst-alert="info" ng-show="detailsTable.rows.length === 0">
-        <span translate>
-          There are no Host Collections available. You can create new Host Collections after selecting 'Host Collections' under 'Hosts' in main menu.
-        </span>
-      </p>
-
-
       <table data-block="table"  class="table table-striped" ng-class="{'table-mask': state.working}">
         <thead>
           <tr bst-table-head row-select>

@@ -18,12 +18,11 @@
       </tr>
     </thead>
 
+    <span data-block="no-rows-message" translate>
+      There are no Puppet Modules that match the criteria.
+    </span>
+
     <tbody>
-      <tr ng-show="detailsTable.rows.length === 0">
-        <td colspan="4">
-          <span bst-alert="info"><span translate>There are no Puppet Modules that match the criteria.</span></span>
-        </td>
-      </tr>
       <tr bst-table-row ng-repeat="puppetModule in detailsTable.rows">
         <td bst-table-cell>{{ puppetModule.name }}</td>
         <td bst-table-cell>{{ puppetModule.author }}</td>

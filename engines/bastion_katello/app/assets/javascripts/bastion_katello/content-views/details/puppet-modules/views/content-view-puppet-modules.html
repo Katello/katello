@@ -21,13 +21,11 @@
            ng-model="filterTerm"/>
   </div>
 
-  <div data-block="table">
-    <p bst-alert="info" ng-show="detailsTable.rows.length === 0 && !detailsTable.working">
-      <span translate>
-        You currently don't have any Puppet Modules included in this Content View, you can add Puppet Modules using the button on the right.
-      </span>
-    </p>
+  <span data-block="no-rows-message" translate>
+    You currently don't have any Puppet Modules included in this Content View, you can add Puppet Modules using the button on the right.
+  </span>
 
+  <div data-block="table">
     <table class="table table-striped table-bordered" ng-show="detailsTable.rows.length > 0">
       <thead>
         <tr bst-table-head>
