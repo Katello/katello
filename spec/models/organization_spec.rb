@@ -17,6 +17,7 @@ module Katello
     include OrganizationHelperMethods
 
     before(:each) do
+      User.current = User.find(users(:admin))
       disable_foreman_tasks_hooks_execution(Organization)
       disable_env_orchestration
       Organization.any_instance.stubs(:ensure_not_in_transaction!)
@@ -83,7 +84,7 @@ module Katello
 
     describe "update an organization" do
       before(:each) do
-        @organization2 = Organization.create(:name => 'test_org_name2', :label => 'test_org_label2')
+        @organization2 = Organization.create!(:name => 'test_org_name2', :label => 'test_org_label2')
       end
       it "can update name" do
         new_name = @organization.name + "_changed"
