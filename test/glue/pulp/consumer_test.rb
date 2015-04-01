@@ -41,6 +41,7 @@ module Katello
 
   class GluePulpConsumerTestCreateDestroy < GluePulpConsumerTestBase
     def setup
+      set_user
       VCR.insert_cassette('pulp/consumer/create')
       @simple_server = System.find(katello_systems(:simple_server).id)
     end
@@ -57,6 +58,7 @@ module Katello
 
   class GluePulpConsumerDeleteTest < GluePulpConsumerTestBase
     def setup
+      set_user
       VCR.insert_cassette('pulp/consumer/delete')
       @simple_server = System.find(katello_systems(:simple_server).id)
       set_pulp_consumer(@simple_server)
@@ -73,6 +75,7 @@ module Katello
 
   class GluePulpConsumerTest < GluePulpConsumerTestBase
     def setup
+      set_user
       VCR.insert_cassette('pulp/consumer/consumer')
       @simple_server = System.find(katello_systems(:simple_server).id)
       set_pulp_consumer(@simple_server)
@@ -122,9 +125,11 @@ module Katello
     end
 
     def self.after_suite
-      RepositorySupport.destroy_repo
-      @@simple_server.del_pulp_consumer
-      VCR.eject_cassette
+      run_as_admin do
+        RepositorySupport.destroy_repo
+        @@simple_server.del_pulp_consumer
+        VCR.eject_cassette
+      end
     end
 
     def test_enable_repos
@@ -152,9 +157,11 @@ module Katello
     end
 
     def self.after_suite
-      RepositorySupport.destroy_repo
-      @@simple_server.del_pulp_consumer if defined? @@simple_server
-      VCR.eject_cassette
+      run_as_admin do
+        RepositorySupport.destroy_repo
+        @@simple_server.del_pulp_consumer if defined? @@simple_server
+        VCR.eject_cassette
+      end
     end
 
     def test_install_package

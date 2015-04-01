@@ -34,8 +34,10 @@ module Katello
     end
 
     def self.after_suite
-      RepositorySupport.destroy_repo
-      VCR.eject_cassette
+      run_as_admin do
+        RepositorySupport.destroy_repo
+        VCR.eject_cassette
+      end
     end
   end
 
