@@ -27,6 +27,10 @@ module ::Actions::Katello::Repository
     let(:custom_repository) { katello_repositories(:fedora_17_x86_64) }
     let(:puppet_repository) { katello_repositories(:p_forge) }
     let(:docker_repository) { katello_repositories(:redis) }
+
+    before(:all) do
+      set_user
+    end
   end
 
   class CreateTest < TestBase

@@ -17,6 +17,10 @@ module Katello
   class GluePulpRepoTestBase < ActiveSupport::TestCase
     include TaskSupport
 
+    def setup
+      set_user
+    end
+
     def self.before_suite
       super
       configure_runcible
@@ -79,8 +83,10 @@ module Katello
     end
 
     def self.after_suite
-      delete_repo(@@fedora_17_x86_64)
-      VCR.eject_cassette
+      run_as_admin do
+        delete_repo(@@fedora_17_x86_64)
+        VCR.eject_cassette
+      end
     end
 
     def setup
@@ -143,8 +149,10 @@ module Katello
     end
 
     def self.after_suite
-      delete_repo(@@fedora_17_x86_64)
-      VCR.eject_cassette
+      run_as_admin do
+        delete_repo(@@fedora_17_x86_64)
+        VCR.eject_cassette
+      end
     end
 
     def setup
@@ -162,8 +170,10 @@ module Katello
     end
 
     def self.after_suite
-      delete_repo(@@fedora_17_x86_64)
-      VCR.eject_cassette
+      run_as_admin do
+        delete_repo(@@fedora_17_x86_64)
+        VCR.eject_cassette
+      end
     end
   end
 
@@ -180,8 +190,10 @@ module Katello
     end
 
     def self.after_suite
-      delete_repo(@@p_forge)
-      VCR.eject_cassette
+      run_as_admin do
+        delete_repo(@@p_forge)
+        VCR.eject_cassette
+      end
     end
 
     def setup
@@ -206,8 +218,10 @@ module Katello
     end
 
     def self.after_suite
-      delete_repo(@@fedora_17_x86_64)
-      VCR.eject_cassette
+      run_as_admin do
+        delete_repo(@@fedora_17_x86_64)
+        VCR.eject_cassette
+      end
     end
 
     def test_sync_status
@@ -303,8 +317,10 @@ module Katello
     end
 
     def self.after_suite
-      delete_repo(@@fedora_17_x86_64)
-      VCR.eject_cassette
+      run_as_admin do
+        delete_repo(@@fedora_17_x86_64)
+        VCR.eject_cassette
+      end
     end
 
     def test_create_clone
