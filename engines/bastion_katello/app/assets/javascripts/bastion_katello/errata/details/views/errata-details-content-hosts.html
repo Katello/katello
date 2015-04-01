@@ -46,15 +46,14 @@
     </form>
   </div>
 
-  <div data-block="table">
-    <p bst-alert="warning" data-i18n
-       ng-show="detailsTable.rows.length > 0 && stateIncludes('errata.details.content-hosts.unavailable')">
-      The Content View or Lifecycle Environment needs to be updated in order to make errata available to these hosts.
-    </p>
+  <span data-block="no-rows-message" translate>
+    No Content Hosts match this Erratum.
+  </span>
 
-    <span data-block="no-rows-message" translate>
-      No Content Hosts match this Erratum.
-    </span>
+  <div data-block="table">
+    <p bst-alert="warning" ng-show="detailsTable.rows.length > 0 && stateIncludes('errata.details.content-hosts.unavailable')">
+      <span translate>The Content View or Lifecycle Environment needs to be updated in order to make errata available to these hosts.</span>
+    </p>
 
     <table class="table table-striped table-bordered"
            ng-class="{'table-mask': detailsTable.working}"
