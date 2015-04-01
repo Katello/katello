@@ -95,6 +95,7 @@ Requires: %{?scl_prefix}rubygem-rabl
 Requires: %{?scl_prefix}rubygem-tire => 0.6.2
 Requires: %{?scl_prefix}rubygem-tire < 0.7
 Requires: %{?scl_prefix}rubygem-logging >= 1.8.0
+Requires: %{?scl_prefix}rubygem-logging < 2.0.0
 Requires: %{?scl_prefix}rubygem-hooks
 Requires: %{?scl_prefix}rubygem-foreman_docker >= 0.2.0
 Requires: %{?scl_prefix}rubygem-foreman-tasks >= 0.6.0
@@ -119,6 +120,7 @@ BuildRequires: %{?scl_prefix}rubygem-sqlite3
 BuildRequires: %{?scl_prefix}rubygem-tire => 0.6.2
 BuildRequires: %{?scl_prefix}rubygem-tire < 0.7
 BuildRequires: %{?scl_prefix}rubygem-logging >= 1.8.0
+BuildRequires: %{?scl_prefix}rubygem-logging < 2.0.0
 BuildRequires: %{?scl_prefix}rubygem-hooks
 BuildRequires: %{?scl_prefix}rubygem-foreman_docker >= 0.2.0
 BuildRequires: %{?scl_prefix}rubygem-foreman-tasks >= 0.6.0
