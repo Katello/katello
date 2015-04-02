@@ -110,7 +110,7 @@ module Katello
     param :system_id, String, :desc => N_("UUID of the system")
     param :activation_key_id, String, :desc => N_("activation key ID")
     param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
-      param :id, String, :desc => N_("Subscription Pool uuid"), :required => true
+      param :id, String, :desc => N_("Subscription Pool uuid")
     end
     def destroy
       object = @system || @activation_key || @distributor
