@@ -30,7 +30,23 @@ module Katello
       @request.env['HTTP_ACCEPT'] = 'application/json'
 
       @system = katello_systems(:simple_server)
+      @errata_system = katello_systems(:errata_server)
       permissions
+    end
+
+    def test_index
+      get :index, :system_id => @errata_system.uuid
+
+      assert_response :success
+      assert_template 'api/v2/system_errata/index'
+    end
+
+    def test_index_other_env
+      get :index, :system_id => @errata_system.uuid, :content_view_id => @errata_system.organization.default_content_view.id,
+          :environment_id => @errata_system.organization.library.id
+
+      assert_response :success
+      assert_template 'api/v2/system_errata/index'
     end
 
     def test_apply
