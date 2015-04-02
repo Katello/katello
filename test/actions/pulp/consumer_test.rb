@@ -25,6 +25,7 @@ module ::Actions::Pulp
     let(:args) { %w(vim vi) }
 
     def setup
+      set_user
       ::ForemanTasks.sync_task(::Actions::Pulp::Consumer::Create, uuid: uuid, name: name)
     end
 
@@ -110,6 +111,7 @@ module ::Actions::Pulp
     end
 
     def setup
+      set_user
       ::Katello::RepositorySupport.create_repo(repository.id)
     end
 

@@ -19,6 +19,10 @@ module ::Actions::Katello::ContentView
     include FactoryGirl::Syntax::Methods
 
     let(:action) { create_action action_class }
+
+    before(:all) do
+      set_user
+    end
   end
 
   class AddToEnvironmentTest < TestBase
@@ -148,6 +152,7 @@ module ::Actions::Katello::ContentView
     before(:all) do
       task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
       ::Actions::Katello::ContentView::Remove.any_instance.stubs(:task).returns(task)
+      User.current = User.first
     end
 
     let(:action_class) { ::Actions::Katello::ContentView::Remove }

@@ -17,6 +17,7 @@ module Actions
     # that triggered the action.
     class RemoteAction < Dynflow::Middleware
       def plan(*args)
+        fail "No current user is set. Please set User.current to perform a remote action" if User.current.nil?
         pass(*args).tap do
           action.input[:remote_user] = User.current.remote_id
           action.input[:remote_cp_user] = User.current.login

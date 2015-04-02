@@ -16,6 +16,7 @@ require 'support/pulp/repository_support'
 module Katello
   class GluePulpPuppetModuleTest < ActiveSupport::TestCase
     def setup
+      set_user
       configure_runcible
 
       VCR.insert_cassette('glue_pulp_puppet_module')
