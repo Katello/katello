@@ -25,6 +25,7 @@ angular.module('Bastion.content-hosts').factory('ContentHost',
 
         return BastionResource('/katello/api/v2/systems/:id/:action/:action2', {id: '@uuid'}, {
             get: {method: 'GET', params: {fields: 'full'}},
+            getPost: {method: 'POST', params: {fields: 'full', action: 'post_index'}},
             update: {method: 'PUT'},
             releaseVersions: {method: 'GET', params: {action: 'releases'}},
             subscriptions: {method: 'GET', params: {action: 'subscriptions'}},

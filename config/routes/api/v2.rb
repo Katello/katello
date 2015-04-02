@@ -266,6 +266,7 @@ Katello::Engine.routes.draw do
             get :events
           end
           collection do
+            match '/post_index' => 'systems#index', :via => :post
             match '/bulk/add_host_collections' => 'systems_bulk_actions#bulk_add_host_collections', :via => :put
             match '/bulk/remove_host_collections' => 'systems_bulk_actions#bulk_remove_host_collections', :via => :put
             match '/bulk/install_content' => 'systems_bulk_actions#install_content', :via => :put
