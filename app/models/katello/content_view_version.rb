@@ -41,6 +41,8 @@ module Katello
     scope :default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true)
     scope :non_default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false)
 
+    scoped_search :on => [:content_view_id, :major, :minor]
+
     def self.component_of(versions)
       joins(:content_view_version_composites).where("#{Katello::ContentViewVersionComponent.table_name}.composite_version_id" => versions)
     end
