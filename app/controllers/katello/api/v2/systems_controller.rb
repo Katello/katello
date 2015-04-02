@@ -52,6 +52,7 @@ module Katello
     end
 
     api :GET, "/systems", N_("List content hosts"), :deprecated => true
+    api :POST, "/systems/post_index", N_("List content hosts when you have a query string parameter that will cause a 414."), :deprecated => true
     api :GET, "/organizations/:organization_id/systems", N_("List content hosts in an organization"), :deprecated => true
     api :GET, "/environments/:environment_id/systems", N_("List content hosts in environment"), :deprecated => true
     api :GET, "/host_collections/:host_collection_id/systems", N_("List content hosts in a host collection"), :deprecated => true
