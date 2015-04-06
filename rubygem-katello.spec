@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.2.0
-Release: 6%{dist}
+Release: 7%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -224,6 +224,30 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Mon Apr 06 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-7
+- Refs #9518, #9310 - Create containers in API using katello repos
+  (paji@redhat.com)
+- Refs #9979: Other tests were not setting User.current when they should.
+- Fixes #9979: Set User.current in Organization spec tests.
+- Fixes #9968: Remove unused kill commands and cleanup script.
+- fixes #9629 - fix env delete, as it no longer needs indexing
+- Fixes #9579: Limit bastion to less than 1.0.0
+- refs #8175 - require qpid-dispatch-router
+- Fixes #9511: fix typo on manifest update page. (walden@redhat.com)
+- fixes #9935 - pass correct id to install errata for inc updates
+- Fixes #9986: Lock 'logging' gem to 1.X
+- Fixes #9978 - Sets an env content id correctly in cp (paji@redhat.com)
+- Fixes #9902 - Updated incorrect cv association (paji@redhat.com)
+- Fixes #9934: do not refresh errata on initial load BZ 1206704.
+  (walden@redhat.com)
+- Fixes #9866: Properly remove Pulp sync schedule from products.
+- fixes #9914 - fixing uninitialized constant error on incremental update
+  (jsherril@redhat.com)
+- fixes #9899 - reindex all org subscriptions during manifest destroy
+- Fixes #9872: Properly destroy systems that are of type Hypervisor.
+  (ericdhelms@gmail.com)
+- Add 2.2 CHANGELOG (ericdhelms@gmail.com)
+
 * Thu Mar 26 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-6
 - Fixes #9887: remove search on activation key show, BZ1204929.
   (walden@redhat.com)
