@@ -27,7 +27,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "rabl"
   gem.add_dependency "tire", "~> 0.6.2"
-  gem.add_dependency "logging", ">= 1.8.0"
+  gem.add_dependency "logging", ">= 1.8.0", '< 2.0.0'
   gem.add_dependency "hooks"
   gem.add_dependency "foreman-tasks", "~> 0.6.0"
   gem.add_dependency "foreman_docker", ">= 0.2.0"
@@ -47,7 +47,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "haml-rails"
   gem.add_dependency "deface", '< 1.0.0'
   gem.add_dependency "jquery-ui-rails"
-  gem.add_dependency "bastion"
+  gem.add_dependency "bastion", "< 1.0.0"
   gem.add_development_dependency "less-rails", "~> 2.5.0"
 
   # Testing

@@ -35,22 +35,93 @@ then
     exit 1
 fi
 
+CONFIG_FILES=(
+    /etc/pulp/
+    /etc/candlepin/
+    /etc/katello/
+    /usr/share/foreman
+    /usr/share/katello/
+    /var/lib/puppet/
+    /var/lib/pgsql/
+    /var/lib/mongodb/
+    /var/lib/katello/
+    /var/lib/pulp/
+    /etc/httpd/
+    /etc/tomcat6/
+    /etc/elasticsearch
+    /var/lib/elasticsearch
+    /usr/share/pulp
+    /var/lib/candlepin
+    /etc/foreman
+    /var/lib/foreman
+    /etc/tomcat
+    /etc/katello-installer
+    /etc/foreman-proxy/
+    /etc/puppet/environments
+    /etc/pki/katello-certs-tools
+)
+
+LOG_FILES=(
+    /var/log/katello/
+    /var/log/tomcat6/
+    /var/log/pulp/
+    /var/log/candlepin/
+    /var/log/httpd/
+    /var/log/mongodb/
+    /var/log/foreman
+    /etc/tomcat
+    /var/log/foreman-proxy
+)
+
+RPMS=(
+    `rpm -qa | grep puppetlabs-release`
+    `rpm -qa | grep foreman-release`
+    `rpm -qa | grep foreman-client`
+    `rpm -qa | grep foreman-proxy`
+    `rpm -qa | grep candlepin`
+    `rpm -qa | grep katello`
+    `rpm -qa | grep ^pulp`
+    `rpm -qa | grep ^python-pulp`
+    `rpm -qa | grep ^pulp-`
+    `rpm -qa | grep mongo`
+    `rpm -qa | grep postgre`
+    `rpm -qa | grep ^mod_`
+    `rpm -qa | grep ^rubygem`
+    `rpm -qa | grep ^ruby193`
+    `rpm -qa | grep ^foreman`
+    ruby
+    rubygems
+    elasticsearch
+    httpd
+    puppet
+    tomcat
+    tomcat6 
+)
+
+CERT_FILES=(
+    /etc/pki/pulp/
+    /etc/pki/content/*
+    /etc/pki/katello
+    /root/ssl-build
+    /etc/pki/tls/certs/katello-node.crt
+    /etc/pki/tls/private/katello-node.key
+    /etc/pki/tls/certs/pulp_consumers_ca.crt
+    /etc/pki/tls/certs/pulp_ssl_cert.crt
+    /var/www/html/pub/katello-ca*.rpm
+)
+
 katello-service stop
-kill -9 `ps -aef | grep katello | grep -v $(basename $0) | grep -v grep | awk '{print $2}'`
-kill -9 `ps -aef | grep delayed_job | grep -v grep | awk '{print $2}'`
 
-yum erase -y `rpm -qa | grep puppetlabs-release` `rpm -qa | grep foreman-release` `rpm -qa | grep foreman-client` `rpm -qa | grep foreman-proxy` `rpm -qa | grep candlepin` `rpm -qa | grep katello` `rpm -qa | grep ^pulp` `rpm -qa | grep ^python-pulp`  `rpm -qa | grep ^pulp-` `rpm -qa | grep mongo` `rpm -qa | grep postgre` `rpm -qa | grep ^mod_` `rpm -qa | grep ^rubygem` `rpm -qa | grep ^ruby193` `rpm -qa | grep ^foreman` ruby rubygems elasticsearch httpd puppet tomcat tomcat6 
+echo "Removing RPMs"
+yum erase -y ${RPMS[*]}
 
-# config files
-rm -rf /etc/pulp/ /etc/candlepin/ /etc/katello/ /usr/share/foreman /usr/share/katello/ /var/lib/puppet/ /var/lib/pgsql/ /var/lib/mongodb/ /var/lib/katello/ /var/lib/pulp/ /etc/httpd/ /etc/tomcat6/ /etc/elasticsearch /var/lib/elasticsearch /usr/share/pulp /var/lib/candlepin /etc/foreman /var/lib/foreman /etc/tomcat /etc/katello-installer /etc/foreman-proxy/ /etc/puppet/environments /etc/pki/katello-certs-tools
+echo "Cleaning up configuration files"
+rm -rf ${CONFIG_FILES[*]}
 
-
+echo "Cleaning up log files"
 # logs
-rm -rf /var/log/katello/ /var/log/tomcat6/ /var/log/pulp/ /var/log/candlepin/ /var/log/httpd/ /var/log/mongodb/ /var/log/foreman /etc/tomcat /var/log/foreman-proxy
+rm -rf ${LOG_FILES[*]}
 
+echo "Cleaning up Certs"
 # pulp cert stuff 
-rm -rf /etc/pki/pulp/ /etc/pki/content/* /etc/pki/katello /root/ssl-build /etc/pki/tls/certs/katello-node.crt /etc/pki/tls/private/katello-node.key /etc/pki/tls/certs/pulp_consumers_ca.crt /etc/pki/tls/certs/pulp_ssl_cert.crt
-
-# client cert rpms
-rm -rf /var/www/html/pub/katello-ca*.rpm
-
+rm -rf ${CERT_FILES[*]}

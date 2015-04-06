@@ -19,6 +19,7 @@ module Katello
       services  = ['Candlepin', 'ElasticSearch', 'Foreman']
       models    = ['Repository', 'PuppetModule']
       disable_glue_layers(services, models)
+      set_user
       configure_runcible
 
       VCR.insert_cassette('glue_pulp_puppet_module')

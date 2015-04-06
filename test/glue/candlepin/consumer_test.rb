@@ -52,13 +52,14 @@ module Katello
     end
 
     def self.after_suite
-      unless @@dev_cve.nil?
-        User.current.remote_id =  User.current.login
-        # To prevent deletion of the fixture object
-        @@dev_cve.stubs(:destroy).returns(true)
-        # ForemanTasks.sync_task(::Actions::Katello::ContentViewEnvironment::Destroy, @@dev_cve)
+      run_as_admin do
+        unless @@dev_cve.nil?
+          # To prevent deletion of the fixture object
+          @@dev_cve.stubs(:destroy).returns(true)
+          # ForemanTasks.sync_task(::Actions::Katello::ContentViewEnvironment::Destroy, @@dev_cve)
+        end
+        Resources::Candlepin::Owner.destroy(@@org.label) unless @@org.nil?
       end
-      Resources::Candlepin::Owner.destroy(@@org.label) unless @@org.nil?
     ensure
       VCR.eject_cassette
     end

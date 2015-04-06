@@ -26,11 +26,11 @@ module Actions
             plan_action(Pulp::Consumer::Destroy, uuid: system.uuid) unless skip_pulp
           end
 
-          plan_self
+          plan_self(:system_id => system.id)
         end
 
         def finalize
-          system = ::Katello::System.find(input[:system][:id])
+          system = ::Katello::System.find(input[:system_id])
           system.destroy!
         end
 

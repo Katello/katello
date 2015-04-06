@@ -26,12 +26,7 @@ module Katello
     end
 
     def create_environment(attrs)
-      User.current.remote_id =  User.current.login
       env = KTEnvironment.create!(attrs)
-      if block_given?
-        yield env
-        env.save!
-      end
 
       unless attrs[:content_view]
         find_or_create_content_view(env)

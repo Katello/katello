@@ -22,6 +22,7 @@ class Actions::Pulp::UserTest < ActiveSupport::TestCase
   end
 
   def setup
+    set_user
     planned_action = create_and_plan_action ::Actions::Pulp::User::Create,
       remote_id: 'user_id'
 
