@@ -4,20 +4,18 @@ namespace :katello do
     def cleanup_systems
       Katello::System.find_each do |system|
 
-        next if system.is_a? Katello::Hypervisor
-
         if system.uuid.nil?
           cp_fail = true
           pulp_fail = true
         else
           cp_fail = test_method { system.facts }
-          pulp_fail = test_method { system.pulp_facts }
+          pulp_fail = test_method { system.pulp_facts } unless system.is_a?(Katello::Hypervisor)
         end
 
         if cp_fail || pulp_fail
           print "System #{system.id} #{system.name} #{system.uuid} is partially missing.  Cleaning.\n"
           ::Katello::Resources::Candlepin::Consumer.destroy(system.uuid) unless cp_fail
-          system.del_pulp_consumer unless pulp_fail
+          system.del_pulp_consumer unless (pulp_fail || system.is_a?(Katello::Hypervisor))
           Katello::System.index.remove system
           system.system_activation_keys.destroy_all
           system.system_host_collections.destroy_all
@@ -44,6 +42,7 @@ namespace :katello do
       # look at https://bugzilla.redhat.com/show_bug.cgi?id=1140653
       # for more information
       cp_consumers = ::Katello::Resources::Candlepin::Consumer.get({})
+      cp_consumers.reject! { |consumer| consumer['type']['label'] == 'uebercert' }
       cp_consumer_ids = cp_consumers.map {|cons| cons["uuid"]}
       katello_consumer_ids = ::Katello::System.pluck(:uuid)
       deletable_ids = cp_consumer_ids - katello_consumer_ids
