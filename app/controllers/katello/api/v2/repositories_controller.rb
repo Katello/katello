@@ -48,6 +48,7 @@ module Katello
     param :environment_id, :number, :desc => N_("ID of an environment to show repositories in")
     param :content_view_id, :number, :desc => N_("ID of a content view to show repositories in")
     param :content_view_version_id, :number, :desc => N_("ID of a content view version to show repositories in")
+    param :erratum_id, String, :desc => N_("UUID of an erratum to find repositories that contain the erratum")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :content_type, String, :desc => N_("limit to only repositories of this time")
     param :name, String, :desc => N_("name of the repository"), :required => false
@@ -71,7 +72,7 @@ module Katello
       repositories = repositories.where(:content_view_version_id => params[:content_view_version_id]) if params[:content_view_version_id]
       repositories = repositories.where(:content_type => params[:content_type]) if params[:content_type]
       repositories = repositories.where(:name => params[:name]) if params[:name]
-      repositories = repositories.joins(:errata).where("#{Erratum.table_name}.uuid" => params[:errata_id]) if params[:errata_id]
+      repositories = repositories.joins(:errata).where("#{Erratum.table_name}.uuid" => params[:erratum_id]) if params[:erratum_id]
 
       if params[:environment_id] && !params[:library]
         repositories = repositories.where(:environment_id => params[:environment_id])
