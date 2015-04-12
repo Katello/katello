@@ -3,12 +3,12 @@ namespace :katello do
     namespace '2.1' do
       task :import_errata => ["environment"]  do
 
-        def error(exception)
+        def error(exception, system)
           message = _("There was an error updating Content Host %{name} with id %{id}") %
                                {:name =>system.name, :id => system.id}
           puts message
           Rails.logger.error(message)
-          Rails.logger.error(e.message)
+          Rails.logger.error(exception.message)
         end
 
         def update_system_repositories(system)
@@ -30,7 +30,7 @@ namespace :katello do
           begin
             update_system_repositories(system)
           rescue => e
-            error(e)
+            error(e, system)
           end
         end
 
