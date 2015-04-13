@@ -216,6 +216,7 @@ module Katello
     #api :DELETE, "/consumers/:id", N_("Unregister a consumer")
     #param :id, String, :desc => N_("UUID of the consumer"), :required => true
     def consumer_destroy
+      User.current = User.anonymous_admin
       sync_task(::Actions::Katello::System::Destroy, @system)
       render :text => _("Deleted consumer '%s'") % params[:id], :status => 204
     end
