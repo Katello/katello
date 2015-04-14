@@ -192,7 +192,7 @@ module Katello
         end
 
         def allowed_organizations
-          (admin? || anonymous_admin) ? Organization.all : self.organizations
+          admin? ? Organization.all : self.organizations
         end
 
         private
