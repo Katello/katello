@@ -26,7 +26,20 @@
 
     <div class="detail">
       <span class="info-label" translate>Start Date</span>
-      <span class="info-value">{{ syncPlan.sync_date | date:'medium' }}</span>
+      <span class="info-value"
+            bst-edit-custom="syncPlan.sync_date"
+            formatter="date"
+            formatter-options="'medium'"
+            on-save="save(syncPlan)"
+            readonly="denied('edit_sync_plans', syncPlan)">
+
+           <input type="text" datepicker-popup id="syncDate" name="syncDate" ng-model="syncPlan.syncDate"
+                  show-weeks="false" tabindex="4" required/>
+
+           <timepicker type="time" show-meridian="false" id="syncTime" name="syncTime" ng-model="syncPlan.syncTime"
+                       tabindex="5">
+           </timepicker>
+      </span>
     </div>
 
     <div class="detail">

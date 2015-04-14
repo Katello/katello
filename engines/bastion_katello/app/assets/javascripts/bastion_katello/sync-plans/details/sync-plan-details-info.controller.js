@@ -38,12 +38,23 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
             $scope.menuExpander = MenuExpander;
             $scope.panel = $scope.panel || {loading: false};
 
-            $scope.syncPlan = $scope.syncPlan || SyncPlan.get({id: $scope.$stateParams.syncPlanId}, function () {
+            SyncPlan.get({id: $scope.$stateParams.syncPlanId}, function (syncPlan) {
                 $scope.panel.loading = false;
+
+                syncPlan.syncDate = syncPlan.syncTime = syncPlan['sync_date'];
+                $scope.syncPlan = syncPlan;
             });
 
             $scope.save = function (syncPlan) {
-                var deferred = $q.defer();
+                var deferred = $q.defer(),
+                    syncDate = new Date(syncPlan.syncDate),
+                    syncTime = new Date(syncPlan.syncTime || new Date());
+
+                syncDate.setHours(syncTime.getHours());
+                syncDate.setMinutes(syncTime.getMinutes());
+                syncDate.setSeconds(0);
+                syncPlan['sync_date'] = syncDate.toString();
+
                 syncPlan.$update(function (response) {
                     deferred.resolve(response);
                     $scope.successMessages.push(translate('Sync Plan Saved'));
