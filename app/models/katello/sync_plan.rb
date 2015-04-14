@@ -66,7 +66,7 @@ module Katello
     end
 
     def schedule_format
-      if (self.interval != DURATION[self.interval]) && self.enabled
+      if (self.interval != DURATION[self.interval])
         format = self.sync_date.iso8601 << "/P" << DURATION[self.interval]
       else
         if self.sync_date < Time.now
@@ -83,6 +83,8 @@ module Katello
     end
 
     def next_sync
+      return nil unless self.enabled
+
       now = Time.now.utc
       next_sync = self.sync_date
 
@@ -93,25 +95,23 @@ module Katello
 
         next_sync = nil
 
-        if self.enabled
-          case self.interval
-          when HOURLY
-            if self.sync_date.min < now.min
-              minutes += 60
-            end
-            next_sync = now.advance(:minutes => minutes, :seconds => seconds)
-          when DAILY
-            sync_time = Time.at(self.sync_date.hour * 60 * 60 + self.sync_date.min * 60 + self.sync_date.sec)
-            now_time = Time.at(now.hour * 60 * 60 + now.min * 60 + now.sec)
-            if sync_time < now_time
-              hours += 24
-            end
-            next_sync = now.advance(:hours => hours, :minutes => minutes, :seconds => seconds)
-          when WEEKLY
-            days = 7 + self.sync_date.wday - now.wday
-            next_sync = now.change(:hour => self.sync_date.hour, :min => self.sync_date.min,
-                                   :sec => self.sync_date.sec).advance(:days => days)
+        case self.interval
+        when HOURLY
+          if self.sync_date.min < now.min
+            minutes += 60
           end
+          next_sync = now.advance(:minutes => minutes, :seconds => seconds)
+        when DAILY
+          sync_time = Time.at(self.sync_date.hour * 60 * 60 + self.sync_date.min * 60 + self.sync_date.sec)
+          now_time = Time.at(now.hour * 60 * 60 + now.min * 60 + now.sec)
+          if sync_time < now_time
+            hours += 24
+          end
+          next_sync = now.advance(:hours => hours, :minutes => minutes, :seconds => seconds)
+        when WEEKLY
+          days = 7 + self.sync_date.wday - now.wday
+          next_sync = now.change(:hour => self.sync_date.hour, :min => self.sync_date.min,
+                                 :sec => self.sync_date.sec).advance(:days => days)
         end
       end
       next_sync
