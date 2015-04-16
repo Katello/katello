@@ -24,7 +24,8 @@ module Katello
       base.send :extend, ClassMethods
 
       base.class_eval do
-        attr_accessible :cp_type, :owner, :serviceLevel, :installedProducts, :facts, :guestIds, :releaseVer, :autoheal
+        attr_accessible :cp_type, :owner, :serviceLevel, :installedProducts, :facts, :guestIds, :releaseVer, :autoheal,
+                        :lastCheckin
 
         lazy_accessor :href, :facts, :cp_type, :idCert, :owner, :lastCheckin, :created, :guestIds,
         :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities, :entitlementStatus,

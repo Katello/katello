@@ -35,6 +35,7 @@ module Actions
                                     autoheal:            system.autoheal,
                                     release_ver:         system.release,
                                     service_level:       system.serviceLevel,
+                                    last_checkin:        system.lastCheckin,
                                     uuid:                system.uuid,
                                     capabilities:        system.capabilities,
                                     guest_ids:           system.guestIds,

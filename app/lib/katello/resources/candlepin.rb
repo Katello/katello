@@ -117,7 +117,8 @@ module Katello
 
           # rubocop:disable ParameterLists
           def create(env_id, _key, name, type, facts, installed_products, autoheal = true, release_ver = nil,
-                     service_level = "", uuid = "", capabilities = nil, activation_keys = [], guest_ids = [])
+                     service_level = "", uuid = "", capabilities = nil, activation_keys = [], guest_ids = [],
+                     last_checkin = nil)
             # rubocop:enable ParameterLists
 
             activation_key_ids = activation_keys.collect do |activation_key|
@@ -134,7 +135,8 @@ module Katello
                      :serviceLevel => service_level,
                      :uuid => uuid,
                      :capabilities => capabilities,
-                     :guestIds => guest_ids }
+                     :guestIds => guest_ids,
+                     :lastCheckin => last_checkin}
             url += "?activation_keys=" + activation_key_ids.join(",") if activation_key_ids.length > 0
             response = self.post(url, attrs.to_json, self.default_headers).body
             JSON.parse(response).with_indifferent_access
