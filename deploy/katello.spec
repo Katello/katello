@@ -84,8 +84,6 @@ install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysco
 install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/service-wait
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 
-install -p -m0644 etc/service-list %{buildroot}%{_sysconfdir}/%{name}/
-
 #create symlinks for important scripts
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_sbindir}
@@ -103,7 +101,7 @@ install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 %clean
 %{__rm} -rf %{buildroot}
 
-%files 
+%files
 
 # ------ Common ------------------
 
@@ -111,17 +109,15 @@ install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 BuildArch:  noarch
 Summary:    Common runtime components of %{name}
 
-# service-wait dependency
-Requires:       wget
-Requires:       curl
 Requires:       %{?scl_prefix}rubygem-katello
-Requires:       rubygem-hammer_cli 
+Requires:       rubygem-hammer_cli
 Requires:       rubygem-hammer_cli_foreman
 Requires:       rubygem-hammer_cli_katello
 Requires:       rubygem-hammer_cli_import
 Requires:       rubygem-hammer_cli_gutterball
 Requires:       %{?scl_prefix}rubygem-foreman_gutterball
 Requires:       %{name}-debug
+Requires:       %{name}-service
 
 %description common
 Common runtime components of %{name}
@@ -130,14 +126,9 @@ Common runtime components of %{name}
 %{_bindir}/katello-*
 
 %{homedir}/script
-%config(noreplace) %{_sysconfdir}/%{name}/service-list
-%{_mandir}/man8/katello-service.8*
-%{_sbindir}/service-wait
 %dir %{_sysconfdir}/%{name}
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
-%config(noreplace) %{_sysconfdir}/sysconfig/service-wait
-%{homedir}/script/service-wait
 %dir %{homedir}
 %config(missingok) %{_sysconfdir}/cron.weekly/katello-remove-orphans
 
@@ -153,13 +144,32 @@ Useful utilities for debug info collecting
 %files debug
 %{_datadir}/foreman/script/foreman-debug.d/katello-debug.sh
 
+# ------ Service ----------------
+%package service
+Summary: Katello Service utilities
+Group: Applications/System
+
+# service-wait dependency
+Requires:       wget
+Requires:       curl
+
+%description service
+Useful utilities for managing Katello services
+
+%files service
+%{_sbindir}/service-wait
+%{homedir}/script/service-wait
+%{_mandir}/man8/katello-service.8*
+
+%config(noreplace) %{_sysconfdir}/sysconfig/service-wait
+
 # ------ SAM ------------------
 
 %package sam
 Summary: Package that installs only the Subscription and basic Content Management parts of Katello
 Group:  Applications/System
 
-# Require the common package and ensure the katello-sam package 
+# Require the common package and ensure the katello-sam package
 # can't be installed on the same system as katello
 Requires:       %{name}-common = %{version}-%{release}
 Conflicts:      %{name}
