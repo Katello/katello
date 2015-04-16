@@ -98,7 +98,8 @@ module Katello
 
       options = {
         :filters       => filters,
-        :load_records? => true
+        :load_records? => true,
+        :includes => [:content_view, :activation_keys, :environment]
       }
       respond_for_index(:collection => item_search(System, params, options))
     end
