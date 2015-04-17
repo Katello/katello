@@ -77,6 +77,7 @@ Requires: createrepo >= 0.9.9-18%{?dist}
 Requires: elasticsearch
 Requires: foreman >= 1.7.0
 Requires: java-openjdk >= 1:1.7.0
+Requires: java-openjdk < 1:1.8.0.45
 # Still Requires katello-common which clashes with
 # new build - will re-enable after fixing
 #Requires: katello-selinux
