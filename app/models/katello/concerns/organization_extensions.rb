@@ -199,6 +199,23 @@ module Katello
         def parent_id=(_parent_id)
           fail ::Foreman::Exception, N_("You cannot set an organization's parent_id. This feature is disabled.")
         end
+
+        def latest_repo_discovery
+          ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Repository::Discover)
+            .for_resource(::User.current).order("started_at").last
+        end
+
+        def cancel_repo_discovery
+          discovery = latest_repo_discovery
+          if discovery
+            discovery.execution_plan.steps.each_pair do |_num, step|
+              if step.cancellable? && step.is_a?(Dynflow::ExecutionPlan::Steps::RunStep)
+                ::ForemanTasks.dynflow.world.event(discovery.execution_plan.id, step.id, Dynflow::Action::Cancellable::Cancel)
+              end
+            end
+          end
+          discovery
+        end
       end
     end
   end

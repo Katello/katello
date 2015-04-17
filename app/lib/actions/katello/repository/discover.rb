@@ -14,6 +14,8 @@ module Actions
   module Katello
     module Repository
       class Discover < Actions::Base
+        include Dynflow::Action::Cancellable
+
         input_format do
           param :url, String
         end
@@ -26,13 +28,23 @@ module Actions
           plan_self(url: url)
         end
 
-        def run
-          repo_discovery = ::Katello::RepoDiscovery.new(input[:url], proxy)
-          output[:repo_urls] = []
-          found = lambda { |path| output[:repo_urls] << path }
-          # TODO: implement task cancelling
-          continue = lambda { true }
-          repo_discovery.run(found, continue)
+        def run(event = nil)
+          output[:repo_urls] = output[:repo_urls] || []
+          output[:crawled] = output[:crawled] || []
+          output[:to_follow] = output[:to_follow] || [input[:url]]
+
+          repo_discovery = ::Katello::RepoDiscovery.new(input[:url], proxy, output[:crawled], output[:repo_urls], output[:to_follow])
+
+          match(event,
+            (on nil do
+              unless output[:to_follow].empty?
+                repo_discovery.run(output[:to_follow].shift)
+                suspend { |suspended_action| world.clock.ping suspended_action, 0.001 }
+              end
+            end),
+            (on Dynflow::Action::Cancellable::Cancel do
+              output[:repo_urls] = []
+            end))
         end
 
         # @return <String> urls found by the action

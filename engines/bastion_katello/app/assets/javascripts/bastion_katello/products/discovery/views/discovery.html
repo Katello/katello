@@ -1,18 +1,21 @@
 <span page-title>{{ 'Repository Discovery' | translate }}</span>
 
 <div class="row">
-  <form ng-submit="discover()" role="form" class="col-sm-6">
+  <form ng-submit="discover()" name="discoveryForm" class="col-sm-6">
     <div class="input-group">
 
-      <input type="url"
+      <input type="text"
+             ng-pattern="/^(file:\/\/|http:\/\/|https:\/\/).+/"
              class="form-control input-lg"
              placeholder="{{ 'URL to discover' | translate }}"
              ng-model="discovery.url"
-             ng-disabled="discovery.pending"/>
+             ng-disabled="discovery.pending"
+             name="discoveryUrl"
+             required/>
 
       <span class="input-group-btn input-group-lg">
         <button ng-show="!discovery.pending && permitted('edit_products')"
-               ng-disabled="!discovery.url"
+               ng-disabled="discoveryForm.discoveryUrl.$invalid"
                translate
                type="submit"
                class="btn btn-primary btn-lg">

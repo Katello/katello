@@ -92,8 +92,8 @@ module Katello
     param :label, String, :desc => N_("Organization label")
     param :url, String, :desc => N_("base url to perform repo discovery on")
     def cancel_repo_discover
-      # TODO: implement task canceling
-      render :json => { message: "not implemented" }
+      task = @organization.cancel_repo_discovery
+      respond_for_async :resource => task
     end
 
     api :GET, "/organizations/:label/download_debug_certificate", N_("Download a debug certificate")
