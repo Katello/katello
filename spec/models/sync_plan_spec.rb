@@ -114,19 +114,6 @@ module Katello
         @plan.schedule_format.wont_be_nil
         @plan.schedule_format.must_match(/\/P7D$/)
       end
-
-      it "should properly handle interval when not enabled" do
-        @plan.enabled = false
-        @plan.sync_date = DateTime.now.tomorrow
-        @plan.schedule_format.wont_be_nil
-        @plan.schedule_format.must_match(%r{R1\/.*\/P1D})
-      end
-
-      it "should properly handle not being enabled if scheduled in the past" do
-        @plan.enabled = false
-        @plan.sync_date = DateTime.now.yesterday
-        @plan.schedule_format.must_be_nil
-      end
     end
   end
 end

@@ -1,0 +1,366 @@
+--- 
+http_interactions: 
+- request: 
+    method: post
+    uri: https://katello-patternfly.example.com/pulp/api/v2/repositories/
+    body: 
+      encoding: US-ASCII
+      string: "{\"id\":\"1\",\"display_name\":\"Fedora 17 x86_64\",\"importer_type_id\":\"yum_importer\",\"importer_config\":{\"feed\":\"file:///var/www/test_repos/zoo\",\"ssl_ca_cert\":null,\"ssl_client_cert\":null,\"ssl_client_key\":null},\"notes\":{\"_repo-type\":\"rpm-repo\"},\"distributors\":[{\"distributor_type_id\":\"yum_distributor\",\"distributor_config\":{\"relative_url\":\"/test_path/\",\"http\":false,\"https\":true,\"protected\":true},\"auto_publish\":true,\"distributor_id\":\"1\"},{\"distributor_type_id\":\"yum_clone_distributor\",\"distributor_config\":{\"destination_distributor_id\":\"1\"},\"auto_publish\":false,\"distributor_id\":\"1_clone\"},{\"distributor_type_id\":\"nodes_http_distributor\",\"distributor_config\":{},\"auto_publish\":true,\"distributor_id\":\"1_nodes\"}]}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="xRiGvhTXT37jVy8Pld8a44EhRIyNl1gtu9klkGrMivM", oauth_signature="ifHpY26gvya%2FDE1EIRHMxB%2FpswA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1428935235", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "703"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Date: 
+      - Mon, 13 Apr 2015 14:27:15 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Location: 
+      - "1"
+      Content-Length: 
+      - "304"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"scratchpad\": {}, \"display_name\": \"Fedora 17 x86_64\", \"description\": null, \"last_unit_added\": null, \"notes\": {\"_repo-type\": \"rpm-repo\"}, \"last_unit_removed\": null, \"content_unit_counts\": {}, \"_ns\": \"repos\", \"_id\": {\"$oid\": \"552bd2437396ca11f4c4f6d3\"}, \"id\": \"1\", \"_href\": \"/pulp/api/v2/repositories/1/\"}"
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 14:27:15 GMT
+- request: 
+    method: get
+    uri: https://katello-patternfly.example.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="qHOUou1qVLni8dqltz4tct9rMvpadi5unnLcecCaE", oauth_signature="4a18%2BfwybBNIQoTUX9RCCgSom5g%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1428935235", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Mon, 13 Apr 2015 14:27:15 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Content-Length: 
+      - "2"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "[]"
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 14:27:15 GMT
+- request: 
+    method: post
+    uri: https://katello-patternfly.example.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
+    body: 
+      encoding: US-ASCII
+      string: "{\"schedule\":\"R1/030-01-01T05:00:00Z/P1D\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="kO6nbevZ6fMTvmAp3ySwKZ3DRHEbMuXsmZtxbcl8", oauth_signature="pAa4pvWJk4hSN6TRqqKTClzw1RU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1428935235", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "41"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Date: 
+      - Mon, 13 Apr 2015 14:27:15 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Location: 
+      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/552bd2437396ca11f4c4f6db/
+      Content-Length: 
+      - "575"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"next_run\": \"2015-04-13T14:27:15Z\", \"remaining_runs\": 1, \"last_updated\": 1428935235.642478, \"first_run\": \"0301-01-01T05:00:00Z\", \"total_run_count\": 0, \"schedule\": \"R1/030-01-01T05:00:00Z/P1D\", \"kwargs\": {\"overrides\": {}}, \"args\": [\"1\"], \"enabled\": true, \"last_run_at\": null, \"task\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"failure_threshold\": null, \"resource\": \"pulp:importer:1:yum_importer\", \"_id\": \"552bd2437396ca11f4c4f6db\", \"consecutive_failures\": 0, \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/552bd2437396ca11f4c4f6db/\"}"
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 14:27:15 GMT
+- request: 
+    method: get
+    uri: https://katello-patternfly.example.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="B8Jo6Pl9iQ69fMLvlBvAz3EUagJql6WSY0nTLmkDw", oauth_signature="PSF8ubfxLa6hicPXD9z8qn%2FcqQg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1428935235", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Mon, 13 Apr 2015 14:27:15 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Content-Length: 
+      - "577"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "[{\"next_run\": \"2015-04-13T14:27:15Z\", \"remaining_runs\": 1, \"last_updated\": 1428935235.642478, \"first_run\": \"0301-01-01T05:00:00Z\", \"total_run_count\": 0, \"schedule\": \"R1/030-01-01T05:00:00Z/P1D\", \"kwargs\": {\"overrides\": {}}, \"args\": [\"1\"], \"enabled\": true, \"last_run_at\": null, \"task\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"failure_threshold\": null, \"resource\": \"pulp:importer:1:yum_importer\", \"_id\": \"552bd2437396ca11f4c4f6db\", \"consecutive_failures\": 0, \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/552bd2437396ca11f4c4f6db/\"}]"
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 14:27:15 GMT
+- request: 
+    method: put
+    uri: https://katello-patternfly.example.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/552bd2437396ca11f4c4f6db/
+    body: 
+      encoding: US-ASCII
+      string: "{\"enabled\":false}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="GmLa2pm8l1OTt7Qh7EUd6oPr9cb59p55kE65oGdkXU", oauth_signature="nmAJ0bLobol1R6oxgzFcDutSWLI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1428935235", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "17"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Mon, 13 Apr 2015 14:27:15 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Content-Length: 
+      - "576"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"next_run\": \"2015-04-13T14:27:15Z\", \"remaining_runs\": 1, \"last_updated\": 1428935235.788749, \"first_run\": \"0301-01-01T05:00:00Z\", \"total_run_count\": 0, \"schedule\": \"R1/030-01-01T05:00:00Z/P1D\", \"kwargs\": {\"overrides\": {}}, \"args\": [\"1\"], \"enabled\": false, \"last_run_at\": null, \"task\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"failure_threshold\": null, \"resource\": \"pulp:importer:1:yum_importer\", \"_id\": \"552bd2437396ca11f4c4f6db\", \"consecutive_failures\": 0, \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/552bd2437396ca11f4c4f6db/\"}"
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 14:27:15 GMT
+- request: 
+    method: get
+    uri: https://katello-patternfly.example.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="g5U6085t611BCstJme09LTMNFWpy5LIuapjBLv2eFA", oauth_signature="yKCmDj5YrVwrAIE%2BFk0bqijrB7E%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1428935235", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Mon, 13 Apr 2015 14:27:15 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Content-Length: 
+      - "578"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "[{\"next_run\": \"2015-04-13T14:27:15Z\", \"remaining_runs\": 1, \"last_updated\": 1428935235.788749, \"first_run\": \"0301-01-01T05:00:00Z\", \"total_run_count\": 0, \"schedule\": \"R1/030-01-01T05:00:00Z/P1D\", \"kwargs\": {\"overrides\": {}}, \"args\": [\"1\"], \"enabled\": false, \"last_run_at\": null, \"task\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"failure_threshold\": null, \"resource\": \"pulp:importer:1:yum_importer\", \"_id\": \"552bd2437396ca11f4c4f6db\", \"consecutive_failures\": 0, \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/552bd2437396ca11f4c4f6db/\"}]"
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 14:27:15 GMT
+- request: 
+    method: delete
+    uri: https://katello-patternfly.example.com/pulp/api/v2/repositories/1/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="3BKlxcLNJQT49xz49CaOYNIA5wYnj1vZFHrjgMDiw", oauth_signature="NKLKevRKR8EmTALmlEM60oLGFFs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1428935235", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Date: 
+      - Mon, 13 Apr 2015 14:27:15 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Content-Encoding: 
+      - utf-8
+      Content-Length: 
+      - "172"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/0ebf761b-1205-4438-aadf-545f7938dd56/\", \"task_id\": \"0ebf761b-1205-4438-aadf-545f7938dd56\"}], \"result\": null, \"error\": null}"
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 14:27:15 GMT
+- request: 
+    method: get
+    uri: https://katello-patternfly.example.com/pulp/api/v2/tasks/0ebf761b-1205-4438-aadf-545f7938dd56/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="fRg8tCf8666p6y7FmgZOvgAK5jeNnADYSdKSFUMj4", oauth_signature="EKh3qhekAHF9Ps1HYybDC%2Fkwe%2B0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1428935235", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Mon, 13 Apr 2015 14:27:15 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Content-Length: 
+      - "627"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/0ebf761b-1205-4438-aadf-545f7938dd56/\", \"task_id\": \"0ebf761b-1205-4438-aadf-545f7938dd56\", \"tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-0@katello-patternfly.example.com.dq\", \"state\": \"waiting\", \"worker_name\": \"reserved_resource_worker-0@katello-patternfly.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"552bd2437cb3f489b508a220\"}, \"id\": \"552bd2437396ca727c1c8519\"}"
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 14:27:15 GMT
+- request: 
+    method: get
+    uri: https://katello-patternfly.example.com/pulp/api/v2/tasks/0ebf761b-1205-4438-aadf-545f7938dd56/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="AC5EqTCVHaoPzJuJNIpkm66i0L0LmGiugKlU0fukM", oauth_signature="yz2KAZ0IHl8Ll3h5bUfU0gKesBM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1428935236", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Mon, 13 Apr 2015 14:27:16 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Content-Length: 
+      - "686"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/0ebf761b-1205-4438-aadf-545f7938dd56/\", \"task_id\": \"0ebf761b-1205-4438-aadf-545f7938dd56\", \"tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"finish_time\": \"2015-04-13T14:27:15Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-04-13T14:27:15Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-0@katello-patternfly.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-0@katello-patternfly.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"552bd2437cb3f489b508a220\"}, \"id\": \"552bd2437396ca727c1c8519\"}"
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 14:27:16 GMT
+recorded_with: VCR 2.9.3

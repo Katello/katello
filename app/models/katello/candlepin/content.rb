@@ -125,7 +125,7 @@ module Katello
       end
 
       def feed_url
-        product.repo_url(path, content_type)
+        product.repo_url(path)
       end
 
       def arch

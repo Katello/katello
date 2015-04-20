@@ -277,16 +277,11 @@ module Katello
         Repository.repo_id(self.label.to_s, content_name.to_s, env_label, self.organization.label, nil, nil)
       end
 
-      def repo_url(content_url, repo_content_type = ::Katello::Repository::YUM_TYPE)
+      def repo_url(content_url)
         if self.provider.provider_type == Provider::CUSTOM
           content_url.dup
         else
-          rh_url = if repo_content_type == ::Katello::Repository::YUM_TYPE
-                     self.provider.repository_url
-                   else
-                     self.provider.docker_registry_url
-                   end
-          rh_url + content_url
+          self.provider.repository_url + content_url
         end
       end
 

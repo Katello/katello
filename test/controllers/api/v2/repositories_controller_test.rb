@@ -132,7 +132,7 @@ module Katello
       assert_template 'api/v2/repositories/index'
     end
 
-    def test_index_with_errata_id
+    def test_index_with_erratum_id
       ids = @errata.repositories.pluck(:id)
 
       @controller
@@ -140,7 +140,7 @@ module Katello
           .with(anything, anything, has_entry(:filters => [{:terms => {:id => ids}}]))
           .returns({})
 
-      get :index, :errata_id => @errata.uuid, :organization_id => @organization.id
+      get :index, :erratum_id => @errata.uuid, :organization_id => @organization.id
 
       assert_response :success
       assert_template 'api/v2/repositories/index'

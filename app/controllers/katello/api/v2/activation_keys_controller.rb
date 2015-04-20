@@ -115,17 +115,15 @@ module Katello
     param_group :search, Api::V2::ApiController
     param :name, String, :desc => N_("host collection name to filter by")
     def available_host_collections
-      filters = [:terms => { :id => HostCollection.readable.pluck("#{Katello::HostCollection.table_name}.id") -
-                   @activation_key.host_collections.pluck("#{Katello::HostCollection.table_name}.id") }]
-      filters << { :term => { :name => params[:name] } } if params[:name]
-      filters << { :term => { :organization_id => @activation_key.organization_id } }
+      table_name = HostCollection.table_name
+      host_collection_ids = @activation_key.host_collections.pluck("#{table_name}.id")
 
-      options = {
-        :filters       => filters,
-        :load_records? => true
-      }
+      scoped = HostCollection.readable
+      scoped = scoped.where("#{table_name}.id NOT IN (?)", host_collection_ids) if host_collection_ids.present?
+      scoped = scoped.where(:organization_id => @activation_key.organization)
+      scoped = scoped.where(:name => params[:name]) if params[:name]
 
-      respond_for_index(:collection => item_search(HostCollection, params, options))
+      respond_for_index(:collection => scoped_search(scoped, :name, :desc, :resource_class => HostCollection))
     end
 
     api :GET, "/activation_keys/:id/releases", N_("Show release versions available for an activation key")

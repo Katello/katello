@@ -18,7 +18,7 @@ module Katello
     before_filter :find_activation_key
     before_filter :find_system
     before_filter :find_optional_organization, :only => [:index]
-    before_filter :find_organization, :only => [:create]
+    before_filter :find_organization, :only => [:create, :auto_complete_search]
     before_filter :load_search_service, :only => [:index, :systems]
 
     wrap_parameters :include => (HostCollection.attribute_names + %w(system_ids))
@@ -41,7 +41,7 @@ module Katello
     api :GET, "/activation_keys/:activation_key_id/host_collections", N_("List host collections in an activation key")
     api :GET, "/systems/:system_id/host_collections", N_("List host collections containing a content host"), :deprecated => true
     param_group :search, Api::V2::ApiController
-    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     param :name, String, :desc => N_("host collection name to filter by")
     param :activation_key_id, :identifier, :desc => N_("activation key identifier")
     param :system_id, :identifier, :desc => N_("system identifier")
