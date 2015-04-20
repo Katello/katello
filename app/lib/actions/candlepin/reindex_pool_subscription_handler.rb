@@ -29,8 +29,6 @@ module Actions
     end
 
     class ReindexPoolSubscriptionHandler
-      TEN_SECONDS = 10
-      FIVE_ATTEMPTS = 5
       def initialize(logger)
         @logger = logger
       end
@@ -49,7 +47,11 @@ module Actions
           pool_created(wrapped_message)
         when /pool\.deleted/
           remove_pool_from_index(wrapped_message)
+        when /compliance\.created/
+          reindex_consumer(wrapped_message)
         end
+      rescue RestClient::ResourceNotFound => e
+        @logger.warning "failed to re-index #{message.subject} - #{e}"
       end
 
       private
@@ -85,6 +87,15 @@ module Actions
 
       def pools_in_my_index
         ::Katello::Pool.search.map { |p| p.id }
+      end
+
+      def reindex_consumer(message)
+        if message.content['newEntity']
+          uuid = JSON.parse(message.content['newEntity'])['consumer']['uuid']
+          system = ::Katello::System.find_by_uuid(uuid)
+          @logger.debug "re-indexing content host #{system.name}"
+          system.update_index
+        end
       end
     end
   end
