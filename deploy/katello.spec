@@ -104,7 +104,7 @@ install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 %clean
 %{__rm} -rf %{buildroot}
 
-%files 
+%files
 
 # ------ Common ------------------
 
@@ -116,8 +116,9 @@ Summary:    Common runtime components of %{name}
 Requires:       wget
 Requires:       curl
 Requires:       %{?scl_prefix}rubygem-katello
-Requires:       rubygem-hammer_cli 
+Requires:       rubygem-hammer_cli
 Requires:       rubygem-hammer_cli_foreman
+Requires:       rubygem-hammer_cli_foreman_docker
 Requires:       rubygem-hammer_cli_katello
 Requires:       rubygem-hammer_cli_import
 Requires:       rubygem-hammer_cli_gutterball
@@ -160,7 +161,7 @@ Useful utilities for debug info collecting
 Summary: Package that installs only the Subscription and basic Content Management parts of Katello
 Group:  Applications/System
 
-# Require the common package and ensure the katello-sam package 
+# Require the common package and ensure the katello-sam package
 # can't be installed on the same system as katello
 Requires:       %{name}-common = %{version}-%{release}
 Conflicts:      %{name}
