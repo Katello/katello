@@ -1,10 +1,12 @@
 module Katello
   class Api::V2::ContentViewsController < Api::V2::ApiController
     include Concerns::Authorization::Api::V2::ContentViewsController
-    before_filter :find_content_view, :except => [:index, :create]
+    include Katello::Concerns::FilteredAutoCompleteSearch
+
+    before_filter :find_content_view, :except => [:index, :create, :auto_complete_search]
     before_filter :find_organization, :only => [:create]
-    before_filter :find_optional_organization, :only => [:index]
-    before_filter :load_search_service, :only => [:index, :history, :available_puppet_modules,
+    before_filter :find_optional_organization, :only => [:index, :auto_complete_search]
+    before_filter :load_search_service, :only => [:history, :available_puppet_modules,
                                                   :available_puppet_module_names]
     before_filter :find_environment, :only => [:index, :remove_from_environment]
 
@@ -30,24 +32,21 @@ module Katello
     param :name, String, :desc => N_("Name of the content view"), :required => false
     param_group :search, Api::V2::ApiController
     def index
-      options = sort_params
-      options[:load_records?] = true
-
-      readable_cvs = ContentView.readable
-      readable_cvs = readable_cvs.where(:organization_id => @organization.id) if @organization
-      readable_cvs = readable_cvs.in_environment(@environment) if @environment
-      ids = readable_cvs.pluck("#{Katello::ContentView.table_name}.id")
-
-      options[:filters] = [{:terms => {:id => ids}}]
-      options[:filters] << {:not => {:terms => {:id => params[:without]}}} if params[:without]
-
-      options[:filters] << {:term => {:default => false}} if params[:nondefault]
-      options[:filters] << {:term => {:composite => false}} if params[:noncomposite]
-      options[:filters] << {:term => {:name => params[:name]}} if params[:name]
-
       content_view_includes = [:activation_keys, :content_view_puppet_modules, :content_view_versions,
                                :environments, :organization, :repositories, components: [:content_view, :environments]]
-      respond(:collection => item_search(ContentView.includes(content_view_includes), params, options))
+
+      respond(:collection => scoped_search(index_relation.uniq, :name, :desc, :includes => content_view_includes))
+    end
+
+    def index_relation
+      content_views = ContentView.readable
+      content_views = content_views.where(:organization_id => @organization.id) if @organization
+      content_views = content_views.in_environment(@environment) if @environment
+      content_views = content_views.non_default if params[:nondefault]
+      content_views = content_views.non_composite if params[:noncomposite]
+      content_views = content_views.where(:name => params[:name]) if params[:name]
+      content_views = content_views.where("#{ContentView.table_name}.id NOT IN (?)", params[:without]) if params[:without]
+      content_views
     end
 
     api :POST, "/organizations/:organization_id/content_views", N_("Create a content view")

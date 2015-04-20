@@ -429,5 +429,21 @@ module Katello
       version = @library_view.create_new_version("Awesome")
       assert_equal "Awesome", @library_view.versions.find(version.id).description
     end
+
+    def test_search_name
+      assert_equal @library_view, ContentView.search_for("name = \"#{@library_view.name}\"").first
+    end
+
+    def test_search_organization_id
+      assert_includes ContentView.search_for("organization_id = #{@library_view.organization_id}"), @library_view
+    end
+
+    def test_search_composite_false
+      assert_includes ContentView.search_for("composite = false"), @library_view
+    end
+
+    def test_search_composite_true
+      refute_includes ContentView.search_for("composite = true"), @library_view
+    end
   end
 end

@@ -3,7 +3,6 @@ module Katello
     self.include_root_in_json = false
 
     include Ext::LabelFromName
-    include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
     include Katello::Authorization::ContentView
     include ForemanTasks::Concerns::ActionSubject
 
@@ -29,8 +28,7 @@ module Katello
     has_many :distributors, :class_name => "Katello::Distributor", :dependent => :restrict
     has_many :content_view_repositories, :dependent => :destroy
     has_many :repositories, :through => :content_view_repositories, :class_name => "Katello::Repository",
-                            :after_remove => :remove_repository,
-                            :after_add => :add_repository
+                            :after_remove => :remove_repository
 
     has_many :content_view_puppet_modules, :class_name => "Katello::ContentViewPuppetModule",
                                            :dependent => :destroy
@@ -64,6 +62,7 @@ module Katello
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true
+    scoped_search :on => :composite, :complete_value => {true: true, false: false}
 
     def self.in_environment(env)
       joins(:content_view_environments).
@@ -138,6 +137,18 @@ module Katello
       end
 
       result
+    end
+
+    def total_package_count(env)
+      repoids = self.repos(env).collect { |r| r.pulp_id }
+      result = Katello::Package.legacy_search('*', 0, 1, repoids)
+      result.length > 0 ? result.total : 0
+    end
+
+    def total_puppet_module_count(env)
+      repoids = self.repos(env).collect { |r| r.pulp_id }
+      result = Katello::PuppetModule.legacy_search('*', :page_size => 1, :repoids => repoids)
+      result.length > 0 ? result.total : 0
     end
 
     def in_environment?(env)
@@ -560,12 +571,6 @@ module Katello
           filter_item.save!
         end
       end
-
-      reindex_on_association_change(repository) if Katello.config.use_elasticsearch
-    end
-
-    def add_repository(repository)
-      reindex_on_association_change(repository) if Katello.config.use_elasticsearch
     end
 
     private

@@ -52,7 +52,8 @@ angular.module('Bastion.content-views').factory('ContentView',
                         return response;
                     }
                 },
-                availablePuppetModuleNames: {method: 'GET', params: {action: 'available_puppet_module_names'}}
+                availablePuppetModuleNames: {method: 'GET', params: {action: 'available_puppet_module_names'}},
+                autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
             }
         );
 
