@@ -41,52 +41,39 @@ module Actions
 
         wrapped_message = MessageWrapper.new(message)
         case message.subject
-        when /entitlement\.(deleted|created)$/
-          reindex_pool_based_on_entitlement(wrapped_message)
+        when /entitlement\.created/
+          reindex_pool(wrapped_message.content['referenceId'])
+        when /entitlement\.deleted/
+          reindex_or_unindex_pool(wrapped_message.content['referenceId'])
         when /pool\.created/
-          pool_created(wrapped_message)
+          reindex_pool(wrapped_message.content['entityId'])
         when /pool\.deleted/
-          remove_pool_from_index(wrapped_message)
+          unindex_pool(wrapped_message.content['entityId'])
         when /compliance\.created/
           reindex_consumer(wrapped_message)
         end
-      rescue RestClient::ResourceNotFound => e
-        @logger.warning "failed to re-index #{message.subject} - #{e}"
       end
 
       private
 
-      def remove_pool_from_index(message)
-        @logger.info "removing pool from index #{message.subject}."
-        remove_pool_from_index_by_pool_id(message.content['entityId'])
-      end
-
-      def pool_created(message)
-        pool_id = message.content['entityId']
-        @logger.debug "creating index for pool #{pool_id}."
+      def reindex_or_unindex_pool(pool_id)
+        ::Katello::Pool.find_pool(pool_id)
         reindex_pool(pool_id)
-        @logger.debug "pools in index #{pools_in_my_index.to_s}."
-      end
-
-      def reindex_pool_based_on_entitlement(message)
-        pool_id = message.content['referenceId']
-        @logger.info "re-indexing pools[#{pool_id}] for entitlement[#{message.content['entityId']}]."
-        reindex_pool(pool_id)
+      rescue RestClient::ResourceNotFound
+        unindex_pool(pool_id)
       end
 
       def reindex_pool(pool_id)
         @logger.info "re-indexing pool #{pool_id}."
         pool = ::Katello::Pool.find_pool(pool_id)
-        ::Katello::Pool.index_pools([pool]) unless pool.unmapped_guest
+        ::Katello::Pool.index_pools([pool]) unless pool.nil? || pool.unmapped_guest
+      rescue RestClient::ResourceNotFound
+        @logger.debug "skipped re-index of non-existent pool #{pool_id}"
       end
 
-      def remove_pool_from_index_by_pool_id(pool_id)
+      def unindex_pool(pool_id)
         @logger.info "removing pool from index #{pool_id}."
         ::Katello::Pool.remove_from_index(pool_id)
-      end
-
-      def pools_in_my_index
-        ::Katello::Pool.search.map { |p| p.id }
       end
 
       def reindex_consumer(message)
