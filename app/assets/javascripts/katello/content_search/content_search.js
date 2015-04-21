@@ -30,6 +30,9 @@ $(document).ready(function() {
     var search = KT.content_search(KT.available_environments);
 
     $('#content_selector select').chosen();
+    $(document).click(function () {
+        $('.tooltip').hide();
+    });
 
     Spinner({lines: 13, width: 4}).spin($('.large_spinner').get(0));
 });
@@ -39,14 +42,16 @@ KT.content_search_templates = (function(i18n) {
         package_header = function(display) {
             display["url"] = KT.routes.details_package_path(KT.utils.escape(display["id"]));
 
-            return KT.utils.template("<span data-url='<%= url %>' class='tipsify-package'><%- name %></span> \
+            return KT.utils.template("<span class='clickable tipsify-package' data-url='<%= url %>'>\
+                       <%- name %><i class='fa fa-question-circle'></i></span> \
                        <span class='one-line-ellipsis'><%- vel_rel_arch %></span>", display);
         },
         puppet_module_header = function(display) {
             display["url"] = KT.routes.puppet_module_path(KT.utils.escape(display["id"]));
             display["author_label"] = i18n.author;
 
-            return KT.utils.template("<span data-url='<%= url %>' class='tipsify-package'><%- name_version %></span> \
+            return KT.utils.template("<span class='clickable tipsify-package' data-url='<%= url %>'>\
+                                      <%- name_version %><i class='fa fa-question-circle'></i></span> \
                                       <span><%- author_label %>: <%- author %></span>", display);
         },
         row_header_content = function(name, type) {
@@ -241,7 +246,7 @@ KT.content_search = function(paths_in){
         env_select = KT.path_select('column_selector', 'env', paths,
             {select_mode:'multi', link_first: true, footer: footer });
         env_select.reposition_left();
-        init_tipsy();
+        init_helper_tipsy();
 
         comparison_grid = KT.comparison_grid();
         comparison_grid.init();
@@ -362,6 +367,7 @@ KT.content_search = function(paths_in){
                 package_id = link.data("id"),
                 div = link_class.substring(0, link_class.indexOf("-link")) + "-" + package_id;
 
+            $('.tipsify-package').tooltip('hide');
             e.preventDefault();
             width = (div.indexOf("changelog") === -1) ? "600px" : "960px";
             $("#"+div).dialog({ modal: true,
@@ -428,6 +434,7 @@ KT.content_search = function(paths_in){
                     comparison_grid.set_default_row_level(1);
                     draw_grid(data.rows);
                     cache.save_state(comparison_grid, search_params);
+                    init_package_tipsy();
                 }
             });
         }
@@ -586,15 +593,35 @@ KT.content_search = function(paths_in){
             $.bbq.pushState({search:search});
         }
     },
-    init_tipsy = function(){
+    init_helper_tipsy = function(){
         var find_text = function(){ return $(this).find('.hidden-text').html();};
-        $('.browse_tipsy').tipsy({html:true, gravity:'w', className:'content-tipsy',
-            title:find_text});
-        $('.view_tipsy').tipsy({html:true, gravity:'s', className:'content-tipsy',
-                    title:find_text});
-        KT.tipsy.custom.url_tooltip($('.tipsify-errata'), 'w');
-        KT.tipsy.custom.url_tooltip($('.tipsify-package'), 'w');
 
+        $('.browse_tipsy').tooltip({html:true, placement: 'right', className:'content-tipsy', container: 'body',
+            title:find_text});
+        $('.view_tipsy').tooltip({html:true, placement:'bottom', className:'content-tipsy',
+                    title:find_text});
+    },
+    init_package_tipsy = function () {
+        var add_url_tooltip = function () {
+            var elem = this,
+                url = $(elem).data().url,
+                get_content;
+
+            get_content = function () {
+                $.ajax({
+                    url: url,
+                    dataType: 'text',
+                    success: function (json) {
+                        $(elem).tooltip({title: json, placement: 'right', trigger: 'manual', html: true});
+                        $(elem).tooltip('show');
+                    }
+                });
+            };
+
+            $(elem).click(get_content);
+        };
+
+        $('.tipsify-package').each(add_url_tooltip);
     },
     subgrid_selector_items = function(type) {
         var to_ret = [],

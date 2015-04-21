@@ -1,48 +1,48 @@
 .details_container
   .item-container
-    %label.fl.ra
+    %label
       = _("Name:")
     %p
       = @package.name
 
   .item-container
-    %label.fl.ra
+    %label
       = _("ID:")
     %p
       = @package.id
 
   .item-container
-    %label.fl.ra
+    %label
       = _("Description: ")
     %p
       = @package.description
 
   .item-container
-    %label.fl.ra
+    %label
       =_("Architecture: ")
     %p
       = @package.arch
 
   .item-container
-    %label.fl.ra
+    %label
       =_("Signature:")
     %p
       = "#{@package.checksumtype} : #{@package.checksum}"
 
   .item-container
-    %label.fl.ra
+    %label
       =_("Build Host:")
     %p
       = @package.buildhost
 
   .item-container
-    %label.fl.ra
+    %label
       =_("License:")
     %p
       = @package.license
 
   .item-container
-    %label.fl.ra
+    %label
       =_("Requires:")
     %p
       &nbsp;
@@ -52,7 +52,7 @@
           = format_package_details(item)
 
   .item-container
-    %label.fl.ra
+    %label
       =_("Provides:")
     %p
       &nbsp;

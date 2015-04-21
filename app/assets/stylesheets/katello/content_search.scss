@@ -78,7 +78,15 @@ $grid_cell_hover_link-color:                lighten($primary_color, 40%);
   background-color: transparent;
 }
 
-.tipsy-inner{
+#grid_row_headers .tooltip-inner {
+  max-height: 400px;
+  max-width: 400px;
+  overflow: scroll;
+  text-align: left;
+  width: 400px;
+}
+
+.tooltip-inner{
   .spinner {
     margin-top: 40px;
     margin-bottom: 40px;
@@ -234,7 +242,7 @@ table.changelog {
   border-radius: 3px;
   @include widget-background-color;
 
-  .icon-chevron-down, .icon-chevron-right {
+  .fa.fa-chevron-down, .fa.fa-chevron-right {
     padding: 0 4px;
     float: left;
     padding-top: 2px;
