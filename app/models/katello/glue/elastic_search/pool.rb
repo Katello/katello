@@ -135,7 +135,7 @@ module Katello
             # details
             organization = pool.organization
             json_pool[:organization] = {:id => organization.id, :name => organization.name, :label => organization.label}
-            json_pool[:host] = { :id => pool.host.uuid, :name => pool.host.name } if pool.host if pool.host
+            json_pool[:host] = { :uuid => pool.host.uuid, :name => pool.host.name } if pool.host
             json_pool.merge(pool.index_options)
           end
 
