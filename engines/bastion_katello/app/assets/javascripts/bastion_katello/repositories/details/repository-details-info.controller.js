@@ -21,18 +21,21 @@
  * @requires translate
  * @requires Repository
  * @requires GPGKey
+ * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$state', '$q', 'translate', 'Repository', 'GPGKey', function ($scope, $state, $q, translate, Repository, GPGKey) {
+    ['$scope', '$state', '$q', 'translate', 'Repository', 'GPGKey', 'CurrentOrganization',
+    function ($scope, $state, $q, translate, Repository, GPGKey, CurrentOrganization) {
         var updateRepositoriesTable;
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
         $scope.uploadSuccessMessages = [];
         $scope.uploadErrorMessages = [];
+        $scope.organization = CurrentOrganization;
 
         $scope.progress = {uploading: false};
 
