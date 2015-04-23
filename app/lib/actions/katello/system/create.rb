@@ -42,6 +42,8 @@ module Actions
           system.save!
           action_subject system
 
+          connect_to_smart_proxy(system)
+
           cp_create = plan_action(Candlepin::Consumer::Create, consumer_create_input)
           return if cp_create.error
 
@@ -61,6 +63,16 @@ module Actions
           system.disable_auto_reindex!
           system.uuid = input[:uuid]
           system.save!
+        end
+
+        def connect_to_smart_proxy(system)
+          smart_proxy = SmartProxy.where(:name => system.name).first
+
+          if smart_proxy
+            smart_proxy.content_host = system
+            smart_proxy.organizations << system.organization unless smart_proxy.organizations.include?(system.organization)
+            smart_proxy.save!
+          end
         end
       end
     end

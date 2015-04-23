@@ -43,7 +43,7 @@ module Katello
     delegate :uuid, :to => :consumer, :prefix => true
 
     def consumer
-      @consumer ||= System.where(name: @capsule.name).first
+      @consumer ||= @capsule.content_host
       unless @consumer
         fail Errors::CapsuleContentMissingConsumer, _("Could not find Content Host with exact name '%s', verify the Capsule is registered with that name.")  %
             @capsule.name

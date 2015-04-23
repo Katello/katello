@@ -32,6 +32,7 @@ module ::Actions::Katello::CapsuleContent
       @capsule_system = create(:katello_system,
                                :capsule,
                                name: proxy_with_pulp.name,
+                               capsule: proxy_with_pulp,
                                environment: environment)
     end
   end
