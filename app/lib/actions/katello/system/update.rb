@@ -22,7 +22,7 @@ module Actions
           system.update_attributes!(sys_params)
           sequence do
             concurrence do
-              plan_action(::Actions::Pulp::Consumer::Update, system) if ::Katello.config.use_pulp
+              plan_action(::Actions::Pulp::Consumer::Update, system) if !system.hypervisor? && ::Katello.config.use_pulp
               plan_action(::Actions::Candlepin::Consumer::Update, system) if ::Katello.config.use_cp
             end
 
