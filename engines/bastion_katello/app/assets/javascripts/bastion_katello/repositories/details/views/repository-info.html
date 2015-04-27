@@ -138,13 +138,19 @@
             on-save="save(repository)"
             readonly="product.readonly || denied('edit_products', product)">
       </span>
-
     </div>
 
-    <div class="detail">
+    <div class="detail" ng-hide="repository.content_type === 'puppet'">
       <span class="info-label" translate>Published At</span>
       <span class="info-value">
         <a ng-href="{{ repository.full_path }}">{{ repository.full_path }}</a>
+
+        <p bst-alert='info' ng-hide="repository.unprotected">
+          <span translate>
+            In order to browse this repository you must <a ng-href="/organizations/{{ organization }}/edit">download the certificate</a>
+            or ask your admin for a certificate.
+          </span>
+        </p>
       </span>
     </div>
 
