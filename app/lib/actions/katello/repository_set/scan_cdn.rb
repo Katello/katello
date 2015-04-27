@@ -32,14 +32,17 @@ module Actions
           if content.type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
             prepare_results_docker_content
           else
-            cdn_var_substitutor.substitute_vars(content.contentUrl).map do |(substitutions, path)|
+            substitutor = cdn_var_substitutor
+            return [] unless substitutor
+            substitutor.substitute_vars(content.contentUrl).map do |(substitutions, path)|
               prepare_result(substitutions, path)
             end
           end
         end
 
         def cdn_var_substitutor
-          product.cdn_resource.substitutor
+          return unless (cdn_resource = product.cdn_resource)
+          cdn_resource.substitutor
         end
 
         def prepare_results_docker_content

@@ -1,24 +1,30 @@
 %table.repo_table{:style=>'display: none;'}
-  %thead
-    %th.skinny_column
-      = _('Enabled?')
-    %th
-      = _('Repository')
-  %tbody
-    - repos.each do |result|
-      %tr.repo{:id=>"repo_#{result[:pulp_id]}"}
+  - if repos.empty?
+    %tbody
+      %tr
         %td
-          %label
-            =image_tag( "katello/icons/spinner.gif", :class=>"hidden fl", :id=>"spinner_#{result[:pulp_id]}", :style=>"margin-right:1px;")
-            %input.repo_enable{:id=>"input_repo_#{result[:pulp_id]}",
-                               :type=>:checkbox,
-                               :value=>result[:pulp_id],
-                               :data => { :url => toggle_repository_product_path(scan_cdn.input[:product_id]),
-                                          'content-id' => scan_cdn.input[:content_id],
-                                          'pulp-id' => result[:pulp_id],
-                                          'registry-name' => result[:registry_name],
-                                          :releasever => result[:substitutions][:releasever],
-                                          :basearch => result[:substitutions][:basearch] },
-                               :disabled => result[:promoted], :checked=>(:checked if result[:enabled])}
-        %td
-          #{result[:repo_name]}
+          = _("No repositories accessible. Check that Red Hat Subscriptions have been imported.")
+  - else
+    %thead
+      %th.skinny_column
+        = _('Enabled?')
+      %th
+        = _('Repository')
+    %tbody
+      - repos.each do |result|
+        %tr.repo{:id=>"repo_#{result[:pulp_id]}"}
+          %td
+            %label
+              =image_tag( "katello/icons/spinner.gif", :class=>"hidden fl", :id=>"spinner_#{result[:pulp_id]}", :style=>"margin-right:1px;")
+              %input.repo_enable{:id=>"input_repo_#{result[:pulp_id]}",
+                                 :type=>:checkbox,
+                                 :value=>result[:pulp_id],
+                                 :data => { :url => toggle_repository_product_path(scan_cdn.input[:product_id]),
+                                            'content-id' => scan_cdn.input[:content_id],
+                                            'pulp-id' => result[:pulp_id],
+                                            'registry-name' => result[:registry_name],
+                                            :releasever => result[:substitutions][:releasever],
+                                            :basearch => result[:substitutions][:basearch] },
+                                 :disabled => result[:promoted], :checked=>(:checked if result[:enabled])}
+          %td
+            #{result[:repo_name]}
