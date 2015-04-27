@@ -25,7 +25,7 @@
 
 Name:           katello
 Version:        2.2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -173,6 +173,9 @@ Package that installs only the Subscription and basic Content Management parts o
 %files sam
 
 %changelog
+* Mon Apr 27 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-4
+- Fixes #9867: Update katello-remove for latest packages.
+
 * Tue Apr 07 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-3
 - Fixes #9968: Remove unused kill commands and cleanup script.
 - refs #8175 - add qpid dispatch router to services list (stbenjam@redhat.com)
