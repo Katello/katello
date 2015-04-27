@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.2.0
-Release: 7%{dist}
+Release: 8%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -225,6 +225,26 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Mon Apr 27 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-8
+- Fixes #10185: Lock openjdk to less than 1.8.0.45. (ericdhelms@gmail.com)
+- Fixes #10149: Distribute katello-client-repos RPM in client repos.
+- Fixes #10006: Host collections can be listed on AK key page again.
+- Fixes #10132: Allow viewer role to view content dashboard.
+  (ericdhelms@gmail.com)
+- Fixes #9867: Update katello-remove for latest packages.
+- Fixes #9818: Properly propogate enabled state for sync plans to Pulp.
+- fixes #9354 - fixing error with import_errata rake task
+- fixes #9951 - fixing package update during inc update
+- Fixes #9929: Errata parameter was improperly named for repositories.
+- Fixes #9915: Backend cleanup script handles uebercert and hypervisors.
+  (ericdhelms@gmail.com)
+- fixes #10028 - Fixes issue with enabling non-yum repos
+- fixes #10012 - properly display conent host tasks
+- Fixes #9839: show no rows message if table isn't working BZ 1203851.
+  (walden@redhat.com)
+- Automatic commit of package [katello] minor release [2.2.0-3].
+  (ericdhelms@gmail.com)
+
 * Mon Apr 06 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-7
 - Refs #9518, #9310 - Create containers in API using katello repos
   (paji@redhat.com)
