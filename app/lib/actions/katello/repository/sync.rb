@@ -15,6 +15,7 @@ module Actions
     module Repository
       class Sync < Actions::EntryAction
         include Helpers::Presenter
+        middleware.use Actions::Middleware::KeepCurrentUser
 
         input_format do
           param :id, Integer
@@ -51,11 +52,8 @@ module Actions
 
         def run
           output[:sync_result] = input[:sync_result]
-          ::User.current = ::User.find(input[:user_id])
 
-          ForemanTasks.async_task(Repository::NodeMetadataGenerate, ::Katello::Repository.find(input[:id]))
-        ensure
-          ::User.current = nil
+          ForemanTasks.async_task(Repository::CapsuleGenerateAndSync, ::Katello::Repository.find(input[:id]))
         end
 
         def humanized_name

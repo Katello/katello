@@ -45,17 +45,17 @@ module Katello
     api :POST, '/capsules/:id/content/lifecycle_environments', 'Add lifecycle environments to the capsule'
     param_group :update_lifecycle_environments
     def add_lifecycle_environment
-      task = sync_task(::Actions::Katello::CapsuleContent::AddLifecycleEnvironment,
-                       capsule_content, @environment)
-      respond_for_async :resource => task
+      capsule_content.add_lifecycle_environment(@environment)
+      @lifecycle_environments = capsule_content.lifecycle_environments
+      render 'katello/api/v2/capsule_content/lifecycle_environments'
     end
 
     api :DELETE, '/capsules/:id/content/lifecycle_environments/:environment_id',  'Remove lifecycle environments from the capsule'
     param_group :update_lifecycle_environments
     def remove_lifecycle_environment
-      task = sync_task(::Actions::Katello::CapsuleContent::RemoveLifecycleEnvironment,
-                       capsule_content, @environment)
-      respond_for_async :resource => task
+      capsule_content.remove_lifecycle_environment(@environment)
+      @lifecycle_environments = capsule_content.lifecycle_environments
+      render 'katello/api/v2/capsule_content/lifecycle_environments'
     end
 
     api :POST, '/capsules/:id/content/sync',  'Synchronize the content to the capsule'
