@@ -13,11 +13,13 @@ module Katello
       scope
     end
 
-    def pulp_repos(environment)
-      yum_repos = Katello::Repository.in_environment(environment).find_all do |repo|
-        repo.node_syncable?
-      end
-      puppet_environments = Katello::ContentViewPuppetEnvironment.in_environment(environment)
+    def pulp_repos(environments = lifecycle_environments, content_view = nil)
+      yum_repos = Katello::Repository.in_environment(environments)
+      yum_repos = yum_repos.in_content_views([content_view]) if content_view
+      yum_repos = yum_repos.find_all { |repo| repo.node_syncable? }
+
+      puppet_environments = Katello::ContentViewPuppetEnvironment.in_environment(environments)
+      puppet_environments = puppet_environments.in_content_view(content_view) if content_view
       yum_repos + puppet_environments
     end
 
@@ -47,6 +49,10 @@ module Katello
             @capsule.name
       end
       @consumer
+    end
+
+    def ==(other)
+      other.class == self.class && other.capsule == capsule
     end
 
     def default_capsule?

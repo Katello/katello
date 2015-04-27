@@ -59,11 +59,6 @@ module Katello
     end
 
     def test_add_lifecycle_environment
-      assert_sync_task ::Actions::Katello::CapsuleContent::AddLifecycleEnvironment do |capsule_content, caps_environment|
-        capsule_content.capsule.id.must_equal proxy_with_pulp.id
-        caps_environment.id.must_equal environment.id
-      end
-
       post :add_lifecycle_environment, :id => proxy_with_pulp.id, :environment_id => environment.id
       assert_response :success
     end
@@ -76,11 +71,6 @@ module Katello
 
     def test_remove_lifecycle_environment
       capsule_content.add_lifecycle_environment(environment)
-
-      assert_sync_task ::Actions::Katello::CapsuleContent::RemoveLifecycleEnvironment do |capsule_content, caps_environment|
-        capsule_content.capsule.id.must_equal proxy_with_pulp.id
-        caps_environment.id.must_equal environment.id
-      end
 
       delete :remove_lifecycle_environment, :id => proxy_with_pulp.id, :environment_id => environment.id
       assert_response :success

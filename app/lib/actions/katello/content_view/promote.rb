@@ -14,6 +14,8 @@ module Actions
   module Katello
     module ContentView
       class Promote < Actions::EntryAction
+        middleware.use Actions::Middleware::KeepCurrentUser
+
         def plan(version, environment, is_force = false)
           action_subject(version.content_view)
           version.check_ready_to_promote!
@@ -52,12 +54,9 @@ module Actions
         end
 
         def run
-          ::User.current = ::User.find(input[:user_id])
-          ForemanTasks.async_task(ContentView::NodeMetadataGenerate,
+          ForemanTasks.async_task(ContentView::CapsuleGenerateAndSync,
                                   ::Katello::ContentView.find(input[:content_view_id]),
                                   ::Katello::KTEnvironment.find(input[:environment_id]))
-        ensure
-          ::User.current = nil
         end
 
         def finalize

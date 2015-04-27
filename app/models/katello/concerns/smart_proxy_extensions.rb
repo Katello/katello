@@ -25,8 +25,6 @@ module Katello
         before_create :associate_lifecycle_environments
         attr_accessible :lifecycle_environment_ids
 
-        alias_method_chain :refresh, :dynflow
-
         has_many :containers,
                  :class_name => "Container",
                  :foreign_key => :capsule_id,
@@ -72,16 +70,6 @@ module Katello
             self.locations << default_location
           end
         end
-      end
-
-      def refresh_with_dynflow
-        old_features = self.features.all
-        errors = refresh_without_dynflow
-        ::ForemanTasks.sync_task(::Actions::Katello::CapsuleContent::FeaturesRefreshed, self, old_features, self.features)
-        errors
-      rescue Katello::Errors::CapsuleContentMissingConsumer => e
-        errors.add(:base, e.message)
-        errors
       end
 
       def associate_lifecycle_environments

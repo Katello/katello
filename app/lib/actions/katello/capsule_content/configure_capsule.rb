@@ -13,14 +13,11 @@
 module Actions
   module Katello
     module CapsuleContent
-      class FeaturesRefreshed < ::Actions::EntryAction
-        def plan(smart_proxy, old_features, new_features)
-          capsule = ::Katello::CapsuleContent.new(smart_proxy)
-
-          if new_features.map(&:name).include?(SmartProxy::PULP_NODE_FEATURE)
+      class ConfigureCapsule < ::Actions::EntryAction
+        def plan(capsule)
+          sequence do
             plan_action(Pulp::Consumer::ActivateNode, capsule.consumer)
-          elsif (old_features - new_features).map(&:name).include?(SmartProxy::PULP_NODE_FEATURE)
-            plan_action(Pulp::Consumer::DeactivateNode, capsule.consumer)
+            plan_action(ManageBoundRepositories, capsule)
           end
         end
       end
