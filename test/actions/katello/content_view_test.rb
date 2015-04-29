@@ -264,6 +264,29 @@ module ::Actions::Katello::ContentView
     end
   end
 
+  class CapsuleGenerateAndSyncTest < TestBase
+    include Support::CapsuleSupport
+
+    let(:action_class) { ::Actions::Katello::ContentView::CapsuleGenerateAndSync }
+    let(:content_view) do
+      katello_content_views(:library_dev_view)
+    end
+
+    let(:library) do
+      katello_environments(:library)
+    end
+
+    before do
+      capsule_content.add_lifecycle_environment(library)
+    end
+
+    it 'plans' do
+      plan_action(action, content_view, library)
+      assert_action_planed_with(action, ::Actions::Katello::ContentView::NodeMetadataGenerate, content_view, library)
+      assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::Sync, capsule_content, :content_view => content_view, :environment => library)
+    end
+  end
+
   class IncrementalUpdatesTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::IncrementalUpdates }
 

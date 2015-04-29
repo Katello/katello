@@ -45,22 +45,11 @@ module Actions
             concurrence do
               plan_action(Katello::Repository::MetadataGenerate, clone) if environment
               plan_action(ElasticSearch::ContentViewPuppetEnvironment::IndexContent, id: clone.id)
-              handle_capsule_content(environment, clone)
             end
           end
         end
 
         private
-
-        def handle_capsule_content(environment, clone)
-          sequence do
-            if environment
-              ::Katello::CapsuleContent.with_environment(environment).each do |capsule_content|
-                plan_action(CapsuleContent::AddRepository, capsule_content, clone)
-              end
-            end
-          end
-        end
 
         # The environment clone clone of the repository is the one
         # visible for the systems in the environment

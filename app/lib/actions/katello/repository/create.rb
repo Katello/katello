@@ -41,16 +41,6 @@ module Actions
 
             return if create_action.error
 
-            if repository.environment
-              concurrence do
-                if repository.node_syncable?
-                  ::Katello::CapsuleContent.with_environment(repository.environment).each do |capsule_content|
-                    plan_action(CapsuleContent::AddRepository, capsule_content, repository)
-                  end
-                end
-              end
-            end
-
             # when creating a clone, the following actions are handled by the
             # publish/promote process
             unless clone

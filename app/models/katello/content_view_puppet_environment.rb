@@ -43,6 +43,10 @@ module Katello
       true
     end
 
+    def node_syncable?
+      environment
+    end
+
     def organization
       if self.environment
         self.environment.organization

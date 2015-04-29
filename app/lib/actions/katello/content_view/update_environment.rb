@@ -25,7 +25,7 @@ module Actions
                       cp_environment_id: view_env.cp_id,
                       content_ids:       content_ids)
 
-          plan_action(CapsuleContent::UpdateWithoutContent, environment)
+          plan_self(:environment_id => environment.id)
         end
       end
     end

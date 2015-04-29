@@ -12,15 +12,21 @@
 
 module Actions
   module Katello
-    module CapsuleContent
-      class AddLifecycleEnvironment < ::Actions::EntryAction
-        def plan(capsule_content, environment)
-          fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
+    module Repository
+      class CapsuleGenerateAndSync < Actions::Base
+        def humanized_name
+          _("Generate Capsule Metadata and Sync")
+        end
 
-          capsule_content.add_lifecycle_environment(environment)
+        def plan(repo)
+          if repo.node_syncable?
+            plan_action(NodeMetadataGenerate, repo)
 
-          capsule_content.pulp_repos(environment).each do |pulp_repo|
-            plan_action(CapsuleContent::AddRepository, capsule_content, pulp_repo)
+            concurrence do
+              ::Katello::CapsuleContent.with_environment(repo.environment).each do |capsule_content|
+                plan_action(Katello::CapsuleContent::Sync, capsule_content, repository: repo)
+              end
+            end
           end
         end
       end

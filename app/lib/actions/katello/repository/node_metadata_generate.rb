@@ -14,24 +14,11 @@ module Actions
   module Katello
     module Repository
       class NodeMetadataGenerate < Actions::Base
-        def plan(repo, dependency = nil)
-          return if (repo.content_type == ::Katello::Repository::FILE_TYPE) || !repo.environment
-
-          sequence do
-            unless repo.puppet? && repo.content_view.default?
-              plan_action(Pulp::Repository::DistributorPublish,
-                          pulp_id: repo.pulp_id,
-                          dependency: dependency,
-                          distributor_type_id: Runcible::Models::NodesHttpDistributor.type_id)
-            end
-            concurrence do
-              ::Katello::CapsuleContent.with_environment(repo.environment).each do |capsule_content|
-                plan_action(Pulp::Consumer::SyncNode,
-                            consumer_uuid: capsule_content.consumer_uuid,
-                            repo_ids: [repo.pulp_id])
-              end
-            end
-          end
+        def plan(repo)
+          return unless repo.node_syncable?
+          plan_action(Pulp::Repository::DistributorPublish,
+                      pulp_id: repo.pulp_id,
+                      distributor_type_id: Runcible::Models::NodesHttpDistributor.type_id)
         end
       end
     end

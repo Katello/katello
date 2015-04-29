@@ -36,58 +36,6 @@ module ::Actions::Katello::CapsuleContent
     end
   end
 
-  class AddToEnvironmentTest < TestBase
-    let(:action_class) { ::Actions::Katello::CapsuleContent::AddLifecycleEnvironment }
-
-    it 'plans' do
-      action = create_and_plan_action(action_class, capsule_content, environment)
-      assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::AddRepository) do |capsule_content, _repository|
-        capsule_content.capsule.id == proxy_with_pulp.id
-      end
-    end
-
-    it 'fails when trying to add the environment twice' do
-      create_and_plan_action(action_class, capsule_content, environment)
-
-      assert_raises(ActiveRecord::RecordInvalid) do
-        create_and_plan_action(action_class, capsule_content, environment)
-      end
-    end
-
-    it 'fails when trying to add the environment to default capsule' do
-      Katello::CapsuleContent.any_instance.stubs(:default_capsule?).returns(true)
-      assert_raises(RuntimeError) do
-        create_and_plan_action(action_class, capsule_content, environment)
-      end
-    end
-  end
-
-  class RemoveLifecycleEnvironmentTest < TestBase
-    let(:action_class) { ::Actions::Katello::CapsuleContent::RemoveLifecycleEnvironment }
-
-    it 'plans' do
-      capsule_content.add_lifecycle_environment(environment)
-
-      action = create_and_plan_action(action_class, capsule_content, environment)
-      assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::RemoveRepository) do |capsule_content, _repository|
-        capsule_content.capsule.id == proxy_with_pulp.id
-      end
-    end
-
-    it 'fails when trying to remove environment that is not in the capsule' do
-      assert_raises(ActiveRecord::RecordNotFound) do
-        create_and_plan_action(action_class, capsule_content, environment)
-      end
-    end
-
-    it 'fails when trying to remove environment from the default capsule' do
-      Katello::CapsuleContent.any_instance.stubs(:default_capsule?).returns(true)
-      assert_raises(RuntimeError) do
-        create_and_plan_action(action_class, capsule_content, environment)
-      end
-    end
-  end
-
   class SyncTest < TestBase
     let(:action_class) { ::Actions::Katello::CapsuleContent::Sync }
     let(:staging_environment) { katello_environments(:staging) }
@@ -97,13 +45,13 @@ module ::Actions::Katello::CapsuleContent
       action = create_and_plan_action(action_class, capsule_content)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncNode) do |(input)|
         input.must_equal(consumer_uuid: @capsule_system.uuid,
-                         repo_ids: nil)
+                         repo_ids: capsule_content.pulp_repos.map(&:pulp_id))
       end
     end
 
     it 'allows limiting scope of the syncing to one environment' do
       capsule_content.add_lifecycle_environment(environment)
-      action = create_and_plan_action(action_class, capsule_content, environment)
+      action = create_and_plan_action(action_class, capsule_content, :environment => environment)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncNode) do |(input)|
         input[:repo_ids].size.must_equal 5
       end
@@ -111,7 +59,7 @@ module ::Actions::Katello::CapsuleContent
     it 'fails when trying to sync to the default capsule' do
       Katello::CapsuleContent.any_instance.stubs(:default_capsule?).returns(true)
       assert_raises(RuntimeError) do
-        create_and_plan_action(action_class, capsule_content, environment)
+        create_and_plan_action(action_class, capsule_content, :environment => environment)
       end
     end
     it 'fails when trying to sync a lifecyle environment that is not attached' do
@@ -119,7 +67,7 @@ module ::Actions::Katello::CapsuleContent
 
       Katello::CapsuleContent.any_instance.stubs(:lifecycle_environments).returns([])
       assert_raises(RuntimeError) do
-        create_and_plan_action(action_class, capsule_content, staging_environment)
+        create_and_plan_action(action_class, capsule_content, :environment => staging_environment)
       end
     end
   end
@@ -137,43 +85,6 @@ module ::Actions::Katello::CapsuleContent
     end
   end
 
-  class FeaturesRefreshedTest < TestBase
-    let(:action_class) { ::Actions::Katello::CapsuleContent::FeaturesRefreshed }
-    let(:node_feature) { ::Feature.where(:name => SmartProxy::PULP_NODE_FEATURE).first }
-    let(:activation_action) { ::Actions::Pulp::Consumer::ActivateNode }
-    let(:deactivation_action) { ::Actions::Pulp::Consumer::DeactivateNode }
-
-    it 'plans activation' do
-      old_features = []
-      new_features = [node_feature]
-
-      action = create_and_plan_action(action_class, @proxy_with_pulp, old_features, new_features)
-      assert_action_planed_with(action, activation_action) do |(input)|
-        input.must_equal(@capsule_system)
-      end
-    end
-
-    it 'plans activation even if already activated' do
-      old_features = [node_feature]
-      new_features = [node_feature]
-
-      action = create_and_plan_action(action_class, @proxy_with_pulp, old_features, new_features)
-      assert_action_planed_with(action, activation_action) do |(input)|
-        input.must_equal(@capsule_system)
-      end
-    end
-
-    it 'plans deactivation' do
-      old_features = [node_feature]
-      new_features = []
-
-      action = create_and_plan_action(action_class, @proxy_with_pulp, old_features, new_features)
-      assert_action_planed_with(action, deactivation_action) do |(input)|
-        input.must_equal(@capsule_system)
-      end
-    end
-  end
-
   class RepositoryTestBase < TestBase
     include VCR::TestCase
     include FactoryGirl::Syntax::Methods
@@ -187,29 +98,35 @@ module ::Actions::Katello::CapsuleContent
     end
   end
 
-  class AddRepositoryTest < RepositoryTestBase
-    let(:action_class) { ::Actions::Katello::CapsuleContent::AddRepository }
+  class ManageBoundRepositoriesAddTest < RepositoryTestBase
+    let(:action_class) { ::Actions::Katello::CapsuleContent::ManageBoundRepositories }
+
+    before do
+      ::Katello::System.any_instance.stubs(:bound_node_repos).returns([])
+      capsule_content.add_lifecycle_environment(repository.environment)
+    end
 
     it 'plans' do
-      action = create_and_plan_action(action_class, capsule_content, repository)
-      assert_action_planed_with(action, ::Actions::Pulp::Consumer::BindNodeDistributor) do |(input)|
-        input.must_equal(consumer_uuid: @capsule_system.uuid,
-                         repo_id: repository.pulp_id,
-                         bind_options:
-                           { notify_agent: false, binding_config: { strategy: 'mirror' }})
-      end
+      action = create_and_plan_action(action_class, capsule_content)
+      assert_action_planed_with(action, ::Actions::Pulp::Consumer::BindNodeDistributor,
+                                consumer_uuid: @capsule_system.uuid,
+                                repo_id: repository.pulp_id,
+                                bind_options: { notify_agent: false, binding_config: { strategy: 'mirror' }})
     end
   end
 
-  class RemoveRepositoryTest < RepositoryTestBase
-    let(:action_class) { ::Actions::Katello::CapsuleContent::RemoveRepository }
+  class ManageBoundRepositoriesRemoveTest < RepositoryTestBase
+    let(:action_class) { ::Actions::Katello::CapsuleContent::ManageBoundRepositories }
+
+    before do
+      ::Katello::System.any_instance.stubs(:bound_node_repos).returns([repository.pulp_id])
+    end
 
     it 'plans' do
-      action = create_and_plan_action(action_class, capsule_content, repository)
-      assert_action_planed_with(action, ::Actions::Pulp::Consumer::UnbindNodeDistributor) do |(input)|
-        input.must_equal(consumer_uuid: @capsule_system.uuid,
-                         repo_id: repository.pulp_id)
-      end
+      action = create_and_plan_action(action_class, capsule_content)
+      assert_action_planed_with(action, ::Actions::Pulp::Consumer::UnbindNodeDistributor,
+                                consumer_uuid: @capsule_system.uuid,
+                                repo_id: repository.pulp_id)
     end
   end
 end
