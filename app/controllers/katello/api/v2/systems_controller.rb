@@ -231,9 +231,9 @@ module Katello
     param :match_installed, [true, false], :desc => N_("Match pools to installed")
     param :no_overlap, [true, false], :desc => N_("allow overlap")
     def pools
-      match_system    = params.key?(:match_system) ? params[:match_system].to_bool : false
-      match_installed = params.key?(:match_installed) ? params[:match_installed].to_bool : false
-      no_overlap      = params.key?(:no_overlap) ? params[:no_overlap].to_bool : false
+      match_system    = ::Foreman::Cast.to_bool(params[:match_system])
+      match_installed = ::Foreman::Cast.to_bool(params[:match_installed])
+      no_overlap      = ::Foreman::Cast.to_bool(params[:no_overlap])
 
       cp_pools = @system.filtered_pools(match_system, match_installed, no_overlap)
       response = { :records => cp_pools,
@@ -376,8 +376,8 @@ module Katello
     end
 
     def systems_by_errata(errata_uuids, installable, non_installable)
-      installable = installable.nil? ? false : installable.to_bool
-      non_installable = non_installable.nil? ? false : non_installable.to_bool
+      installable = ::Foreman::Cast.to_bool(installable)
+      non_installable = ::Foreman::Cast.to_bool(non_installable)
 
       errata = Katello::Erratum.where(:uuid => errata_uuids)
       if errata.count != errata_uuids.count

@@ -113,7 +113,7 @@ module Katello
 
         def legacy_mode=(use_legacy_mode)
           self.preferences_hash[:user] = { } unless self.preferences_hash.key? :user
-          self.preferences_hash[:user][:legacy_mode] = use_legacy_mode.to_bool
+          self.preferences_hash[:user][:legacy_mode] = ::Foreman::Cast.to_bool(use_legacy_mode)
         end
 
         def default_org

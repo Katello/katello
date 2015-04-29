@@ -113,7 +113,7 @@ module Katello
 
     def test_promote
       version = @library_dev_staging_view.versions.first
-      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @dev, nil).returns({})
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @dev, false).returns({})
       post :promote, :id => version.id, :environment_id => @dev.id
 
       assert_response :success
@@ -122,7 +122,7 @@ module Katello
 
     def test_promote_out_of_sequence
       version = @library_dev_staging_view.versions.first
-      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @beta, nil).raises(::Katello::HttpErrors::BadRequest)
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @beta, false).raises(::Katello::HttpErrors::BadRequest)
       post :promote, :id => version.id, :environment_id => @beta.id
 
       assert_response 500
