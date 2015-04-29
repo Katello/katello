@@ -115,7 +115,9 @@ Summary:    Common runtime components of %{name}
 # service-wait dependency
 Requires:       wget
 Requires:       curl
+Requires:       mod_passenger
 Requires:       %{?scl_prefix}rubygem-katello
+Requires:       %{?scl_prefix}rubygem-passenger-native
 Requires:       rubygem-hammer_cli 
 Requires:       rubygem-hammer_cli_foreman
 Requires:       rubygem-hammer_cli_katello
