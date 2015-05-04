@@ -86,7 +86,7 @@ module Katello
     end
 
     def scoped_search(query, default_sort_by, default_sort_order, options = {})
-      resource = options.fetch(:resource_class, resource_class)
+      resource = options[:resource_class] || resource_class
       includes = options.fetch(:includes, [])
 
       total = query.count
