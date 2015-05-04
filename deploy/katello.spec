@@ -25,7 +25,7 @@
 
 Name:           katello
 Version:        2.2.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -183,6 +183,9 @@ Package that installs only the Subscription and basic Content Management parts o
 %files sam
 
 %changelog
+* Mon May 04 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-5
+- fixes #6781 - provide a way to restart capsule services
+
 * Mon Apr 27 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-4
 - Fixes #9867: Update katello-remove for latest packages.
 
