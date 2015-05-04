@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.2.0
-Release: 8%{dist}
+Release: 9%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -225,6 +225,15 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Mon May 04 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-9
+- Fixes #10257: Connect capsule and its content host at the DB level.
+  (ericdhelms@gmail.com)
+- fixes #6781 - provide a way to restart capsule services
+- fixes #10229 - centralizing and isolating capsule communication
+  (jsherril@redhat.com)
+- Automatic commit of package [katello] minor release [2.2.0-4].
+  (ericdhelms@gmail.com)
+
 * Mon Apr 27 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-8
 - Fixes #10185: Lock openjdk to less than 1.8.0.45. (ericdhelms@gmail.com)
 - Fixes #10149: Distribute katello-client-repos RPM in client repos.
