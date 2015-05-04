@@ -269,4 +269,20 @@ module ::Actions::Katello::Repository
       assert_action_planed_with(action, ::Actions::Katello::Repository::CloneDockerContent, source_repo, clone)
     end
   end
+
+  class CapsuleGenerateAndSyncTest < TestBase
+    include Support::CapsuleSupport
+
+    let(:action_class) { ::Actions::Katello::Repository::CapsuleGenerateAndSync }
+
+    before do
+      capsule_content.add_lifecycle_environment(repository.environment)
+    end
+
+    it 'plans' do
+      plan_action(action, repository)
+      assert_action_planed_with(action, ::Actions::Katello::Repository::NodeMetadataGenerate, repository)
+      assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::Sync, capsule_content, :repository => repository)
+    end
+  end
 end

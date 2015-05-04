@@ -12,15 +12,22 @@
 
 module Actions
   module Katello
-    module CapsuleContent
-      class RemoveLifecycleEnvironment < ::Actions::EntryAction
-        def plan(capsule_content, environment)
-          fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
+    module ContentView
+      class CapsuleGenerateAndSync < Actions::Base
+        def humanized_name
+          _("Generate Capsule Metadata and Sync")
+        end
 
-          capsule_content.remove_lifecycle_environment(environment)
+        def plan(content_view, environment)
+          sequence do
+            plan_action(NodeMetadataGenerate, content_view, environment)
 
-          capsule_content.pulp_repos(environment).each do |pulp_repo|
-            plan_action(CapsuleContent::RemoveRepository, capsule_content, pulp_repo)
+            concurrence do
+              ::Katello::CapsuleContent.with_environment(environment).each do |capsule_content|
+                plan_action(Katello::CapsuleContent::Sync, capsule_content, :content_view => content_view,
+                            :environment => environment)
+              end
+            end
           end
         end
       end

@@ -81,15 +81,6 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
                                 id: dev_puppet_env.id
     end
 
-    it 'plans capsule related actions' do
-      capsule_content.add_lifecycle_environment(dev)
-      plan_action action, puppet_env.content_view_version, :environment => dev
-      assert_action_planed_with action, ::Actions::Katello::CapsuleContent::AddRepository do |(current_capsule_content, repo)|
-        current_capsule_content.capsule.id == capsule_content.capsule.id &&
-            dev_puppet_env == repo
-      end
-    end
-
     it 'plans without existing puppet environment' do
       dev_puppet_env.delete
       action.execution_plan.stub_planned_action(::Actions::Katello::ContentViewPuppetEnvironment::Create)

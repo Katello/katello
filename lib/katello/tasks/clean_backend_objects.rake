@@ -17,10 +17,7 @@ namespace :katello do
           ::Katello::Resources::Candlepin::Consumer.destroy(system.uuid) unless cp_fail
           system.del_pulp_consumer unless (pulp_fail || system.is_a?(Katello::Hypervisor))
           Katello::System.index.remove system
-          system.system_activation_keys.destroy_all
-          system.system_host_collections.destroy_all
-          system.system_errata.destroy_all
-          system.delete
+          system.destroy!
         end
       end
     end

@@ -63,6 +63,12 @@ module Katello
 
     belongs_to :content_view, :inverse_of => :systems
 
+    has_one :capsule,
+            :class_name => "::SmartProxy",
+            :inverse_of => :content_host,
+            :foreign_key => :content_host_id,
+            :dependent => :nullify
+
     validates_lengths_from_database
     before_validation :set_default_content_view, :unless => :persisted?
     validates :environment, :presence => true
