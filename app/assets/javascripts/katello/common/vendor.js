@@ -18,5 +18,4 @@
 //= require "jquery.ui.effect.all"
 //= require "katello/jquery.ba-bbq"
 //= require "katello/jquery.periodicalupdater"
-//= require "katello/jquery.tipsy"
 //= require "katello/jquery.trunk8"

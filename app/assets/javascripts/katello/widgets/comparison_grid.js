@@ -678,16 +678,16 @@ KT.comparison_grid.controls = function(grid) {
 
                     show(id, false, rows);
 
-                    parent_row_header.find('.icon-chevron-down').hide();
-                    parent_row_header.find('.icon-chevron-right').show();
+                    parent_row_header.find('.fa.fa-chevron-down').hide();
+                    parent_row_header.find('.fa.fa-chevron-right').show();
                 },
                 expand = function(id, rows){
                     var parent_row_header = $('#row_header_' + KT.common.escapeId(id));
 
                     show(id, true, rows);
 
-                    parent_row_header.find('.icon-chevron-down').show();
-                    parent_row_header.find('.icon-chevron-right').hide();
+                    parent_row_header.find('.fa.fa-chevron-down').show();
+                    parent_row_header.find('.fa.fa-chevron-right').hide();
                 };
 
             return {
@@ -743,7 +743,7 @@ KT.comparison_grid.events = function(grid) {
                     }
                 }
             });
-            $('.hover_details').tipsy({ gravity : 'w', live : true, html : true });
+            $('.hover_details').tooltip({ gravity : 'w', live : true, html : true });
         },
         details_view = function() {
             $('#return_to_results_btn').live('click', function() {
@@ -783,7 +783,6 @@ KT.comparison_grid.events = function(grid) {
                     }
                 }
             });
-            $('#compare_btn').tipsy({ gravity: 'w' });
         },
         load_row_links = function(){
             $('.load_row_link').live('click', function(event){
@@ -816,8 +815,9 @@ KT.comparison_grid.templates = (function(i18n) {
 
             if ( data['hover_details'] ) {
                 hover_details = $('<span/>', {
-                    'class' : 'icon-circle hover_details',
-                    'original-title' : data['hover_details']
+                    'class' : 'fa fa-question-circle hover_details',
+                    'title' : data['hover_details'],
+                    'data-html': true
                 });
             }
 
@@ -986,9 +986,9 @@ KT.comparison_grid.templates = (function(i18n) {
             var html;
 
             if( options['open'] ){
-                html = '<i class="icon-chevron-down"/><i class="icon-chevron-right" style="display:none;"/>';
+                html = '<i class="fa fa-chevron-down"/><i class="fa fa-chevron-right" style="display:none;"/>';
             } else {
-                html = '<i class="icon-chevron-down" style="display:none;" /><i class="icon-chevron-right" />';
+                html = '<i class="fa fa-chevron-down" style="display:none;" /><i class="fa fa-chevron-right" />';
             }
 
             return html;
@@ -1001,7 +1001,7 @@ KT.comparison_grid.templates = (function(i18n) {
 
             html.append('<i class="fl spinner invisible" />');
             html.append('<a class="load_row_link fl" href="" >' + i18n.show_more.replace('%P', load_size) + '</a>');
-            html.append('<i class="icon-chevron-down"/>');
+            html.append('<i class="fa fa-chevron-down"/>');
             html.append($('<span/>').html(i18n.counts.replace('%C', current).replace('%T', total)));
 
             return html;

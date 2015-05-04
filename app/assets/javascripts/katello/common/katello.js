@@ -314,10 +314,8 @@ $(document).ready(function (){
     $(".helptip-close").live('click', KT.helptip.handle_open);
 
     // Add a handler for ellipsis
-    $(".tipsify").tipsy({ live : true, gravity: 's', fade: true, delayIn : 350 });
-    $(".tipsify-west").tipsy({ gravity: 'w', hoverable : 'true' });
-
-    KT.tipsy.custom.enable_forms_tooltips();
+    $(".tipsify").tooltip({ placement: 'bottom', delay : 350 });
+    $(".tipsify-left").tooltip({ placement: 'left'});
 
     KT.common.orgSwitcherSetup();
 });

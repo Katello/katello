@@ -42,35 +42,33 @@ KT.dashboard = (function(){
         dropbutton.hide();
         dropbutton.each(function(){
             currentDropbutton = $(this);
-            currentDropbutton.attr('original-title',popout.html()).tipsy({
-              gravity: 'n',
-              fade:true,
-              html:true,
-              opacity: 0.9,
-              trigger: 'manual',
-              afterShow: function(){
+            currentDropbutton.attr('original-title',popout.html()).tooltip({
+              placement: 'top',
+              trigger: 'manual'
+            });
+
+            currentDropbutton.on('shown.bs.tooltip', function(){
                 //attach some events to the current popout
                 //the current portal under the dropbutton
                 thisPortal = currentDropbutton.parent().parent().find('.portal').children(':first').children(':first');
                 $('.tipsy').find('select.num_of_results').each(function(){
-                  $(this).val(thisPortal.attr("data-quantity"));
-                  $(this).unbind();
-                  $(this).bind('change', function(){
-                    KT.dashboard.widgetReload(thisPortal, $(this).val(), "quantity");
-                    KT.dashboard.popoutClose();
-                  });
+                    $(this).val(thisPortal.attr("data-quantity"));
+                    $(this).unbind();
+                    $(this).bind('change', function(){
+                        KT.dashboard.widgetReload(thisPortal, $(this).val(), "quantity");
+                        KT.dashboard.popoutClose();
+                    });
                 });
-              }
-
             });
         });
+
         dropbutton.live('click', function(){
           KT.dashboard.popoutClose();
           currentDropbutton = $(this);
           if (!currentDropbutton.hasClass('active')){
             //make it active
             $(this).addClass('active');
-            $(this).tipsy("show");
+            $(this).tooltip("show");
           } else {
             KT.dashboard.popoutClose();
           }
@@ -83,7 +81,7 @@ KT.dashboard = (function(){
         });
     },
     popoutClose = function(){
-      $('.dropbutton.active').tipsy('hide').removeClass('active').removeClass('showing');
+      $('.dropbutton.active').tooltip('hide').removeClass('active').removeClass('showing');
     },
     widgetReload = function(theWidget, quantity, type) {
         if(quantity === undefined) {

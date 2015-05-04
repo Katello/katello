@@ -15,7 +15,7 @@
         %label
           = _("View")
         %select
-        %i.view_tipsy.icon-info-sign
+        %i.view_tipsy.fa.fa-question-circle{'data-placement' => 'bottom', 'data-container' => 'body'}
           %span.hidden-text.hidden
             .la.content-tipsy
               %ul
@@ -56,5 +56,6 @@
     %div.fl
     %ul.fl
       %li
-        %a.button#compare_btn.hidden{ :title => _("Select a set of items that you wish to compare the contents of by clicking the checkboxes inside the cells.") }
+        %a.button#compare_btn.hidden{'data-container' => 'body', 'data-placement' => 'right',
+          :title => _("Select a set of items that you wish to compare the contents of by clicking the checkboxes inside the cells.") }
           = _("Compare Selected")

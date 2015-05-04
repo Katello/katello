@@ -35,7 +35,7 @@
         #repo_search
           = radio_button_tag :repos, :search_radio, true
           = text_field_tag :repo_search_input, nil, :placeholder=>_('Search repositories')
-          %span.browse_tipsy.icon-info-sign
+          %span.browse_tipsy.fa.fa-question-circle
             %span.hidden-text.hidden
               .la.content-tipsy
                 = _('Example Searches:')
@@ -69,7 +69,7 @@
         = label_tag :packages, _("Packages")
         #package_search
           = text_field_tag :search, nil, :placeholder=>_('Search packages'), :size=>19
-          %span.browse_tipsy.icon-info-sign
+          %span.browse_tipsy.fa.fa-question-circle
             %span.hidden-text.hidden
               .la.content-tipsy
                 = _('Example Searches:')
@@ -101,7 +101,7 @@
         #puppet_modules_search
           = radio_button_tag :puppet_modules, :search, true
           = text_field_tag :search, '', :size=>19, :placeholder=>_('Search modules')
-          %span.browse_tipsy.icon-info-sign
+          %span.browse_tipsy.fa.fa-question-circle
             %span.hidden-text.hidden
               .la.content-tipsy
                 = _('Example Searches:')

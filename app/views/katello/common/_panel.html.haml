@@ -33,7 +33,7 @@
         %header
           %h2.fl.one-line-ellipsis{:title => title} #{title}
           - if enable_create
-            %a.fr#new{:href => "#", :class => (disable_create ? "disabled tipsify-west" : "block"), "data-ajax_url" => url_for(:action => 'new'), :title => (disable_create if disable_create) }
+            %a.fr#new{:href => "#", :class => (disable_create ? "disabled tipsify-left" : "block"), "data-ajax_url" => url_for(:action => 'new'), :title => (disable_create if disable_create) }
               - if !create_label.nil?
                 = create_label
               - else

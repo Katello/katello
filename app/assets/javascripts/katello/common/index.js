@@ -20,6 +20,4 @@
 //= require "katello/common/spin.min"
 //= require "katello/common/jquery.jeditable.custominputs"
 //= require "katello/common/search"
-//= require "katello/common/panel"
 //= require "katello/common/katello_object"
-//= require "katello/widgets/tipsy.custom"

@@ -1,66 +1,66 @@
 .details_container
   .item-container
-    %label.fl.ra
+    %label
       = _("ID")
     %p
       = @puppet_module.id
 
   .item-container
-    %label.fl.ra
+    %label
       = _("Author: ")
     %p
       = @puppet_module.author
 
   .item-container
-    %label.fl.ra
+    %label
       = _("Name: ")
     %p
       = @puppet_module.name
 
   .item-container
-    %label.fl.ra
+    %label
       = _("Version: ")
     %p
       = @puppet_module.version
 
   - unless @puppet_module.summary.blank?
     .item-container
-      %label.fl.ra
+      %label
         = _("Summary: ")
       %p
         = @puppet_module.summary
 
   - unless @puppet_module.description.blank?
     .item-container
-      %label.fl.ra
+      %label
         = _("Description: ")
       %p
         = @puppet_module.description
 
   - unless @puppet_module.license.blank?
     .item-container
-      %label.fl.ra
+      %label
         = _("License: ")
       %p
         = @puppet_module.license
 
   - unless @puppet_module.project_page.blank?
     .item-container
-      %label.fl.ra
+      %label
         = _("Project Page: ")
       %p
         = @puppet_module.project_page
 
   - unless @puppet_module.source.blank?
     .item-container
-      %label.fl.ra
+      %label
         = _("Source: ")
       %p
         = @puppet_module.source
 
   - unless @puppet_module.dependencies.blank?
     .item-container
-      %label.fl.ra
+      %label
         = _("Dependencies: ")
       %p
         &nbsp;
@@ -71,7 +71,7 @@
 
   - unless @puppet_module.checksums.blank?
     .item-container
-      %label.fl.ra
+      %label
         = _("Checksums: ")
       %p
         &nbsp;
@@ -82,7 +82,7 @@
 
   - unless @puppet_module.tag_list.blank?
     .item-container
-      %label.fl.ra
+      %label
         = _("Tag List: ")
       %p
         = @puppet_module.tag_list.join(', ')
