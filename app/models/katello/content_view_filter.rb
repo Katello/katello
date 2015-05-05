@@ -2,8 +2,6 @@ module Katello
   class ContentViewFilter < Katello::Model
     self.include_root_in_json = false
 
-    include Glue::ElasticSearch::ContentViewFilter if Katello.config.use_elasticsearch
-
     PACKAGE         = Package::CONTENT_TYPE
     PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE
     ERRATA          = Erratum::CONTENT_TYPE
@@ -30,6 +28,13 @@ module Katello
 
     scope :whitelist, where(:inclusion => true)
     scope :blacklist, where(:inclusion => false)
+
+    scoped_search :on => :name, :complete_value => true
+    scoped_search :on => :type, :rename => :content_type,
+                  :complete_value => {Package::CONTENT_TYPE.to_sym => ContentViewPackageFilter.to_s,
+                                      PackageGroup::CONTENT_TYPE.to_sym => ContentViewPackageGroupFilter.to_s,
+                                      Erratum::CONTENT_TYPE.to_sym => ContentViewErratumFilter.to_s}
+    scoped_search :on => :inclusion, :rename => :inclusion_type, :complete_value => {:include => true, :exclude => :false}
 
     def self.yum
       where(:type => [::Katello::ContentViewPackageGroupFilter.name,

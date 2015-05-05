@@ -55,6 +55,24 @@ module Katello
       refute filter_item.save
     end
 
+    def test_search_name
+      assert_equal @filter, ContentViewFilter.search_for("name = #{@filter.name}").first
+    end
+
+    def test_search_type
+      assert_equal ContentViewPackageFilter, ContentViewFilter.search_for("content_type = rpm").first.class
+    end
+
+    def test_search_inclusion
+      inclusion = @filter.inclusion ? 'include' : 'exclude'
+      assert_include ContentViewFilter.search_for("inclusion_type = #{inclusion}"), @filter
+    end
+
+    def test_search_exclusion
+      inclusion = @filter.inclusion ? 'exclude' : 'include'
+      refute ContentViewFilter.search_for("inclusion_type = #{inclusion}").include?(@filter)
+    end
+
     def test_add_bad_repo
       @filter.repositories << @repo
       assert_raises(ActiveRecord::RecordInvalid) do

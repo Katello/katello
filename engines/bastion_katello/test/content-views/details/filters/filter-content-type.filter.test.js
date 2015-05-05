@@ -25,7 +25,7 @@ describe('Filter: filterContentType', function() {
     }));
 
     it("provides a filter shell around transforming content type for a filter", function() {
-        expect(filterContentTypeFilter('rpm')).toBe('Packages');
+        expect(filterContentTypeFilter('rpm')).toBe('RPM');
     });
 
 });

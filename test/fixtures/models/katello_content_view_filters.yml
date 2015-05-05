@@ -21,3 +21,5 @@ populated_erratum_filter:
 populated_filter_with_repos_and_filters:
   name:            Populated Filter
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
+  type:            <%= Katello::ContentViewErratumFilter.name %>
+
