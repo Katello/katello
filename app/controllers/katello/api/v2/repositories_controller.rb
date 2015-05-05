@@ -86,6 +86,7 @@ module Katello
       end
 
       options[:filters] = [{:terms => {:id => repositories.pluck("#{Repository.table_name}.id")}}]
+      options[:includes] = [:gpg_key, :product, :environment]
 
       respond :collection => item_search(Repository, params, options)
     end
