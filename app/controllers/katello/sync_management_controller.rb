@@ -7,11 +7,6 @@ module Katello
     include SyncManagementHelper::RepoMethods
     respond_to :html, :json
 
-    @@status_values = { :stopped      => _("Syncing Complete."),
-                        :error        => _("Sync Incomplete"),
-                        :never_synced => _("Never Synced"),
-                        :paused       => _("Paused")}.with_indifferent_access
-
     def section_id
       'contents'
     end
@@ -55,63 +50,7 @@ module Katello
     private
 
     def format_sync_progress(repo)
-      task = latest_task(repo)
-      if task
-        {   :id             => repo.id,
-            :product_id     => repo.product.id,
-            :progress       => {:progress => task.progress * 100},
-            :sync_id        => task.id,
-            :state          => format_state(task),
-            :raw_state      => raw_state(task),
-            :start_time     => format_date(task.started_at),
-            :finish_time    => format_date(task.ended_at),
-            :duration       => format_duration(task.ended_at, task.started_at),
-            :display_size   => task.humanized[:output],
-            :size           => task.humanized[:output],
-            :is_running     => task.pending && task.state != 'paused',
-            :error_details  => task.errors
-        }
-      else
-        empty_task(repo)
-      end
-    end
-
-    def empty_task(repo)
-      state = 'never_synced'
-      {   :id             => repo.id,
-          :product_id     => repo.product.id,
-          :progress       => {},
-          :state          => format_state(OpenStruct.new(:state => state)),
-          :raw_state      => state
-      }
-    end
-
-    def raw_state(task)
-      if task.result == 'error' || task.result == 'warning'
-        return 'error'
-      else
-        task.state
-      end
-    end
-
-    def format_state(task)
-      @@status_values[raw_state(task)] || task.state
-    end
-
-    def format_duration(finish, start)
-      retval = nil
-      if !finish.nil? && !start.nil?
-        retval = distance_of_time_in_words(finish, start)
-      end
-      retval
-    end
-
-    def format_date(check_date)
-      retval = nil
-      unless check_date.nil?
-        retval = relative_time_in_words(check_date)
-      end
-      retval
+      ::Katello::SyncStatusPresenter.new(repo, latest_task(repo)).sync_progress
     end
 
     def latest_task(repo)
