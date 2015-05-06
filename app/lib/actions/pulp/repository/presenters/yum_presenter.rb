@@ -47,7 +47,7 @@ module Actions
               ret << _("Processing metadata")
             end
 
-            ret << metadata_error if metadata_error
+            ret << _('Yum Metadata: %s') % metadata_error if metadata_error
 
             if error_details.any?
               ret << n_("Failed to download %s package.", "Failed to download %s packages.",
