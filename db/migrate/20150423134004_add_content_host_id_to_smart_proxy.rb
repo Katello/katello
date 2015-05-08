@@ -12,8 +12,10 @@ class AddContentHostIdToSmartProxy < ActiveRecord::Migration
     SmartProxy.all.each do |proxy|
       content_host = ::Katello::System.where(:name => proxy.name).order("created_at DESC").first
 
-      proxy.content_host_id = content_host.id
-      proxy.save!
+      if content_host
+        proxy.content_host_id = content_host.id
+        proxy.save!
+      end
     end
   end
 end
