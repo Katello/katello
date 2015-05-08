@@ -123,10 +123,10 @@ module Katello
     param :name, String, :desc => N_("Name of the content host"), :required => true, :action_aware => true
     param :description, String, :desc => N_("Description of the content host")
     param :location, String, :desc => N_("Physical location of the content host")
-    param :facts, Hash, :desc => N_("Key-value hash of content host-specific facts"), :action_aware => true, :required => true do
+    param :facts, Hash, :desc => N_("Key-value hash of content host-specific facts"), :action_aware => true do
       param :fact, String, :desc => N_("Any number of facts about this content host")
     end
-    param :type, String, :desc => N_("Type of the content host, it should always be 'system'"), :required => true, :action_aware => true
+    param :type, String, :desc => N_("Type of the content host, it should always be 'system'"), :action_aware => true
     param :guest_ids, Array, :desc => N_("IDs of the virtual guests running on this content host")
     param :installed_products, Array, :desc => N_("List of products installed on the content host"), :action_aware => true
     param :release_ver, String, :desc => N_("Release version of the content host")
