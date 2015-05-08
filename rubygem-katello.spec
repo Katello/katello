@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.2.0
-Release: 9%{dist}
+Release: 10%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -225,6 +225,15 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Fri May 08 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-10
+- Fixes #10426: Ensure content host exists before updating in migration.
+- Fixes #8544: Carry subscription-manager for EL5 in our client repos.
+  (ericdhelms@gmail.com)
+- Refs #10224 - release python-isodate for fedoras
+- Refs #10224 - updating comps for f20, f21
+- Automatic commit of package [katello] minor release [2.2.0-5].
+  (ericdhelms@gmail.com)
+
 * Mon May 04 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-9
 - Fixes #10257: Connect capsule and its content host at the DB level.
   (ericdhelms@gmail.com)
