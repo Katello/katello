@@ -1,22 +1,27 @@
 module Katello
   class RepoDiscovery
-    attr_reader :found
+    attr_reader :found, :crawled, :to_follow
 
-    def initialize(url, options = {})
+    def initialize(url, proxy = {}, crawled = [], found = [], to_follow = [])
       #add a / on the end, as directories require it or else
       #  They will get double slahes on them
-      url += '/' unless url.ends_with?('/')
-      @uri = URI(url)
-      @found = []
-      @crawled = []
-      @options = options
+      @uri = uri(url)
+      @found = found
+      @crawled = crawled
+      @to_follow = to_follow
+      @proxy = proxy
     end
 
-    def run(found_lambda, continue_lambda)
+    def uri(url)
+      url += '/' unless url.ends_with?('/')
+      URI(url)
+    end
+
+    def run(resume_point)
       if @uri.scheme == 'file'
-        file_crawl(found_lambda, continue_lambda)
+        file_crawl(uri(resume_point))
       elsif %w(http https).include?(@uri.scheme)
-        http_crawl(found_lambda, continue_lambda)
+        http_crawl(uri(resume_point))
       else
         fail _("Unsupported URL protocol %s.")  % @uri.scheme
       end
@@ -24,40 +29,34 @@ module Katello
 
     private
 
-    def http_crawl(found_lambda, continue_lambda)
-      Anemone.crawl(@uri, @options) do |anemone|
+    def http_crawl(resume_point)
+      Anemone.crawl(resume_point, @proxy) do |anemone|
         anemone.focus_crawl do |page|
-          return false unless continue_lambda.call
           @crawled << page.url.path
 
-          to_follow = []
           page.links.each do |link|
             if link.path.ends_with?('/repodata/')
               @found << page.url.to_s
-              found_lambda.call(page.url.to_s)
             else
-              to_follow << link if should_follow?(link.path)
+              @to_follow << link.to_s if should_follow?(link.path)
             end
           end
           page.discard_doc! #saves memory, doc not needed
-          to_follow
+          []
         end
       end
-      @found
     end
 
-    def file_crawl(found_lambda, continue_lambda)
-      directories = Dir.glob("#{@uri.path}**/")
-      directories.each do |dir|
-        return false unless continue_lambda.call
-
-        if dir.ends_with?('/repodata/')
-          found_path = Pathname(dir).parent.to_s
-          @found << "file://#{found_path}"
-          found_lambda.call("file://#{found_path}")
-        end
+    def file_crawl(resume_point)
+      if resume_point.path.ends_with?('/repodata/')
+        found_path = Pathname(resume_point.path).parent.to_s
+        @found << "file://#{found_path}"
       end
-      @found
+      if resume_point.path == @uri.path
+        Dir.glob("#{@uri.path}**/").each { |path| @to_follow << path }
+        @to_follow.shift
+      end
+      @crawled << resume_point.path
     end
 
     def should_follow?(path)

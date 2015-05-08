@@ -4,16 +4,16 @@ module Katello
   class FileRepoDiscoveryTest < ActiveSupport::TestCase
     def test_run
       base_url = "file://#{Katello::Engine.root}/test/fixtures/"
-
-      rd = RepoDiscovery.new(base_url)
+      crawled = []
       found = []
-      add_proc = lambda { |url| found << url }
-      continue_proc = lambda { true }
+      to_follow = [base_url]
+      rd = RepoDiscovery.new(base_url, crawled, found, to_follow)
 
-      found_final = rd.run(add_proc, continue_proc)
-      assert_equal found, found_final  #validate that final list equals incremental list
-      assert_equal 1, found.size
-      assert_equal found.first, base_url + 'test_repos/zoo'
+      rd.run(to_follow.shift)
+      assert_equal 1, rd.crawled.size
+      refute_empty rd.to_follow
+      assert_empty rd.found
+      assert_equal rd.crawled.first, "#{Katello::Engine.root}/test/fixtures/"
     end
   end
 end
