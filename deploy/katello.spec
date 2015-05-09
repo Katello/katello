@@ -158,6 +158,7 @@ Useful utilities for managing Katello services
 
 %files service
 %{_sbindir}/service-wait
+%{_bindir}/katello-service
 %{homedir}/script/service-wait
 %{_mandir}/man8/katello-service.8*
 
