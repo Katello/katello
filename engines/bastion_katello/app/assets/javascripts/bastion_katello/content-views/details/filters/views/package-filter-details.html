@@ -14,11 +14,11 @@
            ng-change="updateFilter(filter)"/>
 
     <span ng-show="filter.inclusion" translate>
-      Include all packages with no errata.
+      Include all RPMs with no errata.
     </span>
 
     <span ng-show="!filter.inclusion" translate>
-      Exclude all packages with no errata.
+      Exclude all RPMs with no errata.
     </span>
   </div>
 
@@ -27,7 +27,7 @@
           ng-hide="denied('edit_content_views', contentView)"
           ng-click="removeRules(filter)">
     <i class="fa fa-trash-o"></i>
-    <span translate>Remove Packages</span>
+    <span translate>Remove RPMs</span>
   </button>
 </div>
 
@@ -39,7 +39,7 @@
                                   ng-model="allSelected"
                                   ng-change="selectAll(allSelected)"
                                   ng-hide="denied('edit_content_views', contentView)"/></th>
-    <th translate>Package Name</th>
+    <th translate>RPM Name</th>
     <th class="col-sm-5" translate>Detail</th>
     <th class="col-sm-2"></th>
   </tr>

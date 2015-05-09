@@ -2,7 +2,7 @@ object @resource
 
 extends 'katello/api/v2/common/identifier'
 
-node(:type) { |filter| filter.type.constantize::CONTENT_TYPE }
+node(:type) { |filter| filter.class::CONTENT_TYPE }
 attributes :inclusion
 
 child :content_view => :content_view do

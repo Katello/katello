@@ -31,10 +31,30 @@ module Katello
     end
 
     def test_index
+      get :index
+
+      assert_response :success
+      assert_template 'api/v2/content_view_filters/index'
+    end
+
+    def test_index_with_content_view
       get :index, :content_view_id => @content_view.id
 
       assert_response :success
       assert_template 'api/v2/content_view_filters/index'
+    end
+
+    def test_index_with_search
+      get :index, :search => "name = #{@filter.name}"
+
+      assert_response :success
+      assert_template 'api/v2/content_view_filters/index'
+    end
+
+    def test_index_with_name
+      response = get :index, :name => @filter.name
+      results = JSON.parse(response.body)
+      assert_equal @filter.id, results['results'][0]['id']
     end
 
     def test_index_protected

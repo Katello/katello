@@ -1,24 +1,26 @@
 module Katello
   class Api::V2::ContentViewFiltersController < Api::V2::ApiController
+    include Katello::Concerns::FilteredAutoCompleteSearch
+
     before_filter :find_content_view
-    before_filter :find_filter, :except => [:index, :create]
-    before_filter :load_search_service, :only => [:index, :available_errata, :available_package_groups]
+    before_filter :find_filter, :except => [:index, :create, :auto_complete_search]
+    before_filter :load_search_service, :only => [:available_errata, :available_package_groups]
 
     wrap_parameters :include => (ContentViewFilter.attribute_names + %w(repository_ids))
 
     api :GET, "/content_views/:content_view_id/filters", N_("List filters")
     api :GET, "/content_view_filters", N_("List filters")
+    param_group :search, Api::V2::ApiController
     param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
     param :name, String, :desc => N_("Filter content view filters by name")
     def index
-      params.require(:content_view_id)
-      options = sort_params
-      options[:load_records?] = true
-      options[:filters] = [{ :terms => { :id => @view.filter_ids } }]
-      options[:filters] << {:term => {:name => params[:name]}} if params[:name]
+      respond(:collection => scoped_search(index_relation.uniq, :name, :asc))
+    end
 
-      @search_service.model = ContentViewFilter
-      respond(:collection => item_search(ContentViewFilter, params, options))
+    def index_relation
+      query = ContentViewFilter.where(:content_view_id => (@content_view || ContentView.readable))
+      query = query.where(:name => params[:name]) unless params[:name].blank?
+      query
     end
 
     api :POST, "/content_views/:content_view_id/filters", N_("Create a filter for a content view")

@@ -25,7 +25,7 @@ describe('Service: FilterHelper', function() {
     }));
 
     it("provides a method to convert a server side filter content type to a human readable version", function() {
-        expect(FilterHelper.contentType('rpm')).toBe('Packages');
+        expect(FilterHelper.contentType('rpm')).toBe('RPM');
         expect(FilterHelper.contentType('erratum')).toBe('Errata');
         expect(FilterHelper.contentType('package_group')).toBe('Package Groups');
     });

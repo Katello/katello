@@ -24,7 +24,7 @@ angular.module('Bastion.content-views').service('FilterHelper',
     ['translate', function (translate) {
 
         this.contentTypes = {
-            'rpm': translate('Packages'),
+            'rpm': translate('RPM'),
             'erratum': translate('Errata'),
             'package_group': translate('Package Groups')
         };

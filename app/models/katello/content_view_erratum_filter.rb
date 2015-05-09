@@ -1,7 +1,5 @@
 module Katello
   class ContentViewErratumFilter < ContentViewFilter
-    use_index_of ContentViewFilter if Katello.config.use_elasticsearch
-
     CONTENT_TYPE = Erratum::CONTENT_TYPE
 
     ERRATA_TYPES = { 'bugfix' => _('Bug Fix'),

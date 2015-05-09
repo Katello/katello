@@ -1,7 +1,5 @@
 module Katello
   class ContentViewPackageFilter < ContentViewFilter
-    use_index_of ContentViewFilter if Katello.config.use_elasticsearch
-
     CONTENT_TYPE = Package::CONTENT_TYPE
 
     has_many :package_rules, :dependent => :destroy, :foreign_key => :content_view_filter_id,
