@@ -77,9 +77,7 @@ module ::Actions::Katello::ContentView
     it 'plans' do
       Katello::Configuration::Node.any_instance.stubs(:use_elasticsearch).returns(true)
       content_view.expects(:save!)
-      content_view.expects(:disable_auto_reindex!)
       plan_action(action, content_view)
-      assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, content_view)
     end
   end
 
@@ -215,7 +213,6 @@ module ::Actions::Katello::ContentView
     it 'plans' do
       action.expects(:action_subject).with(content_view)
       plan_action action, content_view, 'repository_ids' => [repository.id]
-      assert_action_planed action, ::Actions::ElasticSearch::Reindex
       assert_action_planed action, ::Actions::ElasticSearch::ReindexOnAssociationChange
     end
 

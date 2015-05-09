@@ -3,15 +3,12 @@ module Actions
     module ContentView
       class Update < Actions::EntryAction
         def plan(content_view, content_view_params)
-          content_view.disable_auto_reindex!
-          content_view.disable_auto_reindex_on_association!
           repositories = repositories_to_reindex(content_view, content_view_params)
 
           action_subject content_view
           content_view.update_attributes!(content_view_params)
 
           if ::Katello.config.use_elasticsearch
-            plan_action(ElasticSearch::Reindex, content_view)
             repositories.each { |repository| plan_action(ElasticSearch::ReindexOnAssociationChange, repository) }
           end
         end

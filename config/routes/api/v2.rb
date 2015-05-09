@@ -52,6 +52,7 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :content_views do
+          get :auto_complete_search, :on => :collection
           member do
             post :copy
             post :publish
