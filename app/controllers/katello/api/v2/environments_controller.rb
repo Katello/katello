@@ -99,15 +99,6 @@ module Katello
     param :organization_id, :number, :desc => N_("name of the organization")
     param :new_name, String, :desc => N_("new name to be given to the environment")
     param :description, String, :desc => N_("description of the environment")
-    param :prior, Integer, :deprecated => true, :desc => <<-DESC
-      ID of an environment that is prior to the new environment in the chain. It has to be
-      either the ID of Library or the ID of an environment at the end of a chain.
-      This param exists for backwards compatibility purposes. Please use prior_id.
-    DESC
-    param :prior_id, Integer, :desc => <<-DESC
-      ID of an environment that is prior to the new environment in the chain. It has to be
-      either the ID of Library or the ID of an environment at the end of a chain.
-    DESC
     def update
       fail HttpErrors::BadRequest, _("Can't update the '%s' environment") % "Library" if @environment.library?
       update_params = environment_params
