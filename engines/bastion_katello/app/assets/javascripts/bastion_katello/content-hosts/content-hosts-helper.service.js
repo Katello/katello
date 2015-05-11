@@ -33,48 +33,12 @@ angular.module('Bastion.content-hosts').service('ContentHostsHelper',
             'No Change': 'green'
         };
 
-        this.getStatusColor = function (status) {
-            var colors = {
-                    'valid': 'green',
-                    'partial': 'yellow',
-                    'invalid': 'red'
-                };
-
-            return colors[status] ? colors[status] : 'red';
-        };
-
-        this.getProvisioningStatusColor = function (status) {
-            var  color;
-            if (status !== undefined) {
-                if ((color = hostStatusColorMap[status]) === undefined) {
-                    throw "Unknown status = " + status;
-                }
-            }
-            return color;
-        };
-
-        this.memory = function (facts) {
-            var mem;
-            if (facts !== undefined) {
-                if (facts.memory !== undefined) {
-                    mem = facts.memory["memtotal"];
-                }
-                if (mem === undefined && facts.dmi !== undefined &&
-                   facts.dmi.memory !== undefined) {
-                    mem = facts.dmi.memory["size"];
-                }
-                return memoryInGigabytes(mem);
-            } else {
-                return "0";
-            }
-        };
-
         function memoryInGigabytes(memStr) {
             var mems,
                 memory,
                 unit;
 
-            if (memStr === undefined || memStr === "") {
+            if (angular.isUndefined(memStr) || memStr === "") {
                 return "0";
             }
 
@@ -113,6 +77,42 @@ angular.module('Bastion.content-hosts').service('ContentHostsHelper',
             memory = Math.round(memory * 100) / 100;
             return memory;
         }
+
+        this.getStatusColor = function (status) {
+            var colors = {
+                    'valid': 'green',
+                    'partial': 'yellow',
+                    'invalid': 'red'
+                };
+
+            return colors[status] ? colors[status] : 'red';
+        };
+
+        this.getProvisioningStatusColor = function (status) {
+            var color;
+            if (angular.isDefined(status)) {
+                if (angular.isUndefined(color = hostStatusColorMap[status])) {
+                    throw "Unknown status = " + status;
+                }
+            }
+            return color;
+        };
+
+        this.memory = function (facts) {
+            var mem;
+            if (angular.isDefined(facts)) {
+                if (angular.isDefined(facts.memory)) {
+                    mem = facts.memory.memtotal;
+                }
+                if (angular.isUndefined(mem) && angular.isDefined(facts.dmi) &&
+                   angular.isDefined(facts.dmi.memory)) {
+                    mem = facts.dmi.memory.size;
+                }
+                return memoryInGigabytes(mem);
+            }
+
+            return "0";
+        };
 
     }
 );

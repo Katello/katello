@@ -33,17 +33,18 @@
 angular.module('Bastion.subscriptions').controller('SubscriptionsController',
     ['$scope', '$filter', '$q', '$location', 'translate', 'Nutupane', 'Subscription', 'Organization', 'CurrentOrganization', 'SubscriptionsHelper',
     function ($scope, $filter, $q, $location, translate, Nutupane, Subscription, Organization, CurrentOrganization, SubscriptionsHelper) {
+        var params, nutupane;
 
-        var params = {
-            'organization_id':  CurrentOrganization,
-            'search':           $location.search().search || "",
-            'sort_by':          'name',
-            'sort_order':       'ASC',
-            'enabled' :         true,
-            'paged':            true
+        params = {
+            'organization_id': CurrentOrganization,
+            'search': $location.search().search || "",
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'enabled': true,
+            'paged': true
         };
 
-        var nutupane = new Nutupane(Subscription, params);
+        nutupane = new Nutupane(Subscription, params);
         $scope.table = nutupane.table;
         $scope.refreshTable = nutupane.refresh;
         $scope.successMessages = [];
@@ -65,13 +66,13 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
         };
 
         $scope.formatInstanceBased = function (subscription) {
-            if (subscription['instance_multiplier'] === undefined || subscription['instance_multiplier'] === "" || subscription['instance_multiplier'] === 0) {
+            if (angular.isUndefined(subscription['instance_multiplier']) || subscription['instance_multiplier'] === "" || subscription['instance_multiplier'] === 0) {
                 return translate("No");
             }
             return translate("Yes");
         };
 
-        $scope.redhatProvider =  Organization.redhatProvider();
+        $scope.redhatProvider = Organization.redhatProvider();
 
         $scope.subscriptions = Subscription.queryPaged();
 

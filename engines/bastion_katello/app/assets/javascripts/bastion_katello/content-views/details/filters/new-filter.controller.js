@@ -25,35 +25,6 @@ angular.module('Bastion.content-views').controller('NewFilterController',
     ['$scope', 'Filter', 'Rule', function ($scope, Filter, Rule) {
         var filterType;
 
-        $scope.filter = new Filter();
-        $scope.working = false;
-
-        $scope.save = function (filter, contentView) {
-            filterType = filter.type;
-
-            if (filter.type === 'erratumId' || filter.type === 'erratumDateType') {
-                filter.type = 'erratum';
-            }
-
-            filter.$save({'content_view_id': contentView.id}, success, failure);
-        };
-
-        function success(filter) {
-            if (filterType === 'erratumDateType') {
-                addErrataDateTypeRule(filter);
-            } else {
-                transitionToDetails(filter);
-            }
-        }
-
-        function failure(response) {
-            $scope.working = false;
-            angular.forEach(response.data.errors, function (errors, field) {
-                $scope.filterForm[field].$setValidity('server', false);
-                $scope.filterForm[field].$error.messages = errors;
-            });
-        }
-
         function transitionToDetails(filter) {
             var state = '';
 
@@ -75,18 +46,47 @@ angular.module('Bastion.content-views').controller('NewFilterController',
             var rule = new Rule({
                     types: ['security', 'enhancement', 'bugfix']
                 }),
-                success, failure;
+                addSuccess, error;
 
-            success = function () {
+            addSuccess = function () {
                 transitionToDetails(filter);
             };
 
-            failure = function (response) {
+            error = function (response) {
                 $scope.errorMessages = [response.data.displayMessage];
             };
 
-            rule.$save({filterId: filter.id}, success, failure);
+            rule.$save({filterId: filter.id}, addSuccess, error);
         }
+
+        function success(filter) {
+            if (filterType === 'erratumDateType') {
+                addErrataDateTypeRule(filter);
+            } else {
+                transitionToDetails(filter);
+            }
+        }
+
+        function failure(response) {
+            $scope.working = false;
+            angular.forEach(response.data.errors, function (errors, field) {
+                $scope.filterForm[field].$setValidity('server', false);
+                $scope.filterForm[field].$error.messages = errors;
+            });
+        }
+
+        $scope.filter = new Filter();
+        $scope.working = false;
+
+        $scope.save = function (filter, contentView) {
+            filterType = filter.type;
+
+            if (filter.type === 'erratumId' || filter.type === 'erratumDateType') {
+                filter.type = 'erratum';
+            }
+
+            filter.$save({'content_view_id': contentView.id}, success, failure);
+        };
 
     }]
 );

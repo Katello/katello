@@ -30,22 +30,22 @@
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionHostCollectionsController',
     ['$scope', '$q', '$location', 'translate', 'Nutupane', 'ContentHostBulkAction', 'HostCollection', 'CurrentOrganization',
     function ($scope, $q, $location, translate, Nutupane, ContentHostBulkAction, HostCollection, CurrentOrganization) {
-        var hostCollectionNutupane, params;
+        var hostCollectionNutupane, nutupaneParams;
 
         $scope.hostCollections = {
             action: null
         };
         $scope.setState(false, [], []);
 
-        params = {
-            'organization_id':  CurrentOrganization,
-            'offset':           0,
-            'sort_by':          'name',
-            'sort_order':       'ASC',
-            'paged':            true
+        nutupaneParams = {
+            'organization_id': CurrentOrganization,
+            'offset': 0,
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'paged': true
         };
 
-        hostCollectionNutupane = new Nutupane(HostCollection, params, 'queryPaged');
+        hostCollectionNutupane = new Nutupane(HostCollection, nutupaneParams, 'queryPaged');
 
         $scope.setState(false, [], []);
         $scope.detailsTable = hostCollectionNutupane.table;
@@ -73,9 +73,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionHostCo
                 hostCollectionNutupane.refresh();
             };
 
-            error = function (error) {
-                deferred.reject(error.data["errors"]);
-                $scope.setState(false, [], [error.data.displayMessage]);
+            error = function (response) {
+                deferred.reject(response.data.errors);
+                $scope.setState(false, [], [response.data.displayMessage]);
                 $scope.editMode = true;
             };
 

@@ -24,7 +24,18 @@
 angular.module('Bastion.content-views').controller('ContentViewDeletionController',
     ['$scope', 'ContentView', function ($scope, ContentView) {
 
-        if ($scope.versions === undefined) {
+        function success() {
+            $scope.removeRow($scope.contentView.id);
+            $scope.transitionTo('content-views.index');
+            $scope.working = false;
+        }
+
+        function failure(response) {
+            $scope.$parent.errorMessages = [response.data.displayMessage];
+            $scope.working = false;
+        }
+
+        if (angular.isUndefined($scope.versions)) {
             $scope.reloadVersions();
         }
 
@@ -48,17 +59,6 @@ angular.module('Bastion.content-views').controller('ContentViewDeletionControlle
                 return !env.permissions.readable;
             });
         };
-
-        function success() {
-            $scope.removeRow($scope.contentView.id);
-            $scope.transitionTo('content-views.index');
-            $scope.working = false;
-        }
-
-        function failure(response) {
-            $scope.$parent.errorMessages = [response.data.displayMessage];
-            $scope.working = false;
-        }
 
     }]
 );

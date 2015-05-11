@@ -29,7 +29,7 @@ angular.module('Bastion.subscriptions').service('SubscriptionsHelper',
             grouped = {};
             for (offset = 0; offset < rows.length; offset += 1) {
                 subscription = rows[offset];
-                if (grouped[subscription['product_name']] === undefined) {
+                if (angular.isUndefined(grouped[subscription['product_name']])) {
                     grouped[subscription['product_name']] = [];
                 }
                 grouped[subscription['product_name']].push(subscription);

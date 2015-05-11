@@ -50,9 +50,9 @@ angular.module('Bastion.tasks').directive('tasksTable',
             templateUrl: function (element, attrs) {
                 if (attrs.templateUrl) {
                     return attrs.templateUrl;
-                } else {
-                    return 'tasks/views/tasks-table.html';
                 }
+
+                return 'tasks/views/tasks-table.html';
             },
             scope: {
                 resourceId: '@',

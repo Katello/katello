@@ -32,11 +32,11 @@ angular.module('Bastion.host-collections').controller('HostCollectionsController
     function ($scope, $location, translate, Nutupane, HostCollection, CurrentOrganization) {
 
         var params = {
-            'organization_id':  CurrentOrganization,
-            'search':           $location.search().search || "",
-            'sort_by':          'name',
-            'sort_order':       'ASC',
-            'paged':            true
+            'organization_id': CurrentOrganization,
+            'search': $location.search().search || "",
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'paged': true
         };
 
         var nutupane = new Nutupane(HostCollection, params);

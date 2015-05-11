@@ -25,15 +25,15 @@ angular.module('Bastion.tasks').directive('taskInputPart',
             template: '<span ng-if="!link()">{{text()}}</span>' +
                       '<a ng-if="link()" href="{{link()}}">{{text()}}</a>',
             scope: {
-                data: '=',
+                data: '='
             },
             link: function (scope) {
                 scope.text = function () {
                     if (_.isString(scope.data)) {
                         return scope.data;
-                    } else {
-                        return scope.data[1].text;
                     }
+
+                    return scope.data[1].text;
                 };
 
                 scope.link = function () {

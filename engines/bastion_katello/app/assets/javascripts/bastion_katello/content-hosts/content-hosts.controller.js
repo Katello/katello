@@ -31,18 +31,19 @@
 angular.module('Bastion.content-hosts').controller('ContentHostsController',
     ['$scope', '$state', '$location', 'translate', 'Nutupane', 'ContentHost', 'CurrentOrganization', 'ContentHostsHelper',
     function ($scope, $state, $location, translate, Nutupane, ContentHost, CurrentOrganization, ContentHostsHelper) {
+        var nutupane, params;
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
-        var params = {
-            'organization_id':  CurrentOrganization,
-            'search':           $location.search().search || "",
-            'sort_by':          'name',
-            'sort_order':       'ASC'
+        params = {
+            'organization_id': CurrentOrganization,
+            'search': $location.search().search || "",
+            'sort_by': 'name',
+            'sort_order': 'ASC'
         };
 
-        var nutupane = new Nutupane(ContentHost, params);
+        nutupane = new Nutupane(ContentHost, params);
         $scope.contentHostTable = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
         $scope.nutupane = nutupane;

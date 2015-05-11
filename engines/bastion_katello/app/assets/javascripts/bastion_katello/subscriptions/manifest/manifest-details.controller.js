@@ -32,10 +32,10 @@ angular.module('Bastion.subscriptions').controller('ManifestDetailsController',
 
         $q.all([$scope.organization.$promise]).then(function () {
             $scope.details = $scope.organization['owner_details'];
-            $scope.upstream = $scope.details['upstreamConsumer'];
+            $scope.upstream = $scope.details.upstreamConsumer;
 
             angular.forEach($scope.redhatProvider['owner_imports'], function (value) {
-                if (value['upstreamId'] === $scope.upstream['uuid']) {
+                if (value.upstreamId === $scope.upstream.uuid) {
                     $scope.manifestImport = value;
                 }
             });

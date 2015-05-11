@@ -34,11 +34,11 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddHostCollec
         $scope.errorMessages = [];
 
         params = {
-            'search':      $location.search().search || "",
-            'sort_by':     'name',
-            'sort_order':  'ASC',
-            'paged':       true,
-            'id':          $scope.$stateParams.activationKeyId
+            'search': $location.search().search || "",
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'paged': true,
+            'id': $scope.$stateParams.activationKeyId
         };
 
         hostCollectionsPane = new Nutupane(ActivationKey, params, 'availableHostCollections');
@@ -57,7 +57,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddHostCollec
                 }
             };
 
-            success = function (data) {
+            success = function (response) {
                 $scope.successMessages = [translate('Added %x host collections to activation key "%y".')
                     .replace('%x', $scope.hostCollectionsTable.numSelected)
                     .replace('%y', $scope.activationKey.name)];
@@ -65,12 +65,12 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddHostCollec
                 $scope.hostCollectionsTable.selectAll(false);
                 hostCollectionsPane.refresh();
                 $scope.activationKey.$get();
-                deferred.resolve(data);
+                deferred.resolve(response);
             };
 
-            error = function (error) {
-                deferred.reject(error.data.errors);
-                $scope.errorMessages = error.data.errors['base'];
+            error = function (response) {
+                deferred.reject(response.data.errors);
+                $scope.errorMessages = response.data.errors.base;
                 $scope.hostCollectionsTable.working = false;
             };
 

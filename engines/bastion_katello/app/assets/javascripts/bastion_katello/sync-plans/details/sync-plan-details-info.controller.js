@@ -67,7 +67,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
                         $scope.errorMessages.push(translate("An error occurred saving the Sync Plan: ") + errorMessage);
                     });
                 });
-                
+
                 return deferred.promise;
             };
         }]

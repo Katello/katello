@@ -32,26 +32,26 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddContentH
         var addContentHostsPane, params;
 
         params = {
-            'organization_id':          CurrentOrganization,
-            'search':                   $location.search().search || "",
-            'page':                     1,
-            'sort_by':                  'name',
-            'sort_order':               'ASC',
-            'paged':                    true
+            'organization_id': CurrentOrganization,
+            'search': $location.search().search || "",
+            'page': 1,
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'paged': true
         };
 
         addContentHostsPane = new Nutupane(ContentHost, params);
         addContentHostsPane.searchTransform = function (term) {
             var addition = "NOT ( host_collection_ids:" + $scope.$stateParams.hostCollectionId + " )";
-            if (term === "" || term === undefined) {
+            if (term === "" || angular.isUndefined(term)) {
                 return addition;
-            } else {
-                return term +  " " + addition;
             }
+
+            return term + " " + addition;
         };
 
         $scope.addContentHostsTable = addContentHostsPane.table;
-        $scope.isAdding  = false;
+        $scope.isAdding = false;
         $scope.addContentHostsTable.closeItem = function () {};
 
         $scope.disableAddButton = function () {
@@ -77,7 +77,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddContentH
                 $scope.refreshHostCollection();
             }, function (response) {
                 $scope.$parent.errorMessages.push(response.data.displayMessage);
-                $scope.isAdding  = false;
+                $scope.isAdding = false;
             });
         };
 

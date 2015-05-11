@@ -22,7 +22,7 @@
      *   Controls displaying content tables for a given environment along with appropriate filtering.
      */
     function EnvironmentContentController($scope, ContentService, ContentView, Repository, translate, $location) {
-        var nutupane, allRepositories, params;
+        var nutupane, allRepositories, nutupaneParams;
 
         function fetchContentViews(environmentId) {
             ContentView.queryUnpaged({'environment_id': environmentId}, function (data) {
@@ -49,8 +49,8 @@
                 $scope.repositories = [allRepositories].concat(data.results);
 
                 if ($location.search().repositoryId) {
-                    repository = _.find($scope.repositories, function (repository) {
-                        return repository.id.toString() === $location.search().repositoryId.toString();
+                    repository = _.find($scope.repositories, function (repo) {
+                        return repo.id.toString() === $location.search().repositoryId.toString();
                     });
                 }
 
@@ -68,8 +68,8 @@
             var versionId, version;
 
             if (contentView.id !== 'all') {
-                version = _.find(contentView.versions, function (version) {
-                    return version['environment_ids'].indexOf(parseInt(environmentId, 10)) > -1;
+                version = _.find(contentView.versions, function (vers) {
+                    return vers['environment_ids'].indexOf(parseInt(environmentId, 10)) > -1;
                 });
                 versionId = version.id;
             }
@@ -77,12 +77,12 @@
             return versionId;
         }
 
-        params = {'environment_id': $scope.$stateParams.environmentId, library: true};
+        nutupaneParams = {'environment_id': $scope.$stateParams.environmentId, library: true};
         if ($location.search().repositoryId) {
-            params['repository_id'] = $location.search().repositoryId;
+            nutupaneParams['repository_id'] = $location.search().repositoryId;
         }
 
-        nutupane = ContentService.buildNutupane(params);
+        nutupane = ContentService.buildNutupane(nutupaneParams);
         nutupane.masterOnly = true;
 
         $scope.nutupane = nutupane;

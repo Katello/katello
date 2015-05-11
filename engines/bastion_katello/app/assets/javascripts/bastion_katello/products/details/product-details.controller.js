@@ -59,7 +59,7 @@ angular.module('Bastion.products').controller('ProductDetailsController',
                     readOnlyReason = 'redhat';
                 }
             }
-            
+
             return readOnlyReason;
         };
     }]

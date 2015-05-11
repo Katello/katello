@@ -27,6 +27,20 @@ angular.module('Bastion.content-views').service('ContentViewRepositoriesUtil',
 
         return function (scope) {
 
+            function extractProducts(repositories) {
+                var products = {};
+
+                scope.product = {name: translate('All Products'), id: 'all'};
+
+                angular.forEach(repositories, function (repository) {
+                    products[repository.product.id] = repository.product;
+                });
+
+                products[scope.product.id] = scope.product;
+
+                return products;
+            }
+
             scope.product = {id: 'all'};
             scope.products = {};
             scope.filteredItems = [];
@@ -57,20 +71,6 @@ angular.module('Bastion.content-views').service('ContentViewRepositoriesUtil',
 
                 return selected;
             };
-
-            function extractProducts(repositories) {
-                var products = {};
-
-                scope.product = {name: translate('All Products'), id: 'all'};
-
-                angular.forEach(repositories, function (repository) {
-                    products[repository.product.id] = repository.product;
-                });
-
-                products[scope.product.id] = scope.product;
-
-                return products;
-            }
 
             scope.removeSelectedRepositoriesFromContentView = function (nutupane, contentView) {
                 var ids = [],

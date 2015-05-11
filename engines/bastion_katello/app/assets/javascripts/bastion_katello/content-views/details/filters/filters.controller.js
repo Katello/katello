@@ -27,8 +27,23 @@ angular.module('Bastion.content-views').controller('FiltersController',
     ['$scope', 'translate', 'Filter', 'Nutupane', function ($scope, translate, Filter, Nutupane) {
         var nutupane;
 
+        function removeFilter(id) {
+            var success, failure;
+
+            success = function () {
+                nutupane.removeRow(id);
+                $scope.successMessages = [translate('Filters successfully removed.')];
+            };
+
+            failure = function (response) {
+                $scope.errorMessages = [response.data.displayMessage];
+            };
+
+            Filter.delete({filterId: id}, success, failure);
+        }
+
         nutupane = new Nutupane(Filter, {
-            'content_view_id': $scope.$stateParams.contentViewId,
+            'content_view_id': $scope.$stateParams.contentViewId
         });
 
         $scope.detailsTable = nutupane.table;
@@ -69,21 +84,6 @@ angular.module('Bastion.content-views').controller('FiltersController',
 
             return state;
         };
-
-        function removeFilter(id) {
-            var success, failure;
-
-            success = function () {
-                nutupane.removeRow(id);
-                $scope.successMessages = [translate('Filters successfully removed.')];
-            };
-
-            failure = function (response) {
-                $scope.errorMessages = [response.data.displayMessage];
-            };
-
-            Filter.delete({filterId: id}, success, failure);
-        }
 
     }]
 );

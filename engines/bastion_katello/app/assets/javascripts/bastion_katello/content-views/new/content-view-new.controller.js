@@ -26,21 +26,6 @@ angular.module('Bastion.content-views').controller('NewContentViewController',
     ['$scope', 'ContentView', 'FormUtils', 'CurrentOrganization',
     function ($scope, ContentView, FormUtils, CurrentOrganization) {
 
-        $scope.contentView = new ContentView({'organization_id': CurrentOrganization});
-        $scope.createOption = 'new';
-        $scope.table = {};
-
-        $scope.save = function (contentView) {
-            contentView.$save(success, error);
-        };
-
-        $scope.$watch('contentView.name', function () {
-            if ($scope.contentViewForm.name) {
-                $scope.contentViewForm.name.$setValidity('server', true);
-                FormUtils.labelize($scope.contentView);
-            }
-        });
-
         function success(response) {
             var successState = 'content-views.details.repositories.yum.available';
 
@@ -59,6 +44,21 @@ angular.module('Bastion.content-views').controller('NewContentViewController',
                 $scope.contentViewForm[field].$error.messages = errors;
             });
         }
+
+        $scope.contentView = new ContentView({'organization_id': CurrentOrganization});
+        $scope.createOption = 'new';
+        $scope.table = {};
+
+        $scope.save = function (contentView) {
+            contentView.$save(success, error);
+        };
+
+        $scope.$watch('contentView.name', function () {
+            if ($scope.contentViewForm.name) {
+                $scope.contentViewForm.name.$setValidity('server', true);
+                FormUtils.labelize($scope.contentView);
+            }
+        });
 
     }]
 );

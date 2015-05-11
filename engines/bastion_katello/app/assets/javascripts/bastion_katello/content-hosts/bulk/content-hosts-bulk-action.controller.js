@@ -84,9 +84,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionContro
                 $scope.setState(false, data.displayMessages.success, data.displayMessages.error);
             };
 
-            error = function (error) {
-                deferred.reject(error.data["errors"]);
-                $scope.setState(false, [], error.data["errors"]);
+            error = function (response) {
+                deferred.reject(response.data.errors);
+                $scope.setState(false, [], response.data.errors);
             };
 
             ContentHostBulkAction.unregisterContentHosts(params, success, error);

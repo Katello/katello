@@ -30,11 +30,11 @@ angular.module('Bastion.host-collections').controller('HostCollectionContentHost
         var contentHostsPane, params;
 
         params = {
-            'id':          $scope.$stateParams.hostCollectionId,
-            'search':      $location.search().search || "",
-            'sort_by':     'name',
-            'sort_order':  'ASC',
-            'paged':       true
+            'id': $scope.$stateParams.hostCollectionId,
+            'search': $location.search().search || "",
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'paged': true
         };
 
         contentHostsPane = new Nutupane(HostCollection, params, 'contentHosts');

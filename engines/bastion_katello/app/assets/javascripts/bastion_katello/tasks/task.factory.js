@@ -35,7 +35,7 @@ angular.module('Bastion.tasks').factory('Task',
     ['BastionResource', '$timeout', '$log', '$q', 'CurrentOrganization',
     function (BastionResource, $timeout, $log, $q, CurrentOrganization) {
         var bulkSearchRunning = false, searchIdGenerator = 0,
-            searchParamsById = {},  callbackById = {};
+            searchParamsById = {}, callbackById = {};
 
         var resource = BastionResource('/katello/api/v2/tasks/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization}, {});
@@ -58,12 +58,8 @@ angular.module('Bastion.tasks').factory('Task',
 
         function taskProgressbar(task) {
             var mapping = { 'error': 'danger', 'warning': 'warning', 'default': 'success' };
-            var type = mapping[task.result] || mapping['default'];
+            var type = mapping[task.result] || mapping.default;
             return { value: task.progress * 100, type: type };
-        }
-
-        function schedulePoll() {
-            $timeout(function () { updateProgress(true); }, 1500);
         }
 
         // add additional fields to the task model that help with
@@ -72,7 +68,7 @@ angular.module('Bastion.tasks').factory('Task',
             task.progressbar = taskProgressbar(task);
             if (!task.humanized.errors) {
                 task.humanized.errors = [];
-            } else if (! _.isArray(task.humanized.errors)) {
+            } else if (!_.isArray(task.humanized.errors)) {
                 task.humanized.errors = [task.humanized.errors];
             }
         }
@@ -91,27 +87,36 @@ angular.module('Bastion.tasks').factory('Task',
                             return;
                         }
                         try {
-                            _.each(tasksSearch['results'], function (task) {
+                            _.each(tasksSearch.results, function (task) {
                                 normalizeTask(task);
                             });
-                            if (tasksSearch['search_params']['type'] === 'task') {
-                                callback(tasksSearch['results'][0]);
+                            if (tasksSearch['search_params'].type === 'task') {
+                                callback(tasksSearch.results[0]);
                             } else {
-                                callback(tasksSearch['results']);
+                                callback(tasksSearch.results);
                             }
-                        }
-                        catch (e) {
+                        } catch (e) {
                             $log.error(e);
                         }
                     });
-                }
-                finally {
+                } finally {
                     // schedule the next update
-                    if (periodic) { schedulePoll(); }
+                    if (periodic) {
+                        schedulePoll();
+                    }
                 }
             }, function () {
-                if (periodic) { schedulePoll(); }
+                if (periodic) {
+                    schedulePoll();
+                }
             });
+        }
+
+        /*eslint no-use-before-define:0*/
+        function schedulePoll() {
+            $timeout(function () {
+                updateProgress(true);
+            }, 1500);
         }
 
         function ensureBulkSearchRunning() {
@@ -145,8 +150,7 @@ angular.module('Bastion.tasks').factory('Task',
                     $timeout(function () {
                         resource.poll(data, returnFunction);
                     }, 8000);
-                }
-                else {
+                } else {
                     returnFunction(data);
                 }
             }, function () {
@@ -182,7 +186,9 @@ angular.module('Bastion.tasks').factory('Task',
           *
           * @param {Number} id the value returned by the registerSearch
           */
-        resource.unregisterSearch = function (id) { deleteSearch(id); };
+        resource.unregisterSearch = function (id) {
+            deleteSearch(id);
+        };
 
         /**
           * monitors a single task, and runs corresponding callbacks
@@ -214,26 +220,26 @@ angular.module('Bastion.tasks').factory('Task',
                 }
             };
 
-            function updateTask(task) {
-                runningTask.task = task;
-                if (task.state === 'paused' || task.state === 'stopped') {
+            function updateTask(taskObject) {
+                runningTask.task = taskObject;
+                if (taskObject.state === 'paused' || taskObject.state === 'stopped') {
                     resource.unregisterSearch(searchId);
-                    if (task.result === 'success') {
+                    if (taskObject.result === 'success') {
                         runningTask.state = 'stopped';
-                        deferred.resolve(task);
+                        deferred.resolve(taskObject);
                     }
-                    if ((task.result === 'error' || task.result === 'warning')) {
+                    if ((taskObject.result === 'error' || taskObject.result === 'warning')) {
                         runningTask.state = 'paused';
-                        deferred.reject(task.humanized.errors);
+                        deferred.reject(taskObject.humanized.errors);
                     }
                 } else {
                     runningTask.state = 'running';
-                    deferred.notify(task);
+                    deferred.notify(taskObject);
                 }
             }
 
-            function pollTask(task) {
-                searchId = resource.registerSearch({ 'type': 'task', 'task_id': task.id }, updateTask);
+            function pollTask(taskObject) {
+                searchId = resource.registerSearch({ 'type': 'task', 'task_id': taskObject.id }, updateTask);
             }
 
             if (task.$promise) {

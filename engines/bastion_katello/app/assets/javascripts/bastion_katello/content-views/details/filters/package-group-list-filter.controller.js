@@ -30,26 +30,6 @@ angular.module('Bastion.content-views').controller('PackageGroupFilterListContro
     function ($scope, translate, Filter, Rule, Nutupane) {
         var nutupane;
 
-        nutupane = new Nutupane(
-            Filter,
-            {filterId: $scope.$stateParams.filterId},
-            'packageGroups'
-        );
-
-        $scope.detailsTable = nutupane.table;
-        nutupane.table.closeItem = function () {};
-
-        $scope.removePackageGroups = function () {
-            var packageGroupIds = nutupane.getAllSelectedResults().included.ids,
-                rules;
-
-            rules = findRules(packageGroupIds);
-
-            angular.forEach(rules, function (rule) {
-                rule.$delete(success, failure);
-            });
-        };
-
         function success(rule) {
             nutupane.removeRow(rule.uuid, 'id');
             $scope.filter.rules = _.reject($scope.filter.rules, function (filterRule) {
@@ -79,6 +59,26 @@ angular.module('Bastion.content-views').controller('PackageGroupFilterListContro
 
             return rules;
         }
+
+        nutupane = new Nutupane(
+            Filter,
+            {filterId: $scope.$stateParams.filterId},
+            'packageGroups'
+        );
+
+        $scope.detailsTable = nutupane.table;
+        nutupane.table.closeItem = function () {};
+
+        $scope.removePackageGroups = function () {
+            var packageGroupIds = nutupane.getAllSelectedResults().included.ids,
+                rules;
+
+            rules = findRules(packageGroupIds);
+
+            angular.forEach(rules, function (rule) {
+                rule.$delete(success, failure);
+            });
+        };
 
     }]
 );

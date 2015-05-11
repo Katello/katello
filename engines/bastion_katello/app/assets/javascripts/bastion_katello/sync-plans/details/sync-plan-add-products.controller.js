@@ -55,19 +55,19 @@ angular.module('Bastion.sync-plans').controller('SyncPlanAddProductsController',
                     "product_ids": productsToAdd
                 };
 
-                success = function (data) {
+                success = function (response) {
                     $scope.successMessages = [translate('Added %x products to sync plan "%y".')
                         .replace('%x', $scope.productsTable.numSelected).replace('%y', $scope.syncPlan.name)];
                     $scope.productsTable.working = false;
                     $scope.productsTable.selectAll(false);
                     productsNutupane.refresh();
                     $scope.syncPlan.$get();
-                    deferred.resolve(data);
+                    deferred.resolve(response);
                 };
 
-                error = function (error) {
-                    deferred.reject(error.data.errors);
-                    $scope.errorMessages = error.data.errors['base'];
+                error = function (response) {
+                    deferred.reject(response.data.errors);
+                    $scope.errorMessages = response.data.errors.base;
                     $scope.productsTable.working = false;
                 };
 

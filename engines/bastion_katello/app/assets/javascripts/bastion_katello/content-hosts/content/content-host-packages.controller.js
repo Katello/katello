@@ -26,8 +26,8 @@
 angular.module('Bastion.content-hosts').controller('ContentHostPackagesController',
     ['$scope', 'ContentHostPackage', 'translate', 'Nutupane',
     function ($scope, ContentHostPackage, translate, Nutupane) {
-        const PACKAGES_PER_PAGE = 50;
-        var packagesNutupane, packageActions, openEventInfo;
+        var packagesNutupane, packageActions, openEventInfo, errorHandler,
+            PACKAGES_PER_PAGE = 50;
 
         openEventInfo = function (event) {
             // when the event has label defined, it means it comes
@@ -40,7 +40,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
             $scope.working = false;
         };
 
-        var errorHandler = function (response) {
+        errorHandler = function (response) {
             $scope.errorMessages = response.data.errors;
             $scope.working = false;
         };
@@ -87,7 +87,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
         $scope.currentPackagesTable.contentHost = $scope.contentHost;
 
         $scope.currentPackagesTable.taskFailed = function (task) {
-            return task === undefined || task.failed || task['affected_units'] === 0;
+            return angular.isUndefined(task) || task.failed || task['affected_units'] === 0;
         };
 
         $scope.currentPackagesTable.removePackage = function (pkg) {

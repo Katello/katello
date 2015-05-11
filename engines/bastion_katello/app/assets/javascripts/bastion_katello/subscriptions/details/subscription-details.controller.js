@@ -51,9 +51,9 @@ angular.module('Bastion.subscriptions').controller('SubscriptionDetailsControlle
 
             if (limits.length > 0) {
                 return limits.join(", ");
-            } else {
-                return "";
             }
+
+            return "";
         };
     }]
 );

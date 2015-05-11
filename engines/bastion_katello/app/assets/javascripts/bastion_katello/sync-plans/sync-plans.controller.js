@@ -30,18 +30,19 @@
 angular.module('Bastion.sync-plans').controller('SyncPlansController',
     ['$scope', '$location', 'translate', 'Nutupane', 'SyncPlan', 'CurrentOrganization',
         function ($scope, $location, translate, Nutupane, SyncPlan, CurrentOrganization) {
+            var params, nutupane;
 
             $scope.successMessages = [];
             $scope.errorMessages = [];
 
-            var params = {
-                'organization_id':  CurrentOrganization,
-                'search':           $location.search().search || "",
-                'sort_by':          'name',
-                'sort_order':       'ASC'
+            params = {
+                'organization_id': CurrentOrganization,
+                'search': $location.search().search || "",
+                'sort_by': 'name',
+                'sort_order': 'ASC'
             };
 
-            var nutupane = new Nutupane(SyncPlan, params);
+            nutupane = new Nutupane(SyncPlan, params);
             $scope.syncPlanTable = nutupane.table;
             $scope.removeRow = nutupane.removeRow;
             $scope.nutupane = nutupane;

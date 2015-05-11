@@ -31,12 +31,12 @@ angular.module('Bastion.products').controller('ProductsController',
     function ($scope, $location, Nutupane, Product, CurrentOrganization) {
 
         var params = {
-            'organization_id':  CurrentOrganization,
-            'search':           $location.search().search || "",
-            'sort_by':          'name',
-            'sort_order':       'ASC',
-            'enabled' :         true,
-            'paged':            true
+            'organization_id': CurrentOrganization,
+            'search': $location.search().search || "",
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'enabled': true,
+            'paged': true
         };
 
         $scope.productsNutupane = new Nutupane(Product, params);
@@ -61,9 +61,9 @@ angular.module('Bastion.products').controller('ProductsController',
 
         $scope.mostImportantSyncState = function (product) {
             var state = 'none';
-            if (product['sync_summary']['pending'] > 0) {
+            if (product['sync_summary'].pending > 0) {
                 state = 'pending';
-            } else if (product['sync_summary']['error'] > 0) {
+            } else if (product['sync_summary'].error > 0) {
                 state = 'error';
             } else {
                 state = 'success';

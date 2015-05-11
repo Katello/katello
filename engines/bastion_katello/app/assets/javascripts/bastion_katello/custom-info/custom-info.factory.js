@@ -26,7 +26,7 @@ angular.module('Bastion.custom-info').factory('CustomInfo',
         return BastionResource('/katello/api/v2/custom_info/:type/:id/:action',
             {},
             {
-                update: { method: 'PUT' },
+                update: { method: 'PUT' }
             }
         );
 

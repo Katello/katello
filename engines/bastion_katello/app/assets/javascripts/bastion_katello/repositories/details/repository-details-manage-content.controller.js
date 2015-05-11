@@ -32,36 +32,6 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
     function ($scope, $state, translate, Nutupane, Repository, Package, PuppetModule, DockerImage) {
         var currentState, contentTypes;
 
-        $scope.repository = Repository.get({id: $scope.$stateParams.repositoryId});
-
-        currentState = $state.current.name.split('.').pop();
-
-        contentTypes = {
-            'packages': { type: Package },
-            'puppet-modules': { type: PuppetModule },
-            'docker-images': { type: DockerImage }
-        };
-
-        $scope.contentNutupane = new Nutupane(contentTypes[currentState].type, {
-            'repository_id': $scope.$stateParams.repositoryId
-        });
-        $scope.detailsTable = $scope.contentNutupane.table;
-        $scope.detailsTable.closeItem = function () {};
-
-        $scope.removeContent = function () {
-            var selected = $scope.detailsTable.getSelected();
-            $scope.detailsTable.working = true;
-            Repository.removeContent({id: $scope.repository.id, uuids : _.pluck(selected, 'id')},
-                function (response) {
-                    success(response, selected);
-                }, error);
-        };
-
-        $scope.taskUrl = function () {
-            return $scope.$state.href('products.details.tasks.details', {productId: $scope.product.id,
-                taskId: $scope.generationTaskId});
-        };
-
         function success(response, selected) {
             var message;
 
@@ -82,11 +52,41 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
             $scope.errorMessages = [data.response.displayMessage];
         }
 
+        $scope.repository = Repository.get({id: $scope.$stateParams.repositoryId});
+
+        currentState = $state.current.name.split('.').pop();
+
+        contentTypes = {
+            'packages': { type: Package },
+            'puppet-modules': { type: PuppetModule },
+            'docker-images': { type: DockerImage }
+        };
+
+        $scope.contentNutupane = new Nutupane(contentTypes[currentState].type, {
+            'repository_id': $scope.$stateParams.repositoryId
+        });
+        $scope.detailsTable = $scope.contentNutupane.table;
+        $scope.detailsTable.closeItem = function () {};
+
+        $scope.removeContent = function () {
+            var selected = $scope.detailsTable.getSelected();
+            $scope.detailsTable.working = true;
+            Repository.removeContent({id: $scope.repository.id, uuids: _.pluck(selected, 'id')},
+                function (response) {
+                    success(response, selected);
+                }, error);
+        };
+
+        $scope.taskUrl = function () {
+            return $scope.$state.href('products.details.tasks.details', {productId: $scope.product.id,
+                taskId: $scope.generationTaskId});
+        };
+
         $scope.clearTaskId = function () {
             $scope.generationTaskId = undefined;
         };
 
-        $scope.formatRepoDockerTags =  function (image, repoId) {
+        $scope.formatRepoDockerTags = function (image, repoId) {
             var tags = '';
 
             if (!_.isEmpty(image.tags)) {

@@ -30,6 +30,32 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
     ['$scope', '$q', 'translate', 'CurrentOrganization', 'Organization', 'Task', 'Subscription',
     function ($scope, $q, translate, CurrentOrganization, Organization, Task, Subscription) {
 
+        function buildManifestLink(upstream) {
+            var url = upstream.webUrl,
+                upstreamId = upstream.uuid;
+
+            if (!url.match(/^http/)) {
+                url = "https://" + url;
+            }
+            if (!url.match(/\/$/)) {
+                url = url + "/";
+            }
+
+            url += upstreamId;
+
+            return url;
+        }
+
+        function initializeManifestDetails(organization) {
+            $scope.details = organization['owner_details'];
+            $scope.upstream = $scope.details.upstreamConsumer;
+
+            if (!_.isNull($scope.upstream)) {
+                $scope.manifestLink = buildManifestLink($scope.upstream);
+                $scope.manifestName = $scope.upstream.name || $scope.upstream.uuid;
+            }
+        }
+
         $scope.uploadErrorMessages = [];
         $scope.progress = {uploading: false};
         $scope.uploadURL = '/katello/api/v2/organizations/' + CurrentOrganization + '/subscriptions/upload';
@@ -77,8 +103,8 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
 
         $scope.deleteManifest = function () {
             Subscription.deleteManifest({}, function (returnData) {
-                $scope.deleteTask =  returnData;
-                $scope.searchId = Task.registerSearch({ 'type': 'task', 'task_id':  $scope.deleteTask.id }, $scope.deleteManifestTask);
+                $scope.deleteTask = returnData;
+                $scope.searchId = Task.registerSearch({'type': 'task', 'task_id': $scope.deleteTask.id}, $scope.deleteManifestTask);
             }, function (response) {
                 $scope.saveError = true;
                 $scope.errors = response.data.errors;
@@ -110,8 +136,8 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
 
         $scope.refreshManifest = function () {
             Subscription.refreshManifest({}, function (returnData) {
-                $scope.refreshTask =  returnData;
-                $scope.searchId = Task.registerSearch({ 'type': 'task', 'task_id':  $scope.refreshTask.id }, $scope.refreshManifestTask);
+                $scope.refreshTask = returnData;
+                $scope.searchId = Task.registerSearch({'type': 'task', 'task_id': $scope.refreshTask.id}, $scope.refreshManifestTask);
             }, function (response) {
                 $scope.saveError = true;
                 $scope.errors = response.data.errors;
@@ -151,27 +177,11 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
             return deferred.promise;
         };
 
-        function buildManifestLink(upstream) {
-            var url = upstream['webUrl'],
-                upstreamId = upstream['uuid'];
-
-            if (!url.match(/^http/)) {
-                url = "https://" + url;
-            }
-            if (!url.match(/\/$/)) {
-                url = url + "/";
-            }
-
-            url += upstreamId;
-
-            return url;
-        }
-
         $scope.uploadManifest = function (content) {
             var returnData;
             if (content) {
                 try {
-                    returnData = JSON.parse(angular.element(content).html());
+                    returnData = angular.fromJson(angular.element(content).html());
                 } catch (err) {
                     returnData = content;
                 }
@@ -180,9 +190,9 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                     returnData = content;
                 }
 
-                if (returnData !== null && returnData.errors === undefined) {
-                    $scope.task =  returnData;
-                    $scope.searchId = Task.registerSearch({ 'type': 'task', 'task_id':  $scope.task.id }, $scope.updateTask);
+                if (returnData !== null && angular.isUndefined(returnData.errors)) {
+                    $scope.task = returnData;
+                    $scope.searchId = Task.registerSearch({'type': 'task', 'task_id': $scope.task.id}, $scope.updateTask);
                 } else {
                     $scope.uploadErrorMessages = [translate('Error during upload: ') + returnData.displayMessage];
                 }
@@ -190,16 +200,6 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 $scope.progress.uploading = false;
             }
         };
-
-        function initializeManifestDetails(organization) {
-            $scope.details = organization['owner_details'];
-            $scope.upstream = $scope.details.upstreamConsumer;
-
-            if (!_.isNull($scope.upstream)) {
-                $scope.manifestLink = buildManifestLink($scope.upstream);
-                $scope.manifestName = $scope.upstream["name"] || $scope.upstream["uuid"];
-            }
-        }
 
         $scope.histories = Subscription.manifestHistory();
 

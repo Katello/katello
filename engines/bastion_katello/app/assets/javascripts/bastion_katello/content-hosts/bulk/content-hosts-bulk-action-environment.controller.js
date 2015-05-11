@@ -28,6 +28,14 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionEnviro
     ['$scope', 'ContentHostBulkAction', 'Organization', 'CurrentOrganization', 'ContentView',
     function ($scope, ContentHostBulkAction, Organization, CurrentOrganization, ContentView) {
 
+        function actionParams() {
+            var params = $scope.nutupane.getAllSelectedResults();
+            params['organization_id'] = CurrentOrganization;
+            params['environment_id'] = $scope.selected.environment.id;
+            params['content_view_id'] = $scope.selected.contentView.id;
+            return params;
+        }
+
         $scope.setState(false, [], []);
         $scope.selected = {
             environment: undefined,
@@ -38,7 +46,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionEnviro
 
         $scope.disableAssignButton = function (confirm) {
             return confirm || $scope.table.numSelected === 0 || $scope.state.working ||
-                $scope.selected.environment === undefined || $scope.selected.contentView === undefined;
+                angular.isUndefined($scope.selected.environment) || angular.isUndefined($scope.selected.contentView);
         };
 
         $scope.$watch('selected.environment', function (environment) {
@@ -65,13 +73,5 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionEnviro
                 $scope.setState(false, [], data.errors);
             });
         };
-
-        function actionParams() {
-            var params = $scope.nutupane.getAllSelectedResults();
-            params['organization_id'] = CurrentOrganization;
-            params['environment_id'] = $scope.selected.environment.id;
-            params['content_view_id'] = $scope.selected.contentView.id;
-            return params;
-        }
     }]
 );

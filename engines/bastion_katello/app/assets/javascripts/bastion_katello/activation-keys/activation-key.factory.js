@@ -22,6 +22,7 @@
  */
 angular.module('Bastion.activation-keys').factory('ActivationKey',
     ['BastionResource', function (BastionResource) {
+
         return BastionResource('/katello/api/v2/activation_keys/:id/:action/:action2', {id: '@id'}, {
             get: {method: 'GET', params: {fields: 'full'}},
             update: {method: 'PUT'},

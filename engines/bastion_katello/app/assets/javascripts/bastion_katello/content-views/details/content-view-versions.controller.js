@@ -27,6 +27,39 @@
 angular.module('Bastion.content-views').controller('ContentViewVersionsController',
     ['$scope', 'translate', function ($scope, translate) {
 
+        function pluralSafe(count, strings) {
+            if (count === 1) {
+                return strings[0];
+            }
+
+            return strings[1];
+        }
+
+        function findTaskTypes(activeHistory, taskType) {
+            return _.filter(activeHistory, function (history) {
+                return history.task.label === taskType;
+            });
+        }
+
+        function deleteMessage(count) {
+            var messages = [translate('Deleting from 1 environment.'),
+                            translate("Deleting from %count environments.").replace('%count', count)];
+            return pluralSafe(count, messages);
+        }
+
+        function publishMessage(count) {
+            var messages = [translate("Publishing and promoting to 1 environment."),
+                            translate("Publishing and promoting to %count environments.").replace(
+                                        '%count', count)];
+            return pluralSafe(count, messages);
+        }
+
+        function promoteMessage(count) {
+            var messages = [translate('Promoting to 1 environment.'),
+                            translate("Promoting to %count environments.").replace('%count', count)];
+            return pluralSafe(count, messages);
+        }
+
         $scope.table = {};
 
         $scope.reloadVersions();
@@ -52,8 +85,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
             if (taskType === taskTypes.deletion) {
                 if (version['last_event'].environment) {
                     message = translate("Deletion from %s").replace('%s', version['last_event'].environment.name);
-                }
-                else {
+                } else {
                     message = translate("Version Deletion");
                 }
             } else if (taskType === taskTypes.promotion) {
@@ -99,38 +131,5 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
             }
             return failed;
         };
-
-        function findTaskTypes(activeHistory, taskType) {
-            return _.filter(activeHistory, function (history) {
-                return history.task.label === taskType;
-            });
-        }
-
-        function deleteMessage(count) {
-            var messages = [translate('Deleting from 1 environment.'),
-                            translate("Deleting from %count environments.").replace('%count', count)];
-            return pluralSafe(count, messages);
-        }
-
-        function publishMessage(count) {
-            var messages = [translate("Publishing and promoting to 1 environment."),
-                            translate("Publishing and promoting to %count environments.").replace(
-                                        '%count', count)];
-            return pluralSafe(count, messages);
-        }
-
-        function promoteMessage(count) {
-            var messages = [translate('Promoting to 1 environment.'),
-                            translate("Promoting to %count environments.").replace('%count', count)];
-            return pluralSafe(count, messages);
-        }
-
-        function pluralSafe(count, strings) {
-            if (count === 1) {
-                return strings[0];
-            } else {
-                return strings[1];
-            }
-        }
     }]
 );

@@ -41,8 +41,8 @@
 
       <tbody>
         <tr bst-table-row ng-repeat="item in detailsTable.rows | filter:filterTerm">
-          <td bst-table-cell>{{ item.module_name }}</td>
-          <td bst-table-cell class="action-cell">
+          <td >{{ item.module_name }}</td>
+          <td  class="action-cell">
             <button translate
                     ng-hide="denied('edit_content_views', contentView)"
                     ng-click="selectVersion(item.module_name)">

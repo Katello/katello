@@ -35,16 +35,16 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddSubscripti
         var addSubscriptionsPane, params;
 
         params = {
-            'id':                       $scope.$stateParams.activationKeyId,
-            'organization_id':          CurrentOrganization,
-            'search':                   $location.search().search || "",
-            'sort_by':                  'name',
-            'sort_order':               'ASC'
+            'id': $scope.$stateParams.activationKeyId,
+            'organization_id': CurrentOrganization,
+            'search': $location.search().search || "",
+            'sort_by': 'name',
+            'sort_order': 'ASC'
         };
 
         addSubscriptionsPane = new Nutupane(ActivationKey, params, 'availableSubscriptions');
         $scope.addSubscriptionsTable = addSubscriptionsPane.table;
-        $scope.isAdding  = false;
+        $scope.isAdding = false;
         $scope.addSubscriptionsTable.closeItem = function () {};
 
         $scope.groupedSubscriptions = {};
@@ -67,7 +67,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddSubscripti
                 addSubscriptionsPane.refresh();
             }, function (response) {
                 $scope.$parent.errorMessages = response.data.displayMessage;
-                $scope.isAdding  = false;
+                $scope.isAdding = false;
             });
         };
 

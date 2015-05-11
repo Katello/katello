@@ -34,11 +34,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollection
         $scope.errorMessages = [];
 
         params = {
-            'search':      $location.search().search || "",
-            'sort_by':     'name',
-            'sort_order':  'ASC',
-            'paged':       true,
-            'id':            $scope.$stateParams.contentHostId
+            'search': $location.search().search || "",
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'paged': true,
+            'id': $scope.$stateParams.contentHostId
         };
 
         hostCollectionsPane = new Nutupane(ContentHost, params, 'availableHostCollections');
@@ -61,9 +61,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollection
                 deferred.resolve(data);
             };
 
-            error = function (error) {
-                deferred.reject(error.data.errors);
-                $scope.errorMessages = error.data.errors['base'];
+            error = function (response) {
+                deferred.reject(response.data.errors);
+                $scope.errorMessages = response.data.errors.base;
                 $scope.hostCollectionsTable.working = false;
             };
 

@@ -75,7 +75,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
 
             if (contentHostId) {
                 params = params ? params : {};
-                params.contentHostId  = contentHostId;
+                params.contentHostId = contentHostId;
                 $state.transitionTo(state, params);
                 return true;
             }

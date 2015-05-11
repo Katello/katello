@@ -22,6 +22,7 @@
  *   Provides a BastionResource for a subscription or list of subscriptions
  */
 angular.module('Bastion.subscriptions').factory('Subscription', ['BastionResource', 'CurrentOrganization',
+
     function (BastionResource, CurrentOrganization) {
         return BastionResource('/katello/api/v2/organizations/:org/subscriptions/:id/:action',
             {org: CurrentOrganization, id: '@id'},
@@ -40,7 +41,7 @@ angular.module('Bastion.subscriptions').factory('Subscription', ['BastionResourc
 
                 manifestHistory: {
                     method: 'GET',
-                    url:  '/katello/api/v2/organizations/:org/subscriptions/:action',
+                    url: '/katello/api/v2/organizations/:org/subscriptions/:action',
                     params: {action: 'manifest_history'},
                     isArray: true
                 }

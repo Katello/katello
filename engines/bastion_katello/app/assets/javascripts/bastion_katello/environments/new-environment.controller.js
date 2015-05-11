@@ -23,6 +23,18 @@
      */
     function NewEnvironmentController($scope, Environment, FormUtils) {
 
+        function success() {
+            $scope.transitionTo('environments.index');
+        }
+
+        function error(response) {
+            $scope.working = false;
+            angular.forEach(response.data.errors, function (errors, field) {
+                $scope.environmentForm[field].$setValidity('server', false);
+                $scope.environmentForm[field].$error.messages = errors;
+            });
+        }
+
         $scope.loading = true;
         $scope.environment = new Environment();
         $scope.priorEnvironment = Environment.get({id: $scope.$stateParams.priorId});
@@ -42,18 +54,6 @@
                 FormUtils.labelize($scope.environment);
             }
         });
-
-        function success() {
-            $scope.transitionTo('environments.index');
-        }
-
-        function error(response) {
-            $scope.working = false;
-            angular.forEach(response.data.errors, function (errors, field) {
-                $scope.environmentForm[field].$setValidity('server', false);
-                $scope.environmentForm[field].$error.messages = errors;
-            });
-        }
 
     }
 

@@ -31,10 +31,10 @@ angular.module('Bastion.content-views').controller('FilterRepositoriesController
         ContentViewRepositoriesUtil($scope);
 
         refreshTable = function (filter) {
-            $scope.$parent.filter = filter;
-
             var displayedRepositories = filter['content_view'].repositories,
                 filterRepositories = filter.repositories;
+
+            $scope.$parent.filter = filter;
 
             if (filterRepositories.length === 0) {
                 displayedRepositories = _.map(displayedRepositories, function (repository) {

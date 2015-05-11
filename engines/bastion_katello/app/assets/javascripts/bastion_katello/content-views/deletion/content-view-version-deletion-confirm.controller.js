@@ -26,6 +26,24 @@
 angular.module('Bastion.content-views').controller('ContentViewVersionDeletionConfirmController',
     ['$scope', 'ContentView', 'translate',
     function ($scope, ContentView, translate) {
+
+        function success() {
+            var message = translate('Successfully initiated removal of %cv version %ver.');
+
+            if ($scope.deleteOptions.deleteArchive) {
+                message = translate('Successfully initiated deletion of %cv version %ver.');
+            }
+
+            message = message.replace('%cv', $scope.contentView.name).replace('%ver', $scope.version.version);
+            $scope.successMessages.push(message);
+            $scope.transitionTo('content-views.details.versions', {contentViewId: $scope.contentView.id});
+        }
+
+        function error(response) {
+            $scope.deleting = false;
+            $scope.$parent.$parent.errorMessages = response.data.errors;
+        }
+
         $scope.validateEnvironmentSelection();
 
         $scope.performDeletion = function () {
@@ -53,22 +71,5 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
 
             ContentView.removeAssociations(params, success, error);
         };
-
-        function success() {
-            var message = translate('Successfully initiated removal of %cv version %ver.');
-
-            if ($scope.deleteOptions.deleteArchive) {
-                message = translate('Successfully initiated deletion of %cv version %ver.');
-            }
-
-            message = message.replace('%cv', $scope.contentView.name).replace('%ver', $scope.version.version);
-            $scope.successMessages.push(message);
-            $scope.transitionTo('content-views.details.versions', {contentViewId: $scope.contentView.id});
-        }
-
-        function error(response) {
-            $scope.deleting = false;
-            $scope.$parent.$parent.errorMessages = response.data.errors;
-        }
     }]
 );

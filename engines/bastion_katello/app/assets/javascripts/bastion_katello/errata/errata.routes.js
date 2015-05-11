@@ -90,20 +90,20 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
     .state('errata.details.info', {
         url: '/info',
         collapsed: true,
-        permission:  ['view_products', 'view_content_views'],
+        permission: ['view_products', 'view_content_views'],
         templateUrl: 'errata/details/views/errata-details-info.html'
     })
     .state('errata.details.content-hosts', {
         url: '/content-hosts',
         collapsed: true,
-        permission:  ['view_products', 'view_content_views'],
+        permission: ['view_products', 'view_content_views'],
         controller: 'ErrataContentHostsController',
         templateUrl: 'errata/details/views/errata-details-content-hosts.html'
     })
     .state('errata.details.repositories', {
         url: '/repositories',
         collapsed: true,
-        permission:  ['view_products', 'view_content_views'],
+        permission: ['view_products', 'view_content_views'],
         controller: 'ErrataDetailsRepositoriesController',
         templateUrl: 'errata/details/views/errata-details-repositories.html'
     })

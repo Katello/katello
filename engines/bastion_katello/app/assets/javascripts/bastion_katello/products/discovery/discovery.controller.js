@@ -89,7 +89,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
             if (!task.pending) {
                 Task.unregisterSearch($scope.taskSearchId);
             }
-        },
+        };
 
         $scope.discover = function () {
             $scope.discovery.pending = true;

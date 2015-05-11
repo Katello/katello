@@ -34,6 +34,18 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionErrata
 
         var nutupane;
 
+        function installParams() {
+            var params = $scope.nutupane.getAllSelectedResults();
+            params['content_type'] = 'errata';
+            params.content = _.pluck($scope.detailsTable.getSelected(), 'errata_id');
+            params['organization_id'] = CurrentOrganization;
+            return params;
+        }
+
+        function fetchErratum(errataId) {
+            $scope.erratum = Erratum.get({id: errataId, 'organization_id': CurrentOrganization});
+        }
+
         nutupane = new Nutupane(ContentHostBulkAction, {}, 'applicableErrata');
         nutupane.table.closeItem = function () {};
         $scope.detailsTable = nutupane.table;
@@ -45,7 +57,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionErrata
         $scope.setState(false, [], []);
 
         $scope.fetchErrata = function () {
-            var params =  $scope.nutupane.getAllSelectedResults('id');
+            var params = $scope.nutupane.getAllSelectedResults('id');
             params['organization_id'] = CurrentOrganization;
             nutupane.setParams(params);
             $scope.detailsTable.working = true;
@@ -55,8 +67,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionErrata
                     $scope.detailsTable.working = false;
                     $scope.outOfDate = false;
                 });
-            }
-            else {
+            } else {
                 $scope.detailsTable.working = false;
             }
         };
@@ -96,18 +107,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionErrata
                     $scope.setState(false, [], data.errors);
                 });
         };
-
-        function installParams() {
-            var params = $scope.nutupane.getAllSelectedResults();
-            params['content_type'] = 'errata';
-            params.content = _.pluck($scope.detailsTable.getSelected(), 'errata_id');
-            params['organization_id'] = CurrentOrganization;
-            return params;
-        }
-
-        function fetchErratum(errataId) {
-            $scope.erratum = Erratum.get({id: errataId, 'organization_id': CurrentOrganization});
-        }
 
     }]
 );

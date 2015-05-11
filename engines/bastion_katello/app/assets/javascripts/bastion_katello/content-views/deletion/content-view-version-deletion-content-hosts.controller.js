@@ -34,20 +34,20 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
 
         $scope.validateEnvironmentSelection();
         params = {
-            'organization_id':  CurrentOrganization,
-            'content_view_id':  $scope.contentView.id,
-            'sort_by':          'name',
-            'sort_order':       'ASC'
+            'organization_id': CurrentOrganization,
+            'content_view_id': $scope.contentView.id,
+            'sort_by': 'name',
+            'sort_order': 'ASC'
         };
         nutupane = new Nutupane(ContentHost, params);
 
         nutupane.searchTransform = function (term) {
             var addition = "(environment_id:(" + $scope.selectedEnvironmentIds().join(" OR ") + "))";
-            if (term === "" || term === undefined) {
+            if (term === "" || angular.isUndefined(term)) {
                 return addition;
-            } else {
-                return term +  " AND " + addition;
             }
+
+            return term + " AND " + addition;
         };
         $scope.detailsTable = nutupane.table;
         $scope.detailsTable.closeItem = function () {};
@@ -57,7 +57,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
 
         $scope.selectedEnvironment = $scope.deleteOptions.contentHosts.environment;
         if ($scope.deleteOptions.contentHosts.contentView) {
-            $scope.selectedContentViewId =  $scope.deleteOptions.contentHosts.contentView.id;
+            $scope.selectedContentViewId = $scope.deleteOptions.contentHosts.contentView.id;
         }
 
         $scope.processSelection = function () {

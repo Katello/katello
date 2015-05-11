@@ -30,11 +30,11 @@ angular.module('Bastion.gpg-keys').controller('GPGKeysController',
     ['$scope', '$location', 'Nutupane', 'GPGKey', 'CurrentOrganization',
     function ($scope, $location, Nutupane, GPGKey, CurrentOrganization) {
         var params = {
-            'organization_id':  CurrentOrganization,
-            'search':           $location.search().search || "",
-            'sort_by':          'name',
-            'sort_order':       'ASC',
-            'paged':            true
+            'organization_id': CurrentOrganization,
+            'search': $location.search().search || "",
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'paged': true
         };
 
         var nutupane = new Nutupane(GPGKey, params);

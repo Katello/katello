@@ -45,17 +45,16 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionEn
                 } else {
                     //set existing selections
                     angular.forEach($scope.environmentsTable.rows, function (row) {
-                        row.selected = _.findWhere($scope.deleteOptions.environments,
-                                                    {unselectable: false, id: row.id}) !== undefined;
+                        row.selected = angular.isDefined(_.findWhere($scope.deleteOptions.environments, {unselectable: false, id: row.id}));
 
                     });
                 }
 
                 numSelections = _.countBy($scope.environmentsTable.rows, function (row) {
-                    return row.selected ? 'selected': 'unselected';
+                    return row.selected ? 'selected' : 'unselected';
                 });
 
-                $scope.environmentsTable.numSelected = numSelections["selected"];
+                $scope.environmentsTable.numSelected = numSelections.selected;
             }
         });
 
@@ -72,13 +71,13 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionEn
             if ($scope.environmentsTable.rows.length === 0) {
                 anySelectable = true;
             } else {
-                anySelectable =  _.findWhere($scope.environmentsTable.rows, {unselectable: false}) !== undefined;
+                anySelectable = angular.isDefined(_.findWhere($scope.environmentsTable.rows, {unselectable: false}));
             }
             return anySelectable;
         };
 
         $scope.allSelectable = function () {
-            return _.findWhere($scope.environmentsTable.rows, {unselectable: true}) === undefined;
+            return angular.isUndefined(_.findWhere($scope.environmentsTable.rows, {unselectable: true}));
         };
 
         $scope.processSelection = function () {
