@@ -51,6 +51,7 @@ module Katello
     validates :organization_id, :presence => true
     validate :check_repo_conflicts
     validate :check_puppet_conflicts
+    validates :composite, :inclusion => [true, false]
 
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
