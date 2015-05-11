@@ -14,9 +14,10 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModulesCont
     ['$scope', 'translate', 'Nutupane', 'ContentViewPuppetModule',
     function ($scope, translate, Nutupane, ContentViewPuppetModule) {
         var nutupane = new Nutupane(ContentViewPuppetModule, {
-            contentViewId: $scope.$stateParams.contentViewId,
-            'paged': true
+            contentViewId: $scope.$stateParams.contentViewId
         });
+
+        nutupane.masterOnly = true;
 
         $scope.detailsTable = nutupane.table;
         $scope.successMessages = [];

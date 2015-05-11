@@ -1,6 +1,8 @@
 module Katello
   class Api::V2::ContentViewPuppetModulesController < Api::V2::ApiController
-    before_filter :find_content_view
+    include Katello::Concerns::FilteredAutoCompleteSearch
+
+    before_filter :find_content_view, :except => [:autocomplete_search]
     before_filter :find_puppet_module, :only => [:show, :update, :destroy]
 
     api :GET, "/content_views/:content_view_id/content_view_puppet_modules", N_("List content view puppet modules")
@@ -9,16 +11,7 @@ module Katello
     param :author, String, :desc => N_("author of the puppet module")
     param :uuid, String, :desc => N_("the uuid of the puppet module to associate")
     def index
-      options = sort_params
-      options[:load_records?] = true
-      options[:filters] = []
-      options[:filters] << { :terms => { :id => @view.content_view_puppet_module_ids } }
-      options[:filters] << { :term => {:name => params[:name]} } if params[:name]
-      options[:filters] << { :term => {:uuid => params[:uuid]} } if params[:uuid]
-      options[:filters] << { :term => {:author => params[:author]} } if params[:author]
-
-      @search_service.model = ContentViewPuppetModule
-      respond(:collection => item_search(ContentViewPuppetModule, params, options))
+      respond(:collection => scoped_search(index_relation.uniq, :name, :desc))
     end
 
     api :POST, "/content_views/:content_view_id/content_view_puppet_modules",
@@ -61,6 +54,14 @@ module Katello
     def destroy
       @puppet_module.destroy
       respond :resource => @puppet_module
+    end
+
+    def index_relation
+      puppet_modules = ContentViewPuppetModule.where(:content_view_id => @view)
+      puppet_modules = puppet_modules.where(:name => params[:name]) if params[:name]
+      puppet_modules = puppet_modules.where(:uuid => params[:uuid]) if params[:uuid]
+      puppet_modules = puppet_modules.where(:author => params[:author]) if params[:author]
+      puppet_modules
     end
 
     private
