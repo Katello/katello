@@ -113,6 +113,7 @@ Summary:    Common runtime components of %{name}
 Requires:       %{?scl_prefix}rubygem-katello
 Requires:       rubygem-hammer_cli
 Requires:       rubygem-hammer_cli_foreman
+Requires:       rubygem-hammer_cli_foreman_docker
 Requires:       rubygem-hammer_cli_katello
 Requires:       rubygem-hammer_cli_import
 Requires:       rubygem-hammer_cli_gutterball
