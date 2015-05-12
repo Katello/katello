@@ -299,12 +299,29 @@ module Katello
 
     # Hypervisors are restricted to the content host's environment and content view
     def find_hypervisor_environment_and_content_view
-      find_system(User.consumer? ? User.current.uuid : params[:id])
-      @organization = @system.organization
-      @environment = @system.environment
-      @content_view = @system.content_view
-      params[:owner] = @organization.label
-      params[:env] = @content_view.cp_environment_label(@environment)
+      if User.consumer?
+        find_system(User.current.uuid)
+        @organization = @system.organization
+        @environment = @system.environment
+        @content_view = @system.content_view
+        params[:owner] = @organization.label
+        params[:env] = @content_view.cp_environment_label(@environment)
+      else
+        @organization = Organization.find_by_label(params[:owner])
+        deny_access unless @organization
+        if params[:env] == 'Library'
+          @environment = @organization.library
+          deny_access unless @environment && @environment.readable?
+          @content_view = @environment.default_content_view
+          deny_access unless @content_view && @content_view.readable?
+        else
+          (env_name, cv_name) = params[:env].split('/')
+          @environment = @organization.kt_environments.find_by_label(env_name)
+          deny_access unless @environment && @environment.readable?
+          @content_view = @environment.content_views.find_by_label(cv_name)
+          deny_access unless @content_view && @content_view.readable?
+        end
+      end
     end
 
     def find_organization
@@ -425,7 +442,9 @@ module Katello
     end
 
     def authorize_client_or_admin
-      client_authorized? || User.current.admin?
+      unless client_authorized?
+        deny_access unless authorize
+      end
     end
 
     def authorize_client
