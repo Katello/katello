@@ -26,8 +26,9 @@
         $scope.contentTypes = ContentService.contentTypes;
         $scope.errorMessages = [];
         $scope.successMessages = [];
+        $scope.environment = new Environment({id: $scope.$stateParams.environmentId});
 
-        $scope.environment = Environment.get({id: $scope.$stateParams.environmentId});
+        $scope.environment.$get();
 
         $scope.save = function (environment) {
             var promise;
