@@ -123,8 +123,8 @@ module Katello
           # build the rows
           units = case unit_type
                   when :package
-                    Package.legacy_search('', offset, page_size, view_repos.map(&:pulp_id),
-                                   [:nvrea_sort, "asc"], search_mode.to_sym)
+                    Package.new_from_legacy_search('', offset, page_size, view_repos.map(&:pulp_id),
+                                                  [:nvrea_sort, "asc"], search_mode.to_sym)
                   when :puppet_module
                     PuppetModule.legacy_search('', :start => offset, :page_size => page_size,
                                                    :repoids => view_repos.map(&:pulp_id),
