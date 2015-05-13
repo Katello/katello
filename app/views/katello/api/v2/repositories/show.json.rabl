@@ -14,6 +14,7 @@ attributes :gpg_key_id
 attributes :content_id, :content_view_version_id, :library_instance_id
 attributes :product_type
 attributes :promoted? => :promoted
+attributes :ostree_branch_names => :ostree_branches
 
 node :content_counts do |repo|
   {

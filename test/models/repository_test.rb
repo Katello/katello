@@ -103,6 +103,12 @@ module Katello
       assert_equal "puppet", Repository.find(@repo.id).content_type
     end
 
+    def test_ostree_content_type
+      @repo.content_type = "ostree"
+      assert @repo.save
+      assert_equal "ostree", Repository.find(@repo.id).content_type
+    end
+
     def test_docker_pulp_id
       # for docker repos, the pulp_id should be downcased
       @repo.name = 'docker_repo'
@@ -126,6 +132,23 @@ module Katello
       assert @repo.save
       assert @repo.pulp_id.ends_with?('PULP-ID')
     end
+
+    def test_ostree_attribs
+      @repo.url = "http://foo.com"
+      assert @repo.save
+
+      @repo.url = ""
+      refute @repo.save
+    end
+
+    def test_ostree_branch_create
+      @repo.url = "http://foo.com"
+      @repo.content_type = Repository::OSTREE_TYPE
+      assert OstreeBranchh.create(:repository => @repo, :name => "/foo/bar")
+
+      @repo.content_type = Repository::DOCKER_TYPE
+      refute OstreeBranchh.create(:repository => @repo, :name => "/foo/bar")
+    end
   end
 
   class RepositoryInstanceTest < RepositoryTestBase
@@ -133,6 +156,18 @@ module Katello
       super
       User.current = @admin
       @rhel6 = Repository.find(katello_repositories(:rhel_6_x86_64))
+    end
+
+    def test_ostree_branch_update
+      repo = Repository.find(katello_repositories(:ostree_rhel7).id)
+      repo.content_type = Repository::OSTREE_TYPE
+      assert OstreeBranchh.create(:repository => repo, :name => "/foo/bar")
+
+      repo.content_type = Repository::DOCKER_TYPE
+      refute OstreeBranchh.create(:repository => repo, :name => "/foo/bar")
+
+      repo.url = ""
+      refute repo.save
     end
 
     def test_product
