@@ -27,6 +27,7 @@ module Actions
                      contentUrl: input[:content_url],
                      type: input[:type],
                      label: input[:label],
+                     metadataExpire: 1,
                      vendor: ::Katello::Provider::CUSTOM)
         end
       end

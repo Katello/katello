@@ -174,6 +174,7 @@ module Katello
 
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.1/import_errata.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.2/update_gpg_key_urls.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.2/update_metadata_expire.rake"
     end
   end
 end
