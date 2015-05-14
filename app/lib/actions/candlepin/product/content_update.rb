@@ -19,6 +19,7 @@ module Actions
                      gpgUrl: input[:gpg_key_url],
                      type: input[:type],
                      label: input[:label],
+                     metadataExpire: 1,
                      vendor: ::Katello::Provider::CUSTOM)
         end
       end
