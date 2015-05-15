@@ -68,8 +68,12 @@ module Actions
         if message.content['newEntity']
           uuid = JSON.parse(message.content['newEntity'])['consumer']['uuid']
           system = ::Katello::System.find_by_uuid(uuid)
-          @logger.debug "re-indexing content host #{system.name}"
-          system.update_index
+          if system.nil?
+            @logger.debug "skip re-indexing of non-existent content host #{uuid}"
+          else
+            @logger.debug "re-indexing content host #{system.name}"
+            system.update_index
+          end
         end
       end
     end
