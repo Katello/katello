@@ -15,7 +15,7 @@
             .errata
               %div.errata_item
                 .col_1
-                  %div{:class => 'tipsify ' + errata_type_class(erratum),
-                       'original-title' => errata_human_type(erratum.errata_type)}
+                  %div{:class => errata_type_class(erratum),
+                       :title => errata_human_type(erratum.errata_type)}
                 %a{:href=>"/errata/#{erratum.uuid}/info", :class=>"col_2"}
                   #{erratum.errata_id} (#{content_hosts.length} #{_('Content Hosts')})

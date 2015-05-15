@@ -110,11 +110,11 @@ module Katello
     def errata_type_class(errata)
       case errata.errata_type
       when Erratum::SECURITY
-        return "icon-warning-sign"
+        return "fa fa-warning"
       when Erratum::ENHANCEMENT
-        return "icon-plus-sign-alt"
+        return "fa fa-plus-square"
       when Erratum::BUGZILLA
-        return "icon-bug"
+        return "fa fa-bug"
       end
     end
 
