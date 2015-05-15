@@ -1,24 +1,13 @@
 object @resource
+@resource ||= @object
 
-attributes :id, :cp_id, :name, :label, :description
+extends "katello/api/v2/products/base"
 
 extends 'katello/api/v2/common/org_reference'
-extends 'katello/api/v2/common/syncable'
-
-attributes :provider_id
-attributes :sync_plan_id
-attributes :sync_status
-attributes :sync_summary
-attributes :gpg_key_id
-attributes :redhat? => :redhat
 
 attributes :productContent => :product_content
 
 attributes :available_content => :available_content
-
-node :repository_count do |product|
-  product.library_repositories.count
-end
 
 child :library_repositories => :repositories do |_repo|
   attributes :name, :id
@@ -30,10 +19,6 @@ end
 
 child :provider do
   attribute :name
-end
-
-child :sync_plan do
-  extends 'katello/api/v2/sync_plans/show'
 end
 
 node :permissions do |product|

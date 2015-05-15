@@ -3,7 +3,7 @@ module Katello
     before_filter :find_activation_key, :only => [:index]
     before_filter :find_system, :only => [:index]
     before_filter :find_organization, :only => [:create, :index]
-    before_filter :find_product, :only => [:update, :destroy, :show, :sync]
+    before_filter :find_product, :only => [:update, :destroy, :sync]
     before_filter :find_organization_from_product, :only => [:update]
     before_filter :authorize_gpg_key, :only => [:update, :create]
 
@@ -44,7 +44,7 @@ module Katello
       options[:filters] << {:term => {:name => params[:name]}} if params[:name]
       options[:filters] << {:term => {:enabled => params[:enabled].to_bool}} if params[:enabled]
       options.merge!(sort_params)
-      options[:includes] = [:repositories, :gpg_key, :sync_plan, :provider]
+      options[:includes] = [:sync_plan, :provider]
 
       respond(:collection => item_search(Product, params, options))
     end
@@ -66,6 +66,7 @@ module Katello
     api :GET, "/products/:id", N_("Show a product")
     param :id, :number, :desc => N_("product numeric identifier"), :required => true
     def show
+      find_product(:includes => [{:repositories => :environment}])
       respond_for_show(:resource => @product)
     end
 
@@ -98,8 +99,8 @@ module Katello
 
     protected
 
-    def find_product
-      @product = Product.find_by_id(params[:id])
+    def find_product(options = {})
+      @product = Product.includes(*options[:includes] || []).find_by_id(params[:id])
       fail HttpErrors::NotFound, _("Couldn't find product '%s'") % params[:id] unless @product
     end
 
