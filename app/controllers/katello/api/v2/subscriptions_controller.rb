@@ -74,7 +74,7 @@ module Katello
     param :activation_key_id, String, :desc => N_("ID of the activation key"), :required => false
     param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => false
     param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
-      param :id, String, :desc => N_("Subscription Pool uuid"), :required => true
+      param :id, String, :desc => N_("Subscription ID"), :required => true
       param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
     end
     def create

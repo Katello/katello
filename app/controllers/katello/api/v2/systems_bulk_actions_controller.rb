@@ -5,10 +5,13 @@ module Katello
     before_filter :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
     before_filter :find_environment, :only => [:environment_content_view]
     before_filter :find_content_view, :only => [:environment_content_view]
+    before_filter :find_organization, :only => [:available_subscriptions]
     before_filter :load_search_service
-    before_filter :find_editable_systems, :except => [:destroy_systems, :applicable_errata]
+    before_filter :find_editable_systems, :except => [:destroy_systems, :applicable_errata,
+                                                      :all_subscriptions, :available_subscriptions]
     before_filter :find_deletable_systems, :only => [:destroy_systems]
-    before_filter :find_readable_systems, :only => [:applicable_errata, :available_incremental_updates]
+    before_filter :find_readable_systems, :only => [:applicable_errata, :available_incremental_updates,
+                                                    :all_subscriptions, :available_subscriptions]
     before_filter :find_errata, :only => [:available_incremental_updates]
 
     before_filter :validate_content_action, :only => [:install_content, :update_content, :remove_content]
@@ -177,6 +180,57 @@ module Katello
       respond_for_index :collection => response, :template => :available_incremental_updates
     end
 
+    api :PUT, "/systems/bulk/autoattach_subscriptions", N_("Auto-attach subscriptions on one or more content hosts")
+    param_group :bulk_params
+    def autoattach_subscriptions
+      task = async_task(::Actions::BulkAction, ::Actions::Katello::System::AutoAttachSubscriptions, @systems)
+      respond_for_async :resource => task
+    end
+
+    api :PUT, "/systems/bulk/all_subscriptions", N_("List all subscriptions on one or more content hosts")
+    param_group :bulk_params
+    def all_subscriptions
+      respond_for_index(:collection => find_attached_subscriptions, :template => 'subscriptions')
+    end
+
+    api :PUT, "/systems/bulk/add_subscriptions", N_("Attach subscriptions to all content hosts in collection")
+    param_group :bulk_params
+    param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
+      param :id, String, :desc => N_("Subscription ID"), :required => false
+      param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => false
+    end
+    def add_subscriptions
+      task = async_task(::Actions::BulkAction, ::Actions::Katello::System::AttachSubscriptions,
+                       @systems, params[:subscriptions])
+      respond_for_async :resource => task
+    end
+
+    api :PUT, "/systems/bulk/remove_subscriptions", N_("Attach subscriptions to one or more content hosts")
+    param_group :bulk_params
+    param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
+      param :id, String, :desc => N_("Subscription ID"), :required => false
+    end
+    def remove_subscriptions
+      task = async_task(::Actions::BulkAction, ::Actions::Katello::System::UnattachSubscriptions,
+                       @systems, params[:subscriptions])
+      respond_for_async :resource => task
+    end
+
+    api :PUT, "/systems/bulk/available_subscriptions", N_("List subscriptions not already attached to all content hosts specified")
+    param_group :bulk_params
+    def available_subscriptions
+      filters = []
+      filters << {:term => {:org => [@organization.label]}}
+      options = {
+        :filters => filters,
+        :load_records? => false,
+        :default_field => :product_name
+      }
+      subscriptions = item_search(Pool, params, options)
+
+      respond_for_index(:collection => subscriptions, :template => 'subscriptions')
+    end
+
     private
 
     def find_errata
@@ -246,6 +300,23 @@ module Katello
 
     def find_content_view
       @view = ContentView.find(params[:content_view_id])
+    end
+
+    def find_attached_subscriptions
+      pool_ids = []
+      @systems.each do |system|
+        system.pools.each do |pool|
+          pool_ids << pool['id'] unless pool_ids.detect { |already| already == pool['id'] }
+        end
+      end
+
+      filters = []
+      filters << {:terms => {:cp_id => pool_ids}}
+      options = {
+        :filters => filters,
+        :load_records? => false
+      }
+      item_search(Pool, params, options)
     end
   end
 end

@@ -2,12 +2,18 @@ module Katello
   class Api::V2::HostCollectionsController <  Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
     before_filter :find_host_collection, :only => [:copy, :show, :update, :destroy, :destroy_systems,
-                                                   :add_systems, :remove_systems, :systems]
+                                                   :add_systems, :remove_systems, :systems,
+                                                   :subscriptions, :add_subscriptions,
+                                                   :remove_subscriptions, :autoattach_subscriptions,
+                                                   :available_subscriptions]
     before_filter :find_activation_key
     before_filter :find_system
     before_filter :find_optional_organization, :only => [:index]
     before_filter :find_organization, :only => [:create, :auto_complete_search]
-    before_filter :load_search_service, :only => [:index, :systems]
+    before_filter :load_search_service, :only => [:index, :systems,
+                                                  :subscriptions, :add_subscriptions,
+                                                  :remove_subscriptions, :autoattach_subscriptions,
+                                                  :available_subscriptions]
 
     wrap_parameters :include => (HostCollection.attribute_names + %w(system_ids))
 

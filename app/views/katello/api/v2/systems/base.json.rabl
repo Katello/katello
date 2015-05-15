@@ -25,6 +25,7 @@ attributes :autoheal
 attributes :release, :ipv4_address
 attributes :checkin_time, :created
 attributes :installedProducts
+attributes :serviceLevel => :service_level
 
 node :errata_counts do |system|
   partial('katello/api/v2/errata/counts', :object => Katello::RelationPresenter.new(system.installable_errata))

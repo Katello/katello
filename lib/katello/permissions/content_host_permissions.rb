@@ -7,7 +7,7 @@ Foreman::Plugin.find(:katello).security_block :content_hosts do
                'katello/api/v2/systems' => [:index, :show, :errata, :package_profile, :product_content,
                                             :report, :pools, :releases, :available_host_collections, :events],
                'katello/api/v2/system_errata' => [:index, :show],
-               'katello/api/v2/systems_bulk_actions' => [:applicable_errata],
+               'katello/api/v2/systems_bulk_actions' => [:applicable_errata, :all_subscriptions, :available_subscriptions],
                'katello/api/v2/host_collections' => [:systems]
              },
              :resource_type => 'Katello::System'
@@ -24,7 +24,9 @@ Foreman::Plugin.find(:katello).security_block :content_hosts do
                'katello/api/v2/system_errata' => [:apply],
                'katello/api/v2/systems_bulk_actions' => [:install_content, :update_content,
                                                          :remove_content, :environment_content_view,
-                                                         :bulk_add_host_collections, :bulk_remove_host_collections],
+                                                         :bulk_add_host_collections, :bulk_remove_host_collections,
+                                                         :autoattach_subscriptions, :add_subscriptions,
+                                                         :remove_subscriptions],
                'katello/api/rhsm/candlepin_proxies' => [:upload_package_profile, :regenerate_identity_certificates,
                                                         :hypervisors_update]
              },

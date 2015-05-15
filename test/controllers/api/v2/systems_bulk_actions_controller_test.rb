@@ -17,6 +17,7 @@ module Katello
       setup_controller_defaults_api
       login_user(User.find(users(:admin)))
       @request.env['HTTP_ACCEPT'] = 'application/json'
+      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
 
       @system1 = System.find(katello_systems(:simple_server))
       @system2 = System.find(katello_systems(:simple_server2))
@@ -203,6 +204,48 @@ module Katello
 
       assert @missing_erratum
       post :available_incremental_updates, :included => {:ids => [@errata_system.uuid]}, :organization_id => @org.id, :errata_ids => [@missing_erratum.uuid]
+      assert_response :success
+    end
+
+    def test_autoattach_subscriptions
+      assert_async_task ::Actions::BulkAction do |action_class, systems|
+        action_class.must_equal ::Actions::Katello::System::AutoAttachSubscriptions
+        systems.must_equal @systems
+      end
+      put(:autoattach_subscriptions, :included => {:ids => @system_ids}, :organization_id => @org.id)
+      assert_response 202
+    end
+
+    def test_all_subscriptions
+      @controller.stubs(:find_attached_subscriptions).returns({})
+      put(:all_subscriptions, :included => {:ids => @system_ids}, :organization_id => @org.id)
+      assert_response :success
+    end
+
+    def test_add_subscriptions
+      assert_async_task ::Actions::BulkAction do |action_class, systems, subscriptions|
+        action_class.must_equal ::Actions::Katello::System::AttachSubscriptions
+        systems.must_equal @systems
+        subscriptions.must_equal ["1", "2", "3"]
+      end
+      put(:add_subscriptions, :included => {:ids => @system_ids}, :organization_id => @org.id,
+          :subscriptions => [1, 2, 3])
+      assert_response :success
+    end
+
+    def test_remove_subscriptions
+      assert_async_task ::Actions::BulkAction do |action_class, systems, subscriptions|
+        action_class.must_equal ::Actions::Katello::System::UnattachSubscriptions
+        systems.must_equal @systems
+        subscriptions.must_equal ["1", "2", "3"]
+      end
+      put(:remove_subscriptions, :included => {:ids => @system_ids}, :organization_id => @org.id,
+          :subscriptions => [1, 2, 3])
+      assert_response :success
+    end
+
+    def test_available_subscriptions
+      put(:available_subscriptions, :included => {:ids => @system_ids}, :organization_id => @org.id)
       assert_response :success
     end
   end

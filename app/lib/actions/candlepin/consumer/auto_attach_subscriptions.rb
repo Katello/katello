@@ -11,7 +11,7 @@ module Actions
         end
 
         def run
-          ::Katello::Resources::Candlepin::Consumer.refresh_entitlements(input[:uuid])
+          output[:attached_subscriptions] = ::Katello::Resources::Candlepin::Consumer.refresh_entitlements(input[:uuid])
         end
       end
     end
