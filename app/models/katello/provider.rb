@@ -3,7 +3,6 @@ module Katello
     self.include_root_in_json = false
 
     include ForemanTasks::Concerns::ActionSubject
-    include Glue::ElasticSearch::Provider if Katello.config.use_elasticsearch
     include Glue::Provider
     include Glue
 

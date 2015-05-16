@@ -4,8 +4,6 @@ module Katello
       base.send :include, Ext::IndexedModel
 
       base.class_eval do
-        after_save :update_related_index
-
         index_options :extended_json => :extended_index_attrs,
                       :json => { :only => [:name, :description, :id] },
                       :display_attrs => [:name, :description]
@@ -26,10 +24,6 @@ module Katello
         :organization_id => organization.id,
         :enabled => self.enabled?
       }
-    end
-
-    def update_related_index
-      self.provider.update_index if self.provider.respond_to? :update_index
     end
 
     def total_package_count(env, view)
