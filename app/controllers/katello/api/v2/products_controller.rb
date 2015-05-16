@@ -1,8 +1,10 @@
 module Katello
   class Api::V2::ProductsController < Api::V2::ApiController
+    include Katello::Concerns::FilteredAutoCompleteSearch
+
     before_filter :find_activation_key, :only => [:index]
     before_filter :find_system, :only => [:index]
-    before_filter :find_organization, :only => [:create, :index]
+    before_filter :find_organization, :only => [:create, :index, :auto_complete_search]
     before_filter :find_product, :only => [:update, :destroy, :sync]
     before_filter :find_organization_from_product, :only => [:update]
     before_filter :authorize_gpg_key, :only => [:update, :create]
@@ -28,25 +30,19 @@ module Katello
     param :custom, :bool, :desc => N_("Filter products by custom")
     param_group :search, Api::V2::ApiController
     def index
-      options = {
-        :filters => [],
-        :load_records? => true
-      }
-      products = Product.readable.where(:organization_id => @organization.id)
-      products = products.where(:provider_id => @organization.anonymous_provider.id) if params[:custom]
+      options = {:includes => [:sync_plan, :provider]}
+      respond(:collection => scoped_search(index_relation.uniq, :name, :desc, options))
+    end
 
-      ids = products.pluck(:id)
-      ids = filter_by_subscription(ids, params[:subscription_id]) if params[:subscription_id]
-      ids = filter_by_activation_key(ids, @activation_key) if @activation_key
-      ids = filter_by_system(ids, @system) if @system
-
-      options[:filters] << {:terms => {:id => ids}}
-      options[:filters] << {:term => {:name => params[:name]}} if params[:name]
-      options[:filters] << {:term => {:enabled => ::Foreman::Cast.to_bool(params[:enabled])}} if params[:enabled]
-      options.merge!(sort_params)
-      options[:includes] = [:sync_plan, :provider]
-
-      respond(:collection => item_search(Product, params, options))
+    def index_relation
+      query = Product.readable.where(:organization_id => @organization.id)
+      query = query.where(:provider_id => @organization.anonymous_provider.id) if params[:custom]
+      query = query.where(:name => params[:name]) if params[:name]
+      query = query.enabled if params[:enabled]
+      query = query.where(:id => @activation_key.products) if @activation_key
+      query = query.where(:id => @system.products) if @system
+      query = query.where(:id => Pool.find_by_id!(params[:subscription_id]).products) if params[:subscription_id]
+      query
     end
 
     api :POST, "/products", N_("Create a product")
@@ -120,15 +116,6 @@ module Katello
       end
     end
 
-    def filter_by_subscription(ids, subscription_id)
-      @subscription = Pool.find_by_id!(subscription_id)
-      ids & @subscription.products.pluck("#{Product.table_name}.id")
-    end
-
-    def filter_by_activation_key(ids = [], activation_key)
-      ids & activation_key.products.map { |product| product.id }
-    end
-
     def find_organization_from_product
       @organization = @product.organization
     end
@@ -139,10 +126,6 @@ module Katello
         gpg_key = GpgKey.readable.where(:id => gpg_key_id, :organization_id => @organization).first
         fail HttpErrors::NotFound, _("Couldn't find gpg key '%s'") % gpg_key_id if gpg_key.nil?
       end
-    end
-
-    def filter_by_system(ids = [], system)
-      ids & system.products.map { |product| product.id }
     end
 
     def product_params

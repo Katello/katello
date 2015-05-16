@@ -178,6 +178,9 @@ Katello::Engine.routes.draw do
           member do
             post :sync
           end
+          collection do
+            get :auto_complete_search
+          end
           api_resources :repository_sets, :only => [:index, :show] do
             member do
               get :available_repositories

@@ -47,26 +47,11 @@ module Katello
       render :partial => 'katello/providers/redhat/enable_errors', :locals => { :error_message => e.message}, :status => 500
     end
 
+    #used by content search
     def auto_complete
-      query = "name_autocomplete:#{params[:term]}"
-      org = current_organization
-
-      readable_ids = []
-      readable_ids += Product.readable.pluck(:id) if Product.readable?
-      readable_ids += ContentView.readable_products.pluck("#{Katello::Product.table_name}.id")
-      readable_ids.uniq
-
-      products = Product.search do
-        query do
-          string query
-        end
-        filter :term, :organization_id => org.id
-        filter :terms, :id => readable_ids
-      end
-
+      products = Product.readable.enabled.where(:organization_id => current_organization).
+          where("#{Product.table_name}.name ILIKE ?", "#{params[:term]}%")
       render :json => products.collect { |s| {:label => s.name, :value => s.name, :id => s.id} }
-    rescue Tire::Search::SearchRequestFailed
-      render :json => Util::Support.array_with_total
     end
 
     private
