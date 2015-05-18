@@ -83,7 +83,6 @@ KT.dashboard = (function(){
 
         if (id === 'errata') {
             $(document).trigger('close.tipsy');
-            KT.tipsy.custom.disable_details_tooltip($('.errata-info'));
         }
 
         $.ajax({
@@ -118,6 +117,8 @@ KT.dashboard = (function(){
             btn.parents(".errata_item").siblings().hide();
             btn.removeClass("expanded").addClass("collapsed");
         });
+
+        $('.errata_item .col_1 .fa').tooltip({container: 'body'});
     },
     register_sync_progress = function() {
         $(".progressbar").each(function(){
@@ -191,5 +192,4 @@ $(window).load(function() {
     $(".loading").each(function(){
        KT.dashboard.widgetReload($(this));
     });
-    KT.tipsy.custom.tooltip($('.tipsy-icon.errata-info'));
 });
