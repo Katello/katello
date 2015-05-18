@@ -197,7 +197,7 @@ module Katello
       def fetch_package_profile
         Katello.pulp_server.extensions.consumer.retrieve_profile(uuid, 'rpm')
       rescue RestClient::ResourceNotFound => e
-        Rails.logger.error "Failed to find profile for #{uuid}: #{e}, #{e.backtrace.join("\n")}"
+        Rails.logger.info "Failed to find profile for #{uuid}: #{e}}"
         {:profile => []}.with_indifferent_access
       end
     end
