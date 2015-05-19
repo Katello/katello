@@ -42,7 +42,7 @@ module Katello
 
       options[:filters] << {:terms => {:id => ids}}
       options[:filters] << {:term => {:name => params[:name]}} if params[:name]
-      options[:filters] << {:term => {:enabled => params[:enabled].to_bool}} if params[:enabled]
+      options[:filters] << {:term => {:enabled => ::Foreman::Cast.to_bool(params[:enabled])}} if params[:enabled]
       options.merge!(sort_params)
       options[:includes] = [:sync_plan, :provider]
 

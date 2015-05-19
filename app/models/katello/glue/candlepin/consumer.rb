@@ -221,9 +221,7 @@ module Katello
       end
 
       def virtual_guest
-        v = facts["virt.is_guest"]
-        return false if (v == false || v.nil?)
-        return(v == true || v.to_bool)
+        ::Foreman::Cast.to_bool(facts["virt.is_guest"])
       end
 
       def virtual_guest=(val)

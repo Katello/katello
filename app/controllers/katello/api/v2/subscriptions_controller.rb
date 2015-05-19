@@ -247,9 +247,9 @@ module Katello
     param :match_installed, :bool, :desc => N_("Return subscriptions that match installed")
     param :no_overlap, :bool, :desc => N_("Return subscriptions that don't overlap")
     def available_system
-      params[:match_system] = params[:match_system].to_bool if params[:match_system]
-      params[:match_installed] = params[:match_installed].to_bool if params[:match_installed]
-      params[:no_overlap] = params[:no_overlap].to_bool if params[:no_overlap]
+      params[:match_system] = ::Foreman::Cast.to_bool(params[:match_system]) if params[:match_system]
+      params[:match_installed] = ::Foreman::Cast.to_bool(params[:match_installed]) if params[:match_installed]
+      params[:no_overlap] = ::Foreman::Cast.to_bool(params[:no_overlap]) if params[:no_overlap]
       pools = @system.filtered_pools(params[:match_system], params[:match_installed],
                                      params[:no_overlap])
       available = available_subscriptions(pools, @system.organization)
