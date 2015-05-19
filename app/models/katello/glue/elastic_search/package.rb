@@ -1,6 +1,7 @@
 module Katello
   module Glue::ElasticSearch::Package
     # TODO: break up into modules
+    # rubocop:disable Metrics/AbcSize
     def self.included(base) # rubocop:disable MethodLength
       base.class_eval do
         include Glue::ElasticSearch::BackendIndexedModel
@@ -185,6 +186,14 @@ module Katello
           return search.perform.results
         rescue Tire::Search::SearchRequestFailed
           Util::Support.array_with_total
+        end
+
+        def self.new_from_legacy_search(*args)
+          results = search(args)
+
+          results.map do |item|
+            Package.new(item.as_json)
+          end
         end
 
         def self.add_indexed_repoid(pkg_ids, repoid)
