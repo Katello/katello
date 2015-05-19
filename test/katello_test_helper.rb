@@ -93,6 +93,8 @@ module FixtureTestCase
     fixtures(:all)
 
     load_permissions
+
+    Setting::Katello.load_defaults
   end
 
   module ClassMethods
