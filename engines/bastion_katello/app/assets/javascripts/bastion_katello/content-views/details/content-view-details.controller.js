@@ -4,6 +4,7 @@
  *
  * @requires $scope
  * @requires ContentView
+ * @requires Nutupane
  * @requires translate
  *
  * @description
@@ -12,8 +13,9 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewDetailsController',
-    ['$scope', 'ContentView', 'ContentViewVersion', 'AggregateTask', 'translate',
-    function ($scope, ContentView, ContentViewVersion, AggregateTask, translate) {
+    ['$scope', 'ContentView', 'ContentViewVersion', 'Nutupane', 'AggregateTask', 'translate',
+    function ($scope, ContentView, ContentViewVersion, Nutupane, AggregateTask, translate) {
+
 
         function saveSuccess() {
             $scope.successMessages = [translate('Content View updated.')];
@@ -70,9 +72,7 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         }
 
         function updateVersion(version) {
-            var versionIds = _.map($scope.contentView.versions, function (ver) {
-                    return ver.id;
-                }),
+            var versionIds = _.pluck($scope.detailsTable.rows, 'id'),
                 versionIndex = versionIds.indexOf(version.id);
 
             ContentViewVersion.get({'id': version.id}).$promise.then(function (newVersion) {
@@ -121,19 +121,21 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         };
 
         $scope.reloadVersions = function () {
-            var contentViewId = $scope.contentView.id || $scope.$stateParams.contentViewId;
-            $scope.contentView.versions = [];
-            $scope.loadingVersions = true;
+            var contentViewId = $scope.contentView.id || $scope.$stateParams.contentViewId,
+                nutupane = new Nutupane(ContentViewVersion, {
+                    'content_view_id': contentViewId
+                });
 
-            ContentViewVersion.queryUnpaged({'content_view_id': contentViewId}, function (data) {
-                $scope.versions = data.results;
-                if ($scope.contentView) {
-                    $scope.contentView.versions = data.results;
-                }
-                $scope.loadingVersions = false;
-                processTasks($scope.versions);
-            });
+            nutupane.masterOnly = true;
+
+            $scope.detailsTable = nutupane.table;
         };
+
+        $scope.$watch('detailsTable.rows', function () {
+            if ($scope.detailsTable.rows.length > 0) {
+                processTasks($scope.detailsTable.rows);
+            }
+        });
 
         $scope.save = function (contentView) {
             return contentView.$update(saveSuccess, saveError);

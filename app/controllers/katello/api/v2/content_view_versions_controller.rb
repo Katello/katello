@@ -16,24 +16,18 @@ module Katello
     param :environment_id, :identifier, :desc => N_("Filter versions by environment"), :required => false
     param :version, String, :desc => N_("Filter versions by version number"), :required => false
     param :composite_version_id, :identifier, :desc => N_("Filter versions that are components in the specified composite version"), :required => false
+    param_group :search, Api::V2::ApiController
     def index
       version_number = params.permit(:version)[:version]
-      versions = ContentViewVersion
+      versions = ContentViewVersion.readable
       versions = versions.where(:content_view_id => @view.id) if @view
       versions = versions.for_version(version_number) if version_number
       versions = versions.in_environment(@environment) if @environment
       versions = versions.component_of(params[:composite_version_id]) if params[:composite_version_id]
-      versions = versions.includes(:content_view).includes(:environments).includes(:composite_content_views).includes(:history => :task)
+      includes = [:content_view, :environments, :composite_content_views, :history => :task]
 
-      collection = {:results  => versions.order('major desc, minor desc'),
-                    :subtotal => versions.count,
-                    :total    => versions.count
-                   }
-
-      params[:sort_by] = 'major'
-      params[:sort_order] = 'desc'
-
-      respond(:collection => collection, :layout => 'index')
+      sort = "#{versions.table_name}.major desc, #{versions.table_name}.minor desc"
+      respond(:collection => scoped_search(versions, sort, '', :includes => includes))
     end
 
     api :GET, "/content_view_versions/:id", N_("Show content view version")
