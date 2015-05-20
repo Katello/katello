@@ -5,6 +5,18 @@ module Actions
         def plan(repository, repo_params)
           repository.disable_auto_reindex!
           action_subject repository
+          ostree_branches = repo_params.delete(:ostree_branches)
+          if ostree_branches
+            # remove the ostree_branches not in this list
+            repository.ostree_branches.keep_if do |branch|
+              ostree_branches.include?(branch.name)
+            end
+
+            # add the new ostree_branches
+            (ostree_branches - repository.ostree_branch_names).each do |ref|
+              repository.ostree_branches.create!(:name => ref)
+            end
+          end
           repository.update_attributes!(repo_params)
 
           if (::Katello.config.use_cp && ::Katello.config.use_pulp)
@@ -49,6 +61,8 @@ module Actions
                           Runcible::Models::IsoDistributor
                         when ::Katello::Repository::DOCKER_TYPE
                           Runcible::Models::DockerDistributor
+                        when ::Katello::Repository::OSTREE_TYPE
+                          Runcible::Models::OstreeDistributor
                         end
           distributor.type_id
         end
