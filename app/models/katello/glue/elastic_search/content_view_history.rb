@@ -25,7 +25,7 @@ module Katello
         indexes :created_at, :type => 'date'
         indexes :environment, :type => 'string'
         indexes :content_view_id, :type => 'integer'
-        indexes :version, :type => 'integer'
+        indexes :version, :type => 'float'
         indexes :user, :type => 'string'
       end
     end
