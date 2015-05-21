@@ -12,6 +12,8 @@ attributes :sync_summary
 attributes :gpg_key_id
 attributes :redhat? => :redhat
 
+attributes :available_content => :available_content, :if => params[:include_available_content]
+
 child :sync_plan do
   extends 'katello/api/v2/sync_plans/show'
 end
