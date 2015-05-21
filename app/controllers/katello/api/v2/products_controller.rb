@@ -26,6 +26,7 @@ module Katello
     param :name, String, :desc => N_("Filter products by name")
     param :enabled, :bool, :desc => N_("Filter products by enabled or disabled")
     param :custom, :bool, :desc => N_("Filter products by custom")
+    param :include_available_content, :bool, :desc => N_("Whether to include available content attribute in results")
     param_group :search, Api::V2::ApiController
     def index
       options = {
