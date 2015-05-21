@@ -1,0 +1,39 @@
+common:
+
+  rest_client_timeout: 120
+
+  post_sync_url: https://localhost/katello/api/v2/repositories/sync_complete?token=test
+
+  candlepin:
+    url: https://localhost:8443/candlepin
+    oauth_key: bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8
+    oauth_secret: 4DdSEh7dGkGKC5DGoE4CdWdFXap36Dqa
+
+  pulp:
+    url: https://katello-devel.example.com/pulp/api/v2/
+    oauth_key: bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8
+    oauth_secret: 4DdSEh7dGkGKC5DGoE4CdWdFXap36Dqa
+
+  qpid:
+    url: amqp:ssl:katello-devel.example.com:5671
+    subscriptions_queue_address: katello_event_queue
+
+# Logging configuration can be changed by uncommenting the loggers
+# section and the logger configuration desired.
+# 
+#:katello:
+#  :loggers:
+#    :glue:
+#      :enabled: true
+#    :pulp_rest:
+#      :enabled: true
+#    :cp_rest:
+#      :enabled: true
+#    :cp_proxy:
+#      :enabled: true
+#    :action:
+#      :enabled: true
+#    :tire_rest:
+#      :enabled: false
+#    :manifest_import_logger:
+#      :enabled: true

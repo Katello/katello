@@ -2,10 +2,6 @@ module Katello
   class Engine < ::Rails::Engine
     isolate_namespace Katello
 
-    initializer 'katello.silenced_logger', :before => :build_middleware_stack do |app|
-      app.config.middleware.swap Rails::Rack::Logger, Katello::Middleware::SilencedLogger, {}
-    end
-
     initializer 'katello.mount_engine', :after => :build_middleware_stack do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
     end
@@ -71,13 +67,6 @@ module Katello
       ActionView::Base.send :include, Katello::TaxonomyHelper
       ActionView::Base.send :include, Katello::HostsAndHostgroupsHelper
       ActionView::Base.send :include, Katello::KatelloUrlsHelper
-    end
-
-    initializer "logging" do |app|
-      Katello::Logging.configure
-
-      app.config.logger = ::Logging.logger['app']
-      app.config.active_record.logger = ::Logging.logger['sql']
     end
 
     initializer :register_assets do |app|
@@ -154,6 +143,10 @@ module Katello
     initializer 'katello.register_plugin', :after => :finisher_hook do
       require 'katello/plugin'
       require 'katello/permissions'
+
+      Tire::Configuration.url(Katello.config.elastic_url)
+      bridge = Katello::TireBridge.new(Foreman::Logging.logger('katello/tire_rest'))
+      Tire.configure { logger bridge, :level => bridge.level }
     end
 
     rake_tasks do

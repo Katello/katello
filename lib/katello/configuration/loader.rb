@@ -51,27 +51,11 @@ module Katello
         @early_config ||= load
       end
 
-      # @return [Hash{String => Hash}] database configurations
-      def database_configs
-        @database_configs ||= begin
-          %w(production development test).inject({}) do |hash, environment|
-            common = config_data.common.database.to_hash
-            if config_data.present?(environment.to_sym, :database)
-              hash.update(
-                  environment =>
-                      common.merge(config_data[environment.to_sym].database.to_hash).stringify_keys)
-            else
-              hash
-            end
-          end
-        end
-      end
-
       private
 
       def load(environment = nil)
         Node.new.tap do |c|
-          load_config_file c, environment
+          load_config_file c
           config_post_process.call c, environment  if config_post_process
           validate c, environment
         end
@@ -97,9 +81,8 @@ module Katello
         Rails.env.to_sym rescue raise 'Rails.env is not accessible, try to use #early_config instead'
       end
 
-      def load_config_file(config, environment = nil)
+      def load_config_file(config)
         config.deep_merge! config_data[:common]
-        config.deep_merge! config_data[environment] if environment
       end
 
       def validate(config, environment)
