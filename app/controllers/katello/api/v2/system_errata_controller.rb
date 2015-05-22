@@ -17,7 +17,7 @@ module Katello
     end
 
     api :GET, "/systems/:system_id/errata", N_("List errata available for the content host"), :deprecated => true
-    param :id, String, :desc => N_("UUID of the content host"), :required => true
+    param :system_id, :identifier, :desc => N_("UUID of the content host"), :required => true
     param :content_view_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Content View"), :required => false
     param :environment_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Environment"), :required => false
     param_group :search, Api::V2::ApiController
