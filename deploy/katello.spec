@@ -46,7 +46,7 @@ Provides a package for managing application life-cycle for Linux systems.
 
 %if %{?scl:1}%{!?scl:0}
     #replace shebangs for SCL
-    find script/ -type f | xargs sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X'
+    find script/ -type f -not -name katello-service | xargs sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X'
     #use rake from SCL
     sed -ri 'sX(/usr/bin/rake|/usr/bin/env rake)X%{scl_rake}Xg' script/katello-remove-orphans
 %endif
@@ -71,14 +71,12 @@ install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysco
 install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/service-wait
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 
-#create symlinks for important scripts
+# install important scripts
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_sbindir}
-ln -sv %{homedir}/script/katello-remove %{buildroot}%{_bindir}/katello-remove
-ln -sv %{homedir}/script/katello-service %{buildroot}%{_bindir}/katello-service
-ln -sv %{homedir}/script/service-wait %{buildroot}%{_sbindir}/service-wait
-
-#foreman-debug must not be a symlink
+install -Dp -m0755 script/katello-service %{buildroot}%{_bindir}/katello-service
+install -Dp -m0755 script/service-wait %{buildroot}%{_sbindir}/service-wait
+install -Dp -m0755 script/katello-remove %{buildroot}%{_bindir}/katello-remove
 install -Dp -m0755 script/katello-debug.sh %{buildroot}/usr/share/foreman/script/foreman-debug.d/katello-debug.sh
 
 chmod +x %{buildroot}%{homedir}/script/*
@@ -140,6 +138,7 @@ Group: Applications/System
 # service-wait dependency
 Requires:       wget
 Requires:       curl
+Requires:       ruby
 
 %description service
 Useful utilities for managing Katello services
