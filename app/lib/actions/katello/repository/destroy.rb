@@ -16,6 +16,7 @@ module Actions
           plan_action(Pulp::Repository::Destroy, pulp_id: repository.pulp_id)
           plan_action(Product::ContentDestroy, repository) unless skip_environment_update
           plan_action(ElasticSearch::Repository::Destroy, pulp_id: repository.pulp_id)
+          plan_action(Katello::Repository::DestroyMedia, repository)
 
           view_env = repository.content_view.content_view_environment(repository.environment)
 
