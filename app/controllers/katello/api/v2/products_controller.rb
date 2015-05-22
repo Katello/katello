@@ -88,7 +88,7 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :POST, "/products/:id/sync", "Sync a repository"
+    api :POST, "/products/:id/sync", N_("Sync all repositories for a product")
     param :id, :identifier, :required => true, :desc => "product ID"
     def sync
       task = async_task(::Actions::BulkAction,
