@@ -3,7 +3,6 @@ module Actions
     module Repository
       class Update < Actions::EntryAction
         def plan(repository, repo_params)
-          repository.disable_auto_reindex!
           action_subject repository
           repository.update_attributes!(repo_params)
 
@@ -26,8 +25,6 @@ module Actions
             plan_self(:user_id => ::User.current.id, :pulp_id => repository.pulp_id,
                       :distributor_type_id => distributor_type_id(repository.content_type))
           end
-
-          plan_action(ElasticSearch::Reindex, repository) if ::Katello.config.use_elasticsearch
         end
 
         def run

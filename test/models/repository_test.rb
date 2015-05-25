@@ -150,6 +150,30 @@ module Katello
     end
   end
 
+  class RepositorySearchTest < RepositoryTestBase
+    def test_search_content_type
+      repos = Repository.search_for("content_type = yum")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+    end
+
+    def test_search_name
+      repos = Repository.search_for("name = \"#{@fedora_17_x86_64.name}\"")
+      assert_includes repos, @fedora_17_x86_64
+    end
+
+    def test_search_product
+      repos = Repository.search_for("product = \"#{@fedora_17_x86_64.product.name}\"")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+    end
+
+    def test_search_content_view_id
+      repos = Repository.search_for("content_view_id = \"#{@fedora_17_x86_64.content_views.first.id}\"")
+      assert_includes repos, @fedora_17_x86_64
+    end
+  end
+
   class RepositoryInstanceTest < RepositoryTestBase
     def setup
       super

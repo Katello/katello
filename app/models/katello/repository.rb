@@ -78,9 +78,6 @@ module Katello
     validate :ensure_valid_docker_attributes, :if => :docker?
     validate :ensure_docker_repo_unprotected, :if => :docker?
 
-    # TODO: remove this default scope
-    # rubocop:disable Rails/DefaultScope
-    default_scope order("#{Katello::Repository.table_name}.name ASC")
     scope :has_url, where('url IS NOT NULL')
     scope :in_default_view, joins(:content_view_version => :content_view).
       where("#{Katello::ContentView.table_name}.default" => true)
@@ -93,7 +90,10 @@ module Katello
     scope :non_archived, where('environment_id is not NULL')
     scope :archived, where('environment_id is NULL')
 
-    scope :completer_scope, lambda { |options| options[table_name].call(self) }
+    scoped_search :on => :name, :complete_value => true
+    scoped_search :rename => :product, :on => :name, :in => :product, :complete_value => true
+    scoped_search :on => :content_type, :complete_value => Katello::Repository::TYPES.each_with_object({})  { |value, hash| hash[value.to_sym] = value }
+    scoped_search :on => :content_view_id, :in => :content_view_repositories
 
     def organization
       if self.environment
