@@ -5,10 +5,12 @@ module Katello
     def setup
       User.current = User.find(users(:admin))
       @cvv = create(:katello_content_view_version, :major => 1, :minor => 0)
+      @cvv_minor = create(:katello_content_view_version, :major => 1, :minor => 1)
       @cvv.organization.kt_environments << Katello::KTEnvironment.find_by_name(:Library)
       @dev = create(:katello_environment,  :organization => @cvv.organization, :prior => @cvv.organization.library,     :name => 'dev')
       @beta = create(:katello_environment, :organization => @cvv.organization, :prior => @dev,                         :name => 'beta')
       @composite_version = ContentViewVersion.find(katello_content_view_versions(:composite_view_version_1))
+      @cvv_with_repo = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
     end
 
     def test_promotable_in_sequence
@@ -66,6 +68,36 @@ module Katello
       assert cvv.repositories.archived.docker_type.count > 0
       assert_equal image_count, cvv.docker_image_count
       assert_equal tag_count, cvv.docker_tag_count
+    end
+
+    def test_search_equal_version
+      assert_includes ContentViewVersion.search_for("version = 1.0"), @cvv
+      query = ContentViewVersion.search_for("version = 1")
+      assert [@cvv, @cvv_minor] & query == [@cvv, @cvv_minor]
+    end
+
+    def test_search_compare_version
+      assert_includes ContentViewVersion.search_for("version >= 1.0"), @cvv
+      assert_includes ContentViewVersion.search_for("version <= 1.0"), @cvv
+      assert_includes ContentViewVersion.search_for("version < 1.1"), @cvv
+      assert_includes ContentViewVersion.search_for("version < 2"), @cvv
+      assert_equal [], ContentViewVersion.search_for("version < 1")
+      assert ContentViewVersion.search_for("version > 0").length > 1
+      assert ContentViewVersion.search_for("version < 2").length > 1
+    end
+
+    def test_search_in_version
+      assert_not_equal [@cvv], ContentViewVersion.search_for("version != 1.0")
+      assert_includes ContentViewVersion.search_for("version ^ 1.0"), @cvv
+      assert_not_equal [@cvv], ContentViewVersion.search_for("version ^! 1.0")
+    end
+
+    def test_search_content_view_id
+      assert_equal [@cvv], ContentViewVersion.search_for("content_view_id = #{@cvv.content_view_id}")
+    end
+
+    def test_search_repository
+      assert_includes ContentViewVersion.search_for("repository = busybox"), @cvv_with_repo
     end
   end
 

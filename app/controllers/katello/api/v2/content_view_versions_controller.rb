@@ -1,6 +1,7 @@
 module Katello
   class Api::V2::ContentViewVersionsController < Api::V2::ApiController
     include Concerns::Api::V2::BulkSystemsExtensions
+    include Katello::Concerns::FilteredAutoCompleteSearch
 
     before_filter :find_content_view_version, :only => [:show, :promote, :destroy]
     before_filter :find_content_view, :except => [:incremental_update]
@@ -18,16 +19,19 @@ module Katello
     param :composite_version_id, :identifier, :desc => N_("Filter versions that are components in the specified composite version"), :required => false
     param_group :search, Api::V2::ApiController
     def index
+      includes = [:content_view, :environments, :composite_content_views, :history => :task]
+      sort = "#{ContentViewVersion.table_name}.major desc, #{ContentViewVersion.table_name}.minor desc"
+      respond(:collection => scoped_search(index_relation.uniq, sort, '', :includes => includes))
+    end
+
+    def index_relation
       version_number = params.permit(:version)[:version]
       versions = ContentViewVersion.readable
       versions = versions.where(:content_view_id => @view.id) if @view
       versions = versions.for_version(version_number) if version_number
       versions = versions.in_environment(@environment) if @environment
       versions = versions.component_of(params[:composite_version_id]) if params[:composite_version_id]
-      includes = [:content_view, :environments, :composite_content_views, :history => :task]
-
-      sort = "#{versions.table_name}.major desc, #{versions.table_name}.minor desc"
-      respond(:collection => scoped_search(versions, sort, '', :includes => includes))
+      versions
     end
 
     api :GET, "/content_view_versions/:id", N_("Show content view version")

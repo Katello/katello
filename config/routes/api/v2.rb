@@ -95,6 +95,7 @@ Katello::Engine.routes.draw do
             post :promote
           end
           collection do
+            get :auto_complete_search
             post :incremental_update
           end
         end

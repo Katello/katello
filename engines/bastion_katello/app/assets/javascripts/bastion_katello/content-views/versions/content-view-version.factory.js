@@ -14,6 +14,7 @@ angular.module('Bastion.content-views.versions').factory('ContentViewVersion',
         return BastionResource('/katello/api/v2/content_view_versions/:id/:action',
             {id: '@id'},
             {
+                autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
                 update: {method: 'PUT'},
                 incrementalUpdate: {method: 'POST', params: {action: 'incremental_update'}},
                 promote: {method: 'POST', params: {action: 'promote'}}
