@@ -220,6 +220,7 @@ redis:
   product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  unprotected:           <%= true %>
 
 busybox:
   name:                 busybox
@@ -232,6 +233,7 @@ busybox:
   product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  unprotected:           <%= true %>
 
 busybox_view1:
   name:                 busybox
@@ -245,6 +247,7 @@ busybox_view1:
   product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>
+  unprotected:           <%= true %>
 
 busybox_view2:
   name:                 busybox
@@ -258,6 +261,7 @@ busybox_view2:
   product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>
+  unprotected:           <%= true %>
 
 rhel_6_x86_64_composite_view_version_1:
   name:                 RHEL 6 x86_64

@@ -61,6 +61,7 @@ module Katello
       :with => /^([a-z0-9\-_]{4,30}\/)?[a-z0-9\-_\.]{3,30}$/,
       :message => (_("must be a valid docker name"))
     }
+
     #validates :content_id, :presence => true #add back after fixing add_repo orchestration
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -75,6 +76,7 @@ module Katello
       :message => (_("must be one of the following: %s") % TYPES.join(', '))
     }
     validate :ensure_valid_docker_attributes, :if => :docker?
+    validate :ensure_docker_repo_unprotected, :if => :docker?
 
     # TODO: remove this default scope
     # rubocop:disable Rails/DefaultScope
@@ -513,6 +515,13 @@ module Katello
         field = url.blank? ? :url : :docker_upstream_name
         errors.add(field, N_("cannot be blank. Either provide all or no sync information."))
         errors.add(:base, N_("Repository URL or Upstream Name is empty. Both are required for syncing from the upstream."))
+      end
+    end
+
+    def ensure_docker_repo_unprotected
+      unless unprotected
+        errors.add(:base, N_("Docker Repositories are not protected at this time. " \
+                             "They need to be published via http to be available to containers."))
       end
     end
   end
