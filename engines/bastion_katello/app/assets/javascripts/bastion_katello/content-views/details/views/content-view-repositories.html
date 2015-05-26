@@ -78,62 +78,58 @@
       {{ "Loading..." | translate }}
     </div>
 
-    <div bst-infinite-scroll="repositoriesTable.nextPage()" data="repositoriesTable.rows">
+    <table ng-show="repositoriesTable.rows.length > 0"  class="table table-bordered table-striped">
+      <thead>
+        <tr bst-table-head row-select>
+          <th bst-table-column translate>Name</th>
+          <th bst-table-column translate>Product</th>
+          <th bst-table-column translate>Last Sync</th>
+          <th bst-table-column translate>Sync State</th>
+          <th bst-table-column translate>Content</th>
+        </tr>
+      </thead>
 
-      <table ng-show="repositoriesTable.rows.length > 0"  class="table table-bordered table-striped">
-        <thead>
-          <tr bst-table-head row-select>
-            <th bst-table-column translate>Name</th>
-            <th bst-table-column translate>Product</th>
-            <th bst-table-column translate>Last Sync</th>
-            <th bst-table-column translate>Sync State</th>
-            <th bst-table-column translate>Content</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr bst-table-row
-              row-select="repository"
-              ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch | filter:repositoryFilter | as:'filteredItems'">
-            <td bst-table-cell>
-              <a ui-sref="products.details.repositories.info({productId: repository.product.id, repositoryId: repository.id})">
-                {{ repository.name }}
+      <tbody>
+        <tr bst-table-row
+            row-select="repository"
+            ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch | filter:repositoryFilter | as:'filteredItems'">
+          <td bst-table-cell>
+            <a ui-sref="products.details.repositories.info({productId: repository.product.id, repositoryId: repository.id})">
+              {{ repository.name }}
+            </a>
+          </td>
+          <td bst-table-cell>{{ repository.product.name }}</td>
+          <td bst-table-cell>
+            <span ng-show="repository.url">
+              {{ repository.last_sync.ended_at | date:"short" }}
+            </span>
+            <span ng-hide="repository.url" translate>N/A</span>
+          </td>
+          <td bst-table-cell>
+            <span ng-show="repository.url">
+              <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result | capitalize }}</a>
+            </span>
+            <span ng-hide="repository.url" translate>N/A</span>
+          </td>
+          <td bst-table-cell>
+            <div ng-if="repository.content_counts.rpm && repository.content_counts.rpm > 0">
+              <a ng-href="/katello/content_search#/!=&search[packages][search]=&search[content_type]=packages&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages"
+                 ng-show="repository.content_type == 'yum'"
+                 translate>
+                {{ repository.content_counts.rpm }} Packages
               </a>
-            </td>
-            <td bst-table-cell>{{ repository.product.name }}</td>
-            <td bst-table-cell>
-              <span ng-show="repository.url">
-                {{ repository.last_sync.ended_at | date:"short" }}
-              </span>
-              <span ng-hide="repository.url" translate>N/A</span>
-            </td>
-            <td bst-table-cell>
-              <span ng-show="repository.url">
-                <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result | capitalize }}</a>
-              </span>
-              <span ng-hide="repository.url" translate>N/A</span>
-            </td>
-            <td bst-table-cell>
-              <div ng-if="repository.content_counts.rpm && repository.content_counts.rpm > 0">
-                <a ng-href="/katello/content_search#/!=&search[packages][search]=&search[content_type]=packages&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages"
-                   ng-show="repository.content_type == 'yum'"
-                   translate>
-                  {{ repository.content_counts.rpm }} Packages
-                </a>
-              </div>
-              <div ng-if="repository.content_counts.erratum && repository.content_counts.erratum > 0">
-                <a ui-sref="errata.index({repositoryId: repository.id})"
-                   ng-show="repository.content_type == 'yum'"
-                   translate>
-                  {{ repository.content_counts.erratum }} Errata
-                </a>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-    </div>
+            </div>
+            <div ng-if="repository.content_counts.erratum && repository.content_counts.erratum > 0">
+              <a ui-sref="errata.index({repositoryId: repository.id})"
+                 ng-show="repository.content_type == 'yum'"
+                 translate>
+                {{ repository.content_counts.erratum }} Errata
+              </a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
 </div>

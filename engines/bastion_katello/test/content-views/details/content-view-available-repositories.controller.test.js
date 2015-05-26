@@ -15,6 +15,7 @@ describe('Controller: ContentViewAvailableRepositoriesController', function() {
                 return {included: {ids: [1, 2]}};
             };
 
+            this.load = function () {};
             this.table = {};
         };
 
