@@ -67,11 +67,11 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
       assert_action_planed_with action, ::Actions::Katello::Repository::MetadataGenerate, dev_puppet_env
       assert_action_planed_with action, ::Actions::ElasticSearch::ContentViewPuppetEnvironment::IndexContent,
                                 id: dev_puppet_env.id
+      refute_nil dev_puppet_env.reload.puppet_environment
     end
 
-    it 'plans without existing puppet environment' do
+    it 'plans without existing cv puppet environment' do
       dev_puppet_env.delete
-      action.execution_plan.stub_planned_action(::Actions::Katello::ContentViewPuppetEnvironment::Create)
 
       plan_action action, puppet_env.content_view_version, :environment => dev
 
@@ -80,6 +80,27 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
       assert_action_planed action, ::Actions::Pulp::Repository::CopyPuppetModule
       assert_action_planed action, ::Actions::Katello::Repository::MetadataGenerate
       assert_action_planed action, ::Actions::ElasticSearch::ContentViewPuppetEnvironment::IndexContent
+    end
+
+    it 'plans with uneeded existing cv puppet environment' do
+      dev_puppet_env.update_attribute(:puppet_environment_id, nil)
+
+      plan_action action, puppet_env.content_view_version, :environment => dev, :puppet_modules_present => false
+
+      assert_action_planed action, ::Actions::Katello::ContentViewPuppetEnvironment::Destroy
+      refute_action_planed action, ::Actions::Pulp::Repository::CopyPuppetModule
+      refute_action_planed action, ::Actions::Katello::Repository::MetadataGenerate
+      refute_action_planed action, ::Actions::ElasticSearch::ContentViewPuppetEnvironment::IndexContent
+    end
+
+    it 'does not plan things when cvep does not already exist and no puppet modules' do
+      dev_puppet_env.delete
+
+      plan_action action, puppet_env.content_view_version, :environment => dev, :puppet_modules_present => false
+      refute_action_planed action, ::Actions::Katello::ContentViewPuppetEnvironment::Create
+      refute_action_planed action, ::Actions::Pulp::Repository::CopyPuppetModule
+      refute_action_planed action, ::Actions::Katello::Repository::MetadataGenerate
+      refute_action_planed action, ::Actions::ElasticSearch::ContentViewPuppetEnvironment::IndexContent
     end
   end
 

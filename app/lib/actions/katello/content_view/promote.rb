@@ -22,7 +22,8 @@ module Actions
                 end
               end
 
-              plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => environment)
+              plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => environment,
+                          :puppet_modules_present => version.puppet_module_count > 0)
 
               repos_to_delete(version, environment).each do |repo|
                 plan_action(Repository::Destroy, repo, :planned_destroy => true)
