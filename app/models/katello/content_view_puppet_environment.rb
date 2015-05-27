@@ -3,8 +3,8 @@ module Katello
     self.include_root_in_json = false
 
     include ForemanTasks::Concerns::ActionSubject
-    include Glue::Pulp::Repo if Katello.config.use_pulp
-    include Glue if Katello.config.use_pulp
+    include Glue::Pulp::Repo if SETTINGS[:katello][:use_pulp]
+    include Glue if SETTINGS[:katello][:use_pulp]
 
     belongs_to :environment, :class_name => "Katello::KTEnvironment",
                              :inverse_of => :content_view_puppet_environments
@@ -70,7 +70,7 @@ module Katello
     def generate_puppet_path
       # rubocop:disable Style/EmptyElse
       if self.environment
-        File.join(Katello.config.puppet_repo_root, generate_puppet_env_name, 'modules')
+        File.join(SETTINGS[:katello][:puppet_repo_root], generate_puppet_env_name, 'modules')
       else
         nil #don't generate archived content view puppet environments
       end

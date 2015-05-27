@@ -29,7 +29,7 @@ module Katello
 
         # candlepin - ping without oauth
         if services.include?(:candlepin)
-          url = Katello.config.candlepin.url
+          url = SETTINGS[:katello][:candlepin][:url]
           exception_watch(result[:services][:candlepin]) do
             RestClient.get "#{url}/status"
           end
@@ -37,7 +37,7 @@ module Katello
 
         # elasticsearch - ping without oauth
         if services.include?(:elasticsearch)
-          url = Katello.config.elastic_url
+          url = SETTINGS[:katello][:elastic_url]
           exception_watch(result[:services][:elasticsearch]) do
             RestClient.get "#{url}/_status"
           end
@@ -111,7 +111,7 @@ module Katello
       # because it returns empty string, which is not enough to say
       # pulp is the one that responded
       def pulp_without_oauth
-        body = RestClient.get("#{Katello.config.pulp.url}/status/")
+        body = RestClient.get("#{SETTINGS[:katello][:pulp][:url]}/status/")
         fail _("Pulp does not appear to be running.") if body.empty?
         json = JSON.parse(body)
 

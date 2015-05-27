@@ -20,7 +20,7 @@ module Actions
         private
 
         def upload_chunk_size
-          ::Katello.config.pulp.upload_chunk_size
+          SETTINGS[:katello][:pulp][:upload_chunk_size]
         end
       end
     end

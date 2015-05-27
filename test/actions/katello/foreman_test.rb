@@ -25,8 +25,8 @@ class Actions::Katello::Foreman::ContentUpdateTest < ActiveSupport::TestCase
     action.input.must_equal("environment_id" => environment.id,
                             "content_view_id" => content_view.id,
                             "repository_id" => nil,
-                            "remote_user" => Katello.config.pulp.default_login,
-                            "remote_cp_user" => Katello.config.pulp.default_login)
+                            "remote_user" => SETTINGS[:katello][:pulp][:default_login],
+                            "remote_cp_user" => SETTINGS[:katello][:pulp][:default_login])
   end
 
   it 'updates the foreman content' do

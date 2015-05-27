@@ -25,9 +25,9 @@ module Katello
       end
 
       def self.fetch_all
-        all_items = items = fetch(0, Katello.config.pulp.bulk_load_size)
+        all_items = items = fetch(0, SETTINGS[:katello][:pulp][:bulk_load_size])
         until items.empty? #we can't know how many there are, so we have to keep looping until we get nothing
-          items = fetch(all_items.length, Katello.config.pulp.bulk_load_size)
+          items = fetch(all_items.length, SETTINGS[:katello][:pulp][:bulk_load_size])
           all_items.concat(items)
         end
         all_items
@@ -35,7 +35,7 @@ module Katello
 
       def self.fetch_by_uuids(uuids)
         items = []
-        uuids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        uuids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
           items.concat(fetch(0, sub_list.length, sub_list))
         end
         items

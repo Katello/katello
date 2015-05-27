@@ -1,22 +1,74 @@
-common:
+:katello:
+  :use_cp: true # set to true/false if you want to override default
+  :use_pulp: true # set to true/false if you want to override default
+  :use_elasticsearch: true # set to true/false if you want to override default
 
-  rest_client_timeout: 120
+  :rest_client_timeout: 30
+  :gpg_strict_validation: false
 
-  post_sync_url: https://localhost/katello/api/v2/repositories/sync_complete?token=test
+  :puppet_repo_root: '/etc/puppet/environments/'
 
-  candlepin:
-    url: https://localhost:8443/candlepin
-    oauth_key: bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8
-    oauth_secret: 4DdSEh7dGkGKC5DGoE4CdWdFXap36Dqa
+  :elastic_index: katello
+  :elastic_url: http://localhost:9200
 
-  pulp:
-    url: https://katello-devel.example.com/pulp/api/v2/
-    oauth_key: bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8
-    oauth_secret: 4DdSEh7dGkGKC5DGoE4CdWdFXap36Dqa
+  :post_sync_url: "http://localhost:3000/katello/api/v2/repositories/sync_complete?token=katello"
 
-  qpid:
-    url: amqp:ssl:katello-devel.example.com:5671
-    subscriptions_queue_address: katello_event_queue
+  :simple_search_tokens: [":", " and\\b", " or\\b", " not\\b"]
+
+  :redhat_repository_url: https://cdn.redhat.com
+
+  :consumer_cert_rpm: 'katello-ca-consumer-latest.noarch.rpm'
+
+  # Setup your candlepin environment here
+  :candlepin:
+    # refers to the url of the candlepin
+    # example https://localhost:8443/candlepin
+    :url: https://localhost:8443/candlepin
+
+    # Specify your oauth key and secret used to authenticate between Katello and Candlepin
+    :oauth_key: katello
+    :oauth_secret: katello
+
+    # refers to the candlepin-ca.crt location that is needed
+    # to connect to candlepin over https.This is not necessary
+    # if the candlepin server is running on the same machine as katello
+    # but required if the server is on a different machine.
+    # In the different machine case the katello host needs to have a
+    # copy of /etc/candlepin/certs/candlepin-ca.crt copied from
+    # the candlepin host and the location of the copied file needs to be
+    # specified here..
+    :ca_cert_file:
+
+  # Setup your pulp environment here
+  :pulp:
+    # refers to the url of the pulp
+    # example https://localhost/pulp/api
+    :url: https://localhost/pulp/api/v2/
+
+    # Specify your oauth key and secret used to authenticate between Katello and Pulp
+    :oauth_key: katello
+    :oauth_secret: katello
+
+    :sync_threads: 4
+    :bulk_load_size: 100
+    # refers to the apache certificate
+    # (typically /etc/pki/tls/certs/localhost.crt) location that is needed
+    # to connect to pulp over https.
+    :ca_cert_file:
+    :default_login: admin
+    :sync_KBlimit:
+    :upload_chunk_size: 1048575 # upload size in bytes to pulp. see SSLRenegBufferSize in apache
+    :skip_checksum_validation: false
+
+  :qpid:
+    :url: amqp:ssl:katello-devel.example.com:5671
+    :subscriptions_queue_address: katello_event_queue
+
+  :cdn_proxy:
+  #    :host: localhost
+  #    :port: 3128
+  #    :user: login
+  #    :password: password
 
 # Logging configuration can be changed by uncommenting the loggers
 # section and the logger configuration desired.

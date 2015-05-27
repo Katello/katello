@@ -18,7 +18,7 @@ module Katello
     validates :organization, :presence => true
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::ContentValidator, :attributes => :content
-    validates_with Validators::GpgKeyContentValidator, :attributes => :content, :if => proc { Katello.config.gpg_strict_validation }
+    validates_with Validators::GpgKeyContentValidator, :attributes => :content, :if => proc { SETTINGS[:katello][:gpg_strict_validation] }
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true
