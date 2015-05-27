@@ -42,15 +42,15 @@ module Katello
           Environment.where(:katello_id => katello_id).first
         end
 
-        def create_by_katello_id(org, env, content_view)
+        def build_by_katello_id(org, env, content_view)
           env_name = Environment.construct_name(org, env, content_view)
           katello_id = Environment.construct_katello_id(org, env, content_view)
-          Environment.create!(:name => env_name, :organizations => [org], :katello_id => katello_id)
+          Environment.new(:name => env_name, :organizations => [org], :katello_id => katello_id)
         end
 
-        def find_or_create_by_katello_id(org, env, content_view)
+        def find_or_build_by_katello_id(org, env, content_view)
           Environment.find_by_katello_id(org, env, content_view) ||
-              Environment.create_by_katello_id(org, env, content_view)
+              Environment.build_by_katello_id(org, env, content_view)
         end
 
         def construct_katello_id(org, env, content_view)

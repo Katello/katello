@@ -12,15 +12,15 @@
 
 module Katello
   class Foreman
-    def self.create_puppet_environment(org, env, content_view)
+    def self.build_puppet_environment(org, env, content_view)
       unless content_view.default?
-        Environment.find_or_create_by_katello_id(org, env, content_view)
+        Environment.find_or_build_by_katello_id(org, env, content_view)
       end
     end
 
     def self.update_puppet_environment(content_view, environment)
-      unless content_view.default?
-        content_view_puppet_env = content_view.version(environment).puppet_env(environment)
+      content_view_puppet_env = content_view.version(environment).puppet_env(environment)
+      if !content_view.default? && content_view_puppet_env
         foreman_environment = content_view_puppet_env.puppet_environment
 
         # Associate the puppet environment with the locations that are currently

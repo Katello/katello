@@ -30,7 +30,7 @@ module Katello
     validates_lengths_from_database
     validates :pulp_id, :presence => true, :uniqueness => true
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
-    validates :puppet_environment_id, :presence => true, :if => :environment
+    validates :puppet_environment, :presence => true, :if => :environment
 
     scope :non_archived, where('environment_id is not NULL')
     scope :archived, where('environment_id is NULL')
