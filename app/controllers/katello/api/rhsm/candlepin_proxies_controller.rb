@@ -261,9 +261,9 @@ module Katello
                      :releaseVer, :serviceLevel, :lastCheckin, :autoheal
                     ]
       attrs[:installedProducts] = [] if attrs.key?(:installedProducts) && attrs[:installedProducts].nil?
-
-      sync_task(::Actions::Katello::System::Update, @system, attrs.slice(*slice_attrs))
-
+      User.as_anonymous_admin do
+        sync_task(::Actions::Katello::System::Update, @system, attrs.slice(*slice_attrs))
+      end
       render :json => {:content => _("Facts successfully updated.")}, :status => 200
     end
 

@@ -63,7 +63,7 @@ module Katello
     param :environment_id, Integer, :desc => 'Id of the environment to limit the synchronization on'
     def sync
       find_environment if params[:environment_id]
-      task = async_task(::Actions::Katello::CapsuleContent::Sync, capsule_content, @environment)
+      task = async_task(::Actions::Katello::CapsuleContent::Sync, capsule_content, :environment => @environment)
       respond_for_async :resource => task
     end
 
