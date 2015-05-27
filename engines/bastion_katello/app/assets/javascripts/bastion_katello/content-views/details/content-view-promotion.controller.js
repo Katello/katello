@@ -38,6 +38,7 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
         $scope.version = ContentViewVersion.get({id: $scope.$stateParams.versionId});
         $scope.currentOrganization = CurrentOrganization;
         $scope.availableEnvironments = Organization.paths({id: CurrentOrganization, 'permission_type': 'promotable'});
+        $scope.suggestedEnvironments = [];
 
         $q.all([$scope.availableEnvironments.$promise, $scope.version.$promise]).then(function (args) {
             var environments = args[0],
@@ -46,6 +47,9 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
             angular.forEach(environments, function (path) {
                 angular.forEach(path.environments, function (environment) {
                     environment.disabled = $scope.checkDisabled(environment, version.environments);
+                    if ($scope.checkSuggested(environment, version.environments)) {
+                        environment.customClass = 'fa fa-star';
+                    }
                 });
             });
 
@@ -63,22 +67,52 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
             if (envIds.indexOf(env.id) !== -1) {
                 //if version is already promoted to the environment
                 enabled = false;
-            } else if (env.library) {
-                //allow library for all versions
-                enabled = true;
-            } else if (envIds.length !== 0 && envIds.indexOf(env.prior.id) !== -1) {
-                //if environment is a successor an existing environment
+            } else {
                 enabled = true;
             }
 
             return !enabled;
         };
 
+        $scope.checkSuggested = function (env, environments) {
+            var suggest = false,
+                envIds = _.pluck(environments, 'id');
+
+            // if version is not promoted to the environment
+            if (envIds.indexOf(env.id) === -1) {
+                // if version not yet promoted to any environment, and environment is in library or if version is promoted to prior environment
+                if ((environments.length === 0 && env.library) || (env.prior && envIds.indexOf(env.prior.id) !== -1)) {
+                    suggest = true;
+                    $scope.suggestedEnvironments.push(env);
+                }
+            }
+            return suggest;
+        };
+
         $scope.promote = function () {
             $scope.promoting = true;
-            ContentViewVersion.promote({id: $scope.version.id, 'environment_id': $scope.selectedEnvironment.id},
+            ContentViewVersion.promote({id: $scope.version.id, 'environment_id': $scope.selectedEnvironment.id, force: true},
                 success, failure);
         };
 
+        $scope.verifySelection = function () {
+            if ($scope.suggestedEnvironments.indexOf($scope.selectedEnvironment) !== -1) {
+                $scope.promote();
+            } else {
+                $scope.openModal();
+            }
+        };
+
+        $scope.suggestedEnvironmentMessage = function () {
+            var envs = _.uniq(_.pluck($scope.suggestedEnvironments, 'name'));
+
+            if (envs.length === 0) {
+                return "There are no environments suggested in the promotion path.";
+            } else if (envs.length === 1) {
+                return "Suggested environment is: ".concat(envs[0]);
+            } else {
+                return "Suggested environments are: ".concat(envs.join(', '));
+            }
+        };
     }]
 );

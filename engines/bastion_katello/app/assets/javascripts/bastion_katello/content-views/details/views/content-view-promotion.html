@@ -13,6 +13,11 @@
     Choose a lifecycle environment from the available promotion paths.
   </p>
 
+  <p class="info" translate>
+    <i class="fa fa-star"></i>
+    Starred environments are suggested for promotion.
+  </p>
+
   <p ng-hide="working">
     <i class="fa fa-spinner fa-spin"></i>
     <span translate>Loading Environment Paths...</span>
@@ -27,13 +32,19 @@
   </div>
 
   <div>
-    <button class="btn btn-primary btn-lg" ng-disabled="promoting || !selectedEnvironment" ng-click="promote()" translate>
+    <button class="btn btn-primary btn-lg" ng-disabled="promoting || !selectedEnvironment" ng-click="verifySelection()" translate>
       Promote Version
     </button>
 
     <a ui-sref="content-views.details.versions" class="btn btn-default btn-lg"  translate role="button">
       Cancel
     </a>
+
+    <div bst-modal="promote()">
+      <div data-block="modal-header" translate>Force Promote?</div>
+      <div data-block="modal-body" translate>Promote version to {{ selectedEnvironment.name }}?<br /><br />{{ suggestedEnvironmentMessage() }}</div>
+      <div data-block="modal-confirm-button" translate>Promote</div>
+    </div>
   </div>
 
 </div>
