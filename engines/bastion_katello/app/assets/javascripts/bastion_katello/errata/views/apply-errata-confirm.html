@@ -17,7 +17,11 @@
   <p class="alert alert-warning" translate>You must select at least one Content Host in order to apply Errata.</p>
 </section>
 
-<section class="details details-full" ng-show="selectedContentHosts">
+<section class="col-md-4" ng-hide="errataIds">
+  <p class="alert alert-warning" translate>You must select at least one Errata to apply.</p>
+</section>
+
+<section class="details details-full" ng-show="selectedContentHosts && errataIds">
   <h3 ng-show="errata" translate>Apply {{ errata.errata_id }}</h3>
 
   <section ng-hide="updates">

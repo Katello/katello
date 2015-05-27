@@ -181,6 +181,7 @@ module Katello
     private
 
     def find_errata
+      params[:errata_ids] ||= []
       @errata = Katello::Erratum.where(:uuid => params[:errata_ids])
       not_found = params[:errata_ids] - @errata.pluck(:uuid)
       fail _("Could not find all specified errata ids: %s") % not_found.join(', ') unless not_found.empty?
