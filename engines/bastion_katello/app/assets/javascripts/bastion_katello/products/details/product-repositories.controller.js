@@ -36,6 +36,28 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
             'full_result': true
         });
 
+        function getParams() {
+            return {
+                ids: repositoriesNutupane.getAllSelectedResults('id').included.ids
+            };
+        }
+
+        $scope.close = function(index) {
+            $scope.removingTasks.splice(index, 1);
+        };
+
+        function success(response) {
+            angular.forEach(response.task.input.target_ids, function (row) {
+                $scope.repositoriesTable.removeRow(row);
+            });
+            $scope.removingTasks.push(response.task.id);
+        }
+
+        function error(response) {
+            $scope.errorMessages = response.data.errors;
+        }
+
+        $scope.removingTasks = [];
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
