@@ -72,6 +72,7 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
         });
 
         $scope.addSubscriptionsPane = {
+            refresh: function() {},
             table: {}
         }
 
