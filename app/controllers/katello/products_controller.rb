@@ -21,14 +21,8 @@ module Katello
           render :partial => 'katello/providers/redhat/errors', :locals => { :error_message => task_error(task), :task => task}
         else
           repos = task.output[:results]
-
-          repos = repos.select do |repo|
-            if repo[:path].include?('kickstart')
-              repo[:substitutions][:releasever].include?('Server') ? repo[:enabled] : true
-            else
-              true
-            end
-          end
+          repos = exclude_rolling_kickstart_repos(repos)
+          repos = available_synced_repos(repos)
 
           render :partial => 'katello/providers/redhat/repos', :locals => {:scan_cdn => task, :repos => repos}
         end
@@ -79,6 +73,40 @@ module Katello
 
     def task_error(task)
       task.failed_steps.first.action(task.execution_plan).steps.map { |s| s.try(:error).try(:message) }.reject(&:blank?).join(', ')
+    end
+
+    def exclude_rolling_kickstart_repos(repos)
+      repos.select do |repo|
+        if repo[:path].include?('kickstart')
+          repo[:substitutions][:releasever].include?('Server') ? repo[:enabled] : true
+        else
+          true
+        end
+      end
+    end
+
+    def available_synced_repos(repos)
+      @product.repositories.each do |product_repo|
+        found = repos.detect do |repo|
+          product_repo.pulp_id == repo[:pulp_id]
+        end
+        unless found
+          repos << {
+            :repo_name => product_repo.name,
+            :path => product_repo.url,
+            :pulp_id => product_repo.pulp_id,
+            :content_id => product_repo.content_id,
+            :substitutions => {
+              :basearch => product_repo.arch,
+              :releasever => product_repo.minor
+            },
+            :enabled => true,
+            :promoted => product_repo.promoted?,
+            :registry_name => product_repo.docker_upstream_name
+          }
+        end
+      end
+      repos
     end
   end
 end

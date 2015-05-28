@@ -208,7 +208,8 @@ module Katello
     end
 
     def cdn_resource
-      certs = { :ssl_client_cert => OpenSSL::X509::Certificate.new(certificate),
+      return unless (product_certificate = certificate)
+      certs = { :ssl_client_cert => OpenSSL::X509::Certificate.new(product_certificate),
                 :ssl_client_key => OpenSSL::PKey::RSA.new(key) }
       ::Katello::Resources::CDN::CdnResource.new(provider.repository_url, certs)
     end

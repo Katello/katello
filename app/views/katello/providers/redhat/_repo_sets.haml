@@ -6,26 +6,29 @@
       - orphaned = orphaned_product_ids.include?(product.id)
       - if product_map[product.id]
         - contents = product_map[product.id].sort{|p1, p2| p1.content.name <=> p2.content.name}
-        %tr.product{:id=>"#{tab_id}_prod_#{product.id}", :class=>cycle(nil, 'alt')}
-          %td
-            = "#{product.name} " +  (orphaned ? _('(Orphaned)') : '')
+        - has_content = !orphaned || product.repositories.length > 0
+        - if has_content
+          %tr.product{:id=>"#{tab_id}_prod_#{product.id}", :class=>cycle(nil, 'alt')}
+            %td
+              = "#{product.name} " +  (orphaned ? _('(Orphaned)') : '')
 
-        %tr{:class=>"child-of-#{tab_id}_prod_#{product.id} #{current_cycle()}"}
-          %td
-            %table.content_table
-              %thead
-                %th
-                  = _('Repository Set')
-              %tbody
-                - for product_content in contents
-                  %tr.collapsed.repo_set{:id=>"repo_set_#{product_content.content.id}"}
-                    %td
-                      %span.expander_area{:data=>{:url => available_repositories_product_path(product.id),
-                                                   'content-id'=> product_content.content.id,
-                                                   :orphaned => orphaned.to_s}}
-                        =image_tag( "katello/icons/spinner.gif", :class=>"hidden fl repo_set_spinner",
-                            :id=>"spinner_set_#{product_content.content.id}", :style=>"margin-left:-18px;")
-                        %span.expander
-                        #{product_content.content.name}
+          %tr{:class=>"child-of-#{tab_id}_prod_#{product.id} #{current_cycle()}"}
+            %td
+              %table.content_table
+                %thead
+                  %th
+                    = _('Repository Set')
+                %tbody
+                  - for product_content in contents
+                    - if !orphaned || product.repositories.detect {|repo| repo.cp_label == product_content.content.label}
+                      %tr.collapsed.repo_set{:id=>"repo_set_#{product_content.content.id}"}
+                        %td
+                          %span.expander_area{:data=>{:url => available_repositories_product_path(product.id),
+                                                       'content-id'=> product_content.content.id,
+                                                       :orphaned => orphaned.to_s}}
+                            =image_tag( "katello/icons/spinner.gif", :class=>"hidden fl repo_set_spinner",
+                                :id=>"spinner_set_#{product_content.content.id}", :style=>"margin-left:-18px;")
+                            %span.expander
+                            #{product_content.content.name}
 
-                      %table{:style=>'display:none;'}
+                          %table{:style=>'display:none;'}
