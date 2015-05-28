@@ -225,6 +225,11 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Thu May 28 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.1-0
+- Version bump to 2.2.1 (ericdhelms@gmail.com)
+- Automatic commit of package [katello] minor release [2.2.0-6].
+  (ericdhelms@gmail.com)
+
 * Thu May 28 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-11
 - fixes #10523 - use admin user for facts updating (jsherril@redhat.com)
 - Fixes #10381 - reduce #queries on products page
