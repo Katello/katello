@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.2.0
-Release: 10%{dist}
+Release: 11%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -225,6 +225,19 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Thu May 28 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-11
+- fixes #10523 - use admin user for facts updating (jsherril@redhat.com)
+- Fixes #10381 - reduce #queries on products page
+- fixes #10495 - create custom products with metadata_expire set to 1
+  (jsherril@redhat.com)
+- Fixes #10152 - reduce num querys in sys#index (dtsang@redhat.com)
+- fixes #10428 - katello-service and related scripts shouldn't be symlinks
+- fixes #10428 - katello-service package should actually have katello-service
+- fixes #10422 - send hash to capsule sync plan as expected
+- fixes #10331 - fix assocation from lifecycle environment to hosts
+- Fixes #10309: prevent ISE on CH bulk actions errata BZ1216195.
+  (walden@redhat.com)
+
 * Fri May 08 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-10
 - Fixes #10426: Ensure content host exists before updating in migration.
 - Fixes #8544: Carry subscription-manager for EL5 in our client repos.
