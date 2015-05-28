@@ -33,7 +33,10 @@ module Katello
         user.receives?(:katello_sync_errata) && user.can?(:view_products, @repo.product)
       end
 
-      fail Errors::NotFound, N_("No recipients found for %s sync report") % @repo.name unless recipients.any?
+      if recipients.empty?
+        Rails.logger.info _("No recipients found for %s sync report") % @repo.name
+        return
+      end
 
       all_errata = Katello::Erratum.where(:id => @repo.repository_errata.where('katello_repository_errata.updated_at > ?', last_updated).pluck(:erratum_id))
 
@@ -51,7 +54,10 @@ module Katello
         user.receives?(:katello_promote_errata) && user.can?(:view_content_views, content_view)
       end
 
-      fail Errors::NotFound, N_("No recipients found for %s promotion summary") % content_view.name unless recipients.any?
+      if recipients.empty?
+        Rails.logger.info _("No recipients found for %s promotion summary") % content_view.name
+        return
+      end
 
       @content_view = content_view
       @environment = environment
