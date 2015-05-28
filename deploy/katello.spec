@@ -185,6 +185,10 @@ Package that installs only the Subscription and basic Content Management parts o
 %files sam
 
 %changelog
+* Thu May 28 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.1-0
+- Set katello metapackage release to 0 for 2.2.1 (ericdhelms@gmail.com)
+- Version bump to 2.2.1 (ericdhelms@gmail.com)
+
 * Thu May 28 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.0-6
 - fixes #10428 - katello-service and related scripts shouldn't be symlinks
 - fixes #10428 - katello-service package should actually have katello-service
