@@ -12,6 +12,7 @@ module Katello
       @product = Product.find(katello_products(:empty_product))
       @product.stubs(:redhat?).returns(false)
       Product.any_instance.stubs('productContent').returns([])
+      Product.any_instance.stubs('sync_status').returns(PulpSyncStatus.new)
     end
 
     def permissions
@@ -24,13 +25,19 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       models
       permissions
     end
 
     def test_index
       get :index, :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/products/index'
+    end
+
+    def test_index_name
+      get :index, :organization_id => @organization.id, :name => @product.name
 
       assert_response :success
       assert_template 'api/v2/products/index'

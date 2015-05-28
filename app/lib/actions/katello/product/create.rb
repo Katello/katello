@@ -3,7 +3,6 @@ module Actions
     module Product
       class Create < Actions::EntryAction
         def plan(product, organization)
-          product.disable_auto_reindex!
           product.provider = organization.anonymous_provider
           product.organization = organization
 
@@ -21,13 +20,11 @@ module Actions
           action_subject product, :cp_id => cp_id
 
           plan_self
-          plan_action ElasticSearch::Reindex, product
           plan_action ElasticSearch::Provider::ReindexSubscriptions, product.provider
         end
 
         def finalize
           product = ::Katello::Product.find(input[:product][:id])
-          product.disable_auto_reindex!
           product.cp_id = input[:cp_id]
           product.save!
         end

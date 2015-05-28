@@ -3,7 +3,7 @@ fedora:
   description:  An open source Linux distribution.
   label:        fedora_label
   cp_id:        fedora
-  provider_id:  <%= ActiveRecord::Fixtures.identify(:fedora_hosted) %>
+  provider_id:  <%= ActiveRecord::Fixtures.identify(:anonymous) %>
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
 redhat:
@@ -26,12 +26,12 @@ empty_product:
   name:         Empty Product
   cp_id:        empty_product
   label:        empty_product
-  provider_id:  <%= ActiveRecord::Fixtures.identify(:fedora_hosted) %>
+  provider_id:  <%= ActiveRecord::Fixtures.identify(:anonymous) %>
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
 empty_product_2:
   name:         Empty Product_2
   cp_id:        empty_product_2
   label:        empty_product_2
-  provider_id:  <%= ActiveRecord::Fixtures.identify(:fedora_hosted) %>
+  provider_id:  <%= ActiveRecord::Fixtures.identify(:anonymous) %>
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>

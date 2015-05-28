@@ -80,8 +80,6 @@ module ::Actions::Katello::Product
         params[:cp_id].must_be_kind_of Dynflow::ExecutionPlan::OutputReference
         params[:cp_id].subkeys.must_equal %w(response id)
       end
-
-      product.expects(:disable_auto_reindex!).returns
       product.expects(:save!).returns([])
 
       plan_action(action, product, product.organization)
@@ -94,7 +92,6 @@ module ::Actions::Katello::Product
 
       # TODO: figure out how to specify the candlepin id or a placeholder
       assert_action_planed(action, ::Actions::Candlepin::Product::CreateUnlimitedSubscription)
-      assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, product)
     end
   end
 
@@ -113,7 +110,6 @@ module ::Actions::Katello::Product
       assert_action_planed_with(action,
                               ::Actions::Pulp::Repos::Update,
                               product)
-      assert_action_planed action, ::Actions::ElasticSearch::Reindex
     end
 
     it 'raises error when validation fails' do
@@ -140,7 +136,6 @@ module ::Actions::Katello::Product
       default_view_repos = product.repositories.in_default_view.map(&:id)
 
       action.expects(:plan_self)
-      product.expects(:disable_auto_reindex!)
 
       plan_action(action, product)
 
@@ -156,8 +151,6 @@ module ::Actions::Katello::Product
 
       assert_action_planed_with(action, candlepin_delete_subscriptions_class,
                                 cp_id: product.cp_id, organization_label: product.organization.label)
-
-      assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, product)
     end
 
     it 'fails' do

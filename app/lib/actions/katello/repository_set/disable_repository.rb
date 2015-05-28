@@ -12,7 +12,6 @@ module Actions
                                             options,
                                             options[:registry_name]).find_repository
             action_subject(repository)
-            plan_action(ElasticSearch::Reindex, repository.product)
             plan_action(Repository::Destroy, repository)
           else
             fail ::Katello::Errors::NotFound, _('Repository not found')

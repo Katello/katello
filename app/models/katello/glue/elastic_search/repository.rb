@@ -15,8 +15,6 @@ module Katello
           indexes :labels, :type => 'string', :index => :not_analyzed
           indexes :name_autocomplete, :type => 'string', :analyzer => 'autcomplete_name_analyzer'
         end
-
-        after_save :update_related_index
       end
 
       def extended_index_attrs
@@ -32,10 +30,6 @@ module Katello
           :content_view_ids => self.content_view_ids,
           :name_autocomplete => self.name
         }
-      end
-
-      def update_related_index
-        self.product.provider.update_index if self.product.provider.respond_to? :update_index
       end
 
       def indexed_package_ids

@@ -11,7 +11,6 @@ module Actions
           end
 
           no_other_assignment = ::Katello::Product.where(["cp_id = ? AND id != ?", product.cp_id, product.id]).count == 0
-          product.disable_auto_reindex!
           action_subject(product)
 
           sequence do
@@ -46,7 +45,6 @@ module Actions
             end
 
             plan_self
-            plan_action(ElasticSearch::Reindex, product)
             plan_action(ElasticSearch::Provider::ReindexSubscriptions, product.provider) unless organization_destroy
           end
         end

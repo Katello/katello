@@ -14,7 +14,6 @@ module Actions
           end
           repository = mapper.build_repository
           plan_action(Repository::Create, repository)
-          plan_action(ElasticSearch::Reindex, repository.product)
           action_subject(repository)
         end
 

@@ -13,7 +13,8 @@ angular.module('Bastion.products').factory('Product',
         return BastionResource('/katello/api/products/:id/:action', {id: '@id'}, {
             update: { method: 'PUT'},
             sync: { method: 'POST', params: { action: 'sync' }},
-            updateSyncPlan: { method: 'POST', params: { action: 'sync_plan' }}
+            updateSyncPlan: { method: 'POST', params: { action: 'sync_plan' }},
+            autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
         });
 
     }]

@@ -3,7 +3,6 @@ module Katello
     self.include_root_in_json = false
 
     include ForemanTasks::Concerns::ActionSubject
-    include Glue::ElasticSearch::Product if Katello.config.use_elasticsearch
     include Glue::Candlepin::Product if Katello.config.use_cp
     include Glue::Pulp::Repos if Katello.config.use_pulp
     include Glue if Katello.config.use_cp || Katello.config.use_pulp
@@ -34,6 +33,10 @@ module Katello
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true
+    scoped_search :on => :label, :complete_value => true
+    scoped_search :on => :description
+    scoped_search :in => :provider, :on => :provider_type, :rename => :redhat,
+                  :complete_value => {:true => Provider::REDHAT, :false => Provider::ANONYMOUS }
 
     def library_repositories
       self.repositories.in_default_view
@@ -208,6 +211,18 @@ module Katello
       certs = { :ssl_client_cert => OpenSSL::X509::Certificate.new(certificate),
                 :ssl_client_key => OpenSSL::PKey::RSA.new(key) }
       ::Katello::Resources::CDN::CdnResource.new(provider.repository_url, certs)
+    end
+
+    def total_package_count(env, view)
+      repo_ids = view.repos(env).in_product(self).collect { |r| r.pulp_id }
+      result = Katello::Package.legacy_search('*', 0, 1, repo_ids)
+      result.length > 0 ? result.total : 0
+    end
+
+    def total_puppet_module_count(env, view)
+      repo_ids = view.repos(env).in_product(self).collect { |r| r.pulp_id }
+      results = Katello::PuppetModule.legacy_search('', :page_size => 1, :repoids => repo_ids)
+      results.empty? ? 0 : results.total
     end
 
     def self.humanize_class_name(_name = nil)

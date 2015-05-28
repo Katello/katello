@@ -28,6 +28,28 @@ module Katello
       refute @promoted_product.user_deletable?
     end
 
+    def test_search_redhat
+      products = Product.search_for('redhat = true')
+      assert_includes products, @redhat_product
+      refute_includes products, @promoted_product
+    end
+
+    def test_search_custom
+      products = Product.search_for('redhat = false')
+      assert_includes products, @promoted_product
+      refute_includes products, @redhat_product
+    end
+
+    def test_search_label
+      products = Product.search_for("label = #{@redhat_product.label}")
+      assert_includes products, @redhat_product
+    end
+
+    def test_search_description
+      products = Product.search_for("description = \"#{@redhat_product.description}\"")
+      assert_includes products, @redhat_product
+    end
+
     def test_create
       assert @product.save
       refute_empty Product.where(:id => @product.id)

@@ -14,10 +14,6 @@ module Katello
       end
 
       describe "get auto_complete_product" do
-        before :each do
-          Product.expects(:search).once.returns([OpenStruct.new(:name => "a", :id => 100)])
-        end
-
         it 'should succeed' do
           get :auto_complete, :term => "a"
           must_respond_with(:success)
