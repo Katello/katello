@@ -89,9 +89,9 @@ module Katello
       end
       repo_params[:label] = labelize_params(repo_params)
       repo_params[:url] = nil if repo_params[:url].blank?
-
+      unprotected =  repo_params.key?(:unprotected) ? repo_params[:unprotected] : true
       repository = @product.add_repo(repo_params[:label], repo_params[:name], repo_params[:url],
-                                     repo_params[:content_type], repo_params[:unprotected],
+                                     repo_params[:content_type], unprotected,
                                      gpg_key, repository_params[:checksum_type])
       repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
       sync_task(::Actions::Katello::Repository::Create, repository, false, true)

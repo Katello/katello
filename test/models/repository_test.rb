@@ -35,6 +35,7 @@ module Katello
     end
 
     def test_docker_repository_docker_upstream_name_url
+      @repo.unprotected = true
       @repo.content_type = 'docker'
       @repo.docker_upstream_name = ""
       @repo.url = "http://registry.com"
@@ -52,6 +53,7 @@ module Katello
     end
 
     def test_docker_repository_docker_upstream_name_format
+      @repo.unprotected = true
       @repo.content_type = 'docker'
       @repo.docker_upstream_name = 'valid'
       assert @repo.valid?
@@ -109,8 +111,20 @@ module Katello
       @repo.pulp_id = 'PULP-ID'
       @repo.content_type = Repository::DOCKER_TYPE
       @repo.docker_upstream_name = "haha"
+      @repo.unprotected = true
       assert @repo.save
       assert @repo.pulp_id.ends_with?('pulp-id')
+    end
+
+    def test_docker_repo_unprotected
+      @repo.name = 'docker_repo'
+      @repo.pulp_id = 'PULP-ID'
+      @repo.content_type = Repository::DOCKER_TYPE
+      @repo.docker_upstream_name = "haha"
+      @repo.unprotected = true
+      assert @repo.save
+      @repo.unprotected = false
+      refute @repo.save
     end
 
     def test_yum_type_pulp_id
