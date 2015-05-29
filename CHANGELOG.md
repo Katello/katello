@@ -1,3 +1,45 @@
+# 2.2.1 Maibock (2015-05-29)
+
+## Features 
+
+### Documentation
+ * Add documentation on how to use Docker ([#9601](http://projects.theforeman.org/issues/9601), [ffdda4f3](http://github.com/katello/katello.org/commit/ffdda4f3b0c8ae4c868481cce1c7ec7d9b528c9d))
+
+## Bug Fixes 
+
+### Web UI
+ * katello fails when content host registers with a release version or uploading facts ([#10523](http://projects.theforeman.org/issues/10523), [86973983](http://github.com/katello/katello/commit/86973983e0e615661e697f9f106b9ace6eecfd40))
+ * Custom repositories do not define 'metadata_expire = 1' ([#10495](http://projects.theforeman.org/issues/10495), [78c75ae8](http://github.com/katello/katello/commit/78c75ae85c8a5752de9e655f1ec278f492f95245))
+ * Product -> Repository page is slow (10-30 seconds) to render when there are 10+ repos with content synced ([#10381](http://projects.theforeman.org/issues/10381), [e179a600](http://github.com/katello/katello/commit/e179a60018fe0cdb951342bd44cf6327ecc45c20))
+ * Bulk Actions -> Errata page does not load ([#10309](http://projects.theforeman.org/issues/10309), [ecbb51bc](http://github.com/katello/katello/commit/ecbb51bca629a6c90c8e0528cb62f6dd238d4654))
+ * The Content Hosts page is loading very slowly on Satellite 6 ([#10152](http://projects.theforeman.org/issues/10152), [20fecb64](http://github.com/katello/katello/commit/20fecb6490a200a7ac8bba577068d7d7b51b3902))
+
+### Installer
+ * GPG key urls not updated on upgrade from 2.1 -> 2.2 ([#10512](http://projects.theforeman.org/issues/10512), [bc091d97](http://github.com/katello/katello-installer/commit/bc091d97eef4b1151c9bbc89e0b6f75414004d01))
+
+### CLI
+ * hammer content-host errata list failed ([#10499](http://projects.theforeman.org/issues/10499), [e1fbd2f6](http://github.com/katello/hammer-cli-katello/commit/e1fbd2f60ec2d65775f1cf3dfa5f902a40abcafd))
+
+### Capsule
+ * Unable to sync capsule: "undefined method `fetch' for nil:NilClass" ([#10422](http://projects.theforeman.org/issues/10422), [d575025f](http://github.com/katello/katello/commit/d575025fe14e2c2cf91f1878a518ad3a6e80189c))
+ * Repeated crashes of goferd on Pulp Node Capsule when trying to SyncNode  ([#10148](http://projects.theforeman.org/issues/10148))
+
+### Content Uploads
+ * Package Upload via GUI to Products is not updating Info ([#10327](http://projects.theforeman.org/issues/10327))
+
+### Pulp
+ * "undefined method `[]' for nil:NilClass (NoMethodError)" problem synching repo's ([#10231](http://projects.theforeman.org/issues/10231))
+
+### Packaging
+ * Katello-agent is not available for Fedora 21 ([#10224](http://projects.theforeman.org/issues/10224), [60b72b76](http://github.com/katello/katello/commit/60b72b762064540a072329c50be54d58613aa9b5))
+
+### Documentation
+ * katello.org is missing information about katello-agent ([#7735](http://projects.theforeman.org/issues/7735))
+
+### Other
+ * katello-service package doesn't have katello-service ([#10428](http://projects.theforeman.org/issues/10428), [95f1e0cc](http://github.com/katello/katello/commit/95f1e0cc6e2b3ff9877ce2d3f8b2203512ab2296))
+ * Can't delete Lifecycle Environment when hosts are assigned to Content View ([#10331](http://projects.theforeman.org/issues/10331), [a0ee7b07](http://github.com/katello/katello/commit/a0ee7b07c00459577be5cac79c105cad5a73733c))
+
 # 2.2 Maibock (2015-03-28)
 
 ## Features 
