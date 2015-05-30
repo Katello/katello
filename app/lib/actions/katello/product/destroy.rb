@@ -22,7 +22,6 @@ module Actions
             fail _("Cannot delete a Red Hat Products or Products with Repositories published in a Content View")
           end
 
-          no_other_assignment = ::Katello::Product.where(["cp_id = ? AND id != ?", product.cp_id, product.id]).count == 0
           product.disable_auto_reindex!
           action_subject(product)
 
@@ -35,15 +34,15 @@ module Actions
                   plan_action(Katello::Repository::Destroy, repo, repo_options)
                 end
               end
-            end
-            concurrence do
-              plan_action(Candlepin::Product::DeletePools,
-                            cp_id: product.cp_id, organization_label: product.organization.label)
-              plan_action(Candlepin::Product::DeleteSubscriptions,
-                            cp_id: product.cp_id, organization_label: product.organization.label)
+              concurrence do
+                plan_action(Candlepin::Product::DeletePools,
+                              cp_id: product.cp_id, organization_label: product.organization.label)
+                plan_action(Candlepin::Product::DeleteSubscriptions,
+                              cp_id: product.cp_id, organization_label: product.organization.label)
+              end
             end
 
-            if no_other_assignment
+            if !product.used_by_another_org? && !organization_destroy
               if product.is_a? ::Katello::MarketingProduct
                 concurrence do
                   product.productContent.each do |pc|
@@ -57,14 +56,14 @@ module Actions
               plan_action(Candlepin::Product::Destroy, cp_id: product.cp_id)
             end
 
-            plan_self
+            plan_self(:product_id => product.id)
             plan_action(ElasticSearch::Reindex, product)
             plan_action(ElasticSearch::Provider::ReindexSubscriptions, product.provider) unless organization_destroy
           end
         end
 
         def finalize
-          product = ::Katello::Product.find(input[:product][:id])
+          product = ::Katello::Product.find(input[:product_id])
           product.destroy!
         end
 

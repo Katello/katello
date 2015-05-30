@@ -36,8 +36,8 @@ class Actions::Katello::Foreman::ContentUpdateTest < ActiveSupport::TestCase
     assert_finalize_phase(action)
     action.input.must_equal("environment_id" => environment.id,
                             "content_view_id" => content_view.id,
-                            "remote_user" => "user",
-                            "remote_cp_user" => "user")
+                            "remote_user" => User.current.login,
+                            "remote_cp_user" => User.current.remote_id)
   end
 
   it 'updates the foreman content' do

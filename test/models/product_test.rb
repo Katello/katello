@@ -78,5 +78,21 @@ module Katello
       assert_equal 2, products.length
       products.each { |prod| assert prod.syncable_content? }
     end
+
+    def test_not_used_by_other_org
+      refute @redhat_product.used_by_another_org?
+    end
+
+    def test_used_by_other_orgs
+      other_org = taxonomies(:organization1)
+      create(:katello_product,
+             :cp_id => @redhat_product.cp_id,
+             :organization => other_org,
+             :name => @redhat_product.name,
+             :label => 'dont_label_me',
+             :provider => other_org.redhat_provider)
+
+      assert @redhat_product.used_by_another_org?
+    end
   end
 end

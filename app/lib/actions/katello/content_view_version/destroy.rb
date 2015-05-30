@@ -19,7 +19,7 @@ module Actions
 
           sequence do
             concurrence do
-              version.archived_repos.each do |repo|
+              version.repositories.each do |repo|
                 repo_options = options.clone
                 repo_options[:planned_destroy] = true
                 plan_action(Repository::Destroy, repo, repo_options)
