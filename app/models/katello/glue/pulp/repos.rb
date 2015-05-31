@@ -166,42 +166,23 @@ module Katello
         self.repos(library).any? { |r| r.synced? }
       end
 
-      #get last sync status of all repositories in this product
-      def latest_sync_statuses
-        self.repos(library).collect do |r|
-          r._get_most_recent_sync_status
-        end
-      end
-
       # Get the most relevant status for all the repos in this Product
       def sync_status
-        return @status if @status
+        all_repos = repos(self.library, nil, false)
 
-        statuses = repos(self.library, nil, false).map { |r| r.sync_status }
-        return PulpSyncStatus.new(:state => PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
+        last_sync_task = ForemanTasks::Task::DynflowTask
+          .select('*')
+          .for_action(::Actions::Katello::Repository::Sync)
+          .joins(:locks).where("foreman_tasks_locks.resource_id in (?) and foreman_tasks_locks.resource_type = ?", all_repos, ::Katello::Repository.name)
+          .order(:started_at).last
 
-        #if any of repos sync still running -> product sync running
-        idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::RUNNING.to_s }
-        return statuses[idx] unless idx.nil?
+        last_synced_repo = last_sync_task ? all_repos.find { |repo| repo.id.to_s == last_sync_task.resource_id.to_s } : nil
 
-        #else if any of repos not synced -> product not synced
-        idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::NOT_SYNCED.to_s }
-        return statuses[idx] unless idx.nil?
-
-        #else if any of repos sync cancelled -> product sync cancelled
-        idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::CANCELED.to_s }
-        return statuses[idx] unless idx.nil?
-
-        #else if any of repos sync finished with error -> product sync finished with error
-        idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::ERROR.to_s }
-        return statuses[idx] unless idx.nil?
-
-        #else -> all finished
-        @status = statuses[0]
+        ::Katello::SyncStatusPresenter.new(last_synced_repo, last_sync_task).sync_progress
       end
 
       def sync_state
-        self.sync_status.state
+        self.sync_status[:state]
       end
 
       def sync_start
