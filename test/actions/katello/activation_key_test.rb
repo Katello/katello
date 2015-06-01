@@ -36,7 +36,6 @@ module ::Actions::Katello::ActivationKey
     let(:input) { { :auto_attach => 'false' } }
 
     it 'plans' do
-      activation_key.expects(:disable_auto_reindex!)
       action.expects(:action_subject).with(activation_key)
       activation_key.expects(:update_attributes!).with(input)
       plan_action(action, activation_key, input)
@@ -49,7 +48,6 @@ module ::Actions::Katello::ActivationKey
     let(:input) { { :name => 'newName' } }
 
     it 'plans' do
-      activation_key.expects(:disable_auto_reindex!)
       action.expects(:action_subject).with(activation_key)
       activation_key.expects(:update_attributes!).with(input)
       plan_action(action, activation_key, input)
