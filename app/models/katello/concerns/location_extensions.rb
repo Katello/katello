@@ -11,7 +11,7 @@ module Katello
       end
 
       def set_default_overrides
-        self.ignore_types << ::ConfigTemplate.name
+        self.ignore_types << ::ProvisioningTemplate.name
         self.ignore_types << ::Hostgroup.name
       end
 

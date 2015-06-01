@@ -4,7 +4,7 @@ module Katello
   class LocationTest < ActiveSupport::TestCase
     def test_location_create
       loc = Location.create!(:name => "FOO")
-      assert_includes loc.ignore_types, ::ConfigTemplate.name
+      assert_includes loc.ignore_types, ::ProvisioningTemplate.name
       assert_includes loc.ignore_types, ::Hostgroup.name
     end
 
