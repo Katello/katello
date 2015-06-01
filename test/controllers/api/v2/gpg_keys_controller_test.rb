@@ -1,10 +1,12 @@
 require "katello_test_helper"
+require 'tempfile'
 
 module Katello
   class Api::V2::GpgKeysControllerTest < ActionController::TestCase
     def models
       @organization = get_organization
       @product = Product.find(katello_products(:fedora).id)
+      @gpg_key = GpgKey.find(katello_gpg_keys(:fedora_gpg_key))
     end
 
     def permissions
@@ -39,6 +41,17 @@ module Katello
       assert_protected_action(:index, allowed_perms, denied_perms) do
         get :index, :organization_id => @organization.id
       end
+    end
+
+    def test_content
+      @request.env["CONTENT_TYPE"] = "multipart/form"
+      content = "abc123"
+      temp_content_file = Tempfile.new(content)
+      temp_content_file.write(content)
+      temp_content_file.rewind
+      post :content, :id => @gpg_key.id, :content => Rack::Test::UploadedFile.new(temp_content_file.path, "text/plain")
+      assert_response :success, @response.body
+      assert_equal content, @gpg_key.reload.content
     end
   end
 end
