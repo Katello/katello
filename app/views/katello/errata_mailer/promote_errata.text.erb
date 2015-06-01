@@ -1,11 +1,9 @@
 <%= _("Katello Promotion Summary") %>
 
-<% all_errata = @content_hosts.authorized_as(@user).map(&:installable_errata).flatten.sort_by(&:id).uniq %>
-
 <%= (_("The promotion of %{content_view} to %{environment} has completed.  %{count} errata are available to your hosts.") %
       {:content_view         => @content_view.name,
        :environment          => @environment.name,
-       :count                => all_errata.count}) %>
+       :count                => @errata.count}) %>
 
 <%= _("Content View") %>: <%= @content_view.name %> (<%= content_view_path(@content_view) %>)
 <%= _("Environment") %>:  <%= @environment %>
@@ -15,7 +13,7 @@ Hosts with Installable Errata:
   <%= _("Bugfix") %>:      <%= host_count(@content_hosts, :bugfix) %>
   <%= _("Enhancement") %>: <%= host_count(@content_hosts, :enhancement) %>
 
-<% @errata = all_errata.take(100).group_by(&:errata_type) %>
+<% @errata = @errata.take(100).group_by(&:errata_type) %>
 
 <%= _("Unapplied Errata") %>:
 
