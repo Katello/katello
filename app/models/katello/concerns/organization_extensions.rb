@@ -30,8 +30,6 @@ module Katello
         #older association
         has_many :org_tasks, :dependent => :destroy, :class_name => "Katello::TaskStatus", :inverse_of => :organization
 
-        has_many :notices, :class_name => "Katello::Notice", :dependent => :destroy
-
         serialize :default_info, Hash
 
         attr_accessor :statistics

@@ -15,14 +15,6 @@ module Katello
       link_to(anchor_text, href_format % href_params)
     end
 
-    def user_notices(num = quantity, options = {})
-      truncate = options[:truncate] || 45
-
-      Notice.for_user(current_user).for_org(current_organization).order("created_at DESC").limit(num).map do |notice|
-        { :text => notice.text.truncate(truncate), :level => notice.level, :date => notice.created_at }
-      end
-    end
-
     def content_view_histories(num  = quantity)
       content_views = ContentView.where(:organization_id => current_organization.id).readable
       ContentViewHistory.joins(:content_view_version => :content_view).

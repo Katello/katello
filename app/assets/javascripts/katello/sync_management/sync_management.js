@@ -126,7 +126,6 @@ KT.content_actions = (function(){
                         KT.content.updateRepo(repo.id, repo.start_time, repo.duration, repo.progress.progress, repo.display_size, repo.packages, repo.size, repo.sync_id);
                         KT.content.finishRepo(repo.id, repo.state, repo.duration, repo.raw_state, repo.error_details, repo.sync_id);
                         KT.content.updateProduct(repo.product_id, false, false, true);
-                        notices.checkNotices();
                    }
                    else {
                     KT.content.updateRepo(  repo.id,

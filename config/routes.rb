@@ -39,20 +39,9 @@ Katello::Engine.routes.draw do
       end
     end
 
-    resources :notices, :only => [] do
-      collection do
-        get :get_new
-      end
-    end
-
-    match 'notices/:id/details' => 'notices#details', :via => :get, :as => 'notices_details'
-    match 'notices' => 'notices#show', :via => :get
-    match 'notices' => 'notices#destroy_all', :via => :delete
-
     resources :dashboard, :only => [:index] do
       collection do
         get :sync
-        get :notices
         get :errata
         get :content_views
         get :promotions

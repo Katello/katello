@@ -25,8 +25,6 @@ module Katello
 
         include Util::ThreadSession::UserModel
 
-        has_many :user_notices, :dependent => :destroy, :class_name => "Katello::UserNotice"
-        has_many :notices, :through => :user_notices, :class_name => "Katello::Notice"
         has_many :task_statuses, :dependent => :destroy, :class_name => "Katello::TaskStatus"
         has_many :activation_keys, :dependent => :destroy, :class_name => "Katello::ActivationKey"
         serialize :preferences, Hash
@@ -54,17 +52,6 @@ module Katello
         # is the current user consumer? (rhsm)
         def self.consumer?
           User.current.is_a? CpConsumerUser
-        end
-
-        #Remove up to 5 un-viewed notices
-        def pop_notices(organization = nil, count = 5)
-          notices = Notice.for_user(self).for_org(organization).unread.limit(count == :all ? nil : count)
-          notices.each { |notice| notice.user_notices.each(&:read!) }
-
-          notices = notices.map do |notice|
-            {:text => notice.text, :level => notice.level, :request_type => notice.request_type}
-          end
-          return notices
         end
 
         def cp_oauth_header
