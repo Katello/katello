@@ -58,7 +58,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 params['content_view_version_environments'] = [];
                 params['resolve_dependencies'] = true;
 
-                //get a list of unique content view verion ids with their environments
+                //get a list of unique content view version ids with their environments
                 angular.forEach($scope.updates, function (update) {
                     var versionId = update['content_view_version'].id;
 
@@ -119,7 +119,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 }
             }
 
-            if ($scope.selectedContentHosts) {
+            if ($scope.selectedContentHosts && $scope.errataIds) {
                 $scope.selectedContentHosts['errata_ids'] = $scope.errataIds;
                 $scope.selectedContentHosts['organization_id'] = CurrentOrganization;
                 ContentHostBulkAction.availableIncrementalUpdates($scope.selectedContentHosts, function (updates) {
