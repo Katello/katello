@@ -31,7 +31,6 @@ module Katello
                                       :filter      => { :_id => ids },
                                       :skip_render => true,
                                       :page_size   => 100)
-      retain_search_history
     end
 
     #rubocop:disable Style/AccessorMethodName

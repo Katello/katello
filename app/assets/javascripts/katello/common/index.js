@@ -7,5 +7,4 @@
 //= require "katello/common/chosen.jquery"
 //= require "katello/common/spin.min"
 //= require "katello/common/jquery.jeditable.custominputs"
-//= require "katello/common/search"
 //= require "katello/common/katello_object"
