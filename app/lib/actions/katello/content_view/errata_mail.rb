@@ -7,8 +7,17 @@ module Actions
         end
 
         def run
-          MailNotification[:katello_promote_errata].deliver(:content_view => input[:content_view],
-                                                            :environment => input[:environment])
+          ::User.current = ::User.anonymous_admin
+
+          content_view = ::Katello::ContentView.find(input[:content_view])
+          environment = ::Katello::KTEnvironment.find(input[:environment])
+          users = ::User.select { |user| user.receives?(:katello_promote_errata) && user.can?(:view_content_views, content_view) }
+
+          MailNotification[:katello_promote_errata].deliver(:users => users, :content_view => content_view, :environment  => environment) unless users.blank?
+        end
+
+        def finalize
+          ::User.current = nil
         end
       end
     end

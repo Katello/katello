@@ -44,15 +44,15 @@ module Katello
     def test_sync_errata
       ActionMailer::Base.deliveries = []
       repo = katello_repositories(:rhel_6_x86_64)
-      last_updated = 10.years.ago
-      MailNotification[:katello_sync_errata].deliver(:repo => repo.id, :last_updated => last_updated.to_s)
+      errata = ::Katello::Erratum.where(:id => repo.repository_errata.where('katello_repository_errata.updated_at > ?', 10.years.ago).pluck(:erratum_id))
+      MailNotification[:katello_sync_errata].deliver(:users => [@user], :repo => repo, :errata => errata)
       email = ActionMailer::Base.deliveries.first
       assert email.body.encoded.include? katello_errata(:security).errata_id
     end
 
     def test_promote_errata
       ActionMailer::Base.deliveries = []
-      MailNotification[:katello_promote_errata].deliver(:content_view => @errata_system.content_view_id, :environment => @errata_system.environment_id)
+      MailNotification[:katello_promote_errata].deliver(:users => [@user], :content_view => @errata_system.content_view, :environment => @errata_system.environment)
       email = ActionMailer::Base.deliveries.first
       assert email.body.encoded.include? 'RHSA-1999-1231'
     end
