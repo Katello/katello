@@ -83,54 +83,6 @@ KT.getData = function(fieldNames) {
     return data;
 };
 
-
-KT.helptip =  (function($) {
-    var enable = function(key, url) {
-        $.ajax({
-          type: "POST",
-          url: url,
-          data: { "key":key},
-          cache: false
-          });
-        },
-        disable = function(key, url) {
-          $.ajax({
-            type: "POST",
-            url: url,
-            data: { "key":key},
-            cache: false
-           });
-        },
-        handle_close = function(){
-          var key = this.id.split("helptip-opened_")[1],
-              url = $(this).attr('data-url');
-
-          $("#helptip-opened_" + key).hide();
-          $("#helptip-closed_" + key).show();
-
-          $(document).trigger('helptip-closed');
-
-          disable(key, url);
-        },
-        handle_open = function(){
-          var key = this.id.split("helptip-closed_")[1],
-              url = $(this).attr('data-url');
-
-          $("#helptip-opened_" + key).show();
-          $("#helptip-closed_" + key).hide();
-
-          $(document).trigger('helptip-opened');
-
-          enable(key, url);
-        };
-
-    return {
-        handle_close    :    handle_close,
-        handle_open     :    handle_open
-    };
-})(jQuery);
-
-
 //Add backwards compatible version of Object.keys
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/keys
 if(!Object.keys) {
@@ -294,10 +246,6 @@ $(document).ready(function (){
     }).blur(function() {
         onInputField = false;
     });
-
-    //Add a handler for helptips
-    $(".helptip-open").live('click', KT.helptip.handle_close);
-    $(".helptip-close").live('click', KT.helptip.handle_open);
 
     // Add a handler for ellipsis
     $(".tipsify").tooltip({ placement: 'bottom', delay : 350 });

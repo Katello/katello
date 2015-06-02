@@ -1,25 +1,17 @@
 = javascript "katello/dashboard"
 
-- if (current_user && current_user.organizations.length == 0) && !current_user.admin
-  .flash_hud
-    %ul.flash_messages.warning
-      %li
-        = _("You do not currently have access to any organizations.  Please contact an administrator to get permission to access an organization.")
+.col-md-12
+  .alert.alert-info 
+    = _('Your dashboard can be rearranged by clicking on a widget\'s title and dragging the widget ' + |
+      'to another position.') |
 
+.row
+  = render_dashboard
 
-- else
-  = help_tip_button
-  .col-md-12
-    = help_tip((_('Your dashboard can be rearranged by clicking on a widget\'s title and dragging the widget ' + |
-                  'to another position.'))) |
-
-  .row
-    = render_dashboard
-
-  .dashboard_popout.hidden
-    .popout_row.popout
-      %label.popout #{_("Display")}
-      %select.num_of_results.popout
-        - ['5', '15', '30'].each do |i|
-          %option.popout{:value => i} #{i} results
+.dashboard_popout.hidden
+  .popout_row.popout
+    %label.popout #{_("Display")}
+    %select.num_of_results.popout
+      - ['5', '15', '30'].each do |i|
+        %option.popout{:value => i} #{i} results
 

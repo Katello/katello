@@ -602,11 +602,6 @@ fieldset {
       top: 36px;
       right: 10px;
     }
-    .helptip_area {
-      float: left;
-      width: 62%;
-      clear: both;
-    }
     .filter_button {
 
 
@@ -865,13 +860,6 @@ fieldset {
   .subsubnav {
     background: none transparent;
   }
-  .helptip-close{
-    float: right;
-  }
-  .helptip-open-button {
-    right: 50px;
-    top: 7px;
-  }
   .data  {
     font-size: 100%;
 
@@ -938,16 +926,6 @@ fieldset {
   .grid_8 {
     margin-left: 0px;
     margin-right: 0px;
-  }
-  .helptip-close {
-    position: relative;
-    float: left;
-
-    .helptip-open-button {
-      position: relative;
-      top: 0;
-      right: 0;
-    }
   }
 }
 .subpanel {
@@ -1030,43 +1008,6 @@ fieldset {
     color: $text_color;
   }
 }
-
-/* begin helptip */
-.helptip, .helptip-open {
-  background-color: $helptip-background_color;
-  display: block;
-  padding: 12px;
-  border: 1px solid $helptip-border_color;
-  margin: 10px auto 5px auto;
-  @extend .clearfix !optional;
-
-  .helptip-close-button {
-    position: relative;
-    float: right;
-    height: 16px;
-    width: 16px;
-    margin: 0px;
-    background-position: -32px 0;
-
-    &:hover { background-position: -32px -16px; }
-  }
-}
-.helptip-close {
-  display: block;
-  margin: 4px 4px 4px 8px;
-  height: 18px;
-
-  .helptip-open-button {
-    background-position: -336px 0;
-    height: 16px;
-    width: 16px;
-    position: absolute;
-
-    &:hover { background-position: -336px -16px; }
-    @extend .clearfix !optional;
-  }
-}
-/* end helptip */
 
 .permission {
   display: inline-block;
@@ -1241,14 +1182,6 @@ footer a {
   ul li a {
     color: $kselected_color;
   }
-}
-.flash_messages {
-  background-color: $helptip-background_color;
-  display: block;
-  padding: 12px;
-  border: 1px solid $helptip-border_color;
-  margin: 10px auto 5px auto;
-  @extend .clearfix !optional;
 }
 
 #content section.maincontent {

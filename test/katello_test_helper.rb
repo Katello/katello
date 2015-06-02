@@ -71,7 +71,6 @@ module FixtureTestCase
     self.set_fixture_class :katello_environment_priors => "Katello::EnvironmentPrior"
     self.set_fixture_class :katello_environments => "Katello::KTEnvironment"
     self.set_fixture_class :katello_gpg_keys => "Katello::GpgKey"
-    self.set_fixture_class :katello_help_tips => "Katello::HelpTip"
     self.set_fixture_class :katello_notices => "Katello::Notice"
     self.set_fixture_class :katello_products => "Katello::Product"
     self.set_fixture_class :katello_providers => "Katello::Provider"
