@@ -5,7 +5,6 @@ module Actions
         def plan(activation_key, activation_key_params)
           # need to check if candlepin attributes have changed prior to updating attributes
           update_candlepin = update_candlepin?(activation_key, activation_key_params)
-          activation_key.disable_auto_reindex!
           action_subject activation_key
           activation_key.update_attributes!(activation_key_params)
           if update_candlepin
