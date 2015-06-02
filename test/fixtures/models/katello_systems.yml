@@ -30,3 +30,10 @@ errata_server:
   uuid:         010E99C0-3276-11E2-81C1-0800200Czzzzz
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+
+errata_server_dev:
+  name:         Errata Dev Server
+  description:  Errata server in the dev environment
+  uuid:         010E99C0-3276-11E2-81C1-0800200Czzzz1
+  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>

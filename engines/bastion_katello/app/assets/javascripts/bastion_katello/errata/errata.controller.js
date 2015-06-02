@@ -71,12 +71,12 @@ angular.module('Bastion.errata').controller('ErrataController',
         $scope.showApplicable = true;
         $scope.showInstallable = false;
 
-        $scope.toggleApplicable = function () {
-            nutupane.table.params['errata_restrict_applicable'] = $scope.showApplicable;
-            nutupane.refresh();
-        };
+        $scope.toggleFilters = function () {
+            if ($scope.showInstallable === true) {
+                $scope.showApplicable = true;
+            }
 
-        $scope.toggleInstallable = function () {
+            nutupane.table.params['errata_restrict_applicable'] = $scope.showApplicable;
             nutupane.table.params['errata_restrict_installable'] = $scope.showInstallable;
             nutupane.refresh();
         };

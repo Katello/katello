@@ -8,6 +8,7 @@ module Katello
       @bugfix = katello_errata(:bugfix)
       @enhancement = katello_errata(:enhancement)
       @errata_server = katello_systems(:errata_server)
+      @errata_server_dev = katello_systems(:errata_server_dev)
       @simple_server = katello_systems(:simple_server)
     end
   end
@@ -122,6 +123,21 @@ module Katello
 
     def test_installable_for_systems
       errata = Erratum.installable_for_systems([@errata_server, @simple_server])
+      assert_includes errata, @security
+      refute_includes errata, @bugfix
+      refute_includes errata, @enhancement
+    end
+
+    def test_installable_for_systems_dev_environment
+      errata = Erratum.installable_for_systems([@errata_server_dev, @simple_server])
+      assert_includes errata, @security
+      refute_includes errata, @bugfix
+      refute_includes errata, @enhancement
+    end
+
+    def test_installable_for_systems_dev_environment_with_repos
+      #Tests issue #10681
+      errata = Erratum.installable_for_systems([@errata_server_dev, @simple_server]).in_repositories(@repo)
       assert_includes errata, @security
       refute_includes errata, @bugfix
       refute_includes errata, @enhancement

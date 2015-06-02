@@ -65,7 +65,9 @@ module Katello
     def self.installable_for_systems(systems = nil)
       query = Katello::Erratum.joins(:system_errata).joins(:repository_errata).joins("INNER JOIN #{Katello::SystemRepository.table_name} on \
         #{Katello::SystemRepository.table_name}.system_id = #{Katello::SystemErratum.table_name}.system_id").
-          where("#{Katello::SystemRepository.table_name}.repository_id = #{Katello::RepositoryErratum.table_name}.repository_id")
+        joins("INNER JOIN #{Katello::RepositoryErratum.table_name} AS system_repo_errata ON \
+          system_repo_errata.erratum_id = #{Katello::Erratum.table_name}.id").
+        where("#{Katello::SystemRepository.table_name}.repository_id = system_repo_errata.repository_id")
       query.where("#{Katello::SystemRepository.table_name}.system_id" => [systems.map(&:id)]) if systems
       query
     end

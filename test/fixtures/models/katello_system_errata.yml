@@ -5,3 +5,11 @@ errata_server_security:
 errata_server_bugfix:
   erratum_id: <%= ActiveRecord::Fixtures.identify(:bugfix) %>
   system_id: <%= ActiveRecord::Fixtures.identify(:errata_server) %>
+
+errata_server_dev_security:
+  erratum_id: <%= ActiveRecord::Fixtures.identify(:security) %>
+  system_id: <%= ActiveRecord::Fixtures.identify(:errata_server_dev) %>
+
+errata_server_dev_bugfix:
+  erratum_id: <%= ActiveRecord::Fixtures.identify(:bugfix) %>
+  system_id: <%= ActiveRecord::Fixtures.identify(:errata_server_dev) %>

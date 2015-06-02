@@ -34,12 +34,13 @@
 
     <div class="col-sm-3">
       <label class="checkbox-inline" title="{{ 'Only show Errata that is Applicable to one or more Content Hosts' | translate }}">
-        <input type="checkbox" ng-model="showApplicable" ng-change="toggleApplicable()"/>
+        <input type="checkbox" ng-model="showApplicable" ng-disabled="showInstallable" ng-change="toggleFilters()"/>
         <span translate>Applicable</span>
+        <i class="fa fa-question-circle" ng-show="showInstallable" title="{{ 'Errata is automatically Applicable if it is Installable' | translate }}"></i>
       </label>
 
       <label class="checkbox-inline" title="{{ 'Only show Errata that is Installable on one or more Content Hosts' | translate }}">
-        <input type="checkbox" ng-model="showInstallable" ng-change="toggleInstallable()"/>
+        <input type="checkbox" ng-model="showInstallable" ng-change="toggleFilters()"/>
         <span translate>Installable</span>
       </label>
     </div>
