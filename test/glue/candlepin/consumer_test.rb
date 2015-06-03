@@ -30,7 +30,6 @@ module Katello
       # Create the environment in candlepin
       CandlepinOwnerSupport.set_owner(@@org)
 
-      User.current.remote_id =  User.current.login
       ForemanTasks.sync_task(::Actions::Katello::ContentView::EnvironmentCreate, @@dev_cve)
     end
 

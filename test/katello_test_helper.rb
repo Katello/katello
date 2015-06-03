@@ -98,7 +98,6 @@ module FixtureTestCase
       @loaded_fixtures = load_fixtures
 
       @@admin = ::User.find(@loaded_fixtures['users']['admin']['id'])
-      @@admin.remote_id = Katello.config.pulp.default_login
       User.current = @@admin
     end
   end
@@ -153,7 +152,6 @@ class ActiveSupport::TestCase
 
   def self.run_as_admin
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
-    User.current.remote_id = User.current.login
     yield
     User.current = nil
   end
@@ -161,10 +159,6 @@ class ActiveSupport::TestCase
   def set_user(user = nil)
     user ||= users(:admin)
     user = User.find(user) if user.id
-    unless user.remote_id
-      user.remote_id = user.admin? ? 'admin' : user.login
-      user.save!
-    end
     User.current = user
   end
 

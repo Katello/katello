@@ -8,10 +8,10 @@ module Katello
 
     def self.before_suite
       VCR.insert_cassette("elasticsearch/package")
-      Tire.index(Package.index).delete
-      Tire.index Package.index do
-        create :settings => Package.index_settings, :mappings => Package.index_mapping
-      end
+      #Tire.index(Package.index).delete
+      #Tire.index Package.index do
+      #  create :settings => Package.index_settings, :mappings => Package.index_mapping
+      #end
     end
 
     def setup

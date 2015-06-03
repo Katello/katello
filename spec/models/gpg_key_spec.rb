@@ -7,9 +7,6 @@ module Katello
 
     let(:organization) do
       disable_org_orchestration
-      as_admin do
-        User.current.stubs(:remote_id).returns(User.current.login)
-      end
     end
 
     describe "create gpg key" do

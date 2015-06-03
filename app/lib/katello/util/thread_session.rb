@@ -48,8 +48,8 @@ module Katello
                 self.cp_config(o.cp_oauth_header)
               end
 
-              if Katello.config.use_pulp && o.respond_to?(:remote_id)
-                self.pulp_config(o.remote_id)
+              if Katello.config.use_pulp
+                self.pulp_config(User.remote_user)
               end
             end
 

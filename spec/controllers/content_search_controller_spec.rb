@@ -69,7 +69,7 @@ module Katello
             it "should return some #{content_type}" do
               setup_search(:filter => @expected_filters[mode],
                            :query => {:match_all => {}},
-                           :size => 25,
+                           :size => 20,
                            :fields => [:id, :name, :nvrea, :repoids, :type, :errata_id, :author, :version],
                            :results => [])
               params = {"mode" => mode.to_s, "views" => {:autocomplete => [{"id" => @organization.default_content_view.id}]},
