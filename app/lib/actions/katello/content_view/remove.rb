@@ -38,10 +38,12 @@ module Actions
           check_version_deletion(versions, cv_envs)
 
           sequence do
-            concurrence do
-              all_cv_envs.each do |cv_env|
-                if cv_env.systems.any? || cv_env.activation_keys.any?
-                  plan_action(ContentViewEnvironment::ReassignObjects, cv_env, options)
+            unless organization_destroy
+              concurrence do
+                all_cv_envs.each do |cv_env|
+                  if cv_env.systems.any? || cv_env.activation_keys.any?
+                    plan_action(ContentViewEnvironment::ReassignObjects, cv_env, options)
+                  end
                 end
               end
             end
