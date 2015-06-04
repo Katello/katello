@@ -52,7 +52,6 @@ module Katello
       expected_version = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2))
 
       results = JSON.parse(get(:index, :content_view_id => @library_view.id, :environment_id => @library.id).body)
-
       assert_response :success
       assert_template 'api/v2/content_view_versions/index'
 

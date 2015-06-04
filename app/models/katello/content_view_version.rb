@@ -41,7 +41,27 @@ module Katello
     scope :default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true)
     scope :non_default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false)
 
-    scoped_search :on => [:content_view_id, :major, :minor]
+    scoped_search :on => :content_view_id
+    scoped_search :on => :major, :rename => :version, :complete_value => true, :ext_method => :find_by_version
+    scoped_search :in => :repositories, :on => :name, :rename => :repository, :complete_value => true
+
+    def self.find_by_version(_key, operator, value)
+      conditions = ""
+      if ['>', '<', '=', '<=', '>=', "<>", "!=", 'IN', 'NOT IN'].include?(operator) && value.to_f >= 0
+        major, minor = value.split(".")
+        case
+        when /[<>]/ =~ operator
+          minor ||= 0
+          query = where("major #{operator} :major OR (major = :major AND minor #{operator} :minor)", :major => major, :minor => minor)
+        when minor.nil?
+          query = where("major #{operator} (:major)", :major => major)
+        else
+          query = where("major #{operator} (:major) and minor #{operator} (:minor)", :major => major, :minor => minor)
+        end
+        _, conditions = query.to_sql.split("WHERE")
+      end
+      { :conditions => conditions }
+    end
 
     def self.component_of(versions)
       joins(:content_view_version_composites).where("#{Katello::ContentViewVersionComponent.table_name}.composite_version_id" => versions)
@@ -132,7 +152,6 @@ module Katello
 
     def self.in_environment(env)
       joins(:content_view_environments).where("#{Katello::ContentViewEnvironment.table_name}.environment_id" => env)
-        .order("#{Katello::ContentViewEnvironment.table_name}.environment_id")
     end
 
     def removable?
