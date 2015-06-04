@@ -26,6 +26,9 @@ angular.module('Bastion.content-views').controller('ContentViewRepositoriesListC
             'content_type': 'yum'
         },
         'queryUnpaged');
+
+        nutupane.load();
+
         $scope.repositoriesTable = nutupane.table;
 
         $scope.removeRepositories = function () {

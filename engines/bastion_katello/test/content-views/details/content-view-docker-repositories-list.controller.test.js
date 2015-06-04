@@ -15,6 +15,7 @@ describe('Controller: ContentViewDockerRepositoriesListController', function() {
                 return {included: {ids: [1, 2]}};
             };
 
+            this.load = function () {};
             this.table = {};
         };
 

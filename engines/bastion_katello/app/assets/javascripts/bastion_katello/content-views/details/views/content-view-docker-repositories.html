@@ -78,58 +78,54 @@
       {{ "Loading..." | translate }}
     </div>
 
-    <div bst-infinite-scroll="repositoriesTable.nextPage()" data="repositoriesTable.rows">
+    <table ng-show="repositoriesTable.rows.length > 0"  class="table table-bordered table-striped">
+      <thead>
+        <tr bst-table-head row-select>
+          <th bst-table-column translate>Name</th>
+          <th bst-table-column translate>Product</th>
+          <th bst-table-column translate>Last Sync</th>
+          <th bst-table-column translate>Sync State</th>
+          <th bst-table-column translate>Content</th>
+        </tr>
+      </thead>
 
-      <table ng-show="repositoriesTable.rows.length > 0"  class="table table-bordered table-striped">
-        <thead>
-          <tr bst-table-head row-select>
-            <th bst-table-column translate>Name</th>
-            <th bst-table-column translate>Product</th>
-            <th bst-table-column translate>Last Sync</th>
-            <th bst-table-column translate>Sync State</th>
-            <th bst-table-column translate>Content</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr bst-table-row
-              row-select="repository"
-              ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch | filter:repositoryFilter | as:'filteredItems'">
-            <td bst-table-cell>
-              <a ui-sref="products.details.repositories.info({productId: repository.product.id, repositoryId: repository.id})">
-                {{ repository.name }}
-              </a>
-            </td>
-            <td bst-table-cell>{{ repository.product.name }}</td>
-            <td bst-table-cell>
-              <span ng-show="repository.url">
-                {{ repository.last_sync.ended_at | date:"short" }}
+      <tbody>
+        <tr bst-table-row
+            row-select="repository"
+            ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch | filter:repositoryFilter | as:'filteredItems'">
+          <td bst-table-cell>
+            <a ui-sref="products.details.repositories.info({productId: repository.product.id, repositoryId: repository.id})">
+              {{ repository.name }}
+            </a>
+          </td>
+          <td bst-table-cell>{{ repository.product.name }}</td>
+          <td bst-table-cell>
+            <span ng-show="repository.url">
+              {{ repository.last_sync.ended_at | date:"short" }}
+            </span>
+            <span ng-hide="repository.url" translate>N/A</span>
+          </td>
+          <td bst-table-cell>
+            <span ng-show="repository.url">
+              <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result | capitalize }}</a>
+            </span>
+            <span ng-hide="repository.url" translate>N/A</span>
+          </td>
+          <td bst-table-cell>
+            <div ng-if="repository.content_counts.docker_image && repository.content_counts.docker_image > 0">
+              <span translate>
+                {{ repository.content_counts.docker_image }} Docker Images
               </span>
-              <span ng-hide="repository.url" translate>N/A</span>
-            </td>
-            <td bst-table-cell>
-              <span ng-show="repository.url">
-                <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result | capitalize }}</a>
+            </div>
+            <div ng-if="repository.content_counts.docker_tag && repository.content_counts.docker_tag > 0">
+              <span translate>
+                {{ repository.content_counts.docker_tag }} Docker Tags
               </span>
-              <span ng-hide="repository.url" translate>N/A</span>
-            </td>
-            <td bst-table-cell>
-              <div ng-if="repository.content_counts.docker_image && repository.content_counts.docker_image > 0">
-                <span translate>
-                  {{ repository.content_counts.docker_image }} Docker Images
-                </span>
-              </div>
-              <div ng-if="repository.content_counts.docker_tag && repository.content_counts.docker_tag > 0">
-                <span translate>
-                  {{ repository.content_counts.docker_tag }} Docker Tags
-                </span>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-    </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
 </div>
