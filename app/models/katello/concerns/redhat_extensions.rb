@@ -17,10 +17,13 @@ module Katello
           major, minor = distribution.version.split('.')
           minor ||= '' # treat minor versions as empty string to not confuse with nil
 
-          os = ::Redhat.where(:name => os_name, :major => major, :minor => minor).first
-          os = create_operating_system(os_name, major, minor) unless os
+          create_os = lambda { ::Redhat.where(:name => os_name, :major => major, :minor => minor).first_or_create! }
 
-          return os
+          begin
+            create_os.call
+          rescue ActiveRecord::RecordInvalid
+            create_os.call
+          end
         end
 
         def create_operating_system(name, major, minor)
