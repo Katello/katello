@@ -197,6 +197,10 @@ module Katello
         Resources::Candlepin::Owner.imports self.organization.label
       end
 
+      def import_logger
+        Foreman::Logging.logger('katello/manifest_import_logger')
+      end
+
       # TODO: break up method
       def queue_import_manifest(options) # rubocop:disable MethodLength
         options = options.with_indifferent_access
@@ -207,13 +211,7 @@ module Katello
         #are we refreshing from upstream?
         manifest_refresh = options['zip_file_path'].nil?
 
-        output = ::Logging.appenders.string_io.new('manifest_import_appender')
-        import_logger = ::Logging.logger['manifest_import_logger']
-        import_logger.additive = false
-        import_logger.add_appenders(output)
-
-        options.merge!(:import_logger => import_logger)
-        [Rails.logger, import_logger].each { |l| l.debug "Importing manifest for provider #{self.name}" }
+        import_logger.debug "Importing manifest for provider #{self.name}"
 
         begin
           if manifest_refresh
@@ -249,8 +247,7 @@ module Katello
       end
 
       # TODO: break up method
-      def import_products_from_cp(options = {}) # rubocop:disable MethodLength
-        import_logger = options[:import_logger]
+      def import_products_from_cp # rubocop:disable MethodLength
         product_in_katello_ids = self.organization.providers.redhat.first.products.pluck("cp_id")
         products_in_candlepin_ids = []
 
@@ -264,23 +261,16 @@ module Katello
           adjusted_eng_products = []
           added_eng_products.each do |product_attrs|
             begin
-              product_attrs.merge!(:import_logger => import_logger)
-
               Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
                 p.provider = self
                 p.organization_id = self.organization.id
               end
               adjusted_eng_products << product_attrs
-              if import_logger
-                import_logger.info "import of product '#{product_attrs["name"]}' from Candlepin OK"
-              end
+              import_logger.info "import of product '#{product_attrs["name"]}' from Candlepin OK"
             rescue Errors::SecurityViolation => e
               # Do not add non-accessible products
-              [Rails.logger, import_logger].each do |logger|
-                next if logger.nil?
-                logger.info "import of product '#{product_attrs["name"]}' from Candlepin failed"
-                import_logger.info e
-              end
+              logger.info "import of product '#{product_attrs["name"]}' from Candlepin failed"
+              import_logger.info e
             end
           end
 
@@ -349,10 +339,7 @@ module Katello
       end
 
       def queue_delete_manifest(options)
-        output        = StringIO.new
-        import_logger = Logger.new(output)
-        options.merge!(:import_logger => import_logger)
-        [Rails.logger, import_logger].each { |l| l.debug "Deleting manifest for provider #{self.name}" }
+        import_logger.debug "Deleting manifest for provider #{self.name}"
 
         begin
           pre_queue.create(:name     => "delete manifest for owner: #{self.organization.name}",

@@ -25,35 +25,15 @@ module Katello
                   redhat_repository_url
                   elastic_url rest_client_timeout elastic_index
                   pulp
-                  logging
                   consumer_cert_rpm))
-
-        validate :logging do
-          keys?(*%w(console_inline colorize log_trace loggers))
-
-          validate :loggers do
-            keys? 'root'
-            validate :root do
-              keys? 'level'
-              if config[:type] == 'file'
-                keys?(*%w(age keep pattern filename))
-                keys? 'path' unless early?
-              end
-            end
-          end
-        end
 
         booleans? :use_cp, :use_pulp, :use_elasticsearch
       end,
 
-      :config_post_process      => lambda do |config, environment|
+      :config_post_process => lambda do |config, _environment|
         config[:use_cp] = true if config[:use_cp].nil?
         config[:use_pulp] = true if config[:use_pulp].nil?
         config[:use_elasticsearch] = true if config[:use_elasticsearch].nil?
-
-        root = config.logging.loggers.root
-        root[:path] = "#{Rails.root}/log" unless root.key?(:path) if environment
-        root[:type] ||= 'file'
       end)
   end
 

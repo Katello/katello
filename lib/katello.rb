@@ -34,9 +34,8 @@ require "monkeys/anemone"
 
 module Katello
   require "katello/version"
+  require "katello/tire_bridge"
   require "katello/app_config"
   require "katello/engine"
   require "katello/load_configuration"
-  require "katello/logging"
-  require 'katello/middleware/silenced_logger.rb'
 end

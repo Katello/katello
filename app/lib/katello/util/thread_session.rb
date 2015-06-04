@@ -64,7 +64,7 @@ module Katello
                 :open_timeout => Katello.config.rest_client_timeout,
                 :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
                               :oauth_key    => Katello.config.pulp.oauth_key },
-                :logging  => {:logger     => ::Logging.logger['pulp_rest'],
+                :logging  => {:logger     => ::Foreman::Logging.logger('katello/pulp_rest'),
                               :exception  => true,
                               :debug      => true }
               )

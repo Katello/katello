@@ -164,4 +164,12 @@ Foreman::Plugin.register :katello do
   end
   apipie_documented_controllers ["#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"]
   apipie_ignored_controllers %w(::Api::V2::OrganizationsController)
+
+  logger :glue, :enabled => true
+  logger :pulp_rest, :enabled => true
+  logger :cp_rest, :enabled => true
+  logger :cp_proxy, :enabled => true
+  logger :action, :enabled => true
+  logger :tire_rest, :enabled => false
+  logger :manifest_import_logger, :enabled => true
 end

@@ -6,7 +6,7 @@ module Katello
     module Candlepin
       class Proxy
         def self.logger
-          ::Logging.logger['cp_proxy']
+          Foreman::Logging.logger('katello/cp_proxy')
         end
 
         def self.post(path, body)
@@ -50,7 +50,7 @@ module Katello
         self.ca_cert_file = cfg.ca_cert_file
 
         def self.logger
-          ::Logging.logger['cp_rest']
+          Foreman::Logging.logger('katello/cp_rest')
         end
 
         def self.default_headers(uuid = nil)
@@ -284,7 +284,7 @@ module Katello
 
       class UpstreamConsumer < HttpResource
         def self.logger
-          ::Logging.logger['cp_rest']
+          Foreman::Logging.logger('katello/cp_rest')
         end
 
         def self.resource(url, client_cert, client_key, ca_file)
