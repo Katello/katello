@@ -25,7 +25,7 @@ angular.module('Bastion.errata').controller('ErrataContentHostsController',
         };
 
         if (!params['erratum_id']) {
-            params['errata_ids[]'] = _.pluck($scope.table.getSelected(), 'id');
+            params['errata_ids'] = _.pluck($scope.table.getSelected(), 'id');
         }
 
         nutupane = new Nutupane(ContentHost, params, 'getPost');
