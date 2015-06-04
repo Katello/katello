@@ -75,6 +75,11 @@ module Katello
       assert_response :success
     end
 
+    def test_create_duplicate_name
+      post(:create, :organization => {"name" => @organization.name})
+      assert_response :unprocessable_entity
+    end
+
     def test_delete
       assert_async_task ::Actions::Katello::Organization::Destroy do |org|
         org.id.must_equal @organization.id
