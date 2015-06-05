@@ -16,29 +16,39 @@ module Actions
 
         def run
           saved_cp_ids = existing_ids
-          add_ids    = input[:content_ids] - saved_cp_ids
-          delete_ids = saved_cp_ids - input[:content_ids]
-          retries = 2
-          (retries + 1).times do
-            output[:add_ids] = add_ids
-            break if add_ids.empty?
+          output[:add_ids] = input[:content_ids] - saved_cp_ids
+          output[:delete_ids] = saved_cp_ids - input[:content_ids]
+          max_retries = 4
+          retries = 0
+          until output[:add_ids].empty?
             begin
               output[:add_response] = ::Katello::Resources::Candlepin::Environment.
-                add_content(input[:cp_environment_id], add_ids)
+                add_content(input[:cp_environment_id], output[:add_ids])
               break
-            rescue RestClient::InternalServerError
-              # HACK
-              # Candlepin raises a 500 in case it gets a duplicate content id add to a environment
-              # so as pure conjecture we are using this and just guessing if its a dup id.
-              # so trying again
-              add_ids = input[:content_ids] - existing_ids
+            rescue RestClient::Conflict => e
+              retries += 1
+              raise e if retries == max_retries
+              # Candlepin raises a 409 in case it gets a duplicate content id add to an environment
+              # Since its a dup id refresh the existing ids list (which hopefully will not have the duplicate content)
+              # and try again.
+              output[:add_ids] = input[:content_ids] - existing_ids
             end
           end
 
-          output[:delete_ids]      = delete_ids
-          unless delete_ids.empty?
-            output[:delete_response] = ::Katello::Resources::Candlepin::Environment.
-                delete_content(input[:cp_environment_id], delete_ids)
+          retries = 0
+          until output[:delete_ids].empty?
+            begin
+              output[:delete_response] = ::Katello::Resources::Candlepin::Environment.
+                  delete_content(input[:cp_environment_id], output[:delete_ids])
+              break
+            rescue RestClient::ResourceNotFound => e
+              retries += 1
+              raise e if retries == max_retries
+              # Candlepin raises a 404 in case a content id is not found in this environment
+              # If thats the case lets just refresh the existing ids list (which hopefully will not have the 404'd content)
+              # and try again.
+              output[:delete_ids] = existing_ids - input[:content_ids]
+            end
           end
         end
       end
