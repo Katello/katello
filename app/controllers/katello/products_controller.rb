@@ -22,7 +22,7 @@ module Katello
         else
           repos = task.output[:results]
           repos = exclude_rolling_kickstart_repos(repos)
-          repos = available_synced_repos(repos)
+          repos = available_synced_repos(repos) if params[:orphaned]
 
           render :partial => 'katello/providers/redhat/repos', :locals => {:scan_cdn => task, :repos => repos}
         end
