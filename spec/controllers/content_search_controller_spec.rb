@@ -15,6 +15,7 @@ module Katello
       @controller.stubs(:search_validate).returns(true)
       disable_product_orchestration
       disable_repo_orchestration
+      stub_ping
     end
 
     describe "check packages and errata" do

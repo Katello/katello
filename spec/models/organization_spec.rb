@@ -5,6 +5,7 @@ module Katello
     include OrganizationHelperMethods
 
     before(:each) do
+      stub_ping
       User.current = User.find(users(:admin))
       disable_foreman_tasks_hooks_execution(Organization)
       disable_env_orchestration
