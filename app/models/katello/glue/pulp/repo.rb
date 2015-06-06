@@ -313,7 +313,11 @@ module Katello
       def index_db_errata(force = false)
         if self.content_view.default? || force
           errata_json.each do |erratum_json|
-            erratum = Erratum.find_or_create_by_uuid(:uuid => erratum_json['_id'])
+            begin
+              erratum = Erratum.find_or_create_by_uuid(:uuid => erratum_json['_id'])
+            rescue ActiveRecord::RecordNotUnique
+              retry
+            end
             erratum.update_from_json(erratum_json)
           end
         end
