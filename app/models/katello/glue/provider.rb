@@ -231,7 +231,7 @@ module Katello
                            :priority => 4, :action => [self, :owner_import, zip_file_path, options],
                            :action_rollback => [self, :del_owner_import])
           pre_queue.create(:name     => "import of products in manifest #{zip_file_path}",
-                           :priority => 5, :action => [self, :import_products_from_cp, options])
+                           :priority => 5, :action => [self, :import_products_from_cp])
           pre_queue.create(:name     => "refresh product repos",
                            :priority => 6, :action => [self, :refresh_existing_products]) if manifest_update && Katello.config.use_pulp
 
