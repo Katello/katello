@@ -70,16 +70,20 @@ describe('Controller: ErrataController', function() {
         expect($scope.repositories[0]['id']).toBe('all');
     });
 
-    it("allows the filtering of applicable errata only", function () {
-        $scope.showApplicable = true;
-        $scope.toggleApplicable();
-        expect($scope.table.params['errata_restrict_applicable']).toBe(true)
+    it("allows the filtering of errata", function () {
+        $scope.showApplicable = false;
+        $scope.showInstallable = false;
+        $scope.toggleFilters();
+        expect($scope.table.params['errata_restrict_applicable']).toBe(false)
+        expect($scope.table.params['errata_restrict_installable']).toBe(false)
     });
 
-    it("allows the filtering of installable errata only", function () {
-        $scope.showInstallable = false;
-        $scope.toggleInstallable();
-        expect($scope.table.params['errata_restrict_installable']).toBe(false)
+    it("ensures showApplicable is true if showInstallable is true", function () {
+        $scope.showApplicable = false;
+        $scope.showInstallable = true;
+        $scope.toggleFilters();
+        expect($scope.table.params['errata_restrict_applicable']).toBe(true)
+        expect($scope.table.params['errata_restrict_installable']).toBe(true)
     });
 
     it('should set the repository_id param on Nutupane when a repository is chosen', function () {
