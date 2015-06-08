@@ -97,28 +97,58 @@ module Katello
 
     private
 
+    def run_until(needed_function, action_function)
+      needed = needed_function.call
+      retries = needed.length
+      until needed.empty? || retries == 0
+        begin
+          action_function.call(needed)
+        rescue ActiveRecord::RecordNotUnique
+          self.reload
+        end
+        needed = needed_function.call
+        retries -= 1
+      end
+      fail _('Failed indexing errata, maximum retries encountered') if retries == 0 && needed.any?
+    end
+
     def update_bugzillas(json)
-      existing_names = self.bugzillas.pluck(:bug_id)
-      needed = json.select { |bz| !existing_names.include?(bz['id']) }
-      self.bugzillas.create!(needed.map { |bug| {:bug_id => bug['id'], :href => bug['href']} })
+      needed_function = lambda do
+        existing_names = bugzillas.pluck(:bug_id)
+        json.select { |bz| !existing_names.include?(bz['id']) }
+      end
+      action_function = lambda do |needed|
+        bugzillas.create!(needed.map { |bug| {:bug_id => bug['id'], :href => bug['href']} })
+      end
+      run_until(needed_function, action_function)
     end
 
     def update_cves(json)
-      existing_names = self.cves.pluck(:cve_id)
-      needed = json.select { |cve| !existing_names.include?(cve['id']) }
-      self.cves.create!(needed.map { |cve| {:cve_id => cve['id'], :href => cve['href']} })
+      needed_function = lambda do
+        existing_names = cves.pluck(:cve_id)
+        json.select { |cve| !existing_names.include?(cve['id']) }
+      end
+      action_function = lambda do |needed|
+        cves.create!(needed.map { |cve| {:cve_id => cve['id'], :href => cve['href']} })
+      end
+      run_until(needed_function, action_function)
     end
 
     def update_packages(json)
-      package_hashes = json.map { |list| list['packages'] }.flatten
-      package_attributes = package_hashes.map do |hash|
-        nvrea = "#{hash['name']}-#{hash['version']}-#{hash['release']}.#{hash['arch']}"
-        {'name' => hash['name'], 'nvrea' => nvrea, 'filename' => hash['filename']}
+      needed_function = lambda do
+        package_hashes = json.map { |list| list['packages'] }.flatten
+        package_attributes = package_hashes.map do |hash|
+          nvrea = "#{hash['name']}-#{hash['version']}-#{hash['release']}.#{hash['arch']}"
+          {'name' => hash['name'], 'nvrea' => nvrea, 'filename' => hash['filename']}
+        end
+        existing_nvreas = self.packages.pluck(:nvrea)
+        package_attributes.delete_if { |pkg| existing_nvreas.include?(pkg['nvrea']) }
+        package_attributes.uniq { |pkg| pkg['nvrea'] }
       end
-      existing_nvreas = self.packages.pluck(:nvrea)
-      package_attributes.delete_if { |pkg| existing_nvreas.include?(pkg['nvrea']) }
-      package_attributes = package_attributes.uniq { |pkg| pkg['nvrea'] }
-      self.packages.create!(package_attributes)
+      action_function = lambda do |needed|
+        self.packages.create!(needed)
+      end
+      run_until(needed_function, action_function)
     end
   end
 end
