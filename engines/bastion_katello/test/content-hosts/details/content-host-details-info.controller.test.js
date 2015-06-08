@@ -3,7 +3,6 @@ describe('Controller: ContentHostDetailsInfoController', function() {
         $controller,
         translate,
         ContentHost,
-        CustomInfo,
         mockContentViews;
 
     beforeEach(module(
@@ -22,7 +21,6 @@ describe('Controller: ContentHostDetailsInfoController', function() {
             ContentView = $injector.get('MockResource').$new(),
             Organization = $injector.get('MockResource').$new();
 
-        CustomInfo = $injector.get('MockResource').$new(),
         ContentHost = $injector.get('MockResource').$new();
         $scope = $injector.get('$rootScope').$new();
 
@@ -77,7 +75,6 @@ describe('Controller: ContentHostDetailsInfoController', function() {
             $scope: $scope,
             $q: $q,
             translate: translate,
-            CustomInfo: CustomInfo,
             ContentHost: ContentHost,
             ContentView: ContentView,
             Organization: Organization,
@@ -153,38 +150,6 @@ describe('Controller: ContentHostDetailsInfoController', function() {
 
             expect($scope.contentHost.environment.id).toBe(2);
             expect($scope.editContentView).toBe(false);
-        });
-    });
-
-    describe("handles custom info CRUD operations", function() {
-        var $httpBackend, info, expectedUrl, expectedData;
-
-        beforeEach(function() {
-
-            inject(function(_$httpBackend_) {
-                $httpBackend = _$httpBackend_;
-            });
-
-            $scope.contentHost = {id: 1, customInfo: []};
-            info = {id: 1, keyname: 'key', value: 'value'};
-            expectedData = {'custom_info': info};
-        });
-
-        it("should provide a way to update custom info", function() {
-            $scope.contentHost.customInfo = [{id: 1, name: 'CustomInfo1'}];
-            expect($scope.saveCustomInfo({name: 'CustomInfo2'}).custom_info.name).toBe('CustomInfo2');
-        });
-
-        it("should provide a way to create custom info", function() {
-            $scope.addCustomInfo(info);
-
-            expect($scope.contentHost.customInfo.length).toBe(1);
-        });
-
-        it("should provide a way to delete custom info", function() {
-            var customInfo = {keyname: 'CustomInfo1'};
-            $scope.contentHost.customInfo = [customInfo];
-            expect($scope.deleteCustomInfo(customInfo)).toBe(true);
         });
     });
 });

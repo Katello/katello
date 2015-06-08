@@ -30,14 +30,11 @@ module Katello
         #older association
         has_many :org_tasks, :dependent => :destroy, :class_name => "Katello::TaskStatus", :inverse_of => :organization
 
-        serialize :default_info, Hash
-
         attr_accessor :statistics
 
         scope :having_name_or_label, lambda { |name_or_label| { :conditions => ["name = :id or label = :id", {:id => name_or_label}] } }
         scoped_search :on => :label, :complete_value => :true
 
-        after_initialize :initialize_default_info
         after_create :associate_default_capsule
 
         validates :name, :uniqueness => true, :presence => true
@@ -45,7 +42,6 @@ module Katello
         validates :label, :presence => true
         validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
         validate :unique_name_and_label
-        validates_with Validators::DefaultInfoValidator, :attributes => :default_info
 
         # Ensure that the name and label namespaces do not overlap
         def unique_name_and_label
@@ -134,30 +130,6 @@ module Katello
           unless destroy
             fail self.errors.full_messages.join('; ')
           end
-        end
-
-        def applying_default_info?
-          return false if self.apply_info_task_id.nil?
-          !TaskStatus.find_by_id(self.apply_info_task_id).finished?
-        end
-
-        def initialize_default_info
-          self.default_info ||= {}
-
-          ALLOWED_DEFAULT_INFO_TYPES.each do |key|
-            if self.default_info.class == ActiveRecord::AttributeMethods::Serialization::Attribute
-              self.default_info = self.default_info.unserialized_value
-              if !self.default_info.value.include?(key) || self.default_info.value.class != Array
-                self.default_info.value[key] = []
-              end
-            elsif self.default_info[key].class != Array
-              self.default_info[key] = []
-            end
-          end
-        end
-
-        def default_info_hash
-          self.default_info.is_a?(Hash) ? self.default_info : self.default_info.unserialized_value
         end
 
         def self.check_informable_type!(informable_type, options = {})

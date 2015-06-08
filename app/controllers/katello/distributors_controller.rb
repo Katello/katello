@@ -71,8 +71,7 @@ module Katello
         :facts => read_distributor,
         :auto_complete => any_readable,
         :destroy => delete_distributors,
-        :bulk_destroy => bulk_delete_distributors,
-        :custom_info => read_distributor
+        :bulk_destroy => bulk_delete_distributors
       }
     end
 
@@ -280,10 +279,6 @@ module Katello
     def show
       distributor = Distributor.find(params[:id])
       render :partial => "list_distributor_show", :locals => {:item => distributor, :accessor => "id", :columns => COLUMNS.keys, :noblock => 1}
-    end
-
-    def custom_info
-      render :partial => "edit_custom_info"
     end
 
     def section_id

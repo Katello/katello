@@ -24,7 +24,6 @@ $(document).ready(function() {
             initialize_panel_element();
             initialize_ajaxfileupload();
             initialize_textfield();
-            initialize_textfield_custom_info();
             initialize_textarea();
             initialize_multiselect();
             initialize_select();
@@ -83,26 +82,6 @@ $(document).ready(function() {
                     name        :  $(this).attr('name'),
                     onsuccess   : function(result, status, xhr) {
                         element.text(KT.utils.unescape(result)); // hax
-                    },
-                    onerror     : function(settings, original, xhr) {
-                        original.reset();
-                    }
-                };
-                $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
-            });
-        };
-
-        var initialize_textfield_custom_info = function() {
-            $('.edit_textfield_custom_info').each(function() {
-                $(this).editable('destroy');
-                var element = $(this);
-                var settings = {
-                    type        :  'custom_info',
-                    data        :  null,
-                    width       :  158,
-                    name        :  $(this).attr('name'),
-                    onsuccess   : function(result, status, xhr) {
-                        element.text(result);
                     },
                     onerror     : function(settings, original, xhr) {
                         original.reset();
@@ -256,7 +235,6 @@ $(document).ready(function() {
             initialize_panel_element         : initialize_panel_element,
             initialize_ajaxfileupload        : initialize_ajaxfileupload,
             initialize_textfield             : initialize_textfield,
-            initialize_textfield_custom_info : initialize_textfield_custom_info,
             initialize_textarea              : initialize_textarea,
             initialize_select                : initialize_select,
             initialize_multiselect           : initialize_multiselect,
