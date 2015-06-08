@@ -99,6 +99,16 @@ Foreman::Plugin.register :katello do
                        :action => 'index'},
          :engine => Katello::Engine,
          :turbolinks => false
+
+    menu :top_menu,
+         :puppet_modules,
+         :caption => N_('Puppet Modules'),
+         :url => '/puppet_modules',
+         :url_hash => {:controller => 'katello/api/v2/puppet_modules',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false
+
     menu :top_menu,
          :docker_tags,
          :caption => N_('Docker Tags'),

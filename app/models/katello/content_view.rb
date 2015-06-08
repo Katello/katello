@@ -409,11 +409,12 @@ module Katello
       pulp_id = ContentViewPuppetEnvironment.generate_pulp_id(organization.label, to_env.try(:label),
                                                               self.label, version.try(:version))
 
-      ContentViewPuppetEnvironment.new(:environment => to_env,
-                                       :content_view_version => to_version,
-                                       :name => self.name,
-                                       :pulp_id => pulp_id
-                                      )
+      ContentViewPuppetEnvironment.new(
+        :environment => to_env,
+        :content_view_version => to_version,
+        :name => self.name,
+        :pulp_id => pulp_id
+      )
     end
 
     def create_puppet_env(options)
@@ -421,41 +422,37 @@ module Katello
     end
 
     def computed_module_ids_by_repoid
-      # In order to copy the puppet modules to the new repo, we need to retrieve the module
-      # details.  This is necessary since pulp requires both a source and destination
-      # repo id to copy content.
-      ids = []
+      uuids = []
       names_and_authors = []
+      puppet_modules = []
+
       if composite?
-        component_modules_to_publish.each { |puppet_module| ids << puppet_module.id }
+        uuids = component_modules_to_publish.collect { |puppet_module| puppet_module.uuid }
       else
         puppet_modules_to_publish.each do |cvpm|
           if cvpm.uuid
-            ids << cvpm.uuid
+            uuids << cvpm.uuid
           else
             names_and_authors << { :name => cvpm.name, :author => cvpm.author }
           end
         end
       end
 
-      puppet_modules = ids.blank? ? [] : PuppetModule.id_search(ids)
-      unless names_and_authors.blank?
-        puppet_modules << PuppetModule.latest_modules_search(names_and_authors,
-                                                             self.organization.library.repositories.puppet_type.map(&:pulp_id))
+      puppet_modules = PuppetModule.where(:uuid => uuids) if uuids.present?
+
+      if names_and_authors.present?
+        names_and_authors.each do |name_and_author|
+          puppet_module = ::Katello::PuppetModule.latest_module(
+            name_and_author[:name],
+            name_and_author[:author],
+            self.organization.library.repositories.puppet_type
+          )
+          puppet_modules << puppet_module
+        end
       end
 
       # In order to minimize the number of copy requests, organize the data by repoid.
-      modules_by_repoid = puppet_modules.flatten.each_with_object({}) do |puppet_module, result|
-        repo = Repository.where(:pulp_id => puppet_module.repoids).first ||
-                ContentViewPuppetEnvironment.where(:pulp_id =>  puppet_module.repoids).first
-        if repo
-          result[repo.pulp_id] ||= []
-          result[repo.pulp_id] << puppet_module.id
-        else
-          fail _("Could not find Repository for module %s.") % puppet_module.name
-        end
-      end
-      modules_by_repoid
+      PuppetModule.group_by_repoid(puppet_modules)
     end
 
     def check_ready_to_publish!

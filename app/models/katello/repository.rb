@@ -9,7 +9,6 @@ module Katello
     include ForemanTasks::Concerns::ActionSubject
     include Glue::Candlepin::Content if (Katello.config.use_cp && Katello.config.use_pulp)
     include Glue::Pulp::Repo if Katello.config.use_pulp
-    include Glue::ElasticSearch::Repository if Katello.config.use_elasticsearch
 
     include Glue if (Katello.config.use_cp || Katello.config.use_pulp)
     include Authorization::Repository
@@ -42,6 +41,9 @@ module Katello
 
     has_many :repository_rpms, :class_name => "Katello::RepositoryRpm", :dependent => :destroy
     has_many :rpms, :through => :repository_rpms
+
+    has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :destroy
+    has_many :puppet_modules, :through => :repository_puppet_modules
 
     has_many :repository_docker_images, :class_name => "Katello::RepositoryDockerImage", :dependent => :destroy
     has_many :docker_images, :through => :repository_docker_images
@@ -255,7 +257,7 @@ module Katello
       ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
       ret["package_count"] = package_count rescue nil
       ret["last_sync"] = last_sync rescue nil
-      ret["puppet_module_count"] = puppet_module_count rescue nil
+      ret["puppet_module_count"] = self.puppet_modules.count rescue nil
       ret
     end
 
@@ -426,7 +428,7 @@ module Katello
       if puppet?
         modules = PuppetModule.search("*", :repoids => self.pulp_id,
                                            :fields => [:name],
-                                           :page_size => self.puppet_module_count)
+                                           :page_size => self.puppet_modules.count)
 
         modules.map(&:name).group_by(&:to_s).select { |_, v| v.size > 1 }.keys
       else
@@ -507,11 +509,13 @@ module Katello
       end
     end
 
-    def remove_db_units(units)
+    def remove_content(units)
       if yum?
         self.rpms -= units
+      elsif puppet?
+        self.puppet_modules -= units
       elsif docker?
-        remove_docker_db_units(units)
+        remove_docker_content(units)
       end
     end
 
@@ -539,6 +543,8 @@ module Katello
         self.rpms
       elsif docker?
         self.docker_images
+      elsif puppet?
+        self.puppet_modules
       else
         fail "Content type not supported for removal"
       end
@@ -567,7 +573,7 @@ module Katello
       end
     end
 
-    def remove_docker_db_units(images)
+    def remove_docker_content(images)
       self.docker_tags.where(:docker_image_id => images.map(&:id)).destroy_all
       self.docker_images -= images
 

@@ -78,6 +78,11 @@ module Katello
       query
     end
 
+    def self.with_puppet_module(puppet_module)
+      joins(:content_view_puppet_environments)
+        .where("#{Katello::ContentViewPuppetEnvironment.table_name}.id = ?", puppet_module.content_view_puppet_environments)
+    end
+
     def to_s
       name
     end
@@ -185,7 +190,7 @@ module Katello
 
     def puppet_modules
       if archive_puppet_environment
-        archive_puppet_environment.indexed_puppet_modules
+        archive_puppet_environment.puppet_modules
       else
         []
       end
@@ -203,8 +208,7 @@ module Katello
     end
 
     def puppet_module_count
-      env = self.archive_puppet_environment
-      env.nil? ? 0 : PuppetModule.module_count([env])
+      puppet_modules.count
     end
 
     def package_count

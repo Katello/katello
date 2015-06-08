@@ -257,14 +257,6 @@ module Katello
         content_unit_counts
       end
 
-      def puppet_module_count
-        content_unit_counts = 0
-        if self.pulp_repo_facts
-          content_unit_counts = self.pulp_repo_facts[:content_unit_counts][:puppet_module]
-        end
-        content_unit_counts
-      end
-
       # remove errata and groups from this repo
       # that have no packages
       def purge_empty_groups_errata
@@ -323,6 +315,31 @@ module Katello
           end
         end
         Katello::Rpm.sync_repository_associations(self, rpm_ids)
+      end
+
+      def index_db_puppet_modules(force = false)
+        if self.content_view.default? || force
+          puppet_modules_json.each do |puppet_module_json|
+            begin
+              puppet_module = Katello::PuppetModule.find_or_create_by_uuid(:uuid => puppet_module_json['_id'])
+            rescue ActiveRecord::RecordNotUnique
+              retry
+            end
+            puppet_module.update_from_json(puppet_module_json)
+          end
+        end
+
+        Katello::PuppetModule.sync_repository_associations(self, puppet_module_ids)
+      end
+
+      def puppet_modules_json
+        tmp_puppet_modules = []
+        #we fetch ids and then fetch errata by id, because repo errata
+        #  do not contain all the info we need (bz 854260)
+        self.puppet_module_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+          tmp_puppet_modules.concat(Katello.pulp_server.extensions.puppet_module.find_all_by_unit_ids(sub_list))
+        end
+        tmp_puppet_modules
       end
 
       def errata_json
@@ -410,27 +427,6 @@ module Katello
 
       def puppet_module_ids
         Katello.pulp_server.extensions.repository.puppet_module_ids(self.pulp_id)
-      end
-
-      def puppet_modules
-        if @repo_puppet_modules.nil?
-          # we fetch ids and then fetch modules by id, because repo puppet modules
-          #  do not contain all the info we need
-          ids = puppet_module_ids
-          tmp_modules = []
-          ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
-            tmp_modules.concat(Katello.pulp_server.extensions.puppet_module.find_all_by_unit_ids(sub_list))
-          end
-          self.puppet_modules = tmp_modules
-        end
-        @repo_puppet_modules
-      end
-
-      def puppet_modules=(attrs)
-        @repo_puppet_modules = attrs.collect do |puppet_module|
-          Katello::PuppetModule.new(puppet_module)
-        end
-        @repo_puppet_modules
       end
 
       def docker_image_ids
@@ -723,6 +719,16 @@ module Katello
       else
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
       end
+    end
+
+    def index_content
+      self.index_db_rpms
+      self.index_db_errata
+      self.index_db_docker_images
+      self.index_db_puppet_modules
+      self.index_db_package_groups
+      self.import_distribution_data
+      true
     end
   end
 end

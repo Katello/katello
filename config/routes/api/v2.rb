@@ -199,7 +199,9 @@ Katello::Engine.routes.draw do
             end
           end
         end
-        api_resources :puppet_modules, :only => [:index, :show]
+        api_resources :puppet_modules, :only => [:index, :show] do
+          get :auto_complete_search, :on => :collection
+        end
 
         api_resources :repositories, :only => [:index, :create, :show, :destroy, :update] do
           collection do
