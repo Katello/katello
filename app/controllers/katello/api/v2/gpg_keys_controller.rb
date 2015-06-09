@@ -4,7 +4,7 @@ module Katello
     before_filter :authorize
     before_filter :find_organization, :only => [:create, :index, :auto_complete_search]
     before_filter :find_gpg_key, :only => [:show, :update, :destroy, :content]
-    skip_before_filter :check_content_type, :only => [:create]
+    skip_before_filter :check_content_type, :only => [:create, :content]
 
     def_param_group :gpg_key do
       param :name, :identifier, :action_aware => true, :required => true, :desc => N_("identifier of the gpg key")
