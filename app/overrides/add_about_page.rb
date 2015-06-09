@@ -18,3 +18,9 @@ Deface::Override.new(:virtual_path => "about/index",
                      :insert_bottom => '.col-md-5 .stats-well:first-child',
                      :partial => '../overrides/foreman/about/support_documentation'
                      )
+
+Deface::Override.new(:virtual_path => "about/index",
+                     :name => "add_tasks_status",
+                     :insert_bottom => '#about',
+                     :partial => '../overrides/foreman/about/tasks_status'
+                     )

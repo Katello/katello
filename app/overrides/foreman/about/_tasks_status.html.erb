@@ -1,0 +1,17 @@
+<div class="col-sm-7">
+  <div class="stats-well">
+    <h4><%=_("Task Status")%></h4>
+    <table class="table table-striped">
+      <tr>
+        <th><%= _("State") %></th>
+        <th><%= _("No. of Tasks") %></th>
+      </tr>
+      <% ForemanTasks::Task::Summarizer.new.summarize_by_status.each do |result| %>
+        <tr>
+          <td><%= result.state %></td>
+          <td><%= result.count %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
