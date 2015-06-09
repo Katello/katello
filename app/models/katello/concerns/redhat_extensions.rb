@@ -49,10 +49,10 @@ module Katello
       def assign_templates!
         # Automatically assign default templates
         TemplateKind.all.each do |kind|
-          if (template = ConfigTemplate.find_by_name(Setting["katello_default_#{kind.name}"]))
-            config_templates << template unless config_templates.include?(template)
+          if (template = ProvisioningTemplate.find_by_name(Setting["katello_default_#{kind.name}"]))
+            provisioning_templates << template unless provisioning_templates.include?(template)
             if OsDefaultTemplate.where(:template_kind_id => kind.id, :operatingsystem_id => id).empty?
-              OsDefaultTemplate.create(:template_kind_id => kind.id, :config_template_id => template.id, :operatingsystem_id => id)
+              OsDefaultTemplate.create(:template_kind_id => kind.id, :provisioning_template_id => template.id, :operatingsystem_id => id)
             end
           end
         end

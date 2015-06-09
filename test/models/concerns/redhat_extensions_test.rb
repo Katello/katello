@@ -40,8 +40,8 @@ module Katello
     end
 
     def test_assign_template
-      template = config_templates(:mystring2)
-      ptable = ptables(:one)
+      template = templates(:mystring2)
+      ptable = FactoryGirl.create(:ptable)
 
       Setting.create(:name => 'katello_default_provision', :description => 'default template',
                      :category => 'Setting::Katello', :settings_type => 'string',
@@ -53,7 +53,7 @@ module Katello
 
       os = ::Redhat.create_operating_system(@my_distro.name, '9', '0')
       assert ::OsDefaultTemplate.where(:template_kind_id    => ::TemplateKind.find_by_name('provision').id,
-                                       :config_template_id  => template.id,
+                                       :provisioning_template_id  => template.id,
                                        :operatingsystem_id  => os.id).any?
 
       assert os.ptables.include? ptable
