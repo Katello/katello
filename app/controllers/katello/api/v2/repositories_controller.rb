@@ -41,6 +41,7 @@ module Katello
     param :content_type, String, :desc => N_("limit to only repositories of this time")
     param :name, String, :desc => N_("name of the repository"), :required => false
     param_group :search, Api::V2::ApiController
+    # rubocop:disable Metrics/MethodLength
     def index
       options = sort_params
       options[:load_records?] = true
@@ -57,10 +58,17 @@ module Katello
                          .where("#{ContentViewRepository.table_name}.content_view_id" => params[:content_view_id])
       end
 
-      repositories = repositories.where(:content_view_version_id => params[:content_view_version_id]) if params[:content_view_version_id]
       repositories = repositories.where(:content_type => params[:content_type]) if params[:content_type]
       repositories = repositories.where(:name => params[:name]) if params[:name]
       repositories = repositories.joins(:errata).where("#{Erratum.table_name}.uuid" => params[:erratum_id]) if params[:erratum_id]
+
+      if params[:content_view_version_id]
+        repositories = repositories.where(:content_view_version_id => params[:content_view_version_id])
+
+        if params[:library]
+          repositories = Repository.where(:id => repositories.map(&:library_instance_id))
+        end
+      end
 
       if params[:environment_id] && !params[:library]
         repositories = repositories.where(:environment_id => params[:environment_id])

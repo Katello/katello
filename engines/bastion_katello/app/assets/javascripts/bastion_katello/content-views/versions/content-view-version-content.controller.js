@@ -28,7 +28,8 @@
                 type: Repository,
                 params: {
                     'content_type': "yum",
-                    'content_view_version_id': $scope.$stateParams.versionId
+                    'content_view_version_id': $scope.$stateParams.versionId,
+                    library: true
                 }
             },
             'packages': {

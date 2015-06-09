@@ -142,6 +142,20 @@ module Katello
       assert_template 'api/v2/repositories/index'
     end
 
+    def test_index_with_content_view_version_id_and_library
+      ids = @view.versions.first.repositories.pluck(:library_instance_id).reject(&:blank?)
+
+      @controller
+          .expects(:item_search)
+          .with(anything, anything, has_entry(:filters => [{:terms => {:id => ids}}]))
+          .returns({})
+
+      get :index, :content_view_version_id => @view.versions.first.id, :organization_id => @organization.id, :library => true
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+    end
+
     def test_index_with_library
       ids = @organization.default_content_view.versions.first.repositories.pluck(:id)
 
