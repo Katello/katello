@@ -9,6 +9,8 @@ module Katello
         sync
         host_collections
         errata
+        tasks_summary
+        error_warning_tasks
       )
 
       attr_accessor :widgets, :columns, :organization, :current_user
