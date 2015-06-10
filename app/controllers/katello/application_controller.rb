@@ -230,12 +230,6 @@ module Katello
       _("No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default.")
     end
 
-    def retain_search_history
-      current_user.create_or_update_search_history(URI(@_request.env['HTTP_REFERER']).path, params[:search])
-    rescue => error
-      log_exception(error)
-    end
-
     def render_correct_nav
       if self.respond_to?(:menu_definition) && self.menu_definition[params[:action]] == :admin_menu
         session[:menu_back] = true
@@ -601,8 +595,6 @@ module Katello
                        :results_count => options[:total_count],
                        :total_items => options[:total_results],
                        :current_items => options[:collection].length}
-
-      retain_search_history unless options[:no_search_history]
     end
 
     # TODO: break up method
@@ -642,8 +634,6 @@ module Katello
                        :results_count => options[:total_count],
                        :total_items => options[:total_results],
                        :current_items => options[:collection].length}
-
-      retain_search_history
     end
 
     def execute_after_filters

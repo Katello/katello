@@ -28,8 +28,6 @@ module Katello
         has_many :user_notices, :dependent => :destroy, :class_name => "Katello::UserNotice"
         has_many :notices, :through => :user_notices, :class_name => "Katello::Notice"
         has_many :task_statuses, :dependent => :destroy, :class_name => "Katello::TaskStatus"
-        has_many :search_favorites, :dependent => :destroy, :class_name => "Katello::SearchFavorite"
-        has_many :search_histories, :dependent => :destroy, :class_name => "Katello::SearchHistory"
         has_many :activation_keys, :dependent => :destroy, :class_name => "Katello::ActivationKey"
         serialize :preferences, Hash
 
@@ -137,14 +135,6 @@ module Katello
         def subscriptions_no_overlap_preference=(flag)
           self.preferences_hash[:user] = { } unless self.preferences_hash.key? :user
           self.preferences_hash[:user][:subscriptions_no_overlap] = flag
-        end
-
-        def create_or_update_search_history(path, search_params)
-          unless search_params.nil? || search_params.blank? || empty_display_attributes?(search_params)
-            if history = search_histories.find_or_create_by_path_and_params(path, search_params)
-              history.update_attributes(:updated_at => Time.now)
-            end
-          end
         end
 
         def empty_display_attributes?(a_search_string)
