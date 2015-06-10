@@ -31,16 +31,6 @@ module Katello
       end
     end
 
-    def help_tip(text, key = nil)
-      key ||= params[:controller] + "-" + params[:action]
-      render :partial => "katello/common/helptip", :locals => {:key => key, :text => text}
-    end
-
-    def help_tip_button(key = nil)
-      key ||= params[:controller] + "-" + params[:action]
-      render :partial => "katello/common/helptip_button", :locals => {:key => key}
-    end
-
     # Headpin inclusion
     def stats_line(stats, _options = {})
       render :partial => "katello/commonstats_line",

@@ -25,7 +25,6 @@ module Katello
 
         include Util::ThreadSession::UserModel
 
-        has_many :help_tips, :dependent => :destroy, :class_name => "Katello::HelpTip"
         has_many :user_notices, :dependent => :destroy, :class_name => "Katello::UserNotice"
         has_many :notices, :through => :user_notices, :class_name => "Katello::Notice"
         has_many :task_statuses, :dependent => :destroy, :class_name => "Katello::TaskStatus"
@@ -59,15 +58,6 @@ module Katello
           User.current.is_a? CpConsumerUser
         end
 
-        def disable_helptip(key)
-          return unless self.helptips_enabled? #don't update helptips if user has it disabled
-          return unless Katello::HelpTip.where(:key => key, :user_id => self.id).empty?
-          help      = Katello::HelpTip.new
-          help.key  = key
-          help.user = self
-          help.save
-        end
-
         #Remove up to 5 un-viewed notices
         def pop_notices(organization = nil, count = 5)
           notices = Notice.for_user(self).for_org(organization).unread.limit(count == :all ? nil : count)
@@ -77,21 +67,6 @@ module Katello
             {:text => notice.text, :level => notice.level, :request_type => notice.request_type}
           end
           return notices
-        end
-
-        def enable_helptip(key)
-          return unless self.helptips_enabled? #don't update helptips if user has it disabled
-          help = Katello::HelpTip.where(:key => key, :user_id => self.id).first
-          return if help.nil?
-          help.destroy
-        end
-
-        def clear_helptips
-          Katello::HelpTip.destroy_all(:user_id => self.id)
-        end
-
-        def helptip_enabled?(key)
-          return self.helptips_enabled && Katello::HelpTip.where(:key => key, :user_id => self.id).first.nil?
         end
 
         def cp_oauth_header

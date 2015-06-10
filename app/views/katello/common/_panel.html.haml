@@ -13,12 +13,6 @@
 .center
   #container.container_16
     .right_panel
-      .helptip_area
-        = help_tip_button('panel-help')
-        = help_tip((_("To view the details of an item on the left, simply click on a single row." + |
-                  "<br/><br/>To select multiple rows, hold the Control Key and click multiple rows." + |
-                  "<br/><br/>If you don't need this help anymore, please click the close button in the top right " + |
-                  "of this box.")).html_safe, 'panel-help') |
       .fl.clear
         - if actions
           = render :partial => actions
