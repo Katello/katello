@@ -56,11 +56,11 @@ module Katello
     private
 
     def find_content_view
-      ContentView.readable.find(params[:content_view_id]) if params[:content_view_id]
+      @content_view = ContentView.readable.find(params[:content_view_id]) if params[:content_view_id]
     end
 
     def find_environment
-      KTEnvironment.readable.find(params[:environment_id]) if params[:environment_id]
+      @environment = KTEnvironment.readable.find(params[:environment_id]) if params[:environment_id]
     end
 
     def find_system
