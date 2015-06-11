@@ -4,7 +4,6 @@ module Katello
       AVAILABLE_WIDGETS = %w(
         subscriptions
         subscriptions_totals
-        notices
         content_views
         sync
         host_collections

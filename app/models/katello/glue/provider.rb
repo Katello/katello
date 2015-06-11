@@ -350,13 +350,6 @@ module Katello
                              :priority => 6, :action => [self, :refresh_existing_products])
           end
           self.save!
-
-          if options[:notify]
-            message = _("Subscription manifest deleted successfully for provider '%s'.")
-            Notify.success message % self.name,
-                           :request_type => 'providers__update_redhat_provider',
-                           :organization => self.organization
-          end
         rescue => error
           display_manifest_message('delete', error, options)
           raise error
@@ -376,7 +369,7 @@ module Katello
       # Display appropriate messages when manifest import or delete fails
       # TODO: break up this method
       # rubocop:disable MethodLength
-      def display_manifest_message(type, error, options)
+      def display_manifest_message(type, error)
         # Clean up response from candlepin
         types = {'import' => _('import'), 'delete' => _('delete'), 'refresh' => _('refresh')}  # For i18n
         begin
@@ -392,29 +385,6 @@ module Katello
         end
 
         Rails.logger.error "Error during manifest #{type}: #{results}"
-
-        if options[:notify]
-
-          # For MANIFEST_SAME simply inform that no action was taken
-          if !results['conflicts'].nil? && results['conflicts'].include?('MANIFEST_SAME')
-            error_texts = [
-              _("Subscription manifest import for provider '%s' skipped") % self.name,
-              _("Reason: %s") % _("Manifest subscriptions unchanged from previous")
-            ]
-            error_texts.join('<br />')
-            Notify.message(error_texts, :request_type => 'providers__update_redhat_provider',
-                                        :organization => self.organization)
-          else
-            error_texts = []
-
-            error_texts << _("Subscription manifest %{action} for provider '%{name}' failed") % {:action => types[type], :name => self.name}
-            error_texts << (_("Reason: %s") % results['displayMessage']) unless results['displayMessage'].blank?
-            error_texts.join('<br />')
-
-            Notify.error(error_texts, :request_type => 'providers__update_redhat_provider',
-                                      :organization => self.organization)
-          end
-        end
       end
 
       # There are two types of products in Candlepin: marketing and engineering.

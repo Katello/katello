@@ -63,10 +63,6 @@ module Katello
       }
     end
 
-    def notices
-      render :partial => "notices", :locals => {:quantity => quantity}
-    end
-
     private
 
     def update_preferences_quantity

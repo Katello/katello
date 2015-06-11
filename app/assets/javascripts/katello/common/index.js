@@ -2,7 +2,6 @@
 //= require "katello/common/katello.common.js"
 //= require "katello/common/katello"
 //= require "katello/common/menu"
-//= require "katello/common/notices"
 //= require "katello/common/routes"
 //= require "katello/common/chosen.jquery"
 //= require "katello/common/spin.min"
