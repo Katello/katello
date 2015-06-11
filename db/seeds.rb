@@ -49,11 +49,11 @@ templates = [{:name => "Katello Kickstart Default",           :source => "kickst
 
 templates.each do |template|
   template[:template] = File.read(File.join(Katello::Engine.root, "app/views/foreman/unattended", template.delete(:source)))
-  ConfigTemplate.find_or_create_by_name(template).update_attributes(defaults.merge(template))
+  ProvisioningTemplate.find_or_create_by_name(template).update_attributes(defaults.merge(template))
 end
 
 # Ensure all default templates are seeded into the first org and loc
-ConfigTemplate.where(:default => true).each do |template|
+ProvisioningTemplate.where(:default => true).each do |template|
   template.organizations << Organization.first unless template.organizations.include?(Organization.first) || Organization.count.zero?
   template.locations << Location.first unless template.locations.include?(Location.first) || Location.count.zero?
 end
