@@ -24,6 +24,8 @@ module Actions
             Runcible::Models::IsoDistributor
           when ::Katello::Repository::DOCKER_TYPE
             Runcible::Models::DockerDistributor
+          when ::Katello::Repository::OSTREE_TYPE
+            Runcible::Models::OstreeDistributor
           end
         end
       end
