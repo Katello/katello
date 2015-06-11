@@ -4,6 +4,7 @@ module Katello
   describe Ping do
     describe "#ping" do
       before do
+        Katello::Ping.unstub(:ping)
         # candlepin - without oauth
         stub_request(:get, "#{Katello.config.candlepin.url}/status")
 

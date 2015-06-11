@@ -150,6 +150,10 @@ class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
   include FixtureTestCase
 
+  before do
+    stub_ping
+  end
+
   def self.run_as_admin
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
     User.current.remote_id = User.current.login
@@ -165,6 +169,18 @@ class ActiveSupport::TestCase
       user.save!
     end
     User.current = user
+  end
+
+  def stubbed_ping_response
+    status = {:services => {}}
+    ::Katello::Ping::SERVICES.each do |service|
+      status[:services][service] = {:status => Katello::Ping::OK_RETURN_CODE}
+    end
+    status
+  end
+
+  def stub_ping
+    Katello::Ping.stubs(:ping).returns(stubbed_ping_response)
   end
 
   def get_organization(org = nil)
