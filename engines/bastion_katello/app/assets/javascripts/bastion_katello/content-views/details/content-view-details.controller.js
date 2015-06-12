@@ -132,7 +132,7 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         };
 
         $scope.$watch('detailsTable.rows', function () {
-            if ($scope.detailsTable.rows.length > 0) {
+            if ($scope.detailsTable && $scope.detailsTable.rows.length > 0) {
                 processTasks($scope.detailsTable.rows);
             }
         });

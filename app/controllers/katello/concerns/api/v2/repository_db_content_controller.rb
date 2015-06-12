@@ -35,15 +35,22 @@ module Katello
         respond_for_index(:collection => collection)
       end
 
+      param :available_for, :string, :desc => N_("Show errata that can be added to content view filter")
+      param :filterId, :integer, :desc => N_("Content View Filter id")
       def index_relation
         collection = resource_class.scoped
         collection = filter_by_repos(Repository.readable, collection)
         collection = filter_by_repos([@repo], collection) if @repo && !@repo.puppet?
-        collection = filter_by_content_view_filter(@filter, collection) if @filter
         collection = filter_by_content_view_version(@version, collection) if @version
         collection = filter_by_environment(@environment, collection) if @environment
         collection = filter_by_repos(Repository.readable.in_organization(@organization), collection) if @organization
         collection = filter_by_ids(params[:ids], collection) if params[:ids]
+        @filter = ContentViewFilter.find(params[:filterId]) if params[:filterId]
+        if params[:available_for] == "content_view_filter" && self.respond_to?(:available_for_content_view_filter)
+          collection = self.available_for_content_view_filter(@filter, collection) if @filter
+        else
+          collection = filter_by_content_view_filter(@filter, collection) if @filter
+        end
         collection = self.custom_index_relation(collection) if self.respond_to?(:custom_index_relation)
         collection
       end
