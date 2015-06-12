@@ -89,6 +89,14 @@ module Katello
       refute @repo.valid?
     end
 
+    def test_docker_full_path
+      full_path = @repo.full_path
+      @repo.content_type = 'docker'
+      refute_equal full_path, @repo.full_path
+      @repo.pulp_id = "abc123"
+      assert @repo.full_path =~ /abc123/
+    end
+
     def test_unique_repository_label_per_product_and_environment
       @repo.save
       @repo2 = build(:katello_repository,
