@@ -89,13 +89,6 @@ Foreman::Plugin.register :katello do
          :engine => Katello::Engine,
          :turbolinks => false
 
-    menu :top_menu,
-         :content_search,
-         :caption => N_('Content Search'),
-         :url_hash => {:controller => 'katello/content_search',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
     divider :top_menu, :parent => :content_menu
     menu :top_menu,
          :errata,

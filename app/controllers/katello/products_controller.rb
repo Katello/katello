@@ -41,13 +41,6 @@ module Katello
       render :partial => 'katello/providers/redhat/enable_errors', :locals => { :error_message => e.message}, :status => 500
     end
 
-    #used by content search
-    def auto_complete
-      products = Product.readable.enabled.where(:organization_id => current_organization).
-          where("#{Product.table_name}.name ILIKE ?", "#{params[:term]}%")
-      render :json => products.collect { |s| {:label => s.name, :value => s.name, :id => s.id} }
-    end
-
     private
 
     def find_provider
