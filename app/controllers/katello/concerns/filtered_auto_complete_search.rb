@@ -3,6 +3,8 @@ module Katello
     module FilteredAutoCompleteSearch
       extend ActiveSupport::Concern
 
+      PAGE_SIZE=20
+
       def auto_complete_search
         begin
           options = resource_class.respond_to?(:completer_scope_options) ? resource_class.completer_scope_options : {}

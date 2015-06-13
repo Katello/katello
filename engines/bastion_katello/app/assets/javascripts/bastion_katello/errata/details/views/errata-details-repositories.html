@@ -44,18 +44,16 @@
            ng-class="{'table-mask': detailsTable.working}"
            ng-show="detailsTable.rows.length > 0">
       <thead>
-        <tr bst-table-head row-select>
+        <tr bst-table-head>
           <th bst-table-column="name"><span translate>Name</span></th>
           <th bst-table-column="product"><span translate>Product</span></th>
-          <th bst-table-column="contentView"><span translate>Content View</span></th>
           <th bst-table-column="lastSync"><span translate>Last Sync</span></th>
         </tr>
       </thead>
 
       <tbody>
         <tr bst-table-row
-            ng-repeat="repository in detailsTable.rows"
-            row-select="repository">
+            ng-repeat="repository in detailsTable.rows">
           <td bst-table-cell>
             <a ng-href="/products/{{ repository.product.id }}/repositories/{{ repository.library_instance_id || repository.id }}">
               {{ repository.name }}
@@ -64,11 +62,6 @@
           <td bst-table-cell>
             <a ui-sref="products.details.repositories.index({productId: repository.product.id})">
               {{ repository.product.name }}
-            </a>
-          </td>
-          <td bst-table-cell>
-            <a ng-href="/content_views/{{ repository.content_view.id }}">
-              {{ repository.content_view.name }}
             </a>
           </td>
           <td bst-table-cell>

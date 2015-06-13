@@ -191,7 +191,7 @@ module Katello
     end
 
     def packages
-      archived_repos.flat_map(&:packages)
+      Rpm.in_repositories(archived_repos).uniq
     end
 
     def puppet_module_count
@@ -200,7 +200,7 @@ module Katello
     end
 
     def package_count
-      Package.package_count(self.repositories.archived)
+      Katello::Rpm.in_repositories(self.repositories.archived).count
     end
 
     def docker_image_count

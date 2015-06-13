@@ -52,7 +52,9 @@
       <h3 translate>Affected Packages</h3>
       <ul>
         <li ng-repeat="package in errata.packages">
-          {{ package }}
+          <a href="/packages?search={{package}}">
+            {{ package }}
+          </a>
         </li>
       </ul>
     </section>

@@ -243,18 +243,6 @@ module Katello
       products.flatten(1)
     end
 
-    def find_latest_packages_by_name(name)
-      packs = self.products.collect do |prod|
-        prod.find_latest_packages_by_name(self, name).collect do |pack|
-          pack[:product_id] = prod.cp_id
-          pack
-        end
-      end
-      packs.flatten!(1)
-
-      Util::Package.find_latest_packages packs
-    end
-
     def get_distribution(id)
       distribution = self.products.collect do |prod|
         prod.get_distribution(self, id)

@@ -5,7 +5,7 @@ module Actions
         class IncrementalUpdatesPresenter < Helpers::Presenter::Base
           HUMANIZED_TYPES = {
             ::Katello::Erratum::CONTENT_TYPE => "Errata",
-            ::Katello::Package::CONTENT_TYPE => "Packages",
+            ::Katello::Rpm::CONTENT_TYPE => "Packages",
             ::Katello::PuppetModule::CONTENT_TYPE => "Puppet Modules"
           }
 

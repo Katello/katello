@@ -3,8 +3,10 @@ require "katello_test_helper"
 module Katello
   class Api::V2::PackagesControllerTest < ActionController::TestCase
     def models
-      @repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
+      @repo = katello_repositories(:fedora_17_x86_64_dev)
       @version = ContentViewVersion.first
+      @rpm = katello_rpms(:one)
+      Rpm.any_instance.stubs(:backend_data).returns({})
     end
 
     def permissions
@@ -21,7 +23,6 @@ module Katello
       setup_controller_defaults_api
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @request.env['CONTENT_TYPE'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       models
       permissions
     end
@@ -60,29 +61,35 @@ module Katello
       end
     end
 
+    def test_autocomplete_name
+      response = get :auto_complete_name, :repoids => [@repo.id], :term => @rpm.name[0]
+
+      assert_response :success
+      assert_includes JSON.parse(response.body), @rpm.name
+    end
+
     def test_show
-      package = stub
-      package.stubs(:repoids).returns([@repo.pulp_id])
-      Package.expects(:find).once.with("3805853f-5cae-4a4a-8549-0ec86410f58f").returns(package)
-      get :show, :repository_id => @repo.id, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f"
+      get :show, :id => @rpm.id
+
+      assert_response :success
+      assert_template %w(katello/api/v2/packages/show)
+    end
+
+    def test_show_uuid
+      get :show, :id => @rpm.uuid
 
       assert_response :success
       assert_template %w(katello/api/v2/packages/show)
     end
 
     def test_show_package_not_found
-      Package.expects(:find).once.returns(nil)
       get :show, :repository_id => @repo.id, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f"
       assert_response 404
     end
 
     def test_show_protected
-      package = stub
-      package.stubs(:repoids).returns([@repo.pulp_id])
-      Package.stubs(:find).with("3805853f-5cae-4a4a-8549-0ec86410f58f").returns(package)
-
       assert_protected_action(:show, @read_permission, @unauth_permissions) do
-        get :show, :repository_id => @repo.id, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f"
+        get :show, :repository_id => @repo.id, :id => @rpm.uuid
       end
     end
   end
