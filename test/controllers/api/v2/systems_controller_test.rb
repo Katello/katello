@@ -35,7 +35,6 @@ module Katello
       System.any_instance.stubs(:products).returns([])
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
 
-      Katello::Package.stubs(:package_count).returns(0)
       Katello::PuppetModule.stubs(:module_count).returns(0)
 
       models

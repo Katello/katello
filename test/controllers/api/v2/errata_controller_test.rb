@@ -112,8 +112,8 @@ module Katello
       assert_template %w(katello/api/v2/errata/show)
     end
 
-    def test_show_group_not_found
-      get :show, :repository_id => @repo.id, :id => "made_up_errata"
+    def test_show_errata_not_found
+      get :show, :repository_id => @repo.id, :id => "not a real errata id"
       assert_response 404
     end
 

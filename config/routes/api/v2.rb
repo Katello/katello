@@ -168,7 +168,12 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :packages, :only => [:index, :show]
+        api_resources :packages, :only => [:index, :show] do
+          collection do
+            get :auto_complete_search
+            get :auto_complete_name
+          end
+        end
 
         api_resources :package_groups, :only => [:index, :show] do
           collection do

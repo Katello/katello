@@ -228,7 +228,7 @@ module Katello
         Repository.where(:content_id => self.content_id).pluck(:pulp_id) - [self.pulp_id]
       end
 
-      def package_ids
+      def rpm_ids
         Katello.pulp_server.extensions.repository.rpm_ids(self.pulp_id)
       end
 
@@ -289,27 +289,6 @@ module Katello
         end
       end
 
-      def packages
-        #we fetch ids and then fetch packages by id, because repo packages
-        #  does not contain all the info we need (bz 854260)
-        tmp_packages = []
-
-        self.package_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
-          tmp_packages.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
-                                  sub_list, Katello::Package::PULP_INDEXED_FIELDS))
-        end
-        self.packages = tmp_packages
-
-        @repo_packages
-      end
-
-      def packages=(attrs)
-        @repo_packages = attrs.collect do |package|
-          Katello::Package.new(package)
-        end
-        @repo_packages
-      end
-
       def index_db_errata(force = false)
         if self.content_view.default? || force
           errata_json.each do |erratum_json|
@@ -323,6 +302,20 @@ module Katello
         end
 
         Katello::Erratum.sync_repository_associations(self, errata_ids)
+      end
+
+      def index_db_rpms(force = false)
+        if self.content_view.default? || force
+          rpms_json.each do |rpm_json|
+            begin
+              rpm = Rpm.find_or_create_by_uuid(:uuid => rpm_json['_id'])
+            rescue ActiveRecord::RecordNotUnique
+              retry
+            end
+            rpm.update_from_json(rpm_json)
+          end
+        end
+        Katello::Rpm.sync_repository_associations(self, rpm_ids)
       end
 
       def errata_json
@@ -350,6 +343,15 @@ module Katello
 
       def package_group_json
         Katello.pulp_server.extensions.repository.package_groups(self.pulp_id)
+      end
+
+      def rpms_json
+        tmp_packages = []
+        self.rpm_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+          tmp_packages.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
+                                  sub_list, Katello::Rpm::PULP_INDEXED_FIELDS))
+        end
+        tmp_packages
       end
 
       def index_db_docker_images
@@ -478,21 +480,12 @@ module Katello
         end
       end
 
-      def package?(id)
-        self.package_ids.include?(id)
-      end
-
       def find_packages_by_name(name)
         Katello.pulp_server.extensions.repository.rpms_by_nvre self.pulp_id, name
       end
 
       def find_packages_by_nvre(name, version, release, epoch)
         Katello.pulp_server.extensions.repository.rpms_by_nvre self.pulp_id, name, version, release, epoch
-      end
-
-      def find_latest_packages_by_name(name)
-        packages = Katello.pulp_server.extensions.repository.rpms_by_nvre(self.pulp_id, name)
-        Util::Package.find_latest_packages(packages)
       end
 
       def pulp_update_needed?
@@ -520,7 +513,7 @@ module Katello
 
       def clone_contents_by_filter(to_repo, content_type, filter_clauses, override_config = {})
         content_classes = {
-          Katello::Package::CONTENT_TYPE => :rpm,
+          Katello::Rpm::CONTENT_TYPE => :rpm,
           Katello::PackageGroup::CONTENT_TYPE => :package_group,
           Katello::Erratum::CONTENT_TYPE => :errata,
           Katello::PuppetModule::CONTENT_TYPE => :puppet_module
@@ -529,7 +522,7 @@ module Katello
                                                                        unless content_classes[content_type]
         criteria = {}
         if content_type == Runcible::Extensions::Rpm.content_type
-          criteria[:fields] = Package::PULP_SELECT_FIELDS
+          criteria[:fields] = Rpm::PULP_SELECT_FIELDS
         end
 
         if filter_clauses && !filter_clauses.empty?
@@ -554,7 +547,7 @@ module Katello
           # are listed, pulp will retrieve every field it knows about for the rpm
           # (e.g. changelog, filelist...etc).
           events << Katello.pulp_server.extensions.rpm.copy(self.pulp_id, to_repo.pulp_id,
-                                                    :fields => Package::PULP_SELECT_FIELDS)
+                                                    :fields => Rpm::PULP_SELECT_FIELDS)
           events << clone_distribution(to_repo)
 
           # Since the rpms will be copied above, during the copy of errata and package groups,
@@ -578,7 +571,7 @@ module Katello
       def unassociate_by_filter(content_type, filter_clauses)
         criteria = {:type_ids => [content_type], :filters => {:unit => filter_clauses}}
         if content_type == Katello.pulp_server.extensions.rpm.content_type
-          criteria[:fields] = { :unit => Package::PULP_SELECT_FIELDS}
+          criteria[:fields] = { :unit => Rpm::PULP_SELECT_FIELDS}
         end
         Katello.pulp_server.extensions.repository.unassociate_units(self.pulp_id, criteria)
       end
@@ -588,7 +581,7 @@ module Katello
         tasks = content_types.collect { |type| type.unassociate_from_repo(self.pulp_id, {}) }.flatten(1)
 
         tasks << Katello.pulp_server.extensions.repository.unassociate_units(self.pulp_id,
-                   :type_ids => ['rpm'], :filters => {}, :fields => { :unit => Package::PULP_SELECT_FIELDS})
+                   :type_ids => ['rpm'], :filters => {}, :fields => { :unit => Rpm::PULP_SELECT_FIELDS})
         tasks
       end
 
@@ -724,13 +717,13 @@ module Katello
       def package_lists_for_publish
         names = []
         filenames = []
-        rpms = []
-        self.package_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
-          rpms.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
+        rpm_list = []
+        self.rpm_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+          rpm_list.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
                                   sub_list, %w(filename name)))
         end
 
-        rpms.each do |rpm|
+        rpm_list.each do |rpm|
           filenames << rpm["filename"]
           names << rpm["name"]
         end

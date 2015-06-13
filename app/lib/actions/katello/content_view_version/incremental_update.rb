@@ -77,7 +77,7 @@ module Actions
 
         def run
           content = { ::Katello::Erratum::CONTENT_TYPE => [],
-                      ::Katello::Package::CONTENT_TYPE => [],
+                      ::Katello::Rpm::CONTENT_TYPE => [],
                       ::Katello::PuppetModule::CONTENT_TYPE => []}
 
           input[:copy_action_outputs].each do |copy_output|
@@ -88,8 +88,8 @@ module Actions
                 case type
                 when ::Katello::Erratum::CONTENT_TYPE
                   content[::Katello::Erratum::CONTENT_TYPE] << unit['id']
-                when ::Katello::Package::CONTENT_TYPE
-                  content[::Katello::Package::CONTENT_TYPE] << ::Katello::Util::Package.build_nvra(unit)
+                when ::Katello::Rpm::CONTENT_TYPE
+                  content[::Katello::Rpm::CONTENT_TYPE] << ::Katello::Util::Package.build_nvra(unit)
                 when ::Katello::PuppetModule::CONTENT_TYPE
                   content[::Katello::PuppetModule::CONTENT_TYPE] << "#{unit['author']}-#{unit['name']}-#{unit['version']}"
                 end

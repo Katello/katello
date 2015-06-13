@@ -31,6 +31,8 @@ module Katello
       :katello_erratum_packages => "Katello::ErratumPackage",
       :katello_erratum_cves => "Katello::ErratumCve",
       :katello_repository_errata => "Katello::RepositoryErratum",
+      :katello_rpms => "Katello::Rpm",
+      :katello_repository_rpms => "Katello::RepositoryRpm",
       :katello_system_errata => "Katello::SystemErratum"
     }
 

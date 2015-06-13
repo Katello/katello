@@ -13,15 +13,13 @@ angular.module('Bastion.packages').factory('Package',
         return BastionResource('/katello/api/v2/packages/:id',
             {'id': '@id'},
             {
-                autocomplete: {
-                    method: 'GET',
-                    url: '/katello/packages/auto_complete',
+                'autocomplete': {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
+                'autocompleteName': {method: 'GET', isArray: false, params: {id: 'auto_complete_name'},
                     transformResponse: function (data) {
                         data = angular.fromJson(data);
                         return {results: data};
                     }
                 }
             });
-
     }]
 );

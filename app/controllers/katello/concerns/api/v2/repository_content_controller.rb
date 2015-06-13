@@ -122,7 +122,7 @@ module Katello
         case resource_class.to_s
         when "Katello::Erratum"
           _("Erratum")
-        when "Katello::Package"
+        when "Katello::Rpm"
           _("Package")
         when "Katello::PackageGroup"
           _("Package Group")

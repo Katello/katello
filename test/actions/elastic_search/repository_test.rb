@@ -15,8 +15,7 @@ module Actions::ElasticSearch
     it 'runs and clear content' do
       action = create_and_plan_action(action_class, pulp_id: repository.pulp_id)
 
-      [::Katello::Package,
-       ::Katello::PuppetModule].each do |klass|
+      [::Katello::PuppetModule].each do |klass|
         klass.expects(:indexed_ids_for_repo).with(repository.pulp_id).returns([1, 2, 3])
         klass.expects(:remove_indexed_repoid).with([1, 2, 3], repository.pulp_id)
       end
@@ -35,7 +34,7 @@ module Actions::ElasticSearch
                                         id: yum_repository.id, filter: { name: 'cheetah' })
         ::Katello::Repository.any_instance.expects(:unit_search).
             with(type_ids: ['rpm'], filters: { 'name' => 'cheetah' }).returns([{unit_id: 1}])
-        ::Katello::Package.expects(:index_packages).with([1])
+        ::Katello::Rpm.expects(:import_all).with([1], true)
         run_action action
       end
     end

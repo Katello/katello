@@ -8,30 +8,33 @@ module Katello
       User.current = User.find(users(:admin))
       organization = get_organization
       Repository.any_instance.stubs(:package_count).returns(2)
-      @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
+      @repo = katello_repositories(:fedora_17_x86_64)
+      @rpm = katello_rpms(:one)
+      @rpm2 = katello_rpms(:two)
+      @rpm3 = katello_rpms(:three)
+
+      @repo.rpms = [@rpm, @rpm2, @rpm3]
+      @repo.rpms.each do |rpm|
+        rpm.version_sortable = Util::Package.sortable_version(rpm.version)
+        rpm.release_sortable = Util::Package.sortable_version(rpm.release)
+        rpm.save!
+      end
+
       @content_view = FactoryGirl.build(:katello_content_view, :organization => organization, :repositories => [@repo])
     end
 
     def test_package_names
       @filter = FactoryGirl.create(:katello_content_view_package_filter, :content_view => @content_view)
-      foo_rule = FactoryGirl.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "foo*")
-      goo_rule = FactoryGirl.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "goo*")
+      foo_rule = FactoryGirl.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "#{@rpm.name[0..1]}*")
+      goo_rule = FactoryGirl.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => @rpm2.name)
 
-      search_results1 = array_to_struct([{:filename => "100"},
-                                         {:filename => "102"}])
-      expected_ids1 = search_results1.collect(&:filename)
-      search_results2 = array_to_struct([{:filename => "103"},
-                                         {:filename => "104"}])
-      expected_ids2 = search_results2.collect(&:filename)
-      combined = [{"filename" => {"$in" => expected_ids1 + expected_ids2}}]
+      combined = [{"filename" => {"$in" => [@rpm.filename, @rpm2.filename]}}]
 
-      Package.expects(:legacy_search).twice.returns(search_results1, search_results2)
       clause_gen = setup_whitelist_filter([foo_rule, goo_rule])
       expected = {"$or" => combined}
       assert_equal expected, clause_gen.copy_clause
       assert_nil clause_gen.remove_clause
 
-      Package.expects(:legacy_search).twice.returns(search_results1, search_results2)
       blacklist_expected = {"$or" => combined}
       clause_gen = setup_blacklist_filter([foo_rule, goo_rule])
       expected = {"$and" => [INCLUDE_ALL_PACKAGES, {"$nor" => [blacklist_expected]}]}
@@ -42,31 +45,36 @@ module Katello
     def test_package_versions
       @filter = FactoryGirl.create(:katello_content_view_package_filter, :content_view => @content_view)
       foo_rule = FactoryGirl.create(:katello_content_view_package_filter_rule, :filter => @filter,
-                                    :name => "foo*", :version => "5.0")
+                                    :name => @rpm2.name, :version => @rpm2.version)
       goo_rule = FactoryGirl.create(:katello_content_view_package_filter_rule, :filter => @filter,
-                                    :name => "goo*", :min_version => "0.5", :max_version => "0.7")
+                                    :name => "#{@rpm.name[0..1]}*", :min_version => "0.9", :max_version => "1.1")
 
-      search_results1 = array_to_struct([{:filename => "200"},
-                                         {:filename => "202"}])
-      expected_ids1 = search_results1.collect(&:filename)
-      search_results2 = array_to_struct([{:filename => "203"},
-                                         {:filename => "204"}])
-      expected_ids2 = search_results2.collect(&:filename)
+      combined = [{"filename" => {"$in" => [@rpm.filename, @rpm2.filename]}}]
 
-      combined = [{"filename" => {"$in" => expected_ids1 + expected_ids2}}]
-
-      Package.expects(:legacy_search).twice.returns(search_results1, search_results2)
-      expected = {"$or" => combined}
       clause_gen = setup_whitelist_filter([foo_rule, goo_rule])
-      assert_equal expected, clause_gen.copy_clause
+      expected = {"$or" => combined}
+      assert_equal deep_sort(expected), deep_sort(clause_gen.copy_clause)
       assert_nil clause_gen.remove_clause
 
-      Package.expects(:legacy_search).twice.returns(search_results1, search_results2)
       blacklist_expected = {"$or" => combined}
       clause_gen = setup_blacklist_filter([foo_rule, goo_rule])
       expected = {"$and" => [INCLUDE_ALL_PACKAGES, {"$nor" => [blacklist_expected]}]}
-      assert_equal expected, clause_gen.copy_clause
-      assert_equal blacklist_expected, clause_gen.remove_clause
+      assert_equal deep_sort(expected), deep_sort(clause_gen.copy_clause)
+      assert_equal deep_sort(blacklist_expected), deep_sort(clause_gen.remove_clause)
+    end
+
+    def deep_sort(obj)
+      if obj.is_a?(Array)
+        to_ret = obj.map { |value| deep_sort(value) }
+        to_ret[0].is_a?(Hash) ? to_ret : to_ret.sort
+      elsif obj.is_a?(Hash)
+        obj.inject({}) do |hash, (key, value)|
+          hash[key] = deep_sort(value)
+          hash
+        end
+      else
+        obj
+      end
     end
 
     def test_package_group_names

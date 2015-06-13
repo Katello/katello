@@ -15,7 +15,17 @@ module Katello
       extend ::Apipie::DSL::Concern
 
       def index
-        respond(:collection => scoped_search(index_relation.uniq, default_sort[0], default_sort[1]))
+        sort_options = []
+        options = {}
+        if default_sort.is_a?(Array)
+          sort_options = default_sort
+        elsif default_sort.is_a?(Proc)
+          options[:custom_sort] =  default_sort
+        else
+          fail "Unsupported default_sort type"
+        end
+
+        respond(:collection => scoped_search(index_relation.uniq, sort_options[0], sort_options[1], options))
       end
 
       api :GET, "/compare/", N_("List :resource_id")
@@ -83,12 +93,7 @@ module Katello
       end
 
       def find_content_resource
-        begin
-          id = Integer(params[:id])
-          @resource = resource_class.where(:id => id).first
-        rescue ArgumentError
-          @resource = resource_class.where(:uuid => params[:id]).first
-        end
+        @resource = resource_class.with_identifiers(params[:id]).first
 
         if resource_class == Katello::Erratum && @resource.blank?
           @resource = Erratum.find_by_errata_id(params[:id])
