@@ -15,7 +15,6 @@ module Katello
     belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :distributors
 
     has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
-    has_many :custom_info, :class_name => "Katello::CustomInfo", :as => :informable, :dependent => :destroy
     belongs_to :content_view, :inverse_of => :distributors
 
     validates_lengths_from_database
@@ -28,8 +27,6 @@ module Katello
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
     before_create :fill_defaults
-
-    after_create :init_default_custom_info
 
     scope :in_environment, lambda { |env| where('environment_id = ?', env) unless env.nil? }
     scope :completer_scope, lambda { |options| readable(options[:organization_id]) }
@@ -69,12 +66,6 @@ module Katello
       json
     end
 
-    def init_default_custom_info
-      self.organization.default_info_hash["distributor"].each do |k|
-        self.custom_info.create!(:keyname => k)
-      end
-    end
-
     def tasks
       import_candlepin_tasks
       self.task_statuses
@@ -112,12 +103,6 @@ module Katello
     def fill_defaults
       self.description = _("Initial Creation Params") unless self.description
       self.location = _("None") unless self.location
-    end
-
-    def collect_custom_info
-      hash = {}
-      self.custom_info.each { |c| hash[c.keyname] = c.value } if self.custom_info
-      hash
     end
   end
 end

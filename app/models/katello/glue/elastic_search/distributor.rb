@@ -14,20 +14,9 @@ module Katello
                                          :id,
                                          :uuid,
                                          :created_at,
-                                         :lastCheckin,
-                                         "custom_info.KEYNAME"]
+                                         :lastCheckin]
 
-        dynamic_templates = [
-          {
-            "custom_info_string" => {
-              :path_match => "custom_info.*",
-              :mapping => {
-                :type => "string",
-                :analyzer => "kt_name_analyzer"
-              }
-            }
-          }
-        ]
+        dynamic_templates = []
 
         mapping :dynamic_templates => dynamic_templates do
           indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
@@ -35,16 +24,13 @@ module Katello
           indexes :name_sort, :type => 'string', :index => :not_analyzed
           indexes :lastCheckin, :type => 'date'
           indexes :name_autocomplete, :type => 'string', :analyzer => 'autcomplete_name_analyzer'
-          indexes :custom_info, :path => "just_name" do
-          end
         end
       end
     end
 
     def extended_index_attrs
       {:organization_id => self.organization.id,
-       :name_sort => name.downcase, :name_autocomplete => self.name,
-       :custom_info => collect_custom_info
+       :name_sort => name.downcase, :name_autocomplete => self.name
       }
     end
   end

@@ -60,30 +60,6 @@ module Katello
       specify { System.new(:cp_type => cp_type, :environment => @organization.kt_environments.first, :facts => facts).wont_be :valid? }
     end
 
-    it "adds custom info if organization has default custom info set" do
-      CustomInfo.skip_callback(:save, :after, :reindex_informable)
-      CustomInfo.skip_callback(:destroy, :after, :reindex_informable)
-
-      o = Organization.find(@organization.id)
-      o.default_info["system"] << "test_key"
-      o.save!
-      #    e = create_environment(:name=>'test2', :label=> 'test2', :prior => o.library.id, :organization => o)
-
-      s = System.new(:name => system_name,
-                     :environment => o.library,
-                     :cp_type => cp_type,
-                     :facts => facts,
-                     :description => description,
-                     :uuid => uuid,
-                     :installedProducts => installed_products,
-                     :serviceLevel => nil)
-
-      s.save!
-
-      System.find(s.id).custom_info.size.must_equal(1)
-      System.find(s.id).custom_info.find_by_keyname("test_key").keyname.must_equal("test_key")
-    end
-
     describe "regenerate identity certificates" do
       before { @system.uuid = uuid }
 

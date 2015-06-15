@@ -18,7 +18,6 @@ module Katello
 
     def ignorable_foreign_keys
       {
-        "katello_custom_info" => ["informable_id"],
         "katello_task_statuses" => ["task_owner_id"],
         "katello_content_view_erratum_filter_rules" => ["errata_id"],
         "katello_repositories" => ["content_id"]

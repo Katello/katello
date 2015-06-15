@@ -58,9 +58,6 @@
 //= require "bastion_katello/tasks/tasks.module.js"
 //= require_tree "./tasks"
 
-//= require "bastion_katello/custom-info/custom-info.module.js"
-//= require_tree "./custom-info"
-
 //= require "bastion_katello/activation-keys/activation-keys.module.js"
 //= require_tree "./activation-keys"
 
