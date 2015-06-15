@@ -51,6 +51,8 @@ module Actions
             Presenters::IsoPresenter.new(self)
           elsif repo.try(:docker?)
             Presenters::DockerPresenter.new(self)
+          elsif repo.try(:ostree?)
+            Presenters::OstreePresenter.new(self)
           end
         end
 
