@@ -29,10 +29,11 @@ module Actions
         def process_timeout
           accept_timeout = Setting['pulp_sync_node_action_accept_timeout']
           finish_timeout = Setting['pulp_sync_node_action_finish_timeout']
+          pulp_task = external_task.first
 
-          if pulp_state == 'waiting'
+          if pulp_task[:state] == 'waiting'
             fail _("Host did not respond within %s seconds. Is katello-agent installed and goferd running on the Host?") % accept_timeout
-          elsif pulp_state == 'unknown'
+          elsif pulp_task[:state] == 'unknown'
             fail _("Unknown Status during sync. Is katello-agent installed and goferd running on the Host?")
           else
             if output[:sync_task_is_accepted].nil?
