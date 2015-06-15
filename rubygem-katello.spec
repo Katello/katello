@@ -87,8 +87,8 @@ Requires: postgresql
 Requires: postgresql-server
 Requires: v8
 Requires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
-Requires: %{?scl_prefix}rubygem-bastion >= 1.0.0
-Requires: %{?scl_prefix}rubygem-bastion < 2.0.0
+Requires: %{?scl_prefix}rubygem-bastion >= 2.0.0
+Requires: %{?scl_prefix}rubygem-bastion < 3.0.0
 Requires: %{?scl_prefix}rubygem-rails
 Requires: %{?scl_prefix}rubygem-json
 Requires: %{?scl_prefix}rubygem-oauth
@@ -115,8 +115,8 @@ Requires: %{?scl_prefix}rubygem-qpid_messaging < 0.31.0
 BuildRequires: foreman >= 1.7.0
 BuildRequires: foreman-assets >= 1.7.0
 BuildRequires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
-BuildRequires: %{?scl_prefix}rubygem-bastion >= 1.0.0
-BuildRequires: %{?scl_prefix}rubygem-bastion < 2.0.0
+BuildRequires: %{?scl_prefix}rubygem-bastion >= 2.0.0
+BuildRequires: %{?scl_prefix}rubygem-bastion < 3.0.0
 BuildRequires: %{?scl_prefix}rubygem-sqlite3
 BuildRequires: %{?scl_prefix}rubygem-tire => 0.6.2
 BuildRequires: %{?scl_prefix}rubygem-tire < 0.7

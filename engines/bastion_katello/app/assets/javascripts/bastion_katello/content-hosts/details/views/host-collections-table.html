@@ -36,53 +36,55 @@
   </div>
 
   <div bst-table="hostCollectionsTable" class="nutupane">
-    <div bst-container-scroll bst-infinite-scroll="hostCollectionsTable.nextPage()">
+    <div bst-container-scroll>
+      <div infinite-scroll="hostCollectionsTable.nextPage()" infinite-scroll-container="'.nutupane-sub-section .container-scroll-wrapper'">
 
-      <div ng-show="hostCollectionsTable.rows.length == 0">
-        <div class="loading-mask" ng-show="hostCollectionsTable.working">
-          <i class="fa fa-spinner fa-spin"></i>
-          {{ "Loading..." | translate }}
+        <div ng-show="hostCollectionsTable.rows.length == 0">
+          <div class="loading-mask" ng-show="hostCollectionsTable.working">
+            <i class="fa fa-spinner fa-spin"></i>
+            {{ "Loading..." | translate }}
+          </div>
+
+          <p bst-alert="info"
+             ng-if="isState('content-hosts.details.host-collections.list')"
+             ng-hide="hostCollectionsTable.working">
+            <span translate>
+              No Host Collections to show, you can add Host Collections after selecting the 'Add' tab.
+            </span>
+          </p>
+
+          <p bst-alert="info"
+             ng-if="isState('content-hosts.details.host-collections.add')"
+             ng-hide="hostCollectionsTable.working">
+            <span translate>
+              No Host Collections to show, you can add Host Collections after selecting 'Host Collections' under 'Hosts' in main menu.
+            </span>
+          </p>
         </div>
 
-        <p bst-alert="info"
-           ng-if="isState('content-hosts.details.host-collections.list')"
-           ng-hide="hostCollectionsTable.working">
-          <span translate>
-            No Host Collections to show, you can add Host Collections after selecting the 'Add' tab.
-          </span>
-        </p>
+        <table ng-show="hostCollectionsTable.rows.length > 0"
+               ng-class="{'table-mask': hostCollectionsTable.working}" class="table table-full table-striped">
+          <thead>
+            <tr bst-table-head row-select="hostCollection">
+              <th bst-table-column="name" translate>Name</th>
+              <th bst-table-column="description" translate>Description</th>
+              <th bst-table-column="capacity" translate>Capacity</th>
+            </tr>
+          </thead>
 
-        <p bst-alert="info"
-           ng-if="isState('content-hosts.details.host-collections.add')"
-           ng-hide="hostCollectionsTable.working">
-          <span translate>
-            No Host Collections to show, you can add Host Collections after selecting 'Host Collections' under 'Hosts' in main menu.
-          </span>
-        </p>
+          <tbody>
+            <tr bst-table-row ng-repeat="hostCollection in hostCollectionsTable.rows | filter:hostCollectionFilter" row-select="hostCollection">
+              <td bst-table-cell>
+                <a ui-sref="host-collections.details.info({hostCollectionId: hostCollection.id})">
+                  {{ hostCollection.name }}
+                </a>
+              </td>
+              <td bst-table-cell>{{ hostCollection.description }}</td>
+              <td bst-table-cell>{{ hostCollection.total_content_hosts }} / {{ hostCollection.max_content_hosts | unlimitedFilter:hostCollection.unlimited_content_hosts }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-      <table ng-show="hostCollectionsTable.rows.length > 0"
-             ng-class="{'table-mask': hostCollectionsTable.working}" class="table table-full table-striped">
-        <thead>
-          <tr bst-table-head row-select="hostCollection">
-            <th bst-table-column="name" translate>Name</th>
-            <th bst-table-column="description" translate>Description</th>
-            <th bst-table-column="capacity" translate>Capacity</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr bst-table-row ng-repeat="hostCollection in hostCollectionsTable.rows | filter:hostCollectionFilter" row-select="hostCollection">
-            <td bst-table-cell>
-              <a ui-sref="host-collections.details.info({hostCollectionId: hostCollection.id})">
-                {{ hostCollection.name }}
-              </a>
-            </td>
-            <td bst-table-cell>{{ hostCollection.description }}</td>
-            <td bst-table-cell>{{ hostCollection.total_content_hosts }} / {{ hostCollection.max_content_hosts | unlimitedFilter:hostCollection.unlimited_content_hosts }}</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </div>
 </section>
