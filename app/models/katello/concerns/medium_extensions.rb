@@ -4,6 +4,12 @@ module Katello
     module MediumExtensions
       extend ActiveSupport::Concern
 
+      def destroy!
+        unless destroy
+          fail self.errors.full_messages.join('; ')
+        end
+      end
+
       module ClassMethods
         def update_media(repo)
           return if repo.puppet?
@@ -39,6 +45,11 @@ module Katello
           medium = ::Medium.create!(params.merge(:organization_ids => [org.id])) unless medium
 
           return medium
+        end
+
+        def find_medium(repo)
+          path = ::Medium.installation_media_path(repo.uri)
+          ::Medium.find_by_path(path)
         end
 
         def construct_name(repo, _distribution)
