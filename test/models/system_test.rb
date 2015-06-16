@@ -155,19 +155,26 @@ module Katello
     end
 
     def test_with_installable_errata
-      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
-      @errata_system.bound_repositories = [@view_repo]
+      @errata_system.bound_repositories = [Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))]
       @errata_system.save!
 
-      installable = @errata_system.applicable_errata & @errata_system.installable_errata
-      non_installable = @errata_system.applicable_errata - @errata_system.installable_errata
+      @errata_system_dev = System.find(katello_systems(:errata_server_dev))
+      @errata_system_dev.bound_repositories = [Katello::Repository.find(katello_repositories(:fedora_17_x86_64_dev))]
+      @errata_system_dev.save!
+
+      installable = @errata_system_dev.applicable_errata & @errata_system_dev.installable_errata
+      non_installable = @errata_system_dev.applicable_errata - @errata_system_dev.installable_errata
+
       refute_empty non_installable
       refute_empty installable
       systems = System.with_installable_errata([installable.first])
-      assert_include systems, @errata_system
+      assert_include systems, @errata_system_dev
 
       systems = System.with_installable_errata([non_installable.first])
-      refute systems.include?(@errata_system)
+      refute systems.include?(@errata_system_dev)
+
+      systems = System.with_installable_errata([installable.first, non_installable.first])
+      refute systems.include?(@errata_system_dev)
     end
 
     def test_with_non_installable_errata

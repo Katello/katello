@@ -1,3 +1,7 @@
 errata_server_repo:
   repository_id: <%= ActiveRecord::Fixtures.identify(:rhel_6_x86_64) %>
   system_id: <%= ActiveRecord::Fixtures.identify(:errata_server) %>
+
+errata_server_dev_repo:
+  repository_id: <%= ActiveRecord::Fixtures.identify(:fedora_17_x86_64_dev) %>
+  system_id: <%= ActiveRecord::Fixtures.identify(:errata_server_dev) %>
