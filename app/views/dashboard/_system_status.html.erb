@@ -1,0 +1,19 @@
+<h4 class="header" ><%=_("Backend System Status")%></h4>
+<table class="table table-striped ellipsis">
+  <thead>
+    <th><%= _("Component") %></th>
+    <th><%= _("Status") %></th>
+  </thead>
+  <tbody>
+    <% Katello::Ping.ping[:services].sort.each do |component, status| %>
+      <tr>
+        <td><%= component %></td>
+        <td>
+          <% if status[:status].downcase != 'ok' %>
+            <span class="glyphicon glyphicon-warning-sign" title="<%= status[:message] %>"></span>
+          <% end %>
+          <%= status[:status].downcase == 'ok' ? _('OK') : _('FAIL') %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

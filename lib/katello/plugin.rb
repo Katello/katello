@@ -163,4 +163,6 @@ Foreman::Plugin.register :katello do
   logger :action, :enabled => true
   logger :tire_rest, :enabled => false
   logger :manifest_import_logger, :enabled => true
+
+  widget :system_status, :name => 'Backend Systems Status', :sizey => 1, :sizex => 6
 end
