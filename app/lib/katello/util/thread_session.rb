@@ -66,6 +66,7 @@ module Katello
                               :oauth_key    => Katello.config.pulp.oauth_key },
                 :logging  => {:logger     => ::Foreman::Logging.logger('katello/pulp_rest'),
                               :exception  => true,
+                              :info       => true,
                               :debug      => true }
               )
               yield if block_given?
