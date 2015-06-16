@@ -1,7 +1,5 @@
 module Katello
   class DashboardController < Katello::ApplicationController
-    before_filter :update_preferences_quantity, :except => [:index, :section_id]
-
     def index
     end
 
@@ -14,10 +12,6 @@ module Katello
     end
 
     def update
-      if params[:columns]
-        columns = params[:columns].map { |_key, column| column }
-        update_user_preference(:layout, columns)
-      end
       render :nothing => true
     end
 
@@ -65,26 +59,9 @@ module Katello
 
     private
 
-    def update_preferences_quantity
-      action = params[:action]
-      num_of_items = params[:quantity].to_i
-      if num_of_items && num_of_items > 0 && quantity != num_of_items
-        update_user_preference(action, :page_size => num_of_items)
-        current_user.save!
-      end
-    end
-
-    def update_user_preference(key, value)
-      user_preferences = current_user.preferences_hash
-      user_preferences[:dashboard] = {} unless user_preferences.key? :dashboard
-      user_preferences[:dashboard][key] = value
-      current_user.preferences = user_preferences
-      current_user.save!
-    end
-
     helper_method :quantity
     def quantity
-      current_user.preferences_hash[:dashboard][params[:action]][:page_size] rescue 5
+      Setting.entries_per_page || 5
     end
   end
 end

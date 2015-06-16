@@ -4,8 +4,6 @@
 # !!! PLEASE KEEP THIS SCRIPT IDEMPOTENT !!!
 #
 
-require 'util/password'
-
 def format_errors(model = nil)
   return '(nil found)' if model.nil?
   model.errors.full_messages.join(';')

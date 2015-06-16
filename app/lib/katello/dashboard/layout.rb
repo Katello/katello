@@ -26,20 +26,7 @@ module Katello
       end
 
       def setup_layout
-        if (user_layout = current_user.preferences_hash.try(:[], :dashboard).try(:[], :layout))
-          user_layout.each do |col|
-            @columns << col.each_with_object([]) do |name, column|
-              begin
-                widget = get_widget(name, organization)
-                column << widget if widget.accessible?
-              rescue NameError
-                Rails.logger.info("Could not load dashboard widget #{name}")
-              end
-            end
-          end
-        else
-          setup_default_layout
-        end
+        setup_default_layout
       end
 
       def setup_default_layout
