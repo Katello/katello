@@ -304,6 +304,7 @@ module Katello
           @organization = @environment.organization
           @content_view = cve.content_view
         else
+
           # assumption here is :content_view_id is passed as a separate attrib
           @environment = KTEnvironment.find(params[:environment_id])
           @organization = @environment.organization
