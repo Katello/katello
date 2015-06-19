@@ -25,7 +25,8 @@ module Actions
 
               sequence do
                 plan_action(ContentViewPuppetEnvironment::CreateForVersion, version)
-                plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => library)
+                plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => library,
+                            :puppet_modules_present => content_view.puppet_modules.any?)
               end
 
               repos_to_delete(content_view).each do |repo|

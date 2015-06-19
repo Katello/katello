@@ -20,7 +20,7 @@ module Actions
 
             cv_puppet_env = ::Katello::ContentViewPuppetEnvironment.in_environment(environment).
                 in_content_view(content_view).first
-            plan_action(Katello::Repository::NodeMetadataGenerate, cv_puppet_env)
+            plan_action(Katello::Repository::NodeMetadataGenerate, cv_puppet_env) if cv_puppet_env && cv_puppet_env.puppet_environment
           end
           plan_self(:environment_name => environment.name)
         end
