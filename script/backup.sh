@@ -13,6 +13,7 @@ tar --selinux -czvf config_files.tar.gz \
 /etc/katello \
 /etc/elasticsearch \
 /etc/candlepin \
+/etc/gutterball \
 /etc/pulp \
 /etc/grinder \
 /etc/pki/katello \
