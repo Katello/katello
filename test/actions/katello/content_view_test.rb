@@ -213,7 +213,6 @@ module ::Actions::Katello::ContentView
     it 'plans' do
       action.expects(:action_subject).with(content_view)
       plan_action action, content_view, 'repository_ids' => [repository.id]
-      assert_action_planed action, ::Actions::ElasticSearch::ReindexOnAssociationChange
     end
 
     it 'raises error when validation fails' do

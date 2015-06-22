@@ -23,10 +23,7 @@ module Actions
 
           sequence do
             sync_task = plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id, task_id: pulp_sync_task_id)
-            concurrence do
-              plan_action(ElasticSearch::Repository::IndexContent, dependency: sync_task.output[:pulp_tasks], id: repo.id)
-            end
-            plan_action(ElasticSearch::Reindex, repo)
+            plan_action(ElasticSearch::Repository::IndexContent, dependency: sync_task.output[:pulp_tasks], id: repo.id)
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view)
             plan_action(Katello::Repository::CorrectChecksum, repo)
             concurrence do

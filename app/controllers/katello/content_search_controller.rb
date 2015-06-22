@@ -394,21 +394,9 @@ module Katello
     end
 
     def repo_search(term, readable_list, product_ids = nil)
-      conditions = [{ :terms => { :id => readable_list } }]
-      conditions << { :terms => { :product_id => product_ids } } unless product_ids.blank?
-
-      #get total repos
-      found = Repository.search(:load => true) do
-        query { string term,  :default_field => 'name'  } unless term.blank?
-        filter "and", conditions
-        size 1
-      end
-
-      Repository.search(:load => true) do
-        query { string term,  :default_field => 'name'  } unless term.blank?
-        filter "and", conditions
-        size found.total
-      end
+      repos = Repository.where(:id => readable_list)
+      repos = repos.where(:product_id => product_ids) if product_ids
+      repos.search_for(term)
     end
 
     def collect_views(view_ids)

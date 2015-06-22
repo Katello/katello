@@ -199,6 +199,7 @@ Katello::Engine.routes.draw do
         api_resources :repositories, :only => [:index, :create, :show, :destroy, :update] do
           collection do
             post :sync_complete
+            get :auto_complete_search
           end
         end
 
@@ -322,6 +323,7 @@ Katello::Engine.routes.draw do
           collection do
             match '/bulk/destroy' => 'repositories_bulk_actions#destroy_repositories', :via => :put
             match '/bulk/sync' => 'repositories_bulk_actions#sync_repositories', :via => :post
+            get :auto_complete_search
           end
           api_resources :sync, :only => [:index] do
             delete :index, :on => :collection, :action => :cancel
