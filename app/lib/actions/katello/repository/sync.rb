@@ -59,6 +59,10 @@ module Actions
           end
         end
 
+        def rescue_strategy
+          Dynflow::Action::Rescue::Skip
+        end
+
         def finalize
           ::User.current = ::User.anonymous_admin
           repo = ::Katello::Repository.find(input[:id])
