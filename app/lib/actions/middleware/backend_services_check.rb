@@ -9,7 +9,7 @@ module Actions
           to_check = services - parent.input[:services_checked]
 
           if to_check.any?
-            result = ::Katello::Ping.ping(to_check)[:services]
+            result = User.as_anonymous_admin { ::Katello::Ping.ping(to_check)[:services] }
 
             to_check.each do |service|
               if result[service][:status] != ::Katello::Ping::OK_RETURN_CODE
