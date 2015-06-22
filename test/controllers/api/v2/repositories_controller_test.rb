@@ -10,7 +10,7 @@ module Katello
       @redhat_repository = katello_repositories(:rhel_6_x86_64)
       @product = katello_products(:fedora)
       @view = ContentView.find(katello_content_views(:library_view))
-      @errata = Erratum.find(katello_errata(:bugfix))
+      @errata = Erratum.find(katello_errata(:enhancement))
       @environment = katello_environments(:dev)
     end
 

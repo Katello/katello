@@ -13,3 +13,7 @@ rhel6_view_security:
 fedora_17_x86_64_security:
     erratum_id: <%= ActiveRecord::Fixtures.identify(:security) %>
     repository_id: <%= ActiveRecord::Fixtures.identify(:fedora_17_x86_64) %>
+
+fedora_17_x86_64_dev_bugfix:
+    erratum_id: <%= ActiveRecord::Fixtures.identify(:bugfix) %>
+    repository_id: <%= ActiveRecord::Fixtures.identify(:fedora_17_x86_64_dev) %>
