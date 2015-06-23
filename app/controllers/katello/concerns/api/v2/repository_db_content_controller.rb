@@ -5,7 +5,11 @@ module Katello
 
       included do
         include Katello::Concerns::FilteredAutoCompleteSearch
-        before_filter :find_optional_organization, :only => [:index]
+        before_filter :find_optional_organization, :only => [:index, :auto_complete_search]
+        before_filter :find_environment, :only => [:index, :auto_complete_search]
+        before_filter :find_content_view_version, :only => [:index, :auto_complete_search]
+        before_filter :find_filter, :only => [:index, :auto_complete_search]
+        before_filter :find_content_resource, :only => [:show]
       end
 
       extend ::Apipie::DSL::Concern
@@ -35,7 +39,7 @@ module Katello
         respond_for_index(:collection => collection)
       end
 
-      param :available_for, :string, :desc => N_("Show errata that can be added to content view filter")
+      param :available_for, :string, :desc => N_("Show available to be added to content view filter")
       param :filterId, :integer, :desc => N_("Content View Filter id")
       def index_relation
         collection = resource_class.scoped
@@ -79,13 +83,18 @@ module Katello
       end
 
       def find_content_resource
-        @resource = resource_class.with_uuid(params[:id]).first
-        if resource_class == Katello::Erratum
-          # also try to look up erratum by errata_id
-          @resource ||= Erratum.find_by_errata_id(params[:id])
+        begin
+          id = Integer(params[:id])
+          @resource = resource_class.where(:id => id).first
+        rescue ArgumentError
+          @resource = resource_class.where(:uuid => params[:id]).first
         end
 
-        if @resource.nil?
+        if resource_class == Katello::Erratum && @resource.blank?
+          @resource = Erratum.find_by_errata_id(params[:id])
+        end
+
+        if @resource.blank?
           fail HttpErrors::NotFound, _("Failed to find %{content} with id '%{id}'.") %
             {content: resource_name, id: params[:id]}
         end

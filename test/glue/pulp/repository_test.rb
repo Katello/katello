@@ -13,6 +13,7 @@ module Katello
       super
       configure_runcible
 
+      @@fedora_17_x86_64_dev = Repository.find(@loaded_fixtures['katello_repositories']['fedora_17_x86_64_dev']['id'])
       @@fedora_17_x86_64 = Repository.find(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
       @@fedora_17_x86_64.relative_path = '/test_path/'
       @@fedora_17_x86_64.url = "file:///var/www/test_repos/zoo"
@@ -285,9 +286,10 @@ module Katello
     end
 
     def test_package_groups
-      package_groups = @@fedora_17_x86_64.package_groups
+      @fedora_17_x86_64_dev = Repository.find(@loaded_fixtures['katello_repositories']['fedora_17_x86_64_dev']['id'])
+      package_groups = @fedora_17_x86_64_dev.package_groups
 
-      refute_empty package_groups.select { |group| group.name == 'mammal' }
+      refute_empty package_groups.select { |group| group.name == 'mammals' }
     end
 
     def test_package_group_categories

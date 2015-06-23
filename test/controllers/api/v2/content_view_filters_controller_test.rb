@@ -154,23 +154,5 @@ module Katello
         delete :destroy, :content_view_id => @filter.content_view_id, :id => @filter.id
       end
     end
-
-    def test_available_package_groups
-      @filter = katello_content_view_filters(:populated_package_group_filter)
-      get :available_package_groups, :content_view_id => @filter.content_view_id, :id => @filter.id
-
-      assert_response :success
-      assert_template 'katello/api/v2/content_view_filters/../package_groups/index'
-    end
-
-    def test_available_package_groups_protected
-      @filter = katello_content_view_filters(:populated_package_group_filter)
-      allowed_perms = [@view_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission]
-
-      assert_protected_action(:available_package_groups, allowed_perms, denied_perms) do
-        get :available_package_groups, :content_view_id => @filter.content_view_id, :id => @filter.id
-      end
-    end
   end
 end

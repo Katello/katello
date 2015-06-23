@@ -4,6 +4,7 @@ module Katello
   class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
     def models
       @repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
+      @package_group_filter = katello_content_view_filters(:populated_package_group_filter)
     end
 
     def permissions
@@ -27,6 +28,13 @@ module Katello
     end
 
     def test_index
+      get :index
+
+      assert_response :success
+      assert_template %w(katello/api/v2/package_groups/index)
+    end
+
+    def test_index_with_repo_id
       get :index, :repository_id => @repo.id
 
       assert_response :success
@@ -35,6 +43,7 @@ module Katello
 
     def test_index_with_content_view_version
       get :index, :content_view_version_id => ContentViewVersion.first.id
+
       assert_response :success
       assert_template %w(katello/api/v2/package_groups/index)
     end
@@ -51,31 +60,47 @@ module Katello
 
     def test_index_protected
       assert_protected_action(:index, @auth_permissions, @unauth_permissions) do
-        get :index, :repository_id => @repo.id
+        get :index
       end
     end
 
+    def test_index_available_for_content_view_filter
+      filtered_id = @package_group_filter.package_group_rules.first["uuid"]
+
+      get :index, :filterId => @package_group_filter, :available_for => "content_view_filter"
+      body = JSON.parse(response.body)
+      response_ids = body["results"].map { |item| item["package_group_id"] }
+
+      assert_response :success
+      assert !(response_ids.include? filtered_id)
+      assert response_ids.length > 0
+    end
+
     def test_show
-      PackageGroup.expects(:find).once.returns(stub(:repo_id => @repo.pulp_id))
-      get :show, :repository_id => @repo.id, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f"
+      PackageGroup.any_instance.stubs(:backend_data).returns({})
+      get :show, :id => @repo.package_groups.first.id
 
       assert_response :success
       assert_template %w(katello/api/v2/package_groups/show)
     end
 
+    def test_show_by_uuid
+      PackageGroup.any_instance.stubs(:backend_data).returns({})
+      get :show, :id => @repo.package_groups.first.uuid
+
+      assert_response :success
+    end
+
     def test_show_group_not_found
-      PackageGroup.expects(:find).once.returns(nil)
-      get :show, :repository_id => @repo.id, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f"
+      get :show, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f"
       assert_response 404
     end
 
     def test_show_protected
-      pckage_group = stub
-      pckage_group.stubs(:repo_id).returns([@repo.pulp_id])
-      PackageGroup.stubs(:find).with("3805853f-5cae-4a4a-8549-0ec86410f58f").returns(pckage_group)
+      PackageGroup.any_instance.stubs(:backend_data).returns({})
 
       assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
-        get :show, :repository_id => @repo.id, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f"
+        get :show, :id => @repo.package_groups.first.id
       end
     end
   end

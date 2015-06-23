@@ -129,9 +129,8 @@ namespace :katello do
       end
     end
 
-    reindex_helper.index_objects(Katello::Erratum) do
-      Katello::Erratum.import_all
-    end
+    Katello::Erratum.import_all
+    Katello::PackageGroup.import_all
 
     reindex_helper.log "Re-indexing Pools"
     Organization.all.each do |org|

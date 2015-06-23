@@ -39,7 +39,7 @@
                 type: PackageGroup,
                 params: {
                     'sort_by': 'name',
-                    'sort_order': 'DESC',
+                    'sort_order': 'ASC',
                     'content_view_version_id': $scope.$stateParams.versionId
                 }
             },
