@@ -21,7 +21,7 @@
 Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
-Version: 2.2.1
+Version: 2.2.2
 Release: 1%{dist}
 Group: Development/Ruby
 License: Distributable
@@ -225,6 +225,24 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Tue Jun 23 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.2-1
+- fixes #10871 - Loads product content tab on content host, BZ1230782
+- fixes #10459,#10435 - do not create a puppet env for cvs with no modules
+  (jsherril@redhat.com)
+- refs #7162 - fixing capsule sync timeout
+- Fixes #7162 - timeout capsule sync task
+- fixes #10572 - send e-mail to all subscribers
+- Fixes #10593: Log message instead of failing when no mail recipients.
+- Fixes #10622 - Fixes javascript traceback when removing repositories
+- fixes #10655 - fix organization delete (jsherril@redhat.com)
+- refs #10655 - fixing a couple more issues with org delete
+  (jsherril@redhat.com)
+- Fixes #10588: Fix typo that broke listing puppet modules for a version.
+- Fixes #10575: add available content to AK products index BZ 1223743.
+  (walden@redhat.com)
+- fixes #10489 - adding two timeouts for content tasks (jsherril@redhat.com)
+- Adding CHANGELOG updates for 2.2.1 (ericdhelms@gmail.com)
+
 * Thu May 28 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.1-1
 - Fix breakage in scoped_search from previous cherry pick.
   (ericdhelms@gmail.com)
