@@ -75,9 +75,49 @@ class Actions::Candlepin::Product::DestroyTest < ActiveSupport::TestCase
     end
 
     it 'runs' do
-      action_class.any_instance.expects(:done?).returns(true)
       ::Katello::Resources::Candlepin::Product.expects(:delete_subscriptions).with(label, cp_id)
       run_action planned_action
+    end
+  end
+
+  describe "Delete Unused" do
+    before(:all) { stub_remote_user }
+    let(:action_class) { ::Actions::Candlepin::Product::DeleteUnused }
+    let(:org) { get_organization }
+    let(:destroy_action) { ::Actions::Candlepin::Product::Destroy  }
+
+    context('without duplicate') do
+      let(:planned_action) do
+        create_and_plan_action(action_class, org)
+      end
+
+      it 'plans deletion of all products' do
+        org.products.each do |product|
+          assert_action_planed_with(planned_action, destroy_action, cp_id: product.cp_id)
+        end
+      end
+    end
+
+    context('with duplicate') do
+      let(:other_org) { taxonomies(:organization1) }
+      let(:redhat_product) { katello_products(:redhat) }
+
+      let(:other_product) do
+        create(:katello_product,
+               :cp_id => redhat_product.cp_id,
+               :organization => other_org,
+               :name => redhat_product.name,
+               :label => 'dont_label_me',
+               :provider => other_org.redhat_provider)
+      end
+
+      let(:planned_action) do
+        create_and_plan_action(action_class, other_org)
+      end
+
+      it 'does not plan deletion of duplicated product' do
+        refute_action_planed(planned_action, destroy_action)
+      end
     end
   end
 

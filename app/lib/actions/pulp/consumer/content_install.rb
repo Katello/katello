@@ -24,10 +24,12 @@ module Actions
         end
 
         def invoke_external_task
-          pulp_extensions.consumer.install_content(input[:consumer_uuid],
+          task = pulp_extensions.consumer.install_content(input[:consumer_uuid],
                                                    input[:type],
                                                    input[:args],
                                                     "importkeys" => true)
+          schedule_timeout(Setting['content_action_accept_timeout'])
+          task
         end
 
         def presenter

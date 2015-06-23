@@ -40,21 +40,23 @@ module Katello
       assert_equal name, ["KT", @org.label, @env.label, @content_view.label, @content_view.id].join('_')
     end
 
-    def test_create_by_katello_id
-      refute_nil Environment.create_by_katello_id(@org, @env, @content_view)
+    def test_build_by_katello_id
+      env = Environment.build_by_katello_id(@org, @env, @content_view)
+      refute_nil env
+      env.save!
     end
 
     def test_find_by_katello_id
       assert_nil Environment.find_by_katello_id(@org, @env, @content_view)
 
-      Environment.create_by_katello_id(@org, @env, @content_view)
-
+      env = Environment.build_by_katello_id(@org, @env, @content_view)
+      env.save!
       refute_nil Environment.find_by_katello_id(@org, @env, @content_view)
     end
 
     def test_find_or_create_by_katello_id
       assert_nil Environment.find_by_katello_id(@org, @env, @content_view)
-      refute_nil Environment.find_or_create_by_katello_id(@org, @env, @content_view)
+      refute_nil Environment.find_or_build_by_katello_id(@org, @env, @content_view)
     end
   end
 end

@@ -30,3 +30,10 @@ puppet_labs:
   description:    Fie, fie, you counterfeit. You puppet, you!
   provider_type:  Custom
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+
+redhat2:
+  name: Red Hat Provider2
+  description: Provider of all your red hat needs
+  provider_type: 'Red Hat'
+  repository_url: 'https://cds.example.com'
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>

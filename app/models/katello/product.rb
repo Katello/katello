@@ -158,6 +158,10 @@ module Katello
       provider.anonymous_provider?
     end
 
+    def used_by_another_org?
+      self.class.where(["cp_id = ? AND id != ?", cp_id, id]).count > 0
+    end
+
     def gpg_key_name=(name)
       if name.blank?
         self.gpg_key = nil
