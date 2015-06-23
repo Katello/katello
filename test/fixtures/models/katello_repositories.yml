@@ -12,12 +12,12 @@ fedora_17_x86_64:
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
 
 fedora_17_x86_64_dev:
-  name:                 Fedora 17 x86_64
+  name:                 Fedora 17 x86_64 dev
   pulp_id:              2
   content_id:           1
   content_type:         yum
   library_instance:     fedora_17_x86_64
-  label:                fedora_17_dev_label
+  label:                fedora_17_x86_64_dev_label
   relative_path:        '/ACME_Corporation/dev/fedora_17_dev_label'
   environment_id:       <%= ActiveRecord::Fixtures.identify(:dev) %>
   product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>

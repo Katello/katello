@@ -76,18 +76,10 @@ module Katello
       goo_rule = FactoryGirl.create(:katello_content_view_package_group_filter_rule,
                                     :filter => @filter, :name => "goo*")
 
-      search_results1 = array_to_struct([{:package_group_id => "300"},
-                                         {:package_group_id => "302"}])
-      expected_ids1 = search_results1.collect(&:package_group_id)
-      search_results2 = array_to_struct([{:package_group_id => "303"},
-                                         {:package_group_id => "304"}])
-      expected_ids2 = search_results2.collect(&:package_group_id)
-
-      expected_group_clause = [{"id" => {"$in" => expected_ids1 + expected_ids2}}]
-
+      expected_ids = @filter.package_group_rules.map(&:uuid)
+      expected_group_clause = [{"_id" => {"$in" => expected_ids}}]
       returned_packages = {'names' => {"$in" => ["foo", "bar"]}}
 
-      PackageGroup.expects(:legacy_search).twice.returns(search_results1, search_results2)
       clause_gen = setup_whitelist_filter([foo_rule, goo_rule]) do |gen|
         gen.expects(:package_clauses_for_group).once.
                     with(expected_group_clause).returns(returned_packages)
@@ -95,7 +87,6 @@ module Katello
       assert_equal returned_packages, clause_gen.copy_clause
       assert_nil clause_gen.remove_clause
 
-      PackageGroup.expects(:legacy_search).twice.returns(search_results1, search_results2)
       clause_gen = setup_blacklist_filter([foo_rule, goo_rule]) do |gen|
         gen.expects(:package_clauses_for_group).once.
                     with(expected_group_clause).returns(returned_packages)

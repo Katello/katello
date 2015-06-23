@@ -27,20 +27,6 @@ module Katello
       end
     end
 
-    def index_package_groups
-      package_groups_map = self.package_groups.collect { |pg| pg.as_json.merge(pg.index_options) }
-
-      unless package_groups_map.empty?
-        Tire.index Katello::PackageGroup.index do
-          create :settings => Katello::PackageGroup.index_settings, :mappings => Katello::PackageGroup.index_mapping
-        end unless Tire.index(Katello::PackageGroup.index).exists?
-
-        Tire.index Katello::PackageGroup.index do
-          import package_groups_map
-        end unless package_groups_map.empty?
-      end
-    end
-
     def index_puppet_modules
       Tire.index Katello::PuppetModule.index do
         create :settings => Katello::PuppetModule.index_settings, :mappings => Katello::PuppetModule.index_mapping
@@ -77,9 +63,9 @@ module Katello
       self.index_packages
       self.index_db_errata
       self.index_db_docker_images
-      self.index_package_groups
       self.index_puppet_modules
       self.index_distributions
+      self.index_db_package_groups
       true
     end
   end

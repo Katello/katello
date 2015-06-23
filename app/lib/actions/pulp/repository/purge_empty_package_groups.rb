@@ -14,12 +14,11 @@ module Actions
 
           # Remove all  package groups with no packages
           package_groups_to_delete = repo.package_groups.collect do |group|
-            group.package_group_id if rpm_names.intersection(group.package_names).empty?
+            group.uuid if rpm_names.intersection(group.package_names).empty?
           end
-          package_groups_to_delete.compact!
+          criteria = {:association=>{"unit_id"=>{"$in"=>package_groups_to_delete.compact!}}}
 
-          repo.unassociate_by_filter(::Katello::ContentViewPackageGroupFilter::CONTENT_TYPE,
-                                   "id" => { "$in" => package_groups_to_delete })
+          ::Katello.pulp_server.extensions.repository.unassociate_units(repo.pulp_id, :filters => criteria)
         end
       end
     end

@@ -335,6 +335,23 @@ module Katello
         tmp_errata
       end
 
+      def index_db_package_groups
+        package_group_json.each do |pg_json|
+          begin
+            package_group = Katello::PackageGroup.find_or_create_by_uuid(:uuid => pg_json['_id'])
+          rescue ActiveRecord::RecordNotUnique
+            retry
+          end
+          package_group.update_from_json(pg_json)
+        end
+        pg_ids = package_group_json.map { |pg| pg['_id'] }
+        Katello::PackageGroup.sync_repository_associations(self, pg_ids)
+      end
+
+      def package_group_json
+        Katello.pulp_server.extensions.repository.package_groups(self.pulp_id)
+      end
+
       def index_db_docker_images
         docker_tags.destroy_all
 
@@ -361,7 +378,6 @@ module Katello
         docker_images.each do |attrs|
           attrs[:tags] = tags.select { |tag| tag[:image_id] == attrs[:image_id] }.map { |tag| tag[:tag] }
         end
-
         docker_images
       end
 
@@ -396,32 +412,6 @@ module Katello
       def bootable_distribution
         return unless self.unprotected
         self.distributions.find { |distribution| distribution.bootable? }
-      end
-
-      def package_groups
-        if @repo_package_groups.nil?
-          groups = Katello.pulp_server.extensions.repository.package_groups(self.pulp_id)
-          self.package_groups = groups
-        end
-        @repo_package_groups
-      end
-
-      def package_groups=(attrs)
-        @repo_package_groups = attrs.collect do |group|
-          Katello::PackageGroup.new(group)
-        end
-        @repo_package_groups
-      end
-
-      def package_groups_search(search_args = {})
-        groups = package_groups
-        unless search_args.empty?
-          groups.delete_if do |group|
-            group_attrs = group.as_json
-            search_args.any? { |attr, value| group_attrs[attr] != value }
-          end
-        end
-        groups
       end
 
       def package_group_categories(search_args = {})
