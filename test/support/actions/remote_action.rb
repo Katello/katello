@@ -4,10 +4,8 @@ module Support
       def stub_remote_user(admin = false)
         if admin
           User.current = users(:admin)
-          User.current.remote_id = 'admin'
         else
           User.current = users(:one)
-          User.current.remote_id = 'one'
         end
       end
 

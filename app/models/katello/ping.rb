@@ -2,11 +2,13 @@
 
 module Katello
   class Ping
-    class << self
-      OK_RETURN_CODE = 'ok'
-      FAIL_RETURN_CODE = 'FAIL'
-      PACKAGES = %w(katello candlepin pulp thumbslug qpid elasticsearch)
+    OK_RETURN_CODE = 'ok'
+    FAIL_RETURN_CODE = 'FAIL'
+    PACKAGES = %w(katello candlepin pulp thumbslug qpid elasticsearch)
 
+    SERVICES = [:pulp, :pulp_auth, :elasticsearch, :candlepin, :candlepin_auth, :foreman_tasks]
+
+    class << self
       #
       # Calls "status" services in all backend engines.
       #
@@ -14,50 +16,58 @@ module Katello
       #
       # TODO: break up this method
       # rubocop:disable MethodLength
-      def ping
-        result = { :status => OK_RETURN_CODE, :services => {
-          :pulp => {},
-          :candlepin => {},
-          :elasticsearch => {},
-          :pulp_auth => {},
-          :candlepin_auth => {},
-          :foreman_tasks => {}
-        }}
+      def ping(services = SERVICES)
+        result = { :status => OK_RETURN_CODE, :services => {}}
+        services.each { |service| result[:services][service] = {} }
 
         # pulp - ping without oauth
-        exception_watch(result[:services][:pulp]) do
-          Ping.pulp_without_oauth
-        end
-
-        # candlepin - ping without oauth
-        url = Katello.config.candlepin.url
-        exception_watch(result[:services][:candlepin]) do
-          RestClient.get "#{url}/status"
-        end
-
-        # elasticsearch - ping without oauth
-        url = Katello.config.elastic_url
-        exception_watch(result[:services][:elasticsearch]) do
-          RestClient.get "#{url}/_status"
-        end
-
-        # pulp - ping with oauth
-        if User.current
-          exception_watch(result[:services][:pulp_auth]) do
-            Katello.pulp_server.resources.user.retrieve_all
+        if services.include?(:pulp)
+          exception_watch(result[:services][:pulp]) do
+            Ping.pulp_without_oauth
           end
         end
 
-        # candlepin - ping with oauth
-        exception_watch(result[:services][:candlepin_auth]) do
-          Katello::Resources::Candlepin::CandlepinPing.ping
+        # candlepin - ping without oauth
+        if services.include?(:candlepin)
+          url = Katello.config.candlepin.url
+          exception_watch(result[:services][:candlepin]) do
+            RestClient.get "#{url}/status"
+          end
         end
 
-        exception_watch(result[:services][:foreman_tasks]) do
-          dynflow_world = ForemanTasks.dynflow.world
-          if dynflow_world.executor.is_a?(Dynflow::Executors::RemoteViaSocket) &&
-                !dynflow_world.executor.connected?
-            fail _("foreman-tasks service not running")
+        # elasticsearch - ping without oauth
+        if services.include?(:elasticsearch)
+          url = Katello.config.elastic_url
+          exception_watch(result[:services][:elasticsearch]) do
+            RestClient.get "#{url}/_status"
+          end
+        end
+
+        # pulp - ping with oauth
+        if User.current && services.include?(:pulp_auth)
+          exception_watch(result[:services][:pulp_auth]) do
+            if result[:services][:pulp][:status] == OK_RETURN_CODE
+              Katello.pulp_server.resources.user.retrieve_all
+            else
+              fail _("Skipped pulp_auth check after failed pulp check")
+            end
+          end
+        end
+
+        if services.include?(:candlepin_auth)
+          # candlepin - ping with oauth
+          exception_watch(result[:services][:candlepin_auth]) do
+            Katello::Resources::Candlepin::CandlepinPing.ping
+          end
+        end
+
+        if services.include?(:foreman_tasks)
+          exception_watch(result[:services][:foreman_tasks]) do
+            dynflow_world = ForemanTasks.dynflow.world
+            if dynflow_world.executor.is_a?(Dynflow::Executors::RemoteViaSocket) &&
+                  !dynflow_world.executor.connected?
+              fail _("foreman-tasks service not running")
+            end
           end
         end
 
@@ -69,7 +79,7 @@ module Katello
       end
 
       # check for exception - set the result code properly
-      def exception_watch(result, &_block)
+      def exception_watch(result)
         start = Time.new
         yield
         result[:status] = OK_RETURN_CODE
@@ -92,16 +102,23 @@ module Katello
       # because it returns empty string, which is not enough to say
       # pulp is the one that responded
       def pulp_without_oauth
-        url = Katello.config.pulp.url
-        uri = URI("#{url}/status/")
-        http = Net::HTTP.new(uri.host, uri.port)
-        if uri.scheme == "https"
-          http.use_ssl = true
-          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        body = RestClient.get("#{Katello.config.pulp.url}/status/")
+        fail _("Pulp does not appear to be running.") if body.empty?
+        json = JSON.parse(body)
+
+        if json['known_workers'].empty?
+          fail _("No pulp workers running.")
         end
-        unless http.options(uri.path).content_length > 0
-          fail _("Pulp not running")
+
+        if json['database_connection'] && json['database_connection']['connected'] != true
+          fail _("Pulp database connection issue.")
         end
+
+        if json['messaging_connection'] && json['messaging_connection']['connected'] != true
+          fail _("Pulp message bus connection issue.")
+        end
+
+        json
       end
     end
   end

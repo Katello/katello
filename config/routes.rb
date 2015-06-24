@@ -39,20 +39,9 @@ Katello::Engine.routes.draw do
       end
     end
 
-    resources :notices, :only => [] do
-      collection do
-        get :get_new
-      end
-    end
-
-    match 'notices/:id/details' => 'notices#details', :via => :get, :as => 'notices_details'
-    match 'notices' => 'notices#show', :via => :get
-    match 'notices' => 'notices#destroy_all', :via => :delete
-
     resources :dashboard, :only => [:index] do
       collection do
         get :sync
-        get :notices
         get :errata
         get :content_views
         get :promotions
@@ -95,7 +84,6 @@ Katello::Engine.routes.draw do
         get :products
         get :more_products
         get :download
-        get :custom_info
       end
       collection do
         get :auto_complete
@@ -167,7 +155,6 @@ Katello::Engine.routes.draw do
       end
     end
     match '/organizations/:id/edit' => 'organizations#update', :via => :put
-    match '/organizations/:id/default_info/:informable_type' => 'organizations#default_info', :via => :get, :as => :organization_default_info
 
     resources :search, :only => {} do
       get 'show', :on => :collection

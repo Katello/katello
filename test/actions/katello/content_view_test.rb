@@ -200,7 +200,7 @@ module ::Actions::Katello::ContentView
 
       plan_action(action, content_view, options)
       assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env, :skip_elastic => false, :skip_repo_destroy => false, :organization_destroy => false)
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version, :skip_environment_check => true)
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version, :skip_environment_check => true, :skip_destroy_env_content => true)
     end
   end
 
@@ -213,7 +213,6 @@ module ::Actions::Katello::ContentView
     it 'plans' do
       action.expects(:action_subject).with(content_view)
       plan_action action, content_view, 'repository_ids' => [repository.id]
-      assert_action_planed action, ::Actions::ElasticSearch::ReindexOnAssociationChange
     end
 
     it 'raises error when validation fails' do

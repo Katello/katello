@@ -2,8 +2,6 @@ module Katello
   class ContentViewPuppetModule < Katello::Model
     self.include_root_in_json = false
 
-    include Glue::ElasticSearch::ContentViewPuppetModule if Katello.config.use_elasticsearch
-
     belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
 
     validates_lengths_from_database
@@ -12,6 +10,11 @@ module Katello
     validates :uuid, :uniqueness => { :scope => :content_view_id }, :allow_blank => true
 
     validates_with Validators::ContentViewPuppetModuleValidator
+
+    scoped_search :on => :name, :complete_value => true
+    scoped_search :on => :author, :complete_value => true
+    scoped_search :on => :uuid, :complete_value => true
+    scoped_search :on => :name, :in => :content_view, :rename => :content_view_name
 
     def puppet_module
       PuppetModule.find(self.uuid)

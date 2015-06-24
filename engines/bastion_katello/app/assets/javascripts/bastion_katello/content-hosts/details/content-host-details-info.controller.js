@@ -5,7 +5,6 @@
  * @requires $scope
  * @requires $q
  * @requires translate
- * @requires CustomInfo
  * @requires ContentHost
  * @requires ContentView
  * @requires Organization
@@ -16,12 +15,8 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoController',
-    ['$scope', '$q', 'translate', 'CustomInfo', 'ContentHost', 'ContentView', 'Organization', 'CurrentOrganization', 'ContentHostsHelper',
-    function ($scope, $q, translate, CustomInfo, ContentHost, ContentView, Organization, CurrentOrganization, ContentHostsHelper) {
-        var customInfoErrorHandler = function (response) {
-            $scope.errorMessages = response.data.errors;
-        };
-
+    ['$scope', '$q', 'translate', 'ContentHost', 'ContentView', 'Organization', 'CurrentOrganization', 'ContentHostsHelper',
+    function ($scope, $q, translate, ContentHost, ContentView, Organization, CurrentOrganization, ContentHostsHelper) {
         function dotNotationToObj(dotString) {
             var dotObject = {}, tempObject, parts, part, key, property;
             for (property in dotString) {
@@ -135,53 +130,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
             });
 
             return deferred.promise;
-        };
-
-        $scope.saveCustomInfo = function (info) {
-            return CustomInfo.update({
-                id: $scope.contentHost.id,
-                type: 'system',
-                action: info.keyname
-            }, {
-                'custom_info': info
-            },
-            function () {
-                $scope.successMessages = [translate("Successfully updated custom info.")];
-            },
-            customInfoErrorHandler);
-        };
-
-        $scope.addCustomInfo = function (info) {
-            var success = function () {
-                    $scope.contentHost.customInfo.push(info);
-                    $scope.successMessages = [translate("Successfully saved custom info.")];
-                };
-
-            return CustomInfo.save({
-                id: $scope.contentHost.id,
-                type: 'system'
-            }, {
-                'custom_info': info
-            },
-            success,
-            customInfoErrorHandler);
-        };
-
-        $scope.deleteCustomInfo = function (info) {
-            var success = function () {
-                    $scope.contentHost.customInfo = _.filter($scope.contentHost.customInfo, function (keyValue) {
-                        return keyValue !== info;
-                    }, this);
-                    $scope.successMessages = [translate("Successfully removed custom info.")];
-                };
-
-            return CustomInfo.delete({
-                id: $scope.contentHost.id,
-                type: 'system',
-                action: info.keyname
-            },
-            success,
-            customInfoErrorHandler);
         };
 
         $scope.getActivationKeyLink = function (activationKey) {

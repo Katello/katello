@@ -54,7 +54,9 @@ module Actions
               ::Katello::ContentViewHistory.create!(:content_view_version => version,
                                                     :user => ::User.current.login,
                                                     :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task)
-              plan_action(ContentViewVersion::Destroy, version, :skip_environment_check => true)
+              plan_action(ContentViewVersion::Destroy, version,
+                          :skip_environment_check => true,
+                          :skip_destroy_env_content => true)
             end
 
             plan_self(content_view_id: content_view.id,

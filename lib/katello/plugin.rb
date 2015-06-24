@@ -148,16 +148,6 @@ Foreman::Plugin.register :katello do
        :after => :dashboard,
        :turbolinks => false
 
-  menu :admin_menu,
-       :notices,
-       :caption => N_('Content Notices'),
-       :url_hash => {:controller => 'katello/notices',
-                     :action => 'show'},
-       :engine => Katello::Engine,
-       :parent => :administer_menu,
-       :after => :organizations,
-       :turbolinks => false
-
   allowed_template_helpers :subscription_manager_configuration_url
   search_path_override("Katello") do |resource|
     "/#{Katello::Util::Model.model_to_controller_path(resource)}/auto_complete_search"

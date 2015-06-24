@@ -2,6 +2,7 @@ module Actions
   module Pulp
     class Abstract < Actions::Base
       middleware.use ::Actions::Middleware::RemoteAction
+      middleware.use Actions::Middleware::PulpServicesCheck
 
       def pulp_resources
         ::Katello.pulp_server.resources

@@ -17,8 +17,6 @@ module Katello
       # TODO: this tests should move to actions tests once we
       # have more actions in Dynflow. For now just peform the
       # things that system.set_pulp_consumer did before.
-
-      User.current.remote_id =  User.current.login
       ForemanTasks.sync_task(::Actions::Candlepin::Owner::Create,
                              name: org.name, label: org.label)
     end

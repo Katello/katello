@@ -79,6 +79,14 @@ module Katello
       refute @repo.valid?
     end
 
+    def test_docker_full_path
+      full_path = @repo.full_path
+      @repo.content_type = 'docker'
+      refute_equal full_path, @repo.full_path
+      @repo.pulp_id = "abc123"
+      assert @repo.full_path =~ /abc123/
+    end
+
     def test_unique_repository_label_per_product_and_environment
       @repo.save
       @repo2 = build(:katello_repository,
@@ -167,6 +175,30 @@ module Katello
       assert_raises ActiveRecord::RecordInvalid do
         OstreeBranch.create!(:repository => @repo, :name => "/foo/bar1")
       end
+    end
+  end
+
+  class RepositorySearchTest < RepositoryTestBase
+    def test_search_content_type
+      repos = Repository.search_for("content_type = yum")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+    end
+
+    def test_search_name
+      repos = Repository.search_for("name = \"#{@fedora_17_x86_64.name}\"")
+      assert_includes repos, @fedora_17_x86_64
+    end
+
+    def test_search_product
+      repos = Repository.search_for("product = \"#{@fedora_17_x86_64.product.name}\"")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+    end
+
+    def test_search_content_view_id
+      repos = Repository.search_for("content_view_id = \"#{@fedora_17_x86_64.content_views.first.id}\"")
+      assert_includes repos, @fedora_17_x86_64
     end
   end
 

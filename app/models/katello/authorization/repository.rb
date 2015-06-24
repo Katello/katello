@@ -5,8 +5,6 @@ module Katello
     include Authorizable
     include Katello::Authorization
 
-    delegate :readable?, to: :product
-
     delegate :editable?, to: :product
 
     def deletable?
@@ -17,11 +15,18 @@ module Katello
       !self.promoted? && self.product.editable?
     end
 
+    def readable?
+      self.class.readable.where("#{self.class.table_name}.id"=> self.id).any?
+    end
+
     delegate :syncable?, to: :product
 
     module ClassMethods
       def readable
-        where(:product_id => Katello::Product.authorized(:view_products))
+        in_products = Repository.where(:product_id => Katello::Product.authorized(:view_products))
+        in_content_views = Repository.joins(:content_view_repositories).where("#{ContentViewRepository.table_name}.content_view_id in (?)", ContentView.readable)
+        in_versions = Repository.joins(:content_view_version).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => ContentView.readable)
+        where("#{self.table_name}.id in (?) or #{self.table_name}.id in (?) or #{self.table_name}.id in (?)", in_products, in_content_views, in_versions)
       end
 
       def deletable

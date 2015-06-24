@@ -3,7 +3,6 @@ $LOAD_PATH << path unless $LOAD_PATH.include? path
 
 require 'katello/configuration'
 require 'katello/app_config'
-require 'util/password'
 
 module Katello
   # TODO: clean up this method

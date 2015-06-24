@@ -1,24 +1,26 @@
 <section class="nutupane-sub-section">
-  <div bst-container-scroll bst-infinite-scroll="eventTable.nextPage()">
-    <table bst-table="eventTable" class="table table-striped">
-      <thead>
-        <tr bst-table-head>
-          <th bst-table-column="Type" class='type' translate>Type</th>
-          <th bst-table-column="Target" translate>Target</th>
-          <th bst-table-column="Message" class='type' translate>Message</th>
-          <th bst-table-column="Date" translate>Date</th>
-        </tr>
-      </thead>
+  <div bst-container-scroll>
+    <div infinite-scroll="eventTable.nextPage()" infinite-scroll-container="'.nutupane-sub-section .container-scroll-wrapper'">
+      <table bst-table="eventTable" class="table table-striped">
+        <thead>
+          <tr bst-table-head>
+            <th bst-table-column="Type" class='type' translate>Type</th>
+            <th bst-table-column="Target" translate>Target</th>
+            <th bst-table-column="Message" class='type' translate>Message</th>
+            <th bst-table-column="Date" translate>Date</th>
+          </tr>
+        </thead>
 
-      <tbody>
-        <tr bst-table-row ng-repeat="event in eventTable.rows">
-          <td bst-table-cell>{{ event.type }}</td>
-          <td bst-table-cell>{{ event.target }}</td>
-          <td bst-table-cell>{{ event.messageText }}</td>
-          <td bst-table-cell>{{ event.timestamp | date:"short" }}</td>
-        </tr>
-      </tbody>
-    </table>
+        <tbody>
+          <tr bst-table-row ng-repeat="event in eventTable.rows">
+            <td bst-table-cell>{{ event.type }}</td>
+            <td bst-table-cell>{{ event.target }}</td>
+            <td bst-table-cell>{{ event.messageText }}</td>
+            <td bst-table-cell>{{ event.timestamp | date:"short" }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </section>
 

@@ -216,7 +216,7 @@ module Katello
 
     def repo_packages
       offset = params[:offset] || 0
-      packages = Package.legacy_search('', offset, current_user.page_size, [@repo.pulp_id])
+      packages = Package.legacy_search('', offset, Setting::General.entries_per_page, [@repo.pulp_id])
 
       rows = packages.collect do |pack|
         { :name => package_display(pack),
@@ -224,7 +224,7 @@ module Katello
           :data_type => "package", :value => pack.nvrea }
       end
 
-      if packages.total > current_user.page_size
+      if packages.total > Setting::General.entries_per_page
         rows += [metadata_row(packages.total, offset.to_i + rows.length, { :repo_id => @repo.id }, @repo.id)]
       end
 
@@ -233,7 +233,7 @@ module Katello
 
     def repo_puppet_modules
       offset = params[:offset] || 0
-      puppet_modules = PuppetModule.legacy_search('',  :start => offset, :page_size => current_user.page_size,
+      puppet_modules = PuppetModule.legacy_search('',  :start => offset, :page_size => Setting::General.entries_per_page,
                                                        :repoids => [@repo.pulp_id])
 
       rows = puppet_modules.collect do |puppet_module|
@@ -247,7 +247,7 @@ module Katello
         )
       end
 
-      if puppet_modules.total > current_user.page_size
+      if puppet_modules.total > Setting::General.entries_per_page
         rows += [metadata_row(puppet_modules.total, offset.to_i + rows.length, { :repo_id => @repo.id }, @repo.id)]
       end
 
@@ -291,10 +291,10 @@ module Katello
 
       units = case unit_type
               when :package
-                Package.legacy_search('', offset, current_user.page_size,
+                Package.legacy_search('', offset, Setting::General.entries_per_page,
                                repo_map.keys, [:nvrea_sort, "ASC"], process_search_mode)
               when :puppet_module
-                PuppetModule.legacy_search('',  :start => offset, :page_size => current_user.page_size,
+                PuppetModule.legacy_search('',  :start => offset, :page_size => Setting::General.entries_per_page,
                                                 :repoids => repo_map.keys, :search_mode => process_search_mode)
               end
 
@@ -320,7 +320,7 @@ module Katello
 
       sort_repos(@repos).each { |r| cols[r.id] = { :id => r.id, :content => repo_compare_name_display(r) } }
 
-      if !units.empty? && units.total > current_user.page_size
+      if !units.empty? && units.total > Setting::General.entries_per_page
         rows += [metadata_row(units.total, offset.to_i + rows.length,
                               { :mode => process_search_mode, :repos => params[:repos] }, 'compare')]
       end
@@ -394,21 +394,9 @@ module Katello
     end
 
     def repo_search(term, readable_list, product_ids = nil)
-      conditions = [{ :terms => { :id => readable_list } }]
-      conditions << { :terms => { :product_id => product_ids } } unless product_ids.blank?
-
-      #get total repos
-      found = Repository.search(:load => true) do
-        query { string term,  :default_field => 'name'  } unless term.blank?
-        filter "and", conditions
-        size 1
-      end
-
-      Repository.search(:load => true) do
-        query { string term,  :default_field => 'name'  } unless term.blank?
-        filter "and", conditions
-        size found.total
-      end
+      repos = Repository.where(:id => readable_list)
+      repos = repos.where(:product_id => product_ids) if product_ids
+      repos.search_for(term)
     end
 
     def collect_views(view_ids)
@@ -429,7 +417,7 @@ module Katello
 
     def metadata_row(total_count, current_count, data, unique_id, parent_id = nil)
       to_ret = { :total => total_count, :current_count => current_count,
-                 :page_size => current_user.page_size, :data => data,
+                 :page_size => Setting::General.entries_per_page, :data => data,
                  :id => "repo_metadata_#{unique_id}", :metadata => true
                }
 
@@ -461,8 +449,8 @@ module Katello
 
           content_rows += repo_span[:content_rows]
 
-          if repo_span[:total] > current_user.page_size
-            content_rows << metadata_row(repo_span[:total], current_user.page_size,
+          if repo_span[:total] > Setting::General.entries_per_page
+            content_rows << metadata_row(repo_span[:total], Setting::General.entries_per_page,
                                          { :repo_id => repo.id, :view_id => view.id },
                                          "#{view.id}_#{repo.id}", repo_row_hash[repo.id].id)
           end
@@ -531,7 +519,6 @@ module Katello
     # offset          offset of the search
     # default_field   default field to search if none specifiec
     def  multi_repo_content_search(content_class, search_obj, repos, offset, default_field, search_mode = :all, in_repo = nil)
-      user = current_user
       search = Tire::Search::Search.new(content_class.index)
 
       query_options = {
@@ -550,7 +537,7 @@ module Katello
 
         sort { by "#{default_field}_sort", 'asc' }
         fields [:id, :name, :nvrea, :repoids, :type, :errata_id, :author, :version]
-        size user.page_size
+        size Setting::General.entries_per_page
         from offset
 
         if  search_obj.is_a? Array

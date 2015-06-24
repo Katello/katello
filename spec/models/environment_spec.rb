@@ -62,7 +62,6 @@ module Katello
 
       describe "delete an environment" do
         it "should delete the environment" do
-          User.current.remote_id =  User.current.login
           env = KTEnvironment.create!(:name => "Boooo1224",
                                       :organization => @organization,
                                       :prior => @organization.library)

@@ -2,7 +2,7 @@ require 'katello_test_helper'
 
 module Katello
   describe LazyAccessor do
-    class Something < Notice # needed a class with an AR base
+    class Something < Provider # needed a class with an AR base
       include LazyAccessor
 
       DEFAULT_VALUE = 1

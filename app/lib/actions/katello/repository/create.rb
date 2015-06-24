@@ -4,7 +4,6 @@ module Actions
       class Create < Actions::EntryAction
         # rubocop:disable MethodLength
         def plan(repository, clone = false, plan_create = false, ostree_branches = [])
-          repository.disable_auto_reindex!
           repository.save!
           ostree_branches.each do |branch_name|
             repository.ostree_branches.create!(:name => branch_name)
@@ -49,7 +48,6 @@ module Actions
             concurrence do
               plan_action(::Actions::Pulp::Repos::Update, repository.product) if repository.product.sync_plan
               plan_self(:repository_id => repository.id) unless repository.puppet?
-              plan_action(ElasticSearch::Reindex, repository)
             end
           end
         end

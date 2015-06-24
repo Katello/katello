@@ -412,16 +412,11 @@ module Katello
       pulp_id = ContentViewPuppetEnvironment.generate_pulp_id(organization.label, to_env.try(:label),
                                                               self.label, version.try(:version))
 
-      env = ContentViewPuppetEnvironment.new(:environment => to_env,
-                                             :content_view_version => to_version,
-                                             :name => self.name,
-                                             :pulp_id => pulp_id
-                                            )
-      if to_env
-        env.puppet_environment = Katello::Foreman.create_puppet_environment(content_view.organization,
-                                                                            to_env, content_view)
-      end
-      env
+      ContentViewPuppetEnvironment.new(:environment => to_env,
+                                       :content_view_version => to_version,
+                                       :name => self.name,
+                                       :pulp_id => pulp_id
+                                      )
     end
 
     def create_puppet_env(options)
