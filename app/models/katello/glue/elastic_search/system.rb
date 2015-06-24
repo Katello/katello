@@ -39,7 +39,6 @@ module Katello
                                          :host_collection,
                                          :activation_key,
                                          :installed_products,
-                                         "custom_info.KEYNAME",
                                          :content_view,
                                          :memory,
                                          :sockets,
@@ -52,15 +51,6 @@ module Katello
           {
             "fact_string" => {
               :path_match => "facts.*",
-              :mapping => {
-                :type => "string",
-                :analyzer => "kt_name_analyzer"
-              }
-            }
-          },
-          {
-            "custom_info_string" => {
-              :path_match => "custom_info.*",
               :mapping => {
                 :type => "string",
                 :analyzer => "kt_name_analyzer"
@@ -93,8 +83,6 @@ module Katello
           indexes :uuid, :type => 'string', :analyzer => :kt_name_analyzer
           indexes :facts, :path => "just_name" do
           end
-          indexes :custom_info, :path => "just_name" do
-          end
           indexes :status, :type => 'string'
 
           # Sortable attributes
@@ -123,7 +111,6 @@ module Katello
         :activation_key_ids => self.activation_key_ids,
         :installed_products => collect_installed_product_names,
         :sockets => self.sockets,
-        :custom_info => collect_custom_info,
         :content_view => self.content_view.try(:name),
         :environment => self.environment.try(:name),
         :status => self.compliance_color,

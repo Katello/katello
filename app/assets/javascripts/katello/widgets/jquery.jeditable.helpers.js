@@ -17,7 +17,6 @@ $(document).ready(function() {
             onerror         :  function(settings, original, xhr) {
                 original.reset();
                 $("#notification").replaceWith(xhr.responseText);
-                notices.checkNotices();
             }
         };
 
@@ -25,7 +24,6 @@ $(document).ready(function() {
             initialize_panel_element();
             initialize_ajaxfileupload();
             initialize_textfield();
-            initialize_textfield_custom_info();
             initialize_textarea();
             initialize_multiselect();
             initialize_select();
@@ -87,28 +85,6 @@ $(document).ready(function() {
                     },
                     onerror     : function(settings, original, xhr) {
                         original.reset();
-                    }
-                };
-                $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
-            });
-        };
-
-        var initialize_textfield_custom_info = function() {
-            $('.edit_textfield_custom_info').each(function() {
-                $(this).editable('destroy');
-                var element = $(this);
-                var settings = {
-                    type        :  'custom_info',
-                    data        :  null,
-                    width       :  158,
-                    name        :  $(this).attr('name'),
-                    onsuccess   : function(result, status, xhr) {
-                        element.text(result);
-                        notices.displayNotice("success", window.JSON.stringify({ "notices": [katelloI18n.custom_info_update_success] }));
-                    },
-                    onerror     : function(settings, original, xhr) {
-                        original.reset();
-                        notices.displayNotice("error", window.JSON.stringify({ "notices": [$.parseJSON(xhr.responseText)["displayMessage"]] }));
                     }
                 };
                 $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
@@ -259,7 +235,6 @@ $(document).ready(function() {
             initialize_panel_element         : initialize_panel_element,
             initialize_ajaxfileupload        : initialize_ajaxfileupload,
             initialize_textfield             : initialize_textfield,
-            initialize_textfield_custom_info : initialize_textfield_custom_info,
             initialize_textarea              : initialize_textarea,
             initialize_select                : initialize_select,
             initialize_multiselect           : initialize_multiselect,

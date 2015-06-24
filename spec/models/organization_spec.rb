@@ -5,6 +5,7 @@ module Katello
     include OrganizationHelperMethods
 
     before(:each) do
+      stub_ping
       User.current = User.find(users(:admin))
       disable_foreman_tasks_hooks_execution(Organization)
       disable_env_orchestration
@@ -24,21 +25,6 @@ module Katello
       specify { Organization.new(:name => 'without label').must_be :valid? }
       specify { Organization.new(:label => 'without_name').wont_be :valid? }
       specify { Organization.new(:label => 'without_name').wont_be :valid? }
-      specify do
-        o = Organization.new(:name => "default_info_valid")
-        o.default_info["system"] << "less than 256 characters"
-        o.must_be :valid?
-      end
-      specify do
-        o = Organization.new(:name => "default_info_invalid")
-        o.default_info["system"] << ""
-        o.wont_be :valid?
-      end
-      specify do
-        o = Organization.new(:name => "default_info_invalid")
-        o.default_info["system"] << ("a" * 300)
-        o.wont_be :valid?
-      end
     end
 
     describe "create an organization" do

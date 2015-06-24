@@ -1,9 +1,10 @@
 module Katello
   class Api::V2::RepositoriesController < Api::V2::ApiController
     wrap_parameters :include => (Repository.attribute_names + [:ostree_branches])
+    include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_filter :find_organization, :only => [:index]
-    before_filter :find_product, :only => [:index]
+    before_filter :find_organization, :only => [:index, :auto_complete_search]
+    before_filter :find_product, :only => [:index, :auto_complete_search]
     before_filter :find_product_for_create, :only => [:create]
     before_filter :find_organization_from_product, :only => [:create]
     before_filter :find_repository, :only => [:show, :update, :destroy, :sync,
@@ -43,51 +44,44 @@ module Katello
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :content_type, String, :desc => N_("limit to only repositories of this time")
     param :name, String, :desc => N_("name of the repository"), :required => false
+    param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' is supported."),
+          :required => false
     param_group :search, Api::V2::ApiController
     # rubocop:disable Metrics/MethodLength
     def index
-      options = sort_params
-      options[:load_records?] = true
+      options = {:includes => [:gpg_key, :product, :environment]}
+      respond(:collection => scoped_search(index_relation.uniq, :name, :desc, options))
+    end
 
-      repositories = Repository.where(:product_id => Product.readable.where(:organization_id => @organization.id))
-      repositories = repositories.where(:product_id => @product.id) if @product
-
-      if params[:content_view_id] && params[:environment_id]
-        version = ContentViewVersion.in_environment(params[:environment_id]).where(:content_view_id => params[:content_view_id])
-        repositories = repositories.where(:content_view_version_id => version)
-      elsif params[:content_view_id]
-        repositories = repositories
-                         .joins(:content_view_repositories)
-                         .where("#{ContentViewRepository.table_name}.content_view_id" => params[:content_view_id])
-      end
-
-      repositories = repositories.where(:content_type => params[:content_type]) if params[:content_type]
-      repositories = repositories.where(:name => params[:name]) if params[:name]
-      repositories = repositories.joins(:errata).where("#{Erratum.table_name}.uuid" => params[:erratum_id]) if params[:erratum_id]
+    def index_relation
+      query = Repository.readable
+      query = query.joins(:product).where("#{Product.table_name}.organization_id" => @organization) if @organization
+      query = query.where(:product_id => @product.id) if @product
+      query = query.where(:content_type => params[:content_type]) if params[:content_type]
+      query = query.where(:name => params[:name]) if params[:name]
+      query = query.joins(:errata).where("#{Erratum.table_name}.uuid" => params[:erratum_id]) if params[:erratum_id]
 
       if params[:content_view_version_id]
-        repositories = repositories.where(:content_view_version_id => params[:content_view_version_id])
+        query = query.where(:content_view_version_id => params[:content_view_version_id])
+        query = Repository.where(:id => query.map(&:library_instance_id)) if params[:library]
+      end
 
-        if params[:library]
-          repositories = Repository.where(:id => repositories.map(&:library_instance_id))
-        end
+      if params[:content_view_id]
+        query = filter_by_content_view(query, params[:content_view_id], params[:environment_id], params[:available_for] == 'content_view')
       end
 
       if params[:environment_id] && !params[:library]
-        repositories = repositories.where(:environment_id => params[:environment_id])
+        query = query.where(:environment_id => params[:environment_id])
       elsif params[:environment_id] && params[:library]
-        instances = repositories.where(:environment_id => params[:environment_id])
+        instances = query.where(:environment_id => params[:environment_id])
         instance_ids = instances.pluck(:library_instance_id).reject(&:blank?)
         instance_ids += instances.where(:library_instance_id => nil)
-        repositories = Repository.where(:id => instance_ids)
+        query = Repository.where(:id => instance_ids)
       elsif (params[:library] && !params[:environment_id]) || (params[:environment_id].blank? && params[:content_view_version_id].blank? && params[:content_view_id].blank?)
-        repositories = repositories.where(:content_view_version_id => @organization.default_content_view.versions.first.id)
+        query = query.where(:content_view_version_id => @organization.default_content_view.versions.first.id)
       end
 
-      options[:filters] = [{:terms => {:id => repositories.pluck("#{Repository.table_name}.id")}}]
-      options[:includes] = [:gpg_key, :product, :environment]
-
-      respond :collection => item_search(Repository, params, options)
+      query
     end
 
     api :POST, "/repositories", N_("Create a custom repository")
@@ -279,6 +273,20 @@ module Katello
 
     def find_organization_from_product
       @organization = @product.organization
+    end
+
+    def filter_by_content_view(query, content_view_id, environment_id, is_available_for)
+      if is_available_for
+        params[:library] =  true
+        sub_query = ContentViewRepository.where(:content_view_id => content_view_id).pluck(:repository_id)
+        query = query.where("#{Repository.table_name}.id not in (#{sub_query.join(',')})") unless sub_query.empty?
+      elsif environment_id
+        version = ContentViewVersion.in_environment(environment_id).where(:content_view_id => content_view_id)
+        query = query.where(:content_view_version_id => version)
+      else
+        query = query.joins(:content_view_repositories).where("#{ContentViewRepository.table_name}.content_view_id" => content_view_id)
+      end
+      query
     end
   end
 end

@@ -67,53 +67,55 @@
     <span translate>You currently do not have any Packages installed. You can use Package Actions above this message to install new Packages.</span>
   </p>
 
-  <div bst-table="currentPackagesTable" ng-show="currentPackagesTable.rows.length > 0">
-    <div bst-container-scroll bst-infinite-scroll="currentPackagesTable.loadMorePackages()" data="currentPackagesTable.rows">
+  <div class="current-packages" bst-table="currentPackagesTable" ng-show="currentPackagesTable.rows.length > 0">
+    <div bst-container-scroll data="currentPackagesTable.rows">
+      <div infinite-scroll="currentPackagesTable.nextPage()" infinite-scroll-container="'.current-packages .container-scroll-wrapper'">
 
-      <table ng-class="{'table-mask': currentPackagesTable.working}" class="table table-striped">
-        <thead>
-          <tr bst-table-head>
-            <th bst-table-column="name" translate>Installed Package</th>
-            <th bst-table-column="remove" bst-feature-flag="remote_actions" ng-hide="currentPackagesTable.contentHost.readonly">
-              <span translate>Remove</span>
-            </th>
-          </tr>
-        </thead>
+        <table ng-class="{'table-mask': currentPackagesTable.working}" class="table table-striped">
+          <thead>
+            <tr bst-table-head>
+              <th bst-table-column="name" translate>Installed Package</th>
+              <th bst-table-column="remove" bst-feature-flag="remote_actions" ng-hide="currentPackagesTable.contentHost.readonly">
+                <span translate>Remove</span>
+              </th>
+            </tr>
+          </thead>
 
-        <tbody>
+          <tbody>
 
-            <tr bst-table-row ng-repeat="package in currentPackagesTable.rows | filter: currentPackagesTable.filter | limitTo: currentPackagesTable.limit" >
-            <td bst-table-cell>{{ package.nvrea }}</td>
-            <td bst-table-cell ng-hide="currentPackagesTable.contentHost.readonly" bst-feature-flag="remote_actions">
+              <tr bst-table-row ng-repeat="package in currentPackagesTable.rows | filter: currentPackagesTable.filter | limitTo: currentPackagesTable.limit" >
+              <td bst-table-cell>{{ package.nvrea }}</td>
+              <td bst-table-cell ng-hide="currentPackagesTable.contentHost.readonly" bst-feature-flag="remote_actions">
 
-                <i class="active fa fa-remove-sign" ng-hide="package.removeTask" tooltip="{{ 'Remove' | translate }}"
-                   ng-click="currentPackagesTable.removePackage(package)"></i>
+                  <i class="active fa fa-remove-sign" ng-hide="package.removeTask" tooltip="{{ 'Remove' | translate }}"
+                     ng-click="currentPackagesTable.removePackage(package)"></i>
 
-                <i class="fa fa-spinner fa-spin" ng-show="package.removeTask.pending"></i>
-                <span ng-show="package.removeTask && !package.removeTask.pending">
+                  <i class="fa fa-spinner fa-spin" ng-show="package.removeTask.pending"></i>
+                  <span ng-show="package.removeTask && !package.removeTask.pending">
 
-                  <i ng-show="currentPackagesTable.taskFailed(package.removeTask)" class="fa fa-exclamation-sign" tooltip="{{ 'Failed' | translate }}"></i>
-                  <i ng-hide="currentPackagesTable.taskFailed(package.removeTask)" class="fa fa-check-sign" tooltip="{{ 'Success' | translate }}"></i>
+                    <i ng-show="currentPackagesTable.taskFailed(package.removeTask)" class="fa fa-exclamation-sign" tooltip="{{ 'Failed' | translate }}"></i>
+                    <i ng-hide="currentPackagesTable.taskFailed(package.removeTask)" class="fa fa-check-sign" tooltip="{{ 'Success' | translate }}"></i>
 
-                  <a ng-click="currentPackagesTable.openEventInfo(package.removeTask)" >
-                    <span translate ng-show="package.removeTask.affected_units == 1">
-                      {{ package.removeTask.affected_units }} package removed
-                    </span>
+                    <a ng-click="currentPackagesTable.openEventInfo(package.removeTask)" >
+                      <span translate ng-show="package.removeTask.affected_units == 1">
+                        {{ package.removeTask.affected_units }} package removed
+                      </span>
 
-                    <span translate ng-show="!package.removeTask.failed && package.removeTask.affected_units != 1">
-                      {{ package.removeTask.affected_units }} packages removed
-                    </span>
+                      <span translate ng-show="!package.removeTask.failed && package.removeTask.affected_units != 1">
+                        {{ package.removeTask.affected_units }} packages removed
+                      </span>
 
-                    <span translate ng-show="package.removeTask.failed">
-                        Package removal failed
-                    </span>
-                  </a>
-                </span>
-            </td>
+                      <span translate ng-show="package.removeTask.failed">
+                          Package removal failed
+                      </span>
+                    </a>
+                  </span>
+              </td>
 
-          </tr>
-        </tbody>
-      </table>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </section>

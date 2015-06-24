@@ -12,7 +12,6 @@ require "#{Katello::Engine.root}/spec/helpers/system_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/product_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/repository_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/search_helper_methods"
-require "#{Katello::Engine.root}/spec/support/custom_matchers"
 require "#{Katello::Engine.root}/test/support/vcr"
 require "#{Katello::Engine.root}/test/support/runcible"
 require "#{Katello::Engine.root}/test/support/controller_support"
@@ -71,7 +70,6 @@ module FixtureTestCase
     self.set_fixture_class :katello_environment_priors => "Katello::EnvironmentPrior"
     self.set_fixture_class :katello_environments => "Katello::KTEnvironment"
     self.set_fixture_class :katello_gpg_keys => "Katello::GpgKey"
-    self.set_fixture_class :katello_notices => "Katello::Notice"
     self.set_fixture_class :katello_products => "Katello::Product"
     self.set_fixture_class :katello_providers => "Katello::Provider"
     self.set_fixture_class :katello_repositories => "Katello::Repository"
@@ -80,7 +78,6 @@ module FixtureTestCase
     self.set_fixture_class :katello_systems => "Katello::System"
     self.set_fixture_class :katello_system_host_collections => "Katello::SystemHostCollection"
     self.set_fixture_class :katello_task_statuses => "Katello::TaskStatus"
-    self.set_fixture_class :katello_user_notices => "Katello::UserNotice"
     self.set_fixture_class :katello_errata => "Katello::Erratum"
     self.set_fixture_class :katello_erratum_packages => "Katello::ErratumPackage"
     self.set_fixture_class :katello_erratum_cves => "Katello::ErratumCve"
@@ -101,7 +98,6 @@ module FixtureTestCase
       @loaded_fixtures = load_fixtures
 
       @@admin = ::User.find(@loaded_fixtures['users']['admin']['id'])
-      @@admin.remote_id = Katello.config.pulp.default_login
       User.current = @@admin
     end
   end
@@ -150,9 +146,12 @@ class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
   include FixtureTestCase
 
+  before do
+    stub_ping
+  end
+
   def self.run_as_admin
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
-    User.current.remote_id = User.current.login
     yield
     User.current = nil
   end
@@ -160,11 +159,19 @@ class ActiveSupport::TestCase
   def set_user(user = nil)
     user ||= users(:admin)
     user = User.find(user) if user.id
-    unless user.remote_id
-      user.remote_id = user.admin? ? 'admin' : user.login
-      user.save!
-    end
     User.current = user
+  end
+
+  def stubbed_ping_response
+    status = {:services => {}}
+    ::Katello::Ping::SERVICES.each do |service|
+      status[:services][service] = {:status => Katello::Ping::OK_RETURN_CODE}
+    end
+    status
+  end
+
+  def stub_ping
+    Katello::Ping.stubs(:ping).returns(stubbed_ping_response)
   end
 
   def get_organization(org = nil)

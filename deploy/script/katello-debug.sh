@@ -61,6 +61,14 @@ fi
 add_files /etc/gofer
 add_files /var/log/gofer
 
+#foreman-tasks export
+if hash foreman-rake  2>/dev/null; then
+  echo "Exporting tasks, this may take a few minutes."
+  tasks_filename=`foreman-rake foreman_tasks:export_tasks 2> /tmp/tasks_export.log | tail -n 1 | awk '{print $2}'`
+  add_files $tasks_filename
+  add_files /tmp/tasks_export.log
+fi
+
 # FreeIPA (*)
 if [ $NOGENERIC -eq 0 ]; then
   add_files /var/log/ipa*-install.log

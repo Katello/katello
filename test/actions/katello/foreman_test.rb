@@ -16,7 +16,7 @@ class Actions::Katello::Foreman::ContentUpdateTest < ActiveSupport::TestCase
   end
 
   before do
-    stub_remote_user
+    stub_remote_user(true)
   end
 
   it 'plans' do
@@ -24,8 +24,8 @@ class Actions::Katello::Foreman::ContentUpdateTest < ActiveSupport::TestCase
     assert_finalize_phase(action)
     action.input.must_equal("environment_id" => environment.id,
                             "content_view_id" => content_view.id,
-                            "remote_user" => User.current.login,
-                            "remote_cp_user" => User.current.remote_id)
+                            "remote_user" => Katello.config.pulp.default_login,
+                            "remote_cp_user" => Katello.config.pulp.default_login)
   end
 
   it 'updates the foreman content' do

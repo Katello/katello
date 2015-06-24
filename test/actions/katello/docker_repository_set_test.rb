@@ -1,6 +1,6 @@
 require 'katello_test_helper'
 
-module ::Actions::Katello::RepositorySet
+module ::Actions::Katello::DockerRepositorySet
   class DockerTestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures

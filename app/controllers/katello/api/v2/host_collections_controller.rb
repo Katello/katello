@@ -2,8 +2,7 @@ module Katello
   class Api::V2::HostCollectionsController <  Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
     before_filter :find_host_collection, :only => [:copy, :show, :update, :destroy, :destroy_systems,
-                                                   :add_systems, :remove_systems, :systems,
-                                                   :add_activation_keys, :remove_activation_keys]
+                                                   :add_systems, :remove_systems, :systems]
     before_filter :find_activation_key
     before_filter :find_system
     before_filter :find_optional_organization, :only => [:index]

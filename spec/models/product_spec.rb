@@ -13,7 +13,6 @@ module Katello
       disable_product_orchestration
 
       as_admin do
-        User.current.stubs(:remote_id).returns(User.current.login)
         @organization = get_organization
 
         # Organization.find_or_create_by_label!(:name=>ProductTestData::ORG_ID, :label => 'admin-org-37070')

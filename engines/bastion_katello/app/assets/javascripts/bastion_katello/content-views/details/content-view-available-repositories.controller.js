@@ -24,15 +24,13 @@ angular.module('Bastion.content-views').controller('ContentViewAvailableReposito
         nutupane = new Nutupane(Repository, {
             'organization_id': CurrentOrganization,
             'library': true,
-            'content_type': 'yum'
+            'content_type': 'yum',
+            'content_view_id': $scope.$stateParams.contentViewId,
+            'available_for': 'content_view'
         },
         'queryUnpaged');
 
         nutupane.load();
-
-        nutupane.searchTransform = function () {
-            return "NOT ( content_view_ids:" + $scope.$stateParams.contentViewId + " )";
-        };
 
         $scope.repositoriesTable = nutupane.table;
 

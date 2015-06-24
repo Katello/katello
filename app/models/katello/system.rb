@@ -45,7 +45,6 @@ module Katello
                                 :after_add    => :add_host_collection,
                                 :after_remove => :remove_host_collection
 
-    has_many :custom_info, :class_name => "Katello::CustomInfo", :as => :informable, :dependent => :destroy
     has_many :audits, :class_name => "::Audit", :as => :auditable, :dependent => :destroy
 
     belongs_to :content_view, :inverse_of => :systems
@@ -66,7 +65,6 @@ module Katello
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
     before_create :fill_defaults
-    after_create :init_default_custom_info
 
     before_update :update_foreman_host, :if => proc { |r| r.environment_id_changed? || r.content_view_id_changed? }
 
@@ -108,8 +106,12 @@ module Katello
     end
 
     def self.with_installable_errata(errata)
+      non_installable = System.with_non_installable_errata(errata)
       subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems.where("#{Katello::SystemRepository.table_name}.system_id = #{System.table_name}.id")
-      self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata).where("#{Katello::Erratum.table_name}.id" => subquery).uniq
+
+      query = self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata).where("#{Katello::Erratum.table_name}.id" => subquery)
+      query = query.where("katello_systems.id not in (?)", non_installable) unless non_installable.empty?
+      query.uniq
     end
 
     def add_host_collection(host_collection)
@@ -304,12 +306,6 @@ module Katello
       end
     end
 
-    def init_default_custom_info
-      self.organization.default_info_hash["system"].each do |k|
-        self.custom_info.create!(:keyname => k)
-      end
-    end
-
     def refresh_tasks
       refresh_running_tasks
       import_candlepin_tasks
@@ -390,12 +386,6 @@ module Katello
     # rubocop:disable SymbolName
     def collect_installed_product_names
       self.installedProducts ? self.installedProducts.map { |p| p[:productName] } : []
-    end
-
-    def collect_custom_info
-      hash = {}
-      self.custom_info.each { |c| hash[c.keyname] = c.value } if self.custom_info
-      hash
     end
 
     def self.humanize_class_name(_name = nil)

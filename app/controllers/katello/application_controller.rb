@@ -3,7 +3,6 @@ require 'base64'
 
 module Katello
   class ApplicationController < ::ApplicationController
-    include Notifications::ControllerHelper
     include ::HomeHelper
 
     layout 'katello/layouts/katello'
@@ -230,21 +229,11 @@ module Katello
       _("No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default.")
     end
 
-    def retain_search_history
-      current_user.create_or_update_search_history(URI(@_request.env['HTTP_REFERER']).path, params[:search])
-    rescue => error
-      log_exception(error)
-    end
-
     def render_correct_nav
       if self.respond_to?(:menu_definition) && self.menu_definition[params[:action]] == :admin_menu
         session[:menu_back] = true
         #the menu definition exists, return true
         render_admin_menu
-      elsif self.respond_to?(:menu_definition) && self.menu_definition[params[:action]] == :notices_menu
-        session[:menu_back] = true
-        session[:notifications] = true
-        render_notifications_menu
       else
         #the menu definition does not exist, return false
         session[:menu_back] = false
@@ -273,16 +262,12 @@ module Katello
       end
     end
 
-    def matches_no_redirect?(url)
-      ["logout", "notices/get_new"].any? { |path| url.include? path }
-    end
-
     def require_user
       if current_user
         #don't redirect if the user is trying to set an org
         if params[:action] != 'set_org' && params[:controller] != 'user_sessions'
           #redirect to originally requested page
-          if !session[:original_uri].nil? && !matches_no_redirect?(session[:original_uri])
+          unless session[:original_uri].nil?
             redirect_to session[:original_uri]
             session[:original_uri] = nil
           end
@@ -601,8 +586,6 @@ module Katello
                        :results_count => options[:total_count],
                        :total_items => options[:total_results],
                        :current_items => options[:collection].length}
-
-      retain_search_history unless options[:no_search_history]
     end
 
     # TODO: break up method
@@ -642,8 +625,6 @@ module Katello
                        :results_count => options[:total_count],
                        :total_items => options[:total_results],
                        :current_items => options[:collection].length}
-
-      retain_search_history
     end
 
     def execute_after_filters

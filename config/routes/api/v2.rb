@@ -63,7 +63,11 @@ Katello::Engine.routes.draw do
             get :available_puppet_module_names
             match '/environments/:environment_id' => "content_views#remove_from_environment", :via => :delete
           end
-          api_resources :content_view_puppet_modules
+          api_resources :content_view_puppet_modules do
+            collection do
+              get :auto_complete_search
+            end
+          end
           api_resources :filters, :controller => :content_view_filters do
             member do
               get :available_errata
@@ -195,6 +199,7 @@ Katello::Engine.routes.draw do
         api_resources :repositories, :only => [:index, :create, :show, :destroy, :update] do
           collection do
             post :sync_complete
+            get :auto_complete_search
           end
         end
 
@@ -318,6 +323,7 @@ Katello::Engine.routes.draw do
           collection do
             match '/bulk/destroy' => 'repositories_bulk_actions#destroy_repositories', :via => :put
             match '/bulk/sync' => 'repositories_bulk_actions#sync_repositories', :via => :post
+            get :auto_complete_search
           end
           api_resources :sync, :only => [:index] do
             delete :index, :on => :collection, :action => :cancel
