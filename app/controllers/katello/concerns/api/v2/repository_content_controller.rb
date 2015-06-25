@@ -150,7 +150,7 @@ module Katello
 
       def filter_by_content_view_filter(filter, options)
         ids = filter.send("#{singular_resource_name}_rules").map(&:uuid)
-        repo_ids = filter.applicable_repos.readable.map(&:pulp_id)
+        repo_ids = filter.applicable_repos.readable.pluck("#{Repository.table_name}.pulp_id")
 
         filter_by_ids(ids, options)
         filter_by_repo_ids(repo_ids, options)

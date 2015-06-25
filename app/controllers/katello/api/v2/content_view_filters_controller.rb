@@ -4,7 +4,7 @@ module Katello
 
     before_filter :find_content_view
     before_filter :find_filter, :except => [:index, :create, :auto_complete_search]
-    before_filter :load_search_service, :only => [:available_errata, :available_package_groups]
+    before_filter :load_search_service, :only => [:available_package_groups]
 
     wrap_parameters :include => (ContentViewFilter.attribute_names + %w(repository_ids))
 
@@ -67,28 +67,6 @@ module Katello
     def destroy
       @filter.destroy
       respond_for_show :resource => @filter
-    end
-
-    api :GET, "/content_views/:content_view_id/filters/:id/available_errata",
-        N_("Get errata that are available to be added to the filter")
-    api :GET, "/content_view_filters/:id/available_errata",
-        N_("Get errata that are available to be added to the filter")
-    param :content_view_id, :identifier, :desc => N_("content view identifier")
-    param :id, :identifier, :desc => N_("filter identifier"), :required => true
-    param :types, Array, :desc => N_("Errata types array \\['security', 'bugfix', 'enhancement'\\]")
-    param :start_date, DateTime, :desc => N_("Start date that Errata was issued on to filter by")
-    param :end_date, DateTime, :desc => N_("End date that Errata was issued on to filter by")
-    def available_errata
-      current_errata_ids = @filter.erratum_rules.map(&:errata_id)
-
-      scoped = Erratum.in_repositories(@filter.applicable_repos)
-      scoped = scoped.where('errata_id not in (?)', current_errata_ids) unless current_errata_ids.empty?
-      scoped = scoped.where('issued  >= ?', params[:start_date]) if params[:start_date]
-      scoped = scoped.where('issued  <= ?', params[:end_date]) if params[:end_date]
-      scoped = scoped.of_type(params[:types]) if params[:types]
-
-      respond_for_index :template => '../errata/index',
-                        :collection => scoped_search(scoped, 'issued', 'desc', :resource_class => Erratum)
     end
 
     api :GET, "/content_views/:content_view_id/filters/:id/available_package_groups",

@@ -13,8 +13,8 @@
  *   functionality to create filter rules based off selected errata.
  */
 angular.module('Bastion.content-views').controller('AvailableErrataFilterController',
-    ['$scope', 'translate', 'Nutupane', 'Filter', 'Rule',
-    function ($scope, translate, Nutupane, Filter, Rule) {
+    ['$scope', 'translate', 'Nutupane', 'Erratum', 'Rule',
+    function ($scope, translate, Nutupane, Erratum, Rule) {
 
         var nutupane, filterByDate;
 
@@ -35,13 +35,15 @@ angular.module('Bastion.content-views').controller('AvailableErrataFilterControl
             return rules.$save(params, success, failure);
         }
 
-        $scope.nutupane = nutupane = new Nutupane(Filter, {
+        $scope.nutupane = nutupane = new Nutupane(Erratum, {
                 filterId: $scope.$stateParams.filterId,
                 'sort_order': 'DESC',
-                'sort_by': 'issued'
+                'sort_by': 'issued',
+                'available_for': 'content_view_filter'
             },
-            'availableErrata'
+            'queryUnpaged'
         );
+        nutupane.masterOnly = true;
         nutupane.enableSelectAllResults();
 
         filterByDate = function (date, type) {

@@ -74,10 +74,10 @@ describe('Factory: Filter', function() {
     });
 
     it('provides a way to get installable errata for a filter', function() {
-        $httpBackend.expectGET('/katello/api/v2/content_view_filters/1/available_errata?content_view_id=1')
+        $httpBackend.expectGET('/katello/api/v2/content_view_filters/1/errata?available_for=content_view_filter')
                     .respond({});
 
-        Filter.availableErrata({'filterId': '1', 'content_view_id': 1}, function (errata) {
+        Filter.availableErrata({'filterId': 1}, function (errata) {
             expect(errata).toBeDefined();
         });
     });

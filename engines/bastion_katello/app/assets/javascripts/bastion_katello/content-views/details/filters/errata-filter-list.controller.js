@@ -13,8 +13,8 @@
  *   to remove errata from the filter.
  */
 angular.module('Bastion.content-views').controller('ErrataFilterListController',
-    ['$scope', 'translate', 'Nutupane', 'Filter', 'Rule',
-    function ($scope, translate, Nutupane, Filter, Rule) {
+    ['$scope', 'translate', 'Nutupane', 'Erratum', 'Rule',
+    function ($scope, translate, Nutupane, Erratum, Rule) {
         var nutupane;
 
         function findRules(errataIds) {
@@ -47,12 +47,12 @@ angular.module('Bastion.content-views').controller('ErrataFilterListController',
             $scope.$parent.errorMessages = [response.data.displayMessage];
         }
 
-        $scope.nutupane = nutupane = new Nutupane(Filter, {
+        $scope.nutupane = nutupane = new Nutupane(Erratum, {
                 filterId: $scope.$stateParams.filterId,
                 'sort_order': 'DESC',
                 'sort_by': 'issued'
             },
-            'errata'
+            'queryUnpaged'
         );
 
         $scope.detailsTable = nutupane.table;
