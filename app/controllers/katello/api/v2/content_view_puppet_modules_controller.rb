@@ -10,6 +10,7 @@ module Katello
     param :name, String, :desc => N_("name of the puppet module")
     param :author, String, :desc => N_("author of the puppet module")
     param :uuid, String, :desc => N_("the uuid of the puppet module to associate")
+    param_group :search, ::Katello::Api::V2::ApiController
     def index
       respond(:collection => scoped_search(index_relation.uniq, :name, :desc))
     end
