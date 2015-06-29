@@ -29,6 +29,14 @@ empty_product:
   provider_id:  <%= ActiveRecord::Fixtures.identify(:anonymous) %>
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
+empty_redhat:
+  name:         Empty Red Hat Linux
+  description:  A more Enterprisy but empty fedora
+  cp_id:        redhat_empty
+  label:        redhat_empty_label
+  provider_id:  <%= ActiveRecord::Fixtures.identify(:redhat) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+
 empty_product_2:
   name:         Empty Product_2
   cp_id:        empty_product_2
