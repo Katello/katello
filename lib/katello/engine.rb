@@ -147,9 +147,6 @@ module Katello
       Tire::Configuration.url(Katello.config.elastic_url)
       bridge = Katello::TireBridge.new(Foreman::Logging.logger('katello/tire_rest'))
       Tire.configure { logger bridge, :level => bridge.level }
-
-      require 'katello/dashboard_registerer'
-      ::Katello::DashboardRegisterer.register_widgets
     end
 
     rake_tasks do
