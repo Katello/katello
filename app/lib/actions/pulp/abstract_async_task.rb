@@ -46,6 +46,25 @@ module Actions
         end
       end
 
+      def humanized_state
+        case state
+        when :running
+          if self.external_task.nil?
+            _("initiating Pulp task")
+          else
+            _("checking Pulp task status")
+          end
+        when :suspended
+          if external_task && external_task.all? { |task| task[:start_time].nil? }
+            _("waiting for Pulp to start the task")
+          else
+            _("waiting for Pulp to finish the task")
+          end
+        else
+          super
+        end
+      end
+
       def done?
         external_task.all? { |task| task[:finish_time] || FINISHED_STATES.include?(task[:state]) }
       end
