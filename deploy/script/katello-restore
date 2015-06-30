@@ -1,0 +1,77 @@
+#!/bin/bash
+# Echo all commands
+
+usage(){
+  echo "Usage: katello-restore <backup directory>"
+  echo " eg: $ katello-restore /tmp/katello-backup"
+}
+
+while getopts ":y" opt; do
+case $opt in
+  y)
+    CONFIRM=1
+    ;;
+  esac
+done
+
+BDIR=${@:$OPTIND:1}
+
+if [[ "$#" -lt 1 || "$#" -gt 2 || -z $BDIR ]]; then
+    echo "ERROR: Please specify an export directory"
+    usage
+    exit 1
+fi
+
+if [[ "$CONFIRM" -ne 1 ]]; then
+  echo ""
+  echo "WARNING: This script will drop and restore your database."
+  echo "Your existing installation will be replaced with the backup database."
+  echo ""
+  echo "Once this operation is complete there is no going back."
+  echo ""
+  read -p "Are you sure(Y/N)? " -n 1 -r
+  echo ""
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      echo "** cancelled **"
+      exit 1
+  fi
+fi
+
+chgrp postgres -R $BDIR
+cd $BDIR
+
+# Set file security
+echo "Setting file security"
+restorecon -Rnv /
+echo "Done."
+echo ""
+
+# Reset katello
+echo "Resetting Katello"
+tar --selinux -xzvf config_files.tar.gz -C /
+katello-installer --reset
+echo "Done."
+echo ""
+
+# Stop all services
+echo "Stopping services"
+katello-service stop
+service postgresql stop
+echo "Done."
+echo ""
+
+# Restore system files
+echo "Restoring backend data"
+tar --selinux -xzvf elastic_data.tar.gz -C /
+tar --selinux -xzvf pulp_data.tar.gz -C /
+tar --selinux -xzvf mongo_data.tar.gz -C /
+tar --selinux -xzvf pgsql_data.tar.gz -C /
+echo "Done."
+echo ""
+
+# Restart services
+echo "Restarting all Red Hat Satellite processes"
+service postgresql restart
+katello-service restart
+echo "Done."
+echo ""

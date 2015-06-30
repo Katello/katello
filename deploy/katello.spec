@@ -78,6 +78,8 @@ install -Dp -m0755 script/katello-service %{buildroot}%{_bindir}/katello-service
 install -Dp -m0755 script/service-wait %{buildroot}%{_sbindir}/service-wait
 install -Dp -m0755 script/katello-remove %{buildroot}%{_bindir}/katello-remove
 install -Dp -m0755 script/katello-debug.sh %{buildroot}/usr/share/foreman/script/foreman-debug.d/katello-debug.sh
+install -Dp -m0755 script/katello-backup %{buildroot}%{_bindir}/katello-backup
+install -Dp -m0755 script/katello-restore %{buildroot}%{_bindir}/katello-restore
 
 chmod +x %{buildroot}%{homedir}/script/*
 
