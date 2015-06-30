@@ -506,7 +506,7 @@ module Katello
       end
 
       def pulp_update_needed?
-        unless redhat?
+        unless redhat? || previous_changes.key?('url')
           allowed_changes = %w(url unprotected checksum_type docker_upstream_name)
           allowed_changes << "name" if docker?
           allowed_changes.any? { |key| previous_changes.key?(key) }
