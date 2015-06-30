@@ -775,6 +775,8 @@ module Katello
       scheme   = (self.unprotected ? 'http' : 'https')
       if docker?
         "#{pulp_uri.host.downcase}:5000/#{pulp_id}"
+      elsif file?
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/isos/#{pulp_id}"
       else
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
       end
