@@ -75,7 +75,7 @@ Requires: katello-selinux
 Requires: candlepin-selinux
 Requires: createrepo >= 0.9.9-18%{?dist}
 Requires: elasticsearch
-Requires: foreman >= 1.7.0
+Requires: foreman >= 1.9.0
 Requires: java-openjdk >= 1:1.7.0
 Requires: java-openjdk < 1:1.8.0.45
 # Still Requires katello-common which clashes with
@@ -112,8 +112,8 @@ Requires: %{?scl_prefix}rubygem-deface < 1.0.0
 Requires: %{?scl_prefix}rubygem-strong_parameters
 Requires: %{?scl_prefix}rubygem-qpid_messaging >= 0.30.0
 Requires: %{?scl_prefix}rubygem-qpid_messaging < 0.31.0
-BuildRequires: foreman >= 1.7.0
-BuildRequires: foreman-assets >= 1.7.0
+BuildRequires: foreman >= 1.9.0
+BuildRequires: foreman-assets >= 1.9.0
 BuildRequires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
 BuildRequires: %{?scl_prefix}rubygem-bastion >= 2.0.0
 BuildRequires: %{?scl_prefix}rubygem-bastion < 3.0.0
