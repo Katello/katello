@@ -70,6 +70,11 @@ module Katello
       assert_equal tag_count, cvv.docker_tag_count
     end
 
+    def test_active_history_nil_task
+      @cvv.history = [ContentViewHistory.new(:status => ContentViewHistory::IN_PROGRESS, :user => 'admin')]
+      assert_empty @cvv.active_history
+    end
+
     def test_search_equal_version
       assert_includes ContentViewVersion.search_for("version = 1.0"), @cvv
       query = ContentViewVersion.search_for("version = 1")
