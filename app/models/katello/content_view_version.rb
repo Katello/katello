@@ -85,7 +85,7 @@ module Katello
     delegate :organization, to: :content_view
 
     def active_history
-      self.history.select { |history| history.task.pending }
+      self.history.select { |history| history.task.try(:pending) }
     end
 
     def last_event
