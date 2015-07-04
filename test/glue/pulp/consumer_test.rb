@@ -105,6 +105,7 @@ module Katello
     end
 
     def self.after_suite
+      super
       run_as_admin do
         RepositorySupport.destroy_repo
         @@simple_server.del_pulp_consumer
@@ -137,6 +138,7 @@ module Katello
     end
 
     def self.after_suite
+      super
       run_as_admin do
         RepositorySupport.destroy_repo
         @@simple_server.del_pulp_consumer if defined? @@simple_server
