@@ -135,9 +135,9 @@ module Katello
     #   critical: those collections that have 1 or more security errata that need to be applied
     #   warning: those collections that have 1 or more non-security errata that need to be applied
     #   ok: those collections that are completely up to date
-    def self.lists_by_updates_needed(organization)
+    def self.lists_by_updates_needed(organizations)
       host_collections_hash = {}
-      host_collections = HostCollection.where(:organization_id => organization.id).readable
+      host_collections = HostCollection.where(:organization_id => organizations).readable
 
       # determine the state (critical/warning/ok) for each host collection
       host_collections.each do |host_collection|
@@ -162,6 +162,18 @@ module Katello
         host_collections_hash[host_collection_state] << host_collection
       end
       return host_collections_hash[:critical].to_a, host_collections_hash[:warning].to_a, host_collections_hash[:ok].to_a
+    end
+
+    def security_updates?
+      errata.any? { |erratum| erratum.errata_type == Erratum::SECURITY }
+    end
+
+    def bugzilla_updates?
+      errata.any? { |erratum| erratum.errata_type == Erratum::BUGZILLA }
+    end
+
+    def enhancement_updates?
+      errata.any? { |erratum| erratum.errata_type == Erratum::ENHANCEMENT }
     end
 
     private

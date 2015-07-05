@@ -1,0 +1,32 @@
+<h4 class="header">
+  <%= _("Sync Overview") %>
+</h4>
+
+<% organizations = Organization.current.present? ? [Organization.current] : User.current.allowed_organizations %>
+<% products = Katello::Product.includes(:provider => [:organization]).in_orgs(organizations).syncable_content.syncable %>
+<% products = products.select { |product| product.sync_status.key?(:start_time) } %>
+<% products = products.sort { |a,b| b.sync_status[:start_time] <=> a.sync_status[:start_time] } %>
+<% products = products[0...6] %>
+
+<% if products.empty? %>
+  <p class="ca"><%= _("No recently synced products") %></p>
+<% else %>
+  <table class="table table-striped ellipsis table-bordered">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Status</th>
+        <th>Finished</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% products.each do |product| %>
+        <tr>
+          <td><%= product.name %></td>
+          <td><%= product.sync_status[:state] %></td>
+          <td><%= product.sync_status[:finish_time] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

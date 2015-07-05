@@ -11,6 +11,7 @@ module Katello
       :katello_content_view_puppet_modules => "Katello::ContentViewPuppetModule",
       :katello_content_view_puppet_environments => "Katello::ContentViewPuppetEnvironment",
       :katello_content_view_repositories => "Katello::ContentViewRepository",
+      :katello_content_view_histories => "Katello::ContentViewHistory",
       :katello_content_view_version_environments => "Katello::ContentViewVersionEnvironment",
       :katello_content_view_versions => "Katello::ContentViewVersion",
       :katello_distributors => "Katello::Distributor",

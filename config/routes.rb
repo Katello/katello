@@ -10,19 +10,6 @@ Katello::Engine.routes.draw do
       end
     end
 
-    resources :dashboard, :only => [:index] do
-      collection do
-        get :sync
-        get :errata
-        get :content_views
-        get :promotions
-        get :host_collections
-        get :subscriptions
-        get :subscriptions_totals
-        put :update
-      end
-    end
-
     resources :distributors do
       resources :events, :only => [:index, :show], :controller => "distributor_events" do
         collection do
@@ -92,8 +79,6 @@ Katello::Engine.routes.draw do
       post 'favorite' => 'search#create_favorite', :on => :collection
       delete 'favorite/:id' => 'search#destroy_favorite', :on => :collection, :as => 'destroy_favorite'
     end
-
-    root :to => "dashboard#index"
 
     match '/403' => 'application#permission_denied', :via => :get
   end

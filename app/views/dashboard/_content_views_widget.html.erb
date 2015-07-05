@@ -1,0 +1,34 @@
+<h4 class="header">
+  <%= _("Content View History") %>
+</h4>
+
+<% organizations = Organization.current.present? ? [Organization.current] : User.current.allowed_organizations %>
+<% histories = Katello::ContentViewHistory.includes(:content_view_version => [:content_view]).includes(:task, :environment).in_organizations(organizations) %>
+<% histories = histories.readable.limit(6) %>
+
+<% if histories.empty? %>
+  <p class="ca"><%= _("No content view history events found.") %></p>
+<% else %>
+  <table class="table table-striped ellipsis table-bordered">
+    <thead>
+      <tr>
+        <th>Content View</th>
+        <th>Task</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% histories.each do |history| %>
+        <tr>
+          <td>
+            <a href="/content_views/<%= history.content_view_version.content_view.id %>/versions/<%= history.content_view_version.id %>">
+              <%= history.content_view_version.content_view.name %> <%= history.content_view_version.version %>
+            </a>
+          </td>
+          <td><%= history.humanized_action %></td>
+          <td><%= history.humanized_status %> on <%= history.updated_at.to_s(:short) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
