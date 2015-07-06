@@ -1,5 +1,3 @@
-require 'strong_parameters'
-
 module Katello
   class Api::V2::ApiController < ::Api::V2::BaseController
     include Concerns::Api::ApiController

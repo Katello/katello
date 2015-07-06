@@ -18,10 +18,6 @@ module Katello
 
     audited :on => [:create], :allow_mass_assignment => true
 
-    attr_accessible :name, :uuid, :description, :location, :environment, :content_view,
-                    :environment_id, :content_view_id, :host_collection_ids, :host_id,
-                    :activation_key_ids
-
     after_rollback :rollback_on_create, :on => :create
 
     belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :systems

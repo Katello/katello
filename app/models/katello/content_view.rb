@@ -25,7 +25,7 @@ module Katello
       end
     end
 
-    has_many :distributors, :class_name => "Katello::Distributor", :dependent => :restrict
+    has_many :distributors, :class_name => "Katello::Distributor", :dependent => :restrict_with_error
     has_many :content_view_repositories, :dependent => :destroy
     has_many :repositories, :through => :content_view_repositories, :class_name => "Katello::Repository",
                             :after_remove => :remove_repository
@@ -36,13 +36,13 @@ module Katello
 
     has_many :filters, :dependent => :destroy, :class_name => "Katello::ContentViewFilter"
 
-    has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict
-    has_many :systems, :class_name => "Katello::System", :dependent => :restrict
+    has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict_with_error
+    has_many :systems, :class_name => "Katello::System", :dependent => :restrict_with_error
 
     has_many :hosts,      :class_name => "::Host::Managed", :foreign_key => :content_view_id,
-                          :inverse_of => :content_view, :dependent => :restrict
+                          :inverse_of => :content_view, :dependent => :restrict_with_error
     has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :content_view_id,
-                          :inverse_of => :content_view, :dependent => :restrict
+                          :inverse_of => :content_view, :dependent => :restrict_with_error
 
     validates_lengths_from_database :except => [:label]
     validates :label, :uniqueness => {:scope => :organization_id},
