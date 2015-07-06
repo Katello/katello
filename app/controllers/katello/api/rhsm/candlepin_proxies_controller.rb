@@ -271,7 +271,7 @@ module Katello
     end
 
     def find_system(uuid = nil)
-      @system = System.first(:conditions => { :uuid => uuid || params[:id] })
+      @system = System.where(:uuid => uuid || params[:id]).first
       if @system.nil?
         # check with candlepin if consumer is Gone, raises RestClient::Gone
         Resources::Candlepin::Consumer.get params[:id]

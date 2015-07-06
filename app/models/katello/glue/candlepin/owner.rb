@@ -7,7 +7,7 @@ module Katello
       base.class_eval do
         validates :label,
             :presence => true,
-            :format => { :with => /^[\w-]*$/ }
+            :format => { :with => /\A[\w-]*\z/ }
 
         lazy_accessor :events, :initializer => lambda { |_s| Resources::Candlepin::Owner.events(label) }
         lazy_accessor :service_levels, :initializer => lambda { |_s| Resources::Candlepin::Owner.service_levels(label) }
