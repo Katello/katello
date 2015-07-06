@@ -21,8 +21,8 @@
 Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
-Version: 2.3.0
-Release: 2%{dist}
+Version: 2.4.0
+Release: 1%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -269,6 +269,8 @@ chown -R foreman.foreman %{foreman_dir}/public/apipie-cache
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Mon Jul 06 2015 Stephen Benjamin <stbenjam@redhat.com> 2.4.0-1
+- Update to Katello 2.4.0
 * Mon Jul 06 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-2
 - Merge pull request #5318 from jlsherrill/10901 (jlsherrill@gmail.com)
 - Merge pull request #5330 from iNecas/limit-foreman-tasks (inecas@redhat.com)
