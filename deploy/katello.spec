@@ -12,7 +12,7 @@
 
 Name:           katello
 Version:        2.3.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -171,6 +171,28 @@ Package that installs only the Subscription and basic Content Management parts o
 %files sam
 
 %changelog
+* Mon Jul 06 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-2
+- fixes #10820 - collect tasks dump with foreman-debug (jsherril@redhat.com)
+- Merge pull request #5237 from stbenjam/stbenjam-- (stephen@bitbin.de)
+- fixes #10428 - katello-service and related scripts shouldn't be symlinks
+  (stbenjam@redhat.com)
+- Fixes #10388 - Removing license header from remaining files
+  (daviddavis@redhat.com)
+- fixes #10428 - katello-service package should actually have katello-service
+  (stbenjam@redhat.com)
+- fixes #6781 - provide a way to restart capsule services (stbenjam@redhat.com)
+- Fixes #9867: Update katello-remove for latest packages.
+  (ericdhelms@gmail.com)
+- Fixes #9968: Remove unused kill commands and cleanup script.
+  (ericdhelms@gmail.com)
+- Refs #8710 - katello-debug script is no longer a symlink
+  (lzap+git@redhat.com)
+- Merge pull request #5039 from stbenjam/8175 (stephen@bitbin.de)
+- Merge pull request #5001 from mccun934/20150211-0930 (mmccune@gmail.com)
+- refs #8175 - add qpid dispatch router to services list (stbenjam@redhat.com)
+- fixes #8956, #9337 - remove unused scripts and files from specfile
+  (mmccune@redhat.com)
+
 * Tue Feb 24 2015 Eric D. Helms <ericdhelms@gmail.com> 2.3.0-1
 - Update katello to 2.3.0 (ericdhelms@gmail.com)
 - Fixed #9530 - installer logs are collected again by debug script
