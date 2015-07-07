@@ -150,6 +150,31 @@ class ActiveSupport::TestCase
     stub_ping
   end
 
+  def self.stubbed_ping_response
+    status = {:services => {}}
+    ::Katello::Ping::SERVICES.each do |service|
+      status[:services][service] = {:status => Katello::Ping::OK_RETURN_CODE}
+    end
+    status
+  end
+
+  def self.stub_ping
+    Katello::Ping.stubs(:ping).returns(stubbed_ping_response)
+  end
+
+  def self.before_suite
+    stub_ping
+    super
+  end
+
+  def self.after_suite
+    stub_ping
+  end
+
+  def stub_ping
+    self.class.stub_ping
+  end
+
   def self.run_as_admin
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
     yield
@@ -160,18 +185,6 @@ class ActiveSupport::TestCase
     user ||= users(:admin)
     user = User.find(user) if user.id
     User.current = user
-  end
-
-  def stubbed_ping_response
-    status = {:services => {}}
-    ::Katello::Ping::SERVICES.each do |service|
-      status[:services][service] = {:status => Katello::Ping::OK_RETURN_CODE}
-    end
-    status
-  end
-
-  def stub_ping
-    Katello::Ping.stubs(:ping).returns(stubbed_ping_response)
   end
 
   def get_organization(org = nil)

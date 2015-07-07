@@ -41,6 +41,7 @@
 
     <button class="btn btn-default"
             ng-click="openModal()"
+            ng-hide="denied('edit_products')"
             ng-disabled="detailsTable.working || detailsTable.numSelected === 0">
       <i class="fa fa-trash-o" ng-hide="detailsTable.working"></i>
       <span translate>Remove Docker Images</span>

@@ -17,6 +17,16 @@ module Katello
       super
     end
 
+    def available_for_content_view_filter(filter, collection)
+      collection = filter_by_content_view(filter, collection)
+      ids = Katello::ContentViewErratumFilterRule.where(:content_view_filter_id => filter.id).pluck("errata_id")
+      collection = collection.where("errata_id not in (?)", ids) unless ids.empty?
+      collection = collection.where('issued  >= ?', params[:start_date]) if params[:start_date]
+      collection = collection.where('issued  <= ?', params[:end_date]) if params[:end_date]
+      collection = collection.of_type(params[:types]) if params[:types]
+      collection
+    end
+
     def custom_index_relation(collection)
       collection = filter_by_cve(params[:cve], collection) if params[:cve]
       if ::Foreman::Cast.to_bool(params[:errata_restrict_applicable])
@@ -33,6 +43,12 @@ module Katello
 
     def filter_by_cve(cve, collection)
       collection.joins(:cves).where('katello_erratum_cves.cve_id' => cve)
+    end
+
+    def filter_by_content_view(filter, collection)
+      repos = Katello::ContentView.find(filter.content_view_id).repositories
+      uuid = repos.map { |r| r.send("errata").pluck("uuid") }
+      filter_by_ids(uuid, collection)
     end
 
     def filter_by_content_view_filter(filter, collection)

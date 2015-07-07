@@ -1,9 +1,11 @@
 require 'katello_test_helper'
 require 'mocha/setup'
+require 'support/candlepin/owner_support'
 
 module Katello
   class GlueCandlepinProviderTestBase < ActiveSupport::TestCase
     def self.before_suite
+      super
       @loaded_fixtures = load_fixtures
 
       User.current = User.find(@loaded_fixtures['users']['admin']['id'])
@@ -11,12 +13,14 @@ module Katello
 
       @@dev      = KTEnvironment.find(@loaded_fixtures['katello_environments']['candlepin_dev']['id'])
       @@org      = Organization.find(@loaded_fixtures['taxonomies']['organization2']['id'])
+      @@org.setup_label_from_name
       @@provider = Provider.find(@loaded_fixtures['katello_providers']['candlepin_redhat']['id'])
 
       CandlepinOwnerSupport.set_owner(@@org)
     end
 
     def self.after_suite
+      super
       Resources::Candlepin::Owner.destroy(@@org.label)
     ensure
       VCR.eject_cassette

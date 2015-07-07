@@ -151,7 +151,8 @@ module Katello
       input = {
         :id => @system.id
       }
-      System.expects(:first).returns(@system)
+      System.stubs(:where).returns(@system)
+      System.any_instance.stubs(:first).returns(@system)
       assert_sync_task(::Actions::Katello::System::AutoAttachSubscriptions) do |sys|
         sys.must_equal @system
       end
@@ -190,7 +191,8 @@ module Katello
         :id => @system.id,
         :name => 'newname'
       }
-      System.expects(:first).returns(@system)
+      System.stubs(:where).returns(@system)
+      System.any_instance.stubs(:first).returns(@system)
       @controller.expects(:system_params).returns(input)
       assert_sync_task(::Actions::Katello::System::Update) do |sys, inp|
         sys.must_equal @system

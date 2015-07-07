@@ -71,6 +71,7 @@ module Katello
     end
 
     def self.after_suite
+      super
       run_as_admin do
         delete_repo(@@fedora_17_x86_64)
         VCR.eject_cassette
@@ -137,6 +138,7 @@ module Katello
     end
 
     def self.after_suite
+      super
       run_as_admin do
         delete_repo(@@fedora_17_x86_64)
         VCR.eject_cassette
@@ -158,6 +160,7 @@ module Katello
     end
 
     def self.after_suite
+      super
       run_as_admin do
         delete_repo(@@fedora_17_x86_64)
         VCR.eject_cassette
@@ -178,6 +181,7 @@ module Katello
     end
 
     def self.after_suite
+      super
       run_as_admin do
         delete_repo(@@p_forge)
         VCR.eject_cassette
@@ -206,6 +210,7 @@ module Katello
     end
 
     def self.after_suite
+      super
       run_as_admin do
         delete_repo(@@fedora_17_x86_64)
         VCR.eject_cassette
@@ -305,6 +310,7 @@ module Katello
     end
 
     def self.after_suite
+      super
       run_as_admin do
         delete_repo(@@fedora_17_x86_64)
         VCR.eject_cassette

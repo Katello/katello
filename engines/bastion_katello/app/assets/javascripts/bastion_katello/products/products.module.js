@@ -164,19 +164,19 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
     })
     .state('products.details.repositories.manage-content.packages', {
         url: '/repositories/:repositoryId/content/packages',
-        permission: 'edit_products',
+        permission: 'view_products',
         collapsed: true,
         templateUrl: 'repositories/details/views/repository-manage-packages.html'
     })
     .state('products.details.repositories.manage-content.puppet-modules', {
         url: '/repositories/:repositoryId/content/puppet_modules',
-        permission: 'edit_products',
+        permission: 'view_products',
         collapsed: true,
         templateUrl: 'repositories/details/views/repository-manage-puppet-modules.html'
     })
     .state('products.details.repositories.manage-content.docker-images', {
         url: '/repositories/:repositoryId/content/docker_images',
-        permission: 'edit_products',
+        permission: 'view_products',
         collapsed: true,
         templateUrl: 'repositories/details/views/repository-manage-docker-images.html'
     });

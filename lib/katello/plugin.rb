@@ -1,5 +1,5 @@
 Foreman::Plugin.register :katello do
-  requires_foreman '> 1.3'
+  requires_foreman '> 1.9'
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'), :after => :monitor_menu do
     menu :top_menu,
@@ -89,13 +89,6 @@ Foreman::Plugin.register :katello do
          :engine => Katello::Engine,
          :turbolinks => false
 
-    menu :top_menu,
-         :content_search,
-         :caption => N_('Content Search'),
-         :url_hash => {:controller => 'katello/content_search',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
     divider :top_menu, :parent => :content_menu
     menu :top_menu,
          :errata,

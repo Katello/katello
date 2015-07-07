@@ -470,6 +470,8 @@ module Katello
       @view_repo = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1))
       @view_system.bound_repositories = [@view_repo]
       @view_system.save!
+
+      @dev_system =  System.find(katello_systems(:errata_server_dev))
     end
 
     def test_systems_with_applicability
@@ -478,9 +480,10 @@ module Katello
     end
 
     def test_import_system_applicability
-      mock_active_records(@lib_system, @view_system)
+      mock_active_records(@lib_system, @view_system, @dev_system)
       @lib_system.expects(:import_applicability)
       @view_system.expects(:import_applicability)
+      @dev_system.expects(:import_applicability)
       @lib_repo.import_system_applicability
     end
   end
