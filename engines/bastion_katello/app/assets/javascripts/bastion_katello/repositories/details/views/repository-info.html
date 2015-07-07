@@ -216,7 +216,7 @@
         <tr ng-show="repository.content_type == 'yum'">
           <td translate>Packages</td>
           <td class="align-center">
-            <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages">
+            <a ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})">
               {{ repository.content_counts.rpm || 0 }}
             </a>
           </td>
@@ -236,7 +236,7 @@
         <tr ng-show="repository.content_type == 'puppet'">
           <td translate>Puppet Modules</td>
           <td class="align-center">
-            <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_puppet_modules">
+            <a ui-sref="products.details.repositories.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})">
             {{ repository.content_counts.puppet_module || 0 }}
             </a>
           </td>

@@ -40,6 +40,7 @@
     </div>
 
     <button class="btn btn-default"
+            ng-hide="denied('edit_products')"
             ng-click="openModal()"
             ng-disabled="detailsTable.working || detailsTable.numSelected === 0">
       <i class="fa fa-trash-o" ng-hide="detailsTable.working"></i>
