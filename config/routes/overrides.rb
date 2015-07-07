@@ -1,5 +1,5 @@
 Foreman::Application.routes.draw do
-  match "/api/v2/organizations/*all", to: proc { [404, {}, ['']] }
+  match "/api/v2/organizations/*all", to: proc { [404, {}, ['']] }, :via => :get
   match "/api/v1/organizations/:id", via: :delete, to: proc { [404, {}, ['']] }
 
   resources :operatingsystems, :only => [] do

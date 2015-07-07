@@ -177,23 +177,4 @@ $(document).ready(function() {
             });
         }
     });
-
-    $.editable.addInputType( 'timepicker', {
-        /* create input element */
-        element: function( settings, original ) {
-            var form = $( this ), input = $( '<input data-change="false"/>' );
-            if (settings.width !== 'none') { input.width(settings.width); }
-            if (settings.height !== 'none') { input.height(settings.height); }
-            input.attr( 'autocomplete','off' );
-            form.append( input );
-            return input;
-        },
-
-        plugin: function( settings, original ) {
-            var form = this, input = form.find( "input" );
-            settings.onblur = 'ignore';
-            input.timepickr({convention: 12})
-                .click();
-        }
-    });
 });

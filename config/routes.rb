@@ -122,8 +122,7 @@ Katello::Engine.routes.draw do
       end
     end
 
-    match '/providers/:id' => 'providers#update', :via => :put
-    match '/providers/:id' => 'providers#update', :via => :post
+    match '/providers/:id' => 'providers#update', :via => [:put, :post]
 
     resources :repositories, :only => [:new, :create, :edit, :destroy] do
       collection do
