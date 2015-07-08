@@ -202,25 +202,58 @@ module Katello
     end
   end
 
+  class OstreeRepositoryInstanceTest < RepositoryTestBase
+    def setup
+      super
+      User.current = @admin
+      @repo = Repository.find(katello_repositories(:ostree_rhel7).id)
+      @repo.content_type = Repository::OSTREE_TYPE
+    end
+
+    def test_ostree_branch_update
+      assert OstreeBranch.create(:repository => @repo, :name => "/foo/bar")
+      @repo.url = ""
+      refute @repo.save
+    end
+
+    def test_bad_branch_update
+      rhel6 = Repository.find(katello_repositories(:rhel_6_x86_64))
+      assert_raises ActiveRecord::RecordInvalid do
+        OstreeBranch.create!(:repository => rhel6, :name => "/foo/bar1")
+      end
+    end
+
+    def test_ostree_branch_update_methods
+      branches = ["branch1", "branch2"]
+      @repo.update_ostree_branches!(branches)
+      branches.each do |branch_name|
+        assert_includes @repo.ostree_branch_names, branch_name
+      end
+
+      branches2 = ["branch3", "branch4"]
+      @repo.update_ostree_branches!(branches2)
+      @repo = @repo.reload
+      branches.each do |branch_name|
+        refute_includes @repo.ostree_branch_names, branch_name
+      end
+
+      branches2.each do |branch_name|
+        assert_includes @repo.ostree_branch_names, branch_name
+      end
+    end
+
+    def test_ostree_branch_update_duplicate_violation
+      assert_raises ::Katello::Errors::ConflictException do
+        @repo.update_ostree_branches!(["branch", "branch"])
+      end
+    end
+  end
+
   class RepositoryInstanceTest < RepositoryTestBase
     def setup
       super
       User.current = @admin
       @rhel6 = Repository.find(katello_repositories(:rhel_6_x86_64))
-    end
-
-    def test_ostree_branch_update
-      repo = Repository.find(katello_repositories(:ostree_rhel7).id)
-      repo.content_type = Repository::OSTREE_TYPE
-      assert OstreeBranch.create(:repository => repo, :name => "/foo/bar")
-      repo.url = ""
-      refute repo.save
-    end
-
-    def test_bad_branch_update
-      assert_raises ActiveRecord::RecordInvalid do
-        OstreeBranch.create!(:repository => @rhel6, :name => "/foo/bar1")
-      end
     end
 
     def test_product

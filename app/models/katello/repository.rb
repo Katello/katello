@@ -495,7 +495,36 @@ module Katello
       self.ostree_branches.map(&:name)
     end
 
+    def update_ostree_branches!(branch_names)
+      check_duplicate_branch_names(branch_names)
+
+      # remove the ostree_branches not in this list
+      self.ostree_branches.each do |branch|
+        branch.destroy unless branch_names.include?(branch.name)
+      end
+
+      # add the new ostree_branches
+      (branch_names - self.ostree_branch_names).each do |ref|
+        self.ostree_branches.create!(:name => ref)
+      end
+    end
+
     protected
+
+    def check_duplicate_branch_names(branch_names)
+      dupe_branch_checker = Hash.new
+      dupe_branch_checker.default = 0
+      branch_names.each do |branch|
+        dupe_branch_checker[branch] += 1
+      end
+
+      duplicate_branch_names = dupe_branch_checker.select { |_, value| value > 1 }.keys
+
+      unless duplicate_branch_names.empty?
+        fail ::Katello::Errors::ConflictException,
+              _("Duplicate branches specified - %{branches}") % { branches: duplicate_branch_names.join(", ")}
+      end
+    end
 
     def assert_deletable
       if self.environment.try(:library?) && self.content_view.default?
