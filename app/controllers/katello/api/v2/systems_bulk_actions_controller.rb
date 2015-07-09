@@ -171,11 +171,11 @@ module Katello
         else
           version_environment[:components] = nil
         end
-
-        version_environments[version] = OpenStruct.new(version_environment)
+        version_environments[version] = version_environment
       end
 
-      respond_for_index :collection => version_environments.values, :template => :available_incremental_updates
+      response = version_environments.values.map { |version| OpenStruct.new(version) }
+      respond_for_index :collection => response, :template => :available_incremental_updates
     end
 
     private
