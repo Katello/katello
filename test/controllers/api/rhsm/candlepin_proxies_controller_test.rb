@@ -110,7 +110,8 @@ module Katello
     describe "update enabled_repos", :katello => true do
       before do
         User.stubs(:consumer?).returns(true)
-        System.stubs(:first).returns(@system)
+        System.stubs(:where).returns(@system)
+        System.any_instance.stubs(:first).returns(@system)
         uuid = @system.uuid
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
         Repository.stubs(:where).with(:relative_path => 'foo').returns([OpenStruct.new(:pulp_id => 'a')])

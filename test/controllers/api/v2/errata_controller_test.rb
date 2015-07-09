@@ -10,6 +10,7 @@ module Katello
     def models
       ::Katello::Product.any_instance.stubs(:as_json).returns([])
       @repo = Repository.find(katello_repositories(:rhel_6_x86_64))
+      @errata_filter = katello_content_view_filters(:populated_erratum_filter)
     end
 
     def permissions
@@ -71,11 +72,22 @@ module Katello
     end
 
     def test_index_with_filters
-      errata_filter = ContentViewFilter.find(katello_content_view_filters(:populated_erratum_filter))
-      get :index, :content_view_filter_id => errata_filter
+      get :index, :content_view_filter_id => @errata_filter
 
       package_group_filter = ContentViewFilter.find(katello_content_view_filters(:populated_package_group_filter))
       get :index, :content_view_filter_id => package_group_filter
+    end
+
+    def test_index_available_errata_for_content_view_filter
+      filtered_id = @errata_filter.erratum_rules.first["errata_id"]
+
+      get :index, :filterId => @errata_filter, :available_for => "content_view_filter"
+      body = JSON.parse(response.body)
+      response_ids = body["results"].map { |item| item["errata_id"] }
+
+      assert_response :success
+      assert !(response_ids.include? filtered_id)
+      assert response_ids.length > 0
     end
 
     def test_index_with_cve

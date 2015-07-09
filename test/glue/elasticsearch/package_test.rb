@@ -34,6 +34,7 @@ module Katello
     end
 
     def self.after_suite
+      super
       VCR.eject_cassette
     end
 

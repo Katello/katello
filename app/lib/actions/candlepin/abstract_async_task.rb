@@ -10,6 +10,21 @@ module Actions
         end
       end
 
+      def humanized_state
+        case state
+        when :running
+          if self.external_task.nil?
+            _("initiating Candlepin task")
+          else
+            _("checking Candlepin task status")
+          end
+        when :suspended
+          _("waiting for Candlepin to finish the task")
+        else
+          super
+        end
+      end
+
       def done?
         ! ::Katello::Resources::Candlepin::Job.not_finished?(external_task)
       end

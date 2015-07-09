@@ -17,6 +17,23 @@ module Katello
       @product.destroy if @product
     end
 
+    def test_enabled
+      products = Product.enabled
+      refute_includes products, katello_products(:empty_redhat)
+      assert_includes products, @redhat_product
+      assert_includes products, katello_products(:empty_product)
+    end
+
+    def test_redhat
+      assert_includes Product.redhat, @redhat_product
+      refute_includes Product.redhat, @promoted_product
+    end
+
+    def test_custom
+      assert_includes Product.custom, @promoted_product
+      refute_includes Product.custom, @redhat_product
+    end
+
     def test_redhat?
       assert @redhat_product.redhat?
       refute @product.redhat?
@@ -78,8 +95,11 @@ module Katello
     end
 
     def test_syncable_content
+      products_with_syncable_repos = Product.all.select do |prod|
+        prod.repositories.any? { |r| r.url.present? }
+      end
       products = Katello::Product.syncable_content
-      assert_equal 2, products.length
+      assert_equal products_with_syncable_repos.length, products.length
       products.each { |prod| assert prod.syncable_content? }
     end
 

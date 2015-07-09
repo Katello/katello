@@ -17,7 +17,7 @@ angular.module('Bastion.content-views').factory('Filter',
                 update: {method: 'PUT'},
                 availableErrata: {
                     method: 'GET',
-                    params: {action: 'available_errata'}
+                    params: {action: 'errata', 'available_for': 'content_view_filter'}
                 },
                 errata: {
                     method: 'GET',

@@ -66,7 +66,7 @@ module Katello
         end
 
         def description
-          "string from 2 to 128 characters containting only alphanumeric characters, space, '_', '-' with no leading or trailing space.."
+          "string from 2 to 128 characters containing only alphanumeric characters, space, '_', '-' with no leading or trailing space.."
         end
       end
 

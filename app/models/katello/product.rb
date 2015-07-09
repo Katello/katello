@@ -56,7 +56,12 @@ module Katello
     scope :marketing, where(:type => "Katello::MarketingProduct")
     scope :syncable_content, uniq.where(Katello::Repository.arel_table[:url].not_eq(nil))
       .joins(:repositories)
-    scope :enabled, joins(:repositories).uniq
+    scope :redhat, joins(:provider).where("#{Provider.table_name}.provider_type" => Provider::REDHAT)
+    scope :custom, joins(:provider).where("#{Provider.table_name}.provider_type" => [Provider::CUSTOM, Provider::ANONYMOUS])
+
+    def self.enabled
+      self.where("#{Product.table_name}.id in (?) or #{Product.table_name}.id in (?)", Product.redhat.joins(:repositories).uniq, Product.custom)
+    end
 
     before_create :assign_unique_label
 
