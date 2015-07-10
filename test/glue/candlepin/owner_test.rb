@@ -11,7 +11,7 @@ module Katello
     end
 
     def self.after_suite
-      true
+      super
     ensure
       VCR.eject_cassette
     end
@@ -24,8 +24,8 @@ module Katello
     end
 
     def self.after_suite
-      CandlepinOwnerSupport.destroy_organization(@@org.id)
       super
+      CandlepinOwnerSupport.destroy_organization(@@org.id)
     end
 
     def test_update_candlepin_owner_service_level

@@ -1,5 +1,5 @@
 Foreman::Plugin.register :katello do
-  requires_foreman '> 1.3'
+  requires_foreman '>= 1.9'
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'), :after => :monitor_menu do
     menu :top_menu,

@@ -34,6 +34,7 @@ module Katello
     end
 
     def self.after_suite
+      super
       run_as_admin do
         unless @@dev_cve.nil?
           # To prevent deletion of the fixture object

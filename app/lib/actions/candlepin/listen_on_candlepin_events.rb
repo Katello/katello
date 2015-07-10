@@ -44,6 +44,28 @@ module Actions
 
       Close = Algebrick.atom
 
+      class RunOnceCoordinatorLock < Dynflow::Coordinator::LockByWorld
+        def initialize(world)
+          super
+          @data[:id] = 'listen-on-candlepin-events'
+        end
+      end
+
+      class << self
+        attr_reader :triggered_action
+
+        def ensure_running
+          world = ForemanTasks.dynflow.world
+          world.coordinator.acquire(RunOnceCoordinatorLock.new(world)) do
+            unless ForemanTasks::Task::DynflowTask.for_action(self).running.any?
+              @triggered_action = ForemanTasks.trigger(self)
+            end
+          end
+        rescue Dynflow::Coordinator::LockError
+          return false
+        end
+      end
+
       def plan
         # Make sure we don't have two concurrent listening services competing
         if already_running?
@@ -105,9 +127,6 @@ module Actions
         output[:connection] = "Connected"
         suspend do |suspended_action|
           CandlepinListeningService.instance.poll_for_messages(SuspendedAction.new(suspended_action))
-          at_exit do
-            suspended_action << Close
-          end
         end
       end
 
@@ -123,9 +142,12 @@ module Actions
             error!(e)
             raise e
           end
-          at_exit do
-            # make sure we close the service at exit to finish the listening action
-            suspended_action << Close
+          unless Rails.env.test?
+            world.before_termination do
+              # make sure we close the service at exit to finish the listening action
+              suspended_action.ask(Close).wait
+              self.class.triggered_action.finished.wait
+            end
           end
         end
       end
