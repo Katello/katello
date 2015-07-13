@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.3.0
-Release: 2%{dist}
+Release: 3%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -269,6 +269,19 @@ chown -R foreman.foreman %{foreman_dir}/public/apipie-cache
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Mon Jul 13 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-3
+- Fixes #11070: Fix restrict to Foreman 1.9 (elyezermr@gmail.com)
+- Refs #10962 - update to foreman-tasks 0.7.0 dynflow 0.8.1 (inecas@redhat.com)
+- fixes #11055 - remove enabling red hat repos from katello
+  (stbenjam@redhat.com)
+- fixes #10922 - fix enabled product listing (jsherril@redhat.com)
+- Fixes #10987: Restrict to Foreman 1.9 (ericdhelms@gmail.com)
+- refs #10725 - make sure to stub the ping in before_suite as well
+  (inecas@redhat.com)
+- Automatic commit of package [katello] minor release [2.3.0-2].
+  (stbenjam@redhat.com)
+- Updating rel-eng for 2.3 (stbenjam@redhat.com)
+
 * Mon Jul 06 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-2
 - Merge pull request #5318 from jlsherrill/10901 (jlsherrill@gmail.com)
 - Merge pull request #5330 from iNecas/limit-foreman-tasks (inecas@redhat.com)
