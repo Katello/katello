@@ -5,7 +5,6 @@ module Actions
         def plan(puppet_env)
           action_subject(puppet_env)
           plan_action(Pulp::Repository::Destroy, pulp_id: puppet_env.pulp_id)
-          plan_action(ElasticSearch::Repository::Destroy, pulp_id: puppet_env.pulp_id)
           plan_self
         end
 
