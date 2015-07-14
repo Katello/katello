@@ -24,5 +24,19 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsController',
         $scope.syncPlan = SyncPlan.get({id: $scope.$stateParams.syncPlanId}, function () {
             $scope.panel.loading = false;
         });
+
+        $scope.runSyncPlan = function () {
+            var promise;
+
+            promise = $scope.syncPlan.$sync();
+
+            promise.then(function (task) {
+                $scope.task = task;
+            });
+
+            promise.catch(function (response) {
+                $scope.errorMessages = [response.data.errors[0]];
+            });
+        };
     }]
 );

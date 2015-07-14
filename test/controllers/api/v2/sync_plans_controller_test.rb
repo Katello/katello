@@ -19,6 +19,7 @@ module Katello
       @update_permission = :edit_sync_plans
       @destroy_permission = :destroy_sync_plans
 
+      @sync_permission = :sync_products
       @read_products_permission = :view_products
       @update_products_permission = :edit_products
     end
@@ -158,6 +159,29 @@ module Katello
       assert_protected_action(:remove_products, allowed_perms, denied_perms) do
         put :remove_products, :id => @sync_plan.id, :organization_id => @organization.id,
             :product_ids => @products.collect { |p| p.id }
+      end
+    end
+
+    def test_sync
+      repo_ids = @sync_plan.products.collect { |product| product.repositories.map(&:id) }
+      repo_ids.flatten!
+
+      assert_async_task(::Actions::BulkAction) do |action_class, ids|
+        assert_equal action_class, ::Actions::Katello::Repository::Sync
+        assert_equal repo_ids, ids
+      end
+
+      put :sync, :id => @sync_plan.id, :organization_id => @organization.id
+
+      assert_response :success
+    end
+
+    def test_sync_protected
+      allowed_perms = [@sync_permission]
+      denied_perms = [@create_permission, @update_permission, @destroy_permission]
+
+      assert_protected_action(:sync, allowed_perms, denied_perms) do
+        put :sync, :id => @sync_plan.id, :organization_id => @organization.id
       end
     end
   end
