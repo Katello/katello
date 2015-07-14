@@ -84,6 +84,7 @@ module Katello
       sort_attr = "#{query.table_name}.#{sort_attr}" unless sort_attr.to_s.include?('.')
 
       query = query.order("#{sort_attr} #{params[:sort_order] || default_sort_order}")
+      query = query.order("#{query.table_name}.id DESC") #secondary order to ensure sort is deterministic
       query = query.includes(includes) if includes.length > 0
 
       if params[:full_result]
