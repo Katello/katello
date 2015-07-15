@@ -214,6 +214,25 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         controller: 'ContentViewAvailableDockerRepositoriesController',
         templateUrl: 'content-views/details/views/content-view-docker-repositories.html'
     })
+    .state('content-views.details.repositories.ostree', {
+        abstract: true,
+        collapsed: true,
+        template: '<div ui-view></div>'
+    })
+    .state('content-views.details.repositories.ostree.list', {
+        collapsed: true,
+        url: '/repositories/ostree',
+        permission: 'view_content_views',
+        controller: 'ContentViewOstreeRepositoriesListController',
+        templateUrl: 'content-views/details/views/content-view-ostree-repositories.html'
+    })
+    .state('content-views.details.repositories.ostree.available', {
+        collapsed: true,
+        url: '/repositories/ostree/available',
+        permission: 'view_content_views',
+        controller: 'ContentViewAvailableOstreeRepositoriesController',
+        templateUrl: 'content-views/details/views/content-view-ostree-repositories.html'
+    })
     .state('content-views.details.history', {
         collapsed: true,
         url: '/history',
