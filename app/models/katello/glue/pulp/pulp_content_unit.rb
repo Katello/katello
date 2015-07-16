@@ -92,8 +92,10 @@ module Katello
           repo_unit_id = {}
           units_json.each do |unit_json|
             unit_json['repository_memberships'].each do |repo_pulp_id|
-              repo_unit_id[repo_pulp_id] ||= []
-              repo_unit_id[repo_pulp_id]  << unit_json['_id']
+              if Repository.exists?(:pulp_id => repo_pulp_id)
+                repo_unit_id[repo_pulp_id] ||= []
+                repo_unit_id[repo_pulp_id]  << unit_json['_id']
+              end
             end
           end
 

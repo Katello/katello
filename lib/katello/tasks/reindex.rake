@@ -36,6 +36,9 @@ namespace :katello do
       begin
         yield
       rescue Exception => e
+        if object_class.ancestors.include?(Katello::Glue::Pulp::PulpContentUnit) || Katello::Util::Search.pulp_backend_search_classes.include?(object_class)
+          report_bad_backend_class(object_class.name)
+        else
           bad_objects = []
           object_class.each do |object|
             begin
@@ -45,6 +48,7 @@ namespace :katello do
             end
           end
           report_bad_objects(bad_objects, object_class.name)
+        end
       end
     end
 
@@ -77,6 +81,13 @@ namespace :katello do
         log_error "Stack Trace: \n #{exception.backtrace.join("\n")}"
       end
     end
+  end
+
+  def report_bad_backend_class(model_name)
+    log("The following #{model_name} items could not be indexed due to various reasons.", :console => true)
+    log("Please check #{ReindexHelper::LOG_FILE} for more detailed information.", :console => true)
+    log_error("Exception: #{exception.message}")
+    log_error "Stack Trace: \n #{exception.backtrace.join("\n")}"
   end
 
   desc "Runs a katello ping and prints out the statuses of each service"
