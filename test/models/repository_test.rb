@@ -172,6 +172,48 @@ module Katello
       repos = Repository.search_for("content_view_id = \"#{@fedora_17_x86_64.content_views.first.id}\"")
       assert_includes repos, @fedora_17_x86_64
     end
+
+    def test_search_distribution_version
+      repos = Repository.search_for("distribution_version = \"#{@fedora_17_x86_64.distribution_version}\"")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+
+      empty = Repository.search_for("distribution_version = 100")
+      assert_empty empty
+    end
+
+    def test_search_distribution_arch
+      repos = Repository.search_for("distribution_arch = \"#{@fedora_17_x86_64.distribution_arch}\"")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+
+      empty = Repository.search_for("distribution_arch = x_fake_arch")
+      assert_empty empty
+    end
+
+    def test_search_distribution_family
+      repos = Repository.search_for("distribution_family = \"#{@fedora_17_x86_64.distribution_family}\"")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+
+      empty = Repository.search_for("distribution_family = not_a_family")
+      assert_empty empty
+    end
+
+    def test_search_distribution_variant
+      repos = Repository.search_for("distribution_variant = \"#{@fedora_17_x86_64.distribution_variant}\"")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+
+      empty = Repository.search_for("distribution_variant = not_variant")
+      assert_empty empty
+    end
+
+    def test_search_distribution_bootable
+      repos = Repository.search_for("distribution_bootable = \"#{@fedora_17_x86_64.distribution_bootable}\"")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+    end
   end
 
   class RepositoryInstanceTest < RepositoryTestBase
