@@ -5,6 +5,7 @@ require 'optparse'
 ACTIONS = ['restart', 'stop', 'start', 'status']
 COMMAND = '/usr/sbin/service-wait'
 SERVICES = {
+  'mongod'                => 5,
   'qpidd'                 => 10,
   'qdrouterd'             => 10,
   'tomcat'                => 20,
@@ -13,7 +14,6 @@ SERVICES = {
   'pulp_workers'          => 20,
   'pulp_celerybeat'       => 20,
   'pulp_resource_manager' => 20,
-  'mongod'                => 20,
   'foreman-proxy'         => 20,
   'httpd'                 => 30,
   'foreman-tasks'         => 30
