@@ -12,7 +12,7 @@
 
 Name:           katello
 Version:        2.3.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -171,6 +171,11 @@ Package that installs only the Subscription and basic Content Management parts o
 %files sam
 
 %changelog
+* Tue Jul 21 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-4
+- fixes #11129 - add shebang to service-wait (stbenjam@redhat.com)
+- Automatic commit of package [katello] minor release [2.3.0-3].
+  (stbenjam@redhat.com)
+
 * Mon Jul 13 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-3
 - 
 
