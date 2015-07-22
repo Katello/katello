@@ -4,6 +4,7 @@ module Katello
   class ActivationKeyTest < ActiveSupport::TestCase
     def setup
       @dev_key = ActivationKey.find(katello_activation_keys(:dev_key))
+      @dev_staging_view_key = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key))
       @dev_view = ContentView.find(katello_content_views(:library_dev_view))
       @lib_view = ContentView.find(katello_content_views(:library_view))
     end
@@ -70,6 +71,36 @@ module Katello
 
       new_key.max_content_hosts = 100
       assert !new_key.valid?
+    end
+
+    def test_search_name
+      activation_keys = ActivationKey.search_for("name = \"#{@dev_staging_view_key.name}\"")
+      assert_includes activation_keys, @dev_staging_view_key
+    end
+
+    def test_search_organization_id
+      activation_keys = ActivationKey.search_for("organization_id = \"#{@dev_staging_view_key.organization.id}\"")
+      assert_includes activation_keys, @dev_staging_view_key
+    end
+
+    def test_search_environment
+      activation_keys = ActivationKey.search_for("environment = \"#{@dev_staging_view_key.environment.name}\"")
+      assert_includes activation_keys, @dev_staging_view_key
+    end
+
+    def test_search_content_view
+      activation_keys = ActivationKey.search_for("content_view = \"#{@dev_staging_view_key.content_view.name}\"")
+      assert_includes activation_keys, @dev_staging_view_key
+    end
+
+    def test_search_content_view_id
+      activation_keys = ActivationKey.search_for("content_view_id = \"#{@dev_staging_view_key.content_view.id}\"")
+      assert_includes activation_keys, @dev_staging_view_key
+    end
+
+    def test_valid_content_label?
+      @dev_key.stubs(:available_content).returns([OpenStruct.new(:content => OpenStruct.new(:label => 'some-label'))])
+      assert @dev_key.valid_content_label?('some-label')
     end
   end
 end

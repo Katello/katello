@@ -1,5 +1,7 @@
 module Katello
   class Api::V2::ActivationKeysController < Api::V2::ApiController
+    include Katello::Concerns::FilteredAutoCompleteSearch
+
     before_filter :verify_presence_of_organization_or_environment, :only => [:index]
     before_filter :find_environment, :only => [:index, :create, :update]
     before_filter :find_optional_organization, :only => [:index, :create, :show]
@@ -7,7 +9,6 @@ module Katello
                                                   :available_host_collections, :add_host_collections, :remove_host_collections,
                                                   :content_override, :add_subscriptions, :remove_subscriptions]
     before_filter :authorize
-    before_filter :load_search_service, :only => [:index, :available_host_collections]
 
     wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach content_view_environment))
 
@@ -20,7 +21,8 @@ module Katello
     param :name, String, :desc => N_("activation key name to filter by")
     param_group :search, Api::V2::ApiController
     def index
-      respond_for_index(:collection => search_for_activation_keys)
+      activation_key_includes = [:content_view, :environment, :host_collections, :organization]
+      respond(:collection => scoped_search(index_relation.uniq, :name, :desc, :includes => activation_key_includes))
     end
 
     api :POST, "/activation_keys", N_("Create an activation key")
@@ -203,6 +205,15 @@ module Katello
       respond_for_show(:resource => @activation_key)
     end
 
+    def index_relation
+      activation_keys = ActivationKey.readable
+      activation_keys = activation_keys.where(:name => params[:name]) if params[:name]
+      activation_keys = activation_keys.where(:organization_id => @organization) if @organization
+      activation_keys = activation_keys.where(:environment_id => @environment) if @environment
+      activation_keys = activation_keys.where(:content_view_id => @content_view) if @content_view
+      activation_keys
+    end
+
     private
 
     def validate_content_overrides(content_params)
@@ -217,7 +228,7 @@ module Katello
         fail HttpErrors::BadRequest, _("Value must be 0/1, or 'default'")
       end
 
-      unless @activation_key.available_content.map(&:content).any? { |content| content.label == content_params[:content_label] }
+      unless @activation_key.valid_content_label?(content_params[:content_label])
         fail HttpErrors::BadRequest, _("Invalid content label: %s") % content_params[:content_label]
       end
       content_params
@@ -271,24 +282,6 @@ module Katello
     def verify_presence_of_organization_or_environment
       return if params.key?(:organization_id) || params.key?(:environment_id)
       fail HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
-    end
-
-    def search_for_activation_keys
-      ids = ActivationKey.readable.pluck(:id)
-      ids &= [params[:id].to_i] if params[:id]
-      filters = [:terms => { :id => ids }]
-      filters << { :term => {:organization_id => @organization.id} } if params[:organization_id]
-      filters << { :terms => {:environment_id => [params[:environment_id]] } } if params[:environment_id]
-      filters << { :terms => {:content_view_id => [params[:content_view_id]] } } if params[:content_view_id]
-      filters << { :term => { :name => params[:name] } } if params[:name]
-
-      options = {
-        :filters       => filters,
-        :load_records? => true
-      }
-
-      activation_key_includes = [:content_view, :environment, :host_collections, :organization]
-      item_search(ActivationKey.includes(activation_key_includes), params, options)
     end
 
     def activation_key_params
