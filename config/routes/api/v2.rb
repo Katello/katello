@@ -28,6 +28,7 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :activation_keys, :only => [:index, :create, :show, :update, :destroy] do
+          get :auto_complete_search, :on => :collection
           member do
             match '/product_content' => 'activation_keys#product_content', :via => :get
             match '/content_override' => 'activation_keys#content_override', :via => :put
