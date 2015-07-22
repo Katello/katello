@@ -418,7 +418,7 @@ module Katello
     end
 
     def logger
-      Foreman::Logging.logger('katello/cp_proxy')
+      ::Foreman::Logging.logger('katello/cp_proxy')
     end
 
     def respond_for_index(options = {})
