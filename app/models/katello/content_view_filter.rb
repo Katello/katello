@@ -31,9 +31,9 @@ module Katello
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :type, :rename => :content_type,
-                  :complete_value => {Package::CONTENT_TYPE.to_sym => ContentViewPackageFilter.to_s,
-                                      PackageGroup::CONTENT_TYPE.to_sym => ContentViewPackageGroupFilter.to_s,
-                                      Erratum::CONTENT_TYPE.to_sym => ContentViewErratumFilter.to_s}
+                  :complete_value => {Package::CONTENT_TYPE.to_sym => "Katello::ContentViewPackageFilter",
+                                      PackageGroup::CONTENT_TYPE.to_sym => "Katello::ContentViewPackageGroupFilter",
+                                      Erratum::CONTENT_TYPE.to_sym => "Katello::ContentViewErratumFilter"}
     scoped_search :on => :inclusion, :rename => :inclusion_type, :complete_value => {:include => true, :exclude => :false}
 
     def self.yum
