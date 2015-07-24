@@ -221,6 +221,7 @@ Katello::Engine.routes.draw do
             get :releases
             put :refresh_subscriptions
             put :content_override
+            get :product_content
           end
           api_resources :activation_keys, :only => [:index]
           api_resources :host_collections, :only => [:index]
