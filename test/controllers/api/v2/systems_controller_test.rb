@@ -32,7 +32,7 @@ module Katello
       System.any_instance.stubs(:katello_agent_installed?).returns(true)
       System.any_instance.stubs(:refresh_subscriptions).returns(true)
       System.any_instance.stubs(:content_overrides).returns([])
-      System.any_instance.stubs(:products).returns([{:id => 1, :name => 'product', :available_content => []}])
+      System.any_instance.stubs(:products).returns([])
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
 
       Katello::Package.stubs(:package_count).returns(0)
@@ -200,6 +200,48 @@ module Katello
       end
       post :update, input
       assert_response :success
+    end
+
+    def test_content_override_protected
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission]
+
+      assert_protected_action(:content_override, allowed_perms, denied_perms) do
+        put(:content_override, :id => @system.uuid, :content_label => 'some-content',
+            :value => 1)
+      end
+    end
+
+    def test_content_override
+      System.any_instance.stubs(:available_content).returns([Candlepin::ProductContent.new(:content => {:label => 'some-content'})])
+      Resources::Candlepin::Consumer.expects(:update_content_override).with(@system.uuid, 'some-content', 'enabled', 1)
+      put :content_override, :id => @system.uuid, :content_override => {:content_label => 'some-content', :value => 1}
+
+      assert_response :success
+      assert_template 'api/v2/systems/content_override'
+    end
+
+    def test_invalid_content_fails
+      System.any_instance.stubs(:available_content).returns([Candlepin::ProductContent.new(:content => {:label => 'some-content'})])
+      put :content_override, :id => @system.uuid, :content_override => {:content_label => 'wrong-content', :value => 1}
+
+      assert_response 400
+    end
+
+    def test_product_content_protected
+      allowed_perms = [@view_permission]
+      denied_perms = [@update_permission, @create_permission, @destroy_permission]
+
+      assert_protected_action(:product_content, allowed_perms, denied_perms) do
+        get(:product_content, :id => @system.uuid)
+      end
+    end
+
+    def test_product_content
+      get :product_content, :id => @system.uuid
+
+      assert_response :success
+      assert_template 'api/v2/systems/product_content'
     end
   end
 end
