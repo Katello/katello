@@ -21,7 +21,6 @@ module Actions
 
           content_view.version(environment).repos(environment).each do |repo|
             if distribution = repo.bootable_distribution
-              ::Redhat.find_or_create_operating_system(distribution)
               os = Redhat.find_or_create_operating_system(distribution)
 
               arch = Architecture.where(:name => distribution.arch).first_or_create!
