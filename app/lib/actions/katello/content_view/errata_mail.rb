@@ -19,6 +19,12 @@ module Actions
         def finalize
           ::User.current = nil
         end
+
+        def rescue_strategy_for_self
+          # If sending mail fails do not cause any calling tasks to fail
+          # but mark the task in a WARNING state with the error message.
+          Dynflow::Action::Rescue::Skip
+        end
       end
     end
   end
