@@ -192,12 +192,5 @@ module Katello
 
       assert tasks[:spawned_tasks].first['task_id']
     end
-
-    def test_import_applicability
-      erratum = Erratum.first
-      @@simple_server.expects(:errata_ids).returns([erratum.uuid])
-      @@simple_server.import_applicability
-      assert_equal [erratum], @@simple_server.reload.applicable_errata
-    end
   end
 end
