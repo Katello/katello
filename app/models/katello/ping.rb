@@ -63,10 +63,17 @@ module Katello
 
         if services.include?(:foreman_tasks)
           exception_watch(result[:services][:foreman_tasks]) do
-            dynflow_world = ForemanTasks.dynflow.world
-            if dynflow_world.executor.is_a?(Dynflow::Executors::RemoteViaSocket) &&
-                  !dynflow_world.executor.connected?
-              fail _("foreman-tasks service not running")
+            timeout   = 2
+            world     = ForemanTasks.dynflow.world
+            executors = world.coordinator.find_worlds(true)
+            if executors.empty?
+              fail _("foreman-tasks service not running or is not ready yet")
+            end
+
+            checks = executors.map { |executor| world.ping(executor.id, timeout) }
+            checks.each(&:wait)
+            if checks.any?(&:failed?)
+              fail _("some executors are not responding, check %{status_url}") % { :status_url => '/foreman_tasks/dynflow/status' }
             end
           end
         end
