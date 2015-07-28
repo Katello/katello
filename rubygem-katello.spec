@@ -68,6 +68,7 @@ Requires: mongodb >= 2.4
 Requires: mongodb-server >= 2.4
 Requires: cyrus-sasl-plain
 Requires: python-crane
+Requires: python-gofer-qpid
 Requires: qpid-cpp-client-devel
 Requires: qpid-dispatch-router
 
