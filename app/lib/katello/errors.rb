@@ -21,6 +21,8 @@ module Katello
 
     class CapsuleContentMissingConsumer < StandardError; end
 
+    class CdnSubstitutionError < StandardError; end
+
     class ConflictException < StandardError; end
 
     class ContentViewRepositoryOverlap < StandardError; end
