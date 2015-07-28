@@ -75,7 +75,7 @@ module Katello
       synced_products = []
 
       Product.in_org(current_organization).syncable_content.syncable.each do |prod|
-        if !prod.sync_status.start_time.nil?
+        if !prod.sync_status[:start_time].nil?
           syncing_products << prod
         else
           synced_products << prod
@@ -83,16 +83,24 @@ module Katello
       end
 
       syncing_products = syncing_products.sort do |a, b|
-        b.sync_status.start_time <=> a.sync_status.start_time
+        b.sync_status[:start_time] <=> a.sync_status[:start_time]
       end
 
       return (syncing_products + synced_products)[0..num]
     end
 
     def sync_percentage(product)
-      stat = product.sync_status.progress
+      stat = product.sync_status[:progress]
       return 0 if stat.total_size == 0
       "%.0f" % ((stat.total_size - stat.size_left) * 100 / stat.total_size).to_s
+    end
+
+    def sync_finish_time(product)
+      if product.sync_status[:finish_time].is_a?(String)
+        product.sync_status[:finish_time]
+      else
+        format_time product.sync_status[:finish_time]
+      end
     end
 
     def subscription_counts
