@@ -2,8 +2,9 @@ module Katello
   class Api::V2::DistributionsController < Api::V2::ApiController
     before_filter :find_repository
     before_filter :find_distribution, :only => [:show]
+    before_filter :deprecated
 
-    api :GET, "/repositories/:repository_id/distributions", "List distributions"
+    api :GET, "/repositories/:repository_id/distributions", "List distributions", :deprecated => true
     param :repository_id, :identifier, :desc => "Repository id to list packages for"
     param_group :search, Api::V2::ApiController
     def index
@@ -15,7 +16,7 @@ module Katello
       respond(:collection => collection)
     end
 
-    api :GET, "/repositories/:repository_id/distributions/:id", "Show a distribution"
+    api :GET, "/repositories/:repository_id/distributions/:id", "Show a distribution", :deprecated => true
     param :repository_id, :number, :desc => "repository numeric id"
     param :id, String, :desc => "distribution id"
     def show
@@ -23,6 +24,10 @@ module Katello
     end
 
     private
+
+    def deprecated
+      ::Foreman::Deprecation.api_deprecation_warning("it will be changed in Katello 2.4, where Distribution information will be included in /repositories/:repository_id")
+    end
 
     def find_repository
       @repo = Repository.find(params[:repository_id])
