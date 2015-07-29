@@ -5,6 +5,8 @@ fedora:
   cp_id:        fedora
   provider_id:  <%= ActiveRecord::Fixtures.identify(:anonymous) %>
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 redhat:
   name:         Red Hat Linux
@@ -13,6 +15,8 @@ redhat:
   label:        redhat_label
   provider_id:  <%= ActiveRecord::Fixtures.identify(:redhat) %>
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 puppet_product:
   name:         Puppet Product
@@ -21,6 +25,8 @@ puppet_product:
   label:        puppet_product
   provider_id:  <%= ActiveRecord::Fixtures.identify(:puppet_labs) %>
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 empty_product:
   name:         Empty Product
@@ -28,6 +34,8 @@ empty_product:
   label:        empty_product
   provider_id:  <%= ActiveRecord::Fixtures.identify(:anonymous) %>
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 empty_redhat:
   name:         Empty Red Hat Linux
@@ -36,6 +44,8 @@ empty_redhat:
   label:        redhat_empty_label
   provider_id:  <%= ActiveRecord::Fixtures.identify(:redhat) %>
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 empty_product_2:
   name:         Empty Product_2
@@ -43,3 +53,5 @@ empty_product_2:
   label:        empty_product_2
   provider_id:  <%= ActiveRecord::Fixtures.identify(:anonymous) %>
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>

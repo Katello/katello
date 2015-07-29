@@ -4,30 +4,40 @@ library:
   library:        true
   label:          library_label
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 dev:
   name:           Dev
   description:    Dev environment.
   label:          dev_label
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 test:
   name:           Test_env
   description:    Test environment.
   label:          test_label
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 beta:
   name:           Beta
   description:    Beta environment.
   label:          beta_label
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 staging:
   name:           Staging
   description:    Staging environment.
   label:          staging_label
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 candlepin_library:
   name:           Library
@@ -35,12 +45,16 @@ candlepin_library:
   library:        true
   label:          candlepin_library
   organization_id: <%= ActiveRecord::Fixtures.identify(:organization2) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 candlepin_dev:
   name:           Candlepin Dev
   description:    Dev environment.
   label:          candlepin_dev_label
   organization_id: <%= ActiveRecord::Fixtures.identify(:organization2) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 organization1_library:
   name:           Library
@@ -48,39 +62,53 @@ organization1_library:
   library:        true
   label:          organization1_library
   organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 dev_path1:
   name:           Dev Path1
   description:    Dev environment.
   label:          dev_path1_label
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 qa_path1:
   name:           QA Path1
   description:    QA environment.
   label:          qa_path1_label
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 staging_path1:
   name:           Staging Path1
   description:    Staging environment.
   label:          staging_path1_label
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 dev_path2:
   name:           Dev Path2
   description:    Dev environment.
   label:          dev_path2_label
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 qa_path2:
   name:           QA Path2
   description:    QA environment.
   label:          qa_path2_label
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 staging_path2:
   name:           Staging Path2
   description:    Staging environment.
   label:          staging_path2_label
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>

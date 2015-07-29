@@ -5,6 +5,8 @@ simple_key:
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
   auto_attach: true
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 another_simple_key:
   name: Another Simple Activation Key
@@ -13,6 +15,8 @@ another_simple_key:
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
   auto_attach: true
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 yet_another_simple_key:
   name: Yet Another Activation Key
@@ -21,6 +25,8 @@ yet_another_simple_key:
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
   auto_attach: true
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 and_yet_another_simple_key:
   name: And Yet Another Simple Activation Key
@@ -29,6 +35,8 @@ and_yet_another_simple_key:
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
   auto_attach: true
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 dev_key:
   name: DevKey
@@ -45,3 +53,5 @@ library_dev_staging_view_key:
   environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view) %>
   auto_attach: true
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
