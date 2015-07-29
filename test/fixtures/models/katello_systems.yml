@@ -4,6 +4,8 @@ simple_server:
   uuid:         010E99C0-3276-11E2-81C1-0800200C9A66
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 simple_server2:
   name:         Simple Server 2
@@ -11,11 +13,15 @@ simple_server2:
   uuid:         010E99C0-3276-11E2-81C1-0800200C9A77
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 candlepin_system:
   name:         Candlepin System
   description:  System before creating in candlepin
   environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 simple_server_3:
   name:         Simple Server 3
@@ -23,6 +29,8 @@ simple_server_3:
   uuid:         010E99C0-3276-11E2-81C1-0800200C9A88
   environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 errata_server:
   name:         Errata Server
@@ -30,6 +38,8 @@ errata_server:
   uuid:         010E99C0-3276-11E2-81C1-0800200Czzzzz
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 errata_server_dev:
   name:         Errata Dev Server
@@ -37,3 +47,5 @@ errata_server_dev:
   uuid:         010E99C0-3276-11E2-81C1-0800200Czzzz1
   environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>

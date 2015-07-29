@@ -2,13 +2,19 @@ simple_host_collection:
   name:         Simple Host Collection
   description:  The simplest of host collections.
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 another_simple_host_collection:
   name:         Another Simple Host Collection
   description:  Another collection,keeping it simple.
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 yet_another_host_collection:
   name:         Yet Another Host Collection
   description:  Here we are in a collection again!
   organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>

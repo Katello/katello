@@ -2,7 +2,11 @@ library_view_module_by_name:
   name:            theModule
   author:          theAuthor
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
 
 library_view_module_by_uuid:
   uuid:            3bd47a52-0847-42b5-90ff-206307b48b22
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
