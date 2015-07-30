@@ -12,7 +12,7 @@
 # This simple wrapper works with any service and just pass over the request
 # to /sbin/service, but for few problematic ones it waits until service is
 # fully started or stopped.
-# 
+#
 # To test the implementation use:
 #
 #   service-wait xxx test-wait
@@ -85,6 +85,9 @@ after_start() {
       # and create lock and pid files if they does not exist
       [ -f "/var/lock/subsys/postgresql" ] || touch "/var/lock/subsys/postgresql"
       [ -f "/var/run/postmaster.${POSTGRES_PORT}.pid" ] || head -n 1 "$POSTGRES_DATA/postmaster.pid" > "/var/run/postmaster.${POSTGRES_PORT}.pid"
+      sleep $ADDITIONAL_SLEEP
+      ;;
+    httpd)
       sleep $ADDITIONAL_SLEEP
       ;;
   esac
