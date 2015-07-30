@@ -19,7 +19,7 @@ module Katello
     end
 
     def index_relation
-      query = ContentViewFilter.where(:content_view_id => (@content_view || ContentView.readable))
+      query = ContentViewFilter.where(:content_view_id => (@view || ContentView.readable))
       query = query.where(:name => params[:name]) unless params[:name].blank?
       query
     end
