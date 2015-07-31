@@ -150,8 +150,8 @@ module Katello
                        :resource => { 'displayMessages' => [display_message] }
     end
 
-    api :POST, "/systems/bulk/available_incremental_updates", N_("Given a set of systems and errata, lists the content view versions \
-                                                                  and environments that need updating."), :deprecated => true
+    api :POST, "/systems/bulk/available_incremental_updates", N_("Given a set of systems and errata, lists the content view versions" \
+                                                                 " and environments that need updating."), :deprecated => true
     param_group :bulk_params
     param :errata_ids, Array, :desc => N_("List of Errata ids")
     def available_incremental_updates
