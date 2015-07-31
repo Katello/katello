@@ -59,7 +59,7 @@ module Katello
     scope :default, where(:default => true)
     scope :non_default, where(:default => false)
     scope :composite, where(:composite => true)
-    scope :non_composite, where(:composite => nil)
+    scope :non_composite, where(:composite => [nil, false])
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true
