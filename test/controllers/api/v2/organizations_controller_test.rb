@@ -16,7 +16,7 @@ module Katello
     end
 
     def models
-      @organization = get_organization
+      @organization = get_organization_with_label
     end
 
     def setup

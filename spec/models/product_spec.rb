@@ -7,6 +7,10 @@ module Katello
     include ProductHelperMethods
     include OrganizationHelperMethods
 
+    before(:all) do
+      get_organization_with_label
+    end
+
     before(:each) do
       load "#{Katello::Engine.root}/spec/helpers/product_test_data.rb"
       disable_org_orchestration
