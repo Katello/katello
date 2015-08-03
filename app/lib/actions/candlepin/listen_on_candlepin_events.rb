@@ -6,7 +6,7 @@ module Actions
         @suspended_action = suspended_action
       end
 
-      def notify_message_recieved(id, subject, content)
+      def notify_message_received(id, subject, content)
         @suspended_action << Actions::Candlepin::ListenOnCandlepinEvents::Event[id, subject, content]
       end
 
@@ -19,7 +19,7 @@ module Actions
       end
 
       def notify_not_connected(message)
-        @suspended_action << Actions::Candlepin::ListenOnCandlepinEvents::NotConnected[message]
+        ForemanTasks.dynflow.world.clock.ping(@suspended_action, 5, Actions::Candlepin::ListenOnCandlepinEvents::Reconnect[message])
       end
 
       def notify_finished
@@ -30,7 +30,7 @@ module Actions
     class ListenOnCandlepinEvents < Actions::Base
       Connected = Algebrick.atom
 
-      NotConnected = Algebrick.type do
+      Reconnect = Algebrick.type do
         fields! message: String
       end
 
@@ -77,10 +77,10 @@ module Actions
       def run(event = nil)
         match(event,
               (on nil do
-                 # initialize the listening service
-                 initialize_service
-               end),
-              (on NotConnected do
+                # initialize the listening service
+                initialize_service
+              end),
+              (on Reconnect do
                  connect_listening_service(event)
                end),
               (on Connected do
@@ -116,8 +116,8 @@ module Actions
 
       def connect_listening_service(event)
         CandlepinListeningService.instance.close
-        sleep 5
-        output[:connection] = event.message
+        output[:error] = event.message
+
         suspend do |suspended_action|
           CandlepinListeningService.instance.start(SuspendedAction.new(suspended_action))
         end
@@ -125,6 +125,7 @@ module Actions
 
       def poll_listening_service(_event)
         output[:connection] = "Connected"
+        output[:error] = nil
         suspend do |suspended_action|
           CandlepinListeningService.instance.poll_for_messages(SuspendedAction.new(suspended_action))
         end
@@ -199,7 +200,6 @@ module Actions
       end
 
       def close_service
-        output[:connection] = 'disconnected'
         CandlepinListeningService.close
       end
     end

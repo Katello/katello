@@ -23,3 +23,8 @@ populated_filter_with_repos_and_filters:
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
   type:            <%= Katello::ContentViewErratumFilter.name %>
 
+extra_filter:
+  name:            Extra Filter
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+  type:            <%= Katello::ContentViewErratumFilter.name %>
+  

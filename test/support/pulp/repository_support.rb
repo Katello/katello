@@ -52,10 +52,10 @@ module Katello
                               )
     end
 
-    def self.destroy_repo
-      ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :pulp_id => @repo.pulp_id)
+    def self.destroy_repo(pulp_id = @repo.pulp_id)
+      ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :pulp_id => pulp_id)
     rescue RestClient::ResourceNotFound => e
-      puts "Failed to sync repo destroy #{e.message}"
+      puts "Failed to destroy repo #{e.message}"
     end
   end
 end
