@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.3.0
-Release: 3%{dist}
+Release: 4%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -270,6 +270,49 @@ chown -R foreman.foreman %{foreman_dir}/public/apipie-cache
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Mon Aug 03 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-4
+- RC2
+- Refs #10690 - remove duplicate method call for os creation
+  (jsherril@redhat.com)
+- Fixes #11075: fix error on incremental update, BZ 1240819.
+  (walden@redhat.com)
+- Fixes #10950: Update Red Hat repositories based on organization CDN URL.
+  (ericdhelms@gmail.com)
+- Fixes #11026: Products weren't being shown during repo discovery.
+  (ericdhelms@gmail.com)
+- fixes #11117 - sort by id as secondary sort to ensure result order is
+  deterministic (jsherril@redhat.com)
+- fixes #11123 - actually assign content_host to capsule (stbenjam@redhat.com)
+- fixes #11165 - making sure mongo comes before pulp_celerybeat
+  (komidore64@gmail.com)
+- Refs #10673: Pulp server no longer requires python-gofer-qpid.
+  (ericdhelms@gmail.com)
+- Fixes #10673: Changes needed to upgrade to Pulp 2.6.2 (ericdhelms@gmail.com)
+- fixes #11166 - better handling qpid disconnections on cp listener
+  (jsherril@redhat.com)
+- Fixes #11183 - Fixed NaN sync logic for docker presenters (paji@redhat.com)
+- fixes #11094 - assign default location to new puppet environments
+  (jsherril@redhat.com)
+- Fixes #11215 - update the ping to the new dynflow mechanisms
+  (inecas@redhat.com)
+- fixes #11028 - avoid race conditions on applicability indexng
+  (jsherril@redhat.com)
+- Fixes #11228 - skip the email step if it fails and warn the user
+  (mmccune@redhat.com)
+- fixes #11210 - Distribution API endpoint deprecation (jomitsch@redhat.com)
+- Fixes #11227 - Deprecation warning for available package groups for content
+  view filter (jomitsch@redhat.com)
+- Fixes #11253 All content view filters are shown in every content view
+  (jomitsch@redhat.com)
+- fixes #11261 - wait a little after starting httpd (stbenjam@redhat.com)
+- Automatic commit of package [katello] minor release [2.3.0-4].
+  (stbenjam@redhat.com)
+- fixes #11129 - add shebang to service-wait (stbenjam@redhat.com)
+- Add changelog and contributors for KATELLO-2.3 (stbenjam@redhat.com)
+- Automatic commit of package [katello] minor release [2.3.0-3].
+  (stbenjam@redhat.com)
+- fixes #11116 - Add comps for Fedora 22 (stbenjam@redhat.com)
+
 * Mon Jul 13 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-3
 - Fixes #11070: Fix restrict to Foreman 1.9 (elyezermr@gmail.com)
 - Refs #10962 - update to foreman-tasks 0.7.0 dynflow 0.8.1 (inecas@redhat.com)
