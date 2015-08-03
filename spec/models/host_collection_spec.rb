@@ -40,6 +40,13 @@ module Katello
         grp2.new_record?.must_equal(false)
         HostCollection.where(:name => "TestHostCollection").count.must_equal(2)
       end
+
+      it "should not allow unlimited_content_hosts=false and max_content_hosts to be nil at the same time" do
+        create = lambda do
+          HostCollection.create!(:name => "TestHostCollection", :organization => @org, :unlimited_content_hosts => false)
+        end
+        create.must_raise(ActiveRecord::RecordInvalid)
+      end
     end
 
     describe "delete should" do
