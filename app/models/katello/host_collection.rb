@@ -40,6 +40,8 @@ module Katello
           errors.add :content_host_limit, _("may not be less than the number of content hosts associated with the host collection.")
         elsif (max_content_hosts == 0)
           errors.add :content_host_limit, _("may not be set to 0.")
+        elsif (unlimited_content_hosts == false) && (max_content_hosts.nil?)
+          errors.add :max_content_hosts, _("must be given a value if this host collection is not unlimited.")
         end
       end
     end
