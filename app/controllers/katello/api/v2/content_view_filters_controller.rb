@@ -5,6 +5,7 @@ module Katello
     before_filter :find_content_view
     before_filter :find_filter, :except => [:index, :create, :auto_complete_search]
     before_filter :load_search_service, :only => [:available_package_groups]
+    before_filter :deprecated, :only => [:available_package_groups]
 
     wrap_parameters :include => (ContentViewFilter.attribute_names + %w(repository_ids))
 
@@ -18,7 +19,7 @@ module Katello
     end
 
     def index_relation
-      query = ContentViewFilter.where(:content_view_id => (@content_view || ContentView.readable))
+      query = ContentViewFilter.where(:content_view_id => (@view || ContentView.readable))
       query = query.where(:name => params[:name]) unless params[:name].blank?
       query
     end
@@ -70,9 +71,9 @@ module Katello
     end
 
     api :GET, "/content_views/:content_view_id/filters/:id/available_package_groups",
-        N_("Get package groups that are available to be added to the filter")
+        N_("Get package groups that are available to be added to the filter"), :deprecated => true
     api :GET, "/content_view_filters/:id/available_package_groups",
-        N_("Get package groups that are available to be added to the filter")
+        N_("Get package groups that are available to be added to the filter"), :deprecated => true
     param :content_view_id, :identifier, :desc => N_("content view identifier")
     param :id, :identifier, :desc => N_("filter identifier"), :required => true
     def available_package_groups
@@ -89,6 +90,10 @@ module Katello
     end
 
     private
+
+    def deprecated
+      ::Foreman::Deprecation.api_deprecation_warning("it will be changed in Katello 2.4, where it will be /content_view_filters/:id/package_groups?available_for=content_view_filter")
+    end
 
     def find_content_view
       @view = ContentView.find(params[:content_view_id]) if params[:content_view_id]

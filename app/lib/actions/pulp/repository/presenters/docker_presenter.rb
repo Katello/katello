@@ -13,7 +13,7 @@ module Actions
               download_details = details("sync_step_download")
               if content_completed?(download_details)
                 completion += 0.7
-              elsif content_started?(download_details)
+              elsif content_started?(download_details) && items_total(download_details) > 0
                 completion += 0.7 * items_done(download_details) / items_total(download_details)
               end
               completion

@@ -198,6 +198,37 @@ module Katello
     end
   end
 
+  class SystemImportApplicabilityTest < SystemTestBase
+    def setup
+      super
+      @enhancement_errata = katello_errata(:enhancement)
+    end
+
+    def test_partial_import
+      refute @errata_system.applicable_errata.empty?
+      refute_includes @errata_system.applicable_errata, @enhancement_errata
+
+      @errata_system.stubs(:pulp_errata_uuids).returns([@enhancement_errata.uuid])
+      @errata_system.import_applicability(true)
+
+      assert_equal [@enhancement_errata], @errata_system.reload.applicable_errata
+    end
+
+    def test_partial_import_empty
+      @errata_system.stubs(:pulp_errata_uuids).returns([])
+      @errata_system.import_applicability(true)
+
+      assert_empty @errata_system.reload.applicable_errata
+    end
+
+    def test_full_import
+      @errata_system.stubs(:pulp_errata_uuids).returns([@enhancement_errata.uuid])
+      @errata_system.import_applicability(false)
+
+      assert_equal [@enhancement_errata], @errata_system.reload.applicable_errata
+    end
+  end
+
   class SystemHostTest < SystemTestBase
     def setup
       super

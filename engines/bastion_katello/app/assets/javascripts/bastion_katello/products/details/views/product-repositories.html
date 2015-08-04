@@ -1,36 +1,31 @@
 <span page-title ng-model="product">{{ 'Repositories for Product:' | translate }} {{ product.name }}</span>
 
-<section class="details details-full">
-  <div bst-alert="success" ng-show="removingTasks.length > 0" close="close($index)" ng-repeat="task in removingTasks">
-    <div>
-      <p translate>Removal of selected repositories initiated successfully. </p>
-      <div>
-        <a href="/foreman_tasks/tasks/{{task}}" translate>Click here to check the status of the task.</a>
+<section ng-hide="panel.loading">
+  <div data-extend-template="layouts/details-nutupane.html">
+    <div data-block="header"> {{ 'Repositories' | translate }} </div>
+    <div data-block="messages">
+      <div bst-alert="success" ng-show="removingTasks.length > 0" close="close($index)" ng-repeat="task in removingTasks">
+        <div>
+          <p translate>Removal of selected repositories initiated successfully. </p>
+          <div><a href="/foreman_tasks/tasks/{{task}}" translate>Click here to check the status of the task.</a></div>
+        </div>
+      </div>
+      <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+      <div bst-alert="danger" ng-show="warningMessages">
+        <strong translate>There were errors while removing the following Repositories:</strong>
+        <ol>
+          <li data-ng-repeat="message in warningMessages">
+            {{ message }}
+          </li>
+        </ol>
+        <a ui-sref="products.details.tasks.details({taskId: warningTaskId})" translate>Click here to see the task for the successful removals.</a>
       </div>
     </div>
-  </div>
-  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
-  <div bst-alert="danger" ng-show="warningMessages">
-    <strong translate>There were errors while removing the following Repositories:</strong>
-    <ol>
-      <li data-ng-repeat="message in warningMessages">
-        {{ message }}
-      </li>
-    </ol>
-    <a ui-sref="products.details.tasks.details({taskId: warningTaskId})" translate>Click here to see the task for the successful removals.</a>
-  </div>
-  <h4 translate>Repositories</h4>
 
-  <input type="text"
-         class="form-control filter-input"
-         placeholder="{{ 'Filter' | translate }}"
-         ng-model="repositorySearch"/>
-
-  <span class="pull-right">
-
+    <div data-block="actions">
       <div bst-modal="removeSelectedRepositories()">
-        <div data-block="modal-header" translate>Remove {{ repositoriesTable.numSelected  }} Repositories?</div>
-        <div data-block="modal-body" translate>Are you sure you want to remove the {{ repositoriesTable.numSelected }} repositories selected?</div>
+        <div data-block="modal-header" translate>Remove {{ detailsTable.numSelected  }} Repositories?</div>
+        <div data-block="modal-body" translate>Are you sure you want to remove the {{ detailsTable.numSelected }} repositories selected?</div>
       </div>
 
       <span ng-switch="getRepositoriesNonDeletableReason(product)" bst-feature-flag="custom_products">
@@ -51,7 +46,7 @@
       <button class="btn btn-default"
               ng-click="openModal()"
               ng-show="canRemoveRepositories(product)"
-              ng-disabled="removingRepositories || repositoriesTable.numSelected == 0">
+              ng-disabled="removingRepositories || detailsTable.numSelected == 0">
         <span ng-show="removingRepositories">
           <i class="fa fa-spinner inline-icon fa-spin"></i>
           <span>{{ "Removing Repositories" | translate }}</span>
@@ -63,98 +58,99 @@
 
       </button>
 
-    <button class="btn btn-default"
-            ng-click="syncSelectedRepositories()"
-            ng-hide="denied('sync_products', product)"
-            ng-disabled="syncInProgress || repositoriesTable.numSelected == 0">
-      <i class="fa fa-spinner fa-spin" ng-show="syncInProgress"></i>
-      <span ng-show="syncInProgress" translate>Syncing...</span>
-      <i ng-hide="syncInProgress" class="fa fa-refresh"></i>
-      <span ng-hide="syncInProgress" translate>Sync Now</span>
-    </button>
-    <button class="btn btn-primary"
-            bst-feature-flag="custom_products"
-            ng-hide="denied('edit_products', product)"
-            ng-disabled="product.readonly"
-            ui-sref="products.details.repositories.new({productId: product.id})">
-      <span translate>Create Repository</span>
-    </button>
-  </span>
+      <button class="btn btn-default"
+              ng-click="syncSelectedRepositories()"
+              ng-hide="denied('sync_products', product)"
+              ng-disabled="syncInProgress || detailsTable.numSelected == 0">
+        <i class="fa fa-spinner fa-spin" ng-show="syncInProgress"></i>
+        <span ng-show="syncInProgress" translate>Syncing...</span>
+        <i ng-hide="syncInProgress" class="fa fa-refresh"></i>
+        <span ng-hide="syncInProgress" translate>Sync Now</span>
+      </button>
+      <button class="btn btn-primary"
+              bst-feature-flag="custom_products"
+              ng-hide="denied('edit_products', product)"
+              ng-disabled="product.readonly"
+              ui-sref="products.details.repositories.new({productId: product.id})">
+        <span translate>Create Repository</span>
+      </button>
+    </div>
 
-  <table bst-table="repositoriesTable"
-         class="table table-striped"
-         ng-class="{'table-mask': repositoriesTable.working}"
-         ng-show="repositoriesTable.rows.length > 0">
-    <thead>
-      <tr bst-table-head row-select>
-        <th bst-table-column="name" translate>Name</th>
-        <th bst-table-column="type" translate>Type</th>
-        <th bst-table-column="sync-status" translate>Sync Status</th>
-        <th bst-table-column="content" translate>Content</th>
-      </tr>
-    </thead>
+    <span data-block="no-rows-message" translate>
+      You currently don't have any Repositories included in this Product, you can add Repositories using the button on the right.
+    </span>
 
-    <tbody>
-      <tr bst-table-row
-          row-select="repository"
-          ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch">
-        <td bst-table-cell>
-          <a ng-href="/products/{{ product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
-        </td>
-        <td bst-table-cell>{{ repository.content_type }}</td>
-        <td bst-table-cell>
-          <span ng-show="repository.url">
-            <span ng-show="repository.last_sync == null" translate>
-              Not Synced
-            </span>
-            <span ng-hide="repository.last_sync == null">
-              <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result | capitalize}}</a>
-              <span translate>{{ repository.last_sync_words }} ago</span>
-            </span>
-          </span>
-          <span ng-hide="repository.url" translate>N/A</span>
-        </td>
-        <td bst-table-cell>
-          <span ng-show="repository.content_type == 'puppet'">
-            <a translate ui-sref="products.details.repositories.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})">
-              {{ repository.content_counts.puppet_module || 0 }} Puppet Modules
-            </a>
-          </span>
+    <div data-block="table">
+      <table bst-table="detailsTable"
+             class="table table-striped"
+             ng-show="detailsTable.rows.length > 0 && !detailsTable.working">
+        <thead>
+          <tr bst-table-head row-select>
+            <th bst-table-column="name" translate>Name</th>
+            <th bst-table-column="type" translate>Type</th>
+            <th bst-table-column="sync-status" translate>Sync Status</th>
+            <th bst-table-column="content" translate>Content</th>
+          </tr>
+        </thead>
 
-          <span ng-show="repository.content_type == 'yum'">
-            <div>
-              <a translate ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})">
-                {{ repository.content_counts.rpm || 0 }} Packages
-              </a>
-            </div>
-
-            <div>
-              <a ui-sref="errata.index({repositoryId: repository.id})" translate>
-              {{ repository.content_counts.erratum || 0 }} Errata
-              </a>
-            </div>
-          </span>
-
-          <span ng-show="repository.content_type == 'docker'">
-            <div>
-              <span translate>
-                {{ repository.content_counts.docker_image || 0 }} Docker Images
+        <tbody>
+          <tr bst-table-row
+              row-select="repository"
+              ng-repeat="repository in detailsTable.rows | filter:repositorySearch">
+            <td bst-table-cell>
+              <a ng-href="/products/{{ product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
+            </td>
+            <td bst-table-cell>{{ repository.content_type }}</td>
+            <td bst-table-cell>
+              <span ng-show="repository.url">
+                <span ng-show="repository.last_sync == null" translate>
+                  Not Synced
+                </span>
+                <span ng-hide="repository.last_sync == null">
+                  <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result | capitalize}}</a>
+                  <span translate>{{ repository.last_sync_words }} ago</span>
+                </span>
               </span>
-            </div>
-           <div>
-              <span translate>
-                {{ repository.content_counts.docker_tag || 0 }} Docker Tags
+              <span ng-hide="repository.url" translate>N/A</span>
+            </td>
+            <td bst-table-cell>
+              <span ng-show="repository.content_type == 'puppet'">
+                <a translate ui-sref="products.details.repositories.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})"> 
+                  {{ repository.content_counts.puppet_module || 0 }} Puppet Modules
+                </a>
               </span>
-            </div>
-          </span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+
+              <span ng-show="repository.content_type == 'yum'">
+                <div>
+                  <a translate ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})">   
+                    {{ repository.content_counts.rpm || 0 }} Packages
+                  </a>
+                </div>
+
+                <div>
+                  <a ui-sref="errata.index({repositoryId: repository.id})" translate>
+                    {{ repository.content_counts.erratum || 0 }} Errata
+                  </a>
+                </div>
+              </span>
+
+              <span ng-show="repository.content_type == 'docker'">
+                <div>
+                  <span translate>
+                    {{ repository.content_counts.docker_image || 0 }} Docker Images
+                  </span>
+                </div>
+                <div>
+                  <span translate>
+                    {{ repository.content_counts.docker_tag || 0 }} Docker Tags
+                  </span>
+                </div>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </section>
-
-<p bst-alert="info" ng-show="repositoriesTable.rows.length === 0 && !repositoriesTable.working">
-  <span translate>
-    You currently don't have any Repositories included in this Product, you can add Repositories using the button on the right.
-  </span>
-</p>

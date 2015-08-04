@@ -40,6 +40,11 @@ module Katello
     def test_index_with_content_view
       get :index, :content_view_id => @content_view.id
 
+      body = JSON.parse(response.body)
+      filter_count = ContentViewFilter.where(:content_view_id => @content_view.id).count
+      returned_filter_count = body["total"]
+
+      assert_equal returned_filter_count, filter_count
       assert_response :success
       assert_template 'api/v2/content_view_filters/index'
     end

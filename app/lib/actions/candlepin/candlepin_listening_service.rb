@@ -63,14 +63,10 @@ module Actions
         suspended_action.notify_not_connected(e.message)
       end
 
-      def fetch_message(suspended_action)
-        result = nil
-        begin
-          result = retrieve
-        rescue Actions::Candlepin::ConnectionError => e
-          suspended_action.notify_not_connected(e.message)
-        end
-        result
+      def fetch_message
+        {:result => retrieve, :error => nil}
+      rescue Actions::Candlepin::ConnectionError => e
+        {:result => nil, :error => e.message}
       end
 
       def poll_for_messages(suspended_action)
@@ -78,10 +74,14 @@ module Actions
         @thread = Thread.new do
           loop do
             begin
-              message = fetch_message(suspended_action)
-              if message
-                @session.acknowledge(:message => message)
-                suspended_action.notify_message_recieved(message.message_id, message.subject, message.content)
+              message = fetch_message
+              if message[:result]
+                result = message[:result]
+                @session.acknowledge(:message => result)
+                suspended_action.notify_message_received(result.message_id, result.subject, result.content)
+              elsif message[:error]
+                suspended_action.notify_not_connected(message[:error])
+                break
               end
               sleep 1
             rescue => e

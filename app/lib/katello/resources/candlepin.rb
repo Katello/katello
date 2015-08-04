@@ -104,7 +104,7 @@ module Katello
           end
 
           # rubocop:disable ParameterLists
-          def create(env_id, _key, name, type, facts, installed_products, autoheal = true, release_ver = nil,
+          def create(env_id, _key, name, type, facts, installed_products = [], autoheal = true, release_ver = nil,
                      service_level = "", uuid = "", capabilities = nil, activation_keys = [], guest_ids = [],
                      last_checkin = nil)
             # rubocop:enable ParameterLists
@@ -112,6 +112,8 @@ module Katello
             activation_key_ids = activation_keys.collect do |activation_key|
               activation_key.cp_name
             end
+
+            installed_products ||= []
 
             url = "/candlepin/environments/#{url_encode(env_id)}/consumers/"
             attrs = {:name => name,

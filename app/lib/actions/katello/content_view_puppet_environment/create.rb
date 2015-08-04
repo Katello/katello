@@ -4,7 +4,6 @@ module Actions
       class Create < Actions::EntryAction
         # rubocop:disable MethodLength
         def plan(puppet_environment, clone = false)
-          puppet_environment.disable_auto_reindex!
           puppet_environment.save!
           action_subject(puppet_environment)
           plan_self
@@ -23,7 +22,6 @@ module Actions
             # publish/promote process
             unless clone
               plan_action(Katello::Repository::MetadataGenerate, puppet_environment) if puppet_environment.environment
-              plan_action(ElasticSearch::Reindex, puppet_environment)
             end
           end
         end
