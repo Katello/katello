@@ -198,7 +198,7 @@ module Katello
       end
 
       def import_logger
-        Foreman::Logging.logger('katello/manifest_import_logger')
+        ::Foreman::Logging.logger('katello/manifest_import_logger')
       end
 
       # TODO: break up method
