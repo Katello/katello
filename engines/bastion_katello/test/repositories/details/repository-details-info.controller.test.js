@@ -21,7 +21,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             repositoryId: 1
         };
 
-        $scope.repositoriesTable = {
+        $scope.detailsTable = {
             replaceRow: function (row) {},
             removeRow: function () {}
         };
@@ -62,22 +62,22 @@ describe('Controller: RepositoryDetailsInfoController', function() {
 
     it('should save the repository and return a promise', function() {
         var promise;
-        spyOn($scope.repositoriesTable, 'replaceRow');
+        spyOn($scope.detailsTable, 'replaceRow');
 
         promise = $scope.save($scope.repository);
 
         expect(promise.then).toBeDefined();
-        expect($scope.repositoriesTable.replaceRow).toHaveBeenCalledWith($scope.repository);
+        expect($scope.detailsTable.replaceRow).toHaveBeenCalledWith($scope.repository);
     });
 
     it('should save the repository successfully', function() {
-        spyOn($scope.repositoriesTable, 'replaceRow');
+        spyOn($scope.detailsTable, 'replaceRow');
 
         $scope.save($scope.repository);
 
         expect($scope.errorMessages.length).toBe(0);
         expect($scope.successMessages.length).toBe(1);
-        expect($scope.repositoriesTable.replaceRow).toHaveBeenCalledWith($scope.repository);
+        expect($scope.detailsTable.replaceRow).toHaveBeenCalledWith($scope.repository);
     });
 
     it('should fail to save the repository', function() {
@@ -113,14 +113,14 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     });
 
     it('should set the upload status to success and refresh the repository if a file upload status is success', function() {
-        spyOn($scope.repositoriesTable, 'replaceRow');
+        spyOn($scope.detailsTable, 'replaceRow');
         spyOn($scope.repository, '$get');
         $scope.uploadContent('<pre>{"status": "success"}</pre>', true);
 
         expect($scope.uploadErrorMessages.length).toBe(0);
         expect($scope.uploadSuccessMessages.length).toBe(1);
         expect($scope.repository.$get).toHaveBeenCalled();
-        expect($scope.repositoriesTable.replaceRow).toHaveBeenCalledWith($scope.repository);
+        expect($scope.detailsTable.replaceRow).toHaveBeenCalledWith($scope.repository);
     });
 
     it('should provide a method to determine if a repository is currently being syncd', function() {
@@ -134,11 +134,11 @@ describe('Controller: RepositoryDetailsInfoController', function() {
 
     it("provides a way to sync a repository", function() {
         spyOn($state, 'go');
-        spyOn($scope.repositoriesTable, 'replaceRow');
+        spyOn($scope.detailsTable, 'replaceRow');
 
         $scope.syncRepository($scope.repository);
         expect($state.go).toHaveBeenCalled();
-        expect($scope.repositoriesTable.replaceRow).toHaveBeenCalledWith($scope.repository);
+        expect($scope.detailsTable.replaceRow).toHaveBeenCalledWith($scope.repository);
     });
 
     it("should provide a valid reason for a repo deletion disablement", function() {
@@ -172,12 +172,12 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     it('should provide a way to remove a repository', function() {
         repository.id = 1;
 
-        spyOn($scope.repositoriesTable, 'removeRow');
+        spyOn($scope.detailsTable, 'removeRow');
         spyOn($scope, 'transitionTo');
 
         $scope.removeRepository(repository);
 
-        expect($scope.repositoriesTable.removeRow).toHaveBeenCalledWith(1);
+        expect($scope.detailsTable.removeRow).toHaveBeenCalledWith(1);
         expect($scope.transitionTo).toHaveBeenCalledWith('products.details.repositories.index', {productId: 1});
     });
 });

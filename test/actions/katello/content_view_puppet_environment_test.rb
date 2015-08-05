@@ -65,8 +65,6 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
                                 target_pulp_id: dev_puppet_env.pulp_id,
                                 criteria: nil
       assert_action_planed_with action, ::Actions::Katello::Repository::MetadataGenerate, dev_puppet_env
-      assert_action_planed_with action, ::Actions::ElasticSearch::ContentViewPuppetEnvironment::IndexContent,
-                                id: dev_puppet_env.id
       refute_nil dev_puppet_env.reload.puppet_environment
     end
 
@@ -79,7 +77,6 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
       refute_action_planed action, ::Actions::Katello::ContentViewPuppetEnvironment::Clear
       assert_action_planed action, ::Actions::Pulp::Repository::CopyPuppetModule
       assert_action_planed action, ::Actions::Katello::Repository::MetadataGenerate
-      assert_action_planed action, ::Actions::ElasticSearch::ContentViewPuppetEnvironment::IndexContent
     end
 
     it 'plans with uneeded existing cv puppet environment' do
@@ -90,7 +87,6 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
       assert_action_planed action, ::Actions::Katello::ContentViewPuppetEnvironment::Destroy
       refute_action_planed action, ::Actions::Pulp::Repository::CopyPuppetModule
       refute_action_planed action, ::Actions::Katello::Repository::MetadataGenerate
-      refute_action_planed action, ::Actions::ElasticSearch::ContentViewPuppetEnvironment::IndexContent
     end
 
     it 'does not plan things when cvep does not already exist and no puppet modules' do
@@ -100,7 +96,6 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
       refute_action_planed action, ::Actions::Katello::ContentViewPuppetEnvironment::Create
       refute_action_planed action, ::Actions::Pulp::Repository::CopyPuppetModule
       refute_action_planed action, ::Actions::Katello::Repository::MetadataGenerate
-      refute_action_planed action, ::Actions::ElasticSearch::ContentViewPuppetEnvironment::IndexContent
     end
   end
 

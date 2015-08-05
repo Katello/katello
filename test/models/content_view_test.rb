@@ -211,7 +211,7 @@ module Katello
       v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
       composite.update_attributes(:component_ids => [v1.id])
       repo_ids = composite.repositories_to_publish.map(&:id)
-      assert_equal v1.repositories.archived.pluck(:id), repo_ids
+      assert_equal v1.repositories.archived.pluck(:id).sort, repo_ids.sort
 
       repo = Repository.find(katello_repositories(:fedora_17_x86_64))
       assert_includes @library_view.repositories_to_publish.map(&:id), repo.id

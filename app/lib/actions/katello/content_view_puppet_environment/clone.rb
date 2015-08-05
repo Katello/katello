@@ -45,6 +45,7 @@ module Actions
             plan_action(ContentViewPuppetEnvironment::Create, clone, true)
           else
             clone.content_view_version = from_version
+            clone.puppet_environment.try(:save!) #manually save puppet environment in case of error
             clone.save!
             plan_action(ContentViewPuppetEnvironment::Clear, clone)
           end

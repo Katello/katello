@@ -11,7 +11,7 @@ module Actions
           ::User.current = ::User.anonymous_admin
           systems = ::Katello::System.where(:id => input[:system_ids])
           systems.each do |system|
-            system.import_applicability
+            system.import_applicability(false)
           end
         ensure
           ::User.current = nil

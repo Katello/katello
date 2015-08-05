@@ -107,11 +107,10 @@ module Katello
       end
 
       url = "http://www.redhat.com"
-      redhat_provider = mock
-      redhat_provider.expects(:update_attributes!).with do |arg_hash|
-        arg_hash[:repository_url] == url
+      assert_sync_task ::Actions::Katello::Provider::Update do |_organization, params|
+        params[:redhat_repository_url] == url
       end
-      Organization.any_instance.expects(:redhat_provider).returns(redhat_provider)
+
       put(:update, :id => @organization.id, :redhat_repository_url => url)
       assert_response :success
     end

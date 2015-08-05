@@ -16,7 +16,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
     function ($scope, Repository, GPGKey, FormUtils, translate) {
 
         function success(response) {
-            $scope.repositoriesTable.rows.push(response);
+            $scope.detailsTable.rows.push(response);
             $scope.successMessages.push(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
             $scope.transitionTo('products.details.repositories.index', {productId: $scope.$stateParams.productId});
         }

@@ -519,7 +519,7 @@ module Katello
       end
 
       def pulp_update_needed?
-        unless redhat?
+        unless redhat? || previous_changes.key?('url')
           allowed_changes = %w(url unprotected checksum_type docker_upstream_name)
           allowed_changes << "name" if docker?
           allowed_changes.any? { |key| previous_changes.key?(key) }
@@ -790,6 +790,8 @@ module Katello
       scheme   = (self.unprotected ? 'http' : 'https')
       if docker?
         "#{pulp_uri.host.downcase}:5000/#{pulp_id}"
+      elsif file?
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/isos/#{pulp_id}"
       else
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
       end

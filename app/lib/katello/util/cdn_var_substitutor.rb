@@ -90,20 +90,37 @@ module Katello
         path.include?("$")
       end
 
-      def valid_substitutions?(contnent_url, substitutions)
-        real_path = gsub_vars(contnent_url, substitutions)
+      def valid_substitutions(content, substitutions)
+        validate_all_substitutions_accepted(content, substitutions)
+        content_url = content.contentUrl
+        real_path = gsub_vars(content_url, substitutions)
+
         if substituable?(real_path)
-          return false
+          fail Errors::CdnSubstitutionError, _("%{substitutions} are not valid substitutions for %{content_url}") %
+              { substitutions: substitutions, content_url: content.contentUrl }
         else
           is_valid = valid_path?(real_path, 'repodata/repomd.xml') || valid_path?(real_path, 'PULP_MANIFEST')
           unless is_valid
             @resource.log :error, "No valid metadata files found for #{real_path}"
+            fail Errors::CdnSubstitutionError, _("%{substitutions} are not valid substitutions for %{content_url}."\
+                   " No valid metadata files found for %{real_path}") %
+              { substitutions: substitutions, content_url: content.contentUrl, real_path: real_path}
           end
-          return is_valid
         end
       end
 
       protected
+
+      def validate_all_substitutions_accepted(content, substitutions)
+        unaccepted_substitutions = substitutions.keys.reject do |key|
+          content.contentUrl.include?("$#{key}")
+        end
+        if unaccepted_substitutions.size > 0
+          fail Errors::CdnSubstitutionError, _("%{unaccepted_substitutions} cannot be specified for %{content_name}"\
+                 " as that information is not substituable in %{content_url} ") %
+              { unaccepted_substitutions: unaccepted_substitutions, content_name: content.name, content_url: content.contentUrl }
+        end
+      end
 
       def valid_path?(path, postfix)
         @resource.get(File.join(path, postfix)).present?
