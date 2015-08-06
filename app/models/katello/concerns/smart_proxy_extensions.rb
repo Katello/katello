@@ -12,7 +12,6 @@ module Katello
         before_create :associate_default_location
         before_create :associate_lifecycle_environments
         before_create :associate_content_host
-        attr_accessible :lifecycle_environment_ids
 
         has_many :containers,
                  :class_name => "Container",

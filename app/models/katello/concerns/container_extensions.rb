@@ -6,7 +6,6 @@ module Katello
       included do
         belongs_to :capsule, :inverse_of => :containers, :foreign_key => :capsule_id,
           :class_name => "SmartProxy"
-        attr_accessible :capsule_id
 
         alias_method_chain :repository_pull_url, :katello
       end
