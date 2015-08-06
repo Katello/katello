@@ -43,7 +43,7 @@ module Katello
     param_group :resource, ::Api::V2::TaxonomiesController
     def update
       if params.key?(:redhat_repository_url)
-        @organization.redhat_provider.update_attributes!(:repository_url => params[:redhat_repository_url])
+        sync_task(::Actions::Katello::Provider::Update, @organization.redhat_provider, params)
       end
       super
     end

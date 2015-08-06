@@ -84,22 +84,10 @@ module Katello
         error_ids
       end
 
-      def errata_ids
+      def pulp_errata_uuids
         response = Katello.pulp_server.extensions.consumer.applicable_errata([self.uuid])
         return [] if response.empty?
         response[0]['applicability']['erratum'] || []
-      end
-
-      def import_applicability
-        applicable_errata_ids = ::Katello::Erratum.where(:uuid => errata_ids).pluck(:id)
-        ActiveRecord::Base.transaction do
-          Katello::SystemErratum.where(:system_id => self.id).delete_all
-          unless applicable_errata_ids.empty?
-            inserts = applicable_errata_ids.map { |erratum_id| "(#{erratum_id.to_i}, #{id.to_i})" }
-            sql = "INSERT INTO katello_system_errata (erratum_id, system_id) VALUES #{inserts.join(', ')}"
-            ActiveRecord::Base.connection.execute(sql)
-          end
-        end
       end
 
       def generate_applicability

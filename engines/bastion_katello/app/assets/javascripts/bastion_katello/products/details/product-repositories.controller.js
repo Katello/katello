@@ -22,6 +22,7 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
             'enabled': true,
             'full_result': true
         });
+        repositoriesNutupane.masterOnly = true;
 
         function getParams() {
             return {
@@ -35,7 +36,7 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
 
         function success(response) {
             angular.forEach(response.task.input.target_ids, function (row) {
-                $scope.repositoriesTable.removeRow(row);
+                $scope.detailsTable.removeRow(row);
             });
             $scope.removingTasks.push(response.task.id);
         }
@@ -49,8 +50,8 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
         $scope.errorMessages = [];
 
         $scope.checksums = [{name: translate('Default'), id: null}, {id: 'sha256', name: 'sha256'}, {id: 'sha1', name: 'sha1'}];
-        $scope.repositoriesTable = repositoriesNutupane.table;
-        $scope.repositoriesTable.removeRow = repositoriesNutupane.removeRow;
+        $scope.detailsTable = repositoriesNutupane.table;
+        $scope.detailsTable.removeRow = repositoriesNutupane.removeRow;
         repositoriesNutupane.query();
 
         $scope.syncSelectedRepositories = function () {

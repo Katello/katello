@@ -344,7 +344,41 @@ module Katello
       super.merge(uuid => uuid)
     end
 
+    def import_applicability(partial = true)
+      consumer = self
+      ::Katello::Util::Support.active_record_retry do
+        ActiveRecord::Base.transaction do
+          errata_uuids = pulp_errata_uuids
+          if partial
+            consumer_uuids = consumer.applicable_errata.pluck("#{Erratum.table_name}.uuid")
+            to_remove = consumer_uuids - errata_uuids
+            to_add = errata_uuids - consumer_uuids
+          else
+            to_add = errata_uuids
+            to_remove = nil
+            Katello::SystemErratum.where(:system_id => self.id).delete_all
+          end
+          insert_errata_applicability(to_add) unless to_add.blank?
+          remove_errata_applicability(to_remove) unless to_remove.blank?
+        end
+      end
+    end
+
     private
+
+    def insert_errata_applicability(uuids)
+      applicable_errata_ids = ::Katello::Erratum.where(:uuid => uuids).pluck(:id)
+      unless applicable_errata_ids.empty?
+        inserts = applicable_errata_ids.map { |erratum_id| "(#{erratum_id.to_i}, #{id.to_i})" }
+        sql = "INSERT INTO katello_system_errata (erratum_id, system_id) VALUES #{inserts.join(', ')}"
+        ActiveRecord::Base.connection.execute(sql)
+      end
+    end
+
+    def remove_errata_applicability(uuids)
+      applicable_errata_ids = ::Katello::Erratum.where(:uuid => uuids).pluck(:id)
+      Katello::SystemErratum.where(:system_id => self.id, :erratum_id => applicable_errata_ids).delete_all
+    end
 
     def update_foreman_host
       if foreman_host && foreman_host.lifecycle_environment && foreman_host.content_view

@@ -74,12 +74,7 @@ module Katello
       end
 
       def validate!
-        if substitutor.valid_substitutions?(content.contentUrl, substitutions)
-          return true
-        else
-          fail _("%{substitutions} are not valid substitutions for %{content_url}") %
-              { substitutions: substitutions, content_url: content.contentUrl }
-        end
+        substitutor.valid_substitutions(content, substitutions)
       end
 
       def substitutor
@@ -144,7 +139,11 @@ module Katello
       end
 
       def unprotected?
-        kickstart? ? true : false
+        kickstart? || file?
+      end
+
+      def file?
+        content.type.downcase == 'file'
       end
 
       def kickstart?

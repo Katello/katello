@@ -1,7 +1,0 @@
-//= require "katello/chosen.jquery"
-//= require "katello/jquery.hoverIntent"
-//= require "katello/common/env_select_scroll"
-//= require "katello/widgets/path_selector"
-//= require "katello/widgets/comparison_grid"
-//= require "katello/content_search/content_search"
-//= require "katello/widgets/auto_complete"

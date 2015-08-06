@@ -143,7 +143,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 $scope.errorMessages = response.data.errors;
             };
 
-            $scope.repositoriesTable.removeRow(repository.id);
+            $scope.detailsTable.removeRow(repository.id);
             repository.$delete(success, error);
         };
 
@@ -155,7 +155,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
         };
 
         updateRepositoriesTable = function () {
-            $scope.repositoriesTable.replaceRow($scope.repository);
+            $scope.detailsTable.replaceRow($scope.repository);
         };
     }]
 );
