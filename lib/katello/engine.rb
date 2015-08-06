@@ -95,6 +95,9 @@ module Katello
         fail Foreman::Exception, N_("Organizations disabled, try allowing them in foreman/config/settings.yaml")
       end
 
+      # Lib Extensions
+      ::Foreman::Renderer.send :include, Katello::Concerns::RendererExtensions
+
       # Model extensions
       ::Environment.send :include, Katello::Concerns::EnvironmentExtensions
       ::Host::Managed.send :include, Katello::Concerns::HostManagedExtensions

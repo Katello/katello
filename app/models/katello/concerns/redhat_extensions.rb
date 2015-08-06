@@ -6,7 +6,6 @@ module Katello
 
       included do
         alias_method_chain :medium_uri, :content_uri
-        alias_method_chain :mediumpath, :content
         alias_method_chain :boot_files_uri, :content
         after_create :assign_templates!
       end
@@ -68,10 +67,6 @@ module Katello
         else
           medium_uri_without_content_uri(host, url)
         end
-      end
-
-      def mediumpath_with_content(host)
-        "url --url #{medium_uri(host)}"
       end
 
       def kickstart_repo(host)
