@@ -15,7 +15,7 @@ describe('Controller: NewRepositoryController', function() {
         $httpBackend = $injector.get('$httpBackend');
         FormUtils = $injector.get('FormUtils');
 
-        $scope.repositoriesTable = {rows: []};
+        $scope.detailsTable = {rows: []};
         $scope.successMessages = [];
         $scope.$stateParams = {productId: 1};
         $scope.repositoryForm = $injector.get('MockForm');

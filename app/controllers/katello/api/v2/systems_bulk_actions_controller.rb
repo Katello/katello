@@ -150,8 +150,8 @@ module Katello
                        :resource => { 'displayMessages' => [display_message] }
     end
 
-    api :POST, "/systems/bulk/available_incremental_updates", N_("Given a set of systems and errata, lists the content view versions \
-                                                                  and environments that need updating."), :deprecated => true
+    api :POST, "/systems/bulk/available_incremental_updates", N_("Given a set of systems and errata, lists the content view versions" \
+                                                                 " and environments that need updating."), :deprecated => true
     param_group :bulk_params
     param :errata_ids, Array, :desc => N_("List of Errata ids")
     def available_incremental_updates
@@ -171,11 +171,11 @@ module Katello
         else
           version_environment[:components] = nil
         end
-
-        version_environments[version] = OpenStruct.new(version_environment)
+        version_environments[version] = version_environment
       end
 
-      respond_for_index :collection => version_environments.values, :template => :available_incremental_updates
+      response = version_environments.values.map { |version| OpenStruct.new(version) }
+      respond_for_index :collection => response, :template => :available_incremental_updates
     end
 
     private

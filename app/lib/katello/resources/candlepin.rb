@@ -6,7 +6,7 @@ module Katello
     module Candlepin
       class Proxy
         def self.logger
-          Foreman::Logging.logger('katello/cp_proxy')
+          ::Foreman::Logging.logger('katello/cp_proxy')
         end
 
         def self.post(path, body)
@@ -50,7 +50,7 @@ module Katello
         self.ca_cert_file = cfg.ca_cert_file
 
         def self.logger
-          Foreman::Logging.logger('katello/cp_rest')
+          ::Foreman::Logging.logger('katello/cp_rest')
         end
 
         def self.default_headers(uuid = nil)
@@ -104,7 +104,7 @@ module Katello
           end
 
           # rubocop:disable ParameterLists
-          def create(env_id, _key, name, type, facts, installed_products, autoheal = true, release_ver = nil,
+          def create(env_id, _key, name, type, facts, installed_products = [], autoheal = true, release_ver = nil,
                      service_level = "", uuid = "", capabilities = nil, activation_keys = [], guest_ids = [],
                      last_checkin = nil)
             # rubocop:enable ParameterLists
@@ -112,6 +112,8 @@ module Katello
             activation_key_ids = activation_keys.collect do |activation_key|
               activation_key.cp_name
             end
+
+            installed_products ||= []
 
             url = "/candlepin/environments/#{url_encode(env_id)}/consumers/"
             attrs = {:name => name,
@@ -284,7 +286,7 @@ module Katello
 
       class UpstreamConsumer < HttpResource
         def self.logger
-          Foreman::Logging.logger('katello/cp_rest')
+          ::Foreman::Logging.logger('katello/cp_rest')
         end
 
         def self.resource(url, client_cert, client_key, ca_file)

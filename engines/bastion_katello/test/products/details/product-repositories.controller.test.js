@@ -56,7 +56,7 @@ describe('Controller: ProductRepositoriesController', function() {
     }));
 
     it("sets up the repositories nutupane table", function() {
-        expect($scope.repositoriesTable).toBe(expectedTable);
+        expect($scope.detailsTable).toBe(expectedTable);
     });
 
     it("provides a way to remove all of the selected repositories in the table", function() {

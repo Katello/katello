@@ -45,7 +45,7 @@ module Katello
       assert_equal 4, @repository.puppet_modules.length
       assert_equal @names, @repository.puppet_modules.map(&:name).sort
     ensure
-      @dev_repo.destroy
+      RepositorySupport.destroy_repo(@dev_repo.pulp_id)
     end
 
     def test_generate_unit_data

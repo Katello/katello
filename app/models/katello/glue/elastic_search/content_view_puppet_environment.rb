@@ -2,29 +2,7 @@ module Katello
   module Glue::ElasticSearch::ContentViewPuppetEnvironment
     # TODO: break this up into modules
     # rubocop:disable MethodLength
-    def self.included(base)
-      base.send :include, Ext::IndexedModel
-
-      base.class_eval do
-        index_options :extended_json => :extended_index_attrs,
-                      :json => {:except => [:pulp_repo_facts, :feed_cert]}
-
-        mapping do
-          indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-          indexes :name_sort, :type => 'string', :index => :not_analyzed
-          indexes :labels, :type => 'string', :index => :not_analyzed
-        end
-      end
-
-      def extended_index_attrs
-        {
-          :environment => self.environment.try(:name),
-          :archive => self.archive?,
-          :environment_id => self.environment.try(:id),
-          :name_sort => self.name
-        }
-      end
-
+    def self.included(_base)
       def index_puppet_modules
         Tire.index Katello::PuppetModule.index do
           create :settings => Katello::PuppetModule.index_settings, :mappings => Katello::PuppetModule.index_mapping

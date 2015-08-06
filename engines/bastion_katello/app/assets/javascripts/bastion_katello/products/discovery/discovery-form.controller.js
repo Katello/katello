@@ -85,10 +85,6 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             createNextRepo();
         }
 
-        function filterEditable(items) {
-            return _.where(items, {readonly: false});
-        }
-
         $scope.discovery = $scope.discovery || {selected: []};
         $scope.panel = {loading: true};
         $scope.$watch('createRepoChoices.product.name', function () {
@@ -115,7 +111,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
         });
 
         Product.queryUnpaged({'organization_id': CurrentOrganization, custom: true}, function (values) {
-            $scope.products = filterEditable(values.results);
+            $scope.products = values.results;
 
             if ($scope.products.length > 0) {
                 $scope.createRepoChoices.existingProductId = $scope.products[0].id;

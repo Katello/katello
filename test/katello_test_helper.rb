@@ -18,6 +18,7 @@ require "#{Katello::Engine.root}/test/support/controller_support"
 require "#{Katello::Engine.root}/test/support/search_service"
 require "#{Katello::Engine.root}/test/support/capsule_support"
 require "#{Katello::Engine.root}/test/support/pulp/repository_support"
+require "#{Katello::Engine.root}/test/support/fixtures_support"
 
 require 'dynflow/testing'
 Mocha::Mock.send :include, Dynflow::Testing::Mimic
@@ -54,36 +55,7 @@ module FixtureTestCase
     self.use_instantiated_fixtures = false
     self.pre_loaded_fixtures = true
 
-    self.set_fixture_class :katello_activation_keys => "Katello::ActivationKey"
-    self.set_fixture_class :katello_content_views => "Katello::ContentView"
-    self.set_fixture_class :katello_content_view_environments => "Katello::ContentViewEnvironment"
-    self.set_fixture_class :katello_content_view_filters => "Katello::ContentViewFilter"
-    self.set_fixture_class :katello_content_view_erratum_filter_rules => "Katello::ContentViewErratumFilterRule"
-    self.set_fixture_class :katello_content_view_package_filter_rules => "Katello::ContentViewPackageFilterRule"
-    self.set_fixture_class :katello_content_view_package_group_filter_rules => "Katello::ContentViewPackageGroupFilterRule"
-    self.set_fixture_class :katello_content_view_puppet_modules => "Katello::ContentViewPuppetModule"
-    self.set_fixture_class :katello_content_view_puppet_environments => "Katello::ContentViewPuppetEnvironment"
-    self.set_fixture_class :katello_content_view_repositories => "Katello::ContentViewRepository"
-    self.set_fixture_class :katello_content_view_version_environments => "Katello::ContentViewVersionEnvironment"
-    self.set_fixture_class :katello_content_view_versions => "Katello::ContentViewVersion"
-    self.set_fixture_class :katello_distributors => "Katello::Distributor"
-    self.set_fixture_class :katello_environment_priors => "Katello::EnvironmentPrior"
-    self.set_fixture_class :katello_environments => "Katello::KTEnvironment"
-    self.set_fixture_class :katello_gpg_keys => "Katello::GpgKey"
-    self.set_fixture_class :katello_products => "Katello::Product"
-    self.set_fixture_class :katello_providers => "Katello::Provider"
-    self.set_fixture_class :katello_repositories => "Katello::Repository"
-    self.set_fixture_class :katello_sync_plans => "Katello::SyncPlan"
-    self.set_fixture_class :katello_host_collections => "Katello::HostCollection"
-    self.set_fixture_class :katello_systems => "Katello::System"
-    self.set_fixture_class :katello_system_host_collections => "Katello::SystemHostCollection"
-    self.set_fixture_class :katello_task_statuses => "Katello::TaskStatus"
-    self.set_fixture_class :katello_errata => "Katello::Erratum"
-    self.set_fixture_class :katello_erratum_packages => "Katello::ErratumPackage"
-    self.set_fixture_class :katello_erratum_cves => "Katello::ErratumCve"
-    self.set_fixture_class :katello_repository_errata => "Katello::RepositoryErratum"
-    self.set_fixture_class :katello_system_errata => "Katello::SystemErratum"
-
+    Katello::FixturesSupport.set_fixture_classes(self)
     load_fixtures
     self.fixture_path = "#{Katello::Engine.root}/test/fixtures/models"
     fixtures(:all)

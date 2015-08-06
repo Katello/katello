@@ -72,6 +72,19 @@ module Katello
         stringify(params.keys) - stringify(rule.keys)
       end
 
+      # Used for retrying active record transactions when race conditions could cause
+      #  RecordNotUnique exceptions
+      def self.active_record_retry(retries = 3)
+        yield
+      rescue ActiveRecord::RecordNotUnique => e
+        retries -= 1
+        if retries == 0
+          raise e
+        else
+          retry
+        end
+      end
+
       # We need this so that we can return
       # empty search results on an invalid query
       # Basically this is a empty array with a total
