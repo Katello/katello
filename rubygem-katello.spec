@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.3.0
-Release: 4%{dist}
+Release: 5%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -271,6 +271,13 @@ chown -R foreman.foreman %{foreman_dir}/public/apipie-cache
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Thu Aug 06 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-5
+- fixes #11195 - handle foreman restructuring of kickstart_attributes
+  (stbenjam@redhat.com)
+- fixes #11285 - require qpid-cpp-server-linearstore (stbenjam@redhat.com)
+- Automatic commit of package [katello] minor release [2.3.0-5].
+  (stbenjam@redhat.com)
+
 * Mon Aug 03 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-4
 - RC2
 - Refs #10690 - remove duplicate method call for os creation
