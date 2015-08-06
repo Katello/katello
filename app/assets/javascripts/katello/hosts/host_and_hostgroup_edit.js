@@ -34,16 +34,18 @@ KT.hosts.fetchContentViews = function () {
 };
 
 KT.hosts.signalContentViewFetch = function(fetching) {
-    var select = KT.hosts.getContentViewSelect(),
+    var select = KT.hosts.getContentViewSelect();
+    var select2 = KT.hosts.getContentViewSelect2();
         //parent = select.parent(),
         spinner = $('<img>').attr('src', '/assets/spinner.gif'),
         spinner_id = "content_view_spinner";
 
     if(fetching) {
         select.hide();
+        select2.hide();
         $(spinner).attr('id', spinner_id).insertAfter(select);
     } else {
-        select.show();
+        select2.show();
         $('#' + spinner_id).remove();
     }
 };
@@ -70,6 +72,14 @@ KT.hosts.getPuppetEnvironmentSelect = function() {
     var select = $("#host_environment_id").first();
     if(select.length === 0) {
         select = $("#hostgroup_environment_id").first();
+    }
+    return select;
+};
+
+KT.hosts.getContentViewSelect2 = function() {
+    var select = $("#s2id_host_content_view_id").first();
+    if(select.length === 0) {
+        select = $("#s2id_hostgroup_content_view_id").first();
     }
     return select;
 };
@@ -158,8 +168,12 @@ KT.hosts.toggle_installation_medium = function() {
                     if ($("#kt_kickstart_url").length == 0) {
                       $('label[for="medium_id"]').after("<div id='kt_kickstart_url' class='col-md-8'></div>");
                     }
+
                     $("#host_medium_id").hide();
+                    $("#s2id_host_medium_id").hide();
+
                     $("#hostgroup_medium_id").hide();
+                    $("#s2id_hostgroup_medium_id").hide();
                     // populate kickstart_url inside div created above
                     $("#kt_kickstart_url").html(result.name+"<br />"+result.path);
                 }
@@ -172,7 +186,7 @@ KT.hosts.toggle_installation_medium = function() {
 };
 
 KT.hosts.show_medium_selectbox = function() {
-    $("#host_medium_id").show();
-    $("#hostgroup_medium_id").show();
+    $("#s2id_host_medium_id").show();
+    $("#s2id_hostgroup_medium_id").show();
     $("#kt_kickstart_url").html('');
 };
