@@ -18,8 +18,8 @@
  *   within the table.
  */
 angular.module('Bastion.subscriptions').controller('SubscriptionsController',
-    ['$scope', '$filter', '$q', '$location', 'translate', 'Nutupane', 'Subscription', 'Organization', 'CurrentOrganization', 'SubscriptionsHelper',
-    function ($scope, $filter, $q, $location, translate, Nutupane, Subscription, Organization, CurrentOrganization, SubscriptionsHelper) {
+    ['$scope', '$filter', '$location', 'translate', 'Nutupane', 'Subscription', 'Organization', 'CurrentOrganization', 'SubscriptionsHelper',
+    function ($scope, $filter, $location, translate, Nutupane, Subscription, Organization, CurrentOrganization, SubscriptionsHelper) {
         var params, nutupane;
 
         params = {
@@ -63,10 +63,12 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
 
         $scope.subscriptions = Subscription.queryPaged();
 
-        $q.all([$scope.subscriptions.$promise]).then(function () {
-            if ($scope.subscriptions.results.length < 1) {
-                $scope.transitionTo('subscriptions.manifest.import');
-            }
+        $scope.$on('$stateChangeSuccess', function () {
+            $scope.subscriptions.$promise.then(function () {
+                if ($scope.subscriptions.results.length < 1) {
+                    $scope.transitionTo('subscriptions.manifest.import');
+                }
+            });
         });
     }]
 );
