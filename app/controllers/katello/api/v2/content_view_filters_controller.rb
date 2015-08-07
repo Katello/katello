@@ -4,16 +4,14 @@ module Katello
 
     before_filter :find_content_view
     before_filter :find_filter, :except => [:index, :create, :auto_complete_search]
-    before_filter :load_search_service, :only => [:available_package_groups]
-    before_filter :deprecated, :only => [:available_package_groups]
 
     wrap_parameters :include => (ContentViewFilter.attribute_names + %w(repository_ids))
 
-    api :GET, "/content_views/:content_view_id/filters", N_("List filters")
-    api :GET, "/content_view_filters", N_("List filters")
+    api :get, "/content_views/:content_view_id/filters", N_("list filters")
+    api :get, "/content_view_filters", N_("list filters")
     param_group :search, Api::V2::ApiController
     param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
-    param :name, String, :desc => N_("Filter content view filters by name")
+    param :name, String, :desc => N_("filter content view filters by name")
     def index
       respond(:collection => scoped_search(index_relation.uniq, :name, :asc))
     end
@@ -24,13 +22,13 @@ module Katello
       query
     end
 
-    api :POST, "/content_views/:content_view_id/filters", N_("Create a filter for a content view")
-    api :POST, "/content_view_filters", N_("Create a filter for a content view")
+    api :post, "/content_views/:content_view_id/filters", N_("create a filter for a content view")
+    api :post, "/content_view_filters", N_("create a filter for a content view")
     param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
     param :name, String, :desc => N_("name of the filter"), :required => true
     param :type, String, :desc => N_("type of filter (e.g. rpm, package_group, erratum)"), :required => true
-    param :original_packages, :bool, :desc => N_("Add all packages without Errata to the included/excluded list. " \
-                                                       "(Package Filter only)")
+    param :original_packages, :bool, :desc => N_("add all packages without errata to the included/excluded list. " \
+                                                       "(package filter only)")
     param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")
     param :repository_ids, Array, :desc => N_("list of repository ids")
     param :description, String, :desc => N_("description of the filter")
@@ -39,21 +37,21 @@ module Katello
       respond :resource => filter
     end
 
-    api :GET, "/content_views/:content_view_id/filters/:id", N_("Show filter info")
-    api :GET, "/content_view_filters/:id", N_("Show filter info")
+    api :get, "/content_views/:content_view_id/filters/:id", N_("show filter info")
+    api :get, "/content_view_filters/:id", N_("show filter info")
     param :content_view_id, :identifier, :desc => N_("content view identifier")
     param :id, :identifier, :desc => N_("filter identifier"), :required => true
     def show
       respond :resource => @filter
     end
 
-    api :PUT, "/content_views/:content_view_id/filters/:id", N_("Update a filter")
-    api :PUT, "/content_view_filters/:id", N_("Update a filter")
+    api :put, "/content_views/:content_view_id/filters/:id", N_("update a filter")
+    api :put, "/content_view_filters/:id", N_("update a filter")
     param :content_view_id, :identifier, :desc => N_("content view identifier")
     param :id, :identifier, :desc => N_("filter identifier"), :required => true
     param :name, String, :desc => N_("new name for the filter")
-    param :original_packages, :bool, :desc => N_("Add all packages without Errata to the included/excluded list. " \
-                                                       "(Package Filter only)")
+    param :original_packages, :bool, :desc => N_("add all packages without errata to the included/excluded list. " \
+                                                       "(package filter only)")
     param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")
     param :repository_ids, Array, :desc => N_("list of repository ids")
     def update
@@ -61,32 +59,13 @@ module Katello
       respond :resource => @filter
     end
 
-    api :DELETE, "/content_views/:content_view_id/filters/:id", N_("Delete a filter")
-    api :DELETE, "/content_view_filters/:id", N_("Delete a filter")
+    api :delete, "/content_views/:content_view_id/filters/:id", N_("delete a filter")
+    api :delete, "/content_view_filters/:id", N_("delete a filter")
     param :content_view_id, :identifier, :desc => N_("content view identifier")
     param :id, :identifier, :desc => N_("filter identifier"), :required => true
     def destroy
       @filter.destroy
       respond_for_show :resource => @filter
-    end
-
-    api :GET, "/content_views/:content_view_id/filters/:id/available_package_groups",
-        N_("Get package groups that are available to be added to the filter"), :deprecated => true
-    api :GET, "/content_view_filters/:id/available_package_groups",
-        N_("Get package groups that are available to be added to the filter"), :deprecated => true
-    param :content_view_id, :identifier, :desc => N_("content view identifier")
-    param :id, :identifier, :desc => N_("filter identifier"), :required => true
-    def available_package_groups
-      current_ids = @filter.package_group_rules.map(&:uuid)
-      repo_ids = @filter.applicable_repos.readable.pluck("#{Repository.table_name}.pulp_id")
-      search_filters = [{ :terms => { :repo_id => repo_ids } }]
-      search_filters << { :not => { :terms => { :id => current_ids } } } unless current_ids.blank?
-
-      options = sort_params
-      options[:filters] = search_filters
-
-      respond_for_index :template => '../package_groups/index',
-                        :collection => item_search(PackageGroup, params, options)
     end
 
     private

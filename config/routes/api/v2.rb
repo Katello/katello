@@ -72,9 +72,6 @@ Katello::Engine.routes.draw do
             collection do
               get :auto_complete_search
             end
-            member do
-              get :available_package_groups
-            end
             api_resources :errata, :only => [:index]
             api_resources :package_groups, :only => [:index]
           end
@@ -89,9 +86,6 @@ Katello::Engine.routes.draw do
           api_resources :rules, :controller => :content_view_filter_rules
           collection do
             get :auto_complete_search
-          end
-          member do
-            get :available_package_groups
           end
         end
 
@@ -175,7 +169,11 @@ Katello::Engine.routes.draw do
 
         api_resources :packages, :only => [:index, :show]
 
-        api_resources :package_groups, :only => [:index, :show]
+        api_resources :package_groups, :only => [:index, :show] do
+          collection do
+            get :auto_complete_search
+          end
+        end
 
         api_resources :ping, :only => [:index]
         match "/status" => "ping#server_status", :via => :get

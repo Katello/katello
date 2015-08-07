@@ -231,6 +231,10 @@ module Katello
       DockerImage.in_repositories(archived_repos).uniq
     end
 
+    def package_groups
+      PackageGroup.in_repositories(archived_repos).uniq
+    end
+
     def check_ready_to_promote!
       fail _("Default content view versions cannot be promoted") if default?
     end

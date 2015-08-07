@@ -17,6 +17,8 @@ module Katello
       :katello_environment_priors => "Katello::EnvironmentPrior",
       :katello_environments => "Katello::KTEnvironment",
       :katello_gpg_keys => "Katello::GpgKey",
+      :katello_package_groups => "Katello::PackageGroup",
+      :katello_repository_package_groups => "Katello::RepositoryPackageGroup",
       :katello_products => "Katello::Product",
       :katello_providers => "Katello::Provider",
       :katello_repositories => "Katello::Repository",
