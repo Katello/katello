@@ -44,7 +44,8 @@ angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
         }
 
         $scope.createSyncPlan = function (syncPlan) {
-            var syncDate = new Date(syncPlan.startDate),
+            var GMT_OFFSET_MILLISECONDS = syncPlan.startDate.getTimezoneOffset() * 60000,
+                syncDate = new Date(syncPlan.startDate.getTime() + GMT_OFFSET_MILLISECONDS),
                 syncTime = new Date(syncPlan.startTime || new Date());
             syncDate.setHours(syncTime.getHours());
             syncDate.setMinutes(syncTime.getMinutes());
