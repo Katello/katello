@@ -15,7 +15,7 @@ module Katello
 
     belongs_to :organization, :inverse_of => :providers, :class_name => "Organization"
     belongs_to :task_status, :inverse_of => :provider
-    has_many :products, :class_name => "Katello::Product", :inverse_of => :provider, :dependent => :restrict
+    has_many :products, :class_name => "Katello::Product", :inverse_of => :provider, :dependent => :restrict_with_error
     has_many :repositories, :through => :products
 
     validates_lengths_from_database

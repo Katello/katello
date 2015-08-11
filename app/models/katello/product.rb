@@ -22,7 +22,7 @@ module Katello
     belongs_to :provider, :inverse_of => :products
     belongs_to :sync_plan, :inverse_of => :products, :class_name => 'Katello::SyncPlan'
     belongs_to :gpg_key, :inverse_of => :products
-    has_many :repositories, :class_name => "Katello::Repository", :dependent => :restrict
+    has_many :repositories, :class_name => "Katello::Repository", :dependent => :restrict_with_error
 
     validates_lengths_from_database :except => [:label]
     validates :provider_id, :presence => true
@@ -35,8 +35,8 @@ module Katello
     scoped_search :on => :organization_id, :complete_value => true
     scoped_search :on => :label, :complete_value => true
     scoped_search :on => :description
-    scoped_search :in => :provider, :on => :provider_type, :rename => :redhat,
-                  :complete_value => {:true => Provider::REDHAT, :false => Provider::ANONYMOUS }
+    # scoped_search :in => :provider, :on => :provider_type, :rename => :redhat,
+    #               :complete_value => {:true => Provider::REDHAT, :false => Provider::ANONYMOUS }
 
     def library_repositories
       self.repositories.in_default_view

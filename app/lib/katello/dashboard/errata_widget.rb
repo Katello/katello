@@ -1,3 +1,5 @@
+load File.expand_path('../widget.rb', __FILE__)
+
 module Katello
   class Dashboard::ErrataWidget < Dashboard::Widget
     def accessible?

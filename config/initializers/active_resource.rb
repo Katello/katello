@@ -1,1 +1,1 @@
-ActiveResource::Base.logger = Rails.logger
+# ActiveResource::Base.logger = Rails.logger
