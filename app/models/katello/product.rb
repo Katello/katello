@@ -35,8 +35,8 @@ module Katello
     scoped_search :on => :organization_id, :complete_value => true
     scoped_search :on => :label, :complete_value => true
     scoped_search :on => :description
-    scoped_search :in => :provider, :on => :provider_type, :rename => :redhat,
-                  :complete_value => {:true => Provider::REDHAT, :false => Provider::ANONYMOUS }
+    # scoped_search :in => :provider, :on => :provider_type, :rename => :redhat,
+    #               :complete_value => {:true => Provider::REDHAT, :false => Provider::ANONYMOUS }
 
     def library_repositories
       self.repositories.in_default_view

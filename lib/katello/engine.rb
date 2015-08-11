@@ -43,7 +43,6 @@ module Katello
       Katello::Engine.paths['db/migrate'].existent.each do |path|
         app.config.paths['db/migrate'] << path
       end
-
       app.config.autoload_paths += Dir["#{config.root}/app/lib"]
       app.config.autoload_paths += Dir["#{config.root}/app/presenters"]
       app.config.autoload_paths += Dir["#{config.root}/app/services/katello"]
@@ -51,13 +50,13 @@ module Katello
     end
 
     initializer "katello.assets.paths", :group => :all do |app|
-      if Rails.env.production?
+      # if Rails.env.production?
         app.config.assets.paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion',
                                                              'font-awesome', 'scss')
-      else
-        app.config.sass.load_paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion',
-                                                                'font-awesome', 'scss')
-      end
+      # else
+      #   app.config.sass.load_paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion',
+      #                                                           'font-awesome', 'scss')
+      # end
     end
 
     initializer "katello.paths" do |app|
