@@ -31,6 +31,10 @@ angular.module('Bastion.errata').controller('ErrataController',
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
 
+        Erratum.queryPaged({'organization_id': CurrentOrganization}, function (result) {
+            $scope.errataCount = result.total;
+        });
+
         $scope.table.closeItem = function () {
             $scope.transitionTo('errata.index');
         };
