@@ -3,7 +3,7 @@ describe('Controller: ErrataController', function() {
         $location,
         $controller,
         dependencies,
-        Errata,
+        Erratum,
         Task,
         Repository,
         Nutupane;
@@ -22,7 +22,6 @@ describe('Controller: ErrataController', function() {
             this.refresh = function () {};
             this.getAllSelectedResults = function () {};
         };
-        Errata = {};
 
         Task = {
             registerSearch: function() {},
@@ -31,6 +30,7 @@ describe('Controller: ErrataController', function() {
     });
 
     beforeEach(inject(function(_$controller_, $rootScope, _$location_, MockResource, translateMock) {
+        Erratum = MockResource.$new();
         Repository = MockResource.$new();
         $scope = $rootScope.$new();
         $location = _$location_;
@@ -40,7 +40,7 @@ describe('Controller: ErrataController', function() {
             $scope: $scope,
             $location: $location,
             Nutupane: Nutupane,
-            Errata: Errata,
+            Erratum: Erratum,
             Task: Task,
             Repository: Repository,
             CurrentOrganization: 'CurrentOrganization',
@@ -52,6 +52,10 @@ describe('Controller: ErrataController', function() {
 
     it('attaches the nutupane table to the scope', function() {
         expect($scope.table).toBeDefined();
+    });
+
+    it('sets the total errata count on the scope', function () {
+        expect($scope.errataCount).toBe(2);
     });
 
     it('sets the closeItem function to transition to the index page', function() {
