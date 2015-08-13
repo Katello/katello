@@ -10,7 +10,6 @@ require "hooks"
 require "foreigner"
 require "foreman-tasks"
 require "rest_client"
-require "justified/standard_error"
 require "anemone"
 require "securerandom"
 require 'foreman_docker'
