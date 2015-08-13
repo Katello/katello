@@ -120,11 +120,7 @@ module Katello
           end
 
           repo_unit_id.each do |repo_pulp_id, unit_uuids|
-<<<<<<< HEAD
-            sync_repository_associations(Repository.find_by_pulp_id(repo_pulp_id), unit_uuids, additive)
-=======
             sync_repository_associations(Repository.find_by(:pulp_id => repo_pulp_id), unit_uuids)
->>>>>>> Converting models to new ActiveRecord query syntax
           end
         end
       end
