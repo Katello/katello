@@ -30,7 +30,7 @@ module Katello
         if current_organization
           if params.key?(:distributor) && !params[:distributor][:content_view_id].blank?
             content_view = ContentView.readable.
-              find_by_id(params[:distributor][:content_view_id])
+              find_by(:id => params[:distributor][:content_view_id])
             Distributor.registerable?(@environment, current_organization, content_view) if content_view
           else
             Distributor.registerable?(@environment, current_organization)
@@ -49,7 +49,7 @@ module Katello
 
       edit_distributor = lambda do
         if params.key?(:distributor) && !params[:distributor][:content_view_id].blank?
-          ContentView.readable.find_by_id(params[:distributor][:content_view_id])
+          ContentView.readable.find_by(:id => params[:distributor][:content_view_id])
         end
         Distributor.find(params[:id]).editable?
       end
@@ -120,7 +120,7 @@ module Katello
       @distributor.cp_type = "candlepin"  # The 'candlepin' type is allowed to export a manifest
       @distributor.facts = {'distributor_version' => params[:distributor][:version]}
       @distributor.environment = KTEnvironment.find(params["distributor"]["environment_id"])
-      @distributor.content_view = ContentView.find_by_id(params["distributor"].try(:[], "content_view_id"))
+      @distributor.content_view = ContentView.find_by(:id => params["distributor"].try(:[], "content_view_id"))
       #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
       #find the newly created distributor
       if @distributor.save!

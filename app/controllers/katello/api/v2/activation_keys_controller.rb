@@ -264,7 +264,7 @@ module Katello
     end
 
     def find_pool
-      @pool = Pool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
+      @pool = Pool.find_by(:organization => @activation_key.organization, :id => params[:poolid])
     end
 
     def find_host_collections
