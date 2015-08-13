@@ -11,7 +11,7 @@ module Katello
             category = (['and', 'or', 'not', 'has'].include?(item.to_s.sub(/^.*\s+/, ''))) ? _('Operators') : ''
             part = item.to_s.sub(/^.*\b(and|or)\b/i) { |match| match.sub(/^.*\s+/, '') }
             completed = item.to_s.chomp(part)
-            {:completed => CGI.escapeHTML(completed), :part => CGI.escapeHTML(part), :label => item, :category => category}
+            {:completed => completed, :part => part, :label => item, :category => category}
           end
         rescue ScopedSearch::QueryNotSupported => e
           items = [{:error => e.to_s}]
