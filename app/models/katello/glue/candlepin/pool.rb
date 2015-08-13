@@ -122,7 +122,7 @@ module Katello
       end
 
       def host
-        System.find_by(:uuid => host_id) if host_id
+        System.find_by(:uuid => host_id) if self.host_id
       end
     end
   end

@@ -44,7 +44,7 @@ module Katello
         end
       end
 
-      def medium_uri_with_content_uri(host, url = nil)
+     def medium_uri_with_content_uri(host, url = nil)
         if host.try(:content_source) && (repo_details = kickstart_repo(host))
           URI.parse(repo_details[:path])
         else
