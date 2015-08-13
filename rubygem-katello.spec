@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.2.3
-Release: 1%{dist}
+Release: 2%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -225,6 +225,9 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Thu Aug 13 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.3-2
+- Bumping version to 2.2.3 (ericdhelms@gmail.com)
+
 * Thu Aug 13 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.3-1
 - Adding 2.2.3 CHANGELOG (ericdhelms@gmail.com)
 - Fixes #10208: Fix auto-attach on activation keys with custom products.
