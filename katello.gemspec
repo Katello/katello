@@ -36,7 +36,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "qpid_messaging", ">= 0.30.0", '< 0.31.0'
 
   gem.add_dependency "gettext_i18n_rails"
-  gem.add_dependency "i18n_data", ">= 0.2.6"
 
   # Pulp
   gem.add_dependency "runcible", ">= 1.3.0"
