@@ -1,3 +1,16 @@
+# 2.2.3 Maibock (2015-08-13)
+
+## Bug Fixes 
+
+### Installer
+ * Katello : Installation of Pulp Capsule fails ([#11041](http://projects.theforeman.org/issues/11041))
+
+### API
+ * Content View histories task can be deleted, causing ISE on versions list ([#10996](http://projects.theforeman.org/issues/10996), [eee31ac5](http://github.com/katello/katello/commit/eee31ac5debab9dc0ef1252156420577d5f93d31))
+
+### Other
+ * Auto-attach subscriptions not working for content hosts with custom products only ([#10208](http://projects.theforeman.org/issues/10208), [1a6cf418](http://github.com/katello/katello/commit/1a6cf418e421e3fa8ae3b61af92fbe1721cca923))
+
 # 2.2.2 Maibock (2015-06-24)
 
 ## Features 
