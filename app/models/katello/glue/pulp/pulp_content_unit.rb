@@ -37,14 +37,14 @@ module Katello
       end
 
       def pulp_data(uuid)
-        unit_handler.find_by_unit_id(uuid)
+        unit_handler.find_by(:unit_id => uuid)
       end
 
       # Import all units of a single type and refresh their repository associations
       def import_all(uuids = nil, additive = false)
         all_items = uuids ? fetch_by_uuids(uuids) : fetch_all
         all_items.each do |item_json|
-          item = self.find_or_create_by_uuid(:uuid => item_json['_id'])
+          item = self.find_or_create_by(:uuid => item_json['_id'])
           item.update_from_json(item_json)
         end
         update_repository_associations(all_items, additive)
@@ -120,7 +120,11 @@ module Katello
           end
 
           repo_unit_id.each do |repo_pulp_id, unit_uuids|
+<<<<<<< HEAD
             sync_repository_associations(Repository.find_by_pulp_id(repo_pulp_id), unit_uuids, additive)
+=======
+            sync_repository_associations(Repository.find_by(:pulp_id => repo_pulp_id), unit_uuids)
+>>>>>>> Converting models to new ActiveRecord query syntax
           end
         end
       end

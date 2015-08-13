@@ -18,7 +18,7 @@ module Katello
           uuids = TaskStatus.where(:id => ids).pluck(:uuid)
           uuids.each do |uuid|
             pulp_task = Katello.pulp_server.resources.task.poll(uuid)
-            PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task[:task_id]))
+            PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by(:uuid => pulp_task[:task_id]))
           end
         end
       end

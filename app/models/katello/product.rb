@@ -161,7 +161,7 @@ module Katello
       if name.blank?
         self.gpg_key = nil
       else
-        self.gpg_key = GpgKey.readable.find_by_name!(name)
+        self.gpg_key = GpgKey.readable.find_by!(:name => name)
       end
     end
 

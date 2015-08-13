@@ -33,12 +33,12 @@ module Katello
         lazy_accessor :all_available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(uuid, true) }
         lazy_accessor :virtual_host, :initializer => (lambda do |_s|
                                                         host_attributes = Resources::Candlepin::Consumer.virtual_host(self.uuid)
-                                                        (System.find_by_uuid(host_attributes['uuid']) || System.new(host_attributes)) if host_attributes
+                                                        (System.find_by(:uuid => host_attributes['uuid']) || System.new(host_attributes)) if host_attributes
                                                       end)
         lazy_accessor :virtual_guests, :initializer => (lambda do |_s|
                                                           guests_attributes = Resources::Candlepin::Consumer.virtual_guests(self.uuid)
                                                           guests_attributes.map do |attr|
-                                                            System.find_by_uuid(attr['uuid']) || System.new(attr)
+                                                            System.find_by(:uuid => attr['uuid']) || System.new(attr)
                                                           end
                                                         end)
         lazy_accessor :compliance, :initializer => lambda { |_s| Resources::Candlepin::Consumer.compliance(uuid) }
@@ -473,14 +473,14 @@ module Katello
         end
         if consumers_attrs[:updated]
           consumers_attrs[:updated].each do |hypervisor|
-            unless System.find_by_uuid(hypervisor[:uuid])
+            unless System.find_by(:uuid => hypervisor[:uuid])
               created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
             end
           end
         end
         if consumers_attrs[:unchanged]
           consumers_attrs[:unchanged].each do |hypervisor|
-            unless System.find_by_uuid(hypervisor[:uuid])
+            unless System.find_by(:uuid => hypervisor[:uuid])
               created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
             end
           end
