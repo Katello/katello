@@ -87,31 +87,31 @@ module Katello
       assert_equal image_count, cvv.docker_image_count
       assert_equal tag_count, cvv.docker_tag_count
     end
-  end
 
-  def test_components
-    @composite_version.components = [@cvv]
-    @composite_version.save!
+    def test_components
+      @composite_version.components = [@cvv]
+      @composite_version.save!
 
-    assert_equal [@cvv], @composite_version.reload.components
-  end
-
-  def test_component_default
-    default_view = content_view_versions(:library_default_version)
-    assert_raises do
-      @composite_version.components = [default_view]
+      assert_equal [@cvv], @composite_version.reload.components
     end
-  end
 
-  def test_component_non_composite
-    assert_raises do
-      @cvv.components = [@composite_version]
+    def test_component_default
+      default_view = content_view_versions(:library_default_version)
+      assert_raises do
+        @composite_version.components = [default_view]
+      end
     end
-  end
 
-  def test_components_needing_errata
-    errata = Erratum.find(katello_errata(:security))
-    component = @composite_version.components.first
-    assert_include @composite_version.components_needing_errata([errata]), component
+    def test_component_non_composite
+      assert_raises do
+        @cvv.components = [@composite_version]
+      end
+    end
+
+    def test_components_needing_errata
+      errata = Erratum.find(katello_errata(:security))
+      component = @composite_version.components.first
+      assert_include @composite_version.components_needing_errata([errata]), component
+    end
   end
 end

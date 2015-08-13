@@ -1,15 +1,3 @@
-#
-# Copyright 2014 Red Hat, Inc.
-#
-# This software is licensed to you under the GNU General Public
-# License as published by the Free Software Foundation; either version
-# 2 of the License (GPLv2) or (at your option) any later version.
-# There is NO WARRANTY for this software, express or implied,
-# including the implied warranties of MERCHANTABILITY,
-# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
-# have received a copy of GPLv2 along with this software; if not, see
-# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-
 # rubocop:disable SymbolName
 module Katello
   module Resources
@@ -18,7 +6,7 @@ module Katello
     module Candlepin
       class Proxy
         def self.logger
-          ::Logging.logger['cp_proxy']
+          Foreman::Logging.logger('katello/cp_proxy')
         end
 
         def self.post(path, body)
@@ -62,7 +50,7 @@ module Katello
         self.ca_cert_file = cfg.ca_cert_file
 
         def self.logger
-          ::Logging.logger['cp_rest']
+          Foreman::Logging.logger('katello/cp_rest')
         end
 
         def self.default_headers(uuid = nil)
@@ -116,13 +104,16 @@ module Katello
           end
 
           # rubocop:disable ParameterLists
-          def create(env_id, _key, name, type, facts, installed_products, autoheal = true, release_ver = nil,
-                     service_level = "", uuid = "", capabilities = nil, activation_keys = [], guest_ids = [])
+          def create(env_id, _key, name, type, facts, installed_products = [], autoheal = true, release_ver = nil,
+                     service_level = "", uuid = "", capabilities = nil, activation_keys = [], guest_ids = [],
+                     last_checkin = nil)
             # rubocop:enable ParameterLists
 
             activation_key_ids = activation_keys.collect do |activation_key|
               activation_key.cp_name
             end
+
+            installed_products ||= []
 
             url = "/candlepin/environments/#{url_encode(env_id)}/consumers/"
             attrs = {:name => name,
@@ -134,7 +125,8 @@ module Katello
                      :serviceLevel => service_level,
                      :uuid => uuid,
                      :capabilities => capabilities,
-                     :guestIds => guest_ids }
+                     :guestIds => guest_ids,
+                     :lastCheckin => last_checkin}
             url += "?activation_keys=" + activation_key_ids.join(",") if activation_key_ids.length > 0
             response = self.post(url, attrs.to_json, self.default_headers).body
             JSON.parse(response).with_indifferent_access
@@ -294,7 +286,7 @@ module Katello
 
       class UpstreamConsumer < HttpResource
         def self.logger
-          ::Logging.logger['cp_rest']
+          Foreman::Logging.logger('katello/cp_rest')
         end
 
         def self.resource(url, client_cert, client_key, ca_file)
