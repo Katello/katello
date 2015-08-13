@@ -30,21 +30,17 @@ module Actions
             end
 
             if !product.used_by_another_org? && !organization_destroy
-              if product.is_a? ::Katello::MarketingProduct
-                concurrence do
-                  product.productContent.each do |pc|
-                    plan_action(Candlepin::Product::ContentRemove,
-                                product_id: product.cp_id,
-                                content_id: pc.content.id)
-                  end
+              concurrence do
+                product.productContent.each do |pc|
+                  plan_action(Candlepin::Product::ContentRemove,
+                              product_id: product.cp_id,
+                              content_id: pc.content.id)
                 end
               end
-
               plan_action(Candlepin::Product::Destroy, cp_id: product.cp_id)
             end
 
             plan_self(:product_id => product.id)
-            plan_action(ElasticSearch::Provider::ReindexSubscriptions, product.provider) unless organization_destroy
           end
         end
 

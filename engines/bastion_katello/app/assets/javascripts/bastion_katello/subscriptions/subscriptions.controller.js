@@ -25,7 +25,6 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
         params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
-            'sort_by': 'name',
             'sort_order': 'ASC',
             'enabled': true,
             'paged': true

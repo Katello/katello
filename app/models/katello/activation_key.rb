@@ -18,6 +18,9 @@ module Katello
     has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
     has_many :systems, :through => :system_activation_keys
 
+    has_many :pools, :through => :pool_activation_keys, :class_name => "Katello::Pool"
+    has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :activation_keys
+
     before_validation :set_default_content_view, :unless => :persisted?
 
     validates_lengths_from_database
@@ -76,27 +79,15 @@ module Katello
       end
     end
 
-    # For efficiency, sometimes the candlepin pool objects have already been fetched so allow
-    # them to be passed in directly. By default, a call to candlepin will be made
-    def subscriptions(cp_pools = nil)
-      cp_pools ||= self.get_key_pools
-
-      pools = cp_pools.collect { |cp_pool| Pool.find_pool(cp_pool['id'], cp_pool) }
-
-      subscriptions = pools.collect do |pool|
-        product = Product.where(:cp_id => pool.product_id).first
-        next if product.nil?
-        pool.provider_id = product.provider_id
-        pool
-      end
-      subscriptions.compact
+    def subscriptions
+      self.pools
     end
 
     def available_subscriptions
-      all_pools = self.get_pools
-      key_pool_ids = self.get_key_pools.collect { |pool| pool[:id] }
-      pools = all_pools.reject { |pool| key_pool_ids.include? pool[:id] }
-      self.subscriptions(pools)
+      all_pools = self.get_pools.map { |pool| pool["id"] }
+      added_pools = self.get_key_pools.map { |pool| pool["id"] }
+      available_pools = all_pools - added_pools
+      Pool.where(:cp_id => available_pools)
     end
 
     def products
@@ -104,20 +95,12 @@ module Katello
 
       cp_pools = self.get_key_pools
       if cp_pools
-        pools = cp_pools.collect { |cp_pool| Pool.find_pool(cp_pool['id'], cp_pool) }
-        product_ids = pools.map(&:product_id)
-        marketing_products = MarketingProduct.includes(:engineering_products, :marketing_engineering_products).
-            where(:cp_id => product_ids)
-        products = Product.where(:cp_id => product_ids).where('type != ?', "Katello::MarketingProduct")
-
-        marketing_products.each do |product|
-          all_products += product.engineering_products
+        pools = cp_pools.collect { |cp_pool| Pool.find_by_cp_id(cp_pool['id']) }
+        pools.each do |pool|
+          all_products << pool.subscription.products
         end
-
-        all_products += products
       end
-
-      all_products
+      all_products.flatten!
     end
 
     def available_content

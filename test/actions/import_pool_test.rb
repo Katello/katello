@@ -1,15 +1,15 @@
 require 'katello_test_helper'
 
 module Katello
-  describe ::Actions::Candlepin::ReindexPoolSubscriptionHandler do
+  describe ::Actions::Candlepin::ImportPoolHandler do
     let(:pool_id) { '12345' }
     let(:pool) { OpenStruct.new(:id => pool_id) }
 
     before do
-      ::Actions::Candlepin::ReindexPoolSubscriptionHandler.any_instance.stubs(:attempt_find_pool).returns('id' => pool_id)
-      ::Katello::Pool.stubs(:find_pool).returns(pool)
-      ::Katello::Pool.stubs(:index_pools)
+      ::Actions::Candlepin::ImportPoolHandler.any_instance.stubs(:attempt_find_pool).returns('id' => pool_id)
+      ::Katello::Pool.stubs(:find_by_cp_id).returns(pool)
       ::Katello::Pool.stubs(:search).returns([pool])
+      ::Katello::Pool.any_instance.stubs(:import_data).returns(true)
     end
 
     def message(subject, content = {})
@@ -24,9 +24,7 @@ module Katello
       end
 
       it 'reindex the pool' do
-        ::Katello::Pool.expects(:index_pools).with([pool])
-
-        ::Actions::Candlepin::ReindexPoolSubscriptionHandler.new(Rails.logger).handle(mymessage)
+        ::Actions::Candlepin::ImportPoolHandler.new(Rails.logger).handle(mymessage)
       end
     end
 
@@ -36,9 +34,7 @@ module Katello
       end
 
       it 'reindex the pool' do
-        ::Katello::Pool.expects(:index_pools).with([pool])
-
-        ::Actions::Candlepin::ReindexPoolSubscriptionHandler.new(Rails.logger).handle(mymessage)
+        ::Actions::Candlepin::ImportPoolHandler.new(Rails.logger).handle(mymessage)
       end
     end
 
@@ -48,7 +44,7 @@ module Katello
       end
 
       it 'adds pool to index and reindex the pool' do
-        ::Actions::Candlepin::ReindexPoolSubscriptionHandler.new(Rails.logger).handle(mymessage)
+        ::Actions::Candlepin::ImportPoolHandler.new(Rails.logger).handle(mymessage)
       end
     end
 
@@ -58,8 +54,7 @@ module Katello
       end
 
       it 'pool removed from index' do
-        ::Katello::Pool.expects(:remove_from_index).with(pool_id)
-        ::Actions::Candlepin::ReindexPoolSubscriptionHandler.new(Rails.logger).handle(mymessage)
+        ::Actions::Candlepin::ImportPoolHandler.new(Rails.logger).handle(mymessage)
       end
     end
   end

@@ -32,9 +32,6 @@ namespace :katello do
       Katello::Util::Search.active_record_search_classes.each do |model|
         Tire.index(model.index.name).delete
       end
-
-      Katello::Util::Search.backend_search_classes.each{|c| c.delete_index}
-      puts "Elasticsearch Indices cleared."
     end
   end
 

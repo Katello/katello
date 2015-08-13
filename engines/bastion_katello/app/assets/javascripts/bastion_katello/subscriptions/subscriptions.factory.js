@@ -14,6 +14,7 @@ angular.module('Bastion.subscriptions').factory('Subscription', ['BastionResourc
         return BastionResource('/katello/api/v2/organizations/:org/subscriptions/:id/:action',
             {org: CurrentOrganization, id: '@id'},
             {
+                autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
                 deleteManifest: {
                     method: 'POST',
                     url: '/katello/api/v2/organizations/:org/subscriptions/delete_manifest',

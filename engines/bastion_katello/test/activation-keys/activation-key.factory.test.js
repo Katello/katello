@@ -71,14 +71,6 @@ describe('Factory: ActivationKey', function() {
         });
     });
 
-    it('ActivationKey.availableSubscriptions GET /api/v2/activation_keys/1/subscriptions/available', function() {
-        $httpBackend.expectGET('/katello/api/v2/activation_keys/1/subscriptions/available').respond(activationKeys.results[0]);
-
-        ActivationKey.availableSubscriptions({id: 1}, function(response) {
-            expect(response).toBeDefined();
-        });
-    });
-
     it('ActivationKey.removeSubscriptions PUT /api/v2/activation_keys/1/remove_subscriptions', function() {
         $httpBackend.expectPUT('/katello/api/v2/activation_keys/1/remove_subscriptions').respond(activationKeys.results[0]);
 

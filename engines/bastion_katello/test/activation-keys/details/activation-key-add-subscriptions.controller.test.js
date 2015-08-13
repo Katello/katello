@@ -38,7 +38,7 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
                             "organization": {"name": "Mega Corporation", "label": "megacorp"},
                             "id": "ff80808143f94b760143fcee78210166",
                             "description": "",
-                            "product_name": "Point of Sale",
+                            "name": "Point of Sale",
                             "start_date": "2014-02-04",
                             "end_date": "2044-01-28",
                             "available": -1,
@@ -63,7 +63,7 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
                             "organization": {"name": "Mega Corporation", "label": "megacorp"},
                             "id": "ff80808143f94b760143fceb9aca014b",
                             "description": "RHEV",
-                            "product_name": "Red Hat Enterprise Virtualization Offering, Premium (2-socket)",
+                            "name": "Red Hat Enterprise Virtualization Offering, Premium (2-socket)",
                             "start_date": "2013-12-31",
                             "end_date": "2016-12-31",
                             "available": 1,
@@ -96,7 +96,7 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
                             "organization": { "name": "Mega Corporation",  "label": "megacorp"},
                             "id": "ff80808143f94b760143fceb9aa40134",
                             "description": "RHEV",
-                            "product_name": "Red Hat Enterprise Virtualization Offering, Premium (2-socket)",
+                            "name": "Red Hat Enterprise Virtualization Offering, Premium (2-socket)",
                             "start_date": "2013-12-31",
                             "end_date": "2016-12-31",
                             "available": 1,
@@ -129,7 +129,7 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
                             "organization": {"name": "Mega Corporation", "label": "megacorp"},
                             "id": "ff80808143f94b760143fceb9a8a011d",
                             "description": "RHEV",
-                            "product_name": "Red Hat Enterprise Virtualization Offering, Premium (2-socket)",
+                            "name": "Red Hat Enterprise Virtualization Offering, Premium (2-socket)",
                             "start_date": "2012-12-31",
                             "end_date": "2015-12-31",
                             "available": 1,
@@ -162,7 +162,7 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
                             "organization": {"name": "Mega Corporation", "label": "megacorp"},
                             "id": "ff80808143f94b760143fceb9a720106",
                             "description": "RHEV",
-                            "product_name": "Red Hat Enterprise Virtualization Offering, Premium (2-socket)",
+                            "name": "Red Hat Enterprise Virtualization Offering, Premium (2-socket)",
                             "start_date": "2012-12-31",
                             "end_date": "2015-12-31",
                             "available": 1,
@@ -195,7 +195,7 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
                             "organization": {"name": "Mega Corporation", "label": "megacorp"},
                             "id": "ff80808143f94b760143fceb9a5d00ed",
                             "description": "Red Hat Enterprise Linux",
-                            "product_name": "Red Hat Enterprise Linux Server, Standard (Physical or Virtual Nodes)",
+                            "name": "Red Hat Enterprise Linux Server, Standard (Physical or Virtual Nodes)",
                             "start_date": "2013-12-31",
                             "end_date": "2014-12-31",
                             "available": 17,
@@ -227,7 +227,7 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
                             "organization": {"name": "Mega Corporation", "label": "megacorp"},
                             "id": "ff80808143f94b760143fceb9a0f00b8",
                             "description": "Red Hat Enterprise Linux",
-                            "product_name": "Red Hat Enterprise Linux Server, Premium (8 sockets) (Up to 4 guests)",
+                            "name": "Red Hat Enterprise Linux Server, Premium (8 sockets) (Up to 4 guests)",
                             "start_date": "2013-12-31",
                             "end_date": "2014-12-31",
                             "available": 4,
@@ -258,7 +258,7 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
                             "organization": {"name": "Mega Corporation", "label": "megacorp"},
                             "id": "ff80808143f94b760143fceb993300a4",
                             "description": "Red Hat Enterprise Linux",
-                            "product_name": "Red Hat Enterprise Linux Server, Premium (8 sockets) (Up to 4 guests)",
+                            "name": "Red Hat Enterprise Linux Server, Premium (8 sockets) (Up to 4 guests)",
                             "start_date": "2013-12-31",
                             "end_date": "2014-12-31",
                             "available": 3,
@@ -303,12 +303,12 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
     }));
 
     it('attaches the nutupane table to the scope', function () {
-        expect($scope.addSubscriptionsTable).toBeDefined();
+        expect($scope.detailsTable).toBeDefined();
     });
 
     it('groups subscriptions', function () {
         spyOn(SubscriptionsHelper, 'groupByProductName').andCallThrough();
-        $scope.addSubscriptionsTable.rows = subscriptions.results;
+        $scope.detailsTable.rows = subscriptions.results;
         $scope.$digest();
         expect(SubscriptionsHelper.groupByProductName).toHaveBeenCalled();
         expect($scope.groupedSubscriptions["Red Hat Enterprise Linux Server, Premium (8 sockets) (Up to 4 guests)"].length).toBe(2);
