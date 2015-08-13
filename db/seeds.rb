@@ -12,14 +12,14 @@ end
 if ENV['SEED_ORGANIZATION']
   Organization.without_auditing do
     User.current = User.anonymous_admin
-    org = Organization.find_by_name!(ENV['SEED_ORGANIZATION'])
+    org = Organization.find_by!(:name => ENV['SEED_ORGANIZATION'])
     ForemanTasks.sync_task(::Actions::Katello::Organization::Create, org) unless org.library
     User.current = nil
   end
   if Setting['db_pending_seed']
     admin = User.where(:login => ENV['SEED_ADMIN_USER'].present? ? ENV['SEED_ADMIN_USER'] : 'admin').first
     if admin && admin.default_organization.nil?
-      admin.default_organization = Organization.find_by_name!(ENV['SEED_ORGANIZATION'])
+      admin.default_organization = Organization.find_by!(:name => ENV['SEED_ORGANIZATION'])
       admin.save!
     end
   end
@@ -34,7 +34,7 @@ end
 # Provisioning Templates
 
 kinds = [:provision, :finish, :user_data].inject({}) do |hash, kind|
-  hash[kind] = TemplateKind.find_by_name(kind)
+  hash[kind] = TemplateKind.find_by!(:name => kind)
   hash
 end
 
@@ -47,7 +47,7 @@ templates = [{:name => "Katello Kickstart Default",           :source => "kickst
 
 templates.each do |template|
   template[:template] = File.read(File.join(Katello::Engine.root, "app/views/foreman/unattended", template.delete(:source)))
-  ProvisioningTemplate.find_or_create_by_name(template).update_attributes(defaults.merge(template))
+  ProvisioningTemplate.find_or_create_by(:name => template["name"]).update_attributes(defaults.merge(template))
 end
 
 # Ensure all default templates are seeded into the first org and loc
@@ -59,7 +59,7 @@ end
 Katello::Util::Search.backend_search_classes.each { |c| c.create_index }
 
 # Proxy features
-feature = Feature.find_or_create_by_name('Pulp')
+feature = Feature.find_or_create_by(:name => 'Pulp')
 if feature.nil? || feature.errors.any?
   fail "Unable to create proxy feature: #{format_errors feature}"
 end
@@ -112,7 +112,7 @@ permissions = [
 ]
 
 permissions.each do |resource, permission|
-  Permission.find_or_create_by_resource_type_and_name resource, permission
+  Permission.find_or_create_by(:resource_type => resource, :name => permission)
 end
 
 default_permissions = {
@@ -122,15 +122,15 @@ default_permissions = {
 
 Role.without_auditing do
   default_permissions.each do |role_name, permission_names|
-    permissions = Permission.find_all_by_name permission_names
-    create_filters(Role.find_by_name(role_name), permissions)
+    permissions = Permission.where(:name => permission_names).to_a
+    create_filters(Role.find_by!(:name => role_name), permissions)
   end
 end
 
-Setting.find_by_name("dynflow_enable_console").update_attributes!(:value => true) if Rails.env.development?
+Setting.find_by!(:name => "dynflow_enable_console").update_attributes!(:value => true) if Rails.env.development?
 
 ["Pulp", "Pulp Node"].each do |input|
-  f = Feature.find_or_create_by_name(input)
+  f = Feature.find_or_create_by(:name => input)
   fail "Unable to create proxy feature: #{format_errors f}" if f.nil? || f.errors.any?
 end
 
@@ -159,5 +159,9 @@ notifications = [
 ]
 
 notifications.each do |notification|
-  ::MailNotification.find_or_create_by_name(notification)
+  ::MailNotification.find_or_create_by(:name => notification[:name], 
+                                       :description => notification[:description], 
+                                       :mailer => notification[:mailer],
+                                       :method => notification[:method],
+                                       :subscription_type => notification[:subscription_type])
 end

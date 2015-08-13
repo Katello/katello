@@ -12,7 +12,7 @@ module Actions
         end
 
         def finalize
-          provider = ::Katello::Provider.find_by_id!(input[:id])
+          provider = ::Katello::Provider.find_by!(:id => input[:id])
           provider.index_subscriptions
         end
       end

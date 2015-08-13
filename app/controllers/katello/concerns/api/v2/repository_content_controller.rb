@@ -57,14 +57,14 @@ module Katello
 
       def find_repository
         if params[:repository_id]
-          @repo = Repository.readable.find_by_id(params[:repository_id])
+          @repo = Repository.readable.find_by(:id => params[:repository_id])
           fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
         end
       end
 
       def find_environment
         if params[:environment_id]
-          @environment = KTEnvironment.readable.find_by_id(params[:environment_id])
+          @environment = KTEnvironment.readable.find_by(:id => params[:environment_id])
           fail HttpErrors::NotFound, _("Could not find Lifecycle Environment with id '%{id}'.") %
             {id: params[:environment_id]} if @environment.nil?
         end
@@ -72,7 +72,7 @@ module Katello
 
       def find_content_view_version
         if params[:content_view_version_id]
-          @version = ContentViewVersion.readable.find_by_id(params[:content_view_version_id])
+          @version = ContentViewVersion.readable.find_by(:id => params[:content_view_version_id])
           fail HttpErrors::NotFound, _("Couldn't find content view version '%s'") % params[:content_view_version_id] if @version.nil?
         end
       end
@@ -97,7 +97,7 @@ module Katello
 
         if filter_id
           scoped = ContentViewFilter.scoped
-          @filter = scoped.where(:type => filter_class_name).find_by_id(filter_id)
+          @filter = scoped.where(:type => filter_class_name).find_by(:id => filter_id)
 
           unless @filter
             fail HttpErrors::NotFound, _("Couldn't find %{type} Filter with id %{id}") %

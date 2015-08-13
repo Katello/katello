@@ -10,7 +10,7 @@ module Katello
 
     belongs_to :organization, :class_name => "Organization", :inverse_of => :environments
     has_many :activation_keys, :class_name => "Katello::ActivationKey",
-                               :dependent => :restrict, :foreign_key => :environment_id
+                               :dependent => :restrict_with_error, :foreign_key => :environment_id
     # rubocop:disable HasAndBelongsToMany
     # TODO: change these into has_many associations
     has_and_belongs_to_many :priors,  :class_name => "Katello::KTEnvironment", :foreign_key => :environment_id,
@@ -22,22 +22,22 @@ module Katello
 
     has_many :repositories, :class_name => "Katello::Repository", dependent: :destroy, foreign_key: :environment_id
     has_many :systems, :class_name => "Katello::System", :inverse_of => :environment,
-                       :dependent => :restrict, :foreign_key => :environment_id
+                       :dependent => :restrict_with_error, :foreign_key => :environment_id
     has_many :distributors, :class_name => "Katello::Distributor", :inverse_of => :environment,
                             :dependent => :destroy, :foreign_key => :environment_id
     has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
-                                         :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :restrict
+                                         :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :restrict_with_error
     has_many :content_view_puppet_environments, :class_name => "Katello::ContentViewPuppetEnvironment",
-                                                :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :restrict
+                                                :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :restrict_with_error
     has_many :content_view_versions, :through => :content_view_environments, :inverse_of => :environments
     has_many :content_views, :through => :content_view_environments, :inverse_of => :environments
     has_many :content_view_histories, :class_name => "Katello::ContentViewHistory", :dependent => :destroy,
                                       :inverse_of => :environment, :foreign_key => :katello_environment_id
 
     has_many :hosts,      :class_name => "::Host::Managed", :foreign_key => :lifecycle_environment_id,
-                              :inverse_of => :lifecycle_environment, :dependent => :restrict
+                              :inverse_of => :lifecycle_environment, :dependent => :restrict_with_error
     has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :lifecycle_environment_id,
-                          :inverse_of => :lifecycle_environment, :dependent => :restrict
+                          :inverse_of => :lifecycle_environment, :dependent => :restrict_with_error
 
     scope :completer_scope, lambda { |options = nil| where('organization_id = ?', options[:organization_id]) if options[:organization_id].present? }
     scope :non_library, where(library: false)

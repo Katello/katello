@@ -13,7 +13,7 @@ module Actions
 
       def finalize
         model_class = input[:class_name].constantize
-        record      = model_class.find_by_id(input[:id])
+        record      = model_class.find_by(:id => input[:id])
 
         if record
           record.update_index

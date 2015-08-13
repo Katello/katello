@@ -22,7 +22,7 @@ module Katello
     belongs_to :provider, :inverse_of => :products
     belongs_to :sync_plan, :inverse_of => :products, :class_name => 'Katello::SyncPlan'
     belongs_to :gpg_key, :inverse_of => :products
-    has_many :repositories, :class_name => "Katello::Repository", :dependent => :restrict
+    has_many :repositories, :class_name => "Katello::Repository", :dependent => :restrict_with_error
 
     validates_lengths_from_database :except => [:label]
     validates :provider_id, :presence => true
@@ -162,7 +162,7 @@ module Katello
       if name.blank?
         self.gpg_key = nil
       else
-        self.gpg_key = GpgKey.readable.find_by_name!(name)
+        self.gpg_key = GpgKey.readable.find_by!(:name => name)
       end
     end
 

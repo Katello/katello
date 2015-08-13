@@ -8,7 +8,7 @@ module Katello
                         :mandatory_package_names, :description, :optional_package_names
 
         def self.find(id)
-          attrs = Katello.pulp_server.extensions.package_group.find_by_unit_id(id)
+          attrs = Katello.pulp_server.extensions.package_group.find_by(:unit_id => id)
           Katello::PackageGroup.new(attrs) unless attrs.nil?
         end
 
