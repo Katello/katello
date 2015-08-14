@@ -56,9 +56,13 @@ module FixtureTestCase
     self.pre_loaded_fixtures = true
 
     Katello::FixturesSupport.set_fixture_classes(self)
-    load_fixtures
-    self.fixture_path = "#{Katello::Engine.root}/test/fixtures/models"
+
+    fixture_path = Dir.mktmpdir("katello_fixtures")
+    FileUtils.cp(Dir.glob("#{Katello::Engine.root}/test/fixtures/models/*"), fixture_path)
+    FileUtils.cp(Dir.glob("#{Rails.root}/test/fixtures/*"), fixture_path)
+    self.fixture_path = fixture_path
     fixtures(:all)
+    FIXTURES = load_fixtures
 
     load_permissions
 
@@ -67,9 +71,7 @@ module FixtureTestCase
 
   module ClassMethods
     def before_suite
-      @loaded_fixtures = load_fixtures
-
-      @@admin = ::User.find(@loaded_fixtures['users']['admin']['id'])
+      @@admin = ::User.find(FIXTURES['users']['admin']['id'])
       User.current = @@admin
     end
   end
@@ -148,7 +150,7 @@ class ActiveSupport::TestCase
   end
 
   def self.run_as_admin
-    User.current = User.find(@loaded_fixtures['users']['admin']['id'])
+    User.current = User.find(FIXTURES['users']['admin']['id'])
     yield
     User.current = nil
   end
