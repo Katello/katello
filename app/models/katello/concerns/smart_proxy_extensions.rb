@@ -41,7 +41,7 @@ module Katello
                    :inverse_of => :capsule,
                    :foreign_key => :content_host_id
 
-        scope :with_content, with_features(PULP_FEATURE, PULP_NODE_FEATURE)
+        scope :with_content, -> { with_features(PULP_FEATURE, PULP_NODE_FEATURE) }
 
         def self.default_capsule
           with_features(PULP_FEATURE).first

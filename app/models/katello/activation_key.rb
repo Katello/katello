@@ -45,7 +45,7 @@ module Katello
     end
     validates_with Validators::ContentViewEnvironmentValidator
 
-    scope :in_environment, lambda { |env| where(:environment_id => env) }
+    scope :in_environment, ->(env) { where(:environment_id => env) }
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true
