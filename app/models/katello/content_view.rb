@@ -56,7 +56,6 @@ module Katello
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
 
-    scope :default, -> { where(:default => true) }
     scope :non_default, -> { where(:default => false) }
     scope :composite, -> { where(:composite => true) }
     scope :non_composite, -> { where(:composite => [nil, false]) }
