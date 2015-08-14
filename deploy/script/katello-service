@@ -2,7 +2,7 @@
 
 require 'optparse'
 
-ACTIONS = ['restart', 'stop', 'start', 'status']
+ACTIONS = ['restart', 'stop', 'start', 'status', 'list']
 COMMAND = '/usr/sbin/service-wait'
 SERVICES = {
   'mongod'                => 5,
@@ -22,7 +22,7 @@ SERVICES = {
 @options = {:excluded => []}
 
 OptionParser.new do |opts|
-  opts.banner = "Usage: katello-service [options] [stop|start|restart|status]"
+  opts.banner = "Usage: katello-service [options] [#{ACTIONS.join('|')}]"
 
   opts.on("--exclude [SERVICES]", Array, "A comma-separated list of services to skip") do |exclude|
     @options[:excluded] = exclude
@@ -50,19 +50,38 @@ def services_by_priority
   SERVICES.sort_by { |_, value| value }.map { |service| service[0] } - @options[:excluded]
 end
 
-failures = []
+def list_services
+  if `which systemctl 2>&1` && $?.success?
+    regex = services_by_priority.map { |service| "^#{service}.service" }.join('\|')
+    puts `systemctl list-unit-files | grep '#{regex}'`
+  end
 
-services_by_priority.each do |service|
-  if service_exists?(service)
-    puts `#{COMMAND} #{service} #{@options[:action]}`
-    failures << service unless $?.success?
+  regex = services_by_priority.map { |service| "^#{service} " }.join('\|')
+  puts `chkconfig --list 2>&1 | grep '#{regex}'`
+end
+
+def manage_services
+  failures = []
+
+  services_by_priority.each do |service|
+    if service_exists?(service)
+      puts `#{COMMAND} #{service} #{@options[:action]}`
+      failures << service unless $?.success?
+    end
+  end
+
+  if failures.empty?
+    puts "Success!"
+    exit 0
+  else
+    puts "Some services failed: #{failures.join(',')}"
+    exit 1
   end
 end
 
-if failures.empty?
-  puts "Success!"
-  exit 0
+case @options[:action]
+when 'list'
+  list_services
 else
-  puts "Some services failed: #{failures.join(',')}"
-  exit 1
+  manage_services
 end
