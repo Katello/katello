@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.3.0
-Release: 5%{dist}
+Release: 6%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -271,6 +271,29 @@ chown -R foreman.foreman %{foreman_dir}/public/apipie-cache
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Fri Aug 14 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-6
+- Katello 2.3 RC3
+- Fixes #10208: Fix auto-attach on activation keys with custom products.
+  (ericdhelms@gmail.com)
+- fixes #10996 - ignore content view histories without tasks
+  (jsherril@redhat.com)
+- fixes #11322 - associate partition table and templates to Operating System
+  upon creation (bbuckingham@redhat.com)
+- fixes #11249 - return `katello list` command (stbenjam@redhat.com)
+- fixes #11353 - make wait_for_url more reliable (stbenjam@redhat.com)
+- Fixes #11262: Only update Candlepin content for library repositories
+  (ericdhelms@gmail.com)
+- fixes #11264 - Unable to associate component view to composite in the UI
+  (bbuckingham@redhat.com)
+- fixes #10958 - Publishes ISO repos via http, BZ1222707 (cfouant@redhat.com)
+- fixes #11222 - corrected calls to display_manifest_message()
+  (thomasmckay@redhat.com)
+- Fixes #11140 - Improved reindex for backend search classes (paji@redhat.com)
+- fixes #11296 - handle select2 input boxes (stbenjam@redhat.com)
+- Fixes #10771: Prevent errors during puppet repository syncing.
+  (ericdhelms@gmail.com)
+- Fixes #11330: message on errata list if errata exist, BZ 1242943.
+  (walden@redhat.com)
 * Thu Aug 06 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-5
 - fixes #11195 - handle foreman restructuring of kickstart_attributes
   (stbenjam@redhat.com)
