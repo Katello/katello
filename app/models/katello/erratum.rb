@@ -36,9 +36,9 @@ module Katello
       where(:errata_type => type)
     end
 
-    scope :security, of_type(Erratum::SECURITY)
-    scope :bugfix, of_type(Erratum::BUGZILLA)
-    scope :enhancement, of_type(Erratum::ENHANCEMENT)
+    scope :security, -> { of_type(Erratum::SECURITY) }
+    scope :bugfix, -> { of_type(Erratum::BUGZILLA) }
+    scope :enhancement, -> { of_type(Erratum::ENHANCEMENT) }
 
     def self.repository_association_class
       RepositoryErratum

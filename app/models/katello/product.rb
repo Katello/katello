@@ -52,12 +52,11 @@ module Katello
       where(:organization_id => organization.id)
     end
 
-    scope :engineering, where(:type => "Katello::Product")
-    scope :marketing, where(:type => "Katello::MarketingProduct")
-    scope :syncable_content, uniq.where(Katello::Repository.arel_table[:url].not_eq(nil))
-      .joins(:repositories)
-    scope :redhat, joins(:provider).where("#{Provider.table_name}.provider_type" => Provider::REDHAT)
-    scope :custom, joins(:provider).where("#{Provider.table_name}.provider_type" => [Provider::CUSTOM, Provider::ANONYMOUS])
+    scope :engineering, -> { where(:type => "Katello::Product") }
+    scope :marketing, -> { where(:type => "Katello::MarketingProduct") }
+    scope :syncable_content, -> { uniq.where(Katello::Repository.arel_table[:url].not_eq(nil)).joins(:repositories) }
+    scope :redhat, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => Provider::REDHAT) }
+    scope :custom, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => [Provider::CUSTOM, Provider::ANONYMOUS]) }
 
     def self.enabled
       self.where("#{Product.table_name}.id in (?) or #{Product.table_name}.id in (?)", Product.redhat.joins(:repositories).uniq, Product.custom)
@@ -166,7 +165,7 @@ module Katello
       end
     end
 
-    scope :all_in_org, lambda { |org| Product.joins(:provider).where("#{Katello::Provider.table_name}.organization_id = ?", org.id) }
+    scope :all_in_org, ->(org) { Product.joins(:provider).where("#{Katello::Provider.table_name}.organization_id = ?", org.id) }
 
     def assign_unique_label
       self.label = Util::Model.labelize(self.name) if self.label.blank?
