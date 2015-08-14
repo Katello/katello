@@ -6,7 +6,7 @@ module Actions
           action_subject repository
           repository.update_attributes!(repo_params)
 
-          if (::Katello.config.use_cp && ::Katello.config.use_pulp)
+          if (::Katello.config.use_cp && ::Katello.config.use_pulp) && repository.library_instance?
             plan_action(::Actions::Candlepin::Product::ContentUpdate,
                         :content_id => repository.content_id,
                         :name => repository.name,

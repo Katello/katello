@@ -24,6 +24,7 @@ COMMAND=$2
 
 # maximum time to wait (in seconds)
 WAIT_MAX=${WAIT_MAX:-30}
+RETRY_INTERVAL=${RETRY_INTERVAL:-1}
 TOMCAT_PORT=${TOMCAT_PORT:-8443}
 TOMCAT_SERV_PORT=${TOMCAT_SERV_PORT:-8005}
 TOMCAT_TEST_URL=${TOMCAT_TEST_URL:-https://localhost:$TOMCAT_PORT/candlepin/status}
@@ -39,16 +40,15 @@ KATELLO_TEST_URL=${KATELLO_TEST_URL:-http://localhost:5000/katello/api}
 ADDITIONAL_SLEEP=5
 
 wait_for_url() {
-    # we use wget first because it's able to retry from connrefused situation
-    /usr/bin/wget --timeout=1 --tries=$WAIT_MAX --retry-connrefused -qO-\
-                  --no-check-certificate $1 > /dev/null
-    # then we double check with curl that the service is really
-    # available. wget is not able to retry from 'Unable to establish
-    # SSL connection.' error, which happens for example with tomcat6
-    /usr/bin/curl -ks --retry $WAIT_MAX --retry-delay 1 $1 > /dev/null
-    if ! [ $? = '0' ]; then
-        RETVAL=5
-    fi
+  RETVAL=5
+  tries=0
+
+  while [[ $RETVAL -ne 0 && $tries -lt $WAIT_MAX ]]; do
+    tries=$((tries + 1))
+    /usr/bin/curl -ks $1 > /dev/null
+    RETVAL=$?
+    sleep $RETRY_INTERVAL
+  done
 }
 
 # before start or restart

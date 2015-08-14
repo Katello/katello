@@ -144,7 +144,11 @@ module Katello
       end
 
       def unprotected?
-        kickstart? ? true : false
+        kickstart? || file?
+      end
+
+      def file?
+        content.type.downcase == 'file'
       end
 
       def kickstart?
