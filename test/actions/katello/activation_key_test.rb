@@ -22,7 +22,6 @@ module ::Actions::Katello::ActivationKey
                                 ::Actions::Candlepin::ActivationKey::Create,
                                 :organization_label => activation_key.organization.label,
                                 :auto_attach => true)
-      assert_action_planed action, ::Actions::ElasticSearch::Reindex
     end
 
     it 'raises error when validation fails' do
