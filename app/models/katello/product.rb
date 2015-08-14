@@ -48,6 +48,7 @@ module Katello
       where(:organization_id => organization.id)
     end
 
+<<<<<<< HEAD
     def self.in_orgs(organizations)
       where(:organization_id => organizations)
     end
