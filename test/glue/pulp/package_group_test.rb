@@ -13,7 +13,7 @@ module Katello
 
       VCR.insert_cassette('pulp/content/package_group')
 
-      repository_id = @loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id']
+      repository_id = FIXTURES['katello_repositories']['fedora_17_x86_64']['id']
       RepositorySupport.create_and_sync_repo(repository_id)
 
       @@package_groups = RepositorySupport.repo.package_groups
