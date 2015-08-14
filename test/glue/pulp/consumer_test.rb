@@ -98,9 +98,9 @@ module Katello
       super
       VCR.insert_cassette('pulp/consumer/bind')
 
-      RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
+      RepositorySupport.create_and_sync_repo(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
 
-      @@simple_server = System.find(@loaded_fixtures['katello_systems']['simple_server']['id'])
+      @@simple_server = System.find(FIXTURES['katello_systems']['simple_server']['id'])
       set_pulp_consumer(@@simple_server)
     end
 
@@ -130,8 +130,8 @@ module Katello
       super
       VCR.insert_cassette('pulp/consumer/content')
 
-      RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
-      @@simple_server = System.find(@loaded_fixtures['katello_systems']['simple_server']['id'])
+      RepositorySupport.create_and_sync_repo(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
+      @@simple_server = System.find(FIXTURES['katello_systems']['simple_server']['id'])
       set_pulp_consumer(@@simple_server)
       @@simple_server.bound_repositories << RepositorySupport.repo
       @@simple_server.propagate_yum_repos
