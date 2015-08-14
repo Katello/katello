@@ -13,7 +13,8 @@ module Katello
       super
       configure_runcible
 
-      @@fedora_17_x86_64 = Repository.find(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
+      @@fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
+      @@fedora_17_x86_64 = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
       @@fedora_17_x86_64.relative_path = '/test_path/'
       @@fedora_17_x86_64.url = "file:///var/www/test_repos/zoo"
     end
@@ -174,7 +175,7 @@ module Katello
     def self.before_suite
       super
       VCR.insert_cassette('pulp/repository/puppet')
-      @@p_forge = Repository.find(@loaded_fixtures['katello_repositories']['p_forge']['id'])
+      @@p_forge = Repository.find(FIXTURES['katello_repositories']['p_forge']['id'])
       @@p_forge.relative_path = '/test_path/'
       @@p_forge.url = "http://davidd.fedorapeople.org/repos/random_puppet/"
       create_repo(@@p_forge)
@@ -285,7 +286,8 @@ module Katello
     end
 
     def test_package_groups
-      package_groups = @@fedora_17_x86_64.package_groups
+      @fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
+      package_groups = @fedora_17_x86_64_dev.package_groups
 
       refute_empty package_groups.select { |group| group.name == 'mammal' }
     end
@@ -302,7 +304,7 @@ module Katello
       super
       VCR.insert_cassette('pulp/repository/operations')
 
-      @@fedora_17_x86_64_dev = Repository.find(@loaded_fixtures['katello_repositories']['fedora_17_x86_64_dev']['id'])
+      @@fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
 
       @@fedora_17_x86_64.create_pulp_repo
       task_list = @@fedora_17_x86_64.sync
