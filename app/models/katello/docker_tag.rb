@@ -53,6 +53,10 @@ module Katello
       self.class.where(:repository_id => repository.group, :name => name)
     end
 
+    def self.with_identifiers(ids)
+      self.where(:id => ids)
+    end
+
     def self.completer_scope_options
       {"#{Katello::Repository.table_name}" => lambda { |repo_class| repo_class.docker_type } }
     end

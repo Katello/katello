@@ -143,6 +143,10 @@ namespace :katello do
     Katello::Erratum.import_all
     Katello::PackageGroup.import_all
 
+    reindex_helper.index_objects(Katello::Rpm) do
+      Katello::Rpm.import_all
+    end
+
     reindex_helper.log "Re-indexing Pools"
     Organization.all.each do |org|
       begin

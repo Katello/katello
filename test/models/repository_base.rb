@@ -8,6 +8,7 @@ module Katello
       @fedora_17_x86_64     = katello_repositories(:fedora_17_x86_64)
       @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
       @puppet_forge         = katello_repositories(:p_forge)
+      @redis                = katello_repositories(:redis)
       @fedora               = katello_products(:fedora)
       @library              = katello_environments(:library)
       @dev                  = katello_environments(:dev)
