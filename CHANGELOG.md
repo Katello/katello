@@ -1,3 +1,10 @@
+# 2.2.4 Maibock (2015-08-18)
+
+## Bug Fixes 
+
+### Other
+ * After installing 2.2.3 content promotions fail with /katello is not writable ([#11394](http://projects.theforeman.org/issues/11394))
+
 # 2.2.3 Maibock (2015-08-13)
 
 ## Bug Fixes 
