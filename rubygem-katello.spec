@@ -21,8 +21,8 @@
 Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
-Version: 2.2.3
-Release: 2%{dist}
+Version: 2.2.4
+Release: 1%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -225,6 +225,11 @@ ln -s %{gem_instdir}/public/assets/bastion_katello %{buildroot}%{foreman_dir}/pu
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Mon Aug 17 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.4-1
+- Bump version to 2.2.4 (ericdhelms@gmail.com)
+- Fixes #11394: Revert Logging additions that don't exist in 2.2/1.9 yet.
+  (ericdhelms@gmail.com)
+
 * Thu Aug 13 2015 Eric D. Helms <ericdhelms@gmail.com> 2.2.3-2
 - Bumping version to 2.2.3 (ericdhelms@gmail.com)
 
