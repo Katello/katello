@@ -49,14 +49,23 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::Destroy }
     let(:pulp_action_class) { ::Actions::Pulp::Repository::Destroy }
     let(:unpublished_repository) { katello_repositories(:fedora_17_unpublished) }
+    let(:published_repository) { katello_repositories(:rhel_6_x86_64) }
 
     it 'plans' do
-      action       = create_action action_class
+      action = create_action action_class
       action.stubs(:action_subject).with(unpublished_repository)
       action.expects(:plan_self)
       plan_action action, unpublished_repository
       assert_action_planed_with action, pulp_action_class, pulp_id: unpublished_repository.pulp_id
       assert_action_planed_with action, ::Actions::Katello::Product::ContentDestroy, unpublished_repository
+    end
+
+    it "plan fails if repository is not deletable" do
+      action = create_action action_class
+      action.stubs(:action_subject).with(published_repository)
+      assert_raises(RuntimeError) do
+        plan_action action, published_repository
+      end
     end
   end
 

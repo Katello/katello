@@ -490,18 +490,6 @@ module Katello
       end
     end
 
-    protected
-
-    def removable_unit_association
-      if yum?
-        self.rpms
-      elsif docker?
-        self.docker_images
-      else
-        fail "Content type not supported for removal"
-      end
-    end
-
     def assert_deletable
       if self.environment.try(:library?) && self.content_view.default?
         if self.environment.organization.being_deleted?
@@ -516,6 +504,18 @@ module Katello
 
           return false
         end
+      end
+    end
+
+    protected
+
+    def removable_unit_association
+      if yum?
+        self.rpms
+      elsif docker?
+        self.docker_images
+      else
+        fail "Content type not supported for removal"
       end
     end
 
