@@ -132,7 +132,7 @@ module Katello
         when Repository::OSTREE_TYPE
           options = {}
           options[:feed] = self.url if self.respond_to?(:url)
-          options[:ostree_branches] = self.ostree_branch_names
+          options[:branches] = self.ostree_branch_names
           Runcible::Models::OstreeImporter.new(options)
         else
           fail _("Unexpected repo type %s") % self.content_type
@@ -172,8 +172,7 @@ module Katello
           docker_dist = Runcible::Models::DockerDistributor.new(options)
           [docker_dist, nodes_distributor]
         when Repository::OSTREE_TYPE
-          options = { :protected => !self.unprotected,
-                      :id => self.pulp_id,
+          options = { :id => self.pulp_id,
                       :auto_publish => true,
                       :relative_path => relative_path }
           dist = Runcible::Models::OstreeDistributor.new(options)
@@ -503,6 +502,7 @@ module Katello
       end
 
       def pulp_update_needed?
+        return true if ostree?
         unless redhat? || previous_changes.key?('url')
           allowed_changes = %w(url unprotected checksum_type docker_upstream_name)
           allowed_changes << "name" if docker?
