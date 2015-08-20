@@ -364,6 +364,10 @@ module Katello
       end
     end
 
+    def available_content
+      self.products.flat_map(&:available_content)
+    end
+
     private
 
     def insert_errata_applicability(uuids)

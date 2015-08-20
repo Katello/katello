@@ -6,11 +6,12 @@ module Katello
 
     def models
       @organization = get_organization
-      @repository = Repository.find(katello_repositories(:fedora_17_unpublished))
+      @repository = katello_repositories(:fedora_17_unpublished)
+      @rpm = katello_rpms(:one)
       @redhat_repository = katello_repositories(:rhel_6_x86_64)
       @product = katello_products(:fedora)
-      @view = ContentView.find(katello_content_views(:library_view))
-      @errata = Erratum.find(katello_errata(:enhancement))
+      @view = katello_content_views(:library_view)
+      @errata = katello_errata(:security)
       @environment = katello_environments(:dev)
     end
 
@@ -27,7 +28,6 @@ module Katello
       login_user(User.find(users(:admin)))
       User.current = User.find(users(:admin))
       @request.env['HTTP_ACCEPT'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       models
       permissions
       [:package_group_count, :package_count, :puppet_module_count].each do |content_type_count|
@@ -45,6 +45,7 @@ module Katello
     def assert_response_ids(response, expected)
       body = JSON.parse(response.body)
       found_ids = body['results'].map { |item| item['id'] }
+      refute_empty expected
       assert_equal expected.sort, found_ids.sort
     end
 
@@ -101,7 +102,7 @@ module Katello
     end
 
     def test_index_with_erratum_id
-      ids = @errata.repositories.pluck(:id)
+      ids = @errata.repositories.in_content_views([@organization.default_content_view]).pluck(:id)
 
       response = get :index, :erratum_id => @errata.uuid, :organization_id => @organization.id
 
@@ -459,11 +460,12 @@ module Katello
     end
 
     def test_remove_content
-      uuids = ['foo', 'bar']
+      @repository.rpms << @rpm
       @controller.expects(:sync_task).with(::Actions::Katello::Repository::RemoveContent,
-                                           @repository, uuids).once.returns(::ForemanTasks::Task.new)
+                                           @repository, [@rpm]).once.returns(::ForemanTasks::Task.new)
 
-      put :remove_content, :id => @repository.id, :uuids => uuids
+      put :remove_content, :id => @repository.id, :uuids => [@rpm.uuid]
+
       assert_response :success
     end
 
@@ -561,16 +563,14 @@ module Katello
     end
 
     def test_import_uploads
-      Repository.any_instance.expects(:import_upload).with([1]).reutrns(true)
-      Repository.any_instance.expects(:trigger_contents_changed).returns([])
-      Repository.any_instance.expects(:unit_type_id).returns("rpm")
+      assert_sync_task ::Actions::Katello::Repository::ImportUpload, @repository, '1'
 
       put :import_uploads, :id => @repository.id, :upload_ids => [1]
 
       assert_response :success
     end
 
-    def test_import_uploads
+    def test_import_uploads_protected
       allowed_perms = [@update_permission]
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 

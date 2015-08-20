@@ -10,6 +10,7 @@ module Katello
     before_filter :find_repository, :only => [:show, :update, :destroy, :sync,
                                               :remove_content, :upload_content,
                                               :import_uploads, :gpg_key_content]
+    before_filter :find_content, :only => :remove_content
     before_filter :find_organization_from_repo, :only => [:update]
     before_filter :find_gpg_key, :only => [:create, :update]
     before_filter :error_on_rh_product, :only => [:create]
@@ -40,7 +41,8 @@ module Katello
     param :environment_id, :number, :desc => N_("ID of an environment to show repositories in")
     param :content_view_id, :number, :desc => N_("ID of a content view to show repositories in")
     param :content_view_version_id, :number, :desc => N_("ID of a content view version to show repositories in")
-    param :erratum_id, String, :desc => N_("UUID of an erratum to find repositories that contain the erratum")
+    param :erratum_id, String, :desc => N_("Id of an erratum to find repositories that contain the erratum")
+    param :rpm_id, String, :desc => N_("Id of a package to find repositories that contain the rpm")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :content_type, String, :desc => N_("limit to only repositories of this time")
     param :name, String, :desc => N_("name of the repository"), :required => false
@@ -59,7 +61,14 @@ module Katello
       query = query.where(:product_id => @product.id) if @product
       query = query.where(:content_type => params[:content_type]) if params[:content_type]
       query = query.where(:name => params[:name]) if params[:name]
-      query = query.joins(:errata).where("#{Erratum.table_name}.uuid" => params[:erratum_id]) if params[:erratum_id]
+
+      if params[:erratum_id]
+        query = query.joins(:errata).where("#{Erratum.table_name}.id" => Erratum.with_identifiers(params[:erratum_id]))
+      end
+
+      if params[:rpm_id]
+        query = query.joins(:rpms).where("#{Rpm.table_name}.id" => Rpm.with_identifiers(params[:rpm_id]))
+      end
 
       if params[:content_view_version_id]
         query = query.where(:content_view_version_id => params[:content_view_version_id])
@@ -175,10 +184,11 @@ module Katello
     api :PUT, "/repositories/:id/remove_content"
     desc "Remove content from a repository"
     param :id, :identifier, :required => true, :desc => "repository ID"
-    param 'uuids', Array, :required => true, :desc => "Array of content uuids to remove"
+    param 'uuids', Array, :required => true, :deprecated => true, :desc => "Array of content uuids to remove"
+    param 'ids', Array, :required => true, :desc => "Array of content ids to remove"
     def remove_content
-      fail _("No package uuids provided") if params[:uuids].blank?
-      respond_for_async :resource => sync_task(::Actions::Katello::Repository::RemoveContent, @repository, params[:uuids])
+      fail _("No content ids provided") if @content.blank?
+      respond_for_async :resource => sync_task(::Actions::Katello::Repository::RemoveContent, @repository, @content)
     end
 
     api :POST, "/repositories/:id/upload_content", N_("Upload content into the repository")
@@ -273,6 +283,14 @@ module Katello
 
     def find_organization_from_product
       @organization = @product.organization
+    end
+
+    def find_content
+      if @repository.puppet?
+        @content = params[:ids] || params[:uuids]
+      else
+        @content = @repository.units_for_removal(params[:ids] || params[:uuids])
+      end
     end
 
     def filter_by_content_view(query, content_view_id, environment_id, is_available_for)

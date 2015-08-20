@@ -158,7 +158,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
             var repositoryIds = $scope.contentView['repository_ids'],
                 promise;
 
-            promise = Package.autocomplete({repoids: repositoryIds, term: term}).$promise;
+            promise = Package.autocompleteName({repoids: repositoryIds, term: term}).$promise;
 
             return promise.then(function (data) {
                 return data.results;

@@ -112,12 +112,8 @@ module Katello
       assert_template %w(katello/api/v2/errata/show)
     end
 
-    def test_show_group_not_found
-      errata = @repo.errata.first
-      Erratum.expects(:with_uuid).once.with(errata.errata_id).returns([])
-      Erratum.expects(:find_by_errata_id).returns(nil)
-
-      get :show, :repository_id => @repo.id, :id => errata.errata_id
+    def test_show_errata_not_found
+      get :show, :repository_id => @repo.id, :id => "not a real errata id"
       assert_response 404
     end
 

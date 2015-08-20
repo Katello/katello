@@ -46,8 +46,13 @@
     </div>
   </div>
 
-  <span data-block="no-rows-message" translate>
-    There are no Errata in this organization.  Create one or more Products with Errata to view Errata on this page.
+  <span data-block="no-rows-message">
+    <span ng-hide="errataCount > 0" translate>
+      There are no Errata in this organization.  Create one or more Products with Errata to view Errata on this page.
+    </span>
+    <span ng-show="errataCount > 0" translate>
+      There are {{ errataCount }} total Errata in this organization but none match the above filters.
+    </span>
   </span>
 
 </div>

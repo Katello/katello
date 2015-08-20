@@ -41,6 +41,9 @@ module Katello
     has_many :repository_errata, :class_name => "Katello::RepositoryErratum", :dependent => :destroy
     has_many :errata, :through => :repository_errata
 
+    has_many :repository_rpms, :class_name => "Katello::RepositoryRpm", :dependent => :destroy
+    has_many :rpms, :through => :repository_rpms
+
     has_many :repository_docker_images, :class_name => "Katello::RepositoryDockerImage", :dependent => :destroy
     has_many :docker_images, :through => :repository_docker_images
     has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag"
@@ -49,6 +52,9 @@ module Katello
 
     has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy
     has_many :systems, :through => :system_repositories
+
+    has_many :repository_package_groups, :class_name => "Katello::RepositoryPackageGroup", :dependent => :destroy
+    has_many :package_groups, :through => :repository_package_groups
 
     # rubocop:disable HasAndBelongsToMany
     # TODO: change this into has_many :through association
@@ -306,8 +312,11 @@ module Katello
     end
 
     def packages_without_errata
-      filenames = errata_filenames
-      packages_without_filenames(filenames)
+      if errata_filenames.any?
+        self.rpms.where("#{Rpm.table_name}.filename NOT in (?)", errata_filenames)
+      else
+        self.rpms
+      end
     end
 
     def self.with_errata(errata)
@@ -316,28 +325,7 @@ module Katello
 
     def errata_filenames
       Katello::ErratumPackage.joins(:erratum => :repository_errata).
-          where("#{RepositoryErratum.table_name}.repository_id" => self.id).pluck(:filename)
-    end
-
-    def packages_without_filenames(filenames)
-      repo = self
-      bulk_size = Katello.config.pulp.bulk_load_size
-      filters = [{:term => {:repoids => repo.pulp_id}}, {:not => { :terms => {:filename => filenames} } }]
-
-      initial_list = Package.search do
-        size 1
-        fields ['id']
-        filter :and, filters
-      end
-
-      (0..initial_list.total).step(bulk_size).flat_map do |offset|
-        Package.search do
-          size bulk_size
-          fields %w(id filename)
-          filter :and, filters
-          from offset
-        end
-      end
+          where("#{RepositoryErratum.table_name}.repository_id" => self.id).pluck("#{ Katello::ErratumPackage.table_name}.filename")
     end
 
     def container_repository_name
@@ -509,6 +497,25 @@ module Katello
       end
     end
 
+    def units_for_removal(ids)
+      table_name = removable_unit_association.table_name
+      is_integer = Integer(ids.first) rescue false #assume all ids are either integers or not
+
+      if is_integer
+        self.removable_unit_association.where("#{table_name}.id in (?)", ids)
+      else
+        self.removable_unit_association.where("#{table_name}.uuid in (?)", ids)
+      end
+    end
+
+    def remove_db_units(units)
+      if yum?
+        self.rpms -= units
+      elsif docker?
+        remove_docker_db_units(units)
+      end
+    end
+
     protected
 
     def check_duplicate_branch_names(branch_names)
@@ -523,6 +530,16 @@ module Katello
       unless duplicate_branch_names.empty?
         fail ::Katello::Errors::ConflictException,
               _("Duplicate branches specified - %{branches}") % { branches: duplicate_branch_names.join(", ")}
+      end
+    end
+
+    def removable_unit_association
+      if yum?
+        self.rpms
+      elsif docker?
+        self.docker_images
+      else
+        fail "Content type not supported for removal"
       end
     end
 
@@ -569,6 +586,16 @@ module Katello
     def ensure_has_url_for_ostree
       return true if url.present? || library_instance_id
       errors.add(:url, N_("cannot be blank. RPM OSTree Repository URL required for syncing from the upstream."))
+    end
+
+    def remove_docker_db_units(images)
+      self.docker_tags.where(:docker_image_id => images.map(&:id)).destroy_all
+      self.docker_images -= images
+
+      # destroy any orphan docker images
+      images.reload.each do |image|
+        image.destroy if image.repositories.empty?
+      end
     end
   end
 end

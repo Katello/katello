@@ -342,6 +342,54 @@ module Katello
       assert_includes @fedora_17_x86_64.as_json, "gpg_key_name"
     end
 
+    def test_units_for_removal_yum
+      rpms = @fedora_17_x86_64.rpms.sample(2).sort
+
+      refute_empty rpms
+      assert_equal rpms, @fedora_17_x86_64.units_for_removal(rpms.map(&:id)).sort
+      assert_equal rpms, @fedora_17_x86_64.units_for_removal(rpms.map(&:id).map(&:to_s)).sort
+      assert_equal rpms, @fedora_17_x86_64.units_for_removal(rpms.map(&:uuid)).sort
+    end
+
+    def test_units_for_removal_puppet
+      assert_raises(RuntimeError) do
+        @puppet_forge.units_for_removal(["3"])
+      end
+    end
+
+    def test_packages_without_errata
+      rpms = @fedora_17_x86_64.rpms
+      errata_rpm = rpms[0]
+      non_errata_rpm = rpms[1]
+      @fedora_17_x86_64.errata.create! do |erratum|
+        erratum.uuid = "foo"
+        erratum.packages = [ErratumPackage.new(:filename => errata_rpm.filename, :nvrea => 'foo', :name => 'foo')]
+      end
+
+      filenames = @fedora_17_x86_64.packages_without_errata.map(&:filename)
+
+      refute_empty filenames
+      refute_includes filenames, errata_rpm.filename
+      assert_includes filenames, non_errata_rpm.filename
+    end
+
+    def test_packages_without_errata_no_errata
+      @fedora_17_x86_64.errata.destroy_all
+      assert_equal @fedora_17_x86_64.rpms, @fedora_17_x86_64.packages_without_errata
+    end
+
+    def test_units_for_removal_docker
+      ['one', 'two', 'three'].each do |str|
+        @redis.docker_images.create!(:image_id => str) do |image|
+          image.uuid = str
+        end
+      end
+
+      images = @redis.docker_images.sample(2).sort_by { |obj| obj.id }
+      refute_empty images
+      assert_equal images, @redis.units_for_removal(images.map(&:id)).sort_by { |obj| obj.id }
+    end
+
     def test_environmental_instances
       assert_includes @fedora_17_x86_64.environmental_instances(@acme_corporation.default_content_view), @fedora_17_x86_64
       assert_includes @fedora_17_x86_64.environmental_instances(@acme_corporation.default_content_view), @fedora_17_x86_64_dev

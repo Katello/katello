@@ -28,6 +28,7 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :activation_keys, :only => [:index, :create, :show, :update, :destroy] do
+          get :auto_complete_search, :on => :collection
           member do
             match '/product_content' => 'activation_keys#product_content', :via => :get
             match '/content_override' => 'activation_keys#content_override', :via => :put
@@ -72,9 +73,6 @@ Katello::Engine.routes.draw do
             collection do
               get :auto_complete_search
             end
-            member do
-              get :available_package_groups
-            end
             api_resources :errata, :only => [:index]
             api_resources :package_groups, :only => [:index]
           end
@@ -89,9 +87,6 @@ Katello::Engine.routes.draw do
           api_resources :rules, :controller => :content_view_filter_rules
           collection do
             get :auto_complete_search
-          end
-          member do
-            get :available_package_groups
           end
         end
 
@@ -173,9 +168,18 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :packages, :only => [:index, :show]
+        api_resources :packages, :only => [:index, :show] do
+          collection do
+            get :auto_complete_search
+            get :auto_complete_name
+          end
+        end
 
-        api_resources :package_groups, :only => [:index, :show]
+        api_resources :package_groups, :only => [:index, :show] do
+          collection do
+            get :auto_complete_search
+          end
+        end
 
         api_resources :ping, :only => [:index]
         match "/status" => "ping#server_status", :via => :get
@@ -223,6 +227,7 @@ Katello::Engine.routes.draw do
             get :releases
             put :refresh_subscriptions
             put :content_override
+            get :product_content
           end
           api_resources :activation_keys, :only => [:index]
           api_resources :host_collections, :only => [:index]

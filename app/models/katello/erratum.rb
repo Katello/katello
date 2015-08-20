@@ -95,6 +95,10 @@ module Katello
       Katello::ErratumPackage.joins(:erratum).where("#{Erratum.table_name}.uuid" => errata.map { |e| e['_id'] }).pluck(:filename)
     end
 
+    def self.unit_handler
+      Katello.pulp_server.extensions.errata
+    end
+
     private
 
     def run_until(needed_function, action_function)

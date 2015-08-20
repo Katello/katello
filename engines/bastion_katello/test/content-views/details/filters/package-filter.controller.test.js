@@ -20,7 +20,7 @@ describe('Controller: PackageFilterController', function() {
         $scope.filter.rules = [];
         $scope.contentView = {'repository_ids': []};
 
-        Package.autocomplete = function () {
+        Package.autocompleteName = function () {
             return {
                 $promise: $q.defer().promise
             };
@@ -188,11 +188,11 @@ describe('Controller: PackageFilterController', function() {
     it("should provide a method to retrieve autocomplete results", function () {
         var autocomplete;
 
-        spyOn(Package, 'autocomplete').andCallThrough();
+        spyOn(Package, 'autocompleteName').andCallThrough();
         autocomplete = $scope.fetchAutocomplete('gir');
 
         expect(autocomplete.then).toBeDefined();
-        expect(Package.autocomplete).toHaveBeenCalled();
+        expect(Package.autocompleteName).toHaveBeenCalled();
     });
 
 });

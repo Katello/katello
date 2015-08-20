@@ -25,6 +25,7 @@ module BastionKatello
           content_views
           docker_tags
           errata
+          packages
           gpg_keys
           lifecycle_environments
           products

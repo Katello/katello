@@ -141,9 +141,7 @@ module Katello
     end
 
     def total_package_count(env)
-      repoids = self.repos(env).collect { |r| r.pulp_id }
-      result = Katello::Package.legacy_search('*', 0, 1, repoids)
-      result.length > 0 ? result.total : 0
+      Katello::Rpm.in_repositories(self.repos(env)).count
     end
 
     def total_puppet_module_count(env)
