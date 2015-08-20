@@ -4,7 +4,6 @@ module Katello
       extend ActiveSupport::Concern
 
       include Authorizable
-      include Katello::Authorization
 
       def readable?
         authorized?(:view_products)
