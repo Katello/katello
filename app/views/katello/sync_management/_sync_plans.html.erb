@@ -1,0 +1,23 @@
+<table>
+  <thead>
+    <tr>
+      <th><%= _("Sync plan") %></th>
+      <th><%= _("Interval") %></th>
+      <th><%= _("Start Date") %></th>
+      <th><%= _("Time") %></th>
+      <th><%= _("Organization") %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sync_plans.each do |sync_plan| %>
+      <tr class="<%= cycle("", "alt", :name => 'syncplan') %>" title="<%= sync_plan.description %>">
+        <td><%= sync_plan.name %></td>
+        <td><%= sync_plan.interval %></td>
+        <td><%= sync_plan.plan_date %></td>
+        <td><%= sync_plan.plan_time %></td>
+        <td><%= sync_plan.organization.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

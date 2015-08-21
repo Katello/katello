@@ -1,0 +1,19 @@
+<table class="repo_table" style="display: none;">
+  <thead>
+    <th>
+      <%= _('Errors') %>
+    </th>
+  <tbody>
+    <td>
+      <i class="icon-exclamation-sign"></i>
+      <%= _("There was an error attempting to retrieve the repository list:") %>
+      <pre>
+        <%= error_message %>
+      </pre>
+      <%= _("For more information see ") %>
+      <a href="<%= main_app.foreman_tasks_task_path(task.id) %>">
+        <%= _("the failed task.") %>
+      </a>
+    </td>
+  </tbody>
+</table>

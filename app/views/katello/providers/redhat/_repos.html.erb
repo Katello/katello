@@ -1,0 +1,52 @@
+<table class="repo_table" style="display: none">
+  <% if repos.empty? %>
+    <tbody>
+      <tr>
+        <td>
+          <%= _("No repositories accessible. Check that Red Hat Subscriptions have been imported.") %>
+        </td>
+      </tr>
+    </tbody>
+  <% else %>
+    <thead>
+      <th class="skinny_column">
+        <%= _('Enabled?') %>
+      </th>
+      <th>
+        <%= _('Repository') %>
+      </th>
+    </thead>
+    <tbody>
+      <% repos.each do |result| %>
+        <tr class="repo" id="repo_<%= result[:pulp_id] %>">
+          <td>
+            <label>
+              <%= image_tag( "katello/icons/spinner.gif", :class=>"hidden fl", :id=>"spinner_#{result[:pulp_id]}", :style=>"margin-right:1px;") %>
+              <input class="repo_enable"
+                     id="input_repo_<%= result[:pulp_id] %>"
+                     type="checkbox"
+                     value="<%= result[:pulp_id] %>"
+                     data-url="<%= toggle_repository_product_path(scan_cdn.input[:product_id]) %>"
+                     data-content-id="<%= scan_cdn.input[:content_id] %>"
+                     data-pulp-id="<%= result[:pulp_id] %>"
+                     <% if result[:registry_name] %>
+                       data-registry-name="<%= result[:registry_name] %>"
+                     <% end %>
+                     data-releasever="<%= result[:substitutions][:releasever] %>"
+                     data-basearch="<%= result[:substitutions][:basearch] %>"
+                     <% if result[:promoted] %>
+                      disabled="disabled"
+                     <% end %>
+                     <% if result[:enabled] %>
+                      checked="checked"
+                    <% end %> />
+            </label>
+          </td>
+          <td>
+            <%= result[:repo_name] %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  <% end %>
+</table>
