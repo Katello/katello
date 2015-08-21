@@ -38,8 +38,8 @@ module Katello
 
     validates_lengths_from_database
 
-    scope :default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true)
-    scope :non_default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false)
+    scope :default_view, -> { joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true) }
+    scope :non_default_view, -> { joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false) }
 
     scoped_search :on => :content_view_id
     scoped_search :on => :major, :rename => :version, :complete_value => true, :ext_method => :find_by_version

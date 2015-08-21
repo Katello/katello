@@ -32,7 +32,7 @@ module Katello
 
         attr_accessor :statistics
 
-        scope :having_name_or_label, lambda { |name_or_label| { :conditions => ["name = :id or label = :id", {:id => name_or_label}] } }
+        scope :having_name_or_label, ->(name_or_label) { { :conditions => ["name = :id or label = :id", {:id => name_or_label}] } }
         scoped_search :on => :label, :complete_value => :true
 
         after_create :associate_default_capsule

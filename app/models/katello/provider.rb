@@ -31,9 +31,9 @@ module Katello
     before_destroy :prevent_redhat_deletion
     before_validation :sanitize_repository_url
 
-    scope :redhat, where(:provider_type => REDHAT)
-    scope :custom, where(:provider_type => CUSTOM)
-    scope :anonymous, where(:provider_type => ANONYMOUS)
+    scope :redhat, -> { where(:provider_type => REDHAT) }
+    scope :custom, -> { where(:provider_type => CUSTOM) }
+    scope :anonymous, -> { where(:provider_type => ANONYMOUS) }
 
     def self.create_anonymous!(organization)
       create!(:name => SecureRandom.uuid, :description => nil,
