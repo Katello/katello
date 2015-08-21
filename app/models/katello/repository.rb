@@ -88,17 +88,16 @@ module Katello
     validate :ensure_docker_repo_unprotected, :if => :docker?
     validate :ensure_has_url_for_ostree, :if => :ostree?
 
-    scope :has_url, where('url IS NOT NULL')
-    scope :in_default_view, joins(:content_view_version => :content_view).
-      where("#{Katello::ContentView.table_name}.default" => true)
+    scope :has_url, -> { where('url IS NOT NULL') }
+    scope :in_default_view, -> { joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => true) }
 
-    scope :yum_type, where(:content_type => YUM_TYPE)
-    scope :file_type, where(:content_type => FILE_TYPE)
-    scope :puppet_type, where(:content_type => PUPPET_TYPE)
-    scope :docker_type, where(:content_type => DOCKER_TYPE)
-    scope :non_puppet, where("content_type != ?", PUPPET_TYPE)
-    scope :non_archived, where('environment_id is not NULL')
-    scope :archived, where('environment_id is NULL')
+    scope :yum_type, -> { where(:content_type => YUM_TYPE) }
+    scope :file_type, -> { where(:content_type => FILE_TYPE) }
+    scope :puppet_type, -> { where(:content_type => PUPPET_TYPE) }
+    scope :docker_type, -> { where(:content_type => DOCKER_TYPE) }
+    scope :non_puppet, -> { where("content_type != ?", PUPPET_TYPE) }
+    scope :non_archived, -> { where('environment_id is not NULL') }
+    scope :archived, -> { where('environment_id is NULL') }
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :rename => :product, :on => :name, :in => :product, :complete_value => true

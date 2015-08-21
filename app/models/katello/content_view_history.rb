@@ -16,7 +16,7 @@ module Katello
     validates :status, :inclusion => {:in          => STATUSES,
                                       :allow_blank => false}
 
-    scope :active, where(:status => IN_PROGRESS)
+    scope :active, -> { where(:status => IN_PROGRESS) }
     alias_method :version, :content_view_version
 
     def content_view

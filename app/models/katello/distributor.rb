@@ -28,8 +28,8 @@ module Katello
 
     before_create :fill_defaults
 
-    scope :in_environment, lambda { |env| where('environment_id = ?', env) unless env.nil? }
-    scope :completer_scope, lambda { |options| readable(options[:organization_id]) }
+    scope :in_environment, ->(env) { where('environment_id = ?', env) unless env.nil? }
+    scope :completer_scope, ->(options) { readable(options[:organization_id]) }
 
     delegate :organization, to: :environment
 
