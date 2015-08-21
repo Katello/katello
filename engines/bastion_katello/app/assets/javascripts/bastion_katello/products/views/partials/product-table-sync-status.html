@@ -9,10 +9,10 @@
         1 repository sync in progress.
   </div>
 
-  <div ng-show="mostImportantSyncState(product) == 'error'"
+  <div ng-show="mostImportantSyncState(product) == 'error' || mostImportantSyncState(product) == 'warning'"
         translate
         translate-n="product.sync_summary.error"
-        translate-plural="{{ product.sync_summary.error}} repository syncs have errors.">
+        translate-plural="{{ product.sync_summary.error || product.sync_summary.warning }} repository syncs have errors.">
         1 repository sync has errors.
   </div>
 

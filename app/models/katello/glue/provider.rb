@@ -103,13 +103,6 @@ module Katello
         sync_times.last
       end
 
-      def cancel_sync
-        Rails.logger.debug "Cancelling synchronization of provider #{name}"
-        self.products.each do |p|
-          p.cancel_sync
-        end
-      end
-
       def url_to_host_and_path(url = "")
         parsed = URI.parse(url)
         ["#{parsed.scheme}://#{parsed.host}#{ parsed.port ? ':' + parsed.port.to_s : '' }", parsed.path]
