@@ -39,9 +39,9 @@ module Katello
     has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :lifecycle_environment_id,
                           :inverse_of => :lifecycle_environment, :dependent => :restrict_with_error
 
-    scope :completer_scope, lambda { |options = nil| where('organization_id = ?', options[:organization_id]) if options[:organization_id].present? }
-    scope :non_library, where(library: false)
-    scope :library, where(library: true)
+    scope :completer_scope, ->(options = nil) { where('organization_id = ?', options[:organization_id]) if options[:organization_id].present? }
+    scope :non_library, -> { where(library: false) }
+    scope :library, -> { where(library: true) }
 
     validates_lengths_from_database :except => [:label]
     validates :organization, :presence => true
@@ -64,12 +64,12 @@ module Katello
     before_destroy :deletable?, :prepend => true
 
     scope(:not_in_capsule,
-          lambda do |capsule|
-            select("DISTINCT #{KTEnvironment.table_name}.*").
-                joins(%{LEFT OUTER JOIN #{CapsuleLifecycleEnvironment.table_name} ON ( "#{CapsuleLifecycleEnvironment.table_name}"."lifecycle_environment_id" = "#{KTEnvironment.table_name}"."id")}).
-                where(%("#{CapsuleLifecycleEnvironment.table_name}"."capsule_id" IS NULL
-                       OR "#{CapsuleLifecycleEnvironment.table_name}"."capsule_id" != ?), capsule.id)
-          end)
+      lambda do |capsule|
+        select("DISTINCT #{KTEnvironment.table_name}.*").
+          joins(%{LEFT OUTER JOIN #{CapsuleLifecycleEnvironment.table_name} ON ( "#{CapsuleLifecycleEnvironment.table_name}"."lifecycle_environment_id" = "#{KTEnvironment.table_name}"."id")}).
+          where(%("#{CapsuleLifecycleEnvironment.table_name}"."capsule_id" IS NULL
+          OR "#{CapsuleLifecycleEnvironment.table_name}"."capsule_id" != ?), capsule.id)
+      end)
 
     after_create :add_to_default_capsule
 

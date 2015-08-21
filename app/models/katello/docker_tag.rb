@@ -13,7 +13,7 @@ module Katello
     scoped_search :in => :repository, :on => :name, :rename => :repository,
       :complete_value => true, :only_explicit => true
 
-    scope :in_repositories, -> repos { where(:repository_id => repos) }
+    scope :in_repositories, ->(repos) { where(:repository_id => repos) }
 
     delegate :image_id, :to => :docker_image
     delegate :relative_path, :environment, :content_view_version, :product, :to => :repository

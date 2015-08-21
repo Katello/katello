@@ -20,8 +20,8 @@ module Katello
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates :puppet_environment, :presence => true, :if => :environment
 
-    scope :non_archived, where('environment_id is not NULL')
-    scope :archived, where('environment_id is NULL')
+    scope :non_archived, -> { where('environment_id is not NULL') }
+    scope :archived, -> { where('environment_id is NULL') }
 
     def content_type
       Repository::PUPPET_TYPE
