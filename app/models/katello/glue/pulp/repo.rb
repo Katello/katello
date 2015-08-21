@@ -605,13 +605,6 @@ module Katello
         retval
       end
 
-      def cancel_sync
-        Rails.logger.info "Cancelling synchronization of repository #{self.pulp_id}"
-        history = self.sync_status
-        return if history.nil? || !history.pending?
-        Katello.pulp_server.resources.task.cancel(history.uuid)
-      end
-
       def sync_finish
         status = self.sync_status
         retval = nil

@@ -15,7 +15,7 @@ attributes :redhat? => :redhat
 attributes :available_content => :available_content, :if => params[:include_available_content]
 
 child :sync_plan do
-  extends 'katello/api/v2/sync_plans/show'
+  attributes :name, :description, :sync_date, :interval, :next_sync
 end
 
 node :repository_count do |product|
