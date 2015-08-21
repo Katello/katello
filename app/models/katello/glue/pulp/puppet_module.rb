@@ -9,7 +9,7 @@ module Katello
                       :_content_type_id, :checksums, :id, :_id, :types, :name, :repoids
 
         def self.find(id)
-          attrs = Katello.pulp_server.extensions.puppet_module.find_by_unit_id(id)
+          attrs = Katello.pulp_server.extensions.puppet_module.find_by(:unit_id => id)
           Katello::PuppetModule.new(attrs) unless attrs.nil?
         end
 

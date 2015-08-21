@@ -22,24 +22,24 @@ module Katello
 
     module ClassMethods
       def find_by_organization_and_id(organization, pool_id)
-        pool = Katello::Pool.find_by_cp_id(pool_id.to_s) || Pool.new(Resources::Candlepin::Pool.find(pool_id))
+        pool = Katello::Pool.find_by(:cp_id => pool_id.to_s) || Pool.new(Resources::Candlepin::Pool.find(pool_id))
         if pool.organization == organization
           return pool
         end
       end
 
       def find_by_organization_and_id!(organization, pool_id)
-        subscription = find_by_organization_and_id(organization, pool_id)
+        subscription = find_by(:organization => organization, :id => pool_id)
         fail ActiveRecord::RecordNotFound if subscription.nil?
         subscription
       end
 
       def find_by_id(pool_id)
-        Katello::Pool.find_by_cp_id(pool_id) || Pool.new(Resources::Candlepin::Pool.find(pool_id))
+        Katello::Pool.find_by(:cp_id => pool_id) || Pool.new(Resources::Candlepin::Pool.find(pool_id))
       end
 
       def find_by_id!(pool_id)
-        subscription = find_by_id(pool_id)
+        subscription = find_by(:id => pool_id)
         fail ActiveRecord::RecordNotFound if subscription.nil?
         subscription
       end
@@ -57,7 +57,7 @@ module Katello
       end
 
       def organization
-        Organization.find_by_label(self.owner["key"])
+        Organization.find_by(:label => self.owner["key"])
       end
 
       # if defined +load_remote_data+ will be used by +lazy_accessors+
@@ -179,7 +179,7 @@ module Katello
       end
 
       def host
-        System.find_by_uuid(host_id) if host_id
+        System.find_by(:uuid => host_id) if host_id
       end
 
       attr_reader :amount

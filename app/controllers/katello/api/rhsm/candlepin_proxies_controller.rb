@@ -307,7 +307,7 @@ module Katello
         params[:owner] = @organization.label
         params[:env] = @content_view.cp_environment_label(@environment)
       else
-        @organization = Organization.find_by_label(params[:owner])
+        @organization = Organization.find_by(:label => params[:owner])
         deny_access unless @organization
         if params[:env] == 'Library'
           @environment = @organization.library
@@ -316,9 +316,9 @@ module Katello
           deny_access unless @content_view && @content_view.readable?
         else
           (env_name, cv_name) = params[:env].split('/')
-          @environment = @organization.kt_environments.find_by_label(env_name)
+          @environment = @organization.kt_environments.find_by(:label => env_name)
           deny_access unless @environment && @environment.readable?
-          @content_view = @environment.content_views.find_by_label(cv_name)
+          @content_view = @environment.content_views.find_by(:label => cv_name)
           deny_access unless @content_view && @content_view.readable?
         end
       end
@@ -328,7 +328,7 @@ module Katello
       organization = nil
 
       if params.key?(:organization_id)
-        organization = Organization.find_by_label(params[:organization_id])
+        organization = Organization.find_by(:label => params[:organization_id])
       end
 
       if organization.nil?
@@ -350,7 +350,7 @@ module Katello
       if ak_names = params[:activation_keys]
         ak_names        = ak_names.split(",")
         activation_keys = ak_names.map do |ak_name|
-          activation_key = organization.activation_keys.find_by_name(ak_name)
+          activation_key = organization.activation_keys.find_by(:name => ak_name)
           fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
 
           if !activation_key.unlimited_content_hosts && activation_key.usage_count >= activation_key.max_content_hosts

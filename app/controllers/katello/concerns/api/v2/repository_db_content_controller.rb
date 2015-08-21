@@ -82,7 +82,7 @@ module Katello
         @resource = resource_class.with_uuid(params[:id]).first
         if resource_class == Katello::Erratum
           # also try to look up erratum by errata_id
-          @resource ||= Erratum.find_by_errata_id(params[:id])
+          @resource ||= Erratum.find_by(:errata_id => params[:id])
         end
 
         if @resource.nil?

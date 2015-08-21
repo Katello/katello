@@ -8,7 +8,7 @@ module Actions
         end
 
         def run
-          repo = ::Katello::Repository.find_by_pulp_id(input[:source_pulp_id])
+          repo = ::Katello::Repository.find_by(:pulp_id => input[:source_pulp_id])
           output[:response] = pulp_extensions.repository.update_docker_tags(input[:target_pulp_id], repo.docker_image_tag_hash)
         end
       end

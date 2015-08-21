@@ -1,5 +1,3 @@
-require 'strong_parameters'
-
 module Katello
   class Api::V2::ApiController < ::Api::V2::BaseController
     include Concerns::Api::ApiController
@@ -162,7 +160,7 @@ module Katello
     end
 
     def get_organization(org_id)
-      return Organization.find_by_id(org_id)
+      return Organization.find_by(:id => org_id)
     end
 
     def find_default_organization_and_or_environment

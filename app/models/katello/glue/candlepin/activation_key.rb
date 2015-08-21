@@ -38,13 +38,13 @@ module Katello
 
       def subscribe(pool_id, quantity = 1)
         product = Resources::Candlepin::Pool.find(pool_id)[:productAttributes][0]
-        add_custom_product(product[:productId]) unless Katello::Product.find_by_cp_id(product[:productId]).redhat?
+        add_custom_product(product[:productId]) unless Katello::Product.find_by(:cp_id => product[:productId]).redhat?
         Resources::Candlepin::ActivationKey.add_pools self.cp_id, pool_id, quantity
       end
 
       def unsubscribe(pool_id)
         product = Resources::Candlepin::Pool.find(pool_id)[:productAttributes][0]
-        remove_custom_product(product[:productId]) unless Katello::Product.find_by_cp_id(product[:productId]).redhat?
+        remove_custom_product(product[:productId]) unless Katello::Product.find_by(:cp_id => product[:productId]).redhat?
         Resources::Candlepin::ActivationKey.remove_pools self.cp_id, pool_id
       end
 

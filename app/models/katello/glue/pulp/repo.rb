@@ -314,7 +314,7 @@ module Katello
         if self.content_view.default? || force
           errata_json.each do |erratum_json|
             begin
-              erratum = Erratum.find_or_create_by_uuid(:uuid => erratum_json['_id'])
+              erratum = Erratum.find_or_create_by(:uuid => erratum_json['_id'])
             rescue ActiveRecord::RecordNotUnique
               retry
             end
@@ -339,7 +339,7 @@ module Katello
         docker_tags.destroy_all
 
         docker_images_json.each do |image_json|
-          image = DockerImage.find_or_create_by_uuid(image_json[:_id])
+          image = DockerImage.find_or_create_by(:uuid => image_json[:_id])
           image.update_from_json(image_json)
           create_docker_tags(image, image_json[:tags])
         end
@@ -369,7 +369,7 @@ module Katello
         return if tags.empty?
 
         tags.each do |tag|
-          DockerTag.find_or_create_by_repository_id_and_docker_image_id_and_name!(id, image.id, tag)
+          DockerTag.find_or_create_by(:repository_id => id, :docker_image_id => image.id, :name => tag)
         end
       end
 
