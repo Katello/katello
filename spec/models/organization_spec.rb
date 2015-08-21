@@ -3,6 +3,7 @@ require 'katello_test_helper'
 module Katello
   describe Organization do
     include OrganizationHelperMethods
+    include Dynflow::Testing
 
     before(:each) do
       stub_ping
@@ -11,7 +12,8 @@ module Katello
       disable_env_orchestration
       Organization.any_instance.stubs(:ensure_not_in_transaction!)
       @organization = Organization.new(:name => 'test_org_name', :label => 'test_org_label')
-      ForemanTasks.trigger(::Actions::Katello::Organization::Create, @organization)
+      ::Actions::Katello::Organization::Create.any_instance.stubs(:action_subject)
+      create_and_plan_action(::Actions::Katello::Organization::Create, @organization)
     end
 
     describe "organization validation" do

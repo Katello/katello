@@ -63,7 +63,7 @@
 
           <tbody>
             <tr bst-table-row  ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
-              <td bst-table-cell colspan="8">
+              <td bst-table-cell colspan="9">
                 <a href='/subscriptions?search=product_name:"{{ name }}"'>
                   {{ name }}
                 </a>
@@ -75,7 +75,7 @@
               <td bst-table-cell><div subscription-type="subscription"></div></td>
               <td bst-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
               <td bst-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
-              <td bst-table-cell>{{ subscription.service_level }}</td>
+              <td bst-table-cell>{{ subscription.support_level }}</td>
               <td bst-table-cell>{{ subscription.contract_number }}</td>
               <td bst-table-cell>{{ subscription.account_number }}</td>
             </tr>

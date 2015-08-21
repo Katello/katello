@@ -11,6 +11,7 @@ module Katello
       @beta = create(:katello_environment, :organization => @cvv.organization, :prior => @dev,                         :name => 'beta')
       @composite_version = ContentViewVersion.find(katello_content_view_versions(:composite_view_version_1))
       @cvv_with_repo = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
+      @cvv_with_package_groups = ContentViewVersion.find(katello_content_view_versions(:dev_default_version))
     end
 
     def test_promotable_in_sequence
@@ -73,6 +74,10 @@ module Katello
     def test_active_history_nil_task
       @cvv.history = [ContentViewHistory.new(:status => ContentViewHistory::IN_PROGRESS, :user => 'admin')]
       assert_empty @cvv.active_history
+    end
+
+    def test_find_package_groups
+      assert @cvv_with_package_groups.package_groups.count > 0
     end
 
     def test_search_equal_version

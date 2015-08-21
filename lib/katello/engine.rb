@@ -95,6 +95,9 @@ module Katello
         fail Foreman::Exception, N_("Organizations disabled, try allowing them in foreman/config/settings.yaml")
       end
 
+      # Lib Extensions
+      ::Foreman::Renderer.send :include, Katello::Concerns::RendererExtensions
+
       # Model extensions
       ::Environment.send :include, Katello::Concerns::EnvironmentExtensions
       ::Host::Managed.send :include, Katello::Concerns::HostManagedExtensions
@@ -102,6 +105,7 @@ module Katello
       ::Location.send :include, Katello::Concerns::LocationExtensions
       ::Medium.send :include, Katello::Concerns::MediumExtensions
       ::Redhat.send :include, Katello::Concerns::RedhatExtensions
+      ::Operatingsystem.send :include, Katello::Concerns::OperatingsystemExtensions
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
 
@@ -148,7 +152,7 @@ module Katello
       require 'katello/permissions'
 
       Tire::Configuration.url(Katello.config.elastic_url)
-      bridge = Katello::TireBridge.new(Foreman::Logging.logger('katello/tire_rest'))
+      bridge = Katello::TireBridge.new(::Foreman::Logging.logger('katello/tire_rest'))
       Tire.configure { logger bridge, :level => bridge.level }
     end
 
@@ -169,6 +173,8 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.1/import_errata.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.2/update_gpg_key_urls.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.2/update_metadata_expire.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_package_groups.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_rpms.rake"
     end
   end
 end

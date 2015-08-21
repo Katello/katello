@@ -68,9 +68,9 @@ module Katello
 
     before_update :update_foreman_host, :if => proc { |r| r.environment_id_changed? || r.content_view_id_changed? }
 
-    scope :in_environment, lambda { |env| where('environment_id = ?', env) unless env.nil? }
-    scope :completer_scope, lambda { |options| readable(options[:organization_id]) }
-    scope :by_uuids, lambda { |uuids| where(:uuid => uuids) }
+    scope :in_environment, ->(env) { where('environment_id = ?', env) unless env.nil? }
+    scope :completer_scope, ->(options) { readable(options[:organization_id]) }
+    scope :by_uuids, ->(uuids) { where(:uuid => uuids) }
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :in => :environment, :on => :organization_id, :complete_value => true, :rename => :organization_id
@@ -362,6 +362,10 @@ module Katello
           remove_errata_applicability(to_remove) unless to_remove.blank?
         end
       end
+    end
+
+    def available_content
+      self.products.flat_map(&:available_content)
     end
 
     private

@@ -17,6 +17,8 @@ module Katello
       :katello_environment_priors => "Katello::EnvironmentPrior",
       :katello_environments => "Katello::KTEnvironment",
       :katello_gpg_keys => "Katello::GpgKey",
+      :katello_package_groups => "Katello::PackageGroup",
+      :katello_repository_package_groups => "Katello::RepositoryPackageGroup",
       :katello_products => "Katello::Product",
       :katello_providers => "Katello::Provider",
       :katello_repositories => "Katello::Repository",
@@ -29,6 +31,8 @@ module Katello
       :katello_erratum_packages => "Katello::ErratumPackage",
       :katello_erratum_cves => "Katello::ErratumCve",
       :katello_repository_errata => "Katello::RepositoryErratum",
+      :katello_rpms => "Katello::Rpm",
+      :katello_repository_rpms => "Katello::RepositoryRpm",
       :katello_system_errata => "Katello::SystemErratum"
     }
 

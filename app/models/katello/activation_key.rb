@@ -3,7 +3,6 @@ module Katello
     self.include_root_in_json = false
 
     include Glue::Candlepin::ActivationKey if Katello.config.use_cp
-    include Glue::ElasticSearch::ActivationKey if Katello.config.use_elasticsearch
     include Glue if Katello.config.use_cp
     include Katello::Authorization::ActivationKey
     include ForemanTasks::Concerns::ActionSubject
@@ -45,10 +44,13 @@ module Katello
     end
     validates_with Validators::ContentViewEnvironmentValidator
 
-    scope :in_environment, lambda { |env| where(:environment_id => env) }
+    scope :in_environment, ->(env) { where(:environment_id => env) }
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true
+    scoped_search :rename => :environment, :on => :name, :in => :environment, :complete_value => true
+    scoped_search :rename => :content_view, :on => :name, :in => :content_view, :complete_value => true
+    scoped_search :on => :content_view_id, :complete_value => true
 
     def environment_exists
       if environment_id && environment.nil?
@@ -120,6 +122,10 @@ module Katello
 
     def available_content
       self.products.map(&:available_content).flatten
+    end
+
+    def valid_content_label?(content_label)
+      self.available_content.map(&:content).any? { |content| content.label == content_label }
     end
 
     # sets up system when registering with this activation key - must be executed in a transaction

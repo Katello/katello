@@ -38,8 +38,8 @@ module Katello
 
     validates_lengths_from_database
 
-    scope :default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true)
-    scope :non_default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false)
+    scope :default_view, -> { joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true) }
+    scope :non_default_view, -> { joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false) }
 
     scoped_search :on => :content_view_id
     scoped_search :on => :major, :rename => :version, :complete_value => true, :ext_method => :find_by_version
@@ -191,7 +191,7 @@ module Katello
     end
 
     def packages
-      archived_repos.flat_map(&:packages)
+      Rpm.in_repositories(archived_repos).uniq
     end
 
     def puppet_module_count
@@ -200,7 +200,7 @@ module Katello
     end
 
     def package_count
-      Package.package_count(self.repositories.archived)
+      Katello::Rpm.in_repositories(self.repositories.archived).count
     end
 
     def docker_image_count
@@ -229,6 +229,10 @@ module Katello
 
     def docker_images
       DockerImage.in_repositories(archived_repos).uniq
+    end
+
+    def package_groups
+      PackageGroup.in_repositories(archived_repos).uniq
     end
 
     def check_ready_to_promote!

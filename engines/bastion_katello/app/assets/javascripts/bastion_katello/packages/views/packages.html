@@ -1,0 +1,19 @@
+<span page-title>{{ 'Packages' | translate }}</span>
+
+<div data-extend-template="layouts/nutupane.html">
+
+  <div data-block="header">
+    {{ 'Packages' | translate }}
+  </div>
+
+  <div data-block="search-filter">
+    <div class="col-sm-3">
+      <select class="form-control" ng-model="repository" ng-options="repository.name for (id, repository) in repositories"></select>
+    </div>
+  </div>
+
+  <span data-block="no-rows-message" translate>
+    There are no Packages in this organization.  Create one or more Products with Packages to view Packages on this page.
+  </span>
+
+</div>

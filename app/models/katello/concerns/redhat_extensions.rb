@@ -6,9 +6,7 @@ module Katello
 
       included do
         alias_method_chain :medium_uri, :content_uri
-        alias_method_chain :mediumpath, :content
         alias_method_chain :boot_files_uri, :content
-        after_create :assign_templates!
       end
 
       module ClassMethods
@@ -46,32 +44,12 @@ module Katello
         end
       end
 
-      def assign_templates!
-        # Automatically assign default templates
-        TemplateKind.all.each do |kind|
-          if (template = ProvisioningTemplate.find_by_name(Setting["katello_default_#{kind.name}"]))
-            provisioning_templates << template unless provisioning_templates.include?(template)
-            if OsDefaultTemplate.where(:template_kind_id => kind.id, :operatingsystem_id => id).empty?
-              OsDefaultTemplate.create(:template_kind_id => kind.id, :provisioning_template_id => template.id, :operatingsystem_id => id)
-            end
-          end
-        end
-
-        if (ptable = Ptable.find_by_name(Setting["katello_default_ptable"]))
-          ptables << ptable unless ptables.include?(ptable)
-        end
-      end
-
       def medium_uri_with_content_uri(host, url = nil)
         if host.try(:content_source) && (repo_details = kickstart_repo(host))
           URI.parse(repo_details[:path])
         else
           medium_uri_without_content_uri(host, url)
         end
-      end
-
-      def mediumpath_with_content(host)
-        "url --url #{medium_uri(host)}"
       end
 
       def kickstart_repo(host)

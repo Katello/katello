@@ -16,9 +16,8 @@ module Katello
         queue_import_manifest options
       end
 
-      def delete_manifest(options = {})
-        options = options.dup
-        queue_delete_manifest(options)
+      def delete_manifest
+        queue_delete_manifest
       end
 
       def refresh_manifest(upstream, options = {})
@@ -198,7 +197,7 @@ module Katello
       end
 
       def import_logger
-        Foreman::Logging.logger('katello/manifest_import_logger')
+        ::Foreman::Logging.logger('katello/manifest_import_logger')
       end
 
       # TODO: break up method
@@ -237,7 +236,7 @@ module Katello
 
           self.save!
         rescue => error
-          display_manifest_message(manifest_refresh ? 'refresh' : 'import', error, options)
+          display_manifest_message(manifest_refresh ? 'refresh' : 'import', error)
           raise error
         end
       end
@@ -338,7 +337,7 @@ module Katello
         # Nothing to be done until implemented in katello where possible pulp recovery actions should be done(?)
       end
 
-      def queue_delete_manifest(options)
+      def queue_delete_manifest
         import_logger.debug "Deleting manifest for provider #{self.name}"
 
         begin
@@ -351,7 +350,7 @@ module Katello
           end
           self.save!
         rescue => error
-          display_manifest_message('delete', error, options)
+          display_manifest_message('delete', error)
           raise error
         end
       end

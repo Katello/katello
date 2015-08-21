@@ -51,14 +51,27 @@ module Katello
         return name.split(ARCH_RE)
       end
 
-      def self.build_nvrea(package, include_zero_epoch = true)
-        nvrea = package[:name] + '-' + package[:version] + '-' + package[:release]
-        nvrea = nvrea + '.' + package[:arch] unless package[:arch].nil?
-        nvrea = nvrea + '.' + package[:suffix] unless package[:suffix].nil?
-        unless package[:epoch].nil?
-          nvrea = package[:epoch] + ':' + nvrea if package[:epoch].to_i != 0 || include_zero_epoch
+      def self.format_requires(requires)
+        flags = {'GT' => '>', 'LT' => '>', 'EQ' => '=', 'GE' => '>=', 'LE' => '<='}
+        if requires['flags']
+          "#{requires['name']} #{flags[requires['flags']]} #{build_vrea(requires, false)}"
+        else
+          build_nvrea(requires, false)
         end
-        nvrea
+      end
+
+      def self.build_nvrea(package, include_zero_epoch = true)
+        [package[:name], build_vrea(package, include_zero_epoch)].compact.reject(&:empty?).join('-')
+      end
+
+      def self.build_vrea(package, include_zero_epoch = true)
+        vrea =  [package[:version], package[:release]].compact.join('-')
+        vrea = vrea + '.' + package[:arch] unless package[:arch].nil?
+        vrea = vrea + '.' + package[:suffix] unless package[:suffix].nil?
+        unless package[:epoch].nil?
+          vrea = package[:epoch] + ':' + vrea if package[:epoch].to_i != 0 || include_zero_epoch
+        end
+        vrea
       end
 
       def self.build_nvra(package)
@@ -90,25 +103,6 @@ module Katello
         end
 
         selected_packs
-      end
-
-      def self.divide_packages_by_name(packages)
-        pack_map = {}
-        packages.each do |p|
-          pack_map[p['name']] ||= []
-          pack_map[p['name']] << p
-        end
-        pack_map
-      end
-
-      def self.filter_latest_packages_by_name(packages)
-        pack_map = divide_packages_by_name packages
-
-        result = []
-        pack_map.each_pair do |_name, packs|
-          result += find_latest_packages packs
-        end
-        result
       end
 
       def self.validate_package_list_format(packages)
@@ -145,18 +139,6 @@ module Katello
         else
           search_results.filter :or, repo_filter_ids
         end
-      end
-
-      def self.version_filter(minimum = nil, maximum = nil)
-        filters = []
-        filters << Util::PackageFilter.new(minimum, Util::PackageFilter::GREATER_THAN).clauses unless minimum.blank?
-        filters << Util::PackageFilter.new(maximum, Util::PackageFilter::LESS_THAN).clauses unless maximum.blank?
-
-        filters
-      end
-
-      def self.version_eq_filter(version)
-        [Util::PackageFilter.new(version, Util::PackageFilter::EQUAL).clauses]
       end
 
       # Converts a package version to a sortable string

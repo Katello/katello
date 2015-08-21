@@ -36,9 +36,9 @@ module Katello
       where(:errata_type => type)
     end
 
-    scope :security, of_type(Erratum::SECURITY)
-    scope :bugfix, of_type(Erratum::BUGZILLA)
-    scope :enhancement, of_type(Erratum::ENHANCEMENT)
+    scope :security, -> { of_type(Erratum::SECURITY) }
+    scope :bugfix, -> { of_type(Erratum::BUGZILLA) }
+    scope :enhancement, -> { of_type(Erratum::ENHANCEMENT) }
 
     def self.repository_association_class
       RepositoryErratum
@@ -93,6 +93,10 @@ module Katello
     def self.list_filenames_by_clauses(clauses)
       errata = Katello.pulp_server.extensions.errata.search(Katello::Erratum::CONTENT_TYPE, :filters => clauses)
       Katello::ErratumPackage.joins(:erratum).where("#{Erratum.table_name}.uuid" => errata.map { |e| e['_id'] }).pluck(:filename)
+    end
+
+    def self.unit_handler
+      Katello.pulp_server.extensions.errata
     end
 
     private

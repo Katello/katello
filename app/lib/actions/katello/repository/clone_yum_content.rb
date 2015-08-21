@@ -41,6 +41,7 @@ module Actions
             if purge_empty_units
               plan_action(Katello::Repository::IndexErrata, target_repo)
               plan_action(Pulp::Repository::PurgeEmptyErrata, :pulp_id => target_repo.pulp_id)
+              plan_action(Katello::Repository::IndexPackageGroups, target_repo)
               plan_action(Pulp::Repository::PurgeEmptyPackageGroups, :pulp_id => target_repo.pulp_id)
             end
 

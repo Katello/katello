@@ -1,11 +1,9 @@
 module Katello
   class BulkActions
-    attr_accessor :systems, :user, :organization
+    attr_accessor :systems
 
-    def initialize(user, org, systems)
+    def initialize(systems)
       self.systems = systems
-      self.organization = org
-      self.user = user
     end
 
     def install_packages(packages)

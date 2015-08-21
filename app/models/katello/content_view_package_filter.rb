@@ -1,6 +1,6 @@
 module Katello
   class ContentViewPackageFilter < ContentViewFilter
-    CONTENT_TYPE = Package::CONTENT_TYPE
+    CONTENT_TYPE = Rpm::CONTENT_TYPE
 
     has_many :package_rules, :dependent => :destroy, :foreign_key => :content_view_filter_id,
                              :class_name => "Katello::ContentViewPackageFilterRule"
@@ -12,12 +12,11 @@ module Katello
     # @param repo [Repository] a repository containing packages to filter
     # @return [Array] an array of hashes with MongoDB conditions
     def generate_clauses(repo)
-      package_filenames = package_rules.reject { |rule| rule.name.blank? }.flat_map do |rule|
-        filter = version_filter(rule)
-        Package.legacy_search(rule.name, 0, repo.package_count, [repo.pulp_id], [:nvrea_sort, "asc"],
-                       :all, 'name', filter).map(&:filename).compact
-      end
+      package_filenames = []
 
+      self.package_rules.each do |rule|
+        package_filenames.concat(query_rpms(repo, rule))
+      end
       if self.original_packages
         package_filenames.concat(repo.packages_without_errata.map(&:filename))
       end
@@ -31,12 +30,15 @@ module Katello
 
     protected
 
-    def version_filter(rule)
+    def query_rpms(repo, rule)
+      query_name = rule.name.gsub("*", "%")
+      query = Rpm.in_repositories(repo).where("#{Rpm.table_name}.name ilike ?", query_name)
       if !rule.version.blank?
-        Util::Package.version_eq_filter(rule.version)
+        query = query.search_version_equal(rule.version)
       elsif !rule.min_version.blank? || !rule.max_version.blank?
-        Util::Package.version_filter(rule.min_version, rule.max_version)
+        query = query.search_version_range(rule.min_version, rule.max_version)
       end
+      query.pluck("#{Rpm.table_name}.filename")
     end
   end
 end

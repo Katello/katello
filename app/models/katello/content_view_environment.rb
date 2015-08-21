@@ -18,7 +18,7 @@ module Katello
 
     before_save :generate_info
 
-    scope :non_default, joins(:content_view).where("katello_content_views.default" => false)
+    scope :non_default, -> { joins(:content_view).where("katello_content_views.default" => false) }
 
     def self.for_systems(systems)
       joins("INNER JOIN #{System.table_name} on #{System.table_name}.environment_id = #{ContentViewEnvironment.table_name}.environment_id").
