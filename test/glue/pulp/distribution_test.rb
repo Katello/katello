@@ -11,7 +11,7 @@ module Katello
 
       VCR.insert_cassette('pulp/content/distribution')
 
-      RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
+      RepositorySupport.create_and_sync_repo(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
     end
 
     def self.after_suite
