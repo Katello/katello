@@ -343,12 +343,14 @@ module Katello
     end
 
     def test_units_for_removal_yum
-      rpms = @fedora_17_x86_64.rpms.sample(2).sort
+      rpms = @fedora_17_x86_64.rpms.sample(2)
+      rpm_ids = rpms.map(&:id).sort
+      rpm_uuids = rpms.map(&:uuid).sort
 
       refute_empty rpms
-      assert_equal rpms, @fedora_17_x86_64.units_for_removal(rpms.map(&:id)).sort
-      assert_equal rpms, @fedora_17_x86_64.units_for_removal(rpms.map(&:id).map(&:to_s)).sort
-      assert_equal rpms, @fedora_17_x86_64.units_for_removal(rpms.map(&:uuid)).sort
+      assert_equal rpm_ids, @fedora_17_x86_64.units_for_removal(rpm_ids).map(&:id).sort
+      assert_equal rpm_ids, @fedora_17_x86_64.units_for_removal(rpm_ids.map(&:to_s)).map(&:id).sort
+      assert_equal rpm_uuids, @fedora_17_x86_64.units_for_removal(rpm_uuids).map(&:uuid).sort
     end
 
     def test_units_for_removal_puppet
