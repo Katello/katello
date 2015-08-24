@@ -10,6 +10,7 @@ module Katello
 
         alias_method_chain :validate_media?, :capsule
         alias_method_chain :set_hostgroup_defaults, :katello_attributes
+        alias_method_chain :info, :katello
 
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
                                :dependent => :restrict, :inverse_of => :foreman_host
@@ -30,6 +31,15 @@ module Katello
 
       def rhsm_organization_label
         self.organization.label
+      end
+
+      def info_with_katello
+        info = info_without_katello
+        info['parameters']['kt_env'] = self.lifecycle_environment.try(:label) #deprecated
+        info['parameters']['kt_cv'] = self.content_view.try(:label) #deprecated
+        info['parameters']['lifecycle_environment'] = self.lifecycle_environment.try(:label)
+        info['parameters']['content_view'] = self.content_view.try(:label)
+        info
       end
 
       def update_content_host
