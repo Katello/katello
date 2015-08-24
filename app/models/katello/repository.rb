@@ -394,8 +394,8 @@ module Katello
     end
 
     def latest_dynflow_sync
-      ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Repository::Sync).
-                for_resource(self).order(:started_at).last
+      @latest_dynflow_sync ||= ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Repository::Sync).
+                                for_resource(self).order(:started_at).last
     end
 
     def create_clone(options)

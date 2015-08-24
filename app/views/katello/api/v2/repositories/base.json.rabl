@@ -4,10 +4,10 @@ extends 'katello/api/v2/common/identifier'
 
 attributes :content_type, :url, :relative_path
 
-child :product do |product|
+child :product do |_product|
   attributes :id, :cp_id, :name
   node :sync_plan do |_sync_plan|
-    partial('katello/api/v2/sync_plans/show', :object => product.sync_plan)
+    attributes :name, :description, :sync_date, :interval, :next_sync
   end
 end
 
