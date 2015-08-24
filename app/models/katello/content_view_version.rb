@@ -4,7 +4,7 @@ module Katello
 
     include Authorization::ContentViewVersion
 
-    before_destroy :check_ready_to_destroy!
+    before_destroy :validate_destroyable!
 
     belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
     has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
@@ -98,6 +98,14 @@ module Katello
 
     def default_content_view?
       default?
+    end
+
+    def in_composite?
+      composite_content_views.any?
+    end
+
+    def in_environment?
+      environments.any?
     end
 
     def available_releases
@@ -239,11 +247,19 @@ module Katello
       fail _("Default content view versions cannot be promoted") if default?
     end
 
-    def check_ready_to_destroy!
-      if environments.any? && !organization.being_deleted?
-        fail _("Cannot delete version while it is in environments: %s") % environments.map(&:name).join(",")
+    def validate_destroyable!(skip_environment_check = false)
+      unless organization.being_deleted?
+        if !skip_environment_check && in_environment?
+          fail _("Cannot delete version while it is in environments: %s") %
+                   environments.map(&:name).join(",")
+        end
+
+        if in_composite?
+          fail _("Cannot delete version while it is in use by composite content views: %s") %
+                   composite_content_views.map(&:name).join(",")
+        end
       end
-      return true
+      true
     end
 
     private
