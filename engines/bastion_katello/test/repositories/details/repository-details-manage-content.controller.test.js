@@ -1,5 +1,5 @@
 describe('Controller: RepositoryManageContentController', function() {
-    var $scope, translate, Repository, Nutupane, PuppetModule, Package, DockerImage;
+    var $scope, translate, Repository, Nutupane, PuppetModule, Package, PackageGroup, DockerImage;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -40,6 +40,7 @@ describe('Controller: RepositoryManageContentController', function() {
             Repository: Repository,
             PuppetModule: PuppetModule,
             Package: Package,
+            PackageGroup: PackageGroup,
             DockerImage: DockerImage,
         });
     }));
