@@ -79,6 +79,10 @@ module Katello
       where(:environment_id => organization.kt_environments.pluck(:id))
     end
 
+    def self.in_organizations(organizations)
+      where(:environment_id => organizations.collect { |org| org.kt_environments.pluck(:id) })
+    end
+
     def self.in_content_view_version_environments(version_environments)
       #takes a structure of [{:content_view_version => ContentViewVersion, :environments => [KTEnvironment]}]
       queries = version_environments.map do |version_environment|

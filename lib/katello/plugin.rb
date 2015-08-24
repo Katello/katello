@@ -139,16 +139,6 @@ Foreman::Plugin.register :katello do
        :after => :content_hosts,
        :turbolinks => false
 
-  menu :top_menu,
-       :content_dashboard,
-       :caption => N_('Content Dashboard'),
-       :url_hash => {:controller => 'katello/dashboard',
-                     :action => 'index'},
-       :engine => Katello::Engine,
-       :parent => :monitor_menu,
-       :after => :dashboard,
-       :turbolinks => false
-
   allowed_template_helpers :subscription_manager_configuration_url
   search_path_override("Katello") do |resource|
     "/#{Katello::Util::Model.model_to_controller_path(resource)}/auto_complete_search"
@@ -163,4 +153,11 @@ Foreman::Plugin.register :katello do
   logger :action, :enabled => true
   logger :tire_rest, :enabled => false
   logger :manifest_import_logger, :enabled => true
+
+  widget 'errata_widget', :name => 'Errata Widget', :sizey => 1, :sizex => 6
+  widget 'content_views_widget', :name => 'Content Views Widget', :sizey => 1, :sizex => 6
+  widget 'sync_widget', :name => 'Sync Widget', :sizey => 1, :sizex => 6
+  widget 'subscription_widget', :name => 'Content Host Subscription Status Widget', :sizey => 1, :sizex => 6
+  widget 'subscription_status_widget', :name => 'Subscription Status Widget', :sizey => 1, :sizex => 6
+  widget 'host_collection_widget', :name => 'Host Collection Widget', :sizey => 1, :sizex => 6
 end

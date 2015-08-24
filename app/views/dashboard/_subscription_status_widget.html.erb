@@ -1,0 +1,32 @@
+<h4 class="header">
+  <%= _("Current Subscription Totals") %>
+</h4>
+
+<% organizations = Organization.current.present? ? [Organization.current] : User.current.allowed_organizations %>
+<% subscriptions = organizations.collect { |org| org.redhat_provider.index_subscriptions }.flatten %>
+<% total_active_subscriptions = Katello::Pool.active(subscriptions).count %>
+<% total_expiring_subscriptions = Katello::Pool.expiring_soon(subscriptions).count %>
+<% total_recently_expired_subscriptions = Katello::Pool.recently_expired(subscriptions).count %>
+
+<table class="table table-striped ellipsis table-bordered">
+  <thead>
+    <tr>
+      <th>Subscription Status</th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><%= _("Active Subscriptions") %></td>
+      <td style="text-align:right;"><%= total_active_subscriptions %></td>
+    </tr>
+    <tr>
+      <td><%= _("Subscriptions Expiring in 120 Days") %></td>
+      <td style="text-align:right;"><%= total_expiring_subscriptions %></td>
+    </tr>
+    <tr>
+      <td><%= _("Recently Expired Subscriptions") %></td>
+      <td style="text-align:right;"><%= total_recently_expired_subscriptions %></td>
+    </tr>
+  </tbody>
+</table>
