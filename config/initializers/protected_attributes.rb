@@ -1,0 +1,1 @@
+require 'protected_attributes'
