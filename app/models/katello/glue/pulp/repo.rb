@@ -174,7 +174,8 @@ module Katello
         when Repository::OSTREE_TYPE
           options = { :protected => !self.unprotected,
                       :id => self.pulp_id,
-                      :auto_publish => true }
+                      :auto_publish => true,
+                      :relative_path => relative_path }
           dist = Runcible::Models::OstreeDistributor.new(options)
           [dist, nodes_distributor]
         else
