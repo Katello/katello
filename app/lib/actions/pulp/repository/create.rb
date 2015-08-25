@@ -134,10 +134,8 @@ module Actions
         end
 
         def ostree_distributor
-          ostree_path_url = URI(input[:feed])
-
           options = { id: input[:pulp_id],
-                      relative_path: ostree_path_url.path}
+                      relative_path: input[:path]}
           Runcible::Models::OstreeDistributor.new(options)
         end
       end
