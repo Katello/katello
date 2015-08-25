@@ -33,7 +33,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "strong_parameters", "~> 0.2.1" # remove after we upgrade to Rails 4
 
   gem.add_dependency "qpid_messaging", ">= 0.30.0", '< 0.31.0'
-
   gem.add_dependency "gettext_i18n_rails"
 
   # Pulp
@@ -41,7 +40,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "anemone"
 
   # UI
-  gem.add_dependency "haml-rails"
   gem.add_dependency "deface", '< 1.0.0'
   gem.add_dependency "jquery-ui-rails"
   gem.add_dependency "bastion", ">= 2.0.0", "< 3.0.0"

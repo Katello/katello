@@ -1,0 +1,26 @@
+<%= javascript 'katello/sync_management' %>
+
+<%= javascript do %>
+  localize({
+    "cancel": "<%= escape_javascript(_('Cancel')) %>",
+    "cancelled": "<%= escape_javascript(_('Sync Canceled')) %>",
+    "error": "<%= escape_javascript(_('Error')) %>",
+    "complete": "<%= escape_javascript(_('Sync complete.')) %>",
+    "no_start_time": "<%= escape_javascript(_('No start time currently available.')) %>"
+  });
+
+    KT.repo_status = $.parseJSON('<%= escape_javascript(@repo_status.to_json.html_safe) %>');
+    KT.permissions = { "syncable" : <%= any_syncable? %> };
+<% end %>
+
+<div class="grid_4">
+  <h2>
+    <%= _("Sync Status") %>
+  </h2>
+</div>
+
+<%= render 'controls' %>
+
+<div id="main" class="grid_16">
+  <%= render 'products' %>
+</div>
