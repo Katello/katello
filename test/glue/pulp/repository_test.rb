@@ -129,6 +129,20 @@ module Katello
       assert_equal "ACME/library_label/custom/fedora_label/test",
         Glue::Pulp::Repos.custom_repo_path(env, product, "test")
     end
+
+    def test_pulp_update_needed?
+      refute @fedora_17_x86_64.pulp_update_needed?
+
+      @fedora_17_x86_64.url = 'https://www.google.com'
+      @fedora_17_x86_64.save!
+      assert @fedora_17_x86_64.pulp_update_needed?
+
+      @fedora_17_x86_64.stubs(:redhat?).returns(true)
+
+      @fedora_17_x86_64.url = 'https://www.yahoo.com'
+      @fedora_17_x86_64.save!
+      assert @fedora_17_x86_64.pulp_update_needed?
+    end
   end
 
   class GluePulpRepoAfterSyncTest < GluePulpRepoTestBase
