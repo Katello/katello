@@ -489,11 +489,9 @@ module Katello
       end
 
       def pulp_update_needed?
-        unless redhat? || previous_changes.key?('url')
-          allowed_changes = %w(url unprotected checksum_type docker_upstream_name)
-          allowed_changes << "name" if docker?
-          allowed_changes.any? { |key| previous_changes.key?(key) }
-        end
+        changeable_attributes = %w(url unprotected checksum_type docker_upstream_name)
+        changeable_attributes << "name" if docker?
+        changeable_attributes.any? { |key| previous_changes.key?(key) }
       end
 
       def sync(options = {})
