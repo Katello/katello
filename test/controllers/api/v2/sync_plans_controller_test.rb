@@ -27,7 +27,6 @@ module Katello
       setup_controller_defaults_api
       login_user(User.find(users(:admin)))
       @request.env['HTTP_ACCEPT'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       Repository.any_instance.stubs(:sync_status).returns(PulpSyncStatus.new({}))
       Repository.any_instance.stubs(:last_sync).returns(DateTime.now.to_s)
       models
@@ -124,7 +123,7 @@ module Katello
       get :available_products, :id => @sync_plan.id, :organization_id => @organization.id
 
       assert_response :success
-      assert_template 'api/v2/sync_plans/available_products'
+      assert_template 'api/v2/sync_plans/../products/index'
     end
 
     def test_available_products_protected
