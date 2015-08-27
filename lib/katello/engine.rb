@@ -175,6 +175,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.2/update_metadata_expire.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_package_groups.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_rpms.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_distributions.rake"
     end
   end
 end

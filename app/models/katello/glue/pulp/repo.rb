@@ -45,6 +45,19 @@ module Katello
         def self.delete_orphaned_content
           Katello.pulp_server.resources.content.remove_orphans
         end
+
+        def self.distribution_bootable?(distribution)
+          # Not every distribution from Pulp represents a bootable
+          # repo. Determine based on the files in the repo.
+          distribution["files"].any? do |file|
+            if file.is_a? Hash
+              filename = file[:relativepath]
+            else
+              filename = file
+            end
+            filename.include?("vmlinuz") || filename.include?("pxeboot")
+          end
+        end
       end
     end
 
@@ -236,12 +249,6 @@ module Katello
         Katello.pulp_server.extensions.repository.errata_ids(self.pulp_id)
       end
 
-      def distribution_ids
-        Katello.pulp_server.extensions.repository.distributions(self.pulp_id).collect do |distribution|
-          distribution['_id']
-        end
-      end
-
       def package_group_count
         content_unit_counts = 0
         if self.pulp_repo_facts
@@ -391,31 +398,6 @@ module Katello
         end
       end
 
-      def distributions
-        if @repo_distributions.nil?
-          # we fetch ids and then fetch distributions by id, because repo distributions do not contain
-          # all the info needed, e.g. repoids
-          tmp_distributions = []
-          self.distribution_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
-            tmp_distributions.concat(Katello.pulp_server.extensions.distribution.find_all_by_unit_ids(sub_list))
-          end
-          self.distributions = tmp_distributions
-        end
-        @repo_distributions
-      end
-
-      def distributions=(attrs)
-        @repo_distributions = attrs.collect do |dist|
-          Katello::Distribution.new(dist)
-        end
-        @repo_distributions
-      end
-
-      def bootable_distribution
-        return unless self.unprotected
-        self.distributions.find { |distribution| distribution.bootable? }
-      end
-
       def package_group_categories(search_args = {})
         categories = Katello.pulp_server.extensions.repository.package_categories(self.pulp_id)
         unless search_args.empty?
@@ -463,13 +445,6 @@ module Katello
         docker_tags.map do |tag|
           {:tag => tag.name, :image_id => tag.docker_image.image_id}
         end
-      end
-
-      def distribution?(id)
-        self.distributions.each do |distro|
-          return true if distro.id == id
-        end
-        return false
       end
 
       def sync_schedule(date_and_time)
@@ -546,7 +521,6 @@ module Katello
           # (e.g. changelog, filelist...etc).
           events << Katello.pulp_server.extensions.rpm.copy(self.pulp_id, to_repo.pulp_id,
                                                     :fields => Rpm::PULP_SELECT_FIELDS)
-          events << clone_distribution(to_repo)
 
           # Since the rpms will be copied above, during the copy of errata and package groups,
           # include the copy_children flag to request that pulp skip copying them again.
@@ -560,10 +534,6 @@ module Katello
 
       def clone_file_metadata(to_repo)
         Katello.pulp_server.extensions.yum_repo_metadata_file.copy(self.pulp_id, to_repo.pulp_id)
-      end
-
-      def clone_distribution(to_repo)
-        Katello.pulp_server.extensions.distribution.copy(self.pulp_id, to_repo.pulp_id)
       end
 
       def unassociate_by_filter(content_type, filter_clauses)
@@ -586,7 +556,6 @@ module Katello
       def content_types
         [Katello.pulp_server.extensions.errata,
          Katello.pulp_server.extensions.package_group,
-         Katello.pulp_server.extensions.distribution,
          Katello.pulp_server.extensions.puppet_module
         ]
       end

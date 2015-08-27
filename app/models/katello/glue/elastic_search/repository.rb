@@ -20,12 +20,6 @@ module Katello
       end
     end
 
-    def index_distributions
-      #reindex all distributions, much simpler
-      Tire.index(Katello::Distribution.index).delete
-      Katello::Distribution.index_all
-    end
-
     def indexed_puppet_module_ids
       Katello::PuppetModule.indexed_ids_for_repo(pulp_id)
     end
@@ -40,8 +34,8 @@ module Katello
       self.index_db_errata
       self.index_db_docker_images
       self.index_puppet_modules
-      self.index_distributions
       self.index_db_package_groups
+      self.import_distribution_data
       true
     end
   end

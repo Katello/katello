@@ -16,6 +16,16 @@ attributes :content_id, :content_view_version_id, :library_instance_id
 attributes :product_type
 attributes :promoted? => :promoted
 
+if @resource.is_a?(Katello::Repository)
+  if @resource.distribution_version || @resource.distribution_arch || @resource.distribution_family || @resource.distribution_variant
+    attributes :distribution_version
+    attributes :distribution_arch
+    attributes :distribution_bootable? => :distribution_bootable
+    attributes :distribution_family
+    attributes :distribution_variant
+  end
+end
+
 node :permissions do |repo|
   {
     :deletable => repo.deletable?

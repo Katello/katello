@@ -99,6 +99,12 @@ module Katello
     scoped_search :rename => :product, :on => :name, :in => :product, :complete_value => true
     scoped_search :on => :content_type, :complete_value => Katello::Repository::TYPES.each_with_object({})  { |value, hash| hash[value.to_sym] = value }
     scoped_search :on => :content_view_id, :in => :content_view_repositories
+    scoped_search :on => :distribution_version, :complete_value => true
+    scoped_search :on => :distribution_arch, :complete_value => true
+    scoped_search :on => :distribution_family, :complete_value => true
+    scoped_search :on => :distribution_variant, :complete_value => true
+    scoped_search :on => :distribution_bootable, :complete_value => true
+    scoped_search :on => :distribution_uuid, :complete_value => true
 
     def organization
       if self.environment
@@ -478,6 +484,26 @@ module Katello
         self.removable_unit_association.where("#{table_name}.id in (?)", ids)
       else
         self.removable_unit_association.where("#{table_name}.uuid in (?)", ids)
+      end
+    end
+
+    def self.import_distributions
+      self.all.each do |repo|
+        repo.import_distribution_data
+      end
+    end
+
+    def import_distribution_data
+      distribution = Katello.pulp_server.extensions.repository.distributions(self.pulp_id).first
+      if distribution
+        self.update_attributes!(
+          :distribution_version => distribution["version"],
+          :distribution_arch => distribution["arch"],
+          :distribution_family => distribution["family"],
+          :distribution_variant => distribution["variant"],
+          :distribution_uuid => distribution["_id"],
+          :distribution_bootable => ::Katello::Repository.distribution_bootable?(distribution)
+        )
       end
     end
 

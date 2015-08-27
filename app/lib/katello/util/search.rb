@@ -53,8 +53,7 @@ module Katello
       end
 
       def self.pulp_backend_search_classes
-        [Katello::PuppetModule,
-         Katello::Distribution]
+        [Katello::PuppetModule]
       end
 
       def self.get_subclasses(obj_class)

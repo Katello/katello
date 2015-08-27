@@ -16,12 +16,12 @@ module Katello
 
           medium_path = ::Medium.installation_media_path(repo.uri)
 
-          if distribution = repo.bootable_distribution
+          if distribution = repo.distribution_bootable?
             return if ::Medium.find_by_path(medium_path)
 
-            os = ::Redhat.find_or_create_operating_system(distribution)
+            os = ::Redhat.find_or_create_operating_system(repo)
 
-            arch = ::Architecture.where(:name => distribution.arch).first_or_create!
+            arch = ::Architecture.where(:name => repo.distribution_arch).first_or_create!
             os.architectures << arch unless os.architectures.include?(arch)
 
             medium_name = ::Medium.construct_name(repo, distribution)
