@@ -257,6 +257,35 @@ module ::Actions::Katello::Repository
     end
   end
 
+  class CloneOstreeContentTest  < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::CloneOstreeContent }
+    let(:source_repo) { katello_repositories(:ostree) }
+    let(:target_repo) { katello_repositories(:ostree_view1) }
+
+    it 'plans' do
+      action = create_action action_class
+      plan_action(action, source_repo, target_repo)
+      assert_action_planed_with(action, ::Actions::Katello::Repository::MetadataGenerate, target_repo)
+      assert_action_planed_with(action, ::Actions::ElasticSearch::Repository::IndexContent, id: target_repo.id)
+    end
+  end
+
+  class CloneOstreeContentEnvironmentTest  < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::CloneToEnvironment }
+    let(:source_repo) { katello_repositories(:ostree) }
+
+    it 'plans' do
+      action = create_action action_class
+      env = mock
+      clone = mock
+      action.expects(:find_or_build_environment_clone).returns(clone)
+      clone.expects(:new_record?).returns(false)
+      plan_action(action, source_repo, env)
+      assert_action_planed_with(action, ::Actions::Katello::Repository::Clear, clone)
+      assert_action_planed_with(action, ::Actions::Katello::Repository::CloneOstreeContent, source_repo, clone)
+    end
+  end
+
   class CapsuleGenerateAndSyncTest < TestBase
     include Support::CapsuleSupport
 

@@ -18,6 +18,8 @@ module Actions
                           :generate_metadata => !incremental, :index_content => !incremental, :simple_clone => incremental)
             elsif new_repository.docker?
               plan_action(Repository::CloneDockerContent, repository, new_repository)
+            elsif new_repository.ostree?
+              plan_action(Repository::CloneOstreeContent, repository, new_repository)
             end
           end
         end

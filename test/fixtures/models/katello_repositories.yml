@@ -287,3 +287,30 @@ rhel_6_x86_64_composite_view_version_1:
   product_id:           <%= ActiveRecord::Fixtures.identify(:redhat) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:composite_view_version_1) %>
+
+ostree:
+  name:                 ostree
+  pulp_id:              "Default_Organization-Test-ostree"
+  content_id:           1
+  content_type:         ostree
+  label:                ostree
+  relative_path:        '/ACME_Corporation/library/ostree'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  unprotected:           <%= true %>
+
+ostree_view1:
+  name:                 ostree
+  pulp_id:              "Default_Organization-Test-ostree"
+  content_id:           1
+  content_type:         ostree
+  library_instance:     ostree
+  label:                ostree
+  relative_path:        '/ACME_Corporation/library/ostree'
+  environment_id:
+  product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>
+  unprotected:           <%= true %>

@@ -135,7 +135,7 @@ module Actions
 
         def ostree_distributor
           options = { id: input[:pulp_id],
-                      relative_path: input[:path]}
+                      relative_path: input[:path] }
           Runcible::Models::OstreeDistributor.new(options)
         end
       end
