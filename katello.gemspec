@@ -40,7 +40,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "anemone"
 
   # UI
-  gem.add_dependency "deface", '< 1.0.0'
+  gem.add_dependency "deface", '>= 1.0.0', '< 2.0.0'
   gem.add_dependency "jquery-ui-rails"
   gem.add_dependency "bastion", ">= 2.0.0", "< 3.0.0"
   gem.add_development_dependency "less-rails", "~> 2.5.0"
