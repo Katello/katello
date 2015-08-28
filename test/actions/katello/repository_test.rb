@@ -265,6 +265,9 @@ module ::Actions::Katello::Repository
     it 'plans' do
       action = create_action action_class
       plan_action(action, source_repo, target_repo)
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::CopyOstreeBranch,
+                                source_pulp_id: source_repo.pulp_id,
+                                target_pulp_id: target_repo.pulp_id)
       assert_action_planed_with(action, ::Actions::Katello::Repository::MetadataGenerate, target_repo)
       assert_action_planed_with(action, ::Actions::ElasticSearch::Repository::IndexContent, id: target_repo.id)
     end
