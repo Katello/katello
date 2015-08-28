@@ -11,7 +11,7 @@ module Actions
           self.new_repository = repository.build_clone(content_view: content_view,
                                                        version: content_view_version)
           sequence do
-            plan_action(Repository::Create, new_repository, true)
+            plan_action(Repository::Create, new_repository, true, false, repository.ostree_branch_names)
 
             if new_repository.yum?
               plan_action(Repository::CloneYumContent, repository, new_repository, filters, !incremental,

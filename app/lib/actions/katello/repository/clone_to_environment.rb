@@ -9,7 +9,7 @@ module Actions
 
           sequence do
             if clone.new_record?
-              plan_action(Repository::Create, clone, true)
+              plan_action(Repository::Create, clone, true, false, repository.ostree_branch_names)
             else
               plan_action(Repository::Clear, clone)
             end
