@@ -382,10 +382,6 @@ module Katello
           :version => version
         }
 
-        ostree_branch_names.each do |branch_name|
-          ostree_branches << OstreeBranch.new(name: branch_name, repository: self)
-        end
-
         clone.relative_path = if clone.docker?
                                 Repository.clone_docker_repo_path(options)
                               else
