@@ -88,7 +88,7 @@ module Actions
           when ::Katello::Repository::DOCKER_TYPE
             [docker_distributor, nodes_distributor]
           when ::Katello::Repository::OSTREE_TYPE
-            [ostree_distributor, nodes_distributor]
+            [ostree_distributor]
           else
             fail _("Unexpected repo type %s") % input[:content_type]
           end
@@ -135,7 +135,8 @@ module Actions
 
         def ostree_distributor
           options = { id: input[:pulp_id],
-                      relative_path: input[:path] }
+                      relative_path: input[:path],
+                      auto_publish: true }
           Runcible::Models::OstreeDistributor.new(options)
         end
       end

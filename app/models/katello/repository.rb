@@ -446,7 +446,7 @@ module Katello
     end
 
     def node_syncable?
-      environment && !(environment.library? && content_view.default? && puppet?) && !file?
+      environment && !(environment.library? && content_view.default? && puppet?) && !file? && !ostree?
     end
 
     def exist_for_environment?(environment, content_view, attribute = nil)

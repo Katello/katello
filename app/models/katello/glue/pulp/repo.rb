@@ -176,7 +176,7 @@ module Katello
                       :auto_publish => true,
                       :relative_path => relative_path }
           dist = Runcible::Models::OstreeDistributor.new(options)
-          [dist, nodes_distributor]
+          [dist]
         else
           fail _("Unexpected repo type %s") % self.content_type
         end

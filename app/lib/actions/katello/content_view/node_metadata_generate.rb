@@ -15,7 +15,7 @@ module Actions
 
           concurrence do
             ::Katello::Repository.in_content_views([content_view]).in_environment(environment).each do |repo|
-              plan_action(Katello::Repository::NodeMetadataGenerate, repo)
+              plan_action(Katello::Repository::NodeMetadataGenerate, repo) unless repo.node_syncable?
             end
 
             cv_puppet_env = ::Katello::ContentViewPuppetEnvironment.in_environment(environment).
