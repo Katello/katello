@@ -247,12 +247,13 @@ Katello::Engine.routes.draw do
         api_resources :organizations do
           api_resources :sync_plans do
             member do
-              get :available_products
               put :add_products
               put :remove_products
             end
             collection do
               get :auto_complete_search
+              match ':sync_plan_id/available_products', :to => 'products#index',
+                :available_for => 'sync_plan'
             end
           end
           api_resources :systems, :only => [:create] do
