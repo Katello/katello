@@ -27,7 +27,6 @@ module Katello
       setup_controller_defaults_api
       login_user(User.find(users(:admin)))
       @request.env['HTTP_ACCEPT'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       Repository.any_instance.stubs(:sync_status).returns(PulpSyncStatus.new({}))
       Repository.any_instance.stubs(:last_sync).returns(DateTime.now.to_s)
       models
@@ -117,22 +116,6 @@ module Katello
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         delete :destroy, :organization_id => @organization.id, :id => @sync_plan.id
-      end
-    end
-
-    def test_available_products
-      get :available_products, :id => @sync_plan.id, :organization_id => @organization.id
-
-      assert_response :success
-      assert_template 'api/v2/sync_plans/available_products'
-    end
-
-    def test_available_products_protected
-      allowed_perms = [@view_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission]
-
-      assert_protected_action(:available_products, allowed_perms, denied_perms) do
-        get :available_products, :id => @sync_plan.id, :organization_id => @organization.id
       end
     end
 
