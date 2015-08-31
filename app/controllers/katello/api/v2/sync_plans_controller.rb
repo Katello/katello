@@ -87,18 +87,12 @@ module Katello
     param_group :search, Api::V2::ApiController
     param :name, String, :desc => N_("product name to filter by")
     def available_products
-      enabled_product_ids = Product.where(:organization_id => @organization).readable.select { |p| p.enabled? }.collect(&:id)
+      product_ids = @sync_plan.product_ids
+      products = Product.enabled.readable
+      products = products.where("#{Product.table_name}.id NOT IN (?)", product_ids) unless product_ids.empty?
 
-      filters = [:terms => {:id => enabled_product_ids - @sync_plan.product_ids}]
-      filters << {:term => {:name => params[:name]}} if params[:name]
-
-      options = {
-        :filters       => filters,
-        :load_records? => true
-      }
-
-      products = item_search(Product, params, options)
-      respond_for_index(:collection => products)
+      options = {:includes => [:sync_plan, :provider], :resource_class => Product}
+      respond_for_index(:collection => scoped_search(products, :name, :desc, options), :template => '../products/index')
     end
 
     api :PUT, "/organizations/:organization_id/sync_plans/:id/add_products", N_("Add products to sync plan")
