@@ -515,10 +515,12 @@ module Katello
       lib_yum_repo = Repository.find(katello_repositories(:rhel_6_x86_64))
       lib_puppet_repo = Repository.find(katello_repositories(:p_forge))
       lib_iso_repo = Repository.find(katello_repositories(:iso))
+      lib_ostree_repo = Repository.find(katello_repositories(:ostree_rhel7))
 
       assert lib_yum_repo.node_syncable?
       refute lib_puppet_repo.node_syncable?
       refute lib_iso_repo.node_syncable?
+      refute lib_ostree_repo.node_syncable?
     end
 
     def test_bad_checksum
