@@ -2,7 +2,7 @@ module Katello
   class OstreeBranch < Katello::Model
     belongs_to :repository, :class_name => "Katello::Repository", :inverse_of => :ostree_branches
     validates :name, presence: true, uniqueness: {scope: :repository_id}
-    validates :repository_id, :presence => true
+    validates :repository, :presence => true
     validate :ensure_ostree_repository
 
     def ensure_ostree_repository
