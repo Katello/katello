@@ -23,12 +23,19 @@ module Katello
     api :GET, "/subscriptions/:subscription_id/products", N_("List of subscription products in a subscription")
     api :GET, "/activation_keys/:activation_key_id/products", N_("List of subscription products in an activation key")
     api :GET, "/organizations/:organization_id/products", N_("List of products in an organization")
+    api :GET, "/organizations/:organization_id/sync_plans/:sync_plan_id/available_products",
+      N_("List of available Products for sync plan")
+    api :GET, "sync_plans/:sync_plan_id/products", N_("List of Products for sync plan")
+    api :GET, "/organizations/:organization_id/sync_plans/:sync_plan_id/products", N_("List of Products for sync plan")
     param :organization_id, :number, :desc => N_("Filter products by organization"), :required => true
     param :subscription_id, :identifier, :desc => N_("Filter products by subscription")
     param :name, String, :desc => N_("Filter products by name")
     param :enabled, :bool, :desc => N_("Filter products by enabled or disabled")
     param :custom, :bool, :desc => N_("Filter products by custom")
     param :include_available_content, :bool, :desc => N_("Whether to include available content attribute in results")
+    param :sync_plan_id, :identifier, :desc => N_("Filter products by sync plan id")
+    param :available_for, String, :desc => N_("Interpret specified object to return only Products that can be associated with specified object.  Only 'sync_plan' is supported."),
+          :required => false
     param_group :search, Api::V2::ApiController
     def index
       options = {:includes => [:sync_plan, :provider]}
@@ -43,6 +50,16 @@ module Katello
       query = query.where(:id => @activation_key.products) if @activation_key
       query = query.where(:id => @system.products) if @system
       query = query.where(:id => Pool.find_by_id!(params[:subscription_id]).products) if params[:subscription_id]
+
+      # filter by sync plan
+      if sync_plan_id = params[:sync_plan_id]
+        query = if params[:available_for] == "sync_plan"
+                  query.enabled.where("sync_plan_id != ? OR sync_plan_id IS NULL", sync_plan_id)
+                else
+                  query.where(:sync_plan_id => sync_plan_id)
+                end
+      end
+
       query
     end
 
