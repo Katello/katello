@@ -58,7 +58,7 @@ module Katello
     end
 
     def test_show
-      PuppetModule.any_instance.stubs(:backend_data).returns({})
+      Katello::Pulp::PuppetModule.any_instance.stubs(:backend_data).returns({})
       get :show, :repository_id => @repo.id, :id => @puppet_module.id
 
       assert_response :success
