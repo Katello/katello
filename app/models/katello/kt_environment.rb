@@ -23,8 +23,6 @@ module Katello
     has_many :repositories, :class_name => "Katello::Repository", dependent: :destroy, foreign_key: :environment_id
     has_many :systems, :class_name => "Katello::System", :inverse_of => :environment,
                        :dependent => :restrict, :foreign_key => :environment_id
-    has_many :distributors, :class_name => "Katello::Distributor", :inverse_of => :environment,
-                            :dependent => :destroy, :foreign_key => :environment_id
     has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
                                          :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :restrict
     has_many :content_view_puppet_environments, :class_name => "Katello::ContentViewPuppetEnvironment",

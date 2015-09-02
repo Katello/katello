@@ -259,7 +259,6 @@ Katello::Engine.routes.draw do
             get :report, :on => :collection
           end
 
-          api_resources :distributors, :only => [:index, :create]
           resource :uebercert, :only => [:show]
 
           api_resources :gpg_keys, :only => [:index]
@@ -312,19 +311,6 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :distributors, :only => [:show, :destroy, :create, :index, :update] do
-          member do
-            get :pools
-          end
-          api_resources :subscriptions, :only => [:create, :index, :destroy] do
-            collection do
-              match '/' => 'subscriptions#destroy_all', :via => :delete
-              match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
-            end
-          end
-        end
-        match "/distributor_versions" => "distributors#versions", :via => :get, :as => :distributor_versions
-
         api_resources :repositories, :only => [], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
           collection do
             match '/bulk/destroy' => 'repositories_bulk_actions#destroy_repositories', :via => :put
@@ -364,7 +350,6 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :environments, :only => [] do
-          api_resources :distributors, :only => [:create, :index]
           api_resources :products, :only => [:index] do
             get :repositories, :on => :member
           end

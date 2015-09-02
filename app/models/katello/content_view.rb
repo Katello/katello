@@ -25,7 +25,6 @@ module Katello
       end
     end
 
-    has_many :distributors, :class_name => "Katello::Distributor", :dependent => :restrict
     has_many :content_view_repositories, :dependent => :destroy
     has_many :repositories, :through => :content_view_repositories, :class_name => "Katello::Repository",
                             :after_remove => :remove_repository
@@ -469,7 +468,6 @@ module Katello
       errors = []
 
       dependencies = {systems:                _("systems"),
-                      distributors:           _("distributors"),
                       activation_keys:        _("activation keys")
       }
 
@@ -489,7 +487,6 @@ module Katello
 
       dependencies = {environments:           _("environments"),
                       systems:                _("systems"),
-                      distributors:           _("distributors"),
                       activation_keys:        _("activation keys")
       }
 
