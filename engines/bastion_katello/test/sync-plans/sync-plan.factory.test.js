@@ -60,7 +60,7 @@ describe('Factory: SyncPlan', function() {
     });
 
     it('provides a way to list the available products', function() {
-        $httpBackend.expectGET('/katello/api/v2/organizations/ACME/sync_plans/1/available_products').respond(products);
+        $httpBackend.expectGET('/katello/api/v2/organizations/ACME/sync_plans/1/products?available_for=sync_plan').respond(products);
         SyncPlan.availableProducts({id: 1}, function(products) {
             expect(products).toBe(products);
         });
@@ -77,7 +77,9 @@ describe('Factory: SyncPlan', function() {
     });
 
     it("provides a way to display the syncPlan's products", function() {
-        $httpBackend.expectGET('/katello/api/v2/organizations/ACME/sync_plans/1').respond(syncPlans.records[0]);
-        SyncPlan.products({id: 1});
+        $httpBackend.expectGET('/katello/api/v2/organizations/ACME/sync_plans/1/products').respond(products);
+        SyncPlan.products({id: 1}, function(products) {
+            expect(products).toBe(products);
+        });
     });
 });

@@ -254,6 +254,7 @@ Katello::Engine.routes.draw do
               get :auto_complete_search
               match ':sync_plan_id/available_products', :to => 'products#index',
                 :available_for => 'sync_plan'
+              match ':sync_plan_id/products', :to => 'products#index'
             end
           end
           api_resources :systems, :only => [:create] do
