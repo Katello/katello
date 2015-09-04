@@ -22,19 +22,14 @@ module Actions
                         when ::Katello::Repository::DOCKER_TYPE
                           Pulp::Repository::RemoveDockerImage
                         end
-          if repository.puppet?
-            uuids = content_units
-          else
-            uuids = content_units.map(&:uuid)
-            repository.remove_db_units(content_units)
-          end
+
+          uuids = content_units.map(&:uuid)
+          repository.remove_content(content_units)
 
           sequence do
             plan_action(pulp_action, :pulp_id => repository.pulp_id,
                                      :clauses => {:association => {'unit_id' => {'$in' => uuids}}
             })
-
-            plan_action(ElasticSearch::Repository::RemovePuppetModules, :pulp_id => repository.pulp_id, :uuids => uuids) if repository.puppet?
 
             plan_self(:repository_id => repository.id, :user_id => ::User.current.id)
           end

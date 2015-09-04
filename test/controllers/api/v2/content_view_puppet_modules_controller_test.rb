@@ -6,10 +6,7 @@ module Katello
   class Api::V2::ContentViewPuppetModulesControllerTest < ActionController::TestCase
     def models
       @content_view = katello_content_views(:library_view)
-      @puppet_module = katello_content_view_puppet_modules(:library_view_module_by_name)
-      PuppetModule.stubs(:find).returns(@puppet_module)
-      @puppet_module.stubs(:repositories).returns([])
-      PuppetModule.stubs(:exists?).returns(true)
+      @cv_puppet_module = katello_content_view_puppet_modules(:library_view_abrt_module)
     end
 
     def permissions
@@ -23,8 +20,6 @@ module Katello
       setup_controller_defaults_api
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @request.env['CONTENT_TYPE'] = 'application/json'
-      ContentViewPuppetModule.any_instance.stubs(:computed_version).returns("1.0")
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       models
       permissions
     end
@@ -49,11 +44,11 @@ module Katello
       @content_view = katello_content_views(:library_dev_view)
       assert_empty @content_view.puppet_modules
 
-      post :create, :content_view_id => @content_view.id, :name => "myFavoriteModule", :author => "johndoe"
+      post :create, :content_view_id => @content_view.id, :name => "abrt", :author => "johndoe"
 
       assert_response :success
       assert_template %w(katello/api/v2/content_view_puppet_modules/show)
-      assert_includes @content_view.reload.puppet_modules.map(&:name), "myFavoriteModule"
+      assert_includes @content_view.reload.puppet_modules.map(&:name), "abrt"
     end
 
     def test_create_protected
@@ -66,7 +61,7 @@ module Katello
     end
 
     def test_show
-      get :show, :content_view_id => @content_view.id, :id => @puppet_module.id
+      get :show, :content_view_id => @content_view.id, :id => @cv_puppet_module.id
 
       assert_response :success
       assert_template 'api/v2/content_view_puppet_modules/show'
@@ -77,16 +72,16 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:show, allowed_perms, denied_perms) do
-        get :show, :content_view_id => @content_view.id, :id => @puppet_module.id
+        get :show, :content_view_id => @content_view.id, :id => @cv_puppet_module.id
       end
     end
 
     def test_update_name
-      put :update, :content_view_id => @content_view.id, :id => @puppet_module, :name => "myNewFavoriteModule"
+      put :update, :content_view_id => @content_view.id, :id => @cv_puppet_module.id, :name => "dhcp"
 
       assert_response :success
       assert_template 'api/v2/common/update'
-      assert_equal @puppet_module.reload.name, "myNewFavoriteModule"
+      assert_equal @cv_puppet_module.reload.name, "dhcp"
     end
 
     def test_update_protected
@@ -94,15 +89,15 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
-        put :update, :content_view_id => @content_view.id, :id => @puppet_module.id, :name => "myNewFavoriteModule"
+        put :update, :content_view_id => @content_view.id, :id => @cv_puppet_module.id, :name => "myNewFavoriteModule"
       end
     end
 
     def test_destroy
-      delete :destroy, :content_view_id => @content_view.id, :id => @puppet_module.id
+      delete :destroy, :content_view_id => @content_view.id, :id => @cv_puppet_module.id
 
       assert_response :success
-      assert_nil ContentViewPuppetModule.find_by_id(@puppet_module.id)
+      assert_nil ContentViewPuppetModule.find_by_id(@cv_puppet_module.id)
     end
 
     def test_destroy_protected
@@ -110,7 +105,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        delete :destroy, :content_view_id => @content_view.id, :id => @puppet_module.id
+        delete :destroy, :content_view_id => @content_view.id, :id => @cv_puppet_module.id
       end
     end
   end

@@ -3,12 +3,16 @@ module Actions
     module ContentViewPuppetEnvironment
       class CloneContent < Actions::Base
         def plan(puppet_environment, module_ids_by_repoid)
-          concurrence do
-            module_ids_by_repoid.each_pair do |repo_id, module_ids|
-              source_repo = ::Katello::ContentViewPuppetEnvironment.where(:pulp_id => repo_id).first ||
-                ::Katello::Repository.where(:pulp_id => repo_id).first
-              plan_copy(Pulp::Repository::CopyPuppetModule, source_repo, puppet_environment, clauses(module_ids))
+          sequence do
+            concurrence do
+              module_ids_by_repoid.each_pair do |repo_id, module_ids|
+                source_repo = ::Katello::ContentViewPuppetEnvironment.where(:pulp_id => repo_id).first ||
+                  ::Katello::Repository.where(:pulp_id => repo_id).first
+                plan_copy(Pulp::Repository::CopyPuppetModule, source_repo, puppet_environment, clauses(module_ids))
+              end
             end
+
+            plan_action(Pulp::ContentViewPuppetEnvironment::IndexContent, id: puppet_environment.id)
           end
         end
 

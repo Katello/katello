@@ -321,9 +321,14 @@ module Katello
     end
 
     def test_units_for_removal_puppet
-      assert_raises(RuntimeError) do
-        @puppet_forge.units_for_removal(["3"])
-      end
+      puppet_modules = @puppet_forge.puppet_modules
+      puppet_ids = puppet_modules.map(&:id).sort
+      puppet_uuids = puppet_modules.map(&:uuid).sort
+
+      refute_empty puppet_modules
+      assert_equal puppet_ids, @puppet_forge.units_for_removal(puppet_ids).map(&:id).sort
+      assert_equal puppet_ids, @puppet_forge.units_for_removal(puppet_ids.map(&:to_s)).map(&:id).sort
+      assert_equal puppet_uuids, @puppet_forge.units_for_removal(puppet_uuids).map(&:uuid).sort
     end
 
     def test_packages_without_errata

@@ -17,18 +17,21 @@ module Katello
     scoped_search :on => :name, :in => :content_view, :rename => :content_view_name
 
     def puppet_module
-      PuppetModule.find(self.uuid)
+      PuppetModule.find_by_uuid(self.uuid)
     end
 
     def computed_version
-      computed_version = nil
-      if Katello.config.use_elasticsearch
-        names_and_authors = [{:name => self.name, :author => self.author}]
-        search = PuppetModule.latest_modules_search(names_and_authors,
-                                           self.content_view.organization.library.repositories.puppet_type.map(&:pulp_id))
-        computed_version = search[0].version
+      if self.uuid
+        puppet_module = PuppetModule.where(:uuid => self.uuid).first
+      else
+        puppet_module = PuppetModule.latest_module(
+          self.name,
+          self.author,
+          self.content_view.puppet_repos
+        )
       end
-      computed_version
+
+      puppet_module.version
     end
 
     before_save :set_attributes
@@ -38,7 +41,7 @@ module Katello
     def set_attributes
       return unless Katello.config.use_pulp
       if self.uuid.present?
-        puppet_module = PuppetModule.find(self.uuid)
+        puppet_module = PuppetModule.find_by_uuid(self.uuid)
         fail Errors::NotFound, _("Couldn't find Puppet Module with id '%s'") % self.uuid unless puppet_module
 
         self.name = puppet_module.name

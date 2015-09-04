@@ -2,7 +2,6 @@ module Katello
   class Api::V2::PackagesController < Api::V2::ApiController
     apipie_concern_subst(:a_resource => N_("a package"), :resource => "packages")
     include Katello::Concerns::Api::V2::RepositoryContentController
-    include Katello::Concerns::Api::V2::RepositoryDbContentController
 
     before_filter :find_repositories, :only => :auto_complete_name
 
