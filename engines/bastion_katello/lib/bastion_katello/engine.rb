@@ -29,6 +29,7 @@ module BastionKatello
           gpg_keys
           lifecycle_environments
           products
+          puppet_modules
           subscriptions
           sync_plans
           host_collections

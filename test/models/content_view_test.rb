@@ -320,16 +320,6 @@ module Katello
       view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64))
       view.save!
 
-      distro1 = Distribution.new
-      distro1.repoids = view.repositories.pluck(:pulp_id)
-      distro1.files = [{'relativepath' => 'vmlinuz'}]
-
-      distro2 = Distribution.new
-      distro2.repoids = []
-      distro2.files = [{'relativepath' => 'vmlinuz'}]
-
-      Distribution.stubs(:search).returns([distro1, distro2])
-
       assert_raises(RuntimeError) do
         view.check_distribution_conflicts!
       end
@@ -337,58 +327,46 @@ module Katello
 
     def test_check_distribution_conflicts_no_conflict
       view = @library_view
-      view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64))
+      view.repositories << Repository.find(katello_repositories(:rhel_7_x86_64))
+      view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64_dev))
+      view.repositories << Repository.find(katello_repositories(:feedless_fedora_17_x86_64))
       view.save!
 
-      distro1 = Distribution.new
-      distro1.repoids = []
-      distro1.files = [{'relativepath' => 'vmlinuz'}]
+      assert_empty view.check_distribution_conflicts!
+    end
 
-      Distribution.stubs(:search).returns([distro1])
-      assert_nil view.check_distribution_conflicts!
+    def test_conflicting_distributions_nil_value_no_conflict
+      view = @library_view
+      view.repositories << Repository.find(katello_repositories(:rhel_7_no_arch))
+      view.repositories << Repository.find(katello_repositories(:fedora_17_no_arch))
+      view.save!
+
+      assert_empty view.check_distribution_conflicts!
     end
 
     def test_duplicate_distributions
       view = @library_view
-      view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64))
+      duplicate_repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
+
+      view.repositories << duplicate_repo
       view.save!
 
-      distro1 = Distribution.new
-      distro1.repoids = view.repositories.pluck(:pulp_id)
-      distro1.files = [{'relativepath' => 'vmlinuz'}]
-
-      distro2 = Distribution.new
-      distro2.repoids = []
-      distro2.files = [{'relativepath' => 'vmlinuz'}]
-
-      Distribution.stubs(:search).returns([distro1, distro2])
-      assert_equal [distro1], view.duplicate_distributions
+      assert_includes view.duplicate_distributions, duplicate_repo
     end
 
     def test_distribution_conflicts
       view = @library_view
-      view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64))
+      conflicting_distribution = Repository.find(katello_repositories(:rhel_6_x86_64))
+      view.repositories << conflicting_distribution
       view.save!
 
-      distro1 = Distribution.new(:version => '6.4', :arch => 'x86_64')
-      distro1.repoids = [view.repositories[0].pulp_id]
-      distro1.files = [{'relativepath' => 'vmlinuz'}]
-
-      distro2 = Distribution.new(:version => '6.4', :arch => 'x86_64')
-      distro2.repoids = [view.repositories[1].pulp_id]
-      distro2.files = [{'relativepath' => 'vmlinuz'}]
-
-      distro3 = Distribution.new(:version => '6.5', :arch => 'x86_64')
-      distro3.repoids = []
-      distro3.files = [{'relativepath' => 'vmlinuz'}]
-
-      Distribution.stubs(:search).returns([distro1, distro2, distro3])
-
       conflicts = view.distribution_conflicts
-      assert_equal 1, conflicts.size
-      assert_equal '6.4', conflicts.first[:version]
-      assert_equal 'x86_64', conflicts.first[:arch]
-      assert_equal [distro1, distro2], conflicts.first[:distributions]
+      assert_equal 2, conflicts.count
+      conflicts.each do |c|
+        assert_equal conflicting_distribution.distribution_version, c.distribution_version
+        assert_equal conflicting_distribution.distribution_arch, c.distribution_arch
+      end
+      assert_includes conflicts, conflicting_distribution
     end
 
     def test_add_repository_from_other_org

@@ -18,14 +18,6 @@ Foreman::Plugin.register :katello do
                        :action => 'index'},
          :engine => Katello::Engine,
          :turbolinks => false
-    # TODO
-    # Refs http://projects.theforeman.org/issues/4883
-    # menu :top_menu,
-    #      :subscription_manager_applications,
-    #      :caption => N_('Subscription Manager Applications'),
-    #      :url_hash => {:controller => 'katello/distributors',
-    #                    :action => 'index'},
-    #      :engine => Katello::Engine
     menu :top_menu,
          :activation_keys,
          :url => '/activation_keys',
@@ -107,6 +99,16 @@ Foreman::Plugin.register :katello do
                        :action => 'index'},
          :engine => Katello::Engine,
          :turbolinks => false
+
+    menu :top_menu,
+         :puppet_modules,
+         :caption => N_('Puppet Modules'),
+         :url => '/puppet_modules',
+         :url_hash => {:controller => 'katello/api/v2/puppet_modules',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false
+
     menu :top_menu,
          :docker_tags,
          :caption => N_('Docker Tags'),

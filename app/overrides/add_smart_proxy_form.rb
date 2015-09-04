@@ -5,5 +5,5 @@ Deface::Override.new(:virtual_path => "smart_proxies/_form",
 
 Deface::Override.new(:virtual_path => "smart_proxies/_form",
                      :name => "add_smart_proxies_tab_pane",
-                     :insert_after => 'code[erb-loud]:contains("render"):contains("taxonomies/loc_org_tabs")',
+                     :insert_after => 'erb[loud]:contains("render"):contains("taxonomies/loc_org_tabs")',
                      :partial => '../overrides/foreman/smart_proxies/environment_tab_pane')

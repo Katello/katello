@@ -36,7 +36,7 @@ namespace :katello do
       begin
         yield
       rescue Exception => e
-        if object_class.ancestors.include?(Katello::Glue::Pulp::PulpContentUnit) || Katello::Util::Search.pulp_backend_search_classes.include?(object_class)
+        if object_class.ancestors.include?(Katello::Glue::Pulp::PulpContentUnit)
           report_bad_backend_class(object_class.name)
         else
           bad_objects = []
@@ -134,14 +134,9 @@ namespace :katello do
       end
     end
 
-    Katello::Util::Search.pulp_backend_search_classes.each do |object_class|
-      reindex_helper.index_objects(object_class) do
-        object_class.index_all
-      end
-    end
-
     Katello::Erratum.import_all
     Katello::PackageGroup.import_all
+    Katello::PuppetModule.import_all
 
     reindex_helper.index_objects(Katello::Rpm) do
       Katello::Rpm.import_all

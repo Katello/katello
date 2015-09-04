@@ -21,6 +21,7 @@ module Katello
       @update_permission = :edit_products
       @delete_permission = :destroy_products
       @sync_permission = :sync_products
+      @sync_plan_permission = :view_sync_plans
     end
 
     def setup
@@ -43,8 +44,22 @@ module Katello
       assert_template 'api/v2/products/index'
     end
 
+    def test_index_available_for
+      sync_plan = SyncPlan.first
+      @product.update_attribute(:sync_plan_id, sync_plan.id)
+      get :index, :organization_id => @organization.id, :available_for => 'sync_plan',
+        :sync_plan_id => sync_plan.id
+
+      ids = JSON.parse(response.body)['results'].map { |prod| prod['id'] }
+
+      assert_response :success
+      assert_template 'api/v2/products/index'
+
+      refute_includes ids, @product.id
+    end
+
     def test_index_protected
-      allowed_perms = [@read_permission]
+      allowed_perms = [@read_permission, @sync_plan_permission]
       denied_perms = [@create_permission, @delete_permission, @update_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do

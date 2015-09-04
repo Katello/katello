@@ -129,6 +129,20 @@ module Katello
       assert_equal "ACME/library_label/custom/fedora_label/test",
         Glue::Pulp::Repos.custom_repo_path(env, product, "test")
     end
+
+    def test_pulp_update_needed?
+      refute @fedora_17_x86_64.pulp_update_needed?
+
+      @fedora_17_x86_64.url = 'https://www.google.com'
+      @fedora_17_x86_64.save!
+      assert @fedora_17_x86_64.pulp_update_needed?
+
+      @fedora_17_x86_64.stubs(:redhat?).returns(true)
+
+      @fedora_17_x86_64.url = 'https://www.yahoo.com'
+      @fedora_17_x86_64.save!
+      assert @fedora_17_x86_64.pulp_update_needed?
+    end
   end
 
   class GluePulpRepoAfterSyncTest < GluePulpRepoTestBase
@@ -267,14 +281,18 @@ module Katello
       refute_empty @@fedora_17_x86_64.rpms
     end
 
-    def test_distributions
-      distributions = @@fedora_17_x86_64.distributions
+    def test_import_distribution_data
+      @@fedora_17_x86_64.import_distribution_data
 
-      refute_empty distributions.select { |distribution| distribution.id == "ks-Test Family-TestVariant-16-x86_64" }
+      assert @@fedora_17_x86_64.distribution_version == "16", "couldn't find version"
+      assert @@fedora_17_x86_64.distribution_arch == "x86_64", "couldn't find arch"
+      assert @@fedora_17_x86_64.distribution_family == "Test Family", "couldn't find family"
+      assert @@fedora_17_x86_64.distribution_variant == "TestVariant", "couldn't find variant"
+      assert @@fedora_17_x86_64.distribution_bootable == false, "couldn't find bootable"
     end
 
-    def test_distribution?
-      assert @@fedora_17_x86_64.distribution?("ks-Test Family-TestVariant-16-x86_64")
+    def test_distribution_bootable?
+      assert_equal @@fedora_17_x86_64.distribution_bootable?, true
     end
 
     def test_find_packages_by_name
@@ -337,7 +355,7 @@ module Katello
       @@fedora_17_x86_64_dev.create_pulp_repo
 
       task_list = @@fedora_17_x86_64.clone_contents(@@fedora_17_x86_64_dev)
-      assert_equal 5, task_list.length
+      assert_equal 4, task_list.length
 
       TaskSupport.wait_on_tasks(task_list)
     ensure
