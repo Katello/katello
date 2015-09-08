@@ -12,6 +12,8 @@ module Katello
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",
                                       :inverse_of => :content_view_puppet_environments
 
+    has_one :content_view, :through => :content_view_version, :class_name => "Katello::ContentView"
+
     belongs_to :puppet_environment, :class_name => "Environment",
                                     :inverse_of => :content_view_puppet_environment, :dependent => :destroy
 
