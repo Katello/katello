@@ -37,8 +37,7 @@ Foreman::Plugin.find(:katello).security_block :content_views do
                                             :view_compare_errata,
                                             :view_compare_packages,
                                             :view_compare_puppet_modules,
-                                            :views],
-               'katello/dashboard' => [:content_views, :promotions]
+                                            :views]
              },
              :resource_type => 'Katello::ContentView'
   permission :create_content_views,

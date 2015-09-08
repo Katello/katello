@@ -70,6 +70,12 @@ module Katello
         query = query.joins(:rpms).where("#{Rpm.table_name}.id" => Rpm.with_identifiers(params[:rpm_id]))
       end
 
+      if params[:puppet_module_id]
+        query = query
+                  .joins(:puppet_modules)
+                  .where("#{PuppetModule.table_name}.id" => PuppetModule.with_identifiers(params[:puppet_module_id]))
+      end
+
       if params[:content_view_version_id]
         query = query.where(:content_view_version_id => params[:content_view_version_id])
         query = Repository.where(:id => query.map(&:library_instance_id)) if params[:library]
@@ -286,11 +292,7 @@ module Katello
     end
 
     def find_content
-      if @repository.puppet?
-        @content = params[:ids] || params[:uuids]
-      else
-        @content = @repository.units_for_removal(params[:ids] || params[:uuids])
-      end
+      @content = @repository.units_for_removal(params[:ids] || params[:uuids])
     end
 
     def filter_by_content_view(query, content_view_id, environment_id, is_available_for)

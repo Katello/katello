@@ -93,39 +93,30 @@ module Katello
     param :id, :identifier, :desc => N_("content view numeric identifier"), :required => true
     param :name, String, :desc => N_("module name to restrict modules for"), :required => false
     def available_puppet_modules
-      current_ids = @view.content_view_puppet_modules.map(&:uuid).reject { |p| p.nil? }
+      current_uuids = @view.content_view_puppet_modules.where("uuid is NOT NULL").pluck(:uuid)
+      repositories = @view.organization.library.puppet_repositories
 
-      repo_ids = @view.organization.library.puppet_repositories.pluck(:pulp_id)
-      search_filters = [{ :terms => { :repoids => repo_ids }}]
+      query = PuppetModule.in_repositories(repositories)
+      query = query.where(:name => params[:name]) if params[:name]
+      query = query.where("#{PuppetModule.table_name}.uuid NOT in (?)", current_uuids) if current_uuids.present?
 
-      unless current_ids.empty?
-        search_filters << { :not => { :terms => { :id => current_ids } } }
-      end
-      search_filters << { :term => { :name => params[:name] } } if params[:name]
-      options = { :filters => search_filters, :sort_by => 'sortable_version', :sort_order => 'DESC' }
-
-      collection = item_search(PuppetModule, params, options)
-      collection[:results] = collection[:results].map { |i| PuppetModule.new(i.as_json) }
-
-      respond_for_index :template => 'puppet_modules', :collection => collection
+      respond_for_index :template => 'puppet_modules',
+                        :collection => scoped_search(query, 'name', 'ASC', :resource_class => PuppetModule)
     end
 
     api :GET, "/content_views/:id/available_puppet_module_names",
         N_("Get puppet modules names that are available to be added to the content view")
     param :id, :identifier, :desc => N_("content view numeric identifier"), :required => true
     def available_puppet_module_names
-      current_names = @view.content_view_puppet_modules.map(&:name).reject { |p| p.nil? }
-      repo_ids = @view.organization.library.puppet_repositories.pluck(:pulp_id)
-      search_filters = [{ :terms => { :repoids => repo_ids } }]
+      current_names = @view.content_view_puppet_modules.where("name is NOT NULL").pluck(:name)
 
-      unless current_names.empty?
-        search_filters << { :not => { :terms => { :name => current_names } } }
-      end
+      repos = @view.organization.library.puppet_repositories
 
-      options = {:filters  => search_filters}
+      modules = PuppetModule.in_repositories(repos)
+      modules = modules.where('name NOT in (?)', current_names) if current_names.present?
 
       respond_for_index :template => '../puppet_modules/names',
-                        :collection => facet_search(PuppetModule, 'name', options)
+                        :collection => scoped_search(modules, 'name', 'ASC', :resource_class => PuppetModule, :group => :name)
     end
 
     api :GET, "/content_views/:id/history", N_("Show a content view's history")

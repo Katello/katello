@@ -3,7 +3,6 @@ module Katello
     extend ActiveSupport::Concern
 
     include Authorizable
-    include Katello::Authorization
 
     def editable?
       authorized?(:edit_organizations)

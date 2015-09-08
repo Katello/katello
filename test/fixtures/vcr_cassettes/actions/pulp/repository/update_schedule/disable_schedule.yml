@@ -363,4 +363,367 @@ http_interactions:
       string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/0ebf761b-1205-4438-aadf-545f7938dd56/\", \"task_id\": \"0ebf761b-1205-4438-aadf-545f7938dd56\", \"tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"finish_time\": \"2015-04-13T14:27:15Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-04-13T14:27:15Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-0@katello-patternfly.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-0@katello-patternfly.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"552bd2437cb3f489b508a220\"}, \"id\": \"552bd2437396ca727c1c8519\"}"
     http_version: 
   recorded_at: Mon, 13 Apr 2015 14:27:16 GMT
+- request:
+    method: post
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/
+    body:
+      encoding: US-ASCII
+      string: "{\"id\":\"Fedora_17\",\"display_name\":\"Fedora 17 x86_64\",\"importer_type_id\":\"yum_importer\",\"importer_config\":{\"feed\":\"file:///var/www/test_repos/zoo\",\"ssl_ca_cert\":null,\"ssl_client_cert\":null,\"ssl_client_key\":null},\"notes\":{\"_repo-type\":\"rpm-repo\"},\"distributors\":[{\"distributor_type_id\":\"yum_distributor\",\"distributor_config\":{\"relative_url\":\"/test_path/\",\"http\":false,\"https\":true,\"protected\":true},\"auto_publish\":true,\"distributor_id\":\"Fedora_17\"},{\"distributor_type_id\":\"yum_clone_distributor\",\"distributor_config\":{\"destination_distributor_id\":\"Fedora_17\"},\"auto_publish\":false,\"distributor_id\":\"Fedora_17_clone\"},{\"distributor_type_id\":\"nodes_http_distributor\",\"distributor_config\":{},\"auto_publish\":true,\"distributor_id\":\"Fedora_17_nodes\"}]}"
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="dLW4ZfzcwPdREOtpLKzZI9O0n1r0sZGQDywUxWIflSU", oauth_signature="UZIBG3lnr07da4uC5lEAEJc1O0w%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439240739", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      Content-Length:
+      - "743"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Mon, 10 Aug 2015 21:05:39 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Location:
+      - Fedora_17
+      Content-Length:
+      - "320"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"scratchpad\": {}, \"display_name\": \"Fedora 17 x86_64\", \"description\": null, \"last_unit_added\": null, \"notes\": {\"_repo-type\": \"rpm-repo\"}, \"last_unit_removed\": null, \"content_unit_counts\": {}, \"_ns\": \"repos\", \"_id\": {\"$oid\": \"55c91224db0c2166403e9e19\"}, \"id\": \"Fedora_17\", \"_href\": \"/pulp/api/v2/repositories/Fedora_17/\"}"
+    http_version:
+  recorded_at: Mon, 10 Aug 2015 21:05:40 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="3pbHlvMdAcbrGnn3QZFOnQ2VCauJpFWyVnKBcTBka0w", oauth_signature="gz41gZ%2BMJXDo9hqTDv27izBqwmw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439240740", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Aug 2015 21:05:40 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "2"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "[]"
+    http_version:
+  recorded_at: Mon, 10 Aug 2015 21:05:40 GMT
+- request:
+    method: post
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/
+    body:
+      encoding: US-ASCII
+      string: "{\"schedule\":\"R1/030-01-01T05:00:00Z/P1D\"}"
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="l0uUS6ydIY2tZjpLIMfP0i24Q1zedIgLyHHEFJIg", oauth_signature="lDQ%2ByWRULPk22PynSPnREwCTbmI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439240740", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      Content-Length:
+      - "41"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Mon, 10 Aug 2015 21:05:40 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Location:
+      - /pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/55c91224db0c2166403e9e21/
+      Content-Length:
+      - "599"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"next_run\": \"2015-08-10T21:05:40Z\", \"remaining_runs\": 1, \"last_updated\": 1439240740.455189, \"first_run\": \"0301-01-01T05:00:00Z\", \"total_run_count\": 0, \"schedule\": \"R1/030-01-01T05:00:00Z/P1D\", \"kwargs\": {\"overrides\": {}}, \"args\": [\"Fedora_17\"], \"enabled\": true, \"last_run_at\": null, \"task\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"failure_threshold\": null, \"resource\": \"pulp:importer:Fedora_17:yum_importer\", \"_id\": \"55c91224db0c2166403e9e21\", \"consecutive_failures\": 0, \"_href\": \"/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/55c91224db0c2166403e9e21/\"}"
+    http_version:
+  recorded_at: Mon, 10 Aug 2015 21:05:40 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="m1aAwIc1H8fsgIeQBcmtmDotA0O8uDPr9ByAD5sxg", oauth_signature="8%2B6RHsv5yq%2FxDnGSJW505P%2Fv5VU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439240740", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Aug 2015 21:05:40 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "601"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "[{\"next_run\": \"2015-08-10T21:05:40Z\", \"remaining_runs\": 1, \"last_updated\": 1439240740.455189, \"first_run\": \"0301-01-01T05:00:00Z\", \"total_run_count\": 0, \"schedule\": \"R1/030-01-01T05:00:00Z/P1D\", \"kwargs\": {\"overrides\": {}}, \"args\": [\"Fedora_17\"], \"enabled\": true, \"last_run_at\": null, \"task\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"failure_threshold\": null, \"resource\": \"pulp:importer:Fedora_17:yum_importer\", \"_id\": \"55c91224db0c2166403e9e21\", \"consecutive_failures\": 0, \"_href\": \"/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/55c91224db0c2166403e9e21/\"}]"
+    http_version:
+  recorded_at: Mon, 10 Aug 2015 21:05:40 GMT
+- request:
+    method: put
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/55c91224db0c2166403e9e21/
+    body:
+      encoding: US-ASCII
+      string: "{\"enabled\":false}"
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="KQeAIjtX0GIBP7q6Q26vwExrnumKXFBsm1VZlGfnlk", oauth_signature="ZcdjCzwX80zaioDcfbZTDQO3tcc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439240740", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      Content-Length:
+      - "17"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Aug 2015 21:05:40 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "600"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"next_run\": \"2015-08-10T21:05:40Z\", \"remaining_runs\": 1, \"last_updated\": 1439240740.847237, \"first_run\": \"0301-01-01T05:00:00Z\", \"total_run_count\": 0, \"schedule\": \"R1/030-01-01T05:00:00Z/P1D\", \"kwargs\": {\"overrides\": {}}, \"args\": [\"Fedora_17\"], \"enabled\": false, \"last_run_at\": null, \"task\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"failure_threshold\": null, \"resource\": \"pulp:importer:Fedora_17:yum_importer\", \"_id\": \"55c91224db0c2166403e9e21\", \"consecutive_failures\": 0, \"_href\": \"/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/55c91224db0c2166403e9e21/\"}"
+    http_version:
+  recorded_at: Mon, 10 Aug 2015 21:05:40 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="pl4ke2FLIx1ukxG6LkFY9f1CcmQdLDc4JhKrg6bz8", oauth_signature="SqK531l0X6dcQ3OHf6MqYh8TQm4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439240740", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Aug 2015 21:05:40 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "602"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "[{\"next_run\": \"2015-08-10T21:05:40Z\", \"remaining_runs\": 1, \"last_updated\": 1439240740.847237, \"first_run\": \"0301-01-01T05:00:00Z\", \"total_run_count\": 0, \"schedule\": \"R1/030-01-01T05:00:00Z/P1D\", \"kwargs\": {\"overrides\": {}}, \"args\": [\"Fedora_17\"], \"enabled\": false, \"last_run_at\": null, \"task\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"failure_threshold\": null, \"resource\": \"pulp:importer:Fedora_17:yum_importer\", \"_id\": \"55c91224db0c2166403e9e21\", \"consecutive_failures\": 0, \"_href\": \"/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/55c91224db0c2166403e9e21/\"}]"
+    http_version:
+  recorded_at: Mon, 10 Aug 2015 21:05:40 GMT
+- request:
+    method: delete
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/Fedora_17/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="h7mypSXbVSQXIj5IJQKsQHhMv8rg0coS0WardBGAk8", oauth_signature="Q%2BVcwDKrCdQMtluGiLoLf%2Fix5GQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439240741", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Mon, 10 Aug 2015 21:05:41 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Encoding:
+      - utf-8
+      Content-Length:
+      - "172"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/6e00836a-2f59-4764-bb32-13b34ff7f817/\", \"task_id\": \"6e00836a-2f59-4764-bb32-13b34ff7f817\"}], \"result\": null, \"error\": null}"
+    http_version:
+  recorded_at: Mon, 10 Aug 2015 21:05:41 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/6e00836a-2f59-4764-bb32-13b34ff7f817/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="evzfayYddMqLvwt7nRr7r3wvIPBlpvW83Q59drUQ", oauth_signature="WbvfrKrvpD0mEfufVL56g6JX8IA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439240741", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Aug 2015 21:05:41 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "527"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/6e00836a-2f59-4764-bb32-13b34ff7f817/\", \"task_id\": \"6e00836a-2f59-4764-bb32-13b34ff7f817\", \"tags\": [\"pulp:repository:Fedora_17\", \"pulp:action:delete\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"None.dq\", \"state\": \"waiting\", \"worker_name\": null, \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55c912258627eee487c928ba\"}, \"id\": \"55c91225db0c2166403e9e29\"}"
+    http_version:
+  recorded_at: Mon, 10 Aug 2015 21:05:41 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/6e00836a-2f59-4764-bb32-13b34ff7f817/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="2i7kH8jgA7gaESxTFAS0h5dFT74fE7F7j5YVV5K0tws", oauth_signature="S7GcDz7PIYJwTwSVRb%2FC60%2F1tRM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439240741", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Aug 2015 21:05:41 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "702"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/6e00836a-2f59-4764-bb32-13b34ff7f817/\", \"task_id\": \"6e00836a-2f59-4764-bb32-13b34ff7f817\", \"tags\": [\"pulp:repository:Fedora_17\", \"pulp:action:delete\"], \"finish_time\": \"2015-08-10T21:05:41Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-10T21:05:41Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55c912258627eee487c928ba\"}, \"id\": \"55c91225db0c2164b3d583cc\"}"
+    http_version:
+  recorded_at: Mon, 10 Aug 2015 21:05:41 GMT
 recorded_with: VCR 2.9.3

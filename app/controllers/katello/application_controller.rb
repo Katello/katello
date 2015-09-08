@@ -284,15 +284,6 @@ module Katello
       end
     end
 
-    def require_no_user
-      if current_user
-        notify.success _("Welcome Back") + ", " + current_user.login, :persist => false
-        execute_after_filters
-        redirect_to dashboard_index_url
-        return false
-      end
-    end
-
     # render 403 page
     def render_403
       respond_to do |format|

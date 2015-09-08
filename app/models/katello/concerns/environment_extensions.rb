@@ -8,6 +8,12 @@ module Katello
         has_one :content_view_puppet_environment, :class_name => "Katello::ContentViewPuppetEnvironment",
                                                   :foreign_key => :puppet_environment_id,
                                                   :dependent => :nullify, :inverse_of => :puppet_environment
+
+        has_one :content_view, :class_name => "Katello::ContentView", :through => :content_view_puppet_environment
+        has_one :lifecycle_environment, :class_name => "Katello::KTEnvironment", :through => :content_view_puppet_environment, :source => :environment
+
+        scoped_search :in => :content_view, :on => :name, :rename => :content_view, :complete_value => true
+        scoped_search :in => :lifecycle_environment, :on => :name, :rename => :lifecycle_environment, :complete_value => true
       end
 
       def content_view

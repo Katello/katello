@@ -4,9 +4,11 @@ module Katello
   class MediumExtensionsTest < ActiveSupport::TestCase
     def setup
       User.current = User.find(users(:admin))
-      @distro = OpenStruct.new(:name => 'RedHat', :family => 'Red Hat Enterprise Linux', :version => '9.0',
-                               :arch => 'custom_arch')
       @repo = Repository.find(katello_repositories(:fedora_17_x86_64))
+      @repo_without_distro = Repository.find(katello_repositories(:feedless_fedora_17_x86_64))
+      @distro = OpenStruct.new(:name => 'RedHat', :family => @repo.distribution_family,
+                               :version => @repo.distribution_version,
+                               :arch => @repo.distribution_arch)
       @medium_name = Medium.construct_name(@repo, @distro)
 
       Repository.any_instance.stubs(:uri).returns('http://test_uri/')
@@ -29,7 +31,7 @@ module Katello
     def test_update_media_without_distro
       Repository.any_instance.stubs(:bootable_distribution).returns(nil)
 
-      Medium.update_media(@repo)
+      Medium.update_media(@repo_without_distro)
       assert_nil Medium.where(:name => @medium_name).first
     end
 

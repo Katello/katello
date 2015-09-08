@@ -1,0 +1,40 @@
+<%= form_tag("sync_management/sync", :method => :post, :remote => true, :id => 'sync_product_form') do %>
+  <%= hidden_field_tag 'sync_status_url', nil, 'data-url' => sync_status_sync_management_index_path %>
+  <table id="products_table">
+    <thead>
+      <th>
+        <%= _("Product") %>
+      </th>
+      <th class="max_width">
+        <%= _("Start Time") %>
+      </th>
+      <th class="max_width">
+        <%= _("Duration") %>
+      </th>
+      <th>
+        <%= _("Details") %>
+      </th>
+      <th>
+        <%= _("Result") %>
+      </th>
+      <% if @show_org %>
+        <th>
+          <%= _("Organization") %>
+        </th>
+      <% end %>
+    </thead>
+    <tbody>
+      <% if @products.length > 0 %>
+        <%= render :partial=>"product", :collection=>@product_map, :as=>:prod %>
+      <% else %>
+        <tr>
+          <td colspan="<%= @show_org ? 6 : 5 %>">
+            <%= (_("There are no products or repositories enabled. Try enabling via %{custom} or %{redhat}.") % {:custom => link_to(_("Custom Content Repositories"), '/products'), :redhat => link_to(_(" Red Hat Repositories"), redhat_provider_providers_path)}).html_safe %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= submit_tag _('Synchronize Now'), :class => 'button fr', :id => 'sync_button' %>
+<% end %>

@@ -52,6 +52,8 @@ module Katello
               fail _("Skipped pulp_auth check after failed pulp check")
             end
           end
+        else
+          result[:services].delete(:pulp_auth)
         end
 
         if services.include?(:candlepin_auth)

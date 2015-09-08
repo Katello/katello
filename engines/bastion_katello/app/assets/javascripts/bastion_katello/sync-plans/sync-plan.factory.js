@@ -16,13 +16,10 @@ angular.module('Bastion.sync-plans').factory('SyncPlan',
             {id: '@id', organizationId: CurrentOrganization}, {
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
                 update: { method: 'PUT' },
-                availableProducts: {method: 'GET', params: {action: 'available_products'}},
+                availableProducts: {method: 'GET', params: {action: 'products', 'available_for': 'sync_plan'}},
                 addProducts: {method: 'PUT', params: {action: 'add_products'}},
                 removeProducts: {method: 'PUT', params: {action: 'remove_products'}},
-                products: {method: 'GET', transformResponse: function (data) {
-                    var syncPlan = angular.fromJson(data);
-                    return {results: syncPlan.products};
-                }}
+                products: {method: 'GET', params: {action: 'products'}}
             }
         );
 

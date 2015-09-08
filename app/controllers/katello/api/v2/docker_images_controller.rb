@@ -2,7 +2,6 @@ module Katello
   class Api::V2::DockerImagesController < Api::V2::ApiController
     apipie_concern_subst(:a_resource => N_("a docker image"), :resource => "docker_images")
     include Katello::Concerns::Api::V2::RepositoryContentController
-    include Katello::Concerns::Api::V2::RepositoryDbContentController
 
     private
 

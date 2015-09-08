@@ -10,11 +10,13 @@ module Katello
     before_filter :authorize_destroy, :only => [:destroy]
     before_filter :load_search_service, :only => [:incremental_update]
     before_filter :find_version_environments, :only => [:incremental_update]
+    before_filter :find_puppet_module, :only => [:index]
 
     api :GET, "/content_view_versions", N_("List content view versions")
     api :GET, "/content_views/:content_view_id/content_view_versions", N_("List content view versions")
     param :content_view_id, :identifier, :desc => N_("Content view identifier"), :required => false
     param :environment_id, :identifier, :desc => N_("Filter versions by environment"), :required => false
+    param :puppet_module_id, :identifier, :desc => N_("Filter versions by puppet module"), :required => false
     param :version, String, :desc => N_("Filter versions by version number"), :required => false
     param :composite_version_id, :identifier, :desc => N_("Filter versions that are components in the specified composite version"), :required => false
     param_group :search, Api::V2::ApiController
@@ -30,6 +32,7 @@ module Katello
       versions = versions.where(:content_view_id => @view.id) if @view
       versions = versions.for_version(version_number) if version_number
       versions = versions.in_environment(@environment) if @environment
+      versions = versions.with_puppet_module(@puppet_module) if @puppet_module
       versions = versions.component_of(params[:composite_version_id]) if params[:composite_version_id]
       versions
     end
@@ -184,6 +187,11 @@ module Katello
     def find_environment
       return unless params.key?(:environment_id)
       @environment = KTEnvironment.find(params[:environment_id])
+    end
+
+    def find_puppet_module
+      return unless params.key?(:puppet_module_id)
+      @puppet_module = PuppetModule.with_identifiers([params[:puppet_module_id]]).first
     end
 
     def validate_content(content)

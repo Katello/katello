@@ -21,7 +21,8 @@ module ::Actions::Pulp::Repository
     end
 
     def teardown
-      ::Katello::RepositorySupport.destroy_repo
+      set_user
+      ::Katello::RepositorySupport.destroy_repo(repo.pulp_id)
     end
   end
 end

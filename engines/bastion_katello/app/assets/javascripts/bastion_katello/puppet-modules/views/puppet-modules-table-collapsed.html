@@ -1,0 +1,20 @@
+<table class="table table-striped table-full" ng-class="{'table-mask': table.working}">
+  <thead>
+    <tr bst-table-head row-select>
+      <th bst-table-column="name" sortable>{{ "Name" | translate }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr bst-table-row
+        ng-repeat="puppetModule in table.rows"
+        row-select="puppetModule"
+        active-row="stateIncludes('puppetModule.details', {puppetModuleId: puppetModule.id})">
+      <td bst-table-cell>
+        <a ui-sref="puppet-modules.details.info({puppetModuleId: puppetModule.id})">
+          {{ puppetModule.name }}
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

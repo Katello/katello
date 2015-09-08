@@ -1840,92 +1840,6 @@ http_interactions:
     http_version: 
   recorded_at: Thu, 15 May 2014 20:32:04 GMT
 - request: 
-    method: post
-    uri: https://katello-pulp.example.com/pulp/api/v2/repositories/
-    body: 
-      encoding: US-ASCII
-      string: "{\"id\":\"4\",\"display_name\":\"P Forge\",\"importer_type_id\":\"puppet_importer\",\"importer_config\":{\"feed\":\"http://davidd.fedorapeople.org/repos/random_puppet/\"},\"notes\":{\"_repo-type\":\"puppet-repo\"},\"distributors\":[{\"distributor_type_id\":\"puppet_install_distributor\",\"distributor_config\":{\"install_path\":\"/test_path/\",\"auto_publish\":true},\"auto_publish\":true,\"distributor_id\":\"4\"},{\"distributor_type_id\":\"nodes_http_distributor\",\"distributor_config\":{},\"auto_publish\":true,\"distributor_id\":\"4_nodes\"}]}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="FkTPDSvZS7JXcSwVn3RbBvY7VGsvizPK", oauth_nonce="hnr6hqI9kVWnecYphtpPbSoQIp3Fwnw6UrsgWJdBDU", oauth_signature="hyxZQnLPVszsTYyqeB4p%2BfX%2BJNA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1437422515", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "493"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 201
-      message: Created
-    headers: 
-      Date: 
-      - Mon, 20 Jul 2015 20:01:55 GMT
-      Server: 
-      - Apache/2.4.6 (CentOS)
-      Location: 
-      - "4"
-      Content-Length: 
-      - "298"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"scratchpad\": {}, \"display_name\": \"P Forge\", \"description\": null, \"last_unit_added\": null, \"notes\": {\"_repo-type\": \"puppet-repo\"}, \"last_unit_removed\": null, \"content_unit_counts\": {}, \"_ns\": \"repos\", \"_id\": {\"$oid\": \"55ad53b386bbe52d21e57c0c\"}, \"id\": \"4\", \"_href\": \"/pulp/api/v2/repositories/4/\"}"
-    http_version: 
-  recorded_at: Mon, 20 Jul 2015 20:01:55 GMT
-- request: 
-    method: post
-    uri: https://katello-pulp.example.com/pulp/api/v2/repositories/4/actions/sync/
-    body: 
-      encoding: US-ASCII
-      string: "{\"override_config\":{\"num_threads\":4,\"validate\":true}}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="FkTPDSvZS7JXcSwVn3RbBvY7VGsvizPK", oauth_nonce="nJa06gg5QVlzChIR8ue95KHBBgFMjGdFnj5hNC59QCA", oauth_signature="6KVpi45gwPQfP35jquzfXJu9Eac%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1437422515", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "53"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 202
-      message: Accepted
-    headers: 
-      Date: 
-      - Mon, 20 Jul 2015 20:01:55 GMT
-      Server: 
-      - Apache/2.4.6 (CentOS)
-      Content-Encoding: 
-      - utf-8
-      Content-Length: 
-      - "172"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/af7d5bd5-a769-4c9c-a6cc-4d158bc0b2c9/\", \"task_id\": \"af7d5bd5-a769-4c9c-a6cc-4d158bc0b2c9\"}], \"result\": null, \"error\": null}"
-    http_version: 
-  recorded_at: Mon, 20 Jul 2015 20:01:55 GMT
-- request: 
     method: get
     uri: https://katello-pulp.example.com/pulp/api/v2/tasks/af7d5bd5-a769-4c9c-a6cc-4d158bc0b2c9/
     body: 
@@ -2395,90 +2309,6 @@ http_interactions:
   recorded_at: Mon, 20 Jul 2015 20:02:02 GMT
 - request: 
     method: post
-    uri: https://katello-pulp.example.com/pulp/api/v2/repositories/
-    body: 
-      encoding: US-ASCII
-      string: "{\"id\":\"5\",\"display_name\":\"P Forge\",\"importer_type_id\":\"puppet_importer\",\"importer_config\":{},\"notes\":{\"_repo-type\":\"puppet-repo\"},\"distributors\":[{\"distributor_type_id\":\"puppet_install_distributor\",\"distributor_config\":{\"install_path\":\"/etc/puppet/environments/KT_dev_label_org_default_label_30237652/modules\",\"auto_publish\":true},\"auto_publish\":true,\"distributor_id\":\"5\"},{\"distributor_type_id\":\"nodes_http_distributor\",\"distributor_config\":{},\"auto_publish\":true,\"distributor_id\":\"5_nodes\"}]}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="FkTPDSvZS7JXcSwVn3RbBvY7VGsvizPK", oauth_nonce="uHLZRLHdnWPQwScKbkvfKeKoVBPuP1jhcvc8ktxznk", oauth_signature="phLNuiFIl%2FqFznmWtwnphuRIiG0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1437422523", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "494"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 201
-      message: Created
-    headers: 
-      Date: 
-      - Mon, 20 Jul 2015 20:02:03 GMT
-      Server: 
-      - Apache/2.4.6 (CentOS)
-      Location: 
-      - "5"
-      Content-Length: 
-      - "298"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"scratchpad\": {}, \"display_name\": \"P Forge\", \"description\": null, \"last_unit_added\": null, \"notes\": {\"_repo-type\": \"puppet-repo\"}, \"last_unit_removed\": null, \"content_unit_counts\": {}, \"_ns\": \"repos\", \"_id\": {\"$oid\": \"55ad53bb86bbe52d21e57c2a\"}, \"id\": \"5\", \"_href\": \"/pulp/api/v2/repositories/5/\"}"
-    http_version: 
-  recorded_at: Mon, 20 Jul 2015 20:02:03 GMT
-- request: 
-    method: post
-    uri: https://katello-pulp.example.com/pulp/api/v2/repositories/4/search/units/
-    body: 
-      encoding: US-ASCII
-      string: "{\"criteria\":{\"type_ids\":[\"puppet_module\"],\"fields\":{\"unit\":[],\"association\":[\"unit_id\"]}}}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="FkTPDSvZS7JXcSwVn3RbBvY7VGsvizPK", oauth_nonce="W9FDVY4zukpoMUFSuqog04ayRVxBALO2AnxnqOg", oauth_signature="Tdvr6POaf7LBCZeB00yhvcXXcR4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1437422523", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "90"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Mon, 20 Jul 2015 20:02:03 GMT
-      Server: 
-      - Apache/2.4.6 (CentOS)
-      Content-Length: 
-      - "916"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "[{\"metadata\": {\"_id\": \"fe1abc3c-cc5b-4b67-8fb3-7448878a265d\", \"_content_type_id\": \"puppet_module\"}, \"_id\": {\"$oid\": \"55ad53b786bbe51f4ab13817\"}, \"unit_id\": \"fe1abc3c-cc5b-4b67-8fb3-7448878a265d\", \"unit_type_id\": \"puppet_module\"}, {\"metadata\": {\"_id\": \"eabcdd27-aac7-44c7-a331-54f5ea2db181\", \"_content_type_id\": \"puppet_module\"}, \"_id\": {\"$oid\": \"55ad53ba86bbe51f4ab13819\"}, \"unit_id\": \"eabcdd27-aac7-44c7-a331-54f5ea2db181\", \"unit_type_id\": \"puppet_module\"}, {\"metadata\": {\"_id\": \"9d7358d7-5d67-4a53-bfff-b3bf233e8c8a\", \"_content_type_id\": \"puppet_module\"}, \"_id\": {\"$oid\": \"55ad53b886bbe51f4ab13818\"}, \"unit_id\": \"9d7358d7-5d67-4a53-bfff-b3bf233e8c8a\", \"unit_type_id\": \"puppet_module\"}, {\"metadata\": {\"_id\": \"c6935279-1ed1-4968-95cb-f8cdb312d510\", \"_content_type_id\": \"puppet_module\"}, \"_id\": {\"$oid\": \"55ad53b686bbe51f4ab13816\"}, \"unit_id\": \"c6935279-1ed1-4968-95cb-f8cdb312d510\", \"unit_type_id\": \"puppet_module\"}]"
-    http_version: 
-  recorded_at: Mon, 20 Jul 2015 20:02:03 GMT
-- request: 
-    method: post
     uri: https://katello-pulp.example.com/pulp/api/v2/content/units/puppet_module/search/
     body: 
       encoding: US-ASCII
@@ -2516,47 +2346,6 @@ http_interactions:
     body: 
       encoding: US-ASCII
       string: "[{\"repository_memberships\": [\"4\"], \"_storage_path\": \"/var/lib/pulp/content/puppet_module/5UbZ3r0-pureftpd-1.0.2.tar.gz\", \"tag_list\": null, \"description\": \"Manage Pure-FTPd via Puppet\", \"license\": \"Apache License, Version 2.0\", \"author\": \"5UbZ3r0\", \"checksum\": null, \"_last_updated\": \"2015-07-20T20:02:00Z\", \"project_page\": \"https://github.com/saz/puppet-pureftpd\", \"summary\": \"\", \"_href\": \"/pulp/api/v2/content/units/puppet_module/9d7358d7-5d67-4a53-bfff-b3bf233e8c8a/\", \"source\": \"\", \"dependencies\": [], \"version\": \"1.0.2\", \"_content_type_id\": \"puppet_module\", \"checksums\": [[\"spec\\\\unit\\\\puppet\\\\type\\\\README.markdown\", \"de26a7643813abd6c2e7e28071b1ef94\"], [\"spec\\\\unit\\\\puppet\\\\provider\\\\README.markdown\", \"e52668944ee6af2fb5d5b9e798342645\"], [\"tests\\\\init.pp\", \"5d6e84bd06e23c4d565782db67e333ec\"], [\"files\\\\debian\\\\PAMAuthentication\", \"eb4585ad9fe0426781ed7c49252f8225\"], [\"files\\\\debian\\\\ChrootEveryone\", \"eb4585ad9fe0426781ed7c49252f8225\"], [\"manifests\\\\service.pp\", \"722d62651e6c61da4330332b6382f5a9\"], [\"spec\\\\spec.opts\", \"a600ded995d948e393fbe2320ba8e51c\"], [\"manifests\\\\install.pp\", \"51caa25f90a479cd501824362b9bdba1\"], [\"files\\\\debian\\\\MaxClientsNumber\", \"2a52a5e65fc3c43f409550dfad1f904f\"], [\"files\\\\debian\\\\DontResolve\", \"eb4585ad9fe0426781ed7c49252f8225\"], [\"files\\\\debian\\\\NoAnonymous\", \"eb4585ad9fe0426781ed7c49252f8225\"], [\"spec\\\\README.markdown\", \"32a1fc0121c28aff554ef5d422b8b51e\"], [\"files\\\\debian\\\\AltLog\", \"a3d7f89dc916062234237acf75bde97d\"], [\"README.md\", \"9cbb945c6ce73031b00b1c5269cbb638\"], [\"manifests\\\\params.pp\", \"e7b3cf3a6115e96a6f76d3ff2c545625\"], [\"templates\\\\default_config.erb\", \"222945189c5b8d4efa9fe2c3cc01f435\"], [\"files\\\\debian\\\\VerboseLog\", \"7fa3b767c460b54a2be4d49030b349c7\"], [\"files\\\\debian\\\\PureDB\", \"6db5965698527e1f140dfc73ed40d47c\"], [\"manifests\\\\config.pp\", \"b12d6331349d217bbba684a0c5652620\"], [\"files\\\\debian\\\\UnixAuthentication\", \"eb4585ad9fe0426781ed7c49252f8225\"], [\"manifests\\\\init.pp\", \"61675a905c40641e70d6f74985fda8c8\"], [\"Modulefile\", \"decaaab32a9931c3565a6fc47f26a740\"], [\"files\\\\debian\\\\MinUID\", \"4fbafd6948b6529caa2b78e476359875\"], [\"spec\\\\spec_helper.rb\", \"ca19ec4f451ebc7fdb035b52eae6e909\"]], \"checksum_type\": \"sha256\", \"_id\": \"9d7358d7-5d67-4a53-bfff-b3bf233e8c8a\", \"children\": {}, \"types\": [], \"name\": \"pureftpd\"}, {\"repository_memberships\": [\"4\"], \"_storage_path\": \"/var/lib/pulp/content/puppet_module/5UbZ3r0-samba-0.2.0.tar.gz\", \"tag_list\": null, \"description\": \"This puppet module manages samba configuration.\\n\\nIt has been tested only for samba managing shares, tough it does not care about the content of your config file.\\n\\nTested on CentOS 6.2, RHEL 6.2, CentOS 5.8.\", \"license\": \"GPL v3\", \"author\": \"5UbZ3r0\", \"checksum\": null, \"_last_updated\": \"2015-07-20T20:01:58Z\", \"project_page\": \"https://github.com/5Ub-Z3r0/puppet-samba\", \"summary\": \"A puppet module that manages samba\", \"_href\": \"/pulp/api/v2/content/units/puppet_module/c6935279-1ed1-4968-95cb-f8cdb312d510/\", \"source\": \"https://github.com/5Ub-Z3r0/puppet-samba\", \"dependencies\": [], \"version\": \"0.2.0\", \"_content_type_id\": \"puppet_module\", \"checksums\": [[\"manifests/service.pp\", \"192c819791e2042703891e51a61d314a\"], [\"manifests/params.pp\", \"f41d11e7dbbde67a2cf4d29cf6783a55\"], [\"spec/spec.opts\", \"a600ded995d948e393fbe2320ba8e51c\"], [\"tests/init.pp\", \"4dcc2868cb9740c32eb68f345a7b7194\"], [\"spec/spec_helper.rb\", \"ca19ec4f451ebc7fdb035b52eae6e909\"], [\"manifests/conf.pp\", \"ad4b285a6736aebebb6fa59e38ddded1\"], [\"Modulefile\", \"d309ee315176ea3f923480c286e3a55b\"], [\"manifests/install.pp\", \"c929e13f546bcdb3f02efede9db1af9b\"], [\"manifests/init.pp\", \"f658b594ac88da9026c675bfe0310d57\"], [\"README\", \"627fbb57eb8d94308f01a11430418fb6\"]], \"checksum_type\": \"sha256\", \"_id\": \"c6935279-1ed1-4968-95cb-f8cdb312d510\", \"children\": {}, \"types\": [], \"name\": \"samba\"}, {\"repository_memberships\": [\"4\"], \"_storage_path\": \"/var/lib/pulp/content/puppet_module/5UbZ3r0-httpd-0.2.0.tar.gz\", \"tag_list\": null, \"description\": \"This module handles a standard httpd installation.\\n\\nIt has optional classes if you want to install and configure mod_ssl, php, mod_spdy or httpd-dev.\\n\\nIt has been tested on CentOS 6.2 and CentOS 5.8.\\nIt could work also on debian, but that needs to be tested.\", \"license\": \"GPL v3\", \"author\": \"5UbZ3r0\", \"checksum\": null, \"_last_updated\": \"2015-07-20T20:02:02Z\", \"project_page\": \"\", \"summary\": \"This module handles a standard httpd installation.\", \"_href\": \"/pulp/api/v2/content/units/puppet_module/eabcdd27-aac7-44c7-a331-54f5ea2db181/\", \"source\": \"\", \"dependencies\": [], \"version\": \"0.2.0\", \"_content_type_id\": \"puppet_module\", \"checksums\": [[\"files/spdy/mod-spdy-beta_current_i386.rpm\", \"4abdee35392c1c6d329def2017393403\"], [\"manifests/params.pp\", \"d02eb87a3ed69ff638ca028b67001621\"], [\"manifests/ssl.pp\", \"6d8a9caf1a13132b6cd2464da606281b\"], [\"manifests/init.pp\", \"fcd8c8f976710eac6532adc2f28bfa44\"], [\"manifests/dev.pp\", \"13e0564d366f27694b115f8112406429\"], [\"manifests/vhost.pp\", \"6eac84201d239436c386fe2adf4c4252\"], [\"templates/httpd.conf.RHEL.erb\", \"4cbcc29765356aeb9a01beece6738fe8\"], [\"files/spdy/mod-spdy-beta_current_x86_64.rpm\", \"6d25d03bfb8249f7c6dcd9906909c995\"], [\"templates/localized-error-pages.Debian.erb\", \"578dfd537911a7b8ddcd485640452ac3\"], [\"files/deflate.conf\", \"1fc678aa967f4fd3c8238c9111019a1d\"], [\"manifests/spdy.pp\", \"ef792b41408236aeda7f57a427f574eb\"], [\"templates/vhost-default.conf.erb\", \"ed64a53af0d7bad762176a98c9ea3e62\"], [\"README\", \"4c9b436e48a447d634eb821c06fff6fc\"], [\"spec/spec.opts\", \"a600ded995d948e393fbe2320ba8e51c\"], [\"templates/ssl.conf.RHEL.erb\", \"f116618fb85ffdda3cef1fcf5a8210c8\"], [\"templates/php.ini.RHEL.erb\", \"25cbb760e5fcf81165fbc33ce98fe6d9\"], [\"lib/puppet/provider/a2mod/modfix.rb\", \"f4536cdca68d15a235cbb1e0b67e4406\"], [\"files/error/error.html\", \"3af8411c82a0725c0ba6ba0fa681bd08\"], [\"files/spdy/mod-spdy-beta_current_i386.deb\", \"7d72474e3983f390daf89f1289e08521\"], [\"lib/puppet/provider/a2mod/a2mod.rb\", \"0acf42d3d670a9915c5a3f46ae7335f1\"], [\"manifests/php.pp\", \"56ea7f297aaacdde001d3529051b3c0e\"], [\"files/spdy/mod-spdy-beta_current_amd64.deb\", \"834c85038ae50260da3a070cfa0cdbdf\"], [\"Modulefile\", \"ea33e2d7fe4d97eafa07172c92c130db\"], [\"spec/spec_helper.rb\", \"ca19ec4f451ebc7fdb035b52eae6e909\"], [\"templates/php.ini.Debian.erb\", \"180a39ca262e132c6d431973986d7e39\"], [\"lib/puppet/type/a2mod.rb\", \"adcf754a076153442eac2beb42736547\"]], \"checksum_type\": \"sha256\", \"_id\": \"eabcdd27-aac7-44c7-a331-54f5ea2db181\", \"children\": {}, \"types\": [{\"doc\": \"Manage Apache 2 modules on Debian and Ubuntu\", \"name\": \"a2mod\", \"parameters\": [{\"doc\": \"The name of the module to be managed\", \"name\": \"name\"}], \"providers\": [{\"doc\": \"Manage Apache 2 modules on Debian and Ubuntu\", \"name\": \"a2mod\"}, {\"doc\": \"Dummy provider for A2mod.\\n\\n    Fake nil resources when there is no crontab binary available. Allows\\n    puppetd to run on a bootstrapped machine before a Cron package has been\\n    installed. Workaround for: http://projects.puppetlabs.com/issues/2384\\n    \", \"name\": \"modfix\"}]}], \"name\": \"httpd\"}, {\"repository_memberships\": [\"4\"], \"_storage_path\": \"/var/lib/pulp/content/puppet_module/5UbZ3r0-cron-0.0.1.tar.gz\", \"tag_list\": null, \"description\": \"This puppet module manages the scheduling of task trough cron.\\nIt has shortcuts  classes for hourly (/etc/cron.hourly), daily (/etc/cron.daily), weekly (/etc/cron.daily) and monthly (/etc/cron.monthly) schedulation.\\n\\nIt has been tested only ...\\n\\nTested on CentOS 6.2, RHEL 6.2, CentOS 5.8.\\n\\nRequirements:\\n\\n * [Facter](http://www.puppetlabs.com/puppet/related-projects/facter/) 1.6.1 or greater (versions that support the osfamily fact)\\n * [puppetlabs/stdlib] for the validate_absolute_path statement\\n\\nTodo:\\n- Set up and install cron in the - very unlikely - case that it's not installed;\\n- Make cron::task work with windows.\", \"license\": \"GPL v3\", \"author\": \"5UbZ3r0\", \"checksum\": null, \"_last_updated\": \"2015-07-20T20:01:59Z\", \"project_page\": \"https://github.com/5Ub-Z3r0/puppet-cron\", \"summary\": \"Puppet module that manages scheduling of task trough cron\", \"_href\": \"/pulp/api/v2/content/units/puppet_module/fe1abc3c-cc5b-4b67-8fb3-7448878a265d/\", \"source\": \"https://github.com/5Ub-Z3r0/puppet-cron.git\", \"dependencies\": [{\"name\": \"puppetlabs/stdlib\", \"version_requirement\": \">=3.0.0\"}], \"version\": \"0.0.1\", \"_content_type_id\": \"puppet_module\", \"checksums\": [[\"manifests/daily.pp\", \"96ffd0e592de3f5dd054de3755a8bcff\"], [\"spec/spec.opts\", \"a600ded995d948e393fbe2320ba8e51c\"], [\"manifests/monthly.pp\", \"b9900f6e2db0854f34c66930287db700\"], [\"manifests/task.pp\", \"4cb4aa49df8c90619d9039992a516c07\"], [\"spec/spec_helper.rb\", \"ca19ec4f451ebc7fdb035b52eae6e909\"], [\"tests/init.pp\", \"4bcb7e03aced8bb468351a45e8e9bc76\"], [\"manifests/params.pp\", \"d5924918fc059daa47aa355534a4b434\"], [\"manifests/weekly.pp\", \"7d34a00d629575ee2e4f4bd58eab1d40\"], [\"Modulefile\", \"18c9208e77a3c43b4df65ae8bb3bf804\"], [\"manifests/init.pp\", \"8c3e10bc3e2465908436f1aa771f039b\"], [\"manifests/hourly.pp\", \"7a17621a731750c40c872e7a5b6f4442\"], [\"README\", \"491e63a9cf75f825369528983caae87a\"]], \"checksum_type\": \"sha256\", \"_id\": \"fe1abc3c-cc5b-4b67-8fb3-7448878a265d\", \"children\": {}, \"types\": [], \"name\": \"cron\"}]"
-    http_version: 
-  recorded_at: Mon, 20 Jul 2015 20:02:03 GMT
-- request: 
-    method: delete
-    uri: https://katello-pulp.example.com/pulp/api/v2/repositories/5/
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="FkTPDSvZS7JXcSwVn3RbBvY7VGsvizPK", oauth_nonce="Ipd2hcWF4Z7DW9pjNKVBOBpkPULiJduOo4w7itJEkE", oauth_signature="i4IJGSvJ7nc2luvRD48qEzOJme0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1437422523", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 202
-      message: Accepted
-    headers: 
-      Date: 
-      - Mon, 20 Jul 2015 20:02:03 GMT
-      Server: 
-      - Apache/2.4.6 (CentOS)
-      Content-Encoding: 
-      - utf-8
-      Content-Length: 
-      - "172"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/19e2413c-56fd-42c2-88c9-0526de996db8/\", \"task_id\": \"19e2413c-56fd-42c2-88c9-0526de996db8\"}], \"result\": null, \"error\": null}"
     http_version: 
   recorded_at: Mon, 20 Jul 2015 20:02:03 GMT
 - request: 
@@ -2638,47 +2427,6 @@ http_interactions:
     http_version: 
   recorded_at: Mon, 20 Jul 2015 20:02:03 GMT
 - request: 
-    method: delete
-    uri: https://katello-pulp.example.com/pulp/api/v2/repositories/4/
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="FkTPDSvZS7JXcSwVn3RbBvY7VGsvizPK", oauth_nonce="rVJI47JWtjfzAo3cQ71jSh3DK0ifWFvsmpvRZq01Kkc", oauth_signature="xnZwV5IlCmSSNaDFj8UJ768Ktm8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1437422524", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 202
-      message: Accepted
-    headers: 
-      Date: 
-      - Mon, 20 Jul 2015 20:02:04 GMT
-      Server: 
-      - Apache/2.4.6 (CentOS)
-      Content-Encoding: 
-      - utf-8
-      Content-Length: 
-      - "172"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/eabd2bf4-94e7-4c41-a9ed-b29aa77cae27/\", \"task_id\": \"eabd2bf4-94e7-4c41-a9ed-b29aa77cae27\"}], \"result\": null, \"error\": null}"
-    http_version: 
-  recorded_at: Mon, 20 Jul 2015 20:02:04 GMT
-- request: 
     method: get
     uri: https://katello-pulp.example.com/pulp/api/v2/tasks/eabd2bf4-94e7-4c41-a9ed-b29aa77cae27/
     body: 
@@ -2756,4 +2504,2091 @@ http_interactions:
       string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/eabd2bf4-94e7-4c41-a9ed-b29aa77cae27/\", \"task_id\": \"eabd2bf4-94e7-4c41-a9ed-b29aa77cae27\", \"tags\": [\"pulp:repository:4\", \"pulp:action:delete\"], \"finish_time\": \"2015-07-20T20:02:04Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-07-20T20:02:04Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-pulp.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-pulp.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55ad53bc8703361f3e0477ee\"}, \"id\": \"55ad53bc86bbe51fa3cba760\"}"
     http_version: 
   recorded_at: Mon, 20 Jul 2015 20:02:04 GMT
+- request: 
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="R00XivaKUeoHZrWdZo69GmJLaeXzp4WlVgyOUqXJ34", oauth_signature="V18xxnDUqz9r%2FFeLpp7OI%2B0bLmw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927389", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Tue, 18 Aug 2015 19:49:49 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Content-Length: 
+      - "517"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/\", \"task_id\": \"ef751396-6bd0-4ba7-a0e6-226901351b37\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"None.dq\", \"state\": \"waiting\", \"worker_name\": null, \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c5d8627eee487c932ee\"}, \"id\": \"55d38c5ddb0c21042893e401\"}"
+    http_version: 
+  recorded_at: Tue, 18 Aug 2015 19:49:49 GMT
+- request: 
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="vjplPnYN1qUIbxymWrjADH1UyVJNQcdgQvbQmRbF5ps", oauth_signature="TMkG0G0Clpre74%2FYgkggyrOGO6U%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927390", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Tue, 18 Aug 2015 19:49:50 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Content-Length: 
+      - "673"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/\", \"task_id\": \"ef751396-6bd0-4ba7-a0e6-226901351b37\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:49:49Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c5d8627eee487c932ee\"}, \"id\": \"55d38c5ddb0c2164b3d59429\"}"
+    http_version: 
+  recorded_at: Tue, 18 Aug 2015 19:49:50 GMT
+- request: 
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="Z8rzodfS5seZ3ENBufQ8L01WUGJLnEW5u5XXwaKs", oauth_signature="JY0b3iEjAgA%2BpZXsi053Sn255vM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927390", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Tue, 18 Aug 2015 19:49:50 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Content-Length: 
+      - "673"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/\", \"task_id\": \"ef751396-6bd0-4ba7-a0e6-226901351b37\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:49:49Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c5d8627eee487c932ee\"}, \"id\": \"55d38c5ddb0c2164b3d59429\"}"
+    http_version: 
+  recorded_at: Tue, 18 Aug 2015 19:49:50 GMT
+- request: 
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="O5Tqi399J260Kqn3UU289cmfv5eBp0RV6Ui40xIvso", oauth_signature="8EslqYQcyimD%2BkHbJC2oRfyIpbc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927391", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Tue, 18 Aug 2015 19:49:51 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Content-Length: 
+      - "1155"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/\", \"task_id\": \"ef751396-6bd0-4ba7-a0e6-226901351b37\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:49:49Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": null, \"traceback\": null, \"individual_errors\": [], \"state\": \"not-started\", \"error_count\": null, \"error\": \"None\", \"finished_count\": null}, \"metadata\": {\"query_finished_count\": 1, \"traceback\": null, \"execution_time\": null, \"query_total_count\": 1, \"error_message\": null, \"state\": \"running\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c5d8627eee487c932ee\"}, \"id\": \"55d38c5ddb0c2164b3d59429\"}"
+    http_version: 
+  recorded_at: Tue, 18 Aug 2015 19:49:51 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="1v63qXrAJj8fyON22fa6vXx2Uu8Wquxx2xPajRgXU0", oauth_signature="EW7i1ilcCrDvEFpzWvs4nWyNUP4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927391", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:49:51 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1139"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/\", \"task_id\": \"ef751396-6bd0-4ba7-a0e6-226901351b37\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:49:49Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": 4, \"traceback\": null, \"individual_errors\": [], \"state\": \"running\", \"error_count\": 0, \"error\": \"None\", \"finished_count\": 0}, \"metadata\": {\"query_finished_count\": 1, \"traceback\": null, \"execution_time\": 1, \"query_total_count\": 1, \"error_message\": null, \"state\": \"success\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c5d8627eee487c932ee\"}, \"id\": \"55d38c5ddb0c2164b3d59429\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:49:51 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="ESMs2atf5Rh3EVAc8JNrfFbBtFONCdzI2Y4FnSxCqE", oauth_signature="2VGsgNMVKfgGZgitlnBkBAsmck8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927392", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:49:52 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1139"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/\", \"task_id\": \"ef751396-6bd0-4ba7-a0e6-226901351b37\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:49:49Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": 4, \"traceback\": null, \"individual_errors\": [], \"state\": \"running\", \"error_count\": 0, \"error\": \"None\", \"finished_count\": 0}, \"metadata\": {\"query_finished_count\": 1, \"traceback\": null, \"execution_time\": 1, \"query_total_count\": 1, \"error_message\": null, \"state\": \"success\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c5d8627eee487c932ee\"}, \"id\": \"55d38c5ddb0c2164b3d59429\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:49:52 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="yt5nSqTDJjqprhPT2htT5ORJqPUJt6EpvmZ6eI3M8M", oauth_signature="PsUzbo%2BWV21MS0V1hT4Wb7gQUp4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927393", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:49:53 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1139"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/\", \"task_id\": \"ef751396-6bd0-4ba7-a0e6-226901351b37\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:49:49Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": 4, \"traceback\": null, \"individual_errors\": [], \"state\": \"running\", \"error_count\": 0, \"error\": \"None\", \"finished_count\": 1}, \"metadata\": {\"query_finished_count\": 1, \"traceback\": null, \"execution_time\": 1, \"query_total_count\": 1, \"error_message\": null, \"state\": \"success\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c5d8627eee487c932ee\"}, \"id\": \"55d38c5ddb0c2164b3d59429\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:49:53 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="5x9I9AdicZZlf0KOkXvM0bQrlEGg9LJwZN9csemhlQ", oauth_signature="c105pqPo99mraEVmqnV3zsQ0aEc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927394", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:49:54 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1139"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/\", \"task_id\": \"ef751396-6bd0-4ba7-a0e6-226901351b37\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:49:49Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": 4, \"traceback\": null, \"individual_errors\": [], \"state\": \"running\", \"error_count\": 0, \"error\": \"None\", \"finished_count\": 2}, \"metadata\": {\"query_finished_count\": 1, \"traceback\": null, \"execution_time\": 1, \"query_total_count\": 1, \"error_message\": null, \"state\": \"success\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c5d8627eee487c932ee\"}, \"id\": \"55d38c5ddb0c2164b3d59429\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:49:54 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="xke2Z8YIgTTr2Cg2HVr6jdtKR29t3w24D21vC8ipK8", oauth_signature="PgksJ2uUIqEmhtK7Ldw%2FugrXgz0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927395", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:49:55 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1139"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/\", \"task_id\": \"ef751396-6bd0-4ba7-a0e6-226901351b37\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:49:49Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": 4, \"traceback\": null, \"individual_errors\": [], \"state\": \"running\", \"error_count\": 0, \"error\": \"None\", \"finished_count\": 3}, \"metadata\": {\"query_finished_count\": 1, \"traceback\": null, \"execution_time\": 1, \"query_total_count\": 1, \"error_message\": null, \"state\": \"success\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c5d8627eee487c932ee\"}, \"id\": \"55d38c5ddb0c2164b3d59429\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:49:55 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="msnYGvfZ91F4U1dLgxicjR0qMK7URO6kjrZNIhmbdo", oauth_signature="QMA788kwKaRe59%2FZZTe%2FzKioCO0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927396", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:49:56 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1866"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/ef751396-6bd0-4ba7-a0e6-226901351b37/\", \"task_id\": \"ef751396-6bd0-4ba7-a0e6-226901351b37\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": \"2015-08-18T19:49:56Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:49:49Z\", \"traceback\": null, \"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/57ec81e6-16c5-49e9-b94b-95b7563df95a/\", \"task_id\": \"57ec81e6-16c5-49e9-b94b-95b7563df95a\"}, {\"_href\": \"/pulp/api/v2/tasks/61fc09f9-7b11-4aa2-8869-6fa2ca5e2059/\", \"task_id\": \"61fc09f9-7b11-4aa2-8869-6fa2ca5e2059\"}], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"traceback\": null, \"execution_time\": 4, \"total_count\": 4, \"error_message\": null, \"finished_count\": 4, \"state\": \"success\", \"error_count\": 0, \"error\": \"None\", \"individual_errors\": []}, \"metadata\": {\"query_finished_count\": 1, \"error_message\": null, \"execution_time\": 1, \"query_total_count\": 1, \"traceback\": null, \"state\": \"success\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": {\"importer_type_id\": \"puppet_importer\", \"importer_id\": \"puppet_importer\", \"exception\": null, \"repo_id\": \"4\", \"removed_count\": 0, \"started\": \"2015-08-18T19:49:49Z\", \"_ns\": \"repo_sync_results\", \"completed\": \"2015-08-18T19:49:56Z\", \"traceback\": null, \"summary\": {\"total_execution_time\": 5}, \"added_count\": 4, \"error_message\": null, \"updated_count\": 0, \"details\": {\"finished_count\": 4, \"total_count\": 4, \"error_count\": 0}, \"id\": \"55d38c64db0c2165357779e4\", \"result\": \"success\"}, \"error\": null, \"_id\": {\"$oid\": \"55d38c5d8627eee487c932ee\"}, \"id\": \"55d38c5ddb0c2164b3d59429\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:49:56 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/57ec81e6-16c5-49e9-b94b-95b7563df95a/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="0zgkucLbl6NIlILXbLG95yJ9WDTePDE9FGfUY9RdQQk", oauth_signature="uEz6RIh9o8dyT0k3FYmZfjpVEd0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927396", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:49:56 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1064"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.publish.publish\", \"_href\": \"/pulp/api/v2/tasks/57ec81e6-16c5-49e9-b94b-95b7563df95a/\", \"task_id\": \"57ec81e6-16c5-49e9-b94b-95b7563df95a\", \"tags\": [\"pulp:repository:4\", \"pulp:action:publish\"], \"finish_time\": \"2015-08-18T19:49:56Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:49:56Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": {\"exception\": null, \"repo_id\": \"4\", \"started\": \"2015-08-18T19:49:56Z\", \"_ns\": \"repo_publish_results\", \"completed\": \"2015-08-18T19:49:56Z\", \"traceback\": null, \"distributor_type_id\": \"nodes_http_distributor\", \"summary\": \"succeeded\", \"error_message\": null, \"details\": {\"unit_count\": 4}, \"distributor_id\": \"4_nodes\", \"id\": \"55d38c64db0c2165357779e7\", \"result\": \"success\"}, \"error\": null, \"_id\": {\"$oid\": \"55d38c648627eee487c932f0\"}, \"id\": \"55d38c64db0c2164b3d59430\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:49:56 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/61fc09f9-7b11-4aa2-8869-6fa2ca5e2059/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="GR2TOJ6LbDJNF1HU00XO4kaGriBW9TQqco9gaEJg", oauth_signature="suhwGBF4UXOTHPz%2FtMMb%2FzR%2Ferk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927396", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:49:56 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1739"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.publish.publish\", \"_href\": \"/pulp/api/v2/tasks/61fc09f9-7b11-4aa2-8869-6fa2ca5e2059/\", \"task_id\": \"61fc09f9-7b11-4aa2-8869-6fa2ca5e2059\", \"tags\": [\"pulp:repository:4\", \"pulp:action:publish\"], \"finish_time\": \"2015-08-18T19:49:56Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:49:56Z\", \"traceback\": \"Traceback (most recent call last):\\n  File \\\"/usr/lib/python2.7/site-packages/celery/app/trace.py\\\", line 240, in trace_task\\n    R = retval = fun(*args, **kwargs)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/async/tasks.py\\\", line 328, in __call__\\n    return super(Task, self).__call__(*args, **kwargs)\\n  File \\\"/usr/lib/python2.7/site-packages/celery/app/trace.py\\\", line 437, in __protected_call__\\n    return self.run(*args, **kwargs)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/managers/repo/publish.py\\\", line 99, in publish\\n    transfer_repo, conduit, call_config)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/managers/repo/publish.py\\\", line 131, in _do_publish\\n    repository_id=repo_id, distributor_id=distributor_id)\\nPulpCodedException: The distributor 4 indicated a failed response when publishing repository 4.\\n\", \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"error\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": {\"code\": \"PLP0034\", \"data\": {\"repository_id\": \"4\", \"distributor_id\": \"4\"}, \"description\": \"The distributor 4 indicated a failed response when publishing repository 4.\", \"sub_errors\": []}, \"_id\": {\"$oid\": \"55d38c648627eee487c932f1\"}, \"id\": \"55d38c64db0c2164b3d59434\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:49:56 GMT
+- request:
+    method: post
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/
+    body:
+      encoding: US-ASCII
+      string: "{\"id\":\"5\",\"display_name\":\"P Forge\",\"importer_type_id\":\"puppet_importer\",\"importer_config\":{},\"notes\":{\"_repo-type\":\"puppet-repo\"},\"distributors\":[{\"distributor_type_id\":\"puppet_install_distributor\",\"distributor_config\":{\"install_path\":\"/etc/puppet/environments/KT_dev_label_org_default_label_30237652/modules\",\"auto_publish\":true},\"auto_publish\":true,\"distributor_id\":\"5\"},{\"distributor_type_id\":\"nodes_http_distributor\",\"distributor_config\":{},\"auto_publish\":true,\"distributor_id\":\"5_nodes\"}]}"
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="1EvR8oJjNEwN92SCw90dANaChgZrTMinmllEtW9gRI", oauth_signature="0Xee66OasnlpyO1LOCwcUqKjqtw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927396", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      Content-Length:
+      - "494"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:49:56 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Location:
+      - "5"
+      Content-Length:
+      - "298"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"scratchpad\": {}, \"display_name\": \"P Forge\", \"description\": null, \"last_unit_added\": null, \"notes\": {\"_repo-type\": \"puppet-repo\"}, \"last_unit_removed\": null, \"content_unit_counts\": {}, \"_ns\": \"repos\", \"_id\": {\"$oid\": \"55d38c64db0c21042893e41a\"}, \"id\": \"5\", \"_href\": \"/pulp/api/v2/repositories/5/\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:49:56 GMT
+- request:
+    method: delete
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/5/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="b8nvxqRy82PsWN79muEZqizssFHSUhlnjZAhT0DydNI", oauth_signature="ZnlInf9IGQowKSL6kR4Ahj%2BYwo4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927397", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:49:57 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Encoding:
+      - utf-8
+      Content-Length:
+      - "172"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/14127bd3-ad2a-490d-808f-8441869b718c/\", \"task_id\": \"14127bd3-ad2a-490d-808f-8441869b718c\"}], \"result\": null, \"error\": null}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:49:57 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/14127bd3-ad2a-490d-808f-8441869b718c/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="7LiiiwU7tnWsDAgUlFyLt6bvoFL7gkD2qOa3fjBR4U8", oauth_signature="xIOpS3eV1pyQ8vI7OE17qqNxZuk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927397", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:49:57 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "519"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/14127bd3-ad2a-490d-808f-8441869b718c/\", \"task_id\": \"14127bd3-ad2a-490d-808f-8441869b718c\", \"tags\": [\"pulp:repository:5\", \"pulp:action:delete\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"None.dq\", \"state\": \"waiting\", \"worker_name\": null, \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c658627eee487c932fa\"}, \"id\": \"55d38c65db0c21042893e424\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:49:57 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/14127bd3-ad2a-490d-808f-8441869b718c/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="ex57vqXGNuoh1yRVoAQr9aKMaYntKsBbTCU1e1Q", oauth_signature="JOyU%2FjJlIb6zrUsbsbrQgwUWy3I%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927397", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:49:57 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "694"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/14127bd3-ad2a-490d-808f-8441869b718c/\", \"task_id\": \"14127bd3-ad2a-490d-808f-8441869b718c\", \"tags\": [\"pulp:repository:5\", \"pulp:action:delete\"], \"finish_time\": \"2015-08-18T19:49:57Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:49:57Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c658627eee487c932fa\"}, \"id\": \"55d38c65db0c2164b3d5943b\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:49:57 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/f503ebee-0411-4c36-8e8a-6f4bf4b97338/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="lNyrOToQTXG39Hp6FANC20etrclW0fEsoTdungnD3tc", oauth_signature="jhCT6ib%2FTXL07KoSoB75g3YuLik%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927398", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:49:58 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "635"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/f503ebee-0411-4c36-8e8a-6f4bf4b97338/\", \"task_id\": \"f503ebee-0411-4c36-8e8a-6f4bf4b97338\", \"tags\": [\"pulp:repository:4\", \"pulp:action:delete\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"waiting\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c668627eee487c932fe\"}, \"id\": \"55d38c66db0c2164b3d59442\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:49:58 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/f503ebee-0411-4c36-8e8a-6f4bf4b97338/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="fOBRHfAsXyyd6Z5JPrewwn4RCbkEPCvbTgxYQxf3I", oauth_signature="DfD0dOLNCbZtVBJbCzTv3ES93mI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927398", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:49:58 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "694"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/f503ebee-0411-4c36-8e8a-6f4bf4b97338/\", \"task_id\": \"f503ebee-0411-4c36-8e8a-6f4bf4b97338\", \"tags\": [\"pulp:repository:4\", \"pulp:action:delete\"], \"finish_time\": \"2015-08-18T19:49:58Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:49:58Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c668627eee487c932fe\"}, \"id\": \"55d38c66db0c2164b3d59442\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:49:58 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/40fb72c1-7257-4f46-8269-9f99a07188e1/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="UJQDP4HUJwalHhkwmZ2AZi7bwIacWkimqmEM32Dti0", oauth_signature="0OOhYAzTgZQWWbDwBrM3cbCNey4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927399", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:00 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "633"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/40fb72c1-7257-4f46-8269-9f99a07188e1/\", \"task_id\": \"40fb72c1-7257-4f46-8269-9f99a07188e1\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"waiting\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c678627eee487c93302\"}, \"id\": \"55d38c67db0c2164b3d59449\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:00 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/40fb72c1-7257-4f46-8269-9f99a07188e1/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="Uh04HbvXt4p44WnHYqEUchuNRkVDTE06MnI91F6Zng", oauth_signature="pbdlQZ1uJBoB6A5BVMju%2BIiqtdg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927400", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:00 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1094"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/40fb72c1-7257-4f46-8269-9f99a07188e1/\", \"task_id\": \"40fb72c1-7257-4f46-8269-9f99a07188e1\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:00Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": null, \"traceback\": null, \"individual_errors\": [], \"state\": \"not-started\", \"error_count\": null, \"error\": \"None\", \"finished_count\": null}, \"metadata\": {\"query_finished_count\": 0, \"traceback\": null, \"execution_time\": null, \"query_total_count\": 1, \"error_message\": null, \"state\": \"running\", \"error\": \"None\", \"current_query\": null}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c678627eee487c93302\"}, \"id\": \"55d38c67db0c2164b3d59449\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:00 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/40fb72c1-7257-4f46-8269-9f99a07188e1/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="3XHXEVDeBn3DjXdQWOkbLpcRf2uYqCQPoYngcFKww4", oauth_signature="C2WP8TWHOi1Fno0uZIBgQeAxZU4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927401", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:01 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1094"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/40fb72c1-7257-4f46-8269-9f99a07188e1/\", \"task_id\": \"40fb72c1-7257-4f46-8269-9f99a07188e1\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:00Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": null, \"traceback\": null, \"individual_errors\": [], \"state\": \"not-started\", \"error_count\": null, \"error\": \"None\", \"finished_count\": null}, \"metadata\": {\"query_finished_count\": 0, \"traceback\": null, \"execution_time\": null, \"query_total_count\": 1, \"error_message\": null, \"state\": \"running\", \"error\": \"None\", \"current_query\": null}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c678627eee487c93302\"}, \"id\": \"55d38c67db0c2164b3d59449\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:01 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/40fb72c1-7257-4f46-8269-9f99a07188e1/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="rEP9a3OkYwE4AS5a706DStAD9C95f0xBU6AW9UBYh4", oauth_signature="Vwg11KqBJ7wmC5N5qXDVYb758RI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927401", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:01 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1155"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/40fb72c1-7257-4f46-8269-9f99a07188e1/\", \"task_id\": \"40fb72c1-7257-4f46-8269-9f99a07188e1\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:00Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": null, \"traceback\": null, \"individual_errors\": [], \"state\": \"not-started\", \"error_count\": null, \"error\": \"None\", \"finished_count\": null}, \"metadata\": {\"query_finished_count\": 1, \"traceback\": null, \"execution_time\": null, \"query_total_count\": 1, \"error_message\": null, \"state\": \"running\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c678627eee487c93302\"}, \"id\": \"55d38c67db0c2164b3d59449\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:01 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/40fb72c1-7257-4f46-8269-9f99a07188e1/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="i31ThKzAeGcQ4HH6IKn3Jrs0JT2E7OgGemDfBNLaD1w", oauth_signature="k3%2BJGaOfTbAn5Xn7orc6kQSyQfg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927402", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:02 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1139"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/40fb72c1-7257-4f46-8269-9f99a07188e1/\", \"task_id\": \"40fb72c1-7257-4f46-8269-9f99a07188e1\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:00Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": 4, \"traceback\": null, \"individual_errors\": [], \"state\": \"running\", \"error_count\": 0, \"error\": \"None\", \"finished_count\": 3}, \"metadata\": {\"query_finished_count\": 1, \"traceback\": null, \"execution_time\": 1, \"query_total_count\": 1, \"error_message\": null, \"state\": \"success\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c678627eee487c93302\"}, \"id\": \"55d38c67db0c2164b3d59449\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:02 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/40fb72c1-7257-4f46-8269-9f99a07188e1/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="bVEM0nT3e2SZ0sqhRV7kjkfsCbYi84pUvxEP3Qp5Io", oauth_signature="nKMKN8iASVVXwago2inn%2FrES0D4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927402", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:02 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1866"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/40fb72c1-7257-4f46-8269-9f99a07188e1/\", \"task_id\": \"40fb72c1-7257-4f46-8269-9f99a07188e1\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": \"2015-08-18T19:50:02Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:00Z\", \"traceback\": null, \"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/96f019ca-f187-43f9-aa2b-32bb5964954c/\", \"task_id\": \"96f019ca-f187-43f9-aa2b-32bb5964954c\"}, {\"_href\": \"/pulp/api/v2/tasks/9b243c52-48bd-4761-9aee-34e0c0d1fbb5/\", \"task_id\": \"9b243c52-48bd-4761-9aee-34e0c0d1fbb5\"}], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"traceback\": null, \"execution_time\": 0, \"total_count\": 4, \"error_message\": null, \"finished_count\": 4, \"state\": \"success\", \"error_count\": 0, \"error\": \"None\", \"individual_errors\": []}, \"metadata\": {\"query_finished_count\": 1, \"error_message\": null, \"execution_time\": 1, \"query_total_count\": 1, \"traceback\": null, \"state\": \"success\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": {\"importer_type_id\": \"puppet_importer\", \"importer_id\": \"puppet_importer\", \"exception\": null, \"repo_id\": \"4\", \"removed_count\": 0, \"started\": \"2015-08-18T19:50:00Z\", \"_ns\": \"repo_sync_results\", \"completed\": \"2015-08-18T19:50:02Z\", \"traceback\": null, \"summary\": {\"total_execution_time\": 1}, \"added_count\": 0, \"error_message\": null, \"updated_count\": 4, \"details\": {\"finished_count\": 4, \"total_count\": 4, \"error_count\": 0}, \"id\": \"55d38c6adb0c2165357779ef\", \"result\": \"success\"}, \"error\": null, \"_id\": {\"$oid\": \"55d38c678627eee487c93302\"}, \"id\": \"55d38c67db0c2164b3d59449\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:02 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/96f019ca-f187-43f9-aa2b-32bb5964954c/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="MrjvCV5ip0xwCFx9JYlYbzGCjFmcbyXf1zaB4ZcDUOg", oauth_signature="%2F8uqQ3FuJlRI3jwVOxtfkoFjCF0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927402", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:02 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1064"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.publish.publish\", \"_href\": \"/pulp/api/v2/tasks/96f019ca-f187-43f9-aa2b-32bb5964954c/\", \"task_id\": \"96f019ca-f187-43f9-aa2b-32bb5964954c\", \"tags\": [\"pulp:repository:4\", \"pulp:action:publish\"], \"finish_time\": \"2015-08-18T19:50:02Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:02Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": {\"exception\": null, \"repo_id\": \"4\", \"started\": \"2015-08-18T19:50:02Z\", \"_ns\": \"repo_publish_results\", \"completed\": \"2015-08-18T19:50:02Z\", \"traceback\": null, \"distributor_type_id\": \"nodes_http_distributor\", \"summary\": \"succeeded\", \"error_message\": null, \"details\": {\"unit_count\": 4}, \"distributor_id\": \"4_nodes\", \"id\": \"55d38c6adb0c2165357779f2\", \"result\": \"success\"}, \"error\": null, \"_id\": {\"$oid\": \"55d38c6a8627eee487c93304\"}, \"id\": \"55d38c6adb0c2164b3d59450\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:02 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/9b243c52-48bd-4761-9aee-34e0c0d1fbb5/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="jls0H4PN0jdgVUU8yMldFPpN3bbHXwNaSeroqOGAYU", oauth_signature="YqFm20v8%2F5HkBewq7wz7UNr093U%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927402", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:02 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1739"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.publish.publish\", \"_href\": \"/pulp/api/v2/tasks/9b243c52-48bd-4761-9aee-34e0c0d1fbb5/\", \"task_id\": \"9b243c52-48bd-4761-9aee-34e0c0d1fbb5\", \"tags\": [\"pulp:repository:4\", \"pulp:action:publish\"], \"finish_time\": \"2015-08-18T19:50:02Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:02Z\", \"traceback\": \"Traceback (most recent call last):\\n  File \\\"/usr/lib/python2.7/site-packages/celery/app/trace.py\\\", line 240, in trace_task\\n    R = retval = fun(*args, **kwargs)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/async/tasks.py\\\", line 328, in __call__\\n    return super(Task, self).__call__(*args, **kwargs)\\n  File \\\"/usr/lib/python2.7/site-packages/celery/app/trace.py\\\", line 437, in __protected_call__\\n    return self.run(*args, **kwargs)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/managers/repo/publish.py\\\", line 99, in publish\\n    transfer_repo, conduit, call_config)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/managers/repo/publish.py\\\", line 131, in _do_publish\\n    repository_id=repo_id, distributor_id=distributor_id)\\nPulpCodedException: The distributor 4 indicated a failed response when publishing repository 4.\\n\", \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"error\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": {\"code\": \"PLP0034\", \"data\": {\"repository_id\": \"4\", \"distributor_id\": \"4\"}, \"description\": \"The distributor 4 indicated a failed response when publishing repository 4.\", \"sub_errors\": []}, \"_id\": {\"$oid\": \"55d38c6a8627eee487c93305\"}, \"id\": \"55d38c6adb0c2164b3d59454\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:02 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/cad6a83c-7b74-47eb-9249-f04ce5473158/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="ahPoXQ1EQ8kjmBEgEOE0EeYTT8n3AKF88E5P3vITg", oauth_signature="xpmT4rU2MqUjiREPYefMXO3rCaE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927403", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:03 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "519"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/cad6a83c-7b74-47eb-9249-f04ce5473158/\", \"task_id\": \"cad6a83c-7b74-47eb-9249-f04ce5473158\", \"tags\": [\"pulp:repository:4\", \"pulp:action:delete\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"None.dq\", \"state\": \"waiting\", \"worker_name\": null, \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c6b8627eee487c9330e\"}, \"id\": \"55d38c6bdb0c21042893e444\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:03 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/cad6a83c-7b74-47eb-9249-f04ce5473158/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="Lm6EELxvt22WznDqmO1GTmEeaTfcThFuGKynQAEixE", oauth_signature="RcN7hdpDdxqaX0974LSIm691Grs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927403", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:03 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "694"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/cad6a83c-7b74-47eb-9249-f04ce5473158/\", \"task_id\": \"cad6a83c-7b74-47eb-9249-f04ce5473158\", \"tags\": [\"pulp:repository:4\", \"pulp:action:delete\"], \"finish_time\": \"2015-08-18T19:50:03Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:03Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c6b8627eee487c9330e\"}, \"id\": \"55d38c6bdb0c2164b3d5945b\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:03 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/a3912295-f6a4-4e1d-bb42-2d2e6a43b955/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="HvlGHinDApxcYfjV6xks4TCuEqGE4k8MUOtJPvreRN4", oauth_signature="RTUzH9lKcTqcgQmeJnJbtTUIFiU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927404", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:04 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "517"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/a3912295-f6a4-4e1d-bb42-2d2e6a43b955/\", \"task_id\": \"a3912295-f6a4-4e1d-bb42-2d2e6a43b955\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"None.dq\", \"state\": \"waiting\", \"worker_name\": null, \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c6c8627eee487c93312\"}, \"id\": \"55d38c6cdb0c21042893e44e\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:04 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/a3912295-f6a4-4e1d-bb42-2d2e6a43b955/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="2s2qCtyudkJBpLZXXU0irc9Zzo0AeN5NN1uhVwJE", oauth_signature="2RKlQHGKmPuSeyTct1sPrliSacQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927405", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:05 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1094"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/a3912295-f6a4-4e1d-bb42-2d2e6a43b955/\", \"task_id\": \"a3912295-f6a4-4e1d-bb42-2d2e6a43b955\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:04Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": null, \"traceback\": null, \"individual_errors\": [], \"state\": \"not-started\", \"error_count\": null, \"error\": \"None\", \"finished_count\": null}, \"metadata\": {\"query_finished_count\": 0, \"traceback\": null, \"execution_time\": null, \"query_total_count\": 1, \"error_message\": null, \"state\": \"running\", \"error\": \"None\", \"current_query\": null}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c6c8627eee487c93312\"}, \"id\": \"55d38c6cdb0c2164b3d59462\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:05 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/a3912295-f6a4-4e1d-bb42-2d2e6a43b955/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="Q9vKji7CWgV7qn2ZRedX0V7cwLXSHZZdw0gk7aUMf0", oauth_signature="mb2UZaJy5SMZqmjNLGHwtnkNdH0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927405", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:05 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1155"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/a3912295-f6a4-4e1d-bb42-2d2e6a43b955/\", \"task_id\": \"a3912295-f6a4-4e1d-bb42-2d2e6a43b955\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:04Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": null, \"traceback\": null, \"individual_errors\": [], \"state\": \"not-started\", \"error_count\": null, \"error\": \"None\", \"finished_count\": null}, \"metadata\": {\"query_finished_count\": 0, \"traceback\": null, \"execution_time\": null, \"query_total_count\": 1, \"error_message\": null, \"state\": \"running\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c6c8627eee487c93312\"}, \"id\": \"55d38c6cdb0c2164b3d59462\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:05 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/a3912295-f6a4-4e1d-bb42-2d2e6a43b955/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="6qzcPB5TkBOZ0FCkrCAzH1QqtK4d5fpuZEpc4AiiU", oauth_signature="g4h2eZ8wCGB%2Fpsm3jfnK9%2BG5DfI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927406", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:06 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1155"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/a3912295-f6a4-4e1d-bb42-2d2e6a43b955/\", \"task_id\": \"a3912295-f6a4-4e1d-bb42-2d2e6a43b955\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:04Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": null, \"traceback\": null, \"individual_errors\": [], \"state\": \"not-started\", \"error_count\": null, \"error\": \"None\", \"finished_count\": null}, \"metadata\": {\"query_finished_count\": 1, \"traceback\": null, \"execution_time\": null, \"query_total_count\": 1, \"error_message\": null, \"state\": \"running\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c6c8627eee487c93312\"}, \"id\": \"55d38c6cdb0c2164b3d59462\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:06 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/a3912295-f6a4-4e1d-bb42-2d2e6a43b955/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="JiOrRiRB6YFB2GUiQD9oIMZZ6nNniRw3K5DEuuG1js", oauth_signature="r2q6H8j1buET1KRd2vokXy24X4s%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927407", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:07 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1139"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/a3912295-f6a4-4e1d-bb42-2d2e6a43b955/\", \"task_id\": \"a3912295-f6a4-4e1d-bb42-2d2e6a43b955\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:04Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": 4, \"traceback\": null, \"individual_errors\": [], \"state\": \"running\", \"error_count\": 0, \"error\": \"None\", \"finished_count\": 3}, \"metadata\": {\"query_finished_count\": 1, \"traceback\": null, \"execution_time\": 1, \"query_total_count\": 1, \"error_message\": null, \"state\": \"success\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c6c8627eee487c93312\"}, \"id\": \"55d38c6cdb0c2164b3d59462\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:07 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/a3912295-f6a4-4e1d-bb42-2d2e6a43b955/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="c3RZyZZtkcgIeB3IPzyKPzvN30BS9CfwTwOO69aA", oauth_signature="1RKroSgzqEfLNE9r3iQZqdmFKTQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927407", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:07 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1866"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/a3912295-f6a4-4e1d-bb42-2d2e6a43b955/\", \"task_id\": \"a3912295-f6a4-4e1d-bb42-2d2e6a43b955\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": \"2015-08-18T19:50:07Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:04Z\", \"traceback\": null, \"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/b49726f3-08d2-490c-97cf-e82adae26dcc/\", \"task_id\": \"b49726f3-08d2-490c-97cf-e82adae26dcc\"}, {\"_href\": \"/pulp/api/v2/tasks/e4fb924d-b6d7-4a31-8348-b14f8bfc2c1f/\", \"task_id\": \"e4fb924d-b6d7-4a31-8348-b14f8bfc2c1f\"}], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"traceback\": null, \"execution_time\": 0, \"total_count\": 4, \"error_message\": null, \"finished_count\": 4, \"state\": \"success\", \"error_count\": 0, \"error\": \"None\", \"individual_errors\": []}, \"metadata\": {\"query_finished_count\": 1, \"error_message\": null, \"execution_time\": 1, \"query_total_count\": 1, \"traceback\": null, \"state\": \"success\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": {\"importer_type_id\": \"puppet_importer\", \"importer_id\": \"puppet_importer\", \"exception\": null, \"repo_id\": \"4\", \"removed_count\": 0, \"started\": \"2015-08-18T19:50:04Z\", \"_ns\": \"repo_sync_results\", \"completed\": \"2015-08-18T19:50:07Z\", \"traceback\": null, \"summary\": {\"total_execution_time\": 1}, \"added_count\": 0, \"error_message\": null, \"updated_count\": 4, \"details\": {\"finished_count\": 4, \"total_count\": 4, \"error_count\": 0}, \"id\": \"55d38c6fdb0c2165357779fa\", \"result\": \"success\"}, \"error\": null, \"_id\": {\"$oid\": \"55d38c6c8627eee487c93312\"}, \"id\": \"55d38c6cdb0c2164b3d59462\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:07 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/b49726f3-08d2-490c-97cf-e82adae26dcc/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="2gOhkwinG8wZ97snK2oKcPYOnqE4oCaRFJPxY8IgD4s", oauth_signature="UMi7Q4VHYOrlGp9klcQBhi8i%2FSc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927407", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:07 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1064"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.publish.publish\", \"_href\": \"/pulp/api/v2/tasks/b49726f3-08d2-490c-97cf-e82adae26dcc/\", \"task_id\": \"b49726f3-08d2-490c-97cf-e82adae26dcc\", \"tags\": [\"pulp:repository:4\", \"pulp:action:publish\"], \"finish_time\": \"2015-08-18T19:50:07Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:07Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": {\"exception\": null, \"repo_id\": \"4\", \"started\": \"2015-08-18T19:50:07Z\", \"_ns\": \"repo_publish_results\", \"completed\": \"2015-08-18T19:50:07Z\", \"traceback\": null, \"distributor_type_id\": \"nodes_http_distributor\", \"summary\": \"succeeded\", \"error_message\": null, \"details\": {\"unit_count\": 4}, \"distributor_id\": \"4_nodes\", \"id\": \"55d38c6fdb0c2165357779fd\", \"result\": \"success\"}, \"error\": null, \"_id\": {\"$oid\": \"55d38c6f8627eee487c93314\"}, \"id\": \"55d38c6fdb0c2164b3d59466\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:07 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/e4fb924d-b6d7-4a31-8348-b14f8bfc2c1f/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="RazIescbqboRN3Dhnqz0FBgh7qCymgmCrOAwUkNal8", oauth_signature="iHrr%2FoSrw%2BRDW9KL%2B%2F1W%2F66rV6g%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927407", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:07 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1739"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.publish.publish\", \"_href\": \"/pulp/api/v2/tasks/e4fb924d-b6d7-4a31-8348-b14f8bfc2c1f/\", \"task_id\": \"e4fb924d-b6d7-4a31-8348-b14f8bfc2c1f\", \"tags\": [\"pulp:repository:4\", \"pulp:action:publish\"], \"finish_time\": \"2015-08-18T19:50:07Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:07Z\", \"traceback\": \"Traceback (most recent call last):\\n  File \\\"/usr/lib/python2.7/site-packages/celery/app/trace.py\\\", line 240, in trace_task\\n    R = retval = fun(*args, **kwargs)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/async/tasks.py\\\", line 328, in __call__\\n    return super(Task, self).__call__(*args, **kwargs)\\n  File \\\"/usr/lib/python2.7/site-packages/celery/app/trace.py\\\", line 437, in __protected_call__\\n    return self.run(*args, **kwargs)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/managers/repo/publish.py\\\", line 99, in publish\\n    transfer_repo, conduit, call_config)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/managers/repo/publish.py\\\", line 131, in _do_publish\\n    repository_id=repo_id, distributor_id=distributor_id)\\nPulpCodedException: The distributor 4 indicated a failed response when publishing repository 4.\\n\", \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"error\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": {\"code\": \"PLP0034\", \"data\": {\"repository_id\": \"4\", \"distributor_id\": \"4\"}, \"description\": \"The distributor 4 indicated a failed response when publishing repository 4.\", \"sub_errors\": []}, \"_id\": {\"$oid\": \"55d38c6f8627eee487c93315\"}, \"id\": \"55d38c6fdb0c2164b3d5946a\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:07 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/6b5c1f35-63f1-4d82-bed8-ded3ff9dcd18/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="6SVJPu6B5vwdcG08gxmqZ6rhqYF792eyMWUHyIew", oauth_signature="id%2FxU%2FrmJKm%2Fg0kwCSz3P%2BQ6IFU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927408", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:08 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "519"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/6b5c1f35-63f1-4d82-bed8-ded3ff9dcd18/\", \"task_id\": \"6b5c1f35-63f1-4d82-bed8-ded3ff9dcd18\", \"tags\": [\"pulp:repository:4\", \"pulp:action:delete\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"None.dq\", \"state\": \"waiting\", \"worker_name\": null, \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c708627eee487c9331e\"}, \"id\": \"55d38c70db0c21042893e464\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:08 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/6b5c1f35-63f1-4d82-bed8-ded3ff9dcd18/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="bbIAktJJArwGWQqQ1c2xRzV0AnLxUFPTwiHVw70", oauth_signature="MmwZBr1bb8vxzjL0bAGuFbOPwPw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927408", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:08 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "694"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/6b5c1f35-63f1-4d82-bed8-ded3ff9dcd18/\", \"task_id\": \"6b5c1f35-63f1-4d82-bed8-ded3ff9dcd18\", \"tags\": [\"pulp:repository:4\", \"pulp:action:delete\"], \"finish_time\": \"2015-08-18T19:50:08Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:08Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c708627eee487c9331e\"}, \"id\": \"55d38c70db0c2164b3d59471\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:08 GMT
+- request:
+    method: post
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/
+    body:
+      encoding: US-ASCII
+      string: "{\"id\":\"4\",\"display_name\":\"P Forge\",\"importer_type_id\":\"puppet_importer\",\"importer_config\":{\"feed\":\"http://davidd.fedorapeople.org/repos/random_puppet/\"},\"notes\":{\"_repo-type\":\"puppet-repo\"},\"distributors\":[{\"distributor_type_id\":\"puppet_install_distributor\",\"distributor_config\":{\"install_path\":\"/test_path/\",\"auto_publish\":true},\"auto_publish\":true,\"distributor_id\":\"4\"},{\"distributor_type_id\":\"nodes_http_distributor\",\"distributor_config\":{},\"auto_publish\":true,\"distributor_id\":\"4_nodes\"}]}"
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="fdKM8697bcY8YxhB5uFjxTP8wiCnQlN5H8O3qpb6fts", oauth_signature="XEl1XcC69%2BqjXuxSalpf49nbcd8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927409", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      Content-Length:
+      - "493"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:09 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Location:
+      - "4"
+      Content-Length:
+      - "298"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"scratchpad\": {}, \"display_name\": \"P Forge\", \"description\": null, \"last_unit_added\": null, \"notes\": {\"_repo-type\": \"puppet-repo\"}, \"last_unit_removed\": null, \"content_unit_counts\": {}, \"_ns\": \"repos\", \"_id\": {\"$oid\": \"55d38c71db0c21042893e469\"}, \"id\": \"4\", \"_href\": \"/pulp/api/v2/repositories/4/\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:09 GMT
+- request:
+    method: post
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/4/actions/sync/
+    body:
+      encoding: US-ASCII
+      string: "{\"override_config\":{\"num_threads\":4,\"validate\":true}}"
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="6X3UbOterTJp1PHsZUMUAEnbtlh2fXYkskdKlibbwU", oauth_signature="uiEbSK2024mg%2Ff9CixuP522rZ1U%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927409", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      Content-Length:
+      - "53"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:09 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Encoding:
+      - utf-8
+      Content-Length:
+      - "172"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/3f0cbc55-5e1b-4a57-980f-4050fe136cc3/\", \"task_id\": \"3f0cbc55-5e1b-4a57-980f-4050fe136cc3\"}], \"result\": null, \"error\": null}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:09 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/3f0cbc55-5e1b-4a57-980f-4050fe136cc3/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="guhbUjBPeubOGzXJ0KKLw2U9aIbYQAmoREFzSuRqA", oauth_signature="TVHcqOYlj2jZVshO7M2l9rNp1OI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927409", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:09 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "517"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/3f0cbc55-5e1b-4a57-980f-4050fe136cc3/\", \"task_id\": \"3f0cbc55-5e1b-4a57-980f-4050fe136cc3\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"None.dq\", \"state\": \"waiting\", \"worker_name\": null, \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c718627eee487c93322\"}, \"id\": \"55d38c71db0c21042893e46e\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:09 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/3f0cbc55-5e1b-4a57-980f-4050fe136cc3/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="5yOGXumyeJGUfyOfsFr24dc9Tf6IzBjDPT3lAMmyWE", oauth_signature="q1O9YEG3fDrLvWMrJRm45%2BUNvKc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927410", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:10 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1094"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/3f0cbc55-5e1b-4a57-980f-4050fe136cc3/\", \"task_id\": \"3f0cbc55-5e1b-4a57-980f-4050fe136cc3\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:09Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": null, \"traceback\": null, \"individual_errors\": [], \"state\": \"not-started\", \"error_count\": null, \"error\": \"None\", \"finished_count\": null}, \"metadata\": {\"query_finished_count\": 0, \"traceback\": null, \"execution_time\": null, \"query_total_count\": 1, \"error_message\": null, \"state\": \"running\", \"error\": \"None\", \"current_query\": null}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c718627eee487c93322\"}, \"id\": \"55d38c71db0c2164b3d59478\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:10 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/3f0cbc55-5e1b-4a57-980f-4050fe136cc3/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="U4pqgXwXinH8EWtMBgAUUSwkXKd4GBXMfACW1dURxo", oauth_signature="%2FY6iLAeS4P7w6tywGpUEP3nJoPE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927410", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:10 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1100"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/3f0cbc55-5e1b-4a57-980f-4050fe136cc3/\", \"task_id\": \"3f0cbc55-5e1b-4a57-980f-4050fe136cc3\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:09Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": null, \"traceback\": null, \"individual_errors\": [], \"state\": \"not-started\", \"error_count\": null, \"error\": \"None\", \"finished_count\": null}, \"metadata\": {\"query_finished_count\": null, \"traceback\": null, \"execution_time\": null, \"query_total_count\": null, \"error_message\": null, \"state\": \"running\", \"error\": \"None\", \"current_query\": null}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c718627eee487c93322\"}, \"id\": \"55d38c71db0c2164b3d59478\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:10 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/3f0cbc55-5e1b-4a57-980f-4050fe136cc3/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="DZrVh2v0pF4xGiqGwPZ4yQ8JWWfQNZXaZLC7Ngi2Xo4", oauth_signature="QOsE8itxotZrL%2BDXArmbNqN3New%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927411", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:11 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1155"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/3f0cbc55-5e1b-4a57-980f-4050fe136cc3/\", \"task_id\": \"3f0cbc55-5e1b-4a57-980f-4050fe136cc3\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:09Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": null, \"traceback\": null, \"individual_errors\": [], \"state\": \"not-started\", \"error_count\": null, \"error\": \"None\", \"finished_count\": null}, \"metadata\": {\"query_finished_count\": 1, \"traceback\": null, \"execution_time\": null, \"query_total_count\": 1, \"error_message\": null, \"state\": \"running\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c718627eee487c93322\"}, \"id\": \"55d38c71db0c2164b3d59478\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:11 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/3f0cbc55-5e1b-4a57-980f-4050fe136cc3/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="GhWH1F9LneT5se5twA9p6rabAOkFT2i9prFPe92Y", oauth_signature="8Dg3nmEXcJqRD2dGIgCnYqaO7JI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927412", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:12 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1139"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/3f0cbc55-5e1b-4a57-980f-4050fe136cc3/\", \"task_id\": \"3f0cbc55-5e1b-4a57-980f-4050fe136cc3\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:09Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"error_message\": null, \"execution_time\": null, \"total_count\": 4, \"traceback\": null, \"individual_errors\": [], \"state\": \"running\", \"error_count\": 0, \"error\": \"None\", \"finished_count\": 3}, \"metadata\": {\"query_finished_count\": 1, \"traceback\": null, \"execution_time\": 1, \"query_total_count\": 1, \"error_message\": null, \"state\": \"success\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"running\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c718627eee487c93322\"}, \"id\": \"55d38c71db0c2164b3d59478\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:12 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/3f0cbc55-5e1b-4a57-980f-4050fe136cc3/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="eACF0S7vi2k84e92bvLjFRvClkhoOF1qKKDxGsLM", oauth_signature="gqBaBswqWmrGb9kR78R4dZAKRpw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927412", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:12 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1866"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.sync.sync\", \"_href\": \"/pulp/api/v2/tasks/3f0cbc55-5e1b-4a57-980f-4050fe136cc3/\", \"task_id\": \"3f0cbc55-5e1b-4a57-980f-4050fe136cc3\", \"tags\": [\"pulp:repository:4\", \"pulp:action:sync\"], \"finish_time\": \"2015-08-18T19:50:12Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:09Z\", \"traceback\": null, \"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/45b0defc-af0a-4d3b-9631-231af0454930/\", \"task_id\": \"45b0defc-af0a-4d3b-9631-231af0454930\"}, {\"_href\": \"/pulp/api/v2/tasks/8efe7d9c-ff82-4175-ae8e-54f4ac83778a/\", \"task_id\": \"8efe7d9c-ff82-4175-ae8e-54f4ac83778a\"}], \"progress_report\": {\"puppet_importer\": {\"modules\": {\"traceback\": null, \"execution_time\": 0, \"total_count\": 4, \"error_message\": null, \"finished_count\": 4, \"state\": \"success\", \"error_count\": 0, \"error\": \"None\", \"individual_errors\": []}, \"metadata\": {\"query_finished_count\": 1, \"error_message\": null, \"execution_time\": 1, \"query_total_count\": 1, \"traceback\": null, \"state\": \"success\", \"error\": \"None\", \"current_query\": \"http://davidd.fedorapeople.org/repos/random_puppet/modules.json\"}}}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": {\"importer_type_id\": \"puppet_importer\", \"importer_id\": \"puppet_importer\", \"exception\": null, \"repo_id\": \"4\", \"removed_count\": 0, \"started\": \"2015-08-18T19:50:09Z\", \"_ns\": \"repo_sync_results\", \"completed\": \"2015-08-18T19:50:12Z\", \"traceback\": null, \"summary\": {\"total_execution_time\": 1}, \"added_count\": 0, \"error_message\": null, \"updated_count\": 4, \"details\": {\"finished_count\": 4, \"total_count\": 4, \"error_count\": 0}, \"id\": \"55d38c74db0c216535777a05\", \"result\": \"success\"}, \"error\": null, \"_id\": {\"$oid\": \"55d38c718627eee487c93322\"}, \"id\": \"55d38c71db0c2164b3d59478\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:12 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/45b0defc-af0a-4d3b-9631-231af0454930/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="ZsBwBS4HVYhQHvGDCFZYBI636wxjoFvU65auOLv8", oauth_signature="ba50FVwq37rYEzigQMsvzlEGRFw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927412", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:12 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1064"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.publish.publish\", \"_href\": \"/pulp/api/v2/tasks/45b0defc-af0a-4d3b-9631-231af0454930/\", \"task_id\": \"45b0defc-af0a-4d3b-9631-231af0454930\", \"tags\": [\"pulp:repository:4\", \"pulp:action:publish\"], \"finish_time\": \"2015-08-18T19:50:12Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:12Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": {\"exception\": null, \"repo_id\": \"4\", \"started\": \"2015-08-18T19:50:12Z\", \"_ns\": \"repo_publish_results\", \"completed\": \"2015-08-18T19:50:12Z\", \"traceback\": null, \"distributor_type_id\": \"nodes_http_distributor\", \"summary\": \"succeeded\", \"error_message\": null, \"details\": {\"unit_count\": 4}, \"distributor_id\": \"4_nodes\", \"id\": \"55d38c74db0c216535777a08\", \"result\": \"success\"}, \"error\": null, \"_id\": {\"$oid\": \"55d38c748627eee487c93324\"}, \"id\": \"55d38c74db0c2164b3d5947c\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:12 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/8efe7d9c-ff82-4175-ae8e-54f4ac83778a/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="4LnKy6C1pwMIXT3KS46L580AzuTU574WgyCfEm84Q", oauth_signature="lKom064iqdmVs7d4QIiFldVP1kI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927412", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:12 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1739"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.managers.repo.publish.publish\", \"_href\": \"/pulp/api/v2/tasks/8efe7d9c-ff82-4175-ae8e-54f4ac83778a/\", \"task_id\": \"8efe7d9c-ff82-4175-ae8e-54f4ac83778a\", \"tags\": [\"pulp:repository:4\", \"pulp:action:publish\"], \"finish_time\": \"2015-08-18T19:50:12Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:12Z\", \"traceback\": \"Traceback (most recent call last):\\n  File \\\"/usr/lib/python2.7/site-packages/celery/app/trace.py\\\", line 240, in trace_task\\n    R = retval = fun(*args, **kwargs)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/async/tasks.py\\\", line 328, in __call__\\n    return super(Task, self).__call__(*args, **kwargs)\\n  File \\\"/usr/lib/python2.7/site-packages/celery/app/trace.py\\\", line 437, in __protected_call__\\n    return self.run(*args, **kwargs)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/managers/repo/publish.py\\\", line 99, in publish\\n    transfer_repo, conduit, call_config)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/managers/repo/publish.py\\\", line 131, in _do_publish\\n    repository_id=repo_id, distributor_id=distributor_id)\\nPulpCodedException: The distributor 4 indicated a failed response when publishing repository 4.\\n\", \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"error\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": {\"code\": \"PLP0034\", \"data\": {\"repository_id\": \"4\", \"distributor_id\": \"4\"}, \"description\": \"The distributor 4 indicated a failed response when publishing repository 4.\", \"sub_errors\": []}, \"_id\": {\"$oid\": \"55d38c748627eee487c93326\"}, \"id\": \"55d38c74db0c2164b3d59480\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:12 GMT
+- request:
+    method: post
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/4/search/units/
+    body:
+      encoding: US-ASCII
+      string: "{\"criteria\":{\"type_ids\":[\"puppet_module\"],\"fields\":{\"unit\":[],\"association\":[\"unit_id\"]}}}"
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="8kmePMdiJN0TtrNgsrhYvsSck8ufx0gtmBkQMMg", oauth_signature="El3dqQawMP2NDl%2B8xcSFmLeTmLM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927412", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      Content-Length:
+      - "90"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:12 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "916"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "[{\"metadata\": {\"_id\": \"babe1088-a385-43a8-9a2c-1cc805999789\", \"_content_type_id\": \"puppet_module\"}, \"_id\": {\"$oid\": \"55d38c73db0c216535777a02\"}, \"unit_id\": \"babe1088-a385-43a8-9a2c-1cc805999789\", \"unit_type_id\": \"puppet_module\"}, {\"metadata\": {\"_id\": \"a1fdd4bd-72ba-4186-9289-baf434bb6196\", \"_content_type_id\": \"puppet_module\"}, \"_id\": {\"$oid\": \"55d38c74db0c216535777a04\"}, \"unit_id\": \"a1fdd4bd-72ba-4186-9289-baf434bb6196\", \"unit_type_id\": \"puppet_module\"}, {\"metadata\": {\"_id\": \"e3050ec8-d38e-4936-9a67-5afdbf38dc27\", \"_content_type_id\": \"puppet_module\"}, \"_id\": {\"$oid\": \"55d38c73db0c216535777a03\"}, \"unit_id\": \"e3050ec8-d38e-4936-9a67-5afdbf38dc27\", \"unit_type_id\": \"puppet_module\"}, {\"metadata\": {\"_id\": \"be8a575d-c40c-4e00-b5bb-70b9be9b7a27\", \"_content_type_id\": \"puppet_module\"}, \"_id\": {\"$oid\": \"55d38c73db0c216535777a01\"}, \"unit_id\": \"be8a575d-c40c-4e00-b5bb-70b9be9b7a27\", \"unit_type_id\": \"puppet_module\"}]"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:12 GMT
+- request:
+    method: post
+    uri: https://katello-distributions2.example.com/pulp/api/v2/content/units/puppet_module/search/
+    body:
+      encoding: US-ASCII
+      string: "{\"criteria\":{\"filters\":{\"_id\":{\"$in\":[\"babe1088-a385-43a8-9a2c-1cc805999789\",\"a1fdd4bd-72ba-4186-9289-baf434bb6196\",\"e3050ec8-d38e-4936-9a67-5afdbf38dc27\",\"be8a575d-c40c-4e00-b5bb-70b9be9b7a27\"]}}},\"include_repos\":true}"
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="arDnYhvNyVtSW7kKukDXa6wscwNRd7nAjp1zYL9USk", oauth_signature="KxyhlcOB05HCgO54m%2FJ6SkQ5040%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927412", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      Content-Length:
+      - "219"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:12 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "9122"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "[{\"repository_memberships\": [\"4\"], \"_storage_path\": \"/var/lib/pulp/content/puppet_module/5UbZ3r0-httpd-0.2.0.tar.gz\", \"tag_list\": null, \"description\": \"This module handles a standard httpd installation.\\n\\nIt has optional classes if you want to install and configure mod_ssl, php, mod_spdy or httpd-dev.\\n\\nIt has been tested on CentOS 6.2 and CentOS 5.8.\\nIt could work also on debian, but that needs to be tested.\", \"license\": \"GPL v3\", \"author\": \"5UbZ3r0\", \"checksum\": null, \"_last_updated\": \"2015-08-18T19:50:12Z\", \"project_page\": \"\", \"summary\": \"This module handles a standard httpd installation.\", \"_href\": \"/pulp/api/v2/content/units/puppet_module/a1fdd4bd-72ba-4186-9289-baf434bb6196/\", \"source\": \"\", \"dependencies\": [], \"version\": \"0.2.0\", \"_content_type_id\": \"puppet_module\", \"checksums\": [[\"files/spdy/mod-spdy-beta_current_i386.rpm\", \"4abdee35392c1c6d329def2017393403\"], [\"manifests/params.pp\", \"d02eb87a3ed69ff638ca028b67001621\"], [\"manifests/ssl.pp\", \"6d8a9caf1a13132b6cd2464da606281b\"], [\"manifests/init.pp\", \"fcd8c8f976710eac6532adc2f28bfa44\"], [\"manifests/dev.pp\", \"13e0564d366f27694b115f8112406429\"], [\"manifests/vhost.pp\", \"6eac84201d239436c386fe2adf4c4252\"], [\"templates/httpd.conf.RHEL.erb\", \"4cbcc29765356aeb9a01beece6738fe8\"], [\"files/spdy/mod-spdy-beta_current_x86_64.rpm\", \"6d25d03bfb8249f7c6dcd9906909c995\"], [\"templates/localized-error-pages.Debian.erb\", \"578dfd537911a7b8ddcd485640452ac3\"], [\"files/deflate.conf\", \"1fc678aa967f4fd3c8238c9111019a1d\"], [\"manifests/spdy.pp\", \"ef792b41408236aeda7f57a427f574eb\"], [\"templates/vhost-default.conf.erb\", \"ed64a53af0d7bad762176a98c9ea3e62\"], [\"README\", \"4c9b436e48a447d634eb821c06fff6fc\"], [\"spec/spec.opts\", \"a600ded995d948e393fbe2320ba8e51c\"], [\"templates/ssl.conf.RHEL.erb\", \"f116618fb85ffdda3cef1fcf5a8210c8\"], [\"templates/php.ini.RHEL.erb\", \"25cbb760e5fcf81165fbc33ce98fe6d9\"], [\"lib/puppet/provider/a2mod/modfix.rb\", \"f4536cdca68d15a235cbb1e0b67e4406\"], [\"files/error/error.html\", \"3af8411c82a0725c0ba6ba0fa681bd08\"], [\"files/spdy/mod-spdy-beta_current_i386.deb\", \"7d72474e3983f390daf89f1289e08521\"], [\"lib/puppet/provider/a2mod/a2mod.rb\", \"0acf42d3d670a9915c5a3f46ae7335f1\"], [\"manifests/php.pp\", \"56ea7f297aaacdde001d3529051b3c0e\"], [\"files/spdy/mod-spdy-beta_current_amd64.deb\", \"834c85038ae50260da3a070cfa0cdbdf\"], [\"Modulefile\", \"ea33e2d7fe4d97eafa07172c92c130db\"], [\"spec/spec_helper.rb\", \"ca19ec4f451ebc7fdb035b52eae6e909\"], [\"templates/php.ini.Debian.erb\", \"180a39ca262e132c6d431973986d7e39\"], [\"lib/puppet/type/a2mod.rb\", \"adcf754a076153442eac2beb42736547\"]], \"checksum_type\": \"sha256\", \"_id\": \"a1fdd4bd-72ba-4186-9289-baf434bb6196\", \"children\": {}, \"types\": [{\"doc\": \"Manage Apache 2 modules on Debian and Ubuntu\", \"name\": \"a2mod\", \"parameters\": [{\"doc\": \"The name of the module to be managed\", \"name\": \"name\"}], \"providers\": [{\"doc\": \"Manage Apache 2 modules on Debian and Ubuntu\", \"name\": \"a2mod\"}, {\"doc\": \"Dummy provider for A2mod.\\n\\n    Fake nil resources when there is no crontab binary available. Allows\\n    puppetd to run on a bootstrapped machine before a Cron package has been\\n    installed. Workaround for: http://projects.puppetlabs.com/issues/2384\\n    \", \"name\": \"modfix\"}]}], \"name\": \"httpd\"}, {\"repository_memberships\": [\"4\"], \"_storage_path\": \"/var/lib/pulp/content/puppet_module/5UbZ3r0-cron-0.0.1.tar.gz\", \"tag_list\": null, \"description\": \"This puppet module manages the scheduling of task trough cron.\\nIt has shortcuts  classes for hourly (/etc/cron.hourly), daily (/etc/cron.daily), weekly (/etc/cron.daily) and monthly (/etc/cron.monthly) schedulation.\\n\\nIt has been tested only ...\\n\\nTested on CentOS 6.2, RHEL 6.2, CentOS 5.8.\\n\\nRequirements:\\n\\n * [Facter](http://www.puppetlabs.com/puppet/related-projects/facter/) 1.6.1 or greater (versions that support the osfamily fact)\\n * [puppetlabs/stdlib] for the validate_absolute_path statement\\n\\nTodo:\\n- Set up and install cron in the - very unlikely - case that it's not installed;\\n- Make cron::task work with windows.\", \"license\": \"GPL v3\", \"author\": \"5UbZ3r0\", \"checksum\": null, \"_last_updated\": \"2015-08-18T19:50:11Z\", \"project_page\": \"https://github.com/5Ub-Z3r0/puppet-cron\", \"summary\": \"Puppet module that manages scheduling of task trough cron\", \"_href\": \"/pulp/api/v2/content/units/puppet_module/babe1088-a385-43a8-9a2c-1cc805999789/\", \"source\": \"https://github.com/5Ub-Z3r0/puppet-cron.git\", \"dependencies\": [{\"name\": \"puppetlabs/stdlib\", \"version_requirement\": \">=3.0.0\"}], \"version\": \"0.0.1\", \"_content_type_id\": \"puppet_module\", \"checksums\": [[\"manifests/daily.pp\", \"96ffd0e592de3f5dd054de3755a8bcff\"], [\"spec/spec.opts\", \"a600ded995d948e393fbe2320ba8e51c\"], [\"manifests/monthly.pp\", \"b9900f6e2db0854f34c66930287db700\"], [\"manifests/task.pp\", \"4cb4aa49df8c90619d9039992a516c07\"], [\"spec/spec_helper.rb\", \"ca19ec4f451ebc7fdb035b52eae6e909\"], [\"tests/init.pp\", \"4bcb7e03aced8bb468351a45e8e9bc76\"], [\"manifests/params.pp\", \"d5924918fc059daa47aa355534a4b434\"], [\"manifests/weekly.pp\", \"7d34a00d629575ee2e4f4bd58eab1d40\"], [\"Modulefile\", \"18c9208e77a3c43b4df65ae8bb3bf804\"], [\"manifests/init.pp\", \"8c3e10bc3e2465908436f1aa771f039b\"], [\"manifests/hourly.pp\", \"7a17621a731750c40c872e7a5b6f4442\"], [\"README\", \"491e63a9cf75f825369528983caae87a\"]], \"checksum_type\": \"sha256\", \"_id\": \"babe1088-a385-43a8-9a2c-1cc805999789\", \"children\": {}, \"types\": [], \"name\": \"cron\"}, {\"repository_memberships\": [\"4\"], \"_storage_path\": \"/var/lib/pulp/content/puppet_module/5UbZ3r0-samba-0.2.0.tar.gz\", \"tag_list\": null, \"description\": \"This puppet module manages samba configuration.\\n\\nIt has been tested only for samba managing shares, tough it does not care about the content of your config file.\\n\\nTested on CentOS 6.2, RHEL 6.2, CentOS 5.8.\", \"license\": \"GPL v3\", \"author\": \"5UbZ3r0\", \"checksum\": null, \"_last_updated\": \"2015-08-18T19:50:11Z\", \"project_page\": \"https://github.com/5Ub-Z3r0/puppet-samba\", \"summary\": \"A puppet module that manages samba\", \"_href\": \"/pulp/api/v2/content/units/puppet_module/be8a575d-c40c-4e00-b5bb-70b9be9b7a27/\", \"source\": \"https://github.com/5Ub-Z3r0/puppet-samba\", \"dependencies\": [], \"version\": \"0.2.0\", \"_content_type_id\": \"puppet_module\", \"checksums\": [[\"manifests/service.pp\", \"192c819791e2042703891e51a61d314a\"], [\"manifests/params.pp\", \"f41d11e7dbbde67a2cf4d29cf6783a55\"], [\"spec/spec.opts\", \"a600ded995d948e393fbe2320ba8e51c\"], [\"tests/init.pp\", \"4dcc2868cb9740c32eb68f345a7b7194\"], [\"spec/spec_helper.rb\", \"ca19ec4f451ebc7fdb035b52eae6e909\"], [\"manifests/conf.pp\", \"ad4b285a6736aebebb6fa59e38ddded1\"], [\"Modulefile\", \"d309ee315176ea3f923480c286e3a55b\"], [\"manifests/install.pp\", \"c929e13f546bcdb3f02efede9db1af9b\"], [\"manifests/init.pp\", \"f658b594ac88da9026c675bfe0310d57\"], [\"README\", \"627fbb57eb8d94308f01a11430418fb6\"]], \"checksum_type\": \"sha256\", \"_id\": \"be8a575d-c40c-4e00-b5bb-70b9be9b7a27\", \"children\": {}, \"types\": [], \"name\": \"samba\"}, {\"repository_memberships\": [\"4\"], \"_storage_path\": \"/var/lib/pulp/content/puppet_module/5UbZ3r0-pureftpd-1.0.2.tar.gz\", \"tag_list\": null, \"description\": \"Manage Pure-FTPd via Puppet\", \"license\": \"Apache License, Version 2.0\", \"author\": \"5UbZ3r0\", \"checksum\": null, \"_last_updated\": \"2015-08-18T19:50:11Z\", \"project_page\": \"https://github.com/saz/puppet-pureftpd\", \"summary\": \"\", \"_href\": \"/pulp/api/v2/content/units/puppet_module/e3050ec8-d38e-4936-9a67-5afdbf38dc27/\", \"source\": \"\", \"dependencies\": [], \"version\": \"1.0.2\", \"_content_type_id\": \"puppet_module\", \"checksums\": [[\"spec\\\\unit\\\\puppet\\\\type\\\\README.markdown\", \"de26a7643813abd6c2e7e28071b1ef94\"], [\"spec\\\\unit\\\\puppet\\\\provider\\\\README.markdown\", \"e52668944ee6af2fb5d5b9e798342645\"], [\"tests\\\\init.pp\", \"5d6e84bd06e23c4d565782db67e333ec\"], [\"files\\\\debian\\\\PAMAuthentication\", \"eb4585ad9fe0426781ed7c49252f8225\"], [\"files\\\\debian\\\\ChrootEveryone\", \"eb4585ad9fe0426781ed7c49252f8225\"], [\"manifests\\\\service.pp\", \"722d62651e6c61da4330332b6382f5a9\"], [\"spec\\\\spec.opts\", \"a600ded995d948e393fbe2320ba8e51c\"], [\"manifests\\\\install.pp\", \"51caa25f90a479cd501824362b9bdba1\"], [\"files\\\\debian\\\\MaxClientsNumber\", \"2a52a5e65fc3c43f409550dfad1f904f\"], [\"files\\\\debian\\\\DontResolve\", \"eb4585ad9fe0426781ed7c49252f8225\"], [\"files\\\\debian\\\\NoAnonymous\", \"eb4585ad9fe0426781ed7c49252f8225\"], [\"spec\\\\README.markdown\", \"32a1fc0121c28aff554ef5d422b8b51e\"], [\"files\\\\debian\\\\AltLog\", \"a3d7f89dc916062234237acf75bde97d\"], [\"README.md\", \"9cbb945c6ce73031b00b1c5269cbb638\"], [\"manifests\\\\params.pp\", \"e7b3cf3a6115e96a6f76d3ff2c545625\"], [\"templates\\\\default_config.erb\", \"222945189c5b8d4efa9fe2c3cc01f435\"], [\"files\\\\debian\\\\VerboseLog\", \"7fa3b767c460b54a2be4d49030b349c7\"], [\"files\\\\debian\\\\PureDB\", \"6db5965698527e1f140dfc73ed40d47c\"], [\"manifests\\\\config.pp\", \"b12d6331349d217bbba684a0c5652620\"], [\"files\\\\debian\\\\UnixAuthentication\", \"eb4585ad9fe0426781ed7c49252f8225\"], [\"manifests\\\\init.pp\", \"61675a905c40641e70d6f74985fda8c8\"], [\"Modulefile\", \"decaaab32a9931c3565a6fc47f26a740\"], [\"files\\\\debian\\\\MinUID\", \"4fbafd6948b6529caa2b78e476359875\"], [\"spec\\\\spec_helper.rb\", \"ca19ec4f451ebc7fdb035b52eae6e909\"]], \"checksum_type\": \"sha256\", \"_id\": \"e3050ec8-d38e-4936-9a67-5afdbf38dc27\", \"children\": {}, \"types\": [], \"name\": \"pureftpd\"}]"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:12 GMT
+- request:
+    method: delete
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/4/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="BjiPl6yLhR8tBFdogL2tBMiCDPN6hWSrYPK7Qe6WxsU", oauth_signature="ocpdFkyAOGX0SS1Em272tnnYfkI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927413", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:13 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Encoding:
+      - utf-8
+      Content-Length:
+      - "172"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/d198165e-a438-44b9-93c1-5ada5b536b64/\", \"task_id\": \"d198165e-a438-44b9-93c1-5ada5b536b64\"}], \"result\": null, \"error\": null}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:13 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/d198165e-a438-44b9-93c1-5ada5b536b64/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="ky47YRnPSkyKvqt9bHfrWo2jtmZZc9ux07sqD4AbE", oauth_signature="4pS%2BIORL7FHMtWMIgoWLfztr72A%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927413", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:13 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "635"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/d198165e-a438-44b9-93c1-5ada5b536b64/\", \"task_id\": \"d198165e-a438-44b9-93c1-5ada5b536b64\", \"tags\": [\"pulp:repository:4\", \"pulp:action:delete\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"waiting\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c758627eee487c9332e\"}, \"id\": \"55d38c75db0c2164b3d59487\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:13 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/d198165e-a438-44b9-93c1-5ada5b536b64/
+    body:
+      encoding: US-ASCII
+      string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="ggoKtABWuR0oaTob3RrspvIPU5uy9KvyGOhPaq9uI", oauth_signature="QzYHVKc5y28DiR6V%2BggpfQkVfqM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439927413", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 18 Aug 2015 19:50:13 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "694"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/d198165e-a438-44b9-93c1-5ada5b536b64/\", \"task_id\": \"d198165e-a438-44b9-93c1-5ada5b536b64\", \"tags\": [\"pulp:repository:4\", \"pulp:action:delete\"], \"finish_time\": \"2015-08-18T19:50:13Z\", \"_ns\": \"task_status\", \"start_time\": \"2015-08-18T19:50:13Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-1@katello-distributions2.example.com.dq\", \"state\": \"finished\", \"worker_name\": \"reserved_resource_worker-1@katello-distributions2.example.com\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"55d38c758627eee487c9332e\"}, \"id\": \"55d38c75db0c2164b3d59487\"}"
+    http_version:
+  recorded_at: Tue, 18 Aug 2015 19:50:13 GMT
 recorded_with: VCR 2.9.3

@@ -12,6 +12,13 @@ module Actions
 
           skip_environment_update = options.fetch(:organization_destroy, false)
           action_subject(repository)
+
+          if !planned_destroy && !repository.assert_deletable
+            # The repository is going to be deleted in finalize, but it cannot be deleted.
+            # Stop now and inform the user.
+            fail repository.errors.messages.values.join("\n")
+          end
+
           plan_action(ContentViewPuppetModule::Destroy, repository) if repository.puppet?
           plan_action(Pulp::Repository::Destroy, pulp_id: repository.pulp_id)
           plan_action(Product::ContentDestroy, repository)
