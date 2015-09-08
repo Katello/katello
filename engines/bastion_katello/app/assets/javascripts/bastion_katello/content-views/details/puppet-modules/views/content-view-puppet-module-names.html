@@ -41,11 +41,11 @@
 
       <tbody>
         <tr bst-table-row ng-repeat="item in detailsTable.rows | filter:filterTerm">
-          <td >{{ item.module_name }}</td>
+          <td >{{ item.name }}</td>
           <td  class="action-cell">
             <button translate
                     ng-hide="denied('edit_content_views', contentView)"
-                    ng-click="selectVersion(item.module_name)">
+                    ng-click="selectVersion(item.name)">
               Select a Version
             </button>
           </td>

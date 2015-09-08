@@ -7,18 +7,19 @@ module Katello
     def setup
       User.current = User.find(users(:admin))
       @my_distro = OpenStruct.new(:name => 'RedHat', :family => 'Red Hat Enterprise Linux', :version => '9.0')
+      @repo_with_distro = Repository.find(katello_repositories(:fedora_17_x86_64))
     end
 
     def test_find_or_create_operating_system
       assert_nil ::Redhat.where(:name => @my_distro.name).first
-      refute_nil ::Redhat.find_or_create_operating_system(@my_distro)
+      refute_nil ::Redhat.find_or_create_operating_system(@repo_with_distro)
     end
 
     def test_find_or_create_os_without_minor
-      other_distro = OpenStruct.new(:name => 'RedHat', :family => 'Red Hat Enterprise Linux', :version => '9')
+      repo_without_minor = Repository.find(katello_repositories(:rhel_7_x86_64))
       os_count = Operatingsystem.count
-      created = ::Redhat.find_or_create_operating_system(other_distro)
-      created2 = ::Redhat.find_or_create_operating_system(other_distro)
+      created = ::Redhat.find_or_create_operating_system(repo_without_minor)
+      created2 = ::Redhat.find_or_create_operating_system(repo_without_minor)
       assert_equal created, created2
       assert_equal os_count + 1, Operatingsystem.count
     end

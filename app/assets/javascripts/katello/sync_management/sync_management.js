@@ -95,7 +95,7 @@ KT.content_actions = (function(){
 
             $.ajax({
               type: 'DELETE',
-              url: KT.routes.sync_management_path(repo_id),
+              url: '/katello/sync_management/' + repo_id,
               dataType: 'json',
               success: function(data) {
               },
@@ -109,7 +109,7 @@ KT.content_actions = (function(){
         if (syncing.length ===0){
             return;
         }
-        updater = $.PeriodicalUpdater(KT.routes.sync_management_sync_status_path(), {
+        updater = $.PeriodicalUpdater('/katello/sync_management/sync_status', {
               data: function(){return {repoids:getSyncing()}},
               method: 'get',
               type: 'json',

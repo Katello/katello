@@ -1,0 +1,30 @@
+<div class="grid_12" id="list_actions">
+  <% if @products.length > 0 %>
+    <div class="table-action fl">
+      <a id="collapse_all" class="fl">
+        <%= _("Collapse All") %>
+      </a>
+    </div>
+    <div class="table-action fl">
+      <a id="expand_all" class="fl">
+        <%= _("Expand All") %>
+      </a>
+    </div>
+    <div class="table-action fl">
+      <a id="select_none" class="fl">
+        <%= _("Select None") %>
+      </a>
+    </div>
+    <div class="table-action fl">
+      <a id="select_all" class="fl">
+        <%= _("Select All") %>
+      </a>
+    </div>
+  <% end %>
+  <div id="sync_toggle_cont" class="fl table-action">
+    <input id="sync_toggle" type="checkbox"/>
+    <label for="sync_toggle">
+      <%= _('Active only') %>
+    </label>
+  </div>
+</div>

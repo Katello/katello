@@ -63,8 +63,8 @@ module Katello
       when ERRATA
         ContentViewErratumFilter
       else
-        params = { :content_type => content_type, :content_types => CONTENT_TYPES.join(", ") }
-        fail _("Invalid content type '%{ content_type }' provided. Content types can be one of %{ content_types }") % params
+        fail _("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") %
+                 { :content_type => content_type, :content_types => CONTENT_TYPES.join(", ") }
       end
     end
 
@@ -77,8 +77,8 @@ module Katello
       when ContentViewErratumFilter.name
         ContentViewErratumFilterRule
       else
-        params = { :content_type => filter.type, :content_types => CONTENT_TYPES.join(", ") }
-        fail _("Invalid content type '%{ content_type }' provided. Content types can be one of %{ content_types }") % params
+        fail _("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") %
+                 { :content_type => filter.type, :content_types => CONTENT_TYPES.join(", ") }
       end
     end
 
@@ -91,8 +91,8 @@ module Katello
       when ContentViewErratumFilter.name
         filter.erratum_rule_ids
       else
-        params = { :content_type => filter.type, :content_types => CONTENT_TYPES.join(", ") }
-        fail _("Invalid content type '%{ content_type }' provided. Content types can be one of %{ content_types }") % params
+        fail _("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") %
+                 { :content_type => filter.type, :content_types => CONTENT_TYPES.join(", ") }
       end
     end
 

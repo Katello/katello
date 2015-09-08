@@ -1,0 +1,56 @@
+<table class="tree_table">
+  <thead>
+    <tr>
+      <th>
+        <%= _("Product") %>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for product in provider.products.engineering.order(:name) %>
+      <% orphaned = orphaned_product_ids.include?(product.id) %>
+      <% if product_map[product.id] %>
+        <% contents = product_map[product.id].sort{|p1, p2| p1.content.name <=> p2.content.name} %>
+        <% has_content = !orphaned || product.repositories.length > 0 %>
+        <% if has_content %>
+          <tr class="product <%= cycle(nil, 'alt') %>" id="<%= tab_id%>_prod_<%= product.id %>">
+            <td>
+              <%= "#{product.name} " +  (orphaned ? _('(Orphaned)') : '') %>
+            </td>
+          </tr>
+          <tr class="child-of-<%= tab_id %>_prod_<%= product.id %> <%= current_cycle %>">
+            <td>
+              <table class="content_table">
+                <thead>
+                  <th>
+                    <%= _('Repository Set') %>
+                  </th>
+                </thead>
+                <tbody>
+                  <% for product_content in contents %>
+                    <% if !orphaned || product.repositories.detect {|repo| repo.cp_label == product_content.content.label} %>
+                      <tr class="collapsed repo_set" id="repo_set_<%= product_content.content.id %>">
+                        <td>
+                          <span class="expander_area"
+                                data-url="<%= available_repositories_product_path(product.id)%>"
+                                data-content-id="<%= product_content.content.id %>"
+                                data-orphaned="<%= orphaned.to_s %>">
+                            <%= image_tag( "katello/icons/spinner.gif", :class=>"hidden fl repo_set_spinner",
+                                  :id=>"spinner_set_#{product_content.content.id}", :style=>"margin-left:-18px;") %>
+                            <span class="expander"></span>
+                            <%= product_content.content.name %>
+                          </span>
+                          <table style="display:none;"></table>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

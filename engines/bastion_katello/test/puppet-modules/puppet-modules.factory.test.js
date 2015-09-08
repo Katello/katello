@@ -33,4 +33,12 @@ describe('Factory: PuppetModules', function () {
         });
     });
 
+    it('provides a way to get autocompleted search terms for puppet modules', function () {
+        $httpBackend.expectGET('/katello/api/v2/puppet_modules/auto_complete_search').respond(puppetModules.records);
+
+        PuppetModule.autocomplete(function (puppetModules) {
+            expect(puppetModules.length).toBe(1);
+        });
+    });
+
 });

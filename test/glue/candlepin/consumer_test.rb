@@ -103,17 +103,4 @@ module Katello
       #  assert @dist.export
     end
   end
-
-  class GlueCandlepinConsumerTestDistributor < GlueCandlepinConsumerTestBase
-    def self.before_suite
-      super
-      @@dist = CandlepinConsumerSupport.create_distributor('GlueCandlepinConsumerTestDistributor_1', @@dev, @@dev_cv)
-    end
-
-    def test_candlepin_distributor_export
-      skip "Not ready to test"
-      assert true
-      #  assert @@dist.export
-    end
-  end
 end

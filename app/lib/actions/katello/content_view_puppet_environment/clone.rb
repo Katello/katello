@@ -32,7 +32,7 @@ module Actions
 
               concurrence do
                 plan_action(Katello::Repository::MetadataGenerate, clone) if environment
-                plan_action(ElasticSearch::ContentViewPuppetEnvironment::IndexContent, id: clone.id)
+                plan_action(Pulp::ContentViewPuppetEnvironment::IndexContent, id: clone.id)
               end
             end
           end

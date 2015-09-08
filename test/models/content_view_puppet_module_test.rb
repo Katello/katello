@@ -5,7 +5,7 @@ module Katello
     def setup
       User.current   = User.find(users(:admin))
       @library_view  = ContentView.find(katello_content_views(:library_view).id)
-      @puppet_module = ContentViewPuppetModule.find(katello_content_view_puppet_modules(:library_view_module_by_name).id)
+      @puppet_module = ContentViewPuppetModule.find(katello_content_view_puppet_modules(:library_view_abrt_module).id)
     end
 
     def test_search_name

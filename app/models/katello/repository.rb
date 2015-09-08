@@ -9,7 +9,6 @@ module Katello
     include ForemanTasks::Concerns::ActionSubject
     include Glue::Candlepin::Content if (Katello.config.use_cp && Katello.config.use_pulp)
     include Glue::Pulp::Repo if Katello.config.use_pulp
-    include Glue::ElasticSearch::Repository if Katello.config.use_elasticsearch
 
     include Glue if (Katello.config.use_cp || Katello.config.use_pulp)
     include Authorization::Repository
@@ -43,6 +42,9 @@ module Katello
 
     has_many :repository_rpms, :class_name => "Katello::RepositoryRpm", :dependent => :destroy
     has_many :rpms, :through => :repository_rpms
+
+    has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :destroy
+    has_many :puppet_modules, :through => :repository_puppet_modules
 
     has_many :repository_docker_images, :class_name => "Katello::RepositoryDockerImage", :dependent => :destroy
     has_many :docker_images, :through => :repository_docker_images
@@ -103,6 +105,12 @@ module Katello
     scoped_search :rename => :product, :on => :name, :in => :product, :complete_value => true
     scoped_search :on => :content_type, :complete_value => Katello::Repository::TYPES.each_with_object({})  { |value, hash| hash[value.to_sym] = value }
     scoped_search :on => :content_view_id, :in => :content_view_repositories
+    scoped_search :on => :distribution_version, :complete_value => true
+    scoped_search :on => :distribution_arch, :complete_value => true
+    scoped_search :on => :distribution_family, :complete_value => true
+    scoped_search :on => :distribution_variant, :complete_value => true
+    scoped_search :on => :distribution_bootable, :complete_value => true
+    scoped_search :on => :distribution_uuid, :complete_value => true
 
     def organization
       if self.environment
@@ -257,7 +265,7 @@ module Katello
       ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
       ret["package_count"] = package_count rescue nil
       ret["last_sync"] = last_sync rescue nil
-      ret["puppet_module_count"] = puppet_module_count rescue nil
+      ret["puppet_module_count"] = self.puppet_modules.count rescue nil
       ret
     end
 
@@ -403,8 +411,8 @@ module Katello
     end
 
     def latest_dynflow_sync
-      ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Repository::Sync).
-                for_resource(self).order(:started_at).last
+      @latest_dynflow_sync ||= ForemanTasks::Task::DynflowTask.for_action(::Actions::Katello::Repository::Sync).
+                                for_resource(self).order(:started_at).last
     end
 
     def create_clone(options)
@@ -429,7 +437,7 @@ module Katello
       if puppet?
         modules = PuppetModule.search("*", :repoids => self.pulp_id,
                                            :fields => [:name],
-                                           :page_size => self.puppet_module_count)
+                                           :page_size => self.puppet_modules.count)
 
         modules.map(&:name).group_by(&:to_s).select { |_, v| v.size > 1 }.keys
       else
@@ -508,15 +516,25 @@ module Katello
       end
     end
 
-    def remove_db_units(units)
-      if yum?
-        self.rpms -= units
-      elsif docker?
-        remove_docker_db_units(units)
+    def self.import_distributions
+      self.all.each do |repo|
+        repo.import_distribution_data
       end
     end
 
-    protected
+    def import_distribution_data
+      distribution = Katello.pulp_server.extensions.repository.distributions(self.pulp_id).first
+      if distribution
+        self.update_attributes!(
+          :distribution_version => distribution["version"],
+          :distribution_arch => distribution["arch"],
+          :distribution_family => distribution["family"],
+          :distribution_variant => distribution["variant"],
+          :distribution_uuid => distribution["_id"],
+          :distribution_bootable => ::Katello::Repository.distribution_bootable?(distribution)
+        )
+      end
+    end
 
     def check_duplicate_branch_names(branch_names)
       dupe_branch_checker = Hash.new
@@ -533,13 +551,13 @@ module Katello
       end
     end
 
-    def removable_unit_association
+    def remove_content(units)
       if yum?
-        self.rpms
+        self.rpms -= units
+      elsif puppet?
+        self.puppet_modules -= units
       elsif docker?
-        self.docker_images
-      else
-        fail "Content type not supported for removal"
+        remove_docker_content(units)
       end
     end
 
@@ -557,6 +575,20 @@ module Katello
 
           return false
         end
+      end
+    end
+
+    protected
+
+    def removable_unit_association
+      if yum?
+        self.rpms
+      elsif docker?
+        self.docker_images
+      elsif puppet?
+        self.puppet_modules
+      else
+        fail "Content type not supported for removal"
       end
     end
 
@@ -588,7 +620,7 @@ module Katello
       errors.add(:url, N_("cannot be blank. RPM OSTree Repository URL required for syncing from the upstream."))
     end
 
-    def remove_docker_db_units(images)
+    def remove_docker_content(images)
       self.docker_tags.where(:docker_image_id => images.map(&:id)).destroy_all
       self.docker_images -= images
 

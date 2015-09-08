@@ -1,10 +1,7 @@
 object @resource
 
-attributes :id
-attributes :name
-attributes :version
-attributes :author
-attributes :summary
+extends 'katello/api/v2/puppet_modules/base'
+
 attributes :description
 attributes :license
 attributes :project_page
@@ -12,8 +9,3 @@ attributes :source
 attributes :dependencies
 attributes :checksums
 attributes :tag_list
-attributes :repoids
-
-child :repositories => :repositories do |_repository|
-  extends 'katello/api/v2/repositories/show'
-end
