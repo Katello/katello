@@ -60,7 +60,7 @@ module Katello
       # output -> {"names" => {"$in" => {"foo", "..."}}}  <- packages belonging to those packages
       def package_clauses_for_group(group_clauses = [])
         group_clauses = {"$or" => group_clauses}
-        pkg_names = Katello::PackageGroup.list_by_filter_clauses(group_clauses).collect(&:package_names).flatten
+        pkg_names = Katello::PackageGroup.list_by_filter_clauses(group_clauses)
         {'name' => {"$in" => pkg_names}} unless pkg_names.empty?
       end
     end

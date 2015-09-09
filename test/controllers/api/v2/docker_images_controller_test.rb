@@ -4,7 +4,7 @@ module Katello
   class Api::V2::DockerImagesControllerTest < ActionController::TestCase
     def models
       @repo = Repository.find(katello_repositories(:redis))
-      @image = @repo.docker_images.create!({:image_id => "abc123", :uuid => "123"},
+      @image = @repo.docker_images.create!({:image_id => "abc123", :uuid => "123xyz"},
                                            :without_protection => true
                                           )
     end

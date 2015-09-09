@@ -43,7 +43,6 @@ module Katello
       Katello::Engine.paths['db/migrate'].existent.each do |path|
         app.config.paths['db/migrate'] << path
       end
-
       app.config.autoload_paths += Dir["#{config.root}/app/lib"]
       app.config.autoload_paths += Dir["#{config.root}/app/presenters"]
       app.config.autoload_paths += Dir["#{config.root}/app/services/katello"]
@@ -51,13 +50,13 @@ module Katello
     end
 
     initializer "katello.assets.paths", :group => :all do |app|
-      if Rails.env.production?
+      # if Rails.env.production?
         app.config.assets.paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion',
                                                              'font-awesome', 'scss')
-      else
-        app.config.sass.load_paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion',
-                                                                'font-awesome', 'scss')
-      end
+      # else
+      #   app.config.sass.load_paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion',
+      #                                                           'font-awesome', 'scss')
+      # end
     end
 
     initializer "katello.paths" do |app|
@@ -105,6 +104,7 @@ module Katello
       ::Location.send :include, Katello::Concerns::LocationExtensions
       ::Medium.send :include, Katello::Concerns::MediumExtensions
       ::Redhat.send :include, Katello::Concerns::RedhatExtensions
+      ::Operatingsystem.send :include, Katello::Concerns::OperatingsystemExtensions
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
 
@@ -172,6 +172,8 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.1/import_errata.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.2/update_gpg_key_urls.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.2/update_metadata_expire.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_package_groups.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_rpms.rake"
     end
   end
 end

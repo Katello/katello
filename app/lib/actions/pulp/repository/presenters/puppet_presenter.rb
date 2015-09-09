@@ -25,11 +25,14 @@ module Actions
           end
 
           def finished_count
-            task_result['finished_count']
+            return 0 unless task_progress_details.key?('modules')
+            task_progress_details['modules']['finished_count']
           end
 
           def total_count
-            task_progress_details['modules']['total_count'] || 0
+            return 0 unless task_progress_details.key?('modules')
+            return 0 if task_progress_details['modules']['total_count'].nil?
+            task_progress_details['modules']['total_count']
           end
 
           def error_count
@@ -42,7 +45,7 @@ module Actions
           end
 
           def task_progress_details
-            task_progress && task_progress['puppet_importer']
+            task_progress['puppet_importer'] || task_progress
           end
         end
       end

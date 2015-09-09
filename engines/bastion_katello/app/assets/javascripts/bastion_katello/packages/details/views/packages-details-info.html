@@ -1,0 +1,75 @@
+<span page-title ng-model="package">{{ 'Package: ' | translate }} {{ package.nvrea }}</span>
+
+<section>
+
+  <div class="details">
+    <h4 translate>Package Info</h4>
+
+    <div class="detail">
+      <span class="info-label" translate>Description</span>
+      <span class="info-value">{{ package.description }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Summary</span>
+      <span class="info-value">{{ package.summary }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Group</span>
+      <span class="info-value">{{ package.group }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>License</span>
+      <span class="info-value">{{ package.license }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Url</span>
+      <span class="info-value">{{ package.url }}</span>
+    </div>
+
+    <div class="divider"></div>
+    <h4 translate>File Information</h4>
+
+    <div class="detail">
+      <span class="info-label" translate>Size</span>
+      <span class="info-value">{{ package.human_readable_size }} ({{ package.size }} Bytes)</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Filename</span>
+      <span class="info-value">{{ package.filename}}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Checksum</span>
+      <span class="info-value">{{ package.checksum }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Checksum Type</span>
+      <span class="info-value">{{ package.checksumtype }}</span>
+    </div>
+
+    <div class="divider"></div>
+    <h4 translate>Build Info</h4>
+
+    <div class="detail">
+      <span class="info-label" translate>Source RPM</span>
+      <span class="info-value">{{ package.sourcerpm }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Build Host</span>
+      <span class="info-value">{{ package.buildhost }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Build Time</span>
+      <span class="info-value">{{ package.build_time }}</span>
+    </div>
+
+  </div>
+</section>

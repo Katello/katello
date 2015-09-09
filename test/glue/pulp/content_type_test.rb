@@ -2,8 +2,8 @@ require 'katello_test_helper'
 
 module Katello
   class ContentTypeTest < ActiveSupport::TestCase
-    def test_package_type
-      assert_equal(Package::CONTENT_TYPE, Katello.pulp_server.extensions.rpm.content_type)
+    def test_rpm_type
+      assert_equal(Rpm::CONTENT_TYPE, Katello.pulp_server.extensions.rpm.content_type)
     end
 
     def test_package_group_type

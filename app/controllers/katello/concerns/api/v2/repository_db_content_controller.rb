@@ -5,13 +5,27 @@ module Katello
 
       included do
         include Katello::Concerns::FilteredAutoCompleteSearch
-        before_filter :find_optional_organization, :only => [:index]
+        before_filter :find_optional_organization, :only => [:index, :auto_complete_search]
+        before_filter :find_environment, :only => [:index, :auto_complete_search]
+        before_filter :find_content_view_version, :only => [:index, :auto_complete_search]
+        before_filter :find_filter, :only => [:index, :auto_complete_search]
+        before_filter :find_content_resource, :only => [:show]
       end
 
       extend ::Apipie::DSL::Concern
 
       def index
-        respond(:collection => scoped_search(index_relation.uniq, default_sort[0], default_sort[1]))
+        sort_options = []
+        options = {}
+        if default_sort.is_a?(Array)
+          sort_options = default_sort
+        elsif default_sort.is_a?(Proc)
+          options[:custom_sort] =  default_sort
+        else
+          fail "Unsupported default_sort type"
+        end
+
+        respond(:collection => scoped_search(index_relation.uniq, sort_options[0], sort_options[1], options))
       end
 
       api :GET, "/compare/", N_("List :resource_id")
@@ -35,7 +49,7 @@ module Katello
         respond_for_index(:collection => collection)
       end
 
-      param :available_for, :string, :desc => N_("Show errata that can be added to content view filter")
+      param :available_for, :string, :desc => N_("Show available to be added to content view filter")
       param :filterId, :integer, :desc => N_("Content View Filter id")
       def index_relation
         collection = resource_class.scoped
@@ -85,7 +99,7 @@ module Katello
           @resource ||= Erratum.find_by(:errata_id => params[:id])
         end
 
-        if @resource.nil?
+        if @resource.blank?
           fail HttpErrors::NotFound, _("Failed to find %{content} with id '%{id}'.") %
             {content: resource_name, id: params[:id]}
         end
