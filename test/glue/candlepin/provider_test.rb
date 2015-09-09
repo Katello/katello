@@ -6,15 +6,13 @@ module Katello
   class GlueCandlepinProviderTestBase < ActiveSupport::TestCase
     def self.before_suite
       super
-      @loaded_fixtures = load_fixtures
-
-      User.current = User.find(@loaded_fixtures['users']['admin']['id'])
+      User.current = User.find(FIXTURES['users']['admin']['id'])
       VCR.insert_cassette('glue_candlepin_provider', :match_requests_on => [:path, :params, :method, :body_json])
 
-      @@dev      = KTEnvironment.find(@loaded_fixtures['katello_environments']['candlepin_dev']['id'])
-      @@org      = Organization.find(@loaded_fixtures['taxonomies']['organization2']['id'])
+      @@dev      = KTEnvironment.find(FIXTURES['katello_environments']['candlepin_dev']['id'])
+      @@org      = Organization.find(FIXTURES['taxonomies']['organization2']['id'])
       @@org.setup_label_from_name
-      @@provider = Provider.find(@loaded_fixtures['katello_providers']['candlepin_redhat']['id'])
+      @@provider = Provider.find(FIXTURES['katello_providers']['candlepin_redhat']['id'])
 
       CandlepinOwnerSupport.set_owner(@@org)
     end
