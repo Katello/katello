@@ -4,9 +4,7 @@ require 'support/candlepin/owner_support'
 module Katello
   class GlueCandlepinOwnerTestBase < ActiveSupport::TestCase
     def self.before_suite
-      @loaded_fixtures = load_fixtures
-
-      User.current = User.find(@loaded_fixtures['users']['admin']['id'])
+      User.current = User.find(FIXTURES['users']['admin']['id'])
       VCR.insert_cassette('glue_candlepin_owner', :match_requests_on => [:path, :params, :method, :body_json])
     end
 
