@@ -29,7 +29,7 @@ module Katello
       end
 
       def find_by_organization_and_id!(organization, pool_id)
-        subscription = find_by(:organization => organization, :id => pool_id)
+        subscription = find_by_organization_and_id(organization, pool_id)
         fail ActiveRecord::RecordNotFound if subscription.nil?
         subscription
       end
@@ -39,7 +39,7 @@ module Katello
       end
 
       def find_by_id!(pool_id)
-        subscription = find_by(:id => pool_id)
+        subscription = find_by_id(pool_id)
         fail ActiveRecord::RecordNotFound if subscription.nil?
         subscription
       end

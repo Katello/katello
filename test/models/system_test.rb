@@ -194,7 +194,7 @@ module Katello
     def test_available_errata_other_view
       available_in_view = @errata_system.installable_errata(@library, @library_view)
       assert_equal 1, available_in_view.length
-      assert_include available_in_view, Erratum.find(katello_errata(:security))
+      assert_includes available_in_view, Erratum.find(katello_errata(:security))
     end
   end
 

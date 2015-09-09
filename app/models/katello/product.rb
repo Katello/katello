@@ -36,7 +36,7 @@ module Katello
     scoped_search :on => :label, :complete_value => true
     scoped_search :on => :description
     scoped_search :in => :provider, :on => :provider_type, :rename => :redhat,
-                  :complete_value => {:true => Provider::REDHAT, :false => Provider::ANONYMOUS }
+                  :complete_value => {:true => Katello::Provider::REDHAT, :false => Katello::Provider::ANONYMOUS }
 
     def library_repositories
       self.repositories.in_default_view
@@ -59,7 +59,8 @@ module Katello
     scope :custom, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => [Provider::CUSTOM, Provider::ANONYMOUS]) }
 
     def self.enabled
-      self.where("#{Product.table_name}.id in (?) or #{Product.table_name}.id in (?)", Product.redhat.joins(:repositories).uniq, Product.custom)
+      self.where("#{Product.table_name}.id in (?) or #{Product.table_name}.id in (?)", 
+                 Product.redhat.joins(:repositories).uniq.pluck(:id), Product.custom.pluck(:id))
     end
 
     before_create :assign_unique_label
