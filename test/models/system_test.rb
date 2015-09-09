@@ -151,7 +151,7 @@ module Katello
 
       assert_equal_arrays lib_applicable, @errata_system.applicable_errata
       refute_equal_arrays lib_applicable, @errata_system.installable_errata
-      assert_include @errata_system.installable_errata, Erratum.find(katello_errata(:security))
+      assert_includes @errata_system.installable_errata, Erratum.find(katello_errata(:security))
     end
 
     def test_with_installable_errata
@@ -168,7 +168,7 @@ module Katello
       refute_empty non_installable
       refute_empty installable
       systems = System.with_installable_errata([installable.first])
-      assert_include systems, @errata_system_dev
+      assert_includes systems, @errata_system_dev
 
       systems = System.with_installable_errata([non_installable.first])
       refute systems.include?(@errata_system_dev)
@@ -185,7 +185,7 @@ module Katello
       unavailable = @errata_system.applicable_errata - @errata_system.installable_errata
       refute_empty unavailable
       systems = System.with_non_installable_errata([unavailable.first])
-      assert_include systems, @errata_system
+      assert_includes systems, @errata_system
 
       systems = System.with_non_installable_errata([@errata_system.installable_errata.first])
       refute systems.include?(@errata_system)
