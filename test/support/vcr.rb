@@ -63,7 +63,8 @@ def configure_vcr
       :record => mode,
       :decode_compressed_response => true,
       :match_requests_on => [:method, :path, :params, :body_json],
-      :serialize_with => :syck
+      :serialize_with => :syck,
+      :preserve_exact_body_bytes => true
     }
 
     begin

@@ -63,7 +63,6 @@ module Katello
             "instance_multiplier" => @instance_multiplier,
             "provided_products" => @provided_products,
             "systems" => @systems,
-            "distributors" => @distributors,
             "account_number"   => @account_number,
             "contract_number"  => @contract_number
           }

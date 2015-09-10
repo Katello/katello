@@ -1,20 +1,17 @@
 module Katello
   module Util
     class PackageFilter
-      FILTER_COLUMNS = { :epoch => :epoch,
-                         :version => :sortable_version,
-                         :release => :sortable_release
-                       }
-      LESS_THAN = "lt"
-      GREATER_THAN = "gt"
-      EQUAL = "eq"
+      LESS_THAN = "<"
+      GREATER_THAN = ">"
+      EQUAL = "="
       OPERATORS = [LESS_THAN, GREATER_THAN, EQUAL]
 
-      attr_accessor :operator, :version, :epoch, :release
+      attr_accessor :operator, :version, :epoch, :release, :relation
 
-      def initialize(evr, operator = nil)
+      def initialize(relation, evr, operator = nil)
         extract_epoch_version_release(evr)
         self.operator = operator
+        self.relation = relation
       end
 
       def extract_epoch_version_release(evr)
@@ -33,50 +30,19 @@ module Katello
         self.release = (match[:release] rescue nil) ? Package.sortable_version(match[:release]) : nil
       end
 
-      def clauses
-        operator == "eq" ? equality_clauses : range_clauses
+      def results
+        epoch_clause = "epoch #{operator} :epoch OR (epoch = :epoch AND (%s))"
+        version_clause = "#{convert(:version_sortable)} #{operator} #{convert(':version')}"
+        release_clause = "(#{convert(:version_sortable)} = #{convert(':version')} AND " \
+            "#{convert(:release_sortable)} #{operator} #{convert(':release')})"
+
+        version_clause = "#{version_clause} OR #{release_clause}" unless release.blank?
+        version_clause = epoch_clause % version_clause unless epoch.blank?
+        self.relation.where(version_clause, :version => version, :release => release, :epoch => epoch)
       end
 
-      private
-
-      def equality_clauses
-        clauses = []
-        clauses << {:term => {:sortable_version => self.version}} unless self.version.blank?
-        clauses << {:term => {:sortable_release => self.release}} unless self.release.blank?
-        clauses << {:term => {:epoch => self.epoch}} unless self.epoch.blank?
-        {:and => clauses}
-      end
-
-      def range_clauses
-        clauses = []
-
-        if epoch
-          clauses << range_clause(:epoch, operator, epoch)
-          clauses << combo_clause({:epoch => epoch}, :version, operator, version)
-          if release
-            clauses << combo_clause({:epoch => epoch, :version => version},
-                                    :release, operator, release)
-          end
-        else
-          clauses << range_clause(:version, operator, version)
-          if release
-            clauses << combo_clause({:version => version}, :release, operator, release)
-          end
-        end
-
-        {:or => clauses}
-      end
-
-      def range_clause(field, operator, value)
-        {:range => {FILTER_COLUMNS[field] => {operator => value}}}
-      end
-
-      def combo_clause(eq_fields, field, operator, value)
-        eq_clauses = eq_fields.map do |key, val|
-          {:term => {FILTER_COLUMNS[key] => val}}
-        end
-
-        {:and => (eq_clauses << range_clause(field, operator, value))}
+      def convert(name = '?')
+        "convert_to(#{name}, 'SQL_ASCII')"
       end
     end
   end

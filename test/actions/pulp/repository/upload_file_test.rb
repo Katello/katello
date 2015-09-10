@@ -1,4 +1,5 @@
 require 'katello_test_helper'
+require_relative 'test_base.rb'
 
 module ::Actions::Pulp::Repository
   class UploadFileTest < VCRTestBase
@@ -17,7 +18,7 @@ module ::Actions::Pulp::Repository
       run_action(::Actions::Pulp::Repository::DeleteUploadRequest,
                   upload_id: upload_request.output[:upload_id])
 
-      assert_includes repo.puppet_modules.map(&:name), "ntp"
+      assert_equal repo.puppet_module_ids.length, 1
     end
   end
 end

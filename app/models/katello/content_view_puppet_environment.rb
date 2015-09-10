@@ -4,7 +4,6 @@ module Katello
 
     include ForemanTasks::Concerns::ActionSubject
     include Glue::Pulp::Repo if Katello.config.use_pulp
-    include Glue::ElasticSearch::ContentViewPuppetEnvironment if Katello.config.use_elasticsearch
     include Glue if Katello.config.use_pulp
 
     belongs_to :environment, :class_name => "Katello::KTEnvironment",
@@ -12,8 +11,16 @@ module Katello
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",
                                       :inverse_of => :content_view_puppet_environments
 
+    has_one :content_view, :through => :content_view_version, :class_name => "Katello::ContentView"
+
     belongs_to :puppet_environment, :class_name => "Environment",
                                     :inverse_of => :content_view_puppet_environment, :dependent => :destroy
+
+    has_many :content_view_puppet_environment_puppet_modules,
+             :class_name => "Katello::ContentViewPuppetEnvironmentPuppetModule",
+             :dependent => :destroy
+    has_many :puppet_modules,
+             :through => :content_view_puppet_environment_puppet_modules
 
     validates_lengths_from_database
     validates :pulp_id, :presence => true, :uniqueness => true
@@ -79,6 +86,12 @@ module Katello
 
     def self.generate_pulp_id(organization_label, env_label, view_label, version)
       [organization_label, env_label, view_label, version].compact.join("-").gsub(/[^-\w]/, "_")
+    end
+
+    def index_content(puppet_module_uuids)
+      associated_ids = PuppetModule.with_uuid(puppet_module_uuids).pluck(:id)
+      self.puppet_modules = PuppetModule.where(:id => associated_ids)
+      self.save!
     end
   end
 end

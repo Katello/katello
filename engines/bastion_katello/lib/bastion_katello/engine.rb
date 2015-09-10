@@ -25,9 +25,11 @@ module BastionKatello
           content_views
           docker_tags
           errata
+          packages
           gpg_keys
           lifecycle_environments
           products
+          puppet_modules
           subscriptions
           sync_plans
           host_collections

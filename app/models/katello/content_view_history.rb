@@ -1,5 +1,7 @@
 module Katello
   class ContentViewHistory < Katello::Model
+    include Katello::Authorization::ContentViewHistory
+
     include Glue::ElasticSearch::ContentViewHistory if Katello.config.use_elasticsearch
 
     belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :content_view_histories,
@@ -21,6 +23,44 @@ module Katello
 
     def content_view
       self.content_view_version.try(:content_view)
+    end
+
+    def self.in_organization(organization)
+      content_views = ContentView.where(:organization_id => organization.id)
+
+      self.joins(:content_view_version => :content_view).
+          where("#{ContentView.table_name}.id" => content_views).
+          order("#{self.table_name}.updated_at DESC")
+    end
+
+    def self.in_organizations(organizations)
+      content_views = ContentView.where(:organization_id => organizations)
+
+      self.joins(:content_view_version => :content_view).
+          where("#{ContentView.table_name}.id" => content_views).
+          order("#{self.table_name}.updated_at DESC")
+    end
+
+    def humanized_action
+      case self.task.label
+      when "Actions::Katello::ContentView::Publish"
+        _("Published new version")
+      when "Actions::Katello::ContentView::Promote"
+        _("Promoted to %{environment}") % { :environment => self.environment.name }
+      when "Actions::Katello::ContentView::Remove"
+        _("Deleted from %{environment}") % { :environment => self.environment.name }
+      end
+    end
+
+    def humanized_status
+      case self.status
+      when ContentViewHistory::IN_PROGRESS
+        _("In Progress")
+      when ContentViewHistory::FAILED
+        _("Failed")
+      when ContentViewHistory::SUCCESSFUL
+        _("Success")
+      end
     end
   end
 end

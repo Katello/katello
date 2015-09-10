@@ -3,6 +3,8 @@ module Katello
     module FilteredAutoCompleteSearch
       extend ActiveSupport::Concern
 
+      PAGE_SIZE=20
+
       def auto_complete_search
         begin
           options = resource_class.respond_to?(:completer_scope_options) ? resource_class.completer_scope_options : {}
@@ -11,7 +13,7 @@ module Katello
             category = (['and', 'or', 'not', 'has'].include?(item.to_s.sub(/^.*\s+/, ''))) ? _('Operators') : ''
             part = item.to_s.sub(/^.*\b(and|or)\b/i) { |match| match.sub(/^.*\s+/, '') }
             completed = item.to_s.chomp(part)
-            {:completed => CGI.escapeHTML(completed), :part => CGI.escapeHTML(part), :label => item, :category => category}
+            {:completed => completed, :part => part, :label => item, :category => category}
           end
         rescue ScopedSearch::QueryNotSupported => e
           items = [{:error => e.to_s}]

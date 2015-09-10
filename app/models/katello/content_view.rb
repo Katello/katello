@@ -25,7 +25,6 @@ module Katello
       end
     end
 
-    has_many :distributors, :class_name => "Katello::Distributor", :dependent => :restrict_with_error
     has_many :content_view_repositories, :dependent => :destroy
     has_many :repositories, :through => :content_view_repositories, :class_name => "Katello::Repository",
                             :after_remove => :remove_repository
@@ -141,9 +140,7 @@ module Katello
     end
 
     def total_package_count(env)
-      repoids = self.repos(env).collect { |r| r.pulp_id }
-      result = Katello::Package.legacy_search('*', 0, 1, repoids)
-      result.length > 0 ? result.total : 0
+      Katello::Rpm.in_repositories(self.repos(env)).count
     end
 
     def total_puppet_module_count(env)
@@ -412,11 +409,12 @@ module Katello
       pulp_id = ContentViewPuppetEnvironment.generate_pulp_id(organization.label, to_env.try(:label),
                                                               self.label, version.try(:version))
 
-      ContentViewPuppetEnvironment.new(:environment => to_env,
-                                       :content_view_version => to_version,
-                                       :name => self.name,
-                                       :pulp_id => pulp_id
-                                      )
+      ContentViewPuppetEnvironment.new(
+        :environment => to_env,
+        :content_view_version => to_version,
+        :name => self.name,
+        :pulp_id => pulp_id
+      )
     end
 
     def create_puppet_env(options)
@@ -424,41 +422,37 @@ module Katello
     end
 
     def computed_module_ids_by_repoid
-      # In order to copy the puppet modules to the new repo, we need to retrieve the module
-      # details.  This is necessary since pulp requires both a source and destination
-      # repo id to copy content.
-      ids = []
+      uuids = []
       names_and_authors = []
+      puppet_modules = []
+
       if composite?
-        component_modules_to_publish.each { |puppet_module| ids << puppet_module.id }
+        uuids = component_modules_to_publish.collect { |puppet_module| puppet_module.uuid }
       else
         puppet_modules_to_publish.each do |cvpm|
           if cvpm.uuid
-            ids << cvpm.uuid
+            uuids << cvpm.uuid
           else
             names_and_authors << { :name => cvpm.name, :author => cvpm.author }
           end
         end
       end
 
-      puppet_modules = ids.blank? ? [] : PuppetModule.id_search(ids)
-      unless names_and_authors.blank?
-        puppet_modules << PuppetModule.latest_modules_search(names_and_authors,
-                                                             self.organization.library.repositories.puppet_type.map(&:pulp_id))
+      puppet_modules = PuppetModule.where(:uuid => uuids) if uuids.present?
+
+      if names_and_authors.present?
+        names_and_authors.each do |name_and_author|
+          puppet_module = ::Katello::PuppetModule.latest_module(
+            name_and_author[:name],
+            name_and_author[:author],
+            self.organization.library.repositories.puppet_type
+          )
+          puppet_modules << puppet_module
+        end
       end
 
       # In order to minimize the number of copy requests, organize the data by repoid.
-      modules_by_repoid = puppet_modules.flatten.each_with_object({}) do |puppet_module, result|
-        repo = Repository.where(:pulp_id => puppet_module.repoids).first ||
-                ContentViewPuppetEnvironment.where(:pulp_id =>  puppet_module.repoids).first
-        if repo
-          result[repo.pulp_id] ||= []
-          result[repo.pulp_id] << puppet_module.id
-        else
-          fail _("Could not find Repository for module %s.") % puppet_module.name
-        end
-      end
-      modules_by_repoid
+      PuppetModule.group_by_repoid(puppet_modules)
     end
 
     def check_ready_to_publish!
@@ -471,7 +465,6 @@ module Katello
       errors = []
 
       dependencies = {systems:                _("systems"),
-                      distributors:           _("distributors"),
                       activation_keys:        _("activation keys")
       }
 
@@ -491,7 +484,6 @@ module Katello
 
       dependencies = {environments:           _("environments"),
                       systems:                _("systems"),
-                      distributors:           _("distributors"),
                       activation_keys:        _("activation keys")
       }
 
@@ -508,52 +500,36 @@ module Katello
 
     def check_distribution_conflicts!
       duplicates = duplicate_distributions
-      pulp_repo_ids = []
       if duplicates.any?
         failed_distribution = duplicates.first
-        pulp_repo_ids = failed_distribution.repoids
       else
         conflicts = distribution_conflicts
-        if conflicts.first && conflicts.first[:distributions]
-          pulp_repo_ids = conflicts.first[:distributions].flat_map(&:repoids) & self.repositories_to_publish.map(&:pulp_id)
-          failed_distribution = conflicts.first[:distributions].first
+        if conflicts.any?
+          failed_distribution = conflicts.first
         end
       end
 
       if failed_distribution
+        failed_repos = [duplicates, conflicts].flat_map { |i| i }
         fail _("Content Views cannot contain multiple Kickstart trees with the same version and architecture. " \
                "Multiple Kickstart trees of %{release} %{arch} were found in Repositories: %{repos}") %
-                 {:release => failed_distribution.version, :arch => failed_distribution.arch,
-                  :repos => Repository.where(:pulp_id => pulp_repo_ids).pluck(:name).join(', ')}
+                 {:release => failed_distribution.distribution_version, :arch => failed_distribution.distribution_arch,
+                  :repos => failed_repos.compact.map { |repo| repo.name if repo.name }}
       end
     end
 
     def distribution_conflicts
       #find distributions, where there are two in the content view with the same version and Arch
-      repo_ids =  self.repositories_to_publish.pluck(:pulp_id)
-      distributions = Distribution.search do
-        filter :terms, :repoids => repo_ids
-      end
-      distributions = distributions.select { |dist| Katello::Distribution.new(dist.as_json).bootable? }
-
-      release_arches = {}
-      distributions.each do |dist|
-        key = [dist.version, dist.arch]
-        release_arches[key] ||= []
-        release_arches[key] << dist
-      end
-      conflicts = release_arches.map { |key, value| {:version => key[0], :arch => key[1], :distributions => value} }
-      conflicts.select { |conflict| conflict[:distributions].length > 1 }
+      repos =  self.repositories_to_publish.where("distribution_arch IS NOT NULL OR distribution_version IS NOT NULL")
+      repos = repos.select { |repo| repo.distribution_bootable? }
+      repos.group_by { |repo| [repo.distribution_arch, repo.distribution_version] }
+           .select { |_, value| value.length > 1 }.values.flatten
     end
 
     def duplicate_distributions
       #find distributions where two repositories in the content view share them
-      repo_ids =  self.repositories_to_publish.pluck(:pulp_id)
-      distributions = Distribution.search do
-        filter :terms, :repoids => repo_ids
-      end
-      distributions = distributions.select { |dist| Katello::Distribution.new(dist.as_json).bootable? }
-      distributions.find_all { |dist| (dist.repoids & repo_ids).length > 1 }
+      repos =  self.repositories_to_publish.where("distribution_uuid IS NOT NULL")
+      repos.group_by { |i| i.distribution_uuid }.select { |_, v| v.length > 1 }.values.flatten
     end
 
     protected

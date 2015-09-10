@@ -10,8 +10,18 @@ module Katello
 
       @org = get_organization
       @org.label = @org.label.gsub(' ', '_')
-      @env = KTEnvironment.find(katello_environments(:dev))
-      @content_view = ContentView.find(katello_content_views(:library_dev_view))
+      @env = katello_environments(:dev)
+      @content_view = katello_content_views(:library_dev_view)
+      @content_view_puppet_env = katello_content_view_puppet_environments(:library_view_puppet_environment)
+      Environment.create!(:name => "env_for_test", :content_view_puppet_environment => @content_view_puppet_env)
+    end
+
+    def test_search_by_content_view
+      assert_includes Environment.search_for("content_view = \"#{@content_view_puppet_env.content_view.name}\""), @content_view_puppet_env.puppet_environment
+    end
+
+    def test_search_by_lifecycle_environment
+      assert_includes Environment.search_for("lifecycle_environment = #{@content_view_puppet_env.environment.name}"), @content_view_puppet_env.puppet_environment
     end
 
     def test_construct_katello_id

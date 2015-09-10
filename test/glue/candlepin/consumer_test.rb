@@ -13,18 +13,18 @@ module Katello
 
     def self.before_suite
       super
-      User.current = User.find(@loaded_fixtures['users']['admin']['id'])
+      User.current = User.find(FIXTURES['users']['admin']['id'])
       VCR.insert_cassette('glue_candlepin_consumer', :match_requests_on => [:path, :params, :method, :body_json])
 
-      @@dev      = KTEnvironment.find(@loaded_fixtures['katello_environments']['candlepin_dev']['id'])
+      @@dev      = KTEnvironment.find(FIXTURES['katello_environments']['candlepin_dev']['id'])
 
-      @@org      = Organization.find(@loaded_fixtures['taxonomies']['organization2']['id'])
+      @@org      = Organization.find(FIXTURES['taxonomies']['organization2']['id'])
       @@org.setup_label_from_name
       @@org.stubs(:label_not_changed).returns(true)
       @@org.save!
 
-      @@dev_cv   = ContentView.find(@loaded_fixtures['katello_content_views']['candlepin_library_dev_cv']['id'])
-      @@dev_cve  = ContentViewEnvironment.find(@loaded_fixtures['katello_content_view_environments']['candlepin_library_dev_cve']['id'])
+      @@dev_cv   = ContentView.find(FIXTURES['katello_content_views']['candlepin_library_dev_cv']['id'])
+      @@dev_cve  = ContentViewEnvironment.find(FIXTURES['katello_content_view_environments']['candlepin_library_dev_cve']['id'])
       @@dev_cve.cp_id = @@dev_cv.cp_environment_id @@dev
 
       # Create the environment in candlepin
@@ -101,19 +101,6 @@ module Katello
     def test_candlepin_system_export
       assert true
       #  assert @dist.export
-    end
-  end
-
-  class GlueCandlepinConsumerTestDistributor < GlueCandlepinConsumerTestBase
-    def self.before_suite
-      super
-      @@dist = CandlepinConsumerSupport.create_distributor('GlueCandlepinConsumerTestDistributor_1', @@dev, @@dev_cv)
-    end
-
-    def test_candlepin_distributor_export
-      skip "Not ready to test"
-      assert true
-      #  assert @@dist.export
     end
   end
 end

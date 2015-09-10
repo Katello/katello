@@ -25,7 +25,8 @@ angular.module('Bastion.activation-keys').factory('ActivationKey',
             availableHostCollections: {method: 'GET', params: {action: 'host_collections', action2: 'available'}},
             removeHostCollections: {method: 'PUT', isArray: false, params: {action: 'host_collections'}},
             addHostCollections: {method: 'POST', isArray: false, params: {action: 'host_collections'}},
-            contentOverride: {method: 'PUT', isArray: false, params: {action: 'content_override'}}
+            contentOverride: {method: 'PUT', isArray: false, params: {action: 'content_override'}},
+            autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
         });
     }]
 );

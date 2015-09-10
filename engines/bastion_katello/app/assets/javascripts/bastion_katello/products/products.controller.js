@@ -52,7 +52,9 @@ angular.module('Bastion.products').controller('ProductsController',
                 state = 'pending';
             } else if (product['sync_summary'].error > 0) {
                 state = 'error';
-            } else {
+            } else if (product['sync_summary'].warning > 0) {
+                state = 'warning';
+            } else if (product['sync_summary'].success > 0) {
                 state = 'success';
             }
             return state;

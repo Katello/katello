@@ -1,0 +1,23 @@
+<% content_for(:title) do %>
+  <%= controller.title %>
+<% end %>
+
+<% content_for(:stylesheets) do %>
+  <%= stylesheet "katello/katello" %>
+<% end %>
+
+<% content_for(:javascripts) do %>
+  <%= javascript_include_tag "katello/common/vendor" %>
+  <%= javascript_include_tag "katello/common" %>
+  <%= yield(:katello_javascripts) %>
+<% end %>
+
+<% content_for(:content) do %>
+  <article id="content">
+    <section class="maincontent container" id="contents">
+      <%= yield %>
+    </section>
+  </article>
+<% end %>
+
+<%= render :template => 'layouts/base' %>

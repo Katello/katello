@@ -172,6 +172,48 @@ module Katello
       repos = Repository.search_for("content_view_id = \"#{@fedora_17_x86_64.content_views.first.id}\"")
       assert_includes repos, @fedora_17_x86_64
     end
+
+    def test_search_distribution_version
+      repos = Repository.search_for("distribution_version = \"#{@fedora_17_x86_64.distribution_version}\"")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+
+      empty = Repository.search_for("distribution_version = 100")
+      assert_empty empty
+    end
+
+    def test_search_distribution_arch
+      repos = Repository.search_for("distribution_arch = \"#{@fedora_17_x86_64.distribution_arch}\"")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+
+      empty = Repository.search_for("distribution_arch = x_fake_arch")
+      assert_empty empty
+    end
+
+    def test_search_distribution_family
+      repos = Repository.search_for("distribution_family = \"#{@fedora_17_x86_64.distribution_family}\"")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+
+      empty = Repository.search_for("distribution_family = not_a_family")
+      assert_empty empty
+    end
+
+    def test_search_distribution_variant
+      repos = Repository.search_for("distribution_variant = \"#{@fedora_17_x86_64.distribution_variant}\"")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+
+      empty = Repository.search_for("distribution_variant = not_variant")
+      assert_empty empty
+    end
+
+    def test_search_distribution_bootable
+      repos = Repository.search_for("distribution_bootable = \"#{@fedora_17_x86_64.distribution_bootable}\"")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+    end
   end
 
   class RepositoryInstanceTest < RepositoryTestBase
@@ -265,6 +307,61 @@ module Katello
 
     def test_as_json
       assert_includes @fedora_17_x86_64.as_json, "gpg_key_name"
+    end
+
+    def test_units_for_removal_yum
+      rpms = @fedora_17_x86_64.rpms.sample(2)
+      rpm_ids = rpms.map(&:id).sort
+      rpm_uuids = rpms.map(&:uuid).sort
+
+      refute_empty rpms
+      assert_equal rpm_ids, @fedora_17_x86_64.units_for_removal(rpm_ids).map(&:id).sort
+      assert_equal rpm_ids, @fedora_17_x86_64.units_for_removal(rpm_ids.map(&:to_s)).map(&:id).sort
+      assert_equal rpm_uuids, @fedora_17_x86_64.units_for_removal(rpm_uuids).map(&:uuid).sort
+    end
+
+    def test_units_for_removal_puppet
+      puppet_modules = @puppet_forge.puppet_modules
+      puppet_ids = puppet_modules.map(&:id).sort
+      puppet_uuids = puppet_modules.map(&:uuid).sort
+
+      refute_empty puppet_modules
+      assert_equal puppet_ids, @puppet_forge.units_for_removal(puppet_ids).map(&:id).sort
+      assert_equal puppet_ids, @puppet_forge.units_for_removal(puppet_ids.map(&:to_s)).map(&:id).sort
+      assert_equal puppet_uuids, @puppet_forge.units_for_removal(puppet_uuids).map(&:uuid).sort
+    end
+
+    def test_packages_without_errata
+      rpms = @fedora_17_x86_64.rpms
+      errata_rpm = rpms[0]
+      non_errata_rpm = rpms[1]
+      @fedora_17_x86_64.errata.create! do |erratum|
+        erratum.uuid = "foo"
+        erratum.packages = [ErratumPackage.new(:filename => errata_rpm.filename, :nvrea => 'foo', :name => 'foo')]
+      end
+
+      filenames = @fedora_17_x86_64.packages_without_errata.map(&:filename)
+
+      refute_empty filenames
+      refute_includes filenames, errata_rpm.filename
+      assert_includes filenames, non_errata_rpm.filename
+    end
+
+    def test_packages_without_errata_no_errata
+      @fedora_17_x86_64.errata.destroy_all
+      assert_equal @fedora_17_x86_64.rpms, @fedora_17_x86_64.packages_without_errata
+    end
+
+    def test_units_for_removal_docker
+      ['one', 'two', 'three'].each do |str|
+        @redis.docker_images.create!(:image_id => str) do |image|
+          image.uuid = str
+        end
+      end
+
+      images = @redis.docker_images.sample(2).sort_by { |obj| obj.id }
+      refute_empty images
+      assert_equal images, @redis.units_for_removal(images.map(&:id)).sort_by { |obj| obj.id }
     end
 
     def test_environmental_instances

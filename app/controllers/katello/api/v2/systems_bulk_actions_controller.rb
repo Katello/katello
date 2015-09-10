@@ -2,7 +2,6 @@ module Katello
   class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     include Concerns::Api::V2::BulkSystemsExtensions
 
-    before_filter :find_organization
     before_filter :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
     before_filter :find_environment, :only => [:environment_content_view]
     before_filter :find_content_view, :only => [:environment_content_view]
@@ -226,7 +225,7 @@ module Katello
         task = async_task(::Actions::BulkAction, ::Actions::Katello::System::Erratum::ApplicableErrataInstall, @systems, errata_uuids.uniq)
         respond_for_async :resource => task
       else
-        action = Katello::BulkActions.new(User.current, @organization, @systems)
+        action = Katello::BulkActions.new(@systems)
         job = action.send(PARAM_ACTIONS[params[:action]][params[:content_type]],  params[:content])
         respond_for_show :template => 'job', :resource => job
       end

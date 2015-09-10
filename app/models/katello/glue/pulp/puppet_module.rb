@@ -1,17 +1,16 @@
 module Katello
   module Glue::Pulp::PuppetModule
     def self.included(base)
+      base.send :include, LazyAccessor
       base.send :include, InstanceMethods
 
       base.class_eval do
-        attr_accessor :_storage_path, :tag_list, :description, :license, :author,
-                      :_ns, :project_page, :summary, :source, :dependencies, :version,
-                      :_content_type_id, :checksums, :id, :_id, :types, :name, :repoids
+        lazy_accessor :pulp_facts, :initializer => :backend_data
 
-        def self.find(id)
-          attrs = Katello.pulp_server.extensions.puppet_module.find_by(:unit_id => id)
-          Katello::PuppetModule.new(attrs) unless attrs.nil?
-        end
+        lazy_accessor :_storage_path, :tag_list, :description, :license,
+                      :_ns, :project_page, :source, :dependencies,
+                      :_content_type_id, :checksums, :_id, :types,
+                      :initializer => :pulp_facts
 
         def self.find_by_ids(ids)
           pulp_puppet_modules = Katello.pulp_server.extensions.puppet_module.find_all_by_unit_ids(ids)
@@ -36,26 +35,6 @@ module Katello
     end
 
     module InstanceMethods
-      def initialize(params = {}, _options = {})
-        params['id'] = params['id'] || params.delete('_id')
-        params['repoids'] = params.delete(:repository_memberships) if params.key?(:repository_memberships)
-        params.each_pair { |k, v| instance_variable_set("@#{k}", v) unless v.nil? }
-      end
-
-      def sortable_version
-        Util::Package.sortable_version(self.version)
-      end
-
-      def repositories
-        Repository.where(:pulp_id => self.repoids)
-      end
-
-      def as_json(options = nil)
-        super(options).merge(:sortable_version => sortable_version,
-                             :puppet_name => puppet_name
-                            )
-      end
-
       def puppet_name
         File.basename(@_storage_path, ".tar.gz")
       end

@@ -24,8 +24,8 @@ node :counts do |env|
   }
   if env.library?
     repos = env.repositories.in_default_view
-    counts[:packages] = Katello::Package.package_count(repos)
-    counts[:puppet_modules] = Katello::PuppetModule.module_count(repos)
+    counts[:packages] = Katello::Rpm.total_for_repositories(repos)
+    counts[:puppet_modules] = Katello::PuppetModule.in_repositories(repos).count
     counts[:errata] = partial('katello/api/v2/errata/counts', :object => Katello::RelationPresenter.new(Katello::Erratum.in_repositories(repos)))
     counts[:yum_repositories] = repos.yum_type.count
     counts[:docker_repositories] = repos.docker_type.count

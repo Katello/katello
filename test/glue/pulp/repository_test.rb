@@ -13,7 +13,8 @@ module Katello
       super
       configure_runcible
 
-      @@fedora_17_x86_64 = Repository.find(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
+      @@fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
+      @@fedora_17_x86_64 = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
       @@fedora_17_x86_64.relative_path = '/test_path/'
       @@fedora_17_x86_64.url = "file:///var/www/test_repos/zoo"
     end
@@ -128,6 +129,20 @@ module Katello
       assert_equal "ACME/library_label/custom/fedora_label/test",
         Glue::Pulp::Repos.custom_repo_path(env, product, "test")
     end
+
+    def test_pulp_update_needed?
+      refute @fedora_17_x86_64.pulp_update_needed?
+
+      @fedora_17_x86_64.url = 'https://www.google.com'
+      @fedora_17_x86_64.save!
+      assert @fedora_17_x86_64.pulp_update_needed?
+
+      @fedora_17_x86_64.stubs(:redhat?).returns(true)
+
+      @fedora_17_x86_64.url = 'https://www.yahoo.com'
+      @fedora_17_x86_64.save!
+      assert @fedora_17_x86_64.pulp_update_needed?
+    end
   end
 
   class GluePulpRepoAfterSyncTest < GluePulpRepoTestBase
@@ -174,7 +189,7 @@ module Katello
     def self.before_suite
       super
       VCR.insert_cassette('pulp/repository/puppet')
-      @@p_forge = Repository.find(@loaded_fixtures['katello_repositories']['p_forge']['id'])
+      @@p_forge = Repository.find(FIXTURES['katello_repositories']['p_forge']['id'])
       @@p_forge.relative_path = '/test_path/'
       @@p_forge.url = "http://davidd.fedorapeople.org/repos/random_puppet/"
       create_repo(@@p_forge)
@@ -242,12 +257,8 @@ module Katello
     end
 
     def test_packages
-      refute_empty @@fedora_17_x86_64.packages.select { |package| package.name == 'elephant' }
-    end
-
-    def test_package?
-      pkg_id = @@fedora_17_x86_64.packages.sort_by(&:id).first.id
-      assert @@fedora_17_x86_64.package?(pkg_id)
+      @@fedora_17_x86_64.index_db_rpms
+      refute_empty @@fedora_17_x86_64.rpms.select { |package| package.name == 'elephant' }
     end
 
     def test_errata
@@ -262,14 +273,26 @@ module Katello
       refute_empty @@fedora_17_x86_64.errata
     end
 
-    def test_distributions
-      distributions = @@fedora_17_x86_64.distributions
-
-      refute_empty distributions.select { |distribution| distribution.id == "ks-Test Family-TestVariant-16-x86_64" }
+    def test_index_db_rpms
+      @@fedora_17_x86_64.rpms.destroy_all
+      assert_empty @@fedora_17_x86_64.rpms
+      @@fedora_17_x86_64.index_db_rpms
+      @@fedora_17_x86_64.reload
+      refute_empty @@fedora_17_x86_64.rpms
     end
 
-    def test_distribution?
-      assert @@fedora_17_x86_64.distribution?("ks-Test Family-TestVariant-16-x86_64")
+    def test_import_distribution_data
+      @@fedora_17_x86_64.import_distribution_data
+
+      assert @@fedora_17_x86_64.distribution_version == "16", "couldn't find version"
+      assert @@fedora_17_x86_64.distribution_arch == "x86_64", "couldn't find arch"
+      assert @@fedora_17_x86_64.distribution_family == "Test Family", "couldn't find family"
+      assert @@fedora_17_x86_64.distribution_variant == "TestVariant", "couldn't find variant"
+      assert @@fedora_17_x86_64.distribution_bootable == false, "couldn't find bootable"
+    end
+
+    def test_distribution_bootable?
+      assert_equal @@fedora_17_x86_64.distribution_bootable?, true
     end
 
     def test_find_packages_by_name
@@ -280,14 +303,11 @@ module Katello
       refute_empty @@fedora_17_x86_64.find_packages_by_nvre('elephant', '0.3', '0.8', '0')
     end
 
-    def test_find_latest_packages_by_name
-      refute_empty @@fedora_17_x86_64.find_latest_packages_by_name('elephant')
-    end
-
     def test_package_groups
-      package_groups = @@fedora_17_x86_64.package_groups
+      @fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
+      package_groups = @fedora_17_x86_64_dev.package_groups
 
-      refute_empty package_groups.select { |group| group.name == 'mammal' }
+      refute_empty package_groups.select { |group| group.name == 'mammals' }
     end
 
     def test_package_group_categories
@@ -302,7 +322,7 @@ module Katello
       super
       VCR.insert_cassette('pulp/repository/operations')
 
-      @@fedora_17_x86_64_dev = Repository.find(@loaded_fixtures['katello_repositories']['fedora_17_x86_64_dev']['id'])
+      @@fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
 
       @@fedora_17_x86_64.create_pulp_repo
       task_list = @@fedora_17_x86_64.sync
@@ -335,7 +355,7 @@ module Katello
       @@fedora_17_x86_64_dev.create_pulp_repo
 
       task_list = @@fedora_17_x86_64.clone_contents(@@fedora_17_x86_64_dev)
-      assert_equal 5, task_list.length
+      assert_equal 4, task_list.length
 
       TaskSupport.wait_on_tasks(task_list)
     ensure

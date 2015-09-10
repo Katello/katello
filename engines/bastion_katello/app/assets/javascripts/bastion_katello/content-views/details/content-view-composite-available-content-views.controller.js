@@ -15,6 +15,13 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
         function ($scope, Nutupane, CurrentOrganization, ContentView) {
             var nutupane, params;
 
+            params = {
+                'full_result': true,
+                nondefault: true,
+                noncomposite: true,
+                'organization_id': CurrentOrganization
+            };
+
             nutupane = new Nutupane(ContentView, params);
             nutupane.table.initialLoad = false;
             $scope.detailsTable = nutupane.table;
@@ -27,16 +34,10 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
                 }
                 filterIds.push(contentView.id);
 
-                params = {
-                    'organization_id': CurrentOrganization,
-                    'full_result': true,
-                    nondefault: true,
-                    noncomposite: true,
-                    "without[]": filterIds
-                };
+                params['without[]'] = filterIds;
 
                 nutupane.setParams(params);
-                nutupane.refresh();
+                nutupane.load(true);
             });
 
 
