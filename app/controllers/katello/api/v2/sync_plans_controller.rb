@@ -4,8 +4,8 @@ module Katello
 
     include Katello::Concerns::FilteredAutoCompleteSearch
     before_filter :find_organization, :only => [:create, :index, :auto_complete_search]
-    before_filter :find_plan, :only => [:update, :show, :destroy, :available_products, :add_products, :remove_products]
-    before_filter :load_search_service, :only => [:index, :available_products]
+    before_filter :find_plan, :only => [:update, :show, :destroy, :add_products, :remove_products]
+    before_filter :load_search_service, :only => [:index]
 
     def_param_group :sync_plan do
       param :name, String, :desc => N_("sync plan name"), :required => true, :action_aware => true
@@ -81,24 +81,6 @@ module Katello
     def destroy
       sync_task(::Actions::Katello::SyncPlan::Destroy, @sync_plan)
       respond_for_show(:resource => @sync_plan)
-    end
-
-    api :GET, "/organizations/:organization_id/sync_plans/:id/available_products", N_("List products that are not in this sync plan")
-    param_group :search, Api::V2::ApiController
-    param :name, String, :desc => N_("product name to filter by")
-    def available_products
-      enabled_product_ids = Product.where(:organization_id => @organization).readable.select { |p| p.enabled? }.collect(&:id)
-
-      filters = [:terms => {:id => enabled_product_ids - @sync_plan.product_ids}]
-      filters << {:term => {:name => params[:name]}} if params[:name]
-
-      options = {
-        :filters       => filters,
-        :load_records? => true
-      }
-
-      products = item_search(Product, params, options)
-      respond_for_index(:collection => products)
     end
 
     api :PUT, "/organizations/:organization_id/sync_plans/:id/add_products", N_("Add products to sync plan")
