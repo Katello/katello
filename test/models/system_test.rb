@@ -240,7 +240,7 @@ module Katello
     end
 
     def setup_puppet_env(view, environment)
-      puppet_env = ::Environment.create!(:name => 'blah')
+      puppet_env = ::PuppetEnvironment.create!(:name => 'blah')
 
       cvpe = view.version(environment).puppet_env(environment)
       cvpe.puppet_environment = puppet_env

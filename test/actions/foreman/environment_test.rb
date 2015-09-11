@@ -40,7 +40,7 @@ module ::Actions::Foreman::Environment
     end
 
     it 'destroys the environment' do
-      env = ::Environment.create(:name => "subdev")
+      env = ::PuppetEnvironment.create(:name => "subdev")
       assert plan_action(action, env)
     end
   end
