@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.3.0
-Release: 6%{dist}
+Release: 7%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -271,6 +271,26 @@ chown -R foreman.foreman %{foreman_dir}/public/apipie-cache
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Fri Sep 11 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-7
+- Add changelog for 2.3.1 (stbenjam@redhat.com)
+- fixes #11627 - address inconsistency in wording on repository details
+  (bbuckingham@redhat.com)
+- Fixes #11470, add CH errata index permission, BZ1256494. (walden@redhat.com)
+- Fixes #11573 - Remove sync plan available_products action
+  (daviddavis@redhat.com)
+- Fixes #11556: Fix regression with updating repository URLs in Pulp.
+  (ericdhelms@gmail.com)
+- fixes #11472 - Do not allow deletion of a content view version that is part
+  of a composite view (bbuckingham@redhat.com)
+- fixes #11456 - add env and content view host paramters (jsherril@redhat.com)
+- fixes #11447 - improve performance of product and repo index lists
+  (jsherril@redhat.com)
+- fixes #11336 - properly report non-validation errors on product creation
+  (jsherril@redhat.com)
+- Update CHANGELOG (stbenjam@redhat.com)
+- Update CHANGELOG from tool_belt (stbenjam@redhat.com)
+- Update CHANGELOG and CONTRIBUTORS for GA (stbenjam@redhat.com)
+
 * Fri Aug 14 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-6
 - Katello 2.3 RC3
 - Fixes #10208: Fix auto-attach on activation keys with custom products.
