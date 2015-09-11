@@ -21,8 +21,8 @@
 Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
-Version: 2.3.0
-Release: 7%{dist}
+Version: 2.3.1
+Release: 1%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -271,6 +271,9 @@ chown -R foreman.foreman %{foreman_dir}/public/apipie-cache
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Fri Sep 11 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.1-1
+- Update to 2.3.1
+
 * Fri Sep 11 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-7
 - Add changelog for 2.3.1 (stbenjam@redhat.com)
 - fixes #11627 - address inconsistency in wording on repository details
