@@ -13,8 +13,7 @@ module Katello
 
     has_one :content_view, :through => :content_view_version, :class_name => "Katello::ContentView"
 
-    belongs_to :puppet_environment, :class_name => "Environment",
-                                    :inverse_of => :content_view_puppet_environment, :dependent => :destroy
+    belongs_to :puppet_environment, :inverse_of => :content_view_puppet_environment, :dependent => :destroy
 
     has_many :content_view_puppet_environment_puppet_modules,
              :class_name => "Katello::ContentViewPuppetEnvironmentPuppetModule",

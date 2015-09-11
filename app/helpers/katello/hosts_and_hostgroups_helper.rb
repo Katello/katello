@@ -11,7 +11,7 @@ module Katello
     end
 
     def envs_by_kt_org
-      ::Environment.all.find_all(&:katello_id).group_by do |env|
+      ::PuppetEnvironment.all.find_all(&:katello_id).group_by do |env|
         if env.katello_id
           env.katello_id.split('/').first
         end

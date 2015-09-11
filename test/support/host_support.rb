@@ -3,7 +3,7 @@
 module Support
   class HostSupport
     def self.setup_host_for_view(host, view, environment, assign_to_puppet)
-      puppet_env = ::Environment.create!(:name => 'blahblah')
+      puppet_env = ::PuppetEnvironment.create!(:name => 'blahblah')
 
       cvpe = view.version(environment).puppet_env(environment)
       cvpe.puppet_environment = puppet_env
