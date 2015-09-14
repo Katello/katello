@@ -43,7 +43,7 @@ module Katello
     end
 
     def self.find_by_cp_id(cp_id, organization = nil)
-      query = self.where(:cp_id => cp_id).scoped(:readonly => false)
+      query = self.where(:cp_id => cp_id).readonly(false)
       query = query.in_org(organization) if organization
       query.engineering.first || query.marketing.first
     end

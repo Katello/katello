@@ -154,7 +154,7 @@ module Katello
     end
 
     def version(env)
-      self.versions.in_environment(env).order("#{Katello::ContentViewVersion.table_name}.id ASC").scoped(:readonly => false).last
+      self.versions.in_environment(env).order("#{Katello::ContentViewVersion.table_name}.id ASC").readonly(false).last
     end
 
     def history
