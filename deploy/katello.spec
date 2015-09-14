@@ -12,7 +12,7 @@
 
 Name:           katello
 Version:        2.3.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -171,6 +171,10 @@ Package that installs only the Subscription and basic Content Management parts o
 %files sam
 
 %changelog
+* Mon Sep 14 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-6
+- fixes #11249 - return `katello list` command (stbenjam@redhat.com)
+- fixes #11353 - make wait_for_url more reliable (stbenjam@redhat.com)
+
 * Mon Aug 03 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.0-5
 - RC2
 - fixes #11165 - making sure mongo comes before pulp_celerybeat
