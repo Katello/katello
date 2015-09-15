@@ -692,7 +692,7 @@ module Katello
         rpm_list = []
         self.rpm_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           rpm_list.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
-                                  sub_list, %w(filename name)))
+                                  sub_list, %w(filename name), :include_repos => false))
         end
 
         rpm_list.each do |rpm|

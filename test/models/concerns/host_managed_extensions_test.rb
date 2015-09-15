@@ -32,6 +32,13 @@ module Katello
       @foreman_host.reload.destroy
     end
 
+    def test_smart_proxy_ids_with_katello
+      content_source = FactoryGirl.create(:smart_proxy,
+                                          :features => [Feature.find_or_create_by_name("Pulp Node")])
+      @foreman_host.content_source = content_source
+      assert @foreman_host.smart_proxy_ids.include?(@foreman_host.content_source_id)
+    end
+
     def test_info_with_katello
       assert_equal @foreman_host.info['parameters']['content_view'], nil
       assert_equal @foreman_host.info['parameters']['lifecycle_environment'], nil
