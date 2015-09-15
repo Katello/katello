@@ -34,5 +34,3 @@ module KatelloMiniTestRunner
     end
   end
 end
-
-MiniTest::Unit.runner = KatelloMiniTestRunner::Unit.new
