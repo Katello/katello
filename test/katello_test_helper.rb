@@ -45,6 +45,8 @@ def load_permissions
   end
 end
 
+ActiveSupport::Deprecation.silenced = true
+
 module FixtureTestCase
   extend ActiveSupport::Concern
 
@@ -61,7 +63,7 @@ module FixtureTestCase
     FileUtils.cp(Dir.glob("#{Katello::Engine.root}/test/fixtures/models/*"), self.fixture_path)
     FileUtils.cp(Dir.glob("#{Rails.root}/test/fixtures/*"), self.fixture_path)
     fixtures(:all)
-    FIXTURES = load_fixtures
+    FIXTURES = load_fixtures(ActiveRecord::Base)
 
     load_permissions
 
