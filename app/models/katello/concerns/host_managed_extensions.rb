@@ -11,6 +11,7 @@ module Katello
         alias_method_chain :validate_media?, :capsule
         alias_method_chain :set_hostgroup_defaults, :katello_attributes
         alias_method_chain :info, :katello
+        alias_method_chain :smart_proxy_ids, :katello
 
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
                                :dependent => :restrict, :inverse_of => :foreman_host
@@ -31,6 +32,12 @@ module Katello
 
       def rhsm_organization_label
         self.organization.label
+      end
+
+      def smart_proxy_ids_with_katello
+        ids = smart_proxy_ids_without_katello
+        ids << content_source_id
+        ids.uniq.compact
       end
 
       def info_with_katello

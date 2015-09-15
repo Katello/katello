@@ -43,7 +43,7 @@ class CreatePuppetModules < ActiveRecord::Migration
               :name => 'index_katello_cv_puppet_env_module_on_module_id_and_cvpe_id'
 
     add_foreign_key "katello_content_view_puppet_environment_puppet_modules", "katello_puppet_modules",
-                    :name => "katello_content_view_puppet_env_puppet_modules_puppet_module_id_fk",
+                    :name => "katello_cv_puppet_env_puppet_modules_puppet_module_id_fk",
                     :column => "puppet_module_id"
     add_foreign_key "katello_content_view_puppet_environment_puppet_modules", "katello_content_view_puppet_environments",
                     :name => "katello_content_view_puppet_env_puppet_modules_repo_id_fk",
