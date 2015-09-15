@@ -25,7 +25,7 @@ module Katello
       @root.lifecycle_environment = @library
       @root.save!
 
-      assert_include @root.organizations, @library.organization
+      assert_includes @root.organizations, @library.organization
     end
 
     def test_inherited_lifecycle_environment_with_ancestry

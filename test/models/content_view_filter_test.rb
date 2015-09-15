@@ -53,7 +53,7 @@ module Katello
 
     def test_search_inclusion
       inclusion = @filter.inclusion ? 'include' : 'exclude'
-      assert_include ContentViewFilter.search_for("inclusion_type = #{inclusion}"), @filter
+      assert_includes ContentViewFilter.search_for("inclusion_type = #{inclusion}"), @filter
     end
 
     def test_search_exclusion
