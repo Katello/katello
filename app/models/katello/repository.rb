@@ -167,13 +167,13 @@ module Katello
 
     def other_repos_with_same_product_and_content
       list = Repository.in_product(Product.find(self.product.id)).where(:content_id => self.content_id).all
-      list.delete(self)
+      list.destroy(self)
       list
     end
 
     def other_repos_with_same_content
       list = Repository.where(:content_id => self.content_id).all
-      list.delete(self)
+      list.destroy(self)
       list
     end
 
