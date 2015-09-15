@@ -1,0 +1,27 @@
+<% if repos?(prod) %>
+  <% pid = prod[:id] %>
+  <% cycle_class = cycle("", "alt", :name => 'product') %>
+  <tr class="product <%= cycle_class %>" id="<%= product_id(pid) %>">
+    <td>
+      <%= "#{prod[:name]} " %>
+      <%= "(Orphaned)" if prod[:object].orphaned? %>
+    </td>
+    <td class="max_width start_time"></td>
+    <td class="max_width duration"></td>
+    <td></td>
+    <td class="result" id="table_<%= pid %>"></td>
+    <% if @show_org %>
+      <td><%= prod[:organization] %></td>
+    <% end %>
+
+    <% unless prod[:children].empty? %>
+      <%= render :partial => "children",
+          :locals => {:children => prod[:children], :parent_set => [pid], :cycle_class => cycle_class} %>
+    <% end %>
+
+    <% unless prod[:repos].empty? %>
+      <%= render :partial => "repo", :collection => prod[:repos], :as=>:repo,
+          :locals => {:parent_set => [pid], :cycle_class => cycle_class} %>
+    <% end %>
+  </tr>
+<% end %>

@@ -33,8 +33,51 @@ describe('Controller: NewSyncPlanController', function() {
         expect($scope.syncPlan).toBeDefined();
     });
 
+    describe('sync date', function() {
+        it('should save a sync date in MM/DD/YYYY HH:MM:SS format', function() {
+            var syncPlan = {};
+            syncPlan.startDate = new Date('08/05/2015 00:00:00');
+            syncPlan.startTime = new Date('09/09/1999 13:00:00');
+
+            syncPlan.$save = function() {};
+            spyOn(syncPlan, '$save').andCallThrough();
+            
+            $scope.createSyncPlan(syncPlan);
+
+            var syncDate = new Date(syncPlan['sync_date']);
+
+            expect(syncDate.getHours()).toMatch(13);
+            expect(syncDate.getMinutes()).toMatch(0);
+            expect(syncDate.getDate()).toMatch(5);
+            expect(syncDate.getMonth()).toMatch(7);
+            expect(syncDate.getFullYear()).toMatch(2015);
+            expect(syncPlan.$save).toHaveBeenCalled();
+        });
+
+        it('should save a sync date in YYYY-MM-DD HH:MM:SS format', function() {
+            var syncPlan = {};
+            syncPlan.startDate = new Date('2015-08-05T00:00:00');
+            syncPlan.startTime = new Date('09/09/1999 13:00:00');
+
+            syncPlan.$save = function() {};
+            spyOn(syncPlan, '$save').andCallThrough();
+
+            $scope.createSyncPlan(syncPlan);
+
+            var syncDate = new Date(syncPlan['sync_date']);
+
+            expect(syncDate.getHours()).toMatch(13);
+            expect(syncDate.getMinutes()).toMatch(0);
+            expect(syncDate.getDate()).toMatch(5);
+            expect(syncDate.getMonth()).toMatch(7);
+            expect(syncDate.getFullYear()).toMatch(2015);
+            expect(syncPlan.$save).toHaveBeenCalled();
+        });
+    });
+
     it('should save a new sync plan resource and transform to the newly created sync plan', function() {
-        var syncPlan = {id: 1, startDate: '11/17/1982', endDate: '14:40'};
+        var startDate = new Date('11/17/1982'),
+            syncPlan = {id: 1, startDate: startDate, endDate: '14:40'};
         syncPlan.$save = new SyncPlan().$save;
 
         spyOn($scope.$state, 'go');
@@ -50,7 +93,8 @@ describe('Controller: NewSyncPlanController', function() {
     });
 
     it('should save a new sync plan resource and transform to the product if called from there', function() {
-        var syncPlan = {startDate: '11/17/1982', endDate: '14:40'};
+        var startDate = new Date('11/17/1982'),
+            syncPlan = {id: 1, startDate: startDate, endDate: '14:40'};
         syncPlan.$save = new SyncPlan().$save;
 
         spyOn($scope.$state, 'go');

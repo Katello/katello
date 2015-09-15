@@ -5,6 +5,7 @@ module Katello
     def models
       @library = katello_environments(:library)
       @repo = Repository.find(katello_repositories(:p_forge))
+      @puppet_module = katello_puppet_modules(:dhcp)
     end
 
     def permissions
@@ -22,12 +23,8 @@ module Katello
       setup_controller_defaults_api
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @request.env['CONTENT_TYPE'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       models
       permissions
-      [:package_group_count, :package_count, :puppet_module_count].each do |content_type_count|
-        Repository.any_instance.stubs(content_type_count).returns(0)
-      end
     end
 
     def test_index_by_env
@@ -61,31 +58,25 @@ module Katello
     end
 
     def test_show
-      PuppetModule.expects(:find).once.returns(PuppetModule.new(:repoids => [@repo.pulp_id]))
-      get :show, :repository_id => @repo.id, :id => "abc-123"
+      PuppetModule.any_instance.stubs(:backend_data).returns({})
+      get :show, :repository_id => @repo.id, :id => @puppet_module.id
 
       assert_response :success
       assert_template %w(katello/api/v2/puppet_modules/show)
     end
 
     def test_show_protected
-      puppet_module = stub
-      puppet_module.stubs(:repoids).returns([@repo.pulp_id])
-      PuppetModule.stubs(:find).with("abc-123").returns(puppet_module)
-
       assert_protected_action(:show, @read_permission, @unauth_permissions) do
-        get :show, :repository_id => @repo.id, :id => "abc-123"
+        get :show, :repository_id => @repo.id, :id => @puppet_module.id
       end
     end
 
     def test_show_module_not_in_repo
-      PuppetModule.expects(:find).once.returns(mock(:repoids => ['uh-oh']))
       get :show, :repository_id => @repo.id, :id => "abc-123"
       assert_response 404
     end
 
     def test_show_module_not_found
-      PuppetModule.expects(:find).once.returns(nil)
       get :show, :repository_id => @repo.id, :id => "abc-123"
       assert_response 404
     end

@@ -1,0 +1,19 @@
+<span page-title ng-model="package">{{ 'Package: ' | translate }} {{ package.nvrea }}</span>
+
+<section>
+
+  <div class="details fl">
+    <h4 translate>Requires</h4>
+    <div ng-repeat="item in package.requires | orderBy:'toString()'">
+      {{ item }}
+    </div>
+  </div>
+
+  <div class="details fl">
+    <h4 translate>Provides</h4>
+    <div ng-repeat="item in package.provides | orderBy:'toString()'">
+      {{ item }}
+    </div>
+  </div>
+
+</section>

@@ -1,0 +1,19 @@
+fedora_one:
+  rpm_id: <%= ActiveRecord::Fixtures.identify(:one) %>
+  repository_id: <%= ActiveRecord::Fixtures.identify(:fedora_17_x86_64) %>
+
+fedora_two:
+  rpm_id: <%= ActiveRecord::Fixtures.identify(:two) %>
+  repository_id: <%= ActiveRecord::Fixtures.identify(:fedora_17_x86_64) %>
+
+fedora_one_two:
+  rpm_id: <%= ActiveRecord::Fixtures.identify(:one_two) %>
+  repository_id: <%= ActiveRecord::Fixtures.identify(:fedora_17_x86_64) %>
+
+fedora_dev_one:
+  rpm_id: <%= ActiveRecord::Fixtures.identify(:one) %>
+  repository_id: <%= ActiveRecord::Fixtures.identify(:fedora_17_x86_64_dev) %>
+
+fedora_dev_two:
+  rpm_id: <%= ActiveRecord::Fixtures.identify(:two) %>
+  repository_id: <%= ActiveRecord::Fixtures.identify(:fedora_17_x86_64_dev) %>

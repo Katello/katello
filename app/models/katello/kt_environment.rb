@@ -23,8 +23,6 @@ module Katello
     has_many :repositories, :class_name => "Katello::Repository", dependent: :destroy, foreign_key: :environment_id
     has_many :systems, :class_name => "Katello::System", :inverse_of => :environment,
                        :dependent => :restrict_with_error, :foreign_key => :environment_id
-    has_many :distributors, :class_name => "Katello::Distributor", :inverse_of => :environment,
-                            :dependent => :destroy, :foreign_key => :environment_id
     has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
                                          :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :restrict_with_error
     has_many :content_view_puppet_environments, :class_name => "Katello::ContentViewPuppetEnvironment",
@@ -241,18 +239,6 @@ module Katello
         end
       end
       products.flatten(1)
-    end
-
-    def find_latest_packages_by_name(name)
-      packs = self.products.collect do |prod|
-        prod.find_latest_packages_by_name(self, name).collect do |pack|
-          pack[:product_id] = prod.cp_id
-          pack
-        end
-      end
-      packs.flatten!(1)
-
-      Util::Package.find_latest_packages packs
     end
 
     def get_distribution(id)

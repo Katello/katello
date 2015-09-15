@@ -4,7 +4,7 @@ module Katello
 
     include Authorization::ContentViewVersion
 
-    before_destroy :check_ready_to_destroy!
+    before_destroy :validate_destroyable!
 
     belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
     has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
@@ -78,6 +78,11 @@ module Katello
       query
     end
 
+    def self.with_puppet_module(puppet_module)
+      joins(:content_view_puppet_environments)
+        .where("#{Katello::ContentViewPuppetEnvironment.table_name}.id = ?", puppet_module.content_view_puppet_environments)
+    end
+
     def to_s
       name
     end
@@ -98,6 +103,14 @@ module Katello
 
     def default_content_view?
       default?
+    end
+
+    def in_composite?
+      composite_content_views.any?
+    end
+
+    def in_environment?
+      environments.any?
     end
 
     def available_releases
@@ -177,7 +190,7 @@ module Katello
 
     def puppet_modules
       if archive_puppet_environment
-        archive_puppet_environment.indexed_puppet_modules
+        archive_puppet_environment.puppet_modules
       else
         []
       end
@@ -191,16 +204,15 @@ module Katello
     end
 
     def packages
-      archived_repos.flat_map(&:packages)
+      Rpm.in_repositories(archived_repos).uniq
     end
 
     def puppet_module_count
-      env = self.archive_puppet_environment
-      env.nil? ? 0 : PuppetModule.module_count([env])
+      puppet_modules.count
     end
 
     def package_count
-      Package.package_count(self.repositories.archived)
+      Katello::Rpm.in_repositories(self.repositories.archived).count
     end
 
     def docker_image_count
@@ -231,15 +243,27 @@ module Katello
       DockerImage.in_repositories(archived_repos).uniq
     end
 
+    def package_groups
+      PackageGroup.in_repositories(archived_repos).uniq
+    end
+
     def check_ready_to_promote!
       fail _("Default content view versions cannot be promoted") if default?
     end
 
-    def check_ready_to_destroy!
-      if environments.any? && !organization.being_deleted?
-        fail _("Cannot delete version while it is in environments: %s") % environments.map(&:name).join(",")
+    def validate_destroyable!(skip_environment_check = false)
+      unless organization.being_deleted?
+        if !skip_environment_check && in_environment?
+          fail _("Cannot delete version while it is in environments: %s") %
+                   environments.map(&:name).join(",")
+        end
+
+        if in_composite?
+          fail _("Cannot delete version while it is in use by composite content views: %s") %
+                   composite_content_views.map(&:name).join(",")
+        end
       end
-      return true
+      true
     end
 
     private

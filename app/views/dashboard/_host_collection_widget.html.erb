@@ -1,0 +1,38 @@
+<h4 class="header">
+  <%= _("Host Collections") %>
+</h4>
+
+<% organizations = Organization.current.present? ? [Organization.current] : User.current.allowed_organizations %>
+<% critical, warning, ok = Katello::HostCollection.lists_by_updates_needed(organizations) %>
+<% host_collections = (critical + warning + ok)[0..6] %>
+
+<% if host_collections.empty? %>
+  <p class="ca"><%= _("No host collections found.") %></p>
+<% else %>
+  <table class="table table-striped ellipsis table-bordered">
+    <thead>
+      <tr>
+        <th>Updates</th>
+        <th>Name</th>
+        <th>Content Hosts</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% host_collections.each do |host_collection| %>
+        <tr>
+          <td>
+            <% if host_collection.security_updates? %>
+              <a href="/host_collections/<%= host_collection.id %>/actions" style="text-align: center"><i class="label label-danger">&nbsp;</i></a>
+            <% elsif host_collection.bugzilla_updates? || host_collection.enhancement_updates? %>
+              <a href="/host_collections/<%= host_collection.id %>/actions" style="text-align: center"><i class="label label-warning">&nbsp;</i></a>
+            <% else %>
+              <a href="/host_collections/<%= host_collection.id %>/actions" style="text-align: center"><i class="label label-success">&nbsp;</i></a>
+            <% end %>
+          </td>
+          <td><%= host_collection.name %></td>
+          <td style="text-align: right"><%= host_collection.systems.length %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

@@ -1,6 +1,6 @@
 fedora_17_x86_64:
   name:                 Fedora 17 x86_64
-  pulp_id:              1
+  pulp_id:              Fedora_17
   content_id:           1
   content_type:         yum
   label:                fedora_17_x86_64_label
@@ -10,21 +10,32 @@ fedora_17_x86_64:
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   url:                 "http://myrepo.com"
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  distribution_arch: "test_arch"
+  distribution_version: "2.1"
+  distribution_family: 'Red Hat Enterprise Linux'
+  distribution_variant: "TestVariant"
+  distribution_bootable: true
+  distribution_uuid: 'xyz123'
 
 fedora_17_x86_64_dev:
-  name:                 Fedora 17 x86_64
+  name:                 Fedora 17 x86_64 dev
   pulp_id:              2
   content_id:           1
   content_type:         yum
   library_instance:     fedora_17_x86_64
-  label:                fedora_17_dev_label
+  label:                fedora_17_x86_64_dev_label
   relative_path:        '/ACME_Corporation/dev/fedora_17_dev_label'
   environment_id:       <%= ActiveRecord::Fixtures.identify(:dev) %>
   product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:dev_default_version) %>
   url:                 "http://myrepo.com"
-
+  distribution_arch: "test_arch"
+  distribution_version: "2.1"
+  distribution_family: "Test Family"
+  distribution_variant: "TestVariant"
+  distribution_bootable: false 
+  distribution_uuid: 'xyz123'
 
 feedless_fedora_17_x86_64:
   name:                 Feedless Fedora 17 x86_64
@@ -52,6 +63,12 @@ rhel_7_x86_64:
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
   url:                 'https://cdn.example.com/rhel/7/os'
+  distribution_arch: "test_arch"
+  distribution_version: "3.0"
+  distribution_family: "Other Family"
+  distribution_variant: "TestVariant"
+  distribution_bootable: false
+
 
 rhel_6_x86_64:
   name:                 RHEL 6 x86_64
@@ -67,6 +84,11 @@ rhel_6_x86_64:
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
   url:                 'https://cdn.example.com/rhel/6/os'
+  distribution_arch: "test_arch"
+  distribution_version: "2.1"
+  distribution_family: "Other Family"
+  distribution_variant: "TestVariant"
+  distribution_bootable: true
 
 rhel_6_x86_64_dev:
   name:                 RHEL 6 x86_64
@@ -84,6 +106,42 @@ rhel_6_x86_64_dev:
   library_instance_id:  <%= ActiveRecord::Fixtures.identify(:rhel_6_x86_64) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:dev_default_version) %>
   url:                 'https://cdn.example.com/rhel/6/os'
+
+fedora_17_no_arch:
+  name:                 Fedora 17 no arch
+  pulp_id:              1
+  content_id:           1
+  content_type:         yum
+  label:                fedora_17_no_arch_label
+  relative_path:        '/ACME_Corporation/library/fedora_17_label'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  url:                 "http://myrepo.com"
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  distribution_version: "2.1"
+  distribution_family: 'Red Hat Enterprise Linux'
+  distribution_variant: "TestVariant"
+  distribution_bootable: true
+
+rhel_7_no_arch:
+  name:                 RHEL 7 no_arch
+  pulp_id:              9
+  content_id:           1
+  major:                7
+  minor:                7Server
+  content_type:         yum
+  label:                rhel_7_no_arch_label
+  relative_path:        '/ACME_Corporation/library/rhel_7_label'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:redhat) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  url:                 'https://cdn.example.com/rhel/7/os'
+  distribution_version: "3.0"
+  distribution_family: "Other Family"
+  distribution_variant: "TestVariant"
+  distribution_bootable: false
 
 p_forge:
   name:                 P Forge
@@ -137,7 +195,7 @@ rhel_6_x86_64_library_view_1:
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>
 
 fedora_17_x86_64_library_view_1:
-  name:                 Fedora 17 x86_64
+  name:                 Fedora 17 x86_64 lib view 1
   pulp_id:              3
   content_id:           1
   label:                fedora_17_x86_64_label
@@ -149,7 +207,7 @@ fedora_17_x86_64_library_view_1:
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>
 
 fedora_17_x86_64_library_view_2:
-  name:                 Fedora 17 x86_64
+  name:                 Fedora 17 x86_64 lib view 2
   pulp_id:              3
   content_id:           1
   label:                fedora_17_x86_64_label
@@ -161,7 +219,7 @@ fedora_17_x86_64_library_view_2:
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>
 
 fedora_17_x86_64_library_view_2_library:
-  name:                 Fedora 17 x86_64
+  name:                 Fedora 17 x86_64 lib view 2 lib
   pulp_id:              3
   content_id:           1
   label:                fedora_17_x86_64_label
@@ -174,7 +232,7 @@ fedora_17_x86_64_library_view_2_library:
   url:                  "http://www.pleaseack.com"
 
 fedora_17_unpublished:
-  name:                 Fedora 17 x86_64
+  name:                 Fedora 17 x86_64 unpublished
   pulp_id:              6
   content_id:           1
   label:                fedora_17_unpublished_label

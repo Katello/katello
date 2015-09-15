@@ -168,6 +168,12 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         collapsed: true,
         templateUrl: 'repositories/details/views/repository-manage-packages.html'
     })
+    .state('products.details.repositories.manage-content.package-groups', {
+        url: '/repositories/:repositoryId/content/package_groups',
+        permission: 'view_products',
+        collapsed: true,
+        templateUrl: 'repositories/details/views/repository-manage-package-groups.html'
+    })
     .state('products.details.repositories.manage-content.puppet-modules', {
         url: '/repositories/:repositoryId/content/puppet_modules',
         permission: 'view_products',

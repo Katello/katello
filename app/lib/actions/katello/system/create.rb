@@ -27,7 +27,7 @@ module Actions
                                     uuid:                system.uuid,
                                     capabilities:        system.capabilities,
                                     guest_ids:           system.guestIds,
-                                    activation_keys:     activation_keys }
+                                    activation_keys:     activation_keys.map(&:cp_name) }
           system.save!
           action_subject system
 

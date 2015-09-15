@@ -10,6 +10,10 @@ node :version do |h|
   h.content_view_version.version
 end
 
+node :description do |h|
+  h.content_view_version.description
+end
+
 node :publish do |h|
   h.environment.nil?
 end

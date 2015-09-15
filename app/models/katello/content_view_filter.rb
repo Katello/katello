@@ -2,11 +2,11 @@ module Katello
   class ContentViewFilter < Katello::Model
     self.include_root_in_json = false
 
-    PACKAGE         = Package::CONTENT_TYPE
+    RPM         = Rpm::CONTENT_TYPE
     PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE
     ERRATA          = Erratum::CONTENT_TYPE
-    CONTENT_TYPES   = [PACKAGE, PACKAGE_GROUP, ERRATA]
-    CONTENT_OPTIONS = { _('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA }
+    CONTENT_TYPES   = [RPM, PACKAGE_GROUP, ERRATA]
+    CONTENT_OPTIONS = { _('Packages') => RPM, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA }
 
     belongs_to :content_view,
                :class_name => "Katello::ContentView",
@@ -31,7 +31,7 @@ module Katello
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :type, :rename => :content_type,
-                  :complete_value => {Package::CONTENT_TYPE.to_sym => "Katello::ContentViewPackageFilter",
+                  :complete_value => {Rpm::CONTENT_TYPE.to_sym => "Katello::ContentViewPackageFilter",
                                       PackageGroup::CONTENT_TYPE.to_sym => "Katello::ContentViewPackageGroupFilter",
                                       Erratum::CONTENT_TYPE.to_sym => "Katello::ContentViewErratumFilter"}
     scoped_search :on => :inclusion, :rename => :inclusion_type, :complete_value => {:include => true, :exclude => :false}
@@ -48,7 +48,7 @@ module Katello
 
     def content_type
       {
-        ContentViewPackageFilter => PACKAGE,
+        ContentViewPackageFilter => RPM,
         ContentViewErratumFilter => ERRATA,
         ContentViewPackageGroupFilter => PACKAGE_GROUP
       }[self.class]
@@ -56,15 +56,15 @@ module Katello
 
     def self.class_for(content_type)
       case content_type
-      when PACKAGE
+      when RPM
         ContentViewPackageFilter
       when PACKAGE_GROUP
         ContentViewPackageGroupFilter
       when ERRATA
         ContentViewErratumFilter
       else
-        params = { :content_type => content_type, :content_types => CONTENT_TYPES.join(", ") }
-        fail _("Invalid content type '%{ content_type }' provided. Content types can be one of %{ content_types }") % params
+        fail _("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") %
+                 { :content_type => content_type, :content_types => CONTENT_TYPES.join(", ") }
       end
     end
 
@@ -77,8 +77,8 @@ module Katello
       when ContentViewErratumFilter.name
         ContentViewErratumFilterRule
       else
-        params = { :content_type => filter.type, :content_types => CONTENT_TYPES.join(", ") }
-        fail _("Invalid content type '%{ content_type }' provided. Content types can be one of %{ content_types }") % params
+        fail _("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") %
+                 { :content_type => filter.type, :content_types => CONTENT_TYPES.join(", ") }
       end
     end
 
@@ -91,8 +91,8 @@ module Katello
       when ContentViewErratumFilter.name
         filter.erratum_rule_ids
       else
-        params = { :content_type => filter.type, :content_types => CONTENT_TYPES.join(", ") }
-        fail _("Invalid content type '%{ content_type }' provided. Content types can be one of %{ content_types }") % params
+        fail _("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") %
+                 { :content_type => filter.type, :content_types => CONTENT_TYPES.join(", ") }
       end
     end
 

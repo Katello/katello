@@ -13,12 +13,12 @@
  *   and provides a method to remove them.
  */
 angular.module('Bastion.content-views').controller('PackageGroupFilterListController',
-    ['$scope', 'translate', 'Filter', 'Rule', 'Nutupane',
-    function ($scope, translate, Filter, Rule, Nutupane) {
+    ['$scope', 'translate', 'PackageGroup', 'Rule', 'Nutupane',
+    function ($scope, translate, PackageGroup, Rule, Nutupane) {
         var nutupane;
 
         function success(rule) {
-            nutupane.removeRow(rule.uuid, 'id');
+            nutupane.removeRow(rule.uuid, 'uuid');
             $scope.filter.rules = _.reject($scope.filter.rules, function (filterRule) {
                 return rule.id === filterRule.id;
             });
@@ -47,17 +47,19 @@ angular.module('Bastion.content-views').controller('PackageGroupFilterListContro
             return rules;
         }
 
-        nutupane = new Nutupane(
-            Filter,
-            {filterId: $scope.$stateParams.filterId},
-            'packageGroups'
+        nutupane = new Nutupane(PackageGroup, {
+            filterId: $scope.$stateParams.filterId,
+            'sort_order': 'ASC',
+            'sort_by': 'name'
+            },
+            'queryUnpaged'
         );
 
         $scope.detailsTable = nutupane.table;
         nutupane.table.closeItem = function () {};
 
         $scope.removePackageGroups = function () {
-            var packageGroupIds = nutupane.getAllSelectedResults().included.ids,
+            var packageGroupIds = nutupane.getAllSelectedResults('uuid').included.ids,
                 rules;
 
             rules = findRules(packageGroupIds);

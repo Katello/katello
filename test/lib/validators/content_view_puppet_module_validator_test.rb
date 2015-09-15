@@ -5,8 +5,8 @@ require 'katello_test_helper'
 module Katello
   class ContentViewPuppetModuleValidatorTest < ActiveSupport::TestCase
     def setup
-      Katello::PuppetModule.stubs(:exists?).returns(true)
-      @base_record = { :errors => { :base => [] }, :content_view => OpenStruct.new(:puppet_repos => []) }
+      @repository = katello_repositories(:p_forge)
+      @base_record = { :errors => { :base => [] }, :content_view => OpenStruct.new(:puppet_repos => [@repository]) }
       @validator = Validators::ContentViewPuppetModuleValidator.new(:attributes => [:name])
     end
 
@@ -17,14 +17,15 @@ module Katello
       refute_empty @model.errors[:base]
     end
 
-    test "passes if name provided" do
+    test "fails if only name provided" do
       @model = OpenStruct.new(@base_record.merge(:name => "module name"))
       @validator.validate(@model)
 
-      assert_empty @model.errors[:base]
+      refute_empty @model.errors[:base]
     end
 
     test "passes if name and author provided" do
+      PuppetModule.create!(:name => "module name", :author => "module author", :uuid => '9932943299423', :repositories => [@repository])
       @model = OpenStruct.new(@base_record.merge(:name => "module name", :author => "module author"))
       @validator.validate(@model)
       assert_empty @model.errors[:base]
@@ -46,6 +47,7 @@ module Katello
     end
 
     test "passes if the module does exist" do
+      PuppetModule.create!(:name => "module name", :author => "module author", :uuid => '9932943299423', :repositories => [@repository])
       @model = OpenStruct.new(@base_record.merge(:name => "module name", :author => "module author"))
       @validator.validate(@model)
 

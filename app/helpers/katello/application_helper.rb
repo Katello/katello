@@ -218,17 +218,6 @@ module Katello
       return link.respond_to?(:html_safe) ? link.html_safe : link
     end
 
-    def distributor_link_helper(distributor_id)
-      distributor = Distributor.find(distributor_id)
-      if distributor.readable?
-        link_to(distributor.name, distributors_path(distributor.id, :anchor => "/&list_search=id:#{distributor.id}&panel=distributor_#{distributor.id}"))
-      else
-        distributor.name
-      end
-    rescue ActiveRecord::RecordNotFound
-      _('Distributor with uuid %s not found') % distributor_id
-    end
-
     def activation_key_link_helper(key)
       if ActivationKey.readable? key.organization
         link_to(key.name, activation_keys_path(key.id, :anchor => "/&list_search=id:#{key.id}&panel=activation_key_#{key.id}"))

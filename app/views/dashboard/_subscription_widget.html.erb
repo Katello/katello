@@ -1,0 +1,37 @@
+<h4 class="header">
+  <%= _("Content Host Subscription Status") %>
+</h4>
+
+<% organizations = Organization.current.present? ? [Organization.current] : User.current.allowed_organizations %>
+<% owner_infos = organizations.map(&:owner_info) %>
+<% invalid_consumer_count = owner_infos.map(&:total_invalid_compliance_consumers).reduce(:+) %>
+<% partial_consumer_count = owner_infos.map(&:total_partial_compliance_consumers).reduce(:+) %>
+<% valid_consumer_count = owner_infos.map(&:total_valid_compliance_consumers).reduce(:+) %>
+<% total_count = owner_infos.map(&:total_consumers).reduce(:+) %>
+
+<table class="table table-striped ellipsis table-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><i class="label label-danger" style="margin-right: 6px">&nbsp;</i><%= _("Invalid") %></td>
+      <td style="text-align:right"><%= invalid_consumer_count %></td>
+    </tr>
+    <tr>
+      <td><i class="label label-warning" style="margin-right: 6px">&nbsp;</i><%= _("Partial") %></td>
+      <td style="text-align:right;"><%= partial_consumer_count %></td>
+    </tr>
+    <tr>
+      <td><i class="label label-success" style="margin-right: 6px">&nbsp;</i><%= _("Valid") %></td>
+      <td style="text-align:right;"><%= valid_consumer_count %></td>
+    </tr>
+    <tr>
+      <td><h4><%= _("Total Content Hosts") %></h4></td>
+      <td style="text-align:right;"><%= total_count %></td>
+    </tr>
+  </tbody>
+</table>

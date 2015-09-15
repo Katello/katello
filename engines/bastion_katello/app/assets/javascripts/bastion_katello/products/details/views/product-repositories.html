@@ -106,7 +106,10 @@
                 <span ng-show="repository.last_sync == null" translate>
                   Not Synced
                 </span>
-                <span ng-hide="repository.last_sync == null">
+                <span ng-show="repository.last_sync !== null && repository.last_sync.ended_at == null" translate>
+                  <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result | capitalize}}</a>
+                </span>
+                <span ng-hide="repository.last_sync == null || repository.last_sync.ended_at == null">
                   <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result | capitalize}}</a>
                   <span translate>{{ repository.last_sync_words }} ago</span>
                 </span>

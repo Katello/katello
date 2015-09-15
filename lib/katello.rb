@@ -6,19 +6,16 @@ require "rabl"
 require "tire"
 require "oauth"
 require "gettext_i18n_rails"
-require "i18n_data"
 require "hooks"
 require "foreigner"
 require "foreman-tasks"
 require "rest_client"
-require "justified/standard_error"
 require "anemone"
 require "securerandom"
 require 'foreman_docker'
 
 require "runcible"
 
-require "haml-rails"
 require "deface"
 require 'jquery-ui-rails'
 require 'qpid_messaging'

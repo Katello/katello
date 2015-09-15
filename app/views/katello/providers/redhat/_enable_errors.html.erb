@@ -1,0 +1,12 @@
+<span class="errors">
+  <br/>
+  <i class="icon-exclamation-sign"></i>
+  <%= _("There was an error attempting to enable or disable this repository:") %>
+  <pre>
+    <%= error_message %>
+  </pre>
+  <%= _("For more information see ") %>
+  <a href="<%= main_app.foreman_tasks_tasks_path %>">
+    <%= _("the related failed task.") %>
+  </a>
+</span>

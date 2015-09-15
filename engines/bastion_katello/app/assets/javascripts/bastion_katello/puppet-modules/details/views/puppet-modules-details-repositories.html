@@ -1,0 +1,52 @@
+<span page-title ng-model="puppetModule">{{ 'Repositories for Puppet Module: ' | translate }} {{ puppetModule.name }}</span>
+
+<div data-extend-template="layouts/details-nutupane.html">
+
+  <div data-block="header">
+    <p translate>Library repositories that contain this puppet module.</p>
+  </div>
+
+  <div data-block="actions"></div>
+  <div data-block="selection-summary"></div>
+
+  <div data-block="table">
+    <table class="table table-striped table-bordered"
+           ng-class="{'table-mask': detailsTable.working}"
+           ng-show="detailsTable.rows.length > 0">
+      <thead>
+        <tr bst-table-head>
+          <th bst-table-column="name"><span translate>Name</span></th>
+          <th bst-table-column="product"><span translate>Product</span></th>
+          <th bst-table-column="lastSync"><span translate>Last Sync</span></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row ng-repeat="repository in detailsTable.rows">
+          <td bst-table-cell>
+            <a ng-href="/products/{{ repository.product.id }}/repositories/{{ repository.library_instance_id || repository.id }}">
+              {{ repository.name }}
+            </a>
+          </td>
+          <td bst-table-cell>
+            <a ui-sref="products.details.repositories.index({productId: repository.product.id})">
+              {{ repository.product.name }}
+            </a>
+          </td>
+          <td bst-table-cell>
+              <span ng-show="repository.url">
+              <span ng-show="repository.last_sync == null" translate>
+                Not Synced
+              </span>
+              <span ng-hide="repository.last_sync == null">
+                <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result | capitalize}}</a>
+                <span translate>{{ repository.last_sync_words }} ago</span>
+              </span>
+            </span>
+            <span ng-hide="repository.url" translate>N/A</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

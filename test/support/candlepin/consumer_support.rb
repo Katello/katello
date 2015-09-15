@@ -27,27 +27,5 @@ module Katello
 
       return @system
     end
-
-    @distributor = nil
-
-    def self.distributor_id
-      @distributor.id
-    end
-
-    class << self
-      attr_reader :distributor
-    end
-
-    def self.create_distributor(name, env, cv)
-      @distributor = Distributor.new
-      @distributor.cp_type = 'candlepin'
-      @distributor.name = name
-      @distributor.description = 'New Distributor'
-      @distributor.environment = env
-      @distributor.content_view = cv
-      @distributor.facts = {"distributor_version" => Distributor.latest_version}
-
-      return @distributor
-    end
   end
 end

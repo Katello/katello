@@ -2,7 +2,6 @@ module Katello
   class Api::V2::DockerTagsController < Api::V2::ApiController
     apipie_concern_subst(:a_resource => N_("a docker tag"), :resource => "docker_tags")
     include Katello::Concerns::Api::V2::RepositoryContentController
-    include Katello::Concerns::Api::V2::RepositoryDbContentController
 
     def index
       if params[:grouped]

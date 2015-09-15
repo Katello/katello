@@ -104,10 +104,6 @@ module Actions
           if all_cv_envs.flat_map(&:activation_keys).any? && activation_key_cve(options).nil?
             fail _("Unable to reassign activation_keys. Please check activation_key_content_view_id and activation_key_environment_id.")
           end
-
-          if all_cv_envs.flat_map(&:distributors).any?
-            fail _("Unable to perform removal. Please reassign any attached distributors first.")
-          end
         end
 
         def combined_cv_envs(cv_envs, versions)

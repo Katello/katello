@@ -105,6 +105,7 @@ module Katello
       ::Location.send :include, Katello::Concerns::LocationExtensions
       ::Medium.send :include, Katello::Concerns::MediumExtensions
       ::Redhat.send :include, Katello::Concerns::RedhatExtensions
+      ::Operatingsystem.send :include, Katello::Concerns::OperatingsystemExtensions
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
 
@@ -172,6 +173,10 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.1/import_errata.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.2/update_gpg_key_urls.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.2/update_metadata_expire.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_package_groups.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_rpms.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_distributions.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_puppet_modules.rake"
     end
   end
 end

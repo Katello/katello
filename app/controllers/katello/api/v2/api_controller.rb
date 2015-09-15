@@ -74,15 +74,23 @@ module Katello
     def scoped_search(query, default_sort_by, default_sort_order, options = {})
       resource = options[:resource_class] || resource_class
       includes = options.fetch(:includes, [])
+      group = options.fetch(:group, nil)
 
       total = query.count
       query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
-      sub_total = query.count
-      sort_attr = params[:sort_by] || default_sort_by
-      sort_attr = "#{query.table_name}.#{sort_attr}" unless sort_attr.to_s.include?('.')
 
-      query = query.order("#{sort_attr} #{params[:sort_order] || default_sort_order}")
-      query = query.order("#{query.table_name}.id DESC") #secondary order to ensure sort is deterministic
+      query = query.select(group).group(group) if group
+      sub_total = query.count
+
+      sort_attr = params[:sort_by] || default_sort_by
+
+      if sort_attr
+        sort_attr = "#{query.table_name}.#{sort_attr}" unless sort_attr.to_s.include?('.')
+        query = query.order("#{sort_attr} #{params[:sort_order] || default_sort_order}")
+      elsif options[:custom_sort]
+        query = options[:custom_sort].call(query)
+      end
+      query = query.order("#{query.table_name}.id DESC") unless group #secondary order to ensure sort is deterministic
       query = query.includes(includes) if includes.length > 0
 
       if params[:full_result]

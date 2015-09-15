@@ -7,20 +7,14 @@ module Katello
     include Support::ForemanTasks::Task
 
     def models
-      ActivationKey.any_instance.stubs(:products).returns([])
+      ActivationKey.any_instance.stubs(:valid_content_label?).returns(true)
       ActivationKey.any_instance.stubs(:content_overrides).returns([])
+      ActivationKey.any_instance.stubs(:products).returns([])
 
-      @activation_key = ActivationKey.find(katello_activation_keys(:simple_key))
       @organization = get_organization
+      @activation_key = ActivationKey.find(katello_activation_keys(:simple_key))
       @view = katello_content_views(:library_view)
       @library = @organization.library
-
-      @activation_key.stubs(:get_key_pools).returns([])
-      @activation_key.stubs(:auto_attach).returns(nil)
-
-      ::Katello::ActivationKey.stubs(:find).returns(@activation_key)
-
-      stub_find_organization(@organization)
     end
 
     def permissions
@@ -32,27 +26,19 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      @request.env['HTTP_ACCEPT'] = 'application/json'
-      @request.env['CONTENT_TYPE'] = 'application/json'
-      login_user(User.find(users(:admin)))
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
-
       models
       permissions
     end
 
     def test_index
-      @fake_search_service.stubs(:retrieve).returns([[@activation_key], 1])
-      @fake_search_service.stubs(:total_items).returns(1)
-
       results = JSON.parse(get(:index, :organization_id => @organization.id).body)
 
       assert_response :success
       assert_template 'api/v2/activation_keys/index'
 
       assert_equal results.keys.sort, ['page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total']
-      assert_equal results['results'].size, 1
-      assert_equal results['results'][0]['id'], @activation_key.id
+      assert_equal results['results'].size, 6
+      assert_includes results['results'].collect { |item| item['id'] }, @activation_key.id
     end
 
     def test_index_protected
@@ -60,13 +46,11 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
-        get :index, :organization_id => @organization.label
+        get :index, :organization_id => @organization.id
       end
     end
 
     def test_show
-      @fake_search_service.stubs(:retrieve).returns([[@activation_key], 1])
-      @fake_search_service.stubs(:total_items).returns(1)
       results = JSON.parse(get(:show, :id => @activation_key.id).body)
 
       assert_equal results['name'], 'Simple Activation Key'
@@ -76,9 +60,6 @@ module Katello
     end
 
     def test_show_protected
-      @fake_search_service.stubs(:retrieve).returns([[@activation_key], 1])
-      @fake_search_service.stubs(:total_items).returns(1)
-
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
@@ -98,6 +79,7 @@ module Katello
     end
 
     def test_create_unlimited
+      ActivationKey.any_instance.expects(:reload)
       assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
         activation_key.max_content_hosts.must_be_nil
       end
@@ -110,13 +92,18 @@ module Katello
     end
 
     def test_update
+      assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, activation_key_params|
+        assert_equal activation_key.id, @activation_key.id
+        assert_equal activation_key_params[:name], 'New Name'
+        assert_equal activation_key_params[:max_content_hosts], "2"
+        assert_equal activation_key_params[:unlimited_content_hosts], false
+      end
+
       put :update, :id => @activation_key.id, :organization_id => @organization.id,
-          :activation_key => {:name => 'New Name', :max_content_hosts => 2}
+         :activation_key => {:name => 'New Name', :max_content_hosts => 2}
 
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
-      assert_equal assigns[:activation_key].name, 'New Name'
-      assert_equal assigns[:activation_key].max_content_hosts, 2
     end
 
     def test_update_protected
@@ -194,23 +181,19 @@ module Katello
     end
 
     def test_content_override
-      results = JSON.parse(put(:update, :id => @activation_key.id, :content_label => 'some-content',
-                               :name => 'enabled', :value => 1).body)
+      ActivationKey.any_instance.expects(:set_content_override).returns(true)
 
-      assert_equal results['name'], 'enabled'
+      put(:content_override, :id => @activation_key.id, :content_override => {:content_label => 'some-content',
+                                                                              :name => 'enabled', :value => 1})
 
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
     end
 
     def test_content_override_empty
-      results = JSON.parse(put(:update, :id => @activation_key.id, :content_label => 'some-content',
-                               :name => 'enabled').body)
+      put(:content_override, :id => @activation_key.id, :content_override => {:content_label => 'some-content', :name => 'enabled'})
 
-      assert_equal results['name'], 'enabled'
-
-      assert_response :success
-      assert_template 'api/v2/activation_keys/show'
+      assert_response 400
     end
 
     def test_add_subscriptions_protected

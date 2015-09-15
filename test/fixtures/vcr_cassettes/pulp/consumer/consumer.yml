@@ -1,133 +1,6 @@
 --- 
 http_interactions: 
 - request: 
-    method: put
-    uri: https://centos.installer/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/
-    body: 
-      encoding: US-ASCII
-      string: "{\"delta\":{\"display_name\":\"Not So Simple Server\"}}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="TuBX4aCNtTCr8uBmgUiavukJNACikK03LuQrKwkPCM", oauth_signature="MHMc0wI%2BLAgLsFyH2psgMZaumQU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185865", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "49"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Thu, 15 May 2014 20:31:05 GMT
-      Server: 
-      - Apache/2.2.15 (CentOS)
-      Content-Length: 
-      - "295"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"display_name\": \"Not So Simple Server\", \"description\": null, \"_ns\": \"consumers\", \"notes\": {}, \"rsa_pub\": null, \"capabilities\": {}, \"_id\": {\"$oid\": \"5375240986d9a9321e2b92ff\"}, \"id\": \"010E99C0-3276-11E2-81C1-0800200C9A66\", \"_href\": \"/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/\"}"
-    http_version: 
-  recorded_at: Thu, 15 May 2014 20:31:05 GMT
-- request: 
-    method: post
-    uri: https://centos.installer/pulp/api/v2/consumers/
-    body: 
-      encoding: US-ASCII
-      string: "{\"id\":\"010E99C0-3276-11E2-81C1-0800200C9A66\",\"display_name\":\"Simple Server\"}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="qwwBPfwnxa4aygn6arTTBdVxcOJ1KFkBU2L8qUopPw", oauth_signature="UCRlPQpDoCv2ymAhD4N7rdpIXBk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185866", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "76"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 201
-      message: Created
-    headers: 
-      Date: 
-      - Thu, 15 May 2014 20:31:06 GMT
-      Server: 
-      - Apache/2.2.15 (CentOS)
-      Location: 
-      - /pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/
-      Content-Length: 
-      - "2164"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"consumer\": {\"display_name\": \"Simple Server\", \"description\": null, \"_ns\": \"consumers\", \"notes\": {}, \"rsa_pub\": null, \"capabilities\": {}, \"_id\": {\"$oid\": \"5375240a86d9a9321e2b9308\"}, \"id\": \"010E99C0-3276-11E2-81C1-0800200C9A66\", \"_href\": {\"_href\": \"/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/\"}}, \"certificate\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICXwIBAAKBgQDnsAXtGolC9E48lScBMx7TP5vepN1y5sEqeLRH17j02EPFMmF0\\nckey4lC41qmEb3HkBDvBbJmIIl5i2V57Bg++5O5DYViWIAab52Sbj/PvqAZ2UU55\\nc8OzSsNiTZ5T0dUzvqCfu4lrXKq3KRSOBBFKVZr3C+Tx1UcBF0lB52kVGQIDAQAB\\nAoGBAMGTDCCCH1TVkdiENcaG06ZkavKmhG9P5Ox7VQUBdAL9/gFwioQkR0tqU09b\\n6t4/zsRX1SVSeySGsp2cR5g6BEQ/Gg6V/0wxMZu+FJZFm6Ry+i7yMJftvfGXc37p\\nFcuJPp7UT7p5bDRLTMYqS4Vp4NjPENnr3qlfavP5yZ8QbQQBAkEA+oglTxupVoVK\\n7tzFZQL1J35Ba/LekavYUiyz/xFxN/VS7opLpZgq7PzzGhawWsyN1aZCkqerKWYq\\nwMjvrq/eOQJBAOy+la77cSbL94ZSOAB7E64mik1k+6tdaHUYgwxh42ji2e+RaAjS\\nA0RhcIsozhhmGvWwxx2B7BLFPLkkcD787eECQQCR4klnYUIgAYn6wU+oXCqJDrnl\\ntAzqYliasTE2698zqITcJmeaS5tjWH/uxxt2I/rLV/8YCs5eUwG+NMNswzfxAkEA\\n3e/05ut1Mge4bkWZlmnLE1GyCcgHXqjcihmGkQ8bX3J7GGlZ/BrVUT9/gBWqz5i4\\n4Wbt4y2vIBGjUXVlfMckQQJBAOxqzZgRJKV0t/Dp1EFkmm3Nqr+5yVMlS2pIiKoR\\n3yvNLS4J/8Umv2ZjLVEvhnnKfNd9dPtd0j+D3sBhSkjSOt8=\\n-----END RSA PRIVATE KEY-----\\n-----BEGIN CERTIFICATE-----\\nMIICdDCCAVwCAgLuMA0GCSqGSIb3DQEBBQUAMCoxGTAXBgNVBAMMEGNlbnRvcy5p\\nbnN0YWxsZXIxDTALBgNVBAoMBFBVTFAwHhcNMTQwNTE1MjAzMTA2WhcNMjQwNTEy\\nMjAzMTA2WjBZMS0wKwYDVQQDEyQwMTBFOTlDMC0zMjc2LTExRTItODFDMS0wODAw\\nMjAwQzlBNjYxKDAmBgoJkiaJk/IsZAEBExg1Mzc1MjQwYTg2ZDlhOTMyMWUyYjkz\\nMDgwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAOewBe0aiUL0TjyVJwEzHtM/\\nm96k3XLmwSp4tEfXuPTYQ8UyYXRyR7LiULjWqYRvceQEO8FsmYgiXmLZXnsGD77k\\n7kNhWJYgBpvnZJuP8++oBnZRTnlzw7NKw2JNnlPR1TO+oJ+7iWtcqrcpFI4EEUpV\\nmvcL5PHVRwEXSUHnaRUZAgMBAAEwDQYJKoZIhvcNAQEFBQADggEBACmimt1m8lcH\\njr3H+bBT+sue56PaRbjJhjvSVHqKoYpVojzArWl51ZgXpJXrkOjWKKdGm9y7Vp0/\\n2wmvcZVpGJKl4muvrQ6IHxMU+e4ta+t5h1w6xmlREa44AilKInslr1JszGbGjlz4\\nL4viKow9zbIPv8LtwNRvoKUYaiCRpfHeHHOegRRkkZbfHqQYVXibNHS70+Cdh/Vb\\nTMspmzimkLBp/VD9V9e8CUj1pfAwgp+EZ+QpCr7fr5xxCoVfesOI5zv+fOxRM4Fc\\nIgPd9hZ5KyJYDmPMJb7IG+OreGFVueumWkZDIOS7ykZQso2py/U3KUzWHAfTv8NP\\nvyrkZMfbzD4=\\n-----END CERTIFICATE-----\"}"
-    http_version: 
-  recorded_at: Thu, 15 May 2014 20:31:06 GMT
-- request: 
-    method: post
-    uri: https://centos.installer/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/profiles//
-    body: 
-      encoding: US-ASCII
-      string: "{\"content_type\":\"rpm\",\"profile\":[{\"vendor\":\"FedoraHosted\",\"name\":\"elephant\",\"version\":\"0.3\",\"release\":\"0.8\",\"arch\":\"noarch\",\"epoch\":\"\"}]}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="dljDPZhYgTxeF3UEXF1JroEcbwKUMiszWBJIp8w", oauth_signature="U0HYyFa%2Bo2ORnYoOxYxMOyLM4rE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185866", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "137"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 201
-      message: Created
-    headers: 
-      Date: 
-      - Thu, 15 May 2014 20:31:06 GMT
-      Server: 
-      - Apache/2.2.15 (CentOS)
-      Location: 
-      - /pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/profiles/010E99C0-3276-11E2-81C1-0800200C9A66/rpm/
-      Content-Length: 
-      - "525"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"profile\": [{\"vendor\": \"FedoraHosted\", \"name\": \"elephant\", \"epoch\": \"\", \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"_href\": \"/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/profiles/010E99C0-3276-11E2-81C1-0800200C9A66/rpm/\", \"_ns\": \"consumer_unit_profiles\", \"profile_hash\": \"0d63d9eddb6aacc1705bdc39b3ad249885462b93474d388699eef263de0f190f\", \"consumer_id\": \"010E99C0-3276-11E2-81C1-0800200C9A66\", \"content_type\": \"rpm\", \"_id\": {\"$oid\": \"5375240a86d9a9321e2b930c\"}, \"id\": \"5375240a86d9a9321e2b930c\"}"
-    http_version: 
-  recorded_at: Thu, 15 May 2014 20:31:06 GMT
-- request: 
     method: post
     uri: https://centos.installer/pulp/api/v2/consumers/actions/content/regenerate_applicability//
     body: 
@@ -157,7 +30,7 @@ http_interactions:
       - Thu, 15 May 2014 20:31:06 GMT
       Server: 
       - Apache/2.2.15 (CentOS)
-      Content-Encoding: 
+      Content-Encoding:
       - utf-8
       Content-Length: 
       - "172"
@@ -210,8 +83,135 @@ http_interactions:
     http_version: 
   recorded_at: Thu, 15 May 2014 20:31:07 GMT
 - request: 
+    method: put
+    uri: https://katello-distributions2.example.com/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/
+    body: 
+      encoding: US-ASCII
+      string: "{\"delta\":{\"display_name\":\"Not So Simple Server\"}}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="3F3WPuygZMX1YhevRIE4ZBY3wbrVyeegrqbDGNcb4", oauth_signature="%2B8HfHWyx5ekafNaqbB%2BfKjjRVWA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439926978", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "49"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Tue, 18 Aug 2015 19:42:58 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Content-Length: 
+      - "295"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"display_name\": \"Not So Simple Server\", \"description\": null, \"_ns\": \"consumers\", \"notes\": {}, \"rsa_pub\": null, \"capabilities\": {}, \"_id\": {\"$oid\": \"55d38ac1db0c21042893e340\"}, \"id\": \"010E99C0-3276-11E2-81C1-0800200C9A66\", \"_href\": \"/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/\"}"
+    http_version: 
+  recorded_at: Tue, 18 Aug 2015 19:42:58 GMT
+- request: 
+    method: post
+    uri: https://katello-distributions2.example.com/pulp/api/v2/consumers/
+    body: 
+      encoding: US-ASCII
+      string: "{\"id\":\"010E99C0-3276-11E2-81C1-0800200C9A66\",\"display_name\":\"Simple Server\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="yExNa9xvgm89Jz9ofBCvBKN6UT9PgxnTswQKvmTzI", oauth_signature="Qk4pHYM%2BiiTHUBB95DPL9WabOPM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439926978", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "76"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Date: 
+      - Tue, 18 Aug 2015 19:42:58 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Location:
+      - /pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/
+      Content-Length: 
+      - "2296"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"consumer\": {\"display_name\": \"Simple Server\", \"description\": null, \"_ns\": \"consumers\", \"notes\": {}, \"rsa_pub\": null, \"capabilities\": {}, \"_id\": {\"$oid\": \"55d38ac2db0c21042893e34a\"}, \"id\": \"010E99C0-3276-11E2-81C1-0800200C9A66\", \"_href\": {\"_href\": \"/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/\"}}, \"certificate\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICWwIBAAKBgQCnmzz1bve/Fq4UGFdH+Wx0sId4aJ8Zf+E+YddRQKMQiXJEuVLY\\nkbwYAmtWJfTN7GIPEoYsZj99cY0H7ApsjEkjn3izmzzwEc06VyGXIbmUsbbK8yC4\\nokOoQBjUMJd3lytM6s0vG+n2E0gGEabf9+9G8h2dUP4kjmd13EHWA7HHbwIDAQAB\\nAoGAAROhN55n3wVhRuXFIcQ7ayB7Lk3Vv88vfjwYqv/0TDXl0wUxwAxnneveDqad\\nxPjgxGIFFKHvhHnHQybEBmB8U8iXKLgtkAY+PpPjYvnpyxu7RtbRPhVYi5t1dwQo\\n1ebADXSJFanBOe8jDlmWiYptfA6i39m1z0M1N3HXrmSmtbECQQDawk/0FeFiVv6K\\nHTsun7Ip/KeMeUYsqtkvskOyWa6jLb2BBF59OgadxzSZyw5onc98YWGprf+w9mKT\\n7t1uE9TpAkEAxCOnjXEenQ5cjmgqg1rvlrHi40KRHQsn1zKWzWGf2xZdzS4+K9QA\\nQ6WdY9xZLp5lwJH6147K2+8oh3zI885ilwJATYmEB1LeERoenFuiB3OJFcK8rFir\\n29cupe48enG5KZNj0N/4kdBIWhIqfbxwPfp5eW+WyyqmL1YVOLP4fjS/SQJAXnoO\\nK0Nhy6UvUCk80SjsX1owP+fAnozRFAd6PFPZ/F45sKulptbnia4ssf1ht+L0gF3Q\\nxiQx8t6wVxL0ePvg4QJAchsdeMs5/1GUwUEXHnraU7Cx1QifE1G+JkRaPOy8Y4rP\\nNVuxXm4nZMRSAMsH+WUHr0DCEgZPwC1Z2QIX6tnRGw==\\n-----END RSA PRIVATE KEY-----\\n-----BEGIN CERTIFICATE-----\\nMIIC1zCCAb8CAQ0wDQYJKoZIhvcNAQEFBQAwgY0xCzAJBgNVBAYTAlVTMRcwFQYD\\nVQQIEw5Ob3J0aCBDYXJvbGluYTEQMA4GA1UEBxMHUmFsZWlnaDEQMA4GA1UEChMH\\nS2F0ZWxsbzEUMBIGA1UECxMLU29tZU9yZ1VuaXQxKzApBgNVBAMTImthdGVsbG8t\\nZGlzdHJpYnV0aW9uczIuZXhhbXBsZS5jb20wHhcNMTUwODE4MTk0MjU4WhcNMjUw\\nODE1MTk0MjU4WjBZMS0wKwYDVQQDEyQwMTBFOTlDMC0zMjc2LTExRTItODFDMS0w\\nODAwMjAwQzlBNjYxKDAmBgoJkiaJk/IsZAEBExg1NWQzOGFjMmRiMGMyMTA0Mjg5\\nM2UzNGEwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAKebPPVu978WrhQYV0f5\\nbHSwh3honxl/4T5h11FAoxCJckS5UtiRvBgCa1Yl9M3sYg8ShixmP31xjQfsCmyM\\nSSOfeLObPPARzTpXIZchuZSxtsrzILiiQ6hAGNQwl3eXK0zqzS8b6fYTSAYRpt/3\\n70byHZ1Q/iSOZ3XcQdYDscdvAgMBAAEwDQYJKoZIhvcNAQEFBQADggEBAA6HVlcK\\n44Azzr2b4qOc/FhtJ+Wq6Lml7oqEZaxl548ea2TUYn7MXQHMIcFJjZs+Y4FmDLML\\nC00EE9eM03tFvaZt6MaWZO0cKRsfDSSykBf/kzthk6CFZLJDFZd/EJaO+JeN76h6\\nrIRt1Z2Wz2FSzZkQmAveMutcUWWivJzV+OArXUMz6xVMuNYHcGgI26Mzea7KIspx\\nDZcrx9Ea2bKJRZbj0rodNUtKf1FymVNZ3J+BqiqY+1qJAZcODOClOtAPyV4rTm3g\\nSh8Az+dw/USajjBKjTV8rtE0+dAJJwU7kGo6m1EovKE4TUu/T3saHbN1KUHfTKXQ\\nGIc9sIoQNRsk9Ew=\\n-----END CERTIFICATE-----\"}"
+    http_version: 
+  recorded_at: Tue, 18 Aug 2015 19:42:58 GMT
+- request: 
+    method: post
+    uri: https://katello-distributions2.example.com/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/profiles//
+    body: 
+      encoding: US-ASCII
+      string: "{\"content_type\":\"rpm\",\"profile\":[{\"vendor\":\"FedoraHosted\",\"name\":\"elephant\",\"version\":\"0.3\",\"release\":\"0.8\",\"arch\":\"noarch\",\"epoch\":\"\"}]}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="4vif7RBjEGZnugLP4axEwYyniT3eVCPn3945SbuY", oauth_signature="p19A3GqNdsQA5Ghnut6%2BS7zEvfQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439926978", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length:
+      - "137"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Date: 
+      - Tue, 18 Aug 2015 19:42:58 GMT
+      Server: 
+      - Apache/2.4.6 (CentOS)
+      Location:
+      - /pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/profiles/010E99C0-3276-11E2-81C1-0800200C9A66/rpm/
+      Content-Length: 
+      - "525"
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"profile\": [{\"vendor\": \"FedoraHosted\", \"name\": \"elephant\", \"epoch\": \"\", \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"_href\": \"/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/profiles/010E99C0-3276-11E2-81C1-0800200C9A66/rpm/\", \"_ns\": \"consumer_unit_profiles\", \"profile_hash\": \"0d63d9eddb6aacc1705bdc39b3ad249885462b93474d388699eef263de0f190f\", \"consumer_id\": \"010E99C0-3276-11E2-81C1-0800200C9A66\", \"content_type\": \"rpm\", \"_id\": {\"$oid\": \"55d38ac2db0c21042893e34e\"}, \"id\": \"55d38ac2db0c21042893e34e\"}"
+    http_version: 
+  recorded_at: Tue, 18 Aug 2015 19:42:58 GMT
+- request: 
     method: delete
-    uri: https://centos.installer/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/
+    uri: https://katello-distributions2.example.com/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/
     body: 
       encoding: US-ASCII
       string: ""
@@ -223,7 +223,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="uN8qokwMEmKeWl0wb0ZIf2vpu5HhGkCHG6aJO0TXJL0", oauth_signature="pOlN32X46YAX41pU7Ikfa4uUNQg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185867", oauth_version="1.0"
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="DNlXstrs2EQaIPZYvnop4T387CvTDwOxyUCcdB8jg", oauth_signature="UlO9Iwz15fYzRKA%2BoLvjT8RgE4M%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439926978", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -234,9 +234,9 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 15 May 2014 20:31:07 GMT
+      - Tue, 18 Aug 2015 19:42:58 GMT
       Server: 
-      - Apache/2.2.15 (CentOS)
+      - Apache/2.4.6 (CentOS)
       Content-Length: 
       - "4"
       Connection: 
@@ -247,5 +247,5 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Thu, 15 May 2014 20:31:07 GMT
-recorded_with: VCR 2.9.0
+  recorded_at: Tue, 18 Aug 2015 19:42:58 GMT
+recorded_with: VCR 2.9.3
