@@ -469,7 +469,7 @@ module Katello
       }
 
       dependencies.each do |key, name|
-        if (models = self.association(key).scoped.in_environment(env)).any?
+        if (models = self.association(key).scope.in_environment(env)).any?
           errors << _("Cannot remove '%{view}' from environment '%{env}' due to associated %{dependent}: %{names}.") %
             {view: self.name, env: env.name, dependent: name, names: models.map(&:name).join(", ")}
         end
@@ -488,7 +488,7 @@ module Katello
       }
 
       dependencies.each do |key, name|
-        if (models = self.association(key).scoped).any?
+        if (models = self.association(key).scope).any?
           errors << _("Cannot delete '%{view}' due to associated %{dependent}: %{names}.") %
             {view: self.name, dependent: name, names: models.map(&:name).join(", ")}
         end
