@@ -24,7 +24,7 @@ module Actions
 
       def as_cp_user(&block)
         fail 'missing :remote_user' unless cp_user
-        User.cp_config('cp-user' => cp_user, &block)
+        ::User.cp_config('cp-user' => cp_user, &block)
       end
 
       def as_pulp_user(&block)

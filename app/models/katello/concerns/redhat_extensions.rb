@@ -7,13 +7,12 @@ module Katello
       included do
         alias_method_chain :medium_uri, :content_uri
         alias_method_chain :boot_files_uri, :content
-        after_create :assign_templates!
       end
 
       module ClassMethods
-        def find_or_create_operating_system(distribution)
-          os_name = construct_name(distribution.family)
-          major, minor = distribution.version.split('.')
+        def find_or_create_operating_system(repo)
+          os_name = construct_name(repo.distribution_family)
+          major, minor = repo.distribution_version.split('.')
           minor ||= '' # treat minor versions as empty string to not confuse with nil
 
           create_os = lambda { ::Redhat.where(:name => os_name, :major => major, :minor => minor).first_or_create! }
@@ -45,22 +44,6 @@ module Katello
         end
       end
 
-      def assign_templates!
-        # Automatically assign default templates
-        TemplateKind.all.each do |kind|
-          if (template = ProvisioningTemplate.find_by(:name => Setting["katello_default_#{kind.name}"]))
-            provisioning_templates << template unless provisioning_templates.include?(template)
-            if OsDefaultTemplate.where(:template_kind_id => kind.id, :operatingsystem_id => id).empty?
-              OsDefaultTemplate.create(:template_kind_id => kind.id, :provisioning_template_id => template.id, :operatingsystem_id => id)
-            end
-          end
-        end
-
-        if (ptable = Ptable.find_by(:name => Setting["katello_default_ptable"]))
-          ptables << ptable unless ptables.include?(ptable)
-        end
-      end
-
       def medium_uri_with_content_uri(host, url = nil)
         if host.try(:content_source) && (repo_details = kickstart_repo(host))
           URI.parse(repo_details[:path])
@@ -81,20 +64,10 @@ module Katello
         lifecycle_environment = host.lifecycle_environment
 
         if content_view && lifecycle_environment
-          version = content_view.version(lifecycle_environment)
-          repo_ids = version.repositories.in_environment(lifecycle_environment).pluck(:pulp_id)
-
-          #TODO: handle multiple variants
-          filters = [{:terms => {:repoids => repo_ids}},
-                     {:term => {:version => host.os.release}},
-                     {:term => {:arch => host.architecture.name}}]
-          distributions = Katello::Distribution.search do
-            filter :and, filters
-          end
-          distributions = distributions.select { |dist| Katello::Distribution.new(dist.as_json).bootable? }
-          distribution_repo_ids = distributions.map(&:repoids).flatten
-
-          ::Katello::Repository.where(:pulp_id => (repo_ids & distribution_repo_ids))
+          Katello::Repository.where(:distribution_version => host.os.release,
+                                    :distribution_arch => host.architecture.name,
+                                    :distribution_bootable => true
+                                    )
         else
           []
         end

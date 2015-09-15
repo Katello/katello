@@ -38,8 +38,12 @@ angular.module('Bastion.products').controller('ProductFormController',
         function error(response) {
             $scope.working = false;
             angular.forEach(response.data.errors, function (errors, field) {
-                $scope.productForm[field].$setValidity('server', false);
-                $scope.productForm[field].$error.messages = errors;
+                if ( $scope.productForm[field]) {
+                    $scope.productForm[field].$setValidity('server', false);
+                    $scope.productForm[field].$error.messages = errors;
+                } else {
+                    $scope.$parent.errorMessages = [errors];
+                }
             });
         }
 
@@ -53,6 +57,7 @@ angular.module('Bastion.products').controller('ProductFormController',
         });
 
         $scope.save = function (product) {
+            $scope.$parent.errorMessages = [];
             product.$save(success, error);
         };
 

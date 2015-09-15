@@ -11,6 +11,7 @@ module Katello
       @beta = create(:katello_environment, :organization => @cvv.organization, :prior => @dev,                         :name => 'beta')
       @composite_version = ContentViewVersion.find(katello_content_view_versions(:composite_view_version_1))
       @cvv_with_repo = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
+      @cvv_with_package_groups = ContentViewVersion.find(katello_content_view_versions(:dev_default_version))
     end
 
     def test_promotable_in_sequence
@@ -23,12 +24,12 @@ module Katello
       refute @cvv.promotable?(@beta)
     end
 
-    def test_promotoable_without_environments
+    def test_promotable_without_environments
       @cvv.expects(:environments).returns([]).at_least_once
       assert @cvv.promotable?(@cvv.organization.library)
     end
 
-    def test_promotoable_without_environments2
+    def test_promotable_without_environments2
       @cvv.expects(:environments).returns([]).at_least_once
       refute @cvv.promotable?(@dev)
     end
@@ -75,6 +76,10 @@ module Katello
       assert_empty @cvv.active_history
     end
 
+    def test_find_package_groups
+      assert @cvv_with_package_groups.package_groups.count > 0
+    end
+
     def test_search_equal_version
       assert_includes ContentViewVersion.search_for("version = 1.0"), @cvv
       query = ContentViewVersion.search_for("version = 1")
@@ -104,31 +109,54 @@ module Katello
     def test_search_repository
       assert_includes ContentViewVersion.search_for("repository = busybox"), @cvv_with_repo
     end
-  end
 
-  def test_components
-    @composite_version.components = [@cvv]
-    @composite_version.save!
+    def test_components
+      @composite_version.components = [@cvv]
+      @composite_version.save!
 
-    assert_equal [@cvv], @composite_version.reload.components
-  end
-
-  def test_component_default
-    default_view = content_view_versions(:library_default_version)
-    assert_raises do
-      @composite_version.components = [default_view]
+      assert_equal [@cvv], @composite_version.reload.components
     end
-  end
 
-  def test_component_non_composite
-    assert_raises do
-      @cvv.components = [@composite_version]
+    def test_component_default
+      default_view = katello_content_view_versions(:library_default_version)
+      assert_raises ActiveRecord::RecordInvalid do
+        @composite_version.components = [default_view]
+      end
     end
-  end
 
-  def test_components_needing_errata
-    errata = Erratum.find(katello_errata(:security))
-    component = @composite_version.components.first
-    assert_include @composite_version.components_needing_errata([errata]), component
+    def test_component_non_composite
+      assert_raises ActiveRecord::RecordInvalid do
+        @cvv.components = [@composite_version]
+      end
+    end
+
+    def test_components_needing_errata
+      errata = Erratum.find(katello_errata(:security))
+      component = @composite_version.components.first
+      assert_include @composite_version.components_needing_errata([errata]), component
+    end
+
+    def test_validate_destroyable!
+      @cvv.composite_content_views = [@composite_version.content_view]
+      @cvv.save!
+
+      # checked on destroy
+      assert_raises RuntimeError do
+        @cvv.destroy
+      end
+
+      # checked when called direct
+      assert_raises RuntimeError do
+        @cvv.validate_destroyable!
+      end
+
+      @cvv.composite_content_views = []
+      @cvv.save!
+
+      # no failure when version not in composite
+      assert_nothing_raised do
+        @cvv.validate_destroyable!
+      end
+    end
   end
 end

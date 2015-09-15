@@ -43,13 +43,17 @@ module Katello
     end
 
     def self.find_by_cp_id(cp_id, organization = nil)
-      query = self.where(:cp_id => cp_id).scoped(:readonly => false)
+      query = self.where(:cp_id => cp_id).readonly(false)
       query = query.in_org(organization) if organization
       query.engineering.first || query.marketing.first
     end
 
     def self.in_org(organization)
       where(:organization_id => organization.id)
+    end
+
+    def self.in_orgs(organizations)
+      where(:organization_id => organizations)
     end
 
     scope :engineering, -> { where(:type => "Katello::Product") }

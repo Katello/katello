@@ -2,7 +2,6 @@ module Katello
   class Api::V2::ErrataController < Api::V2::ApiController
     apipie_concern_subst(:a_resource => N_("an erratum"), :resource => "errata")
     include Katello::Concerns::Api::V2::RepositoryContentController
-    include Katello::Concerns::Api::V2::RepositoryDbContentController
 
     api :GET, "/errata", N_("List errata")
     param :content_view_version_id, :identifier, :desc => N_("content view version identifier")

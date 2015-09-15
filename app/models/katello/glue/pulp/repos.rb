@@ -95,13 +95,6 @@ module Katello
         categories.flatten(1)
       end
 
-      def package?(id)
-        self.repos(env).each do |repo|
-          return true if repo.package?(id)
-        end
-        false
-      end
-
       def find_packages_by_name(env, name)
         packages = self.repos(env).collect do |repo|
           repo.find_packages_by_name(name).collect do |p|
@@ -138,18 +131,6 @@ module Katello
         distribution.flatten(1)
       end
 
-      def find_latest_packages_by_name(env, name)
-        packs = self.repos(env).collect do |repo|
-          repo.find_latest_packages_by_name(name).collect do |pack|
-            pack[:repo_id] = repo.id
-            pack
-          end
-        end
-        packs.flatten!(1)
-
-        Util::Package.find_latest_packages packs
-      end
-
       def promoted_to?(target_env)
         target_env.products.include? self
       end
@@ -163,22 +144,51 @@ module Katello
       end
 
       def synced?
-        self.repos(library).any? { |r| r.synced? }
+        !last_repo_sync_task.nil?
       end
 
       # Get the most relevant status for all the repos in this Product
       def sync_status
         all_repos = repos(self.library, nil, false)
+        task = last_repo_sync_task
+        last_synced_repo = task ? all_repos.find { |repo| task.locks.where(:resource_type => ::Katello::Repository.name).pluck(:resource_id).map(&:to_s).include?(repo.id.to_s) } : nil
+        ::Katello::SyncStatusPresenter.new(last_synced_repo, task).sync_progress
+      end
 
-        last_sync_task = ForemanTasks::Task::DynflowTask
-          .select('*')
+      def sync_summary
+        summary = {}
+        last_repo_sync_task_group.each do |task|
+          summary[task.result] ||= 0
+          summary[task.result] += 1
+        end
+        summary
+      end
+
+      def last_sync
+        task = last_repo_sync_task
+        task.nil? ? nil : task.started_at.to_s
+      end
+
+      def last_repo_sync_task
+        @last_sync_task ||= last_repo_sync_tasks.first
+      end
+
+      def last_repo_sync_tasks
+        all_repos = repos(self.library, nil, false)
+        ForemanTasks::Task::DynflowTask
+          .select("#{ForemanTasks::Task::DynflowTask.table_name}.*")
           .for_action(::Actions::Katello::Repository::Sync)
           .joins(:locks).where("foreman_tasks_locks.resource_id in (?) and foreman_tasks_locks.resource_type = ?", all_repos, ::Katello::Repository.name)
-          .order(:started_at).last
+          .order("started_at desc")
+      end
 
-        last_synced_repo = last_sync_task ? all_repos.find { |repo| repo.id.to_s == last_sync_task.resource_id.to_s } : nil
-
-        ::Katello::SyncStatusPresenter.new(last_synced_repo, last_sync_task).sync_progress
+      def last_repo_sync_task_group
+        if last_repo_sync_task
+          started_after = last_repo_sync_task.started_at - 30.seconds
+          last_repo_sync_tasks.where("#{ForemanTasks::Task::DynflowTask.table_name}.started_at > '%s'", started_after).uniq
+        else
+          []
+        end
       end
 
       def sync_state
@@ -208,35 +218,6 @@ module Katello
       def sync_size
         self.repos(library).inject(0) do |sum, v|
           sum + v.sync_status.progress.total_size
-        end
-      end
-
-      def sync_summary
-        summary = {}
-        latest_repo_sync_tasks.each do |task|
-          summary[task.result] ||= 0
-          summary[task.result] += 1
-        end
-        summary
-      end
-
-      def last_sync
-        task = last_repo_sync_task
-        task.nil? ? nil : task.started_at.to_s
-      end
-
-      def latest_repo_sync_tasks
-        repos(library).map { |repo| repo.latest_dynflow_sync }.compact
-      end
-
-      def last_repo_sync_task
-        latest_repo_sync_tasks.sort_by(&:started_at).last
-      end
-
-      def cancel_sync
-        Rails.logger.info "Canceling synchronization of product #{self.label}"
-        repos(library).each do |r|
-          r.cancel_sync
         end
       end
 

@@ -4,12 +4,11 @@ Foreman::Plugin.find(:katello).security_block :content_hosts do
   permission :view_content_hosts,
              {
                'katello/content_hosts'        => [:auto_complete_search],
-               'katello/api/v2/systems' => [:index, :show, :errata, :package_profile,
+               'katello/api/v2/systems' => [:index, :show, :errata, :package_profile, :product_content,
                                             :report, :pools, :releases, :available_host_collections, :events],
-               'katello/api/v2/system_errata' => [:show],
+               'katello/api/v2/system_errata' => [:index, :show],
                'katello/api/v2/systems_bulk_actions' => [:applicable_errata],
-               'katello/api/v2/host_collections' => [:systems],
-               'katello/dashboard' => [:errata]
+               'katello/api/v2/host_collections' => [:systems]
              },
              :resource_type => 'Katello::System'
   permission :create_content_hosts,
@@ -20,7 +19,7 @@ Foreman::Plugin.find(:katello).security_block :content_hosts do
              :resource_type => 'Katello::System'
   permission :edit_content_hosts,
              {
-               'katello/api/v2/systems' => [:update, :refresh_subscriptions],
+               'katello/api/v2/systems' => [:update, :refresh_subscriptions, :content_override],
                'katello/api/v2/system_packages' => [:install, :upgrade, :upgrade_all, :remove],
                'katello/api/v2/system_errata' => [:apply],
                'katello/api/v2/systems_bulk_actions' => [:install_content, :update_content,

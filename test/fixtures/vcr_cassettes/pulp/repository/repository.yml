@@ -1,628 +1,2084 @@
---- 
-http_interactions: 
-- request: 
-    method: post
-    uri: https://localhost/pulp/api/v2/repositories/
-    body: 
-      encoding: US-ASCII
-      string: "{\"id\":\"1\",\"display_name\":\"Fedora 17 x86_64\",\"importer_type_id\":\"yum_importer\",\"importer_config\":{\"feed\":\"file:///var/www/test_repos/zoo\",\"ssl_ca_cert\":null,\"ssl_client_cert\":null,\"ssl_client_key\":null},\"notes\":{\"_repo-type\":\"rpm-repo\"},\"distributors\":[{\"distributor_type_id\":\"yum_distributor\",\"distributor_config\":{\"relative_url\":\"/test_path/\",\"http\":false,\"https\":true,\"protected\":true},\"auto_publish\":true,\"distributor_id\":\"1\"},{\"distributor_type_id\":\"yum_clone_distributor\",\"distributor_config\":{\"destination_distributor_id\":\"1\"},\"auto_publish\":false,\"distributor_id\":\"1_clone\"},{\"distributor_type_id\":\"nodes_http_distributor\",\"distributor_config\":{},\"auto_publish\":true,\"distributor_id\":\"1_nodes\"}]}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="bzZLt8RlBuZVH3cLLi8L4YMMmSNXo0JthvsI0itug", oauth_signature="WJ%2FUrl5%2B2AE6mFafcZibWUDcq7I%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687812", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "703"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 201
-      message: Created
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:16:52 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Location: 
-      - "1"
-      Vary: 
-      - Accept-Encoding
-      Content-Length: 
-      - "252"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: "{\"scratchpad\": {}, \"display_name\": \"Fedora 17 x86_64\", \"description\": null, \"_ns\": \"repos\", \"notes\": {\"_repo-type\": \"rpm-repo\"}, \"content_unit_counts\": {}, \"_id\": {\"$oid\": \"5433e7c45ca0134a6f27948b\"}, \"id\": \"1\", \"_href\": \"/pulp/api/v2/repositories/1/\"}"
-    http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:16:52 GMT
-- request: 
-    method: delete
-    uri: https://localhost/pulp/api/v2/content/orphans/
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="1Za79tNFNIJgWo9UqEUESmtYUQ5pEPgC1WBcpCpdBo", oauth_signature="oF1BjQFuFyb2Y5UylPWh4F2VgLI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687812", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 202
-      message: Accepted
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:16:52 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Content-Encoding: 
-      - utf-8
-      Content-Length: 
-      - "172"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/2458704d-35e1-42f5-a3fa-e8df65ea2a93/\", \"task_id\": \"2458704d-35e1-42f5-a3fa-e8df65ea2a93\"}], \"result\": null, \"error\": null}"
-    http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:16:52 GMT
-- request: 
+---
+http_interactions:
+- request:
     method: get
-    uri: https://localhost/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
-    body: 
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/1fb9f259-280a-490a-82f0-226c4da07015/
+    body:
       encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
+      base64_string: ""
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Type: 
+      Content-Type:
       - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="Ce5hUw3uX6IGFI1inoCxHwpoG2Q8N7ugphcxagkM", oauth_signature="AI2Qt%2Bon1QXqVM9uMIYnGayPaWE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687812", oauth_version="1.0"
-      Pulp-User: 
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="jvErfxoQFtmaPLd4ZFBW25QZ1fIgO8QHGuoNJOseQ", oauth_signature="bHMa4TeYZGmOvibak2hQZ5b9F0A%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440007684", oauth_version="1.0"
+      Pulp-User:
       - admin
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:16:53 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Length: 
-      - "2"
-      Connection: 
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:08:04 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "525"
+      Connection:
       - close
-      Content-Type: 
+      Content-Type:
       - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: "[]"
-    http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:16:53 GMT
-- request: 
-    method: post
-    uri: https://localhost/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
-    body: 
+    body:
       encoding: US-ASCII
-      string: "{\"schedule\":\"2013-08-01T00:00:00-04:00/P1D\"}"
-    headers: 
-      Accept: 
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xZmI5ZjI1OS0yODBhLTQ5MGEtODJmMC0yMjZjNGRhMDcw
+        MTUvIiwgInRhc2tfaWQiOiAiMWZiOWYyNTktMjgwYS00OTBhLTgyZjAtMjI2
+        YzRkYTA3MDE1IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJOb25lLmRxIiwgInN0YXRlIjogIndhaXRpbmciLCAid29ya2VyX25h
+        bWUiOiBudWxsLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1NWQ0YzYwNDg2MjdlZWU0ODdjOTM0MWEifSwgImlk
+        IjogIjU1ZDRjNjA0ZGIwYzIxMDQyODkzZTYzYiJ9
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:08:04 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/1fb9f259-280a-490a-82f0-226c4da07015/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Type: 
+      Content-Type:
       - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="8SmeFXKoyGHSTDtnPbP5UHlXmAlVXv5s0IjxkNGoU", oauth_signature="VgDOawne5zIBq2mL2qjxtQ07NUE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687813", oauth_version="1.0"
-      Pulp-User: 
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="uDgripMJUgb4CB7M65IEewvF547oJHQQRF5Map2bA", oauth_signature="uyH3G%2BDVVJx5GKqhC32queZdT0M%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440007684", oauth_version="1.0"
+      Pulp-User:
       - admin
-      Content-Length: 
-      - "44"
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:08:04 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "641"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xZmI5ZjI1OS0yODBhLTQ5MGEtODJmMC0yMjZjNGRhMDcw
+        MTUvIiwgInRhc2tfaWQiOiAiMWZiOWYyNTktMjgwYS00OTBhLTgyZjAtMjI2
+        YzRkYTA3MDE1IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMUBrYXRlbGxvLWRpc3Ry
+        aWJ1dGlvbnMyLmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogIndhaXRpbmci
+        LCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFA
+        a2F0ZWxsby1kaXN0cmlidXRpb25zMi5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU1ZDRj
+        NjA0ODYyN2VlZTQ4N2M5MzQxYSJ9LCAiaWQiOiAiNTVkNGM2MDRkYjBjMjE2
+        NGIzZDU5NWQ0In0=
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:08:04 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/1fb9f259-280a-490a-82f0-226c4da07015/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="xeVswSaQ8RY7EXwaqYthrcCI671MNbUj7HSu5bwFRA", oauth_signature="4UnE3anLy7hJSB3xTTZ6nmpxtgU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440007685", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:08:05 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "2309"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8xZmI5ZjI1OS0yODBhLTQ5MGEtODJmMC0yMjZjNGRhMDcw
+        MTUvIiwgInRhc2tfaWQiOiAiMWZiOWYyNTktMjgwYS00OTBhLTgyZjAtMjI2
+        YzRkYTA3MDE1IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiAiMjAx
+        NS0wOC0xOVQxODowODowNFoiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0
+        YXJ0X3RpbWUiOiAiMjAxNS0wOC0xOVQxODowODowNFoiLCAidHJhY2ViYWNr
+        IjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbeyJfaHJlZiI6ICIvcHVscC9h
+        cGkvdjIvdGFza3MvZDIxZDRiOTUtNmJjNi00ZGM3LTkzMTQtYzMzODFkMmY5
+        ODk0LyIsICJ0YXNrX2lkIjogImQyMWQ0Yjk1LTZiYzYtNGRjNy05MzE0LWMz
+        MzgxZDJmOTg5NCJ9LCB7Il9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy85
+        MzJjYTQ1MS04Y2JjLTQ1ZDItOTBjNC0wMDlkYjM2ZTYwNjgvIiwgInRhc2tf
+        aWQiOiAiOTMyY2E0NTEtOGNiYy00NWQyLTkwYzQtMDA5ZGIzNmU2MDY4In1d
+        LCAicHJvZ3Jlc3NfcmVwb3J0IjogeyJ5dW1faW1wb3J0ZXIiOiB7ImNvbnRl
+        bnQiOiB7InNpemVfdG90YWwiOiAwLCAiaXRlbXNfbGVmdCI6IDAsICJpdGVt
+        c190b3RhbCI6IDAsICJzdGF0ZSI6ICJGSU5JU0hFRCIsICJzaXplX2xlZnQi
+        OiAwLCAiZGV0YWlscyI6IHsicnBtX3RvdGFsIjogMCwgInJwbV9kb25lIjog
+        MCwgImRycG1fdG90YWwiOiAwLCAiZHJwbV9kb25lIjogMH0sICJlcnJvcl9k
+        ZXRhaWxzIjogW119LCAiY29tcHMiOiB7InN0YXRlIjogIkZJTklTSEVEIn0s
+        ICJkaXN0cmlidXRpb24iOiB7Iml0ZW1zX3RvdGFsIjogMywgInN0YXRlIjog
+        IkZJTklTSEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgIml0ZW1zX2xlZnQi
+        OiAwfSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgIm1ldGFk
+        YXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fX0sICJxdWV1ZSI6ICJyZXNl
+        cnZlZF9yZXNvdXJjZV93b3JrZXItMUBrYXRlbGxvLWRpc3RyaWJ1dGlvbnMy
+        LmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogImZpbmlzaGVkIiwgIndvcmtl
+        cl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0xQGthdGVsbG8t
+        ZGlzdHJpYnV0aW9uczIuZXhhbXBsZS5jb20iLCAicmVzdWx0IjogeyJpbXBv
+        cnRlcl90eXBlX2lkIjogInl1bV9pbXBvcnRlciIsICJpbXBvcnRlcl9pZCI6
+        ICJ5dW1faW1wb3J0ZXIiLCAiZXhjZXB0aW9uIjogbnVsbCwgInJlcG9faWQi
+        OiAiRmVkb3JhXzE3IiwgInJlbW92ZWRfY291bnQiOiAwLCAic3RhcnRlZCI6
+        ICIyMDE1LTA4LTE5VDE4OjA4OjA0WiIsICJfbnMiOiAicmVwb19zeW5jX3Jl
+        c3VsdHMiLCAiY29tcGxldGVkIjogIjIwMTUtMDgtMTlUMTg6MDg6MDRaIiwg
+        InRyYWNlYmFjayI6IG51bGwsICJzdW1tYXJ5IjogeyJjb250ZW50IjogeyJz
+        dGF0ZSI6ICJGSU5JU0hFRCJ9LCAiY29tcHMiOiB7InN0YXRlIjogIkZJTklT
+        SEVEIn0sICJkaXN0cmlidXRpb24iOiB7InN0YXRlIjogIkZJTklTSEVEIn0s
+        ICJlcnJhdGEiOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJtZXRhZGF0YSI6
+        IHsic3RhdGUiOiAiRklOSVNIRUQifX0sICJhZGRlZF9jb3VudCI6IDQsICJl
+        cnJvcl9tZXNzYWdlIjogbnVsbCwgInVwZGF0ZWRfY291bnQiOiAxMSwgImRl
+        dGFpbHMiOiB7ImNvbnRlbnQiOiB7InNpemVfdG90YWwiOiAwLCAiaXRlbXNf
+        bGVmdCI6IDAsICJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6ICJGSU5JU0hF
+        RCIsICJzaXplX2xlZnQiOiAwLCAiZGV0YWlscyI6IHsicnBtX3RvdGFsIjog
+        MCwgInJwbV9kb25lIjogMCwgImRycG1fdG90YWwiOiAwLCAiZHJwbV9kb25l
+        IjogMH0sICJlcnJvcl9kZXRhaWxzIjogW119LCAiY29tcHMiOiB7InN0YXRl
+        IjogIkZJTklTSEVEIn0sICJkaXN0cmlidXRpb24iOiB7Iml0ZW1zX3RvdGFs
+        IjogMywgInN0YXRlIjogIkZJTklTSEVEIiwgImVycm9yX2RldGFpbHMiOiBb
+        XSwgIml0ZW1zX2xlZnQiOiAwfSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklO
+        SVNIRUQifSwgIm1ldGFkYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fSwg
+        ImlkIjogIjU1ZDRjNjA0ZGIwYzIxNjUzNTc3N2I3MCIsICJyZXN1bHQiOiAi
+        c3VjY2VzcyJ9LCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU1
+        ZDRjNjA0ODYyN2VlZTQ4N2M5MzQxYSJ9LCAiaWQiOiAiNTVkNGM2MDRkYjBj
+        MjE2NGIzZDU5NWQ0In0=
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:08:05 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/d849e77c-4653-489e-98d5-a1aa9563f047/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="gPmjzx1IHkKxGyNtsDFGpfAIjXxVT9g27XpB3vIw", oauth_signature="5rj3kDMIP6Oat4rIF9rLPYCTS8U%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440007686", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:08:06 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "527"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9kODQ5ZTc3Yy00NjUzLTQ4OWUtOThkNS1hMWFhOTU2M2Yw
+        NDcvIiwgInRhc2tfaWQiOiAiZDg0OWU3N2MtNDY1My00ODllLTk4ZDUtYTFh
+        YTk1NjNmMDQ3IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
+        bmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjU1ZDRjNjA2ODYyN2VlZTQ4N2M5MzQyNiJ9LCAi
+        aWQiOiAiNTVkNGM2MDZkYjBjMjEwNDI4OTNlNjQ3In0=
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:08:06 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/d849e77c-4653-489e-98d5-a1aa9563f047/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="QEyhwfMHfRPLaPs9nb8h9qmPzAzNGGh66SGCoatyXI", oauth_signature="rqFKgodgVg%2FzIpSIP6SztyOQvWQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440007686", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:08:06 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "702"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9kODQ5ZTc3Yy00NjUzLTQ4OWUtOThkNS1hMWFhOTU2M2Yw
+        NDcvIiwgInRhc2tfaWQiOiAiZDg0OWU3N2MtNDY1My00ODllLTk4ZDUtYTFh
+        YTk1NjNmMDQ3IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
+        MDE1LTA4LTE5VDE4OjA4OjA2WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE1LTA4LTE5VDE4OjA4OjA2WiIsICJ0cmFjZWJh
+        Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
+        b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
+        MUBrYXRlbGxvLWRpc3RyaWJ1dGlvbnMyLmV4YW1wbGUuY29tLmRxIiwgInN0
+        YXRlIjogImZpbmlzaGVkIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jl
+        c291cmNlX3dvcmtlci0xQGthdGVsbG8tZGlzdHJpYnV0aW9uczIuZXhhbXBs
+        ZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6
+        IHsiJG9pZCI6ICI1NWQ0YzYwNjg2MjdlZWU0ODdjOTM0MjYifSwgImlkIjog
+        IjU1ZDRjNjA2ZGIwYzIxNjRiM2Q1OTVlMyJ9
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:08:06 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/d3a1b413-edd8-4334-9927-a1cd08ab6902/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="02OABM9ATJLivmv4qiZmG6T0mG6IbSZn0cayyDdLko", oauth_signature="1l1s4lWAQOIaB%2FWzygCmrIKuIWI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440008254", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:17:34 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "525"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9kM2ExYjQxMy1lZGQ4LTQzMzQtOTkyNy1hMWNkMDhhYjY5
+        MDIvIiwgInRhc2tfaWQiOiAiZDNhMWI0MTMtZWRkOC00MzM0LTk5MjctYTFj
+        ZDA4YWI2OTAyIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJOb25lLmRxIiwgInN0YXRlIjogIndhaXRpbmciLCAid29ya2VyX25h
+        bWUiOiBudWxsLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1NWQ0YzgzZTg2MjdlZWU0ODdjOTM0NjMifSwgImlk
+        IjogIjU1ZDRjODNlZGIwYzIxMDQyODkzZTZkYyJ9
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:17:34 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/d3a1b413-edd8-4334-9927-a1cd08ab6902/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="t1uEi2P1doELPR4rIgAMIRQTVjzh8DetXztj9BFpQ", oauth_signature="4UH3uE8mLg7T5P%2FxD9Kd9OBStL4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440008254", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:17:35 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "525"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9kM2ExYjQxMy1lZGQ4LTQzMzQtOTkyNy1hMWNkMDhhYjY5
+        MDIvIiwgInRhc2tfaWQiOiAiZDNhMWI0MTMtZWRkOC00MzM0LTk5MjctYTFj
+        ZDA4YWI2OTAyIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJOb25lLmRxIiwgInN0YXRlIjogIndhaXRpbmciLCAid29ya2VyX25h
+        bWUiOiBudWxsLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1NWQ0YzgzZTg2MjdlZWU0ODdjOTM0NjMifSwgImlk
+        IjogIjU1ZDRjODNlZGIwYzIxMDQyODkzZTZkYyJ9
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:17:35 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/d3a1b413-edd8-4334-9927-a1cd08ab6902/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="stXYVVCx5GPFmOAm64vARoIRodkwMKc7glLdibs0", oauth_signature="RtxACcIDeFotg3ej%2FZkyZyhC3gg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440008256", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:17:36 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "641"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9kM2ExYjQxMy1lZGQ4LTQzMzQtOTkyNy1hMWNkMDhhYjY5
+        MDIvIiwgInRhc2tfaWQiOiAiZDNhMWI0MTMtZWRkOC00MzM0LTk5MjctYTFj
+        ZDA4YWI2OTAyIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMUBrYXRlbGxvLWRpc3Ry
+        aWJ1dGlvbnMyLmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogIndhaXRpbmci
+        LCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFA
+        a2F0ZWxsby1kaXN0cmlidXRpb25zMi5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU1ZDRj
+        ODNlODYyN2VlZTQ4N2M5MzQ2MyJ9LCAiaWQiOiAiNTVkNGM4M2ZkYjBjMjE2
+        NGIzZDU5NjQwIn0=
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:17:36 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/d3a1b413-edd8-4334-9927-a1cd08ab6902/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="IkwDgQHFwXfvUSTwbBEclHI8fQt1Wvq0QaPcCEs", oauth_signature="Jyp4Ev2EsFv%2FJ9EsZbmNg%2FdKLFE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440008257", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:17:37 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "1107"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9kM2ExYjQxMy1lZGQ4LTQzMzQtOTkyNy1hMWNkMDhhYjY5
+        MDIvIiwgInRhc2tfaWQiOiAiZDNhMWI0MTMtZWRkOC00MzM0LTk5MjctYTFj
+        ZDA4YWI2OTAyIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxNS0w
+        OC0xOVQxODoxNzozN1oiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRf
+        dGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9ydGVy
+        IjogeyJjb250ZW50IjogeyJzaXplX3RvdGFsIjogMCwgIml0ZW1zX2xlZnQi
+        OiAwLCAiaXRlbXNfdG90YWwiOiAwLCAic3RhdGUiOiAiTk9UX1NUQVJURUQi
+        LCAic2l6ZV9sZWZ0IjogMCwgImRldGFpbHMiOiB7InJwbV90b3RhbCI6IDAs
+        ICJycG1fZG9uZSI6IDAsICJkcnBtX3RvdGFsIjogMCwgImRycG1fZG9uZSI6
+        IDB9LCAiZXJyb3JfZGV0YWlscyI6IFtdfSwgImNvbXBzIjogeyJzdGF0ZSI6
+        ICJOT1RfU1RBUlRFRCJ9LCAiZGlzdHJpYnV0aW9uIjogeyJpdGVtc190b3Rh
+        bCI6IDAsICJzdGF0ZSI6ICJOT1RfU1RBUlRFRCIsICJlcnJvcl9kZXRhaWxz
+        IjogW10sICJpdGVtc19sZWZ0IjogMH0sICJlcnJhdGEiOiB7InN0YXRlIjog
+        Ik5PVF9TVEFSVEVEIn0sICJtZXRhZGF0YSI6IHsic3RhdGUiOiAiSU5fUFJP
+        R1JFU1MifX19LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2Vy
+        LTFAa2F0ZWxsby1kaXN0cmlidXRpb25zMi5leGFtcGxlLmNvbS5kcSIsICJz
+        dGF0ZSI6ICJydW5uaW5nIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jl
+        c291cmNlX3dvcmtlci0xQGthdGVsbG8tZGlzdHJpYnV0aW9uczIuZXhhbXBs
+        ZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6
+        IHsiJG9pZCI6ICI1NWQ0YzgzZTg2MjdlZWU0ODdjOTM0NjMifSwgImlkIjog
+        IjU1ZDRjODNmZGIwYzIxNjRiM2Q1OTY0MCJ9
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:17:37 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/d3a1b413-edd8-4334-9927-a1cd08ab6902/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="jeCkvciBpzWL5VOFCbT0T4nibZa4a2FWMFfNdjKbXI", oauth_signature="4%2BlHLrwUrPnKc12UntOOVwDamC4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440008258", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:17:38 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "2317"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9kM2ExYjQxMy1lZGQ4LTQzMzQtOTkyNy1hMWNkMDhhYjY5
+        MDIvIiwgInRhc2tfaWQiOiAiZDNhMWI0MTMtZWRkOC00MzM0LTk5MjctYTFj
+        ZDA4YWI2OTAyIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiAiMjAx
+        NS0wOC0xOVQxODoxNzozN1oiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0
+        YXJ0X3RpbWUiOiAiMjAxNS0wOC0xOVQxODoxNzozN1oiLCAidHJhY2ViYWNr
+        IjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbeyJfaHJlZiI6ICIvcHVscC9h
+        cGkvdjIvdGFza3MvMDM0MWY5MzctOGEwOS00YTEyLWEyMzItMzYyNTc0MmMw
+        MmU5LyIsICJ0YXNrX2lkIjogIjAzNDFmOTM3LThhMDktNGExMi1hMjMyLTM2
+        MjU3NDJjMDJlOSJ9LCB7Il9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy9k
+        MmExNTg1OS00NjU2LTRhYzQtYmQ0NC02ZTZhZmZjOTMwN2QvIiwgInRhc2tf
+        aWQiOiAiZDJhMTU4NTktNDY1Ni00YWM0LWJkNDQtNmU2YWZmYzkzMDdkIn1d
+        LCAicHJvZ3Jlc3NfcmVwb3J0IjogeyJ5dW1faW1wb3J0ZXIiOiB7ImNvbnRl
+        bnQiOiB7InNpemVfdG90YWwiOiAxNzg3MiwgIml0ZW1zX2xlZnQiOiAwLCAi
+        aXRlbXNfdG90YWwiOiA4LCAic3RhdGUiOiAiRklOSVNIRUQiLCAic2l6ZV9s
+        ZWZ0IjogMCwgImRldGFpbHMiOiB7InJwbV90b3RhbCI6IDgsICJycG1fZG9u
+        ZSI6IDgsICJkcnBtX3RvdGFsIjogMCwgImRycG1fZG9uZSI6IDB9LCAiZXJy
+        b3JfZGV0YWlscyI6IFtdfSwgImNvbXBzIjogeyJzdGF0ZSI6ICJGSU5JU0hF
+        RCJ9LCAiZGlzdHJpYnV0aW9uIjogeyJpdGVtc190b3RhbCI6IDMsICJzdGF0
+        ZSI6ICJGSU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJpdGVtc19s
+        ZWZ0IjogMH0sICJlcnJhdGEiOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJt
+        ZXRhZGF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifX19LCAicXVldWUiOiAi
+        cmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFAa2F0ZWxsby1kaXN0cmlidXRp
+        b25zMi5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJmaW5pc2hlZCIsICJ3
+        b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMUBrYXRl
+        bGxvLWRpc3RyaWJ1dGlvbnMyLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IHsi
+        aW1wb3J0ZXJfdHlwZV9pZCI6ICJ5dW1faW1wb3J0ZXIiLCAiaW1wb3J0ZXJf
+        aWQiOiAieXVtX2ltcG9ydGVyIiwgImV4Y2VwdGlvbiI6IG51bGwsICJyZXBv
+        X2lkIjogIkZlZG9yYV8xNyIsICJyZW1vdmVkX2NvdW50IjogMCwgInN0YXJ0
+        ZWQiOiAiMjAxNS0wOC0xOVQxODoxNzozN1oiLCAiX25zIjogInJlcG9fc3lu
+        Y19yZXN1bHRzIiwgImNvbXBsZXRlZCI6ICIyMDE1LTA4LTE5VDE4OjE3OjM3
+        WiIsICJ0cmFjZWJhY2siOiBudWxsLCAic3VtbWFyeSI6IHsiY29udGVudCI6
+        IHsic3RhdGUiOiAiRklOSVNIRUQifSwgImNvbXBzIjogeyJzdGF0ZSI6ICJG
+        SU5JU0hFRCJ9LCAiZGlzdHJpYnV0aW9uIjogeyJzdGF0ZSI6ICJGSU5JU0hF
+        RCJ9LCAiZXJyYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAibWV0YWRh
+        dGEiOiB7InN0YXRlIjogIkZJTklTSEVEIn19LCAiYWRkZWRfY291bnQiOiAx
+        NSwgImVycm9yX21lc3NhZ2UiOiBudWxsLCAidXBkYXRlZF9jb3VudCI6IDAs
+        ICJkZXRhaWxzIjogeyJjb250ZW50IjogeyJzaXplX3RvdGFsIjogMTc4NzIs
+        ICJpdGVtc19sZWZ0IjogMCwgIml0ZW1zX3RvdGFsIjogOCwgInN0YXRlIjog
+        IkZJTklTSEVEIiwgInNpemVfbGVmdCI6IDAsICJkZXRhaWxzIjogeyJycG1f
+        dG90YWwiOiA4LCAicnBtX2RvbmUiOiA4LCAiZHJwbV90b3RhbCI6IDAsICJk
+        cnBtX2RvbmUiOiAwfSwgImVycm9yX2RldGFpbHMiOiBbXX0sICJjb21wcyI6
+        IHsic3RhdGUiOiAiRklOSVNIRUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRl
+        bXNfdG90YWwiOiAzLCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0
+        YWlscyI6IFtdLCAiaXRlbXNfbGVmdCI6IDB9LCAiZXJyYXRhIjogeyJzdGF0
+        ZSI6ICJGSU5JU0hFRCJ9LCAibWV0YWRhdGEiOiB7InN0YXRlIjogIkZJTklT
+        SEVEIn19LCAiaWQiOiAiNTVkNGM4NDFkYjBjMjE2NTM1Nzc3YmQzIiwgInJl
+        c3VsdCI6ICJzdWNjZXNzIn0sICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRv
+        aWQiOiAiNTVkNGM4M2U4NjI3ZWVlNDg3YzkzNDYzIn0sICJpZCI6ICI1NWQ0
+        YzgzZmRiMGMyMTY0YjNkNTk2NDAifQ==
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:17:38 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/7708ca4b-4b95-480a-8cfb-11119ecbddb7/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="oIF1v43HtWW1GjUYH92iUEDkBxzJleWHAsRcG0xFZqo", oauth_signature="GI3af3teGzrkDrSMmvDrbQClxc8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440008259", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:17:39 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "527"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy83NzA4Y2E0Yi00Yjk1LTQ4MGEtOGNmYi0xMTExOWVjYmRk
+        YjcvIiwgInRhc2tfaWQiOiAiNzcwOGNhNGItNGI5NS00ODBhLThjZmItMTEx
+        MTllY2JkZGI3IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
+        bmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjU1ZDRjODQzODYyN2VlZTQ4N2M5MzQ2ZiJ9LCAi
+        aWQiOiAiNTVkNGM4NDNkYjBjMjEwNDI4OTNlNmVjIn0=
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:17:39 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/7708ca4b-4b95-480a-8cfb-11119ecbddb7/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="43HWpvxRkcnJVRKBRrJucgD44JB3bfEnS1r2FzfJhM", oauth_signature="lZP6QZoBcyRz3%2Fh65jxxP7cG5wQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440008259", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:17:39 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "702"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy83NzA4Y2E0Yi00Yjk1LTQ4MGEtOGNmYi0xMTExOWVjYmRk
+        YjcvIiwgInRhc2tfaWQiOiAiNzcwOGNhNGItNGI5NS00ODBhLThjZmItMTEx
+        MTllY2JkZGI3IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
+        MDE1LTA4LTE5VDE4OjE3OjM5WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE1LTA4LTE5VDE4OjE3OjM5WiIsICJ0cmFjZWJh
+        Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
+        b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
+        MUBrYXRlbGxvLWRpc3RyaWJ1dGlvbnMyLmV4YW1wbGUuY29tLmRxIiwgInN0
+        YXRlIjogImZpbmlzaGVkIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jl
+        c291cmNlX3dvcmtlci0xQGthdGVsbG8tZGlzdHJpYnV0aW9uczIuZXhhbXBs
+        ZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6
+        IHsiJG9pZCI6ICI1NWQ0Yzg0Mzg2MjdlZWU0ODdjOTM0NmYifSwgImlkIjog
+        IjU1ZDRjODQzZGIwYzIxNjRiM2Q1OTY0ZiJ9
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:17:39 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/bf9c00c6-217c-40ad-af36-a893be6705ac/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="CDkukiewK7X8DtpreYQ2fj8yhkX51bnNNPBPoPv1cg", oauth_signature="UlakPAJb%2FnMd819uR0BqIF2ZCqM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440009531", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:38:51 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "525"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9iZjljMDBjNi0yMTdjLTQwYWQtYWYzNi1hODkzYmU2NzA1
+        YWMvIiwgInRhc2tfaWQiOiAiYmY5YzAwYzYtMjE3Yy00MGFkLWFmMzYtYTg5
+        M2JlNjcwNWFjIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJOb25lLmRxIiwgInN0YXRlIjogIndhaXRpbmciLCAid29ya2VyX25h
+        bWUiOiBudWxsLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1NWQ0Y2QzYjg2MjdlZWU0ODdjOTM0YWMifSwgImlk
+        IjogIjU1ZDRjZDNiZGIwYzIxMDQyODkzZTdmMyJ9
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:38:51 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/bf9c00c6-217c-40ad-af36-a893be6705ac/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="kUca4SsmYZ1Vale5uGl7gXpC48OfF7wXeoZzbpDQrRc", oauth_signature="EWvM77JJXOyQQAdpcWKROKr%2FZm0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440009531", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:38:51 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "641"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9iZjljMDBjNi0yMTdjLTQwYWQtYWYzNi1hODkzYmU2NzA1
+        YWMvIiwgInRhc2tfaWQiOiAiYmY5YzAwYzYtMjE3Yy00MGFkLWFmMzYtYTg5
+        M2JlNjcwNWFjIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMUBrYXRlbGxvLWRpc3Ry
+        aWJ1dGlvbnMyLmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogIndhaXRpbmci
+        LCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFA
+        a2F0ZWxsby1kaXN0cmlidXRpb25zMi5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU1ZDRj
+        ZDNiODYyN2VlZTQ4N2M5MzRhYyJ9LCAiaWQiOiAiNTVkNGNkM2JkYjBjMjE2
+        NGIzZDU5NmIyIn0=
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:38:51 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/bf9c00c6-217c-40ad-af36-a893be6705ac/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="TADDtzeA5o3QD3F1eWjGbenWz0JjN26Vo3beFobHrs", oauth_signature="gDlwpA8V3sinmu9UiC74KISu10o%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440009532", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:38:52 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "2308"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9iZjljMDBjNi0yMTdjLTQwYWQtYWYzNi1hODkzYmU2NzA1
+        YWMvIiwgInRhc2tfaWQiOiAiYmY5YzAwYzYtMjE3Yy00MGFkLWFmMzYtYTg5
+        M2JlNjcwNWFjIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiAiMjAx
+        NS0wOC0xOVQxODozODo1MloiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0
+        YXJ0X3RpbWUiOiAiMjAxNS0wOC0xOVQxODozODo1MVoiLCAidHJhY2ViYWNr
+        IjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbeyJfaHJlZiI6ICIvcHVscC9h
+        cGkvdjIvdGFza3MvNTA1ZTBiOTMtMmU5MC00MTFmLWEwYmItOTNkYTFhZDE2
+        YjljLyIsICJ0YXNrX2lkIjogIjUwNWUwYjkzLTJlOTAtNDExZi1hMGJiLTkz
+        ZGExYWQxNmI5YyJ9LCB7Il9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy9h
+        NTk1ZGZkZi1lZTdlLTRkYWYtOTRjYi0yZDdhMDRmN2M0NjAvIiwgInRhc2tf
+        aWQiOiAiYTU5NWRmZGYtZWU3ZS00ZGFmLTk0Y2ItMmQ3YTA0ZjdjNDYwIn1d
+        LCAicHJvZ3Jlc3NfcmVwb3J0IjogeyJ5dW1faW1wb3J0ZXIiOiB7ImNvbnRl
+        bnQiOiB7InNpemVfdG90YWwiOiAwLCAiaXRlbXNfbGVmdCI6IDAsICJpdGVt
+        c190b3RhbCI6IDAsICJzdGF0ZSI6ICJGSU5JU0hFRCIsICJzaXplX2xlZnQi
+        OiAwLCAiZGV0YWlscyI6IHsicnBtX3RvdGFsIjogMCwgInJwbV9kb25lIjog
+        MCwgImRycG1fdG90YWwiOiAwLCAiZHJwbV9kb25lIjogMH0sICJlcnJvcl9k
+        ZXRhaWxzIjogW119LCAiY29tcHMiOiB7InN0YXRlIjogIkZJTklTSEVEIn0s
+        ICJkaXN0cmlidXRpb24iOiB7Iml0ZW1zX3RvdGFsIjogMywgInN0YXRlIjog
+        IkZJTklTSEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgIml0ZW1zX2xlZnQi
+        OiAwfSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgIm1ldGFk
+        YXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fX0sICJxdWV1ZSI6ICJyZXNl
+        cnZlZF9yZXNvdXJjZV93b3JrZXItMUBrYXRlbGxvLWRpc3RyaWJ1dGlvbnMy
+        LmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogImZpbmlzaGVkIiwgIndvcmtl
+        cl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0xQGthdGVsbG8t
+        ZGlzdHJpYnV0aW9uczIuZXhhbXBsZS5jb20iLCAicmVzdWx0IjogeyJpbXBv
+        cnRlcl90eXBlX2lkIjogInl1bV9pbXBvcnRlciIsICJpbXBvcnRlcl9pZCI6
+        ICJ5dW1faW1wb3J0ZXIiLCAiZXhjZXB0aW9uIjogbnVsbCwgInJlcG9faWQi
+        OiAiRmVkb3JhXzE3IiwgInJlbW92ZWRfY291bnQiOiAwLCAic3RhcnRlZCI6
+        ICIyMDE1LTA4LTE5VDE4OjM4OjUxWiIsICJfbnMiOiAicmVwb19zeW5jX3Jl
+        c3VsdHMiLCAiY29tcGxldGVkIjogIjIwMTUtMDgtMTlUMTg6Mzg6NTJaIiwg
+        InRyYWNlYmFjayI6IG51bGwsICJzdW1tYXJ5IjogeyJjb250ZW50IjogeyJz
+        dGF0ZSI6ICJGSU5JU0hFRCJ9LCAiY29tcHMiOiB7InN0YXRlIjogIkZJTklT
+        SEVEIn0sICJkaXN0cmlidXRpb24iOiB7InN0YXRlIjogIkZJTklTSEVEIn0s
+        ICJlcnJhdGEiOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJtZXRhZGF0YSI6
+        IHsic3RhdGUiOiAiRklOSVNIRUQifX0sICJhZGRlZF9jb3VudCI6IDYsICJl
+        cnJvcl9tZXNzYWdlIjogbnVsbCwgInVwZGF0ZWRfY291bnQiOiA5LCAiZGV0
+        YWlscyI6IHsiY29udGVudCI6IHsic2l6ZV90b3RhbCI6IDAsICJpdGVtc19s
+        ZWZ0IjogMCwgIml0ZW1zX3RvdGFsIjogMCwgInN0YXRlIjogIkZJTklTSEVE
+        IiwgInNpemVfbGVmdCI6IDAsICJkZXRhaWxzIjogeyJycG1fdG90YWwiOiAw
+        LCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6IDAsICJkcnBtX2RvbmUi
+        OiAwfSwgImVycm9yX2RldGFpbHMiOiBbXX0sICJjb21wcyI6IHsic3RhdGUi
+        OiAiRklOSVNIRUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRlbXNfdG90YWwi
+        OiAzLCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0YWlscyI6IFtd
+        LCAiaXRlbXNfbGVmdCI6IDB9LCAiZXJyYXRhIjogeyJzdGF0ZSI6ICJGSU5J
+        U0hFRCJ9LCAibWV0YWRhdGEiOiB7InN0YXRlIjogIkZJTklTSEVEIn19LCAi
+        aWQiOiAiNTVkNGNkM2NkYjBjMjE2NTM1Nzc3YzM2IiwgInJlc3VsdCI6ICJz
+        dWNjZXNzIn0sICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTVk
+        NGNkM2I4NjI3ZWVlNDg3YzkzNGFjIn0sICJpZCI6ICI1NWQ0Y2QzYmRiMGMy
+        MTY0YjNkNTk2YjIifQ==
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:38:52 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/fe5e58cb-57f0-4272-a19a-7cfe4ccdf6ca/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="laOsWLe590Y8wsH8ZfMh3d1ip99lZzCIo1So0mA", oauth_signature="AOBqjIyzx5MPN0Hi1uEQBuuiivk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440009534", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:38:54 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "643"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9mZTVlNThjYi01N2YwLTQyNzItYTE5YS03Y2ZlNGNjZGY2
+        Y2EvIiwgInRhc2tfaWQiOiAiZmU1ZTU4Y2ItNTdmMC00MjcyLWExOWEtN2Nm
+        ZTRjY2RmNmNhIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0xQGthdGVsbG8tZGlz
+        dHJpYnV0aW9uczIuZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAid2FpdGlu
+        ZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
+        MUBrYXRlbGxvLWRpc3RyaWJ1dGlvbnMyLmV4YW1wbGUuY29tIiwgInJlc3Vs
+        dCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTVk
+        NGNkM2U4NjI3ZWVlNDg3YzkzNGI4In0sICJpZCI6ICI1NWQ0Y2QzZWRiMGMy
+        MTY0YjNkNTk2YzQifQ==
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:38:54 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/fe5e58cb-57f0-4272-a19a-7cfe4ccdf6ca/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="HFak4E5zSg4bFBLXvy7G29PkHAcRBX9VgbCcsviIg", oauth_signature="RbFirzhP2BzfPChencj0BT93DI0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440009535", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:38:55 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "702"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9mZTVlNThjYi01N2YwLTQyNzItYTE5YS03Y2ZlNGNjZGY2
+        Y2EvIiwgInRhc2tfaWQiOiAiZmU1ZTU4Y2ItNTdmMC00MjcyLWExOWEtN2Nm
+        ZTRjY2RmNmNhIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
+        MDE1LTA4LTE5VDE4OjM4OjU0WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE1LTA4LTE5VDE4OjM4OjU0WiIsICJ0cmFjZWJh
+        Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
+        b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
+        MUBrYXRlbGxvLWRpc3RyaWJ1dGlvbnMyLmV4YW1wbGUuY29tLmRxIiwgInN0
+        YXRlIjogImZpbmlzaGVkIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jl
+        c291cmNlX3dvcmtlci0xQGthdGVsbG8tZGlzdHJpYnV0aW9uczIuZXhhbXBs
+        ZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6
+        IHsiJG9pZCI6ICI1NWQ0Y2QzZTg2MjdlZWU0ODdjOTM0YjgifSwgImlkIjog
+        IjU1ZDRjZDNlZGIwYzIxNjRiM2Q1OTZjNCJ9
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:38:55 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/218ad590-57e8-4680-b633-fd13fbcc0126/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="SMriweBG2mVPajTNg7sm7oOMXvPUvZcYkKXu2TsIoW0", oauth_signature="JZaBYIgydrG2RG0xIZhmtTNldSE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440009937", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:45:37 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "525"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8yMThhZDU5MC01N2U4LTQ2ODAtYjYzMy1mZDEzZmJjYzAx
+        MjYvIiwgInRhc2tfaWQiOiAiMjE4YWQ1OTAtNTdlOC00NjgwLWI2MzMtZmQx
+        M2ZiY2MwMTI2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJOb25lLmRxIiwgInN0YXRlIjogIndhaXRpbmciLCAid29ya2VyX25h
+        bWUiOiBudWxsLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1NWQ0Y2VkMTg2MjdlZWU0ODdjOTM1MDEifSwgImlk
+        IjogIjU1ZDRjZWQxZGIwYzIxMDQyODkzZThhYyJ9
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:45:37 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/218ad590-57e8-4680-b633-fd13fbcc0126/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="9Kn3CiK2HZJMgkFCAWAGnD9UQ5jSGOzzh92LDglMtuQ", oauth_signature="YyDR3TGuYToC5FC3vy3xpj9tII4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440009937", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:45:38 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "641"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8yMThhZDU5MC01N2U4LTQ2ODAtYjYzMy1mZDEzZmJjYzAx
+        MjYvIiwgInRhc2tfaWQiOiAiMjE4YWQ1OTAtNTdlOC00NjgwLWI2MzMtZmQx
+        M2ZiY2MwMTI2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMUBrYXRlbGxvLWRpc3Ry
+        aWJ1dGlvbnMyLmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogIndhaXRpbmci
+        LCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFA
+        a2F0ZWxsby1kaXN0cmlidXRpb25zMi5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU1ZDRj
+        ZWQxODYyN2VlZTQ4N2M5MzUwMSJ9LCAiaWQiOiAiNTVkNGNlZDFkYjBjMjE2
+        NGIzZDU5NzMzIn0=
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:45:38 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/218ad590-57e8-4680-b633-fd13fbcc0126/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="7c2nHIAXyjWnJcBCV8or3WZumET2ITuFsEK67qNSI", oauth_signature="tTB7AGSyuTB7qXf7PO8WBOb5o7A%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440009939", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:45:39 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "641"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8yMThhZDU5MC01N2U4LTQ2ODAtYjYzMy1mZDEzZmJjYzAx
+        MjYvIiwgInRhc2tfaWQiOiAiMjE4YWQ1OTAtNTdlOC00NjgwLWI2MzMtZmQx
+        M2ZiY2MwMTI2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMUBrYXRlbGxvLWRpc3Ry
+        aWJ1dGlvbnMyLmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogIndhaXRpbmci
+        LCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFA
+        a2F0ZWxsby1kaXN0cmlidXRpb25zMi5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU1ZDRj
+        ZWQxODYyN2VlZTQ4N2M5MzUwMSJ9LCAiaWQiOiAiNTVkNGNlZDFkYjBjMjE2
+        NGIzZDU5NzMzIn0=
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:45:39 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/218ad590-57e8-4680-b633-fd13fbcc0126/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="QRZoY8o3RzkVgP82KLCXwaYEZGJflrh22gjtTWTDlc", oauth_signature="rlWRCM6nprmjZKF6Z5p%2F01kVOMI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440009940", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:45:40 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "641"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8yMThhZDU5MC01N2U4LTQ2ODAtYjYzMy1mZDEzZmJjYzAx
+        MjYvIiwgInRhc2tfaWQiOiAiMjE4YWQ1OTAtNTdlOC00NjgwLWI2MzMtZmQx
+        M2ZiY2MwMTI2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMUBrYXRlbGxvLWRpc3Ry
+        aWJ1dGlvbnMyLmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogIndhaXRpbmci
+        LCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFA
+        a2F0ZWxsby1kaXN0cmlidXRpb25zMi5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU1ZDRj
+        ZWQxODYyN2VlZTQ4N2M5MzUwMSJ9LCAiaWQiOiAiNTVkNGNlZDFkYjBjMjE2
+        NGIzZDU5NzMzIn0=
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:45:40 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/218ad590-57e8-4680-b633-fd13fbcc0126/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="3wbDBSNm3Le6qZqrBwxXqT4y0thj6kjTTHtY0RZ5Lk", oauth_signature="ZxEwE77JMBH7YS0trMKRtaYdAeY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440009941", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:45:41 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "2317"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8yMThhZDU5MC01N2U4LTQ2ODAtYjYzMy1mZDEzZmJjYzAx
+        MjYvIiwgInRhc2tfaWQiOiAiMjE4YWQ1OTAtNTdlOC00NjgwLWI2MzMtZmQx
+        M2ZiY2MwMTI2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiAiMjAx
+        NS0wOC0xOVQxODo0NTo0MFoiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0
+        YXJ0X3RpbWUiOiAiMjAxNS0wOC0xOVQxODo0NTo0MFoiLCAidHJhY2ViYWNr
+        IjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbeyJfaHJlZiI6ICIvcHVscC9h
+        cGkvdjIvdGFza3MvMzVhMGQzNzgtNGZiNi00NjVhLWFhZmYtNGE5Y2FhMDRk
+        MzE1LyIsICJ0YXNrX2lkIjogIjM1YTBkMzc4LTRmYjYtNDY1YS1hYWZmLTRh
+        OWNhYTA0ZDMxNSJ9LCB7Il9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy9k
+        NmQ3ZjE5ZC0yYTExLTQ4MWItODgyMC1jMjFmMTRiNjg1YTEvIiwgInRhc2tf
+        aWQiOiAiZDZkN2YxOWQtMmExMS00ODFiLTg4MjAtYzIxZjE0YjY4NWExIn1d
+        LCAicHJvZ3Jlc3NfcmVwb3J0IjogeyJ5dW1faW1wb3J0ZXIiOiB7ImNvbnRl
+        bnQiOiB7InNpemVfdG90YWwiOiAxNzg3MiwgIml0ZW1zX2xlZnQiOiAwLCAi
+        aXRlbXNfdG90YWwiOiA4LCAic3RhdGUiOiAiRklOSVNIRUQiLCAic2l6ZV9s
+        ZWZ0IjogMCwgImRldGFpbHMiOiB7InJwbV90b3RhbCI6IDgsICJycG1fZG9u
+        ZSI6IDgsICJkcnBtX3RvdGFsIjogMCwgImRycG1fZG9uZSI6IDB9LCAiZXJy
+        b3JfZGV0YWlscyI6IFtdfSwgImNvbXBzIjogeyJzdGF0ZSI6ICJGSU5JU0hF
+        RCJ9LCAiZGlzdHJpYnV0aW9uIjogeyJpdGVtc190b3RhbCI6IDMsICJzdGF0
+        ZSI6ICJGSU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJpdGVtc19s
+        ZWZ0IjogMH0sICJlcnJhdGEiOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJt
+        ZXRhZGF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifX19LCAicXVldWUiOiAi
+        cmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFAa2F0ZWxsby1kaXN0cmlidXRp
+        b25zMi5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJmaW5pc2hlZCIsICJ3
+        b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMUBrYXRl
+        bGxvLWRpc3RyaWJ1dGlvbnMyLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IHsi
+        aW1wb3J0ZXJfdHlwZV9pZCI6ICJ5dW1faW1wb3J0ZXIiLCAiaW1wb3J0ZXJf
+        aWQiOiAieXVtX2ltcG9ydGVyIiwgImV4Y2VwdGlvbiI6IG51bGwsICJyZXBv
+        X2lkIjogIkZlZG9yYV8xNyIsICJyZW1vdmVkX2NvdW50IjogMCwgInN0YXJ0
+        ZWQiOiAiMjAxNS0wOC0xOVQxODo0NTo0MFoiLCAiX25zIjogInJlcG9fc3lu
+        Y19yZXN1bHRzIiwgImNvbXBsZXRlZCI6ICIyMDE1LTA4LTE5VDE4OjQ1OjQw
+        WiIsICJ0cmFjZWJhY2siOiBudWxsLCAic3VtbWFyeSI6IHsiY29udGVudCI6
+        IHsic3RhdGUiOiAiRklOSVNIRUQifSwgImNvbXBzIjogeyJzdGF0ZSI6ICJG
+        SU5JU0hFRCJ9LCAiZGlzdHJpYnV0aW9uIjogeyJzdGF0ZSI6ICJGSU5JU0hF
+        RCJ9LCAiZXJyYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAibWV0YWRh
+        dGEiOiB7InN0YXRlIjogIkZJTklTSEVEIn19LCAiYWRkZWRfY291bnQiOiAx
+        NSwgImVycm9yX21lc3NhZ2UiOiBudWxsLCAidXBkYXRlZF9jb3VudCI6IDAs
+        ICJkZXRhaWxzIjogeyJjb250ZW50IjogeyJzaXplX3RvdGFsIjogMTc4NzIs
+        ICJpdGVtc19sZWZ0IjogMCwgIml0ZW1zX3RvdGFsIjogOCwgInN0YXRlIjog
+        IkZJTklTSEVEIiwgInNpemVfbGVmdCI6IDAsICJkZXRhaWxzIjogeyJycG1f
+        dG90YWwiOiA4LCAicnBtX2RvbmUiOiA4LCAiZHJwbV90b3RhbCI6IDAsICJk
+        cnBtX2RvbmUiOiAwfSwgImVycm9yX2RldGFpbHMiOiBbXX0sICJjb21wcyI6
+        IHsic3RhdGUiOiAiRklOSVNIRUQifSwgImRpc3RyaWJ1dGlvbiI6IHsiaXRl
+        bXNfdG90YWwiOiAzLCAic3RhdGUiOiAiRklOSVNIRUQiLCAiZXJyb3JfZGV0
+        YWlscyI6IFtdLCAiaXRlbXNfbGVmdCI6IDB9LCAiZXJyYXRhIjogeyJzdGF0
+        ZSI6ICJGSU5JU0hFRCJ9LCAibWV0YWRhdGEiOiB7InN0YXRlIjogIkZJTklT
+        SEVEIn19LCAiaWQiOiAiNTVkNGNlZDRkYjBjMjE2NTM1Nzc3Y2EwIiwgInJl
+        c3VsdCI6ICJzdWNjZXNzIn0sICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRv
+        aWQiOiAiNTVkNGNlZDE4NjI3ZWVlNDg3YzkzNTAxIn0sICJpZCI6ICI1NWQ0
+        Y2VkMWRiMGMyMTY0YjNkNTk3MzMifQ==
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:45:41 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/44330818-8730-437e-b525-bde70921a455/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="1Gnt3Cd01eNRGaB9BTc7hEtFYtzMpyDTOTHhrXQs", oauth_signature="GPZFGjZZOdSwXo1b3ElzoJdvIaQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440009942", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:45:42 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "527"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy80NDMzMDgxOC04NzMwLTQzN2UtYjUyNS1iZGU3MDkyMWE0
+        NTUvIiwgInRhc2tfaWQiOiAiNDQzMzA4MTgtODczMC00MzdlLWI1MjUtYmRl
+        NzA5MjFhNDU1IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
+        bmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjU1ZDRjZWQ2ODYyN2VlZTQ4N2M5MzUwZCJ9LCAi
+        aWQiOiAiNTVkNGNlZDZkYjBjMjEwNDI4OTNlOGJjIn0=
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:45:42 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/44330818-8730-437e-b525-bde70921a455/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="rIhZzUP29RODHPNtoHgSUrvJCRbeSiSThiZBQ1cnXc", oauth_signature="zw0ijtrCLJpSV4lxomsBtQAXtAg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440009942", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:45:42 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "702"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy80NDMzMDgxOC04NzMwLTQzN2UtYjUyNS1iZGU3MDkyMWE0
+        NTUvIiwgInRhc2tfaWQiOiAiNDQzMzA4MTgtODczMC00MzdlLWI1MjUtYmRl
+        NzA5MjFhNDU1IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
+        MDE1LTA4LTE5VDE4OjQ1OjQyWiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE1LTA4LTE5VDE4OjQ1OjQyWiIsICJ0cmFjZWJh
+        Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
+        b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
+        MUBrYXRlbGxvLWRpc3RyaWJ1dGlvbnMyLmV4YW1wbGUuY29tLmRxIiwgInN0
+        YXRlIjogImZpbmlzaGVkIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jl
+        c291cmNlX3dvcmtlci0xQGthdGVsbG8tZGlzdHJpYnV0aW9uczIuZXhhbXBs
+        ZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6
+        IHsiJG9pZCI6ICI1NWQ0Y2VkNjg2MjdlZWU0ODdjOTM1MGQifSwgImlkIjog
+        IjU1ZDRjZWQ2ZGIwYzIxNjRiM2Q1OTc0MiJ9
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:45:42 GMT
+- request:
+    method: post
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJpZCI6IkZlZG9yYV8xNyIsImRpc3BsYXlfbmFtZSI6IkZlZG9yYSAxNyB4
+        ODZfNjQiLCJpbXBvcnRlcl90eXBlX2lkIjoieXVtX2ltcG9ydGVyIiwiaW1w
+        b3J0ZXJfY29uZmlnIjp7ImZlZWQiOiJmaWxlOi8vL3Zhci93d3cvdGVzdF9y
+        ZXBvcy96b28iLCJzc2xfY2FfY2VydCI6bnVsbCwic3NsX2NsaWVudF9jZXJ0
+        IjpudWxsLCJzc2xfY2xpZW50X2tleSI6bnVsbH0sIm5vdGVzIjp7Il9yZXBv
+        LXR5cGUiOiJycG0tcmVwbyJ9LCJkaXN0cmlidXRvcnMiOlt7ImRpc3RyaWJ1
+        dG9yX3R5cGVfaWQiOiJ5dW1fZGlzdHJpYnV0b3IiLCJkaXN0cmlidXRvcl9j
+        b25maWciOnsicmVsYXRpdmVfdXJsIjoiL3Rlc3RfcGF0aC8iLCJodHRwIjpm
+        YWxzZSwiaHR0cHMiOnRydWUsInByb3RlY3RlZCI6dHJ1ZX0sImF1dG9fcHVi
+        bGlzaCI6dHJ1ZSwiZGlzdHJpYnV0b3JfaWQiOiJGZWRvcmFfMTcifSx7ImRp
+        c3RyaWJ1dG9yX3R5cGVfaWQiOiJ5dW1fY2xvbmVfZGlzdHJpYnV0b3IiLCJk
+        aXN0cmlidXRvcl9jb25maWciOnsiZGVzdGluYXRpb25fZGlzdHJpYnV0b3Jf
+        aWQiOiJGZWRvcmFfMTcifSwiYXV0b19wdWJsaXNoIjpmYWxzZSwiZGlzdHJp
+        YnV0b3JfaWQiOiJGZWRvcmFfMTdfY2xvbmUifSx7ImRpc3RyaWJ1dG9yX3R5
+        cGVfaWQiOiJub2Rlc19odHRwX2Rpc3RyaWJ1dG9yIiwiZGlzdHJpYnV0b3Jf
+        Y29uZmlnIjp7fSwiYXV0b19wdWJsaXNoIjp0cnVlLCJkaXN0cmlidXRvcl9p
+        ZCI6IkZlZG9yYV8xN19ub2RlcyJ9XX0=
+
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="ZRwhXbQ75fJMbkRI7Ean4wB6v1uXDF3xgEi8KVh9qr4", oauth_signature="z4lqmpKhsTkMWr92zly%2BNvlpK%2Bg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440010455", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      Content-Length:
+      - "743"
+      User-Agent:
+      - Ruby
+  response:
+    status:
       code: 201
       message: Created
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:16:53 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Location: 
-      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/5433e7c55ca0134a6f279494/
-      Vary: 
-      - Accept-Encoding
-      Content-Length: 
-      - "586"
-      Connection: 
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:54:15 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Location:
+      - Fedora_17
+      Content-Length:
+      - "320"
+      Connection:
       - close
-      Content-Type: 
+      Content-Type:
       - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: "{\"next_run\": \"2014-10-07T13:16:53Z\", \"remaining_runs\": null, \"last_updated\": 1412687813.146884, \"first_run\": \"2013-08-01T00:00:00-04:00\", \"total_run_count\": 0, \"schedule\": \"2013-08-01T00:00:00-04:00/P1D\", \"kwargs\": {\"overrides\": {}}, \"args\": [\"1\"], \"enabled\": true, \"last_run_at\": null, \"task\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"failure_threshold\": null, \"resource\": \"pulp:importer:1:yum_importer\", \"_id\": \"5433e7c55ca0134a6f279494\", \"consecutive_failures\": 0, \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/5433e7c55ca0134a6f279494/\"}"
-    http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:16:53 GMT
-- request: 
-    method: post
-    uri: https://localhost/pulp/api/v2/repositories/1/actions/sync/
-    body: 
+    body:
       encoding: US-ASCII
-      string: "{\"override_config\":{\"num_threads\":4}}"
-    headers: 
-      Accept: 
+      base64_string: |
+        eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiRmVkb3JhIDE3
+        IHg4Nl82NCIsICJkZXNjcmlwdGlvbiI6IG51bGwsICJsYXN0X3VuaXRfYWRk
+        ZWQiOiBudWxsLCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicnBtLXJlcG8i
+        fSwgImxhc3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9j
+        b3VudHMiOiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAi
+        NTVkNGQwZDdkYjBjMjEwNDI4OTNlOTYyIn0sICJpZCI6ICJGZWRvcmFfMTci
+        LCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9GZWRvcmFf
+        MTcvIn0=
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:54:15 GMT
+- request:
+    method: delete
+    uri: https://katello-distributions2.example.com/pulp/api/v2/content/orphans/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Type: 
+      Content-Type:
       - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="66leqOejeFgTyf1zocBry5S1hX5BHcI2oHkjAC7w3U", oauth_signature="P2xwcbGFzsz%2B7cojbTKFxNcQDEE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687813", oauth_version="1.0"
-      Pulp-User: 
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="9QIYkDhAGxM2rUHtJCCi2ulseAnPTl7DAj3FARhss", oauth_signature="OusAmXq6x86tO7x%2F1bCs44ifxog%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440010455", oauth_version="1.0"
+      Pulp-User:
       - admin
-      Content-Length: 
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:54:15 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Encoding:
+      - utf-8
+      Content-Length:
+      - "172"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzL2YzNzNiYzJjLWI0ZjEtNGM3Mi04NWEwLTQzMDk0NTU3NzdmMi8iLCAi
+        dGFza19pZCI6ICJmMzczYmMyYy1iNGYxLTRjNzItODVhMC00MzA5NDU1Nzc3
+        ZjIifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+
+    http_version: 
+  recorded_at: Wed, 19 Aug 2015 18:54:15 GMT
+- request:
+    method: post
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/Fedora_17/actions/sync/
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJvdmVycmlkZV9jb25maWciOnsibnVtX3RocmVhZHMiOjR9fQ==
+
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="ZoHSx8TPm8R5XgkArRIy6wMTcM6VXkPJEjeeHff0Fs", oauth_signature="9aozzXnkI8XWNquJkn74RHcw8Qw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440010455", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      Content-Length:
       - "37"
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 202
       message: Accepted
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:16:53 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Content-Encoding: 
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:54:16 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Encoding:
       - utf-8
-      Content-Length: 
+      Content-Length:
       - "172"
-      Connection: 
+      Connection:
       - close
-      Content-Type: 
+      Content-Type:
       - application/json
-    body: 
+    body:
       encoding: US-ASCII
-      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/\", \"task_id\": \"54ac8f91-36e3-4e31-be25-025fa56d7b42\"}], \"result\": null, \"error\": null}"
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzL2Q1NTUzYzIzLWRjM2ItNGQyNy1hNzg3LTViYTFkNGEwMTQzZC8iLCAi
+        dGFza19pZCI6ICJkNTU1M2MyMy1kYzNiLTRkMjctYTc4Ny01YmExZDRhMDE0
+        M2QifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+
     http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:16:53 GMT
-- request: 
+  recorded_at: Wed, 19 Aug 2015 18:54:16 GMT
+- request:
     method: get
-    uri: https://localhost/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/
-    body: 
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/d5553c23-dc3b-4d27-a787-5ba1d4a0143d/
+    body:
       encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
+      base64_string: ""
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Type: 
+      Content-Type:
       - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="iVkSabyavLxYxUYOrS6Fdd9aGladKr5VzJwL3UuAo", oauth_signature="JEmJl%2F9CTC4A6o5qJPOCKbo8ufk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687813", oauth_version="1.0"
-      Pulp-User: 
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="hc52jekP5fDuD2xFkKT03xgzhwSVyY9AZtUdUO8Y4", oauth_signature="zwcnnnjOWQ7fqYDcTyZtGC5aHiQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440010456", oauth_version="1.0"
+      Pulp-User:
       - admin
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:16:53 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Length: 
-      - "558"
-      Connection: 
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:54:16 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "525"
+      Connection:
       - close
-      Content-Type: 
+      Content-Type:
       - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"_href\": \"/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/\", \"task_id\": \"54ac8f91-36e3-4e31-be25-025fa56d7b42\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-0@abed.usersys.redhat.com.dq\", \"state\": \"waiting\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"5433e7c533a7d3a2e73bef61\"}, \"id\": \"5433e7c55ca0134a6f279497\"}"
-    http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:16:53 GMT
-- request: 
-    method: get
-    uri: https://localhost/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/
-    body: 
+    body:
       encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9kNTU1M2MyMy1kYzNiLTRkMjctYTc4Ny01YmExZDRhMDE0
+        M2QvIiwgInRhc2tfaWQiOiAiZDU1NTNjMjMtZGMzYi00ZDI3LWE3ODctNWJh
+        MWQ0YTAxNDNkIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJOb25lLmRxIiwgInN0YXRlIjogIndhaXRpbmciLCAid29ya2VyX25h
+        bWUiOiBudWxsLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1NWQ0ZDBkODg2MjdlZWU0ODdjOTM1NTYifSwgImlk
+        IjogIjU1ZDRkMGQ4ZGIwYzIxMDQyODkzZTk2OSJ9
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:54:16 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/d5553c23-dc3b-4d27-a787-5ba1d4a0143d/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Type: 
+      Content-Type:
       - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="q5dpiJgy4sViYphMWkWuAsDJkwcPxqA1gOa6iDwc", oauth_signature="QGP0Xdr6MruQhTV5dr7r8jZ4kJ4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687813", oauth_version="1.0"
-      Pulp-User: 
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="2RUYV3t2YkS0OIBIkKBUaTN2zbnjE674w6qYSKhM", oauth_signature="JcPv6Vku67z8r0FKecZ9yUI%2F2Bc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440010456", oauth_version="1.0"
+      Pulp-User:
       - admin
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:16:54 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Length: 
-      - "558"
-      Connection: 
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:54:16 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "641"
+      Connection:
       - close
-      Content-Type: 
+      Content-Type:
       - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"_href\": \"/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/\", \"task_id\": \"54ac8f91-36e3-4e31-be25-025fa56d7b42\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-0@abed.usersys.redhat.com.dq\", \"state\": \"waiting\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"5433e7c533a7d3a2e73bef61\"}, \"id\": \"5433e7c55ca0134a6f279497\"}"
-    http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:16:54 GMT
-- request: 
-    method: get
-    uri: https://localhost/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/
-    body: 
+    body:
       encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9kNTU1M2MyMy1kYzNiLTRkMjctYTc4Ny01YmExZDRhMDE0
+        M2QvIiwgInRhc2tfaWQiOiAiZDU1NTNjMjMtZGMzYi00ZDI3LWE3ODctNWJh
+        MWQ0YTAxNDNkIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMUBrYXRlbGxvLWRpc3Ry
+        aWJ1dGlvbnMyLmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogIndhaXRpbmci
+        LCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFA
+        a2F0ZWxsby1kaXN0cmlidXRpb25zMi5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU1ZDRk
+        MGQ4ODYyN2VlZTQ4N2M5MzU1NiJ9LCAiaWQiOiAiNTVkNGQwZDhkYjBjMjE2
+        NGIzZDU5N2FlIn0=
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:54:16 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/d5553c23-dc3b-4d27-a787-5ba1d4a0143d/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Type: 
+      Content-Type:
       - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="2cvOi1FxXVmIgBF50Uxk8DrWHz1T9X9guXQUPr8M", oauth_signature="kIk%2FDaggNRr9bU%2BywAe1cd818AA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687815", oauth_version="1.0"
-      Pulp-User: 
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="GMiWBbZI12RKRpsd3ZS5eislAgxA0PTNV7rG2OJV8", oauth_signature="qz5Lk29MIdjEOqlIZpf5OHmC4q0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440010457", oauth_version="1.0"
+      Pulp-User:
       - admin
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:16:55 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Length: 
-      - "558"
-      Connection: 
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:54:17 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "2309"
+      Connection:
       - close
-      Content-Type: 
+      Content-Type:
       - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"_href\": \"/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/\", \"task_id\": \"54ac8f91-36e3-4e31-be25-025fa56d7b42\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-0@abed.usersys.redhat.com.dq\", \"state\": \"waiting\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"5433e7c533a7d3a2e73bef61\"}, \"id\": \"5433e7c55ca0134a6f279497\"}"
-    http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:16:55 GMT
-- request: 
-    method: get
-    uri: https://localhost/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/
-    body: 
+    body:
       encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9kNTU1M2MyMy1kYzNiLTRkMjctYTc4Ny01YmExZDRhMDE0
+        M2QvIiwgInRhc2tfaWQiOiAiZDU1NTNjMjMtZGMzYi00ZDI3LWE3ODctNWJh
+        MWQ0YTAxNDNkIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiAiMjAx
+        NS0wOC0xOVQxODo1NDoxNloiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0
+        YXJ0X3RpbWUiOiAiMjAxNS0wOC0xOVQxODo1NDoxNloiLCAidHJhY2ViYWNr
+        IjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbeyJfaHJlZiI6ICIvcHVscC9h
+        cGkvdjIvdGFza3MvYzMyMjY1N2EtMDFkYy00NTlhLWFmOWUtZTU4ZTZjNDM2
+        YmJjLyIsICJ0YXNrX2lkIjogImMzMjI2NTdhLTAxZGMtNDU5YS1hZjllLWU1
+        OGU2YzQzNmJiYyJ9LCB7Il9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy9h
+        YWY3MTAxMS05MmUxLTQyMTItODY4Ny0wZWFiMDlmYjRkMTMvIiwgInRhc2tf
+        aWQiOiAiYWFmNzEwMTEtOTJlMS00MjEyLTg2ODctMGVhYjA5ZmI0ZDEzIn1d
+        LCAicHJvZ3Jlc3NfcmVwb3J0IjogeyJ5dW1faW1wb3J0ZXIiOiB7ImNvbnRl
+        bnQiOiB7InNpemVfdG90YWwiOiAwLCAiaXRlbXNfbGVmdCI6IDAsICJpdGVt
+        c190b3RhbCI6IDAsICJzdGF0ZSI6ICJGSU5JU0hFRCIsICJzaXplX2xlZnQi
+        OiAwLCAiZGV0YWlscyI6IHsicnBtX3RvdGFsIjogMCwgInJwbV9kb25lIjog
+        MCwgImRycG1fdG90YWwiOiAwLCAiZHJwbV9kb25lIjogMH0sICJlcnJvcl9k
+        ZXRhaWxzIjogW119LCAiY29tcHMiOiB7InN0YXRlIjogIkZJTklTSEVEIn0s
+        ICJkaXN0cmlidXRpb24iOiB7Iml0ZW1zX3RvdGFsIjogMywgInN0YXRlIjog
+        IkZJTklTSEVEIiwgImVycm9yX2RldGFpbHMiOiBbXSwgIml0ZW1zX2xlZnQi
+        OiAwfSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifSwgIm1ldGFk
+        YXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fX0sICJxdWV1ZSI6ICJyZXNl
+        cnZlZF9yZXNvdXJjZV93b3JrZXItMUBrYXRlbGxvLWRpc3RyaWJ1dGlvbnMy
+        LmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogImZpbmlzaGVkIiwgIndvcmtl
+        cl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0xQGthdGVsbG8t
+        ZGlzdHJpYnV0aW9uczIuZXhhbXBsZS5jb20iLCAicmVzdWx0IjogeyJpbXBv
+        cnRlcl90eXBlX2lkIjogInl1bV9pbXBvcnRlciIsICJpbXBvcnRlcl9pZCI6
+        ICJ5dW1faW1wb3J0ZXIiLCAiZXhjZXB0aW9uIjogbnVsbCwgInJlcG9faWQi
+        OiAiRmVkb3JhXzE3IiwgInJlbW92ZWRfY291bnQiOiAwLCAic3RhcnRlZCI6
+        ICIyMDE1LTA4LTE5VDE4OjU0OjE2WiIsICJfbnMiOiAicmVwb19zeW5jX3Jl
+        c3VsdHMiLCAiY29tcGxldGVkIjogIjIwMTUtMDgtMTlUMTg6NTQ6MTZaIiwg
+        InRyYWNlYmFjayI6IG51bGwsICJzdW1tYXJ5IjogeyJjb250ZW50IjogeyJz
+        dGF0ZSI6ICJGSU5JU0hFRCJ9LCAiY29tcHMiOiB7InN0YXRlIjogIkZJTklT
+        SEVEIn0sICJkaXN0cmlidXRpb24iOiB7InN0YXRlIjogIkZJTklTSEVEIn0s
+        ICJlcnJhdGEiOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJtZXRhZGF0YSI6
+        IHsic3RhdGUiOiAiRklOSVNIRUQifX0sICJhZGRlZF9jb3VudCI6IDUsICJl
+        cnJvcl9tZXNzYWdlIjogbnVsbCwgInVwZGF0ZWRfY291bnQiOiAxMCwgImRl
+        dGFpbHMiOiB7ImNvbnRlbnQiOiB7InNpemVfdG90YWwiOiAwLCAiaXRlbXNf
+        bGVmdCI6IDAsICJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6ICJGSU5JU0hF
+        RCIsICJzaXplX2xlZnQiOiAwLCAiZGV0YWlscyI6IHsicnBtX3RvdGFsIjog
+        MCwgInJwbV9kb25lIjogMCwgImRycG1fdG90YWwiOiAwLCAiZHJwbV9kb25l
+        IjogMH0sICJlcnJvcl9kZXRhaWxzIjogW119LCAiY29tcHMiOiB7InN0YXRl
+        IjogIkZJTklTSEVEIn0sICJkaXN0cmlidXRpb24iOiB7Iml0ZW1zX3RvdGFs
+        IjogMywgInN0YXRlIjogIkZJTklTSEVEIiwgImVycm9yX2RldGFpbHMiOiBb
+        XSwgIml0ZW1zX2xlZnQiOiAwfSwgImVycmF0YSI6IHsic3RhdGUiOiAiRklO
+        SVNIRUQifSwgIm1ldGFkYXRhIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9fSwg
+        ImlkIjogIjU1ZDRkMGQ4ZGIwYzIxNjUzNTc3N2QwYSIsICJyZXN1bHQiOiAi
+        c3VjY2VzcyJ9LCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU1
+        ZDRkMGQ4ODYyN2VlZTQ4N2M5MzU1NiJ9LCAiaWQiOiAiNTVkNGQwZDhkYjBj
+        MjE2NGIzZDU5N2FlIn0=
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:54:17 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Type: 
+      Content-Type:
       - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="AAsOhocbDl8MVixQdgs6E7fbTgr9BGWibhrGcx01iI", oauth_signature="Byb%2FPYcBpopyxsQfCj%2F0VRgryfs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687816", oauth_version="1.0"
-      Pulp-User: 
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="Q7r9N3rDPkdE0KHCkN1P8OCFFsR4eTjNuOfaWPwZc", oauth_signature="Z%2F3G1rokccX%2BpEQKnVQTXTtIJgo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440010457", oauth_version="1.0"
+      Pulp-User:
       - admin
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:16:56 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Length: 
-      - "558"
-      Connection: 
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:54:17 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "2"
+      Connection:
       - close
-      Content-Type: 
+      Content-Type:
       - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"_href\": \"/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/\", \"task_id\": \"54ac8f91-36e3-4e31-be25-025fa56d7b42\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-0@abed.usersys.redhat.com.dq\", \"state\": \"waiting\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"5433e7c533a7d3a2e73bef61\"}, \"id\": \"5433e7c55ca0134a6f279497\"}"
-    http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:16:56 GMT
-- request: 
-    method: get
-    uri: https://localhost/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/
-    body: 
+    body:
       encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="nBAReCvFoWoyXpbKGjIvJVLUuF05ilLqFdZQPB9XU", oauth_signature="Fd96qD828pXalpCjrxHf4S3V%2B5Y%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687817", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:16:57 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Length: 
-      - "558"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"_href\": \"/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/\", \"task_id\": \"54ac8f91-36e3-4e31-be25-025fa56d7b42\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-0@abed.usersys.redhat.com.dq\", \"state\": \"waiting\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"5433e7c533a7d3a2e73bef61\"}, \"id\": \"5433e7c55ca0134a6f279497\"}"
+      base64_string: |
+        W10=
+
     http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:16:57 GMT
-- request: 
-    method: get
-    uri: https://localhost/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/
-    body: 
+  recorded_at: Wed, 19 Aug 2015 18:54:17 GMT
+- request:
+    method: post
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/
+    body:
       encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
+      base64_string: |
+        eyJzY2hlZHVsZSI6IjIwMTMtMDgtMDFUMDA6MDA6MDAtMDQ6MDAvUDFEIn0=
+
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Type: 
+      Content-Type:
       - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="mDwqfGEXaT8teuqvFXci7PInELQRGaSlujSA4gVNMc", oauth_signature="j35VHvd7voKp%2B4E1w5wa3i9RMoM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687818", oauth_version="1.0"
-      Pulp-User: 
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="0wL4OwIkn0caS0X7zZ3VQIGIJiOwJxt1f401c4JQyUI", oauth_signature="UTyo9QMVWucgyL0IAh%2F3uTm55yE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440010457", oauth_version="1.0"
+      Pulp-User:
       - admin
-      User-Agent: 
+      Content-Length:
+      - "44"
+      User-Agent:
       - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:16:58 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Length: 
-      - "558"
-      Connection: 
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:54:17 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Location:
+      - /pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/55d4d0d9db0c21042893e972/
+      Content-Length:
+      - "610"
+      Connection:
       - close
-      Content-Type: 
+      Content-Type:
       - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"_href\": \"/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/\", \"task_id\": \"54ac8f91-36e3-4e31-be25-025fa56d7b42\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"finish_time\": null, \"start_time\": null, \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-0@abed.usersys.redhat.com.dq\", \"state\": \"waiting\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"5433e7c533a7d3a2e73bef61\"}, \"id\": \"5433e7c55ca0134a6f279497\"}"
-    http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:16:58 GMT
-- request: 
-    method: get
-    uri: https://localhost/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/
-    body: 
+    body:
       encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="bnmXYdDw21tNxQ5jSp3lea8gglDL3RArKqWdwj8ZPc", oauth_signature="NYCDIVZ9pMNAm31rWYFhOFiLtVg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687819", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:16:59 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Length: 
-      - "1013"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"_href\": \"/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/\", \"task_id\": \"54ac8f91-36e3-4e31-be25-025fa56d7b42\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"finish_time\": null, \"_ns\": \"task_status\", \"start_time\": \"2014-10-07T13:16:59Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {\"yum_importer\": {\"content\": {\"size_total\": 15640, \"items_left\": 0, \"items_total\": 7, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"rpm_total\": 7, \"rpm_done\": 7, \"drpm_total\": 0, \"drpm_done\": 0}, \"error_details\": []}, \"comps\": {\"state\": \"FINISHED\"}, \"distribution\": {\"items_total\": 3, \"state\": \"FINISHED\", \"error_details\": [], \"items_left\": 0}, \"errata\": {\"state\": \"FINISHED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"queue\": \"reserved_resource_worker-0@abed.usersys.redhat.com.dq\", \"state\": \"running\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"5433e7c533a7d3a2e73bef61\"}, \"id\": \"5433e7c55ca0134a6f279497\"}"
-    http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:16:59 GMT
-- request: 
-    method: get
-    uri: https://localhost/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="I8gJpjCyhSobNp69a6iVGmmJW7D1ZjmsPqy5r8Keqt4", oauth_signature="76IwrqB2lY%2B%2Fjdj1liEQbWHNDhE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687821", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:17:01 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Length: 
-      - "2236"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.sync_with_auto_publish\", \"_href\": \"/pulp/api/v2/tasks/54ac8f91-36e3-4e31-be25-025fa56d7b42/\", \"task_id\": \"54ac8f91-36e3-4e31-be25-025fa56d7b42\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"finish_time\": \"2014-10-07T13:17:00Z\", \"_ns\": \"task_status\", \"start_time\": \"2014-10-07T13:16:59Z\", \"traceback\": null, \"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/e626b12c-d3d4-4a2c-9adf-f581f6f0f0e1/\", \"task_id\": \"e626b12c-d3d4-4a2c-9adf-f581f6f0f0e1\"}, {\"_href\": \"/pulp/api/v2/tasks/266c64db-8d4f-4230-9a8f-9c2390f472b0/\", \"task_id\": \"266c64db-8d4f-4230-9a8f-9c2390f472b0\"}], \"progress_report\": {\"yum_importer\": {\"content\": {\"size_total\": 15640, \"items_left\": 0, \"items_total\": 7, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"rpm_total\": 7, \"rpm_done\": 7, \"drpm_total\": 0, \"drpm_done\": 0}, \"error_details\": []}, \"comps\": {\"state\": \"FINISHED\"}, \"distribution\": {\"items_total\": 3, \"state\": \"FINISHED\", \"error_details\": [], \"items_left\": 0}, \"errata\": {\"state\": \"FINISHED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"queue\": \"reserved_resource_worker-0@abed.usersys.redhat.com.dq\", \"state\": \"finished\", \"result\": {\"importer_type_id\": \"yum_importer\", \"importer_id\": \"yum_importer\", \"exception\": null, \"repo_id\": \"1\", \"removed_count\": 0, \"started\": \"2014-10-07T09:16:58-04:00\", \"_ns\": \"repo_sync_results\", \"completed\": \"2014-10-07T09:16:59-04:00\", \"traceback\": null, \"summary\": {\"content\": {\"state\": \"FINISHED\"}, \"comps\": {\"state\": \"FINISHED\"}, \"distribution\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\"}, \"metadata\": {\"state\": \"FINISHED\"}}, \"added_count\": 13, \"error_message\": null, \"updated_count\": 2, \"details\": {\"content\": {\"size_total\": 15640, \"items_left\": 0, \"items_total\": 7, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"rpm_total\": 7, \"rpm_done\": 7, \"drpm_total\": 0, \"drpm_done\": 0}, \"error_details\": []}, \"comps\": {\"state\": \"FINISHED\"}, \"distribution\": {\"items_total\": 3, \"state\": \"FINISHED\", \"error_details\": [], \"items_left\": 0}, \"errata\": {\"state\": \"FINISHED\"}, \"metadata\": {\"state\": \"FINISHED\"}}, \"id\": \"5433e7cb5ca013067bd775f7\", \"result\": \"success\"}, \"error\": null, \"_id\": {\"$oid\": \"5433e7c533a7d3a2e73bef61\"}, \"id\": \"5433e7c55ca0134a6f279497\"}"
-    http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:17:01 GMT
-- request: 
+      base64_string: |
+        eyJuZXh0X3J1biI6ICIyMDE1LTA4LTE5VDE4OjU0OjE3WiIsICJyZW1haW5p
+        bmdfcnVucyI6IG51bGwsICJsYXN0X3VwZGF0ZWQiOiAxNDQwMDEwNDU3Ljkw
+        MzAzMywgImZpcnN0X3J1biI6ICIyMDEzLTA4LTAxVDAwOjAwOjAwLTA0OjAw
+        IiwgInRvdGFsX3J1bl9jb3VudCI6IDAsICJzY2hlZHVsZSI6ICIyMDEzLTA4
+        LTAxVDAwOjAwOjAwLTA0OjAwL1AxRCIsICJrd2FyZ3MiOiB7Im92ZXJyaWRl
+        cyI6IHt9fSwgImFyZ3MiOiBbIkZlZG9yYV8xNyJdLCAiZW5hYmxlZCI6IHRy
+        dWUsICJsYXN0X3J1bl9hdCI6IG51bGwsICJ0YXNrIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuc3luY193aXRoX2F1dG9fcHVibGlzaCIsICJm
+        YWlsdXJlX3RocmVzaG9sZCI6IG51bGwsICJyZXNvdXJjZSI6ICJwdWxwOmlt
+        cG9ydGVyOkZlZG9yYV8xNzp5dW1faW1wb3J0ZXIiLCAiX2lkIjogIjU1ZDRk
+        MGQ5ZGIwYzIxMDQyODkzZTk3MiIsICJjb25zZWN1dGl2ZV9mYWlsdXJlcyI6
+        IDAsICJfaHJlZiI6ICIvcHVscC9hcGkvdjIvcmVwb3NpdG9yaWVzL0ZlZG9y
+        YV8xNy9pbXBvcnRlcnMveXVtX2ltcG9ydGVyL3NjaGVkdWxlcy9zeW5jLzU1
+        ZDRkMGQ5ZGIwYzIxMDQyODkzZTk3Mi8ifQ==
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:54:17 GMT
+- request:
     method: delete
-    uri: https://localhost/pulp/api/v2/repositories/1/
-    body: 
+    uri: https://katello-distributions2.example.com/pulp/api/v2/repositories/Fedora_17/
+    body:
       encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
+      base64_string: ""
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Type: 
+      Content-Type:
       - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="YitVX7FiFCxmANWBvgIRzTNYNm0tNvqszJtJIJpk4", oauth_signature="xI52zLkM4NtUij6i2A17i4K%2B0q0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687822", oauth_version="1.0"
-      Pulp-User: 
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="vWUNoWR5ZgD9MLU8EbcE9d2zkUcEqTcmOu7EPcppBDg", oauth_signature="CZslhmgxKqsLMMECET8%2B%2F2C2B7s%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440010458", oauth_version="1.0"
+      Pulp-User:
       - admin
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 202
       message: Accepted
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:17:02 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Content-Encoding: 
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:54:18 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Encoding:
       - utf-8
-      Content-Length: 
+      Content-Length:
       - "172"
-      Connection: 
+      Connection:
       - close
-      Content-Type: 
+      Content-Type:
       - application/json
-    body: 
+    body:
       encoding: US-ASCII
-      string: "{\"spawned_tasks\": [{\"_href\": \"/pulp/api/v2/tasks/29eb92ff-34b8-41c1-a0fc-9b19b59c7e99/\", \"task_id\": \"29eb92ff-34b8-41c1-a0fc-9b19b59c7e99\"}], \"result\": null, \"error\": null}"
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzL2QyN2Y4YzhiLThhNjEtNDcyMC04Nzg4LWMxODRlN2EzZjkyMi8iLCAi
+        dGFza19pZCI6ICJkMjdmOGM4Yi04YTYxLTQ3MjAtODc4OC1jMTg0ZTdhM2Y5
+        MjIifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+
     http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:17:02 GMT
-- request: 
+  recorded_at: Wed, 19 Aug 2015 18:54:18 GMT
+- request:
     method: get
-    uri: https://localhost/pulp/api/v2/tasks/29eb92ff-34b8-41c1-a0fc-9b19b59c7e99/
-    body: 
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/d27f8c8b-8a61-4720-8788-c184e7a3f922/
+    body:
       encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
+      base64_string: ""
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Type: 
+      Content-Type:
       - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="O8g9wPAC8wXA8FBsjIHrbo7Cg7ydKkkjMbAvfD3zAA", oauth_signature="OlwY3kya32on2U%2BaJXNZ5tEZsgs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1412687822", oauth_version="1.0"
-      Pulp-User: 
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="NDR6YyxaNQfKKYfwWDy3rTpp6NQ2DmDkDGv0Vf9E", oauth_signature="CIIHCm3YCWgaokFCc%2BpuF%2FNQZEE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440010458", oauth_version="1.0"
+      Pulp-User:
       - admin
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Date: 
-      - Tue, 07 Oct 2014 13:17:02 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Vary: 
-      - Accept-Encoding
-      Content-Length: 
-      - "603"
-      Connection: 
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:54:18 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "643"
+      Connection:
       - close
-      Content-Type: 
+      Content-Type:
       - application/json
-    body: 
-      encoding: ASCII-8BIT
-      string: "{\"exception\": null, \"task_type\": \"pulp.server.tasks.repository.delete\", \"_href\": \"/pulp/api/v2/tasks/29eb92ff-34b8-41c1-a0fc-9b19b59c7e99/\", \"task_id\": \"29eb92ff-34b8-41c1-a0fc-9b19b59c7e99\", \"tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"finish_time\": \"2014-10-07T13:17:02Z\", \"_ns\": \"task_status\", \"start_time\": \"2014-10-07T13:17:02Z\", \"traceback\": null, \"spawned_tasks\": [], \"progress_report\": {}, \"queue\": \"reserved_resource_worker-0@abed.usersys.redhat.com.dq\", \"state\": \"finished\", \"result\": null, \"error\": null, \"_id\": {\"$oid\": \"5433e7ce33a7d3a2e73bef64\"}, \"id\": \"5433e7ce5ca0134a6f2794a0\"}"
-    http_version: 
-  recorded_at: Tue, 07 Oct 2014 13:17:02 GMT
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9kMjdmOGM4Yi04YTYxLTQ3MjAtODc4OC1jMTg0ZTdhM2Y5
+        MjIvIiwgInRhc2tfaWQiOiAiZDI3ZjhjOGItOGE2MS00NzIwLTg3ODgtYzE4
+        NGU3YTNmOTIyIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0xQGthdGVsbG8tZGlz
+        dHJpYnV0aW9uczIuZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAid2FpdGlu
+        ZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
+        MUBrYXRlbGxvLWRpc3RyaWJ1dGlvbnMyLmV4YW1wbGUuY29tIiwgInJlc3Vs
+        dCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTVk
+        NGQwZGE4NjI3ZWVlNDg3YzkzNTYyIn0sICJpZCI6ICI1NWQ0ZDBkYWRiMGMy
+        MTY0YjNkNTk3YzAifQ==
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:54:18 GMT
+- request:
+    method: get
+    uri: https://katello-distributions2.example.com/pulp/api/v2/tasks/d27f8c8b-8a61-4720-8788-c184e7a3f922/
+    body:
+      encoding: US-ASCII
+      base64_string: ""
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="AKcw992P36sghrwPzQFA7jRGUqQPiKmj", oauth_nonce="YP9R0quF4CVRPyMYUj5LGGTPCWCs6gbx9XBWLB2eQz0", oauth_signature="%2BlC6r%2FcHzcxSyGErQupvb0cOrig%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1440010458", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 19 Aug 2015 18:54:18 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - "702"
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: US-ASCII
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9kMjdmOGM4Yi04YTYxLTQ3MjAtODc4OC1jMTg0ZTdhM2Y5
+        MjIvIiwgInRhc2tfaWQiOiAiZDI3ZjhjOGItOGE2MS00NzIwLTg3ODgtYzE4
+        NGU3YTNmOTIyIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
+        MDE1LTA4LTE5VDE4OjU0OjE4WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE1LTA4LTE5VDE4OjU0OjE4WiIsICJ0cmFjZWJh
+        Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
+        b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
+        MUBrYXRlbGxvLWRpc3RyaWJ1dGlvbnMyLmV4YW1wbGUuY29tLmRxIiwgInN0
+        YXRlIjogImZpbmlzaGVkIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jl
+        c291cmNlX3dvcmtlci0xQGthdGVsbG8tZGlzdHJpYnV0aW9uczIuZXhhbXBs
+        ZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6
+        IHsiJG9pZCI6ICI1NWQ0ZDBkYTg2MjdlZWU0ODdjOTM1NjIifSwgImlkIjog
+        IjU1ZDRkMGRhZGIwYzIxNjRiM2Q1OTdjMCJ9
+
+    http_version:
+  recorded_at: Wed, 19 Aug 2015 18:54:18 GMT
 recorded_with: VCR 2.9.3

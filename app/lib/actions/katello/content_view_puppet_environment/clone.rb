@@ -32,7 +32,7 @@ module Actions
 
               concurrence do
                 plan_action(Katello::Repository::MetadataGenerate, clone) if environment
-                plan_action(ElasticSearch::ContentViewPuppetEnvironment::IndexContent, id: clone.id)
+                plan_action(Pulp::ContentViewPuppetEnvironment::IndexContent, id: clone.id)
               end
             end
           end
@@ -56,7 +56,7 @@ module Actions
         # visible for the systems in the environment
         def find_or_build_puppet_env(version, environment, puppet_modules_present)
           puppet_env = ::Katello::ContentViewPuppetEnvironment.in_content_view(version.content_view).
-              in_environment(environment).scoped(:readonly => false).first
+              in_environment(environment).readonly(false).first
           puppet_env = version.content_view.build_puppet_env(:environment => environment) unless puppet_env
 
           if puppet_env.puppet_environment.nil? && puppet_modules_present

@@ -34,10 +34,6 @@ module Katello
       content_view.systems.in_environment(environment)
     end
 
-    def distributors
-      content_view.distributors.in_environment(environment)
-    end
-
     def activation_keys
       content_view.activation_keys.in_environment(environment)
     end

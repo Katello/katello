@@ -7,7 +7,7 @@ module Actions
         end
 
         def criteria
-          super.merge(fields: { :unit => ::Katello::Package::PULP_SELECT_FIELDS})
+          super.merge(fields: { :unit => ::Katello::Rpm::PULP_SELECT_FIELDS})
         end
       end
     end

@@ -45,6 +45,19 @@ module Katello
         def self.delete_orphaned_content
           Katello.pulp_server.resources.content.remove_orphans
         end
+
+        def self.distribution_bootable?(distribution)
+          # Not every distribution from Pulp represents a bootable
+          # repo. Determine based on the files in the repo.
+          distribution["files"].any? do |file|
+            if file.is_a? Hash
+              filename = file[:relativepath]
+            else
+              filename = file
+            end
+            filename.include?("vmlinuz") || filename.include?("pxeboot")
+          end
+        end
       end
     end
 
@@ -228,7 +241,7 @@ module Katello
         Repository.where(:content_id => self.content_id).pluck(:pulp_id) - [self.pulp_id]
       end
 
-      def package_ids
+      def rpm_ids
         Katello.pulp_server.extensions.repository.rpm_ids(self.pulp_id)
       end
 
@@ -236,24 +249,10 @@ module Katello
         Katello.pulp_server.extensions.repository.errata_ids(self.pulp_id)
       end
 
-      def distribution_ids
-        Katello.pulp_server.extensions.repository.distributions(self.pulp_id).collect do |distribution|
-          distribution['_id']
-        end
-      end
-
       def package_group_count
         content_unit_counts = 0
         if self.pulp_repo_facts
           content_unit_counts = self.pulp_repo_facts[:content_unit_counts][:package_group]
-        end
-        content_unit_counts
-      end
-
-      def puppet_module_count
-        content_unit_counts = 0
-        if self.pulp_repo_facts
-          content_unit_counts = self.pulp_repo_facts[:content_unit_counts][:puppet_module]
         end
         content_unit_counts
       end
@@ -289,32 +288,11 @@ module Katello
         end
       end
 
-      def packages
-        #we fetch ids and then fetch packages by id, because repo packages
-        #  does not contain all the info we need (bz 854260)
-        tmp_packages = []
-
-        self.package_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
-          tmp_packages.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
-                                  sub_list, Katello::Package::PULP_INDEXED_FIELDS))
-        end
-        self.packages = tmp_packages
-
-        @repo_packages
-      end
-
-      def packages=(attrs)
-        @repo_packages = attrs.collect do |package|
-          Katello::Package.new(package)
-        end
-        @repo_packages
-      end
-
       def index_db_errata(force = false)
         if self.content_view.default? || force
           errata_json.each do |erratum_json|
             begin
-              erratum = Erratum.find_or_create_by(:uuid => erratum_json['_id'])
+              erratum = Erratum.find_or_create_by_uuid(:uuid => erratum_json['_id'])
             rescue ActiveRecord::RecordNotUnique
               retry
             end
@@ -325,6 +303,45 @@ module Katello
         Katello::Erratum.sync_repository_associations(self, errata_ids)
       end
 
+      def index_db_rpms(force = false)
+        if self.content_view.default? || force
+          rpms_json.each do |rpm_json|
+            begin
+              rpm = Rpm.find_or_create_by_uuid(:uuid => rpm_json['_id'])
+            rescue ActiveRecord::RecordNotUnique
+              retry
+            end
+            rpm.update_from_json(rpm_json)
+          end
+        end
+        Katello::Rpm.sync_repository_associations(self, rpm_ids)
+      end
+
+      def index_db_puppet_modules(force = false)
+        if self.content_view.default? || force
+          puppet_modules_json.each do |puppet_module_json|
+            begin
+              puppet_module = Katello::PuppetModule.find_or_create_by(:uuid => puppet_module_json['_id'])
+            rescue ActiveRecord::RecordNotUnique
+              retry
+            end
+            puppet_module.update_from_json(puppet_module_json)
+          end
+        end
+
+        Katello::PuppetModule.sync_repository_associations(self, puppet_module_ids)
+      end
+
+      def puppet_modules_json
+        tmp_puppet_modules = []
+        #we fetch ids and then fetch errata by id, because repo errata
+        #  do not contain all the info we need (bz 854260)
+        self.puppet_module_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+          tmp_puppet_modules.concat(Katello.pulp_server.extensions.puppet_module.find_all_by_unit_ids(sub_list))
+        end
+        tmp_puppet_modules
+      end
+
       def errata_json
         tmp_errata = []
         #we fetch ids and then fetch errata by id, because repo errata
@@ -333,6 +350,32 @@ module Katello
           tmp_errata.concat(Katello.pulp_server.extensions.errata.find_all_by_unit_ids(sub_list))
         end
         tmp_errata
+      end
+
+      def index_db_package_groups
+        package_group_json.each do |pg_json|
+          begin
+            package_group = Katello::PackageGroup.find_or_create_by_uuid(:uuid => pg_json['_id'])
+          rescue ActiveRecord::RecordNotUnique
+            retry
+          end
+          package_group.update_from_json(pg_json)
+        end
+        pg_ids = package_group_json.map { |pg| pg['_id'] }
+        Katello::PackageGroup.sync_repository_associations(self, pg_ids)
+      end
+
+      def package_group_json
+        Katello.pulp_server.extensions.repository.package_groups(self.pulp_id)
+      end
+
+      def rpms_json
+        tmp_packages = []
+        self.rpm_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+          tmp_packages.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
+                                  sub_list, Katello::Rpm::PULP_INDEXED_FIELDS))
+        end
+        tmp_packages
       end
 
       def index_db_docker_images
@@ -361,7 +404,6 @@ module Katello
         docker_images.each do |attrs|
           attrs[:tags] = tags.select { |tag| tag[:image_id] == attrs[:image_id] }.map { |tag| tag[:tag] }
         end
-
         docker_images
       end
 
@@ -371,57 +413,6 @@ module Katello
         tags.each do |tag|
           DockerTag.find_or_create_by(:repository_id => id, :docker_image_id => image.id, :name => tag)
         end
-      end
-
-      def distributions
-        if @repo_distributions.nil?
-          # we fetch ids and then fetch distributions by id, because repo distributions do not contain
-          # all the info needed, e.g. repoids
-          tmp_distributions = []
-          self.distribution_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
-            tmp_distributions.concat(Katello.pulp_server.extensions.distribution.find_all_by_unit_ids(sub_list))
-          end
-          self.distributions = tmp_distributions
-        end
-        @repo_distributions
-      end
-
-      def distributions=(attrs)
-        @repo_distributions = attrs.collect do |dist|
-          Katello::Distribution.new(dist)
-        end
-        @repo_distributions
-      end
-
-      def bootable_distribution
-        return unless self.unprotected
-        self.distributions.find { |distribution| distribution.bootable? }
-      end
-
-      def package_groups
-        if @repo_package_groups.nil?
-          groups = Katello.pulp_server.extensions.repository.package_groups(self.pulp_id)
-          self.package_groups = groups
-        end
-        @repo_package_groups
-      end
-
-      def package_groups=(attrs)
-        @repo_package_groups = attrs.collect do |group|
-          Katello::PackageGroup.new(group)
-        end
-        @repo_package_groups
-      end
-
-      def package_groups_search(search_args = {})
-        groups = package_groups
-        unless search_args.empty?
-          groups.delete_if do |group|
-            group_attrs = group.as_json
-            search_args.any? { |attr, value| group_attrs[attr] != value }
-          end
-        end
-        groups
       end
 
       def package_group_categories(search_args = {})
@@ -438,27 +429,6 @@ module Katello
         Katello.pulp_server.extensions.repository.puppet_module_ids(self.pulp_id)
       end
 
-      def puppet_modules
-        if @repo_puppet_modules.nil?
-          # we fetch ids and then fetch modules by id, because repo puppet modules
-          #  do not contain all the info we need
-          ids = puppet_module_ids
-          tmp_modules = []
-          ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
-            tmp_modules.concat(Katello.pulp_server.extensions.puppet_module.find_all_by_unit_ids(sub_list))
-          end
-          self.puppet_modules = tmp_modules
-        end
-        @repo_puppet_modules
-      end
-
-      def puppet_modules=(attrs)
-        @repo_puppet_modules = attrs.collect do |puppet_module|
-          Katello::PuppetModule.new(puppet_module)
-        end
-        @repo_puppet_modules
-      end
-
       def docker_image_ids
         Katello.pulp_server.extensions.repository.docker_image_ids(self.pulp_id)
       end
@@ -473,23 +443,12 @@ module Katello
         end
       end
 
-      def distribution?(id)
-        self.distributions.each do |distro|
-          return true if distro.id == id
-        end
-        return false
-      end
-
       def sync_schedule(date_and_time)
         if date_and_time
           Katello.pulp_server.extensions.repository.create_or_update_schedule(self.pulp_id, importer_type, date_and_time)
         else
           Katello.pulp_server.extensions.repository.remove_schedules(self.pulp_id, importer_type)
         end
-      end
-
-      def package?(id)
-        self.package_ids.include?(id)
       end
 
       def find_packages_by_name(name)
@@ -500,17 +459,10 @@ module Katello
         Katello.pulp_server.extensions.repository.rpms_by_nvre self.pulp_id, name, version, release, epoch
       end
 
-      def find_latest_packages_by_name(name)
-        packages = Katello.pulp_server.extensions.repository.rpms_by_nvre(self.pulp_id, name)
-        Util::Package.find_latest_packages(packages)
-      end
-
       def pulp_update_needed?
-        unless redhat? || previous_changes.key?('url')
-          allowed_changes = %w(url unprotected checksum_type docker_upstream_name)
-          allowed_changes << "name" if docker?
-          allowed_changes.any? { |key| previous_changes.key?(key) }
-        end
+        changeable_attributes = %w(url unprotected checksum_type docker_upstream_name)
+        changeable_attributes << "name" if docker?
+        changeable_attributes.any? { |key| previous_changes.key?(key) }
       end
 
       def sync(options = {})
@@ -530,7 +482,7 @@ module Katello
 
       def clone_contents_by_filter(to_repo, content_type, filter_clauses, override_config = {})
         content_classes = {
-          Katello::Package::CONTENT_TYPE => :rpm,
+          Katello::Rpm::CONTENT_TYPE => :rpm,
           Katello::PackageGroup::CONTENT_TYPE => :package_group,
           Katello::Erratum::CONTENT_TYPE => :errata,
           Katello::PuppetModule::CONTENT_TYPE => :puppet_module
@@ -539,7 +491,7 @@ module Katello
                                                                        unless content_classes[content_type]
         criteria = {}
         if content_type == Runcible::Extensions::Rpm.content_type
-          criteria[:fields] = Package::PULP_SELECT_FIELDS
+          criteria[:fields] = Rpm::PULP_SELECT_FIELDS
         end
 
         if filter_clauses && !filter_clauses.empty?
@@ -564,8 +516,7 @@ module Katello
           # are listed, pulp will retrieve every field it knows about for the rpm
           # (e.g. changelog, filelist...etc).
           events << Katello.pulp_server.extensions.rpm.copy(self.pulp_id, to_repo.pulp_id,
-                                                    :fields => Package::PULP_SELECT_FIELDS)
-          events << clone_distribution(to_repo)
+                                                    :fields => Rpm::PULP_SELECT_FIELDS)
 
           # Since the rpms will be copied above, during the copy of errata and package groups,
           # include the copy_children flag to request that pulp skip copying them again.
@@ -581,14 +532,10 @@ module Katello
         Katello.pulp_server.extensions.yum_repo_metadata_file.copy(self.pulp_id, to_repo.pulp_id)
       end
 
-      def clone_distribution(to_repo)
-        Katello.pulp_server.extensions.distribution.copy(self.pulp_id, to_repo.pulp_id)
-      end
-
       def unassociate_by_filter(content_type, filter_clauses)
         criteria = {:type_ids => [content_type], :filters => {:unit => filter_clauses}}
         if content_type == Katello.pulp_server.extensions.rpm.content_type
-          criteria[:fields] = { :unit => Package::PULP_SELECT_FIELDS}
+          criteria[:fields] = { :unit => Rpm::PULP_SELECT_FIELDS}
         end
         Katello.pulp_server.extensions.repository.unassociate_units(self.pulp_id, criteria)
       end
@@ -598,14 +545,13 @@ module Katello
         tasks = content_types.collect { |type| type.unassociate_from_repo(self.pulp_id, {}) }.flatten(1)
 
         tasks << Katello.pulp_server.extensions.repository.unassociate_units(self.pulp_id,
-                   :type_ids => ['rpm'], :filters => {}, :fields => { :unit => Package::PULP_SELECT_FIELDS})
+                   :type_ids => ['rpm'], :filters => {}, :fields => { :unit => Rpm::PULP_SELECT_FIELDS})
         tasks
       end
 
       def content_types
         [Katello.pulp_server.extensions.errata,
          Katello.pulp_server.extensions.package_group,
-         Katello.pulp_server.extensions.distribution,
          Katello.pulp_server.extensions.puppet_module
         ]
       end
@@ -620,13 +566,6 @@ module Katello
           # retval = date.strftime("%H:%M:%S %Y-%m-%d")
         end
         retval
-      end
-
-      def cancel_sync
-        Rails.logger.info "Cancelling synchronization of repository #{self.pulp_id}"
-        history = self.sync_status
-        return if history.nil? || !history.pending?
-        Katello.pulp_server.resources.task.cancel(history.uuid)
       end
 
       def sync_finish
@@ -734,13 +673,13 @@ module Katello
       def package_lists_for_publish
         names = []
         filenames = []
-        rpms = []
-        self.package_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
-          rpms.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
+        rpm_list = []
+        self.rpm_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+          rpm_list.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
                                   sub_list, %w(filename name)))
         end
 
-        rpms.each do |rpm|
+        rpm_list.each do |rpm|
           filenames << rpm["filename"]
           names << rpm["name"]
         end
@@ -780,6 +719,16 @@ module Katello
       else
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
       end
+    end
+
+    def index_content
+      self.index_db_rpms
+      self.index_db_errata
+      self.index_db_docker_images
+      self.index_db_puppet_modules
+      self.index_db_package_groups
+      self.import_distribution_data
+      true
     end
   end
 end

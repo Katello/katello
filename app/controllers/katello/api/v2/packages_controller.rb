@@ -3,6 +3,8 @@ module Katello
     apipie_concern_subst(:a_resource => N_("a package"), :resource => "packages")
     include Katello::Concerns::Api::V2::RepositoryContentController
 
+    before_filter :find_repositories, :only => :auto_complete_name
+
     api :GET, "/packages", N_("List packages")
     api :GET, "/repositories/:repository_id/packages", N_("List packages")
     param :content_view_version_id, :identifier, :desc => N_("content view version identifier")
@@ -12,10 +14,24 @@ module Katello
       super
     end
 
-    private
+    def auto_complete_name
+      page_size = Katello::Concerns::FilteredAutoCompleteSearch::PAGE_SIZE
+      rpms = Rpm.in_repositories(@repositories)
+      col = "#{Rpm.table_name}.name"
+      rpms = rpms.where("#{Rpm.table_name}.name ILIKE ?", "#{params[:term]}%").select(col).group(col).order(col).limit(page_size)
+      render :json => rpms.pluck(col)
+    end
 
-    def sort_params
-      {sort_by: 'nvra'}
+    def find_repositories
+      @repositories = Repository.readable.where(:id => params[:repoids])
+    end
+
+    def resource_class
+      Katello::Rpm
+    end
+
+    def default_sort
+      lambda { |query| query.default_sort }
     end
   end
 end

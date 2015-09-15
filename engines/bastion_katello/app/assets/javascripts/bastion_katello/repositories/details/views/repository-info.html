@@ -39,7 +39,7 @@
       <div data-block="modal-header" translate>Remove Repository "{{ repository.name }}"?</div>
       <div data-block="modal-body" translate>Are you sure you want to remove repository "{{ repository.name }}"?</div>
     </div>
-    
+
     <span ng-switch="getRepoNonDeletableReason(repository, product)">
       <i class="fa fa-question-sign" ng-switch-when="permissions"
          tooltip="{{ 'You cannot remove this repository because you do not have permission.' | translate }}"
@@ -127,7 +127,7 @@
 
     <div class="detail" ng-show="repository.content_type == 'yum'">
       <span class="info-label" translate>Publish via HTTPS</span>
-      <span class="info-value" translate> true </span>
+      <span class="info-value" translate>Yes</span>
     </div>
 
     <div class="detail" ng-show="repository.content_type == 'yum'">
@@ -231,7 +231,11 @@
         </tr>
         <tr ng-show="repository.content_type == 'yum'">
           <td translate>Package Groups</td>
-          <td class="align-center">{{ repository.content_counts.package_group || 0 }}</td>
+          <td class="align-center">
+            <a ui-sref="products.details.repositories.manage-content.package-groups({productId: product.id, repositoryId: repository.id})">
+              {{ repository.content_counts.package_group || 0 }}
+            </a>
+          </td>
         </tr>
         <tr ng-show="repository.content_type == 'puppet'">
           <td translate>Puppet Modules</td>
@@ -283,4 +287,46 @@
     </form>
   </section>
 
+  <section ng-show="repository.content_type === 'yum'">
+    <div class="divider"></div>
+    <h4 translate>Distribution Information</h4>
+
+    <div class="detail" >
+      <span class="info-value" ng-hide="repository.distribution_version ||
+         repository.distribution_arch ||
+         repository.distribution_family ||
+         repository.distribution_variant">No distribution available</span>
+
+      <section ng-show="repository.distribution_version ||
+         repository.distribution_arch ||
+         repository.distribution_family ||
+         repository.distribution_variant">
+
+        <div class="detail">
+          <span class="info-label" translate>Version</span>
+          <span class="info-value">{{ repository.distribution_version }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="info-label" translate>Architecture</span>
+          <span class="info-value">{{ repository.distribution_arch}}</span>
+        </div>
+
+        <div class="detail">
+          <span class="info-label" translate>Family</span>
+          <span class="info-value">{{ repository.distribution_family}}</span>
+        </div>
+
+        <div class="detail">
+          <span class="info-label" translate>Variant</span>
+          <span class="info-value">{{ repository.distribution_variant}}</span>
+        </div>
+
+        <div class="detail">
+          <span class="info-label" translate>Bootable</span>
+          <span class="info-value">{{ repository.distribution_bootable}}</span>
+        </div>
+      </section>
+    </div>
+  </section>
 </div>

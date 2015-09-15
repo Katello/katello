@@ -4,10 +4,10 @@ extends 'katello/api/v2/common/identifier'
 
 attributes :content_type, :url, :relative_path
 
-child :product do |product|
+child :product do |_product|
   attributes :id, :cp_id, :name
   node :sync_plan do |_sync_plan|
-    partial('katello/api/v2/sync_plans/show', :object => product.sync_plan)
+    attributes :name, :description, :sync_date, :interval, :next_sync
   end
 end
 
@@ -15,11 +15,11 @@ node :content_counts do |repo|
   {
     :docker_image => repo.docker_images.count,
     :docker_tag => repo.docker_tags.count,
-    :rpm => repo.package_count,
-    :package => repo.package_count,
+    :rpm => repo.rpms.count,
+    :package => repo.rpms.count,
     :package_group => repo.package_group_count,
     :erratum => repo.errata.count,
-    :puppet_module => repo.puppet_module_count
+    :puppet_module => repo.puppet_modules.count
   }
 end
 

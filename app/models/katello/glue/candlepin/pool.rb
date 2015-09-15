@@ -174,10 +174,6 @@ module Katello
         return Katello::ActivationKey.where(:cp_id => activation_key_ids.compact)
       end
 
-      def distributors
-        Distributor.all_by_pool(cp_id)
-      end
-
       def host
         System.find_by(:uuid => host_id) if host_id
       end

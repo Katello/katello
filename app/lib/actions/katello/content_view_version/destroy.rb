@@ -3,7 +3,8 @@ module Actions
     module ContentViewVersion
       class Destroy < Actions::Base
         def plan(version, options = {})
-          version.check_ready_to_destroy! unless options[:skip_environment_check]
+          version.validate_destroyable!(options[:skip_environment_check])
+
           destroy_env_content = !options.fetch(:skip_destroy_env_content, false)
           repos = destroy_env_content ? version.repositories : version.archived_repos
           puppet_envs = destroy_env_content ? version.content_view_puppet_environments : [version.archive_puppet_environment]

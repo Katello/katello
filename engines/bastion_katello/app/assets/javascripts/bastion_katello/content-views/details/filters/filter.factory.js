@@ -25,7 +25,7 @@ angular.module('Bastion.content-views').factory('Filter',
                 },
                 availablePackageGroups: {
                     method: 'GET',
-                    params: {action: 'available_package_groups'}
+                    params: {action: 'package_groups', 'available_for': 'content_view_filter'}
                 },
                 packageGroups: {
                     method: 'GET',

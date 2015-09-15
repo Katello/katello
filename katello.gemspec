@@ -30,20 +30,19 @@ Gem::Specification.new do |gem|
   gem.add_dependency "hooks"
   gem.add_dependency "foreman-tasks", "~> 0.7.1"
   gem.add_dependency "foreman_docker", ">= 0.2.0"
-  gem.add_dependency "justified"
 
   gem.add_dependency "qpid_messaging", ">= 0.30.0", '< 0.31.0'
-
   gem.add_dependency "gettext_i18n_rails"
-  gem.add_dependency "i18n_data", ">= 0.2.6"
+
+  # TODO: remove this stop-gap fix once we've removed all attr_accessible method calls before merging into katello/master
+  gem.add_dependency 'protected_attributes'
 
   # Pulp
   gem.add_dependency "runcible", ">= 1.3.0"
   gem.add_dependency "anemone"
 
   # UI
-  gem.add_dependency "haml-rails"
-  gem.add_dependency "deface", '~> 1.0.0'
+  gem.add_dependency "deface", '>= 1.0.0', '< 2.0.0'
   gem.add_dependency "jquery-ui-rails"
   gem.add_dependency "bastion", ">= 2.0.0", "< 3.0.0"
   gem.add_development_dependency "less-rails", "~> 2.5.0"
