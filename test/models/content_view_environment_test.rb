@@ -9,7 +9,7 @@ module Katello
 
     def test_for_systems
       cve = @system.content_view.content_view_environment(@system.environment)
-      assert_include ContentViewEnvironment.for_systems(@system), cve
+      assert_includes ContentViewEnvironment.for_systems(@system), cve
     end
   end
 end
