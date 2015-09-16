@@ -9,9 +9,9 @@ module Support
       cvpe.puppet_environment = puppet_env
       cvpe.save!
 
-      host.update_column(:content_view_id, view.id)
-      host.update_column(:lifecycle_environment_id, environment.id)
+      host.content_aspect = Katello::Host::ContentAspect.new(:content_view => view, :lifecycle_environment => environment)
       host.update_column(:environment_id, cvpe.puppet_environment.id) if assign_to_puppet
+      host.reload
     end
   end
 end

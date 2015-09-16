@@ -101,6 +101,8 @@ module Katello
       # Model extensions
       ::Environment.send :include, Katello::Concerns::EnvironmentExtensions
       ::Host::Managed.send :include, Katello::Concerns::HostManagedExtensions
+      ::Host::Managed.send :include, ::Katello::Concerns::ContentAspectHostExtensions
+      ::Host::Managed.send :include, ::Katello::Concerns::SubscriptionAspectHostExtensions
       ::Hostgroup.send :include, Katello::Concerns::HostgroupExtensions
       ::Location.send :include, Katello::Concerns::LocationExtensions
       ::Medium.send :include, Katello::Concerns::MediumExtensions

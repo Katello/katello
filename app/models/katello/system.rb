@@ -25,7 +25,7 @@ module Katello
     after_rollback :rollback_on_create, :on => :create
 
     belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :systems
-    belongs_to :foreman_host, :class_name => "::Host", :foreign_key => :host_id, :inverse_of => :content_host
+    belongs_to :foreman_host, :class_name => "::Host::Managed", :foreign_key => :host_id, :inverse_of => :content_host
 
     has_many :applicable_errata, :through => :system_errata, :class_name => "Katello::Erratum", :source => :erratum
     has_many :system_errata, :class_name => "Katello::SystemErratum", :dependent => :destroy, :inverse_of => :system
@@ -33,7 +33,6 @@ module Katello
     has_many :bound_repositories, :through => :system_repositories, :class_name => "Katello::Repository", :source => :repository
     has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy, :inverse_of => :system
 
-    has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
     has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
     has_many :activation_keys,
                                  :through => :system_activation_keys,
@@ -65,8 +64,6 @@ module Katello
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
     before_create :fill_defaults
-
-    before_update :update_foreman_host, :if => proc { |r| r.environment_id_changed? || r.content_view_id_changed? }
 
     scope :in_environment, ->(env) { where('environment_id = ?', env) unless env.nil? }
     scope :completer_scope, ->(options) { readable(options[:organization_id]) }
@@ -232,8 +229,6 @@ module Katello
 
       self.bound_repositories = repos
       self.save!
-      self.propagate_yum_repos
-      self.generate_applicability
     end
 
     def install_packages(packages)
@@ -386,25 +381,6 @@ module Katello
     def remove_errata_applicability(uuids)
       applicable_errata_ids = ::Katello::Erratum.where(:uuid => uuids).pluck(:id)
       Katello::SystemErratum.where(:system_id => self.id, :erratum_id => applicable_errata_ids).delete_all
-    end
-
-    def update_foreman_host
-      if foreman_host && foreman_host.lifecycle_environment && foreman_host.content_view
-        new_puppet_env = self.content_view.puppet_env(self.environment).try(:puppet_environment)
-
-        set_puppet_env = foreman_host.content_and_puppet_match?
-        foreman_host.content_view = self.content_view
-        foreman_host.lifecycle_environment = self.environment
-        foreman_host.environment = new_puppet_env if set_puppet_env
-
-        if set_puppet_env && new_puppet_env.nil?
-          fail Errors::NotFound,
-               _("Couldn't find puppet environment associated with lifecycle environment '%{env}' and content view '%{view}'") %
-                   { :env => self.environment.name, :view => self.content_view.name }
-        end
-
-        self.foreman_host.save!
-      end
     end
 
     def refresh_running_tasks

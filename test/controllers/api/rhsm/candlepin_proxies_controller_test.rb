@@ -10,6 +10,8 @@ module Katello
       setup_controller_defaults_api
       login_user(User.find(users(:admin)))
       @system = katello_systems(:simple_server)
+
+      @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @system.content_view, :lifecycle_environment => @system.environment)
       @organization = get_organization
     end
 
@@ -32,78 +34,45 @@ module Katello
 
     describe "register with activation key" do
       before do
-        @foreman_host = FactoryGirl.create(:host, :organization => @organization)
-        @facts = { 'network.hostname' => @foreman_host.name }
-
-        @activation_key = ActivationKey.create!(:name => "key 1", :organization => @foreman_host.organization)
-        @controller.stubs(:find_activation_keys).returns([@activation_key])
-        @controller.stubs(:find_foreman_host).returns(@foreman_host)
+        @facts = { 'network.hostname' => 'somehostname'}
+        @activation_key = katello_activation_keys(:simple_key)
       end
 
-      it "should associate the foreman host with the content host" do
-        System.expects(:new).with('facts' => @facts, 'host_id' => @foreman_host.id).returns(@system)
+      it "should register" do
+        system = katello_systems(:simple_server)
+        host = @host
+        Resources::Candlepin::Consumer.stubs(:get)
 
-        assert_sync_task(::Actions::Katello::System::Create, @system, [@activation_key])
+        System.expects(:new).returns(system)
+        ::Katello::Host::SubscriptionAspect.expects(:new_host_from_rhsm_params).returns(host)
+        assert_sync_task(::Actions::Katello::Host::Register, host, system, {'facts' => @facts}, nil, [@activation_key])
 
-        post(:consumer_activate,
-             :activation_keys => 'some_valid_keys',
-             :facts => @facts)
-      end
+        post(:consumer_activate, :organization_id => @activation_key.organization.label,
+             :activation_keys => @activation_key.name, :facts => @facts)
 
-      it "should delete content host currently associated with the foreman host" do
-        @system2 = katello_systems(:simple_server)
-        Host.any_instance.stubs(:content_host).returns(@system2)
-
-        System.expects(:new).with('facts' => @facts, 'host_id' => @foreman_host.id).returns(@system)
-
-        assert_sync_task(::Actions::Katello::System::Destroy, @system2)
-
-        post(:consumer_activate,
-             :activation_keys => 'some_valid_keys',
-             :facts => @facts)
+        assert_response :success
       end
     end
 
     describe "register with a lifecycle environment" do
       before do
-        @foreman_host = FactoryGirl.create(:host, :organization => @organization)
-        @facts = { 'network.hostname' => @foreman_host.name }
-
+        @facts = { 'network.hostname' => 'somehostname'}
         @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment))
-        KTEnvironment.any_instance.stubs(:organization).returns(@foreman_host.organization)
-        @controller.stubs(:find_content_view_environment).returns(@content_view_environment)
-        @controller.stubs(:find_foreman_host).returns(@foreman_host)
       end
 
-      it "should associate the foreman host with the content host" do
-        System.expects(:new).with('environment' => @content_view_environment.environment,
-                                  'content_view' => @content_view_environment.content_view,
-                                  'serviceLevel' => nil,
-                                  'facts' => @facts,
-                                  'host_id' => @foreman_host.id).returns(@system)
+      it "should register" do
+        system = katello_systems(:simple_server)
+        host = @host
+        Resources::Candlepin::Consumer.stubs(:get)
 
-        assert_sync_task(::Actions::Katello::System::Create, @system)
+        System.expects(:new).returns(system)
+        ::Katello::Host::SubscriptionAspect.expects(:new_host_from_rhsm_params).returns(host)
+        assert_sync_task(::Actions::Katello::Host::Register, host, system, {'facts' => @facts}, @content_view_environment)
 
-        post(:consumer_create,
-             :environment_id => @content_view_environment.environment.id,
-             :facts => @facts)
-      end
+        post(:consumer_create, :organization_id => @content_view_environment.content_view.organization.label,
+             :environment_id => @content_view_environment.cp_id, :facts => @facts)
 
-      it "should delete content host currently associated with the foreman host" do
-        @system2 = katello_systems(:simple_server)
-        Host.any_instance.stubs(:content_host).returns(@system2)
-
-        System.expects(:new).with('environment' => @content_view_environment.environment,
-                                  'content_view' => @content_view_environment.content_view,
-                                  'serviceLevel' => nil,
-                                  'facts' => @facts,
-                                  'host_id' => @foreman_host.id).returns(@system)
-
-        assert_sync_task(::Actions::Katello::System::Destroy, @system2)
-
-        post(:consumer_create,
-             :environment_id => @content_view_environment.environment.id,
-             :facts => @facts)
+        assert_response :success
       end
     end
 
@@ -112,7 +81,8 @@ module Katello
         User.stubs(:consumer?).returns(true)
         System.stubs(:where).returns(@system)
         System.any_instance.stubs(:first).returns(@system)
-        uuid = @system.uuid
+        uuid = @host.subscription_aspect.uuid
+        ::Host.any_instance.stubs(:content_host).returns(@system)
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
         Repository.stubs(:where).with(:relative_path => 'foo').returns([OpenStruct.new(:pulp_id => 'a')])
         Repository.stubs(:where).with(:relative_path => 'bar').returns([OpenStruct.new(:pulp_id => 'b')])
@@ -131,8 +101,9 @@ module Katello
       end
 
       it "should bind all" do
-        @system.expects(:save_bound_repos_by_path!).with(["/pulp/repos/foo", "/pulp/repos/bar"])
-        put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
+        Host::ContentAspect.any_instance.expects(:update_repositories_by_paths).with(["/pulp/repos/foo", "/pulp/repos/bar"])
+        System.any_instance.expects(:save_bound_repos_by_path!).with(["/pulp/repos/foo", "/pulp/repos/bar"])
+        put :enabled_repos, :id => @host.subscription_aspect.uuid, :enabled_repos => enabled_repos
         assert_equal 200, response.status
       end
     end
@@ -188,14 +159,14 @@ module Katello
     it "test_upload_package_profile_protected" do
       Resources::Candlepin::Consumer.stubs(:get)
       assert_protected_action(:upload_package_profile, :edit_content_hosts) do
-        put :upload_package_profile, :id => @system.uuid
+        put :upload_package_profile, :id => @host.subscription_aspect.uuid
       end
     end
 
     it "test_regenerate_identity_certificates_protected" do
       Resources::Candlepin::Consumer.stubs(:get)
       assert_protected_action(:regenerate_identity_certificates, :edit_content_hosts) do
-        post :regenerate_identity_certificates, :id => @system.uuid
+        post :regenerate_identity_certificates, :id => @host.subscription_aspect.uuid
       end
     end
 
@@ -230,11 +201,11 @@ module Katello
     describe "available releases" do
       it "can be listed by matching consumer" do
         # Stub out the current user to simulate consumer auth.
-        uuid = @system.uuid
+        uuid = @host.subscription_aspect.uuid
         User.stubs(:consumer?).returns(true)
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
 
-        get :available_releases, :id => @system.uuid
+        get :available_releases, :id => @host.subscription_aspect.uuid
         assert_response 200
       end
 
@@ -245,7 +216,7 @@ module Katello
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
         # Getting the available releases for a different consumer
         # should not be allowed.
-        get :available_releases, :id => @system.uuid
+        get :available_releases, :id => @host.subscription_aspect.uuid
         assert_response 403
       end
     end
@@ -257,14 +228,14 @@ module Katello
 
       it "can be accessed by user" do
         User.current = setup_user_with_permissions(:create_content_hosts, User.find(users(:restricted).id))
-        get :consumer_show, :id => @system.uuid
+        get :consumer_show, :id => @host.subscription_aspect.uuid
         assert_response 200
       end
 
       it "can be accessed by client" do
-        uuid = @system.uuid
+        uuid = @host.subscription_aspect.uuid
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
-        get :consumer_show, :id => @system.uuid
+        get :consumer_show, :id => uuid
         assert_response 200
       end
     end

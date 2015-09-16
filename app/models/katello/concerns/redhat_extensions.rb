@@ -60,8 +60,8 @@ module Katello
       private
 
       def distribution_repositories(host)
-        content_view = host.content_view
-        lifecycle_environment = host.lifecycle_environment
+        content_view = host.content_aspect.try(:content_view)
+        lifecycle_environment = host.content_aspect.try(:lifecycle_environment)
 
         if content_view && lifecycle_environment
           Katello::Repository.where(:distribution_version => host.os.release,

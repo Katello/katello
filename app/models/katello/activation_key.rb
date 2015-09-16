@@ -20,6 +20,8 @@ module Katello
 
     has_many :pools, :through => :pool_activation_keys, :class_name => "Katello::Pool"
     has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :activation_keys
+    has_many :subscription_aspect_activation_keys, :class_name => "Katello::SubscriptionAspectActivationKey", :dependent => :destroy
+    has_many :subscription_aspects, :through => :subscription_aspect_activation_keys
 
     before_validation :set_default_content_view, :unless => :persisted?
 

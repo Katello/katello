@@ -72,14 +72,6 @@ module Katello
       assert_equal @simple_server.update_pulp_consumer['display_name'], "Not So Simple Server"
     end
 
-    def test_upload_package_profile
-      profile = [{"vendor" => "FedoraHosted", "name" => "elephant",
-                  "version" => "0.3", "release" => "0.8",
-                  "arch" => "noarch", :epoch => ""}]
-
-      assert @simple_server.upload_package_profile(profile)
-    end
-
     def test_katello_agent_installed
       package = Glue::Pulp::SimplePackage.new(:name => "katello-agent")
       @simple_server.stubs(:simple_packages).returns([package])
@@ -111,15 +103,6 @@ module Katello
         @@simple_server.del_pulp_consumer
         VCR.eject_cassette
       end
-    end
-
-    def test_enable_repos
-      @@simple_server.bound_repositories << RepositorySupport.repo
-      @@simple_server.save!
-
-      error_ids = @@simple_server.propagate_yum_repos
-
-      refute_includes error_ids, RepositorySupport.repo.pulp_id
     end
   end
 

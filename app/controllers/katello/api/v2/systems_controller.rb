@@ -113,10 +113,14 @@ module Katello
     param :content_view_id, String, :desc => N_("Specify the content view")
     param :host_collection_ids, Array, :desc => N_("Specify the host collections as an array")
     def create
-      @system = System.new(system_params(params).merge(:environment  => @environment,
-                                                       :content_view => @content_view))
-      sync_task(::Actions::Katello::System::Create, @system)
-      @system.reload
+      rhsm_params = system_params(params)
+      rhsm_params[:facts] ||= {}
+      rhsm_params[:facts]['network.hostname'] ||= rhsm_params[:name]
+      content_view_environment = ContentViewEnvironment.where(:content_view_id => @content_view, :environment_id => @environment).first
+      host = Katello::Host::SubscriptionAspect.new_host_from_rhsm_params(rhsm_params, @organization, Location.default_location)
+
+      sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, content_view_environment)
+      @system = host.reload.content_host
       respond_for_create
     end
 
