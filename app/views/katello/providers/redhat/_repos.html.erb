@@ -32,8 +32,12 @@
                      <% if result[:registry_name] %>
                        data-registry-name="<%= result[:registry_name] %>"
                      <% end %>
-                     data-releasever="<%= result[:substitutions][:releasever] %>"
-                     data-basearch="<%= result[:substitutions][:basearch] %>"
+                     <% if result[:substitutions][:releasever] %>
+                       data-releasever="<%= result[:substitutions][:releasever] %>"
+                     <% end %>
+                     <% if result[:substitutions][:basearch] %>
+                       data-basearch="<%= result[:substitutions][:basearch] %>"
+                     <% end %>
                      <% if result[:promoted] %>
                       disabled="disabled"
                      <% end %>
