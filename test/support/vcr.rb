@@ -2,7 +2,7 @@
 require "vcr"
 require "active_support/concern"
 
-WebMock.disable_net_connect!(:allow_localhost => true)
+WebMock.allow_net_connect!
 
 module VCR
   def self.live?
