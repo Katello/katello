@@ -2,7 +2,7 @@ require 'katello_test_helper'
 require 'helpers/repo_test_data'
 
 module Katello
-  describe Product, :katello => true do
+  describe Product do
     include OrchestrationHelper
     include ProductHelperMethods
     include OrganizationHelperMethods

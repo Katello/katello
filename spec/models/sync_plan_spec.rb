@@ -2,7 +2,7 @@ require 'katello_test_helper'
 require 'helpers/product_test_data'
 
 module Katello
-  describe SyncPlan, :katello => true do
+  describe SyncPlan do
     include OrchestrationHelper
 
     describe "SyncPlan should" do
