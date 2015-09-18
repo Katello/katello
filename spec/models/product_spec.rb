@@ -19,7 +19,7 @@ module Katello
         # ForemanTasks.trigger(::Actions::Katello::Organization::Create, @organization)
       end
 
-      @provider     = Provider.find_or_create_by_name!(:name => "customprovider", :organization => @organization, :provider_type => Provider::CUSTOM)
+      @provider     = Provider.find_or_create_by!(:name => "customprovider", :organization => @organization, :provider_type => Provider::CUSTOM)
       @cdn_mock = Resources::CDN::CdnResource.new("https://cdn.redhat.com", :ssl_client_cert => "456", :ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123")
       @substitutor_mock = Util::CdnVarSubstitutor.new(@cdn_mock)
       @substitutor_mock.stubs(:precalculate).returns do |_paths|

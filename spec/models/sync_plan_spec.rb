@@ -48,10 +48,10 @@ module Katello
           @plan.interval = 'hourly'
           @plan.sync_date = '1999-11-17 09:26:00 UTC'
 
-          Time.stubs(:now).returns(Time.new(2012, 1, 1, 9))
+          Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
           @plan.next_sync.must_equal(Time.new(2012, 1, 1, 9, 26, 0, "+00:00"))
 
-          Time.stubs(:now).returns(Time.new(2012, 1, 1, 9, 30))
+          Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9, 30))
           @plan.next_sync.must_equal(Time.new(2012, 1, 1, 10, 26, 0, "+00:00"))
         end
 
@@ -59,13 +59,13 @@ module Katello
           @plan.interval = 'daily'
           @plan.sync_date = '1999-11-17 09:26:00 UTC'
 
-          Time.stubs(:now).returns(Time.new(2012, 1, 1, 9))
+          Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
           @plan.next_sync.must_equal(Time.new(2012, 1, 1, 9, 26, 0, "+00:00"))
 
-          Time.stubs(:now).returns(Time.new(2012, 1, 1, 9, 27))
+          Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9, 27))
           @plan.next_sync.must_equal(Time.new(2012, 1, 2, 9, 26, 0, "+00:00"))
 
-          Time.stubs(:now).returns(Time.new(2012, 1, 2, 9))
+          Time.stubs(:now).returns(Time.utc(2012, 1, 2, 9))
           @plan.next_sync.must_equal(Time.new(2012, 1, 2, 9, 26, 0, "+00:00"))
         end
 

@@ -2,6 +2,8 @@
 require "vcr"
 require "active_support/concern"
 
+WebMock.disable_net_connect!(:allow_localhost => true)
+
 module VCR
   def self.live?
     VCR.configuration.default_cassette_options[:record] != :none

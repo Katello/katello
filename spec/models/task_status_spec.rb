@@ -20,8 +20,8 @@ module Katello
     end
 
     it "has valid as_json" do
-      subject.as_json.must_include(:description)
-      subject.as_json.must_include(:result_description)
+      subject.as_json.must_include("description")
+      subject.as_json.must_include("result_description")
       subject.as_json.must_include(:system_name)
     end
 

@@ -57,7 +57,7 @@ module Katello
           Rails.logger.debug "Unable to report status change" # minor error
           # if logger level is higher than debug logger return false that would cause rollback
           # since this is log only callback we must be sure to return true
-          return true
+          true
         end
       end
     end
