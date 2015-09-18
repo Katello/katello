@@ -41,23 +41,11 @@ module Katello
     def set_attributes
       return unless Katello.config.use_pulp
       if self.uuid.present?
-        puppet_module = PuppetModule.find_by_uuid(self.uuid)
+        puppet_module = PuppetModule.with_identifiers(self.uuid).first
         fail Errors::NotFound, _("Couldn't find Puppet Module with id '%s'") % self.uuid unless puppet_module
 
         self.name = puppet_module.name
         self.author = puppet_module.author
-      elsif (self.name.present? && !self.author.present?)
-        puppet_modules = PuppetModule.latest_modules_search(
-          [{:name => self.name, :author => '*'}],
-          self.content_view.puppet_repos.map(&:pulp_id))
-
-        if puppet_modules.empty?
-          fail Errors::NotFound, _("Couldn't find Puppet Module '%s'.") % self.name
-        elsif puppet_modules.length > 1
-          fail Errors::NotFound, _("Puppet Module '%s' found more than once. Please specify the author.") % self.name
-        else
-          self.author = puppet_modules.first.author
-        end
       end
     end
   end
