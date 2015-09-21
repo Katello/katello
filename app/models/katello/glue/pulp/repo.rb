@@ -292,7 +292,7 @@ module Katello
         if self.content_view.default? || force
           errata_json.each do |erratum_json|
             begin
-              erratum = Erratum.find_or_create_by_uuid(:uuid => erratum_json['_id'])
+              erratum = Erratum.find_or_create_by(:uuid => erratum_json['_id'])
             rescue ActiveRecord::RecordNotUnique
               retry
             end
@@ -307,7 +307,7 @@ module Katello
         if self.content_view.default? || force
           rpms_json.each do |rpm_json|
             begin
-              rpm = Rpm.find_or_create_by_uuid(:uuid => rpm_json['_id'])
+              rpm = Rpm.find_or_create_by(:uuid => rpm_json['_id'])
             rescue ActiveRecord::RecordNotUnique
               retry
             end
@@ -355,7 +355,7 @@ module Katello
       def index_db_package_groups
         package_group_json.each do |pg_json|
           begin
-            package_group = Katello::PackageGroup.find_or_create_by_uuid(:uuid => pg_json['_id'])
+            package_group = Katello::PackageGroup.find_or_create_by(:uuid => pg_json['_id'])
           rescue ActiveRecord::RecordNotUnique
             retry
           end

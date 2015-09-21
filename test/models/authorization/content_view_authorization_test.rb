@@ -45,7 +45,7 @@ module Katello
     end
 
     def test_readable_products_with_ids
-      refute_empty ContentView.readable_products([Product.first.id])
+      refute_empty ContentView.readable_products([Product.last.id])
     end
   end
 

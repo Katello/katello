@@ -160,7 +160,7 @@ module Katello
       repos = if env && content_view
                 Katello::Repository.in_environment(env).in_content_views([content_view])
               else
-                self.bound_repositories
+                self.bound_repositories.pluck(:id)
               end
 
       self.applicable_errata.in_repositories(repos).uniq
