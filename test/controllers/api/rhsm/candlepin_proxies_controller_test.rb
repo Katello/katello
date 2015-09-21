@@ -107,7 +107,7 @@ module Katello
       end
     end
 
-    describe "update enabled_repos", :katello => true do
+    describe "update enabled_repos" do
       before do
         User.stubs(:consumer?).returns(true)
         System.stubs(:where).returns(@system)
