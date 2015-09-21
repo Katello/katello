@@ -46,7 +46,7 @@ module Katello
       end
 
       def readable_repositories(repo_ids = nil)
-        query = Katello::Repository.scoped
+        query = Katello::Repository.where(nil)
         content_views = Katello::ContentView.readable
 
         if repo_ids
@@ -60,7 +60,7 @@ module Katello
       end
 
       def readable_products(product_ids = nil)
-        query = Katello::Product.scoped
+        query = Katello::Product.where(nil)
         query = query.where(:id => product_ids) if product_ids
 
         query.joins(:repositories => :content_view_version)
