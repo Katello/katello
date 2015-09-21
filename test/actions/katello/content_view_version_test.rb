@@ -5,6 +5,10 @@ module ::Actions::Katello::ContentViewVersion
     include Dynflow::Testing
     include Support::Actions::Fixtures
     include FactoryGirl::Syntax::Methods
+
+    before do
+      set_user
+    end
   end
 
   class IncrementalUpdateTest < TestBase
