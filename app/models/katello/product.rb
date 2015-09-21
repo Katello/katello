@@ -63,7 +63,7 @@ module Katello
     scope :custom, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => [Provider::CUSTOM, Provider::ANONYMOUS]) }
 
     def self.enabled
-      self.where("#{Product.table_name}.id in (?) or #{Product.table_name}.id in (?)", 
+      self.where("#{Product.table_name}.id in (?) or #{Product.table_name}.id in (?)",
                  Product.redhat.joins(:repositories).uniq.pluck(:id), Product.custom.pluck(:id))
     end
 
