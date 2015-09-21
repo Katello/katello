@@ -3,7 +3,8 @@ module Katello
     include Katello::Concerns::FilteredAutoCompleteSearch
 
     before_filter :find_content_view, :except => [:autocomplete_search]
-    before_filter :find_puppet_module, :only => [:show, :update, :destroy]
+    before_filter :find_puppet_module, :only => [:create]
+    before_filter :find_content_view_puppet_module, :only => [:show, :update, :destroy]
 
     api :GET, "/content_views/:content_view_id/content_view_puppet_modules", N_("List content view puppet modules")
     param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
@@ -20,8 +21,11 @@ module Katello
     param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
     param :name, String, :desc => N_("name of the puppet module")
     param :author, String, :desc => N_("author of the puppet module")
+    param :id, String, :desc => N_("the id of the puppet module to associate")
     param :uuid, String, :desc => N_("the uuid of the puppet module to associate")
     def create
+      params[:content_view_puppet_module][:uuid] = @puppet_module.uuid if @puppet_module
+
       @puppet_module = ContentViewPuppetModule.create!(puppet_module_params) do |puppet_module|
         puppet_module.content_view = @view
       end
@@ -71,8 +75,12 @@ module Katello
       @view = ContentView.non_default.find(params[:content_view_id])
     end
 
-    def find_puppet_module
+    def find_content_view_puppet_module
       @puppet_module = ContentViewPuppetModule.find(params[:id])
+    end
+
+    def find_puppet_module
+      @puppet_module = PuppetModule.find(params[:id]) if params[:id]
     end
 
     def puppet_module_params
