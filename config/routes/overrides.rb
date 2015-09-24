@@ -1,6 +1,21 @@
+module Katello
+  class WhitelistConstraint
+    PATHS = [/^\/api\/v2\/organizations\/\S+\/parameters/]
+
+    def matches?(request)
+      PATHS.map { |path| request.env["REQUEST_PATH"].match(path) }.any? ? false : true
+    end
+  end
+end
+
 Foreman::Application.routes.draw do
-  match "/api/v2/organizations/*all", to: proc { [404, {}, ['']] }, :via => :get
-  match "/api/v1/organizations/:id", via: :delete, to: proc { [404, {}, ['']] }
+  override_message = '{"message": "Route forbidden by Katello, check katello/config/routes/overrides"}'
+
+  match "/api/v2/organizations/*all", :to => proc { [404, {}, [override_message]] },
+                                      :via => :get,
+                                      :constraints => Katello::WhitelistConstraint.new
+
+  match "/api/v1/organizations/:id", via: :delete, to: proc { [404, {}, [override_message]] }
 
   resources :operatingsystems, :only => [] do
     get 'available_kickstart_repo', :on => :member
