@@ -16,6 +16,7 @@ module ::Actions::Pulp::Repository
     end
 
     def setup
+      set_user
       ::Katello::RepositorySupport.create_repo(repo.id)
     end
 
