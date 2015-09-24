@@ -80,7 +80,6 @@ class SourceCodeTest < ActiveSupport::TestCase
               %r{engines/bastion/test/test_helper\.rb},
               %r{test/support/vcr\.rb},
               %r{test/support/runcible\.rb},
-              %r{test/katello_test_runner\.rb}, # TODO: clean up minitest_helper
               %r{app/services/katello/authentication/client_authentication\.rb},
               %r{lib/util/puppet\.rb}).
           check_lines(<<-DOC) { |line| (line !~ /ENV\[[^\]]+\]/) ? true : line =~ /#\s?ok/ }
