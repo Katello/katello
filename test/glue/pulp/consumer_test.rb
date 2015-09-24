@@ -5,6 +5,14 @@ require 'support/pulp/repository_support'
 module Katello
   class GluePulpConsumerTestBase < ActiveSupport::TestCase
     include RepositorySupport
+    def setup
+      set_user
+      configure_runcible
+    end
+
+    def teardown
+      VCR.eject_cassette
+    end
 
     def self.set_pulp_consumer(system)
       # TODO: this tests should move to actions tests once we
@@ -21,31 +29,31 @@ module Katello
 
   class GluePulpConsumerTestCreateDestroy < GluePulpConsumerTestBase
     def setup
-      set_user
+      super
       VCR.insert_cassette('pulp/consumer/create')
       @simple_server = System.find(katello_systems(:simple_server).id)
     end
 
     def teardown
-      VCR.eject_cassette
+      @simple_server.del_pulp_consumer
+      super
     end
 
     def test_set_pulp_consumer
       assert set_pulp_consumer(@simple_server)
-      @simple_server.del_pulp_consumer
     end
   end
 
   class GluePulpConsumerDeleteTest < GluePulpConsumerTestBase
     def setup
-      set_user
+      super
       VCR.insert_cassette('pulp/consumer/delete')
       @simple_server = System.find(katello_systems(:simple_server).id)
       set_pulp_consumer(@simple_server)
     end
 
     def teardown
-      VCR.eject_cassette
+      super
     end
 
     def test_del_pulp_consumer
@@ -55,7 +63,7 @@ module Katello
 
   class GluePulpConsumerTest < GluePulpConsumerTestBase
     def setup
-      set_user
+      super
       VCR.insert_cassette('pulp/consumer/consumer')
       @simple_server = System.find(katello_systems(:simple_server).id)
       set_pulp_consumer(@simple_server)
@@ -63,7 +71,7 @@ module Katello
 
     def teardown
       @simple_server.del_pulp_consumer
-      VCR.eject_cassette
+      super
     end
 
     def test_update_pulp_consumer
@@ -94,7 +102,7 @@ module Katello
   class GluePulpConsumerBindTest < GluePulpConsumerTestBase
     @@simple_server = nil
 
-    def self.before_suite
+    def setup
       super
       VCR.insert_cassette('pulp/consumer/bind')
 
@@ -104,13 +112,10 @@ module Katello
       set_pulp_consumer(@@simple_server)
     end
 
-    def self.after_suite
+    def teardown
+      RepositorySupport.destroy_repo
+      @@simple_server.del_pulp_consumer
       super
-      run_as_admin do
-        RepositorySupport.destroy_repo
-        @@simple_server.del_pulp_consumer
-        VCR.eject_cassette
-      end
     end
 
     def test_enable_repos
@@ -126,7 +131,7 @@ module Katello
   class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
     @@simple_server = nil
 
-    def self.before_suite
+    def setup
       super
       VCR.insert_cassette('pulp/consumer/content')
 
@@ -137,13 +142,10 @@ module Katello
       @@simple_server.propagate_yum_repos
     end
 
-    def self.after_suite
+    def teardown
+      RepositorySupport.destroy_repo
+      @@simple_server.del_pulp_consumer if defined? @@simple_server
       super
-      run_as_admin do
-        RepositorySupport.destroy_repo
-        @@simple_server.del_pulp_consumer if defined? @@simple_server
-        VCR.eject_cassette
-      end
     end
 
     def test_install_package

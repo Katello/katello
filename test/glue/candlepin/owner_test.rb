@@ -3,25 +3,23 @@ require 'support/candlepin/owner_support'
 
 module Katello
   class GlueCandlepinOwnerTestBase < ActiveSupport::TestCase
-    def self.before_suite
+    def setup
       User.current = User.find(FIXTURES['users']['admin']['id'])
       VCR.insert_cassette('glue_candlepin_owner', :match_requests_on => [:path, :params, :method, :body_json])
     end
 
-    def self.after_suite
-      super
-    ensure
+    def teardown
       VCR.eject_cassette
     end
   end
 
   class GlueCandlepinOwnerTestSLA < GlueCandlepinOwnerTestBase
-    def self.before_suite
+    def setup
       super
       @@org = CandlepinOwnerSupport.create_organization('GlueCandlepinOwnerTestSystem_1', 'GlueCandlepinOwnerTestSystem_1')
     end
 
-    def self.after_suite
+    def teardown
       super
       CandlepinOwnerSupport.destroy_organization(@@org.id)
     end

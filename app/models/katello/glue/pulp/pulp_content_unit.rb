@@ -36,7 +36,7 @@ module Katello
       end
 
       def pulp_data(uuid)
-        unit_handler.find_by(:unit_id => uuid)
+        unit_handler.find_by_unit_id(uuid)
       end
 
       # Import all units of a single type and refresh their repository associations

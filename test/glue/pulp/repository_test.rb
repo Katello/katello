@@ -7,10 +7,6 @@ module Katello
 
     def setup
       set_user
-    end
-
-    def self.before_suite
-      super
       configure_runcible
 
       @@fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
@@ -65,24 +61,18 @@ module Katello
   end
 
   class GluePulpRepoTest < GluePulpRepoTestBase
-    def self.before_suite
+    def setup
       super
       VCR.insert_cassette('pulp/repository/repository')
       self.create_repo(@@fedora_17_x86_64)
-    end
-
-    def self.after_suite
-      super
-      run_as_admin do
-        delete_repo(@@fedora_17_x86_64)
-        VCR.eject_cassette
-      end
-    end
-
-    def setup
-      super
       @fedora_17_x86_64 = @@fedora_17_x86_64
       @fedora_17_x86_64.relative_path = '/test_path/'
+    end
+
+    def teardown
+      super
+      delete_repo(@@fedora_17_x86_64)
+      VCR.eject_cassette
     end
 
     def test_delete_orphaned_content
@@ -146,67 +136,53 @@ module Katello
   end
 
   class GluePulpRepoAfterSyncTest < GluePulpRepoTestBase
-    def self.before_suite
+    def setup
       super
       VCR.insert_cassette('pulp/repository/after_sync')
       create_repo(@@fedora_17_x86_64)
-    end
-
-    def self.after_suite
-      super
-      run_as_admin do
-        delete_repo(@@fedora_17_x86_64)
-        VCR.eject_cassette
-      end
-    end
-
-    def setup
-      super
       @fedora_17_x86_64 = @@fedora_17_x86_64
       @fedora_17_x86_64.relative_path = '/test_path/'
+    end
+
+    def teardown
+      super
+      delete_repo(@@fedora_17_x86_64)
+      VCR.eject_cassette
     end
   end
 
   class GluePulpChangeFeedTest < GluePulpRepoTestBase
-    def self.before_suite
+    def setup
       super
       VCR.insert_cassette('pulp/repository/feed_change')
       create_repo(@@fedora_17_x86_64)
     end
 
-    def self.after_suite
+    def teardown
       super
-      run_as_admin do
-        delete_repo(@@fedora_17_x86_64)
-        VCR.eject_cassette
-      end
+      delete_repo(@@fedora_17_x86_64)
+      VCR.eject_cassette
     end
   end
 
   class GluePulpPuppetRepoTest < GluePulpRepoTestBase
     @@p_forge = nil
 
-    def self.before_suite
+    def setup
       super
       VCR.insert_cassette('pulp/repository/puppet')
       @@p_forge = Repository.find(FIXTURES['katello_repositories']['p_forge']['id'])
       @@p_forge.relative_path = '/test_path/'
       @@p_forge.url = "http://davidd.fedorapeople.org/repos/random_puppet/"
       create_repo(@@p_forge)
-    end
-
-    def self.after_suite
-      super
-      run_as_admin do
-        delete_repo(@@p_forge)
-        VCR.eject_cassette
-      end
-    end
-
-    def setup
-      super
       @p_forge = @@p_forge
       @p_forge.relative_path = '/test_path/'
+    end
+
+    def teardown
+      super
+      delete_repo(@@p_forge)
+      VCR.eject_cassette
     end
 
     def test_generate_distributors
@@ -215,7 +191,7 @@ module Katello
   end
 
   class GluePulpRepoContentsTest < GluePulpRepoTestBase
-    def self.before_suite
+    def setup
       super
       VCR.insert_cassette('pulp/repository/contents')
 
@@ -224,12 +200,10 @@ module Katello
       TaskSupport.wait_on_tasks(task_list)
     end
 
-    def self.after_suite
+    def teardown
       super
-      run_as_admin do
-        delete_repo(@@fedora_17_x86_64)
-        VCR.eject_cassette
-      end
+      delete_repo(@@fedora_17_x86_64)
+      VCR.eject_cassette
     end
 
     def test_sync_status
@@ -318,7 +292,7 @@ module Katello
   end
 
   class GluePulpRepoOperationsTest < GluePulpRepoTestBase
-    def self.before_suite
+    def setup
       super
       VCR.insert_cassette('pulp/repository/operations')
 
@@ -329,12 +303,10 @@ module Katello
       TaskSupport.wait_on_tasks(task_list)
     end
 
-    def self.after_suite
+    def teardown
       super
-      run_as_admin do
-        delete_repo(@@fedora_17_x86_64)
-        VCR.eject_cassette
-      end
+      delete_repo(@@fedora_17_x86_64)
+      VCR.eject_cassette
     end
 
     def test_create_clone

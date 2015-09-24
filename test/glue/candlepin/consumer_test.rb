@@ -11,7 +11,7 @@ module Katello
     @@dev_cv = nil
     @@dev_cve = nil
 
-    def self.before_suite
+    def setup
       super
       User.current = User.find(FIXTURES['users']['admin']['id'])
       VCR.insert_cassette('glue_candlepin_consumer', :match_requests_on => [:path, :params, :method, :body_json])
@@ -33,16 +33,14 @@ module Katello
       ForemanTasks.sync_task(::Actions::Katello::ContentView::EnvironmentCreate, @@dev_cve)
     end
 
-    def self.after_suite
+    def teardown
       super
-      run_as_admin do
-        unless @@dev_cve.nil?
-          # To prevent deletion of the fixture object
-          @@dev_cve.stubs(:destroy).returns(true)
-          # ForemanTasks.sync_task(::Actions::Katello::ContentViewEnvironment::Destroy, @@dev_cve)
-        end
-        Resources::Candlepin::Owner.destroy(@@org.label) unless @@org.nil?
+      unless @@dev_cve.nil?
+        # To prevent deletion of the fixture object
+        @@dev_cve.stubs(:destroy).returns(true)
+        # ForemanTasks.sync_task(::Actions::Katello::ContentViewEnvironment::Destroy, @@dev_cve)
       end
+      Resources::Candlepin::Owner.destroy(@@org.label) unless @@org.nil?
     ensure
       VCR.eject_cassette
     end
@@ -51,14 +49,7 @@ module Katello
   class GlueCandlepinConsumerTestSystem < GlueCandlepinConsumerTestBase
     def setup
       super
-    end
-
-    def self.before_suite
-      super
       @@sys = CandlepinConsumerSupport.create_system('GlueCandlepinConsumerTestSystem_1', @@dev, @@dev_cv)
-    end
-
-    def setup
       @@sys.facts['memory.memtotal'] = '256 MB'
       @@sys.facts.delete 'dmi.memory.size'
       @@sys.facts['cpu.cpu_socket(s)'] = '2'

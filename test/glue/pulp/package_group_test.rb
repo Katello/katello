@@ -7,8 +7,9 @@ module Katello
 
     @@package_group_id = nil
 
-    def self.before_suite
+    def setup
       super
+      set_user
       configure_runcible
 
       VCR.insert_cassette('pulp/content/package_group')
@@ -21,11 +22,9 @@ module Katello
       @@package_group_names = ['bird', 'mammal']
     end
 
-    def self.after_suite
-      run_as_admin do
-        RepositorySupport.destroy_repo
-        VCR.eject_cassette
-      end
+    def teardown
+      RepositorySupport.destroy_repo
+      VCR.eject_cassette
     end
   end
 
