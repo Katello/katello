@@ -2,18 +2,13 @@ module Katello
   class HostCollection < Katello::Model
     self.include_root_in_json = false
 
-    include Hooks
-    define_hooks :add_system_hook, :remove_system_hook
-
     include Katello::Authorization::HostCollection
-    include Glue::ElasticSearch::HostCollection if SETTINGS[:katello][:use_elasticsearch]
 
     has_many :key_host_collections, :class_name => "Katello::KeyHostCollection", :dependent => :destroy
     has_many :activation_keys, :through => :key_host_collections
 
     has_many :system_host_collections, :class_name => "Katello::SystemHostCollection", :dependent => :destroy
-    has_many :systems, :through => :system_host_collections, :class_name => "Katello::System",
-                       :after_add => :add_system, :after_remove => :remove_system
+    has_many :systems, :through => :system_host_collections, :class_name => "Katello::System"
 
     has_many :jobs, :class_name => "Katello::Job", :as => :job_owner, :dependent => :nullify
 
@@ -47,14 +42,6 @@ module Katello
     end
 
     belongs_to :organization, :inverse_of => :host_collections
-
-    def add_system(system)
-      run_hook(:add_system_hook, system)
-    end
-
-    def remove_system(system)
-      run_hook(:remove_system_hook, system)
-    end
 
     def install_packages(packages)
       fail Errors::HostCollectionEmptyException if self.systems.empty?
