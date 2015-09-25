@@ -1,6 +1,5 @@
 module Katello
   class Hypervisor < System
-    use_index_of System if SETTINGS[:katello][:use_elasticsearch]
     validates_lengths_from_database
 
     UNSUPPORTED_ACTIONS = [:package_profile, :pulp_facts, :simple_packages, :errata, :del_pulp_consumer, :set_pulp_consumer,
