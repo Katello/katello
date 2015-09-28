@@ -10,6 +10,7 @@ module Katello
       @system = katello_systems(:simple_server)
       @products = katello_products
       @organization = get_organization
+      @pool_one = katello_pools(:pool_one)
     end
 
     def permissions
@@ -29,7 +30,11 @@ module Katello
       System.any_instance.stubs(:unsubscribe_all).returns(true)
       System.any_instance.stubs(:filtered_pools).returns([])
       System.any_instance.stubs(:releaseVer).returns(1)
-      System.any_instance.stubs(:consumed_entitlements).returns([])
+      System.any_instance.stubs(:entitlements).returns([])
+      System.any_instance.stubs(:find_entitlement).returns({})
+      Pool.stubs(:candlepin_data).returns({})
+      Pool.any_instance.stubs(:backend_data).returns({})
+      Pool.any_instance.stubs(:import_lazy_attributes).returns({})
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
 
       models
@@ -37,14 +42,14 @@ module Katello
     end
 
     def test_system_index
-      get :index, :system_id => @system.uuid
+      get :index, :system_id => @system.uuid, :available_for => "content_host"
 
       assert_response :success
       assert_template 'api/v2/subscriptions/index'
     end
 
     def test_index
-      Provider.any_instance.stubs(:index_subscriptions).returns(true)
+      Pool.expects(:get_for_organization).returns(Pool.all)
       get :index, :organization_id => @organization.id
 
       assert_response :success
@@ -61,7 +66,6 @@ module Katello
     end
 
     def test_available
-      System.any_instance.expects(:filtered_pools)
       get :available, :system_id => @system.uuid
 
       assert_response :success
@@ -78,8 +82,7 @@ module Katello
     end
 
     def test_create
-      System.any_instance.expects(:subscribe)
-      post :create, :system_id => @system.uuid, :subscriptions => [{:id => 'redhat', :quantity => 1}]
+      post :create, :system_id => @system.uuid, :subscriptions => [{:id => @pool_one.id, :quantity => 1}]
 
       assert_response :success
       assert_template 'katello/api/v2/subscriptions/index'

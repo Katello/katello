@@ -137,29 +137,11 @@ namespace :katello do
     Katello::Erratum.import_all
     Katello::PackageGroup.import_all
     Katello::PuppetModule.import_all
+    Katello::Subscription.import_all
+    Katello::Pool.import_all
 
     reindex_helper.index_objects(Katello::Rpm) do
       Katello::Rpm.import_all
-    end
-
-    reindex_helper.log "Re-indexing Pools"
-    Organization.all.each do |org|
-      begin
-        cp_pools = Katello::Resources::Candlepin::Pool.get_for_owner(org.label)
-        if cp_pools
-          # Pool objects
-          pools = cp_pools.collect{ |cp_pool| Katello::Pool.find_pool(cp_pool['id'], cp_pool) }
-          # Index pools
-          Katello::Pool.index_pools(pools) if pools.length > 0
-        end
-      rescue Exception => e
-        reindex_helper.log("Unable to index pools for Organization - '#{org.name}'. Check #{ReindexHelper::LOG_FILE} for more information.", :console => true)
-        reindex_helper.log_error("Object: #{org.inspect}")
-        reindex_helper.log_error("Exception: \n #{e.message}")
-        reindex_helper.log_error("Stack Trace: \n #{e.backtrace.join("\n")}")
-        owner_details = reindex_helper.fetch_resource { org.owner_details}
-        reindex_helper.log_error("Candlepin owner not found for #{org.name}") if owner_details.nil?
-      end
     end
   end
 end

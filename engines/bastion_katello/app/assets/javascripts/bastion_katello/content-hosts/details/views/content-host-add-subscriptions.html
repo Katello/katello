@@ -1,104 +1,68 @@
-<section class="nutupane-sub-section">
+<span page-title ng-model="contentHost">{{ 'Add Subscriptions for Content Host:' | translate }} {{ contentHost.name }}</span>
+<div data-extend-template="layouts/details-nutupane.html">
+  <div data-block="messages"></div>
 
-  <div class="row">
-
-    <div class="col-sm-3">
-      <div class="input-group input-group">
-        <input type="text"
-               class="form-control"
-               placeholder="{{ 'Search...' | translate }}"
-               ng-model="addSubscriptionsTable.searchTerm"
-               bst-on-enter="addSubscriptionsTable.search(addSubscriptionsTable.searchTerm)"/>
-        <span class="input-group-btn">
-          <button ng-click="addSubscriptionsTable.search(addSubscriptionsTable.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
-        </span>
-      </div>
-    </div>
-
-    <div class="col-sm-3 nutupane-info">
-      <span translate>Showing {{ addSubscriptionsTable.rows.length }} of {{ addSubscriptionsTable.resource.subtotal }} ({{ addSubscriptionsTable.resource.total }} Total) Subscriptions</span>
-    </div>
-
-    <div class="fr">
-      <div class="fl nutupane-info">
-        <span translate>{{ addSubscriptionsTable.numSelected }} Selected</span>
-      </div>
-
-      <div ng-hide="system.readonly" class="nutupane-actions fr">
-         <button class="btn btn-primary"
-                 translate
-                 ng-hide="denied('edit_content_hosts', contentHost)"
-                 ng-disabled="disableAddButton()"
-                 ng-click="addSelected()">
-           Add Selected
-         </button>
-      </div>
-
-    </div>
+  <div data-block="actions">
+     <button class="btn btn-primary"
+             translate
+             ng-hide="denied('edit_content_hosts', contentHost)"
+             ng-disabled="disableAddButton()"
+             ng-click="addSelected()">
+       Add Selected
+     </button>
   </div>
 
-  <div bst-table="addSubscriptionsTable" class="nutupane">
-    <div bst-container-scroll>
-      <div infinite-scroll="addSubscriptionsTable.nextPage()" infinite-scroll-container="'.nutupane-sub-section .container-scroll-wrapper'">
-        <div class="loading-mask fa-3x" ng-show="addSubscriptionsTable.working && addSubscriptionsTable.rows.length == 0">
-          <i class="fa fa-spinner fa-spin"></i>
-          {{ "Loading..." | translate }}
-        </div>
+  <span data-block="no-rows-message" translate>
+      You currently don't have any Products to subscribe to, you can add Products after selecting 'Products' under 'Content' in the main menu
+  </span>
 
-        <p bst-alert="info" ng-show="addSubscriptionsTable.rows.length === 0 && !addSubscriptionsTable.working">
-          <span translate>
-            You currently don't have any Products to subscribe to, you can add Products after selecting 'Products' under 'Content' in the main menu.
-          </span>
-        </p>
+  <div data-block="table">
+    <table ng-class="{'table-mask': detailsTable.working}"
+            class="table table-full table-striped">
+       <thead>
+         <tr bst-table-head row-select>
+           <th bst-table-column="quantity" sortable class="align-center"><span translate>Quantity</span></th>
+           <th bst-table-column="attached" sortable><span translate>Attached</span></th>
+           <th bst-table-column="type"><span translate>Type</span></th>
+           <th bst-table-column="startDate" sortable><span translate>Starts</span></th>
+           <th bst-table-column="endDate" sortable><span translate>Expires</span></th>
+           <th bst-table-column="supportLevel"><span translate>Support Level</span></th>
+           <th bst-table-column="contractNumber" sortable><span translate>Contract</span></th>
+           <th bst-table-column="accountNumber" sortable><span translate>Account</span></th>
+         </tr>
+       </thead>
 
-        <table ng-class="{'table-mask': addSubscriptionsTable.working}"
-               class="table table-full table-striped"
-               ng-show="addSubscriptionsTable.rows.length > 0" >
-          <thead>
-            <tr bst-table-head row-select>
-              <th bst-table-column="quantity" sortable class="align-center"><span translate>Quantity</span></th>
-              <th bst-table-column="attached" sortable><span translate>Attached</span></th>
-              <th bst-table-column="type"><span translate>Type</span></th>
-              <th bst-table-column="startDate" sortable><span translate>Starts</span></th>
-              <th bst-table-column="endDate" sortable><span translate>Expires</span></th>
-              <th bst-table-column="supportLevel"><span translate>Support Level</span></th>
-              <th bst-table-column="contractNumber" sortable><span translate>Contract</span></th>
-              <th bst-table-column="accountNumber" sortable><span translate>Account</span></th>
-            </tr>
-          </thead>
+       <tbody>
+         <tr bst-table-row ng-repeat-start="subscription in detailsTable.rows">
+          <td class="row-select"></td>
+           <td bst-table-cell colspan="8">
+             <a href='/subscriptions/{{ subscription.id }}/info'>
+              {{ subscription.name }}
+             </a>
+           </td>
+         </tr>
+         <tr bst-table-row ng-repeat-end row-select="subscription">
+           <td bst-table-cell>
+             <span ng-hide="subscription.multi_entitlement">
+               1
+             </span>
+             <select ng-hide="!subscription.multi_entitlement"
+                     ng-model="subscription.amount"
+                     ng-options="amount for amount in amountSelectorValues(subscription)"
+                     >
+               <option value="">{{ "Automatic" | translate }}</option>
+             </select>
+           </td>
+           <td bst-table-cell>{{ subscription | subscriptionConsumedFilter }}</td>
+           <td bst-table-cell>{{ subscription.type }}</td>
+           <td bst-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
+           <td bst-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
+           <td bst-table-cell>{{ subscription.support_level }}</td>
+           <td bst-table-cell>{{ subscription.contract_number }}</td>
+           <td bst-table-cell>{{ subscription.account_number }}</td>
+         </tr>
+       </tbody>
 
-          <tbody>
-            <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
-              <td bst-table-cell colspan="9">
-                <a href='/subscriptions?search=productName:"{{ name }}"'>
-                  {{ name }}
-                </a>
-              </td>
-            </tr>
-            <tr bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
-              <td bst-table-cell>
-                <span ng-hide="subscription.multi_entitlement">
-                  1
-                </span>
-                <select ng-hide="!subscription.multi_entitlement"
-                        ng-model="subscription.amount"
-                        ng-options="amount for amount in amountSelectorValues(subscription)"
-                        >
-                  <option value="">{{ "Automatic" | translate }}</option>
-                </select>
-              </td>
-              <td bst-table-cell>{{ subscription | subscriptionConsumedFilter }}</td>
-              <td bst-table-cell><div subscription-type="subscription"></div></td>
-              <td bst-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
-              <td bst-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
-              <td bst-table-cell>{{ subscription.support_level }}</td>
-              <td bst-table-cell>{{ subscription.contract_number }}</td>
-              <td bst-table-cell>{{ subscription.account_number }}</td>
-            </tr>
-          </tbody>
-
-        </table>
-      </div>
-    </div>
+     </table>
   </div>
-</section>
+</div>

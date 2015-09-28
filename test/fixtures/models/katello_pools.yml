@@ -1,0 +1,26 @@
+pool_one:
+  cp_id: "abc123"
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  subscription_id: <%= ActiveRecord::Fixtures.identify(:basic_subscription) %> 
+  account_number: "12400203"
+  contract_number: "123403949"
+  pool_type: "normal"
+  quantity: 10
+  start_date: "2011-10-11T04:00:00.000+0000"
+  end_date: "2022-01-01T04:59:59.000+0000"
+  ram: 2
+  multi_entitlement: true
+  consumed: 1
+
+pool_two:
+  cp_id: "xyz123"
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  subscription_id: <%= ActiveRecord::Fixtures.identify(:other_subscription) %> 
+  account_number: "84390203"
+  contract_number: "38943940"
+  quantity: 100
+  start_date: "2011-10-11T04:00:00.000+0000"
+  end_date: "2022-01-01T04:59:59.000+0000"
+  consumed: 10

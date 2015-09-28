@@ -4,6 +4,7 @@ describe('Controller: ContentHostSubscriptionsController', function() {
         translate,
         ContentHost,
         Subscription,
+        Nutupane,
         expectedTable,
         expectedRows,
         SubscriptionsHelper;
@@ -68,13 +69,14 @@ describe('Controller: ContentHostSubscriptionsController', function() {
             $location: $location,
             translate: translate,
             Subscription: Subscription,
+            Nutupane: Nutupane,
             ContentHost: ContentHost,
             SubscriptionsHelper: SubscriptionsHelper
         });
     }));
 
     it('attaches the nutupane table to the scope', function() {
-        expect($scope.subscriptionsTable).toBeDefined();
+        expect($scope.detailsTable).toBeDefined();
     });
 
     it("allows removing subscriptions from the content host", function() {
@@ -82,7 +84,7 @@ describe('Controller: ContentHostSubscriptionsController', function() {
         var expected = {uuid: 12345, subscriptions: [{id: 2}]};
         spyOn(ContentHost, 'removeSubscriptions');
 
-        $scope.subscriptionsTable.getSelected = function() {
+        $scope.detailsTable.getSelected = function() {
             return [{id: 2}];
         };
 

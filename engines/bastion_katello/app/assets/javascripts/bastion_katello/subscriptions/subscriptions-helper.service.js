@@ -16,10 +16,10 @@ angular.module('Bastion.subscriptions').service('SubscriptionsHelper',
             grouped = {};
             for (offset = 0; offset < rows.length; offset += 1) {
                 subscription = rows[offset];
-                if (angular.isUndefined(grouped[subscription['product_name']])) {
-                    grouped[subscription['product_name']] = [];
+                if (angular.isUndefined(grouped[subscription.name])) {
+                    grouped[subscription.name] = [];
                 }
-                grouped[subscription['product_name']].push(subscription);
+                grouped[subscription.name].push(subscription);
             }
 
             return grouped;

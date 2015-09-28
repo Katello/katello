@@ -73,6 +73,10 @@ module Katello
       assert !new_key.valid?
     end
 
+    test "key can return pools" do
+      assert @dev_key.pools.count > 0
+    end
+
     def test_search_name
       activation_keys = ActivationKey.search_for("name = \"#{@dev_staging_view_key.name}\"")
       assert_includes activation_keys, @dev_staging_view_key
