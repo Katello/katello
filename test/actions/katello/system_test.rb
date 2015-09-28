@@ -69,6 +69,21 @@ module ::Actions::Katello::System
       plan_action(action, system, input)
       assert_action_planed(action, ::Actions::Pulp::Consumer::Update)
       assert_action_planed(action, ::Actions::Candlepin::Consumer::Update)
+      refute_action_planed(action, ::Actions::Katello::System::Facts)
+      assert_action_planed(action, ::Actions::ElasticSearch::Reindex)
+    end
+
+    it 'plans' do
+      stub_remote_user
+      system.expects(:disable_auto_reindex!)
+      action.expects(:action_subject).with(system)
+      system.expects(:update_attributes!).with(input)
+      system.stubs(:foreman_host).returns(true)
+
+      plan_action(action, system, input)
+      assert_action_planed(action, ::Actions::Pulp::Consumer::Update)
+      assert_action_planed(action, ::Actions::Candlepin::Consumer::Update)
+      assert_action_planed(action, ::Actions::Katello::System::Facts)
       assert_action_planed(action, ::Actions::ElasticSearch::Reindex)
     end
   end

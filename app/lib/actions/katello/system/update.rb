@@ -12,6 +12,7 @@ module Actions
             concurrence do
               plan_action(::Actions::Pulp::Consumer::Update, system) if !system.hypervisor? && ::Katello.config.use_pulp
               plan_action(::Actions::Candlepin::Consumer::Update, system) if ::Katello.config.use_cp
+              plan_action(::Actions::Katello::System::Facts, system) if system.foreman_host
             end
 
             if sys_params[:autoheal] && ::Katello.config.use_cp
