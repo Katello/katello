@@ -91,6 +91,7 @@ class ActionController::TestCase
     set_default_locale
     setup_engine_routes if load_engine_routes
     @controller.stubs(:require_org).returns({})
+    load_permissions
   end
 
   def set_user(user = nil, is_api = false)
