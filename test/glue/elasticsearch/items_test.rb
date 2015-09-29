@@ -5,9 +5,11 @@ module Katello
     def setup
       @fake_class = Class.new do
         def self.search
+          {}
         end
 
         def self.where(*_args)
+          {}
         end
 
         def self.mapping(*_args)
@@ -29,34 +31,31 @@ module Katello
       @results.expect(:results, [])
       @results.expect(:facets, {})
 
-      @fake_class.stub(:search, @results) do
-        items, count = @items.retrieve("*")
+      @fake_class.expects(:search).twice.returns(@results)
+      items, count = @items.retrieve("*")
 
-        assert_empty items
-        assert_equal 0, count
-      end
+      assert_empty items
+      assert_equal 0, count
     end
 
     def test_load_records
       @results.expect(:length, 0)
       @results.expect(:order, [], [[]])
 
-      @fake_class.stub(:where, @results) do
-        @items.results = []
-        items = @items.load_records
+      @fake_class.expects(:where).returns(@results)
+      @items.results = []
+      items = @items.load_records
 
-        assert_empty items
-      end
+      assert_empty items
     end
 
     def test_total_items
       @results.expect(:total, 10)
 
-      @fake_class.stub(:search, @results) do
-        total = @items.total_items
+      @fake_class.expects(:search).returns(@results)
+      total = @items.total_items
 
-        assert_equal 10, total
-      end
+      assert_equal 10, total
     end
   end
 end

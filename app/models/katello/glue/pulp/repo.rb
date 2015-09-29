@@ -241,7 +241,7 @@ module Katello
         Repository.where(:content_id => self.content_id).pluck(:pulp_id) - [self.pulp_id]
       end
 
-      def rpm_ids
+      def package_ids
         Katello.pulp_server.extensions.repository.rpm_ids(self.pulp_id)
       end
 
@@ -314,7 +314,7 @@ module Katello
             rpm.update_from_json(rpm_json)
           end
         end
-        Katello::Rpm.sync_repository_associations(self, rpm_ids)
+        Katello::Rpm.sync_repository_associations(self, package_ids)
       end
 
       def index_db_puppet_modules(force = false)
@@ -371,7 +371,7 @@ module Katello
 
       def rpms_json
         tmp_packages = []
-        self.rpm_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        self.package_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           tmp_packages.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
                                   sub_list, Katello::Rpm::PULP_INDEXED_FIELDS))
         end
@@ -387,7 +387,7 @@ module Katello
           create_docker_tags(image, image_json[:tags])
         end
 
-        DockerImage.sync_repository_associations(self, docker_image_ids)
+        DockerImage.sync_repository_associations(self, docker_img_ids)
       end
 
       def docker_images_json
@@ -397,7 +397,7 @@ module Katello
         repo_attrs = Katello.pulp_server.extensions.repository.retrieve_with_details(pulp_id)
         tags = repo_attrs.try(:[], :scratchpad).try(:[], :tags) || []
 
-        docker_image_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        docker_img_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           docker_images.concat(Katello.pulp_server.extensions.docker_image.find_all_by_unit_ids(sub_list))
         end
         # add the docker tags in
@@ -429,8 +429,8 @@ module Katello
         Katello.pulp_server.extensions.repository.puppet_module_ids(self.pulp_id)
       end
 
-      def docker_image_ids
-        Katello.pulp_server.extensions.repository.docker_image_ids(self.pulp_id)
+      def docker_img_ids
+        Katello.pulp_server.extensions.repository.docker_img_ids(self.pulp_id)
       end
 
       def docker_image_count
@@ -674,7 +674,7 @@ module Katello
         names = []
         filenames = []
         rpm_list = []
-        self.rpm_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        self.package_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           rpm_list.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
                                   sub_list, %w(filename name), :include_repos => false))
         end

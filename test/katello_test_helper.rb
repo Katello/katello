@@ -66,6 +66,7 @@ module FixtureTestCase
     FIXTURES = load_fixtures(ActiveRecord::Base)
 
     load_permissions
+    configure_vcr
 
     Setting::Katello.load_defaults
   end

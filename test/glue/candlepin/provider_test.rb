@@ -4,8 +4,7 @@ require 'support/candlepin/owner_support'
 
 module Katello
   class GlueCandlepinProviderTestBase < ActiveSupport::TestCase
-    def self.before_suite
-      super
+    def setup
       User.current = User.find(FIXTURES['users']['admin']['id'])
       VCR.insert_cassette('glue_candlepin_provider', :match_requests_on => [:path, :params, :method, :body_json])
 
@@ -17,8 +16,7 @@ module Katello
       CandlepinOwnerSupport.set_owner(@@org)
     end
 
-    def self.after_suite
-      super
+    def teardown
       Resources::Candlepin::Owner.destroy(@@org.label)
     ensure
       VCR.eject_cassette
@@ -26,18 +24,6 @@ module Katello
   end
 
   class GlueCandlepinProviderTestImport < GlueCandlepinProviderTestBase
-    def self.before_suite
-      super
-    end
-
-    def self.after_suite
-      super
-    end
-
-    def setup
-      super
-    end
-
     def test_manifest_import
       skip "Need testable manifests"
 
@@ -69,6 +55,14 @@ module Katello
   end
 
   class GlueCandlepinProviderTestDelete < GlueCandlepinProviderTestBase
+    def setup
+      super
+    end
+
+    def teardown
+      super
+    end
+
     #until we can import a fake manifest into candlepin, this the best we can do
     def test_manifest_delete
       @@provider.stubs(:index_subscriptions).returns(true)

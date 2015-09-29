@@ -7,8 +7,9 @@ module Katello
 
     @@package_id = nil
 
-    def self.before_suite
+    def setup
       super
+      set_user
       configure_runcible
 
       VCR.insert_cassette('pulp/content/erratum')
@@ -18,12 +19,10 @@ module Katello
       @@full_errata_id = 'RHSA-2010:0858'
     end
 
-    def self.after_suite
+    def teardown
       super
-      run_as_admin do
-        RepositorySupport.destroy_repo
-        VCR.eject_cassette
-      end
+      RepositorySupport.destroy_repo
+      VCR.eject_cassette
     end
   end
 

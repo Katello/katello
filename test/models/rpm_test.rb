@@ -59,7 +59,7 @@ module Katello
       end
 
       @repo.stubs(:rpms_json).returns(@packages)
-      @repo.stubs(:rpm_ids).returns(@packages.map { |p| p['_id'] })
+      @repo.stubs(:package_ids).returns(@packages.map { |p| p['_id'] })
       @repo.index_db_rpms
       @all_ids = @repo.rpms.pluck(:uuid).sort
     end
