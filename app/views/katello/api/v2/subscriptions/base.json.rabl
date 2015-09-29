@@ -12,3 +12,4 @@ attributes :product_id
 attributes :sockets, :cores, :ram
 attributes :instance_multiplier, :stacking_id, :multi_entitlement
 attributes :type
+attributes :name => :product_name
