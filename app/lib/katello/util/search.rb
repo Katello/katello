@@ -48,10 +48,6 @@ module Katello
         initial_list + subclass_list
       end
 
-      def self.backend_search_classes
-        [Katello::Pool]
-      end
-
       def self.get_subclasses(obj_class)
         classes = obj_class.subclasses
         subs = classes.collect { |c| get_subclasses(c) }.flatten

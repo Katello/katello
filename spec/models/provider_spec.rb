@@ -70,99 +70,6 @@ module Katello
         @provider.import_manifest "path_to_manifest"
       end
 
-      describe "engineering and marketing product" do
-        let(:eng_product_attrs) { ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "20", "name" => "Red Hat Enterprise Linux 6 Server SVC") }
-        let(:marketing_product_attrs) { ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "rhel6-server", "name" => "Red Hat Enterprise Linux 6") }
-        let(:eng_product_after_import) do
-          @provider.stubs(:index_subscriptions).returns([])
-          product = Product.new(eng_product_attrs) do |p|
-            p.provider = @provider
-          end
-          product.orchestration_for = :import_from_cp_ar_setup
-          product.save!
-          product
-        end
-        before do
-          Resources::Candlepin::Owner.stubs(:pools).returns([ProductTestData::POOLS])
-          Resources::Candlepin::Product.stubs(:get).with("rhel6-server").returns([marketing_product_attrs])
-          Resources::Candlepin::Product.stubs(:get).with("20").returns([eng_product_attrs])
-        end
-
-        describe "there was a RH product that is not included in the latest manifest" do
-          before do
-            Glue::Candlepin::Product.stubs(:import_from_cp => [], :import_marketing_from_cp => true)
-            Resources::Candlepin::Product.stubs(:destroy).returns(true)
-            @provider.stubs(:index_subscriptions).returns([])
-            @rh_product = Product.create!(:label => "prod", :cp_id => 102_033, :name => "rh_product", :productContent => [], :provider => @provider, :organization => @organization)
-            @custom_provider = Provider.where(:organization_id => @organization.id, :provider_type => Provider::ANONYMOUS).first
-            # cp_id gets set based on Product.create in Candlepin so we need a stub to return something besides 1
-            Resources::Candlepin::Product.stubs(:create).returns(:id => 2)
-            @custom_product = Product.create!(:label => "custom-prod", :name => "custom_product", :productContent => [], :provider => @custom_provider, :organization => @organization)
-          end
-
-          it "should keep RH products"  do
-            @provider.import_products_from_cp
-            Product.find_by_id(@rh_product.id).wont_be_nil
-          end
-
-          it "should keep non-RH products" do
-            @provider.import_products_from_cp
-            Product.find_by_id(@custom_product.id).wont_be_nil
-          end
-        end
-
-        describe "there were derived products and derived provided products included in the manifest" do
-          let(:pools) do
-            ProductTestData::POOLS.merge(
-              "derivedProductId" => "200",
-              "derivedProvidedProducts" => [ProductTestData::DERIVED_PROVIDED_PRODUCT.merge("productId" => "700")]
-            )
-          end
-
-          # product specified on the pool
-          let(:pool_product) { ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "rhel6-server") }
-          # derived product specified on the pool
-          let(:derived_product) { ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "200") }
-          # derived provided product specified on the pool
-          let(:derived_provided_product) { ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "700") }
-
-          before do
-            Glue::Candlepin::Product.stubs(:import_from_cp => [], :import_marketing_from_cp => true)
-            Resources::Candlepin::Product.stubs(:destroy).returns(true)
-            @provider.stubs(:index_subscriptions).returns([])
-
-            Resources::Candlepin::Owner.stubs(:pools).returns([pools])
-            Resources::Candlepin::Product.stubs(:get).with("rhel6-server").returns([pool_product])
-            Resources::Candlepin::Product.stubs(:get).with("200").returns([derived_product])
-            Resources::Candlepin::Product.stubs(:get).with("700").returns([derived_provided_product])
-
-            Resources::Candlepin::Product.stubs(:create).returns(:id => "200")
-            @existing_derived_product = Product.create!(
-                                                          :label => "dp",
-                                                          :name => derived_product["name"],
-                                                          :productContent => [],
-                                                          :provider => @provider,
-                                                          :organization => @organization
-                                                        )
-
-            Resources::Candlepin::Product.stubs(:create).returns(:id => "700")
-            @existing_derived_provided_product = Product.create!(
-                                                                   :label => "dpp",
-                                                                   :name => derived_provided_product["name"],
-                                                                   :productContent => [],
-                                                                   :provider => @provider,
-                                                                   :organization => @organization
-                                                                 )
-          end
-
-          it 'derived marketing and engineering products should not be removed' do
-            @provider.import_products_from_cp
-            Product.find_by_cp_id(@existing_derived_product.cp_id).wont_be_nil
-            Product.find_by_cp_id(@existing_derived_provided_product.cp_id).wont_be_nil
-          end
-        end
-      end
-
       describe "marketing to product id mapping" do
         let(:pools) do
           ProductTestData::POOLS.merge(
@@ -473,7 +380,9 @@ module Katello
       disable_product_orchestration
       provider = create(:katello_provider, organization: @organization)
       create(:katello_product, :fedora, provider: provider, organization: @organization)
-      assert provider.destroy
+      assert_raise ActiveRecord::DeleteRestrictionError do
+        provider.destroy
+      end
     end
   end
 end

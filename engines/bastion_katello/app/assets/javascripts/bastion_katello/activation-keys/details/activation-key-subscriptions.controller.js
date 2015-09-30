@@ -13,40 +13,39 @@
  *   Provides the functionality for the activation key subscriptions details action pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeySubscriptionsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'ActivationKey', 'SubscriptionsHelper',
-    function ($scope, $location, translate, Nutupane, ActivationKey, SubscriptionsHelper) {
-        var subscriptionsPane, params;
+    ['$scope', '$location', 'translate', 'Nutupane', 'ActivationKey', 'Subscription', 'SubscriptionsHelper',
+    function ($scope, $location, translate, Nutupane, ActivationKey, Subscription, SubscriptionsHelper) {
+        var params;
 
         params = {
-            'id': $scope.$stateParams.activationKeyId,
+            'activation_key_id': $scope.$stateParams.activationKeyId,
             'search': $location.search().search || "",
-            'sort_by': 'name',
             'sort_order': 'ASC',
             'paged': true
         };
 
-        subscriptionsPane = new Nutupane(ActivationKey, params, 'subscriptions');
-        $scope.subscriptionsTable = subscriptionsPane.table;
-        $scope.subscriptionsTable.closeItem = function () {};
+        $scope.contentNutupane = new Nutupane(Subscription, params);
+        $scope.detailsTable = $scope.contentNutupane.table;
+        $scope.contentNutupane.masterOnly = true;
         $scope.isRemoving = false;
 
         $scope.groupedSubscriptions = {};
-        $scope.$watch('subscriptionsTable.rows', function (rows) {
+        $scope.$watch('detailsTable.rows', function (rows) {
             $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
         });
 
         $scope.disableRemoveButton = function () {
-            return $scope.subscriptionsTable.numSelected === 0 || $scope.isRemoving;
+            return $scope.detailsTable.numSelected === 0 || $scope.isRemoving;
         };
 
         $scope.removeSelected = function () {
             var selected;
-            selected = SubscriptionsHelper.getSelectedSubscriptionAmounts($scope.subscriptionsTable);
+            selected = SubscriptionsHelper.getSelectedSubscriptionAmounts($scope.detailsTable);
 
             $scope.isRemoving = true;
             ActivationKey.removeSubscriptions({id: $scope.activationKey.id, 'subscriptions': selected}, function () {
-                subscriptionsPane.table.selectAll(false);
-                subscriptionsPane.refresh();
+                $scope.contentNutupane.table.selectAll(false);
+                $scope.contentNutupane.refresh();
                 $scope.successMessages.push(translate("Successfully removed %s subscriptions.").replace('%s', selected.length));
                 $scope.isRemoving = false;
             }, function (response) {

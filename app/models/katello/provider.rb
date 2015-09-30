@@ -106,7 +106,7 @@ module Katello
       releases = []
       begin
         Util::CdnVarSubstitutor.with_cache do
-          self.products.engineering.each do |product|
+          self.products.each do |product|
             cdn_var_substitutor = Resources::CDN::CdnResource.new(product.provider[:repository_url],
                                                              :ssl_client_cert => OpenSSL::X509::Certificate.new(product.certificate),
                                                              :ssl_client_key => OpenSSL::PKey::RSA.new(product.key)).substitutor

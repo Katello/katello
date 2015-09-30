@@ -14,15 +14,14 @@ module Katello
     attr_accessible :name, :label, :description, :provider_id, :provider,
                     :gpg_key_id, :gpg_key, :cp_id, :sync_plan_id, :organization_id, :organization
 
-    has_many :marketing_engineering_products, :class_name => "Katello::MarketingEngineeringProduct",
-                                              :foreign_key => :engineering_product_id, :dependent => :destroy
-    has_many :marketing_products, :through => :marketing_engineering_products
-
     belongs_to :organization, :inverse_of => :products
     belongs_to :provider, :inverse_of => :products
     belongs_to :sync_plan, :inverse_of => :products, :class_name => 'Katello::SyncPlan'
     belongs_to :gpg_key, :inverse_of => :products
     has_many :repositories, :class_name => "Katello::Repository", :dependent => :restrict_with_error
+
+    has_many :subscription_products, :class_name => "Katello::SubscriptionProduct", :dependent => :destroy
+    has_many :subscriptions, :through => :subscription_products
 
     validates_lengths_from_database :except => [:label]
     validates :provider_id, :presence => true
@@ -45,7 +44,7 @@ module Katello
     def self.find_by_cp_id(cp_id, organization = nil)
       query = self.where(:cp_id => cp_id).readonly(false)
       query = query.in_org(organization) if organization
-      query.engineering.first || query.marketing.first
+      query.first
     end
 
     def self.in_org(organization)
@@ -56,8 +55,6 @@ module Katello
       where(:organization_id => organizations)
     end
 
-    scope :engineering, -> { where(:type => "Katello::Product") }
-    scope :marketing, -> { where(:type => "Katello::MarketingProduct") }
     scope :syncable_content, -> { uniq.where(Katello::Repository.arel_table[:url].not_eq(nil)).joins(:repositories) }
     scope :redhat, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => Provider::REDHAT) }
     scope :custom, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => [Provider::CUSTOM, Provider::ANONYMOUS]) }

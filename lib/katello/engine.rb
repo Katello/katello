@@ -177,6 +177,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_rpms.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_distributions.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_puppet_modules.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_subscriptions.rake"
     end
   end
 end

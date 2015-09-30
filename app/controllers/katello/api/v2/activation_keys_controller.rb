@@ -263,10 +263,6 @@ module Katello
       @activation_key
     end
 
-    def find_pool
-      @pool = Pool.find_by(:organization => @activation_key.organization, :id => params[:poolid])
-    end
-
     def find_host_collections
       ids = params[:activation_key][:host_collection_ids] if params[:activation_key]
       @host_collections = []

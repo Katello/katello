@@ -72,14 +72,6 @@ describe('Controller: ContentHostBaseSubscriptionsController', function() {
         });
     }));
 
-    it('attaches available subscriptions to the scope', function() {
-        expect($scope.addSubscriptionsPane).toBeDefined();
-    });
-
-    it('attaches current subscriptions to the scope', function() {
-        expect($scope.subscriptionsPane).toBeDefined();
-    });
-
     it("allows auto attaching subscriptions to the content host", function() {
         spyOn(ContentHost, 'refreshSubscriptions');
         $scope.autoAttachSubscriptions();

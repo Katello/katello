@@ -6,179 +6,124 @@ module Katello
       base.send :extend, ClassMethods
 
       base.class_eval do
-        lazy_accessor :remote_data, :pool_derived, :product_name, :consumed, :quantity, :available, :support_level, :support_type,
-          :start_date, :end_date, :attrs, :owner, :product_id, :account_number, :contract_number,
-          :source_pool_id, :host_id, :virt_only, :virt_limit, :multi_entitlement, :stacking_id,
-          :arch, :sockets, :cores, :ram, :description, :product_family, :variant, :provided_products,
-          :active, :instance_multiplier, :suggested_quantity, :unmapped_guest,
-          :initializer => (lambda do |_s|
-                             json = Resources::Candlepin::Pool.find(cp_id)
-                             # symbol "attributes" is reserved by Rails and cannot be used
-                             json['attrs'] = json['attributes']
-                             json
-                           end)
+        lazy_accessor :pool_facts, :initializer => lambda { |_s| self.import_lazy_attributes }
+        lazy_accessor :subscription_facts, :initializer => lambda { |_s| self.subscription ? self.subscription.attributes : {} }
+
+        lazy_accessor :pool_derived, :owner, :source_pool_id, :host_id, :virt_only, :virt_limit, :arch, :description,
+          :product_family, :variant, :suggested_quantity, :unmapped_guest, :support_type, :product_id, :type,
+          :initializer => :pool_facts
+
+        lazy_accessor :name, :support_level, :org, :sockets, :cores, :stacking_id, :instance_multiplier,
+          :initializer => :subscription_facts
+
+        lazy_accessor :active, :initializer => lambda { |_s| self.backend_data["activeSubscription"] }
+
+        lazy_accessor :available, :initializer => lambda { |_s| self.quantity_available }
       end
     end
 
     module ClassMethods
-      def find_by_organization_and_id(organization, pool_id)
-        pool = Katello::Pool.find_by(:cp_id => pool_id.to_s) || Pool.new(Resources::Candlepin::Pool.find(pool_id))
-        if pool.organization == organization
-          return pool
-        end
+      def candlepin_data(cp_id)
+        Katello::Resources::Candlepin::Pool.find(cp_id)
       end
 
-      def find_by_organization_and_id!(organization, pool_id)
-        subscription = find_by_organization_and_id(organization, pool_id)
-        fail ActiveRecord::RecordNotFound if subscription.nil?
-        subscription
+      def get_for_owner(organization)
+        Katello::Resources::Candlepin::Pool.get_for_owner(organization)
       end
 
-      def find_by_id(pool_id)
-        Katello::Pool.find_by(:cp_id => pool_id) || Pool.new(Resources::Candlepin::Pool.find(pool_id))
-      end
-
-      def find_by_id!(pool_id)
-        subscription = find_by_id(pool_id)
-        fail ActiveRecord::RecordNotFound if subscription.nil?
-        subscription
+      def import_pool(cp_pool_id)
+        pool = Katello::Pool.find_or_create_by_cp_id(cp_pool_id)
+        pool.import_data
       end
     end
 
     module InstanceMethods
-      def initialize(attrs = nil, options = {})
-        if !attrs.nil? && attrs.member?('id')
-          # initializing from candlepin json
-          load_remote_data(attrs)
-          super({:cp_id => attrs['id']}, options)
-        else
-          super
-        end
-      end
+      def import_lazy_attributes
+        json = {}
+        json = self.backend_data
 
-      def organization
-        Organization.find_by(:label => self.owner["key"])
-      end
-
-      # if defined +load_remote_data+ will be used by +lazy_accessors+
-      # to define instance variables
-      # TODO: break up method
-      # rubocop:disable MethodLength
-      # rubocop:disable CyclomaticComplexity
-      def load_remote_data(attrs)
-        @amount = attrs["amount"]
-        @remote_data = attrs
-        @product_name = attrs["productName"]
-        @start_date = Date.parse(attrs["startDate"]) if attrs["startDate"]
-        @end_date = Date.parse(attrs["endDate"]) if attrs["endDate"]
-        @consumed = attrs["consumed"]
-        @quantity = attrs["quantity"]
-        if attrs["quantity"].is_a?(Integer) && attrs["consumed"].is_a?(Integer)
-          @available = attrs["quantity"] - attrs["consumed"]
-        else
-          @available = 0
-        end
-        @attrs = attrs["attributes"]
-        @owner = attrs["owner"]
-        @product_id = attrs["productId"]
-        @cp_id = attrs['id']
-        @account_number = attrs['accountNumber']
-        @contract_number = attrs['contractNumber']
-        @provided_products = attrs['providedProducts']
-        @active = attrs['activeSubscription']
-        @source_pool_id = nil
-        @host_id = nil
-        @virt_only = false
-        @pool_derived = false
-        @unmapped_guest = false
-        attrs['attributes'].each do |attr|
-          case attr['name']
-          when 'source_pool_id'
-            @source_pool_id = attr['value']
+        pool_attributes = json["attributes"] + json["productAttributes"]
+        pool_attributes.each do |attr|
+          json[attr["name"]] = attr["value"]
+          case attr["name"]
           when 'requires_host'
-            @host_id = attr['value']
+            json["host_id"] = attr['value']
           when 'virt_only'
-            @virt_only = attr['value'] == 'true' ? true : false
-          when 'pool_derived'
-            @pool_derived = attr['value'] == 'true' ? true : false
-          when 'unmapped_guests_only'
-            @unmapped_guest = attr['value'] == 'true' ? true : false
-          end
-        end if attrs['attributes']
-        @virt_limit = 0
-        @support_type = ""
-        @arch = ""
-        @support_level = ""
-        @sockets = 0
-        @ram = 0
-        @cores = 0
-        @description = ""
-        @product_family = ""
-        @variant = ""
-        @multi_entitlement = false
-        @stacking_id = ""
-        attrs['productAttributes'].each do |attr|
-          case attr['name']
+            json["virtual"] = json["virt_only"] = attr['value'] == 'true' ? true : false
           when 'virt_limit'
-            @virt_limit = attr['value'].to_i
-          when 'support_type'
-            @support_type = attr['value']
-          when 'arch'
-            @arch = attr['value']
-          when 'support_level'
-            @support_level = attr['value']
-          when 'sockets'
-            @sockets = attr['value'].to_i
-          when 'cores'
-            @cores = attr['value'].to_i
-          when 'ram'
-            @ram = attr['value'].to_i
-          when 'description'
-            @description = attr['value']
-          when 'product_family'
-            @product_family = attr['value']
-          when 'variant'
-            @variant = attr['value']
-          when 'multi-entitlement'
-            @multi_entitlement = (attr['value'] == 'true' || attr['value'] == 'yes') ? true : false
-          when 'stacking_id'
-            @stacking_id = attr['value']
-          when 'instance_multiplier'
-            @instance_multiplier = attr['value'].to_i
+            json["virt_limit"] = attr['value'].to_i
+          when 'unmapped_guests_only'
+            json['unmapped_guest'] = attr['value'] == 'true' ? true : false
           end
-        end if attrs['productAttributes']
+        end
 
-        @suggested_quantity = 1
-        attrs['calculatedAttributes'].each_key do |key|
-          case key
-          when 'suggested_quantity'
-            @suggested_quantity = attrs['calculatedAttributes']['suggested_quantity'].to_i
-          end
-        end if attrs['calculatedAttributes']
+        json["calculatedAttributes"].each do |key|
+          json["suggested_quantity"] = json["calculatedAttributes"]["suggested_quantity"].to_i if key == 'suggested_quantity'
+        end if json["calculatedAttributes"]
+
+        json["product_id"] = json["productId"] if json["productId"]
+
+        if self.subscription
+          subscription.backend_data["product"]["attributes"].map { |attr| json[attr["name"].underscore.to_sym] = attr["value"] }
+        end
+        json
       end
 
-      def products
-        Katello::Product.where(:cp_id => provided_products.map { |prod| prod[:productId] })
+      def provider?(organization)
+        providers = self.subscription.products.collect do |provider|
+          Katello::Provider.where(:id => provider.provider_id, :organization_id => organization.id).first
+        end
+        providers.any?
+      end
+
+      def backend_data
+        self.class.candlepin_data(self.cp_id)
+      end
+
+      def import_data
+        pool_attributes = {}
+        pool_json = self.backend_data
+        product_attributes = pool_json["productAttributes"] + pool_json["attributes"]
+
+        product_attributes.map { |attr| pool_attributes[attr["name"].underscore.to_sym] = attr["value"] }
+
+        subscription = ::Katello::Subscription.where(:cp_id => pool_json["subscriptionId"])
+        pool_attributes[:subscription_id] = subscription.first.id if subscription.any?
+
+        %w(accountNumber contractNumber quantity startDate endDate accountNumber consumed).each do |json_attribute|
+          pool_attributes[json_attribute.underscore] = pool_json[json_attribute]
+        end
+        pool_attributes[:pool_type] = pool_json["type"] if pool_json.key?("type")
+
+        if pool_attributes.key?(:multi_entitlement)
+          pool_attributes[:multi_entitlement] = pool_attributes[:multi_entitlement] == "yes" ? true : false
+        end
+        pool_attributes[:host_id] = pool_attributes["requiresHost"] if pool_attributes.key?("requiresHost")
+
+        exceptions = pool_attributes.keys.map(&:to_sym) - self.attribute_names.map(&:to_sym)
+        self.update_attributes(pool_attributes.except!(*exceptions))
+        self.save!
+        self.create_activation_key_associations
       end
 
       def systems
         System.all_by_pool(cp_id)
       end
 
-      def activation_keys
+      def create_activation_key_associations
         keys = Resources::Candlepin::ActivationKey.get(nil, "?include=id&include=pools.pool.id")
         activation_key_ids = keys.collect do |key|
           key['id'] if key['pools'].any? { |pool| pool['pool']['id'] == cp_id }
         end
-
-        return Katello::ActivationKey.where(:cp_id => activation_key_ids.compact)
+        related_keys = ::Katello::ActivationKey.where(:cp_id => activation_key_ids.compact)
+        related_keys.each do |key|
+          Katello::PoolActivationKey.find_or_create_by_activation_key_id_and_pool_id(key.id, self.id)
+        end
       end
 
       def host
         System.find_by(:uuid => host_id) if host_id
       end
-
-      attr_reader :amount
     end
   end
 end

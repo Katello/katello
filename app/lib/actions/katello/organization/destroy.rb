@@ -20,7 +20,6 @@ module Actions
             plan_self
             plan_action(Candlepin::Owner::Destroy, label:  organization.label) if ::Katello.config.use_cp
             plan_action(Candlepin::Product::DeleteUnused, organization)
-            plan_action(Katello::Organization::IndexSubscriptions, organization) if ::Katello.config.use_cp
           end
         end
 

@@ -204,7 +204,7 @@ module Katello
       if no_overlap
         pools = pools.select do |pool|
           pool['providedProducts'].all? do |provided_product|
-            self.consumed_entitlements.all? do |consumed_entitlement|
+            self.entitlements.all? do |consumed_entitlement|
               consumed_entitlement.providedProducts.all? do |consumed_product|
                 consumed_product.cp_id != provided_product['productId']
               end
