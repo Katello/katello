@@ -141,8 +141,12 @@ module Katello
       put :update, :id => @product.id, :product => params
 
       assert_response :success
+<<<<<<< HEAD
       assert_template layout: 'katello/api/v2/layouts/resource'
       assert_template 'katello/api/v2/common/update'
+=======
+      assert_template "katello/api/v2/common/update katello/api/v2/layouts/resource"
+>>>>>>> refs #10970 - controller tests fixes
     end
 
     def test_update_sync_plan
@@ -154,8 +158,12 @@ module Katello
       put :update, :id => @product.id, :product => params
 
       assert_response :success
+<<<<<<< HEAD
       assert_template layout: 'katello/api/v2/layouts/resource'
       assert_template 'katello/api/v2/common/update'
+=======
+      assert_template "katello/api/v2/common/update katello/api/v2/layouts/resource"
+>>>>>>> refs #10970 - controller tests fixes
     end
 
     def test_update_protected

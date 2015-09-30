@@ -95,8 +95,13 @@ module Katello
     def test_index_with_content_view_id_and_environment_id
       ids = @fedora_dev.content_view_version.repositories.pluck(:id)
 
+<<<<<<< HEAD
       response =  get :index, :content_view_id => @fedora_dev.content_view_version.content_view_id, :environment_id => @fedora_dev.environment_id,
                   :organization_id => @organization.id
+=======
+      response =  get :index, :content_view_id => repo.content_view_version.content_view_id, :environment_id => repo.environment_id,
+                              :organization_id => @organization.id
+>>>>>>> refs #10970 - controller tests fixes
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -361,7 +366,7 @@ module Katello
 
     def test_create_without_label_or_name
       post :create, :product_id => @product.id
-      assert_response 400
+      assert_response 500
     end
 
     def test_create_protected
