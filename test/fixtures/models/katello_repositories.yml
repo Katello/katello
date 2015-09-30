@@ -28,7 +28,7 @@ fedora_17_x86_64_dev:
   environment_id:       <%= ActiveRecord::Fixtures.identify(:dev) %>
   product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:dev_default_version) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>
   url:                 "http://myrepo.com"
   distribution_arch: "test_arch"
   distribution_version: "2.1"
@@ -104,7 +104,7 @@ rhel_6_x86_64_dev:
   product_id:           <%= ActiveRecord::Fixtures.identify(:redhat) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   library_instance_id:  <%= ActiveRecord::Fixtures.identify(:rhel_6_x86_64) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:dev_default_version) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>
   url:                 'https://cdn.example.com/rhel/6/os'
 
 fedora_17_no_arch:
@@ -178,7 +178,7 @@ dev_p_forge:
   product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   library_instance_id:  <%= ActiveRecord::Fixtures.identify(:p_forge) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:dev_default_version) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>
 
 rhel_6_x86_64_library_view_1:
   name:                 RHEL 6 x86_64

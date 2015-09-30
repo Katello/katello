@@ -75,7 +75,7 @@ module Katello
         :organization_id => @organization.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/content_views/show)
+      assert_template "katello/api/v2/content_views/show"
     end
 
     def test_create_fail_without_organization_id
@@ -126,7 +126,7 @@ module Katello
       put :update, :id => @library_dev_staging_view.id, :content_view => params
 
       assert_response :success
-      assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
+      assert_template "(katello/api/v2/common/update katello/api/v2/layouts/resource"
     end
 
     def test_update_repositories
@@ -140,7 +140,7 @@ module Katello
       put :update, :id => @library_dev_staging_view.id, :content_view => params
 
       assert_response :success
-      assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
+      assert_template "(katello/api/v2/common/update katello/api/v2/layouts/resource"
     end
 
     def test_update_components
@@ -155,7 +155,7 @@ module Katello
       put :update, :id => composite.id, :content_view => params
 
       assert_response :success
-      assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
+      assert_template "(katello/api/v2/common/update katello/api/v2/layouts/resource"
     end
 
     def test_history
@@ -249,7 +249,7 @@ module Katello
       post :copy, :id => @library_dev_staging_view.id, :name => "My New View"
 
       assert_response :success
-      assert_template %w(katello/api/v2/content_views/copy)
+      assert_template "katello/api/v2/content_views/copy"
     end
 
     def test_copy_protected

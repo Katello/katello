@@ -78,7 +78,7 @@ module Katello
       post :create, :content_view_id => @content_view.id, :name => "My Filter", :type => "rpm"
 
       assert_response :success
-      assert_template %w(katello/api/v2/content_view_filters/show)
+      assert_template "katello/api/v2/content_view_filters/show"
       assert_includes @content_view.reload.filters.map(&:name), "My Filter"
     end
 

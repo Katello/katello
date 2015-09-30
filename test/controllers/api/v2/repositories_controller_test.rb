@@ -13,6 +13,8 @@ module Katello
       @view = katello_content_views(:library_view)
       @errata = katello_errata(:security)
       @environment = katello_environments(:dev)
+      @content_view_version = katello_content_view_versions(:library_view_version_1)
+      @fedora_dev = katello_repositories(:fedora_17_x86_64_dev)
     end
 
     def permissions
@@ -90,10 +92,9 @@ module Katello
     end
 
     def test_index_with_content_view_id_and_environment_id
-      repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
-      ids = repo.content_view_version.repository_ids
+      ids = @fedora_dev.content_view_version.repositories.pluck(:id)
 
-      response =  get :index, :content_view_id => repo.content_view_version.content_view_id, :environment_id => repo.environment_id,
+      response =  get :index, :content_view_id => @fedora_dev.content_view_version.content_view_id, :environment_id => @fedora_dev.environment_id,
                   :organization_id => @organization.id
 
       assert_response :success
@@ -122,8 +123,8 @@ module Katello
     end
 
     def test_index_with_content_view_version_id_and_library
-      ids = @view.versions.first.repositories.pluck(:library_instance_id).reject(&:blank?)
-      get :index, :content_view_version_id => @view.versions.first.id, :organization_id => @organization.id, :library => true
+      ids = @content_view_version.repositories.pluck(:library_instance_id).reject(&:blank?)
+      get :index, :content_view_version_id => @content_view_version.id, :organization_id => @organization.id, :library => true
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -359,8 +360,7 @@ module Katello
 
     def test_create_without_label_or_name
       post :create, :product_id => @product.id
-      # TODO: fix this test, returns 500 because of undefined method add_repo for Katello::Product
-      assert_response 500 # should be 400 but dynflow doesn't raise RecordInvalid
+      assert_response 400
     end
 
     def test_create_protected

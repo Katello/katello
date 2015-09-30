@@ -11,8 +11,9 @@ module Katello
 
     include Ext::LabelFromName
 
-    attr_accessible :name, :label, :description, :provider_id, :provider,
-                    :gpg_key_id, :gpg_key, :cp_id, :sync_plan_id, :organization_id, :organization
+    has_many :marketing_engineering_products, :class_name => "Katello::MarketingEngineeringProduct",
+                                              :foreign_key => :engineering_product_id, :dependent => :destroy
+    has_many :marketing_products, :through => :marketing_engineering_products
 
     belongs_to :organization, :inverse_of => :products
     belongs_to :provider, :inverse_of => :products

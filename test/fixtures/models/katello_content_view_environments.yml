@@ -8,28 +8,6 @@ library_default_view_environment:
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
-# TODO: REMOVE THESE TWO
-dev_default_view_environment:
-  name:           Published Dev view environment
-  label:          'dev_default_view_environment'
-  cp_id:          2
-  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:dev_default_version) %>
-  created_at: <%= Time.now %>
-  updated_at: <%= Time.now %>
-
-staging_default_view_environment:
-  name:           Published Staging view environment
-  label:          'dev_default_view_environment'
-  cp_id:          3
-  environment_id: <%= ActiveRecord::Fixtures.identify(:staging) %>
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:staging_default_version) %>
-  created_at: <%= Time.now %>
-  updated_at: <%= Time.now %>
-# END TODO: REMOVE THESE TWO
-
 library_view_library:
   name:           Published Library view library environment
   label:          'published_library_view_library'

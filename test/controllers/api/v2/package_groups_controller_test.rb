@@ -31,31 +31,30 @@ module Katello
       get :index
 
       assert_response :success
-      assert_template %w(katello/api/v2/package_groups/index)
+      assert_template "katello/api/v2/package_groups/index"
     end
 
     def test_index_with_repo_id
       get :index, :repository_id => @repo.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/package_groups/index)
+      assert_template "katello/api/v2/package_groups/index"
     end
 
     def test_index_with_content_view_version
       get :index, :content_view_version_id => ContentViewVersion.first.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/package_groups/index)
+      assert_template "katello/api/v2/package_groups/index"
     end
 
     def test_index_with_environment_id
       environment = KTEnvironment.first
-      KTEnvironment.expects(:readable).returns(stub(:find_by_id => environment))
 
       get :index, :environment_id => environment.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/package_groups/index)
+      assert_template "katello/api/v2/package_groups/index"
     end
 
     def test_index_protected
@@ -81,7 +80,7 @@ module Katello
       get :show, :id => @repo.package_groups.first.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/package_groups/show)
+      assert_template "katello/api/v2/package_groups/show"
     end
 
     def test_show_by_uuid

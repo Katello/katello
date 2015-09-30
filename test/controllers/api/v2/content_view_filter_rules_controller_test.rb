@@ -45,7 +45,7 @@ module Katello
       post :create, :content_view_filter_id => @filter.id, :name => "testpkg", :version => "10.0"
 
       assert_response :success
-      assert_template %w(katello/api/v2/content_view_filter_rules/show)
+      assert_template "katello/api/v2/content_view_filter_rules/show"
       assert_equal @filter.reload.package_rules.first.name, "testpkg"
       assert_equal @filter.package_rules.first.version, "10.0"
     end

@@ -11,7 +11,7 @@ module Katello
       @beta = create(:katello_environment, :organization => @cvv.organization, :prior => @dev,                         :name => 'beta')
       @composite_version = ContentViewVersion.find(katello_content_view_versions(:composite_view_version_1))
       @cvv_with_repo = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
-      @cvv_with_package_groups = ContentViewVersion.find(katello_content_view_versions(:dev_default_version))
+      @cvv_with_package_groups = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2))
     end
 
     def test_promotable_in_sequence
@@ -58,9 +58,7 @@ module Katello
       image_count = 0
       tag_count = 0
       cvv.repositories.archived.docker_type.each do |repo|
-        image = repo.docker_images.create!({:image_id => "abc123", :uuid => "123"},
-                                             :without_protection => true
-                                            )
+        image = repo.docker_images.create!({:image_id => "abc123", :uuid => "123"})
         repo.docker_tags.create!(:name => "wat", :docker_image => image)
         image_count += repo.docker_images.count
         tag_count += repo.docker_tags.count
