@@ -98,5 +98,14 @@ module Katello
     def test_lifecycle_environment_search
       assert_includes ::Host::Managed.search_for("lifecycle_environment = #{library.name}"), host
     end
+
+    def test_errata_status_search
+      status = host.get_status(Katello::ErrataStatus)
+      status.status = Katello::ErrataStatus::NEEDED_ERRATA
+      status.reported_at = DateTime.now
+      status.save!
+
+      assert_includes ::Host::Managed.search_for("errata_status = errata_needed"), content_aspect.host
+    end
   end
 end
