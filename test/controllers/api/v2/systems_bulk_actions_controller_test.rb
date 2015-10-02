@@ -121,7 +121,7 @@ module Katello
     end
 
     def test_destroy_systems
-      System.stubs(:where).returns([@system1, @system2])
+      System.stubs(:where).returns(System.where(:id => [@system1.id, @system2.id]))
       assert_sync_task(::Actions::Katello::System::Destroy, @system1)
       assert_sync_task(::Actions::Katello::System::Destroy, @system2)
 
