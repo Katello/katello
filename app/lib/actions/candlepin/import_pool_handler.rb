@@ -68,12 +68,12 @@ module Actions
       def reindex_consumer(message)
         if message.content['newEntity']
           uuid = JSON.parse(message.content['newEntity'])['consumer']['uuid']
-          system = ::Katello::System.find_by_uuid(uuid)
-          if system.nil?
+          subscription_aspect = Katello::Host::SubscriptionAspect.where(:uuid => uuid).first
+          if subscription_aspect.nil?
             @logger.debug "skip re-indexing of non-existent content host #{uuid}"
           else
-            @logger.debug "re-indexing content host #{system.name}"
-            system.update_index
+            @logger.debug "re-indexing content host #{subscription_aspect.host.name}"
+            subscription_aspect.update_subscription_status
           end
         end
       end

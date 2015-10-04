@@ -43,5 +43,14 @@ module Katello
 
       assert_equal subscription_aspect.candlepin_environment_id, attrs[:environment][:id]
     end
+
+    def test_subscription_status
+      status = Katello::SubscriptionStatus.new(:host => host)
+      status.status = Katello::SubscriptionStatus::INVALID
+      status.reported_at = DateTime.now
+      status.save!
+
+      assert_includes ::Host::Managed.search_for("subscription_status = invalid"), host
+    end
   end
 end

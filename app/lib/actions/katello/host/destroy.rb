@@ -32,6 +32,8 @@ module Actions
             unless host.destroy
               fail host.errors.full_messages.join('; ')
             end
+          else
+            host.get_status(::Katello::SubscriptionStatus).destroy
           end
         end
 
