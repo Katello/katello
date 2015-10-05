@@ -18,9 +18,9 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
                 typeId = 'equal';
             } else if (rule['min_version'] && !rule['max_version']) {
                 typeId = 'greater';
-            } else if (!rule.min && rule['max_version']) {
+            } else if (!rule['min_version'] && rule['max_version']) {
                 typeId = 'less';
-            } else if (rule.min && rule['max_version']) {
+            } else if (rule['min_version'] && rule['max_version']) {
                 typeId = 'range';
             } else {
                 typeId = 'all';
