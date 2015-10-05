@@ -7,7 +7,7 @@
     </tr>
   </thead>
   <tbody>
-    <% for product in provider.products.engineering.order(:name) %>
+    <% for product in provider.products.order(:name) %>
       <% orphaned = orphaned_product_ids.include?(product.id) %>
       <% if product_map[product.id] %>
         <% contents = product_map[product.id].sort{|p1, p2| p1.content.name <=> p2.content.name} %>

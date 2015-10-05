@@ -33,7 +33,7 @@ class Actions::Candlepin::ListenOnCandlepinEventsTest < ActiveSupport::TestCase
       listening_service = Actions::Candlepin::CandlepinListeningService.new(nil, nil, nil)
       Actions::Candlepin::CandlepinListeningService.stubs(:instance).returns(listening_service)
 
-      Actions::Candlepin::ReindexPoolSubscriptionHandler.any_instance.expects(:handle)
+      Actions::Candlepin::ImportPoolHandler.any_instance.expects(:handle)
 
       action = run_action planned_action
       action.run(Actions::Candlepin::ListenOnCandlepinEvents::Event['123', 'subject.subject', 'json'])

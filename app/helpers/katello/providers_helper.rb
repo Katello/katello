@@ -20,7 +20,7 @@ module Katello
       tabs = {}.with_indifferent_access
       redhat_repo_tabs.each { |tab| tabs[tab[:id]] = tab }
 
-      provider.products.engineering.each do |product|
+      provider.products.each do |product|
         product.productContent.each do |prod_content|
           name = prod_content.content.name
           if prod_content.content.type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
@@ -49,7 +49,7 @@ module Katello
 
     def product_map
       @product_map ||= normalize(collect_repos(
-                                     @provider.products.engineering,
+                                     @provider.products,
                                      current_organization.library))
       @product_map
     end

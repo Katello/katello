@@ -4,6 +4,7 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
         translate,
         ContentHost,
         Subscription,
+        Nutupane,
         expectedTable,
         expectedRows,
         SubscriptionsHelper;
@@ -83,12 +84,13 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
             CurrentOrganization: 'organization',
             Subscription: Subscription,
             ContentHost: ContentHost,
+            Nutupane: Nutupane,
             SubscriptionsHelper: SubscriptionsHelper
         });
     }));
 
     it('attaches the nutupane table to the scope', function() {
-        expect($scope.addSubscriptionsTable).toBeDefined();
+        expect($scope.contentNutupane).toBeDefined();
     });
 
     it("allows adding subscriptions to the content host", function() {
@@ -100,7 +102,7 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
                                                     ]};
         spyOn(ContentHost, 'addSubscriptions');
 
-        $scope.addSubscriptionsTable.getSelected = function() {
+        $scope.detailsTable.getSelected = function() {
             return [
                      {id: 2, 'multi_entitlement': true},
                      {id: 3, 'multi_entitlement': true, 'amount': 1},

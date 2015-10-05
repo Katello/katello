@@ -14,26 +14,35 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsController',
-    ['$scope', '$location', 'translate', 'CurrentOrganization', 'Subscription', 'ContentHost', 'SubscriptionsHelper',
-    function ($scope, $location, translate, CurrentOrganization, Subscription, ContentHost, SubscriptionsHelper) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Subscription', 'ContentHost', 'SubscriptionsHelper',
+    function ($scope, $location, translate, Nutupane, CurrentOrganization, Subscription, ContentHost, SubscriptionsHelper) {
 
-        $scope.addSubscriptionsTable = $scope.addSubscriptionsPane.table;
-        $scope.addSubscriptionsPane.refresh();
+        var params = {
+            'system_id': $scope.$stateParams.contentHostId,
+            'organization_id': CurrentOrganization,
+            'search': $location.search().search || "",
+            'sort_order': 'ASC',
+            'available_for': 'content_host'
+        };
+
+        $scope.contentNutupane = new Nutupane(Subscription, params);
+        $scope.detailsTable = $scope.contentNutupane.table;
+
+        $scope.contentNutupane.masterOnly = true;
         $scope.isAdding = false;
-        $scope.addSubscriptionsTable.closeItem = function () {};
 
         $scope.groupedSubscriptions = {};
-        $scope.$watch('addSubscriptionsTable.rows', function (rows) {
+        $scope.$watch('detailsTable.rows', function (rows) {
             $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
         });
 
         $scope.disableAddButton = function () {
-            return $scope.addSubscriptionsTable.numSelected === 0 || $scope.isAdding;
+            return $scope.detailsTable.numSelected === 0 || $scope.isAdding;
         };
 
         $scope.addSelected = function () {
             var selected;
-            selected = SubscriptionsHelper.getSelectedSubscriptionAmounts($scope.addSubscriptionsTable);
+            selected = SubscriptionsHelper.getSelectedSubscriptionAmounts($scope.detailsTable);
 
             $scope.isAdding = true;
             ContentHost.addSubscriptions({uuid: $scope.contentHost.uuid, 'subscriptions': selected}, function () {
@@ -41,9 +50,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
                     $scope.$parent.contentHost = host;
                     $scope.successMessages.push(translate("Successfully added %s subscriptions.").replace('%s', selected.length));
                     $scope.isAdding = false;
-                    $scope.addSubscriptionsPane.refresh();
-                    $scope.subscriptionsPane.refresh();
-                    $scope.nutupane.refresh();
+                    $scope.contentNutupane.refresh();
                 });
             }, function (response) {
                 $scope.$parent.errorMessages = response.data.displayMessage;

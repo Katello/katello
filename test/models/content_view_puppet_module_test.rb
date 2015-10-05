@@ -8,6 +8,24 @@ module Katello
       @puppet_module = ContentViewPuppetModule.find(katello_content_view_puppet_modules(:library_view_abrt_module).id)
     end
 
+    def test_create_with_name_author
+      assert ContentViewPuppetModule.create!(:name => 'dhcp', :author => 'johndoe', :content_view => @library_view)
+    end
+
+    def test_create_with_name
+      assert_raises ActiveRecord::RecordInvalid do
+        ContentViewPuppetModule.create!(:name => 'dhcp', :content_view => @library_view)
+      end
+    end
+
+    def test_create_with_uuid
+      content_view_puppet_module = ContentViewPuppetModule.new(
+        :uuid => katello_puppet_modules(:foreman_proxy).uuid,
+        :content_view => @library_view
+      )
+      assert content_view_puppet_module.save!
+    end
+
     def test_search_name
       assert_equal @puppet_module, ContentViewPuppetModule.search_for("name = \"#{@puppet_module.name}\"").first
     end
