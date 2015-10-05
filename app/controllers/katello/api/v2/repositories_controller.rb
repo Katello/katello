@@ -1,5 +1,6 @@
 module Katello
   class Api::V2::RepositoriesController < Api::V2::ApiController
+    wrap_parameters :include => (Repository.attribute_names + [:ostree_branches])
     include Katello::Concerns::FilteredAutoCompleteSearch
 
     before_filter :find_organization, :only => [:index, :auto_complete_search]
@@ -27,9 +28,10 @@ module Katello
       param :url, String, :desc => N_("repository source url")
       param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
-      param :content_type, String, :required => true, :desc => N_("type of repo (either 'yum', 'puppet' or 'docker')")
+      param :content_type, String, :required => true, :desc => N_("type of repo (either 'yum', 'puppet', 'docker', or 'ostree')")
       param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.'")
       param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
+      param :ostree_branches, Array, :desc => N_("list of ostree branch refs associated to an rpm ostree repository")
     end
 
     api :GET, "/repositories", N_("List of enabled repositories")
@@ -111,8 +113,9 @@ module Katello
       repository = @product.add_repo(repo_params[:label], repo_params[:name], repo_params[:url],
                                      repo_params[:content_type], unprotected,
                                      gpg_key, repository_params[:checksum_type])
+
       repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
-      sync_task(::Actions::Katello::Repository::Create, repository, false, true)
+      sync_task(::Actions::Katello::Repository::Create, repository, false, true, repo_params[:ostree_branches])
       repository = Repository.find(repository.id)
       respond_for_show(:resource => repository)
     end
@@ -138,9 +141,10 @@ module Katello
     param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.'")
     param :url, String, :desc => N_("the feed url of the original repository ")
     param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
+    param :ostree_branches, Array,  :desc => N_("list of ostree branch refs associated to an rpm ostree repository")
     def update
       repo_params = repository_params
-      repo_params[:url] = nil if repository_params[:url].blank?
+      repo_params[:url] = nil if repository_params[:url].blank? && !@repository.ostree?
       sync_task(::Actions::Katello::Repository::Update, @repository, repo_params)
       respond_for_show(:resource => @repository)
     end
@@ -266,7 +270,7 @@ module Katello
     end
 
     def repository_params
-      keys = [:url, :gpg_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name]
+      keys = [:url, :gpg_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name, :ostree_branches => []]
       keys += [:label, :content_type] if params[:action] == "create"
       params.require(:repository).permit(*keys)
     end

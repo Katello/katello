@@ -113,6 +113,12 @@ module Katello
       assert_equal "puppet", Repository.find(@repo.id).content_type
     end
 
+    def test_ostree_content_type
+      @repo.content_type = "ostree"
+      assert @repo.save
+      assert_equal "ostree", Repository.find(@repo.id).content_type
+    end
+
     def test_docker_pulp_id
       # for docker repos, the pulp_id should be downcased
       @repo.name = 'docker_repo'
@@ -147,6 +153,28 @@ module Katello
       @repo.content_type = Repository::PUPPET_TYPE
       assert @repo.save
       assert @repo.pulp_id.ends_with?('PULP-ID')
+    end
+
+    def test_ostree_attribs
+      @repo.url = "http://foo.com"
+      assert @repo.save
+
+      @repo.url = ""
+      refute @repo.save
+    end
+
+    def test_ostree_branch_create
+      @repo.url = "http://foo.com"
+      @repo.content_type = Repository::OSTREE_TYPE
+      assert OstreeBranch.create(:repository => @repo, :name => "/foo/bar")
+    end
+
+    def test_ostree_branch_bad_create
+      @repo.url = "http://foo.com"
+      @repo.content_type = Repository::DOCKER_TYPE
+      assert_raises ActiveRecord::RecordInvalid do
+        OstreeBranch.create!(:repository => @repo, :name => "/foo/bar1")
+      end
     end
   end
 
@@ -213,6 +241,53 @@ module Katello
       repos = Repository.search_for("distribution_bootable = \"#{@fedora_17_x86_64.distribution_bootable}\"")
       assert_includes repos, @fedora_17_x86_64
       refute_includes repos, @puppet_forge
+    end
+  end
+
+  class OstreeRepositoryInstanceTest < RepositoryTestBase
+    def setup
+      super
+      User.current = @admin
+      @repo = Repository.find(katello_repositories(:ostree_rhel7).id)
+      @repo.content_type = Repository::OSTREE_TYPE
+    end
+
+    def test_ostree_branch_update
+      assert OstreeBranch.create(:repository => @repo, :name => "/foo/bar")
+      @repo.url = ""
+      refute @repo.save
+    end
+
+    def test_bad_branch_update
+      rhel6 = Repository.find(katello_repositories(:rhel_6_x86_64))
+      assert_raises ActiveRecord::RecordInvalid do
+        OstreeBranch.create!(:repository => rhel6, :name => "/foo/bar1")
+      end
+    end
+
+    def test_ostree_branch_update_methods
+      branches = ["branch1", "branch2"]
+      @repo.update_ostree_branches!(branches)
+      branches.each do |branch_name|
+        assert_includes @repo.ostree_branch_names, branch_name
+      end
+
+      branches2 = ["branch3", "branch4"]
+      @repo.update_ostree_branches!(branches2)
+      @repo = @repo.reload
+      branches.each do |branch_name|
+        refute_includes @repo.ostree_branch_names, branch_name
+      end
+
+      branches2.each do |branch_name|
+        assert_includes @repo.ostree_branch_names, branch_name
+      end
+    end
+
+    def test_ostree_branch_update_duplicate_violation
+      assert_raises ::Katello::Errors::ConflictException do
+        @repo.update_ostree_branches!(["branch", "branch"])
+      end
     end
   end
 
@@ -487,10 +562,12 @@ module Katello
       lib_yum_repo = Repository.find(katello_repositories(:rhel_6_x86_64))
       lib_puppet_repo = Repository.find(katello_repositories(:p_forge))
       lib_iso_repo = Repository.find(katello_repositories(:iso))
+      lib_ostree_repo = Repository.find(katello_repositories(:ostree_rhel7))
 
       assert lib_yum_repo.node_syncable?
       refute lib_puppet_repo.node_syncable?
       refute lib_iso_repo.node_syncable?
+      refute lib_ostree_repo.node_syncable?
     end
 
     def test_bad_checksum

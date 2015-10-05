@@ -34,7 +34,7 @@ fedora_17_x86_64_dev:
   distribution_version: "2.1"
   distribution_family: "Test Family"
   distribution_variant: "TestVariant"
-  distribution_bootable: false 
+  distribution_bootable: false
   distribution_uuid: 'xyz123'
 
 feedless_fedora_17_x86_64:
@@ -267,6 +267,18 @@ iso:
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>
 
+ostree_rhel7:
+  name:                 ostree_rhel7
+  pulp_id:              "Default_Organization-Test-ostree"
+  content_id:           1
+  content_type:         ostree
+  label:                ostree_rhel7
+  relative_path:        '/ACME_Corporation/library/LibraryView/ostree_rhel7'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:ostree_product) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  url:                  "http://cdn.qa.redhat.com/content/htb/rhel/server/7/x86_64/extras/ostree/"
+
 redis:
   name:                 redis
   pulp_id:              "Default_Organization-Test-redis"
@@ -334,3 +346,30 @@ rhel_6_x86_64_composite_view_version_1:
   product_id:           <%= ActiveRecord::Fixtures.identify(:redhat) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::Fixtures.identify(:composite_view_version_1) %>
+
+ostree:
+  name:                 ostree
+  pulp_id:              "Default_Organization-Test-ostree"
+  content_id:           1
+  content_type:         ostree
+  label:                ostree
+  relative_path:        '/ACME_Corporation/library/ostree'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  unprotected:           <%= true %>
+
+ostree_view1:
+  name:                 ostree
+  pulp_id:              "Default_Organization-Test-ostree"
+  content_id:           1
+  content_type:         ostree
+  library_instance:     ostree
+  label:                ostree
+  relative_path:        '/ACME_Corporation/library/ostree'
+  environment_id:
+  product_id:           <%= ActiveRecord::Fixtures.identify(:puppet_product) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>
+  unprotected:           <%= true %>

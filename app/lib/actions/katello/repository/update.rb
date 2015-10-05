@@ -4,6 +4,9 @@ module Actions
       class Update < Actions::EntryAction
         def plan(repository, repo_params)
           action_subject repository
+          ostree_branches = repo_params.delete(:ostree_branches)
+          repository.update_ostree_branches!(ostree_branches) if ostree_branches
+          repository = repository.reload
           repository.update_attributes!(repo_params)
 
           if (::Katello.config.use_cp && ::Katello.config.use_pulp) && repository.library_instance?
@@ -46,6 +49,8 @@ module Actions
                           Runcible::Models::IsoDistributor
                         when ::Katello::Repository::DOCKER_TYPE
                           Runcible::Models::DockerDistributor
+                        when ::Katello::Repository::OSTREE_TYPE
+                          Runcible::Models::OstreeDistributor
                         end
           distributor.type_id
         end

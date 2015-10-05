@@ -15,6 +15,7 @@ attributes :gpg_key_id
 attributes :content_id, :content_view_version_id, :library_instance_id
 attributes :product_type
 attributes :promoted? => :promoted
+attributes :ostree_branch_names => :ostree_branches
 
 if @resource.is_a?(Katello::Repository)
   if @resource.distribution_version || @resource.distribution_arch || @resource.distribution_family || @resource.distribution_variant
