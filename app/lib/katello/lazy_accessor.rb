@@ -137,7 +137,7 @@ module Katello
 
         options = self.class.lazy_attributes_options(attr)
 
-        excepted = options.key?(:unless) ? self.instance_eval(&options[:unless]) : new_record?
+        excepted = options.key?(:unless) ? self.instance_eval(&options[:unless]) : (self.is_a?(ActiveRecord::Base) && self.new_record?)
         if !instance_variable_defined?("@#{attr}") && !excepted
           remote_values = run_initializer(options[:in_group], options[:initializer])
           if options[:in_group]
@@ -150,7 +150,7 @@ module Katello
       end
 
       def remote_attribute_value(attr)
-        return nil if new_record?
+        return nil if self.is_a?(ActiveRecord::Base) && self.new_record?
 
         options = self.class.lazy_attributes_options(attr)
         initializer, in_group = options[:initializer], options[:in_group]

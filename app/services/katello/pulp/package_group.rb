@@ -1,9 +1,8 @@
 module Katello
-  module Glue::Pulp::PackageGroup
-    extend ActiveSupport::Concern
-    include LazyAccessor
+  module Pulp
+    class PackageGroup < PulpContentUnit
+      include LazyAccessor
 
-    included do
       lazy_accessor :pulp_facts, :initializer => :backend_data
 
       lazy_accessor :optional_package_names, :mandatory_package_names,
