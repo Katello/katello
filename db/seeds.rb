@@ -56,8 +56,6 @@ ProvisioningTemplate.where(:default => true).each do |template|
   template.locations << Location.first unless template.locations.include?(Location.first) || Location.count.zero?
 end
 
-Katello::Util::Search.backend_search_classes.each { |c| c.create_index }
-
 # Proxy features
 feature = Feature.find_or_create_by(:name => 'Pulp')
 if feature.nil? || feature.errors.any?
@@ -159,8 +157,8 @@ notifications = [
 ]
 
 notifications.each do |notification|
-  ::MailNotification.find_or_create_by(:name => notification[:name], 
-                                       :description => notification[:description], 
+  ::MailNotification.find_or_create_by(:name => notification[:name],
+                                       :description => notification[:description],
                                        :mailer => notification[:mailer],
                                        :method => notification[:method],
                                        :subscription_type => notification[:subscription_type])

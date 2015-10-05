@@ -36,16 +36,30 @@ module Katello
         pools
       end
 
+      def import_pools
+        pool_ids = self.get_key_pools.map { |pool| pool['id'] }
+        pools = Katello::Pool.where(:cp_id => pool_ids)
+        associations = Katello::PoolActivationKey.where(:activation_key_id => self.id)
+        associations.map { |assoc| assoc.destroy! if pools.map(&:id).exclude?(assoc.pool_id) }
+        pools.each do |pool|
+          Katello::PoolActivationKey.where(:pool_id => pool.id, :activation_key_id => self.id).first_or_create
+        end
+      end
+
       def subscribe(pool_id, quantity = 1)
-        product = Resources::Candlepin::Pool.find(pool_id)[:productAttributes][0]
-        add_custom_product(product[:productId]) unless Katello::Product.find_by(:cp_id => product[:productId]).redhat?
-        Resources::Candlepin::ActivationKey.add_pools self.cp_id, pool_id, quantity
+        pool = Katello::Pool.find(pool_id)
+        subscription = pool.subscription
+        add_custom_product(subscription.product_id) unless subscription.redhat?
+        Resources::Candlepin::ActivationKey.add_pools self.cp_id, pool.cp_id, quantity
+        self.import_pools
       end
 
       def unsubscribe(pool_id)
-        product = Resources::Candlepin::Pool.find(pool_id)[:productAttributes][0]
-        remove_custom_product(product[:productId]) unless Katello::Product.find_by(:cp_id => product[:productId]).redhat?
-        Resources::Candlepin::ActivationKey.remove_pools self.cp_id, pool_id
+        pool = Katello::Pool.find(pool_id)
+        subscription = pool.subscription
+        remove_custom_product(subscription.product_id) unless subscription.redhat?
+        Resources::Candlepin::ActivationKey.remove_pools self.cp_id, pool.cp_id
+        self.import_pools
       end
 
       def set_content_override(content_label, name, value = nil)

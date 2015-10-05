@@ -16,7 +16,7 @@ module Actions
       end
     end
 
-    class ReindexPoolSubscriptionHandler
+    class ImportPoolHandler
       def initialize(logger)
         @logger = logger
       end
@@ -30,13 +30,13 @@ module Actions
         wrapped_message = MessageWrapper.new(message)
         case message.subject
         when /entitlement\.created/
-          reindex_pool(wrapped_message.content['referenceId'])
+          import_pool(wrapped_message.content['referenceId'])
         when /entitlement\.deleted/
-          reindex_or_unindex_pool(wrapped_message.content['referenceId'])
+          import_or_remove_pool(wrapped_message.content['referenceId'])
         when /pool\.created/
-          reindex_pool(wrapped_message.content['entityId'])
+          import_pool(wrapped_message.content['entityId'])
         when /pool\.deleted/
-          unindex_pool(wrapped_message.content['entityId'])
+          remove_pool(wrapped_message.content['entityId'])
         when /compliance\.created/
           reindex_consumer(wrapped_message)
         end
@@ -44,24 +44,25 @@ module Actions
 
       private
 
-      def reindex_or_unindex_pool(pool_id)
-        ::Katello::Pool.find_pool(pool_id)
-        reindex_pool(pool_id)
+      def import_or_remove_pool(pool_id)
+        ::Katello::Pool.find_by(:cp_id => pool_id).import_data
       rescue RestClient::ResourceNotFound
-        unindex_pool(pool_id)
+        remove_pool(pool_id)
       end
 
-      def reindex_pool(pool_id)
-        @logger.info "re-indexing pool #{pool_id}."
-        pool = ::Katello::Pool.find_pool(pool_id)
-        ::Katello::Pool.index_pools([pool]) unless pool.nil? || pool.unmapped_guest
+      def import_pool(pool_id)
+        ::Katello::Pool.import_pool(pool_id)
       rescue RestClient::ResourceNotFound
         @logger.debug "skipped re-index of non-existent pool #{pool_id}"
       end
 
-      def unindex_pool(pool_id)
-        @logger.info "removing pool from index #{pool_id}."
-        ::Katello::Pool.remove_from_index(pool_id)
+      def remove_pool(pool_id)
+        pool = ::Katello::Pool.find_by(:cp_id => pool_id)
+        if pool
+          pool.destroy!
+        else
+          @logger.debug "Couldn't find pool with candlepin id #{pool_id} in the database"
+        end
       end
 
       def reindex_consumer(message)

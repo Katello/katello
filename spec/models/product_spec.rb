@@ -128,31 +128,6 @@ module Katello
           @p.repo_id("#{@organization.label}-root-#{ProductTestData::SIMPLE_PRODUCT[:label]}-123").must_equal("#{@organization.label}-root-#{ProductTestData::SIMPLE_PRODUCT[:label]}-123")
         end
       end
-
-      describe "when importing product from candlepin" do
-        describe "marketing product" do
-          let(:eng_product_after_import) do
-            product = Product.new(ProductTestData::PRODUCT_WITH_CP_CONTENT.merge("id" => "20", "name" => "Red Hat Enterprise Server 6")) do |p|
-              p.provider = @provider
-              p.organization = @organization
-            end
-            product.orchestration_for = :import_from_cp_ar_setup
-            product.save!
-            product
-          end
-
-          subject { Glue::Candlepin::Product.import_marketing_from_cp(ProductTestData::PRODUCT_WITH_CP_CONTENT, [eng_product_after_import.id]) }
-
-          specify "repositories should not get created for that" do
-            Repository.expects(:create!).never
-            subject
-          end
-
-          it { subject.engineering_products.must_equal([eng_product_after_import]) }
-
-          it { subject.must_be_kind_of(MarketingProduct) }
-        end
-      end
     end
 
     describe "#environments" do

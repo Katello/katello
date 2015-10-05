@@ -133,6 +133,7 @@ module ::Actions::Katello::Product
         subject.must_equal(product)
       end
       product.expects(:user_deletable?).returns(true)
+      product.expects(:productContent).returns({})
       default_view_repos = product.repositories.in_default_view.map(&:id)
 
       action.expects(:plan_self)

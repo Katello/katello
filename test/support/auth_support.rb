@@ -8,7 +8,9 @@ module Katello
         begin
           role.add_permissions!([perm[:name]], :search => perm[:search])
         rescue ArgumentError => e
-          raise("Permissions not found: #{perm[:name]}, #{e.message}")
+          Rails.logger.error("Permission query: #{Permission.where(:name => [perm[:name]]).all}")
+          Rails.logger.error("Permission list: #{Permission.pluck(:name)}")
+          raise("Permissions not found: #{perm[:name]}, #{e.message}:  #{Permission.pluck(:name)}")
         end
       end
       role

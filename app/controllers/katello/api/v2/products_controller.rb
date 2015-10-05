@@ -50,7 +50,11 @@ module Katello
       query = query.enabled if params[:enabled]
       query = query.where(:id => @activation_key.products) if @activation_key
       query = query.where(:id => @system.products) if @system
-      query = query.where(:id => Pool.find_by!(:id => params[:subscription_id]).products) if params[:subscription_id]
+
+      if params[:subscription_id]
+        pool = Pool.with_identifier(params[:subscription_id])
+        query = query.where(:id => pool.products) if pool
+      end
 
       # filter by sync plan
       if sync_plan_id = params[:sync_plan_id]

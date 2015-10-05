@@ -22,7 +22,6 @@ module Actions
           plan_action(ContentViewPuppetModule::Destroy, repository) if repository.puppet?
           plan_action(Pulp::Repository::Destroy, pulp_id: repository.pulp_id)
           plan_action(Product::ContentDestroy, repository)
-          plan_action(ElasticSearch::Repository::Destroy, pulp_id: repository.pulp_id)
           plan_action(Repository::DestroyMedium, repository)
 
           view_env = repository.content_view.content_view_environment(repository.environment)

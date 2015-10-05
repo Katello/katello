@@ -74,7 +74,7 @@ module Katello
       def index_relation
         collection = resource_class.scoped
         collection = filter_by_repos(Repository.readable, collection)
-        collection = filter_by_repos([@repo], collection) if @repo && !@repo.puppet?
+        collection = filter_by_repos([@repo], collection) if @repo
         collection = filter_by_content_view_version(@version, collection) if @version
         collection = filter_by_environment(@environment, collection) if @environment
         collection = filter_by_repos(Repository.readable.in_organization(@organization), collection) if @organization
