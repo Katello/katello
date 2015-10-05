@@ -157,8 +157,8 @@ notifications = [
 ]
 
 notifications.each do |notification|
-  ::MailNotification.find_or_create_by(:name => notification[:name], 
-                                       :description => notification[:description], 
+  ::MailNotification.find_or_create_by(:name => notification[:name],
+                                       :description => notification[:description],
                                        :mailer => notification[:mailer],
                                        :method => notification[:method],
                                        :subscription_type => notification[:subscription_type])

@@ -45,7 +45,7 @@ module Actions
       private
 
       def import_or_remove_pool(pool_id)
-        ::Katello::Pool.find_by_cp_id(pool_id).import_data
+        ::Katello::Pool.find_by(:cp_id => pool_id).import_data
       rescue RestClient::ResourceNotFound
         remove_pool(pool_id)
       end
@@ -57,7 +57,7 @@ module Actions
       end
 
       def remove_pool(pool_id)
-        pool = ::Katello::Pool.find_by_cp_id(pool_id)
+        pool = ::Katello::Pool.find_by(:cp_id => pool_id)
         if pool
           pool.destroy!
         else

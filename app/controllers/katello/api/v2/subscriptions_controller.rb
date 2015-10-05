@@ -39,7 +39,7 @@ module Katello
       collection = collection.where(:id => ActivationKey.find(params[:activation_key_id]).pools) if params[:activation_key_id]
       collection = collection.get_for_organization(Organization.find(params[:organization_id])) if params[:organization_id]
       if params[:system_id]
-        pool_ids = System.find_by_uuid(params[:system_id]).pools.map { |x| x['id'] }
+        pool_ids = System.find_by(:uuid => params[:system_id]).pools.map { |x| x['id'] }
         collection = collection.where(:cp_id => pool_ids)
       end
       collection
@@ -197,7 +197,7 @@ module Katello
       pools = @system.filtered_pools(params[:match_system], params[:match_installed],
                                      params[:no_overlap])
       if pools
-        available = pools.collect { |cp_pool| ::Katello::Pool.find_by_cp_id(cp_pool['id']) }
+        available = pools.collect { |cp_pool| ::Katello::Pool.find_by(:cp_id => cp_pool['id']) }
         available.compact!
         available.select { |pool| pool.provider?(Organization.find(params[:organization_id])) }
       end

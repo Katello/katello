@@ -410,7 +410,7 @@ module Katello
         all_products = []
 
         self.entitlements.each do |entitlement|
-          pool = Katello::Pool.find_by_cp_id(entitlement['pool']['id'])
+          pool = Katello::Pool.find_by(:cp_id => entitlement['pool']['id'])
           Katello::Product.where(:cp_id => pool.product_id).each do |product|
             all_products << product
           end

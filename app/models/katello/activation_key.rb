@@ -95,7 +95,7 @@ module Katello
 
       cp_pools = self.get_key_pools
       if cp_pools
-        pools = cp_pools.collect { |cp_pool| Pool.find_by_cp_id(cp_pool['id']) }
+        pools = cp_pools.collect { |cp_pool| Pool.find_by(:cp_id => cp_pool['id']) }
         pools.each do |pool|
           all_products << pool.subscription.products
         end

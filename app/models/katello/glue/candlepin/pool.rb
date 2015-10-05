@@ -32,7 +32,7 @@ module Katello
       end
 
       def import_pool(cp_pool_id)
-        pool = Katello::Pool.find_or_create_by_cp_id(cp_pool_id)
+        pool = Katello::Pool.find_or_create_by(:cp_id => cp_pool_id)
         pool.import_data
       end
     end
@@ -117,7 +117,7 @@ module Katello
         end
         related_keys = ::Katello::ActivationKey.where(:cp_id => activation_key_ids.compact)
         related_keys.each do |key|
-          Katello::PoolActivationKey.find_or_create_by_activation_key_id_and_pool_id(key.id, self.id)
+          Katello::PoolActivationKey.find_or_create_by(:activation_key_id => key.id, :pool_id => self.id)
         end
       end
 

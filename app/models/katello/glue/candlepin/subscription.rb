@@ -34,7 +34,7 @@ module Katello
         subscription_attributes[:product_id] = subscription_json["product"]["id"]
         subscription_attributes[:instance_multiplier] = subscription_json["product"]["multiplier"]
         subscription_attributes[:stacking_id] = subscription_json["stackId"]
-        organization = Organization.find_by_label(subscription_json["owner"]["key"]) if subscription_json["owner"]
+        organization = Organization.find_by(:label => subscription_json["owner"]["key"]) if subscription_json["owner"]
         subscription_attributes[:organization_id] = organization.id if organization
 
         exceptions = subscription_attributes.keys.map(&:to_sym) - self.attribute_names.map(&:to_sym)
@@ -49,7 +49,7 @@ module Katello
         cp_product_ids.each do |cp_id|
           product = ::Katello::Product.where(:cp_id => cp_id)
           if product.any?
-            ::Katello::SubscriptionProduct.find_or_create_by_subscription_id_and_product_id(self.id, product.first.id)
+            ::Katello::SubscriptionProduct.find_or_create_by(:subscription_id => self.id, :product_id => product.first.id)
           end
         end
       end
