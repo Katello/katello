@@ -34,9 +34,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "qpid_messaging", ">= 0.30.0", '< 0.31.0'
   gem.add_dependency "gettext_i18n_rails"
 
-  # TODO: remove this stop-gap fix once we've removed all attr_accessible method calls before merging into katello/master
-  gem.add_dependency 'protected_attributes'
-
   # Pulp
   gem.add_dependency "runcible", ">= 1.3.0"
   gem.add_dependency "anemone"

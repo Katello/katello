@@ -47,7 +47,7 @@ module Katello
       post :create, :content_view_id => @content_view.id, :name => "abrt", :author => "johndoe"
 
       assert_response :success
-      assert_template %w(katello/api/v2/content_view_puppet_modules/show)
+      assert_template "katello/api/v2/content_view_puppet_modules/show"
       assert_includes @content_view.reload.puppet_modules.map(&:name), "abrt"
     end
 

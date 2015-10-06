@@ -119,7 +119,7 @@ module Katello
     protected
 
     def find_product(options = {})
-      @product = Product.includes(*options[:includes] || []).find_by(:id => params[:id])
+      @product = Product.includes(options[:includes] || []).find_by(:id => params[:id])
       fail HttpErrors::NotFound, _("Couldn't find product '%s'") % params[:id] unless @product
     end
 

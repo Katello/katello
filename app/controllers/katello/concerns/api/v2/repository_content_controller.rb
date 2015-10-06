@@ -60,7 +60,7 @@ module Katello
           fail HttpErrors::NotFound, _("Couldn't find content view versions '%s'") % missing.join(',')
         end
 
-        collection = resource_class.scoped
+        collection = resource_class.where(nil)
         repos = Katello::Repository.where(:content_view_version_id => @versions.pluck(:id))
         repos = repos.where(:library_instance_id => @repo.id) if @repo
 
@@ -72,7 +72,7 @@ module Katello
       param :available_for, :string, :desc => N_("Show available to be added to content view filter")
       param :filterId, :integer, :desc => N_("Content View Filter id")
       def index_relation
-        collection = resource_class.scoped
+        collection = resource_class.where(nil)
         collection = filter_by_repos(Repository.readable, collection)
         collection = filter_by_repos([@repo], collection) if @repo
         collection = filter_by_content_view_version(@version, collection) if @version
@@ -161,7 +161,7 @@ module Katello
         filter_id = params[:content_view_filter_id] || params[:filter_id]
 
         if filter_id
-          scoped = ContentViewFilter.scoped
+          scoped = ContentViewFilter.where(nil)
           @filter = scoped.where(:type => filter_class_name).find_by(:id => filter_id)
 
           unless @filter
