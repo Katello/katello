@@ -177,7 +177,7 @@ class ActiveSupport::TestCase
 
   def mock_active_records(*records)
     records.each do |record|
-      record.class.stubs(:instantiate).with(has_entry('id', record.id.to_s)).returns(record)
+      record.class.stubs(:instantiate).with(has_entry('id', record.id.to_s), instance_of(Hash)).returns(record)
       record.stubs(:reload).returns(record)
     end
   end
