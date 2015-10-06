@@ -79,6 +79,7 @@ module ::Actions::Katello::System
       stub_remote_user
       action.expects(:plan_self)
       action.stubs(:action_subject).with(system)
+      system.expects(:pools).at_least(1).returns([{"id" => "fake"}])
 
       plan_action(action, system)
       assert_action_planed(action, ::Actions::Candlepin::Consumer::Destroy)
