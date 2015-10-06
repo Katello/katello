@@ -44,7 +44,7 @@ module Katello
     end
 
     describe "unsupported actions" do
-      subject { System.create_hypervisor(@environment.id, @content_view.id, SystemTestData.new_hypervisor) }
+      subject { System.create_hypervisor(@environment, @content_view, SystemTestData.new_hypervisor) }
 
       [:package_profile, :pulp_facts, :simple_packages, :errata, :del_pulp_consumer, :set_pulp_consumer,
        :update_pulp_consumer, :upload_package_profile, :install_package, :uninstall_package,

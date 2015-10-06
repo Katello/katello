@@ -445,9 +445,22 @@ module Katello
         return system_uuids
       end
 
-      def create_hypervisor(environment_id, content_view_id, hypervisor_json)
-        hypervisor = Hypervisor.new(:environment_id => environment_id, :content_view_id => content_view_id)
-        hypervisor.name = hypervisor_json[:name]
+      def update_subscription_aspect(name, organization, location, params)
+        host = Katello::Host::SubscriptionAspect.find_or_create_host_for_hypervisor(name,
+                                                        organization, location)
+        subscription_aspect = host.subscription_aspect || ::Katello::Host::SubscriptionAspect.new
+        subscription_aspect.update_from_consumer_attributes(params)
+        host.save!
+      end
+
+      def create_hypervisor(environment, content_view, hypervisor_json)
+        # Since host names must be unique yet hypervisors may have unique subscription aspects in different orgs
+        name = "#{hypervisor_json[:name]}-#{environment.organization.id}"
+        update_subscription_aspect(name, environment.organization, Location.default_location, hypervisor_json)
+
+        # Legacy
+        hypervisor = Hypervisor.new(:environment_id => environment.id, :content_view_id => content_view.id)
+        hypervisor.name = name
         hypervisor.cp_type = 'hypervisor'
         hypervisor.orchestration_for = :hypervisor
         hypervisor.load_from_cp(hypervisor_json)
@@ -460,20 +473,26 @@ module Katello
         created = []
         if consumers_attrs[:created]
           consumers_attrs[:created].each do |hypervisor|
-            created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
+            created << System.create_hypervisor(environment, content_view, hypervisor)
           end
         end
         if consumers_attrs[:updated]
           consumers_attrs[:updated].each do |hypervisor|
-            unless System.find_by_uuid(hypervisor[:uuid])
-              created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
+            if !System.find_by_uuid(hypervisor[:uuid])
+              created << System.create_hypervisor(environment, content_view, hypervisor)
+            else
+              update_subscription_aspect(hypervisor[:name], environment.organization, Location.default_location,
+                                         hypervisor)
             end
           end
         end
         if consumers_attrs[:unchanged]
           consumers_attrs[:unchanged].each do |hypervisor|
-            unless System.find_by_uuid(hypervisor[:uuid])
-              created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
+            if !System.find_by_uuid(hypervisor[:uuid])
+              created << System.create_hypervisor(environment, content_view, hypervisor)
+            else
+              update_subscription_aspect(hypervisor[:name], environment.organization, Location.default_location,
+                                         hypervisor)
             end
           end
         end

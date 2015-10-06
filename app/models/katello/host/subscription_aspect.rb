@@ -50,6 +50,18 @@ module Katello
                              :ip => facts["net.interface.#{interface}.ipv4_address"].dup)
         end
       end
+
+      def self.find_or_create_host_for_hypervisor(name, organization, location)
+        hosts = ::Host.where(:name => name)
+        if hosts.empty? #no host exists
+          ::Host::Managed.new(:name => name, :organization => organization, :location => location, :managed => false)
+        elsif hosts.where(:organization_id => organization.id).empty? #not in the correct org
+          #TODO
+          fail "Can't handle registering to host in a different org, need to handle this case."
+        else
+          hosts.first
+        end
+      end
     end
   end
 end

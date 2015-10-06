@@ -111,7 +111,6 @@ module Katello
     #api :POST, "/hypervisors", N_("Update the hypervisors information for environment")
     #desc 'See virt-who tool for more details.'
     def hypervisors_update
-      #TODO
       cp_response, _ = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action, :format))
       render :json => cp_response
     end
@@ -256,12 +255,13 @@ module Katello
       params[:organization_id] = params[:owner] if params[:owner]
     end
 
-    def find_host
-      aspect = Katello::Host::SubscriptionAspect.where(:uuid => params[:id]).first
+    def find_host(uuid = nil)
+      uuid ||= params[:id]
+      aspect = Katello::Host::SubscriptionAspect.where(:uuid => uuid).first
       if aspect.nil?
         # check with candlepin if consumer is Gone, raises RestClient::Gone
-        Resources::Candlepin::Consumer.get(params[:id])
-        fail HttpErrors::NotFound, _("Couldn't find consumer '%s'") % params[:id]
+        Resources::Candlepin::Consumer.get(uuid)
+        fail HttpErrors::NotFound, _("Couldn't find consumer '%s'") % uuid
       end
       @host = aspect.host
     end
@@ -286,10 +286,10 @@ module Katello
     # Hypervisors are restricted to the content host's environment and content view
     def find_hypervisor_environment_and_content_view
       if User.consumer?
-        find_system(User.current.uuid)
-        @organization = @system.organization
-        @environment = @system.environment
-        @content_view = @system.content_view
+        @host = find_host(User.current.uuid)
+        @organization = @host.content_aspect.content_view.organization
+        @environment = @host.content_aspect.lifecycle_environment
+        @content_view = @host.content_aspect.content_view
         params[:owner] = @organization.label
         params[:env] = @content_view.cp_environment_label(@environment)
       else
