@@ -19,8 +19,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostBaseSubscriptions
         function success() {
             $scope.subscription.workingMode = false;
             $scope.$parent.successMessages = [translate('Successfully updated subscriptions.')];
-            $scope.addSubscriptionsPane.refresh();
-            $scope.subscriptionsPane.refresh();
             $scope.contentHost.$get();
         }
 

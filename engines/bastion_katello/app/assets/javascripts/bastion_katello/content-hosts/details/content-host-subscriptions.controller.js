@@ -17,15 +17,14 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
     function ($scope, $location, translate, Nutupane, CurrentOrganization, Subscription, ContentHost, SubscriptionsHelper) {
 
         var params = {
-            'system_id': $scope.$stateParams.contentHostId,
+            'id': $scope.$stateParams.contentHostId,
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
             'sort_order': 'ASC'
         };
 
-        $scope.contentNutupane = new Nutupane(Subscription, params);
+        $scope.contentNutupane = new Nutupane(ContentHost, params, 'subscriptions');
         $scope.detailsTable = $scope.contentNutupane.table;
-        $scope.contentNutupane.setSearchKey('subscriptionSearch');
 
         $scope.contentNutupane.masterOnly = true;
         $scope.isRemoving = false;
