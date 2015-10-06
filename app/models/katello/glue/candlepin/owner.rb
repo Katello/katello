@@ -34,11 +34,10 @@ module Katello
 
       def pools(consumer_uuid = nil)
         if consumer_uuid
-          pools = Resources::Candlepin::Owner.pools self.label, :consumer => consumer_uuid
+          Resources::Candlepin::Owner.pools self.label, :consumer => consumer_uuid
         else
-          pools = Resources::Candlepin::Owner.pools self.label
+          Resources::Candlepin::Owner.pools self.label
         end
-        pools.collect { |p| Katello::Pool.new p }
       end
 
       def generate_debug_cert

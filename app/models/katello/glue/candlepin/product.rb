@@ -47,21 +47,6 @@ module Katello
       raise e
     end
 
-    def self.import_marketing_from_cp(attrs, engineering_product_ids, &block)
-      attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Util::Model.labelize(attrs['name']))
-
-      product = MarketingProduct.new(attrs, &block)
-      product.orchestration_for = :import_from_cp_ar_setup
-      product.save!
-      engineering_product_ids.each do |engineering_product_id|
-        product.marketing_engineering_products.create(:engineering_product_id => engineering_product_id)
-      end
-      product
-    rescue => e
-      Rails.logger.error "Failed to create product #{attrs['name']}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
     module InstanceMethods
       def initialize(attribs = nil, options = {})
         unless attribs.nil?

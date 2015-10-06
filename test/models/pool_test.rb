@@ -2,6 +2,11 @@ require 'katello_test_helper'
 
 module Katello
   class PoolTest < ActiveSupport::TestCase
+    def setup
+      @pool_one = katello_pools(:pool_one)
+      @pool_two = katello_pools(:pool_two)
+    end
+
     def test_active
       active_pool = FactoryGirl.build(:katello_pool, :active)
       inactive_pool = FactoryGirl.build(:katello_pool, :inactive)
@@ -36,19 +41,107 @@ module Katello
       assert_equal expired_subscriptions, all_subscriptions - [unexpired, long_expired]
     end
 
-    def test_find_by_organization_and_id
-      Resources::Candlepin::Pool.expects(:find).returns(nil)
-      Pool.any_instance.expects(:organization).returns(nil)
-      assert_raises(ActiveRecord::RecordNotFound) do
-        Pool.find_by_organization_and_id!(get_organization, 3)
-      end
-    end
-
     def test_systems
       active_pool = FactoryGirl.build(:katello_pool, :active)
       systems = [katello_systems(:simple_server)]
       System.expects(:all_by_pool).with(active_pool.cp_id).returns(systems)
       assert_equal active_pool.systems, systems
+    end
+
+    def test_return_find_by_cp_id
+      assert_equal Pool.find_by_cp_id("#{@pool_one.cp_id}"), @pool_one
+    end
+
+    def test_with_identifiers
+      assert_equal Pool.with_identifiers("#{@pool_one.cp_id}").first, @pool_one
+      assert_equal Pool.with_identifiers("#{@pool_one.id}").first, @pool_one
+
+      assert_equal Pool.with_identifier("#{@pool_one.cp_id}"), @pool_one
+      assert_equal Pool.with_identifier("#{@pool_one.id}"), @pool_one
+    end
+
+    def test_search_consumed
+      subscriptions = Pool.search_for("consumed = \"#{@pool_one.consumed}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_search_contract
+      subscriptions = Pool.search_for("contract = \"#{@pool_one.contract_number}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_search_account
+      subscriptions = Pool.search_for("account = \"#{@pool_one.account_number}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_quantity_available
+      assert_equal @pool_one.quantity_available, 9
+    end
+
+    def test_search_cores
+      subscriptions = Pool.search_for("cores = \"#{@pool_one.subscription.cores}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_search_expires
+      subscriptions = Pool.search_for("expires = \"#{@pool_one.end_date}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_search_id
+      subscriptions = Pool.search_for("id = \"#{@pool_one.cp_id}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_search_instance_multiplier
+      subscriptions = Pool.search_for("instance_multiplier = \"#{@pool_one.instance_multiplier}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_search_multi_entitlement
+      subscriptions = Pool.search_for("multi_entitlement = \"#{@pool_one.multi_entitlement}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_search_name
+      subscriptions = Pool.search_for("name = \"#{@pool_one.subscription.name}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_search_product_id
+      subscriptions = Pool.search_for("product_id = \"#{@pool_one.subscription.product_id}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_search_quantity
+      subscriptions = Pool.search_for("quantity = \"#{@pool_one.quantity}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_search_ram
+      subscriptions = Pool.search_for("ram = \"#{@pool_one.ram}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_search_sockets
+      subscriptions = Pool.search_for("sockets = \"#{@pool_one.subscription.sockets}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_search_stacking_id
+      subscriptions = Pool.search_for("stacking_id = \"#{@pool_one.subscription.stacking_id}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_search_starts
+      subscriptions = Pool.search_for("starts = \"#{@pool_one.start_date}\"")
+      assert_includes subscriptions, @pool_one
+    end
+
+    def test_search_support_level
+      subscriptions = Pool.search_for("support_level = \"#{@pool_one.support_level}\"")
+      assert_includes subscriptions, @pool_one
     end
   end
 end

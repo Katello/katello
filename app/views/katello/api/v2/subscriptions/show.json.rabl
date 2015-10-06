@@ -1,26 +1,11 @@
-object @subscription
+object @resource
 
-attributes :cp_id => :id
+extends "katello/api/v2/subscriptions/base"
 
-# When attached candlepin entitlements are returned (eg. for subscriptions attached
-# to systems), the 'id' is the entitlement id. This field is for referencing the
-# original subscription.
-attributes :subscription_id
-
+attributes :virt_only
+attributes :arch
+attributes :unmapped_guest
 attributes :description
-
-extends 'katello/api/v2/common/org_reference'
-
-attributes :product_name
-attributes :start_date, :end_date
-attributes :available, :quantity, :consumed, :amount
-attributes :account_number, :contract_number
-attributes :support_type, :support_level
-attributes :product_id
-
-attributes :arch, :virt_only, :unmapped_guest
-attributes :sockets, :cores, :ram
-attributes :instance_multiplier, :stacking_id, :multi_entitlement
 
 node :provided_products, :if => lambda { |sub| sub && !sub.products.blank? } do |subscription|
   subscription.products.map do |product|
@@ -28,7 +13,7 @@ node :provided_products, :if => lambda { |sub| sub && !sub.products.blank? } do 
   end
 end
 
-node :systems, :if => (params[:action] == "show") do |subscription|
+node :systems do |subscription|
   subscription.systems.readable.map do |sys|
     facts = sys.facts
     {
@@ -57,7 +42,7 @@ node :systems, :if => (params[:action] == "show") do |subscription|
   end
 end
 
-node :activation_keys, :if => (params[:action] == "show") do |subscription|
+node :activation_keys do |subscription|
   subscription.activation_keys.readable.map do |key|
     {
       id: key.id,

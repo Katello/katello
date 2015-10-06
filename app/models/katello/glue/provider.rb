@@ -110,11 +110,7 @@ module Katello
 
       def del_products
         Rails.logger.debug "Deleting all products for provider: #{name}"
-        # we first delete marketing products, because there are no repos for them
-        # and they take care of deleting product <-> content association in CP
-        # for themselves.
-        self.products.where("type = 'MarketingProduct'").uniq.each(&:destroy)
-        self.products.where("type <> 'MarketingProduct'").uniq.each(&:destroy)
+        self.products.uniq.each(&:destroy)
         true
       rescue => e
         Rails.logger.error "Failed to delete all products for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
@@ -269,9 +265,7 @@ module Katello
           product_in_katello_ids.concat(adjusted_eng_products.map { |p| p["id"] })
 
           unless product_in_katello_ids.include?(marketing_product_id)
-            engineering_product_in_katello_ids = Product.in_org(self.organization).
-              where(:cp_id => engineering_product_ids).pluck("#{Katello::Product.table_name}.id")
-            Glue::Candlepin::Product.import_marketing_from_cp(Resources::Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
+            Glue::Candlepin::Product.import_from_cp(Resources::Candlepin::Product.get(marketing_product_id)[0]) do |p|
               p.provider = self
               p.organization_id = self.organization.id
             end
@@ -315,15 +309,8 @@ module Katello
       end
 
       def index_subscriptions
-        cp_pools = Resources::Candlepin::Owner.pools(self.organization.label)
-        if cp_pools
-          subscriptions = cp_pools.collect { |cp_pool| Katello::Pool.find_pool(cp_pool['id'], cp_pool) }
-        else
-          subscriptions = []
-        end
-
-        Katello::Pool.index_pools(subscriptions, [{:term => {:org => self.organization.label}}])
-        subscriptions
+        Katello::Subscription.import_all
+        Katello::Pool.import_all
       end
 
       def rollback_delete_manifest
@@ -379,13 +366,6 @@ module Katello
         Rails.logger.error "Error during manifest #{type}: #{results}"
       end
 
-      # There are two types of products in Candlepin: marketing and engineering.
-      # When promoting, we care only about the engineering products. These are
-      # the products that content/repos are assigned to. The marketing product is
-      # that one that subscriptions are assigned to. Between marketing and
-      # engineering products is M:N relation (see MarketingEngineeringProduct
-      # model)
-      #
       # When a subscription is defined as a virtual data center subscription,
       # its pools will have a seperate 'derived' marketing product and a seperate set
       # of 'derived' engineering products. These products become the marketing and

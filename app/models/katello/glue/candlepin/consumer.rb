@@ -104,6 +104,7 @@ module Katello
       end
 
       def subscribe(pool, quantity = nil)
+        quantity = quantity.to_i unless quantity.nil?
         Rails.logger.debug "Subscribing to pool '#{pool}' for : #{name}"
         Resources::Candlepin::Consumer.consume_entitlement self.uuid, pool, quantity
       rescue => e
@@ -353,17 +354,6 @@ module Katello
         avail_pools
       end
 
-      def consumed_entitlements
-        self.entitlements.collect do |entitlement|
-          pool = self.get_pool(entitlement['pool']['id'])
-          entitlement_pool = Katello::Pool.new(pool)
-          entitlement_pool.cp_id = entitlement['id']
-          entitlement_pool.subscription_id = entitlement['pool']['id']
-          entitlement_pool.amount = entitlement['quantity']
-          entitlement_pool
-        end
-      end
-
       def set_content_override(content_label, name, value = nil)
         Resources::Candlepin::Consumer.update_content_override(self.uuid, content_label, name, value)
       end
@@ -420,17 +410,19 @@ module Katello
         all_products = []
 
         self.entitlements.each do |entitlement|
-          pool = Katello::Pool.find_pool(entitlement['pool']['id'])
+          pool = Katello::Pool.find_by_cp_id(entitlement['pool']['id'])
           Katello::Product.where(:cp_id => pool.product_id).each do |product|
-            if product.is_a? Katello::MarketingProduct
-              all_products += product.engineering_products
-            else
-              all_products << product
-            end
+            all_products << product
           end
         end
 
         return all_products
+      end
+
+      def find_entitlement(pool_id)
+        entitlements = self.entitlements.collect { |ent| ent['id'] if ent["pool"]["id"] == pool_id }
+        entitlements.compact!
+        entitlements.first
       end
     end
 

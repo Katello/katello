@@ -187,7 +187,7 @@ module Actions
       end
 
       def on_event(event)
-        Actions::Candlepin::ReindexPoolSubscriptionHandler.new(Rails.logger).handle(event)
+        Actions::Candlepin::ImportPoolHandler.new(Rails.logger).handle(event)
         output[:last_message] = "#{event.message_id} - #{event.subject}"
         output[:messages] = event.message_id
       rescue => e

@@ -13,15 +13,8 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostBaseSubscriptionsController',
-    ['$scope', 'translate', 'CurrentOrganization', 'Subscription', 'ContentHost', 'Nutupane',
-    function ($scope, translate, CurrentOrganization, Subscription, ContentHost, Nutupane) {
-        var params = {
-            'id': $scope.$stateParams.contentHostId,
-            'organization_id': CurrentOrganization,
-            'sort_by': 'name',
-            'sort_order': 'ASC',
-            'match_system': true
-        };
+    ['$scope', '$location', 'translate', 'CurrentOrganization', 'Subscription', 'ContentHost',
+    function ($scope, $location, translate, CurrentOrganization, Subscription, ContentHost) {
 
         function success() {
             $scope.subscription.workingMode = false;
@@ -39,9 +32,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostBaseSubscriptions
         $scope.subscription = {
             workingMode: false
         };
-
-        $scope.addSubscriptionsPane = new Nutupane(ContentHost, params, 'availableSubscriptions');
-        $scope.subscriptionsPane = new Nutupane(ContentHost, params, 'subscriptions');
 
         $scope.autoAttachSubscriptions = function () {
             $scope.subscription.workingMode = true;

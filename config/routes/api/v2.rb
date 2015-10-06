@@ -160,6 +160,7 @@ Katello::Engine.routes.draw do
           api_resources :subscriptions, :only => [:index] do
             collection do
               match '/available' => 'subscriptions#available', :via => :get
+              get :auto_complete_search
               get :manifest_history
             end
           end
@@ -217,7 +218,11 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :subscriptions, :only => [:show]
+        api_resources :subscriptions, :only => [:index, :show] do
+          collection do
+            get :auto_complete_search
+          end
+        end
 
         api_resources :systems, :only => [:index, :show, :create, :update, :destroy] do
           member do

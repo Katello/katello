@@ -12,6 +12,7 @@ require "foreman-tasks"
 require "rest_client"
 require "anemone"
 require "securerandom"
+require "strong_parameters"
 require 'foreman_docker'
 
 require "runcible"
