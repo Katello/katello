@@ -38,9 +38,11 @@ module Katello
     has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict
     has_many :systems, :class_name => "Katello::System", :dependent => :restrict
 
-    has_many :hosts,      :class_name => "::Host::Managed", :foreign_key => :content_view_id,
+    has_many :content_aspects, :class_name => "Katello::Host::ContentAspect", :foreign_key => :content_view_id,
                           :inverse_of => :content_view, :dependent => :restrict
-    has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :content_view_id,
+    has_many :hosts,      :class_name => "::Host::Managed", :through => :content_aspects,
+                          :inverse_of => :content_view
+    has_many :hostgroups, :class_name => "::Hostgroup", :foreign_key => :content_view_id,
                           :inverse_of => :content_view, :dependent => :restrict
 
     validates_lengths_from_database :except => [:label]

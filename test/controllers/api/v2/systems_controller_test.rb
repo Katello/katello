@@ -13,6 +13,7 @@ module Katello
       @organization = get_organization
       @repo = Repository.find(katello_repositories(:rhel_6_x86_64))
       @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_dev_view_library))
+      @host = ::Host::Managed.create!(:name => "testhost", :managed => false, :content_host => @system)
     end
 
     def permissions
@@ -77,16 +78,19 @@ module Katello
     def test_create
       @controller.stubs(:sync_task).returns(true)
       System.stubs(:new).returns(@system)
+      ::Host::Managed.stubs(:new).returns(@host)
       cp_id = @content_view_environment.cp_id
       ContentViewEnvironment.expects(:find_by_cp_id!).with(cp_id).returns(@content_view_environment)
-      post :create, :name => "needs more tests", :environment_id => cp_id.to_s,
-        :organization_id => @organization.id
+      @controller.expects(:sync_task).returns(true)
+
+      post :create, :name => "needsmoretests", :environment_id => cp_id.to_s, :organization_id => @organization.id
       assert_response :success
     end
 
     def test_create_without_environment
       @controller.stubs(:sync_task).returns(true)
       System.stubs(:new).returns(@system)
+      ::Host::Managed.stubs(:new).returns(@host)
       post :create, :name => "needs more tests", :organization_id => @organization.id
       assert_response :success
     end

@@ -6,8 +6,6 @@ module Katello
       include ForemanTasks::Concerns::ActionSubject
 
       included do
-        before_update :update_content_host, :if => proc { |r| r.lifecycle_environment_id_changed? || r.content_view_id_changed? }
-
         alias_method_chain :validate_media?, :capsule
         alias_method_chain :set_hostgroup_defaults, :katello_attributes
         alias_method_chain :info, :katello
@@ -16,14 +14,11 @@ module Katello
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
                                :dependent => :restrict, :inverse_of => :foreman_host
         belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hosts
-        belongs_to :content_view, :inverse_of => :hosts, :class_name => "::Katello::ContentView"
-        belongs_to :lifecycle_environment, :inverse_of => :hosts, :class_name => "::Katello::KTEnvironment"
 
-        validates_with Katello::Validators::ContentViewEnvironmentValidator
+        has_many :host_installed_packages, :class_name => "::Katello::HostInstalledPackage", :foreign_key => :host_id, :dependent => :destroy
+        has_many :installed_packages, :class_name => "::Katello::InstalledPackage", :through => :host_installed_packages
 
         scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
-        scoped_search :in => :content_view, :on => :name, :complete_value => true, :rename => :content_view
-        scoped_search :in => :lifecycle_environment, :on => :name, :complete_value => true, :rename => :lifecycle_environment
       end
 
       def validate_media_with_capsule?
@@ -49,19 +44,9 @@ module Katello
         info
       end
 
-      def update_content_host
-        if self.content_host && self.lifecycle_environment && self.content_view &&
-           ((self.content_host.environment_id != self.lifecycle_environment.id) ||
-            (self.content_host.content_view_id != self.content_view.id))
-          self.content_host.environment = self.lifecycle_environment
-          self.content_host.content_view = self.content_view
-          self.content_host.save!
-        end
-      end
-
       def content_and_puppet_match?
-        self.content_view && self.lifecycle_environment && self.content_view == self.environment.try(:content_view) &&
-            self.lifecycle_environment == self.environment.try(:lifecycle_environment)
+        content_aspect && content_aspect.content_view == environment.try(:content_view) &&
+            content_aspect.lifecycle_environment == self.environment.try(:lifecycle_environment)
       end
 
       def set_hostgroup_defaults_with_katello_attributes
@@ -69,6 +54,14 @@ module Katello
           assign_hostgroup_attributes(%w(content_source_id content_view_id lifecycle_environment_id))
         end
         set_hostgroup_defaults_without_katello_attributes
+      end
+
+      def import_package_profile(simple_packages)
+        self.installed_packages.where("nvra not in (?)", simple_packages.map(&:nvra)).destroy_all
+        existing_nvras = self.installed_packages.pluck(:nvra)
+        simple_packages.each do |simple_package|
+          self.installed_packages.create!(:name => simple_package.name, :nvra => simple_package.nvra) unless existing_nvras.include?(simple_package.nvra)
+        end
       end
     end
   end

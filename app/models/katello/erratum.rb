@@ -12,6 +12,9 @@ module Katello
     has_many :systems_applicable, :through => :system_errata, :class_name => "Katello::System", :source => :system
     has_many :system_errata, :class_name => "Katello::SystemErratum", :dependent => :destroy, :inverse_of => :erratum
 
+    has_many :content_aspects, :through => :content_aspect_errata, :class_name => "Katello::Host::ContentAspect", :source => :content_aspect
+    has_many :content_aspect_errata, :class_name => "Katello::ContentAspectErratum", :dependent => :destroy, :inverse_of => :content_aspect
+
     has_many :repositories, :through => :repository_errata, :class_name => "Katello::Repository"
     has_many :repository_errata, :class_name => "Katello::RepositoryErratum", :dependent => :destroy, :inverse_of => :erratum
 

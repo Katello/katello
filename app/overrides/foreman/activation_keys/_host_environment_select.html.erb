@@ -5,19 +5,26 @@
 </style>
 
 <% env_select_id =  @hostgroup ? :hostgroup_lifecycle_environment_id : :host_lifecycle_environment_id %>
-<% env_select_name =  @hostgroup ? 'hostgroup[lifecycle_environment_id]' : 'host[lifecycle_environment_id]' %>
-<%= field(f, env_select_id, {:label => _("Lifecycle Environment")}) do
+<% env_select_name =  @hostgroup ? 'hostgroup[lifecycle_environment_id]' : 'host[content_aspect_attributes][lifecycle_environment_id]' %>
+<% env_select_attr = @hostgroup ? 'lifecycle_environment' : 'content_aspect.lifecycle_environment' %>
+
+<%= field(f, env_select_attr, {:label => _("Lifecycle Environment")}) do
   select_tag env_select_id, lifecycle_environment_options(@host || @hostgroup, :include_blank => blank_or_inherit_with_id(f, :lifecycle_environment)),
              :class => 'form-control',  :name => env_select_name
 end %>
 
 
 <% cv_select_id =  @hostgroup ? :hostgroup_content_view_id : :host_content_view_id %>
-<% cv_select_name =  @hostgroup ? 'hostgroup[content_view_id]' : 'host[content_view_id]' %>
-<%= field(f, cv_select_id, {:label => _("Content View")}) do
+<% cv_select_name =  @hostgroup ? 'hostgroup[content_view_id]' : 'host[content_aspect_attributes][content_view_id]' %>
+<% cv_select_attr = @hostgroup ? 'content_view' : 'content_aspect.content_view' %>
+<%= field(f, cv_select_attr, {:label => _("Content View")}) do
   select_tag cv_select_id,  content_views_for_host(@host || @hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_view)),
              :class => 'form-control',  :name => cv_select_name
 end %>
+
+<% if @host %>
+  <input type="hidden" name="host[content_aspect_attributes][id]" value="<%= @host.content_aspect.try(:id) %>">
+<% end %>
 
 <% data_url = @hostgroup ? environment_selected_hostgroups_path : hostgroup_or_environment_selected_hosts_path %>
 <%= select_f f, :environment_id, Environment.all, :id, :to_label, {:include_blank => blank_or_inherit_f(f, :environment)},

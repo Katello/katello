@@ -7,9 +7,9 @@ module Katello
     wrap_parameters false
 
     around_filter :repackage_message
-    before_filter :find_system, :only => [:consumer_show, :consumer_destroy, :consumer_checkin, :enabled_repos,
-                                          :upload_package_profile, :regenerate_identity_certificates, :facts,
-                                          :available_releases]
+    before_filter :find_host, :only => [:consumer_show, :consumer_destroy, :consumer_checkin, :enabled_repos,
+                                        :upload_package_profile, :regenerate_identity_certificates, :facts,
+                                        :available_releases]
     before_filter :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
     before_filter :authorize_client_or_user, :only => [:consumer_show, :upload_package_profile, :regenerate_identity_certificates]
     before_filter :authorize_client_or_admin, :only => [:hypervisors_update]
@@ -90,7 +90,7 @@ module Katello
     #api :GET, "/consumers/:id", N_("Show a system")
     #param :id, String, :desc => N_("UUID of the consumer"), :required => true
     def consumer_show
-      render :json => Resources::Candlepin::Consumer.get(@system.uuid)
+      render :json => Resources::Candlepin::Consumer.get(@host.subscription_aspect.uuid)
     end
 
     #api :GET, "/owners/:organization_id/environments", N_("List environments for RHSM")
@@ -111,6 +111,7 @@ module Katello
     #api :POST, "/hypervisors", N_("Update the hypervisors information for environment")
     #desc 'See virt-who tool for more details.'
     def hypervisors_update
+      #TODO
       cp_response, _ = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action, :format))
       render :json => cp_response
     end
@@ -118,27 +119,28 @@ module Katello
     #api :PUT, "/consumers/:id/checkin/", N_("Update consumer check-in time")
     #param :date, String, :desc => N_("check-in time")
     def consumer_checkin
-      @system.checkin(params[:date])
-      render :json => Resources::Candlepin::Consumer.get(@system.uuid)
+      @host.update_attributes(:last_checkin => params[:date])
+      Candlepin::Consumer.new(@host.subscription_aspect.uuid).checkin(params[:date])
+      render :json => Resources::Candlepin::Consumer.get(@host.subscription_aspect.uuid)
     end
 
     #api :PUT, "/consumers/:id/packages", N_("Update installed packages")
     #api :PUT, "/consumers/:id/profile", N_("Update installed packages")
     #param :id, String, :desc => N_("UUID of the consumer"), :required => true
     def upload_package_profile
-      fail HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.key?(:_json)
-      @system.upload_package_profile(params[:_json])
-      render :json => Resources::Candlepin::Consumer.get(@system.uuid)
+      User.as_anonymous_admin do
+        sync_task(::Actions::Katello::Host::UploadPackageProfile, @host, params[:_json])
+      end
+      render :json => Resources::Candlepin::Consumer.get(@host.subscription_aspect.uuid)
     end
 
     def available_releases
-      render :json => @system.available_releases
+      render :json => @host.content_aspect.try(:available_releases) || []
     end
 
     def list_owners
       orgs = User.current.allowed_organizations
       # rhsm expects owner (Candlepin format)
-      # rubocop:disable SymbolName
       respond_for_index :collection => orgs.map { |o| { :key => o.label, :displayName => o.name } }
     end
 
@@ -146,8 +148,8 @@ module Katello
     #param :id, String, :desc => N_("UUID of the consumer")
     #desc 'Schedules the consumer identity certificate regeneration'
     def regenerate_identity_certificates
-      @system.regenerate_identity_certificates
-      render :json => Resources::Candlepin::Consumer.get(@system.uuid)
+      Candlepin::Consumer.new(params[:uuid]).regenerate_identity_certificates
+      render :json => Resources::Candlepin::Consumer.get(@host.uuid)
     end
 
     api :PUT, "/systems/:id/enabled_repos", N_("Update the information about enabled repositories")
@@ -161,7 +163,7 @@ module Katello
       end
     end
     param :id, String, :desc => N_("UUID of the system"), :required => true
-    def enabled_repos # rubocop:disable Metrics/MethodLength
+    def enabled_repos
       repos_params = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
       repos_params = repos_params['repos'] || []
 
@@ -169,17 +171,16 @@ module Katello
         if !repo['baseurl'].blank?
           URI(repo['baseurl'].first).path
         else
-          logger.warn("System #{@system.name} (#{@system.id}) attempted to bind to unspecific repo (#{repo}).")
+          logger.warn("System #{@host.name} (#{@host.id}) attempted to bind to unspecific repo (#{repo}).")
           nil
         end
       end
 
-      processed_ids, error_ids = @system.save_bound_repos_by_path!(paths.compact)
-
-      result = {:processed_ids => processed_ids,
-                :error_ids     => error_ids,
-                :result        => "ok"}
-      result[:result] = "error" if error_ids.present?
+      result = nil
+      User.as_anonymous_admin do
+        @host.content_host.save_bound_repos_by_path!(paths.compact)
+        result = @host.content_aspect.update_repositories_by_paths(paths.compact)
+      end
 
       respond_for_show :resource => result
     end
@@ -187,25 +188,19 @@ module Katello
     #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")
     def consumer_create
       content_view_environment = find_content_view_environment
-      foreman_host = find_foreman_host(content_view_environment.environment.organization)
+      host = find_or_create_host(content_view_environment.environment.organization)
 
-      sync_task(::Actions::Katello::System::Destroy, foreman_host.content_host) if foreman_host.try(:content_host)
-
-      @system = System.new(system_params.merge(:environment  => content_view_environment.environment,
-                                               :content_view => content_view_environment.content_view,
-                                               :serviceLevel => params[:service_level],
-                                               :host_id      => foreman_host.try(:id)))
-
-      sync_task(::Actions::Katello::System::Create, @system)
-      @system.reload
-      render :json => Resources::Candlepin::Consumer.get(@system.uuid)
+      sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, content_view_environment)
+      host.reload
+      render :json => Resources::Candlepin::Consumer.get(host.subscription_aspect.uuid)
     end
 
     #api :DELETE, "/consumers/:id", N_("Unregister a consumer")
     #param :id, String, :desc => N_("UUID of the consumer"), :required => true
     def consumer_destroy
-      User.current = User.anonymous_admin
-      sync_task(::Actions::Katello::System::Destroy, @system)
+      User.as_anonymous_admin do
+        sync_task(::Actions::Katello::Host::Unregister, @host)
+      end
       render :text => _("Deleted consumer '%s'") % params[:id], :status => 204
     end
 
@@ -217,15 +212,12 @@ module Katello
       # Set it before calling find_activation_keys to allow communication with candlepin
       User.current    = User.anonymous_admin
       activation_keys = find_activation_keys
-      foreman_host    = find_foreman_host(activation_keys.first.organization)
+      host    = find_or_create_host(activation_keys.first.organization)
 
-      sync_task(::Actions::Katello::System::Destroy, foreman_host.content_host) if foreman_host.try(:content_host)
+      sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, nil, activation_keys)
+      host.reload
 
-      @system = System.new(system_params.merge(:host_id => foreman_host.try(:id)))
-      sync_task(::Actions::Katello::System::Create, @system, activation_keys)
-      @system.reload
-
-      render :json => Resources::Candlepin::Consumer.get(@system.uuid)
+      render :json => Resources::Candlepin::Consumer.get(host.subscription_aspect.uuid)
     end
 
     #api :GET, "/status", N_("Shows version information")
@@ -244,14 +236,8 @@ module Katello
     end
 
     def facts
-      attrs = params.clone
-      slice_attrs = [:name, :description, :location,
-                     :facts, :guestIds, :installedProducts,
-                     :releaseVer, :serviceLevel, :lastCheckin, :autoheal
-                    ]
-      attrs[:installedProducts] = [] if attrs.key?(:installedProducts) && attrs[:installedProducts].nil?
       User.as_anonymous_admin do
-        sync_task(::Actions::Katello::System::Update, @system, attrs.slice(*slice_attrs))
+        sync_task(::Actions::Katello::Host::Update, @host, rhsm_params)
       end
       render :json => {:content => _("Facts successfully updated.")}, :status => 200
     end
@@ -270,21 +256,21 @@ module Katello
       params[:organization_id] = params[:owner] if params[:owner]
     end
 
-    def find_system(uuid = nil)
-      @system = System.where(:uuid => uuid || params[:id]).first
-      if @system.nil?
+    def find_host
+      aspect = Katello::Host::SubscriptionAspect.where(:uuid => params[:id]).first
+      if aspect.nil?
         # check with candlepin if consumer is Gone, raises RestClient::Gone
-        Resources::Candlepin::Consumer.get params[:id]
+        Resources::Candlepin::Consumer.get(params[:id])
         fail HttpErrors::NotFound, _("Couldn't find consumer '%s'") % params[:id]
       end
-      @system
+      @host = aspect.host
     end
 
     def find_content_view_environment
       environment = nil
 
       if params.key?(:environment_id)
-        environment = get_content_view_environment_by_cp_id(params[:environment_id])
+        environment = get_content_view_environment("cp_id", params[:environment_id])
       elsif params.key?(:organization_id) && !params.key?(:environment_id)
         organization = find_organization
         environment = organization.library.content_view_environment
@@ -368,9 +354,16 @@ module Katello
       activation_keys
     end
 
-    def find_foreman_host(organization)
-      Host.where(:name => params[:facts]['network.hostname'],
-                 :organization_id => organization.id).first if params[:facts]
+    def find_or_create_host(organization)
+      hosts = ::Host.where(:name => params[:facts]['network.hostname'])
+      if hosts.empty? #no host exists
+        Katello::Host::SubscriptionAspect.new_host_from_rhsm_params(rhsm_params, organization, Location.default_location)
+      elsif hosts.where(:organization_id => organization.id).empty? #not in the correct org
+        #TODO
+        fail "Can't handle registering to host in a different org, need to handle this case."
+      else
+        hosts.first
+      end
     end
 
     def get_content_view_environment(key, value)
@@ -381,10 +374,6 @@ module Katello
         deny_access unless cve.readable? || User.consumer?
       end
       cve
-    end
-
-    def get_content_view_environment_by_cp_id(id)
-      get_content_view_environment("cp_id", id)
     end
 
     def get_content_view_environments(label = nil, organization = nil)
@@ -405,16 +394,8 @@ module Katello
       environments
     end
 
-    def system_params
-      system_params = params.slice(:name, :organization_id, :facts, :installedProducts)
-
-      if params.key?(:cp_type)
-        system_params[:cp_type] = params[:cp_type]
-      elsif params.key?(:type)
-        system_params[:cp_type] = params[:type]
-      end
-
-      system_params
+    def rhsm_params
+      params.slice(:name, :type, :facts, :installedProducts, :autoheal, :releaseVer, :serviceLevel, :uuid, :capabilities, :guestIds, :lastCheckin)
     end
 
     def logger
@@ -453,7 +434,7 @@ module Katello
 
     def client_authorized?
       authorized = authenticate_client && User.consumer?
-      authorized = (User.current.uuid == @system.uuid) if @system && User.consumer?
+      authorized = (User.current.uuid == @host.subscription_aspect.uuid) if @host && User.consumer?
       authorized
     end
 

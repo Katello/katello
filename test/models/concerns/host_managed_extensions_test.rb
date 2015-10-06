@@ -43,8 +43,8 @@ module Katello
       assert_equal @foreman_host.info['parameters']['content_view'], nil
       assert_equal @foreman_host.info['parameters']['lifecycle_environment'], nil
 
-      @foreman_host.content_view = @view
-      @foreman_host.lifecycle_environment = @library
+      @foreman_host.content_aspect = Katello::Host::ContentAspect.new(:content_view => @view, :lifecycle_environment => @library)
+      @foreman_host.reload
 
       assert_equal @foreman_host.info['parameters']['content_view'], @foreman_host.content_view.label
       assert_equal @foreman_host.info['parameters']['lifecycle_environment'], @foreman_host.lifecycle_environment.label
@@ -54,22 +54,11 @@ module Katello
       assert_equal @foreman_host.info['parameters']['kt_cv'], nil
       assert_equal @foreman_host.info['parameters']['kt_env'], nil
 
-      @foreman_host.content_view = @view
-      @foreman_host.lifecycle_environment = @library
+      @foreman_host.content_aspect = Katello::Host::ContentAspect.new(:content_view => @view, :lifecycle_environment => @library)
+      @foreman_host.reload
 
       assert_equal @foreman_host.info['parameters']['kt_cv'], @foreman_host.content_view.label
       assert_equal @foreman_host.info['parameters']['kt_env'], @foreman_host.lifecycle_environment.label
-    end
-
-    def test_update_puppet_environment_updates_content_host
-      Support::HostSupport.setup_host_for_view(@foreman_host, @view, @library, true)
-      Environment.any_instance.stubs(:content_view_puppet_environment).returns(
-          ContentViewPuppetEnvironment.find(katello_content_view_puppet_environments(:dev_view_puppet_environment)))
-
-      # we are making an update to the foreman host that should result in a change to the content host
-      @foreman_host.lifecycle_environment = @dev
-      @foreman_host.content_host.expects(:save!)
-      @foreman_host.save!
     end
 
     def test_update_puppet_environment_does_not_update_content_host
@@ -82,7 +71,7 @@ module Katello
 
     def test_update_does_not_update_content_host
       content_host = System.find(katello_systems(:simple_server2))
-      @foreman_host2 = FactoryGirl.create(:host)
+      @foreman_host2 = FactoryGirl.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
       @foreman_host2.content_host = content_host
       @foreman_host2.save!
 
@@ -91,14 +80,14 @@ module Katello
     end
 
     def test_update_with_cv_env
-      host = FactoryGirl.create(:host)
+      host = FactoryGirl.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
       host.content_view = @library_view
       host.lifecycle_environment = @library
       assert host.save!
     end
 
     def test_update_with_invalid_cv_env_combo
-      host = FactoryGirl.create(:host)
+      host = FactoryGirl.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
       host.content_view = @library_view
       host.lifecycle_environment = @dev
       assert_raises(ActiveRecord::RecordInvalid) do

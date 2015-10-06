@@ -43,7 +43,7 @@ feedless_fedora_17_x86_64:
   content_id:           1
   content_type:         yum
   label:                feedless_fedora_17_x86_64_label
-  relative_path:        '/ACME_Corporation/library/fedora_17_label'
+  relative_path:        '/ACME_Corporation/library/fedora_17_label_no_feed'
   environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
   product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
@@ -113,7 +113,7 @@ fedora_17_no_arch:
   content_id:           1
   content_type:         yum
   label:                fedora_17_no_arch_label
-  relative_path:        '/ACME_Corporation/library/fedora_17_label'
+  relative_path:        '/ACME_Corporation/library/fedora_17_label_no_arch'
   environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
   product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
