@@ -141,7 +141,8 @@ module Katello
       get :paths, :organization_id => @organization.id
 
       assert_response :success
-      assert_template "api/v2/environments/paths api/v2/common/metadata"
+      assert_template layout: 'katello/api/v2/layouts/collection'
+      assert_template 'api/v2/environments/paths'
     end
 
     def test_paths_protected
