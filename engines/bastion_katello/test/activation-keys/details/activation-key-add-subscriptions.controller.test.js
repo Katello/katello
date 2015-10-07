@@ -14,6 +14,7 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
                 showColumns: function() {}
             };
             this.get = function() {};
+            this.setSearchKey = function() {}; 
         };
         ActivationKey = {};
     });

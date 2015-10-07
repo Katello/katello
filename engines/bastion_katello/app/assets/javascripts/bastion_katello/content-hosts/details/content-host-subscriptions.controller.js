@@ -25,6 +25,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
 
         $scope.contentNutupane = new Nutupane(Subscription, params);
         $scope.detailsTable = $scope.contentNutupane.table;
+        $scope.contentNutupane.setSearchKey('subscriptionSearch');
 
         $scope.contentNutupane.masterOnly = true;
         $scope.isRemoving = false;

@@ -26,7 +26,7 @@ angular.module('Bastion.packages').controller('PackageDetailsRepositoriesControl
         $scope.detailsTable = repositoriesNutupane.table;
         $scope.detailsTable.initialLoad = false;
         repositoriesNutupane.masterOnly = true;
-        repositoriesNutupane.searchKey = 'repositoriesSearch';
+        repositoriesNutupane.setSearchKey('repositoriesSearch');
 
         environment = Environment.queryUnpaged(function (response) {
             $scope.environments = response.results;
