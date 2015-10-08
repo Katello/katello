@@ -22,7 +22,8 @@ module ::Actions::Katello::CapsuleContent
                                :capsule,
                                name: proxy_with_pulp.name,
                                capsule: proxy_with_pulp,
-                               environment: environment)
+                               environment: environment,
+                               content_view: katello_content_views(:library_dev_view))
     end
   end
 
