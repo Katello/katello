@@ -16,7 +16,7 @@
 
         contentViewsNutupane = new Nutupane(ContentViewVersion, params);
         contentViewsNutupane.masterOnly = true;
-        contentViewsNutupane.searchKey = 'contentViewsSearch';
+        contentViewsNutupane.setSearchKey('contentViewsSearch');
 
         $scope.detailsTable = contentViewsNutupane.table;
 

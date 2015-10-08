@@ -1,13 +1,13 @@
 module Katello
   class Erratum < Katello::Model
-    include Glue::Pulp::PulpContentUnit
+    include Concerns::PulpDatabaseUnit
 
     SECURITY = "security"
     BUGZILLA = "bugfix"
     ENHANCEMENT = "enhancement"
 
     TYPES = [SECURITY, BUGZILLA, ENHANCEMENT]
-    CONTENT_TYPE = "erratum"
+    CONTENT_TYPE = Pulp::Erratum::CONTENT_TYPE
 
     has_many :systems_applicable, :through => :system_errata, :class_name => "Katello::System", :source => :system
     has_many :system_errata, :class_name => "Katello::SystemErratum", :dependent => :destroy, :inverse_of => :erratum
@@ -96,10 +96,6 @@ module Katello
     def self.list_filenames_by_clauses(clauses)
       errata = Katello.pulp_server.extensions.errata.search(Katello::Erratum::CONTENT_TYPE, :filters => clauses)
       Katello::ErratumPackage.joins(:erratum).where("#{Erratum.table_name}.uuid" => errata.map { |e| e['_id'] }).pluck(:filename)
-    end
-
-    def self.unit_handler
-      Katello.pulp_server.extensions.errata
     end
 
     private

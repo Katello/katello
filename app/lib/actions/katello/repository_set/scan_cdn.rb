@@ -73,6 +73,7 @@ module Actions
           { substitutions: substitutions,
             path:          mapper.path,
             repo_name:     mapper.name,
+            name:          mapper.content.name,
             pulp_id:       mapper.pulp_id,
             enabled:       !repo.nil?,
             promoted:      (!repo.nil? && repo.promoted?)

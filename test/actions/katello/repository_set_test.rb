@@ -107,6 +107,7 @@ module ::Actions::Katello::RepositorySet
                        [{"substitutions" => {"basearch" => "x86_64", "releasever" => "6Server"},
                          "path" => "/product/x86_64/6Server",
                          "repo_name" => "Content 123 x86_64 6Server",
+                         "name" => "Content 123",
                          "pulp_id" => "Empty_Organization-redhat_label-Content_123_x86_64_6Server",
                          "enabled" => false,
                          "promoted" => false}])

@@ -1,7 +1,6 @@
 module Katello
   class PackageGroup < Katello::Model
-    include Glue::Pulp::PulpContentUnit
-    include Glue::Pulp::PackageGroup if Katello.config.use_pulp
+    include Concerns::PulpDatabaseUnit
 
     CONTENT_TYPE = "package_group"
 
@@ -39,7 +38,8 @@ module Katello
     end
 
     def package_names
-      self.default_package_names + self.conditional_package_names + self.optional_package_names + self.mandatory_package_names
+      group = Pulp::PackageGroup.new(self.uuid)
+      group.default_package_names + group.conditional_package_names + group.optional_package_names + group.mandatory_package_names
     end
   end
 end
