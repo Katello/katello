@@ -162,4 +162,6 @@ Foreman::Plugin.register :katello do
   widget 'subscription_widget', :name => 'Content Host Subscription Status Widget', :sizey => 1, :sizex => 6
   widget 'subscription_status_widget', :name => 'Subscription Status Widget', :sizey => 1, :sizex => 6
   widget 'host_collection_widget', :name => 'Host Collection Widget', :sizey => 1, :sizex => 6
+
+  register_custom_status(Katello::SubscriptionStatus)
 end
