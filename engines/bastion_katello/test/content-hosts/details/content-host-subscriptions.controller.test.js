@@ -52,6 +52,7 @@ describe('Controller: ContentHostSubscriptionsController', function() {
             this.get = function() {};
             this.query = function() {};
             this.refresh = function() {};
+            this.setSearchKey = function() {};
         };
 
         $scope.contentHost = new ContentHost({

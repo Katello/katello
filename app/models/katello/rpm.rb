@@ -1,11 +1,8 @@
 module Katello
   class Rpm < Katello::Model
-    include Glue::Pulp::PulpContentUnit
-    include Glue::Pulp::Rpm
+    include Concerns::PulpDatabaseUnit
 
-    PULP_SELECT_FIELDS = %w(name epoch version release arch checksumtype checksum)
-    PULP_INDEXED_FIELDS = %w(name version release arch epoch summary sourcerpm checksum filename _id)
-    CONTENT_TYPE = "rpm"
+    CONTENT_TYPE = Pulp::Rpm::CONTENT_TYPE
 
     has_many :repositories, :through => :repository_rpms, :class_name => "Katello::Repository"
     has_many :repository_rpms, :class_name => "Katello::RepositoryRpm", :dependent => :destroy, :inverse_of => :rpm
@@ -41,7 +38,7 @@ module Katello
     end
 
     def update_from_json(json)
-      keys = PULP_INDEXED_FIELDS - ['_id']
+      keys = Pulp::Rpm::PULP_INDEXED_FIELDS - ['_id']
       custom_json = json.clone.delete_if { |key, _value| !keys.include?(key) }
       if custom_json.any? { |name, value| self.send(name) != value }
         custom_json[:release_sortable] = Util::Package.sortable_version(custom_json[:release])

@@ -373,7 +373,7 @@ module Katello
         tmp_packages = []
         self.rpm_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           tmp_packages.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
-                                  sub_list, Katello::Rpm::PULP_INDEXED_FIELDS))
+                                  sub_list, Pulp::Rpm::PULP_INDEXED_FIELDS))
         end
         tmp_packages
       end
@@ -491,7 +491,7 @@ module Katello
                                                                        unless content_classes[content_type]
         criteria = {}
         if content_type == Runcible::Extensions::Rpm.content_type
-          criteria[:fields] = Rpm::PULP_SELECT_FIELDS
+          criteria[:fields] = Pulp::Rpm::PULP_SELECT_FIELDS
         end
 
         if filter_clauses && !filter_clauses.empty?
@@ -516,7 +516,7 @@ module Katello
           # are listed, pulp will retrieve every field it knows about for the rpm
           # (e.g. changelog, filelist...etc).
           events << Katello.pulp_server.extensions.rpm.copy(self.pulp_id, to_repo.pulp_id,
-                                                    :fields => Rpm::PULP_SELECT_FIELDS)
+                                                    :fields => Pulp::Rpm::PULP_SELECT_FIELDS)
 
           # Since the rpms will be copied above, during the copy of errata and package groups,
           # include the copy_children flag to request that pulp skip copying them again.
@@ -535,7 +535,7 @@ module Katello
       def unassociate_by_filter(content_type, filter_clauses)
         criteria = {:type_ids => [content_type], :filters => {:unit => filter_clauses}}
         if content_type == Katello.pulp_server.extensions.rpm.content_type
-          criteria[:fields] = { :unit => Rpm::PULP_SELECT_FIELDS}
+          criteria[:fields] = { :unit => Pulp::Rpm::PULP_SELECT_FIELDS}
         end
         Katello.pulp_server.extensions.repository.unassociate_units(self.pulp_id, criteria)
       end
@@ -545,7 +545,7 @@ module Katello
         tasks = content_types.collect { |type| type.unassociate_from_repo(self.pulp_id, {}) }.flatten(1)
 
         tasks << Katello.pulp_server.extensions.repository.unassociate_units(self.pulp_id,
-                   :type_ids => ['rpm'], :filters => {}, :fields => { :unit => Rpm::PULP_SELECT_FIELDS})
+                   :type_ids => ['rpm'], :filters => {}, :fields => { :unit => Pulp::Rpm::PULP_SELECT_FIELDS})
         tasks
       end
 

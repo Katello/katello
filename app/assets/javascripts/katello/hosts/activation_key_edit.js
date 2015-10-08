@@ -39,10 +39,10 @@ function ktErrorLoadingActivationKeys(error) {
 
 function ktFindParamContainer(name){
     var ret;
-    $("div#parameters table.row input[ type = 'text']").each(function () {
+    $("div#parameters .fields input[ type = 'text']").each(function () {
         var element = $(this);
         if(element.val() == name) {
-            ret = element.closest('table.row');
+            ret = element.closest('.fields');
             return false;
         }
         return true;
@@ -78,7 +78,7 @@ function ktSetParam(name, value) {
     if(value) {
         if(! paramContainer) { // we create the param for kt_activation_keys
             $("div#parameters a.btn-success").click();
-            paramContainer = $("div#parameters table.row").last();
+            paramContainer = $("div#parameters .fields").last();
             paramContainer.find("input").val(name);
         }
         paramContainer.find("textarea").val(value);

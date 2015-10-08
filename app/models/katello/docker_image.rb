@@ -1,6 +1,6 @@
 module Katello
   class DockerImage < Katello::Model
-    include Glue::Pulp::PulpContentUnit
+    include Concerns::PulpDatabaseUnit
 
     has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag"
     has_many :repository_docker_images, :dependent => :destroy
@@ -8,7 +8,7 @@ module Katello
 
     validates :image_id, presence: true, uniqueness: true
 
-    CONTENT_TYPE = "docker"
+    CONTENT_TYPE = Pulp::DockerImage::CONTENT_TYPE
     scoped_search :on => :image_id, :rename => :name
 
     def self.repository_association_class
