@@ -29,7 +29,7 @@ module ::Actions::Pulp::Repository
     let(:action_class) { ::Actions::Pulp::Repository::Sync }
     def test_sync
       run_action(action_class, pulp_id: repo.pulp_id)
-      assert_equal 8, repo.rpm_ids.length
+      assert_equal 8, repo.pulp_rpm_ids.length
     end
   end
 end
