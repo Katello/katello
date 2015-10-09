@@ -321,6 +321,8 @@ module Katello
         if self.content_view.default? || force
           puppet_modules_json.each do |puppet_module_json|
             begin
+              puppet_module = Katello::PuppetModule.find_or_create_by(:uuid => puppet_module_json['_id'])
+            rescue ActiveRecord::RecordNotUnique
               retry
             end
             puppet_module.update_from_json(puppet_module_json)

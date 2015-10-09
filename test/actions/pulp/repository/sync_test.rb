@@ -23,7 +23,7 @@ module ::Actions::Pulp::Repository
 
   class SyncTest < VCRTestBase
     def test_sync
-      ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :pulp_id => repo.pulp_id).main_action
+      run_action(action_class, pulp_id: repo.pulp_id)
       assert_equal 8, repo.pulp_rpm_ids.length
     end
   end
