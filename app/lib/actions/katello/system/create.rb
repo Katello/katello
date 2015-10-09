@@ -31,6 +31,8 @@ module Actions
           system.save!
           action_subject system
 
+          system.update_foreman_facts
+
           connect_to_smart_proxy(system)
 
           cp_create = plan_action(Candlepin::Consumer::Create, consumer_create_input)

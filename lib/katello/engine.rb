@@ -153,6 +153,9 @@ module Katello
       ::HostsController.send :include, Katello::Concerns::HostsControllerExtensions
       ::Containers::StepsController.send :include, Katello::Concerns::Containers::StepsControllerExtensions
 
+      ::FactImporter.register_fact_importer(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactImporter)
+      ::FactParser.register_fact_parser(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactParser)
+
       #Helper Extensions
       ::Containers::StepsController.class_eval do
         helper Katello::Concerns::ForemanDocker::ContainerStepsHelperExtensions
