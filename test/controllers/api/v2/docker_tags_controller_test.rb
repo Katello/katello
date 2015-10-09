@@ -34,7 +34,8 @@ module Katello
       get :show, :repository_id => @repo.id, :id => @tag.id
 
       assert_response :success
-      assert_template "katello/api/v2/errata/show"
+      assert_template "katello/api/v2/docker_tags/show"
+      assert_template :layout => 'katello/api/v2/layouts/resource'
     end
   end
 end

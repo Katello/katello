@@ -75,7 +75,8 @@ module Katello
         :organization_id => @organization.id
 
       assert_response :success
-      assert_template "katello/api/v2/content_views/show"
+      assert_template :layout =>'katello/api/v2/layouts/resource'
+      assert_template 'katello/api/v2/common/create'
     end
 
     def test_create_fail_without_organization_id
