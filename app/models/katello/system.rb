@@ -71,6 +71,12 @@ module Katello
     scoped_search :on => :name, :complete_value => true
     scoped_search :in => :environment, :on => :organization_id, :complete_value => true, :rename => :organization_id
 
+    has_many :fact_values, :through => :foreman_host
+    has_many :fact_names, :through => :fact_values
+
+    scoped_search :in => :fact_values, :on => :value, :in_key=> :fact_names, :on_key=> :name, :rename => :facts, :complete_value => true,
+                  :only_explicit => true, :ext_method => :search_cast_facts
+
     def self.in_organization(organization)
       where(:environment_id => organization.kt_environments.pluck(:id))
     end
@@ -176,6 +182,14 @@ module Katello
       attribs_to_sub.each do |id|
         self.subscribe id
       end
+    end
+
+    def update_foreman_facts
+      return unless self.foreman_host
+      rhsm_facts = self.facts
+      rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
+      rhsm_facts[:_timestamp] = DateTime.now.to_s
+      foreman_host.import_facts(rhsm_facts)
     end
 
     def filtered_pools(match_system, match_installed, no_overlap)
@@ -369,6 +383,27 @@ module Katello
     end
 
     private
+
+    def self.search_cast_facts(key, operator, value)
+      {
+        :conditions => "fact_names.name = '#{key.split('.')[1]}' AND #{cast_facts(key, operator, value)}",
+        :include    => :fact_names
+      }
+    end
+
+    def self.cast_facts(_key, operator, value)
+      is_int = (value =~ /\A[-+]?\d+\z/) || (value.is_a?(Integer))
+      is_pg = ActiveRecord::Base.connection.adapter_name.downcase.starts_with? 'postgresql'
+      # Once Postgresql 8 support is removed (used in CentOS 6), this could be replaced to only keep the first form (working well with PG 9)
+      if (is_int && !is_pg)
+        casted = "CAST(fact_values.value AS DECIMAL) #{operator} #{value}"
+      elsif (is_int && is_pg && operator !~ /LIKE/i)
+        casted = "fact_values.value ~ E'^\\\\d+$' AND CAST(fact_values.value AS DECIMAL) #{operator} #{value}"
+      else
+        casted = "fact_values.value #{operator} '#{value}'"
+      end
+      casted
+    end
 
     def insert_errata_applicability(uuids)
       applicable_errata_ids = ::Katello::Erratum.where(:uuid => uuids).pluck(:id)
