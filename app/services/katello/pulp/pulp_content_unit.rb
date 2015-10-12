@@ -42,7 +42,7 @@ module Katello
       end
 
       def self.fetch(offset, page_size, uuids = nil)
-        fields = ::PULP_INDEXED_FIELDS if self.constants.include?(:PULP_INDEXED_FIELDS)
+        fields = self.const_get(:PULP_INDEXED_FIELDS) if self.constants.include?(:PULP_INDEXED_FIELDS)
         criteria = {:limit => page_size, :skip => offset}
         criteria[:fields] = fields if fields
         criteria[:filters] = {'_id' => {'$in' => uuids}} if uuids
