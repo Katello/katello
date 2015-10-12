@@ -177,6 +177,7 @@ module Katello
         uuid = @system.uuid
         User.stubs(:consumer?).returns(true)
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
+        @controller.stubs(:find_host).returns(@host)
         System.stubs(:register_hypervisors).returns({})
         System.expects(:register_hypervisors).with(@system.environment, @system.content_view,
             "owner" => "Empty_Organization", "env" => "library_default_view_library")
@@ -190,6 +191,7 @@ module Katello
         uuid = @system.uuid
         User.stubs(:consumer?).returns(true)
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
+        @controller.stubs(:find_host).returns(@host)
         System.stubs(:register_hypervisors).returns({})
         System.expects(:register_hypervisors).with(@system.environment, @system.content_view,
             "owner" => "Empty_Organization", "env" => "library_default_view_library")
