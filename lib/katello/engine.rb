@@ -35,7 +35,9 @@ module Katello
 
     initializer "katello.initialize_cp_listener", after: "foreman_tasks.initialize_dynflow" do
       unless ForemanTasks.dynflow.config.remote? || File.basename($PROGRAM_NAME) == 'rake' || Rails.env.test?
-        ::Actions::Candlepin::ListenOnCandlepinEvents.ensure_running
+        ForemanTasks.dynflow.config.on_init do |world|
+          ::Actions::Candlepin::ListenOnCandlepinEvents.ensure_running(world)
+        end
       end
     end
 
