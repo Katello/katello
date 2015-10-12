@@ -54,8 +54,7 @@ module Actions
       class << self
         attr_reader :triggered_action
 
-        def ensure_running
-          world = ForemanTasks.dynflow.world
+        def ensure_running(world = ForemanTasks.dynflow.world)
           world.coordinator.acquire(RunOnceCoordinatorLock.new(world)) do
             unless ForemanTasks::Task::DynflowTask.for_action(self).running.any?
               @triggered_action = ForemanTasks.trigger(self)

@@ -1,13 +1,9 @@
 require 'set'
 
 module Katello
-  module Glue::Pulp::PulpContentUnit
+  module Concerns::PulpDatabaseUnit
     extend ActiveSupport::Concern
 
-    #  Any class that includes this module should define:
-    #  Class.unit_handler
-    #  Class::CONTENT_TYPE
-    #  Class::PULP_INDEXED_FIELDS (optional)
     #  Class.repository_association_class
     #  Class#update_from_json
 
@@ -16,8 +12,8 @@ module Katello
     end
 
     module ClassMethods
-      def unit_handler
-        Katello.pulp_server.extensions.send(self.name.demodulize.underscore)
+      def content_unit_class
+        "::Katello::Pulp::#{self.name.demodulize}".constantize
       end
 
       def repository_association
@@ -36,12 +32,12 @@ module Katello
       end
 
       def pulp_data(uuid)
-        unit_handler.find_by(:unit_id => uuid)
+        content_unit_class.new(uuid)
       end
 
       # Import all units of a single type and refresh their repository associations
       def import_all(uuids = nil, additive = false)
-        all_items = uuids ? fetch_by_uuids(uuids) : fetch_all
+        all_items = uuids ? content_unit_class.fetch_by_uuids(uuids) : content_unit_class.fetch_all
         all_items.each do |item_json|
           item = self.find_or_create_by(:uuid => item_json['_id'])
           item.update_from_json(item_json)
@@ -79,31 +75,6 @@ module Katello
 
       def with_uuid(unit_uuids)
         where(:uuid => unit_uuids)
-      end
-
-      def fetch_all
-        all_items = items = fetch(0, Katello.config.pulp.bulk_load_size)
-        until items.empty? #we can't know how many there are, so we have to keep looping until we get nothing
-          items = fetch(all_items.length, Katello.config.pulp.bulk_load_size)
-          all_items.concat(items)
-        end
-        all_items
-      end
-
-      def fetch_by_uuids(uuids)
-        items = []
-        uuids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
-          items.concat(fetch(0, sub_list.length, sub_list))
-        end
-        items
-      end
-
-      def fetch(offset, page_size, uuids = nil)
-        fields = self::PULP_INDEXED_FIELDS if self.constants.include?(:PULP_INDEXED_FIELDS)
-        criteria = {:limit => page_size, :skip => offset}
-        criteria[:fields] = fields if fields
-        criteria[:filters] = {'_id' => {'$in' => uuids}} if uuids
-        Katello.pulp_server.resources.unit.search(self::CONTENT_TYPE, criteria, :include_repos => true)
       end
 
       def update_repository_associations(units_json, additive = false)

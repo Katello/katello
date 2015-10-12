@@ -5,6 +5,7 @@ describe('Controller: PuppetModulesDetailsContentViewsController', function() {
 
     beforeEach(function() {
         Nutupane = function() {
+            this.setSearchKey = function() {};
             this.table = {
                 params: {},
                 showColumns: function() {}

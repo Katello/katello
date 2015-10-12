@@ -31,6 +31,7 @@ describe('Controller: PackageDetailsRepositoriesController', function() {
             this.load = function () {
                 return {then: function () {}}
             };
+            this.setSearchKey = function () {};
         };
 
         Environment = MockResource.$new();

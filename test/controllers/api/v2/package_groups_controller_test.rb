@@ -76,7 +76,7 @@ module Katello
     end
 
     def test_show
-      PackageGroup.any_instance.stubs(:backend_data).returns({})
+      Pulp::PackageGroup.any_instance.stubs(:backend_data).returns({})
       get :show, :id => @repo.package_groups.first.id
 
       assert_response :success
@@ -84,7 +84,7 @@ module Katello
     end
 
     def test_show_by_uuid
-      PackageGroup.any_instance.stubs(:backend_data).returns({})
+      Pulp::PackageGroup.any_instance.stubs(:backend_data).returns({})
       get :show, :id => @repo.package_groups.first.uuid
 
       assert_response :success
@@ -96,7 +96,7 @@ module Katello
     end
 
     def test_show_protected
-      PackageGroup.any_instance.stubs(:backend_data).returns({})
+      Pulp::PackageGroup.any_instance.stubs(:backend_data).returns({})
 
       assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
         get :show, :id => @repo.package_groups.first.id
