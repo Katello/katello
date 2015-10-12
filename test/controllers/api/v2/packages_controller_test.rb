@@ -6,7 +6,7 @@ module Katello
       @repo = katello_repositories(:fedora_17_x86_64_dev)
       @version = ContentViewVersion.first
       @rpm = katello_rpms(:one)
-      Rpm.any_instance.stubs(:backend_data).returns({})
+      Pulp::Rpm.any_instance.stubs(:backend_data).returns({})
     end
 
     def permissions

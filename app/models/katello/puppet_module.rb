@@ -3,10 +3,9 @@ require 'zlib'
 
 module Katello
   class PuppetModule < Katello::Model
-    CONTENT_TYPE = "puppet_module"
+    include Concerns::PulpDatabaseUnit
 
-    include Glue::Pulp::PulpContentUnit
-    include Glue::Pulp::PuppetModule if Katello.config.use_pulp
+    CONTENT_TYPE = Pulp::PuppetModule::CONTENT_TYPE
 
     has_many :repositories, :through => :repository_puppet_modules, :class_name => "Katello::Repository"
     has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :destroy, :inverse_of => :puppet_module

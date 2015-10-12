@@ -16,7 +16,7 @@
 
         repositoriesNutupane = new Nutupane(Repository, params);
         repositoriesNutupane.masterOnly = true;
-        repositoriesNutupane.searchKey = 'repositoriesSearch';
+        repositoriesNutupane.setSearchKey('repositoriesSearch');
 
         $scope.detailsTable = repositoriesNutupane.table;
     }

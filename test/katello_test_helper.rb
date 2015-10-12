@@ -189,6 +189,21 @@ class ActiveSupport::TestCase
   def refute_equal_arrays(array1, array2)
     refute_equal array1.sort, array2.sort
   end
+
+  def render_rabl(filepath, resource)
+    Rabl::Renderer.new(filepath, resource, :view_path => "#{Katello::Engine.root}/app/views/",
+                       :format => 'hash', :locals => {:resource => resource}).render
+  end
+
+  def assert_service_not_used(service_class)
+    service_class.any_instance.expects(:backend_data).never
+    yield
+  end
+
+  def assert_service_used(service_class)
+    service_class.any_instance.expects(:backend_data).returns({})
+    yield
+  end
 end
 
 def disable_lazy_accessors
