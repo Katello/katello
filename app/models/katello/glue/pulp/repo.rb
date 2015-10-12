@@ -241,11 +241,11 @@ module Katello
         Repository.where(:content_id => self.content_id).pluck(:pulp_id) - [self.pulp_id]
       end
 
-      def rpm_ids
+      def pulp_rpm_ids
         Katello.pulp_server.extensions.repository.rpm_ids(self.pulp_id)
       end
 
-      def errata_ids
+      def pulp_errata_ids
         Katello.pulp_server.extensions.repository.errata_ids(self.pulp_id)
       end
 
@@ -300,7 +300,7 @@ module Katello
           end
         end
 
-        Katello::Erratum.sync_repository_associations(self, errata_ids)
+        Katello::Erratum.sync_repository_associations(self, pulp_errata_ids)
       end
 
       def index_db_rpms(force = false)
@@ -314,7 +314,7 @@ module Katello
             rpm.update_from_json(rpm_json)
           end
         end
-        Katello::Rpm.sync_repository_associations(self, rpm_ids)
+        Katello::Rpm.sync_repository_associations(self, pulp_rpm_ids)
       end
 
       def index_db_puppet_modules(force = false)
@@ -329,14 +329,14 @@ module Katello
           end
         end
 
-        Katello::PuppetModule.sync_repository_associations(self, puppet_module_ids)
+        Katello::PuppetModule.sync_repository_associations(self, pulp_puppet_module_ids)
       end
 
       def puppet_modules_json
         tmp_puppet_modules = []
         #we fetch ids and then fetch errata by id, because repo errata
         #  do not contain all the info we need (bz 854260)
-        self.puppet_module_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        self.pulp_puppet_module_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           tmp_puppet_modules.concat(Katello.pulp_server.extensions.puppet_module.find_all_by_unit_ids(sub_list))
         end
         tmp_puppet_modules
@@ -346,7 +346,7 @@ module Katello
         tmp_errata = []
         #we fetch ids and then fetch errata by id, because repo errata
         #  do not contain all the info we need (bz 854260)
-        self.errata_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        self.pulp_errata_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           tmp_errata.concat(Katello.pulp_server.extensions.errata.find_all_by_unit_ids(sub_list))
         end
         tmp_errata
@@ -371,7 +371,7 @@ module Katello
 
       def rpms_json
         tmp_packages = []
-        self.rpm_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        self.pulp_rpm_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           tmp_packages.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
                                   sub_list, Katello::Rpm::PULP_INDEXED_FIELDS))
         end
@@ -387,7 +387,7 @@ module Katello
           create_docker_tags(image, image_json[:tags])
         end
 
-        DockerImage.sync_repository_associations(self, docker_image_ids)
+        DockerImage.sync_repository_associations(self, pulp_docker_image_ids)
       end
 
       def docker_images_json
@@ -397,7 +397,7 @@ module Katello
         repo_attrs = Katello.pulp_server.extensions.repository.retrieve_with_details(pulp_id)
         tags = repo_attrs.try(:[], :scratchpad).try(:[], :tags) || []
 
-        docker_image_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        pulp_docker_image_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           docker_images.concat(Katello.pulp_server.extensions.docker_image.find_all_by_unit_ids(sub_list))
         end
         # add the docker tags in
@@ -425,11 +425,11 @@ module Katello
         categories
       end
 
-      def puppet_module_ids
+      def pulp_puppet_module_ids
         Katello.pulp_server.extensions.repository.puppet_module_ids(self.pulp_id)
       end
 
-      def docker_image_ids
+      def pulp_docker_image_ids
         Katello.pulp_server.extensions.repository.docker_image_ids(self.pulp_id)
       end
 
@@ -674,7 +674,7 @@ module Katello
         names = []
         filenames = []
         rpm_list = []
-        self.rpm_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        self.pulp_rpm_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           rpm_list.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
                                   sub_list, %w(filename name), :include_repos => false))
         end

@@ -13,7 +13,7 @@ module Katello
       @repo = Repository.find(katello_repositories(:redis))
 
       ids = @images.map { |attrs| attrs[:_id] }
-      Runcible::Extensions::Repository.any_instance.stubs(:docker_image_ids).
+      Runcible::Extensions::Repository.any_instance.stubs(:pulp_docker_image_ids).
         with(REPO_ID).returns(ids)
       Runcible::Extensions::DockerImage.any_instance.stubs(:find_all_by_unit_ids).
         with(ids).returns(@images)

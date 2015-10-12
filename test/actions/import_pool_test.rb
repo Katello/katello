@@ -7,7 +7,6 @@ module Katello
 
     before do
       ::Actions::Candlepin::ImportPoolHandler.any_instance.stubs(:attempt_find_pool).returns('id' => pool_id)
-      ::Katello::Pool.expects(:find_by).with(has_key(:cp_id)).returns(pool)
       ::Katello::Pool.stubs(:search).returns([pool])
       ::Katello::Pool.any_instance.stubs(:import_data).returns(true)
     end
