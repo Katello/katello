@@ -28,7 +28,7 @@ module Actions
 
           repository.destroy! if planned_destroy
 
-          if !skip_environment_update && ::Katello.config.use_cp && view_env
+          if !skip_environment_update && ::SETTINGS[:katello][:use_cp] && view_env
             plan_action(ContentView::UpdateEnvironment, repository.content_view, repository.environment)
           end
 

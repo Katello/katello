@@ -284,7 +284,7 @@ module Katello
         @provider.name = "url test"
         @provider.provider_type = Provider::REDHAT
         @default_url = "http://boo.com"
-        Katello.config.stubs(:redhat_repository_url).returns(@default_url)
+        SETTINGS[:katello].stubs(:redhat_repository_url).returns(@default_url)
       end
 
       describe "should accept" do

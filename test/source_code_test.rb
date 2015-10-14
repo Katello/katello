@@ -81,11 +81,7 @@ class SourceCodeTest < ActiveSupport::TestCase
               %r{test/support/vcr\.rb},
               %r{test/support/runcible\.rb},
               %r{app/services/katello/authentication/client_authentication\.rb},
-              %r{lib/util/puppet\.rb}).
-          check_lines(<<-DOC) { |line| (line !~ /ENV\[[^\]]+\]/) ? true : line =~ /#\s?ok/ }
-Katello.config or Katello.early_config should be always used instead of ENV variables, Katello.config is
-the single entry point to configuration. ENV variables are processed there.
-      DOC
+              %r{lib/util/puppet\.rb})
     end
   end
 

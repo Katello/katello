@@ -8,8 +8,8 @@ module Katello
 
         include ForemanTasks::Concerns::ActionSubject
         include ForemanTasks::Concerns::ActionTriggering
-        include Glue::Candlepin::Owner if Katello.config.use_cp
-        include Glue if Katello.config.use_cp
+        include Glue::Candlepin::Owner if SETTINGS[:katello][:use_cp]
+        include Glue if SETTINGS[:katello][:use_cp]
 
         include Katello::Authorization::Organization
         include Ext::LabelFromName

@@ -4,7 +4,7 @@ module Actions
       class Create < Actions::EntryAction
         def plan(activation_key)
           activation_key.save!
-          if ::Katello.config.use_cp
+          if ::SETTINGS[:katello][:use_cp]
             cp_create = plan_action(Candlepin::ActivationKey::Create,
                                     organization_label: activation_key.organization.label,
                                     auto_attach: activation_key.auto_attach)
