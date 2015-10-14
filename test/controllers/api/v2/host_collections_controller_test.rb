@@ -4,6 +4,8 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::HostCollectionsControllerTest < ActionController::TestCase
+    include Support::ForemanTasks::Task
+
     def models
       @system = katello_systems(:simple_server)
       @host_collection = katello_host_collections(:simple_host_collection)
@@ -75,6 +77,52 @@ module Katello
 
       assert_response :success
       assert_template 'api/v2/host_collections/create'
+    end
+
+    # Host collection w/o any content hosts
+    def test_autoattach_subscriptions_empty
+      put(:autoattach_subscriptions, :id => @host_collection.id)
+      assert_response :error
+    end
+
+    def test_autoattach_subscriptions
+      System.stubs(:find).returns([@system])
+      assert_async_task ::Actions::BulkAction do |action_class, systems|
+        action_class.must_equal ::Actions::Katello::System::BulkAutoAttachSubscriptions
+        systems.must_equal [@system]
+      end
+      put(:autoattach_subscriptions, :id => @host_collection.id)
+      assert_response :success
+    end
+
+    def test_subscriptions
+      @controller.stubs(:respond_for_index)
+      get(:subscriptions, :id => @host_collection.id)
+    end
+
+    def test_add_subscriptions
+      System.stubs(:find).returns([@system])
+      assert_async_task ::Actions::BulkAction do |action_class, systems|
+        action_class.must_equal ::Actions::Katello::System::BulkAttachSubscriptions
+        systems.must_equal [@system]
+      end
+      put(:add_subscriptions, :id => @host_collection.id)
+      assert_response :success
+    end
+
+    def test_remove_subscriptions
+      System.stubs(:find).returns([@system])
+      assert_async_task ::Actions::BulkAction do |action_class, systems|
+        action_class.must_equal ::Actions::Katello::System::BulkUnattachSubscriptions
+        systems.must_equal [@system]
+      end
+      get(:remove_subscriptions, :id => @host_collection.id)
+      assert_response :success
+    end
+
+    def test_available_subscriptions
+      get(:available_subscriptions, :id => @host_collection.id)
+      assert_response :success
     end
   end
 end

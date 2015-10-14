@@ -7,13 +7,14 @@
  * @requires translate
  * @requires Nutupane
  * @requires HostCollection
+ * @requires ContentHostsHelper
  *
  * @description
  *   Provides the functionality for the host collection details action pane.
  */
 angular.module('Bastion.host-collections').controller('HostCollectionContentHostsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'HostCollection',
-    function ($scope, $location, translate, Nutupane, HostCollection) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'HostCollection', 'ContentHostsHelper',
+    function ($scope, $location, translate, Nutupane, HostCollection, ContentHostsHelper) {
         var contentHostsPane, params;
 
         params = {
@@ -28,6 +29,8 @@ angular.module('Bastion.host-collections').controller('HostCollectionContentHost
         $scope.contentHostsTable = contentHostsPane.table;
         $scope.contentHostsTable.closeItem = function () {};
         $scope.isRemoving = false;
+
+        $scope.getStatusColor = ContentHostsHelper.getStatusColor;
 
         $scope.removeSelected = function () {
             var selected = _.pluck($scope.contentHostsTable.getSelected(), 'uuid');

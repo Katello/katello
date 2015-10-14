@@ -44,7 +44,7 @@ module Katello
       end
 
       def find_organization
-        Organization.find_by_id(params[:organization_id])
+        @organization = Organization.find_by_id(params[:organization_id])
       end
     end
   end

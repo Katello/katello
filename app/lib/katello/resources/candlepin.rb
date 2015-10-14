@@ -192,19 +192,22 @@ module Katello
           end
 
           def refresh_entitlements(uuid)
-            self.post(join_path(path(uuid), 'entitlements'), "", self.default_headers).body
+            results = self.post(join_path(path(uuid), 'entitlements'), "", self.default_headers).body
+            results.empty? ? [] : JSON.parse(results)
           end
 
           def consume_entitlement(uuid, pool, quantity = nil)
             uri = join_path(path(uuid), 'entitlements') + "?pool=#{pool}"
-            uri += "&quantity=#{quantity}" if quantity && quantity > 0
+            uri += "&quantity=#{quantity}" if quantity && quantity.to_i > 0
             response = self.post(uri, "", self.default_headers).body
             response.blank? ? [] : JSON.parse(response)
           end
 
           def remove_entitlement(uuid, ent_id)
             uri = join_path(path(uuid), 'entitlements') + "/#{ent_id}"
-            self.delete(uri, self.default_headers).code.to_i
+            # self.delete(uri, self.default_headers).code.to_i
+            x = self.delete(uri, self.default_headers)
+            x.code.to_i
           end
 
           def remove_entitlements(uuid)

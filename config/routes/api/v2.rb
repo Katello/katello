@@ -44,7 +44,7 @@ Katello::Engine.routes.draw do
             match '/host_collections/available' => 'activation_keys#available_host_collections', :via => :get
           end
           api_resources :products, :only => [:index]
-          api_resources :subscriptions, :only => [:index] do
+          api_resources :subscriptions, :only => [:index, :create, :destroy] do
             collection do
               match '/available' => 'subscriptions#available', :via => :get
             end
@@ -303,6 +303,12 @@ Katello::Engine.routes.draw do
             match '/bulk/destroy' => 'systems_bulk_actions#destroy_systems', :via => :put
             match '/bulk/environment_content_view' => 'systems_bulk_actions#environment_content_view', :via => :put
             match '/bulk/available_incremental_updates' => 'systems_bulk_actions#available_incremental_updates', :via => :post
+
+            match '/bulk/all_subscriptions' => 'systems_bulk_actions#all_subscriptions', :via => :put
+            match '/bulk/available_subscriptions' => 'systems_bulk_actions#available_subscriptions', :via => :put
+            match '/bulk/add_subscriptions' => 'systems_bulk_actions#add_subscriptions', :via => :put
+            match '/bulk/remove_subscriptions' => 'systems_bulk_actions#remove_subscriptions', :via => :put
+            match '/bulk/autoattach_subscriptions' => 'systems_bulk_actions#autoattach_subscriptions', :via => :put
           end
           resource :packages, :only => [], :controller => :system_packages do
             collection do
