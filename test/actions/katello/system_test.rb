@@ -79,6 +79,7 @@ module ::Actions::Katello::System
     let(:system) { Katello::System.find(katello_systems(:simple_server)) }
 
     it 'plans' do
+      stub_remote_user
       action.expects(:plan_self)
       action.stubs(:action_subject).with(system)
 

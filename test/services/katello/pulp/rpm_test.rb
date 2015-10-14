@@ -8,17 +8,10 @@ module Katello
 
       @@package_id = nil
 
-      def self.before_suite
-        configure_runcible
-        VCR.insert_cassette('services/pulp/rpm')
-      end
-
-      def self.after_suite
-        VCR.eject_cassette
-      end
-
       def setup
         User.current = users(:admin)
+        configure_runcible
+        VCR.insert_cassette('services/pulp/rpm')
         repo = Repository.find(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
         RepositorySupport.create_and_sync_repo(repo.id)
         repo.index_db_rpms
@@ -27,6 +20,7 @@ module Katello
 
       def teardown
         RepositorySupport.destroy_repo
+        VCR.eject_cassette
         User.current = nil
       end
     end
