@@ -3,7 +3,7 @@ module Katello
     self.include_root_in_json = false
 
     include Glue
-    include Glue::ElasticSearch::Job  if Katello.config.use_elasticsearch
+    include Glue::ElasticSearch::Job  if SETTINGS[:katello][:use_elasticsearch]
 
     belongs_to :job_owner, :polymorphic => true
 

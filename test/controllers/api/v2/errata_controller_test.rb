@@ -2,14 +2,9 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::ErrataControllerTest < ActionController::TestCase
-    def self.before_suite
-      ::Katello::Erratum.any_instance.stubs(:repositories).returns([])
-      super
-    end
-
     def models
       ::Katello::Product.any_instance.stubs(:as_json).returns([])
-      @repo = Repository.find(katello_repositories(:rhel_6_x86_64))
+      @test_repo = Repository.find(katello_repositories(:rhel_6_x86_64))
       @errata_filter = katello_content_view_filters(:populated_erratum_filter)
     end
 
@@ -38,7 +33,7 @@ module Katello
     end
 
     def test_index
-      get :index, :repository_id => @repo.id
+      get :index, :repository_id => @test_repo.id
       assert_response :success
       assert_template "katello/api/v2/errata/index"
 
@@ -46,7 +41,7 @@ module Katello
       assert_response :success
       assert_template "katello/api/v2/errata/index"
 
-      get :index, :organization_id => @repo.organization.id
+      get :index, :organization_id => @test_repo.organization.id
       assert_response :success
       assert_template "katello/api/v2/errata/index"
     end
@@ -98,20 +93,20 @@ module Katello
 
     def test_index_protected
       assert_protected_action(:index, @auth_permissions, @unauth_permissions) do
-        get :index, :repository_id => @repo.id
+        get :index, :repository_id => @test_repo.id
       end
     end
 
     def test_show
-      errata = @repo.errata.first
-      get :show, :repository_id => @repo.id, :id => errata.errata_id
+      errata = @test_repo.errata.first
+      get :show, :repository_id => @test_repo.id, :id => errata.errata_id
 
       assert_response :success
       assert_template "katello/api/v2/errata/show"
     end
 
     def test_show_errata_not_found
-      get :show, :repository_id => @repo.id, :id => "not a real errata id"
+      get :show, :repository_id => @test_repo.id, :id => "not a real errata id"
       assert_response 404
     end
 
@@ -130,11 +125,11 @@ module Katello
     end
 
     def test_show_protected
-      errata = @repo.errata.first
+      errata = @test_repo.errata.first
       Erratum.stubs(:find).with(errata.errata_id).returns(errata)
 
       assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
-        get :show, :repository_id => @repo.id, :id => errata.errata_id
+        get :show, :repository_id => @test_repo.id, :id => errata.errata_id
       end
     end
   end

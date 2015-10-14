@@ -221,7 +221,7 @@ module Katello
           pre_queue.create(:name     => "import of products in manifest #{zip_file_path}",
                            :priority => 5, :action => [self, :import_products_from_cp])
           pre_queue.create(:name     => "refresh product repos",
-                           :priority => 6, :action => [self, :refresh_existing_products]) if manifest_update && Katello.config.use_pulp
+                           :priority => 6, :action => [self, :refresh_existing_products]) if manifest_update && SETTINGS[:katello][:use_pulp]
 
           self.save!
         rescue => error
@@ -324,7 +324,7 @@ module Katello
           pre_queue.create(:name     => "delete manifest for owner: #{self.organization.name}",
                            :priority => 3, :action => [self, :exec_delete_manifest],
                            :action_rollback => [self, :rollback_delete_manifest])
-          if Katello.config.use_pulp
+          if SETTINGS[:katello][:use_pulp]
             pre_queue.create(:name => "refresh product repos for deletion",
                              :priority => 6, :action => [self, :refresh_existing_products])
           end

@@ -151,7 +151,7 @@ module Katello
     protected
 
     def sanitize_repository_url
-      sanitize_url(:repository_url, Katello.config.redhat_repository_url)
+      sanitize_url(:repository_url, SETTINGS[:katello][:redhat_repository_url])
     end
 
     def sanitize_url(attrib, default_value)

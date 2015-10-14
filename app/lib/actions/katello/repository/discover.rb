@@ -48,11 +48,12 @@ module Actions
         def proxy
           proxy = {}
 
-          config = ::Katello.config.cdn_proxy
-          proxy[:proxy_host] = URI.parse(config.host).host if config.respond_to?(:host)
-          proxy[:proxy_port] = config.port if config.respond_to?(:port)
-          proxy[:proxy_user] = config.user if config.respond_to?(:user)
-          proxy[:proxy_password] = config.password if config.respond_to?(:password)
+          if (config = SETTINGS[:katello][:cdn_proxy])
+            proxy[:proxy_host] = URI.parse(config[:host]).host if config.key?(:host)
+            proxy[:proxy_port] = config[:port] if config.key?(:port)
+            proxy[:proxy_user] = config[:user] if config.key?(:user)
+            proxy[:proxy_password] = config[:password] if config.key?(:password)
+          end
 
           proxy
         end

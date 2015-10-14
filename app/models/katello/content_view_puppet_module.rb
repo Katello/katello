@@ -39,7 +39,7 @@ module Katello
     private
 
     def set_attributes
-      return unless Katello.config.use_pulp
+      return unless SETTINGS[:katello][:use_pulp]
       if self.uuid.present?
         puppet_module = PuppetModule.with_identifiers(self.uuid).first
         fail Errors::NotFound, _("Couldn't find Puppet Module with id '%s'") % self.uuid unless puppet_module

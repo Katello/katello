@@ -6,7 +6,7 @@ module Katello
     define_hooks :add_system_hook, :remove_system_hook
 
     include Katello::Authorization::HostCollection
-    include Glue::ElasticSearch::HostCollection if Katello.config.use_elasticsearch
+    include Glue::ElasticSearch::HostCollection if SETTINGS[:katello][:use_elasticsearch]
 
     has_many :key_host_collections, :class_name => "Katello::KeyHostCollection", :dependent => :destroy
     has_many :activation_keys, :through => :key_host_collections
