@@ -3,17 +3,14 @@ module Katello
     self.include_root_in_json = false
 
     include Hooks
-    define_hooks :add_system_hook, :remove_system_hook
 
     include Katello::Authorization::HostCollection
-    include Glue::ElasticSearch::HostCollection if SETTINGS[:katello][:use_elasticsearch]
 
     has_many :key_host_collections, :class_name => "Katello::KeyHostCollection", :dependent => :destroy
     has_many :activation_keys, :through => :key_host_collections
 
-    has_many :system_host_collections, :class_name => "Katello::SystemHostCollection", :dependent => :destroy
-    has_many :systems, :through => :system_host_collections, :class_name => "Katello::System",
-                       :after_add => :add_system, :after_remove => :remove_system
+    has_many :host_collection_hosts, :class_name => "Katello::HostCollectionHosts", :dependent => :destroy
+    has_many :hosts, :through => :host_collection_hosts, :class_name => "::Host::Managed"
 
     has_many :jobs, :class_name => "Katello::Job", :as => :job_owner, :dependent => :nullify
 
@@ -22,42 +19,35 @@ module Katello
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates :organization_id, :presence => {:message => N_("Organization cannot be blank.")}
     validates :name, :uniqueness => {:scope => :organization_id, :message => N_("must be unique within one organization")}
-    validates :content_host_limit, :numericality => {:only_integer => true,
-                                                     :allow_nil => true,
-                                                     :greater_than_or_equal_to => 1,
-                                                     :less_than_or_equal_to => 2_147_483_647,
-                                                     :message => N_("must be a positive integer value.")}
+    validates :host_limit, :numericality => {:only_integer => true,
+                                             :allow_nil => true,
+                                             :greater_than_or_equal_to => 1,
+                                             :less_than_or_equal_to => 2_147_483_647,
+                                             :message => N_("must be a positive integer value.")}
 
-    alias_attribute :content_host_limit, :max_content_hosts
-    validate :validate_max_content_hosts
+    alias_attribute :host_limit, :max_hosts
+    validate :validate_max_hosts
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true
+    scoped_search :in => :hosts, :complete_value => false
 
-    def validate_max_content_hosts
-      if new_record? || max_content_hosts_changed?
-        if (!unlimited_content_hosts) && (systems.length > 0 && (systems.length > max_content_hosts))
-          errors.add :content_host_limit, _("may not be less than the number of content hosts associated with the host collection.")
-        elsif (max_content_hosts == 0)
-          errors.add :content_host_limit, _("may not be set to 0.")
-        elsif (unlimited_content_hosts == false) && (max_content_hosts.nil?)
-          errors.add :max_content_hosts, _("must be given a value if this host collection is not unlimited.")
+    def validate_max_hosts
+      if new_record? || max_hosts_changed?
+        if (!unlimited_hosts) && (hosts.length > 0 && (hosts.length > max_hosts))
+          errors.add :host_limit, _("may not be less than the number of hosts associated with the host collection.")
+        elsif (max_hosts == 0)
+          errors.add :host_limit, _("may not be set to 0.")
+        elsif (unlimited_hosts == false) && (max_hosts.nil?)
+          errors.add :max_hosts, _("must be given a value if this host collection is not unlimited.")
         end
       end
     end
 
     belongs_to :organization, :inverse_of => :host_collections
 
-    def add_system(system)
-      run_hook(:add_system_hook, system)
-    end
-
-    def remove_system(system)
-      run_hook(:remove_system_hook, system)
-    end
-
     def install_packages(packages)
-      fail Errors::HostCollectionEmptyException if self.systems.empty?
+      fail Errors::HostCollectionEmptyException if self.hosts.empty?
       perform_group_action do |consumer_group|
         pulp_job = consumer_group.install_package(packages)
         save_job(pulp_job, :package_install, :packages, packages)
@@ -65,7 +55,7 @@ module Katello
     end
 
     def uninstall_packages(packages)
-      fail Errors::HostCollectionEmptyException if self.systems.empty?
+      fail Errors::HostCollectionEmptyException if self.hosts.empty?
       perform_group_action do |consumer_group|
         pulp_job = consumer_group.uninstall_package(packages)
         save_job(pulp_job, :package_remove, :packages, packages)
@@ -73,8 +63,8 @@ module Katello
     end
 
     def update_packages(packages = nil)
-      # if no packages are provided, a full system update will be performed (e.g ''yum update' equivalent)
-      fail Errors::HostCollectionEmptyException if self.systems.empty?
+      # if no packages are provided, a full host update will be performed (e.g ''yum update' equivalent)
+      fail Errors::HostCollectionEmptyException if self.hosts.empty?
       perform_group_action do |consumer_group|
         pulp_job = consumer_group.update_package(packages)
         save_job(pulp_job, :package_update, :packages, packages)
@@ -82,7 +72,7 @@ module Katello
     end
 
     def install_package_groups(groups)
-      fail Errors::HostCollectionEmptyException if self.systems.empty?
+      fail Errors::HostCollectionEmptyException if self.hosts.empty?
       perform_group_action do |consumer_group|
         pulp_job = consumer_group.install_package_group(groups)
         save_job(pulp_job, :package_group_install, :groups, groups)
@@ -90,7 +80,7 @@ module Katello
     end
 
     def update_package_groups(groups)
-      fail Errors::HostCollectionEmptyException if self.systems.empty?
+      fail Errors::HostCollectionEmptyException if self.hosts.empty?
       perform_group_action do |consumer_group|
         pulp_job = consumer_group.install_package_group(groups)
         save_job(pulp_job, :package_group_update, :groups, groups)
@@ -98,7 +88,7 @@ module Katello
     end
 
     def uninstall_package_groups(groups)
-      fail Errors::HostCollectionEmptyException if self.systems.empty?
+      fail Errors::HostCollectionEmptyException if self.hosts.empty?
       perform_group_action do |consumer_group|
         pulp_job = consumer_group.uninstall_package_group(groups)
         save_job(pulp_job, :package_group_remove, :groups, groups)
@@ -106,7 +96,7 @@ module Katello
     end
 
     def install_errata(errata_ids)
-      fail Errors::HostCollectionEmptyException if self.systems.empty?
+      fail Errors::HostCollectionEmptyException if self.hosts.empty?
       perform_group_action do |consumer_group|
         pulp_job = consumer_group.install_consumer_errata(errata_ids)
         save_job(pulp_job, :errata_install, :errata_ids, errata_ids)
@@ -118,7 +108,7 @@ module Katello
     end
 
     def consumer_ids
-      self.systems.pluck(:uuid)
+      self.hosts.pluck(:uuid)
     end
 
     def errata(type = nil)
@@ -126,8 +116,8 @@ module Katello
       type ? query.of_type(type) : query
     end
 
-    def total_content_hosts
-      systems.length
+    def total_hosts
+      hosts.length
     end
 
     # Retrieve the list of accessible host collections in the organization specified, returning
@@ -142,7 +132,7 @@ module Katello
       # determine the state (critical/warning/ok) for each host collection
       host_collections.each do |host_collection|
         host_collection_state = :ok
-        unless host_collection.systems.empty?
+        unless host_collection.hosts.empty?
           host_collection.errata.each do |erratum|
             case erratum.errata_type
             when Erratum::SECURITY

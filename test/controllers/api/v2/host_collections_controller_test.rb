@@ -5,7 +5,8 @@ require "katello_test_helper"
 module Katello
   class Api::V2::HostCollectionsControllerTest < ActionController::TestCase
     def models
-      @system = katello_systems(:simple_server)
+      @host = FactoryGirl.create(:host)
+
       @host_collection = katello_host_collections(:simple_host_collection)
       @organization = get_organization
 
@@ -18,7 +19,6 @@ module Katello
       login_user(User.find(users(:admin)))
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
-      System.any_instance.stubs(:update_host_collections)
 
       models
     end
@@ -51,27 +51,26 @@ module Katello
 
     def test_create
       post :create, :organization_id => @organization,
-                    :host_collection => {:name => 'Collection A', :description => 'Collection A, World Cup 2014',
-                                         :system_ids => [@system.id]}
+                    :host_collection => {:name => 'Collection A', :description => 'Collection A, World Cup 2014'}
 
       assert_response :success
 
       results = JSON.parse(response.body)
       assert_equal results['name'], 'Collection A'
-      assert_equal results['unlimited_content_hosts'], true
+      assert_equal results['unlimited_hosts'], true
       assert_equal results['organization_id'], @organization.id
       assert_equal results['description'], 'Collection A, World Cup 2014'
-      assert_equal results['system_ids'], [@system.id]
 
       assert_template 'api/v2/host_collections/create'
     end
 
-    def test_create_with_system_uuid
-      post :create, :organization_id => @organization, :system_uuids => [@system.uuid],
-        :host_collection => {:name => 'Collection A', :description => 'Collection A, World Cup 2014'}
+    def test_create_with_host_id
+      post :create, :organization_id => @organization,
+           :host_collection => {:name => 'Collection A', :description => 'Collection A, World Cup 2014',
+                                :host_ids => [@host.id]}
 
       results = JSON.parse(response.body)
-      assert_equal results['system_ids'], [@system.id]
+      assert_equal results['host_ids'], [@host.id]
 
       assert_response :success
       assert_template 'api/v2/host_collections/create'

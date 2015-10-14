@@ -260,11 +260,12 @@ module Katello
       params[:organization_id] = params[:owner] if params[:owner]
     end
 
-    def find_host
-      aspect = Katello::Host::SubscriptionAspect.where(:uuid => params[:id]).first
+    def find_host(uuid = nil)
+      uuid ||= params[:id]
+      aspect = Katello::Host::SubscriptionAspect.where(:uuid => uuid).first
       if aspect.nil?
         # check with candlepin if consumer is Gone, raises RestClient::Gone
-        Resources::Candlepin::Consumer.get(params[:id])
+        Resources::Candlepin::Consumer.get(uuid)
         fail HttpErrors::NotFound, _("Couldn't find consumer '%s'") % params[:id]
       end
       @host = aspect.host
@@ -290,10 +291,10 @@ module Katello
     # Hypervisors are restricted to the content host's environment and content view
     def find_hypervisor_environment_and_content_view
       if User.consumer?
-        find_system(User.current.uuid)
-        @organization = @system.organization
-        @environment = @system.environment
-        @content_view = @system.content_view
+        find_host(User.current.uuid)
+        @organization = @host.content_host.organization
+        @environment = @host.content_host.environment
+        @content_view = @host.content_host.content_view
         params[:owner] = @organization.label
         params[:env] = @content_view.cp_environment_label(@environment)
       else

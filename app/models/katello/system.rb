@@ -40,8 +40,8 @@ module Katello
                                  :after_add    => :add_activation_key,
                                  :after_remove => :remove_activation_key
 
-    has_many :system_host_collections, :class_name => "Katello::SystemHostCollection", :dependent => :destroy
-    has_many :host_collections, :through      => :system_host_collections,
+    has_many :host_collection_hosts, :class_name => "Katello::HostCollectionHosts", :dependent => :destroy, :foreign_key => :host_id
+    has_many :host_collections, :through      => :host_collection_hosts,
                                 :after_add    => :add_host_collection,
                                 :after_remove => :remove_host_collection
 

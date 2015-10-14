@@ -7,7 +7,11 @@ module ::Actions::Katello::System
     include Support::Actions::Fixtures
     include FactoryGirl::Syntax::Methods
 
-    let(:system) { katello_systems(:simple_server) }
+    let(:system) do
+      system = katello_systems(:simple_server)
+      system.foreman_host = hosts(:one)
+      system
+    end
     let(:host_collection_1) { katello_host_collections(:simple_host_collection) }
     let(:host_collection_2) { katello_host_collections(:another_simple_host_collection) }
     let(:host_collection_3) { katello_host_collections(:yet_another_host_collection) }
@@ -38,33 +42,33 @@ module ::Actions::Katello::System
   class ActivationKeysTest < TestBase
     it 'nil activation keys' do
       plan_action(action, system, nil)
-      assert_empty system.host_collection_ids
+      assert_empty system.foreman_host.host_collection_ids
     end
 
     it 'empty activation keys' do
       plan_action(action, system, [])
-      assert_empty system.host_collection_ids
+      assert_empty system.foreman_host.host_collection_ids
     end
 
     it 'groups actkey0' do
       plan_action(action, system, [actkey0])
-      assert_empty system.host_collection_ids
+      assert_empty system.foreman_host.host_collection_ids
     end
 
     it 'groups actkey1' do
       plan_action(action, system, [actkey1])
-      assert_equal system.host_collection_ids.sort, actkey1.host_collection_ids.sort
+      assert_equal system.foreman_host.host_collection_ids.sort, actkey1.host_collection_ids.sort
     end
 
     it 'groups actkey2' do
       plan_action(action, system, [actkey2])
-      assert_equal system.host_collection_ids.sort, actkey2.host_collection_ids.sort
+      assert_equal system.foreman_host.host_collection_ids.sort, actkey2.host_collection_ids.sort
     end
 
     it 'groups actkey0, actkey1, actkey2, actkey12' do
       plan_action(action, system, [actkey0, actkey1, actkey2, actkey12])
-      assert_equal system.host_collection_ids.sort, (actkey1.host_collection_ids + actkey2.host_collection_ids +
-                                                     actkey12.host_collection_ids).uniq.sort
+      assert_equal system.foreman_host.host_collection_ids.sort, (actkey1.host_collection_ids + actkey2.host_collection_ids +
+                                                                  actkey12.host_collection_ids).uniq.sort
     end
   end
 end

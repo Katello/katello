@@ -1,4 +1,4 @@
-describe('Controller: HostCollectionContentHostsController', function() {
+describe('Controller: HostCollectionHostsController', function() {
     var $scope,
         HostCollection,
         ContentHost,
@@ -11,12 +11,12 @@ describe('Controller: HostCollectionContentHostsController', function() {
             this.table = {
                 showColumns: function() {},
                 getSelected: function() {
-                    return [{uuid: 'abcd'}]
+                    return [{id: 'abcd'}]
                 }
             };
             this.get = function() {};
         };
-        HostCollection = {removeContentHosts: function(){}};
+        HostCollection = {removeHosts: function(){}};
         ContentHost = {};
     });
 
@@ -24,7 +24,7 @@ describe('Controller: HostCollectionContentHostsController', function() {
         $scope = $rootScope.$new();
         $scope.hostCollection = {id: 5};
 
-        $controller('HostCollectionContentHostsController', {
+        $controller('HostCollectionHostsController', {
             $scope: $scope,
             $location: $location,
             Nutupane: Nutupane,
@@ -36,20 +36,20 @@ describe('Controller: HostCollectionContentHostsController', function() {
     }));
 
     it('attaches the nutupane table to the scope', function() {
-        expect($scope.contentHostsTable).toBeDefined();
+        expect($scope.hostsTable).toBeDefined();
     });
 
     it('sets the closeItem function to not do anything', function() {
         spyOn($scope, "transitionTo");
-        $scope.contentHostsTable.closeItem();
+        $scope.hostsTable.closeItem();
         expect($scope.transitionTo).not.toHaveBeenCalled();
     });
 
     it('removes selected content hosts', function(){
-        spyOn(HostCollection, "removeContentHosts");
+        var expected_params = {id: $scope.hostCollection.id, 'host_ids': ['abcd']};
+        spyOn(HostCollection, "removeHosts");
         $scope.removeSelected();
-        expected_params = {id: $scope.hostCollection.id, 'system_ids': ['abcd']};
-        expect(HostCollection.removeContentHosts).toHaveBeenCalledWith(expected_params, jasmine.any(Function), jasmine.any(Function));
+        expect(HostCollection.removeHosts).toHaveBeenCalledWith(expected_params, jasmine.any(Function), jasmine.any(Function));
     });
 
 });

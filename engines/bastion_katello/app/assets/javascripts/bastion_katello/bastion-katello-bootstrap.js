@@ -3,6 +3,7 @@ BASTION_MODULES.push(
     'Bastion.content-views',
     'Bastion.content-views.versions',
     'Bastion.docker-tags',
+    'Bastion.hosts',
     'Bastion.puppet-modules',
     'Bastion.environments',
     'Bastion.gpg-keys',

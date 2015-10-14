@@ -174,22 +174,6 @@ module Katello
       end
     end
 
-    def test_available_host_collections
-      get :available_host_collections, :id => @system.uuid
-
-      assert_response :success
-      assert_template 'api/v2/systems/available_host_collections'
-    end
-
-    def test_available_host_collections_protected
-      allowed_perms = [@view_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission]
-
-      assert_protected_action(:available_host_collections, allowed_perms, denied_perms) do
-        get :available_host_collections, :id => @system.uuid
-      end
-    end
-
     def test_update
       input = {
         :id => @system.id,

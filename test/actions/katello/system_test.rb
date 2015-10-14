@@ -21,6 +21,7 @@ module ::Actions::Katello::System
 
       foreman_host = FactoryGirl.create(:host)
       system.host_id = foreman_host.id
+      system.foreman_host = foreman_host
       system.content_view = library_view
       system.environment = library
       system.save!
@@ -43,7 +44,6 @@ module ::Actions::Katello::System
       stub_remote_user
       system.expects(:disable_auto_reindex!)
       system.expects(:update_attributes!).with(input)
-
       plan_action(action, system, input)
 
       assert_action_planed_with(action, ::Actions::Katello::Host::Update, system.foreman_host)
@@ -107,6 +107,8 @@ module ::Actions::Katello::System
     end
 
     it 'plans' do
+      system.foreman_host = ::Host.new
+
       plan_action(action, system, activation_keys)
 
       assert_equal system.environment, activation_keys[1].environment

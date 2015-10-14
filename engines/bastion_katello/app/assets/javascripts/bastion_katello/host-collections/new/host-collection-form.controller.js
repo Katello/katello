@@ -28,7 +28,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionFormControl
         }
 
         $scope.hostCollection = $scope.hostCollection || new HostCollection();
-        $scope.hostCollection['unlimited_content_hosts'] = true;
+        $scope.hostCollection['unlimited_hosts'] = true;
 
         $scope.save = function (hostCollection) {
             hostCollection['organization_id'] = CurrentOrganization;
