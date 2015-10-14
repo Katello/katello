@@ -7,8 +7,8 @@ module Katello
 
     skip_before_filter :set_default_response_format, :only => :report
 
-    before_filter :find_system, :only => [:destroy, :show, :update, :enabled_repos, :releases, :available_host_collections,
-                                          :tasks, :content_override, :product_content]
+    before_filter :find_system, :only => [:destroy, :show, :update, :enabled_repos, :releases, :tasks,
+                                          :content_override, :product_content]
     before_filter :find_environment, :only => [:index, :report]
     before_filter :find_optional_organization, :only => [:create, :index, :report]
     before_filter :find_host_collection, :only => [:index]
@@ -67,8 +67,8 @@ module Katello
       end
 
       if params[:available_for] && params[:available_for] == 'host_collection'
-        system_ids = HostCollection.find(params[:host_collection_id]).systems.pluck(:id)
-        collection = collection.where("id NOT IN (?)", system_ids) unless system_ids.empty?
+        host_ids = HostCollection.find(params[:host_collection_id]).hosts.pluck(:id)
+        collection = collection.where("id NOT IN (?)", host_ids) unless host_ids.empty?
         return collection
       end
 
@@ -140,19 +140,7 @@ module Katello
     api :GET, "/systems/:id", N_("Show a content host"), :deprecated => true
     param :id, String, :desc => N_("UUID of the content host"), :required => true
     def show
-      @host_collections = @system.host_collections
       respond
-    end
-
-    api :GET, "/systems/:id/available_host_collections", N_("List host collections the content host does not belong to"), :deprecated => true
-    param_group :search, Api::V2::ApiController
-    param :name, String, :desc => N_("host collection name to filter by")
-    def available_host_collections
-      system_org_id = @system.environment.organization_id
-
-      collection = HostCollection.readable.where(:organization_id => system_org_id).where.not(:id => @system.host_collection_ids)
-
-      respond_for_index(:collection => scoped_search(collection, :name, :desc, :resource_class => HostCollection))
     end
 
     api :DELETE, "/systems/:id", N_("Unregister a content host"), :deprecated => true

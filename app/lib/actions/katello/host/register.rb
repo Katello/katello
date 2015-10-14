@@ -11,7 +11,7 @@ module Actions
 
             unless activation_keys.empty?
               content_view_environment ||= lookup_content_view_environment(activation_keys)
-              set_host_collections(system, activation_keys)
+              set_host_collections(host, activation_keys)
             end
 
             fail _('Content View and Environment not set for registration.') if content_view_environment.nil?
@@ -62,18 +62,18 @@ module Actions
 
         private
 
-        def set_host_collections(system, activation_keys)
+        def set_host_collections(host, activation_keys)
           host_collection_ids = activation_keys.flat_map(&:host_collection_ids).compact.uniq
 
           host_collection_ids.each do |host_collection_id|
             host_collection = ::Katello::HostCollection.find(host_collection_id)
-            if !host_collection.unlimited_content_hosts && host_collection.max_content_hosts >= 0 &&
-               host_collection.systems.length >= host_collection.max_content_hosts
+            if !host_collection.unlimited_hosts && host_collection.max_hosts >= 0 &&
+               host_collection.systems.length >= host_collection.max_hosts
               fail _("Host collection '%{name}' exceeds maximum usage limit of '%{limit}'") %
                        {:limit => host_collection.max_content_hosts, :name => host_collection.name}
             end
           end
-          system.host_collection_ids = host_collection_ids
+          host.host_collection_ids = host_collection_ids
         end
 
         def lookup_content_view_environment(activation_keys)

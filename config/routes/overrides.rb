@@ -32,6 +32,16 @@ Foreman::Application.routes.draw do
     end
   end
 
+  namespace :api do
+    scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v2/, :constraints => ApiConstraints.new(:version => 2, :default => true) do
+      resources :hosts, :only => [] do
+        member do
+          put :host_collections
+        end
+      end
+    end
+  end
+
   scope :module => "katello" do
     namespace :api do
       scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v2/, :constraints => ApiConstraints.new(:version => 2, :default => true) do

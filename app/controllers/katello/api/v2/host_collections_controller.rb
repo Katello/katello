@@ -1,20 +1,20 @@
 module Katello
   class Api::V2::HostCollectionsController <  Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
-    before_filter :find_host_collection, :only => [:copy, :show, :update, :destroy, :destroy_systems,
-                                                   :add_systems, :remove_systems, :systems]
+    before_filter :find_host_collection, :only => [:copy, :show, :update, :destroy, :destroy_hosts,
+                                                   :add_hosts, :remove_hosts, :hosts]
     before_filter :find_activation_key
-    before_filter :find_system
+    before_filter :find_host
     before_filter :find_optional_organization, :only => [:index]
     before_filter :find_organization, :only => [:create, :auto_complete_search]
 
-    wrap_parameters :include => (HostCollection.attribute_names + %w(system_ids))
+    wrap_parameters :include => (HostCollection.attribute_names + %w(host_ids))
 
     def_param_group :host_collection do
-      param :system_ids, Array, :required => false, :desc => N_("List of content host uuids to be in the host collection")
       param :description, String
-      param :max_content_hosts, Integer, :desc => N_("Maximum number of content hosts in the host collection")
-      param :unlimited_content_hosts, :bool, :desc => N_("Whether or not the host collection may have unlimited content hosts")
+      param :host_ids, Array, :required => false, :desc => N_("List of host ids to replace the hosts in host collection")
+      param :max_hosts, Integer, :desc => N_("Maximum number of hosts in the host collection")
+      param :unlimited_hosts, :bool, :desc => N_("Whether or not the host collection may have unlimited hosts")
     end
 
     api :GET, "/host_collections/:id", N_("Show a host collection")
@@ -26,24 +26,34 @@ module Katello
     api :GET, "/host_collections", N_("List host collections")
     api :GET, "/organizations/:organization_id/host_collections", N_("List host collections within an organization")
     api :GET, "/activation_keys/:activation_key_id/host_collections", N_("List host collections in an activation key")
-    api :GET, "/systems/:system_id/host_collections", N_("List host collections containing a content host"), :deprecated => true
+    api :GET, "/hosts/:host_id/host_collections", N_("List host collections containing a content host")
     param_group :search, Api::V2::ApiController
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     param :name, String, :desc => N_("host collection name to filter by")
     param :activation_key_id, :identifier, :desc => N_("activation key identifier")
-    param :system_id, :identifier, :desc => N_("system identifier")
+    param :host_id, :identifier, :desc => N_("Filter products by host id")
+    param :available_for, String, :required => false,
+          :desc => N_("Interpret specified object to return only Host Collections that can be associated with specified object. The value 'host' is supported.")
     def index
       respond(:collection => scoped_search(index_relation.uniq, :name, :desc))
     end
 
     def index_relation
-      query = if @system
-                @system.host_collections
-              elsif @activation_key
-                @activation_key.host_collections
-              else
-                HostCollection.readable.where(:organization_id => @organization.id)
-              end
+      if @host
+        query = @host.host_collections
+
+        if params[:available_for] == "host"
+          query = Katello::HostCollection.readable.where(:organization_id => @organization.id)
+
+          if @host.host_collections.count > 0
+            query = query.where("#{Katello::HostCollection.table_name}.id NOT IN (?)", @host.host_collection_ids)
+          end
+        end
+      elsif @activation_key
+        query = @activation_key.host_collections
+      else
+        query = HostCollection.readable.where(:organization_id => @organization.id)
+      end
       query = query.where(:name => params[:name]) if params[:name]
       query
     end
@@ -51,11 +61,10 @@ module Katello
     api :POST, "/host_collections", N_("Create a host collection")
     api :POST, "/organizations/:organization_id/host_collections", N_("Create a host collection")
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
-    param :system_uuids, Array, :required => false, :desc => N_("List of content host uuids to replace the content hosts in host collection")
     param :name, String, :required => true, :desc => N_("Host Collection name")
     param_group :host_collection
     def create
-      @host_collection = HostCollection.new(host_collection_params_with_system_uuids)
+      @host_collection = HostCollection.new(host_collection_params_with_host_ids)
       @host_collection.organization = @organization
       @host_collection.save!
       respond
@@ -63,50 +72,47 @@ module Katello
 
     api :PUT, "/host_collections/:id", N_("Update a host collection")
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
-    param :system_uuids, Array, :required => false, :desc => N_("List of content host uuids to be in the host collection")
     param :name, String, :required => false, :desc => N_("Host Collection name")
     param_group :host_collection
     def update
-      @host_collection.update_attributes!(host_collection_params_with_system_uuids)
+      @host_collection.update_attributes!(host_collection_params_with_host_ids)
       respond
     end
 
-    api :PUT, "/host_collections/:id/add_systems", N_("Add content host to the host collection"), :deprecated => true
+    api :PUT, "/host_collections/:id/add_hosts", N_("Add host to the host collection")
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
-    param :system_ids, Array, :desc => N_("Array of content host ids")
-    def add_systems
-      ids = System.uuids_to_ids(params[:system_ids])
-      @systems = System.editable.where(:id => ids)
-      @editable_systems = @systems.editable
-      @host_collection.system_ids = (@host_collection.system_ids + @editable_systems.collect { |s| s.id }).uniq
+    param :host_ids, Array, :desc => N_("Array of host ids")
+    def add_hosts
+      @hosts = ::Host::Managed.authorized(:edit_host).where(:id => params[:host_ids])
+      @editable_hosts = @hosts.authorized(:edit_host)
+      @host_collection.host_ids = (@host_collection.host_ids + @editable_hosts.collect { |s| s.id }).uniq
       @host_collection.save!
 
       messages = format_bulk_action_messages(
-          :success    => _("Successfully added %s Content Host(s)."),
+          :success    => _("Successfully added %s Host(s)."),
           :error      => _("You were not allowed to add %s"),
-          :models     => @systems,
-          :authorized => @editable_systems
+          :models     => @hosts,
+          :authorized => @editable_hosts
       )
 
       respond_for_show :template => 'bulk_action', :resource_name => 'common',
                        :resource => { 'displayMessages' => messages }
     end
 
-    api :PUT, "/host_collections/:id/remove_systems", N_("Remove content hosts from the host collection"), :deprecated => true
+    api :PUT, "/host_collections/:id/remove_hosts", N_("Remove hosts from the host collection")
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
-    param :system_ids, Array, :desc => N_("Array of content host ids")
-    def remove_systems
-      ids = System.uuids_to_ids(params[:system_ids])
-      @systems = System.editable.where(:id => ids)
-      @editable_systems = @systems.editable
-      @host_collection.system_ids = (@host_collection.system_ids - @editable_systems.collect { |s| s.id }).uniq
+    param :host_ids, Array, :desc => N_("Array of host ids")
+    def remove_hosts
+      @hosts = ::Host::Managed.authorized(:edit_host).where(:id => params[:host_ids])
+      @editable_hosts = @hosts.authorized(:edit_host)
+      @host_collection.host_ids = (@host_collection.host_ids - @editable_hosts.collect { |s| s.id }).uniq
       @host_collection.save!
 
       messages = format_bulk_action_messages(
-          :success    => _("Successfully removed %s Content Host(s)."),
+          :success    => _("Successfully removed %s Host(s)."),
           :error      => _("You were not allowed to sync %s"),
-          :models     => @systems,
-          :authorized => @editable_systems
+          :models     => @hosts,
+          :authorized => @editable_hosts
       )
 
       respond_for_show :template => 'bulk_action', :resource_name => 'common',
@@ -128,9 +134,9 @@ module Katello
       new_host_collection.name                      = params[:host_collection][:name]
       new_host_collection.organization              = @host_collection.organization
       new_host_collection.description               = @host_collection.description
-      new_host_collection.max_content_hosts         = @host_collection.max_content_hosts
-      new_host_collection.unlimited_content_hosts   = @host_collection.unlimited_content_hosts
-      new_host_collection.systems                   = @host_collection.systems
+      new_host_collection.max_hosts                 = @host_collection.max_hosts
+      new_host_collection.unlimited_hosts           = @host_collection.unlimited_hosts
+      new_host_collection.hosts                     = @host_collection.hosts
       new_host_collection.save!
       respond_for_create :resource => new_host_collection
     end
@@ -138,30 +144,27 @@ module Katello
     private
 
     def find_host_collection
-      @organization = @system.organization if @system
+      @organization = @host.organization if @host
       @organization = @activation_key.organization if @activation_key
-      @host_collection = HostCollection.where(:id => params[:id]).first
-      fail HttpErrors::NotFound, _("Couldn't find host collection '%s'") % params[:id] if @host_collection.nil?
+      id = params[:host_collection_id] || params[:id]
+      @host_collection = HostCollection.where(:id => id).first
+      fail HttpErrors::NotFound, _("Couldn't find host collection '%s'") % id if @host_collection.nil?
     end
 
     def host_collection_params
-      attrs = [:name, :description, :max_content_hosts, :unlimited_content_hosts, { :system_ids => [] }]
+      attrs = [:name, :description, :max_hosts, :unlimited_hosts, { :host_ids => [] }]
       params.fetch(:host_collection).permit(*attrs)
     end
 
-    def host_collection_params_with_system_uuids
+    def host_collection_params_with_host_ids
       result = host_collection_params
-      if params['system_uuids']
-        systems_from_uuid = System.uuids_to_ids(params['system_uuids'])
-        result['system_ids'] = result['system_ids'] ?  result['system_ids'] + systems_from_uuid : systems_from_uuid
-      end
-      result[:max_content_hosts] = nil if params[:unlimited_content_hosts]
+      result[:max_hosts] = nil if params[:unlimited_hosts]
       result
     end
 
-    def find_system
-      @system = System.find_by!(:uuid => params[:system_id]) if params[:system_id]
-      @organization = @system.organization if @system
+    def find_host
+      @host = resource_finder(::Host::Managed.authorized("edit_hosts"), params[:host_id]) if params[:host_id]
+      @organization = @host.organization if @host
     end
 
     def find_activation_key

@@ -1,20 +1,21 @@
 /**
  * @ngdoc object
- * @name  Bastion.host-collections.controller:HostCollectionContentHostsController
+ * @name  Bastion.host-collections.controller:HostCollectionHostsController
  *
  * @requires $scope
  * @requires $location
  * @requires translate
  * @requires Nutupane
+ * @requires CurrentOrganization
+ * @requires Host
  * @requires HostCollection
- * @requires ContentHost
  *
  * @description
  *   Provides the functionality for the host collection details action pane.
  */
-angular.module('Bastion.host-collections').controller('HostCollectionContentHostsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'HostCollection', 'CurrentOrganization', 'ContentHost',
-    function ($scope, $location, translate, Nutupane, HostCollection, CurrentOrganization, ContentHost) {
+angular.module('Bastion.host-collections').controller('HostCollectionHostsController',
+    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostCollection',
+    function ($scope, $location, translate, Nutupane, CurrentOrganization, Host, HostCollection) {
         var params;
 
         params = {
@@ -23,21 +24,29 @@ angular.module('Bastion.host-collections').controller('HostCollectionContentHost
             'page': 1,
             'sort_by': 'name',
             'sort_order': 'ASC',
-            'paged': true,
-            'host_collection_id': $scope.$stateParams.hostCollectionId
+            'paged': true
         };
 
-        $scope.contentNutupane = new Nutupane(ContentHost, params);
+        $scope.contentNutupane = new Nutupane(Host, params);
+        $scope.contentNutupane.searchTransform = function (term) {
+            var addition = "host_collection_id=" + $scope.$stateParams.hostCollectionId;
+            if (term === "" || angular.isUndefined(term)) {
+                return addition;
+            }
+
+            return term + " and " + addition;
+        };
+
         $scope.detailsTable = $scope.contentNutupane.table;
         $scope.detailsTable.closeItem = function () {};
         $scope.isRemoving = false;
         $scope.contentNutupane.setSearchKey('contentHostSearch');
 
         $scope.removeSelected = function () {
-            var selected = _.pluck($scope.detailsTable.getSelected(), 'uuid');
+            var selected = _.pluck($scope.detailsTable.getSelected(), 'id');
 
             $scope.isRemoving = true;
-            HostCollection.removeContentHosts({id: $scope.hostCollection.id, 'system_ids': selected}, function (data) {
+            HostCollection.removeHosts({id: $scope.hostCollection.id, 'host_ids': selected}, function (data) {
                 $scope.contentNutupane.table.selectAll(false);
                 $scope.contentNutupane.refresh();
 

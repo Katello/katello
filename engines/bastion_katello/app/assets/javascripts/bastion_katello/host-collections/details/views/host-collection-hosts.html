@@ -2,16 +2,16 @@
 
 <nav>
   <ul class="nav nav-tabs" ng-show="permitted('edit_host_collections', hostCollection) && permitted('edit_content_hosts')">
-    <li ng-class="{active: isState('host-collections.details.content-hosts.list')}">
-      <a ui-sref="host-collections.details.content-hosts.list">
+    <li ng-class="{active: isState('host-collections.details.hosts.list')}">
+      <a ui-sref="host-collections.details.hosts.list">
         <span translate>
           List/Remove
         </span>
       </a>
     </li>
 
-    <li ng-class="{active: stateIncludes('host-collections.details.content-hosts.add')}">
-      <a ui-sref="host-collections.details.content-hosts.add">
+    <li ng-class="{active: stateIncludes('host-collections.details.hosts.add')}">
+      <a ui-sref="host-collections.details.hosts.add">
         <span translate>
           Add
         </span>

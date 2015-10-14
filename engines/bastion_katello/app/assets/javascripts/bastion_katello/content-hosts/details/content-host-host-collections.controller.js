@@ -6,46 +6,54 @@
  * @requires $q
  * @requires $location
  * @requires translate
- * @requires ContentHost
+ * @requires HostCollection
+ * @requires Host
  * @requires Nutupane
  *
  * @description
  *   Provides the functionality for the list host collections details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsController',
-    ['$scope', '$q', '$location', 'translate', 'ContentHost', 'Nutupane',
-    function ($scope, $q, $location, translate, ContentHost, Nutupane) {
+    ['$scope', '$q', '$location', 'translate', 'HostCollection', 'Host', 'Nutupane',
+    function ($scope, $q, $location, translate, HostCollection, Host, Nutupane) {
         var hostCollectionsPane, params;
 
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
-
         params = {
-            'id': $scope.$stateParams.contentHostId,
             'search': $location.search().search || "",
             'sort_by': 'name',
             'sort_order': 'ASC',
             'paged': true
         };
 
-        hostCollectionsPane = new Nutupane(ContentHost, params, 'hostCollections');
+        hostCollectionsPane = new Nutupane(HostCollection, params);
+        hostCollectionsPane.table.initialLoad = false;
         $scope.hostCollectionsTable = hostCollectionsPane.table;
+
+        $scope.contentHost.$promise.then(function(contentHost) {
+            params['host_id'] = contentHost.host.id;
+            hostCollectionsPane.setParams(params);
+            hostCollectionsPane.load(true);
+        });
+
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
 
         $scope.removeHostCollections = function (contentHost) {
             var deferred = $q.defer(),
                 success,
                 error,
+                data,
                 hostCollections,
                 hostCollectionsToRemove;
 
-            success = function (data) {
+            success = function (response) {
                 $scope.successMessages = [translate('Removed %x host collections from content host "%y".')
                     .replace('%x', $scope.hostCollectionsTable.numSelected).replace('%y', $scope.contentHost.name)];
                 $scope.hostCollectionsTable.working = false;
                 $scope.hostCollectionsTable.selectAll(false);
                 hostCollectionsPane.refresh();
                 $scope.contentHost.$get();
-                deferred.resolve(data);
+                deferred.resolve(response);
             };
 
             error = function (response) {
@@ -58,9 +66,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsCo
 
             hostCollections = _.pluck($scope.contentHost.hostCollections, 'id');
             hostCollectionsToRemove = _.pluck($scope.hostCollectionsTable.getSelected(), 'id');
-            contentHost["host_collection_ids"] = _.difference(hostCollections, hostCollectionsToRemove);
+            data = {"host_collection_ids": _.difference(hostCollections, hostCollectionsToRemove)};
 
-            contentHost.$update({id: $scope.contentHost.uuid}, success, error);
+            Host.updateHostCollections({id: contentHost.host.id}, data, success, error);
+
             return deferred.promise;
         };
     }]

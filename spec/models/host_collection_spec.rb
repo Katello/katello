@@ -2,6 +2,7 @@ require 'katello_test_helper'
 
 module Katello
   describe HostCollection do
+    include Support::Actions::Fixtures
     include OrganizationHelperMethods
     include SystemHelperMethods
     include OrchestrationHelper
@@ -17,7 +18,10 @@ module Katello
       Resources::Candlepin::Consumer.stubs(:create).returns(:uuid => uuid, :owner => {:key => uuid})
       Resources::Candlepin::Consumer.stubs(:update).returns(true)
       @environment = create_environment(:name => "DEV", :label => "DEV", :prior => @org.library, :organization => @org)
+      @host = hosts(:one)
       @system = create_system(:name => "bar1", :environment => @environment, :cp_type => "system", :facts => {"Test" => ""})
+      @system.foreman_host = @host
+      @system.save!
     end
 
     describe "create should" do
@@ -41,9 +45,9 @@ module Katello
         HostCollection.where(:name => "TestHostCollection").count.must_equal(2)
       end
 
-      it "should not allow unlimited_content_hosts=false and max_content_hosts to be nil at the same time" do
+      it "should not allow unlimited_hosts=false and max_hosts to be nil at the same time" do
         create = lambda do
-          HostCollection.create!(:name => "TestHostCollection", :organization => @org, :unlimited_content_hosts => false)
+          HostCollection.create!(:name => "TestHostCollection", :organization => @org, :unlimited_hosts => false)
         end
         create.must_raise(ActiveRecord::RecordInvalid)
       end
@@ -64,45 +68,46 @@ module Katello
       end
     end
 
-    describe "changing systems (katello)" do
-      it "should allow systems to be added" do
-        grp = HostCollection.create!(:name => "TestHostCollection", :organization => @org, :unlimited_content_hosts => true)
-        grp.systems << @system
+    describe "changing hosts" do
+      it "should allow hosts to be added" do
+        grp = HostCollection.create!(:name => "TestHostCollection", :organization => @org, :unlimited_hosts => true)
+        grp.hosts << @host
         grp.save!
-        HostCollection.find(grp).consumer_ids.size.must_equal(1)
+        HostCollection.find(grp).host_ids.size.must_equal(1)
+        HostCollection.find(grp).hosts.must_include(@host)
       end
 
       it "should call allow ids to be removed" do
-        grp = HostCollection.create!(:name => "TestHostCollection", :organization => @org, :unlimited_content_hosts => true)
-        grp.systems << @system
-        grp.systems = grp.systems - [@system]
+        grp = HostCollection.create!(:name => "TestHostCollection", :organization => @org, :unlimited_hosts => true)
+        grp.hosts << @host
+        grp.hosts = grp.hosts - [@host]
         grp.save!
-        HostCollection.find(grp).consumer_ids.size.must_equal(0)
+        HostCollection.find(grp).host_ids.size.must_equal(0)
       end
     end
 
     describe "actions (katello)" do
-      it "should raise exception on package install, if no systems in host collection" do
+      it "should raise exception on package install, if no hosts in host collection" do
         lambda { @host_collection.install_packages("pkg1") }.must_raise(Errors::HostCollectionEmptyException)
       end
 
-      it "should raise exception on package update, if no systems in host collection" do
+      it "should raise exception on package update, if no hosts in host collection" do
         lambda { @host_collection.update_packages("pkg1") }.must_raise(Errors::HostCollectionEmptyException)
       end
 
-      it "should raise exception on package remove, if no systems in host collection" do
+      it "should raise exception on package remove, if no hosts in host collection" do
         lambda { @host_collection.uninstall_packages("pkg1") }.must_raise(Errors::HostCollectionEmptyException)
       end
 
-      it "should raise exception on package group install, if no systems in host collection" do
+      it "should raise exception on package group install, if no hosts in host collection" do
         lambda { @host_collection.install_package_groups("grp1") }.must_raise(Errors::HostCollectionEmptyException)
       end
 
-      it "should raise exception on package group remove, if no systems in host collection" do
+      it "should raise exception on package group remove, if no hosts in host collection" do
         lambda { @host_collection.uninstall_package_groups("grp1") }.must_raise(Errors::HostCollectionEmptyException)
       end
 
-      it "should raise exception on errata install, if no systems in host collection" do
+      it "should raise exception on errata install, if no hosts in host collection" do
         lambda { @host_collection.install_errata("errata1") }.must_raise(Errors::HostCollectionEmptyException)
       end
     end

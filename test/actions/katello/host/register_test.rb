@@ -20,7 +20,7 @@ module Katello::Host
     let(:candlepin_class) { ::Actions::Candlepin::Consumer::Create }
     let(:pulp_class) { ::Actions::Pulp::Consumer::Create }
     let(:rhsm_params) { {:name => 'foobar', :facts => {'a' => 'b'}, :type => 'system'} }
-    let(:new_system) { Katello::System.new(:name => :foobar, :cp_type => 'system') }
+    let(:new_system) { Katello::System.new(:name => 'foobar', :cp_type => 'system') }
 
     describe 'Host Register' do
       it 'plans' do
@@ -53,6 +53,7 @@ module Katello::Host
         cvpe = Katello::ContentViewEnvironment.where(:content_view_id => @activation_key.content_view, :environment_id => @activation_key.environment).first
         action = create_action action_class
         new_host = Host::Managed.new(:name => 'foobar', :managed => false)
+        new_system.foreman_host = new_host
         action.stubs(:action_subject).with(new_host)
 
         activation_keys = []
@@ -69,7 +70,7 @@ module Katello::Host
         assert_equal @activation_key.environment, new_system.environment
         assert_equal @activation_key.content_view, new_system.content_view
 
-        assert_includes new_system.host_collections, @host_collection
+        assert_includes new_system.foreman_host.host_collections, @host_collection
       end
 
       it 'plans with existing host' do

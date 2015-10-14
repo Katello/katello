@@ -8,26 +8,26 @@
 
   <ul class="bullet">
     <li bst-feature-flag="remote_actions">
-      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.packages') }}?select_all=true&search=host_collection:&quot;{{ hostCollection.name }}&quot;">
+      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.packages') }}{{ getHostCollectionSearchUrl(hostCollection.name) }}">
         Package Installation, Removal, and Update
       </a>
     </li>
 
 
     <li bst-feature-flag="remote_actions">
-      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.errata.list') }}?select_all=true&search=host_collection:&quot;{{ hostCollection.name }}&quot;">
+      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.errata.list') }}{{ getHostCollectionSearchUrl(hostCollection.name) }}">
         Errata Installation
       </a>
     </li>
 
     <li>
-      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.host-collections') }}?select_all=true&search=host_collection:&quot;{{ hostCollection.name }}&quot;">
+      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.host-collections') }}{{ getHostCollectionSearchUrl(hostCollection.name) }}">
         Host Collection Membership
       </a>
     </li>
 
     <li bst-feature-flag="lifecycle_environments">
-      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.environment') }}?select_all=true&search=host_collection:&quot;{{ hostCollection.name }}&quot;">
+      <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.environment') }}{{ getHostCollectionSearchUrl(hostCollection.name) }}">
         Change assigned Lifecycle Environment or Content View
       </a>
     </li>

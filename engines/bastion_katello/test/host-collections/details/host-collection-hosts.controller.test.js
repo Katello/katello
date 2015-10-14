@@ -1,7 +1,7 @@
-describe('Controller: HostCollectionContentHostsController', function() {
+describe('Controller: HostCollectionHostsController', function() {
     var $scope,
         HostCollection,
-        ContentHost,
+        Host,
         Nutupane;
 
     beforeEach(module('Bastion.host-collections', 'Bastion.test-mocks'));
@@ -11,27 +11,27 @@ describe('Controller: HostCollectionContentHostsController', function() {
             this.table = {
                 showColumns: function() {},
                 getSelected: function() {
-                    return [{uuid: 'abcd'}]
+                    return [{id: 'abcd'}]
                 }
             };
             this.get = function() {};
             this.setSearchKey = function() {};
         };
-        HostCollection = {removeContentHosts: function(){}};
-        ContentHost = {};
+        HostCollection = {removeHosts: function(){}};
+        Host = {};
     });
 
     beforeEach(inject(function($controller, $rootScope, $location) {
         $scope = $rootScope.$new();
         $scope.hostCollection = {id: 5};
 
-        $controller('HostCollectionContentHostsController', {
+        $controller('HostCollectionHostsController', {
             $scope: $scope,
             $location: $location,
             Nutupane: Nutupane,
             translate: function(){},
             HostCollection: HostCollection,
-            ContentHost: ContentHost,
+            Host: Host,
             CurrentOrganization: 'CurrentOrganization'
         });
     }));
@@ -47,10 +47,10 @@ describe('Controller: HostCollectionContentHostsController', function() {
     });
 
     it('removes selected content hosts', function(){
-        spyOn(HostCollection, "removeContentHosts");
+        var expected_params = {id: $scope.hostCollection.id, 'host_ids': ['abcd']};
+        spyOn(HostCollection, "removeHosts");
         $scope.removeSelected();
-        expected_params = {id: $scope.hostCollection.id, 'system_ids': ['abcd']};
-        expect(HostCollection.removeContentHosts).toHaveBeenCalledWith(expected_params, jasmine.any(Function), jasmine.any(Function));
+        expect(HostCollection.removeHosts).toHaveBeenCalledWith(expected_params, jasmine.any(Function), jasmine.any(Function));
     });
 
 });

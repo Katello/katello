@@ -50,17 +50,17 @@ describe('Controller: HostCollectionFormController', function() {
         });
 
         it('with unlimited hosts', function () {
-            hostCollection['max_content_hosts'] = 3;
-            hostCollection.unlimited_content_hosts = true;
+            hostCollection['max_hosts'] = 3;
+            hostCollection.unlimited_hosts = true;
             $scope.save(hostCollection);
-            expect(hostCollection['unlimited_content_hosts']).toBe(true);
+            expect(hostCollection['unlimited_hosts']).toBe(true);
         });
 
         it ('with a host limit', function () {
-            hostCollection['max_content_hosts'] = 3;
-            hostCollection.unlimited_content_hosts = false;
+            hostCollection['max_hosts'] = 3;
+            hostCollection.unlimited_hosts = false;
             $scope.save(hostCollection);
-            expect(hostCollection['max_content_hosts']).toBe(3);
+            expect(hostCollection['max_hosts']).toBe(3);
         });
     });
 
