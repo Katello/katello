@@ -164,16 +164,16 @@ module Actions
       end
 
       def configured?
-        ::Katello.config.respond_to?(:qpid) &&
-          ::Katello.config.qpid.respond_to?(:url) &&
-          ::Katello.config.qpid.respond_to?(:subscriptions_queue_address)
+        SETTINGS[:katello].key?(:qpid) &&
+          SETTINGS[:katello][:qpid].key?(:url) &&
+          SETTINGS[:katello][:qpid].key?(:subscriptions_queue_address)
       end
 
       def initialize_listening_service(suspended_action)
         if configured?
           CandlepinListeningService.initialize(world.logger,
-                                             ::Katello.config.qpid.url,
-                                             ::Katello.config.qpid.subscriptions_queue_address)
+                                             SETTINGS[:katello][:qpid][:url],
+                                             SETTINGS[:katello][:qpid][:subscriptions_queue_address])
           suspended_action.notify_not_connected("initialized...have not connected yet")
         else
           action_logger.error("katello has not been configured for qpid.url and qpid.subscriptions_queue_address")

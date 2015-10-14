@@ -12,7 +12,7 @@ module Katello
                  Setting[:foreman_url].sub(/\Ahttps/, 'http')
                end
 
-      "#{prefix}/pub/#{Katello.config.consumer_cert_rpm}"
+      "#{prefix}/pub/#{SETTINGS[:katello][:consumer_cert_rpm]}"
     end
   end
 end

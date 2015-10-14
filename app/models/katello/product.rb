@@ -3,9 +3,9 @@ module Katello
     self.include_root_in_json = false
 
     include ForemanTasks::Concerns::ActionSubject
-    include Glue::Candlepin::Product if Katello.config.use_cp
-    include Glue::Pulp::Repos if Katello.config.use_pulp
-    include Glue if Katello.config.use_cp || Katello.config.use_pulp
+    include Glue::Candlepin::Product if SETTINGS[:katello][:use_cp]
+    include Glue::Pulp::Repos if SETTINGS[:katello][:use_pulp]
+    include Glue if SETTINGS[:katello][:use_cp] || SETTINGS[:katello][:use_pulp]
 
     include Katello::Authorization::Product
 

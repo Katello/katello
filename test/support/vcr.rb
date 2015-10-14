@@ -58,7 +58,7 @@ def configure_vcr
     c.hook_into :webmock
 
     if ENV['record'] == "false" && mode != :none
-      uri = URI.parse(Katello.config.pulp.url)
+      uri = URI.parse(SETTINGS[:katello][:pulp][:url])
       c.ignore_hosts uri.host
     end
 

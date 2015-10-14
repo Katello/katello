@@ -28,7 +28,7 @@ module Katello
 
         def self.ensure_sync_notification
           resource =  Katello.pulp_server.resources.event_notifier
-          url = Katello.config.post_sync_url
+          url = SETTINGS[:katello][:post_sync_url]
           type = Runcible::Resources::EventNotifier::EventTypes::REPO_SYNC_COMPLETE
           notifs = resource.list
 
@@ -84,7 +84,7 @@ module Katello
       end
 
       def uri
-        uri = URI.parse(Katello.config.pulp.url)
+        uri = URI.parse(SETTINGS[:katello][:pulp][:url])
         "https://#{uri.host}/pulp/repos/#{relative_path}"
       end
 
@@ -164,7 +164,7 @@ module Katello
           dist.auto_publish = true
           [dist]
         when Repository::PUPPET_TYPE
-          repo_path =  File.join(Katello.config.puppet_repo_root,
+          repo_path =  File.join(SETTINGS[:katello][:puppet_repo_root],
                                  Environment.construct_name(self.organization,
                                                             self.environment,
                                                             self.content_view),
@@ -336,7 +336,7 @@ module Katello
         tmp_puppet_modules = []
         #we fetch ids and then fetch errata by id, because repo errata
         #  do not contain all the info we need (bz 854260)
-        self.pulp_puppet_module_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        self.pulp_puppet_module_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
           tmp_puppet_modules.concat(Katello.pulp_server.extensions.puppet_module.find_all_by_unit_ids(sub_list))
         end
         tmp_puppet_modules
@@ -346,7 +346,7 @@ module Katello
         tmp_errata = []
         #we fetch ids and then fetch errata by id, because repo errata
         #  do not contain all the info we need (bz 854260)
-        self.pulp_errata_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        self.pulp_errata_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
           tmp_errata.concat(Katello.pulp_server.extensions.errata.find_all_by_unit_ids(sub_list))
         end
         tmp_errata
@@ -371,7 +371,7 @@ module Katello
 
       def rpms_json
         tmp_packages = []
-        self.pulp_rpm_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        self.pulp_rpm_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
           tmp_packages.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
                                   sub_list, Pulp::Rpm::PULP_INDEXED_FIELDS))
         end
@@ -397,7 +397,7 @@ module Katello
         repo_attrs = Katello.pulp_server.extensions.repository.retrieve_with_details(pulp_id)
         tags = repo_attrs.try(:[], :scratchpad).try(:[], :tags) || []
 
-        pulp_docker_image_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        pulp_docker_image_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
           docker_images.concat(Katello.pulp_server.extensions.docker_image.find_all_by_unit_ids(sub_list))
         end
         # add the docker tags in
@@ -467,8 +467,8 @@ module Katello
 
       def sync(options = {})
         sync_options = {}
-        sync_options[:max_speed] ||= Katello.config.pulp.sync_KBlimit if Katello.config.pulp.sync_KBlimit # set bandwidth limit
-        sync_options[:num_threads] ||= Katello.config.pulp.sync_threads if Katello.config.pulp.sync_threads # set threads per sync
+        sync_options[:max_speed] ||= SETTINGS[:katello][:pulp][:sync_KBlimit] if SETTINGS[:katello][:pulp][:sync_KBlimit] # set bandwidth limit
+        sync_options[:num_threads] ||= SETTINGS[:katello][:pulp][:sync_threads] if SETTINGS[:katello][:pulp][:sync_threads] # set threads per sync
         pulp_tasks = Katello.pulp_server.extensions.repository.sync(self.pulp_id, :override_config => sync_options)
 
         task = PulpSyncStatus.using_pulp_task(pulp_tasks) do |t|
@@ -541,7 +541,7 @@ module Katello
       end
 
       def clear_contents
-        self.clear_content_indices if Katello.config.use_elasticsearch
+        self.clear_content_indices if SETTINGS[:katello][:use_elasticsearch]
         tasks = content_types.collect { |type| type.unassociate_from_repo(self.pulp_id, {}) }.flatten(1)
 
         tasks << Katello.pulp_server.extensions.repository.unassociate_units(self.pulp_id,
@@ -674,7 +674,7 @@ module Katello
         names = []
         filenames = []
         rpm_list = []
-        self.pulp_rpm_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        self.pulp_rpm_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
           rpm_list.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
                                   sub_list, %w(filename name), :include_repos => false))
         end
@@ -710,7 +710,7 @@ module Katello
     end
 
     def full_path(smart_proxy = nil)
-      pulp_uri = URI.parse(smart_proxy ? smart_proxy.url : Katello.config.pulp.url)
+      pulp_uri = URI.parse(smart_proxy ? smart_proxy.url : SETTINGS[:katello][:pulp][:url])
       scheme   = (self.unprotected ? 'http' : 'https')
       if docker?
         "#{pulp_uri.host.downcase}:5000/#{pulp_id}"

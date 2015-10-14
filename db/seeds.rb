@@ -27,7 +27,7 @@ end
 
 ::User.current = ::User.anonymous_api_admin
 
-if Katello.config.use_pulp
+if SETTINGS[:katello][:use_pulp]
   Katello::Repository.ensure_sync_notification
 end
 

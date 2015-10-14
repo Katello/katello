@@ -10,10 +10,10 @@ module Katello
                  :as_json_hook
 
     include ForemanTasks::Concerns::ActionSubject
-    include Glue::Candlepin::Consumer if Katello.config.use_cp
-    include Glue::Pulp::Consumer if Katello.config.use_pulp
-    include Glue if Katello.config.use_cp || Katello.config.use_pulp
-    include Glue::ElasticSearch::System if Katello.config.use_elasticsearch
+    include Glue::Candlepin::Consumer if SETTINGS[:katello][:use_cp]
+    include Glue::Pulp::Consumer if SETTINGS[:katello][:use_pulp]
+    include Glue if SETTINGS[:katello][:use_cp] || SETTINGS[:katello][:use_pulp]
+    include Glue::ElasticSearch::System if SETTINGS[:katello][:use_elasticsearch]
     include Authorization::System
 
     audited :on => [:create], :allow_mass_assignment => true

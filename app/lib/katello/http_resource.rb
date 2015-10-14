@@ -181,8 +181,8 @@ module Katello
         added_header = {'Authorization' => request['Authorization']}
         RestClient::Resource.new url,
           :headers => added_header,
-          :open_timeout => Katello.config.rest_client_timeout,
-          :timeout => Katello.config.rest_client_timeout
+          :open_timeout => SETTINGS[:katello][:rest_client_timeout],
+          :timeout => SETTINGS[:katello][:rest_client_timeout]
       end
 
       # Encode url element if its not nil. This helper method is used mainly in resource path methods.

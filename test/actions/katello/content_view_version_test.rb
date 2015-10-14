@@ -4,6 +4,7 @@ module ::Actions::Katello::ContentViewVersion
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
+    include Support::Actions::RemoteAction
     include FactoryGirl::Syntax::Methods
 
     before do
@@ -28,6 +29,7 @@ module ::Actions::Katello::ContentViewVersion
     end
 
     it 'plans' do
+      stub_remote_user
       new_repo = ::Katello::Repository.new(:pulp_id => 387, :library_instance_id => library_repo.id)
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_repository).returns(new_repo)
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_puppet_environment).returns(Katello::ContentViewPuppetEnvironment)
