@@ -76,5 +76,5 @@ module Katello
 end
 
 class ::Hostgroup::Jail < Safemode::Jail
-  allow :content_source, :rhsm_organization_label
+  allow :content_source, :rhsm_organization_label, :subscription_manager_configuration_url
 end
