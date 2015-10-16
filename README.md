@@ -15,7 +15,19 @@ Linux based systems.
 
 ## Development
 
-The recommended way to set up Katello for development to use the [katello-devel-installer](https://github.com/Katello/katello-installer#development-usage) directly or via [katello-deploy](https://github.com/Katello/katello-deploy#development-deployment).
+The most common way to set up Katello for development is to use
+[katello-deploy](https://github.com/Katello/katello-deploy#development-deployment).
+This will set up a Vagrant instance with the Katello codebase checked out. You
+can also run `setup.rb` directly with katello-deploy if you prefer to not use
+Vagrant.
+
+There is also
+[katello-devel-installer](https://github.com/Katello/katello-installer#development-usage)
+if you would like to use that.
+
+If you have questions or issues with any of the above methods, feel free to ask
+for assistance on #theforeman-dev IRC channel or via the foreman-dev mailing
+list.
 
 ### Test Run
 
@@ -29,14 +41,13 @@ At this point, the development environment should be completely setup and the Ka
     rails s
     ```
 
-2. Access Foreman in your browser (e.g. `http://<hostname>:3000/`)
-3. Login to Foreman (default: `admin` and `changeme`)
-4. Create an initial Foreman organization
-5. Navigate to the Katello engine (e.g. `http://<hostname>:3000/katello`)
+1. Access Foreman in your browser (e.g. `https://<hostname>/`). Note that while Rails will listen on port 3000, the dev installer will set up a reverse proxy so HTTPS on port 443 will work.
+1. Login to Foreman (default: `admin` and `changeme`)
+1. If you go to `https://<hostname>/about` and view the "Plugins" tab, you should see a "Katello" plugin listed.
 
 ### Reset Development Environment
 
-In order to reset the development environment, all backend data and the database needs to be reset. To reiterate, the following will destroy all data in Pulp, Candlepin and your Foreman/Katello database. From the Foreman checkout run:
+In order to reset the development environment, all backend data and the database needs to be reset. To reiterate, *the following will destroy all data in Pulp, Candlepin and your Foreman/Katello database*. From the Foreman checkout run:
 
 ```bash
 rake katello:reset
@@ -50,7 +61,7 @@ That's rather unfortunate. But don't worry! We can help. Just file a bug
 
 ## Contributing
 
-See [getting involved](http://www.katello.org/get-involved/).
+See the [developer documentation](http://www.katello.org/developers/index.html).
 
 ## Contact & Resources
 
