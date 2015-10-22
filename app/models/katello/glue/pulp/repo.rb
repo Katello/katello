@@ -143,7 +143,12 @@ module Katello
           options[:feed] = self.url if self.respond_to?(:url)
           Runcible::Models::DockerImporter.new(options)
         when Repository::OSTREE_TYPE
-          options = {}
+          options = {
+            :ssl_ca_cert => self.feed_ca,
+            :ssl_client_cert => self.feed_cert,
+            :ssl_client_key => self.feed_key
+          }
+
           options[:feed] = self.url if self.respond_to?(:url)
           options[:branches] = self.ostree_branch_names
           Runcible::Models::OstreeImporter.new(options)

@@ -12,6 +12,7 @@ module Katello
         {:id => :beta, :name => _('Beta'), :products => {}},
         {:id => :isos, :name => _('ISOs'), :products => {}},
         {:id => :docker_images, :name => _('Docker Images'), :products => {}},
+        {:id => :ostree, :name => _('OSTree'), :products => {}},
         {:id => :other, :name => _('Other'), :products => {}}
       ]
     end
@@ -25,6 +26,8 @@ module Katello
           name = prod_content.content.name
           if prod_content.content.type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
             key = :docker_images
+          elsif prod_content.content.type == ::Katello::Repository::CANDLEPIN_OSTREE_TYPE
+            key = :ostree
           elsif name.include?(" Beta ")
             key = :beta
           elsif name.include?("(Source RPMs)")
