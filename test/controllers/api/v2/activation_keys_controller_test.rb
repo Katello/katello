@@ -149,6 +149,27 @@ module Katello
       end
     end
 
+    def test_copy
+      ActivationKey.any_instance.expects(:reload)
+      @activation_key.stubs(:service_level).returns("Premium")
+      @activation_key.stubs(:release_version).returns("6Server")
+      @activation_key.stubs(:auto_attach).returns(false)
+      @controller.instance_variable_set(:@activation_key, @activation_key)
+      @controller.stubs(:find_activation_key).returns(@activation_key)
+
+      assert_sync_task(::Actions::Katello::ActivationKey::Create)
+      assert_sync_task(::Actions::Katello::ActivationKey::Update) do |_activation_key, activation_key_params|
+        assert_equal activation_key_params[:service_level], @activation_key.service_level
+        assert_equal activation_key_params[:release_version], @activation_key.release_version
+        assert_equal activation_key_params[:auto_attach], @activation_key.auto_attach
+      end
+
+      post :copy, :id => @activation_key.id, :organization_id => @organization.id, :new_name => 'New Name'
+
+      assert_response :success
+      assert_template 'api/v2/activation_keys/show'
+    end
+
     def test_copy_protected
       allowed_perms = [@create_permission]
       denied_perms = [@view_permission, @destroy_permission, @update_permission]
