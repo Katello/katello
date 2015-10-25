@@ -185,7 +185,7 @@ module Katello
     end
 
     def update_foreman_facts
-      return unless self.foreman_host
+      return unless self.foreman_host && !self.foreman_host.build?
       rhsm_facts = self.facts
       rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
       rhsm_facts[:_timestamp] = DateTime.now.to_s
