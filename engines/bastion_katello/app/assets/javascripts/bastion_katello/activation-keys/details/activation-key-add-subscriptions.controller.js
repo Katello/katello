@@ -63,7 +63,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddSubscripti
             var value, values;
 
             values = [];
-            for (value = 1; value < subscription.quantity; value += 1) {
+            for (value = 1; value < subscription.quantity && values.length < 5; value += 1) {
                 values.push(value);
             }
             values.push(subscription.quantity);
