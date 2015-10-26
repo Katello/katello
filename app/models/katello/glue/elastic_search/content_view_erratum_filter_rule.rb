@@ -19,11 +19,14 @@ module Katello
       mapping do
         indexes :errata_id, :type => 'string', :analyzer => :snowball
         indexes :errata_id_sort, :type => 'string', :index => :not_analyzed
+        indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+        indexes :name_sort, :type => 'string', :index => :not_analyzed
       end
     end
 
     def extended_index_attrs
       {
+        :name => self.errata_id,
         :content_view_filter_id => self.content_view_filter_id
       }
     end
