@@ -14,7 +14,7 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
                 showColumns: function() {}
             };
             this.get = function() {};
-            this.setSearchKey = function() {};
+            this.setSearchKey = function() {}; 
         };
         ActivationKey = {};
     });
@@ -321,7 +321,7 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
     it('gets amount selector values appropriately', function() {
         expect($scope.amountSelectorValues(subscriptions.results[0])).toEqual([-1]);
         expect($scope.amountSelectorValues(subscriptions.results[1])).toEqual([1]);
-        expect($scope.amountSelectorValues(subscriptions.results[5])).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
+        expect($scope.amountSelectorValues(subscriptions.results[5])).toEqual([1, 2, 3, 4, 5, 20]);
         expect($scope.amountSelectorValues(subscriptions.results[6])).toEqual([1, 2, 3, 4]);
         expect($scope.amountSelectorValues(subscriptions.results[7])).toEqual([1, 2, 3]);
     });

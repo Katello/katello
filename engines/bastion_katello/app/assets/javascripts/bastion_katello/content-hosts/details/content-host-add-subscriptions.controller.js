@@ -67,7 +67,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
                 step = 1;
             }
             values = [];
-            for (value = step; value < subscription.quantity; value += step) {
+            for (value = step; value < subscription.quantity && values.length < 5; value += step) {
                 values.push(value);
             }
             values.push(subscription.quantity);
