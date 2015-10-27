@@ -4,7 +4,7 @@
 
   <%= text_f f, :label, :disabled => true, :class => 'input-xlarge' %>
 
-  <% if ::Katello.config.use_cp %>
+  <% if ::SETTINGS[:katello][:use_cp] %>
     <%= selectable_f(f, :service_level, options_for_select(service_level_options, service_level_selected), {}, :label => _('Default System SLA')) %>
   <% end %>
 

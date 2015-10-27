@@ -5,11 +5,8 @@ require 'support/host_support'
 
 module Katello
   class HostManagedExtensionsTest < ActiveSupport::TestCase
-    def self.before_suite
-      configure_runcible
-    end
-
     def setup
+      configure_runcible
       disable_orchestration # disable foreman orchestration
       @dev = KTEnvironment.find(katello_environments(:dev).id)
       @library = KTEnvironment.find(katello_environments(:library).id)

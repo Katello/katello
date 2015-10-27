@@ -2,7 +2,7 @@
 http_interactions: 
 - request: 
     method: delete
-    uri: http://localhost:9200/katello_package
+    uri: http://localhost:9200/katello_test_package
     body: 
       encoding: US-ASCII
       string: ""
@@ -29,7 +29,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:57 GMT
 - request: 
     method: post
-    uri: http://localhost:9200/katello_package
+    uri: http://localhost:9200/katello_test_package
     body: 
       encoding: UTF-8
       string: "{\"settings\":{\"index\":{\"analysis\":{\"filter\":{\"ngram_filter\":{\"type\":\"edgeNGram\",\"side\":\"front\",\"min_gram\":1,\"max_gram\":30}},\"analyzer\":{\"kt_name_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"keyword\"},\"autcomplete_name_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"keyword\",\"filter\":[\"standard\",\"lowercase\",\"ngram_filter\"]}}}}},\"mappings\":{\"package\":{\"properties\":{\"id\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"name\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"name_autocomplete\":{\"type\":\"string\",\"analyzer\":\"autcomplete_name_analyzer\"},\"nvrea_autocomplete\":{\"type\":\"string\",\"analyzer\":\"autcomplete_name_analyzer\"},\"nvrea\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"nvrea_sort\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"nvra\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"filename\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"nvra_sort\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"repoids\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"sortable_version\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"sortable_release\":{\"type\":\"string\",\"index\":\"not_analyzed\"}}}}}"
@@ -58,7 +58,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:57 GMT
 - request: 
     method: post
-    uri: http://localhost:9200/katello_package/_bulk
+    uri: http://localhost:9200/katello_test_package/_bulk
     body: 
       encoding: UTF-8
       string: |
@@ -104,7 +104,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: post
-    uri: http://localhost:9200/katello_package/_refresh
+    uri: http://localhost:9200/katello_test_package/_refresh
     body: 
       encoding: ASCII-8BIT
       string: ""
@@ -133,7 +133,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: head
-    uri: http://localhost:9200/katello_package
+    uri: http://localhost:9200/katello_test_package
     body: 
       encoding: US-ASCII
       string: ""
@@ -160,7 +160,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: get
-    uri: http://localhost:9200/katello_package/_search?from=0&size=8
+    uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
     body: 
       encoding: UTF-8
       string: |
@@ -250,7 +250,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: head
-    uri: http://localhost:9200/katello_package
+    uri: http://localhost:9200/katello_test_package
     body: 
       encoding: US-ASCII
       string: ""
@@ -277,7 +277,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: get
-    uri: http://localhost:9200/katello_package/_search?from=0&size=8
+    uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
     body: 
       encoding: UTF-8
       string: |
@@ -367,7 +367,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: post
-    uri: http://localhost:9200/katello_package/_bulk
+    uri: http://localhost:9200/katello_test_package/_bulk
     body: 
       encoding: UTF-8
       string: |
@@ -413,7 +413,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: post
-    uri: http://localhost:9200/katello_package/_refresh
+    uri: http://localhost:9200/katello_test_package/_refresh
     body: 
       encoding: ASCII-8BIT
       string: ""
@@ -442,7 +442,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: head
-    uri: http://localhost:9200/katello_package
+    uri: http://localhost:9200/katello_test_package
     body: 
       encoding: US-ASCII
       string: ""
@@ -469,7 +469,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: get
-    uri: http://localhost:9200/katello_package/_search?from=0&size=8
+    uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
     body: 
       encoding: UTF-8
       string: |
@@ -543,7 +543,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: head
-    uri: http://localhost:9200/katello_package
+    uri: http://localhost:9200/katello_test_package
     body: 
       encoding: US-ASCII
       string: ""
@@ -570,7 +570,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: get
-    uri: http://localhost:9200/katello_package/_search?from=0&size=8
+    uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
     body: 
       encoding: UTF-8
       string: |
@@ -644,7 +644,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: head
-    uri: http://localhost:9200/katello_package
+    uri: http://localhost:9200/katello_test_package
     body: 
       encoding: US-ASCII
       string: ""
@@ -671,7 +671,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: get
-    uri: http://localhost:9200/katello_package/_search?from=0&size=8
+    uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
     body: 
       encoding: UTF-8
       string: |
@@ -761,7 +761,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: head
-    uri: http://localhost:9200/katello_package
+    uri: http://localhost:9200/katello_test_package
     body: 
       encoding: US-ASCII
       string: ""
@@ -788,7 +788,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: get
-    uri: http://localhost:9200/katello_package/_search?from=0&size=8
+    uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
     body: 
       encoding: UTF-8
       string: |
@@ -878,7 +878,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: post
-    uri: http://localhost:9200/katello_package/_bulk
+    uri: http://localhost:9200/katello_test_package/_bulk
     body: 
       encoding: UTF-8
       string: |
@@ -924,7 +924,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: post
-    uri: http://localhost:9200/katello_package/_refresh
+    uri: http://localhost:9200/katello_test_package/_refresh
     body: 
       encoding: ASCII-8BIT
       string: ""
@@ -953,7 +953,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: head
-    uri: http://localhost:9200/katello_package
+    uri: http://localhost:9200/katello_test_package
     body: 
       encoding: US-ASCII
       string: ""
@@ -980,7 +980,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: get
-    uri: http://localhost:9200/katello_package/_search?from=0&size=8
+    uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
     body: 
       encoding: UTF-8
       string: |
@@ -1039,7 +1039,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: post
-    uri: http://localhost:9200/katello_package/_bulk
+    uri: http://localhost:9200/katello_test_package/_bulk
     body: 
       encoding: UTF-8
       string: |
@@ -1085,7 +1085,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: post
-    uri: http://localhost:9200/katello_package/_refresh
+    uri: http://localhost:9200/katello_test_package/_refresh
     body: 
       encoding: ASCII-8BIT
       string: ""
@@ -1114,7 +1114,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: head
-    uri: http://localhost:9200/katello_package
+    uri: http://localhost:9200/katello_test_package
     body: 
       encoding: US-ASCII
       string: ""
@@ -1141,7 +1141,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: get
-    uri: http://localhost:9200/katello_package/_search?from=0&size=8
+    uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
     body: 
       encoding: UTF-8
       string: |
@@ -1242,7 +1242,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: head
-    uri: http://localhost:9200/katello_package
+    uri: http://localhost:9200/katello_test_package
     body: 
       encoding: US-ASCII
       string: ""
@@ -1269,7 +1269,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: get
-    uri: http://localhost:9200/katello_package/_search?from=0&size=8
+    uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
     body: 
       encoding: UTF-8
       string: |
@@ -1370,7 +1370,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: head
-    uri: http://localhost:9200/katello_package
+    uri: http://localhost:9200/katello_test_package
     body: 
       encoding: US-ASCII
       string: ""
@@ -1397,7 +1397,7 @@ http_interactions:
   recorded_at: Thu, 05 Jun 2014 19:58:58 GMT
 - request: 
     method: get
-    uri: http://localhost:9200/katello_package/_search?from=0&size=8
+    uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
     body: 
       encoding: UTF-8
       string: |

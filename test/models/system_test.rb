@@ -94,6 +94,27 @@ module Katello
       @system2.expects(:udpate_foreman_host).never
       @system2.save!
     end
+
+    def test_update_foreman_facts
+      @system.stubs(:candlepin_consumer_info).returns({})
+      @system.facts = {:rhsm_fact => 'rhsm_value'}
+      @system.update_foreman_facts
+
+      values = @system.foreman_host.fact_values
+      assert_equal 2, values.count
+      assert_include values.map(&:value), 'rhsm_value'
+      assert_includes values.map(&:name), 'rhsm_fact'
+      assert_includes values.map(&:name), '_timestamp'
+    end
+
+    def test_fact_search
+      @system.stubs(:candlepin_consumer_info).returns({})
+      @system.facts = {:rhsm_fact => 'rhsm_value'}
+      @system.update_foreman_facts
+
+      assert_includes System.search_for("facts.rhsm_fact = rhsm_value"), @system
+      assert_includes System.complete_for("facts."), " facts.rhsm_fact "
+    end
   end
 
   class SystemTest < SystemTestBase

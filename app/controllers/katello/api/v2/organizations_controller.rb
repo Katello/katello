@@ -15,6 +15,26 @@ module Katello
       api_base_url "/katello/api"
     end
 
+    def_param_group :resource do
+      param :resource, Hash, :required => true, :action_aware => true do
+        param :name, String, :required => true
+        param :description, String, :required => false
+        param :user_ids, Array, N_("User IDs"), :required => false
+        param :smart_proxy_ids, Array, N_("Smart proxy IDs"), :required => false
+        param :compute_resource_ids, Array, N_("Compute resource IDs"), :required => false
+        param :media_ids, Array, N_("Media IDs"), :required => false
+        param :config_template_ids, Array, N_("Provisioning template IDs"), :required => false # FIXME: deprecated
+        param :ptable_ids, Array, N_("Partition template IDs"), :required => false
+        param :provisioning_template_ids, Array, N_("Provisioning template IDs"), :required => false
+        param :domain_ids, Array, N_("Domain IDs"), :required => false
+        param :realm_ids, Array, N_("Realm IDs"), :required => false
+        param :hostgroup_ids, Array, N_("Host group IDs"), :required => false
+        param :environment_ids, Array, N_("Environment IDs"), :required => false
+        param :subnet_ids, Array, N_("Subnet IDs"), :required => false
+        param :label, String, :required => false
+      end
+    end
+
     def local_find_taxonomy
       find_taxonomy
     end
@@ -52,7 +72,7 @@ module Katello
     param :name, String, :desc => N_("name"), :required => true
     param :label, String, :desc => N_("unique label")
     param :description, String, :desc => N_("description")
-    param_group :resource, ::Api::V2::TaxonomiesController
+    param_group :resource
     def create
       @organization = Organization.new(params[:organization])
       sync_task(::Actions::Katello::Organization::Create, @organization)

@@ -17,6 +17,7 @@ module ::Actions::Katello::CapsuleContent
     end
 
     before do
+      set_user
       @capsule_system = create(:katello_system,
                                :capsule,
                                name: proxy_with_pulp.name,

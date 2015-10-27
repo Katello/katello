@@ -31,6 +31,8 @@ require "#{Katello::Engine.root}/test/support/foreman_tasks/task"
 FactoryGirl.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
 FactoryGirl.find_definitions
 
+SETTINGS[:katello][:elastic_index] = 'katello_test'
+
 module MiniTest::Expectations
   infect_an_assertion :assert_redirected_to, :must_redirect_to
   infect_an_assertion :assert_template, :must_render_template
@@ -64,15 +66,12 @@ module FixtureTestCase
     FIXTURES = load_fixtures
 
     load_permissions
+    configure_vcr
 
     Setting::Katello.load_defaults
-  end
 
-  module ClassMethods
-    def before_suite
-      @@admin = ::User.find(FIXTURES['users']['admin']['id'])
-      User.current = @@admin
-    end
+    @@admin = ::User.find(FIXTURES['users']['admin']['id'])
+    User.current = @@admin
   end
 end
 
@@ -133,15 +132,6 @@ class ActiveSupport::TestCase
 
   def self.stub_ping
     Katello::Ping.stubs(:ping).returns(stubbed_ping_response)
-  end
-
-  def self.before_suite
-    stub_ping
-    super
-  end
-
-  def self.after_suite
-    stub_ping
   end
 
   def stub_ping

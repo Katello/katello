@@ -6,7 +6,7 @@ module Actions
           action_subject repository
           repository.update_attributes!(repo_params)
 
-          if (::Katello.config.use_cp && ::Katello.config.use_pulp) && repository.library_instance?
+          if (SETTINGS[:katello][:use_cp] && SETTINGS[:katello][:use_pulp]) && repository.library_instance?
             plan_action(::Actions::Candlepin::Product::ContentUpdate,
                         :content_id => repository.content_id,
                         :name => repository.name,
@@ -16,11 +16,11 @@ module Actions
                         :type => repository.content_type)
           end
 
-          if ::Katello.config.use_pulp && repository.pulp_update_needed?
+          if SETTINGS[:katello][:use_pulp] && repository.pulp_update_needed?
             plan_action(::Actions::Pulp::Repository::Refresh, repository)
           end
 
-          if ::Katello.config.use_pulp && (repository.previous_changes.key?('unprotected') ||
+          if SETTINGS[:katello][:use_pulp] && (repository.previous_changes.key?('unprotected') ||
               repository.previous_changes.key?('checksum_type'))
             plan_self(:user_id => ::User.current.id, :pulp_id => repository.pulp_id,
                       :distributor_type_id => distributor_type_id(repository.content_type))
