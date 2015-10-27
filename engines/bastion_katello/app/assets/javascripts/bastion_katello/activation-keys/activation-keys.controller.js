@@ -29,6 +29,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeysController',
         var nutupane = new Nutupane(ActivationKey, params);
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
+        $scope.controllerName = 'katello_activation_keys';
 
         $scope.table.closeItem = function () {
             $scope.transitionTo('activation-keys.index');

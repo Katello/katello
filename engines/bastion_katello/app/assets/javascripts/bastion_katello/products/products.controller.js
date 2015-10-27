@@ -29,6 +29,7 @@ angular.module('Bastion.products').controller('ProductsController',
         $scope.productsNutupane = new Nutupane(Product, params);
         $scope.productTable = $scope.productsNutupane.table;
         $scope.removeRow = $scope.productsNutupane.removeRow;
+        $scope.controllerName = 'katello_products';
 
         $scope.productTable.closeItem = function () {
             $scope.transitionTo('products.index');
