@@ -11,10 +11,6 @@ module Katello
 
     include Ext::LabelFromName
 
-    has_many :marketing_engineering_products, :class_name => "Katello::MarketingEngineeringProduct",
-                                              :foreign_key => :engineering_product_id, :dependent => :destroy
-    has_many :marketing_products, :through => :marketing_engineering_products
-
     belongs_to :organization, :inverse_of => :products
     belongs_to :provider, :inverse_of => :products
     belongs_to :sync_plan, :inverse_of => :products, :class_name => 'Katello::SyncPlan'
