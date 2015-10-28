@@ -9,10 +9,10 @@ module Actions
             plan_action(::Actions::Katello::Product::RepositoriesGpgReset, product)
           end
 
-          if ::Katello.config.use_cp && product.productContent_changed?
+          if ::SETTINGS[:katello][:use_cp] && product.productContent_changed?
             plan_action(::Actions::Candlepin::Product::Update, product)
           end
-          plan_action(::Actions::Pulp::Repos::Update, product) if ::Katello.config.use_pulp
+          plan_action(::Actions::Pulp::Repos::Update, product) if ::SETTINGS[:katello][:use_pulp]
         end
       end
     end

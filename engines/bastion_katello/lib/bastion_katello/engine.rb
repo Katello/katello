@@ -15,6 +15,9 @@ module BastionKatello
     end
 
     config.to_prepare do
+      consumer_cert_rpm = 'katello-ca-consumer-latest.noarch.rpm'
+      consumer_cert_rpm = SETTINGS[:katello][:consumer_cert_rpm] if SETTINGS.key?(:katello)
+
       Bastion.register_plugin(
         :name => 'bastion_katello',
         :javascript => 'bastion_katello/bastion_katello',
@@ -37,7 +40,7 @@ module BastionKatello
           select_organization
         ),
         :config => {
-          'consumerCertRPM' => Katello.config.consumer_cert_rpm
+          'consumerCertRPM' => consumer_cert_rpm
         }
       )
     end

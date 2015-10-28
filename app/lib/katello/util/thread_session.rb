@@ -44,26 +44,26 @@ module Katello
               end
               Thread.current[:user] = o
 
-              if Katello.config.use_cp && o.respond_to?(:cp_oauth_header)
+              if SETTINGS[:katello][:use_cp] && o.respond_to?(:cp_oauth_header)
                 self.cp_config(o.cp_oauth_header)
               end
 
-              if Katello.config.use_pulp
+              if SETTINGS[:katello][:use_pulp]
                 self.pulp_config(User.remote_user)
               end
             end
 
             def self.pulp_config(user_remote_id, &_block)
-              uri = URI.parse(Katello.config.pulp.url)
+              uri = URI.parse(SETTINGS[:katello][:pulp][:url])
 
               Katello.pulp_server = Runcible::Instance.new(
                 :url      => "#{uri.scheme}://#{uri.host.downcase}",
                 :api_path => uri.path,
                 :user     => user_remote_id,
-                :timeout      => Katello.config.rest_client_timeout,
-                :open_timeout => Katello.config.rest_client_timeout,
-                :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
-                              :oauth_key    => Katello.config.pulp.oauth_key },
+                :timeout      => SETTINGS[:katello][:rest_client_timeout],
+                :open_timeout => SETTINGS[:katello][:rest_client_timeout],
+                :oauth    => {:oauth_secret => SETTINGS[:katello][:pulp][:oauth_secret],
+                              :oauth_key    => SETTINGS[:katello][:pulp][:oauth_key] },
                 :logging  => {:logger     => ::Foreman::Logging.logger('katello/pulp_rest'),
                               :exception  => true,
                               :info       => true,

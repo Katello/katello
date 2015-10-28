@@ -2,8 +2,8 @@ module Katello
   class ActivationKey < Katello::Model
     self.include_root_in_json = false
 
-    include Glue::Candlepin::ActivationKey if Katello.config.use_cp
-    include Glue if Katello.config.use_cp
+    include Glue::Candlepin::ActivationKey if SETTINGS[:katello][:use_cp]
+    include Glue if SETTINGS[:katello][:use_cp]
     include Katello::Authorization::ActivationKey
     include ForemanTasks::Concerns::ActionSubject
 

@@ -12,7 +12,7 @@ module Actions
           organization.save!
 
           sequence do
-            if ::Katello.config.use_cp
+            if ::SETTINGS[:katello][:use_cp]
               cp_create = plan_action(Candlepin::Owner::Create,
                                       label:  organization.label,
                                       name: organization.name)

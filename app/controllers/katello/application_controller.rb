@@ -491,7 +491,7 @@ module Katello
 
       if search.nil? || search == ''
         all_rows = true
-      elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any? { |s| search.downcase.match(s) }
+      elsif search_options[:simple_query] && !SETTINGS[:katello][:simple_search_tokens].any? { |s| search.downcase.match(s) }
         search = search_options[:simple_query]
       end
       #search = Util::Search::filter_input search

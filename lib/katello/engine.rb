@@ -7,6 +7,40 @@ module Katello
     end
 
     initializer 'katello.load_default_settings', :before => :load_config_initializers do
+      default_settings = {
+        :use_pulp => true,
+        :use_cp => true,
+        :use_elasticsearch => true,
+        :rest_client_timeout => 30,
+        :gpg_strict_validation => false,
+        :puppet_repo_root => '/etc/puppet/environments/',
+        :redhat_repository_url => 'https://cdn.redhat.com',
+        :post_sync_url => 'http://localhost:3000/katello/api/v2/repositories/sync_complete?token=katello',
+        :elastic_index => 'katello',
+        :elastic_url => 'http://localhost:9200',
+        :simple_search_tokens => [":", " and\\b", " or\\b", " not\\b"],
+        :consumer_cert_rpm => 'katello-ca-consumer-latest.noarch.rpm',
+        :pulp => {
+          :default_login => 'admin',
+          :url => 'https://localhost/pulp/api/v2/',
+          :oauth_key => 'katello',
+          :oauth_secret => 'katello',
+          :bulk_load_size => 100,
+          :skip_checksum_validation => false,
+          :upload_chunk_size => 1_048_575, # upload size in bytes to pulp. see SSLRenegBufferSize in apache
+          :sync_threads => 4,
+          :sync_KBlimit => nil
+        },
+        :candlepin => {
+          :url => 'https://localhost:8443/candlepin',
+          :oauth_key => 'katello',
+          :oauth_secret => 'katello',
+          :ca_cert_file => nil
+        }
+      }
+
+      SETTINGS[:katello] = default_settings.deep_merge(SETTINGS[:katello] || {})
+
       require_dependency File.expand_path('../../../app/models/setting/katello.rb', __FILE__) if (Setting.table_exists? rescue(false))
     end
 
@@ -35,7 +69,9 @@ module Katello
 
     initializer "katello.initialize_cp_listener", after: "foreman_tasks.initialize_dynflow" do
       unless ForemanTasks.dynflow.config.remote? || File.basename($PROGRAM_NAME) == 'rake' || Rails.env.test?
-        ::Actions::Candlepin::ListenOnCandlepinEvents.ensure_running
+        ForemanTasks.dynflow.config.on_init do |world|
+          ::Actions::Candlepin::ListenOnCandlepinEvents.ensure_running(world)
+        end
       end
     end
 
@@ -117,6 +153,9 @@ module Katello
       ::HostsController.send :include, Katello::Concerns::HostsControllerExtensions
       ::Containers::StepsController.send :include, Katello::Concerns::Containers::StepsControllerExtensions
 
+      ::FactImporter.register_fact_importer(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactImporter)
+      ::FactParser.register_fact_parser(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactParser)
+
       #Helper Extensions
       ::Containers::StepsController.class_eval do
         helper Katello::Concerns::ForemanDocker::ContainerStepsHelperExtensions
@@ -151,7 +190,7 @@ module Katello
       require 'katello/plugin'
       require 'katello/permissions'
 
-      Tire::Configuration.url(Katello.config.elastic_url)
+      Tire::Configuration.url(SETTINGS[:katello][:elastic_url])
       bridge = Katello::TireBridge.new(::Foreman::Logging.logger('katello/tire_rest'))
       Tire.configure { logger bridge, :level => bridge.level }
     end

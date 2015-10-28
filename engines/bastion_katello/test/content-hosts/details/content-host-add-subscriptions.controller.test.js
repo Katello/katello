@@ -52,6 +52,7 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
             this.get = function() {};
             this.query = function() {};
             this.refresh = function() {};
+            this.setSearchKey = function() {};  
         };
         translate = function(message) {
             return message;

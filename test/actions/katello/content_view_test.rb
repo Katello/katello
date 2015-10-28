@@ -54,7 +54,7 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans' do
-      Katello::Configuration::Node.any_instance.stubs(:use_cp).returns(true)
+      SETTINGS[:katello].stubs(:use_cp).returns(true)
       content_view_environment.expects(:save!)
       plan_action(action, content_view_environment)
       content_view = content_view_environment.content_view
@@ -75,7 +75,7 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans' do
-      Katello::Configuration::Node.any_instance.stubs(:use_elasticsearch).returns(true)
+      SETTINGS[:katello].stubs(:use_elasticsearch).returns(true)
       content_view.expects(:save!)
       plan_action(action, content_view)
     end
