@@ -49,7 +49,7 @@ module Katello
           # Run the following command in rails console to figure out other
           # valid constants in other ruby versions
           # "OpenSSL::SSL::SSLContext::METHODS"
-          @net.ssl_version = Katello.config.cdn_ssl_version if Katello.config.key?(:cdn_ssl_version)
+          @net.ssl_version = SETTINGS[:katello][:cdn_ssl_version] if SETTINGS[:katello].key?(:cdn_ssl_version)
 
           if (options[:verify_ssl] == false) || (options[:verify_ssl] == OpenSSL::SSL::VERIFY_NONE)
             @net.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -113,11 +113,11 @@ module Katello
         end
 
         def load_proxy_settings
-          if Katello.config.cdn_proxy && Katello.config.cdn_proxy.host
-            self.proxy_host = parse_host(Katello.config.cdn_proxy.host)
-            self.proxy_port = Katello.config.cdn_proxy.port
-            self.proxy_user = Katello.config.cdn_proxy.user
-            self.proxy_password = Katello.config.cdn_proxy.password
+          if SETTINGS[:katello][:cdn_proxy] && SETTINGS[:katello][:cdn_proxy][:host]
+            self.proxy_host = parse_host(SETTINGS[:katello][:cdn_proxy][:host])
+            self.proxy_port = SETTINGS[:katello][:cdn_proxy][:port]
+            self.proxy_user = SETTINGS[:katello][:cdn_proxy][:user]
+            self.proxy_password = SETTINGS[:katello][:cdn_proxy][:password]
           end
         rescue URI::Error => e
           Rails.logger.error "Could not parse cdn_proxy:"

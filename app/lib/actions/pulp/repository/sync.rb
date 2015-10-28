@@ -16,15 +16,15 @@ module Actions
           else
             sync_options = {}
 
-            if ::Katello.config.pulp.sync_KBlimit
+            if SETTINGS[:katello][:pulp][:sync_KBlimit]
               # set bandwidth limit
-              sync_options[:max_speed] ||= ::Katello.config.pulp.sync_KBlimit
+              sync_options[:max_speed] ||= SETTINGS[:katello][:pulp][:sync_KBlimit]
             end
-            if ::Katello.config.pulp.sync_threads
+            if SETTINGS[:katello][:pulp][:sync_threads]
               # set threads per sync
-              sync_options[:num_threads] ||= ::Katello.config.pulp.sync_threads
+              sync_options[:num_threads] ||= SETTINGS[:katello][:pulp][:sync_threads]
             end
-            sync_options[:validate] = !(::Katello.config.pulp.skip_checksum_validation)
+            sync_options[:validate] = !(SETTINGS[:katello][:pulp][:skip_checksum_validation])
 
             output[:pulp_tasks] = pulp_tasks =
                 pulp_resources.repository.sync(input[:pulp_id],  override_config: sync_options)

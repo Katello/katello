@@ -262,5 +262,9 @@ module Katello
     def self.humanize_class_name
       _("Lifecycle Environment")
     end
+
+    def self.permission_name
+      'lifecycle_environments'
+    end
   end
 end

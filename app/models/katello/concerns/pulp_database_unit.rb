@@ -13,7 +13,7 @@ module Katello
 
     module ClassMethods
       def content_unit_class
-        "::Pulp::#{self.name.demodulize}"
+        "::Katello::Pulp::#{self.name.demodulize}".constantize
       end
 
       def repository_association

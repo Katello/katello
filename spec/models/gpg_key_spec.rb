@@ -41,7 +41,7 @@ module Katello
 
       it "should be unsuccessful without proper gpg key" do
         gpg_key = GpgKey.new(:name => "Gpg Key 1", :content => "foo-bar-baz", :organization => @organization)
-        if Katello.config.gpg_strict_validation
+        if SETTINGS[:katello][:gpg_strict_validation]
           gpg_key.wont_be :valid?
         else
           gpg_key.must_be :valid?

@@ -12,7 +12,7 @@ module Katello
         has_many :activation_keys, :dependent => :destroy, :class_name => "Katello::ActivationKey"
 
         def self.remote_user
-          Katello.config.pulp.default_login
+          SETTINGS[:katello][:pulp][:default_login]
         end
 
         def self.cp_oauth_header

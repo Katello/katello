@@ -3,6 +3,7 @@ require 'katello_test_helper'
 describe ::Actions::Katello::SyncPlan::AddProducts do
   include Dynflow::Testing
   include Support::Actions::Fixtures
+  include Support::Actions::RemoteAction
   include FactoryGirl::Syntax::Methods
 
   before :all do
@@ -20,6 +21,7 @@ describe ::Actions::Katello::SyncPlan::AddProducts do
   let(:action) { create_action action_class }
 
   it 'plans' do
+    set_user
     action.stubs(:action_subject).with(@sync_plan)
     plan_action(action, @sync_plan, [@product.id])
 

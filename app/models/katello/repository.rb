@@ -7,10 +7,10 @@ module Katello
     before_create :downcase_pulp_id
 
     include ForemanTasks::Concerns::ActionSubject
-    include Glue::Candlepin::Content if (Katello.config.use_cp && Katello.config.use_pulp)
-    include Glue::Pulp::Repo if Katello.config.use_pulp
+    include Glue::Candlepin::Content if (SETTINGS[:katello][:use_cp] && SETTINGS[:katello][:use_pulp])
+    include Glue::Pulp::Repo if SETTINGS[:katello][:use_pulp]
 
-    include Glue if (Katello.config.use_cp || Katello.config.use_pulp)
+    include Glue if (SETTINGS[:katello][:use_cp] || SETTINGS[:katello][:use_pulp])
     include Authorization::Repository
 
     include Ext::LabelFromName

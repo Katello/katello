@@ -4,6 +4,7 @@ module Actions
       class Publish < Actions::EntryAction
         middleware.use Actions::Middleware::KeepCurrentUser
 
+        # rubocop:disable MethodLength
         def plan(content_view, description = "")
           action_subject(content_view)
           content_view.check_ready_to_publish!
@@ -24,9 +25,10 @@ module Actions
               end
 
               sequence do
+                has_modules = content_view.puppet_modules.any? || content_view.components.any? { |component| component.puppet_modules.any? }
                 plan_action(ContentViewPuppetEnvironment::CreateForVersion, version)
                 plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => library,
-                            :puppet_modules_present => content_view.puppet_modules.any?)
+                            :puppet_modules_present => has_modules)
               end
 
               repos_to_delete(content_view).each do |repo|

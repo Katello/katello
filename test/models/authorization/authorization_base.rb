@@ -5,7 +5,6 @@ module Katello
     include Katello::AuthorizationSupportMethods
 
     def setup
-      Katello.config[:warden] = 'database'
       @no_perms_user      = User.find(users(:restricted))
       @admin              = User.find(users(:admin))
       @acme_corporation   = get_organization

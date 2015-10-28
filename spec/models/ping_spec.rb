@@ -6,10 +6,10 @@ module Katello
       before do
         Katello::Ping.unstub(:ping)
         # candlepin - without oauth
-        stub_request(:get, "#{Katello.config.candlepin.url}/status")
+        stub_request(:get, "#{SETTINGS[:katello][:candlepin][:url]}/status")
 
         # elastic search - without oauth
-        stub_request(:get, "#{Katello.config.elastic_url}/_status")
+        stub_request(:get, "#{SETTINGS[:katello][:elastic_url]}/_status")
 
         # candlepin - with oauth
         Resources::Candlepin::CandlepinPing.stubs(:ping).returns
@@ -19,7 +19,7 @@ module Katello
         subject { Ping.ping[:status] }
         it "(katello)" do
           # pulp - without oauth
-          stub_request(:get, "#{Katello.config.pulp.url}/services/status/") # gotta have that trailing slash
+          stub_request(:get, "#{SETTINGS[:katello][:pulp][:url]}/services/status/") # gotta have that trailing slash
 
           # pulp - with oauth
           Katello.pulp_server.resources.user.stubs(:retrieve_all).returns([])

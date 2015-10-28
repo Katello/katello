@@ -4,7 +4,7 @@ module Actions
       class EnvironmentCreate < Actions::Base
         def plan(content_view_environment)
           content_view_environment.save!
-          if ::Katello.config.use_cp
+          if ::SETTINGS[:katello][:use_cp]
             content_view = content_view_environment.content_view
             plan_action(Candlepin::Environment::Create,
                         organization_label: content_view.organization.label,

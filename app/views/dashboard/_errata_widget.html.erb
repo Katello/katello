@@ -21,7 +21,7 @@
         <% content_hosts = erratum.systems_applicable.in_organizations(organizations).readable %>
 
         <tr>
-          <th class="" title="<%= erratum.errata_type %>"><%= erratum.type %></th>
+          <th class="" title="<%= erratum.errata_type %>"><%= erratum.errata_type %></th>
           <th>
             <a href="/errata/<%= erratum.uuid %>/info">
               <%= erratum.errata_id %> (<%= content_hosts.length %> _('Content Hosts')))

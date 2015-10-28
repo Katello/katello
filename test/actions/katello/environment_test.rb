@@ -4,6 +4,7 @@ module ::Actions::Katello::Environment
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
+    include Support::Actions::RemoteAction
     include FactoryGirl::Syntax::Methods
 
     let(:action) { create_action action_class }
@@ -53,6 +54,7 @@ module ::Actions::Katello::Environment
     let(:environment) { stub }
 
     it 'plans' do
+      stub_remote_user
       content_view = stub
       cve = mock(:content_view => content_view)
       action.stubs(:action_subject).with(environment)
