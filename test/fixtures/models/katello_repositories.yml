@@ -28,7 +28,7 @@ fedora_17_x86_64_dev:
   environment_id:       <%= ActiveRecord::Fixtures.identify(:dev) %>
   product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
   gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:dev_default_version) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_view_version) %>
   url:                 "http://myrepo.com"
   distribution_arch: "test_arch"
   distribution_version: "2.1"
@@ -36,6 +36,53 @@ fedora_17_x86_64_dev:
   distribution_variant: "TestVariant"
   distribution_bootable: false 
   distribution_uuid: 'xyz123'
+
+fedora_17_x86_64_duplicate:
+  name:                 Fedora 17 x86_64 duplicate 
+  pulp_id:              2
+  content_id:           1
+  content_type:         yum
+  label:                fedora_17_x86_64_duplicate_label
+  relative_path:        '/ACME_Corporation/dev/fedora_17_duplicate_label'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  url:                 "http://myrepo.com"
+  distribution_arch: "test_arch"
+  distribution_version: "2.1"
+  distribution_family: "Test Family"
+  distribution_variant: "TestVariant"
+  distribution_bootable: true
+  distribution_uuid: 'xyz123'
+
+fedora_17_library_library_view:
+  name:                 Fedora 17 library library view 
+  pulp_id:              fedora_17_library_library_view 
+  content_id:           1
+  content_type:         yum
+  library_instance:     fedora_17_x86_64
+  label:                fedora_17_x86_64_library_library_view
+  relative_path:        '/ACME_Corporation/dev/fedora_17_library_library_view_label'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:library) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_1) %>
+  url:                 "http://myrepo.com"
+
+fedora_17_dev_library_view:
+  name:                 Fedora 17 dev library view 
+  pulp_id:              fedora_17_dev_library_view 
+  content_id:           1
+  content_type:         yum
+  library_instance:     fedora_17_x86_64
+  label:                fedora_17_x86_64_dev_library_view
+  relative_path:        '/ACME_Corporation/dev/fedora_17_library_library_view_label'
+  environment_id:       <%= ActiveRecord::Fixtures.identify(:dev) %>
+  product_id:           <%= ActiveRecord::Fixtures.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::Fixtures.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>
+  url:                 "http://myrepo.com"
 
 feedless_fedora_17_x86_64:
   name:                 Feedless Fedora 17 x86_64

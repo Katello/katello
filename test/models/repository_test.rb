@@ -278,16 +278,16 @@ module Katello
     end
 
     def test_cloned_in?
-      assert @fedora_17_x86_64.cloned_in?(@dev)
+      assert @fedora_17_library_library_view.cloned_in?(@dev)
     end
 
     def test_promoted?
-      assert @fedora_17_x86_64.promoted?
+      assert @puppet_forge.promoted?
 
       repo = build(:katello_repository,
                    :environment => @dev,
-                   :content_view_version => @fedora_17_x86_64.content_view_version,
-                   :product => @fedora_17_x86_64.product
+                   :content_view_version => @fedora_17_x86_64_dev.content_view_version,
+                   :product => @fedora_17_x86_64_dev.product
                   )
 
       assert repo.valid?
@@ -296,7 +296,7 @@ module Katello
     end
 
     def test_get_clone
-      assert_equal @fedora_17_x86_64_dev, @fedora_17_x86_64.get_clone(@dev)
+      assert_equal @fedora_17_dev_library_view, @fedora_17_library_library_view.get_clone(@dev)
     end
 
     def test_gpg_key_name
@@ -365,24 +365,25 @@ module Katello
     end
 
     def test_environmental_instances
-      assert_includes @fedora_17_x86_64.environmental_instances(@acme_corporation.default_content_view), @fedora_17_x86_64
-      assert_includes @fedora_17_x86_64.environmental_instances(@acme_corporation.default_content_view), @fedora_17_x86_64_dev
+      content_view = @fedora_17_dev_library_view.content_view
+      assert_includes @fedora_17_dev_library_view.environmental_instances(content_view), @fedora_17_dev_library_view
+      assert_includes @fedora_17_dev_library_view.environmental_instances(content_view), @fedora_17_library_library_view
     end
 
     def test_create_clone
-      @fedora_17_x86_64.stubs(:checksum_type).returns(nil)
-      clone = @fedora_17_x86_64.create_clone(:environment => @staging)
+      @fedora_17_dev_library_view.stubs(:checksum_type).returns(nil)
+      clone = @fedora_17_dev_library_view.create_clone(:environment => @staging, :content_view => @library_dev_staging_view)
       assert clone.id
       assert Repository.in_environment(@staging).where(:library_instance_id => @fedora_17_x86_64.id).count > 0
     end
 
     def test_create_clone_preserve_type
-      @fedora_17_x86_64.stubs(:checksum_type).returns(nil)
-      @fedora_17_x86_64.content_type = 'file'
-      @fedora_17_x86_64.save!
-      clone = @fedora_17_x86_64.create_clone(:environment => @staging)
+      @fedora_17_library_library_view.stubs(:checksum_type).returns(nil)
+      @fedora_17_library_library_view.content_type = 'file'
+      @fedora_17_library_library_view.save!
+      clone = @fedora_17_library_library_view.create_clone(:environment => @staging, :content_view => @library_dev_staging_view)
       assert clone.id
-      assert_equal @fedora_17_x86_64.content_type, clone.content_type
+      assert_equal @fedora_17_library_library_view.content_type, clone.content_type
     end
 
     def test_repo_id

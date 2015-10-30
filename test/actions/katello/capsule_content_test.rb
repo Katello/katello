@@ -9,7 +9,7 @@ module ::Actions::Katello::CapsuleContent
     include Support::Actions::RemoteAction
 
     let(:environment) do
-      katello_environments(:dev)
+      katello_environments(:library)
     end
 
     let(:repository) do
@@ -29,6 +29,7 @@ module ::Actions::Katello::CapsuleContent
   class SyncTest < TestBase
     let(:action_class) { ::Actions::Katello::CapsuleContent::Sync }
     let(:staging_environment) { katello_environments(:staging) }
+    let(:dev_environment) { katello_environments(:dev) }
 
     it 'plans' do
       capsule_content.add_lifecycle_environment(environment)
@@ -40,10 +41,10 @@ module ::Actions::Katello::CapsuleContent
     end
 
     it 'allows limiting scope of the syncing to one environment' do
-      capsule_content.add_lifecycle_environment(environment)
-      action = create_and_plan_action(action_class, capsule_content, :environment => environment)
+      capsule_content.add_lifecycle_environment(dev_environment)
+      action = create_and_plan_action(action_class, capsule_content, :environment => dev_environment)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncNode) do |(input)|
-        input[:repo_ids].size.must_equal 5
+        input[:repo_ids].size.must_equal 6
       end
     end
     it 'fails when trying to sync to the default capsule' do

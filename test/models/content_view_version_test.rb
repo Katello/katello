@@ -11,7 +11,7 @@ module Katello
       @beta = create(:katello_environment, :organization => @cvv.organization, :prior => @dev,                         :name => 'beta')
       @composite_version = ContentViewVersion.find(katello_content_view_versions(:composite_view_version_1))
       @cvv_with_repo = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
-      @cvv_with_package_groups = ContentViewVersion.find(katello_content_view_versions(:dev_default_version))
+      @cvv_with_package_groups = ContentViewVersion.find(katello_content_view_versions(:library_default_version))
     end
 
     def test_promotable_in_sequence
