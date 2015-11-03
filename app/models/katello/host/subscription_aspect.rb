@@ -50,6 +50,13 @@ module Katello
                              :ip => facts["net.interface.#{interface}.ipv4_address"].dup)
         end
       end
+
+      def update_facts(rhsm_facts)
+        return if self.host.build?
+        rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
+        rhsm_facts[:_timestamp] = DateTime.now.to_s
+        host.import_facts(rhsm_facts)
+      end
     end
   end
 end

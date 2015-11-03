@@ -9,7 +9,7 @@ module Katello
       end
 
       def update_action
-        if self.content_aspect && (self.content_host.content_view != self.content_aspect.content_view ||
+        if self.content_aspect && self.content_host && (self.content_host.content_view != self.content_aspect.content_view ||
             self.content_host.environment != self.content_aspect.lifecycle_environment)
           ::Actions::Katello::Host::Update
         end

@@ -192,6 +192,8 @@ module Katello
 
       sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, content_view_environment)
       host.reload
+      host.subscription_aspect.update_facts(rhsm_params[:facts]) unless rhsm_params[:facts].blank?
+
       render :json => Resources::Candlepin::Consumer.get(host.subscription_aspect.uuid)
     end
 
@@ -216,6 +218,7 @@ module Katello
 
       sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, nil, activation_keys)
       host.reload
+      host.subscription_aspect.update_facts(rhsm_params[:facts]) unless rhsm_params[:facts].blank?
 
       render :json => Resources::Candlepin::Consumer.get(host.subscription_aspect.uuid)
     end
@@ -238,6 +241,7 @@ module Katello
     def facts
       User.as_anonymous_admin do
         sync_task(::Actions::Katello::Host::Update, @host, rhsm_params)
+        @host.subscription_aspect.update_facts(rhsm_params[:facts]) unless rhsm_params[:facts].blank?
       end
       render :json => {:content => _("Facts successfully updated.")}, :status => 200
     end

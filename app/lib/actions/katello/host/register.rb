@@ -108,6 +108,7 @@ module Actions
 
         def plan_subscription_aspect(host, activation_keys, consumer_params)
           subscription_aspect = host.subscription_aspect || ::Katello::Host::SubscriptionAspect.new
+          subscription_aspect.host = host
           subscription_aspect.update_from_consumer_attributes(consumer_params)
           subscription_aspect.activation_keys = activation_keys
           subscription_aspect

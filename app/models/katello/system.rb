@@ -33,6 +33,7 @@ module Katello
     has_many :bound_repositories, :through => :system_repositories, :class_name => "Katello::Repository", :source => :repository
     has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy, :inverse_of => :system
 
+    has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
     has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
     has_many :activation_keys,
                                  :through => :system_activation_keys,
@@ -183,14 +184,6 @@ module Katello
       attribs_to_sub.each do |id|
         self.subscribe id
       end
-    end
-
-    def update_foreman_facts
-      return unless self.foreman_host && !self.foreman_host.build?
-      rhsm_facts = self.facts
-      rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
-      rhsm_facts[:_timestamp] = DateTime.now.to_s
-      foreman_host.import_facts(rhsm_facts)
     end
 
     def filtered_pools(match_system, match_installed, no_overlap)

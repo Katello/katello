@@ -8,22 +8,25 @@ module Katello
     def setup
       set_user
       configure_runcible
+      @simple_server = katello_systems(:simple_server)
+      @simple_server.foreman_host = @host
+      @simple_server.save!
     end
 
     def teardown
       VCR.eject_cassette
     end
 
-    def self.set_pulp_consumer(system)
+    def self.set_pulp_consumer(uuid)
       # TODO: this tests should move to actions tests once we
       # have more actions in Dynflow. For now just peform the
       # things that system.set_pulp_consumer did before.
       ForemanTasks.sync_task(::Actions::Pulp::Consumer::Create,
-                             uuid: system.uuid, name: system.name)
+                             uuid: uuid, name: uuid)
     end
 
-    def set_pulp_consumer(system)
-      self.class.set_pulp_consumer(system)
+    def set_pulp_consumer(uuid)
+      self.class.set_pulp_consumer(uuid)
     end
   end
 
@@ -31,16 +34,16 @@ module Katello
     def setup
       super
       VCR.insert_cassette('pulp/consumer/create')
-      @simple_server = System.find(katello_systems(:simple_server).id)
     end
 
     def teardown
       @simple_server.del_pulp_consumer
-      super
+    ensure
+      VCR.eject_cassette
     end
 
     def test_set_pulp_consumer
-      assert set_pulp_consumer(@simple_server)
+      assert set_pulp_consumer(@simple_server.uuid)
     end
   end
 
@@ -48,8 +51,7 @@ module Katello
     def setup
       super
       VCR.insert_cassette('pulp/consumer/delete')
-      @simple_server = System.find(katello_systems(:simple_server).id)
-      set_pulp_consumer(@simple_server)
+      set_pulp_consumer(@simple_server.uuid)
     end
 
     def teardown
@@ -65,13 +67,13 @@ module Katello
     def setup
       super
       VCR.insert_cassette('pulp/consumer/consumer')
-      @simple_server = System.find(katello_systems(:simple_server).id)
-      set_pulp_consumer(@simple_server)
+      set_pulp_consumer(@simple_server.uuid)
     end
 
     def teardown
       @simple_server.del_pulp_consumer
-      super
+    ensure
+      VCR.eject_cassette
     end
 
     def test_update_pulp_consumer
@@ -99,15 +101,14 @@ module Katello
       VCR.insert_cassette('pulp/consumer/bind')
 
       RepositorySupport.create_and_sync_repo(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
-
-      @simple_server = System.find(FIXTURES['katello_systems']['simple_server']['id'])
-      set_pulp_consumer(@simple_server)
+      set_pulp_consumer(@simple_server.uuid)
     end
 
     def teardown
       RepositorySupport.destroy_repo
       @simple_server.del_pulp_consumer
-      super
+    ensure
+      VCR.eject_cassette
     end
   end
 
@@ -120,15 +121,18 @@ module Katello
 
       RepositorySupport.create_and_sync_repo(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
       @simple_server = System.find(FIXTURES['katello_systems']['simple_server']['id'])
-      set_pulp_consumer(@simple_server)
-      @simple_server.bound_repositories << RepositorySupport.repo
-      @simple_server.propagate_yum_repos
+      set_pulp_consumer(@simple_server.uuid)
+      @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @simple_server.content_view, :lifecycle_environment => @simple_server.environment)
+      @host.content_aspect.uuid = @simple_server.uuid
+      @host.content_aspect.bound_repositories << RepositorySupport.repo
+      @host.content_aspect.propagate_yum_repos
     end
 
     def teardown
       RepositorySupport.destroy_repo
       @simple_server.del_pulp_consumer if defined? @simple_server
-      super
+    ensure
+      VCR.eject_cassette
     end
 
     def test_install_package
@@ -172,7 +176,7 @@ module Katello
       profile = [{"vendor" => "FedoraHosted", "name" => "elephant",
                   "version" => "0.3", "release" => "0.8",
                   "arch" => "noarch", :epoch => ""}]
-      @simple_server.upload_package_profile(profile)
+      ForemanTasks.sync_task(::Actions::Katello::Host::UploadPackageProfile, @host, profile)
       tasks = @simple_server.install_consumer_errata([erratum_id])
 
       assert tasks[:spawned_tasks].first['task_id']

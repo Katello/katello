@@ -25,7 +25,14 @@ module Actions
 
           host = system.foreman_host
           if host && host.content_aspect.try(:lifecycle_environment) && host.content_aspect.try(:content_view) && reset_puppet_env
-            host.environment = system.content_view.puppet_env(system.environment).try(:puppet_environment) || host.environment
+            new_env = system.content_view.puppet_env(system.environment).try(:puppet_environment)
+            if new_env
+              host.environment = new_env
+            else
+              fail ::Katello::Errors::NotFound,
+                   _("Couldn't find puppet environment associated with lifecycle environment '%{env}' and content view '%{view}'") %
+                       { :env =>  host.content_aspect.lifecycle_environment.name, :view => host.content_aspect.content_view.name }
+            end
             host.save!
           end
         end
