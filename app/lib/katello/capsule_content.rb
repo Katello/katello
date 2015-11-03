@@ -30,8 +30,10 @@ module Katello
     def remove_lifecycle_environment(environment)
       @capsule.lifecycle_environments.find(environment)
       unless @capsule.lifecycle_environments.destroy(environment)
-        fail "could not remove the lifecycle environment form capsule"
+        fail _("Could not remove the lifecycle environment from the capsule")
       end
+    rescue ActiveRecord::RecordNotFound
+      raise _("Lifecycle environment was not attached to the capsule; therefore, no changes were made.")
     end
 
     def available_lifecycle_environments(organization_id = nil)
