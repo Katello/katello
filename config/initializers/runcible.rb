@@ -1,6 +1,6 @@
 require 'katello/util/thread_session'
 
-if Katello.config.use_pulp
+if SETTINGS[:katello] && SETTINGS[:katello][:use_pulp]
 
   # override Runcible's default configuration error message
   module Runcible

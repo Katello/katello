@@ -14,7 +14,7 @@ class Actions::Candlepin::ListenOnCandlepinEventsTest < ActiveSupport::TestCase
       ::Actions::Candlepin::CandlepinListeningService.stubs(:new).at_least_once
       action_class.stubs(:connect_listening_service)
 
-      Katello.config[:qpid] = {:url => 'url', :subscriptions_queue_address => 'addr'}
+      SETTINGS[:katello][:qpid] = {:url => 'url', :subscriptions_queue_address => 'addr'}
       ::Actions::Candlepin::ListenOnCandlepinEvents.any_instance.stubs(:configured?).returns(true)
       run_action planned_action
     end

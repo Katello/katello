@@ -43,5 +43,15 @@ module Katello
 
       assert_equal subscription_aspect.candlepin_environment_id, attrs[:environment][:id]
     end
+
+    def test_update_foreman_facts
+      subscription_aspect.update_facts(:rhsm_fact => 'rhsm_value')
+
+      values = subscription_aspect.host.fact_values
+      assert_equal 2, values.count
+      assert_include values.map(&:value), 'rhsm_value'
+      assert_includes values.map(&:name), 'rhsm_fact'
+      assert_includes values.map(&:name), '_timestamp'
+    end
   end
 end

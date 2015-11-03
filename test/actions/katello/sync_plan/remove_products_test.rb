@@ -20,6 +20,7 @@ describe ::Actions::Katello::SyncPlan::RemoveProducts do
   let(:action) { create_action action_class }
 
   it 'plans' do
+    set_user
     action.stubs(:action_subject).with(@sync_plan)
     plan_action(action, @sync_plan, [@product.id])
 

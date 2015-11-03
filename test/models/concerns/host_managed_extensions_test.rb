@@ -5,11 +5,8 @@ require 'support/host_support'
 
 module Katello
   class HostManagedExtensionsTest < ActiveSupport::TestCase
-    def self.before_suite
-      configure_runcible
-    end
-
     def setup
+      configure_runcible
       disable_orchestration # disable foreman orchestration
       @dev = KTEnvironment.find(katello_environments(:dev).id)
       @library = KTEnvironment.find(katello_environments(:library).id)
@@ -71,7 +68,8 @@ module Katello
 
     def test_update_does_not_update_content_host
       content_host = System.find(katello_systems(:simple_server2))
-      @foreman_host2 = FactoryGirl.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
+      @foreman_host2 = FactoryGirl.create(:host, :with_content, :content_view => content_host.content_view,
+                                          :lifecycle_environment => content_host.environment)
       @foreman_host2.content_host = content_host
       @foreman_host2.save!
 

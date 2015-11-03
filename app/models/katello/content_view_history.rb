@@ -2,7 +2,7 @@ module Katello
   class ContentViewHistory < Katello::Model
     include Katello::Authorization::ContentViewHistory
 
-    include Glue::ElasticSearch::ContentViewHistory if Katello.config.use_elasticsearch
+    include Glue::ElasticSearch::ContentViewHistory if SETTINGS[:katello][:use_elasticsearch]
 
     belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :content_view_histories,
                              :foreign_key => :katello_environment_id

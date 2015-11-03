@@ -2,7 +2,7 @@ module Katello
   class ContentViewPackageFilterRule < Katello::Model
     self.include_root_in_json = false
 
-    include Glue::ElasticSearch::ContentViewPackageFilterRule if Katello.config.use_elasticsearch
+    include Glue::ElasticSearch::ContentViewPackageFilterRule if SETTINGS[:katello][:use_elasticsearch]
 
     belongs_to :filter,
                :class_name => "Katello::ContentViewPackageFilter",

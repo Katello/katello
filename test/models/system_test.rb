@@ -70,7 +70,7 @@ module Katello
   class SystemUpdateTest < SystemTestBase
     def setup
       super
-      foreman_host = FactoryGirl.create(:host)
+      foreman_host = FactoryGirl.create(:host, :with_subscription)
       @system.host_id = foreman_host.id
       @system.save!
 
@@ -91,8 +91,15 @@ module Katello
       @system2.host_id = foreman_host.id
       @system2.save!
 
-      @system2.expects(:udpate_foreman_host).never
+      @system2.expects(:update_foreman_host).never
       @system2.save!
+    end
+
+    def test_fact_search
+      @system.foreman_host.subscription_aspect.update_facts(:rhsm_fact => 'rhsm_value')
+
+      assert_includes System.search_for("facts.rhsm_fact = rhsm_value"), @system
+      assert_includes System.complete_for("facts."), " facts.rhsm_fact "
     end
   end
 
@@ -115,18 +122,15 @@ module Katello
     end
 
     def test_save_bound_repos_by_path_empty
-      @errata_system.expects(:generate_applicability)
-      @errata_system.expects(:propagate_yum_repos)
       refute_empty @errata_system.bound_repositories
       @errata_system.save_bound_repos_by_path!([])
+
       assert_empty @errata_system.bound_repositories
     end
 
     def test_save_bound_repos_by_path
       @repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64))
 
-      @errata_system.expects(:generate_applicability)
-      @errata_system.expects(:propagate_yum_repos)
       @errata_system.bound_repositories = []
       @errata_system.save!
       @errata_system.save_bound_repos_by_path!(["/pulp/repos/#{@repo.relative_path}"])
@@ -226,52 +230,6 @@ module Katello
       @errata_system.import_applicability(false)
 
       assert_equal [@enhancement_errata], @errata_system.reload.applicable_errata
-    end
-  end
-
-  class SystemHostTest < SystemTestBase
-    def setup
-      super
-      foreman_host = FactoryGirl.create(:host)
-      @system.host_id = foreman_host.id
-      @system.content_view = @library_view
-      @system.environment = @library
-      @system.save!
-    end
-
-    def setup_puppet_env(view, environment)
-      puppet_env = ::Environment.create!(:name => 'blah')
-
-      cvpe = view.version(environment).puppet_env(environment)
-      cvpe.puppet_environment = puppet_env
-      cvpe.save!
-    end
-
-    def test_update_lifecycle_environment_and_content_view_updates_foreman_host
-      setup_puppet_env(@library_dev_staging_view, @dev)
-      Support::HostSupport.setup_host_for_view(@system.foreman_host, @library_view, @library, true)
-      @system.reload
-      @system.environment = @dev
-      @system.content_view = @library_dev_staging_view
-      @system.save!
-
-      host = ::Host.find(@system.foreman_host)
-      assert_equal host.lifecycle_environment, @dev
-      assert_equal host.content_view, @library_dev_staging_view
-      assert_equal host.environment.content_view, @library_dev_staging_view
-      assert_equal host.environment.lifecycle_environment, @dev
-    end
-
-    def test_update_lifecycle_environment_and_content_view_raises_error
-      Support::HostSupport.setup_host_for_view(@system.foreman_host, @library_dev_staging_view, @dev, true)
-
-      @system.content_view = @acme_default
-      @system.environment = @library
-      # If a puppet environment cannot be found for the lifecycle environment + content view
-      # combination, then an error should be raised
-      assert_raises Errors::NotFound do
-        @system.save!
-      end
     end
   end
 end

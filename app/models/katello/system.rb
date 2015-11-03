@@ -10,10 +10,10 @@ module Katello
                  :as_json_hook
 
     include ForemanTasks::Concerns::ActionSubject
-    include Glue::Candlepin::Consumer if Katello.config.use_cp
-    include Glue::Pulp::Consumer if Katello.config.use_pulp
-    include Glue if Katello.config.use_cp || Katello.config.use_pulp
-    include Glue::ElasticSearch::System if Katello.config.use_elasticsearch
+    include Glue::Candlepin::Consumer if SETTINGS[:katello][:use_cp]
+    include Glue::Pulp::Consumer if SETTINGS[:katello][:use_pulp]
+    include Glue if SETTINGS[:katello][:use_cp] || SETTINGS[:katello][:use_pulp]
+    include Glue::ElasticSearch::System if SETTINGS[:katello][:use_elasticsearch]
     include Authorization::System
 
     audited :on => [:create], :allow_mass_assignment => true
@@ -33,6 +33,7 @@ module Katello
     has_many :bound_repositories, :through => :system_repositories, :class_name => "Katello::Repository", :source => :repository
     has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy, :inverse_of => :system
 
+    has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
     has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
     has_many :activation_keys,
                                  :through => :system_activation_keys,
@@ -71,6 +72,12 @@ module Katello
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :in => :environment, :on => :organization_id, :complete_value => true, :rename => :organization_id
+
+    has_many :fact_values, :through => :foreman_host
+    has_many :fact_names, :through => :fact_values
+
+    scoped_search :in => :fact_values, :on => :value, :in_key=> :fact_names, :on_key=> :name, :rename => :facts, :complete_value => true,
+                  :only_explicit => true, :ext_method => :search_cast_facts
 
     def self.in_organization(organization)
       where(:environment_id => organization.kt_environments.pluck(:id))
@@ -368,6 +375,27 @@ module Katello
     end
 
     private
+
+    def self.search_cast_facts(key, operator, value)
+      {
+        :conditions => "fact_names.name = '#{key.split('.')[1]}' AND #{cast_facts(key, operator, value)}",
+        :include    => :fact_names
+      }
+    end
+
+    def self.cast_facts(_key, operator, value)
+      is_int = (value =~ /\A[-+]?\d+\z/) || (value.is_a?(Integer))
+      is_pg = ActiveRecord::Base.connection.adapter_name.downcase.starts_with? 'postgresql'
+      # Once Postgresql 8 support is removed (used in CentOS 6), this could be replaced to only keep the first form (working well with PG 9)
+      if (is_int && !is_pg)
+        casted = "CAST(fact_values.value AS DECIMAL) #{operator} #{value}"
+      elsif (is_int && is_pg && operator !~ /LIKE/i)
+        casted = "fact_values.value ~ E'^\\\\d+$' AND CAST(fact_values.value AS DECIMAL) #{operator} #{value}"
+      else
+        casted = "fact_values.value #{operator} '#{value}'"
+      end
+      casted
+    end
 
     def insert_errata_applicability(uuids)
       applicable_errata_ids = ::Katello::Erratum.where(:uuid => uuids).pluck(:id)

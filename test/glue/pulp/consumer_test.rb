@@ -5,47 +5,57 @@ require 'support/pulp/repository_support'
 module Katello
   class GluePulpConsumerTestBase < ActiveSupport::TestCase
     include RepositorySupport
+    def setup
+      set_user
+      configure_runcible
+      @simple_server = katello_systems(:simple_server)
+      @simple_server.foreman_host = @host
+      @simple_server.save!
+    end
 
-    def self.set_pulp_consumer(system)
+    def teardown
+      VCR.eject_cassette
+    end
+
+    def self.set_pulp_consumer(uuid)
       # TODO: this tests should move to actions tests once we
       # have more actions in Dynflow. For now just peform the
       # things that system.set_pulp_consumer did before.
       ForemanTasks.sync_task(::Actions::Pulp::Consumer::Create,
-                             uuid: system.uuid, name: system.name)
+                             uuid: uuid, name: uuid)
     end
 
-    def set_pulp_consumer(system)
-      self.class.set_pulp_consumer(system)
+    def set_pulp_consumer(uuid)
+      self.class.set_pulp_consumer(uuid)
     end
   end
 
   class GluePulpConsumerTestCreateDestroy < GluePulpConsumerTestBase
     def setup
-      set_user
+      super
       VCR.insert_cassette('pulp/consumer/create')
-      @simple_server = System.find(katello_systems(:simple_server).id)
     end
 
     def teardown
+      @simple_server.del_pulp_consumer
+    ensure
       VCR.eject_cassette
     end
 
     def test_set_pulp_consumer
-      assert set_pulp_consumer(@simple_server)
-      @simple_server.del_pulp_consumer
+      assert set_pulp_consumer(@simple_server.uuid)
     end
   end
 
   class GluePulpConsumerDeleteTest < GluePulpConsumerTestBase
     def setup
-      set_user
+      super
       VCR.insert_cassette('pulp/consumer/delete')
-      @simple_server = System.find(katello_systems(:simple_server).id)
-      set_pulp_consumer(@simple_server)
+      set_pulp_consumer(@simple_server.uuid)
     end
 
     def teardown
-      VCR.eject_cassette
+      super
     end
 
     def test_del_pulp_consumer
@@ -55,14 +65,14 @@ module Katello
 
   class GluePulpConsumerTest < GluePulpConsumerTestBase
     def setup
-      set_user
+      super
       VCR.insert_cassette('pulp/consumer/consumer')
-      @simple_server = System.find(katello_systems(:simple_server).id)
-      set_pulp_consumer(@simple_server)
+      set_pulp_consumer(@simple_server.uuid)
     end
 
     def teardown
       @simple_server.del_pulp_consumer
+    ensure
       VCR.eject_cassette
     end
 
@@ -84,83 +94,79 @@ module Katello
   end
 
   class GluePulpConsumerBindTest < GluePulpConsumerTestBase
-    @@simple_server = nil
+    @simple_server = nil
 
-    def self.before_suite
+    def setup
       super
       VCR.insert_cassette('pulp/consumer/bind')
 
       RepositorySupport.create_and_sync_repo(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
-
-      @@simple_server = System.find(FIXTURES['katello_systems']['simple_server']['id'])
-      set_pulp_consumer(@@simple_server)
+      set_pulp_consumer(@simple_server.uuid)
     end
 
-    def self.after_suite
-      super
-      run_as_admin do
-        RepositorySupport.destroy_repo
-        @@simple_server.del_pulp_consumer
-        VCR.eject_cassette
-      end
+    def teardown
+      RepositorySupport.destroy_repo
+      @simple_server.del_pulp_consumer
+    ensure
+      VCR.eject_cassette
     end
   end
 
   class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
-    @@simple_server = nil
+    @simple_server = nil
 
-    def self.before_suite
+    def setup
       super
       VCR.insert_cassette('pulp/consumer/content')
 
       RepositorySupport.create_and_sync_repo(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
-      @@simple_server = System.find(FIXTURES['katello_systems']['simple_server']['id'])
-      set_pulp_consumer(@@simple_server)
-      @@simple_server.bound_repositories << RepositorySupport.repo
-      @@simple_server.propagate_yum_repos
+      @simple_server = System.find(FIXTURES['katello_systems']['simple_server']['id'])
+      set_pulp_consumer(@simple_server.uuid)
+      @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @simple_server.content_view, :lifecycle_environment => @simple_server.environment)
+      @host.content_aspect.uuid = @simple_server.uuid
+      @host.content_aspect.bound_repositories << RepositorySupport.repo
+      @host.content_aspect.propagate_yum_repos
     end
 
-    def self.after_suite
-      super
-      run_as_admin do
-        RepositorySupport.destroy_repo
-        @@simple_server.del_pulp_consumer if defined? @@simple_server
-        VCR.eject_cassette
-      end
+    def teardown
+      RepositorySupport.destroy_repo
+      @simple_server.del_pulp_consumer if defined? @simple_server
+    ensure
+      VCR.eject_cassette
     end
 
     def test_install_package
-      tasks = @@simple_server.install_package(['elephant'])
+      tasks = @simple_server.install_package(['elephant'])
 
       assert tasks[:spawned_tasks].first['task_id']
     end
 
     def test_uninstall_package
-      tasks = @@simple_server.uninstall_package(['cheetah'])
+      tasks = @simple_server.uninstall_package(['cheetah'])
 
       assert tasks[:spawned_tasks].first['task_id']
     end
 
     def test_update_package
-      tasks = @@simple_server.update_package(['cheetah'])
+      tasks = @simple_server.update_package(['cheetah'])
 
       assert tasks[:spawned_tasks].first['task_id']
     end
 
     def test_update_all_packages
-      tasks = @@simple_server.update_package([])
+      tasks = @simple_server.update_package([])
 
       assert tasks[:spawned_tasks].first['task_id']
     end
 
     def test_install_package_group
-      tasks = @@simple_server.install_package_group(['mammls'])
+      tasks = @simple_server.install_package_group(['mammls'])
 
       assert tasks[:spawned_tasks].first['task_id']
     end
 
     def test_uninstall_package_group
-      tasks = @@simple_server.uninstall_package_group(['mammals'])
+      tasks = @simple_server.uninstall_package_group(['mammals'])
 
       assert tasks[:spawned_tasks].first['task_id']
     end
@@ -170,8 +176,8 @@ module Katello
       profile = [{"vendor" => "FedoraHosted", "name" => "elephant",
                   "version" => "0.3", "release" => "0.8",
                   "arch" => "noarch", :epoch => ""}]
-      @@simple_server.upload_package_profile(profile)
-      tasks = @@simple_server.install_consumer_errata([erratum_id])
+      ForemanTasks.sync_task(::Actions::Katello::Host::UploadPackageProfile, @host, profile)
+      tasks = @simple_server.install_consumer_errata([erratum_id])
 
       assert tasks[:spawned_tasks].first['task_id']
     end

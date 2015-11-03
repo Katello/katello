@@ -41,13 +41,13 @@ module Katello
       end
 
       class CandlepinResource < HttpResource
-        cfg = Katello.config.candlepin
-        url = cfg.url
+        cfg = SETTINGS[:katello][:candlepin]
+        url = cfg[:url]
         self.prefix = URI.parse(url).path
         self.site = url.gsub(self.prefix, "")
-        self.consumer_secret = cfg.oauth_secret
-        self.consumer_key = cfg.oauth_key
-        self.ca_cert_file = cfg.ca_cert_file
+        self.consumer_secret = cfg[:oauth_secret]
+        self.consumer_key = cfg[:oauth_key]
+        self.ca_cert_file = cfg[:ca_cert_file]
 
         def self.logger
           ::Foreman::Logging.logger('katello/cp_rest')
@@ -258,15 +258,15 @@ module Katello
         end
 
         def self.resource(url, client_cert, client_key, ca_file)
-          if Katello.config.cdn_proxy && Katello.config.cdn_proxy.host
-            proxy_config = Katello.config.cdn_proxy
+          if SETTINGS[:katello][:cdn_proxy] && SETTINGS[:katello][:cdn_proxy][:host]
+            proxy_config = SETTINGS[:katello][:cdn_proxy]
             uri = URI('')
 
-            uri.scheme = URI.parse(proxy_config.host).scheme
-            uri.host = URI.parse(proxy_config.host).host
-            uri.port = proxy_config.port
-            uri.user = proxy_config.user
-            uri.password = proxy_config.password
+            uri.scheme = URI.parse(proxy_config[:host]).scheme
+            uri.host = URI.parse(proxy_config[:host]).host
+            uri.port = proxy_config[:port]
+            uri.user = proxy_config[:user]
+            uri.password = proxy_config[:password]
 
             RestClient.proxy = uri.to_s
           end

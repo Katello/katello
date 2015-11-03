@@ -162,7 +162,7 @@ module Katello
       param 'task_id', String, :required => true
     end
     def sync_complete
-      if params[:token] != Rack::Utils.parse_query(URI(Katello.config.post_sync_url).query)['token']
+      if params[:token] != Rack::Utils.parse_query(URI(SETTINGS[:katello][:post_sync_url]).query)['token']
         fail Errors::SecurityViolation, _("Token invalid during sync_complete.")
       end
 

@@ -16,14 +16,14 @@ module Katello
         self.create_index
 
         total = 0
-        pkgs = fetch_all(total, Katello.config.pulp.bulk_load_size)
+        pkgs = fetch_all(total, SETTINGS[:katello][:pulp][:bulk_load_size])
         until pkgs.empty? #we can't know how many there are, so we have to keep looping until we get nothing
           Tire.index(self.index) do
             import pkgs
           end
 
           total += pkgs.length
-          pkgs = fetch_all(total, Katello.config.pulp.bulk_load_size)
+          pkgs = fetch_all(total, SETTINGS[:katello][:pulp][:bulk_load_size])
         end
         total
       end
