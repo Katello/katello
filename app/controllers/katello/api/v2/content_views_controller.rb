@@ -6,8 +6,6 @@ module Katello
     before_filter :find_content_view, :except => [:index, :create, :auto_complete_search]
     before_filter :find_organization, :only => [:create]
     before_filter :find_optional_organization, :only => [:index, :auto_complete_search]
-    before_filter :load_search_service, :only => [:history, :available_puppet_modules,
-                                                  :available_puppet_module_names]
     before_filter :find_environment, :only => [:index, :remove_from_environment]
 
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids component_ids))
@@ -117,17 +115,6 @@ module Katello
 
       respond_for_index :template => '../puppet_modules/names',
                         :collection => scoped_search(modules, 'name', 'ASC', :resource_class => PuppetModule, :group => :name)
-    end
-
-    api :GET, "/content_views/:id/history", N_("Show a content view's history")
-    param :id, :number, :desc => N_("content view numeric identifier"), :required => true
-    def history
-      options = sort_params
-      options[:load_records?] = true
-      options[:filters] = [{:term => {:content_view_id => @view.id}}]
-
-      respond_for_index :template => '../content_view_histories/index',
-                        :collection => item_search(ContentViewHistory, params, options)
     end
 
     api :DELETE, "/content_views/:id/environments/:environment_id", N_("Remove a content view from an environment")
