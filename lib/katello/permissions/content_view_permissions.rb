@@ -3,10 +3,11 @@ require 'katello/plugin.rb'
 Foreman::Plugin.find(:katello).security_block :content_views do
   permission :view_content_views,
              {
-               'katello/api/v2/content_views' => [:index, :show, :history, :available_puppet_modules,
+               'katello/api/v2/content_views' => [:index, :show, :available_puppet_modules,
                                                   :available_puppet_module_names],
                'katello/api/v2/content_view_filters' => [:index, :show],
                'katello/api/v2/content_view_filter_rules' => [:index, :show],
+               'katello/api/v2/content_view_histories' => [:index],
                'katello/api/v2/content_view_puppet_modules' => [:index, :show],
                'katello/api/v2/content_view_versions' => [:index, :show],
                'katello/api/v2/package_groups' => [:index, :show],
