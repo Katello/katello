@@ -10,15 +10,15 @@
  *   A controller for showing the history of a content view
  */
 angular.module('Bastion.content-views').controller('ContentViewHistoryController',
-    ['$scope', 'translate', 'ContentView', 'Nutupane',
-    function ($scope, translate, ContentView, Nutupane) {
+    ['$scope', 'translate', 'ContentViewHistory', 'Nutupane',
+    function ($scope, translate, ContentViewHistory, Nutupane) {
         var nutupane;
 
-        nutupane = new Nutupane(ContentView, {
-            id: $scope.$stateParams.contentViewId,
+        nutupane = new Nutupane(ContentViewHistory, {
+            contentViewId: $scope.$stateParams.contentViewId,
             'sort_by': 'created_at',
             'sort_order': 'DESC'
-        }, 'history');
+        });
 
         nutupane.table.closeItem = function () {};
         $scope.detailsTable = nutupane.table;
