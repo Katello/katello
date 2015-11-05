@@ -11,10 +11,9 @@
  *   Provides the functionality for the content host packages list and actions.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostPackagesController',
-    ['$scope', 'ContentHostPackage', 'translate', 'Nutupane',
-    function ($scope, ContentHostPackage, translate, Nutupane) {
-        var packagesNutupane, packageActions, openEventInfo, errorHandler,
-            PACKAGES_PER_PAGE = 50;
+    ['$scope', 'HostPackage', 'translate', 'Nutupane',
+    function ($scope, HostPackage, translate, Nutupane) {
+        var packagesNutupane, packageActions, openEventInfo, errorHandler;
 
         openEventInfo = function (event) {
             // when the event has label defined, it means it comes
@@ -38,7 +37,19 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
 
         $scope.updateAll = function () {
             $scope.working = true;
-            ContentHostPackage.updateAll({uuid: $scope.contentHost.uuid}, openEventInfo, errorHandler);
+            HostPackage.updateAll({id: $scope.contentHost.host.id}, openEventInfo, errorHandler);
+        };
+
+        $scope.removeSelectedPackages = function () {
+            var selected = $scope.detailsTable.getSelected();
+
+            if (!$scope.working) {
+                $scope.working = true;
+                HostPackage.remove({
+                    id: $scope.contentHost.host.id,
+                    packages: selected
+                }, openEventInfo, errorHandler);
+            }
         };
 
         $scope.performPackageAction = function () {
@@ -51,48 +62,37 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
 
         packageActions = {
             packageInstall: function (termList) {
-                ContentHostPackage.install({uuid: $scope.contentHost.uuid, packages: termList}, openEventInfo, errorHandler);
+                HostPackage.install({id: $scope.contentHost.host.id, packages: termList}, openEventInfo, errorHandler);
             },
             packageUpdate: function (termList) {
-                ContentHostPackage.update({uuid: $scope.contentHost.uuid, packages: termList}, openEventInfo, errorHandler);
+                HostPackage.update({id: $scope.contentHost.host.id, packages: termList}, openEventInfo, errorHandler);
             },
             packageRemove: function (termList) {
-                ContentHostPackage.remove({uuid: $scope.contentHost.uuid, packages: termList}, openEventInfo, errorHandler);
+                HostPackage.remove({id: $scope.contentHost.host.id, packages: termList}, openEventInfo, errorHandler);
             },
             groupInstall: function (termList) {
-                ContentHostPackage.install({uuid: $scope.contentHost.uuid, groups: termList}, openEventInfo, errorHandler);
+                HostPackage.install({id: $scope.contentHost.host.id, groups: termList}, openEventInfo, errorHandler);
             },
             groupRemove: function (termList) {
-                ContentHostPackage.remove({uuid: $scope.contentHost.uuid, groups: termList}, openEventInfo, errorHandler);
+                HostPackage.remove({id: $scope.contentHost.host.id, groups: termList}, openEventInfo, errorHandler);
             }
         };
 
-        packagesNutupane = new Nutupane(ContentHostPackage, { 'id': $scope.$stateParams.contentHostId }, 'get');
-        packagesNutupane.load();
-        $scope.currentPackagesTable = packagesNutupane.table;
-        $scope.currentPackagesTable.openEventInfo = openEventInfo;
-        $scope.currentPackagesTable.contentHost = $scope.contentHost;
+        // Need to delay loading until we have host id in $stateParams in the future
+        packagesNutupane = new Nutupane(HostPackage, {initialLoad: false});
+        packagesNutupane.masterOnly = true;
 
-        $scope.currentPackagesTable.taskFailed = function (task) {
+        $scope.contentHost.$promise.then(function () {
+            packagesNutupane.setParams({id: $scope.contentHost.host.id});
+            packagesNutupane.load();
+        });
+
+        $scope.detailsTable = packagesNutupane.table;
+        $scope.detailsTable.openEventInfo = openEventInfo;
+        $scope.detailsTable.contentHost = $scope.contentHost;
+
+        $scope.detailsTable.taskFailed = function (task) {
             return angular.isUndefined(task) || task.failed || task['affected_units'] === 0;
-        };
-
-        $scope.currentPackagesTable.removePackage = function (pkg) {
-            if (!$scope.working) {
-                $scope.working = true;
-                ContentHostPackage.remove({
-                    uuid: $scope.contentHost.uuid,
-                    packages: [{name: pkg.name, version: pkg.version,
-                        arch: pkg.arch, release: pkg.release}]
-                }, openEventInfo, errorHandler);
-            }
-        };
-
-        $scope.currentPackagesTable.limit = PACKAGES_PER_PAGE;
-        $scope.currentPackagesTable.loadMorePackages = function () {
-            $scope.$evalAsync(function (scope) {
-                scope.currentPackagesTable.limit = scope.currentPackagesTable.limit + PACKAGES_PER_PAGE;
-            });
         };
     }
 ]);

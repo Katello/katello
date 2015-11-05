@@ -11,7 +11,8 @@ class HostsControllerTest < ActionController::TestCase
   end
 
   def setup
-    setup_controller_defaults(false, false)
+    setup_controller_defaults(false)
+    setup_foreman_routes
     login_user(User.find(users(:admin)))
     models
     permissions

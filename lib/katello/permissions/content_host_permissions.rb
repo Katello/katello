@@ -20,7 +20,6 @@ Foreman::Plugin.find(:katello).security_block :content_hosts do
   permission :edit_content_hosts,
              {
                'katello/api/v2/systems' => [:update, :refresh_subscriptions, :content_override, :add_subscriptions],
-               'katello/api/v2/system_packages' => [:install, :upgrade, :upgrade_all, :remove],
                'katello/api/v2/system_errata' => [:apply],
                'katello/api/v2/systems_bulk_actions' => [:install_content, :update_content,
                                                          :remove_content, :environment_content_view,

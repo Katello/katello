@@ -79,6 +79,10 @@ class ActionController::TestCase
     @routes = Katello::Engine.routes
   end
 
+  def setup_foreman_routes
+    @routes = ::Foreman::Application.routes
+  end
+
   def setup_controller_defaults(is_api = false, load_engine_routes = true)
     set_user(User.current, is_api)
     set_default_locale

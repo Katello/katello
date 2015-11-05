@@ -1,16 +1,16 @@
 module Actions
   module Katello
-    module System
+    module Host
       module Package
         class Update < Actions::EntryAction
           include Helpers::Presenter
 
-          def plan(system, packages)
-            Type! system, ::Katello::System
+          def plan(host, packages)
+            Type! host, ::Host::Managed
 
-            action_subject(system, :packages => packages)
+            action_subject(host, :packages => packages)
             plan_action(Pulp::Consumer::ContentUpdate,
-                        consumer_uuid: system.uuid,
+                        consumer_uuid: host.content_facet.uuid,
                         type:          'rpm',
                         args:          packages)
           end

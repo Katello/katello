@@ -3,7 +3,9 @@ require 'katello_test_helper'
 module Containers
   class StepsControllerTest < ActionController::TestCase
     def setup
-      setup_controller_defaults(false, false)
+      setup_controller_defaults(false)
+      setup_foreman_routes
+
       login_user(User.find(users(:admin)))
       @compute_resource = FactoryGirl.create(:docker_stuff)
       @state = DockerContainerWizardState.create!

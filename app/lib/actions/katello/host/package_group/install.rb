@@ -1,16 +1,16 @@
 module Actions
   module Katello
-    module System
+    module Host
       module PackageGroup
         class Install < Actions::EntryAction
           include Helpers::Presenter
 
-          def plan(system, groups)
-            Type! system, ::Katello::System
+          def plan(host, groups)
+            Type! host, ::Host::Managed
 
-            action_subject(system, :groups => groups)
+            action_subject(host, :groups => groups)
             plan_action(Pulp::Consumer::ContentInstall,
-                        consumer_uuid: system.uuid,
+                        consumer_uuid: host.content_facet.uuid,
                         type:          'package_group',
                         args:          groups)
           end
