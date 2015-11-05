@@ -111,7 +111,8 @@ module Katello
       before(:each) do
         Katello.pulp_server.extensions.consumer.stubs(:create).returns(:id => "1234")
         Resources::Candlepin::Consumer.stubs(:create).returns(:uuid => "1234", :owner => {:key => "1234"})
-        @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name" => "Fedora"})
+        @content_view = katello_content_views(:library_dev_view)
+        @system = System.new(:name => "test", :cp_type => "system", :content_view_id => @content_view.id, :facts => {"distribution.name" => "Fedora"})
         @system2 = System.new(:name => "test2", :cp_type => "system", :facts => {"distribution.name" => "Fedora"})
         @akey_limit1 = ActivationKey.create(:name => "max_content_hosts_key1", :max_content_hosts => 1, :unlimited_content_hosts => false,
                                             :organization => @organization, :environment => @environment_1)

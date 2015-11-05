@@ -51,7 +51,7 @@ module Katello
     def test_sync
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
         action_class.must_equal ::Actions::Katello::Repository::Sync
-        repos.size.must_equal 6
+        repos.size.must_equal 9
       end
 
       put :sync_products, :ids => @products.collect(&:id), :organization_id => @organization.id
