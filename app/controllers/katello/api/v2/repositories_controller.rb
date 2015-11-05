@@ -112,6 +112,11 @@ module Katello
     param_group :repo
     def create
       repo_params = repository_params
+      unless RepositoryTypeManager.creatable_by_user?(repo_params[:content_type])
+        msg = _("Invalid params provided - content_type must be one of %s") % RepositoryTypeManager.creatable_repository_types.keys.join(",")
+        fail HttpErrors::UnprocessableEntity, msg
+      end
+
       gpg_key = @product.gpg_key
       unless repo_params[:gpg_key_id].blank?
         gpg_key = @gpg_key
@@ -126,6 +131,14 @@ module Katello
       sync_task(::Actions::Katello::Repository::Create, repository, false, true)
       repository = Repository.find(repository.id)
       respond_for_show(:resource => repository)
+    end
+
+    api :GET, "/repositories/repository_types", N_("Show the available repository types")
+    param :creatable, :bool, :desc => N_("When set to 'True' repository types that are creatable will be returned")
+    def repository_types
+      creatable = ::Foreman::Cast.to_bool(params[:creatable])
+      repo_types = creatable ? RepositoryTypeManager.creatable_repository_types : RepositoryTypeManager.repository_types
+      render :json => repo_types.values
     end
 
     api :GET, "/repositories/:id", N_("Show a custom repository")
