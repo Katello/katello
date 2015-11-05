@@ -1,7 +1,7 @@
 describe('Controller: ContentHostPackagesController', function() {
-    var $scope, Nutupane, ContentHostPackage, mockContentHost, mockTask, translate, ContentHost;
+    var $scope, Nutupane, HostPackage, mockContentHost, mockTask, translate, ContentHost;
 
-    beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
+    beforeEach(module('Bastion.content-hosts', 'Bastion.hosts', 'Bastion.test-mocks'));
 
     beforeEach(function() {
 
@@ -11,11 +11,12 @@ describe('Controller: ContentHostPackagesController', function() {
             };
             this.get = function() {};
             this.load = function() {};
+            this.setParams = function () {};
         };
         ContentHost = {
             tasks: function() {return []}
         };
-        ContentHostPackage = {
+        HostPackage = {
             get: function() {return []},
             remove: function(params, success) {
                 success(mockTask);
@@ -25,9 +26,7 @@ describe('Controller: ContentHostPackagesController', function() {
             update: function() {return mockTask},
             updateAll: function() {return mockTask}
         };
-        mockContentHost = {
-            uuid: 5
-        };
+
         mockTask = {
             pending: true,
             id: 7
@@ -36,12 +35,16 @@ describe('Controller: ContentHostPackagesController', function() {
 
     });
 
-    beforeEach(inject(function($controller, $rootScope) {
+    beforeEach(inject(function($controller, $rootScope, MockResource) {
         $scope = $rootScope.$new();
+        mockContentHost = MockResource.$new().get({id: 1});
+        mockContentHost.uuid = 5;
+        mockContentHost.host = {id: 10};
+
         $scope.contentHost = mockContentHost;
 
         $controller('ContentHostPackagesController', {$scope: $scope,
-                                               ContentHostPackage: ContentHostPackage,
+                                               HostPackage: HostPackage,
                                                translate:translate,
                                                Nutupane: Nutupane});
     }));
@@ -68,31 +71,31 @@ describe('Controller: ContentHostPackagesController', function() {
     });
 
     it("performs a package update", function() {
-        spyOn(ContentHostPackage, 'update');
+        spyOn(HostPackage, 'update');
         $scope.packageAction.actionType = "packageUpdate";
         $scope.packageAction.term = "foo";
         $scope.performPackageAction();
-        expect(ContentHostPackage.update).toHaveBeenCalledWith({uuid: mockContentHost.uuid, packages: ["foo"]},
+        expect(HostPackage.update).toHaveBeenCalledWith({id: mockContentHost.host.id, packages: ["foo"]},
                                                           jasmine.any(Function), jasmine.any(Function));
         expect($scope.working).toBe(true);
     });
 
     it("performs a package update with multiple packages", function() {
-        spyOn(ContentHostPackage, 'update');
+        spyOn(HostPackage, 'update');
         $scope.packageAction.actionType = "packageUpdate";
         $scope.packageAction.term = "foo, bar";
         $scope.performPackageAction();
-        expect(ContentHostPackage.update).toHaveBeenCalledWith({uuid: mockContentHost.uuid, packages: ["foo", "bar"]},
+        expect(HostPackage.update).toHaveBeenCalledWith({id: mockContentHost.host.id, packages: ["foo", "bar"]},
                                                           jasmine.any(Function), jasmine.any(Function));
         expect($scope.working).toBe(true);
     });
 
     it("performs a package group install", function() {
-        spyOn(ContentHostPackage, 'install');
+        spyOn(HostPackage, 'install');
         $scope.packageAction.actionType = "groupInstall";
         $scope.packageAction.term = "bigGroup";
         $scope.performPackageAction();
-        expect(ContentHostPackage.install).toHaveBeenCalledWith({uuid: mockContentHost.uuid, groups: ["bigGroup"]},
+        expect(HostPackage.install).toHaveBeenCalledWith({id: mockContentHost.host.id, groups: ["bigGroup"]},
                                                           jasmine.any(Function), jasmine.any(Function));
         expect($scope.working).toBe(true);
     });
@@ -102,17 +105,17 @@ describe('Controller: ContentHostPackagesController', function() {
         mockPackage = {name: 'foo', version: '3', release: '14', arch: 'noarch'};
         mockPackageClone = {name: 'foo', version: '3', release: '14', arch: 'noarch'};
 
-        spyOn(ContentHostPackage, 'remove');
+        spyOn(HostPackage, 'remove');
         $scope.currentPackagesTable.removePackage(mockPackage);
-        expect(ContentHostPackage.remove).toHaveBeenCalledWith({uuid: mockContentHost.uuid, packages: [mockPackageClone]},
+        expect(HostPackage.remove).toHaveBeenCalledWith({id: mockContentHost.host.id, packages: [mockPackageClone]},
                                                           jasmine.any(Function), jasmine.any(Function));
         expect($scope.working).toBe(true);
     });
 
     it("provides a way to upgrade all packages", function() {
-        spyOn(ContentHostPackage, "updateAll");
+        spyOn(HostPackage, "updateAll");
         $scope.updateAll();
-        expect(ContentHostPackage.updateAll).toHaveBeenCalledWith({uuid: mockContentHost.uuid}, jasmine.any(Function),
+        expect(HostPackage.updateAll).toHaveBeenCalledWith({id: mockContentHost.host.id}, jasmine.any(Function),
             jasmine.any(Function));
         expect($scope.working).toBe(true);
     });

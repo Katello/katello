@@ -229,7 +229,6 @@ Katello::Engine.routes.draw do
             get :available_host_collections, :action => :available_host_collections
             post :host_collections, :action => :add_host_collections
             delete :host_collections, :action => :remove_host_collections
-            get :packages, :action => :package_profile
             get :pools
             get :releases
             put :refresh_subscriptions
@@ -305,12 +304,6 @@ Katello::Engine.routes.draw do
             match '/bulk/available_incremental_updates' => 'systems_bulk_actions#available_incremental_updates', :via => :post
           end
           resource :packages, :only => [], :controller => :system_packages do
-            collection do
-              put :remove
-              put :install
-              put :upgrade
-              put :upgrade_all
-            end
           end
           api_resources :errata, :only => [:show, :index], :controller => :system_errata do
             collection do

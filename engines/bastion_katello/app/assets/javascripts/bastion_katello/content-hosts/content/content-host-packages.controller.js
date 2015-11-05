@@ -11,8 +11,8 @@
  *   Provides the functionality for the content host packages list and actions.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostPackagesController',
-    ['$scope', 'ContentHostPackage', 'translate', 'Nutupane',
-    function ($scope, ContentHostPackage, translate, Nutupane) {
+    ['$scope', 'HostPackage', 'translate', 'Nutupane',
+    function ($scope, HostPackage, translate, Nutupane) {
         var packagesNutupane, packageActions, openEventInfo, errorHandler,
             PACKAGES_PER_PAGE = 50;
 
@@ -38,7 +38,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
 
         $scope.updateAll = function () {
             $scope.working = true;
-            ContentHostPackage.updateAll({uuid: $scope.contentHost.uuid}, openEventInfo, errorHandler);
+            HostPackage.updateAll({id: $scope.contentHost.host.id}, openEventInfo, errorHandler);
         };
 
         $scope.performPackageAction = function () {
@@ -51,24 +51,30 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
 
         packageActions = {
             packageInstall: function (termList) {
-                ContentHostPackage.install({uuid: $scope.contentHost.uuid, packages: termList}, openEventInfo, errorHandler);
+                HostPackage.install({id: $scope.contentHost.host.id, packages: termList}, openEventInfo, errorHandler);
             },
             packageUpdate: function (termList) {
-                ContentHostPackage.update({uuid: $scope.contentHost.uuid, packages: termList}, openEventInfo, errorHandler);
+                HostPackage.update({id: $scope.contentHost.host.id, packages: termList}, openEventInfo, errorHandler);
             },
             packageRemove: function (termList) {
-                ContentHostPackage.remove({uuid: $scope.contentHost.uuid, packages: termList}, openEventInfo, errorHandler);
+                HostPackage.remove({id: $scope.contentHost.host.id, packages: termList}, openEventInfo, errorHandler);
             },
             groupInstall: function (termList) {
-                ContentHostPackage.install({uuid: $scope.contentHost.uuid, groups: termList}, openEventInfo, errorHandler);
+                HostPackage.install({id: $scope.contentHost.host.id, groups: termList}, openEventInfo, errorHandler);
             },
             groupRemove: function (termList) {
-                ContentHostPackage.remove({uuid: $scope.contentHost.uuid, groups: termList}, openEventInfo, errorHandler);
+                HostPackage.remove({id: $scope.contentHost.host.id, groups: termList}, openEventInfo, errorHandler);
             }
         };
 
-        packagesNutupane = new Nutupane(ContentHostPackage, { 'id': $scope.$stateParams.contentHostId }, 'get');
-        packagesNutupane.load();
+        // Need to delay loading until we have host id in $stateParams in the future
+        packagesNutupane = new Nutupane(HostPackage, {initialLoad: false});
+
+        $scope.contentHost.$promise.then(function () {
+            packagesNutupane.setParams({id: $scope.contentHost.host.id});
+            packagesNutupane.load();
+        });
+
         $scope.currentPackagesTable = packagesNutupane.table;
         $scope.currentPackagesTable.openEventInfo = openEventInfo;
         $scope.currentPackagesTable.contentHost = $scope.contentHost;
@@ -80,8 +86,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
         $scope.currentPackagesTable.removePackage = function (pkg) {
             if (!$scope.working) {
                 $scope.working = true;
-                ContentHostPackage.remove({
-                    uuid: $scope.contentHost.uuid,
+                HostPackage.remove({
+                    id: $scope.contentHost.host.id,
                     packages: [{name: pkg.name, version: pkg.version,
                         arch: pkg.arch, release: pkg.release}]
                 }, openEventInfo, errorHandler);

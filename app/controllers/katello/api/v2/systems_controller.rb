@@ -8,7 +8,6 @@ module Katello
     skip_before_filter :set_default_response_format, :only => :report
 
     before_filter :find_system, :only => [:destroy, :show, :update,
-                                          :package_profile,
                                           :pools, :enabled_repos, :releases,
                                           :available_host_collections,
                                           :refresh_subscriptions, :tasks, :content_override,
@@ -177,18 +176,6 @@ module Katello
     def destroy
       sync_task(::Actions::Katello::System::Destroy, @system)
       respond :message => _("Deleted content host '%s'") % params[:id], :status => 204
-    end
-
-    api :GET, "/systems/:id/packages", N_("List packages installed on the content host"), :deprecated => true
-    param :id, String, :desc => N_("UUID of the content host"), :required => true
-    def package_profile
-      packages = @system.simple_packages.sort { |a, b| a.name.downcase <=> b.name.downcase }
-      response = {
-        :records  => packages,
-        :subtotal => packages.size,
-        :total    => packages.size
-      }
-      respond_for_index :collection => response
     end
 
     api :PUT, "/systems/:id/refresh_subscriptions", N_("Trigger a refresh of subscriptions, auto-attaching if enabled"), :deprecated => true

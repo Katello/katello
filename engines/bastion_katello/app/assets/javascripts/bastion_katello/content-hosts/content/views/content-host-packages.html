@@ -82,10 +82,10 @@
           </thead>
 
           <tbody>
-
               <tr bst-table-row ng-repeat="package in currentPackagesTable.rows | filter: currentPackagesTable.filter | limitTo: currentPackagesTable.limit" >
-              <td bst-table-cell>{{ package.nvrea }}</td>
-              <td bst-table-cell ng-hide="currentPackagesTable.contentHost.readonly" bst-feature-flag="remote_actions">
+              <td bst-table-cell>{{ package.nvra }}</td>
+              <!--<td bst-table-cell ng-hide="currentPackagesTable.contentHost.readonly" bst-feature-flag="remote_actions">-->
+                <td bst-table-cell >
 
                   <i class="active fa fa-remove-sign" ng-hide="package.removeTask" tooltip="{{ 'Remove' | translate }}"
                      ng-click="currentPackagesTable.removePackage(package)"></i>
