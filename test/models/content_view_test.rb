@@ -3,13 +3,14 @@ require 'katello_test_helper'
 module Katello
   class ContentViewTest < ActiveSupport::TestCase
     def setup
-      User.current      = User.find(users(:admin))
-      @organization     = get_organization
-      @library          = KTEnvironment.find(katello_environments(:library).id)
-      @dev              = KTEnvironment.find(katello_environments(:dev).id)
-      @default_view     = ContentView.find(katello_content_views(:acme_default).id)
-      @library_view     = ContentView.find(katello_content_views(:library_view).id)
-      @library_dev_view = ContentView.find(katello_content_views(:library_dev_view).id)
+      User.current         = User.find(users(:admin))
+      @organization        = get_organization
+      @library             = KTEnvironment.find(katello_environments(:library).id)
+      @dev                 = KTEnvironment.find(katello_environments(:dev).id)
+      @default_view        = ContentView.find(katello_content_views(:acme_default).id)
+      @library_view        = ContentView.find(katello_content_views(:library_view).id)
+      @library_dev_view    = ContentView.find(katello_content_views(:library_dev_view).id)
+      @no_environment_view = ContentView.find(katello_content_views(:no_environment_view).id)
     end
 
     def test_create
@@ -157,7 +158,7 @@ module Katello
     end
 
     def test_all_version_library_instances_empty
-      assert_empty @library_dev_view.all_version_library_instances
+      assert_empty @no_environment_view.all_version_library_instances
     end
 
     def test_all_version_library_instances_not_empty
@@ -328,7 +329,6 @@ module Katello
     def test_check_distribution_conflicts_no_conflict
       view = @library_view
       view.repositories << Repository.find(katello_repositories(:rhel_7_x86_64))
-      view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64_dev))
       view.repositories << Repository.find(katello_repositories(:feedless_fedora_17_x86_64))
       view.save!
 
@@ -346,7 +346,7 @@ module Katello
 
     def test_duplicate_distributions
       view = @library_view
-      duplicate_repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
+      duplicate_repo = Repository.find(katello_repositories(:fedora_17_x86_64_duplicate))
 
       view.repositories << duplicate_repo
       view.save!
@@ -356,7 +356,7 @@ module Katello
 
     def test_distribution_conflicts
       view = @library_view
-      conflicting_distribution = Repository.find(katello_repositories(:rhel_6_x86_64))
+      conflicting_distribution = Repository.find(katello_repositories(:fedora_17_x86_64_duplicate))
       view.repositories << conflicting_distribution
       view.save!
 
