@@ -58,7 +58,10 @@ module Katello
     protected
 
     def find_capsule
-      @capsule = SmartProxy.authorized(:manage_capsule_content).with_features(SmartProxy::PULP_NODE_FEATURE).find(params[:id])
+      @capsule = SmartProxy.authorized(:manage_capsule_content).find(params[:id])
+      unless @capsule && @capsule.has_feature?(SmartProxy::PULP_NODE_FEATURE)
+        fail _("This request may only be performed on a Capsule that has the Pulp Node feature.")
+      end
     end
 
     def find_environment

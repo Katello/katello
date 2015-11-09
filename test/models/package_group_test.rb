@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class PackageGroupTest < ActiveSupport::TestCase
     def setup
-      @repo = katello_repositories(:fedora_17_x86_64_dev)
+      @repo = katello_repositories(:fedora_17_x86_64)
       @server_pg = katello_package_groups(:server_pg)
       @mammals_pg = katello_package_groups(:mammals_pg)
     end
@@ -40,7 +40,7 @@ module Katello
     end
 
     def test_search_by_repository
-      assert_includes PackageGroup.search_for('repository = "Fedora 17 x86_64 dev"'), @mammals_pg
+      assert_includes PackageGroup.search_for('repository = "Fedora 17 x86_64"'), @mammals_pg
     end
   end
 end

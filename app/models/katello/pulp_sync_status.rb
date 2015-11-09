@@ -107,8 +107,6 @@ end
 
 module Katello
   class PulpSyncStatus < PulpTaskStatus
-    use_index_of TaskStatus if SETTINGS[:katello][:use_elasticsearch]
-
     HISTORY_ERROR = 'failed'
     HISTORY_SUCCESS = 'success'
     FINISHED  = "finished"

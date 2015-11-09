@@ -219,7 +219,7 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         url: '/history',
         permission: 'view_content_views',
         controller: 'ContentViewHistoryController',
-        templateUrl: 'content-views/details/views/content-view-details-history.html'
+        templateUrl: 'content-views/details/histories/views/content-view-history.html'
     })
     .state('content-views.details.composite-content-views', {
         abstract: true,
