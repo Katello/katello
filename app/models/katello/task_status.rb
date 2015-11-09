@@ -16,8 +16,6 @@ module Katello
       TIMED_OUT = :timed_out
     end
 
-    include Glue::ElasticSearch::TaskStatus if SETTINGS[:katello][:use_elasticsearch]
-
     belongs_to :organization, :inverse_of => :task_statuses, :class_name => "Organization"
     belongs_to :user, :inverse_of => :task_statuses, :class_name => "::User"
 

@@ -59,7 +59,6 @@ Katello::Engine.routes.draw do
             post :publish
             post :refresh
             put :remove
-            get :history
             get :available_puppet_modules
             get :available_puppet_module_names
             match '/environments/:environment_id' => "content_views#remove_from_environment", :via => :delete
@@ -75,6 +74,11 @@ Katello::Engine.routes.draw do
             end
             api_resources :errata, :only => [:index]
             api_resources :package_groups, :only => [:index]
+          end
+          api_resources :history, :controller => :content_view_histories, :only => [:index] do
+            collection do
+              get :auto_complete_search
+            end
           end
           api_resources :puppet_modules, :only => [:index]
           api_resources :repositories, :only => [:index]
