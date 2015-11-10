@@ -21,7 +21,7 @@ module Actions
 
           sequence do
             if filters.empty? || copy_clauses
-              plan_copy(Pulp::Repository::CopyRpm, source_repo, target_repo, copy_clauses)
+              plan_copy(Pulp::Repository::CopyRpm, source_repo, target_repo, copy_clauses, :recursive => true)
               process_errata_and_groups = true
             elsif options[:simple_clone]
               plan_copy(Pulp::Repository::CopyRpm, source_repo, target_repo)
@@ -50,11 +50,12 @@ module Actions
           end
         end
 
-        def plan_copy(action_class, source_repo, target_repo, clauses = nil)
+        def plan_copy(action_class, source_repo, target_repo, clauses = nil, override_config = nil)
           plan_action(action_class,
-                      source_pulp_id: source_repo.pulp_id,
-                      target_pulp_id: target_repo.pulp_id,
-                      clauses:        clauses)
+                      source_pulp_id:  source_repo.pulp_id,
+                      target_pulp_id:  target_repo.pulp_id,
+                      clauses:         clauses,
+                      override_config: override_config)
         end
 
         def plan_remove(action_class, target_repo, clauses)

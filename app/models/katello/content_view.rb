@@ -618,7 +618,7 @@ module Katello
       end
 
       if applicable_filters.empty? || copy_clauses
-        pulp_task = repo.clone_contents_by_filter(cloned, ContentViewFilter::PACKAGE, copy_clauses)
+        pulp_task = repo.clone_contents_by_filter(cloned, ContentViewFilter::PACKAGE, copy_clauses, :recursive => true)
         PulpTaskStatus.wait_for_tasks([pulp_task])
         process_errata_and_groups = true
       end
