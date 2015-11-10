@@ -5,8 +5,6 @@ module Actions
         middleware.use ::Actions::Middleware::RemoteAction
 
         def plan(system, activation_keys = [])
-          system.disable_auto_reindex!
-
           unless activation_keys.empty?
             activation_key_plan = plan_action(Katello::System::ActivationKeys, system, activation_keys)
             return if activation_key_plan.error
@@ -42,7 +40,6 @@ module Actions
           plan_action(Pulp::Consumer::Create,
                       uuid: cp_create.output[:response][:uuid],
                       name: system.name)
-          plan_action ElasticSearch::Reindex, system
         end
 
         def humanized_name
@@ -51,7 +48,6 @@ module Actions
 
         def finalize
           system = ::Katello::System.find(input[:system][:id])
-          system.disable_auto_reindex!
           system.uuid = input[:uuid]
           system.save!
         end

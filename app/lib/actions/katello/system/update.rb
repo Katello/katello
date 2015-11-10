@@ -5,7 +5,6 @@ module Actions
         middleware.use ::Actions::Middleware::RemoteAction
 
         def plan(system, sys_params)
-          system.disable_auto_reindex!
           action_subject system
           system.update_attributes!(sys_params)
           system.update_foreman_facts
@@ -18,7 +17,6 @@ module Actions
             if sys_params[:autoheal] && ::SETTINGS[:katello][:use_cp]
               plan_action(::Actions::Candlepin::Consumer::AutoAttachSubscriptions, system)
             end
-            plan_action(ElasticSearch::Reindex, system) if ::SETTINGS[:katello][:use_elasticsearch]
           end
         end
       end
