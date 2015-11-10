@@ -11,11 +11,9 @@ require "#{Katello::Engine.root}/spec/helpers/organization_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/system_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/product_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/repository_helper_methods"
-require "#{Katello::Engine.root}/spec/helpers/search_helper_methods"
 require "#{Katello::Engine.root}/test/support/vcr"
 require "#{Katello::Engine.root}/test/support/runcible"
 require "#{Katello::Engine.root}/test/support/controller_support"
-require "#{Katello::Engine.root}/test/support/search_service"
 require "#{Katello::Engine.root}/test/support/capsule_support"
 require "#{Katello::Engine.root}/test/support/pulp/repository_support"
 require "#{Katello::Engine.root}/test/support/fixtures_support"
@@ -30,8 +28,6 @@ require "#{Katello::Engine.root}/test/support/foreman_tasks/task"
 
 FactoryGirl.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
 FactoryGirl.find_definitions
-
-SETTINGS[:katello][:elastic_index] = 'katello_test'
 
 module MiniTest::Expectations
   infect_an_assertion :assert_redirected_to, :must_redirect_to

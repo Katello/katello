@@ -12,9 +12,6 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      @request.env['HTTP_ACCEPT'] = 'application/json'
-      @request.env['CONTENT_TYPE'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       models
     end
 

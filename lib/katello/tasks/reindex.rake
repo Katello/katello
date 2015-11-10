@@ -101,7 +101,7 @@ namespace :katello do
   end
 
   desc "Regenerates the search indicies for various Katello objects"
-  task :reindex => ["environment", "katello:check_ping", "katello:reset_backends:elasticsearch"]  do
+  task :reindex => ["environment", "katello:check_ping"]  do
     User.current = User.anonymous_admin #set a user for orchestration
 
     Dir.glob(Katello::Engine.root.to_s + '/app/models/katello/*.rb').each { |file| require file }
@@ -109,7 +109,6 @@ namespace :katello do
 
     Katello::Util::Search.active_record_search_classes.each do |model|
       reindex_helper.log("Re-indexing #{model.name}", :console => true)
-      model.create_elasticsearch_index
       sub_classes = model.subclasses
 
       if sub_classes.empty? || !model.column_names.include?('type')

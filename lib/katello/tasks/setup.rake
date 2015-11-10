@@ -25,14 +25,6 @@ namespace :katello do
       system(service_start.gsub("%s", tomcat))
       puts "Candlepin database reset."
     end
-
-    task :elasticsearch => ['environment'] do
-      Dir.glob(Katello::Engine.root.to_s + '/app/models/katello/*.rb').each { |file| require file }
-
-      Katello::Util::Search.active_record_search_classes.each do |model|
-        Tire.index(model.index.name).delete
-      end
-    end
   end
 
   desc "Resets Foreman/Katello development environemnt. WARNING: This will destroy all your Foreman and Katello data."
@@ -52,7 +44,6 @@ namespace :katello do
     # Otherwise migration fails since it currently requires a reloaded environment
     system('rake db:migrate')
 
-    Rake::Task['katello:reset_backends:elasticsearch'].invoke
     # Load configuration needed by db:seed first
     require './config/initializers/foreman.rb'
     Rake::Task['db:seed'].invoke

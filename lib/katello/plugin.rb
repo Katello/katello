@@ -153,7 +153,6 @@ Foreman::Plugin.register :katello do
   logger :cp_rest, :enabled => true
   logger :cp_proxy, :enabled => true
   logger :action, :enabled => true
-  logger :tire_rest, :enabled => false
   logger :manifest_import_logger, :enabled => true
 
   widget 'errata_widget', :name => 'Errata Widget', :sizey => 1, :sizex => 6
