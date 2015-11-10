@@ -16,7 +16,6 @@ namespace :katello do
           print "System #{system.id} #{system.name} #{system.uuid} is partially missing.  Cleaning.\n"
           ::Katello::Resources::Candlepin::Consumer.destroy(system.uuid) unless cp_fail
           system.del_pulp_consumer unless (pulp_fail || system.is_a?(Katello::Hypervisor))
-          Katello::System.index.remove system
           system.destroy!
         end
       end

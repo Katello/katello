@@ -1,19 +1,13 @@
 :katello:
   :use_cp: true # set to true/false if you want to override default
   :use_pulp: true # set to true/false if you want to override default
-  :use_elasticsearch: true # set to true/false if you want to override default
 
   :rest_client_timeout: 30
   :gpg_strict_validation: false
 
   :puppet_repo_root: '/etc/puppet/environments/'
 
-  :elastic_index: katello
-  :elastic_url: http://localhost:9200
-
   :post_sync_url: "http://localhost:3000/katello/api/v2/repositories/sync_complete?token=katello"
-
-  :simple_search_tokens: [":", " and\\b", " or\\b", " not\\b"]
 
   :redhat_repository_url: https://cdn.redhat.com
 
@@ -72,7 +66,7 @@
 
 # Logging configuration can be changed by uncommenting the loggers
 # section and the logger configuration desired.
-# 
+#
 #  :loggers:
 #    :glue:
 #      :enabled: true
@@ -84,7 +78,5 @@
 #      :enabled: true
 #    :action:
 #      :enabled: true
-#    :tire_rest:
-#      :enabled: false
 #    :manifest_import_logger:
 #      :enabled: true
