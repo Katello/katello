@@ -289,4 +289,36 @@ module ::Actions::Katello::Repository
       assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::Sync, capsule_content, :repository => repository)
     end
   end
+
+  class ExportRepositoryTest  < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::Export }
+    let(:repository) { katello_repositories(:rhel_6_x86_64) }
+
+    it 'export without date' do
+      action = create_action action_class
+      plan_action(action, repository)
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::DistributorPublish,
+                                pulp_id: repository.pulp_id,
+                                distributor_type_id: 'export_distributor',
+                                override_config: { "export_dir" => "/tmp/katello-repo-exports/repo_export"})
+    end
+
+    it 'export with date' do
+      action = create_action action_class
+      plan_action(action, repository, '20100101T00:00:00')
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::DistributorPublish,
+                                pulp_id: repository.pulp_id,
+                                distributor_type_id: 'export_distributor',
+                                override_config: {"export_dir" => "/tmp/katello-repo-exports/repo_export", :start_date => "2010-01-01T00:00:00Z"})
+    end
+
+    it 'export with export suffix' do
+      action = create_action action_class
+      plan_action(action, repository, nil, 'some-export-suffix')
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::DistributorPublish,
+                                pulp_id: repository.pulp_id,
+                                distributor_type_id: 'export_distributor',
+                                override_config: {"export_dir" => "/tmp/katello-repo-exports/some-export-suffix"})
+    end
+  end
 end

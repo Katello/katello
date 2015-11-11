@@ -62,6 +62,7 @@ module Katello
     end
 
     module InstanceMethods
+      # This module is too long. See https://projects.theforeman.org/issues/12584.
       def last_sync
         last = self.latest_dynflow_sync
         last.nil? ? nil : last.to_s
@@ -158,7 +159,8 @@ module Katello
                                                           yum_dist_options)
           clone_dist = Runcible::Models::YumCloneDistributor.new(:id => "#{self.pulp_id}_clone",
                                                                  :destination_distributor_id => yum_dist_id)
-          [yum_dist, clone_dist, nodes_distributor]
+          export_dist = Runcible::Models::ExportDistributor.new(false, false)
+          [yum_dist, clone_dist, nodes_distributor, export_dist]
         when Repository::FILE_TYPE
           dist = Runcible::Models::IsoDistributor.new(true, true)
           dist.auto_publish = true
@@ -174,9 +176,7 @@ module Katello
                                                              :id => self.pulp_id, :auto_publish => true)
           [puppet_install_dist, nodes_distributor]
         when Repository::DOCKER_TYPE
-          options = { :protected => !self.unprotected,
-                      :id => self.pulp_id,
-                      :auto_publish => true }
+          options = { :protected => !self.unprotected, :id => self.pulp_id, :auto_publish => true }
           docker_dist = Runcible::Models::DockerDistributor.new(options)
           [docker_dist, nodes_distributor]
         else
