@@ -41,7 +41,7 @@ module Katello
 
     def test_index_with_environment_id
       environment = KTEnvironment.first
-      KTEnvironment.expects(:readable).returns(stub(:find_by_id => environment))
+      KTEnvironment.expects(:readable).returns(stub(:find_by => environment))
 
       get :index, :environment_id => environment.id
 
