@@ -39,14 +39,6 @@ module Katello
     def test_readable_repositories_with_ids
       refute_empty ContentView.readable_repositories([Repository.first.id])
     end
-
-    def test_readable_products
-      refute_empty ContentView.readable_products
-    end
-
-    def test_readable_products_with_ids
-      refute_empty ContentView.readable_products([Product.first.id])
-    end
   end
 
   class ContentViewAuthorizationNoPermsTest < AuthorizationTestBase
@@ -91,25 +83,6 @@ module Katello
 
     def test_readable_repositories_with_ids
       assert_empty ContentView.readable_repositories([Repository.first.id])
-    end
-
-    def test_readable_products
-      assert_empty ContentView.readable_products
-    end
-
-    def test_readable_products_with_ids
-      assert_empty ContentView.readable_products([Product.first.id])
-    end
-
-    def test_readable_products_with_search
-      prod = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_composite_view_version_1)).product
-      view = katello_content_views(:library_view)
-      view2 = katello_content_views(:composite_view)
-      setup_current_user_with_permissions(:name => "view_content_views",
-                                          :search => "name=\"#{view.name}\"")
-
-      assert_empty(ContentView.readable_products - view.products)
-      assert_equal ContentView.readable_products(view2.products.pluck(:id)), [prod]
     end
   end
 end
