@@ -240,6 +240,9 @@ Katello::Engine.routes.draw do
             put :content_override
             get :product_content
           end
+          collection do
+            get :auto_complete_search
+          end
           api_resources :activation_keys, :only => [:index]
           api_resources :host_collections, :only => [:index]
           api_resources :products, :only => [:index]
@@ -307,6 +310,7 @@ Katello::Engine.routes.draw do
             match '/bulk/destroy' => 'systems_bulk_actions#destroy_systems', :via => :put
             match '/bulk/environment_content_view' => 'systems_bulk_actions#environment_content_view', :via => :put
             match '/bulk/available_incremental_updates' => 'systems_bulk_actions#available_incremental_updates', :via => :post
+            get :auto_complete_search
           end
           resource :packages, :only => [], :controller => :system_packages do
             collection do

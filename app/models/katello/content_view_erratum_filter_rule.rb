@@ -2,8 +2,6 @@ module Katello
   class ContentViewErratumFilterRule < Katello::Model
     self.include_root_in_json = false
 
-    include Glue::ElasticSearch::ContentViewErratumFilterRule if SETTINGS[:katello][:use_elasticsearch]
-
     belongs_to :filter,
                :class_name => "Katello::ContentViewErratumFilter",
                :inverse_of => :erratum_rules,

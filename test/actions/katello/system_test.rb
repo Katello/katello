@@ -34,7 +34,6 @@ module ::Actions::Katello::System
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:error).returns(nil)
       plan_action(action, system, [])
       assert_action_planed(action, ::Actions::Candlepin::Consumer::Create)
-      assert_action_planed_with(action, ::Actions::ElasticSearch::Reindex, system)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::Create) do |params, *_|
         params[:uuid].must_be_kind_of Dynflow::ExecutionPlan::OutputReference
         params[:uuid].subkeys.must_equal %w(response uuid)
@@ -66,14 +65,12 @@ module ::Actions::Katello::System
 
     it 'plans' do
       stub_remote_user
-      system.expects(:disable_auto_reindex!)
       action.expects(:action_subject).with(system)
       system.expects(:update_attributes!).with(input)
 
       plan_action(action, system, input)
       assert_action_planed(action, ::Actions::Pulp::Consumer::Update)
       assert_action_planed(action, ::Actions::Candlepin::Consumer::Update)
-      assert_action_planed(action, ::Actions::ElasticSearch::Reindex)
     end
   end
 

@@ -37,7 +37,8 @@ module Katello
       :katello_repository_errata => "Katello::RepositoryErratum",
       :katello_rpms => "Katello::Rpm",
       :katello_repository_rpms => "Katello::RepositoryRpm",
-      :katello_system_errata => "Katello::SystemErratum"
+      :katello_system_errata => "Katello::SystemErratum",
+      :katello_system_activation_keys => "Katello::SystemActivationKeys"
     }
 
     # rubocop:disable Style/AccessorMethodName
