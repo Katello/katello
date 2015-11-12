@@ -73,7 +73,6 @@ module Actions
             @logger.debug "skip re-indexing of non-existent content host #{uuid}"
           else
             @logger.debug "re-indexing content host #{system.name}"
-            system.update_index
           end
         end
       end
