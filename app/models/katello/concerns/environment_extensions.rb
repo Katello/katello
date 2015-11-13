@@ -39,7 +39,12 @@ module Katello
         def build_by_katello_id(org, env, content_view)
           env_name = Environment.construct_name(org, env, content_view)
           katello_id = Environment.construct_katello_id(org, env, content_view)
-          Environment.new(:name => env_name, :organizations => [org], :locations => [::Location.default_location], :katello_id => katello_id)
+          environment               = Environment.new
+          environment.name          = env_name
+          environment.organizations = [org]
+          environment.locations     = [::Location.default_location]
+          environment.katello_id    = katello_id
+          environment
         end
 
         def find_or_build_by_katello_id(org, env, content_view)
