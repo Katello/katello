@@ -47,7 +47,15 @@ templates = [{:name => "Katello Kickstart Default",           :source => "kickst
 
 templates.each do |template|
   template[:template] = File.read(File.join(Katello::Engine.root, "app/views/foreman/unattended", template.delete(:source)))
-  ProvisioningTemplate.find_or_create_by(:name => template["name"]).update_attributes(defaults.merge(template))
+  pt = ProvisioningTemplate.find_or_create_by(:name => template["name"])
+  defaults.merge(template).each do |k, v|
+    if k == :template_kind
+      pt.template_kind = v
+      next
+    end
+    pt[k] = v
+  end
+  pt.save!
 end
 
 # Ensure all default templates are seeded into the first org and loc
