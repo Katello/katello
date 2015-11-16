@@ -1,6 +1,5 @@
 require 'test_helper'
 require 'factory_girl_rails'
-require "webmock/minitest"
 require "mocha/setup"
 require 'set'
 
