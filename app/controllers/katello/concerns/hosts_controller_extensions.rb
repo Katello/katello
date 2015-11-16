@@ -4,6 +4,8 @@ module Katello
       extend ActiveSupport::Concern
       include ForemanTasks::Triggers
       included do
+        before_filter :find_host, :only => [:package_profile]
+
         def destroy
           sync_task(::Actions::Katello::Host::Destroy, @host)
           process_success(:success_redirect => hosts_path)

@@ -1,5 +1,5 @@
 module Katello
-  class Api::V2::SystemPackagesController < Api::V2::ApiController
+  class Api::V2::HostPackagesController < Api::V2::ApiController
     before_filter :require_packages_or_groups, :only => [:install, :remove]
     before_filter :require_packages_only, :only => [:upgrade]
     before_filter :find_system
@@ -14,8 +14,16 @@ module Katello
       param :groups, Array, :desc => N_("List of package group names"), :required => false
     end
 
-    api :PUT, "/systems/:system_id/packages/install", N_("Install packages remotely"), :deprecated => true
-    param :system_id, :identifier, :required => true, :desc => N_("UUID of the content-host")
+    api :GET, "/hosts/:host_id/packages", N_("List packages installed on the host")
+    param :host_id, String, :desc => N_("ID of the host"), :required => true
+    def index
+      query = @system.foreman_host.installed_packages
+      collection = scoped_search(query.uniq, :name, :desc, :resource_class => ::Katello::InstalledPackage)
+      respond(:collection => collection, :template => "../packages/index")
+    end
+
+    api :PUT, "/hosts/:host_id/packages/install", N_("Install packages remotely"), :deprecated => true
+    param :host_id, :identifier, :required => true, :desc => N_("UUID of the content-host")
     param_group :packages_or_groups
     def install
       if params[:packages]
@@ -32,8 +40,8 @@ module Katello
       end
     end
 
-    api :PUT, "/systems/:system_id/packages/upgrade", N_("Update packages remotely"), :deprecated => true
-    param :system_id, :identifier, :required => true, :desc => N_("UUID of the content-host")
+    api :PUT, "/hosts/:host_id/packages/upgrade", N_("Update packages remotely"), :deprecated => true
+    param :host_id, :identifier, :required => true, :desc => N_("UUID of the content-host")
     param :packages, Array, :desc => N_("list of packages names"), :required => true
     def upgrade
       if params[:packages]
@@ -43,15 +51,15 @@ module Katello
       end
     end
 
-    api :PUT, "/systems/:system_id/packages/upgrade_all", N_("Update packages remotely"), :deprecated => true
-    param :system_id, :identifier, :required => true, :desc => N_("UUID of the content-host")
+    api :PUT, "/hosts/:host_id/packages/upgrade_all", N_("Update packages remotely"), :deprecated => true
+    param :host_id, :identifier, :required => true, :desc => N_("UUID of the content-host")
     def upgrade_all
       task     = async_task(::Actions::Katello::System::Package::Update, @system, [])
       respond_for_async :resource => task
     end
 
-    api :PUT, "/systems/:system_id/packages/remove", N_("Uninstall packages remotely"), :deprecated => true
-    param :system_id, :identifier, :required => true, :desc => N_("UUID of the content-host")
+    api :PUT, "/hosts/:host_id/packages/remove", N_("Uninstall packages remotely"), :deprecated => true
+    param :host_id, :identifier, :required => true, :desc => N_("UUID of the content-host")
     param_group :packages_or_groups
     def remove
       if params[:packages]
@@ -71,8 +79,8 @@ module Katello
     private
 
     def find_system
-      @system = System.where(:uuid => params[:system_id]).first
-      fail HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
+      @system = System.where(:host_id => params[:host_id]).first
+      fail HttpErrors::NotFound, _("Couldn't find system with host id '%s'") % params[:host_id] if @system.nil?
       @system
     end
 

@@ -1,10 +1,10 @@
-describe('Factory: ContentHostPackage', function() {
+describe('Factory: HostPackage', function() {
     var $httpBackend,
         task,
         packages,
-        ContentHostPackage;
+        HostPackage;
 
-    beforeEach(module('Bastion.content-hosts', 'Bastion.utils', 'Bastion.test-mocks'));
+    beforeEach(module('Bastion.hosts', 'Bastion.utils', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         packages = {
@@ -20,7 +20,7 @@ describe('Factory: ContentHostPackage', function() {
 
     beforeEach(inject(function($injector) {
         $httpBackend = $injector.get('$httpBackend');
-        ContentHostPackage = $injector.get('ContentHostPackage');
+        HostPackage = $injector.get('HostPackage');
     }));
 
     afterEach(function() {
@@ -28,36 +28,36 @@ describe('Factory: ContentHostPackage', function() {
     });
 
     it('provides a way to get a list of packages', function() {
-        $httpBackend.expectGET('/katello/api/v2/systems/SYS_ID/packages').respond(packages);
-        ContentHostPackage.get({ id: 'SYS_ID' }, function(results) {
+        $httpBackend.expectGET('/api/v2/hosts/SYS_ID/packages').respond(packages);
+        HostPackage.get({ id: 'SYS_ID' }, function(results) {
             expect(results.total).toBe(2);
         });
     });
 
     it('provides a way to install a list of packages', function() {
-        $httpBackend.expectPUT('/katello/api/v2/systems/SYS_ID/packages/install').respond(task);
-        ContentHostPackage.install({ uuid: 'SYS_ID', packages: ['kernel'] }, function(results) {
+        $httpBackend.expectPUT('/api/v2/hosts/SYS_ID/packages/install').respond(task);
+        HostPackage.install({ id: 'SYS_ID', packages: ['kernel'] }, function(results) {
             expect(results.id).toBe(task.id);
         });
     });
 
     it('provides a way to update a list of packages', function() {
-        $httpBackend.expectPUT('/katello/api/v2/systems/SYS_ID/packages/upgrade').respond(task);
-        ContentHostPackage.update({ uuid: 'SYS_ID', packages: ['kernel'] }, function(results) {
+        $httpBackend.expectPUT('/api/v2/hosts/SYS_ID/packages/upgrade').respond(task);
+        HostPackage.update({ id: 'SYS_ID', packages: ['kernel'] }, function(results) {
             expect(results.id).toBe(task.id);
         });
     });
 
     it('provides a way to update all of packages', function() {
-        $httpBackend.expectPUT('/katello/api/v2/systems/SYS_ID/packages/upgrade_all').respond(task);
-        ContentHostPackage.updateAll({ uuid: 'SYS_ID', packages: ['kernel'] }, function(results) {
+        $httpBackend.expectPUT('/api/v2/hosts/SYS_ID/packages/upgrade_all').respond(task);
+        HostPackage.updateAll({ id: 'SYS_ID', packages: ['kernel'] }, function(results) {
             expect(results.id).toBe(task.id);
         });
     });
 
     it('provides a way to remove a list of packages', function() {
-        $httpBackend.expectPUT('/katello/api/v2/systems/SYS_ID/packages/remove').respond(task);
-        ContentHostPackage.remove({ uuid: 'SYS_ID', packages: ['kernel'] }, function(results) {
+        $httpBackend.expectPUT('/api/v2/hosts/SYS_ID/packages/remove').respond(task);
+        HostPackage.remove({ id: 'SYS_ID', packages: ['kernel'] }, function(results) {
             expect(results.id).toBe(task.id);
         });
     });

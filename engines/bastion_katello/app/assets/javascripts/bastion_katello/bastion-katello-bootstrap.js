@@ -6,6 +6,7 @@ BASTION_MODULES.push(
     'Bastion.puppet-modules',
     'Bastion.environments',
     'Bastion.gpg-keys',
+    'Bastion.hosts',
     'Bastion.capsules',
     'Bastion.organizations',
     'Bastion.products',
