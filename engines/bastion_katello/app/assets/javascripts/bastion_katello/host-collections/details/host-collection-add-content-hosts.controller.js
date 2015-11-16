@@ -16,7 +16,7 @@
 angular.module('Bastion.host-collections').controller('HostCollectionAddContentHostsController',
     ['$scope', '$state', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'ContentHost', 'HostCollection',
     function ($scope, $state, $location, translate, Nutupane, CurrentOrganization, ContentHost, HostCollection) {
-        var addContentHostsPane, params;
+        var params;
 
         params = {
             'organization_id': CurrentOrganization,
@@ -24,30 +24,25 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddContentH
             'page': 1,
             'sort_by': 'name',
             'sort_order': 'ASC',
-            'paged': true
+            'paged': true,
+            'available_for': 'host_collection',
+            'host_collection_id': $scope.$stateParams.hostCollectionId
         };
 
-        addContentHostsPane = new Nutupane(ContentHost, params);
-        addContentHostsPane.searchTransform = function (term) {
-            var addition = "NOT ( host_collection_ids:" + $scope.$stateParams.hostCollectionId + " )";
-            if (term === "" || angular.isUndefined(term)) {
-                return addition;
-            }
+        $scope.contentNutupane = new Nutupane(ContentHost, params);
 
-            return term + " " + addition;
-        };
-
-        $scope.addContentHostsTable = addContentHostsPane.table;
+        $scope.contentNutupane.masterOnly = true;
+        $scope.detailsTable = $scope.contentNutupane.table;
         $scope.isAdding = false;
-        $scope.addContentHostsTable.closeItem = function () {};
+        $scope.contentNutupane.setSearchKey('contentHostSearch');
 
         $scope.disableAddButton = function () {
-            return $scope.addContentHostsTable.numSelected === 0 || $scope.isAdding;
+            return $scope.detailsTable.numSelected === 0 || $scope.isAdding;
         };
 
         $scope.addSelected = function () {
             var selected;
-            selected = _.pluck($scope.addContentHostsTable.getSelected(), 'uuid');
+            selected = _.pluck($scope.detailsTable.getSelected(), 'uuid');
 
             $scope.isAdding = true;
             HostCollection.addContentHosts({id: $scope.hostCollection.id, 'system_ids': selected}, function (data) {
@@ -60,7 +55,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddContentH
                 });
 
                 $scope.isAdding = false;
-                addContentHostsPane.refresh();
+                $scope.contentNutupane.refresh();
                 $scope.refreshHostCollection();
             }, function (response) {
                 $scope.$parent.errorMessages.push(response.data.displayMessage);
