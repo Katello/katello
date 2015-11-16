@@ -16,20 +16,27 @@ module Katello
     end
 
     def test_index
-      get :index, :repository_id => @repo.id
-      assert_response :success
-      assert_template "katello/api/v2/docker_images/index"
-
       get :index
       assert_response :success
       assert_template "katello/api/v2/docker_images/index"
+    end
 
+    def test_index_with_repository
+      get :index, :repository_id => @repo.id
+      assert_response :success
+      assert_template "katello/api/v2/docker_images/index"
+    end
+
+    def test_index_with_organization
       get :index, :organization_id => @repo.organization.id
       assert_response :success
       assert_template "katello/api/v2/docker_images/index"
+    end
 
+    def test_index_with_content_view_version
       get :index, :content_view_version_id => ContentViewVersion.last
       assert_response :success
+      assert_template "katello/api/v2/docker_images/index"
     end
 
     def test_show
