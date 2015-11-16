@@ -43,7 +43,6 @@ class Actions::Candlepin::Product::DestroyTest < ActiveSupport::TestCase
     end
 
     it 'runs' do
-      pool = mock
       ::Katello::Resources::Candlepin::Pool.expects(:destroy).with(pool_id)
       ::Katello::Resources::Candlepin::Product.expects(:pools).with(label, cp_id).returns(pools)
       run_action planned_action

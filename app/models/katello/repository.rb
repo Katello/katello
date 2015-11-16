@@ -28,7 +28,7 @@ module Katello
     belongs_to :product, :inverse_of => :repositories
     belongs_to :gpg_key, :inverse_of => :repositories
     belongs_to :library_instance, :class_name => "Katello::Repository", :inverse_of => :library_instances_inverse
-    has_many :library_instances_inverse, # TODO what is the proper name?
+    has_many :library_instances_inverse, # TODO: what is the proper name?
              :class_name  => 'Katello::Repository',
              :dependent   => :restrict_with_error,
              :foreign_key => :library_instance_id
