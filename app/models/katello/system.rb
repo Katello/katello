@@ -92,7 +92,8 @@ module Katello
     end
 
     def self.with_non_installable_errata(errata)
-      subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems.where("#{Katello::SystemRepository.table_name}.system_id = #{Katello::System.table_name}.id").to_sql
+      subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems
+                 .where("#{Katello::SystemRepository.table_name}.system_id = #{Katello::System.table_name}.id").to_sql
       self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata).where("#{Katello::Erratum.table_name}.id NOT IN (#{subquery})").uniq
     end
 

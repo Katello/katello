@@ -58,7 +58,7 @@ module Katello
       image_count = 0
       tag_count = 0
       cvv.repositories.archived.docker_type.each do |repo|
-        image = repo.docker_images.create!({:image_id => "abc123", :uuid => "123"})
+        image = repo.docker_images.create!(:image_id => "abc123", :uuid => "123")
         repo.docker_tags.create!(:name => "wat", :docker_image => image)
         image_count += repo.docker_images.count
         tag_count += repo.docker_tags.count
