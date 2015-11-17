@@ -26,7 +26,10 @@ module Katello
       begin
         parent_name = find_parent(name)
         parent_fact_name = add_fact_name(parent_name, true) if parent_name
-        fact_name = RhsmFactName.where(:name => name).first_or_create!(parent: parent_fact_name, compose: is_parent)
+        fact_name = RhsmFactName.where(:name => name).first_or_create! do |new_fact|
+          new_fact.parent = parent_fact_name
+          new_fact.compose = is_parent
+        end
       rescue ActiveRecord::RecordNotUnique
         retry
       end
