@@ -42,6 +42,7 @@ namespace :test do
       test_task = Rake::TestTask.new('katello_test_task') do |t|
         t.libs << ["test", "#{Katello::Engine.root}/test"]
         t.test_files = [
+          "#{Katello::Engine.root}/test/models/**/*_test.rb",
           "#{Katello::Engine.root}/test/**/*_test.rb",
         ]
         t.verbose = true
