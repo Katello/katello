@@ -1,5 +1,7 @@
-object false
+object Katello::Util::Data.ostructize(@collection)
 
-child @lifecycle_environments => :results do
-  extends("katello/api/v2/environments/show")
+extends("katello/api/v2/common/metadata")
+
+child :results => :results do
+  extends('katello/api/v2/environments/show')
 end

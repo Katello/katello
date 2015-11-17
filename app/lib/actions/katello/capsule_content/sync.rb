@@ -3,7 +3,7 @@ module Actions
     module CapsuleContent
       class Sync < ::Actions::EntryAction
         def humanized_name
-          _("Sychronize capsule content")
+          _("Synchronize capsule content")
         end
 
         def plan(capsule_content, options = {})
