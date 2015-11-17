@@ -541,7 +541,6 @@ module Katello
       end
 
       def clear_contents
-        self.clear_content_indices if SETTINGS[:katello][:use_elasticsearch]
         tasks = content_types.collect { |type| type.unassociate_from_repo(self.pulp_id, {}) }.flatten(1)
 
         tasks << Katello.pulp_server.extensions.repository.unassociate_units(self.pulp_id,

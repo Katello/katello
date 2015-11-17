@@ -4,9 +4,9 @@ module Katello
   class Ping
     OK_RETURN_CODE = 'ok'
     FAIL_RETURN_CODE = 'FAIL'
-    PACKAGES = %w(katello candlepin pulp thumbslug qpid elasticsearch)
+    PACKAGES = %w(katello candlepin pulp thumbslug qpid)
 
-    SERVICES = [:pulp, :pulp_auth, :elasticsearch, :candlepin, :candlepin_auth, :foreman_tasks]
+    SERVICES = [:pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks]
 
     class << self
       #
@@ -32,14 +32,6 @@ module Katello
           url = SETTINGS[:katello][:candlepin][:url]
           exception_watch(result[:services][:candlepin]) do
             RestClient.get "#{url}/status"
-          end
-        end
-
-        # elasticsearch - ping without oauth
-        if services.include?(:elasticsearch)
-          url = SETTINGS[:katello][:elastic_url]
-          exception_watch(result[:services][:elasticsearch]) do
-            RestClient.get "#{url}/_status"
           end
         end
 
