@@ -72,7 +72,7 @@ module Katello
         :organization_id => @organization.id
 
       assert_response :success
-      assert_template :layout =>'katello/api/v2/layouts/resource'
+      assert_template :layout => 'katello/api/v2/layouts/resource'
       assert_template 'katello/api/v2/common/create'
     end
 
