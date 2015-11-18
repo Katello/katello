@@ -16,14 +16,6 @@ module Katello
         User.current
       end
 
-      def load_search_service(service = nil)
-        if service.nil?
-          @search_service ||= Glue::ElasticSearch::Items.new
-        else
-          @search_service ||= service
-        end
-      end
-
       protected
 
       def request_from_katello_cli?

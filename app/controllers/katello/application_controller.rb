@@ -489,11 +489,7 @@ module Katello
 
       start ||= 0
 
-      if search.nil? || search == ''
-        all_rows = true
-      elsif search_options[:simple_query] && !SETTINGS[:katello][:simple_search_tokens].any? { |s| search.downcase.match(s) }
-        search = search_options[:simple_query]
-      end
+      all_rows = true if (search.nil? || search == '')
       #search = Util::Search::filter_input search
 
       # set the query default field, if one was provided.
@@ -547,13 +543,8 @@ module Katello
           from 0
         end
         total_count = total.total
-
-      rescue Tire::Search::SearchRequestFailed => e
-        Rails.logger.error(e.class)
-
-        total_count = 0
-        panel_options[:total_results] = 0
       end
+
       render_panel_results(@items, total_count, panel_options) unless skip_render
       return @items
     end

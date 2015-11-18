@@ -39,7 +39,6 @@ module Katello
     before_filter :find_prior, :only => [:create]
     before_filter :find_environment, :only => [:show, :update, :destroy, :repositories]
     before_filter :find_content_view, :only => [:repositories]
-    before_filter :load_search_service, :only => [:index]
 
     wrap_parameters :include => (KTEnvironment.attribute_names + %w(prior prior_id new_name))
 

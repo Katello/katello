@@ -7,7 +7,6 @@ module Katello
     before_filter :find_system
     before_filter :find_optional_organization, :only => [:index]
     before_filter :find_organization, :only => [:create, :auto_complete_search]
-    before_filter :load_search_service, :only => [:index, :systems]
 
     wrap_parameters :include => (HostCollection.attribute_names + %w(system_ids))
 
@@ -72,17 +71,6 @@ module Katello
       respond
     end
 
-    # TODO: switch to systems controller index w/ @adprice pull-request
-    api :GET, "/host_collections/:id/systems", N_("List content hosts in the host collection"), :deprecated => true
-    param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
-    def systems
-      options = {
-        :filters       => [{:term => {:host_collection_ids => @host_collection.id }}],
-        :load_records? => true
-      }
-      respond_for_index(:collection => item_search(System, params, options))
-    end
-
     api :PUT, "/host_collections/:id/add_systems", N_("Add content host to the host collection"), :deprecated => true
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
     param :system_ids, Array, :desc => N_("Array of content host ids")
@@ -92,7 +80,6 @@ module Katello
       @editable_systems = @systems.editable
       @host_collection.system_ids = (@host_collection.system_ids + @editable_systems.collect { |s| s.id }).uniq
       @host_collection.save!
-      System.index.refresh
 
       messages = format_bulk_action_messages(
           :success    => _("Successfully added %s Content Host(s)."),
@@ -114,7 +101,6 @@ module Katello
       @editable_systems = @systems.editable
       @host_collection.system_ids = (@host_collection.system_ids - @editable_systems.collect { |s| s.id }).uniq
       @host_collection.save!
-      System.index.refresh
 
       messages = format_bulk_action_messages(
           :success    => _("Successfully removed %s Content Host(s)."),

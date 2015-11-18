@@ -2,8 +2,9 @@ module Actions
   module Katello
     module Repository
       class UpdateMedia < Actions::Base
-        def plan(repo)
-          plan_self(:repo_id => repo.id)
+        input_format do
+          param :repo_id
+          param :contents_changed
         end
 
         def finalize

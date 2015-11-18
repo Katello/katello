@@ -4,6 +4,7 @@ module Actions
       class Sync < Actions::EntryAction
         include Helpers::Presenter
         middleware.use Actions::Middleware::KeepCurrentUser
+        middleware.use Actions::Middleware::ExecuteIfContentsChanged
 
         input_format do
           param :id, Integer
@@ -14,7 +15,6 @@ module Actions
         # @param pulp_sync_task_id in case the sync was triggered outside
         #   of Katello and we just need to finish the rest of the orchestration
         def plan(repo, pulp_sync_task_id = nil)
-          sync_task = nil
           action_subject(repo)
 
           if repo.url.blank?
@@ -22,22 +22,21 @@ module Actions
           end
 
           sequence do
-            sync_task = plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id, task_id: pulp_sync_task_id)
-            plan_action(ElasticSearch::Repository::IndexContent, dependency: sync_task.output[:pulp_tasks], id: repo.id)
+            output = plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id, task_id: pulp_sync_task_id).output
+            contents_changed = output[:contents_changed]
+            plan_action(Katello::Repository::IndexContent, :id => repo.id, :contents_changed => contents_changed)
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
             plan_action(Katello::Repository::CorrectChecksum, repo)
             concurrence do
-              plan_action(Katello::Repository::UpdateMedia, repo)
-              plan_action(Katello::Repository::ErrataMail, repo)
-              plan_self(:id => repo.id, :sync_result => sync_task.output, :user_id => ::User.current.id)
-              plan_action(Pulp::Repository::RegenerateApplicability, :pulp_id => repo.pulp_id)
+              plan_action(Katello::Repository::UpdateMedia, :repo_id => repo.id, :contents_changed => contents_changed)
+              plan_action(Katello::Repository::ErrataMail, repo, nil, contents_changed)
+              plan_self(:id => repo.id, :sync_result => output, :user_id => ::User.current.id, :contents_changed => contents_changed)
+              plan_action(Pulp::Repository::RegenerateApplicability, :pulp_id => repo.pulp_id, :contents_changed => contents_changed)
             end
           end
         end
 
         def run
-          output[:sync_result] = input[:sync_result]
-
           ForemanTasks.async_task(Repository::CapsuleGenerateAndSync, ::Katello::Repository.find(input[:id]))
         end
 
