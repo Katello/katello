@@ -3,7 +3,7 @@ module Katello
     module FilteredAutoCompleteSearch
       extend ActiveSupport::Concern
 
-      PAGE_SIZE=20
+      PAGE_SIZE = 20
 
       def auto_complete_search
         begin
