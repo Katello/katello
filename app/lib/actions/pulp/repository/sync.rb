@@ -7,6 +7,7 @@ module Actions
         input_format do
           param :pulp_id
           param :task_id # In case we need just pair this action with existing sync task
+          param :source_url # allow overriding the feed URL
         end
 
         def invoke_external_task
@@ -24,6 +25,9 @@ module Actions
               # set threads per sync
               sync_options[:num_threads] ||= SETTINGS[:katello][:pulp][:sync_threads]
             end
+
+            sync_options[:feed] = input[:source_url] if input[:source_url]
+
             sync_options[:validate] = !(SETTINGS[:katello][:pulp][:skip_checksum_validation])
 
             output[:pulp_tasks] = pulp_tasks =

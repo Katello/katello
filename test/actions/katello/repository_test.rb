@@ -159,12 +159,12 @@ module ::Actions::Katello::Repository
     let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
 
     it 'plans' do
-      action       = create_action action_class
+      action = create_action action_class
       action.stubs(:action_subject).with(repository)
       plan_action action, repository
 
       assert_action_planed_with(action, pulp_action_class,
-                                pulp_id: repository.pulp_id, task_id: nil)
+                                pulp_id: repository.pulp_id, task_id: nil, source_url: nil)
       assert_action_planed action, ::Actions::Katello::Repository::IndexContent
       assert_action_planed_with action, ::Actions::Katello::Repository::ErrataMail do |repo, _task_id, contents_changed|
         contents_changed.must_be_kind_of Dynflow::ExecutionPlan::OutputReference
@@ -173,12 +173,22 @@ module ::Actions::Katello::Repository
     end
 
     it 'passes the task id to pulp sync action when provided' do
-      action       = create_action action_class
+      action = create_action action_class
       action.stubs(:action_subject).with(repository)
       plan_action action, repository, '123'
 
       assert_action_planed_with(action, pulp_action_class,
-                                pulp_id: repository.pulp_id, task_id: '123')
+                                pulp_id: repository.pulp_id, task_id: '123', source_url: nil)
+    end
+
+    it 'passes the source URL to pulp sync action when provided' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+      plan_action action, repository, nil, 'file:///tmp/'
+
+      assert_action_planed_with(action, pulp_action_class,
+                                pulp_id: repository.pulp_id, task_id: nil,
+                                source_url: 'file:///tmp/')
     end
 
     describe 'progress' do

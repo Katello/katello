@@ -125,8 +125,17 @@ module Katello
 
     api :POST, "/repositories/:id/sync", N_("Sync a repository")
     param :id, :identifier, :required => true, :desc => N_("repository ID")
+    param :source_url, String, :desc => N_("temporarily override feed URL for sync"), :required => false
     def sync
-      task = async_task(::Actions::Katello::Repository::Sync, @repository)
+      if params[:source_url].present? && params[:source_url] !~ /\A#{URI.regexp}\z/
+        fail HttpErrors::BadRequest, _("source URL is malformed")
+      end
+
+      if params[:source_url].blank? && @repository.url.blank?
+        fail HttpErrors::BadRequest, _("attempted to sync without a feed URL")
+      end
+
+      task = async_task(::Actions::Katello::Repository::Sync, @repository, nil, params[:source_url])
       respond_for_async :resource => task
     end
 
