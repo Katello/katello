@@ -96,8 +96,9 @@ module Katello
         real_path = gsub_vars(content_url, substitutions)
 
         if substituable?(real_path)
-          fail Errors::CdnSubstitutionError, _("%{substitutions} are not valid substitutions for %{content_url}") %
-              { substitutions: substitutions, content_url: content.contentUrl }
+          fail Errors::CdnSubstitutionError, _("Missing arguments %{substitutions} for %{content_url}") %
+              { substitutions: substitutions_needed(real_path).join(', '),
+                content_url: real_path }
         else
           is_valid = valid_path?(real_path, 'repodata/repomd.xml') || valid_path?(real_path, 'PULP_MANIFEST')
           unless is_valid
@@ -110,6 +111,12 @@ module Katello
       end
 
       protected
+
+      def substitutions_needed(content_url)
+        # e.g. if content_url = "/content/dist/rhel/server/7/$releasever/$basearch/kickstart"
+        #      return ['releasever', 'basearch']
+        content_url.split('/').map { |word| word.start_with?('$') ? word[1..-1] : nil }.compact
+      end
 
       def validate_all_substitutions_accepted(content, substitutions)
         unaccepted_substitutions = substitutions.keys.reject do |key|
