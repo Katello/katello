@@ -1,7 +1,9 @@
 module Actions
-  module ElasticSearch
+  module Katello
     module Repository
-      class FilteredIndexContent < ElasticSearch::Abstract
+      class FilteredIndexContent < Actions::EntryAction
+        middleware.use Actions::Middleware::KeepCurrentUser
+
         input_format do
           param :id, Integer
           param :filter

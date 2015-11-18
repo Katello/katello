@@ -1,6 +1,10 @@
 class DisownForemanTemplates < ActiveRecord::Migration
   class FakeConfigTemplate < ActiveRecord::Base
-    self.table_name = 'config_templates'
+    if ActiveRecord::Base.connection.table_exists?('config_templates')
+      self.table_name = 'config_templates'
+    else
+      self.table_name = 'templates'
+    end
   end
 
   def up

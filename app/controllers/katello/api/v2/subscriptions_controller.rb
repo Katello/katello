@@ -66,7 +66,6 @@ module Katello
       respond_for_index(:collection => scoped_search(subscriptions.uniq, :cp_id, :asc, :resource_class => Pool), :template => "index")
     end
 
-    api :POST, "/subscriptions/:id", N_("Add a subscription to a resource")
     api :POST, "/systems/:system_id/subscriptions", N_("Add a subscription to a content host"), :deprecated => true
     api :POST, "/activation_keys/:activation_key_id/subscriptions", N_("Add a subscription to an activation key")
     param :id, String, :desc => N_("Subscription Pool uuid"), :required => false
@@ -78,7 +77,7 @@ module Katello
       param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
     end
     def create
-      object = @system || @activation_key || @distributor
+      object = @system || @activation_key
 
       if params[:subscriptions]
         params[:subscriptions].each do |sub|
@@ -94,14 +93,11 @@ module Katello
                         index_system
                       elsif @activation_key
                         index_activation_key
-                      else
-                        index_organization
                       end
 
       respond_for_index(:collection => subscriptions, :template => 'index')
     end
 
-    api :DELETE, "/subscriptions/:id", N_("Unattach a subscription")
     api :DELETE, "/systems/:system_id/subscriptions/:id", N_("Unattach a subscription"), :deprecated => true
     api :DELETE, "/activation_keys/:activation_key_id/subscriptions/:id", N_("Unattach a subscription")
     param :id, String, :desc => N_("Subscription ID"), :required => false
@@ -111,7 +107,7 @@ module Katello
       param :id, String, :desc => N_("Subscription Pool uuid")
     end
     def destroy
-      object = @system || @activation_key || @distributor
+      object = @system || @activation_key
 
       if @system
         params[:subscriptions].each do |subscription|
@@ -128,8 +124,6 @@ module Katello
                         index_system
                       elsif @activation_key
                         index_activation_key
-                      else
-                        index_organization
                       end
 
       respond_for_index(:collection => subscriptions, :template => 'index')
@@ -234,7 +228,7 @@ module Katello
 
     def index_system
       subs = @system.entitlements
-      # TODO: pluck id and call elasticsearch?
+
       subscriptions = {
         :results => subs,
         :subtotal => subs.count,
@@ -249,7 +243,7 @@ module Katello
     def index_activation_key
       @organization = @activation_key.organization
       subs = @activation_key.subscriptions
-      # TODO: pluck id and call elasticsearch?
+
       subscriptions = {
         :results => subs,
         :subtotal => subs.count,
@@ -257,21 +251,6 @@ module Katello
         :page => 1,
         :per_page => subs.count
       }
-
-      return subscriptions
-    end
-
-    def index_organization
-      filters = []
-      filters << {:term => {:org => [@organization.label]}}
-
-      options = {
-        :filters => filters,
-        :load_records? => false,
-        :default_field => :name
-      }
-
-      subscriptions = item_search(Pool, params, options)
 
       return subscriptions
     end

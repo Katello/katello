@@ -146,13 +146,11 @@ module ::Actions::Katello::Repository
     it 'plans' do
       plan_action action, custom_repository
       assert_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
-      assert_action_planed(action, ::Actions::ElasticSearch::Repository::FilteredIndexContent)
     end
 
     it "doesn't plan metadata generate for puppet repository" do
       plan_action action, puppet_repository
       refute_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
-      assert_action_planed(action, ::Actions::ElasticSearch::Repository::FilteredIndexContent)
     end
   end
 
@@ -167,9 +165,11 @@ module ::Actions::Katello::Repository
 
       assert_action_planed_with(action, pulp_action_class,
                                 pulp_id: repository.pulp_id, task_id: nil)
-      assert_action_planed action, ::Actions::ElasticSearch::Repository::IndexContent
-      assert_action_planed action, ::Actions::Katello::Repository::ErrataMail
-      assert_action_planed_with action, ::Actions::Katello::Repository::ErrataMail, repository
+      assert_action_planed action, ::Actions::Katello::Repository::IndexContent
+      assert_action_planed_with action, ::Actions::Katello::Repository::ErrataMail do |repo, _task_id, contents_changed|
+        contents_changed.must_be_kind_of Dynflow::ExecutionPlan::OutputReference
+        repo.id.must_equal repository.id
+      end
     end
 
     it 'passes the task id to pulp sync action when provided' do
@@ -179,7 +179,6 @@ module ::Actions::Katello::Repository
 
       assert_action_planed_with(action, pulp_action_class,
                                 pulp_id: repository.pulp_id, task_id: '123')
-      assert_action_planed action, ::Actions::ElasticSearch::Repository::IndexContent
     end
 
     describe 'progress' do
@@ -246,7 +245,6 @@ module ::Actions::Katello::Repository
                                 target_pulp_id: target_repo.pulp_id)
 
       assert_action_planed_with(action, ::Actions::Katello::Repository::MetadataGenerate, target_repo)
-      assert_action_planed_with(action, ::Actions::ElasticSearch::Repository::IndexContent, id: target_repo.id)
     end
   end
 
