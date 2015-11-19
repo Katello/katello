@@ -10,7 +10,6 @@ module Katello
     before_filter :find_system, :only => [:destroy, :show, :update,
                                           :package_profile,
                                           :pools, :enabled_repos, :releases,
-                                          :available_host_collections,
                                           :refresh_subscriptions, :tasks, :content_override,
                                           :product_content, :events]
     before_filter :find_environment, :only => [:index, :report]
@@ -20,7 +19,7 @@ module Katello
 
     before_filter :find_environment_and_content_view, :only => [:create]
     before_filter :find_content_view, :only => [:create, :update]
-    before_filter :load_search_service, :only => [:index, :available_host_collections, :tasks]
+    before_filter :load_search_service, :only => [:index, :tasks]
     before_filter :authorize_environment, :only => [:create]
 
     def organization_id_keys
@@ -150,26 +149,7 @@ module Katello
     api :GET, "/systems/:id", N_("Show a content host"), :deprecated => true
     param :id, String, :desc => N_("UUID of the content host"), :required => true
     def show
-      @host_collections = @system.host_collections
       respond
-    end
-
-    api :GET, "/systems/:id/available_host_collections", N_("List host collections the content host does not belong to"), :deprecated => true
-    param_group :search, Api::V2::ApiController
-    param :name, String, :desc => N_("host collection name to filter by")
-    def available_host_collections
-      system_org_id = @system.environment.organization_id
-      pluck_val = "#{Katello::HostCollection.table_name}.id"
-      filters = [:terms => {:id => HostCollection.readable.where(:organization_id => system_org_id).pluck(pluck_val) - @system.host_collection_ids}]
-      filters << {:term => {:name => params[:name]}} if params[:name]
-
-      options = {
-        :filters       => filters,
-        :load_records? => true
-      }
-
-      host_collections = item_search(HostCollection, params, options)
-      respond_for_index(:collection => host_collections)
     end
 
     api :DELETE, "/systems/:id", N_("Unregister a content host"), :deprecated => true

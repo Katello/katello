@@ -1,6 +1,6 @@
 /**
  * @ngdoc object
- * @name  Bastion.host-collections.controller:HostCollectionContentHostsController
+ * @name  Bastion.host-collections.controller:HostCollectionHostsController
  *
  * @requires $scope
  * @requires $location
@@ -11,10 +11,10 @@
  * @description
  *   Provides the functionality for the host collection details action pane.
  */
-angular.module('Bastion.host-collections').controller('HostCollectionContentHostsController',
+angular.module('Bastion.host-collections').controller('HostCollectionHostsController',
     ['$scope', '$location', 'translate', 'Nutupane', 'HostCollection',
     function ($scope, $location, translate, Nutupane, HostCollection) {
-        var contentHostsPane, params;
+        var hostsPane, params;
 
         params = {
             'id': $scope.$stateParams.hostCollectionId,
@@ -24,18 +24,18 @@ angular.module('Bastion.host-collections').controller('HostCollectionContentHost
             'paged': true
         };
 
-        contentHostsPane = new Nutupane(HostCollection, params, 'contentHosts');
-        $scope.contentHostsTable = contentHostsPane.table;
-        $scope.contentHostsTable.closeItem = function () {};
+        hostsPane = new Nutupane(HostCollection, params, 'hosts');
+        $scope.hostsTable = hostsPane.table;
+        $scope.hostsTable.closeItem = function () {};
         $scope.isRemoving = false;
 
         $scope.removeSelected = function () {
-            var selected = _.pluck($scope.contentHostsTable.getSelected(), 'uuid');
+            var selected = _.pluck($scope.hostsTable.getSelected(), 'id');
 
             $scope.isRemoving = true;
-            HostCollection.removeContentHosts({id: $scope.hostCollection.id, 'system_ids': selected}, function (data) {
-                contentHostsPane.table.selectAll(false);
-                contentHostsPane.refresh();
+            HostCollection.removeHosts({id: $scope.hostCollection.id, 'host_ids': selected}, function (data) {
+                hostsPane.table.selectAll(false);
+                hostsPane.refresh();
 
                 angular.forEach(data.displayMessages.success, function (success) {
                     $scope.$parent.successMessages.push(success);

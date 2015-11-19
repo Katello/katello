@@ -8,21 +8,21 @@
         <input type="text"
                class="form-control"
                placeholder="{{ 'Search...' | translate }}"
-               ng-model="addContentHostsTable.searchTerm"
-               bst-on-enter="addContentHostsTable.search(addContentHostsTable.searchTerm)"/>
+               ng-model="addHostsTable.searchTerm"
+               bst-on-enter="addHostsTable.search(addHostsTable.searchTerm)"/>
         <span class="input-group-btn">
-          <button ng-click="addContentHostsTable.search(addContentHostsTable.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+          <button ng-click="addHostsTable.search(addHostsTable.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
         </span>
       </div>
     </div>
 
     <div class="col-sm-3 nutupane-info">
-      <span translate>Showing {{ addContentHostsTable.rows.length }} of {{ addContentHostsTable.resource.subtotal }} ({{ addContentHostsTable.resource.total }} Total) Content Hosts</span>
+      <span translate>Showing {{ addHostsTable.rows.length }} of {{ addHostsTable.resource.subtotal }} ({{ addHostsTable.resource.total }} Total) Content Hosts</span>
     </div>
 
     <div class="fr">
       <div class="fl nutupane-info">
-        <span translate>{{ addContentHostsTable.numSelected }} Selected</span>
+        <span translate>{{ addHostsTable.numSelected }} Selected</span>
       </div>
 
       <div ng-hide="hostCollection.readonly" class="nutupane-actions fr">
@@ -38,24 +38,24 @@
     </div>
   </div>
 
-  <div bst-table="addContentHostsTable" class="nutupane">
-    <div bst-container-scroll data="addContentHostsTable.rows">
-      <div infinite-scroll="addContentHostsTable.nextPage()" infinite-scroll-container="'.nutupane-sub-section .container-scroll-wrapper'">
+  <div bst-table="addHostsTable" class="nutupane">
+    <div bst-container-scroll data="addHostsTable.rows">
+      <div infinite-scroll="addHostsTable.nextPage()" infinite-scroll-container="'.nutupane-sub-section .container-scroll-wrapper'">
 
-        <div class="loading-mask" ng-show="addContentHostsTable.working && addContentHostsTable.rows.length == 0">
+        <div class="loading-mask" ng-show="addHostsTable.working && addHostsTable.rows.length == 0">
           <i class="fa fa-spinner fa-spin"></i>
           {{ "Loading..." | translate }}
         </div>
 
-        <p bst-alert="info" ng-show="addContentHostsTable.rows.length === 0 && !addContentHostsTable.working">
+        <p bst-alert="info" ng-show="addHostsTable.rows.length === 0 && !addHostsTable.working">
           <span translate>
             You currently don't have any Content Hosts, you can create new Content Hosts by selecting Contents Host from main menu and then clicking the button on the right.
           </span>
         </p>
 
-        <table ng-class="{'table-mask': addContentHostsTable.working}"
+        <table ng-class="{'table-mask': addHostsTable.working}"
                class="table table-full table-striped"
-               ng-show="addContentHostsTable.rows.length > 0">
+               ng-show="addHostsTable.rows.length > 0">
           <thead>
             <tr bst-table-head row-select>
               <th bst-table-column="name" translate>Name</th>
@@ -65,7 +65,7 @@
           </thead>
 
           <tbody>
-            <tr bst-table-row ng-repeat="contentHost in addContentHostsTable.rows">
+            <tr bst-table-row ng-repeat="contentHost in addHostsTable.rows">
               <td class="row-select">
                 <input type="checkbox"
                        ng-model="contentHost.selected"
