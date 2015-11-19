@@ -18,10 +18,8 @@ module Katello
         end
 
         if bulk_params[:included][:search]
-          ids = find_system_ids_by_search(bulk_params[:included][:search], organization)
-          search_systems = System.send(perm_method).where(:id => ids)
-          search_systems = search_systems.where('uuid not in (?)', bulk_params[:excluded][:ids]) unless bulk_params[:excluded][:ids].blank?
-          search_systems = restrict_to.call(search_systems) if restrict_to
+          search_systems = System.where(:id => Organization.find(params[:organization_id]).systems.map(&:id)) if params[:organization_id]
+          search_systems = search_systems.search_for(bulk_params[:included][:search])
           @systems += search_systems
         end
 
@@ -31,16 +29,6 @@ module Katello
           fail HttpErrors::Forbidden, _("Action unauthorized to be performed on selected systems.")
         end
         @systems
-      end
-
-      def find_system_ids_by_search(search, organization)
-        options = {
-          :filters       => System.readable_search_filters(organization),
-          :load_records? => false,
-          :full_result => true,
-          :fields => [:id]
-        }
-        item_search(System, {:search => search}, options)[:results].collect { |i| i.id }
       end
 
       def find_organization

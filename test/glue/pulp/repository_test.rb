@@ -11,6 +11,8 @@ module Katello
 
       @fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
       @fedora_17_x86_64 = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
+      @fedora_17_library_library_view = Repository.find(FIXTURES['katello_repositories']['fedora_17_library_library_view']['id'])
+      @library_dev_staging_view = katello_content_views(:library_dev_staging_view)
       @fedora_17_x86_64.relative_path = '/test_path/'
       @fedora_17_x86_64.url = "file:///var/www/test_repos/zoo"
     end
@@ -278,8 +280,8 @@ module Katello
     end
 
     def test_package_groups
-      @fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
-      package_groups = @fedora_17_x86_64_dev.package_groups
+      @fedora_17_x86_64 = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
+      package_groups = @fedora_17_x86_64.package_groups
 
       refute_empty package_groups.select { |group| group.name == 'mammals' }
     end
@@ -310,8 +312,8 @@ module Katello
     end
 
     def test_create_clone
-      staging = KTEnvironment.find(katello_environments(:staging).id)
-      clone = @fedora_17_x86_64.create_clone(:environment => staging)
+      dev = KTEnvironment.find(katello_environments(:dev).id)
+      clone = @fedora_17_library_library_view.create_clone(:environment => dev, :content_view => @library_dev_staging_view)
 
       assert_kind_of Repository, clone
     ensure
@@ -320,10 +322,10 @@ module Katello
     end
 
     def test_clone_contents
-      dev = KTEnvironment.find(katello_environments(:dev).id)
+      library = KTEnvironment.find(katello_environments(:library).id)
       @fedora_17_x86_64_dev.relative_path = Repository.clone_repo_path(:repository => @fedora_17_x86_64,
-                                                                        :environment => dev,
-                                                                        :content_view => dev.default_content_view)
+                                                                        :environment => library,
+                                                                        :content_view => library.default_content_view)
       @fedora_17_x86_64_dev.create_pulp_repo
 
       task_list = @fedora_17_x86_64.clone_contents(@fedora_17_x86_64_dev)

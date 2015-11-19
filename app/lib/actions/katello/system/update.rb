@@ -5,7 +5,6 @@ module Actions
         middleware.use ::Actions::Middleware::RemoteAction
 
         def plan(system, sys_params)
-          system.disable_auto_reindex!
           action_subject system
           system.update_attributes!(sys_params)
 

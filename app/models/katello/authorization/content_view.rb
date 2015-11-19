@@ -58,14 +58,6 @@ module Katello
         query.joins(:content_view_version)
              .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => content_views.pluck(:id))
       end
-
-      def readable_products(product_ids = nil)
-        query = Katello::Product.scoped
-        query = query.where(:id => product_ids) if product_ids
-
-        query.joins(:repositories => :content_view_version)
-             .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => ContentView.readable.pluck(:id))
-      end
     end
   end
 end

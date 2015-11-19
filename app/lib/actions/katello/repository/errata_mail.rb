@@ -2,9 +2,11 @@ module Actions
   module Katello
     module Repository
       class ErrataMail < Actions::EntryAction
-        def plan(repo, last_updated = nil)
+        middleware.use Actions::Middleware::ExecuteIfContentsChanged
+
+        def plan(repo, last_updated = nil, contents_changed = nil)
           last_updated ||= repo.repository_errata.order('updated_at ASC').last.try(:updated_at) || Time.now
-          plan_self(:repo => repo.id, :last_updated => last_updated.to_s)
+          plan_self(:repo => repo.id, :last_updated => last_updated.to_s, :contents_changed => contents_changed)
         end
 
         def run

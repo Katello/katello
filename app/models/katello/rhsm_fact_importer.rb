@@ -36,7 +36,7 @@ module Katello
 
     def find_parent(name)
       split = name.split(Katello::RhsmFactName::SEPARATOR)
-      split[0..split.length-2].join(Katello::RhsmFactName::SEPARATOR) if split.length > 1
+      split[0..split.length - 2].join(Katello::RhsmFactName::SEPARATOR) if split.length > 1
     end
   end
 end

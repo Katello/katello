@@ -3,7 +3,7 @@ require "katello_test_helper"
 module Katello
   class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
     def models
-      @repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
+      @repo = Repository.find(katello_repositories(:fedora_17_x86_64))
       @package_group_filter = katello_content_view_filters(:populated_package_group_filter)
     end
 
@@ -20,9 +20,6 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      @request.env['HTTP_ACCEPT'] = 'application/json'
-      @request.env['CONTENT_TYPE'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       models
       permissions
     end

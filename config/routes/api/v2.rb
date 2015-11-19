@@ -59,7 +59,6 @@ Katello::Engine.routes.draw do
             post :publish
             post :refresh
             put :remove
-            get :history
             get :available_puppet_modules
             get :available_puppet_module_names
             match '/environments/:environment_id' => "content_views#remove_from_environment", :via => :delete
@@ -75,6 +74,11 @@ Katello::Engine.routes.draw do
             end
             api_resources :errata, :only => [:index]
             api_resources :package_groups, :only => [:index]
+          end
+          api_resources :history, :controller => :content_view_histories, :only => [:index] do
+            collection do
+              get :auto_complete_search
+            end
           end
           api_resources :puppet_modules, :only => [:index]
           api_resources :repositories, :only => [:index]
@@ -236,6 +240,9 @@ Katello::Engine.routes.draw do
             put :content_override
             get :product_content
           end
+          collection do
+            get :auto_complete_search
+          end
           api_resources :activation_keys, :only => [:index]
           api_resources :host_collections, :only => [:index]
           api_resources :products, :only => [:index]
@@ -303,6 +310,7 @@ Katello::Engine.routes.draw do
             match '/bulk/destroy' => 'systems_bulk_actions#destroy_systems', :via => :put
             match '/bulk/environment_content_view' => 'systems_bulk_actions#environment_content_view', :via => :put
             match '/bulk/available_incremental_updates' => 'systems_bulk_actions#available_incremental_updates', :via => :post
+            get :auto_complete_search
           end
           resource :packages, :only => [], :controller => :system_packages do
             collection do

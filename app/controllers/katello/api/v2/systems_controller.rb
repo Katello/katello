@@ -1,6 +1,7 @@
 # rubocop:disable SymbolName
 module Katello
   class Api::V2::SystemsController < Api::V2::ApiController
+    include Katello::Concerns::FilteredAutoCompleteSearch
     respond_to :json
 
     wrap_parameters :include => (System.attribute_names + %w(type autoheal facts guest_ids host_collection_ids installed_products content_view environment))
@@ -20,7 +21,6 @@ module Katello
 
     before_filter :find_environment_and_content_view, :only => [:create]
     before_filter :find_content_view, :only => [:create, :update]
-    before_filter :load_search_service, :only => [:index, :available_host_collections, :tasks]
     before_filter :authorize_environment, :only => [:create]
 
     def organization_id_keys
@@ -58,39 +58,27 @@ module Katello
     param :erratum_restrict_non_installable, String, :desc => N_("Return only systems where the Erratum specified by erratum_id or errata_ids is unavailable to systems (default False)")
     param_group :search, Api::V2::ApiController
     def index
+      respond(:collection => scoped_search(index_relation.uniq, :name, :asc))
+    end
+
+    def index_relation
       if params[:erratum_id] || params[:errata_ids]
         errata_ids = params.fetch(:errata_ids, [])
-        errata_ids << params[:erratum_id] if params[:erratum_id]
-        systems = systems_by_errata(errata_ids, params[:erratum_restrict_installable],
+        collection = systems_by_errata(errata_ids, params[:erratum_restrict_installable],
             params[:erratum_restrict_non_installable])
       else
-        systems = System.readable
+        collection = System.readable
       end
 
-      systems = systems.where(:content_view_id => params[:content_view_id]) if params[:content_view_id]
-      filters = [{:terms => {:uuid => systems.pluck("#{Katello::System.table_name}.uuid").compact}}]
-      environment_ids = params[:organization_id] ? Organization.find(params[:organization_id]).kt_environments.pluck(:id) : []
-      environment_ids = environment_ids.empty? ? params[:environment_id] : environment_ids & [params[:environment_id].to_i] if params[:environment_id]
-      unless environment_ids.empty?
-        filters << {:terms => {:environment_id =>  environment_ids}}
-      end
-      if params[:host_collection_id]
-        filters << {:terms => {:host_collection_ids => [params[:host_collection_id]] }}
-      end
-      if params[:activation_key_id]
-        filters << {:terms => {:activation_key_ids => [params[:activation_key_id]] }}
-      end
-
-      filters << {:terms => {:uuid => System.all_by_pool_uuid(params['pool_id']) }} if params['pool_id']
-      filters << {:terms => {:uuid => [params['uuid']] }} if params['uuid']
-      filters << {:term => {:name => params['name'] }} if params['name']
-
-      options = {
-        :filters       => filters,
-        :load_records? => true,
-        :includes => [:content_view, :activation_keys, :environment]
-      }
-      respond_for_index(:collection => item_search(System, params, options))
+      collection = collection.where(:content_view_id => params[:content_view_id]) if params[:content_view_id]
+      collection = collection.where(:id => Organization.find(params[:organization_id]).systems.map(&:id)) if params[:organization_id]
+      collection = collection.where(:environment_id => params[:environment_id]) if params[:environment_id]
+      collection = collection.where(:id => HostCollection.find(params[:host_collection_id]).systems) if params[:host_collection_id]
+      collection = collection.where(:id => Katello::ActivationKey.find(params[:activation_key_id]).systems) if params[:activation_key_id]
+      collection = collection.where(:id => Pool.find(params['pool_id']).systems.map(&:id)) if params['pool_id']
+      collection = collection.where(:uuid => params['uuid']) if params['uuid']
+      collection = collection.where(:name => params['name']) if params['name']
+      collection
     end
 
     api :POST, "/systems", N_("Register a content host"), :deprecated => true
@@ -159,17 +147,10 @@ module Katello
     param :name, String, :desc => N_("host collection name to filter by")
     def available_host_collections
       system_org_id = @system.environment.organization_id
-      pluck_val = "#{Katello::HostCollection.table_name}.id"
-      filters = [:terms => {:id => HostCollection.readable.where(:organization_id => system_org_id).pluck(pluck_val) - @system.host_collection_ids}]
-      filters << {:term => {:name => params[:name]}} if params[:name]
 
-      options = {
-        :filters       => filters,
-        :load_records? => true
-      }
+      collection = HostCollection.readable.where(:organization_id => system_org_id).where("id not in (?)", @system.host_collection_ids)
 
-      host_collections = item_search(HostCollection, params, options)
-      respond_for_index(:collection => host_collections)
+      respond_for_index(:collection => scoped_search(collection, :name, :desc, :resource_class => HostCollection))
     end
 
     api :DELETE, "/systems/:id", N_("Unregister a content host"), :deprecated => true

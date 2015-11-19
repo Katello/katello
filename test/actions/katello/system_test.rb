@@ -41,7 +41,6 @@ module ::Actions::Katello::System
 
     it 'plans' do
       stub_remote_user
-      system.expects(:disable_auto_reindex!)
       system.expects(:update_attributes!).with(input)
 
       plan_action(action, system, input)

@@ -53,10 +53,11 @@ module Katello
       ids = Repository.where(:product_id => @product.id, :library_instance_id => nil).pluck(:id)
 
       response = get :index, :product_id => @product.id, :organization_id => @organization.id
+      response_ids = JSON.parse(response.body)['results'].map { |repo| repo['id'] }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
-      assert_response_ids response, ids
+      assert_equal response_ids.sort, ids.sort
     end
 
     def test_index_with_environment_id
@@ -122,8 +123,8 @@ module Katello
     end
 
     def test_index_with_content_view_version_id_and_library
-      ids = @view.versions.first.repositories.pluck(:library_instance_id).reject(&:blank?)
-      get :index, :content_view_version_id => @view.versions.first.id, :organization_id => @organization.id, :library => true
+      ids = @view.versions.first.repositories.pluck(:library_instance_id).reject(&:blank?).uniq
+      response = get :index, :content_view_version_id => @view.versions.first.id, :organization_id => @organization.id, :library => true
 
       assert_response :success
       assert_template 'api/v2/repositories/index'

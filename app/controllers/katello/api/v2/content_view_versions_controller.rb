@@ -8,7 +8,6 @@ module Katello
     before_filter :find_environment, :only => [:promote, :index]
     before_filter :authorize_promotable, :only => [:promote]
     before_filter :authorize_destroy, :only => [:destroy]
-    before_filter :load_search_service, :only => [:incremental_update]
     before_filter :find_version_environments, :only => [:incremental_update]
     before_filter :find_puppet_module, :only => [:index]
 

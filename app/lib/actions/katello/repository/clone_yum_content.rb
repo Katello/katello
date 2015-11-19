@@ -46,7 +46,7 @@ module Actions
             end
 
             plan_action(Katello::Repository::MetadataGenerate, target_repo, filters.empty? ? source_repo : nil) if generate_metadata
-            plan_action(ElasticSearch::Repository::IndexContent, id: target_repo.id) if index_content
+            plan_action(Katello::Repository::IndexContent, id: target_repo.id) if index_content
           end
         end
 

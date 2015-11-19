@@ -19,7 +19,6 @@ module Katello::Host
     let(:action_class) { ::Actions::Katello::Host::Register }
     let(:candlepin_class) { ::Actions::Candlepin::Consumer::Create }
     let(:pulp_class) { ::Actions::Pulp::Consumer::Create }
-    let(:elastic_class) { ::Actions::ElasticSearch::Reindex }
     let(:rhsm_params) { {:name => 'foobar', :facts => {}, :type => 'system'} }
     let(:new_system) { Katello::System.new(:name => :foobar, :cp_type => 'system') }
 
@@ -30,7 +29,6 @@ module Katello::Host
         action.stubs(:action_subject).with(new_host)
         plan_action action, new_host, new_system, rhsm_params, @content_view_environment
 
-        assert_action_planned_with(action, elastic_class, new_system)
         assert_action_planed_with(action, candlepin_class, :cp_environment_id => @content_view_environment.cp_id,
                                   :consumer_parameters => rhsm_params, :activation_keys => [])
 
@@ -57,7 +55,6 @@ module Katello::Host
         action.stubs(:action_subject).with(new_host)
         plan_action action, new_host, new_system, rhsm_params, nil, [@activation_key]
 
-        assert_action_planned_with(action, elastic_class, new_system)
         assert_action_planed_with(action, candlepin_class, :cp_environment_id => cvpe.cp_id,
                                   :consumer_parameters => rhsm_params, :activation_keys => [@activation_key.cp_name])
         refute_action_planned(action, Actions::Katello::Host::Unregister)

@@ -22,14 +22,40 @@ module Katello
 
       api_root_routes.collect! { |r| { :rel => r["/katello/api/".size..-2], :href => r } }
 
-      # provide some fake paths that does not exist (but rhsm is checking it's existance)
-      api_root_routes << { :href => '/katello/api/packages/', :rel => 'packages' }
-      api_root_routes << { :href => '/katello/api/status/', :rel => 'status' }
-      api_root_routes << { :href => '/katello/api/guestids', :rel => 'guestids'}
-      api_root_routes << { :href => '/katello/api/content_overrides', :rel => 'content_overrides'}
-      api_root_routes << { :href => '/katello/api/available_releases', :rel => 'available_releases'}
-
       respond_for_index :collection => api_root_routes
+    end
+
+    def rhsm_resource_list
+      # The RHSM resource list is required to interact with RHSM on the client.
+      # When requested, it will return a list of the resources (href & rel) defined by katello
+      # for the /rhsm namespace.  The rel values are used by RHSM to determine if the server
+      # supports a particular resource (e.g. environments, guestids, organizations..etc)
+
+      all_routes = Engine.routes.routes.collect { |r| r.path.spec.to_s }
+
+      api_routes = all_routes.select do |path|
+        # obtain only the rhsm routes
+        path =~ %r{^/rhsm/.+$}
+      end
+
+      api_routes = api_routes.collect do |path|
+        # drop the trailing :format
+        path = path.sub("(.:format)", "")
+
+        # drop the trailing ids
+        path_elements = path.split("/")
+        if path_elements.last.start_with?(':') && path_elements.last.end_with?('id')
+          path_elements.delete_at(-1)
+          path_elements.join('/')
+        else
+          path
+        end
+      end
+
+      api_routes.uniq!
+      api_routes.collect! { |r| { :rel => r.split('/').last, :href => r } }
+
+      respond_for_index :collection => api_routes, :template => 'resource_list'
     end
   end
 end

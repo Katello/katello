@@ -1,7 +1,9 @@
 module Actions
-  module ElasticSearch
+  module Katello
     module Provider
-      class ReindexSubscriptions < ElasticSearch::Abstract
+      class ReindexSubscriptions < Actions::EntryAction
+        middleware.use Actions::Middleware::KeepCurrentUser
+
         input_format do
           param :id
         end

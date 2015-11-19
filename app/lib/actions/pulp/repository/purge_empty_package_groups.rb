@@ -16,7 +16,7 @@ module Actions
           package_groups_to_delete = repo.package_groups.collect do |group|
             group.uuid if rpm_names.intersection(group.package_names).empty?
           end
-          criteria = {:association=>{"unit_id"=>{"$in"=>package_groups_to_delete.compact}}}
+          criteria = {:association => {"unit_id" => {"$in" => package_groups_to_delete.compact}}}
 
           ::Katello.pulp_server.extensions.repository.unassociate_units(repo.pulp_id, :filters => criteria)
         end
