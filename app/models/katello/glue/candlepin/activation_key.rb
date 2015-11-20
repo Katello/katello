@@ -55,6 +55,7 @@ module Katello
       end
 
       def unsubscribe(pool_id)
+        fail _("Subscription id is nil.") unless pool_id
         pool = Katello::Pool.find(pool_id)
         subscription = pool.subscription
         remove_custom_product(subscription.product_id) unless subscription.redhat?
