@@ -1,4 +1,4 @@
-object @resource
+object @resource ||= @object
 
 attributes :id
 attributes :cp_id
@@ -13,3 +13,12 @@ attributes :sockets, :cores, :ram
 attributes :instance_multiplier, :stacking_id, :multi_entitlement
 attributes :type
 attributes :name => :product_name
+attributes :unmapped_guest
+attributes :virt_only
+
+node :host, :if => lambda { |sub| sub && sub.host } do |subscription|
+  {
+    id: subscription.host.uuid,
+    name: subscription.host.name
+  }
+end
