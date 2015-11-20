@@ -16,7 +16,7 @@ module Katello
     end
 
     def_param_group :resource do
-      param :resource, Hash, :required => true, :action_aware => true do
+      param :organization, Hash, :required => true, :action_aware => true do
         param :name, String, :required => true
         param :description, String, :required => false
         param :user_ids, Array, N_("User IDs"), :required => false
