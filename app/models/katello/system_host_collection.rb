@@ -8,7 +8,7 @@ module Katello
     validate :validate_max_content_hosts_not_exceeded
 
     def validate_max_content_hosts_not_exceeded
-      if new_record?
+      if new_record? && self.host_collection_id
         host_collection = HostCollection.find(self.host_collection_id)
         if (host_collection) && (!host_collection.unlimited_content_hosts) && (host_collection.systems.size >= host_collection.max_content_hosts)
           errors.add :base,
