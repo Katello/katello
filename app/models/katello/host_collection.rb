@@ -17,27 +17,29 @@ module Katello
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates :organization_id, :presence => {:message => N_("Organization cannot be blank.")}
     validates :name, :uniqueness => {:scope => :organization_id, :message => N_("must be unique within one organization")}
-    validates :content_host_limit, :numericality => {:only_integer => true,
-                                                     :allow_nil => true,
-                                                     :greater_than_or_equal_to => 1,
-                                                     :less_than_or_equal_to => 2_147_483_647,
-                                                     :message => N_("must be a positive integer value.")}
-
-    alias_attribute :content_host_limit, :max_content_hosts
-    validate :validate_max_content_hosts
+    validates :max_content_hosts, :numericality => {:only_integer => true,
+                                                    :allow_nil => true,
+                                                    :greater_than_or_equal_to => 1,
+                                                    :less_than_or_equal_to => 2_147_483_647,
+                                                    :message => N_("must be a positive integer value.")}
+    validates :max_content_hosts, :presence => {:message => N_("max_content_hosts must be given a value if this host collection is not unlimited.")},
+                                  :if => ->(host_collection) { !host_collection.unlimited_content_hosts }
+    validate :max_content_hosts_check, :if => ->(host_collection) { host_collection.new_record? || host_collection.max_content_hosts_changed? }
+    validate :max_content_hosts_not_exceeded, :on => :create
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true
 
-    def validate_max_content_hosts
-      if new_record? || max_content_hosts_changed?
-        if (!unlimited_content_hosts) && (systems.length > 0 && (systems.length > max_content_hosts))
-          errors.add :content_host_limit, _("may not be less than the number of content hosts associated with the host collection.")
-        elsif (max_content_hosts == 0)
-          errors.add :content_host_limit, _("may not be set to 0.")
-        elsif (unlimited_content_hosts == false) && (max_content_hosts.nil?)
-          errors.add :max_content_hosts, _("must be given a value if this host collection is not unlimited.")
-        end
+    def max_content_hosts_check
+      if !unlimited_content_hosts && (systems.length > 0 && (systems.length.to_i > max_content_hosts.to_i)) && max_content_hosts_changed?
+        errors.add :max_content_host, N_("may not be less than the number of content hosts associated with the host collection.")
+      end
+    end
+
+    def max_content_hosts_not_exceeded
+      if !unlimited_content_hosts && (systems.size.to_i > max_content_hosts.to_i)
+        errors.add :base,  N_("You cannot have more than #{max_content_hosts} content host(s) associated with host collection #{name}." %
+                              {:max_content_hosts => max_content_hosts, :name => name})
       end
     end
 

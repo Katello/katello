@@ -9,7 +9,7 @@ angular.module('Bastion.subscriptions').filter('subscriptionAttachAmountFilter',
     ['translate',
     function (translate) {
         return function (subscription) {
-            var amount = subscription.amount;
+            var amount = subscription["quantity_attached"];
             return (!amount || amount < 1) ? translate("Automatic") : amount;
         };
     }]

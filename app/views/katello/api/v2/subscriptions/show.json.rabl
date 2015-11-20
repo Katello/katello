@@ -2,10 +2,9 @@ object @resource
 
 extends "katello/api/v2/subscriptions/base"
 
-attributes :virt_only
 attributes :arch
-attributes :unmapped_guest
 attributes :description
+attributes :support_type
 
 node :provided_products, :if => lambda { |sub| sub && !sub.products.blank? } do |subscription|
   subscription.products.map do |product|
