@@ -27,8 +27,23 @@ module Actions
             sync_options[:validate] = !(SETTINGS[:katello][:pulp][:skip_checksum_validation])
 
             output[:pulp_tasks] = pulp_tasks =
-                pulp_resources.repository.sync(input[:pulp_id],  override_config: sync_options)
+                [pulp_resources.repository.sync(input[:pulp_id],  override_config: sync_options)]
+
             pulp_tasks
+          end
+        end
+
+        def external_task=(tasks)
+          output[:contents_changed] = contents_changed?(tasks)
+          super
+        end
+
+        def contents_changed?(tasks)
+          sync_task = tasks.find { |task| (task['tags'] || []).include?('pulp:action:sync') }
+          if sync_task && sync_task['state'] == 'finished' && sync_task[:result]
+            sync_task['result']['added_count'] > 0 || sync_task['result']['removed_count'] > 0
+          else
+            true #if we can't figure it out, assume something changed
           end
         end
 

@@ -1,6 +1,5 @@
 module Katello
   class PulpTaskStatus < TaskStatus
-    use_index_of TaskStatus if SETTINGS[:katello][:use_elasticsearch]
     WAIT_TIMES = [0.5, 1, 2, 4, 8, 16]
     WAIT_TIME_STEP = 5
 

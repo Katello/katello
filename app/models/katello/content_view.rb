@@ -229,8 +229,6 @@ module Katello
     end
 
     # Returns actual puppet modules associated with all components
-    #
-    # @returns array of ElasticSearch::Item objects
     def component_modules_to_publish
       composite? ? components.flat_map { |version| version.puppet_modules } : nil
     end

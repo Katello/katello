@@ -6,8 +6,8 @@ require 'support/host_support'
 module Katello
   class SystemClassTest < SystemTestBase
     def test_uuids_to_ids
-      @alabama = build(:katello_system, :alabama, :name => 'alabama man', :description => 'Alabama system', :environment => @dev, :uuid => 'alabama')
-      @westeros = build(:katello_system, :name => 'westeros', :description => 'Westeros system', :environment => @dev, :uuid => 'westeros')
+      @alabama = build(:katello_system, :alabama, :name => 'alabama man', :description => 'Alabama system', :environment => @library, :uuid => 'alabama')
+      @westeros = build(:katello_system, :name => 'westeros', :description => 'Westeros system', :environment => @library, :uuid => 'westeros')
       assert @alabama.save
       assert @westeros.save
       actual_ids = System.uuids_to_ids([@alabama, @westeros].map(&:uuid))
@@ -17,8 +17,8 @@ module Katello
     end
 
     def test_uuids_to_ids_raises_not_found
-      @alabama = build(:katello_system, :alabama, :name => 'alabama man', :description => 'Alabama system', :environment => @dev, :uuid => 'alabama')
-      @westeros = build(:katello_system, :name => 'westeros', :description => 'Westeros system', :environment => @dev, :uuid => 'westeros')
+      @alabama = build(:katello_system, :alabama, :name => 'alabama man', :description => 'Alabama system', :environment => @library, :uuid => 'alabama')
+      @westeros = build(:katello_system, :name => 'westeros', :description => 'Westeros system', :environment => @library, :uuid => 'westeros')
       assert @alabama.save
       assert @westeros.save
       assert_raises Errors::NotFound do
@@ -37,21 +37,21 @@ module Katello
     end
 
     def test_create
-      @system = build(:katello_system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
+      @system = build(:katello_system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @library, :uuid => '1234')
       assert @system.save!
       refute_nil @system.content_view
       assert @system.content_view.default?
     end
 
     def test_create_with_content_view
-      @system = build(:katello_system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
+      @system = build(:katello_system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @library, :uuid => '1234')
       @system.content_view = ContentView.find(katello_content_views(:library_dev_view))
       assert @system.save
       refute @system.content_view.default?
     end
 
     def test_i18n_name
-      @system = build(:katello_system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
+      @system = build(:katello_system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @library, :uuid => '1234')
       name = "ಬoo0000"
       @system.name = name
       @system.content_view = ContentView.find(katello_content_views(:library_dev_view))
@@ -61,7 +61,7 @@ module Katello
 
     def test_registered_by
       User.current = User.find(users(:admin))
-      @system = build(:katello_system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
+      @system = build(:katello_system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @library, :uuid => '1234')
       assert @system.save!
       assert_equal User.current.name, @system.registered_by
     end
@@ -164,6 +164,7 @@ module Katello
 
       @errata_system_dev = System.find(katello_systems(:errata_server_dev))
       @errata_system_dev.bound_repositories = [Katello::Repository.find(katello_repositories(:fedora_17_x86_64_dev))]
+      @errata_system_dev.environment = @library
       @errata_system_dev.save!
 
       installable = @errata_system_dev.applicable_errata & @errata_system_dev.installable_errata

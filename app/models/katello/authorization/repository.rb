@@ -15,7 +15,7 @@ module Katello
     end
 
     def readable?
-      self.class.readable.where("#{self.class.table_name}.id"=> self.id).any?
+      self.class.readable.where("#{self.class.table_name}.id" => self.id).any?
     end
 
     delegate :syncable?, to: :product

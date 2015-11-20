@@ -34,7 +34,6 @@ module Katello
       System.any_instance.stubs(:refresh_subscriptions).returns(true)
       System.any_instance.stubs(:content_overrides).returns([])
       System.any_instance.stubs(:products).returns([])
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
 
       Katello::PuppetModule.stubs(:module_count).returns(0)
 
@@ -58,7 +57,6 @@ module Katello
     end
 
     def test_index_errata_applicable
-      @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       errata = @repo.errata.first
       get :index, :organization_id => get_organization.id, :erratum_id => errata.uuid, :available => "false"
 
@@ -96,12 +94,6 @@ module Katello
     end
 
     def test_index_with_system_id_only
-      mock = Api::V2::SystemsController.any_instance.expects(:item_search).with do |_model, _params, options|
-        terms = options[:filters].inject({}) { |all_terms, filter| all_terms.merge(filter[:terms]) }
-        terms[:environment_id] ==  @system.environment.id.to_s
-      end
-      mock.returns({})
-
       get :index, :environment_id => @system.environment.id
 
       assert_response :success
@@ -109,12 +101,6 @@ module Katello
     end
 
     def test_index_with_org_id_only
-      mock = Api::V2::SystemsController.any_instance.expects(:item_search).with do |_model, _params, options|
-        terms = options[:filters].inject({}) { |all_terms, filter| all_terms.merge(filter[:terms]) }
-        terms[:environment_id] == @organization.kt_environments.pluck(:id)
-      end
-      mock.returns({})
-
       get :index, :organization_id => @organization.id
 
       assert_response :success
@@ -122,12 +108,6 @@ module Katello
     end
 
     def test_index_with_system_id_and_org_id
-      mock = Api::V2::SystemsController.any_instance.expects(:item_search).with do |_model, _params, options|
-        terms = options[:filters].inject({}) { |all_terms, filter| all_terms.merge(filter[:terms]) }
-        terms[:environment_id] == [@system.environment.id]
-      end
-      mock.returns({})
-
       get :index, :organization_id => @organization.id, :environment_id => @system.environment.id
 
       assert_response :success
@@ -247,6 +227,36 @@ module Katello
 
       assert_response :success
       assert_template 'api/v2/systems/product_content'
+    end
+
+    def test_search_by_name
+      systems = System.search_for("name = \"#{@system.name}\"")
+      assert_includes systems, @system
+    end
+
+    def test_search_by_content_view
+      systems = System.search_for("content_view = \"#{@system.content_view.name}\"")
+      assert_includes systems, @system
+    end
+
+    def test_search_by_activation_key
+      systems = System.search_for("activation_key = \"#{@system.activation_keys.first.name}\"")
+      assert_includes systems, @system
+    end
+
+    def test_search_by_description
+      systems = System.search_for("description = \"#{@system.description}\"")
+      assert_includes systems, @system
+    end
+
+    def test_search_by_host_collection
+      systems = System.search_for("host_collection = \"#{@system.host_collections.first}\"")
+      assert_includes systems, @system
+    end
+
+    def test_search_by_environment
+      systems = System.search_for("environment = \"#{@system.environment.name}\"")
+      assert_includes systems, @system
     end
   end
 end

@@ -22,8 +22,6 @@ module Katello
       setup_controller_defaults_api
       login_user(User.find(users(:admin)))
       User.current = User.find(users(:admin))
-      @request.env['HTTP_ACCEPT'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       models
       permissions
     end
@@ -51,7 +49,7 @@ module Katello
     def test_sync
       assert_async_task(::Actions::BulkAction) do |action_class, repos|
         action_class.must_equal ::Actions::Katello::Repository::Sync
-        repos.size.must_equal 6
+        repos.size.must_equal 9
       end
 
       put :sync_products, :ids => @products.collect(&:id), :organization_id => @organization.id

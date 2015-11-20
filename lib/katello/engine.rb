@@ -10,15 +10,11 @@ module Katello
       default_settings = {
         :use_pulp => true,
         :use_cp => true,
-        :use_elasticsearch => true,
         :rest_client_timeout => 30,
         :gpg_strict_validation => false,
         :puppet_repo_root => '/etc/puppet/environments/',
         :redhat_repository_url => 'https://cdn.redhat.com',
         :post_sync_url => 'http://localhost:3000/katello/api/v2/repositories/sync_complete?token=katello',
-        :elastic_index => 'katello',
-        :elastic_url => 'http://localhost:9200',
-        :simple_search_tokens => [":", " and\\b", " or\\b", " not\\b"],
         :consumer_cert_rpm => 'katello-ca-consumer-latest.noarch.rpm',
         :pulp => {
           :default_login => 'admin',
@@ -191,10 +187,6 @@ module Katello
     initializer 'katello.register_plugin', :after => :finisher_hook do
       require 'katello/plugin'
       require 'katello/permissions'
-
-      Tire::Configuration.url(SETTINGS[:katello][:elastic_url])
-      bridge = Katello::TireBridge.new(::Foreman::Logging.logger('katello/tire_rest'))
-      Tire.configure { logger bridge, :level => bridge.level }
     end
 
     rake_tasks do

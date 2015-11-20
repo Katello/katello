@@ -26,8 +26,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "rest-client"
 
   gem.add_dependency "rabl"
-  gem.add_dependency "tire", "~> 0.6.2"
-  gem.add_dependency "hooks"
   gem.add_dependency "foreman-tasks", "~> 0.7.1"
   gem.add_dependency "foreman_docker", ">= 0.2.0"
   gem.add_dependency "strong_parameters", "~> 0.2.1" # remove after we upgrade to Rails 4
@@ -49,8 +47,9 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "factory_girl_rails"
   gem.add_development_dependency "minitest-tags"
   gem.add_development_dependency "mocha"
-  gem.add_development_dependency "vcr", '< 3.0.0'
+  gem.add_development_dependency "vcr", "< 3.0.0"
   gem.add_development_dependency "webmock"
   gem.add_development_dependency "rubocop-checkstyle_formatter"
 
 end
+

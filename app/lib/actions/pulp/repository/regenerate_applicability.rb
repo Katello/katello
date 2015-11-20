@@ -2,8 +2,11 @@ module Actions
   module Pulp
     module Repository
       class RegenerateApplicability < Pulp::AbstractAsyncTask
+        middleware.use Actions::Middleware::ExecuteIfContentsChanged
+
         input_format do
           param :pulp_id
+          param :contents_changed
         end
 
         def invoke_external_task
