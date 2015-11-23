@@ -1,411 +1,1303 @@
---- 
-http_interactions: 
-- request: 
-    method: get
-    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="PbLBNqBdkwZwOWGK5n2FxJKUG5Qm9nHU6QOjfFDncc", oauth_signature="ZoTfuAEy6VTcIVEtQi%2Bt%2FMgQD%2FM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185843", oauth_version="1.0"
-      Cp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Server: 
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid: 
-      - a09641b0-92c8-4d43-8c7f-9f20d7339a5f
-      X-Candlepin-Version: 
-      - 0.9.11-1
-      Content-Type: 
-      - application/json
-      Transfer-Encoding: 
-      - chunked
-      Date: 
-      - Thu, 15 May 2014 20:30:43 GMT
-    body: 
-      encoding: US-ASCII
-      string: "{\"parentOwner\":null,\"id\":\"ff8080814600f23d014601946f36003a\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":null,\"upstreamConsumer\":null,\"logLevel\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\",\"created\":\"2014-05-15T20:30:43.510+0000\",\"updated\":\"2014-05-15T20:30:43.510+0000\"}"
-    http_version: 
-  recorded_at: Thu, 15 May 2014 20:30:43 GMT
-- request: 
-    method: get
-    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="FcgpTUrdCPVy6pMp2lXbdI1Fuk99bIyar4lXg94Fw", oauth_signature="eL2LGbV8Vqbe7bEAR6H6YNUJsnQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185843", oauth_version="1.0"
-      Cp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Server: 
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid: 
-      - b2c2cc8f-1818-4b4e-a344-162884d27641
-      X-Candlepin-Version: 
-      - 0.9.11-1
-      Content-Type: 
-      - application/json
-      Transfer-Encoding: 
-      - chunked
-      Date: 
-      - Thu, 15 May 2014 20:30:43 GMT
-    body: 
-      encoding: US-ASCII
-      string: "{\"parentOwner\":null,\"id\":\"ff8080814600f23d014601946f36003a\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":null,\"upstreamConsumer\":null,\"logLevel\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\",\"created\":\"2014-05-15T20:30:43.510+0000\",\"updated\":\"2014-05-15T20:30:43.510+0000\"}"
-    http_version: 
-  recorded_at: Thu, 15 May 2014 20:30:43 GMT
-- request: 
+---
+http_interactions:
+- request:
     method: put
     uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body: 
+    body:
       encoding: UTF-8
-      string: "{\"parentOwner\":null,\"id\":\"ff8080814600f23d014601946f36003a\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":\"Premium\",\"upstreamConsumer\":null,\"logLevel\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\",\"created\":\"2014-05-15T20:30:43.510+0000\",\"updated\":\"2014-05-15T20:30:43.510+0000\"}"
-    headers: 
-      Accept: 
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTQ2MDBmMjNkMDE0
+        NjAxOTQ2ZjM2MDAzYSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOiJQ
+        cmVtaXVtIiwidXBzdHJlYW1Db25zdW1lciI6bnVsbCwibG9nTGV2ZWwiOm51
+        bGwsImhyZWYiOiIvb3duZXJzL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0
+        ZW1fMSIsImNyZWF0ZWQiOiIyMDE0LTA1LTE1VDIwOjMwOjQzLjUxMCswMDAw
+        IiwidXBkYXRlZCI6IjIwMTQtMDUtMTVUMjA6MzA6NDMuNTEwKzAwMDAifQ==
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="j9ANzxjRsHnyoSCbjOMrZ2q24DjSaGoSUjZTvUpB9YM", oauth_signature="fK0VneNYm3uEQBoN4hZ%2BFr9o9ps%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185843", oauth_version="1.0"
-      Accept-Language: 
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello",
+        oauth_nonce="j9ANzxjRsHnyoSCbjOMrZ2q24DjSaGoSUjZTvUpB9YM", oauth_signature="fK0VneNYm3uEQBoN4hZ%2BFr9o9ps%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185843", oauth_version="1.0"
+      Accept-Language:
       - en
-      Content-Type: 
+      Content-Type:
       - application/json
-      Cp-User: 
+      Cp-User:
       - admin
-      Content-Length: 
-      - "403"
-      User-Agent: 
+      Content-Length:
+      - '403'
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 400
       message: Bad Request
-    headers: 
-      Server: 
+    headers:
+      Server:
       - Apache-Coyote/1.1
-      X-Candlepin-Version: 
+      X-Candlepin-Version:
       - 0.9.11-1
-      Content-Type: 
+      Content-Type:
       - application/json
-      Transfer-Encoding: 
+      Transfer-Encoding:
       - chunked
-      Date: 
+      Date:
       - Thu, 15 May 2014 20:30:43 GMT
-      Connection: 
+      Connection:
       - close
-    body: 
+    body:
       encoding: US-ASCII
-      string: "{\"displayMessage\":\"Service level 'Premium' is not available to units of organization GlueCandlepinOwnerTestSystem_1.\",\"requestUuid\":\"62ea45e8-0027-4d21-af1c-28c5e3f213cd\"}"
+      base64_string: |
+        eyJkaXNwbGF5TWVzc2FnZSI6IlNlcnZpY2UgbGV2ZWwgJ1ByZW1pdW0nIGlz
+        IG5vdCBhdmFpbGFibGUgdG8gdW5pdHMgb2Ygb3JnYW5pemF0aW9uIEdsdWVD
+        YW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS4iLCJyZXF1ZXN0VXVpZCI6IjYy
+        ZWE0NWU4LTAwMjctNGQyMS1hZjFjLTI4YzVlM2YyMTNjZCJ9
     http_version: 
   recorded_at: Thu, 15 May 2014 20:30:43 GMT
-- request: 
-    method: get
-    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="GVQjKCNh0mTaVoOIXEmx7OvWSz6twotHiXZP89JbpfM", oauth_signature="FFEqtbSjCdi1KImdDmNH17Ona48%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185843", oauth_version="1.0"
-      Cp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Server: 
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid: 
-      - 1b5b7f5d-de04-48d1-bfc6-a36f6f83a43f
-      X-Candlepin-Version: 
-      - 0.9.11-1
-      Content-Type: 
-      - application/json
-      Transfer-Encoding: 
-      - chunked
-      Date: 
-      - Thu, 15 May 2014 20:30:43 GMT
-    body: 
-      encoding: US-ASCII
-      string: "{\"parentOwner\":null,\"id\":\"ff8080814600f23d014601946f36003a\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":null,\"upstreamConsumer\":null,\"logLevel\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\",\"created\":\"2014-05-15T20:30:43.510+0000\",\"updated\":\"2014-05-15T20:30:43.510+0000\"}"
-    http_version: 
-  recorded_at: Thu, 15 May 2014 20:30:44 GMT
-- request: 
-    method: get
-    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="JHMLXXytZa7DVgJYcDdsBEeddNkyxJPTz8h1shthjU", oauth_signature="uQEIgsKY%2BMrX4Esg1cIE2uWg7%2Fg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185844", oauth_version="1.0"
-      Cp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Server: 
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid: 
-      - 7fcf89e0-a403-475d-a07b-951a4356d224
-      X-Candlepin-Version: 
-      - 0.9.11-1
-      Content-Type: 
-      - application/json
-      Transfer-Encoding: 
-      - chunked
-      Date: 
-      - Thu, 15 May 2014 20:30:43 GMT
-    body: 
-      encoding: US-ASCII
-      string: "{\"parentOwner\":null,\"id\":\"ff8080814600f23d014601946f36003a\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":null,\"upstreamConsumer\":null,\"logLevel\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\",\"created\":\"2014-05-15T20:30:43.510+0000\",\"updated\":\"2014-05-15T20:30:43.510+0000\"}"
-    http_version: 
-  recorded_at: Thu, 15 May 2014 20:30:44 GMT
-- request: 
+- request:
     method: put
     uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body: 
+    body:
       encoding: UTF-8
-      string: "{\"parentOwner\":null,\"id\":\"ff8080814600f23d014601946f36003a\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":\"\",\"upstreamConsumer\":null,\"logLevel\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\",\"created\":\"2014-05-15T20:30:43.510+0000\",\"updated\":\"2014-05-15T20:30:43.510+0000\"}"
-    headers: 
-      Accept: 
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTQ2MDBmMjNkMDE0
+        NjAxOTQ2ZjM2MDAzYSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOiIi
+        LCJ1cHN0cmVhbUNvbnN1bWVyIjpudWxsLCJsb2dMZXZlbCI6bnVsbCwiaHJl
+        ZiI6Ii9vd25lcnMvR2x1ZUNhbmRsZXBpbk93bmVyVGVzdFN5c3RlbV8xIiwi
+        Y3JlYXRlZCI6IjIwMTQtMDUtMTVUMjA6MzA6NDMuNTEwKzAwMDAiLCJ1cGRh
+        dGVkIjoiMjAxNC0wNS0xNVQyMDozMDo0My41MTArMDAwMCJ9
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="dTpvVButw8riBRyIQECWYPPPUoVrbkmf3zkob3MCB4", oauth_signature="47J14wKtNTUt49J%2FyOj%2FNS0hfg0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185844", oauth_version="1.0"
-      Accept-Language: 
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello",
+        oauth_nonce="dTpvVButw8riBRyIQECWYPPPUoVrbkmf3zkob3MCB4", oauth_signature="47J14wKtNTUt49J%2FyOj%2FNS0hfg0%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185844", oauth_version="1.0"
+      Accept-Language:
       - en
-      Content-Type: 
+      Content-Type:
       - application/json
-      Cp-User: 
+      Cp-User:
       - admin
-      Content-Length: 
-      - "396"
-      User-Agent: 
+      Content-Length:
+      - '396'
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Server: 
+    headers:
+      Server:
       - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid: 
+      X-Candlepin-Request-Uuid:
       - 131fd604-8d8a-49c8-806a-76da657a697c
-      X-Candlepin-Version: 
+      X-Candlepin-Version:
       - 0.9.11-1
-      Content-Type: 
+      Content-Type:
       - application/json
-      Transfer-Encoding: 
+      Transfer-Encoding:
       - chunked
-      Date: 
+      Date:
       - Thu, 15 May 2014 20:30:43 GMT
-    body: 
+    body:
       encoding: US-ASCII
-      string: "{\"parentOwner\":null,\"id\":\"ff8080814600f23d014601946f36003a\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":null,\"upstreamConsumer\":null,\"logLevel\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\",\"created\":\"2014-05-15T20:30:43.510+0000\",\"updated\":\"2014-05-15T20:30:43.510+0000\"}"
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTQ2MDBmMjNkMDE0
+        NjAxOTQ2ZjM2MDAzYSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNC0wNS0xNVQyMDozMDo0My41MTArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE0LTA1LTE1VDIwOjMwOjQzLjUxMCswMDAwIn0=
     http_version: 
   recorded_at: Thu, 15 May 2014 20:30:44 GMT
-- request: 
-    method: get
-    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="vqIAfvd4kdfGeTa6P3EhRn8hcjFqqKB7YrhsdsoeE", oauth_signature="PZyRmV6cKy9caG7YC6tItsjs4Uo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185844", oauth_version="1.0"
-      Cp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Server: 
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid: 
-      - 6df5ea46-5cab-4f55-80b3-150cac1596ee
-      X-Candlepin-Version: 
-      - 0.9.11-1
-      Content-Type: 
-      - application/json
-      Transfer-Encoding: 
-      - chunked
-      Date: 
-      - Thu, 15 May 2014 20:30:43 GMT
-    body: 
-      encoding: US-ASCII
-      string: "{\"parentOwner\":null,\"id\":\"ff8080814600f23d014601946f36003a\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":null,\"upstreamConsumer\":null,\"logLevel\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\",\"created\":\"2014-05-15T20:30:43.510+0000\",\"updated\":\"2014-05-15T20:30:43.510+0000\"}"
-    http_version: 
-  recorded_at: Thu, 15 May 2014 20:30:44 GMT
-- request: 
-    method: get
-    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="c7f1fqtIWHsVrfVZOUnJL17X0wEQy6Gz5RlybPA", oauth_signature="YThlzOC12OKK0f0kjU40%2B2cCVUk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185844", oauth_version="1.0"
-      Cp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Server: 
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid: 
-      - 40c77573-7214-44f6-b038-9f5f27dfb572
-      X-Candlepin-Version: 
-      - 0.9.11-1
-      Content-Type: 
-      - application/json
-      Transfer-Encoding: 
-      - chunked
-      Date: 
-      - Thu, 15 May 2014 20:30:43 GMT
-    body: 
-      encoding: US-ASCII
-      string: "{\"parentOwner\":null,\"id\":\"ff8080814600f23d014601946f36003a\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":null,\"upstreamConsumer\":null,\"logLevel\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\",\"created\":\"2014-05-15T20:30:43.510+0000\",\"updated\":\"2014-05-15T20:30:43.510+0000\"}"
-    http_version: 
-  recorded_at: Thu, 15 May 2014 20:30:44 GMT
-- request: 
+- request:
     method: put
     uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body: 
+    body:
       encoding: UTF-8
-      string: "{\"parentOwner\":null,\"id\":\"ff8080814600f23d014601946f36003a\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":null,\"upstreamConsumer\":null,\"logLevel\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\",\"created\":\"2014-05-15T20:30:43.510+0000\",\"updated\":\"2014-05-15T20:30:43.510+0000\"}"
-    headers: 
-      Accept: 
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTQ2MDBmMjNkMDE0
+        NjAxOTQ2ZjM2MDAzYSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNC0wNS0xNVQyMDozMDo0My41MTArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE0LTA1LTE1VDIwOjMwOjQzLjUxMCswMDAwIn0=
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="6Ka0TQulfU1w5blBfZgyEvswqwH0vqA7BFO8RZV0", oauth_signature="EPKBW2OLXdRd5q4xBD9Zm95pBcU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185844", oauth_version="1.0"
-      Accept-Language: 
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello",
+        oauth_nonce="6Ka0TQulfU1w5blBfZgyEvswqwH0vqA7BFO8RZV0", oauth_signature="EPKBW2OLXdRd5q4xBD9Zm95pBcU%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185844", oauth_version="1.0"
+      Accept-Language:
       - en
-      Content-Type: 
+      Content-Type:
       - application/json
-      Cp-User: 
+      Cp-User:
       - admin
-      Content-Length: 
-      - "398"
-      User-Agent: 
+      Content-Length:
+      - '398'
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Server: 
+    headers:
+      Server:
       - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid: 
+      X-Candlepin-Request-Uuid:
       - 0070cc14-9ef5-4fd9-a090-b634b8e62c7c
-      X-Candlepin-Version: 
+      X-Candlepin-Version:
       - 0.9.11-1
-      Content-Type: 
+      Content-Type:
       - application/json
-      Transfer-Encoding: 
+      Transfer-Encoding:
       - chunked
-      Date: 
+      Date:
       - Thu, 15 May 2014 20:30:44 GMT
-    body: 
+    body:
       encoding: US-ASCII
-      string: "{\"parentOwner\":null,\"id\":\"ff8080814600f23d014601946f36003a\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":null,\"upstreamConsumer\":null,\"logLevel\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\",\"created\":\"2014-05-15T20:30:43.510+0000\",\"updated\":\"2014-05-15T20:30:43.510+0000\"}"
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTQ2MDBmMjNkMDE0
+        NjAxOTQ2ZjM2MDAzYSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNC0wNS0xNVQyMDozMDo0My41MTArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE0LTA1LTE1VDIwOjMwOjQzLjUxMCswMDAwIn0=
     http_version: 
   recorded_at: Thu, 15 May 2014 20:30:44 GMT
-- request: 
+- request:
+    method: put
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1MzA4NDgyMDI1ZiIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOiJQ
+        cmVtaXVtIiwidXBzdHJlYW1Db25zdW1lciI6bnVsbCwibG9nTGV2ZWwiOm51
+        bGwsImhyZWYiOiIvb3duZXJzL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0
+        ZW1fMSIsImNyZWF0ZWQiOiIyMDE1LTExLTIzVDE2OjMyOjMwLjg1MCswMDAw
+        IiwidXBkYXRlZCI6IjIwMTUtMTEtMjNUMTY6MzI6MzAuODUwKzAwMDAifQ==
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8",
+        oauth_nonce="UH2AKVl8vfdssTcbUfXbGiKArzLZiESC8Irq358Ik", oauth_signature="o2m5b3cFM%2BToG6m9zeNr8TOeO5U%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448296350", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - secret_admin
+      Content-Length:
+      - '403'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 16:32:30 GMT
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJkaXNwbGF5TWVzc2FnZSI6IlNlcnZpY2UgbGV2ZWwgJ1ByZW1pdW0nIGlz
+        IG5vdCBhdmFpbGFibGUgdG8gdW5pdHMgb2Ygb3JnYW5pemF0aW9uIEdsdWVD
+        YW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS4iLCJyZXF1ZXN0VXVpZCI6IjQz
+        YjFlZjE4LTYzMTEtNGYzYy04NzJlLWEyOGE2NjJmMGNlNCJ9
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 16:32:31 GMT
+- request:
+    method: put
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1MzA4NDgyMDI1ZiIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOiIi
+        LCJ1cHN0cmVhbUNvbnN1bWVyIjpudWxsLCJsb2dMZXZlbCI6bnVsbCwiaHJl
+        ZiI6Ii9vd25lcnMvR2x1ZUNhbmRsZXBpbk93bmVyVGVzdFN5c3RlbV8xIiwi
+        Y3JlYXRlZCI6IjIwMTUtMTEtMjNUMTY6MzI6MzAuODUwKzAwMDAiLCJ1cGRh
+        dGVkIjoiMjAxNS0xMS0yM1QxNjozMjozMC44NTArMDAwMCJ9
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8",
+        oauth_nonce="3ZqoKyLpfOSrmbYw9iO2XvsY4F70rGm8A1RPjfB808", oauth_signature="rDknHP4s5AzOpuhm4bHg7MIS2Wc%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448296351", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - secret_admin
+      Content-Length:
+      - '396'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 28827d59-dffe-4636-b589-0b60bb26caf7
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 16:32:30 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1MzA4NDgyMDI1ZiIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNjozMjozMC44NTArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE2OjMyOjMwLjg1MCswMDAwIn0=
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 16:32:31 GMT
+- request:
+    method: put
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1MzA4NDgyMDI1ZiIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNjozMjozMC44NTArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE2OjMyOjMwLjg1MCswMDAwIn0=
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8",
+        oauth_nonce="lwHKOjIXKO1lFhypoVq6xcfEsFC5HJbzJlEREOvDFWo", oauth_signature="JWpuJj6RrR22hmnhBeXi%2BhFrn5A%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448296351", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - secret_admin
+      Content-Length:
+      - '398'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 4ec9cb38-ac85-4057-b2b1-e292b9bfb60f
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 16:32:30 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1MzA4NDgyMDI1ZiIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNjozMjozMC44NTArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE2OjMyOjMwLjg1MCswMDAwIn0=
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 16:32:31 GMT
+- request:
+    method: put
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1MzBjN2M5MDI2MCIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOiJQ
+        cmVtaXVtIiwidXBzdHJlYW1Db25zdW1lciI6bnVsbCwibG9nTGV2ZWwiOm51
+        bGwsImhyZWYiOiIvb3duZXJzL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0
+        ZW1fMSIsImNyZWF0ZWQiOiIyMDE1LTExLTIzVDE2OjMyOjQ4LjA3MyswMDAw
+        IiwidXBkYXRlZCI6IjIwMTUtMTEtMjNUMTY6MzI6NDguMDczKzAwMDAifQ==
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8",
+        oauth_nonce="RU60SewPWVeLHeIsNQCSKBZVLrFZO56mml8ycqJi8", oauth_signature="OysKNqxZh7ix%2Ft7vTr8Mrr1N3bo%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448296368", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - secret_admin
+      Content-Length:
+      - '403'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 16:32:48 GMT
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJkaXNwbGF5TWVzc2FnZSI6IlNlcnZpY2UgbGV2ZWwgJ1ByZW1pdW0nIGlz
+        IG5vdCBhdmFpbGFibGUgdG8gdW5pdHMgb2Ygb3JnYW5pemF0aW9uIEdsdWVD
+        YW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS4iLCJyZXF1ZXN0VXVpZCI6ImUw
+        NDdiZjJmLTNiZTgtNDAwMy1iYmQ5LWE3NDViNzc4YzYxYiJ9
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 16:32:48 GMT
+- request:
+    method: put
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1MzBjN2M5MDI2MCIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOiIi
+        LCJ1cHN0cmVhbUNvbnN1bWVyIjpudWxsLCJsb2dMZXZlbCI6bnVsbCwiaHJl
+        ZiI6Ii9vd25lcnMvR2x1ZUNhbmRsZXBpbk93bmVyVGVzdFN5c3RlbV8xIiwi
+        Y3JlYXRlZCI6IjIwMTUtMTEtMjNUMTY6MzI6NDguMDczKzAwMDAiLCJ1cGRh
+        dGVkIjoiMjAxNS0xMS0yM1QxNjozMjo0OC4wNzMrMDAwMCJ9
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8",
+        oauth_nonce="fRAdS2XK2PflPhXqs4KwRKcMHse2L4vVTIu7qnnOI", oauth_signature="5%2FDylb7fRRaCjKvonsdWpZKlFUk%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448296368", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - secret_admin
+      Content-Length:
+      - '396'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - e6c1040d-a70f-400e-ab5f-909141621df9
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 16:32:48 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1MzBjN2M5MDI2MCIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNjozMjo0OC4wNzMrMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE2OjMyOjQ4LjA3MyswMDAwIn0=
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 16:32:48 GMT
+- request:
+    method: put
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1MzBjN2M5MDI2MCIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNjozMjo0OC4wNzMrMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE2OjMyOjQ4LjA3MyswMDAwIn0=
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8",
+        oauth_nonce="Rc51b5OEfrCukyQ8jIlSBJCi5iMXERu5GZ7ItUtrH0", oauth_signature="GbpJZX%2F2eODgTFYTJNnXGSxCq88%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448296368", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - secret_admin
+      Content-Length:
+      - '398'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 20eec8c1-b070-45bd-9385-202fadc3b0fe
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 16:32:48 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1MzBjN2M5MDI2MCIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNjozMjo0OC4wNzMrMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE2OjMyOjQ4LjA3MyswMDAwIn0=
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 16:32:48 GMT
+- request:
+    method: put
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGI3ZDBiMDI2OSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOiJQ
+        cmVtaXVtIiwidXBzdHJlYW1Db25zdW1lciI6bnVsbCwibG9nTGV2ZWwiOm51
+        bGwsImhyZWYiOiIvb3duZXJzL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0
+        ZW1fMSIsImNyZWF0ZWQiOiIyMDE1LTExLTIzVDE3OjAxOjU4LjQxMSswMDAw
+        IiwidXBkYXRlZCI6IjIwMTUtMTEtMjNUMTc6MDE6NTguNDExKzAwMDAifQ==
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8",
+        oauth_nonce="eee5udm4NsZACUtt0xkf3bwOvtOqchNaPjbnoLfPmvs", oauth_signature="IxJ1DE6MxfXpDqt%2FgrXqa4N1k50%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448298118", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - secret_admin
+      Content-Length:
+      - '403'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 17:01:58 GMT
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJkaXNwbGF5TWVzc2FnZSI6IlNlcnZpY2UgbGV2ZWwgJ1ByZW1pdW0nIGlz
+        IG5vdCBhdmFpbGFibGUgdG8gdW5pdHMgb2Ygb3JnYW5pemF0aW9uIEdsdWVD
+        YW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS4iLCJyZXF1ZXN0VXVpZCI6Ijk3
+        NGUyODg4LTMwNjMtNDY5MS1hOGZkLThiZjdhYjI5M2NkYiJ9
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 17:01:58 GMT
+- request:
+    method: put
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGI3ZDBiMDI2OSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOiIi
+        LCJ1cHN0cmVhbUNvbnN1bWVyIjpudWxsLCJsb2dMZXZlbCI6bnVsbCwiaHJl
+        ZiI6Ii9vd25lcnMvR2x1ZUNhbmRsZXBpbk93bmVyVGVzdFN5c3RlbV8xIiwi
+        Y3JlYXRlZCI6IjIwMTUtMTEtMjNUMTc6MDE6NTguNDExKzAwMDAiLCJ1cGRh
+        dGVkIjoiMjAxNS0xMS0yM1QxNzowMTo1OC40MTErMDAwMCJ9
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8",
+        oauth_nonce="M15XumcHph3PfWdc8uEIlkI2j5JY6pAGhkuruyV2KfU", oauth_signature="yBFPyRp7yeE6ElUBtjXYi1eNb8M%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448298118", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - secret_admin
+      Content-Length:
+      - '396'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 480f7171-f368-4d0b-9ccf-3d2dc5d67f63
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 17:01:58 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGI3ZDBiMDI2OSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNzowMTo1OC40MTErMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE3OjAxOjU4LjQxMSswMDAwIn0=
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 17:01:58 GMT
+- request:
+    method: put
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGI3ZDBiMDI2OSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNzowMTo1OC40MTErMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE3OjAxOjU4LjQxMSswMDAwIn0=
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8",
+        oauth_nonce="9OgBwQx60ZjH7rwB8onh5UNiFhaDkLosEXpLd3RBA", oauth_signature="gm5uqaL%2BS9AeNmfo4I86%2BLrTFGQ%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448298118", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - secret_admin
+      Content-Length:
+      - '398'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - ed8443a1-8b34-4f61-9fcb-50a1616fe62f
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 17:01:58 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGI3ZDBiMDI2OSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNzowMTo1OC40MTErMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE3OjAxOjU4LjQxMSswMDAwIn0=
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 17:01:58 GMT
+- request:
     method: get
     uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body: 
+    body:
       encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
+      base64_string: ''
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="Df9WmX3O03PAJS9zY0CppVwukjtj59I8aa8qpf5g", oauth_signature="XeXl78zJiEvgZTq0CtvJyki7gNo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1400185844", oauth_version="1.0"
-      Cp-User: 
-      - admin
-      User-Agent: 
+      Authorization:
+      - OAuth oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8", oauth_nonce="9qCXo4F2XvjUaZKxVOG25hRaIG8ps1fSkXLWrzxj0",
+        oauth_signature="4SFjA0H%2BLK94WbZOH7MYVm6NaNw%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1448298135", oauth_version="1.0"
+      Cp-User:
+      - secret_admin
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Server: 
+    headers:
+      Server:
       - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid: 
-      - c97ff621-f83b-4477-9b7e-c8eda7895c06
-      X-Candlepin-Version: 
-      - 0.9.11-1
-      Content-Type: 
+      X-Candlepin-Request-Uuid:
+      - 4e56d075-3115-4c66-8263-6cf56f9a117b
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
       - application/json
-      Transfer-Encoding: 
+      Transfer-Encoding:
       - chunked
-      Date: 
-      - Thu, 15 May 2014 20:30:44 GMT
-    body: 
-      encoding: US-ASCII
-      string: "{\"parentOwner\":null,\"id\":\"ff8080814600f23d014601946f36003a\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":null,\"upstreamConsumer\":null,\"logLevel\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\",\"created\":\"2014-05-15T20:30:43.510+0000\",\"updated\":\"2014-05-15T20:30:43.510+0000\"}"
+      Date:
+      - Mon, 23 Nov 2015 17:02:15 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGJiZmVhMDI2YSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNzowMjoxNS41MzArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE3OjAyOjE1LjUzMCswMDAwIn0=
     http_version: 
-  recorded_at: Thu, 15 May 2014 20:30:44 GMT
-recorded_with: VCR 2.9.0
+  recorded_at: Mon, 23 Nov 2015 17:02:15 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8", oauth_nonce="SsiYOIYyzWSDmrme6PMczk4oH1NA7khgtMfCPaGUnM",
+        oauth_signature="7DswwJ3%2B9LbTFGrUkDTzhXQHC6g%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1448298135", oauth_version="1.0"
+      Cp-User:
+      - secret_admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 8ae5f8e5-f484-4be7-84ab-838cb5e6aa0e
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 17:02:15 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGJiZmVhMDI2YSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNzowMjoxNS41MzArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE3OjAyOjE1LjUzMCswMDAwIn0=
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 17:02:15 GMT
+- request:
+    method: put
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGJiZmVhMDI2YSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOiJQ
+        cmVtaXVtIiwidXBzdHJlYW1Db25zdW1lciI6bnVsbCwibG9nTGV2ZWwiOm51
+        bGwsImhyZWYiOiIvb3duZXJzL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0
+        ZW1fMSIsImNyZWF0ZWQiOiIyMDE1LTExLTIzVDE3OjAyOjE1LjUzMCswMDAw
+        IiwidXBkYXRlZCI6IjIwMTUtMTEtMjNUMTc6MDI6MTUuNTMwKzAwMDAifQ==
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8",
+        oauth_nonce="xLyrIrgrZqY3gl6mspUQSZf32PSYDk4fFcbQPCCqqA", oauth_signature="8Hp%2BxwMLKTC7UwLtDWiqsfVuFxU%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448298135", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - secret_admin
+      Content-Length:
+      - '403'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 17:02:15 GMT
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJkaXNwbGF5TWVzc2FnZSI6IlNlcnZpY2UgbGV2ZWwgJ1ByZW1pdW0nIGlz
+        IG5vdCBhdmFpbGFibGUgdG8gdW5pdHMgb2Ygb3JnYW5pemF0aW9uIEdsdWVD
+        YW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS4iLCJyZXF1ZXN0VXVpZCI6Ijdi
+        ZDZiOGQzLWZmODktNDdmNy05YzJiLWE1Mzk1N2Q1NjI1NSJ9
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 17:02:15 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8", oauth_nonce="Vfs2riyRvdyIpxxklxBPFoGirLXBmnZxEYrN56xbms",
+        oauth_signature="shRZIWI7CM8Mgva1LKTkyeyaAwA%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1448298135", oauth_version="1.0"
+      Cp-User:
+      - secret_admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 81bb666a-bd5c-4ee5-93c5-cb76cae97882
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 17:02:15 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGJiZmVhMDI2YSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNzowMjoxNS41MzArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE3OjAyOjE1LjUzMCswMDAwIn0=
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 17:02:15 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8", oauth_nonce="CfY1OrernwSS9IZgdSv4qrBIRgVnohUybwktNJ8dc",
+        oauth_signature="DRf%2FBD%2FmH4yPboFs0Vo9ZoJpS%2FA%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1448298135", oauth_version="1.0"
+      Cp-User:
+      - secret_admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - b111775a-b853-4093-9238-eb808c71691b
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 17:02:15 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGJiZmVhMDI2YSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNzowMjoxNS41MzArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE3OjAyOjE1LjUzMCswMDAwIn0=
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 17:02:15 GMT
+- request:
+    method: put
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGJiZmVhMDI2YSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOiIi
+        LCJ1cHN0cmVhbUNvbnN1bWVyIjpudWxsLCJsb2dMZXZlbCI6bnVsbCwiaHJl
+        ZiI6Ii9vd25lcnMvR2x1ZUNhbmRsZXBpbk93bmVyVGVzdFN5c3RlbV8xIiwi
+        Y3JlYXRlZCI6IjIwMTUtMTEtMjNUMTc6MDI6MTUuNTMwKzAwMDAiLCJ1cGRh
+        dGVkIjoiMjAxNS0xMS0yM1QxNzowMjoxNS41MzArMDAwMCJ9
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8",
+        oauth_nonce="FFJ6zsMI2RRQOeANHi0uMwgxdnaGL2GDD5PoM3n7wKk", oauth_signature="bD5UmmKTbdd7xXql%2FRUXr8qYm2U%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448298135", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - secret_admin
+      Content-Length:
+      - '396'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 5d47c887-8c99-4de0-9edd-bc0b774cf97c
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 17:02:15 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGJiZmVhMDI2YSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNzowMjoxNS41MzArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE3OjAyOjE1LjUzMCswMDAwIn0=
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 17:02:15 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8", oauth_nonce="FchW3nzN0AqTbhcd9j2PLWIsWKityuTm5etzIr7s",
+        oauth_signature="CYGi8w5M9Yx%2Fx7qYWzW377r5%2F6Q%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1448298135", oauth_version="1.0"
+      Cp-User:
+      - secret_admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - c504ffd2-9b70-4c7e-ace1-feffe13fe052
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 17:02:15 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGJiZmVhMDI2YSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNzowMjoxNS41MzArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE3OjAyOjE1LjUzMCswMDAwIn0=
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 17:02:15 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8", oauth_nonce="TaNlVVaRX3hppPZq2j6yS9YKw38AH880PiuluKO5Y",
+        oauth_signature="nSEimz6dnEGl8r7vSuuoawWxyN8%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1448298135", oauth_version="1.0"
+      Cp-User:
+      - secret_admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 59dd5823-7786-4f66-8f1f-e6370b069d62
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 17:02:15 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGJiZmVhMDI2YSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNzowMjoxNS41MzArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE3OjAyOjE1LjUzMCswMDAwIn0=
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 17:02:15 GMT
+- request:
+    method: put
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGJiZmVhMDI2YSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNzowMjoxNS41MzArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE3OjAyOjE1LjUzMCswMDAwIn0=
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8",
+        oauth_nonce="P32beozAmCNmeZKkKSCaMzyMzX4ryrO8JOySeFMDuM", oauth_signature="pj4ElIR2O0WIF0NlFoaVGYcGvR4%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448298135", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - secret_admin
+      Content-Length:
+      - '398'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 23d9a648-0eb4-4313-92da-95bde9339125
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 17:02:15 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGJiZmVhMDI2YSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNzowMjoxNS41MzArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE3OjAyOjE1LjUzMCswMDAwIn0=
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 17:02:15 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_consumer_key="bb5uJCZSUdvRAcrrejP8RC8gYuFXDfr8", oauth_nonce="Wn36wjp1BNZIOun8QSk2DjbcMvQLehBIQw51yp8NY",
+        oauth_signature="83iSJE18ILYy47AhiIn%2BqF%2FtXO4%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1448298135", oauth_version="1.0"
+      Cp-User:
+      - secret_admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 8775ea43-4751-4fdd-bf5d-ffd2b509a7f1
+      X-Version:
+      - 0.9.50-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 23 Nov 2015 17:02:15 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUxMWZjODE2MDE1
+        MTM1NGJiZmVhMDI2YSIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
+        ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
+        bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
+        cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
+        LCJjcmVhdGVkIjoiMjAxNS0xMS0yM1QxNzowMjoxNS41MzArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE1LTExLTIzVDE3OjAyOjE1LjUzMCswMDAwIn0=
+    http_version: 
+  recorded_at: Mon, 23 Nov 2015 17:02:15 GMT
+recorded_with: VCR 2.9.3
