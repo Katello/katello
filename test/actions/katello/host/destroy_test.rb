@@ -12,6 +12,7 @@ module Katello::Host
       @library = katello_environments(:library)
       @host = FactoryGirl.build(:host, :with_content, :with_subscription, :content_view => @content_view,
                                  :lifecycle_environment => @library, :content_host => katello_systems(:simple_server))
+      @host.content_host.stubs(:pools).returns([{"id" => "fake"}])
     end
 
     describe 'Host Destroy' do

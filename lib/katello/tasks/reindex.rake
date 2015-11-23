@@ -139,6 +139,10 @@ namespace :katello do
     Katello::Subscription.import_all
     Katello::Pool.import_all
 
+    Katello::ActivationKey.all.each do |ack_key|
+      ack_key.import_pools
+    end
+
     reindex_helper.index_objects(Katello::Rpm) do
       Katello::Rpm.import_all
     end

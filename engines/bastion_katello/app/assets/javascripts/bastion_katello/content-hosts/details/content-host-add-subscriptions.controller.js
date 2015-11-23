@@ -54,8 +54,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
                     $scope.contentNutupane.refresh();
                 });
             }, function (response) {
-                $scope.$parent.errorMessages = response.data.displayMessage;
+                $scope.errorMessages.push(response.data.displayMessage);
                 $scope.isAdding = false;
+                $scope.contentNutupane.refresh();
             });
         };
 

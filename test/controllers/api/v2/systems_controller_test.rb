@@ -14,6 +14,7 @@ module Katello
       @repo = Repository.find(katello_repositories(:rhel_6_x86_64))
       @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_dev_view_library))
       @host = ::Host::Managed.create!(:name => "testhost", :managed => false, :content_host => @system)
+      @pool_one = katello_pools(:pool_one)
     end
 
     def permissions
@@ -33,6 +34,7 @@ module Katello
       System.any_instance.stubs(:katello_agent_installed?).returns(true)
       System.any_instance.stubs(:refresh_subscriptions).returns(true)
       System.any_instance.stubs(:content_overrides).returns([])
+      System.any_instance.stubs(:entitlements).returns([])
       System.any_instance.stubs(:products).returns([])
 
       Katello::PuppetModule.stubs(:module_count).returns(0)
@@ -257,6 +259,22 @@ module Katello
     def test_search_by_environment
       systems = System.search_for("environment = \"#{@system.environment.name}\"")
       assert_includes systems, @system
+    end
+
+    def test_add_subscriptions_protected
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission]
+
+      assert_protected_action(:add_subscriptions, allowed_perms, denied_perms) do
+        post :add_subscriptions, :id => @system.uuid, :subscriptions => [{:id => 'redhat', :quantity => 1}]
+      end
+    end
+
+    def test_add_subscriptions
+      post :add_subscriptions, :id => @system.uuid, :subscriptions => [{:id => @pool_one.id, :quantity => 1}]
+
+      assert_response :success
+      assert_template 'katello/api/v2/systems/show'
     end
   end
 end
