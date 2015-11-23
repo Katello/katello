@@ -3,10 +3,8 @@ require "rails"
 require "apipie-rails"
 
 require "rabl"
-require "tire"
 require "oauth"
 require "gettext_i18n_rails"
-require "hooks"
 require "foreigner"
 require "foreman-tasks"
 require "rest_client"
@@ -32,6 +30,5 @@ require "monkeys/anemone"
 
 module Katello
   require "katello/version"
-  require "katello/tire_bridge"
   require "katello/engine"
 end

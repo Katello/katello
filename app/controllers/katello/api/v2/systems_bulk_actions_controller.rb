@@ -5,7 +5,6 @@ module Katello
     before_filter :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
     before_filter :find_environment, :only => [:environment_content_view]
     before_filter :find_content_view, :only => [:environment_content_view]
-    before_filter :load_search_service
     before_filter :find_editable_systems, :except => [:destroy_systems, :applicable_errata]
     before_filter :find_deletable_systems, :only => [:destroy_systems]
     before_filter :find_readable_systems, :only => [:applicable_errata, :available_incremental_updates]

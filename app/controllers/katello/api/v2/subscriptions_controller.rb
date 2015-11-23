@@ -17,8 +17,6 @@ module Katello
     end
 
     api :GET, "/organizations/:organization_id/subscriptions", N_("List organization subscriptions")
-    api :GET, "/systems/:system_id/subscriptions", N_("List a content host's subscriptions"), :deprecated => true
-    api :GET, "/activation_keys/:activation_key_id/subscriptions", N_("List an activation key's subscriptions")
     api :GET, "/subscriptions"
     param_group :search, Api::V2::ApiController
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
@@ -36,12 +34,8 @@ module Katello
       return available_for_system if params[:available_for] == "content_host"
       return available_for_activation_key if params[:available_for] == "activation_key"
       collection = Pool.readable
-      collection = collection.where(:id => ActivationKey.find(params[:activation_key_id]).pools) if params[:activation_key_id]
+      collection = collection.where(:unmapped_guest => false)
       collection = collection.get_for_organization(Organization.find(params[:organization_id])) if params[:organization_id]
-      if params[:system_id]
-        pool_ids = System.find_by_uuid(params[:system_id]).pools.map { |x| x['id'] }
-        collection = collection.where(:cp_id => pool_ids)
-      end
       collection
     end
 
@@ -66,7 +60,6 @@ module Katello
       respond_for_index(:collection => scoped_search(subscriptions.uniq, :cp_id, :asc, :resource_class => Pool), :template => "index")
     end
 
-    api :POST, "/subscriptions/:id", N_("Add a subscription to a resource")
     api :POST, "/systems/:system_id/subscriptions", N_("Add a subscription to a content host"), :deprecated => true
     api :POST, "/activation_keys/:activation_key_id/subscriptions", N_("Add a subscription to an activation key")
     param :id, String, :desc => N_("Subscription Pool uuid"), :required => false
@@ -78,7 +71,7 @@ module Katello
       param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
     end
     def create
-      object = @system || @activation_key || @distributor
+      object = @system || @activation_key
 
       if params[:subscriptions]
         params[:subscriptions].each do |sub|
@@ -94,14 +87,11 @@ module Katello
                         index_system
                       elsif @activation_key
                         index_activation_key
-                      else
-                        index_organization
                       end
 
       respond_for_index(:collection => subscriptions, :template => 'index')
     end
 
-    api :DELETE, "/subscriptions/:id", N_("Unattach a subscription")
     api :DELETE, "/systems/:system_id/subscriptions/:id", N_("Unattach a subscription"), :deprecated => true
     api :DELETE, "/activation_keys/:activation_key_id/subscriptions/:id", N_("Unattach a subscription")
     param :id, String, :desc => N_("Subscription ID"), :required => false
@@ -111,7 +101,7 @@ module Katello
       param :id, String, :desc => N_("Subscription Pool uuid")
     end
     def destroy
-      object = @system || @activation_key || @distributor
+      object = @system || @activation_key
 
       if @system
         params[:subscriptions].each do |subscription|
@@ -124,15 +114,7 @@ module Katello
         @system.unsubscribe_all
       end
 
-      subscriptions = if @system
-                        index_system
-                      elsif @activation_key
-                        index_activation_key
-                      else
-                        index_organization
-                      end
-
-      respond_for_index(:collection => subscriptions, :template => 'index')
+      respond_for_index(:collection => scoped_search(import_subscriptions.uniq, :cp_id, :asc, :resource_class => Pool), :template => "index")
     end
 
     api :POST, "/organizations/:organization_id/subscriptions/upload", N_("Upload a subscription manifest")
@@ -232,48 +214,29 @@ module Katello
       %w(id desc)
     end
 
-    def index_system
-      subs = @system.entitlements
-      # TODO: pluck id and call elasticsearch?
-      subscriptions = {
-        :results => subs,
-        :subtotal => subs.count,
-        :total => subs.count,
-        :page => 1,
-        :per_page => subs.count
-      }
+    def import_subscriptions
+      subscriptions = if @system
+                        index_system
+                      elsif @activation_key
+                        index_activation_key
+                      else
+                        index_organization
+                      end
+      cp_ids = subscriptions.collect { |x| x["id"] }
+      index_relation.where("cp_id not in (?)", cp_ids)
+    end
 
-      return subscriptions
+    def index_system
+      Katello::Pool.import_all
+      @system.entitlements
     end
 
     def index_activation_key
-      @organization = @activation_key.organization
-      subs = @activation_key.subscriptions
-      # TODO: pluck id and call elasticsearch?
-      subscriptions = {
-        :results => subs,
-        :subtotal => subs.count,
-        :total => subs.count,
-        :page => 1,
-        :per_page => subs.count
-      }
-
-      return subscriptions
+      @activation_key.subscriptions
     end
 
     def index_organization
-      filters = []
-      filters << {:term => {:org => [@organization.label]}}
-
-      options = {
-        :filters => filters,
-        :load_records? => false,
-        :default_field => :name
-      }
-
-      subscriptions = item_search(Pool, params, options)
-
-      return subscriptions
+      @organization.subscriptions
     end
 
     def available_for_activation_key

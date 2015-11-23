@@ -17,7 +17,6 @@ module Actions
           cv_envs = options.fetch(:content_view_environments, [])
           versions = options.fetch(:content_view_versions, [])
           organization_destroy = options.fetch(:organization_destroy, false)
-          skip_elastic = options.fetch(:skip_elastic, false)
           skip_repo_destroy = options.fetch(:skip_repo_destroy, false)
           action_subject(content_view)
           validate_options(content_view, cv_envs, versions, options) unless organization_destroy
@@ -45,7 +44,6 @@ module Actions
                                                                     :task => self.task)
               plan_action(ContentViewEnvironment::Destroy,
                           cve,
-                          :skip_elastic => skip_elastic,
                           :skip_repo_destroy => skip_repo_destroy,
                           :organization_destroy => organization_destroy)
             end

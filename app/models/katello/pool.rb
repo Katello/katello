@@ -38,9 +38,6 @@ module Katello
       self.remote_data.merge(:cp_id => self.cp_id)
     end
 
-    # Convert active, expiring_soon, and recently_expired into elasticsearch
-    # filters and move implementation into ES pool module if performance becomes
-    # an issue (though I doubt it will--just sayin')
     def self.active(subscriptions)
       subscriptions.select { |s| s.active }
     end

@@ -8,9 +8,6 @@ module Katello
         # candlepin - without oauth
         stub_request(:get, "#{SETTINGS[:katello][:candlepin][:url]}/status")
 
-        # elastic search - without oauth
-        stub_request(:get, "#{SETTINGS[:katello][:elastic_url]}/_status")
-
         # candlepin - with oauth
         Resources::Candlepin::CandlepinPing.stubs(:ping).returns
       end

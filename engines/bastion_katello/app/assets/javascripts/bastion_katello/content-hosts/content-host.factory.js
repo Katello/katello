@@ -27,7 +27,8 @@ angular.module('Bastion.content-hosts').factory('ContentHost',
                 var contentHost = angular.fromJson(data);
                 return {results: contentHost.hostCollections};
             }},
-            contentOverride: {method: 'PUT', isArray: false, params: {action: 'content_override'}}
+            contentOverride: {method: 'PUT', isArray: false, params: {action: 'content_override'}},
+            autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
         });
 
     }]

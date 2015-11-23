@@ -75,7 +75,6 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans' do
-      SETTINGS[:katello].stubs(:use_elasticsearch).returns(true)
       content_view.expects(:save!)
       plan_action(action, content_view)
     end
@@ -185,7 +184,7 @@ module ::Actions::Katello::ContentView
       action.expects(:action_subject).with(content_view)
       plan_action(action, content_view, options)
 
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env,  :skip_elastic => false, :skip_repo_destroy => false, :organization_destroy => false)
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env,  :skip_repo_destroy => false, :organization_destroy => false)
     end
 
     it 'plans for removing a version and an environment' do
@@ -199,7 +198,7 @@ module ::Actions::Katello::ContentView
       action.expects(:action_subject).with(content_view)
 
       plan_action(action, content_view, options)
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env, :skip_elastic => false, :skip_repo_destroy => false, :organization_destroy => false)
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env, :skip_repo_destroy => false, :organization_destroy => false)
       assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version, :skip_environment_check => true, :skip_destroy_env_content => true)
     end
   end

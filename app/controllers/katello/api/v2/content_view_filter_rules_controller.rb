@@ -6,12 +6,14 @@ module Katello
     api :GET, "/content_view_filters/:content_view_filter_id/rules", N_("List filter rules")
     param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
     def index
-      options = sort_params
-      options[:load_records?] = true
-      options[:filters] = [{ :terms => { :id => ContentViewFilter.rule_ids_for(@filter) } }]
-
-      @search_service.model = ContentViewFilter.rule_class_for(@filter)
-      respond(:collection => item_search(ContentViewFilter.rule_class_for(@filter), params, options))
+      ids = ContentViewFilter.rule_ids_for(@filter)
+      results = ids.map { |id| ContentViewFilter.rule_class_for(@filter).find(id) }
+      collection = {
+        :results  => results.uniq,
+        :subtotal => results.count,
+        :total    => results.count
+      }
+      respond :collection => collection
     end
 
     api :POST, "/content_view_filters/:content_view_filter_id/rules",

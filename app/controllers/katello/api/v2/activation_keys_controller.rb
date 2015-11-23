@@ -7,7 +7,8 @@ module Katello
     before_filter :find_optional_organization, :only => [:index, :create, :show]
     before_filter :find_activation_key, :only => [:show, :update, :destroy, :available_releases, :copy, :product_content,
                                                   :available_host_collections, :add_host_collections, :remove_host_collections,
-                                                  :content_override, :add_subscriptions, :remove_subscriptions]
+                                                  :content_override, :add_subscriptions, :remove_subscriptions,
+                                                  :subscriptions]
     before_filter :authorize
 
     wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach content_view_environment))
@@ -212,6 +213,18 @@ module Katello
       activation_keys = activation_keys.where(:environment_id => @environment) if @environment
       activation_keys = activation_keys.where(:content_view_id => @content_view) if @content_view
       activation_keys
+    end
+
+    api :GET, "/activation_keys/:id/subscriptions", N_("List an activation key's subscriptions")
+    param :activation_key_id, String, :desc => N_("Activation key ID"), :required => true
+    def subscriptions
+      subscriptions = @activation_key.get_key_pools.map { |sub| ActivationKeySubscriptionPresenter.new(sub) }
+      collection = subscriptions.map(&:subscription)
+      @collection = { :results => collection,
+                      :total => collection.count,
+                      :page => 1,
+                      :per_page => collection.count,
+                      :subtotal => collection.count }
     end
 
     private
