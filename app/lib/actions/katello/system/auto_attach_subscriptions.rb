@@ -8,6 +8,10 @@ module Actions
           action_subject system
           plan_action(::Actions::Candlepin::Consumer::AutoAttachSubscriptions, system) if ::SETTINGS[:katello][:use_cp]
         end
+
+        def finalize
+          ::Katello::Pool.import_all
+        end
       end
     end
   end

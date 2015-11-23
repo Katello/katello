@@ -18,13 +18,13 @@ angular.module('Bastion.activation-keys').controller('ActivationKeySubscriptions
         var params;
 
         params = {
-            'activation_key_id': $scope.$stateParams.activationKeyId,
+            'id': $scope.$stateParams.activationKeyId,
             'search': $location.search().search || "",
             'sort_order': 'ASC',
             'paged': true
         };
 
-        $scope.contentNutupane = new Nutupane(Subscription, params);
+        $scope.contentNutupane = new Nutupane(ActivationKey, params, "subscriptions");
         $scope.detailsTable = $scope.contentNutupane.table;
         $scope.contentNutupane.masterOnly = true;
         $scope.contentNutupane.setSearchKey('subscriptionSearch');

@@ -26,12 +26,23 @@ module Actions
             host.content_aspect.update_attributes!(:uuid => nil) if host.content_aspect
           end
 
-          host.content_host.destroy! if host.content_host
+          if host.content_host
+            pool_ids = host.content_host.pools.map { |p| p["id"] }
+            plan_self(:pool_ids => pool_ids)
+            host.content_host.destroy!
+          end
 
           if destroy_object
             unless host.destroy
               fail host.errors.full_messages.join('; ')
             end
+          end
+        end
+
+        def finalize
+          input[:pool_ids].each do |pool_id|
+            pool = ::Katello::Pool.where(:cp_id => pool_id).first
+            pool.import_data if pool
           end
         end
 

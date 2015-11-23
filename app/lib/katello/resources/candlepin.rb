@@ -498,8 +498,11 @@ module Katello
             JSON.parse(pool_json).with_indifferent_access
           end
 
-          def get_for_owner(owner_key)
-            pools_json = self.get("/candlepin/owners/#{owner_key}/pools?attribute=unmapped_guests_only:!true", self.default_headers).body
+          def get_for_owner(owner_key, include_temporary_guests = false)
+            url_path = "/candlepin/owners/#{owner_key}/pools"
+            url_params = "?attribute=unmapped_guests_only:!true"
+            url = include_temporary_guests ? url_path : url_path + url_params
+            pools_json = self.get(url, self.default_headers).body
             JSON.parse(pools_json)
           end
 

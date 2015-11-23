@@ -71,7 +71,9 @@ module Katello
     def exclude_rolling_kickstart_repos(repos)
       repos.select do |repo|
         if repo[:path].include?('kickstart')
-          repo[:substitutions][:releasever].include?('Server') ? repo[:enabled] : true
+          variants = ['Server', 'Client', 'ComputeNode', 'Workstation']
+          has_variant = variants.any? { |v| repo[:substitutions][:releasever].include?(v) }
+          has_variant ? repo[:enabled] : true
         else
           true
         end

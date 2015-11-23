@@ -17,10 +17,17 @@
         function error(response) {
             $scope.working = false;
             angular.forEach(response.data.errors, function (errors, field) {
-                $scope.environmentForm[field].$setValidity('server', false);
-                $scope.environmentForm[field].$error.messages = errors;
+                if ($scope.environmentForm.hasOwnProperty(field)) {
+                    $scope.environmentForm[field].$setValidity('server', false);
+                    $scope.environmentForm[field].$error.messages = errors;
+                } else {
+                    $scope.errorMessages.push(errors);
+                }
             });
         }
+
+        $scope.errorMessages = [];
+        $scope.successMessages = [];
 
         $scope.loading = true;
         $scope.environment = new Environment();

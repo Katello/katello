@@ -10,7 +10,6 @@ module Katello
       @system = katello_systems(:simple_server)
       @products = katello_products
       @organization = get_organization
-      @pool_one = katello_pools(:pool_one)
     end
 
     def permissions
@@ -32,6 +31,8 @@ module Katello
       System.any_instance.stubs(:entitlements).returns([])
       System.any_instance.stubs(:find_entitlement).returns({})
       Pool.stubs(:candlepin_data).returns({})
+      Pool.stubs(:get_for_owner).returns([])
+      Pool.any_instance.stubs(:import_data).returns(true)
       Pool.any_instance.stubs(:backend_data).returns({})
       Pool.any_instance.stubs(:import_lazy_attributes).returns({})
 
@@ -76,22 +77,6 @@ module Katello
 
       assert_protected_action(:available, allowed_perms, denied_perms) do
         get :available, :system_id => @system.uuid
-      end
-    end
-
-    def test_create
-      post :create, :system_id => @system.uuid, :subscriptions => [{:id => @pool_one.id, :quantity => 1}]
-
-      assert_response :success
-      assert_template 'katello/api/v2/subscriptions/index'
-    end
-
-    def test_create_protected
-      allowed_perms = [@attach_permission]
-      denied_perms = [@read_permission, @unattach_permission, @import_permission, @delete_permission]
-
-      assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, :system_id => @system.uuid, :subscriptions => [{:id => 'redhat', :quantity => 1}]
       end
     end
 

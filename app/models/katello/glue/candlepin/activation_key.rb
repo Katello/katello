@@ -37,8 +37,8 @@ module Katello
       end
 
       def import_pools
-        pool_ids = self.get_key_pools.map { |pool| pool['id'] }
-        pools = Katello::Pool.where(:cp_id => pool_ids)
+        key_pools = self.get_key_pools
+        pools = Katello::Pool.where(:cp_id => key_pools.map { |pool| pool['id'] })
         associations = Katello::PoolActivationKey.where(:activation_key_id => self.id)
         associations.map { |assoc| assoc.destroy! if pools.map(&:id).exclude?(assoc.pool_id) }
         pools.each do |pool|
