@@ -18,7 +18,8 @@ module Katello
     private
 
     def valid_for_prefixes(url, prefixes)
-      prefixes.include?(URI.parse(url).scheme)
+      return false unless (scheme = URI.parse(url).scheme).present?
+      prefixes.include?(scheme.downcase)
     rescue URI::InvalidURIError
       return false
     end
