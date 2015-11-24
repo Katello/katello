@@ -111,9 +111,12 @@ module Katello
     #api :POST, "/hypervisors", N_("Update the hypervisors information for environment")
     #desc 'See virt-who tool for more details.'
     def hypervisors_update
-      #TODO
-      cp_response, _ = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action, :format))
-      render :json => cp_response
+      login = User.consumer? ? User.anonymous_api_admin.login : User.current.login
+      task = User.as(login) do
+        sync_task(::Actions::Katello::Host::Hypervisors, @environment, @content_view,
+                            params.except(:controller, :action, :format))
+      end
+      render :json => task.output[:results]
     end
 
     #api :PUT, "/consumers/:id/checkin/", N_("Update consumer check-in time")
@@ -188,7 +191,8 @@ module Katello
     #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")
     def consumer_create
       content_view_environment = find_content_view_environment
-      host = find_or_create_host(content_view_environment.environment.organization)
+      host = Katello::Host::SubscriptionAspect.find_or_create_host(params[:facts]['network.hostname'],
+                 content_view_environment.environment.organization, rhsm_params)
 
       sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, content_view_environment)
       host.reload
@@ -214,7 +218,8 @@ module Katello
       # Set it before calling find_activation_keys to allow communication with candlepin
       User.current    = User.anonymous_admin
       activation_keys = find_activation_keys
-      host    = find_or_create_host(activation_keys.first.organization)
+      host = Katello::Host::SubscriptionAspect.find_or_create_host(params[:facts]['network.hostname'],
+                                    activation_keys.first.organization, rhsm_params)
 
       sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, nil, activation_keys)
       host.reload
@@ -291,10 +296,10 @@ module Katello
     # Hypervisors are restricted to the content host's environment and content view
     def find_hypervisor_environment_and_content_view
       if User.consumer?
-        find_host(User.current.uuid)
-        @organization = @host.content_host.organization
-        @environment = @host.content_host.environment
-        @content_view = @host.content_host.content_view
+        @host = find_host(User.current.uuid)
+        @organization = @host.content_aspect.content_view.organization
+        @environment = @host.content_aspect.lifecycle_environment
+        @content_view = @host.content_aspect.content_view
         params[:owner] = @organization.label
         params[:env] = @content_view.cp_environment_label(@environment)
       else
@@ -357,18 +362,6 @@ module Katello
         fail HttpErrors::BadRequest, _("At least one activation key must be provided")
       end
       activation_keys
-    end
-
-    def find_or_create_host(organization)
-      hosts = ::Host.where(:name => params[:facts]['network.hostname'])
-      if hosts.empty? #no host exists
-        Katello::Host::SubscriptionAspect.new_host_from_rhsm_params(rhsm_params, organization, Location.default_location)
-      elsif hosts.where(:organization_id => organization.id).empty? #not in the correct org
-        #TODO
-        fail "Can't handle registering to host in a different org, need to handle this case."
-      else
-        hosts.first
-      end
     end
 
     def get_content_view_environment(key, value)

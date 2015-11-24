@@ -9,6 +9,8 @@ module Katello
 
       validates :host, :presence => true, :allow_blank => false
 
+      DEFAULT_TYPE = Glue::Candlepin::Consumer::SYSTEM
+
       def update_from_consumer_attributes(consumer_params)
         self.autoheal = consumer_params['autoheal'] unless consumer_params['autoheal'].blank?
         self.service_level = consumer_params['serviceLevel'] unless consumer_params['serviceLevel'].blank?
@@ -51,11 +53,36 @@ module Katello
         end
       end
 
+      def self.find_or_create_host(name, organization, rhsm_params)
+        host = find_host(name, organization)
+        host = Katello::Host::SubscriptionAspect.new_host_from_rhsm_params(rhsm_params, organization,
+                                          Location.default_location) unless host
+        host
+      end
+
+      def self.find_or_create_host_for_hypervisor(name, organization, location = nil)
+        location ||= Location.default_location
+        host = find_host(name, organization)
+        host = ::Host::Managed.new(:name => name, :organization => organization, :location => location,
+                            :managed => false) unless host
+        host
+      end
+
       def update_facts(rhsm_facts)
         return if self.host.build?
         rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
         rhsm_facts[:_timestamp] = DateTime.now.to_s
         host.import_facts(rhsm_facts)
+      end
+
+      def self.find_host(name, organization)
+        hosts = ::Host.where(:name => name)
+        return nil if hosts.empty? #no host exists
+        if hosts.where(:organization_id => organization.id).empty? #not in the correct org
+          #TODO http://projects.theforeman.org/issues/11532
+          fail "Can't handle registering to host in a different org, need to handle this case."
+        end
+        hosts.first
       end
     end
   end

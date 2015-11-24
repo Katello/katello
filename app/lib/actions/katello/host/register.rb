@@ -54,7 +54,7 @@ module Actions
           smart_proxy = SmartProxy.where(:name => system.name).first
 
           if smart_proxy
-            smart_proxy.content_host = system
+            smart_proxy.content_host = system.content_host
             smart_proxy.organizations << system.organization unless smart_proxy.organizations.include?(system.organization)
             smart_proxy.save!
           end
