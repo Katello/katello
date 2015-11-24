@@ -6,6 +6,7 @@ module Actions
 
         def plan(system, sys_params)
           action_subject system
+          sys_params.delete(:type)
           system.update_attributes!(sys_params)
 
           reset_puppet_env = system.foreman_host.content_and_puppet_match?

@@ -157,7 +157,7 @@ module Katello
     api :DELETE, "/systems/:id", N_("Unregister a content host"), :deprecated => true
     param :id, String, :desc => N_("UUID of the content host"), :required => true
     def destroy
-      sync_task(::Actions::Katello::System::Destroy, @system)
+      sync_task(::Actions::Katello::System::Destroy, @system, :destroy_object => false)
       respond :message => _("Deleted content host '%s'") % params[:id], :status => 204
     end
 
@@ -401,8 +401,7 @@ module Katello
                                                      :guest_ids, :host_collection_ids => [])
 
       system_params[:facts] = param_hash[:system][:facts].permit! if param_hash[:system][:facts]
-      system_params[:cp_type] = param_hash[:type] ? param_hash[:type] : ::Katello::System::DEFAULT_CP_TYPE
-      system_params.delete(:type) if param_hash[:system].key?(:type)
+      system_params[:type] = param_hash[:type] ? param_hash[:type] : ::Katello::Host::SubscriptionAspect::DEFAULT_TYPE
 
       { :guest_ids => :guestIds,
         :installed_products => :installedProducts,

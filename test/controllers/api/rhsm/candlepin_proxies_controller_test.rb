@@ -174,26 +174,30 @@ module Katello
     describe "hypervisors_update" do
       it "hypervisors_update_correct_env_cv" do
         @controller.stubs(:authorize_client_or_admin)
-        System.stubs(:first).returns(@system)
+        @controller.stubs(:find_host).returns(@host)
         uuid = @host.subscription_aspect.uuid
         User.stubs(:consumer?).returns(true)
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
-        System.stubs(:register_hypervisors).returns({})
-        System.expects(:register_hypervisors).with(@system.environment, @system.content_view,
-            "owner" => "Empty_Organization", "env" => "library_default_view_library")
+        assert_sync_task(::Actions::Katello::Host::Hypervisors) do |environment, content_view, params|
+          assert_equal environment.id, @host.content_aspect.lifecycle_environment.id
+          assert_equal content_view.id, @host.content_aspect.content_view.id
+          assert_equal params, "owner"=>"Empty_Organization", "env"=>"library_default_view_library"
+        end
         post :hypervisors_update
         assert_response 200
       end
 
       it "hypervisors_update_ignore_params" do
         @controller.stubs(:authorize_client_or_admin)
-        System.stubs(:first).returns(@system)
+        @controller.stubs(:find_host).returns(@host)
         uuid = @host.subscription_aspect.uuid
         User.stubs(:consumer?).returns(true)
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
-        System.stubs(:register_hypervisors).returns({})
-        System.expects(:register_hypervisors).with(@system.environment, @system.content_view,
-            "owner" => "Empty_Organization", "env" => "library_default_view_library")
+        assert_sync_task(::Actions::Katello::Host::Hypervisors) do |environment, content_view, params|
+          assert_equal environment.id, @host.content_aspect.lifecycle_environment.id
+          assert_equal content_view.id, @host.content_aspect.content_view.id
+          assert_equal params, "owner"=>"Empty_Organization", "env"=>"library_default_view_library"
+        end
         post(:hypervisors_update, :owner => 'owner', :env => 'dev/dev')
         assert_response 200
       end
