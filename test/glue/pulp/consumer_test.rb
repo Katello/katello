@@ -123,9 +123,9 @@ module Katello
       @simple_server = System.find(FIXTURES['katello_systems']['simple_server']['id'])
       set_pulp_consumer(@simple_server.uuid)
       @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @simple_server.content_view, :lifecycle_environment => @simple_server.environment)
-      @host.content_aspect.uuid = @simple_server.uuid
-      @host.content_aspect.bound_repositories << RepositorySupport.repo
-      @host.content_aspect.propagate_yum_repos
+      @host.content_facet.uuid = @simple_server.uuid
+      @host.content_facet.bound_repositories << RepositorySupport.repo
+      @host.content_facet.propagate_yum_repos
     end
 
     def teardown

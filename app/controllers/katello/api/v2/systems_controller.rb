@@ -106,7 +106,7 @@ module Katello
       rhsm_params[:facts] ||= {}
       rhsm_params[:facts]['network.hostname'] ||= rhsm_params[:name]
       content_view_environment = ContentViewEnvironment.where(:content_view_id => @content_view, :environment_id => @environment).first
-      host = Katello::Host::SubscriptionAspect.new_host_from_rhsm_params(rhsm_params, @organization, Location.default_location)
+      host = Katello::Host::SubscriptionFacet.new_host_from_rhsm_params(rhsm_params, @organization, Location.default_location)
 
       sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, content_view_environment)
       @system = host.reload.content_host
@@ -401,7 +401,7 @@ module Katello
                                                      :guest_ids, :host_collection_ids => [])
 
       system_params[:facts] = param_hash[:system][:facts].permit! if param_hash[:system][:facts]
-      system_params[:type] = param_hash[:type] ? param_hash[:type] : ::Katello::Host::SubscriptionAspect::DEFAULT_TYPE
+      system_params[:type] = param_hash[:type] ? param_hash[:type] : ::Katello::Host::SubscriptionFacet::DEFAULT_TYPE
 
       { :guest_ids => :guestIds,
         :installed_products => :installedProducts,

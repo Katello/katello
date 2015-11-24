@@ -27,7 +27,7 @@ module Actions
           name = hypervisor_json[:name]
 
           # Since host names must be unique yet hypervisors may have unique subscription
-          # aspects in different orgs
+          # facets in different orgs
           duplicate_name = "virt-who-#{name}-#{content_view.organization.id}"
           host = ::Host.find_by_name(name)
           if host
@@ -39,12 +39,12 @@ module Actions
             name = duplicate_name
           end
 
-          host = ::Katello::Host::SubscriptionAspect.find_or_create_host_for_hypervisor(name,
+          host = ::Katello::Host::SubscriptionFacet.find_or_create_host_for_hypervisor(name,
                                     content_view.organization)
-          host.subscription_aspect ||= ::Katello::Host::SubscriptionAspect.new
-          host.subscription_aspect.update_from_consumer_attributes(hypervisor_json)
-          host.subscription_aspect.update_attributes(:uuid => hypervisor_json[:uuid])
-          host.subscription_aspect.save!
+          host.subscription_facet ||= ::Katello::Host::SubscriptionFacet.new
+          host.subscription_facet.update_from_consumer_attributes(hypervisor_json)
+          host.subscription_facet.update_attributes(:uuid => hypervisor_json[:uuid])
+          host.subscription_facet.save!
 
           # TODO: Remove this legacy
           # http://projects.theforeman.org/issues/12556

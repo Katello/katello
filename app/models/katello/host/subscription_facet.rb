@@ -1,11 +1,11 @@
 module Katello
   module Host
-    class SubscriptionAspect < Katello::Model
-      self.table_name = 'katello_subscription_aspects'
-      belongs_to :host, :inverse_of => :subscription_aspect, :class_name => "::Host::Managed"
+    class SubscriptionFacet < Katello::Model
+      self.table_name = 'katello_subscription_facets'
+      belongs_to :host, :inverse_of => :subscription_facet, :class_name => "::Host::Managed"
 
-      has_many :activation_keys, :through => :subscription_aspect_activation_keys, :class_name => "Katello::ActivationKey"
-      has_many :subscription_aspect_activation_keys, :class_name => "Katello::SubscriptionAspectActivationKey", :dependent => :destroy, :inverse_of => :subscription_aspect
+      has_many :activation_keys, :through => :subscription_facet_activation_keys, :class_name => "Katello::ActivationKey"
+      has_many :subscription_facet_activation_keys, :class_name => "Katello::SubscriptionFacetActivationKey", :dependent => :destroy, :inverse_of => :subscription_facet
 
       validates :host, :presence => true, :allow_blank => false
 
@@ -29,8 +29,8 @@ module Katello
       end
 
       def candlepin_environment_id
-        if self.host.content_aspect
-          self.host.content_aspect.content_view.cp_environment_id(self.host.content_aspect.lifecycle_environment)
+        if self.host.content_facet
+          self.host.content_facet.content_view.cp_environment_id(self.host.content_facet.lifecycle_environment)
         else
           self.host.organization.default_content_view.cp_environment_id(self.host.organization.library)
         end
@@ -55,7 +55,7 @@ module Katello
 
       def self.find_or_create_host(name, organization, rhsm_params)
         host = find_host(name, organization)
-        host = Katello::Host::SubscriptionAspect.new_host_from_rhsm_params(rhsm_params, organization,
+        host = Katello::Host::SubscriptionFacet.new_host_from_rhsm_params(rhsm_params, organization,
                                           Location.default_location) unless host
         host
       end

@@ -90,7 +90,7 @@ module Katello
     #api :GET, "/consumers/:id", N_("Show a system")
     #param :id, String, :desc => N_("UUID of the consumer"), :required => true
     def consumer_show
-      render :json => Resources::Candlepin::Consumer.get(@host.subscription_aspect.uuid)
+      render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
     end
 
     #api :GET, "/owners/:organization_id/environments", N_("List environments for RHSM")
@@ -123,8 +123,8 @@ module Katello
     #param :date, String, :desc => N_("check-in time")
     def consumer_checkin
       @host.update_attributes(:last_checkin => params[:date])
-      Candlepin::Consumer.new(@host.subscription_aspect.uuid).checkin(params[:date])
-      render :json => Resources::Candlepin::Consumer.get(@host.subscription_aspect.uuid)
+      Candlepin::Consumer.new(@host.subscription_facet.uuid).checkin(params[:date])
+      render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
     end
 
     #api :PUT, "/consumers/:id/packages", N_("Update installed packages")
@@ -134,11 +134,11 @@ module Katello
       User.as_anonymous_admin do
         sync_task(::Actions::Katello::Host::UploadPackageProfile, @host, params[:_json])
       end
-      render :json => Resources::Candlepin::Consumer.get(@host.subscription_aspect.uuid)
+      render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
     end
 
     def available_releases
-      render :json => @host.content_aspect.try(:available_releases) || []
+      render :json => @host.content_facet.try(:available_releases) || []
     end
 
     def list_owners
@@ -182,7 +182,7 @@ module Katello
       result = nil
       User.as_anonymous_admin do
         @host.content_host.save_bound_repos_by_path!(paths.compact)
-        result = @host.content_aspect.update_repositories_by_paths(paths.compact)
+        result = @host.content_facet.update_repositories_by_paths(paths.compact)
       end
 
       respond_for_show :resource => result
@@ -191,14 +191,14 @@ module Katello
     #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")
     def consumer_create
       content_view_environment = find_content_view_environment
-      host = Katello::Host::SubscriptionAspect.find_or_create_host(params[:facts]['network.hostname'],
+      host = Katello::Host::SubscriptionFacet.find_or_create_host(params[:facts]['network.hostname'],
                  content_view_environment.environment.organization, rhsm_params)
 
       sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, content_view_environment)
       host.reload
-      host.subscription_aspect.update_facts(rhsm_params[:facts]) unless rhsm_params[:facts].blank?
+      host.subscription_facet.update_facts(rhsm_params[:facts]) unless rhsm_params[:facts].blank?
 
-      render :json => Resources::Candlepin::Consumer.get(host.subscription_aspect.uuid)
+      render :json => Resources::Candlepin::Consumer.get(host.subscription_facet.uuid)
     end
 
     #api :DELETE, "/consumers/:id", N_("Unregister a consumer")
@@ -218,14 +218,14 @@ module Katello
       # Set it before calling find_activation_keys to allow communication with candlepin
       User.current    = User.anonymous_admin
       activation_keys = find_activation_keys
-      host = Katello::Host::SubscriptionAspect.find_or_create_host(params[:facts]['network.hostname'],
+      host = Katello::Host::SubscriptionFacet.find_or_create_host(params[:facts]['network.hostname'],
                                     activation_keys.first.organization, rhsm_params)
 
       sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, nil, activation_keys)
       host.reload
-      host.subscription_aspect.update_facts(rhsm_params[:facts]) unless rhsm_params[:facts].blank?
+      host.subscription_facet.update_facts(rhsm_params[:facts]) unless rhsm_params[:facts].blank?
 
-      render :json => Resources::Candlepin::Consumer.get(host.subscription_aspect.uuid)
+      render :json => Resources::Candlepin::Consumer.get(host.subscription_facet.uuid)
     end
 
     #api :GET, "/status", N_("Shows version information")
@@ -246,7 +246,7 @@ module Katello
     def facts
       User.as_anonymous_admin do
         sync_task(::Actions::Katello::Host::Update, @host, rhsm_params)
-        @host.subscription_aspect.update_facts(rhsm_params[:facts]) unless rhsm_params[:facts].blank?
+        @host.subscription_facet.update_facts(rhsm_params[:facts]) unless rhsm_params[:facts].blank?
       end
       render :json => {:content => _("Facts successfully updated.")}, :status => 200
     end
@@ -267,13 +267,13 @@ module Katello
 
     def find_host(uuid = nil)
       uuid ||= params[:id]
-      aspect = Katello::Host::SubscriptionAspect.where(:uuid => uuid).first
-      if aspect.nil?
+      facet = Katello::Host::SubscriptionFacet.where(:uuid => uuid).first
+      if facet.nil?
         # check with candlepin if consumer is Gone, raises RestClient::Gone
         Resources::Candlepin::Consumer.get(uuid)
         fail HttpErrors::NotFound, _("Couldn't find consumer '%s'") % uuid
       end
-      @host = aspect.host
+      @host = facet.host
     end
 
     def find_content_view_environment
@@ -297,9 +297,9 @@ module Katello
     def find_hypervisor_environment_and_content_view
       if User.consumer?
         @host = find_host(User.current.uuid)
-        @organization = @host.content_aspect.content_view.organization
-        @environment = @host.content_aspect.lifecycle_environment
-        @content_view = @host.content_aspect.content_view
+        @organization = @host.content_facet.content_view.organization
+        @environment = @host.content_facet.lifecycle_environment
+        @content_view = @host.content_facet.content_view
         params[:owner] = @organization.label
         params[:env] = @content_view.cp_environment_label(@environment)
       else
@@ -432,7 +432,7 @@ module Katello
 
     def client_authorized?
       authorized = authenticate_client && User.consumer?
-      authorized = (User.current.uuid == @host.subscription_aspect.uuid) if @host && User.consumer?
+      authorized = (User.current.uuid == @host.subscription_facet.uuid) if @host && User.consumer?
       authorized
     end
 

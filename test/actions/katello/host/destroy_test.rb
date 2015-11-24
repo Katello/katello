@@ -24,46 +24,46 @@ module Katello::Host
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
         @host.expects(:destroy).returns(true)
-        @host.content_aspect.expects(:destroy!)
-        @host.subscription_aspect.expects(:destroy!)
+        @host.content_facet.expects(:destroy!)
+        @host.subscription_facet.expects(:destroy!)
         @host.content_host.expects(:destroy!)
 
         plan_action action, @host
 
-        assert_action_planed_with action, candlepin_destroy_class, :uuid => @host.subscription_aspect.uuid
-        assert_action_planed_with action, pulp_destroy_class, :uuid => @host.content_aspect.uuid
+        assert_action_planed_with action, candlepin_destroy_class, :uuid => @host.subscription_facet.uuid
+        assert_action_planed_with action, pulp_destroy_class, :uuid => @host.content_facet.uuid
       end
 
       it 'plans with destroy_object false' do
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
-        @host.content_aspect.expects(:destroy!)
-        @host.subscription_aspect.expects(:destroy!)
+        @host.content_facet.expects(:destroy!)
+        @host.subscription_facet.expects(:destroy!)
         @host.content_host.expects(:destroy!)
         @host.expects(:destroy).never
 
         plan_action action, @host, :destroy_object => false
 
-        assert_action_planed_with action, candlepin_destroy_class, :uuid => @host.subscription_aspect.uuid
-        assert_action_planed_with action, pulp_destroy_class, :uuid => @host.content_aspect.uuid
+        assert_action_planed_with action, candlepin_destroy_class, :uuid => @host.subscription_facet.uuid
+        assert_action_planed_with action, pulp_destroy_class, :uuid => @host.content_facet.uuid
       end
 
-      it 'plans with destroy_aspects false' do
+      it 'plans with destroy_facets false' do
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
-        @host.content_aspect.expects(:destroy!).never
-        @host.subscription_aspect.expects(:destroy!).never
+        @host.content_facet.expects(:destroy!).never
+        @host.subscription_facet.expects(:destroy!).never
         @host.content_host.expects(:destroy!)
 
-        subscription_uuid = @host.subscription_aspect.uuid
-        content_uuid = @host.content_aspect.uuid
-        plan_action action, @host, :destroy_object => false, :destroy_aspects => false
+        subscription_uuid = @host.subscription_facet.uuid
+        content_uuid = @host.content_facet.uuid
+        plan_action action, @host, :destroy_object => false, :destroy_facets => false
 
         assert_action_planed_with action, candlepin_destroy_class, :uuid => subscription_uuid
         assert_action_planed_with action, pulp_destroy_class, :uuid => content_uuid
 
-        assert_nil @host.content_aspect.uuid
-        assert_nil @host.subscription_aspect.uuid
+        assert_nil @host.content_facet.uuid
+        assert_nil @host.subscription_facet.uuid
       end
 
       it 'plans with skip_candlepin true' do
@@ -73,7 +73,7 @@ module Katello::Host
         plan_action action, @host, :destroy_object => false, :skip_candlepin => true
 
         refute_action_planned action, candlepin_destroy_class
-        assert_action_planed_with action, pulp_destroy_class, :uuid => @host.content_aspect.uuid
+        assert_action_planed_with action, pulp_destroy_class, :uuid => @host.content_facet.uuid
       end
     end
   end

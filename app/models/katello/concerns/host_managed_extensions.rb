@@ -45,8 +45,8 @@ module Katello
       end
 
       def content_and_puppet_match?
-        content_aspect && content_aspect.content_view == environment.try(:content_view) &&
-            content_aspect.lifecycle_environment == self.environment.try(:lifecycle_environment)
+        content_facet && content_facet.content_view == environment.try(:content_view) &&
+            content_facet.lifecycle_environment == self.environment.try(:lifecycle_environment)
       end
 
       def set_hostgroup_defaults_with_katello_attributes

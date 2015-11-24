@@ -96,7 +96,7 @@ module Katello
     end
 
     def test_fact_search
-      @system.foreman_host.subscription_aspect.update_facts(:rhsm_fact => 'rhsm_value')
+      @system.foreman_host.subscription_facet.update_facts(:rhsm_fact => 'rhsm_value')
 
       assert_includes System.search_for("facts.rhsm_fact = rhsm_value"), @system
       assert_includes System.complete_for("facts."), " facts.rhsm_fact "

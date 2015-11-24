@@ -18,8 +18,8 @@ module Actions
             system = plan_system(system, content_view_environment, consumer_params)
             system.save!
 
-            host.content_aspect = plan_content_aspect(host, content_view_environment)
-            host.subscription_aspect = plan_subscription_aspect(host, activation_keys, consumer_params)
+            host.content_facet = plan_content_facet(host, content_view_environment)
+            host.subscription_facet = plan_subscription_facet(host, activation_keys, consumer_params)
             host.content_host = system
             host.save!
 
@@ -42,8 +42,8 @@ module Actions
 
         def finalize
           host = ::Host.find(input[:host_id])
-          host.content_aspect.update_attributes(:uuid => input[:uuid])
-          host.subscription_aspect.update_attributes(:uuid => input[:uuid])
+          host.content_facet.update_attributes(:uuid => input[:uuid])
+          host.subscription_facet.update_attributes(:uuid => input[:uuid])
 
           system = ::Katello::System.find(input[:system_id])
           system.uuid = input[:uuid]
@@ -97,19 +97,19 @@ module Actions
           system
         end
 
-        def plan_content_aspect(host, content_view_environment)
-          content_aspect = host.content_aspect || ::Katello::Host::ContentAspect.new
-          content_aspect.content_view = content_view_environment.content_view
-          content_aspect.lifecycle_environment = content_view_environment.environment
-          content_aspect
+        def plan_content_facet(host, content_view_environment)
+          content_facet = host.content_facet || ::Katello::Host::ContentFacet.new
+          content_facet.content_view = content_view_environment.content_view
+          content_facet.lifecycle_environment = content_view_environment.environment
+          content_facet
         end
 
-        def plan_subscription_aspect(host, activation_keys, consumer_params)
-          subscription_aspect = host.subscription_aspect || ::Katello::Host::SubscriptionAspect.new
-          subscription_aspect.host = host
-          subscription_aspect.update_from_consumer_attributes(consumer_params)
-          subscription_aspect.activation_keys = activation_keys
-          subscription_aspect
+        def plan_subscription_facet(host, activation_keys, consumer_params)
+          subscription_facet = host.subscription_facet || ::Katello::Host::SubscriptionFacet.new
+          subscription_facet.host = host
+          subscription_facet.update_from_consumer_attributes(consumer_params)
+          subscription_facet.activation_keys = activation_keys
+          subscription_facet
         end
       end
     end

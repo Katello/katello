@@ -40,7 +40,7 @@ module Katello
       assert_equal @foreman_host.info['parameters']['content_view'], nil
       assert_equal @foreman_host.info['parameters']['lifecycle_environment'], nil
 
-      @foreman_host.content_aspect = Katello::Host::ContentAspect.new(:content_view => @view, :lifecycle_environment => @library)
+      @foreman_host.content_facet = Katello::Host::ContentFacet.new(:content_view => @view, :lifecycle_environment => @library)
       @foreman_host.reload
 
       assert_equal @foreman_host.info['parameters']['content_view'], @foreman_host.content_view.label
@@ -51,7 +51,7 @@ module Katello
       assert_equal @foreman_host.info['parameters']['kt_cv'], nil
       assert_equal @foreman_host.info['parameters']['kt_env'], nil
 
-      @foreman_host.content_aspect = Katello::Host::ContentAspect.new(:content_view => @view, :lifecycle_environment => @library)
+      @foreman_host.content_facet = Katello::Host::ContentFacet.new(:content_view => @view, :lifecycle_environment => @library)
       @foreman_host.reload
 
       assert_equal @foreman_host.info['parameters']['kt_cv'], @foreman_host.content_view.label
