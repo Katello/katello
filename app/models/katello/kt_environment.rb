@@ -32,9 +32,9 @@ module Katello
     has_many :content_view_histories, :class_name => "Katello::ContentViewHistory", :dependent => :destroy,
                                       :inverse_of => :environment, :foreign_key => :katello_environment_id
 
-    has_many :content_aspects, :class_name => "Katello::Host::ContentAspect", :foreign_key => :lifecycle_environment_id,
+    has_many :content_facets, :class_name => "Katello::Host::ContentFacet", :foreign_key => :lifecycle_environment_id,
                           :inverse_of => :lifecycle_environment, :dependent => :restrict
-    has_many :hosts,      :class_name => "::Host::Managed", :through => :content_aspects,
+    has_many :hosts,      :class_name => "::Host::Managed", :through => :content_facets,
                           :inverse_of => :lifecycle_environment
     has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :lifecycle_environment_id,
                           :inverse_of => :lifecycle_environment, :dependent => :restrict

@@ -1,17 +1,17 @@
 module Katello
   module Host
-    class ContentAspect < Katello::Model
-      self.table_name = 'katello_content_aspects'
+    class ContentFacet < Katello::Model
+      self.table_name = 'katello_content_facets'
 
-      belongs_to :host, :inverse_of => :content_aspect, :class_name => "::Host::Managed"
-      belongs_to :content_view, :inverse_of => :content_aspects, :class_name => "Katello::ContentView"
-      belongs_to :lifecycle_environment, :inverse_of => :content_aspects, :class_name => "Katello::KTEnvironment"
+      belongs_to :host, :inverse_of => :content_facet, :class_name => "::Host::Managed"
+      belongs_to :content_view, :inverse_of => :content_facets, :class_name => "Katello::ContentView"
+      belongs_to :lifecycle_environment, :inverse_of => :content_facets, :class_name => "Katello::KTEnvironment"
 
-      has_many :applicable_errata, :through => :content_aspect_errata, :class_name => "Katello::Erratum", :source => :erratum
-      has_many :content_aspect_errata, :class_name => "Katello::ContentAspectErratum", :dependent => :destroy, :inverse_of => :content_aspect
+      has_many :applicable_errata, :through => :content_facet_errata, :class_name => "Katello::Erratum", :source => :erratum
+      has_many :content_facet_errata, :class_name => "Katello::ContentFacetErratum", :dependent => :destroy, :inverse_of => :content_facet
 
-      has_many :bound_repositories, :through => :content_aspect_repositories, :class_name => "Katello::Repository", :source => :repository
-      has_many :content_aspect_repositories, :class_name => "Katello::ContentAspectRepository", :dependent => :destroy, :inverse_of => :content_aspect
+      has_many :bound_repositories, :through => :content_facet_repositories, :class_name => "Katello::Repository", :source => :repository
+      has_many :content_facet_repositories, :class_name => "Katello::ContentFacetRepository", :dependent => :destroy, :inverse_of => :content_facet
 
       validates :content_view, :presence => true, :allow_blank => false
       validates :lifecycle_environment, :presence => true, :allow_blank => false
@@ -40,7 +40,7 @@ module Katello
       end
 
       def import_applicability(partial = false)
-        aspect = self
+        facet = self
         ::Katello::Util::Support.active_record_retry do
           ActiveRecord::Base.transaction do
             errata_uuids = ::Katello::Pulp::Consumer.new(self.uuid).applicable_errata_ids
@@ -51,7 +51,7 @@ module Katello
             else
               to_add = errata_uuids
               to_remove = nil
-              Katello::ContentAspectErratum.where(:content_aspect_id => aspect.id).delete_all
+              Katello::ContentFacetErratum.where(:content_facet_id => facet.id).delete_all
             end
             insert_errata_applicability(to_add) unless to_add.blank?
             remove_errata_applicability(to_remove) unless to_remove.blank?
@@ -69,14 +69,14 @@ module Katello
         applicable_errata_ids = ::Katello::Erratum.where(:uuid => uuids).pluck(:id)
         unless applicable_errata_ids.empty?
           inserts = applicable_errata_ids.map { |erratum_id| "(#{erratum_id.to_i}, #{self.id.to_i})" }
-          sql = "INSERT INTO #{Katello::ContentAspectErratum.table_name} (erratum_id, content_aspect_id) VALUES #{inserts.join(', ')}"
+          sql = "INSERT INTO #{Katello::ContentFacetErratum.table_name} (erratum_id, content_facet_id) VALUES #{inserts.join(', ')}"
           ActiveRecord::Base.connection.execute(sql)
         end
       end
 
       def remove_errata_applicability(uuids)
         applicable_errata_ids = ::Katello::Erratum.where(:uuid => uuids).pluck(:id)
-        Katello::ContentAspectErratum.where(:content_aspect_id => self.id, :erratum_id => applicable_errata_ids).delete_all
+        Katello::ContentFacetErratum.where(:content_facet_id => self.id, :erratum_id => applicable_errata_ids).delete_all
       end
     end
   end

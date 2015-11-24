@@ -38,7 +38,7 @@ module Katello
       :katello_rpms => "Katello::Rpm",
       :katello_repository_rpms => "Katello::RepositoryRpm",
       :katello_system_errata => "Katello::SystemErratum",
-      :katello_content_aspects => "Katello::Host::ContentAspect",
+      :katello_content_facets => "Katello::Host::ContentFacet",
       :katello_system_activation_keys => "Katello::SystemActivationKeys"
     }
 

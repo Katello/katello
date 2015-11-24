@@ -22,7 +22,7 @@ module Katello::Host
 
         plan_action action, @host
 
-        assert_action_planed_with action, Actions::Katello::Host::Destroy, @host, :destroy_object => false, :destroy_aspects => false
+        assert_action_planed_with action, Actions::Katello::Host::Destroy, @host, :destroy_object => false, :destroy_facets => false
       end
     end
   end

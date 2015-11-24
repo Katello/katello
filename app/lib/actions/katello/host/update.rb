@@ -6,25 +6,25 @@ module Actions
 
         def plan(host, consumer_params = nil)
           action_subject host
-          host.content_aspect.save! if host.content_aspect
-          host.subscription_aspect.save!
+          host.content_facet.save! if host.content_facet
+          host.subscription_facet.save!
 
           consumer_params = nil
           if consumer_params
-            host.subscription_aspect.update_from_consumer_attributes(consumer_params)
-            host.subscription_aspect.save!
+            host.subscription_facet.update_from_consumer_attributes(consumer_params)
+            host.subscription_facet.save!
           else
-            consumer_params = host.subscription_aspect.consumer_attributes
-            if host.content_aspect
-              host.content_host.content_view = host.content_aspect.try(:content_view)
-              host.content_host.environment = host.content_aspect.try(:lifecycle_environment)
+            consumer_params = host.subscription_facet.consumer_attributes
+            if host.content_facet
+              host.content_host.content_view = host.content_facet.try(:content_view)
+              host.content_host.environment = host.content_facet.try(:lifecycle_environment)
               host.content_host.save!
             end
           end
 
           sequence do
-            plan_action(::Actions::Candlepin::Consumer::Update, host.subscription_aspect.uuid, consumer_params)
-            plan_action(::Actions::Candlepin::Consumer::AutoAttachSubscriptions, host.subscription_aspect) if host.subscription_aspect.autoheal
+            plan_action(::Actions::Candlepin::Consumer::Update, host.subscription_facet.uuid, consumer_params)
+            plan_action(::Actions::Candlepin::Consumer::AutoAttachSubscriptions, host.subscription_facet) if host.subscription_facet.autoheal
           end
 
           plan_self(:hostname => host.name)

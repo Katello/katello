@@ -6,24 +6,24 @@ module Actions
 
         def plan(host, options = {})
           skip_candlepin = options.fetch(:skip_candlepin, false)
-          destroy_aspects = options.fetch(:destroy_aspects, true)
+          destroy_facets = options.fetch(:destroy_facets, true)
           destroy_object = options.fetch(:destroy_object, true)
 
           action_subject(host)
 
           concurrence do
-            if !skip_candlepin && host.subscription_aspect.try(:uuid)
-              plan_action(Candlepin::Consumer::Destroy, uuid: host.subscription_aspect.uuid)
+            if !skip_candlepin && host.subscription_facet.try(:uuid)
+              plan_action(Candlepin::Consumer::Destroy, uuid: host.subscription_facet.uuid)
             end
-            plan_action(Pulp::Consumer::Destroy, uuid: host.content_aspect.uuid) if host.content_aspect.try(:uuid)
+            plan_action(Pulp::Consumer::Destroy, uuid: host.content_facet.uuid) if host.content_facet.try(:uuid)
           end
 
-          if destroy_aspects
-            host.subscription_aspect.try(:destroy!)
-            host.content_aspect.try(:destroy!)
+          if destroy_facets
+            host.subscription_facet.try(:destroy!)
+            host.content_facet.try(:destroy!)
           else
-            host.subscription_aspect.update_attributes!(:uuid => nil) if host.subscription_aspect
-            host.content_aspect.update_attributes!(:uuid => nil) if host.content_aspect
+            host.subscription_facet.update_attributes!(:uuid => nil) if host.subscription_facet
+            host.content_facet.update_attributes!(:uuid => nil) if host.content_facet
           end
 
           if host.content_host

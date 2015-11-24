@@ -7,7 +7,7 @@ module Actions
         def plan(host, profile)
           action_subject host
 
-          ::Katello::Pulp::Consumer.new(host.content_aspect.uuid).upload_package_profile(profile) if host.content_aspect.uuid
+          ::Katello::Pulp::Consumer.new(host.content_facet.uuid).upload_package_profile(profile) if host.content_facet.uuid
           simple_packages = profile.map { |item| ::Katello::Glue::Pulp::SimplePackage.new(item) }
           host.import_package_profile(simple_packages)
 

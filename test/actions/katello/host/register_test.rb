@@ -39,8 +39,8 @@ module Katello::Host
 
         refute_action_planned(action, Actions::Katello::Host::Unregister)
 
-        assert_equal @library, new_host.content_aspect.lifecycle_environment
-        assert_equal @content_view, new_host.content_aspect.content_view
+        assert_equal @library, new_host.content_facet.lifecycle_environment
+        assert_equal @content_view, new_host.content_facet.content_view
         assert_equal @library, new_system.environment
         assert_equal @content_view, new_system.content_view
         assert_equal new_host.content_host, new_system
@@ -59,8 +59,8 @@ module Katello::Host
                                   :consumer_parameters => rhsm_params, :activation_keys => [@activation_key.cp_name])
         refute_action_planned(action, Actions::Katello::Host::Unregister)
 
-        assert_equal @activation_key.environment, new_host.content_aspect.lifecycle_environment
-        assert_equal @activation_key.content_view, new_host.content_aspect.content_view
+        assert_equal @activation_key.environment, new_host.content_facet.lifecycle_environment
+        assert_equal @activation_key.content_view, new_host.content_facet.content_view
 
         assert_equal @activation_key.environment, new_system.environment
         assert_equal @activation_key.content_view, new_system.content_view

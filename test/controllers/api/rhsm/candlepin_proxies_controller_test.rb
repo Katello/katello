@@ -45,7 +45,7 @@ module Katello
         Resources::Candlepin::Consumer.stubs(:get)
 
         System.expects(:new).returns(system)
-        ::Katello::Host::SubscriptionAspect.expects(:new_host_from_rhsm_params).returns(host)
+        ::Katello::Host::SubscriptionFacet.expects(:new_host_from_rhsm_params).returns(host)
         assert_sync_task(::Actions::Katello::Host::Register, host, system, {'facts' => @facts}, nil, [@activation_key])
 
         post(:consumer_activate, :organization_id => @activation_key.organization.label,
@@ -67,7 +67,7 @@ module Katello
         Resources::Candlepin::Consumer.stubs(:get)
 
         System.expects(:new).returns(system)
-        ::Katello::Host::SubscriptionAspect.expects(:new_host_from_rhsm_params).returns(host)
+        ::Katello::Host::SubscriptionFacet.expects(:new_host_from_rhsm_params).returns(host)
         assert_sync_task(::Actions::Katello::Host::Register, host, system, {'facts' => @facts}, @content_view_environment)
 
         post(:consumer_create, :organization_id => @content_view_environment.content_view.organization.label,
@@ -82,7 +82,7 @@ module Katello
         User.stubs(:consumer?).returns(true)
         System.stubs(:where).returns(@system)
         System.any_instance.stubs(:first).returns(@system)
-        uuid = @host.subscription_aspect.uuid
+        uuid = @host.subscription_facet.uuid
         ::Host.any_instance.stubs(:content_host).returns(@system)
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
         Repository.stubs(:where).with(:relative_path => 'foo').returns([OpenStruct.new(:pulp_id => 'a')])
@@ -102,9 +102,9 @@ module Katello
       end
 
       it "should bind all" do
-        Host::ContentAspect.any_instance.expects(:update_repositories_by_paths).with(["/pulp/repos/foo", "/pulp/repos/bar"])
+        Host::ContentFacet.any_instance.expects(:update_repositories_by_paths).with(["/pulp/repos/foo", "/pulp/repos/bar"])
         System.any_instance.expects(:save_bound_repos_by_path!).with(["/pulp/repos/foo", "/pulp/repos/bar"])
-        put :enabled_repos, :id => @host.subscription_aspect.uuid, :enabled_repos => enabled_repos
+        put :enabled_repos, :id => @host.subscription_facet.uuid, :enabled_repos => enabled_repos
         assert_equal 200, response.status
       end
     end
@@ -160,14 +160,14 @@ module Katello
     it "test_upload_package_profile_protected" do
       Resources::Candlepin::Consumer.stubs(:get)
       assert_protected_action(:upload_package_profile, :edit_content_hosts) do
-        put :upload_package_profile, :id => @host.subscription_aspect.uuid
+        put :upload_package_profile, :id => @host.subscription_facet.uuid
       end
     end
 
     it "test_regenerate_identity_certificates_protected" do
       Resources::Candlepin::Consumer.stubs(:get)
       assert_protected_action(:regenerate_identity_certificates, :edit_content_hosts) do
-        post :regenerate_identity_certificates, :id => @host.subscription_aspect.uuid
+        post :regenerate_identity_certificates, :id => @host.subscription_facet.uuid
       end
     end
 
@@ -175,12 +175,12 @@ module Katello
       it "hypervisors_update_correct_env_cv" do
         @controller.stubs(:authorize_client_or_admin)
         @controller.stubs(:find_host).returns(@host)
-        uuid = @host.subscription_aspect.uuid
+        uuid = @host.subscription_facet.uuid
         User.stubs(:consumer?).returns(true)
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
         assert_sync_task(::Actions::Katello::Host::Hypervisors) do |environment, content_view, params|
-          assert_equal environment.id, @host.content_aspect.lifecycle_environment.id
-          assert_equal content_view.id, @host.content_aspect.content_view.id
+          assert_equal environment.id, @host.content_facet.lifecycle_environment.id
+          assert_equal content_view.id, @host.content_facet.content_view.id
           assert_equal params, "owner"=>"Empty_Organization", "env"=>"library_default_view_library"
         end
         post :hypervisors_update
@@ -190,12 +190,12 @@ module Katello
       it "hypervisors_update_ignore_params" do
         @controller.stubs(:authorize_client_or_admin)
         @controller.stubs(:find_host).returns(@host)
-        uuid = @host.subscription_aspect.uuid
+        uuid = @host.subscription_facet.uuid
         User.stubs(:consumer?).returns(true)
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
         assert_sync_task(::Actions::Katello::Host::Hypervisors) do |environment, content_view, params|
-          assert_equal environment.id, @host.content_aspect.lifecycle_environment.id
-          assert_equal content_view.id, @host.content_aspect.content_view.id
+          assert_equal environment.id, @host.content_facet.lifecycle_environment.id
+          assert_equal content_view.id, @host.content_facet.content_view.id
           assert_equal params, "owner"=>"Empty_Organization", "env"=>"library_default_view_library"
         end
         post(:hypervisors_update, :owner => 'owner', :env => 'dev/dev')
@@ -206,11 +206,11 @@ module Katello
     describe "available releases" do
       it "can be listed by matching consumer" do
         # Stub out the current user to simulate consumer auth.
-        uuid = @host.subscription_aspect.uuid
+        uuid = @host.subscription_facet.uuid
         User.stubs(:consumer?).returns(true)
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
 
-        get :available_releases, :id => @host.subscription_aspect.uuid
+        get :available_releases, :id => @host.subscription_facet.uuid
         assert_response 200
       end
 
@@ -221,7 +221,7 @@ module Katello
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
         # Getting the available releases for a different consumer
         # should not be allowed.
-        get :available_releases, :id => @host.subscription_aspect.uuid
+        get :available_releases, :id => @host.subscription_facet.uuid
         assert_response 403
       end
     end
@@ -233,12 +233,12 @@ module Katello
 
       it "can be accessed by user" do
         User.current = setup_user_with_permissions(:create_content_hosts, User.find(users(:restricted).id))
-        get :consumer_show, :id => @host.subscription_aspect.uuid
+        get :consumer_show, :id => @host.subscription_facet.uuid
         assert_response 200
       end
 
       it "can be accessed by client" do
-        uuid = @host.subscription_aspect.uuid
+        uuid = @host.subscription_facet.uuid
         User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
         get :consumer_show, :id => uuid
         assert_response 200

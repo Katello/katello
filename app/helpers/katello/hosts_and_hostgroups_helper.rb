@@ -23,7 +23,7 @@ module Katello
       if include_blank == true #check for true specifically
         include_blank = '<option></option>'
       end
-      selected_id = host.content_aspect(:lifecycle_environment).try(:id)
+      selected_id = host.content_facet(:lifecycle_environment).try(:id)
       orgs = Organization.current ? [Organization.current] : Organization.my_organizations
       all_options = []
       orgs.each do |org|
@@ -51,10 +51,10 @@ module Katello
         include_blank = '<option></option>'
       end
 
-      content_view = host.content_aspect.try(:content_view)
+      content_view = host.content_facet.try(:content_view)
       views = []
-      if host.content_aspect.try(:lifecycle_environment)
-        views = Katello::ContentView.in_environment(host.content_aspect.try(:lifecycle_environment))
+      if host.content_facet.try(:lifecycle_environment)
+        views = Katello::ContentView.in_environment(host.content_facet.try(:lifecycle_environment))
       elsif content_view
         views = [content_view]
       end

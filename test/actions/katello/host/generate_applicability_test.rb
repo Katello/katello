@@ -20,7 +20,7 @@ module Katello::Host
 
         plan_action action, [@host]
 
-        assert_action_planed_with action, Actions::Pulp::Consumer::GenerateApplicability, :uuids => [@host.content_aspect.uuid]
+        assert_action_planed_with action, Actions::Pulp::Consumer::GenerateApplicability, :uuids => [@host.content_facet.uuid]
       end
     end
   end

@@ -42,30 +42,30 @@ class MigrateContentHosts < ActiveRecord::Migration
     Rails.logger
   end
 
-  def create_content_aspect(host, system)
-    logger.info("Creating content aspect for host #{host.name}.")
-    content_aspect = host.content_aspect = ::Katello::Host::ContentAspect.new(:content_view => system.content_view,
+  def create_content_facet(host, system)
+    logger.info("Creating content facet for host #{host.name}.")
+    content_facet = host.content_facet = ::Katello::Host::ContentFacet.new(:content_view => system.content_view,
                                                                               :lifecycle_environment => system.environment)
-    content_aspect.uuid = system.uuid
-    content_aspect.bound_repositories = system.bound_repositories
-    content_aspect.applicable_errata = system.applicable_errata
-    content_aspect.save!
+    content_facet.uuid = system.uuid
+    content_facet.bound_repositories = system.bound_repositories
+    content_facet.applicable_errata = system.applicable_errata
+    content_facet.save!
   end
 
-  def create_subscription_aspect(host, system)
-    logger.info("Creating subscription aspect for host #{host.name}.")
-    subscription_aspect = host.subscription_aspect = Katello::Host::SubscriptionAspect.new
-    subscription_aspect.activation_keys = system.activation_keys
-    subscription_aspect.uuid = system.uuid
+  def create_subscription_facet(host, system)
+    logger.info("Creating subscription facet for host #{host.name}.")
+    subscription_facet = host.subscription_facet = Katello::Host::SubscriptionFacet.new
+    subscription_facet.activation_keys = system.activation_keys
+    subscription_facet.uuid = system.uuid
 
     if system.backend_data
-      subscription_aspect.service_level = system.backend_data['serviceLevel']
-      subscription_aspect.release_version = system.backend_data['releaseVer']
-      subscription_aspect.last_checkin = system.backend_data['lastCheckin']
-      subscription_aspect.autoheal = system.backend_data['autoheal']
+      subscription_facet.service_level = system.backend_data['serviceLevel']
+      subscription_facet.release_version = system.backend_data['releaseVer']
+      subscription_facet.last_checkin = system.backend_data['lastCheckin']
+      subscription_facet.autoheal = system.backend_data['autoheal']
     end
 
-    subscription_aspect.save!
+    subscription_facet.save!
   end
 
   def get_systems_with_facts(systems)
@@ -184,25 +184,25 @@ class MigrateContentHosts < ActiveRecord::Migration
         logger.info("No host exists with hostname #{hostname}, creating new host.")
         params = system.attributes.to_options
         params[:facts] = system.facts
-        host = Katello::Host::SubscriptionAspect.new_host_from_rhsm_params(params, system.environment.organization, Location.default_location)
+        host = Katello::Host::SubscriptionFacet.new_host_from_rhsm_params(params, system.environment.organization, Location.default_location)
         host.save!
 
-        create_content_aspect(host, system)
-        create_subscription_aspect(host, system)
+        create_content_facet(host, system)
+        create_subscription_facet(host, system)
 
       elsif hosts.where(:organization_id => system.environment.organization.id).empty? # host is not in the correct org
         logger.warn("Found host with hostname #{hostname} but it's in org #{hosts[0].org.name} instead of #{system.environment.organization.name}.")
         host = hosts.first
 
-        create_content_aspect(host, system)
+        create_content_facet(host, system)
         unregister_system(system)
 
       else #host exists in the correct org
         logger.info("Found host with hostname #{hostname}.")
         host = hosts.first
 
-        create_content_aspect(host, system)
-        create_subscription_aspect(host, system)
+        create_content_facet(host, system)
+        create_subscription_facet(host, system)
       end
 
       system.host_id = host.id

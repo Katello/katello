@@ -27,7 +27,7 @@ module Katello::Host
     # rubocop:disable MethodCalledOnDoEndBlock
     describe 'Hypervisors Update' do
       it 'hypervisor' do
-        ::Katello::Host::SubscriptionAspect.expects(:find_or_create_host_for_hypervisor).with do |name, *_|
+        ::Katello::Host::SubscriptionFacet.expects(:find_or_create_host_for_hypervisor).with do |name, *_|
           name.must_equal 'hypervisor'
         end.returns(@host)
         action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
@@ -38,7 +38,7 @@ module Katello::Host
       it 'hypervisor duplicate' do
         ::Host.stubs(:find_by_name).returns(@host)
         @host.organization = @organization
-        ::Katello::Host::SubscriptionAspect.expects(:find_or_create_host_for_hypervisor).with do |name, *_|
+        ::Katello::Host::SubscriptionFacet.expects(:find_or_create_host_for_hypervisor).with do |name, *_|
           name.must_equal "virt-who-hypervisor-#{@content_view.organization.id}"
         end.returns(@host)
         action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
