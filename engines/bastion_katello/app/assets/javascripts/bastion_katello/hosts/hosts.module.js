@@ -3,9 +3,10 @@
  * @name  Bastion.hosts
  *
  * @description
- *   Module for content hosts related functionality.
+ *    Module for hosts
  */
 angular.module('Bastion.hosts', [
     'ngResource',
+    'ui.router',
     'Bastion'
 ]);

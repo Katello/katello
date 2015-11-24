@@ -237,10 +237,8 @@ Katello::Engine.routes.draw do
             delete :host_collections, :action => :remove_host_collections
             get :pools
             get :releases
-            put :refresh_subscriptions
             put :content_override
             get :product_content
-            get :subscriptions, :action => :subscriptions
             post :subscriptions, :action => :add_subscriptions
           end
           collection do
@@ -249,13 +247,6 @@ Katello::Engine.routes.draw do
           api_resources :activation_keys, :only => [:index]
           api_resources :host_collections, :only => [:index]
           api_resources :products, :only => [:index]
-          api_resources :subscriptions, :only => [:destroy] do
-            collection do
-              match '/' => 'subscriptions#destroy', :via => :put
-              match '/available' => 'subscriptions#available', :via => :get
-              match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
-            end
-          end
         end
 
         ##############################

@@ -7,12 +7,8 @@ module Katello
 
     skip_before_filter :set_default_response_format, :only => :report
 
-    before_filter :find_system, :only => [:destroy, :show, :update,
-                                          :pools, :enabled_repos, :releases,
-                                          :available_host_collections,
-                                          :refresh_subscriptions, :tasks, :content_override,
-                                          :product_content, :events, :subscriptions,
-                                          :add_subscriptions]
+    before_filter :find_system, :only => [:destroy, :show, :update, :enabled_repos, :releases, :available_host_collections,
+                                          :tasks, :content_override, :product_content]
     before_filter :find_environment, :only => [:index, :report]
     before_filter :find_optional_organization, :only => [:create, :index, :report]
     before_filter :find_host_collection, :only => [:index]
@@ -166,13 +162,6 @@ module Katello
       respond :message => _("Deleted content host '%s'") % params[:id], :status => 204
     end
 
-    api :PUT, "/systems/:id/refresh_subscriptions", N_("Trigger a refresh of subscriptions, auto-attaching if enabled"), :deprecated => true
-    param :id, String, :desc => N_("UUID of the content host"), :required => true
-    def refresh_subscriptions
-      sync_task(::Actions::Katello::System::AutoAttachSubscriptions, @system)
-      respond_for_show(:resource => @system)
-    end
-
     api :GET, "/environments/:environment_id/systems/report", N_("Get content host reports for the environment"), :deprecated => true
     api :GET, "/organizations/:organization_id/systems/report", N_("Get content host reports for the organization"), :deprecated => true
     def report
@@ -201,55 +190,6 @@ module Katello
         format.text { render :text => system_report.as(:text) }
         format.csv { render :text => system_report.as(:csv) }
       end
-    end
-
-    api :GET, "/systems/:id/pools", N_("List pools a content host is subscribed to"), :deprecated => true
-    param :id, String, :desc => N_("UUID of the content host"), :required => true
-    param :match_system, [true, false], :desc => N_("Match pools to content host")
-    param :match_installed, [true, false], :desc => N_("Match pools to installed")
-    param :no_overlap, [true, false], :desc => N_("allow overlap")
-    def pools
-      match_system    = ::Foreman::Cast.to_bool(params[:match_system])
-      match_installed = ::Foreman::Cast.to_bool(params[:match_installed])
-      no_overlap      = ::Foreman::Cast.to_bool(params[:no_overlap])
-
-      cp_pools = @system.filtered_pools(match_system, match_installed, no_overlap)
-      response = { :records => cp_pools,
-                   :total => cp_pools.size,
-                   :subtotal => cp_pools.size }
-
-      respond_for_index :collection => response
-    end
-
-    api :GET, "/systems/:id/subscriptions", N_("List a content host's subscriptions"), :deprecated => true
-    param :id, String, :desc => N_("UUID of the content host"), :required => true
-    def subscriptions
-      subscriptions =  @system.entitlements.map { |entitlement| SystemSubscriptionPresenter.new(entitlement) }
-      collection = subscriptions.map(&:subscription)
-      @collection = { :results => collection,
-                      :total => collection.count,
-                      :page => 1,
-                      :per_page => collection.count,
-                      :subtotal => collection.count }
-    end
-
-    api :POST, "/systems/:id/subscriptions", N_("Add a subscription to a content host"), :deprecated => true
-    param :subscription_id, String, :desc => N_("Subscription Pool uuid"), :required => false
-    param :id, String, :desc => N_("UUID of a content host"), :required => false
-    param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => false
-    param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
-      param :id, String, :desc => N_("Subscription Pool uuid"), :required => true
-      param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
-    end
-    def add_subscriptions
-      if params[:subscriptions]
-        params[:subscriptions].each do |sub_params|
-          attach_subscription(@system, sub_params[:id], sub_params[:quantity])
-        end
-      elsif params[:subscription_id] && params.key?(:quantity)
-        attach_subscription(@system, params[:subscription_id], params[:quantity])
-      end
-      respond_for_show(:resource => @system)
     end
 
     api :GET, "/systems/:id/releases", N_("Show releases available for the content host"), :deprecated => true
@@ -293,18 +233,6 @@ module Katello
         :subtotal => content.size
       }
       respond_for_index :collection => response
-    end
-
-    api :GET, "/systems/:id/events", N_("List Candlepin events for the content host")
-    param :id, String, :desc => N_("UUID of the content host"), :required => true
-    def events
-      @events = @system.events.map { |e| OpenStruct.new(e) }
-      respond_for_index :collection => @events
-    end
-
-    def attach_subscription(system, pool_id, quantity)
-      subscription = Pool.find(pool_id)
-      async_task(::Actions::Katello::Subscription::Subscribe, system.id, subscription.cp_id, quantity)
     end
 
     private

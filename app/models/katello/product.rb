@@ -19,6 +19,7 @@ module Katello
 
     has_many :subscription_products, :class_name => "Katello::SubscriptionProduct", :dependent => :destroy
     has_many :subscriptions, :through => :subscription_products
+    has_many :pools, :through => :subscriptions
 
     validates_lengths_from_database :except => [:label]
     validates :provider_id, :presence => true

@@ -59,10 +59,3 @@ node :activation_keys do |subscription|
     }
   end
 end
-
-node :host, :if => lambda { |sub| sub && sub.host } do |subscription|
-  {
-    id: subscription.host.uuid,
-    name: subscription.host.name
-  }
-end

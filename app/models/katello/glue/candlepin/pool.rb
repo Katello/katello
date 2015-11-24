@@ -16,7 +16,7 @@ module Katello
         lazy_accessor :name, :support_level, :org, :sockets, :cores, :stacking_id, :instance_multiplier,
           :initializer => :subscription_facts
 
-        lazy_accessor :active, :initializer => lambda { |_s| self.backend_data["activeSubscription"] }
+        lazy_accessor :active, :initializer => lambda { |_s| self.pool_facts["activeSubscription"] }
 
         lazy_accessor :available, :initializer => lambda { |_s| self.quantity_available }
       end
@@ -39,7 +39,6 @@ module Katello
 
     module InstanceMethods
       def import_lazy_attributes
-        json = {}
         json = self.backend_data
 
         pool_attributes = json["attributes"] + json["productAttributes"]
