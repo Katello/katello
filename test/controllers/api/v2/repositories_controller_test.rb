@@ -472,7 +472,33 @@ module Katello
       end
 
       post :sync, :id => @repository.id
+      assert_response :success
+    end
 
+    def test_sync_with_url_override
+      assert_async_task ::Actions::Katello::Repository::Sync do |repo, pulp_task_id, source_url|
+        repo.id.must_equal(@repository.id)
+        pulp_task_id.must_equal(nil)
+        source_url.must_equal('file:///tmp/')
+      end
+      post :sync, :id => @repository.id, :source_url => 'file:///tmp/'
+      assert_response :success
+    end
+
+    def test_sync_with_bad_url_override
+      post :sync, :id => @repository.id, :source_url => 'file:|||tmp/'
+      assert_response 400
+    end
+
+    def test_sync_no_feed_urls
+      repo = katello_repositories(:feedless_fedora_17_x86_64)
+      post :sync, :id => repo.id
+      assert_response 400
+    end
+
+    def test_sync_no_feed_urls_with_override
+      repo = katello_repositories(:feedless_fedora_17_x86_64)
+      post :sync, :id => repo.id, :source_url => 'http://www.wikipedia.org'
       assert_response :success
     end
 
