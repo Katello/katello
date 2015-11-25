@@ -17,9 +17,8 @@ module Katello
     end
 
     def teardown
-      Resources::Candlepin::Owner.destroy(@org.label)
-    ensure
       VCR.eject_cassette
+      CandlepinOwnerSupport.destroy_organization(@org)
     end
   end
 
