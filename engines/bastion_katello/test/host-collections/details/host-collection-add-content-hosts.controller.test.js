@@ -15,6 +15,7 @@ describe('Controller: HostCollectionAddContentHostsController', function() {
                 }
             };
             this.get = function() {};
+            this.setSearchKey = function() {};
         };
         HostCollection = {addContentHosts: function(){}};
         System = {};
@@ -36,13 +37,7 @@ describe('Controller: HostCollectionAddContentHostsController', function() {
     }));
 
     it('attaches the nutupane table to the scope', function() {
-        expect($scope.addContentHostsTable).toBeDefined();
-    });
-
-    it('sets the closeItem function to not do anything', function() {
-        spyOn($scope, "transitionTo");
-        $scope.addContentHostsTable.closeItem();
-        expect($scope.transitionTo).not.toHaveBeenCalled();
+        expect($scope.detailsTable).toBeDefined();
     });
 
     it('adds selected content hosts', function(){
