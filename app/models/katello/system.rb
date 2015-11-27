@@ -208,7 +208,6 @@ module Katello
       paths.each do |path|
         possible_repos = Repository.where(:relative_path => path.gsub('/pulp/repos/', ''))
         if possible_repos.empty?
-          unknown_paths << path
           Rails.logger.warn("System #{self.name} (#{self.id}) requested binding to unknown repo #{path}")
         else
           repos << possible_repos.first
