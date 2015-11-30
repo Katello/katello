@@ -73,8 +73,8 @@ module Katello
 
     def self.for_version(version)
       major, minor = version.to_s.split('.')
-      query = where(:major => major)
-      query.where(:minor => minor) if minor
+      minor = 0 if minor.nil?
+      query = where(:major => major, :minor => minor)
       query
     end
 
