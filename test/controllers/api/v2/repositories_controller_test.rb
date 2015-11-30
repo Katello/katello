@@ -21,6 +21,7 @@ module Katello
       @update_permission = :edit_products
       @destroy_permission = :destroy_products
       @sync_permission = :sync_products
+      @export_permission = :export_products
     end
 
     def setup
@@ -571,6 +572,36 @@ module Katello
 
       assert_protected_action(:import_uploads, allowed_perms, denied_perms) do
         put :import_uploads, :id => @repository.id, :upload_ids => [1]
+      end
+    end
+
+    def test_export
+      post :export, :id => @repository.id
+      assert_response :success
+    end
+
+    def test_export_with_bad_date
+      post :export, :id => @repository.id, :since => 'November 32, 1970'
+      assert_response 400
+    end
+
+    def test_export_with_date
+      post :export, :id => @repository.id, :since => 'November 30, 1970'
+      assert_response :success
+    end
+
+    def test_export_with_8601_date
+      post :export, :id => @repository.id, :since => '2010-01-01T00:00:00'
+      assert_response :success
+    end
+
+    def test_export_protected
+      allowed_perms = [@export_permission]
+      denied_perms = [@sync_permission, @create_permission, @read_permission,
+                      @destroy_permission, @update_permission]
+
+      assert_protected_action(:export, allowed_perms, denied_perms) do
+        post :export, :id => @repository.id
       end
     end
 

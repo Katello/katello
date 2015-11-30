@@ -7,6 +7,7 @@ module Actions
           param :distributor_type_id
           param :source_pulp_id
           param :dependency
+          param :override_config
         end
 
         def invoke_external_task
@@ -24,9 +25,12 @@ module Actions
         end
 
         def distributor_config
+          # the check for YumCloneDistributor is here for backwards compatibility
           if input[:distributor_type_id] == Runcible::Models::YumCloneDistributor.type_id
             { override_config: { source_repo_id: input[:source_pulp_id],
                                  source_distributor_id: source_distributor_id} }
+          else
+            { override_config: input[:override_config] }
           end
         end
 
