@@ -36,10 +36,14 @@ module Katello
 
     def test_of_version
       version = @cvv
+      content_view = version.content_view
+      content_view.versions << @cvv_minor
+
       assert_equal [version], version.content_view.versions.for_version("1.0")
       assert_equal [version], version.content_view.versions.for_version("1")
       assert_equal [version], version.content_view.versions.for_version(1)
       assert_equal [version], version.content_view.versions.for_version(1.0)
+      assert_equal [@cvv_minor], version.content_view.versions.for_version(1.1)
     end
 
     def test_next_incremental_version
