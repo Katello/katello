@@ -84,7 +84,7 @@ module Katello
         System.any_instance.stubs(:first).returns(@system)
         uuid = @host.subscription_facet.uuid
         ::Host.any_instance.stubs(:content_host).returns(@system)
-        User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
+        stub_cp_consumer_with_uuid(uuid)
         Repository.stubs(:where).with(:relative_path => 'foo').returns([OpenStruct.new(:pulp_id => 'a')])
         Repository.stubs(:where).with(:relative_path => 'bar').returns([OpenStruct.new(:pulp_id => 'b')])
       end
@@ -177,7 +177,7 @@ module Katello
         @controller.stubs(:find_host).returns(@host)
         uuid = @host.subscription_facet.uuid
         User.stubs(:consumer?).returns(true)
-        User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
+        stub_cp_consumer_with_uuid(uuid)
         assert_sync_task(::Actions::Katello::Host::Hypervisors) do |environment, content_view, params|
           assert_equal environment.id, @host.content_facet.lifecycle_environment.id
           assert_equal content_view.id, @host.content_facet.content_view.id
@@ -192,7 +192,7 @@ module Katello
         @controller.stubs(:find_host).returns(@host)
         uuid = @host.subscription_facet.uuid
         User.stubs(:consumer?).returns(true)
-        User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
+        stub_cp_consumer_with_uuid(uuid)
         assert_sync_task(::Actions::Katello::Host::Hypervisors) do |environment, content_view, params|
           assert_equal environment.id, @host.content_facet.lifecycle_environment.id
           assert_equal content_view.id, @host.content_facet.content_view.id
@@ -208,8 +208,7 @@ module Katello
         # Stub out the current user to simulate consumer auth.
         uuid = @host.subscription_facet.uuid
         User.stubs(:consumer?).returns(true)
-        User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
-
+        stub_cp_consumer_with_uuid(uuid)
         get :available_releases, :id => @host.subscription_facet.uuid
         assert_response 200
       end
@@ -218,7 +217,7 @@ module Katello
         # Stub out the current user to simulate consumer auth.
         uuid = 4444
         User.stubs(:consumer?).returns(true)
-        User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
+        stub_cp_consumer_with_uuid(uuid)
         # Getting the available releases for a different consumer
         # should not be allowed.
         get :available_releases, :id => @host.subscription_facet.uuid
@@ -239,7 +238,7 @@ module Katello
 
       it "can be accessed by client" do
         uuid = @host.subscription_facet.uuid
-        User.stubs(:current).returns(CpConsumerUser.new(:uuid => uuid, :login => uuid))
+        stub_cp_consumer_with_uuid(uuid)
         get :consumer_show, :id => uuid
         assert_response 200
       end

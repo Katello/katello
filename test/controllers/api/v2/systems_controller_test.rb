@@ -13,7 +13,11 @@ module Katello
       @organization = get_organization
       @repo = Repository.find(katello_repositories(:rhel_6_x86_64))
       @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_dev_view_library))
-      @host = ::Host::Managed.create!(:name => "testhost", :managed => false, :content_host => @system)
+      @host = ::Host::Managed.new
+      @host.name = "testhost"
+      @host.managed = false
+      @host.content_host = @system
+      @host.save!
       @pool_one = katello_pools(:pool_one)
     end
 

@@ -7,8 +7,12 @@ module Containers
       login_user(User.find(users(:admin)))
       @compute_resource = FactoryGirl.create(:docker_stuff)
       @state = DockerContainerWizardState.create!
-      @state.preliminary = DockerContainerWizardStates::Preliminary.create!(:wizard_state => @state,
-                                                                            :compute_resource_id => @compute_resource.id)
+
+      @state.preliminary = DockerContainerWizardStates::Preliminary.create do |prelim|
+        prelim.wizard_state = @state
+        prelim.compute_resource_id = @compute_resource.id
+      end
+
       DockerContainerWizardState.expects(:find).at_least_once.returns(@state)
     end
 
