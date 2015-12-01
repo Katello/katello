@@ -52,3 +52,4 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "rubocop-checkstyle_formatter"
 
 end
+

@@ -73,7 +73,8 @@ module Katello
 
     def teardown
       delete_repo(@fedora_17_x86_64)
-      super
+    ensure
+      VCR.eject_cassette
     end
 
     def test_delete_orphaned_content
@@ -148,7 +149,8 @@ module Katello
 
     def teardown
       delete_repo(@fedora_17_x86_64)
-      super
+    ensure
+      VCR.eject_cassette
     end
   end
 
@@ -161,7 +163,8 @@ module Katello
 
     def teardown
       delete_repo(@fedora_17_x86_64)
-      super
+    ensure
+      VCR.eject_cassette
     end
   end
 
@@ -181,7 +184,8 @@ module Katello
 
     def teardown
       delete_repo(@p_forge)
-      super
+    ensure
+      VCR.eject_cassette
     end
 
     def test_generate_distributors
@@ -201,7 +205,8 @@ module Katello
 
     def teardown
       delete_repo(@fedora_17_x86_64)
-      super
+    ensure
+      VCR.eject_cassette
     end
 
     def test_sync_status
@@ -303,7 +308,8 @@ module Katello
 
     def teardown
       delete_repo(@fedora_17_x86_64)
-      super
+    ensure
+      VCR.eject_cassette
     end
 
     def test_create_clone

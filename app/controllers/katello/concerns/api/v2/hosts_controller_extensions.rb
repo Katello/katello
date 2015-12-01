@@ -6,7 +6,7 @@ module Katello
 
       included do
         def destroy
-          sync_task(::Actions::Katello::System::HostDestroy, @host)
+          sync_task(::Actions::Katello::Host::Destroy, @host)
           process_response(:object => @host)
         end
       end

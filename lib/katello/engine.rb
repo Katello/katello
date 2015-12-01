@@ -133,6 +133,8 @@ module Katello
       # Model extensions
       ::Environment.send :include, Katello::Concerns::EnvironmentExtensions
       ::Host::Managed.send :include, Katello::Concerns::HostManagedExtensions
+      ::Host::Managed.send :include, ::Katello::Concerns::ContentFacetHostExtensions
+      ::Host::Managed.send :include, ::Katello::Concerns::SubscriptionFacetHostExtensions
       ::Hostgroup.send :include, Katello::Concerns::HostgroupExtensions
       ::Location.send :include, Katello::Concerns::LocationExtensions
       ::Medium.send :include, Katello::Concerns::MediumExtensions

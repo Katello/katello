@@ -9,7 +9,9 @@ module Support
       def build_task_stub
         task_attrs = [:id, :label, :pending,
                       :username, :started_at, :ended_at, :state, :result, :progress,
-                      :input, :output, :humanized, :cli_example].inject({}) { |h, k| h.update k => nil }
+                      :input, :humanized, :cli_example].inject({}) { |h, k| h.update k => nil }
+        task_attrs[:output] = {}
+
         stub('task', task_attrs).mimic!(::ForemanTasks::Task)
       end
 

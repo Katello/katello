@@ -445,41 +445,6 @@ module Katello
         return system_uuids
       end
 
-      def create_hypervisor(environment_id, content_view_id, hypervisor_json)
-        hypervisor = Hypervisor.new(:environment_id => environment_id, :content_view_id => content_view_id)
-        hypervisor.name = hypervisor_json[:name]
-        hypervisor.cp_type = 'hypervisor'
-        hypervisor.orchestration_for = :hypervisor
-        hypervisor.load_from_cp(hypervisor_json)
-        hypervisor.save!
-        hypervisor
-      end
-
-      def register_hypervisors(environment, content_view, hypervisors_attrs)
-        consumers_attrs = Resources::Candlepin::Consumer.register_hypervisors(hypervisors_attrs)
-        created = []
-        if consumers_attrs[:created]
-          consumers_attrs[:created].each do |hypervisor|
-            created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
-          end
-        end
-        if consumers_attrs[:updated]
-          consumers_attrs[:updated].each do |hypervisor|
-            unless System.find_by_uuid(hypervisor[:uuid])
-              created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
-            end
-          end
-        end
-        if consumers_attrs[:unchanged]
-          consumers_attrs[:unchanged].each do |hypervisor|
-            unless System.find_by_uuid(hypervisor[:uuid])
-              created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
-            end
-          end
-        end
-        return consumers_attrs, created
-      end
-
       # interface listings come in the form of
       #
       # net.interface.em1.ipv4_address

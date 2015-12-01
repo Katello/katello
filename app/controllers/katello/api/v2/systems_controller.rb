@@ -109,10 +109,14 @@ module Katello
     param :content_view_id, String, :desc => N_("Specify the content view")
     param :host_collection_ids, Array, :desc => N_("Specify the host collections as an array")
     def create
-      @system = System.new(system_params(params).merge(:environment  => @environment,
-                                                       :content_view => @content_view))
-      sync_task(::Actions::Katello::System::Create, @system)
-      @system.reload
+      rhsm_params = system_params(params)
+      rhsm_params[:facts] ||= {}
+      rhsm_params[:facts]['network.hostname'] ||= rhsm_params[:name]
+      content_view_environment = ContentViewEnvironment.where(:content_view_id => @content_view, :environment_id => @environment).first
+      host = Katello::Host::SubscriptionFacet.new_host_from_rhsm_params(rhsm_params, @organization, Location.default_location)
+
+      sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, content_view_environment)
+      @system = host.reload.content_host
       respond_for_create
     end
 
@@ -160,7 +164,7 @@ module Katello
     api :DELETE, "/systems/:id", N_("Unregister a content host"), :deprecated => true
     param :id, String, :desc => N_("UUID of the content host"), :required => true
     def destroy
-      sync_task(::Actions::Katello::System::Destroy, @system)
+      sync_task(::Actions::Katello::System::Destroy, @system, :destroy_object => false)
       respond :message => _("Deleted content host '%s'") % params[:id], :status => 204
     end
 
@@ -404,8 +408,7 @@ module Katello
                                                      :guest_ids, :host_collection_ids => [])
 
       system_params[:facts] = param_hash[:system][:facts].permit! if param_hash[:system][:facts]
-      system_params[:cp_type] = param_hash[:type] ? param_hash[:type] : ::Katello::System::DEFAULT_CP_TYPE
-      system_params.delete(:type) if param_hash[:system].key?(:type)
+      system_params[:type] = param_hash[:type] ? param_hash[:type] : ::Katello::Host::SubscriptionFacet::DEFAULT_TYPE
 
       { :guest_ids => :guestIds,
         :installed_products => :installedProducts,

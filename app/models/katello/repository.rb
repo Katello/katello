@@ -52,6 +52,9 @@ module Katello
     has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy
     has_many :systems, :through => :system_repositories
 
+    has_many :content_facet_repositories, :class_name => "Katello::ContentFacetRepository", :dependent => :destroy
+    has_many :content_facets, :through => :content_facet_repositories
+
     has_many :repository_package_groups, :class_name => "Katello::RepositoryPackageGroup", :dependent => :destroy
     has_many :package_groups, :through => :repository_package_groups
 
