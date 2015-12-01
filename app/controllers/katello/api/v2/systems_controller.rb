@@ -57,6 +57,7 @@ module Katello
     param :errata_ids, Array, :desc => N_("Filter by systems that need any one of multiple Errata by uuid")
     param :erratum_restrict_installable, String, :desc => N_("Return only systems where the Erratum specified by erratum_id or errata_ids is available to systems (default False)")
     param :erratum_restrict_non_installable, String, :desc => N_("Return only systems where the Erratum specified by erratum_id or errata_ids is unavailable to systems (default False)")
+    param :available_for, String, :desc => N_("Return content hosts that are able to be attached to a specified object such as 'host_collection'")
     param_group :search, Api::V2::ApiController
     def index
       respond(:collection => scoped_search(index_relation.uniq, :name, :asc))
@@ -69,6 +70,12 @@ module Katello
             params[:erratum_restrict_non_installable])
       else
         collection = System.readable
+      end
+
+      if params[:available_for] && params[:available_for] == 'host_collection'
+        system_ids = HostCollection.find(params[:host_collection_id]).systems.pluck(:id)
+        collection = collection.where("id NOT IN (?)", system_ids) unless system_ids.empty?
+        return collection
       end
 
       collection = collection.where(:content_view_id => params[:content_view_id]) if params[:content_view_id]

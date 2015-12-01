@@ -21,7 +21,7 @@ module Katello
 
     def teardown
       super
-      CandlepinOwnerSupport.destroy_organization(@org.id)
+      CandlepinOwnerSupport.destroy_organization(@org)
     end
 
     def test_update_candlepin_owner_service_level
