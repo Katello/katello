@@ -8,17 +8,23 @@ module Katello
     end
 
     def kurl_valid?(url)
-      valid_for_prefixes(url, PROTOCOLS)
+      validate_host(url) && validate_scheme(url, PROTOCOLS)
     end
 
     def file_prefix?(url)
-      valid_for_prefixes(url, [FILEPREFIX])
+      validate_scheme(url, [FILEPREFIX])
     end
 
     private
 
-    def valid_for_prefixes(url, prefixes)
-      return false unless (scheme = URI.parse(url).scheme).present?
+    def validate_host(url)
+      URI.parse(url).host.present?
+    rescue URI::InvalidURIError
+      return false
+    end
+
+    def validate_scheme(url, prefixes)
+      return false if (scheme = URI.parse(url).scheme).blank?
       prefixes.include?(scheme.downcase)
     rescue URI::InvalidURIError
       return false
