@@ -13,7 +13,10 @@ module Katello
         if cert_present?
           client_cert = Client::Cert.new(cert_from_request)
           uuid = client_cert.uuid
-          User.current = CpConsumerUser.new(:uuid => uuid, :login => uuid)
+          User.current = CpConsumerUser.new do |cp_consumer|
+            cp_consumer.uuid = uuid
+            cp_consumer.login = uuid
+          end
         end
       end
 
