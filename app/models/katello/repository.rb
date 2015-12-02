@@ -52,6 +52,9 @@ module Katello
     has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy
     has_many :systems, :through => :system_repositories
 
+    has_many :content_facet_repositories, :class_name => "Katello::ContentFacetRepository", :dependent => :destroy
+    has_many :content_facets, :through => :content_facet_repositories
+
     has_many :repository_package_groups, :class_name => "Katello::RepositoryPackageGroup", :dependent => :destroy
     has_many :package_groups, :through => :repository_package_groups
 
@@ -529,7 +532,7 @@ module Katello
           return true
         else
           errors.add(:base, _("Repository cannot be deleted since it has already been included in a published Content View. " \
-                              "Please delete all Content View versions containing this repository before attempting to deleting it."))
+                              "Please delete all Content View versions containing this repository before attempting to delete it."))
 
           return false
         end

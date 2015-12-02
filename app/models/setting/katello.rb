@@ -15,7 +15,8 @@ class Setting::Katello < Setting
         self.set('pulp_sync_node_action_accept_timeout', N_("Time in seconds to wait for a pulp node to remote action"), 20),
         self.set('pulp_sync_node_action_finish_timeout', N_("Time in seconds to wait for a pulp node to finish sync"), 12.hours.to_i),
         self.set('check_services_before_actions', N_("Whether or not to check the status of backend services such as pulp and candlepin prior to performing some actions."), true),
-        self.set('force_post_sync_actions', N_("Force post sync actions such as indexing and email even if no content was available."), false)
+        self.set('force_post_sync_actions', N_("Force post sync actions such as indexing and email even if no content was available."), false),
+        self.set('pulp_export_destination', N_("On-disk location for exported repositories"), "/tmp/katello-repo-exports")
       ].each { |s| self.create! s.update(:category => "Setting::Katello") }
     end
     true

@@ -159,12 +159,12 @@ module ::Actions::Katello::Repository
     let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
 
     it 'plans' do
-      action       = create_action action_class
+      action = create_action action_class
       action.stubs(:action_subject).with(repository)
       plan_action action, repository
 
       assert_action_planed_with(action, pulp_action_class,
-                                pulp_id: repository.pulp_id, task_id: nil)
+                                pulp_id: repository.pulp_id, task_id: nil, source_url: nil)
       assert_action_planed action, ::Actions::Katello::Repository::IndexContent
       assert_action_planed_with action, ::Actions::Katello::Repository::ErrataMail do |repo, _task_id, contents_changed|
         contents_changed.must_be_kind_of Dynflow::ExecutionPlan::OutputReference
@@ -173,12 +173,22 @@ module ::Actions::Katello::Repository
     end
 
     it 'passes the task id to pulp sync action when provided' do
-      action       = create_action action_class
+      action = create_action action_class
       action.stubs(:action_subject).with(repository)
       plan_action action, repository, '123'
 
       assert_action_planed_with(action, pulp_action_class,
-                                pulp_id: repository.pulp_id, task_id: '123')
+                                pulp_id: repository.pulp_id, task_id: '123', source_url: nil)
+    end
+
+    it 'passes the source URL to pulp sync action when provided' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+      plan_action action, repository, nil, 'file:///tmp/'
+
+      assert_action_planed_with(action, pulp_action_class,
+                                pulp_id: repository.pulp_id, task_id: nil,
+                                source_url: 'file:///tmp/')
     end
 
     describe 'progress' do
@@ -277,6 +287,38 @@ module ::Actions::Katello::Repository
       plan_action(action, repository)
       assert_action_planed_with(action, ::Actions::Katello::Repository::NodeMetadataGenerate, repository)
       assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::Sync, capsule_content, :repository => repository)
+    end
+  end
+
+  class ExportRepositoryTest  < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::Export }
+    let(:repository) { katello_repositories(:rhel_6_x86_64) }
+
+    it 'export without date' do
+      action = create_action action_class
+      plan_action(action, repository)
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::DistributorPublish,
+                                pulp_id: repository.pulp_id,
+                                distributor_type_id: 'export_distributor',
+                                override_config: { "export_dir" => "/tmp/katello-repo-exports/repo_export"})
+    end
+
+    it 'export with date' do
+      action = create_action action_class
+      plan_action(action, repository, '20100101T00:00:00')
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::DistributorPublish,
+                                pulp_id: repository.pulp_id,
+                                distributor_type_id: 'export_distributor',
+                                override_config: {"export_dir" => "/tmp/katello-repo-exports/repo_export", :start_date => "2010-01-01T00:00:00Z"})
+    end
+
+    it 'export with export suffix' do
+      action = create_action action_class
+      plan_action(action, repository, nil, 'some-export-suffix')
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::DistributorPublish,
+                                pulp_id: repository.pulp_id,
+                                distributor_type_id: 'export_distributor',
+                                override_config: {"export_dir" => "/tmp/katello-repo-exports/some-export-suffix"})
     end
   end
 end

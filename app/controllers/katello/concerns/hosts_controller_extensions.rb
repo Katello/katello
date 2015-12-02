@@ -5,14 +5,14 @@ module Katello
       include ForemanTasks::Triggers
       included do
         def destroy
-          sync_task(::Actions::Katello::System::HostDestroy, @host)
+          sync_task(::Actions::Katello::Host::Destroy, @host)
           process_success(:success_redirect => hosts_path)
         rescue StandardError => ex
           process_error(:object => @host, :error_msg => ex.message)
         end
 
         def submit_multiple_destroy
-          task = async_task(::Actions::BulkAction, ::Actions::Katello::System::HostDestroy, @hosts)
+          task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::Destroy, @hosts)
           redirect_to(foreman_tasks_task_path(task.id))
         end
 

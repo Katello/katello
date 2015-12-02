@@ -8,6 +8,8 @@ module Actions
 
         def run
           ::Katello::Resources::Candlepin::Consumer.destroy(input[:uuid])
+        rescue RestClient::Gone
+          Rails.logger.error(_("Consumer %s has already been removed") % input[:uuid])
         end
       end
     end

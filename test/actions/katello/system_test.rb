@@ -1,4 +1,5 @@
 require 'katello_test_helper'
+require 'support/host_support'
 
 module ::Actions::Katello::System
   class TestBase < ActiveSupport::TestCase
@@ -14,63 +15,71 @@ module ::Actions::Katello::System
     end
   end
 
-  class CreateTest < TestBase
-    let(:action_class) { ::Actions::Katello::System::Create }
-
-    let(:system) do
-      env = build(:katello_k_t_environment,
-                  :library,
-                  organization: build(:katello_organization, :acme_corporation))
-      build(:katello_system, :alabama, environment: env)
-    end
-
-    it 'plans' do
-      stub_remote_user
-      system.expects(:save!)
-      action.stubs(:action_subject).with do |subject, _params|
-        subject.must_equal(system)
-      end
-      #::Actions::Katello::System::ActivationKeys.any_instance.stubs(:error).returns(nil)
-      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:error).returns(nil)
-      plan_action(action, system, [])
-      assert_action_planed(action, ::Actions::Candlepin::Consumer::Create)
-      assert_action_planed_with(action, ::Actions::Pulp::Consumer::Create) do |params, *_|
-        params[:uuid].must_be_kind_of Dynflow::ExecutionPlan::OutputReference
-        params[:uuid].subkeys.must_equal %w(response uuid)
-      end
-    end
-
-    it 'updates the uuid in finalize method' do
-      ::Katello::System.stubs(:find).with(123).returns(system)
-      action.input[:remote_user] = 'user'
-      action.input[:remote_cp_user] = 'user'
-      action.input[:system] = { id:  123 }
-      action.input[:uuid] = '123'
-      system.expects(:save!)
-      finalize_action action
-      system.uuid.must_equal '123'
-    end
-  end
-
   class UpdateTest < TestBase
+    before do
+      puppet_env = ::Environment.create!(:name => 'blah')
+
+      cvpe = library_dev_staging_view.version(dev).puppet_env(dev)
+      cvpe.puppet_environment = puppet_env
+      cvpe.save!
+
+      foreman_host = FactoryGirl.create(:host)
+      system.host_id = foreman_host.id
+      system.content_view = library_view
+      system.environment = library
+      system.save!
+      action.expects(:action_subject).with(system)
+    end
+
     let(:action_class) { ::Actions::Katello::System::Update }
     let(:input) { { :name => 'newname' } }
 
+    let(:acme_default) { ::Katello::ContentView.find(katello_content_views(:acme_default)) }
+    let(:library_view) { ::Katello::ContentView.find(katello_content_views(:library_view)) }
+    let(:library) { ::Katello::KTEnvironment.find(katello_environments(:library)) }
+    let(:dev) { ::Katello::KTEnvironment.find(katello_environments(:dev).id) }
+    let(:library_dev_staging_view) { ::Katello::ContentView.find(katello_content_views(:library_dev_staging_view)) }
     let(:system) do
-      env = build(:katello_k_t_environment,
-                  :library,
-                  organization: build(:katello_organization, :acme_corporation))
-      build(:katello_system, :alabama, environment: env)
+      ::Katello::System.find(katello_systems(:simple_server))
     end
 
     it 'plans' do
       stub_remote_user
-      action.expects(:action_subject).with(system)
       system.expects(:update_attributes!).with(input)
 
       plan_action(action, system, input)
-      assert_action_planed(action, ::Actions::Pulp::Consumer::Update)
-      assert_action_planed(action, ::Actions::Candlepin::Consumer::Update)
+
+      assert_action_planed_with(action, ::Actions::Katello::Host::Update, system.foreman_host)
+    end
+
+    it 'errors if content view and env dont have matching puppet env' do
+      stub_remote_user
+      Support::HostSupport.setup_host_for_view(system.foreman_host, library_dev_staging_view, dev, true)
+
+      system.content_view = acme_default
+      system.environment = library
+      # If a puppet environment cannot be found for the lifecycle environment + content view
+      # combination, then an error should be raised
+      assert_raises ::Katello::Errors::NotFound do
+        plan_action(action, system, input)
+      end
+    end
+
+    it 'properly updates puppet env' do
+      stub_remote_user
+      Support::HostSupport.setup_host_for_view(system.foreman_host, library_view, library, true)
+      system.reload
+      system.environment = dev
+      system.content_view = library_dev_staging_view
+      system.save!
+
+      plan_action(action, system, input)
+
+      host = ::Host.find(system.foreman_host)
+      assert_equal host.lifecycle_environment, dev
+      assert_equal host.content_view, library_dev_staging_view
+      assert_equal host.environment.content_view, library_dev_staging_view
+      assert_equal host.environment.lifecycle_environment, dev
     end
   end
 
@@ -81,28 +90,12 @@ module ::Actions::Katello::System
 
     it 'plans' do
       stub_remote_user
-      action.expects(:plan_self)
       action.stubs(:action_subject).with(system)
-      system.expects(:pools).at_least(1).returns([{"id" => "fake"}])
+      system.foreman_host = ::Host.new
 
       plan_action(action, system)
-      assert_action_planed(action, ::Actions::Candlepin::Consumer::Destroy)
-      assert_action_planed(action, ::Actions::Pulp::Consumer::Destroy)
-    end
-  end
 
-  class HostDestroyTest < TestBase
-    let(:action_class) { ::Actions::Katello::System::HostDestroy }
-    it 'plans' do
-      host = mock
-      content_host = mock
-      host.expects(:content_host).at_least(1).returns(content_host)
-      host.expects(:id).at_least(1).returns(1)
-
-      action.stubs(:action_subject).with(host)
-
-      plan_action(action, host)
-      assert_action_planed_with(action, ::Actions::Katello::System::Destroy, content_host)
+      assert_action_planed_with(action, ::Actions::Katello::Host::Destroy, system.foreman_host, {})
     end
   end
 

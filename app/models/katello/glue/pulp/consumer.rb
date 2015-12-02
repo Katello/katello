@@ -33,11 +33,6 @@ module Katello
         bindings(Runcible::Models::YumDistributor.type_id)
       end
 
-      def propagate_yum_repos
-        pulp_ids = self.bound_repositories.map { |repo| repo.library_instance.try(:pulp_id) || repo.pulp_id }
-        enable_repos(Runcible::Models::YumDistributor.type_id, pulp_bound_yum_repositories, pulp_ids, :notify_agent => false)
-      end
-
       # Binds and unbinds distributors of a certain type across repos
       def enable_repos(distributor_type, existing_ids, update_ids, bind_options = {})
         # calculate repoids to bind/unbind
@@ -90,14 +85,6 @@ module Katello
         response[0]['applicability']['erratum'] || []
       end
 
-      def generate_applicability
-        old_user = User.current
-        User.current = User.anonymous_admin
-        ForemanTasks.async_task(::Actions::Katello::System::GenerateApplicability, [self])
-      ensure
-        User.current = old_user
-      end
-
       def del_pulp_consumer
         Rails.logger.debug "Deleting consumer in pulp: #{self.name}"
         Katello.pulp_server.extensions.consumer.delete(self.uuid)
@@ -113,15 +100,6 @@ module Katello
         Katello.pulp_server.extensions.consumer.update(self.uuid, :display_name => self.name)
       rescue => e
         Rails.logger.error "Failed to update pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
-        raise e
-      end
-
-      def upload_package_profile(profile)
-        Rails.logger.debug "Uploading package profile for consumer #{self.name}"
-        Katello.pulp_server.extensions.consumer.upload_profile(self.uuid, 'rpm', profile)
-        self.generate_applicability
-      rescue => e
-        Rails.logger.error "Failed to upload package profile to pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
         raise e
       end
 

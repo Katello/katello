@@ -65,4 +65,9 @@ Foreman::Plugin.find(:katello).security_block :products do
                'katello/sync_management' => [:index, :sync_status, :product_status, :sync, :destroy]
              },
              :resource_type => 'Katello::Product'
+  permission :export_products,
+             {
+               'katello/api/v2/repositories' => [:export]
+             },
+             :resource_type => 'Katello::Product'
 end
