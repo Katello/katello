@@ -57,6 +57,7 @@ module Katello
         host = find_host(name, organization)
         host = Katello::Host::SubscriptionFacet.new_host_from_rhsm_params(rhsm_params, organization,
                                           Location.default_location) unless host
+        host.organization = organization unless host.organization
         host
       end
 
@@ -78,9 +79,9 @@ module Katello
       def self.find_host(name, organization)
         hosts = ::Host.where(:name => name)
         return nil if hosts.empty? #no host exists
-        if hosts.where(:organization_id => organization.id).empty? #not in the correct org
-          #TODO http://projects.theforeman.org/issues/11532
-          fail "Can't handle registering to host in a different org, need to handle this case."
+        if hosts.where("organization_id = #{organization.id} OR organization_id is NULL").empty? #not in the correct org
+          #TODO: http://projects.theforeman.org/issues/11532
+          fail _("Host is currently registered to a different org, please migrate host to %s.") %  organization.name
         end
         hosts.first
       end
