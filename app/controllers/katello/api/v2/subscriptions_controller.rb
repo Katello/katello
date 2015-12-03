@@ -45,7 +45,7 @@ module Katello
     param :id, :number, :desc => N_("Subscription identifier"), :required => true
     def show
       @resource = Katello::Pool.with_identifier(params[:id])
-      respond(@resource)
+      respond(:resource => @resource)
     end
 
     def available

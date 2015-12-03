@@ -4,7 +4,7 @@ module Katello
 
     def initialize(entitlement)
       @subscription = Katello::Pool.find_by(:cp_id => entitlement["pool"]["id"])
-      @subscription["quantity_attached"] = entitlement.try(:[], :quantity)
+      @subscription.quantity_attached = entitlement.try(:[], :quantity)
     end
   end
 end
