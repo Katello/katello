@@ -5,15 +5,6 @@ module Katello
 
     before_filter :find_repositories, :only => :auto_complete_name
 
-    api :GET, "/packages", N_("List packages")
-    api :GET, "/repositories/:repository_id/packages", N_("List packages")
-    param :content_view_version_id, :identifier, :desc => N_("content view version identifier")
-    param :repository_id, :number, :desc => N_("repository identifier")
-    param_group :search, Api::V2::ApiController
-    def index
-      super
-    end
-
     def auto_complete_name
       page_size = Katello::Concerns::FilteredAutoCompleteSearch::PAGE_SIZE
       rpms = Rpm.in_repositories(@repositories)
