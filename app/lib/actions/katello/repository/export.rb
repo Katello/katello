@@ -15,7 +15,7 @@ module Actions
         def plan(repo, since = nil, export_suffix = 'repo_export')
           pulp_override_config = {'export_dir' => File.join(Setting['pulp_export_destination'],
                                                             export_suffix)}
-          pulp_override_config[:start_date] = since.to_time.iso8601 if since
+          pulp_override_config[:start_date] = since.iso8601 if since
 
           plan_action(Pulp::Repository::DistributorPublish,
                       pulp_id: repo.pulp_id,

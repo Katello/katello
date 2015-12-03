@@ -305,11 +305,12 @@ module ::Actions::Katello::Repository
 
     it 'export with date' do
       action = create_action action_class
-      plan_action(action, repository, '20100101T00:00:00')
+      # we expect the TZ designation to get converted to an offset
+      plan_action(action, repository, '20100101T00:00:00Z'.to_datetime)
       assert_action_planed_with(action, ::Actions::Pulp::Repository::DistributorPublish,
                                 pulp_id: repository.pulp_id,
                                 distributor_type_id: 'export_distributor',
-                                override_config: {"export_dir" => "/tmp/katello-repo-exports/repo_export", :start_date => "2010-01-01T00:00:00Z"})
+                                override_config: {"export_dir" => "/tmp/katello-repo-exports/repo_export", :start_date => "2010-01-01T00:00:00+00:00"})
     end
 
     it 'export with export suffix' do
