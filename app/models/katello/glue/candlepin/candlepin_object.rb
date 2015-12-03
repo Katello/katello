@@ -16,7 +16,7 @@ module Katello
       def import_candlepin_ids(organization)
         candlepin_ids = self.get_candlepin_ids(organization)
         candlepin_ids.each do |cp_id|
-          self.find_or_create_by(:cp_id => cp_id) unless cp_id.nil?
+          self.where(:cp_id => cp_id).first_or_create unless cp_id.nil?
         end
       end
 

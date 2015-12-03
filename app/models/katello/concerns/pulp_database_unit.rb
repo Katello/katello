@@ -39,7 +39,7 @@ module Katello
       def import_all(uuids = nil, additive = false)
         all_items = uuids ? content_unit_class.fetch_by_uuids(uuids) : content_unit_class.fetch_all
         all_items.each do |item_json|
-          item = self.find_or_create_by(:uuid => item_json['_id'])
+          item = self.where(:uuid => item_json['_id']).first_or_create
           item.update_from_json(item_json)
         end
         update_repository_associations(all_items, additive)

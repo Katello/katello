@@ -43,7 +43,7 @@ end
  {:name => "Katello Kickstart Default Finish",    :source => "finish-katello.erb",         :template_kind => kinds[:finish]},
  {:name => "subscription_manager_registration",   :source => "snippets/_subscription_manager_registration.erb", :snippet => true}].each do |template|
   template[:template] = File.read(File.join(Katello::Engine.root, "app/views/foreman/unattended", template.delete(:source)))
-  ProvisioningTemplate.find_or_create_by(:name => template["name"]) do |pt|
+  ProvisioningTemplate.where(:name => template["name"]).first_or_create do |pt|
     pt.vendor = "Katello"
     pt.default = true
     pt.locked = true
@@ -61,7 +61,7 @@ ProvisioningTemplate.where(:default => true).each do |template|
 end
 
 # Proxy features
-feature = Feature.find_or_create_by(:name => 'Pulp')
+feature = Feature.where(:name => 'Pulp').first_or_create
 if feature.nil? || feature.errors.any?
   fail "Unable to create proxy feature: #{format_errors feature}"
 end
@@ -114,7 +114,7 @@ permissions = [
 ]
 
 permissions.each do |resource, permission|
-  Permission.find_or_create_by(:resource_type => resource, :name => permission)
+  Permission.where(:resource_type => resource, :name => permission).first_or_create
 end
 
 default_permissions = {
@@ -132,7 +132,7 @@ end
 Setting.find_by!(:name => "dynflow_enable_console").update_attributes!(:value => true) if Rails.env.development?
 
 ["Pulp", "Pulp Node"].each do |input|
-  f = Feature.find_or_create_by(:name => input)
+  f = Feature.where(:name => input).first_or_create
   fail "Unable to create proxy feature: #{format_errors f}" if f.nil? || f.errors.any?
 end
 
@@ -161,9 +161,9 @@ notifications = [
 ]
 
 notifications.each do |notification|
-  ::MailNotification.find_or_create_by(:name => notification[:name],
-                                       :description => notification[:description],
-                                       :mailer => notification[:mailer],
-                                       :method => notification[:method],
-                                       :subscription_type => notification[:subscription_type])
+  ::MailNotification.where(:name => notification[:name],
+                           :description => notification[:description],
+                           :mailer => notification[:mailer],
+                           :method => notification[:method],
+                           :subscription_type => notification[:subscription_type]).first_or_create
 end
