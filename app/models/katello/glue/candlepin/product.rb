@@ -70,7 +70,7 @@ module Katello
       end
 
       def build_product_content(attrs)
-        @productContent = attrs.collect { |pc| Candlepin::ProductContent.new pc }
+        @productContent = attrs.collect { |pc| Katello::Candlepin::ProductContent.new pc }
       end
 
       def support_level
