@@ -141,18 +141,18 @@ module Katello
 
     api :POST, "/repositories/:id/export", N_("Export a repository")
     param :id, :identifier, :required => true, :desc => N_("repository ID")
-    param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00), useful for exporting deltas. If not specified, a full export will occur."), :required => false
+    param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z), useful for exporting deltas. If not specified, a full export will occur."), :required => false
     def export
       if params[:since].present?
         begin
-          params[:since].to_time
+          params[:since].to_datetime
         rescue
           raise HttpErrors::BadRequest, _("Invalid date provided.")
         end
       end
 
       task = async_task(::Actions::Katello::Repository::Export,
-                        @repository, params[:since])
+                        @repository, params[:since].try(:to_datetime))
       respond_for_async :resource => task
     end
 
