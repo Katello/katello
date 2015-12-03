@@ -53,5 +53,19 @@ module Katello
       assert_includes values.map(&:name), 'rhsm_fact'
       assert_includes values.map(&:name), '_timestamp'
     end
+
+    def test_find_or_create_host_with_org
+      created_host = FactoryGirl.create(:host, :organization_id => org.id)
+      host = Katello::Host::SubscriptionFacet.find_or_create_host(created_host.name, org, 'facts' => {'network.hostname' => created_host.name})
+
+      assert_equal created_host, host
+    end
+
+    def test_find_or_create_host_no_org
+      no_org_host = FactoryGirl.create(:host, :organization_id => nil)
+      host = Katello::Host::SubscriptionFacet.find_or_create_host(no_org_host.name, org, 'facts' => {'network.hostname' => no_org_host.name})
+
+      assert_equal org, host.organization
+    end
   end
 end
