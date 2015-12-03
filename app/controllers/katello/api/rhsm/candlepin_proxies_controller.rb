@@ -90,7 +90,7 @@ module Katello
     #api :GET, "/consumers/:id", N_("Show a system")
     #param :id, String, :desc => N_("UUID of the consumer"), :required => true
     def consumer_show
-      render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
+      render :json => Resources::Candlepin::Consumer.get(params[:id])
     end
 
     #api :GET, "/owners/:organization_id/environments", N_("List environments for RHSM")
@@ -270,7 +270,7 @@ module Katello
       facet = Katello::Host::SubscriptionFacet.where(:uuid => uuid).first
       if facet.nil?
         # check with candlepin if consumer is Gone, raises RestClient::Gone
-        Resources::Candlepin::Consumer.get(uuid)
+        User.as_anonymous_admin { Resources::Candlepin::Consumer.get(uuid) }
         fail HttpErrors::NotFound, _("Couldn't find consumer '%s'") % uuid
       end
       @host = facet.host
