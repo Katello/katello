@@ -20,7 +20,8 @@ module Actions
           pulp_task = external_task.first
 
           if pulp_task[:state] == 'waiting'
-            fail _("Host did not respond within %s seconds. Is katello-agent installed and goferd running on the Host?") % accept_timeout
+            cancel
+            fail _("Host did not respond within %s seconds. Sync has been cancelled. Is katello-agent installed and goferd running on the Host?") % accept_timeout
           elsif pulp_task[:state] == 'unknown'
             fail _("Unknown Status during sync. Is katello-agent installed and goferd running on the Host?")
           else
@@ -28,7 +29,8 @@ module Actions
               output[:sync_task_is_accepted] ||= true
               schedule_timeout(finish_timeout)
             else
-              fail _("Host/Node did not finish sync within %s seconds. Is katello-agent installed and goferd running on the Host?") % finish_timeout
+              cancel
+              fail _("Host/Node did not finish sync within %s seconds. Sync has been cancelled. Is katello-agent installed and goferd running on the Host?") % finish_timeout
             end
           end
         end
