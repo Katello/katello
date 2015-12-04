@@ -52,7 +52,7 @@ module Katello
       # output -> {"filename" => {"$in" => {"foo.el6.noarch", "..."}}} <- Packages belonging to those errata
       def package_clauses_for_errata(errata_clauses = [])
         errata_clauses = {"$or" => errata_clauses}
-        pkg_filenames = Katello::Erratum.list_filenames_by_clauses(errata_clauses)
+        pkg_filenames = Katello::Erratum.list_filenames_by_clauses(@repo, errata_clauses)
         {'filename' => {"$in" => pkg_filenames}} unless pkg_filenames.empty?
       end
 

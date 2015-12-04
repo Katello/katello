@@ -115,7 +115,7 @@ module Katello
       assert_errata_rules([foo_rule, goo_rule], expected_errata)
     end
 
-    def test_errata_dates
+    def test_errata_dates_default
       from = Date.today.to_s
       to = Date.today.to_s
 
@@ -123,8 +123,36 @@ module Katello
       foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
                                     :filter => @filter, :start_date => from, :end_date => to)
 
+      expected = [{"updated" => {"$gte" => from.to_time.as_json,
+                                 "$lte" => to.to_time.as_json}}]
+      assert_errata_rules([foo_rule], expected)
+    end
+
+    def test_errata_dates_issued
+      from = Date.today.to_s
+      to = Date.today.to_s
+
+      @filter = FactoryGirl.create(:katello_content_view_erratum_filter, :content_view => @content_view)
+      foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
+                                    :date_type => ContentViewErratumFilterRule::ISSUED,
+                                    :filter => @filter, :start_date => from, :end_date => to)
+
       expected = [{"issued" => {"$gte" => from.to_time.as_json,
                                 "$lte" => to.to_time.as_json}}]
+      assert_errata_rules([foo_rule], expected)
+    end
+
+    def test_errata_dates_updated
+      from = Date.today.to_s
+      to = Date.today.to_s
+
+      @filter = FactoryGirl.create(:katello_content_view_erratum_filter, :content_view => @content_view)
+      foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
+                                    :date_type => ContentViewErratumFilterRule::UPDATED,
+                                    :filter => @filter, :start_date => from, :end_date => to)
+
+      expected = [{"updated" => {"$gte" => from.to_time.as_json,
+                                 "$lte" => to.to_time.as_json}}]
       assert_errata_rules([foo_rule], expected)
     end
 
@@ -143,7 +171,7 @@ module Katello
 
       @filter = FactoryGirl.create(:katello_content_view_erratum_filter, :content_view => @content_view)
       foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
-                                    :filter => @filter, :start_date => from.to_s,
+                                    :filter => @filter, :start_date => from.to_s, :date_type => "issued",
                                     :end_date => to.to_s, :types => [:enhancement, :security])
 
       expected = [{"$and" => [{"issued" => {"$gte" => from.to_s.to_time.as_json,

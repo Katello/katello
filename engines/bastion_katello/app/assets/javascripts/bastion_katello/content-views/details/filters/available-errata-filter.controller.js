@@ -83,6 +83,12 @@ angular.module('Bastion.content-views').controller('AvailableErrataFilterControl
             nutupane.refresh();
         };
 
+        $scope.updateDateType = function () {
+            nutupane.addParam("sort_by", $scope.rule["date_type"] );
+            nutupane.addParam("date_type", $scope.rule["date_type"]);
+            nutupane.refresh();
+        };
+
         $scope.$watch('rule.start_date', function (start) {
             if (start) {
                 filterByDate(start, 'start_date');

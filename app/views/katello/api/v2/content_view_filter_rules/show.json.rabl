@@ -12,5 +12,6 @@ attributes :errata_id, :if => lambda { |rule| rule.respond_to?(:errata_id) && !r
 attributes :start_date, :if => lambda { |rule| rule.respond_to?(:start_date) && !rule.start_date.blank? }
 attributes :end_date, :if => lambda { |rule| rule.respond_to?(:end_date) && !rule.end_date.blank? }
 attributes :types, :if => lambda { |rule| rule.respond_to?(:types) && !rule.types.blank? }
+attributes :date_type, :if => lambda { |rule| rule.respond_to?(:date_type) }
 
 extends 'katello/api/v2/common/timestamps'
