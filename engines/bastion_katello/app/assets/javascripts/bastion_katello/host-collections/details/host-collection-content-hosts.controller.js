@@ -7,35 +7,39 @@
  * @requires translate
  * @requires Nutupane
  * @requires HostCollection
+ * @requires ContentHost
  *
  * @description
  *   Provides the functionality for the host collection details action pane.
  */
 angular.module('Bastion.host-collections').controller('HostCollectionContentHostsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'HostCollection',
-    function ($scope, $location, translate, Nutupane, HostCollection) {
-        var contentHostsPane, params;
+    ['$scope', '$location', 'translate', 'Nutupane', 'HostCollection', 'CurrentOrganization', 'ContentHost',
+    function ($scope, $location, translate, Nutupane, HostCollection, CurrentOrganization, ContentHost) {
+        var params;
 
         params = {
-            'id': $scope.$stateParams.hostCollectionId,
+            'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
+            'page': 1,
             'sort_by': 'name',
             'sort_order': 'ASC',
-            'paged': true
+            'paged': true,
+            'host_collection_id': $scope.$stateParams.hostCollectionId
         };
 
-        contentHostsPane = new Nutupane(HostCollection, params, 'contentHosts');
-        $scope.contentHostsTable = contentHostsPane.table;
-        $scope.contentHostsTable.closeItem = function () {};
+        $scope.contentNutupane = new Nutupane(ContentHost, params);
+        $scope.detailsTable = $scope.contentNutupane.table;
+        $scope.detailsTable.closeItem = function () {};
         $scope.isRemoving = false;
+        $scope.contentNutupane.setSearchKey('contentHostSearch');
 
         $scope.removeSelected = function () {
-            var selected = _.pluck($scope.contentHostsTable.getSelected(), 'uuid');
+            var selected = _.pluck($scope.detailsTable.getSelected(), 'uuid');
 
             $scope.isRemoving = true;
             HostCollection.removeContentHosts({id: $scope.hostCollection.id, 'system_ids': selected}, function (data) {
-                contentHostsPane.table.selectAll(false);
-                contentHostsPane.refresh();
+                $scope.contentNutupane.table.selectAll(false);
+                $scope.contentNutupane.refresh();
 
                 angular.forEach(data.displayMessages.success, function (success) {
                     $scope.$parent.successMessages.push(success);

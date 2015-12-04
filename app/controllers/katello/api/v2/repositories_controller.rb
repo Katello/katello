@@ -6,7 +6,7 @@ module Katello
     before_filter :find_product, :only => [:index, :auto_complete_search]
     before_filter :find_product_for_create, :only => [:create]
     before_filter :find_organization_from_product, :only => [:create]
-    before_filter :find_repository, :only => [:show, :update, :destroy, :sync,
+    before_filter :find_repository, :only => [:show, :update, :destroy, :sync, :export,
                                               :remove_content, :upload_content,
                                               :import_uploads, :gpg_key_content]
     before_filter :find_content, :only => :remove_content
@@ -125,8 +125,34 @@ module Katello
 
     api :POST, "/repositories/:id/sync", N_("Sync a repository")
     param :id, :identifier, :required => true, :desc => N_("repository ID")
+    param :source_url, String, :desc => N_("temporarily override feed URL for sync"), :required => false
     def sync
-      task = async_task(::Actions::Katello::Repository::Sync, @repository)
+      if params[:source_url].present? && params[:source_url] !~ /\A#{URI.regexp}\z/
+        fail HttpErrors::BadRequest, _("source URL is malformed")
+      end
+
+      if params[:source_url].blank? && @repository.url.blank?
+        fail HttpErrors::BadRequest, _("attempted to sync without a feed URL")
+      end
+
+      task = async_task(::Actions::Katello::Repository::Sync, @repository, nil, params[:source_url])
+      respond_for_async :resource => task
+    end
+
+    api :POST, "/repositories/:id/export", N_("Export a repository")
+    param :id, :identifier, :required => true, :desc => N_("repository ID")
+    param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z), useful for exporting deltas. If not specified, a full export will occur."), :required => false
+    def export
+      if params[:since].present?
+        begin
+          params[:since].to_datetime
+        rescue
+          raise HttpErrors::BadRequest, _("Invalid date provided.")
+        end
+      end
+
+      task = async_task(::Actions::Katello::Repository::Export,
+                        @repository, params[:since].try(:to_datetime))
       respond_for_async :resource => task
     end
 

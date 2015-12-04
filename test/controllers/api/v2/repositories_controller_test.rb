@@ -23,6 +23,7 @@ module Katello
       @update_permission = :edit_products
       @destroy_permission = :destroy_products
       @sync_permission = :sync_products
+      @export_permission = :export_products
     end
 
     def setup
@@ -472,7 +473,33 @@ module Katello
       end
 
       post :sync, :id => @repository.id
+      assert_response :success
+    end
 
+    def test_sync_with_url_override
+      assert_async_task ::Actions::Katello::Repository::Sync do |repo, pulp_task_id, source_url|
+        repo.id.must_equal(@repository.id)
+        pulp_task_id.must_equal(nil)
+        source_url.must_equal('file:///tmp/')
+      end
+      post :sync, :id => @repository.id, :source_url => 'file:///tmp/'
+      assert_response :success
+    end
+
+    def test_sync_with_bad_url_override
+      post :sync, :id => @repository.id, :source_url => 'file:|||tmp/'
+      assert_response 400
+    end
+
+    def test_sync_no_feed_urls
+      repo = katello_repositories(:feedless_fedora_17_x86_64)
+      post :sync, :id => repo.id
+      assert_response 400
+    end
+
+    def test_sync_no_feed_urls_with_override
+      repo = katello_repositories(:feedless_fedora_17_x86_64)
+      post :sync, :id => repo.id, :source_url => 'http://www.wikipedia.org'
       assert_response :success
     end
 
@@ -545,6 +572,36 @@ module Katello
 
       assert_protected_action(:import_uploads, allowed_perms, denied_perms) do
         put :import_uploads, :id => @repository.id, :upload_ids => [1]
+      end
+    end
+
+    def test_export
+      post :export, :id => @repository.id
+      assert_response :success
+    end
+
+    def test_export_with_bad_date
+      post :export, :id => @repository.id, :since => 'November 32, 1970'
+      assert_response 400
+    end
+
+    def test_export_with_date
+      post :export, :id => @repository.id, :since => 'November 30, 1970'
+      assert_response :success
+    end
+
+    def test_export_with_8601_date
+      post :export, :id => @repository.id, :since => '2010-01-01T00:00:00'
+      assert_response :success
+    end
+
+    def test_export_protected
+      allowed_perms = [@export_permission]
+      denied_perms = [@sync_permission, @create_permission, @read_permission,
+                      @destroy_permission, @update_permission]
+
+      assert_protected_action(:export, allowed_perms, denied_perms) do
+        post :export, :id => @repository.id
       end
     end
 

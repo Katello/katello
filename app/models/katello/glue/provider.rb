@@ -264,13 +264,8 @@ module Katello
 
           product_in_katello_ids.concat(adjusted_eng_products.map { |p| p["id"] })
 
-          unless product_in_katello_ids.include?(marketing_product_id)
-            Glue::Candlepin::Product.import_from_cp(Resources::Candlepin::Product.get(marketing_product_id)[0]) do |p|
-              p.provider = self
-              p.organization_id = self.organization.id
-            end
-            product_in_katello_ids << marketing_product_id
-          end
+          marketing_product = Katello::Product.find_by_cp_id(marketing_product_id)
+          marketing_product.destroy if marketing_product
         end
 
         product_to_remove_ids = (product_in_katello_ids - products_in_candlepin_ids).uniq

@@ -119,6 +119,7 @@ class ActiveSupport::TestCase
 
   before do
     stub_ping
+    Setting::Katello.load_defaults
   end
 
   def self.stubbed_ping_response
@@ -189,6 +190,13 @@ class ActiveSupport::TestCase
   def assert_service_used(service_class)
     service_class.any_instance.expects(:backend_data).returns({})
     yield
+  end
+
+  def stub_cp_consumer_with_uuid(uuid)
+    cp_consumer_user = ::Katello::CpConsumerUser.new
+    cp_consumer_user.uuid = uuid
+    cp_consumer_user.login = uuid
+    User.stubs(:current).returns(cp_consumer_user)
   end
 end
 

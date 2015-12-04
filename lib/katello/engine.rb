@@ -133,6 +133,8 @@ module Katello
       # Model extensions
       ::Environment.send :include, Katello::Concerns::EnvironmentExtensions
       ::Host::Managed.send :include, Katello::Concerns::HostManagedExtensions
+      ::Host::Managed.send :include, ::Katello::Concerns::ContentFacetHostExtensions
+      ::Host::Managed.send :include, ::Katello::Concerns::SubscriptionFacetHostExtensions
       ::Hostgroup.send :include, Katello::Concerns::HostgroupExtensions
       ::Location.send :include, Katello::Concerns::LocationExtensions
       ::Medium.send :include, Katello::Concerns::MediumExtensions
@@ -209,6 +211,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_distributions.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_puppet_modules.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_subscriptions.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.5/add_export_distributor.rake"
     end
   end
 end

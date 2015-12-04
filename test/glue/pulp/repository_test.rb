@@ -73,7 +73,8 @@ module Katello
 
     def teardown
       delete_repo(@fedora_17_x86_64)
-      super
+    ensure
+      VCR.eject_cassette
     end
 
     def test_delete_orphaned_content
@@ -94,6 +95,7 @@ module Katello
       dists = @fedora_17_x86_64.generate_distributors
       refute_empty dists.select { |d| d.is_a? Runcible::Models::YumDistributor }
       refute_empty dists.select { |d| d.is_a? Runcible::Models::YumCloneDistributor }
+      refute_empty dists.select { |d| d.is_a? Runcible::Models::ExportDistributor }
     end
 
     def test_populate_from
@@ -147,7 +149,8 @@ module Katello
 
     def teardown
       delete_repo(@fedora_17_x86_64)
-      super
+    ensure
+      VCR.eject_cassette
     end
   end
 
@@ -160,7 +163,8 @@ module Katello
 
     def teardown
       delete_repo(@fedora_17_x86_64)
-      super
+    ensure
+      VCR.eject_cassette
     end
   end
 
@@ -180,7 +184,8 @@ module Katello
 
     def teardown
       delete_repo(@p_forge)
-      super
+    ensure
+      VCR.eject_cassette
     end
 
     def test_generate_distributors
@@ -200,7 +205,8 @@ module Katello
 
     def teardown
       delete_repo(@fedora_17_x86_64)
-      super
+    ensure
+      VCR.eject_cassette
     end
 
     def test_sync_status
@@ -302,7 +308,8 @@ module Katello
 
     def teardown
       delete_repo(@fedora_17_x86_64)
-      super
+    ensure
+      VCR.eject_cassette
     end
 
     def test_create_clone

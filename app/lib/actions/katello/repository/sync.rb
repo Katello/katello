@@ -14,15 +14,16 @@ module Actions
         # @param repo
         # @param pulp_sync_task_id in case the sync was triggered outside
         #   of Katello and we just need to finish the rest of the orchestration
-        def plan(repo, pulp_sync_task_id = nil)
+        # @param source_url optional url to override source URL with
+        def plan(repo, pulp_sync_task_id = nil, source_url = nil)
           action_subject(repo)
 
-          if repo.url.blank?
-            fail _("Unable to sync %s. This repository does not have a feed url.")
+          if repo.url.blank? && source_url.blank?
+            fail _("Unable to sync repo. This repository does not have a feed url.")
           end
 
           sequence do
-            output = plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id, task_id: pulp_sync_task_id).output
+            output = plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id, task_id: pulp_sync_task_id, source_url: source_url).output
             contents_changed = output[:contents_changed]
             plan_action(Katello::Repository::IndexContent, :id => repo.id, :contents_changed => contents_changed)
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
