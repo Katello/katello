@@ -36,6 +36,7 @@ module Katello
       @resource_class ||= "Katello::#{resource_name.classify}".constantize
     end
 
+    # rubocop:disable MethodLength
     def scoped_search(query, default_sort_by, default_sort_order, options = {})
       resource = options[:resource_class] || resource_class
       includes = options.fetch(:includes, [])
@@ -44,8 +45,12 @@ module Katello
       total = query.count
       query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
 
-      query = query.select(group).group(group) if group
-      sub_total = query.count
+      if group.present?
+        query = query.select(group).group(group)
+        sub_total = query.count.length
+      else
+        sub_total = query.count
+      end
 
       sort_attr = params[:sort_by] || default_sort_by
 
