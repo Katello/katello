@@ -49,7 +49,7 @@ module Katello
         cp_product_ids.each do |cp_id|
           product = ::Katello::Product.where(:cp_id => cp_id)
           if product.any?
-            ::Katello::SubscriptionProduct.find_or_create_by(:subscription_id => self.id, :product_id => product.first.id)
+            ::Katello::SubscriptionProduct.where(:subscription_id => self.id, :product_id => product.first.id).first_or_create
           end
         end
       end
