@@ -55,8 +55,7 @@ module Katello
 
     def index_relation
       query = Repository.readable
-      query = query.joins(:product).where("#{Product.table_name}.organization_id" => @organization) if @organization
-      query = query.where(:product_id => @product.id) if @product
+      query = index_relation_product(query)
       query = query.where(:content_type => params[:content_type]) if params[:content_type]
       query = query.where(:name => params[:name]) if params[:name]
 
@@ -74,15 +73,29 @@ module Katello
                   .where("#{PuppetModule.table_name}.id" => PuppetModule.with_identifiers(params[:puppet_module_id]))
       end
 
+      query = index_relation_content_view(query)
+      query = index_relation_environment(query)
+
+      query
+    end
+
+    def index_relation_product(query)
+      query = query.joins(:product).where("#{Product.table_name}.organization_id" => @organization) if @organization
+      query = query.where(:product_id => @product.id) if @product
+      query
+    end
+
+    def index_relation_content_view(query)
       if params[:content_view_version_id]
         query = query.where(:content_view_version_id => params[:content_view_version_id])
         query = Repository.where(:id => query.map(&:library_instance_id)) if params[:library]
-      end
-
-      if params[:content_view_id]
+      elsif params[:content_view_id]
         query = filter_by_content_view(query, params[:content_view_id], params[:environment_id], params[:available_for] == 'content_view')
       end
+      query
+    end
 
+    def index_relation_environment(query)
       if params[:environment_id] && !params[:library]
         query = query.where(:environment_id => params[:environment_id])
       elsif params[:environment_id] && params[:library]
@@ -93,7 +106,6 @@ module Katello
       elsif (params[:library] && !params[:environment_id]) || (params[:environment_id].blank? && params[:content_view_version_id].blank? && params[:content_view_id].blank?)
         query = query.where(:content_view_version_id => @organization.default_content_view.versions.first.id)
       end
-
       query
     end
 
