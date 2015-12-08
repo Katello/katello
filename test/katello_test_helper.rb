@@ -68,6 +68,9 @@ module FixtureTestCase
 
     @@admin = ::User.find(FIXTURES['users']['admin']['id'])
     User.current = @@admin
+    loc = Location.first
+    loc.katello_default = true
+    loc.save!
   end
 end
 
