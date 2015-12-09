@@ -119,6 +119,7 @@ class ActiveSupport::TestCase
 
   before do
     stub_ping
+    ActiveRecord::Base.connection.tables.each { |t| ActiveRecord::Base.connection.execute("SELECT setval(#{t}_id_seq, (SELECT MAX(id) FROM #{t} ))") rescue ActiveRecord::StatementInvalid }
   end
 
   def self.stubbed_ping_response
