@@ -381,15 +381,7 @@ module Katello
           where("#{Organization.table_name}.id = ?", organization.id)
       environments = environments.where("#{Katello::ContentViewEnvironment.table_name}.label = ?", label) if label
 
-      environments.delete_if do |env|
-        if env.content_view.default
-          !env.environment.readable?
-        else
-          !env.content_view.readable?
-        end
-      end
-
-      environments
+      environments.reject { |env| (env.content_view.default && !env.environment.readable?) || !env.content_view.readable? }
     end
 
     def rhsm_params

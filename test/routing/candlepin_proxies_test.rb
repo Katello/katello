@@ -8,7 +8,7 @@ module Katello
     end
 
     def test_user_resource_proxies
-      {:controller => @proxies_controller, :action => "list_owners", :login => "1"}.must_recognize(:method => "get", :path => "/api/rhsm/users/1/owners")
+      {:controller => @proxies_controller, :action => "list_owners", :login => "1"}.must_recognize(:method => "get", :path => "/rhsm/users/1/owners")
     end
   end
 end
