@@ -1,36 +1,35 @@
 describe('Controller: EnvironmentsController', function () {
-    var $scope, paths;
+    var $scope, paths, lib, PathsService, data;
 
     beforeEach(module('Bastion.environments', 'Bastion.test-mocks'));
 
     beforeEach(inject(function ($injector) {
-        var $controller = $injector.get('$controller'),
-            Organization = $injector.get('MockResource').$new();
+        var $controller = $injector.get('$controller');
+        lib = {library: true, name: 'Library'};
+        PathsService = $injector.get('MockResource').$new();
+        $scope = $injector.get('$rootScope').$new();
 
         paths = [{environments:
-            [{library: true, name: 'Library'}, {library: false, name: 'Dev'}]
+            [lib, {library: false, name: 'Dev'}]
         }];
 
-        Organization.paths = function(params, callback) {
-            callback(angular.copy(paths));
-        };
+        data = {library: lib, paths: paths};
 
-        $scope = $injector.get('$rootScope').$new();
+        PathsService.getActualPaths = function() {
+            return {
+                then: function (callback) { return callback(data); }
+            }
+        };
 
         $controller('EnvironmentsController', {
             $scope: $scope,
-            Organization: Organization,
-            CurrentOrganization: 'CurrentOrganization'
+            PathsService: PathsService
         });
 
     }));
 
     it('should fetch the paths for the current organization', function () {
         expect($scope.paths).toBeDefined();
-    });
-
-    it('should set the paths object without including library', function () {
-        expect($scope.paths[0].environments.length).toBe(paths[0].environments.length - 1);
     });
 
     it('should set the Library object', function () {

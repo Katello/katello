@@ -8,7 +8,7 @@
      * @description
      *   Handles creating a new environment.
      */
-    function NewEnvironmentController($scope, Environment, FormUtils, Notification) {
+    function NewEnvironmentController($scope, Environment, FormUtils, Notification, PathsService) {
 
         function success() {
             $scope.transitionTo('environments');
@@ -30,12 +30,18 @@
         $scope.environment = new Environment();
         $scope.priorEnvironment = Environment.get({id: $scope.$stateParams.priorId});
 
-        $scope.priorEnvironment.$promise.then(function () {
-            $scope.loading = false;
+        $scope.priorEnvironment.$promise.then(function (prior) {
+            PathsService.getCurrentPath(prior).then(function (path) {
+                $scope.currentPath = path || null;
+                $scope.environment['prior_id'] = $scope.priorEnvironment.id;
+                if (path) {
+                    $scope.environment['path_id'] = $scope.currentPath[1].id;
+                }
+                $scope.loading = false;
+            });
         });
 
         $scope.save = function (environment) {
-            environment['prior_id'] = $scope.$stateParams.priorId;
             environment.$save(success, error);
         };
 
@@ -46,12 +52,19 @@
             }
         });
 
+        $scope.$watch('environment.prior_id', function (priorId) {
+            angular.forEach($scope.currentPath, function (env) {
+                if (env.id === priorId) {
+                    $scope.priorEnvironment = env;
+                }
+            });
+        });
     }
 
     angular
         .module('Bastion.environments')
         .controller('NewEnvironmentController', NewEnvironmentController);
 
-    NewEnvironmentController.$inject = ['$scope', 'Environment', 'FormUtils', 'Notification'];
+    NewEnvironmentController.$inject = ['$scope', 'Environment', 'FormUtils', 'Notification', 'PathsService'];
 
 })();

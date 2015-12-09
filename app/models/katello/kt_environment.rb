@@ -11,14 +11,12 @@ module Katello
     belongs_to :organization, :class_name => "Organization", :inverse_of => :environments
     has_many :activation_keys, :class_name => "Katello::ActivationKey",
                                :dependent => :restrict_with_exception, :foreign_key => :environment_id
-    # rubocop:disable HasAndBelongsToMany
-    # TODO: change these into has_many associations
-    has_and_belongs_to_many :priors,  :class_name => "Katello::KTEnvironment", :foreign_key => :environment_id,
-                                      :join_table => "katello_environment_priors",
-                                      :association_foreign_key => "prior_id", :uniq => true
-    has_and_belongs_to_many :successors,  :class_name => "Katello::KTEnvironment", :foreign_key => "prior_id",
-                                          :join_table => "katello_environment_priors",
-                                          :association_foreign_key => :environment_id, :readonly => true
+
+    has_many :env_priors, :class_name => "Katello::EnvironmentPrior", :foreign_key => :environment_id, :dependent => :destroy
+    has_many :priors, :class_name => "Katello::KTEnvironment", :through => :env_priors, :source => :env_prior
+
+    has_many :env_successors, :class_name => "Katello::EnvironmentPrior", :foreign_key => :prior_id, :dependent => :destroy
+    has_many :successors, :class_name => "Katello::KTEnvironment", :through => :env_successors, :source => :env
 
     has_many :repositories, :class_name => "Katello::Repository", dependent: :destroy, foreign_key: :environment_id
     has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
@@ -100,6 +98,28 @@ module Katello
     def successor
       return self.successors[0] unless self.library?
       self.organization.promotion_paths[0][0] unless self.organization.promotion_paths.empty?
+    end
+
+    # creates new env from create_params with self as a prior
+    def insert_successor(create_params, path)
+      self.class.transaction do
+        new_successor = self.class.create!(create_params)
+        if library?
+          if path
+            old_successor = path.first
+            old_successor.prior = new_successor
+          end
+          save_successor new_successor
+        elsif successor.nil?
+          save_successor new_successor
+        else
+          old_successor = successor
+          old_successor.prior = new_successor
+          save_successor new_successor
+        end
+        fail HttpErrors::UnprocessableEntity, _('An environment is missing a prior') unless all_have_prior?
+        new_successor
+      end
     end
 
     def display_name
@@ -261,6 +281,17 @@ module Katello
 
     class Jail < ::Safemode::Jail
       allow :name, :label
+    end
+
+    private
+
+    def all_have_prior?
+      organization.kt_environments.reject { |env| env.library? || env.prior.present? }.empty?
+    end
+
+    def save_successor(new_successor)
+      new_successor.prior = self
+      new_successor.save
     end
   end
 end

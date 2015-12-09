@@ -102,5 +102,21 @@ module Katello
       assert_equal 'Katello::KTEnvironment', recent_audit.auditable_type
       assert_equal 'destroy', recent_audit.action
     end
+
+    def test_insert_successor_after_library
+      @library.insert_successor({ :organization => @acme_corporation, :name => "testEnv" }, @dev.path)
+      assert @library.successors.map(&:name).include?("testEnv")
+      assert_equal "testEnv", @dev.prior.name
+    end
+
+    def test_insert_successor_to_the_end
+      succ = @staging.insert_successor({ :organization => @acme_corporation, :name => "testEnv" }, @staging.path)
+      assert_equal succ.prior, @staging
+    end
+
+    def test_insert_successor_in_the_middle
+      succ = @dev.insert_successor({ :organization => @acme_corporation, :name => "testEnv" }, @dev.path)
+      assert_equal succ.prior, @dev
+    end
   end
 end
