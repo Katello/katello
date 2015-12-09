@@ -13,7 +13,7 @@ module Katello
 
         ## Chains
 
-        Environments are ordered into chains and their content (propducts,
+        Environments are ordered into chains and their content (products,
         repositories, tempaltes, packages) can be moved to an environment only from its
         prior environment. You can have for example chain like:
 
@@ -39,6 +39,7 @@ module Katello
     before_action :find_prior, :only => [:create]
     before_action :find_environment, :only => [:show, :update, :destroy, :repositories]
     before_action :find_content_view, :only => [:repositories]
+    before_action :find_path, :only => [:create]
 
     wrap_parameters :include => (KTEnvironment.attribute_names + %w(prior prior_id new_name))
 
@@ -83,8 +84,7 @@ module Katello
       create_params = environment_params
       create_params[:label] = labelize_params(create_params)
       create_params[:organization] = @organization
-      create_params[:prior] = @prior
-      @environment = KTEnvironment.create!(create_params)
+      @environment = @prior.insert_successor(create_params, @path)
       respond
     end
 
@@ -166,6 +166,11 @@ module Katello
       @prior = KTEnvironment.readable.find(prior)
       fail HttpErrors::NotFound, _("Couldn't find prior-environment '%s'") % prior.to_s if @prior.nil?
       @prior
+    end
+
+    def find_path
+      path = params[:environment][:path_id] || params[:path_id]
+      path ? @path = KTEnvironment.readable.find(path).path : @path = nil
     end
 
     def environment_params

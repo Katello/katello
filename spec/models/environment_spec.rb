@@ -117,50 +117,26 @@ module Katello
           @environment2.errors[:name].wont_be :empty?
         end
 
-        it "should be invalid to create an environment without a prior" do
-          @environment2 = KTEnvironment.new(:name => @env_name)
+        it "should be valid to create an environment without a prior" do
+          @environment2 = KTEnvironment.new(:name => "random env")
           @organization.kt_environments << @environment2
 
-          @environment2.wont_be :valid?
-          @environment2.errors[:prior].wont_be :empty?
+          @environment2.must_be :valid?
+          @environment2.errors[:prior].must_be :empty?
         end
       end
 
       describe "environment path" do
         before(:each) do
-          @env1 = KTEnvironment.new(:name => @env_name + '-succ1', :label => 'env-succ1')
-          @env2 = KTEnvironment.new(:name => @env_name + '-succ2', :label => 'env-succ2')
-          @organization.kt_environments << @env1
-          @organization.kt_environments << @env2
-          @env1.prior = @environment.id
-          @env1.save!
-          @env2.prior = @env1.id
-          @env2.save!
+          @env1 = create_environment(:name => @env_name + '-succ1',
+                                     :label => 'env-succ1',
+                                     :organization => @organization,
+                                     :prior => @environment)
         end
 
-        specify { @environment.path.size.must_equal(3) }
+        specify { @environment.path.size.must_equal(2) }
         specify { @environment.path.must_include(@env1) }
-        specify { @environment.path.must_include(@env2) }
-      end
-
-      describe "Test priors" do
-        before(:each) do
-          @e1 = create_environment(:name => @env_name + '-succ1', :label => @env_name + '-succ1',
-                                   :organization => @organization, :prior => @environment)
-          @e2 = create_environment(:name => @env_name + '-succ2', :label => @env_name + '-succ2',
-                                   :organization => @organization, :prior => @e1)
-
-          @organization.kt_environments << @e1
-          @organization.kt_environments << @e2
-        end
-
-        specify do
-          create = lambda do
-            create_environment(:name => @env_name + '-succ3', :label => @env_name + '-succ3',
-                               :organization => @organization, :prior => @e1)
-          end
-          create.must_raise(ActiveRecord::RecordInvalid)
-        end
+        specify { @environment.path.must_include(@environment) }
       end
 
       describe "libraries" do

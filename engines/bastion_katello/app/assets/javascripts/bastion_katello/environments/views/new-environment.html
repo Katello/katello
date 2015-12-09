@@ -18,11 +18,14 @@
     <h1 translate>New Environment</h1>
   </header>
 
-  <div ng-show="priorEnvironment.successor && !loading">
-    <p translate>Lifecycle Environment "{{ priorEnvironment.name }}" exists within the middle of a path. New Lifecycle Environments can only be added to the end of a path.</p>
+  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+
+  <div ng-show="loading" class="loading-mask">
+    <i class="fa fa-spinner fa-spin"></i>
+      {{ "Loading..." | translate }}
   </div>
 
-  <div ng-show="!priorEnvironment.successor && !loading" class="row">
+  <div ng-show="!loading" class="row">
 
     <p class="col-sm-12" translate>Adding Lifecycle Environment to the end of "{{ priorEnvironment.name }}"</p>
 
@@ -52,6 +55,16 @@
                   ng-model="environment.description"
                   tabindex="3">
         </textarea>
+      </div>
+
+      <div bst-form-group label="{{ 'Prior Environment' | translate }}"
+           ng-show="currentPath != null">
+        <select id="prior_id"
+                name="prior_id"
+                ng-model="environment.prior_id"
+                ng-options="env.id as env.name for env in currentPath"
+                tabindex="4">
+        </select>
       </div>
 
       <div bst-form-buttons
