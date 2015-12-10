@@ -30,7 +30,7 @@ notifications = [
 ]
 
 notifications.each do |notification|
-  ::MailNotification.find_or_create_by_name(notification)
+  ::MailNotification.where(name: notification[:name]).first_or_create!(notification)
 end
 
 ::User.current = nil

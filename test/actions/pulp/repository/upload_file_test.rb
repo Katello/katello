@@ -18,7 +18,7 @@ module ::Actions::Pulp::Repository
       run_action(::Actions::Pulp::Repository::DeleteUploadRequest,
                   upload_id: upload_request.output[:upload_id])
 
-      assert_equal repo.puppet_module_ids.length, 1
+      assert_equal 1, repo.pulp_puppet_module_ids.length
     end
   end
 end

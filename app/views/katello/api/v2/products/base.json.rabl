@@ -14,21 +14,20 @@ attributes :redhat? => :redhat
 attributes :available_content => :available_content, :if => params[:include_available_content]
 
 node :sync_status do |product|
-  status = product.sync_status
   {
-    :id => status[:id],
-    :product_id => status[:product_id],
-    :progress => status[:progress],
-    :sync_id => status[:sync_id],
-    :state => status[:state],
-    :raw_state => status[:raw_state],
-    :start_time => status[:start_time],
-    :finish_time => status[:finish_time],
-    :duration => status[:duration],
-    :display_size => status[:display_size],
-    :size => status[:size],
-    :is_running => status[:is_running],
-    :error_details => status[:error_details]
+    :id => product.sync_status[:id],
+    :product_id => product.sync_status[:product_id],
+    :progress => product.sync_status[:progress],
+    :sync_id => product.sync_status[:sync_id],
+    :state => product.sync_status[:state],
+    :raw_state => product.sync_status[:raw_state],
+    :start_time => product.sync_status[:start_time],
+    :finish_time => product.sync_status[:finish_time],
+    :duration => product.sync_status[:duration],
+    :display_size => product.sync_status[:display_size],
+    :size => product.sync_status[:size],
+    :is_running => product.sync_status[:is_running],
+    :error_details => product.sync_status[:error_details]
   }
 end
 

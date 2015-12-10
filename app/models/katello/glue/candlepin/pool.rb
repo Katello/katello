@@ -32,7 +32,7 @@ module Katello
       end
 
       def import_pool(cp_pool_id)
-        pool = Katello::Pool.find_or_create_by_cp_id(cp_pool_id)
+        pool = Katello::Pool.where(:cp_id => cp_pool_id).first_or_create
         pool.import_data
       end
     end
@@ -129,12 +129,12 @@ module Katello
         end
         related_keys = ::Katello::ActivationKey.where(:cp_id => activation_key_ids.compact)
         related_keys.each do |key|
-          Katello::PoolActivationKey.find_or_create_by_activation_key_id_and_pool_id(key.id, self.id)
+          Katello::PoolActivationKey.where(:activation_key_id => key.id, :pool_id => self.id).first_or_create
         end
       end
 
       def host
-        System.find_by_uuid(self.host_id) if self.host_id
+        System.find_by(:uuid => host_id) if host_id
       end
     end
   end

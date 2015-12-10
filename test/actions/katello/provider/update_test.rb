@@ -25,7 +25,7 @@ module Actions
       end
 
       assert_action_planed_with(action, repository_update_class) do |repository|
-        assert_include repositories, repository
+        assert_includes repositories, repository
       end
     end
   end

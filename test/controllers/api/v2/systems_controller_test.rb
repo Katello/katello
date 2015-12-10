@@ -84,7 +84,7 @@ module Katello
       System.stubs(:new).returns(@system)
       ::Host::Managed.stubs(:new).returns(@host)
       cp_id = @content_view_environment.cp_id
-      ContentViewEnvironment.expects(:find_by_cp_id!).with(cp_id).returns(@content_view_environment)
+      ContentViewEnvironment.expects(:find_by!).with(:cp_id => cp_id).returns(@content_view_environment)
       @controller.expects(:sync_task).returns(true)
 
       post :create, :name => "needsmoretests", :environment_id => cp_id.to_s, :organization_id => @organization.id

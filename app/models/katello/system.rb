@@ -10,10 +10,6 @@ module Katello
 
     audited :on => [:create], :allow_mass_assignment => true
 
-    attr_accessible :name, :uuid, :description, :location, :environment, :content_view,
-                    :environment_id, :content_view_id, :host_collection_ids, :host_id,
-                    :activation_key_ids
-
     belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :systems
     belongs_to :foreman_host, :class_name => "::Host::Managed", :foreign_key => :host_id, :inverse_of => :content_host
 
@@ -92,7 +88,8 @@ module Katello
     end
 
     def self.with_non_installable_errata(errata)
-      subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems.where("#{Katello::SystemRepository.table_name}.system_id = #{System.table_name}.id").to_sql
+      subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems
+                 .where("#{Katello::SystemRepository.table_name}.system_id = #{Katello::System.table_name}.id").to_sql
       self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata).where("#{Katello::Erratum.table_name}.id NOT IN (#{subquery})").uniq
     end
 
@@ -102,10 +99,10 @@ module Katello
 
     def self.with_installable_errata(errata)
       non_installable = System.with_non_installable_errata(errata)
-      subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems.where("#{Katello::SystemRepository.table_name}.system_id = #{System.table_name}.id")
+      subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems.where("#{Katello::SystemRepository.table_name}.system_id = #{Katello::System.table_name}.id")
 
       query = self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata).where("#{Katello::Erratum.table_name}.id" => subquery)
-      query = query.where("katello_systems.id not in (?)", non_installable) unless non_installable.empty?
+      query = query.where.not("katello_systems.id" => non_installable) unless non_installable.empty?
       query.uniq
     end
 
@@ -135,7 +132,7 @@ module Katello
       repos = if env && content_view
                 Katello::Repository.in_environment(env).in_content_views([content_view])
               else
-                self.bound_repositories
+                self.bound_repositories.pluck(:id)
               end
 
       self.applicable_errata.in_repositories(repos).uniq

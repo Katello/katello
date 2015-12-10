@@ -18,8 +18,8 @@ module Katello
         has_many :providers, :class_name => "Katello::Provider", :dependent => :destroy
         has_many :products, :class_name => "Katello::Product", :dependent => :destroy, :inverse_of => :organization
         # has_many :environments is already defined in Foreman taxonomy.rb
-        has_many :kt_environments, :class_name => "Katello::KTEnvironment", :dependent => :restrict, :inverse_of => :organization
-        has_one :library, :class_name => "Katello::KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
+        has_many :kt_environments, :class_name => "Katello::KTEnvironment", :dependent => :restrict_with_exception, :inverse_of => :organization
+        has_one :library, lambda { where(:library => true) }, :class_name => "Katello::KTEnvironment", :dependent => :destroy
         has_many :gpg_keys, :class_name => "Katello::GpgKey", :dependent => :destroy, :inverse_of => :organization
         has_many :sync_plans, :class_name => "Katello::SyncPlan", :dependent => :destroy, :inverse_of => :organization
         has_many :host_collections, :class_name => "Katello::HostCollection", :dependent => :destroy, :inverse_of => :organization
@@ -34,7 +34,7 @@ module Katello
         attr_accessor :statistics
         attr_accessible :label
 
-        scope :having_name_or_label, ->(name_or_label) { { :conditions => ["name = :id or label = :id", {:id => name_or_label}] } }
+        scope :having_name_or_label, ->(name_or_label) { where("name = :id or label = :id", :id => name_or_label) }
         scoped_search :on => :label, :complete_value => :true
 
         after_create :associate_default_capsule

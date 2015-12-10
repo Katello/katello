@@ -1,6 +1,9 @@
 module Katello
   class Pool < Katello::Model
     include Katello::Authorization::Pool
+
+    attr_accessor :quantity_attached
+
     belongs_to :subscription, :inverse_of => :pools, :class_name => "Katello::Subscription"
 
     has_many :activation_keys, :through => :pool_activation_keys, :class_name => "Katello::ActivationKey"

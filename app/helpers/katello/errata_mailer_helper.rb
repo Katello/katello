@@ -6,7 +6,7 @@ module Katello
     end
 
     def content_view_environment_errata_path(content_view, environment)
-      version = Katello::ContentViewEnvironment.find_by_content_view_id_and_environment_id(content_view.id, environment.id).content_view_version_id
+      version = Katello::ContentViewEnvironment.find_by(:content_view_id => content_view.id, :environment_id => environment.id).content_view_version_id
       "#{Setting[:foreman_url]}/content_views/#{content_view.id}/versions/#{version}/errata"
     end
 

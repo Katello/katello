@@ -21,7 +21,7 @@ class DisownForemanTemplates < ActiveRecord::Migration
     templates = ["puppet.conf", "freeipa_register", "Kickstart default iPXE", "Kickstart default PXELinux", "PXELinux global default"]
 
     templates.each do |template|
-      if (template = FakeConfigTemplate.find_by_name(template))
+      if (template = FakeConfigTemplate.find_by(:name => template))
         template.update_attributes(attribute_hash)
       end
     end

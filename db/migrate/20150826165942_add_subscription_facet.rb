@@ -15,8 +15,8 @@ class AddSubscriptionFacet < ActiveRecord::Migration
                     :name => "katello_subscription_facets_host_id", :column => "host_id"
 
     create_table "katello_subscription_facet_activation_keys" do |t|
-      t.references :subscription_facet, :null => false, :index => true
-      t.references :activation_key, :null => false, :index => true
+      t.references :subscription_facet, :null => false, :index => { :name => "katello_subscription_facet_activation_keys_sf" }
+      t.references :activation_key, :null => false, :index => { :name => "katello_subscription_facet_activation_keys_ak" }
     end
 
     add_index :katello_subscription_facet_activation_keys, [:subscription_facet_id, :activation_key_id], :unique => true,

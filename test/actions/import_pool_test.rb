@@ -2,12 +2,10 @@ require 'katello_test_helper'
 
 module Katello
   describe ::Actions::Candlepin::ImportPoolHandler do
-    let(:pool_id) { '12345' }
+    let(:pool_id) { 'abc123' }
     let(:pool) { OpenStruct.new(:id => pool_id) }
 
     before do
-      ::Actions::Candlepin::ImportPoolHandler.any_instance.stubs(:attempt_find_pool).returns('id' => pool_id)
-      ::Katello::Pool.stubs(:find_by_cp_id).returns(pool)
       ::Katello::Pool.stubs(:search).returns([pool])
       ::Katello::Pool.any_instance.stubs(:import_data).returns(true)
     end

@@ -9,6 +9,10 @@ module ::Actions::Katello::System
     include FactoryGirl::Syntax::Methods
 
     let(:action) { create_action action_class }
+
+    before do
+      set_user
+    end
   end
 
   class UpdateTest < TestBase

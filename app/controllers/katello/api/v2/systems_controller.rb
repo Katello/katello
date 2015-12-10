@@ -371,7 +371,7 @@ module Katello
       # equivalent of "environment_id"-"content_view_id".
       if params[:environment_id].is_a? String
         if !params.key?(:content_view_id)
-          cve = ContentViewEnvironment.find_by_cp_id!(params[:environment_id])
+          cve = ContentViewEnvironment.find_by!(:cp_id => params[:environment_id])
           @environment = cve.environment
           @organization = @environment.organization
           @content_view = cve.content_view
@@ -439,7 +439,7 @@ module Katello
       organization ||= @system.organization if @system
       organization ||= @environment.organization if @environment
       if cv_id && organization
-        @content_view = ContentView.readable.find_by_id(cv_id)
+        @content_view = ContentView.readable.find_by(:id => cv_id)
         fail HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
       else
         @content_view = nil

@@ -45,7 +45,7 @@ module Katello
     param :id, :number, :desc => N_("Subscription identifier"), :required => true
     def show
       @resource = Katello::Pool.with_identifier(params[:id])
-      respond(@resource)
+      respond(:resource => @resource)
     end
 
     def available
@@ -179,7 +179,7 @@ module Katello
       pools = @system.filtered_pools(params[:match_system], params[:match_installed],
                                      params[:no_overlap])
       if pools
-        available = pools.collect { |cp_pool| ::Katello::Pool.find_by_cp_id(cp_pool['id']) }
+        available = pools.collect { |cp_pool| ::Katello::Pool.find_by(:cp_id => cp_pool['id']) }
         available.compact!
         available.select { |pool| pool.provider?(Organization.find(params[:organization_id])) }
       end
@@ -190,11 +190,11 @@ module Katello
     protected
 
     def find_system
-      @system = System.find_by_uuid!(params[:system_id]) if params[:system_id]
+      @system = System.find_by!(:uuid => params[:system_id]) if params[:system_id]
     end
 
     def find_activation_key
-      @activation_key = ActivationKey.find_by_id!(params[:activation_key_id]) if params[:activation_key_id]
+      @activation_key = ActivationKey.find_by!(:id => params[:activation_key_id]) if params[:activation_key_id]
     end
 
     def find_provider

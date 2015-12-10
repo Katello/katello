@@ -16,7 +16,7 @@ module Actions
 
         def finalize
           ::User.current = User.find(input[:user_id])
-          ::Katello::Pool.find_by_cp_id(input[:cp_id]).import_data
+          ::Katello::Pool.find_by(:cp_id => input[:cp_id]).import_data
         ensure
           ::User.current = nil
         end

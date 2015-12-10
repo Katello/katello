@@ -29,13 +29,13 @@ module Actions
           # Since host names must be unique yet hypervisors may have unique subscription
           # facets in different orgs
           duplicate_name = "virt-who-#{name}-#{content_view.organization.id}"
-          host = ::Host.find_by_name(name)
+          host = ::Host.find_by(:name => name)
           if host
             fail _("Host '%{name}' does not belong to an organization" % name) unless host.organization
             if host.organization.id != content_view.organization.id
               name = duplicate_name
             end
-          elsif ::Host.find_by_name(duplicate_name)
+          elsif ::Host.find_by(:name => name)
             name = duplicate_name
           end
 
@@ -48,7 +48,7 @@ module Actions
 
           # TODO: Remove this legacy
           # http://projects.theforeman.org/issues/12556
-          unless ::Katello::Hypervisor.find_by_name(name)
+          unless ::Katello::Hypervisor.find_by(:name => name)
             hypervisor = ::Katello::Hypervisor.new(:environment_id => environment.id,
                                         :content_view_id => content_view.id)
             hypervisor.name = name

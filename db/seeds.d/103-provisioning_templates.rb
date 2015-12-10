@@ -9,11 +9,9 @@
 # Provisioning Templates
 
 kinds = [:provision, :finish, :user_data].inject({}) do |hash, kind|
-  hash[kind] = TemplateKind.find_by_name(kind)
+  hash[kind] = TemplateKind.find_by(:name => kind)
   hash
 end
-
-defaults = {:vendor => "Katello", :default => true, :locked => true}
 
 templates = [{:name => "Katello Kickstart Default",           :source => "kickstart-katello.erb",      :template_kind => kinds[:provision]},
              {:name => "Katello Kickstart Default User Data", :source => "userdata-katello.erb",       :template_kind => kinds[:user_data]},
@@ -22,7 +20,15 @@ templates = [{:name => "Katello Kickstart Default",           :source => "kickst
 
 templates.each do |template|
   template[:template] = File.read(File.join(Katello::Engine.root, "app/views/foreman/unattended", template.delete(:source)))
-  ProvisioningTemplate.find_or_create_by_name(template).update_attributes(defaults.merge(template))
+  ProvisioningTemplate.where(:name => template["name"]).first_or_create do |pt|
+    pt.vendor = "Katello"
+    pt.default = true
+    pt.locked = true
+    pt.name = template[:name]
+    pt.template = template[:template]
+    pt.template_kind = template[:template_kind] if template[:template_kind]
+    pt.snippet = template[:snippet] if template[:snippet]
+  end
 end
 
 # Ensure all default templates are seeded into the first org and loc

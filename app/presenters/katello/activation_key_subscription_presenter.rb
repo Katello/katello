@@ -3,8 +3,8 @@ module Katello
     attr_accessor :subscription
 
     def initialize(subscription)
-      @subscription = Katello::Pool.find_by_cp_id(subscription["id"])
-      @subscription["quantity_attached"] = subscription.try(:[], :amount)
+      @subscription = Katello::Pool.find_by(:cp_id => subscription["id"])
+      @subscription.quantity_attached = subscription.try(:[], :amount)
     end
   end
 end

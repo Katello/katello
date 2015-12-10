@@ -19,6 +19,10 @@ module Katello
       @environment.save!
     end
 
+    def teardown
+      @environment.destroy!
+    end
+
     def test_search_by_content_view
       assert_includes Environment.search_for("content_view = \"#{@content_view_puppet_env.content_view.name}\""), @content_view_puppet_env.puppet_environment
     end

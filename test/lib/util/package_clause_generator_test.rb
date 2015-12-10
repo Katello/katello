@@ -20,7 +20,9 @@ module Katello
         rpm.save!
       end
 
-      @content_view = FactoryGirl.build(:katello_content_view, :organization => organization, :repositories => [@repo])
+      @content_view = FactoryGirl.build(:katello_content_view, :organization => organization)
+      @content_view.save!
+      @content_view.repositories << @repo
     end
 
     def test_package_names

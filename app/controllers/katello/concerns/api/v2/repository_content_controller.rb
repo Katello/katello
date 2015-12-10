@@ -61,7 +61,7 @@ module Katello
           fail HttpErrors::NotFound, _("Couldn't find content view versions '%s'") % missing.join(',')
         end
 
-        collection = resource_class.scoped
+        collection = resource_class.all
         repos = Katello::Repository.where(:content_view_version_id => @versions.pluck(:id))
         repos = repos.where(:library_instance_id => @repo.id) if @repo
 
@@ -73,7 +73,7 @@ module Katello
       param :available_for, :string, :desc => N_("Show available to be added to content view filter")
       param :filterId, :integer, :desc => N_("Content View Filter id")
       def index_relation
-        collection = resource_class.scoped
+        collection = resource_class.all
         collection = filter_by_repos(Repository.readable, collection)
         collection = filter_by_repos([@repo], collection) if @repo
         collection = filter_by_content_view_version(@version, collection) if @version
@@ -137,14 +137,14 @@ module Katello
 
       def find_repository
         if params[:repository_id]
-          @repo = Repository.readable.find_by_id(params[:repository_id])
+          @repo = Repository.readable.find_by(:id => params[:repository_id])
           fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
         end
       end
 
       def find_environment
         if params[:environment_id]
-          @environment = KTEnvironment.readable.find_by_id(params[:environment_id])
+          @environment = KTEnvironment.readable.find_by(:id => params[:environment_id])
           fail HttpErrors::NotFound, _("Could not find Lifecycle Environment with id '%{id}'.") %
             {id: params[:environment_id]} if @environment.nil?
         end
@@ -152,7 +152,7 @@ module Katello
 
       def find_content_view_version
         if params[:content_view_version_id]
-          @version = ContentViewVersion.readable.find_by_id(params[:content_view_version_id])
+          @version = ContentViewVersion.readable.find_by(:id => params[:content_view_version_id])
           fail HttpErrors::NotFound, _("Couldn't find content view version '%s'") % params[:content_view_version_id] if @version.nil?
         end
       end
@@ -162,8 +162,8 @@ module Katello
         filter_id = params[:content_view_filter_id] || params[:filter_id]
 
         if filter_id
-          scoped = ContentViewFilter.scoped
-          @filter = scoped.where(:type => filter_class_name).find_by_id(filter_id)
+          scoped = ContentViewFilter.all
+          @filter = scoped.where(:type => filter_class_name).find_by(:id => filter_id)
 
           unless @filter
             fail HttpErrors::NotFound, _("Couldn't find %{type} Filter with id %{id}") %

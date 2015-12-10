@@ -128,7 +128,7 @@ module Katello
     end
 
     def self.pulp_task(pulp_status)
-      task_status = PulpSyncStatus.find_by_uuid(pulp_status[:id])
+      task_status = PulpSyncStatus.find_by(:uuid => pulp_status[:id])
       task_status = self.new { |t| yield t if block_given? } if task_status.nil?
       task_status.update_state(pulp_status)
     end

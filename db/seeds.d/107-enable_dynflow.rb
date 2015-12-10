@@ -5,5 +5,5 @@
 #
 ::User.current = ::User.anonymous_api_admin
 
-Setting.find_by_name("dynflow_enable_console").update_attributes!(:value => true) if Rails.env.development?
+Setting.find_by(:name => "dynflow_enable_console").update_attributes!(:value => true) if Rails.env.development?
 ::User.current = nil
