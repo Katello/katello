@@ -72,15 +72,14 @@ module Katello
       :with => /^([a-z0-9\-_]{4,30}\/)?[a-z0-9\-_\.]{3,30}$/,
       :message => (_("must be a valid docker name"))
     }
+    validates :url, :allow_nil => :custom?, :if => :in_default_view?,
+      :url_schema => ['http', 'https', 'ftp', 'file']
 
     #validates :content_id, :presence => true #add back after fixing add_repo orchestration
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::RepositoryUniqueAttributeValidator, :attributes => :label
     validates_with Validators::RepositoryUniqueAttributeValidator, :attributes => :name
-    validates_with Validators::KatelloUrlFormatValidator,
-      :attributes => :url, :nil_allowed => proc { |o| o.custom? }, :field_name => :url,
-      :if => proc { |o| o.in_default_view? }
     validates :content_type, :inclusion => {
       :in => TYPES,
       :allow_blank => false,
