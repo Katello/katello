@@ -25,6 +25,10 @@ module Katello
       }
     end
 
+    before(:all) do
+      get_organization_with_label(:organization2)
+    end
+
     before(:each) do
       disable_org_orchestration
       disable_product_orchestration

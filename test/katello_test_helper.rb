@@ -150,10 +150,14 @@ class ActiveSupport::TestCase
   end
 
   def get_organization(org = nil)
+    org = org.nil? ? :empty_organization : org
+    Organization.find(taxonomies(org.to_sym))
+  end
+
+  def get_organization_with_label(org = nil)
     saved_user = User.current
     User.current = User.find(users(:admin))
-    org = org.nil? ? :empty_organization : org
-    organization = Organization.find(taxonomies(org.to_sym))
+    organization = get_organization(org)
     organization.stubs(:label_not_changed).returns(true)
     organization.setup_label_from_name
     organization.save!
