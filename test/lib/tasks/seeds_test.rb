@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'katello_test_helper'
 
 module Katello
   class SeedsTest < ActiveSupport::TestCase
@@ -56,7 +56,7 @@ module Katello
 
       ProvisioningTemplate.where(:default => true, :vendor => "Katello").each do |template|
         assert template_names.include?(template.name)
-        assert template.organizations.empty?
+        refute_empty template.organizations
       end
     end
   end
