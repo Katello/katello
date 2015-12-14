@@ -7,10 +7,6 @@ module BastionKatello
     end
 
     initializer "bastion.assets.paths", :group => :all do |app|
-      # TODO: uncomment and fix this or just plain remove it before merging to katello/master
-      # throws a 'can't modify frozen array' error
-      # app.middleware.use ::ActionDispatch::Static, "#{BastionKatello::Engine.root}/app/assets/javascripts/bastion_katello"
-
       if defined? Less::Rails
         app.config.less.paths << "#{BastionKatello::Engine.root}/app/assets/stylesheets/bastion_katello"
       end
