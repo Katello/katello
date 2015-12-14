@@ -70,9 +70,6 @@ module FixtureTestCase
 
     @@admin = ::User.find(FIXTURES['users']['admin']['id'])
     User.current = @@admin
-    loc = Location.first
-    loc.katello_default = true
-    loc.save!
   end
 end
 
@@ -200,6 +197,12 @@ class ActiveSupport::TestCase
     cp_consumer_user.uuid = uuid
     cp_consumer_user.login = uuid
     User.stubs(:current).returns(cp_consumer_user)
+  end
+
+  def set_default_location
+    loc = Location.first
+    loc.katello_default = true
+    loc.save!
   end
 end
 
