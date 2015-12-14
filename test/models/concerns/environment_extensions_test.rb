@@ -6,6 +6,7 @@ module Katello
   class EnvironmentExtensionsTest < ActiveSupport::TestCase
     def setup
       User.current = User.find(users(:admin))
+      set_default_location
       @katello_id = "KT_Org_Env_View_1"
 
       @org = get_organization

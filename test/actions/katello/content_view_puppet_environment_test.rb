@@ -8,6 +8,10 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
     include Support::CapsuleSupport
 
     let(:puppet_env) { katello_content_view_puppet_environments(:library_view_puppet_environment) }
+
+    setup do
+      set_default_location
+    end
   end
 
   class CreateTest < TestBase
