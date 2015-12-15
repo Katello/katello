@@ -163,4 +163,5 @@ Foreman::Plugin.register :katello do
   widget 'host_collection_widget', :name => 'Host Collection Widget', :sizey => 1, :sizex => 6
 
   register_custom_status(Katello::ErrataStatus)
+  register_custom_status(Katello::SubscriptionStatus)
 end
