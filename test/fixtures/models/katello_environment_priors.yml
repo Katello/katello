@@ -1,43 +1,43 @@
 dev_library_prior:
-  prior_id: <%= ActiveRecord::Fixtures.identify(:library) %>
-  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+  prior_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
 
 test_dev_prior:
-  prior_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
-  environment_id: <%= ActiveRecord::Fixtures.identify(:test) %>
+  prior_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:test) %>
 
 test_beta_prior:
-  prior_id: <%= ActiveRecord::Fixtures.identify(:test) %>
-  environment_id: <%= ActiveRecord::Fixtures.identify(:beta) %>
+  prior_id: <%= ActiveRecord::FixtureSet.identify(:test) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:beta) %>
 
 staging_library_prior:
-  prior_id: <%= ActiveRecord::Fixtures.identify(:library) %>
-  environment_id: <%= ActiveRecord::Fixtures.identify(:staging) %>
+  prior_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:staging) %>
 
 candlepin_dev_library_prior:
-  prior_id: <%= ActiveRecord::Fixtures.identify(:candlepin_library) %>
-  environment_id: <%= ActiveRecord::Fixtures.identify(:candlepin_dev) %>
+  prior_id: <%= ActiveRecord::FixtureSet.identify(:candlepin_library) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:candlepin_dev) %>
 
 dev_path1_prior:
-  prior_id: <%= ActiveRecord::Fixtures.identify(:library) %>
-  environment_id: <%= ActiveRecord::Fixtures.identify(:dev_path1) %>
+  prior_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:dev_path1) %>
 
 qa_path1_prior:
-  prior_id: <%= ActiveRecord::Fixtures.identify(:dev_path1) %>
-  environment_id: <%= ActiveRecord::Fixtures.identify(:qa_path1) %>
+  prior_id: <%= ActiveRecord::FixtureSet.identify(:dev_path1) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:qa_path1) %>
 
 staging_path1_prior:
-  prior_id: <%= ActiveRecord::Fixtures.identify(:qa_path1) %>
-  environment_id: <%= ActiveRecord::Fixtures.identify(:staging_path1) %>
+  prior_id: <%= ActiveRecord::FixtureSet.identify(:qa_path1) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:staging_path1) %>
 
 dev_path2_prior:
-  prior_id: <%= ActiveRecord::Fixtures.identify(:library) %>
-  environment_id: <%= ActiveRecord::Fixtures.identify(:dev_path2) %>
+  prior_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:dev_path2) %>
 
 qa_path2_prior:
-  prior_id: <%= ActiveRecord::Fixtures.identify(:dev_path2) %>
-  environment_id: <%= ActiveRecord::Fixtures.identify(:qa_path2) %>
+  prior_id: <%= ActiveRecord::FixtureSet.identify(:dev_path2) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:qa_path2) %>
 
 staging_path2_prior:
-  prior_id: <%= ActiveRecord::Fixtures.identify(:qa_path2) %>
-  environment_id: <%= ActiveRecord::Fixtures.identify(:staging_path2) %>
+  prior_id: <%= ActiveRecord::FixtureSet.identify(:qa_path2) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:staging_path2) %>

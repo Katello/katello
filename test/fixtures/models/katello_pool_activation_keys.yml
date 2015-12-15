@@ -1,5 +1,5 @@
 dev_key_pool_one:
-  activation_key_id: <%= ActiveRecord::Fixtures.identify(:dev_key) %>
-  pool_id: <%= ActiveRecord::Fixtures.identify(:pool_one) %>
+  activation_key_id: <%= ActiveRecord::FixtureSet.identify(:dev_key) %>
+  pool_id: <%= ActiveRecord::FixtureSet.identify(:pool_one) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>

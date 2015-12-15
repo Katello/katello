@@ -2,7 +2,7 @@ pool_one:
   cp_id: "abc123"
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  subscription_id: <%= ActiveRecord::Fixtures.identify(:basic_subscription) %> 
+  subscription_id: <%= ActiveRecord::FixtureSet.identify(:basic_subscription) %> 
   account_number: "12400203"
   contract_number: "123403949"
   pool_type: "normal"
@@ -17,7 +17,7 @@ pool_two:
   cp_id: "xyz123"
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  subscription_id: <%= ActiveRecord::Fixtures.identify(:other_subscription) %> 
+  subscription_id: <%= ActiveRecord::FixtureSet.identify(:other_subscription) %> 
   account_number: "84390203"
   contract_number: "38943940"
   quantity: 100
