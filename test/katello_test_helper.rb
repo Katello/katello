@@ -43,8 +43,6 @@ def load_permissions
   end
 end
 
-ActiveSupport::Deprecation.silenced = true
-
 module FixtureTestCase
   extend ActiveSupport::Concern
 
