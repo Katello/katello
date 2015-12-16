@@ -14,6 +14,5 @@ module Katello
     rescue URI::InvalidURIError
       return false
     end
-
   end
 end
