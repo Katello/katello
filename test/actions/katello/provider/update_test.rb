@@ -21,7 +21,7 @@ module Actions
       repositories.flatten!
       repositories = repositories.collect do |repository|
         next unless repository.url
-        [repository, {:url => "https://localhost#{repository.url.gsub('https://cdn.example.com', '')}"}]
+        [repository, {:url => "https://localhost"}]
       end
 
       assert_action_planed_with(action, repository_update_class) do |repository|
