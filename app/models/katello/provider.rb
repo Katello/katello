@@ -22,11 +22,11 @@ module Katello
     validates :name, :uniqueness => {:scope => :organization_id}
     validates :provider_type, :inclusion => {:in => TYPES,
                                              :allow_blank => false, :message => "Please select provider type from one of the following: #{TYPES.join(', ')}."}
+    validates :repository_url, :url_schema => ['http', 'https', 'ftp', 'file'],
+      :if => :redhat_provider?
     validate :constraint_redhat_update
     validate :only_one_rhn_provider
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
-    validates_with Validators::KatelloUrlFormatValidator, :if => :redhat_provider?,
-                                                          :attributes => [:repository_url]
 
     before_destroy :prevent_redhat_deletion
     before_validation :sanitize_repository_url
