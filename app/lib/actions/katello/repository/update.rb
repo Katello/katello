@@ -6,13 +6,13 @@ module Actions
           action_subject repository
           repository.update_attributes!(repo_params)
 
-          if (SETTINGS[:katello][:use_cp] && SETTINGS[:katello][:use_pulp]) && repository.library_instance?
+          if update_content?(repository)
             plan_action(::Actions::Candlepin::Product::ContentUpdate,
                         :content_id => repository.content_id,
-                        :name => repository.name,
+                        :name => repository.content.name,
                         :content_url => ::Katello::Glue::Pulp::Repos.custom_content_path(repository.product, repository.label),
                         :gpg_key_url => repository.yum_gpg_key_url,
-                        :label => repository.custom_content_label,
+                        :label => repository.content.label,
                         :type => repository.content_type)
           end
 
@@ -48,6 +48,15 @@ module Actions
                           Runcible::Models::DockerDistributor
                         end
           distributor.type_id
+        end
+
+        private
+
+        def update_content?(repository)
+          SETTINGS[:katello][:use_cp] &&
+            SETTINGS[:katello][:use_pulp] &&
+            repository.library_instance? &&
+            !repository.product.redhat?
         end
       end
     end
