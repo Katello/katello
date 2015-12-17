@@ -40,6 +40,32 @@ module Katello
       require_dependency File.expand_path('../../../app/models/setting/katello.rb', __FILE__) if (Setting.table_exists? rescue(false))
     end
 
+    initializer 'katello.configure_assets', :group => :assets do
+      def find_assets(args = {})
+        type = args.fetch(:type, nil)
+        asset_dir = "#{Katello::Engine.root}/app/assets/#{type}/"
+
+        asset_paths = Dir[File.join(asset_dir, '**', '*')].reject { |file| File.directory?(file) }
+        asset_paths.each { |file| file.slice!(asset_dir) }
+
+        asset_paths
+      end
+
+      javascripts = find_assets(:type => 'javascripts')
+      images = find_assets(:type => 'images')
+
+      precompile = [
+        'katello/katello.css',
+        'bastion_katello/bastion_katello.css',
+        'bastion_katello/bastion_katello.js',
+        /bastion_katello\S+.(?:svg|eot|woff|ttf)$/
+      ]
+      precompile.concat(javascripts)
+      precompile.concat(images)
+
+      SETTINGS[:katello] = {:assets => {:precompile => precompile } }
+    end
+
     initializer "katello.apipie" do
       Apipie.configuration.checksum_path += ['/katello/api/']
       require 'katello/apipie/validators'
@@ -102,16 +128,6 @@ module Katello
       ActionView::Base.send :include, Katello::TaxonomyHelper
       ActionView::Base.send :include, Katello::HostsAndHostgroupsHelper
       ActionView::Base.send :include, Katello::KatelloUrlsHelper
-    end
-
-    initializer :register_assets do |app|
-      if Rails.env.production?
-        assets = YAML.load_file("#{Katello::Engine.root}/public/assets/katello/manifest.yml")
-
-        assets.each_pair do |file, digest|
-          app.config.assets.digests[file] = digest
-        end
-      end
     end
 
     config.to_prepare do
@@ -197,7 +213,6 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/regenerate_repo_metadata.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/reindex.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/rubocop.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/asset_compile.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/clean_backend_objects.rake"
 
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.1/import_errata.rake"
