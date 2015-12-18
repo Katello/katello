@@ -160,12 +160,12 @@ module Katello
     end
 
     def find_system
-      @system = System.find_by_uuid!(params[:system_id]) if params[:system_id]
+      @system = System.find_by!(:uuid => params[:system_id]) if params[:system_id]
       @organization = @system.organization if @system
     end
 
     def find_activation_key
-      @activation_key = ActivationKey.find_by_id!(params[:activation_key_id]) if params[:activation_key_id]
+      @activation_key = ActivationKey.find_by!(:id => params[:activation_key_id]) if params[:activation_key_id]
       @organization = @activation_key.organization if @activation_key
     end
   end

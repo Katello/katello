@@ -31,24 +31,23 @@ module Katello
       get :index, :environment_id => @library.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/puppet_modules/index)
+      assert_template "katello/api/v2/puppet_modules/index"
     end
 
     def test_index_by_repo
       get :index, :repository_id => @repo.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/puppet_modules/index)
+      assert_template "katello/api/v2/puppet_modules/index"
     end
 
     def test_index_with_environment_id
       environment = KTEnvironment.first
-      KTEnvironment.expects(:readable).returns(stub(:find_by_id => environment))
 
       get :index, :environment_id => environment.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/puppet_modules/index)
+      assert_template "katello/api/v2/puppet_modules/index"
     end
 
     def test_index_protected
@@ -62,7 +61,7 @@ module Katello
       get :show, :repository_id => @repo.id, :id => @puppet_module.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/puppet_modules/show)
+      assert_template "katello/api/v2/puppet_modules/show"
     end
 
     def test_show_protected

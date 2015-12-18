@@ -178,7 +178,7 @@ module Katello
         ForemanTasks::Task::DynflowTask
           .select("#{ForemanTasks::Task::DynflowTask.table_name}.*")
           .for_action(::Actions::Katello::Repository::Sync)
-          .joins(:locks).where("foreman_tasks_locks.resource_id in (?) and foreman_tasks_locks.resource_type = ?", all_repos, ::Katello::Repository.name)
+          .joins(:locks).where("foreman_tasks_locks.resource_id in (?) and foreman_tasks_locks.resource_type = ?", all_repos.pluck(:id), ::Katello::Repository.name)
           .order("started_at desc")
       end
 

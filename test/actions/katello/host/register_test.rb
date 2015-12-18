@@ -53,7 +53,10 @@ module Katello::Host
         action = create_action action_class
         new_host = Host::Managed.new(:name => 'foobar', :managed => false)
         action.stubs(:action_subject).with(new_host)
-        plan_action action, new_host, new_system, rhsm_params, nil, [@activation_key]
+
+        activation_keys = []
+        activation_keys << @activation_key
+        plan_action action, new_host, new_system, rhsm_params, nil, activation_keys
 
         assert_action_planed_with(action, candlepin_class, :cp_environment_id => cvpe.cp_id,
                                   :consumer_parameters => rhsm_params, :activation_keys => [@activation_key.cp_name])

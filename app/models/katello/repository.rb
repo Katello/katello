@@ -28,9 +28,9 @@ module Katello
     belongs_to :product, :inverse_of => :repositories
     belongs_to :gpg_key, :inverse_of => :repositories
     belongs_to :library_instance, :class_name => "Katello::Repository", :inverse_of => :library_instances_inverse
-    has_many :library_instances_inverse, # TODOp what is the proper name?
+    has_many :library_instances_inverse, # TODO: what is the proper name?
              :class_name  => 'Katello::Repository',
-             :dependent   => :restrict,
+             :dependent   => :restrict_with_exception,
              :foreign_key => :library_instance_id
     has_many :content_view_repositories, :class_name => "Katello::ContentViewRepository",
                                          :dependent => :destroy
@@ -69,7 +69,7 @@ module Katello
     validates :pulp_id, :presence => true, :uniqueness => true, :if => proc { |r| r.name.present? }
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES, :allow_blank => true}
     validates :docker_upstream_name, :allow_blank => true, :if => :docker?, :format => {
-      :with => /^([a-z0-9\-_]{4,30}\/)?[a-z0-9\-_\.]{3,30}$/,
+      :with => /\A([a-z0-9\-_]{4,30}\/)?[a-z0-9\-_\.]{3,30}\z/,
       :message => (_("must be a valid docker name"))
     }
 
@@ -170,13 +170,13 @@ module Katello
 
     def other_repos_with_same_product_and_content
       list = Repository.in_product(Product.find(self.product.id)).where(:content_id => self.content_id).all
-      list.delete(self)
+      list.destroy(self)
       list
     end
 
     def other_repos_with_same_content
       list = Repository.where(:content_id => self.content_id).all
-      list.delete(self)
+      list.destroy(self)
       list
     end
 
@@ -240,7 +240,7 @@ module Katello
       if name.blank?
         self.gpg_key = nil
       else
-        self.gpg_key = GpgKey.readable.find_by_name!(name)
+        self.gpg_key = GpgKey.readable.find_by!(:name => name)
       end
     end
 

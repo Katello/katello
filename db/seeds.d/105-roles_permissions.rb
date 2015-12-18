@@ -53,7 +53,7 @@ permissions = [
 ]
 
 permissions.each do |resource, permission|
-  Permission.find_or_create_by_resource_type_and_name resource, permission
+  Permission.where(:resource_type => resource, :name => permission).first_or_create
 end
 
 default_permissions = {
@@ -63,8 +63,8 @@ default_permissions = {
 
 Role.without_auditing do
   default_permissions.each do |role_name, permission_names|
-    permissions = Permission.find_all_by_name permission_names
-    create_filters(Role.find_by_name(role_name), permissions)
+    permissions = Permission.where(:name => permission_names)
+    create_filters(Role.find_by(:name => role_name), permissions)
   end
 end
 

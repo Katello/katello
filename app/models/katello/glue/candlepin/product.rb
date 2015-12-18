@@ -17,8 +17,6 @@ module Katello
         # we must store custom logger object during product importing so we can log status
         # from various places like callbacks
         attr_accessor :import_logger
-
-        attr_accessible :multiplier, :attrs, :productContent, :href, :import_logger
       end
     end
 
@@ -72,7 +70,7 @@ module Katello
       end
 
       def build_product_content(attrs)
-        @productContent = attrs.collect { |pc| Candlepin::ProductContent.new pc }
+        @productContent = attrs.collect { |pc| Katello::Candlepin::ProductContent.new pc }
       end
 
       def support_level
@@ -106,7 +104,7 @@ module Katello
 
       def convert_from_cp_fields(cp_json)
         ar_safe_json = cp_json.key?(:attributes) ? cp_json.merge(:attrs => cp_json.delete(:attributes)) : cp_json
-        ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| Candlepin::ProductContent.new(pc, self.id) }
+        ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| ::Katello::Candlepin::ProductContent.new(pc, self.id) }
         ar_safe_json[:attrs] = remove_hibernate_fields(cp_json[:attrs]) if ar_safe_json.key?(:attrs)
         ar_safe_json[:attrs] ||= []
         ar_safe_json.except('id')

@@ -46,7 +46,7 @@ module Katello
       end
 
       def readable_repositories(repo_ids = nil)
-        query = Katello::Repository.scoped
+        query = Katello::Repository.all
         content_views = Katello::ContentView.readable
 
         if repo_ids

@@ -502,6 +502,7 @@ module Katello
 
     def test_errata_filenames
       @rhel6 = Repository.find(katello_repositories(:rhel_6_x86_64))
+      @rhel6.errata.first.packages << katello_erratum_packages(:security_package)
 
       refute_empty @rhel6.errata_filenames
       assert_includes @rhel6.errata_filenames, @rhel6.errata.first.packages.first.filename

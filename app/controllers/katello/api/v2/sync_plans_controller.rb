@@ -101,7 +101,7 @@ module Katello
     protected
 
     def find_plan
-      @sync_plan = SyncPlan.find_by_id(params[:id])
+      @sync_plan = SyncPlan.find_by(:id => params[:id])
       fail HttpErrors::NotFound, _("Couldn't find sync plan '%{plan}' in organization '%{org}'") % { :plan => params[:id], :org => params[:organization_id] } if @sync_plan.nil?
       @organization ||= @sync_plan.organization
       @sync_plan

@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require File.expand_path('../../../../app/services/client/cert.rb', __FILE__)
 
 module Client
-  class CertTest < MiniTest::Unit::TestCase
+  class CertTest < Minitest::Test
     CERT = '
       -----BEGIN CERTIFICATE-----
       MIIEaTCCA1GgAwIBAgIIMAikOB+/HpowDQYJKoZIhvcNAQEFBQAwezELMAkGA1UE

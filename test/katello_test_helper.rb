@@ -59,7 +59,7 @@ module FixtureTestCase
     FileUtils.cp(Dir.glob("#{Katello::Engine.root}/test/fixtures/models/*"), self.fixture_path)
     FileUtils.cp(Dir.glob("#{Rails.root}/test/fixtures/*"), self.fixture_path)
     fixtures(:all)
-    FIXTURES = load_fixtures
+    FIXTURES = load_fixtures(ActiveRecord::Base)
 
     load_permissions
     configure_vcr
@@ -68,9 +68,6 @@ module FixtureTestCase
 
     @@admin = ::User.find(FIXTURES['users']['admin']['id'])
     User.current = @@admin
-    loc = Location.first
-    loc.katello_default = true
-    loc.save!
   end
 end
 
@@ -87,6 +84,7 @@ class ActionController::TestCase
     set_default_locale
     setup_engine_routes if load_engine_routes
     @controller.stubs(:require_org).returns({})
+    load_permissions
   end
 
   def set_user(user = nil, is_api = false)
@@ -119,6 +117,7 @@ class ActiveSupport::TestCase
 
   before do
     stub_ping
+    Setting::Katello.load_defaults
   end
 
   def self.stubbed_ping_response
@@ -163,7 +162,7 @@ class ActiveSupport::TestCase
 
   def mock_active_records(*records)
     records.each do |record|
-      record.class.stubs(:instantiate).with(has_entry('id', record.id.to_s)).returns(record)
+      record.class.stubs(:instantiate).with(has_entry('id', record.id.to_s), instance_of(Hash)).returns(record)
       record.stubs(:reload).returns(record)
     end
   end
@@ -196,6 +195,12 @@ class ActiveSupport::TestCase
     cp_consumer_user.uuid = uuid
     cp_consumer_user.login = uuid
     User.stubs(:current).returns(cp_consumer_user)
+  end
+
+  def set_default_location
+    loc = Location.first
+    loc.katello_default = true
+    loc.save!
   end
 end
 

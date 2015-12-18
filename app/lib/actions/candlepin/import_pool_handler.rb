@@ -45,7 +45,7 @@ module Actions
       private
 
       def import_or_remove_pool(pool_id)
-        ::Katello::Pool.find_by_cp_id(pool_id).import_data
+        ::Katello::Pool.find_by(:cp_id => pool_id).import_data
       rescue RestClient::ResourceNotFound
         remove_pool(pool_id)
       end
@@ -57,7 +57,7 @@ module Actions
       end
 
       def remove_pool(pool_id)
-        pool = ::Katello::Pool.find_by_cp_id(pool_id)
+        pool = ::Katello::Pool.find_by(:cp_id => pool_id)
         if pool
           pool.destroy!
         else
@@ -68,7 +68,7 @@ module Actions
       def reindex_consumer(message)
         if message.content['newEntity']
           uuid = JSON.parse(message.content['newEntity'])['consumer']['uuid']
-          system = ::Katello::System.find_by_uuid(uuid)
+          system = ::Katello::System.find_by(:uuid => uuid)
           if system.nil?
             @logger.debug "skip re-indexing of non-existent content host #{uuid}"
           else

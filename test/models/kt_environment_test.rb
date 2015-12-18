@@ -61,11 +61,21 @@ module Katello
       assert_operator @library.repositories.map(&:product).length, :>, @library.products.length
     end
 
-    def test_content_view_label
+    def test_content_view_label_excludes_library
+      env = @acme_corporation.kt_environments.build(:name => "Test", :label => "Library",
+                                                    :prior => @library)
+      refute env.save
+      assert_equal 1, env.errors.size
+      # this an ActiveModel::Errors object; not a Hash
+      assert env.errors.has_key?(:label) # rubocop:disable Style/DeprecatedHashMethods
+    end
+
+    def test_content_view_label_excludes_content_dir
       env = @acme_corporation.kt_environments.build(:name => "Test", :label => ContentView::CONTENT_DIR,
                                                     :prior => @library)
       refute env.save
       assert_equal 1, env.errors.size
+      # this an ActiveModel::Errors object; not a Hash
       assert env.errors.has_key?(:label) # rubocop:disable Style/DeprecatedHashMethods
     end
   end

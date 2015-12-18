@@ -1,7 +1,7 @@
 require 'katello_test_helper'
 
 module Katello
-  describe GpgKey, :katello => true do
+  describe GpgKey do
     include OrchestrationHelper
     include OrganizationHelperMethods
 

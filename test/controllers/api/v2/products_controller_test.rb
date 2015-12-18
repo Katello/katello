@@ -82,7 +82,8 @@ module Katello
       post :create, :product => product_params, :organization_id => @organization.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/common/create katello/api/v2/layouts/resource)
+      assert_template layout: 'katello/api/v2/layouts/resource'
+      assert_template 'katello/api/v2/common/create'
     end
 
     def test_create_fail_without_product
@@ -140,7 +141,8 @@ module Katello
       put :update, :id => @product.id, :product => params
 
       assert_response :success
-      assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
+      assert_template layout: 'katello/api/v2/layouts/resource'
+      assert_template 'katello/api/v2/common/update'
     end
 
     def test_update_sync_plan
@@ -152,7 +154,8 @@ module Katello
       put :update, :id => @product.id, :product => params
 
       assert_response :success
-      assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
+      assert_template layout: 'katello/api/v2/layouts/resource'
+      assert_template 'katello/api/v2/common/update'
     end
 
     def test_update_protected

@@ -37,18 +37,15 @@ module Katello
       it "should validate file urls" do
         kurl_valid?('file://opt/repo').must_equal(true)
         kurl_valid?('/opt/repo').must_equal(false)
-      end
-
-      it "should validate file urls" do
         kurl_valid?('file://opt/repo-is-long/').must_equal(true)
         kurl_valid?('/opt/repo-for-me').must_equal(false)
       end
 
       it "should validate file urls with multiple slashes" do
-        file_prefix?('file://///opt/repo').must_equal(true)
+        kurl_valid?('file://///opt/repo').must_equal(true)
         kurl_valid?('file://///opt/').must_equal(true)
         kurl_valid?('File://///opt/').must_equal(true)
-        file_prefix?('/////opt/repo').must_equal(false)
+        kurl_valid?('/////opt/repo').must_equal(false)
         kurl_valid?('/////opt/repo').must_equal(false)
       end
 

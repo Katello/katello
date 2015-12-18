@@ -81,7 +81,7 @@ module Actions
 
         def finalize
           input[:content_view_history_ids].each do |history_id|
-            history = ::Katello::ContentViewHistory.find_by_id(history_id)
+            history = ::Katello::ContentViewHistory.find_by(:id => history_id)
             if history
               history.status = ::Katello::ContentViewHistory::SUCCESSFUL
               history.save!

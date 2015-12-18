@@ -3,9 +3,6 @@ module Actions
     module Repository
       module Presenters
         class AbstractSyncPresenter < Helpers::Presenter::Base
-          # TODO: in Rails 4.0, the logic is possible to use from ActiveSupport
-          include ActionView::Helpers::NumberHelper
-
           def humanized_output
             if action.external_task
               humanized_details

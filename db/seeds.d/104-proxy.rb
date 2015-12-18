@@ -12,13 +12,13 @@ end
 ::User.current = ::User.anonymous_api_admin
 
 # Proxy features
-feature = Feature.find_or_create_by_name('Pulp')
+feature = Feature.where(:name => 'Pulp').first_or_create
 if feature.nil? || feature.errors.any?
   fail "Unable to create proxy feature: #{format_errors feature}"
 end
 
 ["Pulp", "Pulp Node"].each do |input|
-  f = Feature.find_or_create_by_name(input)
+  f = Feature.where(:name => input).first_or_create
   fail "Unable to create proxy feature: #{format_errors f}" if f.nil? || f.errors.any?
 end
 

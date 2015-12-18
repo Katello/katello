@@ -30,13 +30,7 @@ module Katello
 
       assert_equal results.keys.sort, ['page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total']
       assert_equal results['results'].size, 3
-      assert_block do
-        ids = []
-        results['results'].each do |r|
-          ids << r['id']
-        end
-        ids.include? @host_collection.id
-      end
+      assert_includes results['results'].map { |r| r['id'] }, @host_collection.id
     end
 
     def test_show

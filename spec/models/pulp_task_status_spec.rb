@@ -1,7 +1,7 @@
 require 'katello_test_helper'
 
 module Katello
-  describe PulpTaskStatus, :katello => true do
+  describe PulpTaskStatus do
     include OrchestrationHelper
 
     describe "proxy TaskStatus for pulp task" do

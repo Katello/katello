@@ -25,7 +25,8 @@ module Katello
     end
 
     test "passes if name and author provided" do
-      PuppetModule.create!(:name => "module name", :author => "module author", :uuid => '9932943299423', :repositories => [@repository])
+      puppet = PuppetModule.create!(:name => "module name", :author => "module author", :uuid => '9932943299423')
+      puppet.repositories << @repository
       @model = OpenStruct.new(@base_record.merge(:name => "module name", :author => "module author"))
       @validator.validate(@model)
       assert_empty @model.errors[:base]
@@ -47,7 +48,8 @@ module Katello
     end
 
     test "passes if the module does exist" do
-      PuppetModule.create!(:name => "module name", :author => "module author", :uuid => '9932943299423', :repositories => [@repository])
+      puppet = PuppetModule.create!(:name => "module name", :author => "module author", :uuid => '9932943299423')
+      puppet.repositories << @repository
       @model = OpenStruct.new(@base_record.merge(:name => "module name", :author => "module author"))
       @validator.validate(@model)
 

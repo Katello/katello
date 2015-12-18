@@ -17,7 +17,7 @@ module Katello::Host
       @host = FactoryGirl.build(:host, :with_subscription, :content_view => @content_view,
                                 :lifecycle_environment => @content_view_environment,
                                 :content_host => katello_systems(:simple_server))
-      ::Katello::Hypervisor.stubs(:find_by_name).returns(true)
+      ::Katello::Hypervisor.stubs(:find_by).returns(true)
       ::Katello::KTEnvironment.stubs(:find).returns(@content_view_environment)
       ::Katello::ContentView.stubs(:find).returns(@content_view)
     end
@@ -36,7 +36,7 @@ module Katello::Host
       end
 
       it 'hypervisor duplicate' do
-        ::Host.stubs(:find_by_name).returns(@host)
+        ::Host.stubs(:find_by).returns(@host)
         @host.organization = @organization
         ::Katello::Host::SubscriptionFacet.expects(:find_or_create_host_for_hypervisor).with do |name, *_|
           name.must_equal "virt-who-hypervisor-#{@content_view.organization.id}"

@@ -11,11 +11,8 @@ module ::Actions::Pulp::Repository
     include VCR::TestCase
     let(:repo) { katello_repositories(:fedora_17_x86_64) }
 
-    def run_action(action_class, *args)
-      ForemanTasks.sync_task(action_class, *args).main_action
-    end
-
     def setup
+      set_user
       ::Katello::RepositorySupport.create_repo(repo.id)
     end
 
@@ -25,10 +22,9 @@ module ::Actions::Pulp::Repository
   end
 
   class SyncTest < VCRTestBase
-    let(:action_class) { ::Actions::Pulp::Repository::Sync }
     def test_sync
-      run_action(action_class, pulp_id: repo.pulp_id)
-      assert_equal 8, repo.rpm_ids.length
+      ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :pulp_id => repo.pulp_id).main_action
+      assert_equal 8, repo.pulp_rpm_ids.length
     end
   end
 end

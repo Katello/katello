@@ -28,8 +28,7 @@ module Katello
       end
 
       def in_repositories(repos)
-        self.joins(repository_association.to_sym)
-          .where("#{repository_association_class.table_name}.repository_id" => repos)
+        self.joins(repository_association.to_sym).where("#{repository_association_class.table_name}.repository_id" => repos)
       end
 
       def pulp_data(uuid)
@@ -40,7 +39,7 @@ module Katello
       def import_all(uuids = nil, additive = false)
         all_items = uuids ? content_unit_class.fetch_by_uuids(uuids) : content_unit_class.fetch_all
         all_items.each do |item_json|
-          item = self.find_or_create_by_uuid(:uuid => item_json['_id'])
+          item = self.where(:uuid => item_json['_id']).first_or_create
           item.update_from_json(item_json)
         end
         update_repository_associations(all_items, additive)
@@ -91,7 +90,7 @@ module Katello
           end
 
           repo_unit_id.each do |repo_pulp_id, unit_uuids|
-            sync_repository_associations(Repository.find_by_pulp_id(repo_pulp_id), unit_uuids, additive)
+            sync_repository_associations(Repository.find_by(:pulp_id => repo_pulp_id), unit_uuids, additive)
           end
         end
       end

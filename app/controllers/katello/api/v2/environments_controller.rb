@@ -184,7 +184,7 @@ module Katello
     end
 
     def find_content_view
-      @content_view = ContentView.readable.find_by_id(params[:content_view_id])
+      @content_view = ContentView.readable.find_by(:id => params[:content_view_id])
     end
   end
 end

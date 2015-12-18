@@ -77,7 +77,7 @@ module Katello
       end
     end
 
-    describe "update enabled_repos", :katello => true do
+    describe "update enabled_repos" do
       before do
         User.stubs(:consumer?).returns(true)
         System.stubs(:where).returns(@system)
@@ -172,12 +172,15 @@ module Katello
     end
 
     describe "hypervisors_update" do
-      it "hypervisors_update_correct_env_cv" do
+      before do
         @controller.stubs(:authorize_client_or_admin)
         @controller.stubs(:find_host).returns(@host)
         uuid = @host.subscription_facet.uuid
         User.stubs(:consumer?).returns(true)
         stub_cp_consumer_with_uuid(uuid)
+      end
+
+      it "hypervisors_update_correct_env_cv" do
         assert_sync_task(::Actions::Katello::Host::Hypervisors) do |environment, content_view, params|
           assert_equal environment.id, @host.content_facet.lifecycle_environment.id
           assert_equal content_view.id, @host.content_facet.content_view.id
@@ -188,11 +191,6 @@ module Katello
       end
 
       it "hypervisors_update_ignore_params" do
-        @controller.stubs(:authorize_client_or_admin)
-        @controller.stubs(:find_host).returns(@host)
-        uuid = @host.subscription_facet.uuid
-        User.stubs(:consumer?).returns(true)
-        stub_cp_consumer_with_uuid(uuid)
         assert_sync_task(::Actions::Katello::Host::Hypervisors) do |environment, content_view, params|
           assert_equal environment.id, @host.content_facet.lifecycle_environment.id
           assert_equal content_view.id, @host.content_facet.content_view.id

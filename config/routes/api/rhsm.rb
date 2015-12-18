@@ -6,7 +6,7 @@ class ActionDispatch::Routing::Mapper
 end
 
 Katello::Engine.routes.draw do
-  scope :api, :module => :api do
+  scope :module => :api do
     match '/rhsm' => 'v2/root#rhsm_resource_list', :via => :get
 
     scope :path => :rhsm, :module => :rhsm, :as => :rhsm do

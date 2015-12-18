@@ -1,7 +1,7 @@
 module Katello
   class ContentViewVersionComponent < Katello::Model
-    belongs_to :composite_version, :class_name => "Katello::ContentViewVersion", :inverse_of => :content_view_version_components, :inverse_of =>  :content_view_version_composites
-    belongs_to :component_version, :class_name => "Katello::ContentViewVersion", :inverse_of => :content_view_version_composites, :inverse_of => :content_view_version_components
+    belongs_to :composite_version, :class_name => "Katello::ContentViewVersion", :inverse_of => :content_view_version_components
+    belongs_to :component_version, :class_name => "Katello::ContentViewVersion", :inverse_of => :content_view_version_composites
 
     validates_lengths_from_database
     validate :content_view_types

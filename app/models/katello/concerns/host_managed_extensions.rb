@@ -12,7 +12,7 @@ module Katello
         alias_method_chain :smart_proxy_ids, :katello
 
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
-                               :dependent => :restrict, :inverse_of => :foreman_host
+                               :dependent => :restrict_with_exception, :inverse_of => :foreman_host
         belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hosts
 
         has_many :host_installed_packages, :class_name => "::Katello::HostInstalledPackage", :foreign_key => :host_id, :dependent => :destroy
