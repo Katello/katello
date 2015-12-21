@@ -4,6 +4,5 @@
 //= require "jquery.ui.tabs"
 //= require "jquery.ui.progressbar"
 //= require "jquery.ui.effect.all"
-//= require "katello/jquery.ba-bbq"
 //= require "katello/jquery.periodicalupdater"
 //= require "katello/jquery.trunk8"
