@@ -112,11 +112,6 @@ KT.common = (function() {
             }
           });
         },
-        orgSwitcherSetup : function() {
-             $('.favorite').live('click', function(e) {
-                KT.orgswitcher.checkboxChanged($(this).parent().find('.default_org'));
-            });
-        },
         rootURL : function() {
             if (root_url === undefined) {
                 root_url = KT.routes.options.prefix;
@@ -169,9 +164,10 @@ KT.common = (function() {
             }
         },
         link_hover_setup : function(shade){
-            $('a').live('mouseenter',
-                function(){ KT.common.icon_hover_change($(this), shade); }
-            ).live('mouseleave',
+            $('a').on('mouseenter',
+                function(){
+                    KT.common.icon_hover_change($(this), shade); }
+            ).on('mouseleave',
                 function(){ KT.common.icon_hover_change($(this), shade); }
             );
         }

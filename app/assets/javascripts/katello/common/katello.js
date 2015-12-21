@@ -250,8 +250,6 @@ $(document).ready(function (){
     // Add a handler for ellipsis
     $(".tipsify").tooltip({ placement: 'bottom', delay : 350 });
     $(".tipsify-left").tooltip({ placement: 'left'});
-
-    KT.common.orgSwitcherSetup();
 });
 
 /**
@@ -266,14 +264,6 @@ $(window).ready(function(){
     }).bind("ajaxComplete", function(){
       $(this).hide();
       $('body').css('cursor', 'default');
-    });
-
-    //allow all buttons with class .button to be clicked via enter or space button
-    $('.button').live('keyup', function(e){
-        if(e.which === 13 || e.which === 32)
-        {
-            $(this).click();
-        }
     });
 
     window.alert = function(message){KT.common.customAlert(message);return false;};
