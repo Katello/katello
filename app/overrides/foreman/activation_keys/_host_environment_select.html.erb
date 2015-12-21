@@ -19,13 +19,21 @@ end %>
              :class => 'form-control',  :name => cv_select_name
 end %>
 
-<% data_url = @hostgroup ? environment_selected_hostgroups_path : hostgroup_or_environment_selected_hosts_path %>
-<%= select_f f, :environment_id, Environment.all, :id, :to_label, {:include_blank => blank_or_inherit_f(f, :environment)},
-  {:label => _("Puppet Environment"), :onchange => 'update_puppetclasses(this);', 'data-url'=> data_url,
-   'data-content_puppet_match' => (@host || @hostgroup).new_record? || (@host || @hostgroup).content_and_puppet_match?,
-    :help_inline => %(<a id="reset_puppet_environment">#{_("Reset Puppet Environment to match selected Content View")}</a>).html_safe
-  } %>
+<% environment_attrs = {  :'data-content_puppet_match' => ((@host || @hostgroup).new_record? || (@host || @hostgroup).content_and_puppet_match?),
+                          :help_inline => %(<a id="reset_puppet_environment">#{_("Reset Puppet Environment to match selected Content View")}</a>).html_safe }  %>
 
+<% if @host %>
+  <%= select_f f, :environment_id, Environment.with_taxonomy_scope_override(@location,@organization).order(:name), :id, :to_label, { :include_blank => true,
+       :disable_button => _(HostsAndHostgroupsHelper::INHERIT_TEXT),
+       :disable_button_enabled => inherited_by_default?(:environment_id, @host || @hostgroup),
+       :user_set => params[:host] && params[:host][:environment_id]
+     },
+     {:onchange => 'update_puppetclasses(this)', :'data-url' => hostgroup_or_environment_selected_hosts_path,
+      :'data-host-id' => @host.id, :help_inline => :indicator }.merge(environment_attrs) %>
+<% else %>
+  <%= select_f f, :environment_id, Environment.all, :id, :to_label, {:include_blank => blank_or_inherit_f(f, :environment)},
+    {:label => _("Environment"), :onchange => 'update_puppetclasses(this);', :"data-url" => environment_selected_hostgroups_path}.merge(environment_attrs) %>
+<%end %>
 
 <% proxies = SmartProxy.with_content.unscoped.with_taxonomy_scope(@location,@organization,:path_ids) %>
 <% if proxies.count > 0 %>
