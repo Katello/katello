@@ -24,11 +24,6 @@ module Katello
       assert content_view.label.present?
     end
 
-    def test_create
-      content_view = FactoryGirl.build(:katello_content_view)
-      assert content_view.save
-    end
-
     def test_create_with_name
       content_view = FactoryGirl.build(:katello_content_view)
       content_view.name = ('a' * 256)
