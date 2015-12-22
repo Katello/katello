@@ -83,7 +83,7 @@ module Katello
     end
 
     def test_katello_agent_installed
-      package = Glue::Pulp::SimplePackage.new(:name => "katello-agent")
+      package = Katello::Pulp::SimplePackage.new(:name => "katello-agent")
       @simple_server.stubs(:simple_packages).returns([package])
       assert @simple_server.katello_agent_installed?
 
