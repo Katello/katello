@@ -4,7 +4,10 @@ module Katello
 
     validates_lengths_from_database :except => [:label]
     before_destroy :assert_deletable
-    before_create :downcase_pulp_id
+
+    include Concerns::RepositoryTypes::YumExtensions
+    include Concerns::RepositoryTypes::PuppetExtensions
+    include Concerns::RepositoryTypes::DockerExtensions
 
     include ForemanTasks::Concerns::ActionSubject
     include Glue::Candlepin::Content if (SETTINGS[:katello][:use_cp] && SETTINGS[:katello][:use_pulp])
@@ -16,10 +19,7 @@ module Katello
     include Ext::LabelFromName
     include Katello::Engine.routes.url_helpers
 
-    YUM_TYPE = 'yum'
     FILE_TYPE = 'file'
-    PUPPET_TYPE = 'puppet'
-    DOCKER_TYPE = 'docker'
     TYPES = [YUM_TYPE, FILE_TYPE, PUPPET_TYPE, DOCKER_TYPE]
     SELECTABLE_TYPES = [YUM_TYPE, PUPPET_TYPE, DOCKER_TYPE]
     CHECKSUM_TYPES = %w(sha1 sha256)
@@ -36,27 +36,11 @@ module Katello
                                          :dependent => :destroy
     has_many :content_views, :through => :content_view_repositories
 
-    has_many :repository_errata, :class_name => "Katello::RepositoryErratum", :dependent => :destroy
-    has_many :errata, :through => :repository_errata
-
-    has_many :repository_rpms, :class_name => "Katello::RepositoryRpm", :dependent => :destroy
-    has_many :rpms, :through => :repository_rpms
-
-    has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :destroy
-    has_many :puppet_modules, :through => :repository_puppet_modules
-
-    has_many :repository_docker_images, :class_name => "Katello::RepositoryDockerImage", :dependent => :destroy
-    has_many :docker_images, :through => :repository_docker_images
-    has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag"
-
     has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy
     has_many :systems, :through => :system_repositories
 
     has_many :content_facet_repositories, :class_name => "Katello::ContentFacetRepository", :dependent => :destroy
     has_many :content_facets, :through => :content_facet_repositories
-
-    has_many :repository_package_groups, :class_name => "Katello::RepositoryPackageGroup", :dependent => :destroy
-    has_many :package_groups, :through => :repository_package_groups
 
     # rubocop:disable HasAndBelongsToMany
     # TODO: change this into has_many :through association
@@ -68,10 +52,6 @@ module Katello
     validates :product_id, :presence => true
     validates :pulp_id, :presence => true, :uniqueness => true, :if => proc { |r| r.name.present? }
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES, :allow_blank => true}
-    validates :docker_upstream_name, :allow_blank => true, :if => :docker?, :format => {
-      :with => /\A([a-z0-9\-_]{4,30}\/)?[a-z0-9\-_\.]{3,30}\z/,
-      :message => (_("must be a valid docker name"))
-    }
 
     #validates :content_id, :presence => true #add back after fixing add_repo orchestration
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
@@ -86,17 +66,11 @@ module Katello
       :allow_blank => false,
       :message => (_("must be one of the following: %s") % TYPES.join(', '))
     }
-    validate :ensure_valid_docker_attributes, :if => :docker?
-    validate :ensure_docker_repo_unprotected, :if => :docker?
 
     scope :has_url, -> { where('url IS NOT NULL') }
     scope :in_default_view, -> { joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => true) }
 
-    scope :yum_type, -> { where(:content_type => YUM_TYPE) }
     scope :file_type, -> { where(:content_type => FILE_TYPE) }
-    scope :puppet_type, -> { where(:content_type => PUPPET_TYPE) }
-    scope :docker_type, -> { where(:content_type => DOCKER_TYPE) }
-    scope :non_puppet, -> { where("content_type != ?", PUPPET_TYPE) }
     scope :non_archived, -> { where('environment_id is not NULL') }
     scope :archived, -> { where('environment_id is NULL') }
 
@@ -140,20 +114,8 @@ module Katello
         .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => views.map(&:id))
     end
 
-    def puppet?
-      content_type == PUPPET_TYPE
-    end
-
-    def docker?
-      content_type == DOCKER_TYPE
-    end
-
     def archive?
       self.environment.nil?
-    end
-
-    def yum?
-      content_type == YUM_TYPE
     end
 
     def file?
@@ -277,22 +239,6 @@ module Katello
       end
     end
 
-    def self.clone_docker_repo_path(options)
-      repo = options[:repository]
-      org = repo.organization.label.downcase
-      if options[:environment]
-        cve = ContentViewEnvironment.where(:environment_id => options[:environment],
-                                           :content_view_id => options[:content_view]).first
-        view = repo.content_view.label
-        product = repo.product.label
-        env, _ = cve.label.split('/')
-        "#{org}-#{env.downcase}-#{view}-#{product}-#{repo.label}"
-      else
-        content_path = repo.relative_path.gsub("#{org}-", '')
-        "#{org}-#{options[:content_view].label}-#{options[:version].version}-#{content_path}"
-      end
-    end
-
     def self.repo_id(product_label, repo_label, env_label, organization_label,
                      view_label, version, docker_repo_name = nil)
       actual_repo_id = [organization_label,
@@ -311,27 +257,6 @@ module Katello
       Repository.repo_id(self.product.label, self.label, env.try(:label),
                          organization.label, content_view.label,
                          version)
-    end
-
-    def packages_without_errata
-      if errata_filenames.any?
-        self.rpms.where("#{Rpm.table_name}.filename NOT in (?)", errata_filenames)
-      else
-        self.rpms
-      end
-    end
-
-    def self.with_errata(errata)
-      joins(:repository_errata).where("#{Katello::RepositoryErratum.table_name}.erratum_id" => errata)
-    end
-
-    def errata_filenames
-      Katello::ErratumPackage.joins(:erratum => :repository_errata).
-          where("#{RepositoryErratum.table_name}.repository_id" => self.id).pluck("#{ Katello::ErratumPackage.table_name}.filename")
-    end
-
-    def container_repository_name
-      pulp_id if docker?
     end
 
     # TODO: break up method
@@ -425,18 +350,6 @@ module Katello
 
     def url?
       url.present?
-    end
-
-    def name_conflicts
-      if puppet?
-        modules = PuppetModule.search("*", :repoids => self.pulp_id,
-                                           :fields => [:name],
-                                           :page_size => self.puppet_modules.count)
-
-        modules.map(&:name).group_by(&:to_s).select { |_, v| v.size > 1 }.keys
-      else
-        []
-      end
     end
 
     def related_resources
@@ -550,39 +463,6 @@ module Katello
         self.puppet_modules
       else
         fail "Content type not supported for removal"
-      end
-    end
-
-    def downcase_pulp_id
-      # Docker doesn't support uppercase letters in repository names.  Since the pulp_id
-      # is currently being used for the name, it will be downcased for this content type.
-      if self.content_type == Repository::DOCKER_TYPE
-        self.pulp_id = self.pulp_id.downcase
-      end
-    end
-
-    def ensure_valid_docker_attributes
-      if url.blank? != docker_upstream_name.blank?
-        field = url.blank? ? :url : :docker_upstream_name
-        errors.add(field, N_("cannot be blank. Either provide all or no sync information."))
-        errors.add(:base, N_("Repository URL or Upstream Name is empty. Both are required for syncing from the upstream."))
-      end
-    end
-
-    def ensure_docker_repo_unprotected
-      unless unprotected
-        errors.add(:base, N_("Docker Repositories are not protected at this time. " \
-                             "They need to be published via http to be available to containers."))
-      end
-    end
-
-    def remove_docker_content(images)
-      self.docker_tags.where(:docker_image_id => images.map(&:id)).destroy_all
-      self.docker_images -= images
-
-      # destroy any orphan docker images
-      images.reload.each do |image|
-        image.destroy if image.repositories.empty?
       end
     end
   end
