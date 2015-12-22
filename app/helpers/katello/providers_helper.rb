@@ -79,7 +79,7 @@ module Katello
     end
 
     def name_from_url(provider, url)
-      url.sub(provider.discovery_url, '').gsub('/', ' ').strip
+      url.sub(provider.discovery_url, '').tr('/', ' ').strip
     end
 
     def label_from_url(provider, url)

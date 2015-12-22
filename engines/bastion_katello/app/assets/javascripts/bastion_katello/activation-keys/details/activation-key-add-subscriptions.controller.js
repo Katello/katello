@@ -54,8 +54,9 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddSubscripti
                 $scope.isAdding = false;
                 $scope.contentNutupane.refresh();
             }, function (response) {
-                $scope.$parent.errorMessages = response.data.displayMessage;
+                $scope.errorMessages.push(response.data.displayMessage);
                 $scope.isAdding = false;
+                $scope.contentNutupane.refresh();
             });
         };
 

@@ -1,6 +1,6 @@
-# rubocop:disable SymbolName
 module Katello
   class Api::V2::SystemsController < Api::V2::ApiController
+    include Katello::Concerns::FilteredAutoCompleteSearch
     respond_to :json
 
     wrap_parameters :include => (System.attribute_names + %w(type autoheal facts guest_ids host_collection_ids installed_products content_view environment))
@@ -12,7 +12,8 @@ module Katello
                                           :pools, :enabled_repos, :releases,
                                           :available_host_collections,
                                           :refresh_subscriptions, :tasks, :content_override,
-                                          :product_content, :events]
+                                          :product_content, :events, :subscriptions,
+                                          :add_subscriptions]
     before_filter :find_environment, :only => [:index, :report]
     before_filter :find_optional_organization, :only => [:create, :index, :report]
     before_filter :find_host_collection, :only => [:index]
@@ -20,7 +21,6 @@ module Katello
 
     before_filter :find_environment_and_content_view, :only => [:create]
     before_filter :find_content_view, :only => [:create, :update]
-    before_filter :load_search_service, :only => [:index, :available_host_collections, :tasks]
     before_filter :authorize_environment, :only => [:create]
 
     def organization_id_keys
@@ -56,41 +56,36 @@ module Katello
     param :errata_ids, Array, :desc => N_("Filter by systems that need any one of multiple Errata by uuid")
     param :erratum_restrict_installable, String, :desc => N_("Return only systems where the Erratum specified by erratum_id or errata_ids is available to systems (default False)")
     param :erratum_restrict_non_installable, String, :desc => N_("Return only systems where the Erratum specified by erratum_id or errata_ids is unavailable to systems (default False)")
+    param :available_for, String, :desc => N_("Return content hosts that are able to be attached to a specified object such as 'host_collection'")
     param_group :search, Api::V2::ApiController
     def index
+      respond(:collection => scoped_search(index_relation.uniq, :name, :asc))
+    end
+
+    def index_relation
       if params[:erratum_id] || params[:errata_ids]
         errata_ids = params.fetch(:errata_ids, [])
-        errata_ids << params[:erratum_id] if params[:erratum_id]
-        systems = systems_by_errata(errata_ids, params[:erratum_restrict_installable],
+        collection = systems_by_errata(errata_ids, params[:erratum_restrict_installable],
             params[:erratum_restrict_non_installable])
       else
-        systems = System.readable
+        collection = System.readable
       end
 
-      systems = systems.where(:content_view_id => params[:content_view_id]) if params[:content_view_id]
-      filters = [{:terms => {:uuid => systems.pluck("#{Katello::System.table_name}.uuid").compact}}]
-      environment_ids = params[:organization_id] ? Organization.find(params[:organization_id]).kt_environments.pluck(:id) : []
-      environment_ids = environment_ids.empty? ? params[:environment_id] : environment_ids & [params[:environment_id].to_i] if params[:environment_id]
-      unless environment_ids.empty?
-        filters << {:terms => {:environment_id =>  environment_ids}}
-      end
-      if params[:host_collection_id]
-        filters << {:terms => {:host_collection_ids => [params[:host_collection_id]] }}
-      end
-      if params[:activation_key_id]
-        filters << {:terms => {:activation_key_ids => [params[:activation_key_id]] }}
+      if params[:available_for] && params[:available_for] == 'host_collection'
+        system_ids = HostCollection.find(params[:host_collection_id]).systems.pluck(:id)
+        collection = collection.where("id NOT IN (?)", system_ids) unless system_ids.empty?
+        return collection
       end
 
-      filters << {:terms => {:uuid => System.all_by_pool_uuid(params['pool_id']) }} if params['pool_id']
-      filters << {:terms => {:uuid => [params['uuid']] }} if params['uuid']
-      filters << {:term => {:name => params['name'] }} if params['name']
-
-      options = {
-        :filters       => filters,
-        :load_records? => true,
-        :includes => [:content_view, :activation_keys, :environment]
-      }
-      respond_for_index(:collection => item_search(System, params, options))
+      collection = collection.where(:content_view_id => params[:content_view_id]) if params[:content_view_id]
+      collection = collection.where(:id => Organization.find(params[:organization_id]).systems.map(&:id)) if params[:organization_id]
+      collection = collection.where(:environment_id => params[:environment_id]) if params[:environment_id]
+      collection = collection.where(:id => HostCollection.find(params[:host_collection_id]).systems) if params[:host_collection_id]
+      collection = collection.where(:id => Katello::ActivationKey.find(params[:activation_key_id]).systems) if params[:activation_key_id]
+      collection = collection.where(:id => Pool.find(params['pool_id']).systems.map(&:id)) if params['pool_id']
+      collection = collection.where(:uuid => params['uuid']) if params['uuid']
+      collection = collection.where(:name => params['name']) if params['name']
+      collection
     end
 
     api :POST, "/systems", N_("Register a content host"), :deprecated => true
@@ -113,10 +108,14 @@ module Katello
     param :content_view_id, String, :desc => N_("Specify the content view")
     param :host_collection_ids, Array, :desc => N_("Specify the host collections as an array")
     def create
-      @system = System.new(system_params(params).merge(:environment  => @environment,
-                                                       :content_view => @content_view))
-      sync_task(::Actions::Katello::System::Create, @system)
-      @system.reload
+      rhsm_params = system_params(params)
+      rhsm_params[:facts] ||= {}
+      rhsm_params[:facts]['network.hostname'] ||= rhsm_params[:name]
+      content_view_environment = ContentViewEnvironment.where(:content_view_id => @content_view, :environment_id => @environment).first
+      host = Katello::Host::SubscriptionFacet.new_host_from_rhsm_params(rhsm_params, @organization, Location.default_location)
+
+      sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, content_view_environment)
+      @system = host.reload.content_host
       respond_for_create
     end
 
@@ -155,23 +154,16 @@ module Katello
     param :name, String, :desc => N_("host collection name to filter by")
     def available_host_collections
       system_org_id = @system.environment.organization_id
-      pluck_val = "#{Katello::HostCollection.table_name}.id"
-      filters = [:terms => {:id => HostCollection.readable.where(:organization_id => system_org_id).pluck(pluck_val) - @system.host_collection_ids}]
-      filters << {:term => {:name => params[:name]}} if params[:name]
 
-      options = {
-        :filters       => filters,
-        :load_records? => true
-      }
+      collection = HostCollection.readable.where(:organization_id => system_org_id).where("id not in (?)", @system.host_collection_ids)
 
-      host_collections = item_search(HostCollection, params, options)
-      respond_for_index(:collection => host_collections)
+      respond_for_index(:collection => scoped_search(collection, :name, :desc, :resource_class => HostCollection))
     end
 
     api :DELETE, "/systems/:id", N_("Unregister a content host"), :deprecated => true
     param :id, String, :desc => N_("UUID of the content host"), :required => true
     def destroy
-      sync_task(::Actions::Katello::System::Destroy, @system)
+      sync_task(::Actions::Katello::System::Destroy, @system, :destroy_object => false)
       respond :message => _("Deleted content host '%s'") % params[:id], :status => 204
     end
 
@@ -194,10 +186,9 @@ module Katello
       respond_for_show(:resource => @system)
     end
 
-    # TODO: break this method up
     api :GET, "/environments/:environment_id/systems/report", N_("Get content host reports for the environment"), :deprecated => true
     api :GET, "/organizations/:organization_id/systems/report", N_("Get content host reports for the organization"), :deprecated => true
-    def report # rubocop:disable MethodLength
+    def report
       data = @environment.nil? ? @organization.systems.readable : @environment.systems.readable
 
       data = data.flatten.map do |r|
@@ -241,6 +232,37 @@ module Katello
                    :subtotal => cp_pools.size }
 
       respond_for_index :collection => response
+    end
+
+    api :GET, "/systems/:id/subscriptions", N_("List a content host's subscriptions"), :deprecated => true
+    param :id, String, :desc => N_("UUID of the content host"), :required => true
+    def subscriptions
+      subscriptions =  @system.entitlements.map { |entitlement| SystemSubscriptionPresenter.new(entitlement) }
+      collection = subscriptions.map(&:subscription)
+      @collection = { :results => collection,
+                      :total => collection.count,
+                      :page => 1,
+                      :per_page => collection.count,
+                      :subtotal => collection.count }
+    end
+
+    api :POST, "/systems/:id/subscriptions", N_("Add a subscription to a content host"), :deprecated => true
+    param :subscription_id, String, :desc => N_("Subscription Pool uuid"), :required => false
+    param :id, String, :desc => N_("UUID of a content host"), :required => false
+    param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => false
+    param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
+      param :id, String, :desc => N_("Subscription Pool uuid"), :required => true
+      param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
+    end
+    def add_subscriptions
+      if params[:subscriptions]
+        params[:subscriptions].each do |sub_params|
+          attach_subscription(@system, sub_params[:id], sub_params[:quantity])
+        end
+      elsif params[:subscription_id] && params.key?(:quantity)
+        attach_subscription(@system, params[:subscription_id], params[:quantity])
+      end
+      respond_for_show(:resource => @system)
     end
 
     api :GET, "/systems/:id/releases", N_("Show releases available for the content host"), :deprecated => true
@@ -293,6 +315,11 @@ module Katello
       respond_for_index :collection => @events
     end
 
+    def attach_subscription(system, pool_id, quantity)
+      subscription = Pool.find(pool_id)
+      async_task(::Actions::Katello::Subscription::Subscribe, system.id, subscription.cp_id, quantity)
+    end
+
     private
 
     def validate_content_overrides(content_params)
@@ -342,7 +369,7 @@ module Katello
       # equivalent of "environment_id"-"content_view_id".
       if params[:environment_id].is_a? String
         if !params.key?(:content_view_id)
-          cve = ContentViewEnvironment.find_by_cp_id!(params[:environment_id])
+          cve = ContentViewEnvironment.find_by!(:cp_id => params[:environment_id])
           @environment = cve.environment
           @organization = @environment.organization
           @content_view = cve.content_view
@@ -379,8 +406,7 @@ module Katello
                                                      :guest_ids, :host_collection_ids => [])
 
       system_params[:facts] = param_hash[:system][:facts].permit! if param_hash[:system][:facts]
-      system_params[:cp_type] = param_hash[:type] ? param_hash[:type] : ::Katello::System::DEFAULT_CP_TYPE
-      system_params.delete(:type) if param_hash[:system].key?(:type)
+      system_params[:type] = param_hash[:type] ? param_hash[:type] : ::Katello::Host::SubscriptionFacet::DEFAULT_TYPE
 
       { :guest_ids => :guestIds,
         :installed_products => :installedProducts,
@@ -411,7 +437,7 @@ module Katello
       organization ||= @system.organization if @system
       organization ||= @environment.organization if @environment
       if cv_id && organization
-        @content_view = ContentView.readable.find_by_id(cv_id)
+        @content_view = ContentView.readable.find_by(:id => cv_id)
         fail HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
       else
         @content_view = nil

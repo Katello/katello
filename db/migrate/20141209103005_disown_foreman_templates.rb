@@ -1,6 +1,10 @@
 class DisownForemanTemplates < ActiveRecord::Migration
   class FakeConfigTemplate < ActiveRecord::Base
-    self.table_name = 'config_templates'
+    if ActiveRecord::Base.connection.table_exists?('config_templates')
+      self.table_name = 'config_templates'
+    else
+      self.table_name = 'templates'
+    end
   end
 
   def up
@@ -17,7 +21,7 @@ class DisownForemanTemplates < ActiveRecord::Migration
     templates = ["puppet.conf", "freeipa_register", "Kickstart default iPXE", "Kickstart default PXELinux", "PXELinux global default"]
 
     templates.each do |template|
-      if (template = FakeConfigTemplate.find_by_name(template))
+      if (template = FakeConfigTemplate.find_by(:name => template))
         template.update_attributes(attribute_hash)
       end
     end

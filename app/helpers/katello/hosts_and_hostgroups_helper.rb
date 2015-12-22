@@ -18,12 +18,29 @@ module Katello
       end
     end
 
+    def content_view(host)
+      if host.is_a?(Hostgroup)
+        host.content_view
+      else
+        host.content_facet.try(:content_view)
+      end
+    end
+
+    def lifecycle_environment(host)
+      if host.is_a?(Hostgroup)
+        host.lifecycle_environment
+      else
+        host.content_facet.try(:lifecycle_environment)
+      end
+    end
+
     def lifecycle_environment_options(host, options = {})
       include_blank = options.fetch(:include_blank, nil)
       if include_blank == true #check for true specifically
         include_blank = '<option></option>'
       end
-      selected_id = host[:lifecycle_environment_id]
+
+      selected_id = lifecycle_environment(host).try(:id)
       orgs = Organization.current ? [Organization.current] : Organization.my_organizations
       all_options = []
       orgs.each do |org|
@@ -51,14 +68,17 @@ module Katello
         include_blank = '<option></option>'
       end
 
+      content_view = content_view(host)
+      lifecycle_environment = lifecycle_environment(host)
+
       views = []
-      if host.lifecycle_environment
-        views = Katello::ContentView.in_environment(host.lifecycle_environment)
-      elsif host.content_view
-        views = [host.content_view]
+      if lifecycle_environment
+        views = Katello::ContentView.in_environment(lifecycle_environment)
+      elsif content_view
+        views = [content_view]
       end
       view_options = views.map do |view|
-        selected = host[:content_view_id] == view.id ? 'selected' : ''
+        selected = content_view.try(:id) == view.id ? 'selected' : ''
         %(<option #{selected} value="#{view.id}">#{h(view.name)}</option>)
       end
       view_options = view_options.join

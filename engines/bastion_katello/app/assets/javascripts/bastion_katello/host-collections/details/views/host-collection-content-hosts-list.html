@@ -1,82 +1,53 @@
 <span page-title ng-model="hostCollection">{{ 'Content Hosts for: ' | translate }} {{ hostCollection.name }}</span>
 
-<section class="nutupane-sub-section" >
+<div data-extend-template="layouts/details-nutupane.html">
 
-  <div class="row">
+  <div data-block="messages"></div>
 
-    <div class="col-sm-3">
-      <div class="input-group input-group">
-        <input type="text"
-               class="form-control"
-               placeholder="{{ 'Search...' | translate }}"
-               ng-model="contentHostsTable.searchTerm"
-               bst-on-enter="contentHostsTable.search(contentHostsTable.searchTerm)"/>
-        <span class="input-group-btn">
-          <button ng-click="contentHostsTable.search(contentHostsTable.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
-        </span>
-      </div>
-    </div>
-
-    <div class="col-sm-3 nutupane-info">
-      <span translate>Showing {{ contentHostsTable.rows.length }} of {{ contentHostsTable.resource.subtotal }} ({{ contentHostsTable.resource.total }} Total) Content Hosts</span>
-    </div>
-
-    <div class="fr">
-      <div class="fl nutupane-info">
-        <span translate>{{ contentHostsTable.numSelected }} Selected</span>
-      </div>
-
-      <div ng-hide="denied('edit_content_hosts')" class="nutupane-actions fr">
-         <button class="btn btn-primary"
-                 translate
-                 ng-disabled="contentHostsTable.getSelected().length == 0 || isRemoving"
-                 ng-click="removeSelected()">
-           Remove Selected
-         </button>
-      </div>
+  <div data-block="actions">
+    <div ng-hide="denied('edit_content_hosts')" class="nutupane-actions fr">
+       <button class="btn btn-primary"
+               translate
+               ng-disabled="detailsTable.getSelected().length == 0 || isRemoving"
+               ng-click="removeSelected()">
+         Remove Selected
+       </button>
     </div>
   </div>
 
-  <div bst-table="contentHostsTable" class="nutupane">
-    <div bst-container-scroll data="contentHostsTable.rows">
-      <div infinite-scroll="contentHostsTable.nextPage()" infinite-scroll-container="'.nutupane-sub-section .container-scroll-wrapper'">
+  <span data-block="no-rows-message" translate>
+    You currently don't have any Content Hosts in this Host Group, you can add Content Hosts after selecting the 'Add' tab.
+  </span>
 
-        <div class="loading-mask" ng-show="contentHostsTable.working && contentHostsTable.rows.length == 0">
-          <i class="fa fa-spinner fa-spin"></i>
-          {{ "Loading..." | translate }}
-        </div>
+  <div data-block="table">
+    <table ng-class="{'table-mask': detailsTable.working}"
+           class="table table-full table-striped"
+           ng-show="detailsTable.rows.length > 0">
+      <thead>
+        <tr bst-table-head row-select>
+          <th bst-table-column="name" translate>Name</th>
+          <th bst-table-column="environment" translate>Environment</th>
+          <th bst-table-column="content_view" translate>Content View</th>
+        </tr>
+      </thead>
 
-        <p bst-alert="info" ng-show="contentHostsTable.rows.length === 0 && !contentHostsTable.working">
-          <span translate>
-            You currently don't have any Content Hosts in this Host Group, you can add Content Hosts after selecting the 'Add' tab.
-          </span>
-        </p>
+      <tbody>
+        <tr bst-table-row ng-repeat="contentHost in detailsTable.rows">
+          <td class="row-select">
+            <input type="checkbox"
+                   ng-model="contentHost.selected"
+                   ng-change="itemSelected(contentHost)"/>
+          </td>
+          <td bst-table-cell >
+            <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
+              {{ contentHost.name}}
+            </a>
+          </td>
+          <td bst-table-cell >{{ contentHost.environment.name}}</td>
+          <td bst-table-cell >{{ contentHost.content_view.name}}</td>
+        </tr>
 
-        <table ng-class="{'table-mask': contentHostsTable.working}"
-               class="table table-full table-striped"
-               ng-show="contentHostsTable.rows.length > 0">
-          <thead>
-            <tr bst-table-head row-select>
-              <th bst-table-column="name" translate>Name</th>
-              <th bst-table-column="environment" translate>Environment</th>
-              <th bst-table-column="content_view" translate>Content View</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr bst-table-row ng-repeat="contentHost in contentHostsTable.rows" row-select="contentHost">
-              <td bst-table-cell >
-                <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
-                  {{ contentHost.name}}
-                </a>
-              </td>
-              <td bst-table-cell >{{ contentHost.environment.name}}</td>
-              <td bst-table-cell >{{ contentHost.content_view.name}}</td>
-            </tr>
-
-          </tbody>
-        </table>
-      </div>
-    </div>
+      </tbody>
+    </table>
   </div>
-</section>
+</div>

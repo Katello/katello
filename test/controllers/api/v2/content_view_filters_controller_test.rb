@@ -18,9 +18,6 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      @request.env['HTTP_ACCEPT'] = 'application/json'
-      @request.env['CONTENT_TYPE'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       Repository.any_instance.stubs(:last_sync).returns(Time.now.asctime)
       ::Katello::Erratum.any_instance.stubs(:repositories).returns([])
       models
@@ -78,7 +75,8 @@ module Katello
       post :create, :content_view_id => @content_view.id, :name => "My Filter", :type => "rpm"
 
       assert_response :success
-      assert_template %w(katello/api/v2/content_view_filters/show)
+      assert_template :layout => 'katello/api/v2/layouts/resource'
+      assert_template 'katello/api/v2/common/create'
       assert_includes @content_view.reload.filters.map(&:name), "My Filter"
     end
 

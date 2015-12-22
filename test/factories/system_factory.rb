@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :katello_system, :class => Katello::System do
     cp_type "system"
     facts(:foo => 'bar')
+    association :foreman_host, :factory => :host, :strategy => :build
 
     trait :alabama do
       name 'Alabama'

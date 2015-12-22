@@ -119,7 +119,7 @@ module Katello
       assert_template 'katello/api/v2/common/async'
     end
 
-    def test_promote_out_of_sequence
+    def test_bad_promote_out_of_sequence
       version = @library_dev_staging_view.versions.first
       @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @beta, false).raises(::Katello::HttpErrors::BadRequest)
       post :promote, :id => version.id, :environment_id => @beta.id

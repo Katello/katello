@@ -1,4 +1,3 @@
-# rubocop:disable AccessModifierIndentation
 module Katello
   module Concerns
     module MediumExtensions
@@ -17,7 +16,7 @@ module Katello
           medium_path = ::Medium.installation_media_path(repo.uri)
 
           if distribution = repo.distribution_bootable?
-            return if ::Medium.find_by_path(medium_path)
+            return if ::Medium.find_by(:path => medium_path)
 
             os = ::Redhat.find_or_create_operating_system(repo)
 
@@ -31,7 +30,7 @@ module Katello
             os.save!
 
           else
-            if medium = ::Medium.find_by_path(medium_path)
+            if medium = ::Medium.find_by(:path => medium_path)
               medium.destroy
             end
           end
@@ -49,7 +48,7 @@ module Katello
 
         def find_medium(repo)
           path = ::Medium.installation_media_path(repo.uri)
-          ::Medium.find_by_path(path)
+          ::Medium.find_by(:path => path)
         end
 
         def construct_name(repo, _distribution)

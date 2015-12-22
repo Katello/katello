@@ -53,10 +53,11 @@ module Actions
           end
 
           def size_summary
+            helper = Object.new.extend(ActionView::Helpers::NumberHelper)
             if content_details[:state] == "IN_PROGRESS"
-              "#{number_to_human_size(size_done)}/#{number_to_human_size(size_total)}"
+              "#{helper.number_to_human_size(size_done)}/#{helper.number_to_human_size(size_total)}"
             else
-              number_to_human_size(size_total)
+              helper.number_to_human_size(size_total)
             end
           end
 

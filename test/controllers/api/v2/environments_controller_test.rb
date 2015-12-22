@@ -22,8 +22,6 @@ module Katello
     def setup
       setup_controller_defaults_api
       login_user(User.find(users(:admin)))
-      @request.env['HTTP_ACCEPT'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       Katello::PuppetModule.stubs(:module_count).returns(0)
       models
       permissions
@@ -141,7 +139,8 @@ module Katello
       get :paths, :organization_id => @organization.id
 
       assert_response :success
-      assert_template %w(api/v2/environments/paths api/v2/common/metadata)
+      assert_template layout: 'katello/api/v2/layouts/collection'
+      assert_template 'api/v2/environments/paths'
     end
 
     def test_paths_protected

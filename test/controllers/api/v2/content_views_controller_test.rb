@@ -25,9 +25,6 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      @request.env['HTTP_ACCEPT'] = 'application/json'
-      @request.env['CONTENT_TYPE'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       ContentView.any_instance.stubs(:reindex_on_association_change).returns(true)
       ContentViewVersion.any_instance.stubs(:package_count).returns(0)
       ContentViewVersion.any_instance.stubs(:errata_count).returns(0)
@@ -75,7 +72,8 @@ module Katello
         :organization_id => @organization.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/content_views/show)
+      assert_template :layout => 'katello/api/v2/layouts/resource'
+      assert_template 'katello/api/v2/common/create'
     end
 
     def test_create_fail_without_organization_id
@@ -126,7 +124,8 @@ module Katello
       put :update, :id => @library_dev_staging_view.id, :content_view => params
 
       assert_response :success
-      assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
+      assert_template layout: 'katello/api/v2/layouts/resource'
+      assert_template 'katello/api/v2/common/update'
     end
 
     def test_update_repositories
@@ -140,7 +139,8 @@ module Katello
       put :update, :id => @library_dev_staging_view.id, :content_view => params
 
       assert_response :success
-      assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
+      assert_template layout: 'katello/api/v2/layouts/resource'
+      assert_template 'katello/api/v2/common/update'
     end
 
     def test_update_components
@@ -155,23 +155,8 @@ module Katello
       put :update, :id => composite.id, :content_view => params
 
       assert_response :success
-      assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
-    end
-
-    def test_history
-      get :history, :id => @library_dev_staging_view
-
-      assert_response :success
-      assert_template 'katello/api/v2/content_views/../content_view_histories/index'
-    end
-
-    def test_history_protected
-      allowed_perms = [@view_permission]
-      denied_perms = [@create_permission, @update_permission, :destroy_content_views]
-
-      assert_protected_action(:history, allowed_perms, denied_perms) do
-        get :history, :id => @library_dev_staging_view.id
-      end
+      assert_template layout: 'katello/api/v2/layouts/resource'
+      assert_template 'katello/api/v2/common/update'
     end
 
     def test_update_protected
@@ -200,8 +185,6 @@ module Katello
     end
 
     def test_available_puppet_module_names
-      Support::SearchService::FakeSearchService.any_instance.stubs(:facets).returns('facet_search' => {'terms' => []})
-
       get :available_puppet_module_names, :id => @library_dev_staging_view.id
 
       assert_response :success
@@ -249,7 +232,7 @@ module Katello
       post :copy, :id => @library_dev_staging_view.id, :name => "My New View"
 
       assert_response :success
-      assert_template %w(katello/api/v2/content_views/copy)
+      assert_template "katello/api/v2/content_views/copy"
     end
 
     def test_copy_protected

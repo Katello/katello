@@ -88,8 +88,7 @@ module Katello
       # We need this so that we can return
       # empty search results on an invalid query
       # Basically this is a empty array with a total
-      # method. We could ve user Tire::Result:Collection
-      # But that class is way more involved
+      # method.
       def self.array_with_total(a = [])
         def a.total
           size

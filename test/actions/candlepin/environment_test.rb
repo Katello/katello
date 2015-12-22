@@ -10,20 +10,20 @@ class Actions::Candlepin::Environment::CreateTest < ActiveSupport::TestCase
 
   let(:action_class) { ::Actions::Candlepin::Environment::Create }
   let(:label) { "foo" }
-  let(:name) { "boo" }
+  let(:env_name) { "boo" }
   let(:cp_id) { "foo_boo" }
   let(:description) { "great gatsby" }
 
   let(:planned_action) do
     create_and_plan_action(action_class,
                            organization_label: label,
-                           name: name,
+                           name: env_name,
                            cp_id: cp_id,
                            description: description)
   end
 
   it 'runs' do
-    ::Katello::Resources::Candlepin::Environment.expects(:create).with(label, cp_id, name, description)
+    ::Katello::Resources::Candlepin::Environment.expects(:create).with(label, cp_id, env_name, description)
     run_action planned_action
   end
 end

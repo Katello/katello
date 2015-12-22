@@ -15,7 +15,7 @@ class Actions::Candlepin::Consumer::CreateTest < ActiveSupport::TestCase
     end
 
     it 'runs' do
-      ::Katello::Resources::Candlepin::Consumer.expects(:create)
+      ::Katello::Resources::Candlepin::Consumer.expects(:create).returns({})
       run_action planned_action
     end
   end

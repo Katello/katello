@@ -1,6 +1,9 @@
 module Katello
   class Pool < Katello::Model
     include Katello::Authorization::Pool
+
+    attr_accessor :quantity_attached
+
     belongs_to :subscription, :inverse_of => :pools, :class_name => "Katello::Subscription"
 
     has_many :activation_keys, :through => :pool_activation_keys, :class_name => "Katello::ActivationKey"
@@ -38,9 +41,6 @@ module Katello
       self.remote_data.merge(:cp_id => self.cp_id)
     end
 
-    # Convert active, expiring_soon, and recently_expired into elasticsearch
-    # filters and move implementation into ES pool module if performance becomes
-    # an issue (though I doubt it will--just sayin')
     def self.active(subscriptions)
       subscriptions.select { |s| s.active }
     end

@@ -31,7 +31,7 @@ module Actions
         end
 
         def finalize
-          cv_env = ::Katello::ContentViewEnvironment.find_by_id(input[:id])
+          cv_env = ::Katello::ContentViewEnvironment.find_by(:id => input[:id])
           if cv_env.nil?
             output[:response] = "Content view with ID #{input[:id]} is (probably) already deleted"
           else

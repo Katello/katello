@@ -6,6 +6,10 @@ module ::Actions::Katello::ContentViewVersion
     include Support::Actions::Fixtures
     include Support::Actions::RemoteAction
     include FactoryGirl::Syntax::Methods
+
+    before do
+      set_user
+    end
   end
 
   class IncrementalUpdateTest < TestBase

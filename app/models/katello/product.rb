@@ -11,14 +11,11 @@ module Katello
 
     include Ext::LabelFromName
 
-    attr_accessible :name, :label, :description, :provider_id, :provider,
-                    :gpg_key_id, :gpg_key, :cp_id, :sync_plan_id, :organization_id, :organization
-
     belongs_to :organization, :inverse_of => :products
     belongs_to :provider, :inverse_of => :products
     belongs_to :sync_plan, :inverse_of => :products, :class_name => 'Katello::SyncPlan'
     belongs_to :gpg_key, :inverse_of => :products
-    has_many :repositories, :class_name => "Katello::Repository", :dependent => :restrict
+    has_many :repositories, :class_name => "Katello::Repository", :dependent => :restrict_with_exception
 
     has_many :subscription_products, :class_name => "Katello::SubscriptionProduct", :dependent => :destroy
     has_many :subscriptions, :through => :subscription_products
@@ -35,14 +32,14 @@ module Katello
     scoped_search :on => :label, :complete_value => true
     scoped_search :on => :description
     scoped_search :in => :provider, :on => :provider_type, :rename => :redhat,
-                  :complete_value => {:true => Provider::REDHAT, :false => Provider::ANONYMOUS }
+                  :complete_value => {:true => Katello::Provider::REDHAT, :false => Katello::Provider::ANONYMOUS }
 
     def library_repositories
       self.repositories.in_default_view
     end
 
     def self.find_by_cp_id(cp_id, organization = nil)
-      query = self.where(:cp_id => cp_id).scoped(:readonly => false)
+      query = self.where(:cp_id => cp_id).readonly(false)
       query = query.in_org(organization) if organization
       query.first
     end
@@ -60,7 +57,8 @@ module Katello
     scope :custom, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => [Provider::CUSTOM, Provider::ANONYMOUS]) }
 
     def self.enabled
-      self.where("#{Product.table_name}.id in (?) or #{Product.table_name}.id in (?)", Product.redhat.joins(:repositories).uniq, Product.custom)
+      self.where("#{Product.table_name}.id in (?) or #{Product.table_name}.id in (?)",
+                 Product.redhat.joins(:repositories).uniq.pluck(:id), Product.custom.pluck(:id))
     end
 
     before_create :assign_unique_label
@@ -118,7 +116,6 @@ module Katello
       N_('None')
     end
 
-    # rubocop:disable SymbolName
     def serializable_hash(options = {})
       options = {} if options.nil?
 
@@ -162,7 +159,7 @@ module Katello
       if name.blank?
         self.gpg_key = nil
       else
-        self.gpg_key = GpgKey.readable.find_by_name!(name)
+        self.gpg_key = GpgKey.readable.find_by!(:name => name)
       end
     end
 

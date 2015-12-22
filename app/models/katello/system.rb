@@ -1,31 +1,17 @@
 module Katello
   class System < Katello::Model
-    DEFAULT_CP_TYPE = Glue::Candlepin::Consumer::SYSTEM
-
     self.include_root_in_json = false
-
-    include Hooks
-    define_hooks :add_host_collection_hook, :remove_host_collection_hook,
-                 :add_activation_key_hook, :remove_activation_key_hook,
-                 :as_json_hook
 
     include ForemanTasks::Concerns::ActionSubject
     include Glue::Candlepin::Consumer if SETTINGS[:katello][:use_cp]
     include Glue::Pulp::Consumer if SETTINGS[:katello][:use_pulp]
     include Glue if SETTINGS[:katello][:use_cp] || SETTINGS[:katello][:use_pulp]
-    include Glue::ElasticSearch::System if SETTINGS[:katello][:use_elasticsearch]
     include Authorization::System
 
     audited :on => [:create], :allow_mass_assignment => true
 
-    attr_accessible :name, :uuid, :description, :location, :environment, :content_view,
-                    :environment_id, :content_view_id, :host_collection_ids, :host_id,
-                    :activation_key_ids
-
-    after_rollback :rollback_on_create, :on => :create
-
     belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :systems
-    belongs_to :foreman_host, :class_name => "::Host", :foreign_key => :host_id, :inverse_of => :content_host
+    belongs_to :foreman_host, :class_name => "::Host::Managed", :foreign_key => :host_id, :inverse_of => :content_host
 
     has_many :applicable_errata, :through => :system_errata, :class_name => "Katello::Erratum", :source => :erratum
     has_many :system_errata, :class_name => "Katello::SystemErratum", :dependent => :destroy, :inverse_of => :system
@@ -35,15 +21,10 @@ module Katello
 
     has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
     has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
-    has_many :activation_keys,
-                                 :through => :system_activation_keys,
-                                 :after_add    => :add_activation_key,
-                                 :after_remove => :remove_activation_key
+    has_many :activation_keys, :through => :system_activation_keys
 
     has_many :system_host_collections, :class_name => "Katello::SystemHostCollection", :dependent => :destroy
-    has_many :host_collections, :through      => :system_host_collections,
-                                :after_add    => :add_host_collection,
-                                :after_remove => :remove_host_collection
+    has_many :host_collections, :through      => :system_host_collections
 
     has_many :audits, :class_name => "::Audit", :as => :auditable, :dependent => :destroy
 
@@ -66,20 +47,20 @@ module Katello
 
     before_create :fill_defaults
 
-    before_update :update_foreman_host, :if => proc { |r| r.environment_id_changed? || r.content_view_id_changed? }
-
     scope :in_environment, ->(env) { where('environment_id = ?', env) unless env.nil? }
-    scope :completer_scope, ->(options) { readable(options[:organization_id]) }
     scope :by_uuids, ->(uuids) { where(:uuid => uuids) }
 
     scoped_search :on => :name, :complete_value => true
-    scoped_search :in => :environment, :on => :organization_id, :complete_value => true, :rename => :organization_id
+    scoped_search :in => :activation_keys, :on => :name, :complete_value => true, :rename => :activation_key
+    scoped_search :in => :content_view, :on => :name, :complete_value => true, :rename => :content_view
+    scoped_search :in => :fact_values, :on => :value, :in_key => :fact_names, :on_key => :name, :rename => :facts, :complete_value => true,
+                  :only_explicit => true, :ext_method => :search_cast_facts
+    scoped_search :on => :description, :complete_value => true
+    scoped_search :in => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
+    scoped_search :in => :environment, :on => :name, :complete_value => true, :rename => :environment
 
     has_many :fact_values, :through => :foreman_host
     has_many :fact_names, :through => :fact_values
-
-    scoped_search :in => :fact_values, :on => :value, :in_key=> :fact_names, :on_key=> :name, :rename => :facts, :complete_value => true,
-                  :only_explicit => true, :ext_method => :search_cast_facts
 
     def self.in_organization(organization)
       where(:environment_id => organization.kt_environments.pluck(:id))
@@ -107,7 +88,8 @@ module Katello
     end
 
     def self.with_non_installable_errata(errata)
-      subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems.where("#{Katello::SystemRepository.table_name}.system_id = #{System.table_name}.id").to_sql
+      subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems
+                 .where("#{Katello::SystemRepository.table_name}.system_id = #{Katello::System.table_name}.id").to_sql
       self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata).where("#{Katello::Erratum.table_name}.id NOT IN (#{subquery})").uniq
     end
 
@@ -117,27 +99,11 @@ module Katello
 
     def self.with_installable_errata(errata)
       non_installable = System.with_non_installable_errata(errata)
-      subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems.where("#{Katello::SystemRepository.table_name}.system_id = #{System.table_name}.id")
+      subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems.where("#{Katello::SystemRepository.table_name}.system_id = #{Katello::System.table_name}.id")
 
       query = self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata).where("#{Katello::Erratum.table_name}.id" => subquery)
-      query = query.where("katello_systems.id not in (?)", non_installable) unless non_installable.empty?
+      query = query.where.not("katello_systems.id" => non_installable) unless non_installable.empty?
       query.uniq
-    end
-
-    def add_host_collection(host_collection)
-      run_hook(:add_host_collection_hook, host_collection)
-    end
-
-    def remove_host_collection(host_collection)
-      run_hook(:remove_host_collection_hook, host_collection)
-    end
-
-    def add_activation_key(activation_key)
-      run_hook(:add_activation_key_hook, activation_key)
-    end
-
-    def remove_activation_key(activation_key)
-      run_hook(:remove_activation_key_hook, activation_key)
     end
 
     def registered_by
@@ -166,7 +132,7 @@ module Katello
       repos = if env && content_view
                 Katello::Repository.in_environment(env).in_content_views([content_view])
               else
-                self.bound_repositories
+                self.bound_repositories.pluck(:id)
               end
 
       self.applicable_errata.in_repositories(repos).uniq
@@ -186,14 +152,6 @@ module Katello
       attribs_to_sub.each do |id|
         self.subscribe id
       end
-    end
-
-    def update_foreman_facts
-      return unless self.foreman_host && !self.foreman_host.build?
-      rhsm_facts = self.facts
-      rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
-      rhsm_facts[:_timestamp] = DateTime.now.to_s
-      foreman_host.import_facts(rhsm_facts)
     end
 
     def filtered_pools(match_system, match_installed, no_overlap)
@@ -235,7 +193,6 @@ module Katello
       paths.each do |path|
         possible_repos = Repository.where(:relative_path => path.gsub('/pulp/repos/', ''))
         if possible_repos.empty?
-          unknown_paths << path
           Rails.logger.warn("System #{self.name} (#{self.id}) requested binding to unknown repo #{path}")
         else
           repos << possible_repos.first
@@ -246,8 +203,6 @@ module Katello
 
       self.bound_repositories = repos
       self.save!
-      self.propagate_yum_repos
-      self.generate_applicability
     end
 
     def install_packages(packages)
@@ -302,8 +257,6 @@ module Katello
         json['type'] = type
       end
 
-      run_hook(:as_json_hook, json)
-
       json
     end
 
@@ -332,14 +285,6 @@ module Katello
     def tasks
       refresh_tasks
       self.task_statuses
-    end
-
-    # A rollback occurred while attempting to create the system; therefore, perform necessary cleanup.
-    def rollback_on_create
-      # remove the system from elasticsearch
-      system_id = "id:#{self.id}"
-      Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_system/_query?q=#{system_id}"
-      Tire.index('katello_system').refresh
     end
 
     def reportable_data(options = {})
@@ -423,25 +368,6 @@ module Katello
       Katello::SystemErratum.where(:system_id => self.id, :erratum_id => applicable_errata_ids).delete_all
     end
 
-    def update_foreman_host
-      if foreman_host && foreman_host.lifecycle_environment && foreman_host.content_view
-        new_puppet_env = self.content_view.puppet_env(self.environment).try(:puppet_environment)
-
-        set_puppet_env = foreman_host.content_and_puppet_match?
-        foreman_host.content_view = self.content_view
-        foreman_host.lifecycle_environment = self.environment
-        foreman_host.environment = new_puppet_env if set_puppet_env
-
-        if set_puppet_env && new_puppet_env.nil?
-          fail Errors::NotFound,
-               _("Couldn't find puppet environment associated with lifecycle environment '%{env}' and content view '%{view}'") %
-                   { :env => self.environment.name, :view => self.content_view.name }
-        end
-
-        self.foreman_host.save!
-      end
-    end
-
     def refresh_running_tasks
       ids = self.task_statuses.where(:state => [:waiting, :running]).pluck(:id)
       TaskStatus.refresh(ids)
@@ -460,7 +386,6 @@ module Katello
       self.content_view = self.environment.try(:default_content_view) unless self.content_view
     end
 
-    # rubocop:disable SymbolName
     def collect_installed_product_names
       self.installedProducts ? self.installedProducts.map { |p| p[:productName] } : []
     end

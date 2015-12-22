@@ -73,7 +73,7 @@ module Katello
 
     api :POST, "/gpg_keys/:id/content", N_("Upload gpg key contents")
     param :id, :number, :desc => N_("gpg key numeric identifier"), :required => true
-    param :content, File, :required => true, :desc => N_("file contents"), :required => true
+    param :content, File, :desc => N_("file contents"), :required => true
     def content
       filepath = params.try(:[], :content).try(:path)
 

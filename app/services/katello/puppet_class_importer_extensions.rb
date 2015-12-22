@@ -1,5 +1,3 @@
-# rubocop:disable AccessModifierIndentation
-
 module Katello
   module Services
     module PuppetClassImporterExtensions

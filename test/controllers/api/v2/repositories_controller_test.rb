@@ -1,6 +1,7 @@
 require "katello_test_helper"
 
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
@@ -13,6 +14,8 @@ module Katello
       @view = katello_content_views(:library_view)
       @errata = katello_errata(:security)
       @environment = katello_environments(:dev)
+      @content_view_version = katello_content_view_versions(:library_view_version_1)
+      @fedora_dev = katello_repositories(:fedora_17_x86_64_dev)
     end
 
     def permissions
@@ -21,6 +24,7 @@ module Katello
       @update_permission = :edit_products
       @destroy_permission = :destroy_products
       @sync_permission = :sync_products
+      @export_permission = :export_products
     end
 
     def setup
@@ -53,10 +57,11 @@ module Katello
       ids = Repository.where(:product_id => @product.id, :library_instance_id => nil).pluck(:id)
 
       response = get :index, :product_id => @product.id, :organization_id => @organization.id
+      response_ids = JSON.parse(response.body)['results'].map { |repo| repo['id'] }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
-      assert_response_ids response, ids
+      assert_equal response_ids.sort, ids.sort
     end
 
     def test_index_with_environment_id
@@ -79,6 +84,17 @@ module Katello
       assert_response_ids response, ids
     end
 
+    def test_index_with_content_view_version_id
+      version = @view.content_view_versions.first
+      ids = version.repository_ids
+
+      response = get :index, :content_view_version_id => version.id, :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+      assert_response_ids response, ids
+    end
+
     def test_index_available_for_content_view
       ids = @view.organization.default_content_view.versions.first.repositories.pluck(:id) - @view.repositories.pluck(:id)
 
@@ -90,10 +106,9 @@ module Katello
     end
 
     def test_index_with_content_view_id_and_environment_id
-      repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
-      ids = repo.content_view_version.repository_ids
+      ids = @fedora_dev.content_view_version.repositories.pluck(:id)
 
-      response =  get :index, :content_view_id => repo.content_view_version.content_view_id, :environment_id => repo.environment_id,
+      response =  get :index, :content_view_id => @fedora_dev.content_view_version.content_view_id, :environment_id => @fedora_dev.environment_id,
                   :organization_id => @organization.id
 
       assert_response :success
@@ -111,10 +126,13 @@ module Katello
       assert_response_ids response, ids
     end
 
-    def test_index_with_content_view_version_id
-      ids = @view.versions.first.repositories.pluck(:id)
+    def test_index_with_content_view_version_id_and_environment
+      repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
+      ids = repo.content_view_version.repository_ids
 
-      response = get :index, :content_view_version_id => @view.versions.first.id, :organization_id => @organization.id
+      response =  get :index, :content_view_version_id => repo.content_view_version.id,
+                  :environment_id => repo.environment_id,
+                  :organization_id => @organization.id
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -122,8 +140,8 @@ module Katello
     end
 
     def test_index_with_content_view_version_id_and_library
-      ids = @view.versions.first.repositories.pluck(:library_instance_id).reject(&:blank?)
-      get :index, :content_view_version_id => @view.versions.first.id, :organization_id => @organization.id, :library => true
+      ids = @view.versions.first.repositories.pluck(:library_instance_id).reject(&:blank?).uniq
+      response = get :index, :content_view_version_id => @view.versions.first.id, :organization_id => @organization.id, :library => true
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -391,8 +409,7 @@ module Katello
 
     def test_create_without_label_or_name
       post :create, :product_id => @product.id
-      # TODO: fix this test, returns 500 because of undefined method add_repo for Katello::Product
-      assert_response 500 # should be 400 but dynflow doesn't raise RecordInvalid
+      assert_response 500
     end
 
     def test_create_protected
@@ -503,7 +520,33 @@ module Katello
       end
 
       post :sync, :id => @repository.id
+      assert_response :success
+    end
 
+    def test_sync_with_url_override
+      assert_async_task ::Actions::Katello::Repository::Sync do |repo, pulp_task_id, source_url|
+        repo.id.must_equal(@repository.id)
+        pulp_task_id.must_equal(nil)
+        source_url.must_equal('file:///tmp/')
+      end
+      post :sync, :id => @repository.id, :source_url => 'file:///tmp/'
+      assert_response :success
+    end
+
+    def test_sync_with_bad_url_override
+      post :sync, :id => @repository.id, :source_url => 'file:|||tmp/'
+      assert_response 400
+    end
+
+    def test_sync_no_feed_urls
+      repo = katello_repositories(:feedless_fedora_17_x86_64)
+      post :sync, :id => repo.id
+      assert_response 400
+    end
+
+    def test_sync_no_feed_urls_with_override
+      repo = katello_repositories(:feedless_fedora_17_x86_64)
+      post :sync, :id => repo.id, :source_url => 'http://www.wikipedia.org'
       assert_response :success
     end
 
@@ -576,6 +619,36 @@ module Katello
 
       assert_protected_action(:import_uploads, allowed_perms, denied_perms) do
         put :import_uploads, :id => @repository.id, :upload_ids => [1]
+      end
+    end
+
+    def test_export
+      post :export, :id => @repository.id
+      assert_response :success
+    end
+
+    def test_export_with_bad_date
+      post :export, :id => @repository.id, :since => 'November 32, 1970'
+      assert_response 400
+    end
+
+    def test_export_with_date
+      post :export, :id => @repository.id, :since => 'November 30, 1970'
+      assert_response :success
+    end
+
+    def test_export_with_8601_date
+      post :export, :id => @repository.id, :since => '2010-01-01T00:00:00'
+      assert_response :success
+    end
+
+    def test_export_protected
+      allowed_perms = [@export_permission]
+      denied_perms = [@sync_permission, @create_permission, @read_permission,
+                      @destroy_permission, @update_permission]
+
+      assert_protected_action(:export, allowed_perms, denied_perms) do
+        post :export, :id => @repository.id
       end
     end
 

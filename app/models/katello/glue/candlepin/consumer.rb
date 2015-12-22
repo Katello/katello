@@ -12,9 +12,6 @@ module Katello
       base.send :extend, ClassMethods
 
       base.class_eval do
-        attr_accessible :cp_type, :owner, :serviceLevel, :installedProducts, :facts, :guestIds, :releaseVer, :autoheal,
-                        :lastCheckin
-
         lazy_accessor :href, :facts, :cp_type, :idCert, :owner, :lastCheckin, :created, :guestIds,
         :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities, :entitlementStatus,
         :initializer => :candlepin_consumer_info
@@ -33,12 +30,12 @@ module Katello
         lazy_accessor :all_available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(uuid, true) }
         lazy_accessor :virtual_host, :initializer => (lambda do |_s|
                                                         host_attributes = Resources::Candlepin::Consumer.virtual_host(self.uuid)
-                                                        (System.find_by_uuid(host_attributes['uuid']) || System.new(host_attributes)) if host_attributes
+                                                        (System.find_by(:uuid => host_attributes['uuid']) || System.new(host_attributes)) if host_attributes
                                                       end)
         lazy_accessor :virtual_guests, :initializer => (lambda do |_s|
                                                           guests_attributes = Resources::Candlepin::Consumer.virtual_guests(self.uuid)
                                                           guests_attributes.map do |attr|
-                                                            System.find_by_uuid(attr['uuid']) || System.new(attr)
+                                                            System.find_by(:uuid => attr['uuid']) || System.new(attr)
                                                           end
                                                         end)
         lazy_accessor :compliance, :initializer => lambda { |_s| Resources::Candlepin::Consumer.compliance(uuid) }
@@ -122,6 +119,7 @@ module Katello
 
       def unsubscribe(entitlement)
         Rails.logger.debug "Unsubscribing from entitlement '#{entitlement}' for : #{name}"
+        fail _("Subscription id is nil.") unless entitlement
         Resources::Candlepin::Consumer.remove_entitlement self.uuid, entitlement
         #ents = self.entitlements.collect {|ent| ent["id"] if ent["pool"]["id"] == pool}.compact
         #raise ArgumentError, "Not subscribed to the pool #{pool}" if ents.count < 1
@@ -410,7 +408,7 @@ module Katello
         all_products = []
 
         self.entitlements.each do |entitlement|
-          pool = Katello::Pool.find_by_cp_id(entitlement['pool']['id'])
+          pool = Katello::Pool.find_by(:cp_id => entitlement['pool']['id'])
           Katello::Product.where(:cp_id => pool.product_id).each do |product|
             all_products << product
           end
@@ -443,41 +441,6 @@ module Katello
         entitlements = Resources::Candlepin::Entitlement.get
         system_uuids = entitlements.delete_if { |ent| ent["pool"]["id"] != pool_id }.map { |ent| ent["consumer"]["uuid"] }
         return system_uuids
-      end
-
-      def create_hypervisor(environment_id, content_view_id, hypervisor_json)
-        hypervisor = Hypervisor.new(:environment_id => environment_id, :content_view_id => content_view_id)
-        hypervisor.name = hypervisor_json[:name]
-        hypervisor.cp_type = 'hypervisor'
-        hypervisor.orchestration_for = :hypervisor
-        hypervisor.load_from_cp(hypervisor_json)
-        hypervisor.save!
-        hypervisor
-      end
-
-      def register_hypervisors(environment, content_view, hypervisors_attrs)
-        consumers_attrs = Resources::Candlepin::Consumer.register_hypervisors(hypervisors_attrs)
-        created = []
-        if consumers_attrs[:created]
-          consumers_attrs[:created].each do |hypervisor|
-            created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
-          end
-        end
-        if consumers_attrs[:updated]
-          consumers_attrs[:updated].each do |hypervisor|
-            unless System.find_by_uuid(hypervisor[:uuid])
-              created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
-            end
-          end
-        end
-        if consumers_attrs[:unchanged]
-          consumers_attrs[:unchanged].each do |hypervisor|
-            unless System.find_by_uuid(hypervisor[:uuid])
-              created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
-            end
-          end
-        end
-        return consumers_attrs, created
       end
 
       # interface listings come in the form of

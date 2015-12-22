@@ -16,8 +16,6 @@ module Katello
       TIMED_OUT = :timed_out
     end
 
-    include Glue::ElasticSearch::TaskStatus if SETTINGS[:katello][:use_elasticsearch]
-
     belongs_to :organization, :inverse_of => :task_statuses, :class_name => "Organization"
     belongs_to :user, :inverse_of => :task_statuses, :class_name => "::User"
 
@@ -57,7 +55,7 @@ module Katello
           Rails.logger.debug "Unable to report status change" # minor error
           # if logger level is higher than debug logger return false that would cause rollback
           # since this is log only callback we must be sure to return true
-          return true
+          true
         end
       end
     end
@@ -312,7 +310,7 @@ module Katello
         uuids = TaskStatus.where(:id => ids).pluck(:uuid)
         ret = Katello.pulp_server.resources.task.poll_all(uuids)
         ret.each do |pulp_task|
-          PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task[:task_id]))
+          PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by(:uuid => pulp_task[:task_id]))
         end
       end
     end

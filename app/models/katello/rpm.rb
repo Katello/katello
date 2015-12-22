@@ -27,7 +27,7 @@ module Katello
     end
 
     def self.search_version_range(min = nil, max = nil)
-      query = scoped
+      query = self.all
       query = Katello::Util::PackageFilter.new(query, min, Katello::Util::PackageFilter::GREATER_THAN).results if min
       query = Katello::Util::PackageFilter.new(query, max, Katello::Util::PackageFilter::LESS_THAN).results if max
       query

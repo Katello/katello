@@ -222,14 +222,6 @@ module Katello
       end
     end
 
-    describe "pulp attributes (katello)" do
-      it "should update package-profile" do
-        Katello.pulp_server.extensions.consumer.expects(:upload_profile).once.with(uuid, 'rpm', package_profile).returns(true)
-        System.any_instance.expects(:generate_applicability).once
-        @system.upload_package_profile(package_profile)
-      end
-    end
-
     describe "find system by a pool id" do
       let(:pool_id_1) { "POOL_ID_123" }
       let(:pool_id_2) { "POOL_ID_456" }

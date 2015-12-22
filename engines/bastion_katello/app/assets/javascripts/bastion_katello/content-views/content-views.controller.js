@@ -25,6 +25,7 @@ angular.module('Bastion.content-views').controller('ContentViewsController',
 
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
+        $scope.controllerName = 'katello_content_views';
 
         $scope.table.closeItem = function () {
             $scope.transitionTo('content-views.index');

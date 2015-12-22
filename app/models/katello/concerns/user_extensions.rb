@@ -1,5 +1,3 @@
-# rubocop:disable AccessModifierIndentation
-
 module Katello
   module Concerns
     module UserExtensions
@@ -9,7 +7,7 @@ module Katello
         include Util::ThreadSession::UserModel
 
         has_many :task_statuses, :dependent => :destroy, :class_name => "Katello::TaskStatus"
-        has_many :activation_keys, :dependent => :destroy, :class_name => "Katello::ActivationKey"
+        has_many :activation_keys, :dependent => :nullify, :class_name => "Katello::ActivationKey"
 
         def self.remote_user
           SETTINGS[:katello][:pulp][:default_login]

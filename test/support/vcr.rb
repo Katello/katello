@@ -1,5 +1,8 @@
 # rubocop:disable Lint/HandleExceptions
 require "vcr"
+require "active_support/concern"
+
+WebMock.allow_net_connect!
 
 module VCR
   def self.live?
@@ -19,15 +22,15 @@ module VCR
     end
 
     def cassette_name
-      test_name = self.__name__.downcase.gsub("test_", "")
+      test_name = self.method_name.downcase.gsub("test_", "")
       self_class = self.class.name.split("::")[-1].underscore.gsub("_test", "")
       class_path = self.class.name.split("::")[0...-1].map(&:underscore).join("/")
       "#{class_path}/#{self_class}/#{test_name}"
     end
 
-    def run_with_vcr(args)
+    def run_with_vcr
       VCR.insert_cassette(cassette_name, :match_requests_on => vcr_matches)
-      to_ret = run_without_vcr(args)
+      to_ret = run_without_vcr
       VCR.eject_cassette
       to_ret
     end
@@ -63,7 +66,7 @@ def configure_vcr
       :record => mode,
       :decode_compressed_response => true,
       :match_requests_on => [:method, :path, :params, :body_json],
-      :serialize_with => :syck,
+      :serialize_with => :psych,
       :preserve_exact_body_bytes => true
     }
 

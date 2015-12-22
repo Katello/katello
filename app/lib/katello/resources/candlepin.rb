@@ -1,4 +1,3 @@
-# rubocop:disable SymbolName
 module Katello
   module Resources
     require 'rest_client'
@@ -103,29 +102,11 @@ module Katello
             end
           end
 
-          # rubocop:disable ParameterLists
-          def create(env_id, _key, name, type, facts, installed_products = [], autoheal = true, release_ver = nil,
-                     service_level = "", uuid = "", capabilities = nil, activation_key_cp_ids = [], guest_ids = [],
-                     last_checkin = nil)
-            # rubocop:enable ParameterLists
-
-            installed_products ||= []
-
+          def create(env_id, parameters, activation_key_cp_ids)
             url = "/candlepin/environments/#{url_encode(env_id)}/consumers/"
-            attrs = {:name => name,
-                     :type => type,
-                     :facts => facts,
-                     :installedProducts => installed_products,
-                     :autoheal => autoheal,
-                     :releaseVer => release_ver,
-                     :serviceLevel => service_level,
-                     :uuid => uuid,
-                     :capabilities => capabilities,
-                     :guestIds => guest_ids,
-                     :lastCheckin => last_checkin}
 
             url += "?activation_keys=" + activation_key_cp_ids.join(",") if activation_key_cp_ids.length > 0
-            response = self.post(url, attrs.to_json, self.default_headers).body
+            response = self.post(url, parameters.to_json, self.default_headers).body
             JSON.parse(response).with_indifferent_access
           end
 
@@ -137,22 +118,11 @@ module Katello
             JSON.parse(response).with_indifferent_access
           end
 
-          def update(uuid, facts, guest_ids = nil, installed_products = nil, autoheal = nil, release_ver = nil,
-                     service_level = nil, environment_id = nil, capabilities = nil, last_checkin = nil)
-            attrs = {:facts => facts,
-                     :guestIds => guest_ids,
-                     :releaseVer => release_ver,
-                     :installedProducts => installed_products,
-                     :autoheal => autoheal,
-                     :serviceLevel => service_level,
-                     :environment => environment_id.nil? ? nil : {:id => environment_id},
-                     :capabilities => capabilities,
-                     :lastCheckin => last_checkin
-                    }.delete_if { |_k, v| v.nil? }
-            if attrs.empty?
-              return true
+          def update(uuid, params)
+            if params.empty?
+              true
             else
-              self.put(path(uuid), attrs.to_json, self.default_headers).body
+              self.put(path(uuid), params.to_json, self.default_headers).body
             end
             # consumer update doesn't return any data atm
             # JSON.parse(response).with_indifferent_access
@@ -527,8 +497,11 @@ module Katello
             JSON.parse(pool_json).with_indifferent_access
           end
 
-          def get_for_owner(owner_key)
-            pools_json = self.get("/candlepin/owners/#{owner_key}/pools?attribute=unmapped_guests_only:!true", self.default_headers).body
+          def get_for_owner(owner_key, include_temporary_guests = false)
+            url_path = "/candlepin/owners/#{owner_key}/pools"
+            url_params = "?attribute=unmapped_guests_only:!true"
+            url = include_temporary_guests ? url_path : url_path + url_params
+            pools_json = self.get(url, self.default_headers).body
             JSON.parse(pools_json)
           end
 

@@ -50,6 +50,7 @@ module Katello
       query = query.enabled if params[:enabled]
       query = query.where(:id => @activation_key.products) if @activation_key
       query = query.where(:id => @system.products) if @system
+
       if params[:subscription_id]
         pool = Pool.with_identifier(params[:subscription_id])
         query = query.where(:id => pool.products) if pool
@@ -118,13 +119,13 @@ module Katello
     protected
 
     def find_product(options = {})
-      @product = Product.includes(*options[:includes] || []).find_by_id(params[:id])
+      @product = Product.includes(options[:includes] || []).find_by(:id => params[:id])
       fail HttpErrors::NotFound, _("Couldn't find product '%s'") % params[:id] unless @product
     end
 
     def find_activation_key
       if params[:activation_key_id]
-        @activation_key = ActivationKey.find_by_id(params[:activation_key_id])
+        @activation_key = ActivationKey.find_by(:id => params[:activation_key_id])
         fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:activation_key_id] if @activation_key.nil?
         @organization = @activation_key.organization
       end
@@ -132,7 +133,7 @@ module Katello
 
     def find_system
       if params[:system_id]
-        @system = System.find_by_uuid(params[:system_id])
+        @system = System.find_by(:uuid => params[:system_id])
         fail HttpErrors::NotFound, _("Couldn't find content host '%s'") % params[:system_id] if @system.nil?
         @organization = @system.organization
       end

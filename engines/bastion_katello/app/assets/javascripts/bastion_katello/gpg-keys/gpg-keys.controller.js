@@ -28,6 +28,7 @@ angular.module('Bastion.gpg-keys').controller('GPGKeysController',
         $scope.table = nutupane.table;
         $scope.panel = {loading: false};
         $scope.removeRow = nutupane.removeRow;
+        $scope.controllerName = 'katello_gpg_keys';
 
         if ($scope.$state.current.collapsed) {
             $scope.panel.loading = true;

@@ -2,6 +2,10 @@ require 'katello_test_helper'
 
 module Katello
   class LocationTest < ActiveSupport::TestCase
+    def setup
+      set_default_location
+    end
+
     def test_location_create
       loc = Location.create!(:name => "FOO")
       assert_includes loc.ignore_types, ::ProvisioningTemplate.name

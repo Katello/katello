@@ -1,4 +1,3 @@
-# rubocop:disable AccessModifierIndentation
 module Katello
   module Concerns
     module RedhatExtensions
@@ -39,7 +38,7 @@ module Katello
           if family.include? 'Red Hat'
             return 'RedHat'
           else
-            return family.gsub(' ', '_')
+            return family.tr(' ', '_')
           end
         end
       end
@@ -60,8 +59,8 @@ module Katello
       private
 
       def distribution_repositories(host)
-        content_view = host.content_view
-        lifecycle_environment = host.lifecycle_environment
+        content_view = host.content_facet.try(:content_view)
+        lifecycle_environment = host.content_facet.try(:lifecycle_environment)
 
         if content_view && lifecycle_environment
           Katello::Repository.where(:distribution_version => host.os.release,

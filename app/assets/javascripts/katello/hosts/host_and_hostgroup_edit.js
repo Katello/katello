@@ -118,7 +118,7 @@ KT.hosts.onKatelloHostEditLoad = function(){
 
     $.each(prefxies, function(index, prefix) {
         $.each(attributes, function(attrIndex, attribute) {
-            $('#' + prefix + '_' + attribute).live('change', function () {
+            $('body').on('change', '#' + prefix + '_' + attribute, function () {
                 KT.hosts.toggle_installation_medium();
             });
         });
