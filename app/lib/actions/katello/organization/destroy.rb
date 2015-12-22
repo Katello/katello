@@ -59,7 +59,7 @@ module Actions
 
         def remove_environments(organization)
           organization.promotion_paths.each do |path|
-            path.reverse.each do |env|
+            path.reverse_each do |env|
               plan_action(Katello::Environment::Destroy, env, :skip_repo_destroy => true, :organization_destroy => true)
             end
           end

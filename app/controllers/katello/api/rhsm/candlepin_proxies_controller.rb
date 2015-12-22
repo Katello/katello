@@ -231,7 +231,6 @@ module Katello
     #api :GET, "/status", N_("Shows version information")
     #description N_("This service is available for unauthenticated users")
     def server_status
-      # rubocop:disable SymbolName
       status = { :managerCapabilities => Resources::Candlepin::CandlepinPing.ping['managerCapabilities'],
                  :result => Resources::Candlepin::CandlepinPing.ping['result'],
                  :rulesSource => Resources::Candlepin::CandlepinPing.ping['rulesSource'],

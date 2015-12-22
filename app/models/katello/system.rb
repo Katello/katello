@@ -386,7 +386,6 @@ module Katello
       self.content_view = self.environment.try(:default_content_view) unless self.content_view
     end
 
-    # rubocop:disable SymbolName
     def collect_installed_product_names
       self.installedProducts ? self.installedProducts.map { |p| p[:productName] } : []
     end

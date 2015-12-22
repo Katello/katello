@@ -116,7 +116,6 @@ module Katello
       N_('None')
     end
 
-    # rubocop:disable SymbolName
     def serializable_hash(options = {})
       options = {} if options.nil?
 

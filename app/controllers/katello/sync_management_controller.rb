@@ -1,4 +1,3 @@
-# rubocop:disable ClassVars
 module Katello
   class SyncManagementController < Katello::ApplicationController
     include TranslationHelper

@@ -1,4 +1,3 @@
-# rubocop:disable AccessModifierIndentation
 module Katello
   module Concerns
     module RedhatExtensions
@@ -39,7 +38,7 @@ module Katello
           if family.include? 'Red Hat'
             return 'RedHat'
           else
-            return family.gsub(' ', '_')
+            return family.tr(' ', '_')
           end
         end
       end

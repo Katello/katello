@@ -1,4 +1,3 @@
-# rubocop:disable AccessModifierIndentation
 module Katello
   module Concerns
     module EnvironmentExtensions
@@ -64,7 +63,7 @@ module Katello
                   content_view.try(:id)
                  ].reject(&:blank?).join('_')
 
-          return name.gsub('-', '_')
+          return name.tr('-', '_')
         end
       end
     end

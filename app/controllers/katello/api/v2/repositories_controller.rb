@@ -47,7 +47,6 @@ module Katello
     param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' is supported."),
           :required => false
     param_group :search, Api::V2::ApiController
-    # rubocop:disable Metrics/MethodLength
     def index
       options = {:includes => [:gpg_key, :product, :environment]}
       respond(:collection => scoped_search(index_relation.uniq, :name, :desc, options))

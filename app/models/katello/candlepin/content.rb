@@ -1,6 +1,5 @@
 module Katello
   class Candlepin::Content
-    # rubocop:disable SymbolName
     attr_accessor :name, :id, :type, :label, :vendor, :contentUrl, :gpgUrl
 
     def initialize(params = {})

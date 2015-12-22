@@ -2,7 +2,6 @@ module Actions
   module Katello
     module ContentViewPuppetEnvironment
       class Create < Actions::EntryAction
-        # rubocop:disable MethodLength
         def plan(puppet_environment, clone = false)
           puppet_environment.save!
           action_subject(puppet_environment)

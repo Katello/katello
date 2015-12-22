@@ -9,7 +9,7 @@ FactoryGirl.define do
     end
 
     trait :unexpired do
-      end_date Date.today + 1.days
+      end_date Date.today + 1.day
     end
 
     trait :expired do

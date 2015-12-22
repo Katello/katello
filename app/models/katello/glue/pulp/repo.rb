@@ -212,7 +212,7 @@ module Katello
 
         existing_distributors = self.distributors
         generate_distributors.each do |distributor|
-          found = existing_distributors.select { |i| i['distributor_type_id'] == distributor.type_id }.first
+          found = existing_distributors.find { |i| i['distributor_type_id'] == distributor.type_id }
           if found
             Katello.pulp_server.extensions.repository.update_distributor(self.pulp_id, found['id'], distributor.config)
           else
@@ -541,7 +541,7 @@ module Katello
       end
 
       def clear_contents
-        tasks = content_types.collect { |type| type.unassociate_from_repo(self.pulp_id, {}) }.flatten(1)
+        tasks = content_types.flat_map { |type| type.unassociate_from_repo(self.pulp_id, {}) }
 
         tasks << Katello.pulp_server.extensions.repository.unassociate_units(self.pulp_id,
                    :type_ids => ['rpm'], :filters => {}, :fields => { :unit => Pulp::Rpm::PULP_SELECT_FIELDS})

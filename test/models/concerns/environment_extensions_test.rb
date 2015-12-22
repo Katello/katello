@@ -10,7 +10,7 @@ module Katello
       @katello_id = "KT_Org_Env_View_1"
 
       @org = get_organization
-      @org.label = @org.label.gsub(' ', '_')
+      @org.label = @org.label.tr(' ', '_')
       @env = katello_environments(:dev)
       @content_view = katello_content_views(:library_dev_view)
       @content_view_puppet_env = katello_content_view_puppet_environments(:library_view_puppet_environment)

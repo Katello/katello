@@ -1,4 +1,3 @@
-# rubocop:disable SymbolName
 module Katello
   class Api::V2::SystemsController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
@@ -187,10 +186,9 @@ module Katello
       respond_for_show(:resource => @system)
     end
 
-    # TODO: break this method up
     api :GET, "/environments/:environment_id/systems/report", N_("Get content host reports for the environment"), :deprecated => true
     api :GET, "/organizations/:organization_id/systems/report", N_("Get content host reports for the organization"), :deprecated => true
-    def report # rubocop:disable MethodLength
+    def report
       data = @environment.nil? ? @organization.systems.readable : @environment.systems.readable
 
       data = data.flatten.map do |r|
