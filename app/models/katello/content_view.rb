@@ -197,11 +197,6 @@ module Katello
       ContentViewPuppetEnvironment.where(:id => ids).first
     end
 
-    def  puppet_repos
-      # These are the repos that may contain puppet modules that can be associated with the content view
-      self.organization.library.repositories.puppet_type
-    end
-
     def library_repos
       Repository.where(:id => library_repo_ids)
     end

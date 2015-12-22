@@ -85,9 +85,10 @@ module Katello
     end
 
     def test_index_with_content_view_version_id
-      ids = @view.repositories.pluck(:id)
+      version = @view.content_view_versions.first
+      ids = version.repository_ids
 
-      response = get :index, :content_view_version_id => @view.id, :organization_id => @organization.id
+      response = get :index, :content_view_version_id => version.id, :organization_id => @organization.id
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -125,7 +126,7 @@ module Katello
       assert_response_ids response, ids
     end
 
-    def test_index_with_content_view_version_id
+    def test_index_with_content_view_version_id_and_environment
       repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
       ids = repo.content_view_version.repository_ids
 
