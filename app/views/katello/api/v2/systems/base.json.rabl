@@ -6,10 +6,14 @@ node(:id) { |resource| resource.uuid }
 attributes :id => :katello_id
 attributes :uuid, :name, :description
 attributes :location
-attributes :content_view, :content_view_id
+attributes :content_view_id
 attributes :distribution
 attributes :katello_agent_installed? => :katello_agent_installed
 attributes :registered_by
+
+child :content_view => :content_view do
+  attributes :id, :name, :label
+end
 
 child :environment => :environment do
   extends 'katello/api/v2/environments/show'
