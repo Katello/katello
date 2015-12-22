@@ -21,8 +21,6 @@ module Katello
       # @example lazy_accessor :a, :b, :c,
       #   :initializer => lambda { json = Resources::Candlepin::Product.get(cp_id)[0] },
       #   :unless => lambda { cp_id.nil? }
-      # TODO: break up method
-      # rubocop:disable MethodLength
       def lazy_accessor(*args)
         options = args.extract_options!
         @lazy_attributes = [] if @lazy_attributes.nil?
@@ -70,7 +68,6 @@ module Katello
         @changed_remote_attributes ||= {}
       end
 
-      # rubocop:disable TrivialAccessors
       def changed_remote_attributes=(val)
         @changed_remote_attributes = val
       end

@@ -1,5 +1,3 @@
-# rubocop:disable Style/RegexpLiteral
-
 # encoding: UTF-8
 require 'ripper'
 

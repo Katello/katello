@@ -172,7 +172,7 @@ module Katello
     end
 
     def test_install_consumer_errata
-      erratum_id = RepositorySupport.repo.errata_json.select { |errata| errata['id'] == 'RHEA-2010:0002' }.first['id']
+      erratum_id = RepositorySupport.repo.errata_json.find { |errata| errata['id'] == 'RHEA-2010:0002' }['id']
       profile = [{"vendor" => "FedoraHosted", "name" => "elephant",
                   "version" => "0.3", "release" => "0.8",
                   "arch" => "noarch", :epoch => ""}]

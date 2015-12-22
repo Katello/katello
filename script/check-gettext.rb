@@ -103,7 +103,6 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
       puts "#{relative_file}: #{malformed}#{malformed_suffix}"
       if options[:fix]
         if malformed_suffix =~ /\s*%\s*\[(.*)\]/
-          # rubocop:disable AvoidPerlBackrefs
           array_vars = Regexp.last_match[1].split(",").map(&:strip)
           puts "Are this the variables used in the string?:"
           puts array_vars.inspect

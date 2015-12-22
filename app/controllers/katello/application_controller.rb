@@ -570,8 +570,6 @@ module Katello
                        :current_items => options[:collection].length}
     end
 
-    # TODO: break up method
-    # rubocop:disable MethodLength
     def render_panel_items(items, options, search, start)
       @items = items
 

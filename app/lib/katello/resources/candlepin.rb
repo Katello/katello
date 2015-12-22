@@ -1,4 +1,3 @@
-# rubocop:disable SymbolName
 module Katello
   module Resources
     require 'rest_client'

@@ -1,4 +1,3 @@
-# rubocop:disable AccessModifierIndentation
 module Katello
   module Concerns
     module SmartProxyExtensions
