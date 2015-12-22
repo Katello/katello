@@ -20,8 +20,9 @@ module Katello
     FILE_TYPE = 'file'
     PUPPET_TYPE = 'puppet'
     DOCKER_TYPE = 'docker'
-    TYPES = [YUM_TYPE, FILE_TYPE, PUPPET_TYPE, DOCKER_TYPE]
-    SELECTABLE_TYPES = [YUM_TYPE, PUPPET_TYPE, DOCKER_TYPE]
+    OSTREE_TYPE = 'ostree'
+    TYPES = [YUM_TYPE, FILE_TYPE, PUPPET_TYPE, DOCKER_TYPE, OSTREE_TYPE]
+    SELECTABLE_TYPES = [YUM_TYPE, PUPPET_TYPE, DOCKER_TYPE, OSTREE_TYPE]
     CHECKSUM_TYPES = %w(sha1 sha256)
 
     belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
@@ -48,6 +49,8 @@ module Katello
     has_many :repository_docker_images, :class_name => "Katello::RepositoryDockerImage", :dependent => :destroy
     has_many :docker_images, :through => :repository_docker_images
     has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag"
+
+    has_many :ostree_branches, :class_name => "Katello::OstreeBranch", :dependent => :destroy
 
     has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy
     has_many :systems, :through => :system_repositories
@@ -88,6 +91,7 @@ module Katello
     }
     validate :ensure_valid_docker_attributes, :if => :docker?
     validate :ensure_docker_repo_unprotected, :if => :docker?
+    validate :ensure_has_url_for_ostree, :if => :ostree?
 
     scope :has_url, -> { where('url IS NOT NULL') }
     scope :in_default_view, -> { joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => true) }
@@ -146,6 +150,10 @@ module Katello
 
     def docker?
       content_type == DOCKER_TYPE
+    end
+
+    def ostree?
+      content_type == OSTREE_TYPE
     end
 
     def archive?
@@ -384,6 +392,7 @@ module Katello
           :content_view => content_view,
           :version => version
         }
+
         clone.relative_path = if clone.docker?
                                 Repository.clone_docker_repo_path(options)
                               else
@@ -444,7 +453,7 @@ module Katello
     end
 
     def node_syncable?
-      environment && !(environment.library? && content_view.default? && puppet?) && !file?
+      environment && !(environment.library? && content_view.default? && puppet?) && !file? && !ostree?
     end
 
     def exist_for_environment?(environment, content_view, attribute = nil)
@@ -481,6 +490,24 @@ module Katello
       end
     end
 
+    def ostree_branch_names
+      self.ostree_branches.map(&:name)
+    end
+
+    def update_ostree_branches!(branch_names)
+      check_duplicate_branch_names(branch_names)
+
+      # remove the ostree_branches not in this list
+      self.ostree_branches.each do |branch|
+        branch.destroy unless branch_names.include?(branch.name)
+      end
+
+      # add the new ostree_branches
+      (branch_names - self.ostree_branch_names).each do |ref|
+        self.ostree_branches.create!(:name => ref)
+      end
+    end
+
     def units_for_removal(ids)
       table_name = removable_unit_association.table_name
       is_integer = Integer(ids.first) rescue false #assume all ids are either integers or not
@@ -509,6 +536,21 @@ module Katello
           :distribution_uuid => distribution["_id"],
           :distribution_bootable => ::Katello::Repository.distribution_bootable?(distribution)
         )
+      end
+    end
+
+    def check_duplicate_branch_names(branch_names)
+      dupe_branch_checker = Hash.new
+      dupe_branch_checker.default = 0
+      branch_names.each do |branch|
+        dupe_branch_checker[branch] += 1
+      end
+
+      duplicate_branch_names = dupe_branch_checker.select { |_, value| value > 1 }.keys
+
+      unless duplicate_branch_names.empty?
+        fail ::Katello::Errors::ConflictException,
+              _("Duplicate branches specified - %{branches}") % { branches: duplicate_branch_names.join(", ")}
       end
     end
 
@@ -574,6 +616,11 @@ module Katello
         errors.add(:base, N_("Docker Repositories are not protected at this time. " \
                              "They need to be published via http to be available to containers."))
       end
+    end
+
+    def ensure_has_url_for_ostree
+      return true if url.present? || library_instance_id
+      errors.add(:url, N_("cannot be blank. RPM OSTree Repository URL required for syncing from the upstream."))
     end
 
     def remove_docker_content(images)

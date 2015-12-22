@@ -208,7 +208,7 @@ module Katello
       product.expect(:organization, @organization)
       product.expect(:redhat?, false)
       product.expect(:unprotected?, true)
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
@@ -237,7 +237,7 @@ module Katello
       product.expect(:gpg_key, nil)
       product.expect(:organization, @organization)
       product.expect(:redhat?, false)
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
@@ -268,7 +268,7 @@ module Katello
       ])
       product.expect(:organization, @organization)
       product.expect(:redhat?, false)
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
@@ -297,7 +297,7 @@ module Katello
       product.expect(:gpg_key, nil)
       product.expect(:organization, @organization)
       product.expect(:redhat?, false)
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
@@ -328,7 +328,7 @@ module Katello
       product.expect(:organization, @organization)
       product.expect(:redhat?, false)
       product.expect(:unprotected?, false)
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
@@ -361,7 +361,7 @@ module Katello
       product.expect(:redhat?, false)
       product.expect(:unprotected?, true)
       product.expect(:docker_upstream_name, docker_upstream_name)
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
@@ -369,6 +369,38 @@ module Katello
                       :url => 'http://hub.registry.com',
                       :content_type => 'docker',
                       :docker_upstream_name => "busybox"
+
+        assert_response :success
+        assert_template 'api/v2/repositories/show'
+      end
+    end
+
+    def test_create_with_ostree
+      product = MiniTest::Mock.new
+      product.expect(:add_repo, @repository, [
+        'Fedora_Repository',
+        'Fedora Repository',
+        'http://hub.registry.com',
+        'ostree',
+        true,
+        nil,
+        nil
+      ])
+
+      product.expect(:editable?, @product.editable?)
+      product.expect(:gpg_key, nil)
+      product.expect(:organization, @organization)
+      product.expect(:redhat?, false)
+      branches = ["branch1", "branch2"]
+
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, branches)
+
+      Product.stub(:find, product) do
+        post :create, :name => 'Fedora Repository',
+                      :product_id => @product.id,
+                      :url => 'http://hub.registry.com',
+                      :content_type => 'ostree',
+                      :ostree_branches => branches
 
         assert_response :success
         assert_template 'api/v2/repositories/show'
