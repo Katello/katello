@@ -286,7 +286,7 @@ module ::Actions::Katello::Repository
                                 source_pulp_id: source_repo.pulp_id,
                                 target_pulp_id: target_repo.pulp_id)
       assert_action_planed_with(action, ::Actions::Katello::Repository::MetadataGenerate, target_repo)
-      assert_action_planed_with(action, ::Actions::ElasticSearch::Repository::IndexContent, id: target_repo.id)
+      assert_action_planed_with(action, ::Actions::Katello::Repository::IndexContent, id: target_repo.id)
     end
   end
 
