@@ -1,6 +1,7 @@
 require "katello_test_helper"
 
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
 
@@ -79,6 +80,16 @@ module Katello
       assert_response_ids response, ids
     end
 
+    def test_index_with_content_view_version_id
+      ids = @view.repositories.pluck(:id)
+
+      response = get :index, :content_view_version_id => @view.id, :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+      assert_response_ids response, ids
+    end
+
     def test_index_available_for_content_view
       ids = @view.organization.default_content_view.versions.first.repositories.pluck(:id) - @view.repositories.pluck(:id)
 
@@ -112,9 +123,12 @@ module Katello
     end
 
     def test_index_with_content_view_version_id
-      ids = @view.versions.first.repositories.pluck(:id)
+      repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
+      ids = repo.content_view_version.repository_ids
 
-      response = get :index, :content_view_version_id => @view.versions.first.id, :organization_id => @organization.id
+      response =  get :index, :content_view_version_id => repo.content_view_version.id,
+                  :environment_id => repo.environment_id,
+                  :organization_id => @organization.id
 
       assert_response :success
       assert_template 'api/v2/repositories/index'

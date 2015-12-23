@@ -122,6 +122,7 @@ module Katello
 
       def unsubscribe(entitlement)
         Rails.logger.debug "Unsubscribing from entitlement '#{entitlement}' for : #{name}"
+        fail _("Subscription id is nil.") unless entitlement
         Resources::Candlepin::Consumer.remove_entitlement self.uuid, entitlement
         #ents = self.entitlements.collect {|ent| ent["id"] if ent["pool"]["id"] == pool}.compact
         #raise ArgumentError, "Not subscribed to the pool #{pool}" if ents.count < 1

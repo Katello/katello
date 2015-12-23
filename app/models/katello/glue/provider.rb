@@ -265,7 +265,7 @@ module Katello
           product_in_katello_ids.concat(adjusted_eng_products.map { |p| p["id"] })
 
           marketing_product = Katello::Product.find_by_cp_id(marketing_product_id)
-          marketing_product.destroy if marketing_product
+          marketing_product.destroy if marketing_product && marketing_product.redhat?
         end
 
         product_to_remove_ids = (product_in_katello_ids - products_in_candlepin_ids).uniq
