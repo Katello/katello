@@ -19,12 +19,14 @@ module Actions
           pulp_state = output[:pulp_tasks][0][:state]
 
           if pulp_state == 'waiting'
-            fail _("Host did not respond within %s seconds. Is katello-agent installed and goferd running on the Host?") % accept_timeout
+            cancel
+            fail _("Host did not respond within %s seconds. The task has been cancelled. Is katello-agent installed and goferd running on the Host?") % accept_timeout
           elsif output[:client_accepted].nil?
             output[:client_accepted] = Time.now.to_s
             schedule_timeout(finish_timeout)
           elsif pulp_state == 'running'
-            fail _("Host did not finish content action in %s seconds") % finish_timeout
+            cancel
+            fail _("Host did not finish content action in %s seconds.  The task has been cancelled.") % finish_timeout
           end
         end
 
