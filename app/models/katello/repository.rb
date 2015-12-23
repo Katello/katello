@@ -1,4 +1,5 @@
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class Repository < Katello::Model
     self.include_root_in_json = false
 
@@ -540,7 +541,7 @@ module Katello
     end
 
     def check_duplicate_branch_names(branch_names)
-      dupe_branch_checker = Hash.new
+      dupe_branch_checker = {}
       dupe_branch_checker.default = 0
       branch_names.each do |branch|
         dupe_branch_checker[branch] += 1
