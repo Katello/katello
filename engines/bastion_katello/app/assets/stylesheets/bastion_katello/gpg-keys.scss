@@ -1,10 +1,8 @@
-.form {
-  .gpg-textarea {
-    width: 560px;
-    height: 300px;
-    font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,
-                  Bitstream Vera Sans Mono,Courier New,monospace;
-  }
+.form.gpg-textarea {
+  width: 560px;
+  height: 300px;
+  font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,
+                Bitstream Vera Sans Mono,Courier New,monospace;
 }
 .gpg-details.details {
     width: 82%;
@@ -24,7 +22,7 @@
     }
   }
   textarea {
-    .form.gpg-textarea;
+    @extend .form.gpg-textarea;
   }
 
  .value.editable {
