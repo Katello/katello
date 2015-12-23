@@ -28,6 +28,7 @@ module Katello
     param :start_date, String, :desc => N_("erratum: start date (YYYY-MM-DD)")
     param :end_date, String, :desc => N_("erratum: end date (YYYY-MM-DD)")
     param :types, Array, :desc => N_("erratum: types (enhancement, bugfix, security)")
+    param :date_type, String, :desc => N_("erratum: search using the 'Issued On' or 'Updated On' column of the errata. Values are 'issued'/'updated'")
     def create
       rule_clazz = ContentViewFilter.rule_class_for(@filter)
 
@@ -106,7 +107,7 @@ module Katello
 
       params.fetch(:content_view_filter_rule, {}).
             permit(:uuid, :name, :version, :min_version, :max_version,
-                    :errata_id, :start_date, :end_date,
+                    :errata_id, :start_date, :end_date, :date_type,
                     :types => [], :errata_ids => [])
     end
 

@@ -28,7 +28,7 @@ module Katello
           date_range = {}
           date_range["$gte"] = start_date.to_time.as_json unless start_date.blank?
           date_range["$lte"] = end_date.to_time.as_json unless end_date.blank?
-          rule_clauses << { "issued" => date_range }
+          rule_clauses << { erratum_rules.first.pulp_date_type => date_range }
         end
         unless types.blank?
           # {"type": {"$in": ["security", "enhancement", "bugfix"]}

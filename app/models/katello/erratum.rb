@@ -93,9 +93,11 @@ module Katello
       update_packages(json['pkglist']) unless json['pkglist'].blank?
     end
 
-    def self.list_filenames_by_clauses(clauses)
+    def self.list_filenames_by_clauses(repo, clauses)
       errata = Katello.pulp_server.extensions.errata.search(Katello::Erratum::CONTENT_TYPE, :filters => clauses)
-      Katello::ErratumPackage.joins(:erratum).where("#{Erratum.table_name}.uuid" => errata.map { |e| e['_id'] }).pluck(:filename)
+      Katello::ErratumPackage.joins(:erratum => :repository_errata).
+          where("#{RepositoryErratum.table_name}.repository_id" => repo.id,
+                "#{Erratum.table_name}.uuid" => errata.map { |e| e['_id'] }).pluck(:filename)
     end
 
     private

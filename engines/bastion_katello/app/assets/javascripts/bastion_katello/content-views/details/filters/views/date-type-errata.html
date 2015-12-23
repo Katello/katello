@@ -33,6 +33,22 @@
   </label>
 
 </div>
+<div bst-form-group label="{{ 'Date Type' | translate }}">
+  <label class="radio-inline">
+    <input type="radio"
+           ng-model="rule.date_type"
+           ng-change="updateDateType()"
+           value="updated"/>
+    <span translate>Updated On</span>
+  </label>
+  <label class="radio-inline">
+    <input type="radio"
+           ng-model="rule.date_type"
+           ng-change="updateDateType()"
+           value="issued"/>
+    <span translate>Issued On</span>
+  </label>
+</div>
 
 <div bst-form-group label="{{ 'Start Date' | translate }}">
   <div class="input-group">
