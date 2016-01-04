@@ -16,7 +16,6 @@ module Katello
     api :GET, "/status", N_("Shows version information")
     description N_("This service is available for unauthenticated users")
     def server_status
-      # rubocop:disable SymbolName
       status = { :version    => Katello::VERSION,
                  :timeUTC    => Time.now.getutc }
       respond_for_show :resource => status, :template => "server_status"

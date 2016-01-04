@@ -3,7 +3,6 @@ module Katello
     self.include_root_in_json = false
 
     include Glue
-    include Glue::ElasticSearch::Job  if SETTINGS[:katello][:use_elasticsearch]
 
     belongs_to :job_owner, :polymorphic => true
 
@@ -18,7 +17,7 @@ module Katello
           uuids = TaskStatus.where(:id => ids).pluck(:uuid)
           uuids.each do |uuid|
             pulp_task = Katello.pulp_server.resources.task.poll(uuid)
-            PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task[:task_id]))
+            PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by(:uuid => pulp_task[:task_id]))
           end
         end
       end
@@ -36,14 +35,8 @@ module Katello
 
         ids = tasks.select("#{task_status_table}.id").collect { |row| row[:id] }
 
-        # retrieve the jobs associated with those tasks
-        jobs = Job.where("#{task_status_table}.id" => ids).joins(:task_statuses)
-
         # refresh the tasks via pulp
         refresh_tasks(ids) unless ids.empty?
-
-        # update the elasticsearch index for the associated jobs
-        Job.index_import(jobs) unless jobs.empty?
 
         # retrieve the jobs for the current owner (e.g. system group)
         Job.where(:job_owner_id => owner.id, :job_owner_type => owner.class.name)

@@ -17,8 +17,10 @@ module Katello
       # TODO: this tests should move to actions tests once we
       # have more actions in Dynflow. For now just peform the
       # things that system.set_pulp_consumer did before.
-      ForemanTasks.sync_task(::Actions::Candlepin::Owner::Create,
-                             name: org.name, label: org.label)
+      VCR.use_cassette('support/candlepin/organization', :match_requests_on => [:path, :params, :method, :body_json]) do
+        ForemanTasks.sync_task(::Actions::Candlepin::Owner::Create,
+                               name: org.name, label: org.label)
+      end
     end
 
     def set_owner(org)
@@ -32,18 +34,16 @@ module Katello
       @organization.description = 'New Organization'
       Organization.stubs(:disable_auto_reindex!).returns
 
-      VCR.use_cassette('support/candlepin/organization', :match_requests_on => [:path, :params, :method, :body_json]) do
-        set_owner(@organization)
-      end
-      return @organization
+      set_owner(@organization)
+      @organization
     rescue => e
       puts e
-      return @organization
+      @organization
     end
 
-    def self.destroy_organization(_id = @organization_id, cassette = 'support/candlepin/organization')
+    def self.destroy_organization(organization, cassette = 'support/candlepin/organization')
       VCR.use_cassette(cassette, :match_requests_on => [:path, :params, :method, :body_json]) do
-        Resources::Candlepin::Owner.destroy(@organization.label)
+        Resources::Candlepin::Owner.destroy(organization.label)
       end
     rescue RestClient::ResourceNotFound => e
       puts e

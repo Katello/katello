@@ -2,36 +2,36 @@ fedora_hosted:
   name:         FedoraHosted
   description:  Project and repository hosting.
   provider_type: 'Custom'
-  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 anonymous:
   name:         Anonymous
   description:  Project and repository hosting.
   provider_type: 'Anonymous'
-  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 redhat:
   name: Red Hat Provider
   description: Provider of all your red hat needs
   provider_type: 'Red Hat'
   repository_url: 'https://cds.example.com'
-  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 candlepin_redhat:
   name: Red Hat Provider
   description: Provider of all your red hat needs
   provider_type: 'Red Hat'
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization2) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:organization2) %>
 
 puppet_labs:
   name:           PuppetLabs
   description:    Fie, fie, you counterfeit. You puppet, you!
   provider_type:  Custom
-  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 redhat2:
   name: Red Hat Provider2
   description: Provider of all your red hat needs
   provider_type: 'Red Hat'
   repository_url: 'https://cds.example.com'
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:organization1) %>

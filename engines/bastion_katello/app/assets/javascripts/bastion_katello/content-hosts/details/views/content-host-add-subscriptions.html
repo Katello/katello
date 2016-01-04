@@ -33,15 +33,15 @@
        </thead>
 
        <tbody>
-         <tr bst-table-row ng-repeat-start="subscription in detailsTable.rows">
+         <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
           <td class="row-select"></td>
            <td bst-table-cell colspan="8">
              <a href='/subscriptions/{{ subscription.id }}/info'>
-              {{ subscription.name }}
+              {{ name }}
              </a>
            </td>
          </tr>
-         <tr bst-table-row ng-repeat-end row-select="subscription">
+         <tr bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
            <td bst-table-cell>
              <span ng-hide="subscription.multi_entitlement">
                1
@@ -54,7 +54,7 @@
              </select>
            </td>
            <td bst-table-cell>{{ subscription | subscriptionConsumedFilter }}</td>
-           <td bst-table-cell>{{ subscription.type }}</td>
+           <td bst-table-cell><div subscription-type="subscription"></div></td>
            <td bst-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
            <td bst-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
            <td bst-table-cell>{{ subscription.support_level }}</td>

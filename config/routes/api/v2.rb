@@ -35,6 +35,7 @@ Katello::Engine.routes.draw do
             post :copy
             put :add_subscriptions
             put :remove_subscriptions
+            get :subscriptions
           end
           match '/releases' => 'activation_keys#available_releases', :via => :get, :on => :member
           api_resources :host_collections, :only => [:index]
@@ -44,7 +45,7 @@ Katello::Engine.routes.draw do
             match '/host_collections/available' => 'activation_keys#available_host_collections', :via => :get
           end
           api_resources :products, :only => [:index]
-          api_resources :subscriptions, :only => [:index] do
+          api_resources :subscriptions, :only => [] do
             collection do
               match '/available' => 'subscriptions#available', :via => :get
             end
@@ -59,7 +60,6 @@ Katello::Engine.routes.draw do
             post :publish
             post :refresh
             put :remove
-            get :history
             get :available_puppet_modules
             get :available_puppet_module_names
             match '/environments/:environment_id' => "content_views#remove_from_environment", :via => :delete
@@ -75,6 +75,11 @@ Katello::Engine.routes.draw do
             end
             api_resources :errata, :only => [:index]
             api_resources :package_groups, :only => [:index]
+          end
+          api_resources :history, :controller => :content_view_histories, :only => [:index] do
+            collection do
+              get :auto_complete_search
+            end
           end
           api_resources :puppet_modules, :only => [:index]
           api_resources :repositories, :only => [:index]
@@ -235,11 +240,16 @@ Katello::Engine.routes.draw do
             put :refresh_subscriptions
             put :content_override
             get :product_content
+            get :subscriptions, :action => :subscriptions
+            post :subscriptions, :action => :add_subscriptions
+          end
+          collection do
+            get :auto_complete_search
           end
           api_resources :activation_keys, :only => [:index]
           api_resources :host_collections, :only => [:index]
           api_resources :products, :only => [:index]
-          api_resources :subscriptions, :only => [:create, :index, :destroy] do
+          api_resources :subscriptions, :only => [:destroy] do
             collection do
               match '/' => 'subscriptions#destroy', :via => :put
               match '/available' => 'subscriptions#available', :via => :get
@@ -260,8 +270,8 @@ Katello::Engine.routes.draw do
             collection do
               get :auto_complete_search
               match ':sync_plan_id/available_products', :to => 'products#index',
-                :available_for => 'sync_plan'
-              match ':sync_plan_id/products', :to => 'products#index'
+                :available_for => 'sync_plan', :via => :get
+              match ':sync_plan_id/products', :to => 'products#index', :via => :get
             end
           end
           api_resources :systems, :only => [:create] do
@@ -303,6 +313,7 @@ Katello::Engine.routes.draw do
             match '/bulk/destroy' => 'systems_bulk_actions#destroy_systems', :via => :put
             match '/bulk/environment_content_view' => 'systems_bulk_actions#environment_content_view', :via => :put
             match '/bulk/available_incremental_updates' => 'systems_bulk_actions#available_incremental_updates', :via => :post
+            get :auto_complete_search
           end
           resource :packages, :only => [], :controller => :system_packages do
             collection do
@@ -330,6 +341,8 @@ Katello::Engine.routes.draw do
             delete :index, :on => :collection, :action => :cancel
           end
 
+          api_resources :export, :only => [:index]
+
           api_resources :packages, :only => [:index, :show] do
             get :search, :on => :collection
           end
@@ -353,6 +366,7 @@ Katello::Engine.routes.draw do
             put :remove_docker_images, :action => :remove_content
             put :remove_content
             post :sync
+            post :export
             post :upload_content
             put :import_uploads
           end

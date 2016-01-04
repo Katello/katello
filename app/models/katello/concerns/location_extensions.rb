@@ -32,7 +32,7 @@ module Katello
       end
 
       def refute_katello_default_changed
-        fail _("katello_default cannot be changed.") if self.katello_default_changed?
+        fail _("katello_default cannot be changed.") if Location.default_location && self.katello_default_changed?
       end
 
       module ClassMethods

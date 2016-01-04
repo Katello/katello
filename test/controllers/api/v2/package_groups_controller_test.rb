@@ -3,7 +3,7 @@ require "katello_test_helper"
 module Katello
   class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
     def models
-      @repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
+      @repo = Repository.find(katello_repositories(:fedora_17_x86_64))
       @package_group_filter = katello_content_view_filters(:populated_package_group_filter)
     end
 
@@ -20,9 +20,6 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      @request.env['HTTP_ACCEPT'] = 'application/json'
-      @request.env['CONTENT_TYPE'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       models
       permissions
     end
@@ -31,31 +28,30 @@ module Katello
       get :index
 
       assert_response :success
-      assert_template %w(katello/api/v2/package_groups/index)
+      assert_template "katello/api/v2/package_groups/index"
     end
 
     def test_index_with_repo_id
       get :index, :repository_id => @repo.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/package_groups/index)
+      assert_template "katello/api/v2/package_groups/index"
     end
 
     def test_index_with_content_view_version
       get :index, :content_view_version_id => ContentViewVersion.first.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/package_groups/index)
+      assert_template "katello/api/v2/package_groups/index"
     end
 
     def test_index_with_environment_id
       environment = KTEnvironment.first
-      KTEnvironment.expects(:readable).returns(stub(:find_by_id => environment))
 
       get :index, :environment_id => environment.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/package_groups/index)
+      assert_template "katello/api/v2/package_groups/index"
     end
 
     def test_index_protected
@@ -81,7 +77,7 @@ module Katello
       get :show, :id => @repo.package_groups.first.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/package_groups/show)
+      assert_template "katello/api/v2/package_groups/show"
     end
 
     def test_show_by_uuid

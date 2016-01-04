@@ -1,6 +1,5 @@
 module Katello
   class PulpTaskStatus < TaskStatus
-    use_index_of TaskStatus if SETTINGS[:katello][:use_elasticsearch]
     WAIT_TIMES = [0.5, 1, 2, 4, 8, 16]
     WAIT_TIME_STEP = 5
 
@@ -54,7 +53,7 @@ module Katello
         task_id = pulp_status[:task_id] || pulp_status[:spawned_tasks].first[:task_id]
         pulp_status = Katello.pulp_server.resources.task.poll(task_id)
 
-        task_status = TaskStatus.find_by_uuid(task_id)
+        task_status = TaskStatus.find_by(:uuid => task_id)
         task_status = self.new { |t| yield t if block_given? } if task_status.nil?
         PulpTaskStatus.dump_state(pulp_status, task_status)
       end

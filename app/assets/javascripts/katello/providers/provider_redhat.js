@@ -37,7 +37,7 @@ KT.redhat_provider_page = (function($) {
             id = checkbox.attr("value"),
             set_checkbox = checkbox.parents(".repo_set").find('.repo_set_enable');
 
-        if (checkbox.attr("checked") !== undefined) {
+        if (checkbox.is(":checked")) {
             options['repo'] = "1";
         } else {
             options['repo'] = "0";

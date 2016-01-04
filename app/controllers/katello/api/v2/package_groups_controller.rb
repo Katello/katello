@@ -3,11 +3,6 @@ module Katello
     apipie_concern_subst(:a_resource => N_("a package group"), :resource => "package_groups")
     include Katello::Concerns::Api::V2::RepositoryContentController
 
-    api :GET, "package_groups/:id", N_("show package groups by id")
-    def index
-      super
-    end
-
     def available_for_content_view_filter(filter, collection)
       collection_ids = []
       current_ids = filter.package_group_rules.map(&:uuid)

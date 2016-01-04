@@ -9,7 +9,7 @@ module Actions
 
         def run
           output[:response] = ::Katello::Resources::Candlepin::Product.pools(input[:organization_label], input[:cp_id]).each do |pool|
-            ::Katello::Pool.find_all_by_cp_id(pool['id']).each(&:destroy)
+            ::Katello::Pool.where(:cp_id => pool['id']).each(&:destroy)
             ::Katello::Resources::Candlepin::Pool.destroy(pool['id'])
           end
         end

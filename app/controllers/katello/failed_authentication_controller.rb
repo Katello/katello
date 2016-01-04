@@ -32,7 +32,6 @@ module Katello
       Rails.logger.warn "Request is unauthenticated_api for #{request.remote_ip}"
       m = "Invalid credentials"
       respond_to do |format|
-        # rubocop:disable SymbolName
         format.json { render :json => {:displayMessage => m, :errors => [m] }, :status => 401 }
         format.all  { render :text => m, :status => 401 }
       end

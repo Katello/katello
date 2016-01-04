@@ -18,9 +18,6 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      @request.env['HTTP_ACCEPT'] = 'application/json'
-      @request.env['CONTENT_TYPE'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       models
       permissions
     end
@@ -45,7 +42,9 @@ module Katello
       post :create, :content_view_filter_id => @filter.id, :name => "testpkg", :version => "10.0"
 
       assert_response :success
-      assert_template %w(katello/api/v2/content_view_filter_rules/show)
+
+      assert_template :layout => 'katello/api/v2/layouts/resource'
+      assert_template 'katello/api/v2/common/create'
       assert_equal @filter.reload.package_rules.first.name, "testpkg"
       assert_equal @filter.package_rules.first.version, "10.0"
     end

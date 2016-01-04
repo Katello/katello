@@ -21,7 +21,7 @@ module Katello
       refute_empty Product.syncable
     end
 
-    def test_syncable
+    def test_deletable
       refute_empty Product.deletable
     end
 

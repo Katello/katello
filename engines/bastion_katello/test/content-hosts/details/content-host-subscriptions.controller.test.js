@@ -57,7 +57,7 @@ describe('Controller: ContentHostSubscriptionsController', function() {
 
         $scope.contentHost = new ContentHost({
             uuid: 12345,
-            subscriptions: [{id: 1, quantity: 11}, {id: 2, quantity: 22}]
+            subscriptions: [{id: 1, cp_id: "cpid1", quantity: 11}, {id: 2, cp_id: "cpid2", quantity: 22}]
         });
 
         $scope.subscriptionsPane = {
@@ -82,11 +82,11 @@ describe('Controller: ContentHostSubscriptionsController', function() {
 
     it("allows removing subscriptions from the content host", function() {
 
-        var expected = {uuid: 12345, subscriptions: [{id: 2}]};
+        var expected = {uuid: 12345, subscriptions: [{id: "cpid2"}]};
         spyOn(ContentHost, 'removeSubscriptions');
 
         $scope.detailsTable.getSelected = function() {
-            return [{id: 2}];
+            return [{id: 2, cp_id: "cpid2"}];
         };
 
         $scope.removeSelected();

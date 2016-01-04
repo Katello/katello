@@ -6,8 +6,6 @@ module Katello
   class Api::V2::PingControllerTest < ActionController::TestCase
     def setup
       setup_controller_defaults_api
-      @request.env['HTTP_ACCEPT'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
     end
 
     def test_ping
@@ -17,8 +15,6 @@ module Katello
                                              :duration_ms => "38" },
                                   :candlepin => { :status => "ok",
                                                   :duration_ms => "23" },
-                                  :elasticsearch => { :status => "ok",
-                                                      :duration_ms => "7" },
                                   :pulp_auth => { :status => "ok",
                                                   :duration_ms => "0" },
                                   :candlepin_auth => { :status => "ok",

@@ -5,7 +5,7 @@ acme_default:
   next_version:   2
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 
 #View published only to library
@@ -16,7 +16,7 @@ library_view:
   next_version:   3
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 no_environment_view:
   name:           No environment view
@@ -25,7 +25,7 @@ no_environment_view:
   next_version:   1
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 #view published to library and dev
 library_dev_view:
@@ -35,7 +35,7 @@ library_dev_view:
   next_version:   2
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 library_dev_staging_view:
   name:           Published Library - dev - staging view
@@ -44,7 +44,7 @@ library_dev_staging_view:
   next_version:   4
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 candlepin_default_cv:
   name:           candlepin Default ContentView
@@ -53,7 +53,7 @@ candlepin_default_cv:
   next_version:   1
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization2) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:organization2) %>
 
 
 # For use with glue/candlepin tests
@@ -64,7 +64,7 @@ candlepin_library_cv:
   next_version:   2
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization2) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:organization2) %>
 
 candlepin_library_dev_cv:
   name:           Candlepin Library and Dev Content View
@@ -73,7 +73,7 @@ candlepin_library_dev_cv:
   next_version:   2
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization2) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:organization2) %>
 # end use with glue/candlepin tests
 
 composite_view:
@@ -84,4 +84,4 @@ composite_view:
   next_version:   2
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>

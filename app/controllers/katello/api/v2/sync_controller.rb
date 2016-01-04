@@ -32,7 +32,7 @@ module Katello
     end
 
     def find_repository
-      @repository = Repository.syncable.find_by_id(params[:repository_id])
+      @repository = Repository.syncable.find_by(:id => params[:repository_id])
       fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repository.nil?
       @repository
     end

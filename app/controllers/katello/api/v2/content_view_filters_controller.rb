@@ -80,7 +80,7 @@ module Katello
 
     def find_filter
       if @view
-        @filter = @view.filters.find_by_id(params[:id])
+        @filter = @view.filters.find_by(:id => params[:id])
         fail HttpErrors::NotFound, _("Couldn't find ContentViewFilter with id=%s") % params[:id] unless @filter
       else
         @filter = ContentViewFilter.find(params[:id])

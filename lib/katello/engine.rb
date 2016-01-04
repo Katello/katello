@@ -10,15 +10,11 @@ module Katello
       default_settings = {
         :use_pulp => true,
         :use_cp => true,
-        :use_elasticsearch => true,
         :rest_client_timeout => 30,
         :gpg_strict_validation => false,
         :puppet_repo_root => '/etc/puppet/environments/',
         :redhat_repository_url => 'https://cdn.redhat.com',
         :post_sync_url => 'http://localhost:3000/katello/api/v2/repositories/sync_complete?token=katello',
-        :elastic_index => 'katello',
-        :elastic_url => 'http://localhost:9200',
-        :simple_search_tokens => [":", " and\\b", " or\\b", " not\\b"],
         :consumer_cert_rpm => 'katello-ca-consumer-latest.noarch.rpm',
         :pulp => {
           :default_login => 'admin',
@@ -42,6 +38,32 @@ module Katello
       SETTINGS[:katello] = default_settings.deep_merge(SETTINGS[:katello] || {})
 
       require_dependency File.expand_path('../../../app/models/setting/katello.rb', __FILE__) if (Setting.table_exists? rescue(false))
+    end
+
+    initializer 'katello.configure_assets', :group => :assets do
+      def find_assets(args = {})
+        type = args.fetch(:type, nil)
+        asset_dir = "#{Katello::Engine.root}/app/assets/#{type}/"
+
+        asset_paths = Dir[File.join(asset_dir, '**', '*')].reject { |file| File.directory?(file) }
+        asset_paths.each { |file| file.slice!(asset_dir) }
+
+        asset_paths
+      end
+
+      javascripts = find_assets(:type => 'javascripts')
+      images = find_assets(:type => 'images')
+
+      precompile = [
+        'katello/katello.css',
+        'bastion_katello/bastion_katello.css',
+        'bastion_katello/bastion_katello.js',
+        /bastion_katello\S+.(?:svg|eot|woff|ttf)$/
+      ]
+      precompile.concat(javascripts)
+      precompile.concat(images)
+
+      SETTINGS[:katello] = {:assets => {:precompile => precompile } }
     end
 
     initializer "katello.apipie" do
@@ -108,16 +130,6 @@ module Katello
       ActionView::Base.send :include, Katello::KatelloUrlsHelper
     end
 
-    initializer :register_assets do |app|
-      if Rails.env.production?
-        assets = YAML.load_file("#{Katello::Engine.root}/public/assets/katello/manifest.yml")
-
-        assets.each_pair do |file, digest|
-          app.config.assets.digests[file] = digest
-        end
-      end
-    end
-
     config.to_prepare do
       FastGettext.add_text_domain('katello',
                                     :path => File.expand_path("../../../locale", __FILE__),
@@ -137,6 +149,8 @@ module Katello
       # Model extensions
       ::Environment.send :include, Katello::Concerns::EnvironmentExtensions
       ::Host::Managed.send :include, Katello::Concerns::HostManagedExtensions
+      ::Host::Managed.send :include, ::Katello::Concerns::ContentFacetHostExtensions
+      ::Host::Managed.send :include, ::Katello::Concerns::SubscriptionFacetHostExtensions
       ::Hostgroup.send :include, Katello::Concerns::HostgroupExtensions
       ::Location.send :include, Katello::Concerns::LocationExtensions
       ::Medium.send :include, Katello::Concerns::MediumExtensions
@@ -189,16 +203,9 @@ module Katello
     initializer 'katello.register_plugin', :after => :finisher_hook do
       require 'katello/plugin'
       require 'katello/permissions'
-
-      Tire::Configuration.url(SETTINGS[:katello][:elastic_url])
-      bridge = Katello::TireBridge.new(::Foreman::Logging.logger('katello/tire_rest'))
-      Tire.configure { logger bridge, :level => bridge.level }
     end
 
     rake_tasks do
-      Rake::Task['db:seed'].enhance do
-        Katello::Engine.load_seed
-      end
       load "#{Katello::Engine.root}/lib/katello/tasks/test.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/jenkins.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/setup.rake"
@@ -206,7 +213,6 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/regenerate_repo_metadata.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/reindex.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/rubocop.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/asset_compile.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/clean_backend_objects.rake"
 
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.1/import_errata.rake"
@@ -217,6 +223,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_distributions.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_puppet_modules.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_subscriptions.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.5/add_export_distributor.rake"
     end
   end
 end

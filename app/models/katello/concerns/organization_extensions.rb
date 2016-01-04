@@ -18,8 +18,8 @@ module Katello
         has_many :providers, :class_name => "Katello::Provider", :dependent => :destroy
         has_many :products, :class_name => "Katello::Product", :dependent => :destroy, :inverse_of => :organization
         # has_many :environments is already defined in Foreman taxonomy.rb
-        has_many :kt_environments, :class_name => "Katello::KTEnvironment", :dependent => :restrict, :inverse_of => :organization
-        has_one :library, :class_name => "Katello::KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
+        has_many :kt_environments, :class_name => "Katello::KTEnvironment", :dependent => :restrict_with_exception, :inverse_of => :organization
+        has_one :library, lambda { where(:library => true) }, :class_name => "Katello::KTEnvironment", :dependent => :destroy
         has_many :gpg_keys, :class_name => "Katello::GpgKey", :dependent => :destroy, :inverse_of => :organization
         has_many :sync_plans, :class_name => "Katello::SyncPlan", :dependent => :destroy, :inverse_of => :organization
         has_many :host_collections, :class_name => "Katello::HostCollection", :dependent => :destroy, :inverse_of => :organization
@@ -32,30 +32,14 @@ module Katello
         has_many :org_tasks, :dependent => :destroy, :class_name => "Katello::TaskStatus", :inverse_of => :organization
 
         attr_accessor :statistics
+        attr_accessible :label
 
-        scope :having_name_or_label, ->(name_or_label) { { :conditions => ["name = :id or label = :id", {:id => name_or_label}] } }
+        scope :having_name_or_label, ->(name_or_label) { where("name = :id or label = :id", :id => name_or_label) }
         scoped_search :on => :label, :complete_value => :true
 
         after_create :associate_default_capsule
-
-        validates :name, :uniqueness => true, :presence => true
-        validates_with Validators::KatelloNameFormatValidator, :attributes => :name
-        validates :label, :presence => true
         validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
-        validate :unique_name_and_label
-
-        # Ensure that the name and label namespaces do not overlap
-        def unique_name_and_label
-          if new_record? && Organization.where("name = ? OR label = ?", name, label).any?
-            errors.add(:organization, _("Names and labels must be unique across all organizations"))
-          elsif label_changed? && Organization.where("id != ? AND label = ?", id, label).any?
-            errors.add(:label, _("Names and labels must be unique across all organizations"))
-          elsif name_changed? && Organization.where("id != ? AND name = ?", id, name).any?
-            errors.add(:name, _("Names and labels must be unique across all organizations"))
-          else
-            true
-          end
-        end
+        validates :label, :uniqueness => true
 
         def default_content_view
           ContentView.default.where(:organization_id => self.id).first

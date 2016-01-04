@@ -18,7 +18,7 @@ module Katello
       end
 
       def label_not_changed
-        if label_changed?
+        if label_changed? && label_was.present?
           errors.add(:label, _("cannot be changed."))
         end
       end

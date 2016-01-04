@@ -1,5 +1,3 @@
-# rubocop:disable Style/RegexpLiteral
-
 # encoding: UTF-8
 require 'ripper'
 
@@ -17,12 +15,14 @@ class SourceCodeTest < ActiveSupport::TestCase
   class SourceCode
     include MiniTest::Assertions
     attr_reader :files
+    attr_accessor :assertions
 
     # @param [Array<Regexp>] ignores
     def initialize(pattern, *ignores)
       @pattern = pattern || fail
       root     = File.expand_path File.join(File.dirname(__FILE__), '..')
       @files   = Dir.glob("#{root}/#{pattern}").select { |path| ignores.all? { |i| path !~ i } }
+      self.assertions = 0
     end
 
     def each_file(&it)

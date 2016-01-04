@@ -37,8 +37,8 @@ module Katello
       end
 
       def import_pools
-        pool_ids = self.get_key_pools.map { |pool| pool['id'] }
-        pools = Katello::Pool.where(:cp_id => pool_ids)
+        key_pools = self.get_key_pools
+        pools = Katello::Pool.where(:cp_id => key_pools.map { |pool| pool['id'] })
         associations = Katello::PoolActivationKey.where(:activation_key_id => self.id)
         associations.map { |assoc| assoc.destroy! if pools.map(&:id).exclude?(assoc.pool_id) }
         pools.each do |pool|
@@ -55,6 +55,7 @@ module Katello
       end
 
       def unsubscribe(pool_id)
+        fail _("Subscription id is nil.") unless pool_id
         pool = Katello::Pool.find(pool_id)
         subscription = pool.subscription
         remove_custom_product(subscription.product_id) unless subscription.redhat?

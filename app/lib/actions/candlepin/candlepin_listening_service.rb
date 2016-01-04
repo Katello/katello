@@ -59,7 +59,7 @@ module Actions
         else
           suspended_action.notify_not_connected("Not Connected")
         end
-      rescue TransportFailure => e
+      rescue ::TransportFailure => e
         suspended_action.notify_not_connected(e.message)
       end
 

@@ -12,6 +12,10 @@ module ::Actions::Katello::Organization
     let(:organization) do
       build(:katello_organization, :acme_corporation, :with_library)
     end
+
+    before do
+      set_user
+    end
   end
 
   class CreateTest < TestBase

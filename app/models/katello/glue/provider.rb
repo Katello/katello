@@ -1,4 +1,3 @@
-# rubocop:disable SymbolName
 module Katello
   module Glue::Provider
     def self.included(base)
@@ -190,7 +189,7 @@ module Katello
       end
 
       # TODO: break up method
-      def queue_import_manifest(options) # rubocop:disable MethodLength
+      def queue_import_manifest(options)
         options = options.with_indifferent_access
         fail "zip_file_path or upstream must be specified" if options[:zip_file_path].nil? && options[:upstream].nil?
 
@@ -264,13 +263,8 @@ module Katello
 
           product_in_katello_ids.concat(adjusted_eng_products.map { |p| p["id"] })
 
-          unless product_in_katello_ids.include?(marketing_product_id)
-            Glue::Candlepin::Product.import_from_cp(Resources::Candlepin::Product.get(marketing_product_id)[0]) do |p|
-              p.provider = self
-              p.organization_id = self.organization.id
-            end
-            product_in_katello_ids << marketing_product_id
-          end
+          marketing_product = Katello::Product.find_by_cp_id(marketing_product_id)
+          marketing_product.destroy if marketing_product && marketing_product.redhat?
         end
 
         product_to_remove_ids = (product_in_katello_ids - products_in_candlepin_ids).uniq
@@ -347,7 +341,6 @@ module Katello
 
       # Display appropriate messages when manifest import or delete fails
       # TODO: break up this method
-      # rubocop:disable MethodLength
       def display_manifest_message(type, error)
         # Clean up response from candlepin
         types = {'import' => _('import'), 'delete' => _('delete'), 'refresh' => _('refresh')}  # For i18n

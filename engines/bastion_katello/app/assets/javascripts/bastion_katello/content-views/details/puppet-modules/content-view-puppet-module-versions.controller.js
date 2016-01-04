@@ -43,7 +43,7 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModuleVersi
             contentViewPuppetModule = new ContentViewPuppetModule(contentViewPuppetModuleData);
 
             if ($scope.$stateParams.moduleId) {
-                contentViewPuppetModule.uuid = $scope.$stateParams.moduleId;
+                contentViewPuppetModule.id = $scope.$stateParams.moduleId;
                 contentViewPuppetModule.$update(success, error);
             } else {
                 contentViewPuppetModule.$save(success, error);

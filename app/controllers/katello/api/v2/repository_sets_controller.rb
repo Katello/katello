@@ -39,7 +39,9 @@ module Katello
 
       repos = repos.select do |repo|
         if repo[:path].include?('kickstart')
-          repo[:substitutions][:releasever].include?('Server') ? repo[:enabled] : true
+          variants = ['Server', 'Client', 'ComputeNode', 'Workstation']
+          has_variant = variants.any? { |v| repo[:substitutions][:releasever].include?(v) }
+          has_variant ? repo[:enabled] : true
         else
           true
         end
@@ -83,7 +85,7 @@ module Katello
     end
 
     def find_product
-      @product = Product.find_by_id(params[:product_id])
+      @product = Product.find_by(:id => params[:product_id])
       fail HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
       @organization = @product.organization
     end

@@ -41,12 +41,12 @@ module Katello
         authorized(:destroy_content_views)
       end
 
-      def deletable
+      def publishable
         authorized(:publish_content_views)
       end
 
       def readable_repositories(repo_ids = nil)
-        query = Katello::Repository.scoped
+        query = Katello::Repository.all
         content_views = Katello::ContentView.readable
 
         if repo_ids
@@ -57,14 +57,6 @@ module Katello
 
         query.joins(:content_view_version)
              .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => content_views.pluck(:id))
-      end
-
-      def readable_products(product_ids = nil)
-        query = Katello::Product.scoped
-        query = query.where(:id => product_ids) if product_ids
-
-        query.joins(:repositories => :content_view_version)
-             .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => ContentView.readable.pluck(:id))
       end
     end
   end

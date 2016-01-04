@@ -31,22 +31,22 @@ module Katello
       get :index, :repository_id => @repo.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/packages/index)
+      assert_template "katello/api/v2/packages/index"
 
       get :index, :content_view_version_id => @version.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/packages/index)
+      assert_template "katello/api/v2/packages/index"
     end
 
     def test_index_with_environment_id
       environment = KTEnvironment.first
-      KTEnvironment.expects(:readable).returns(stub(:find_by_id => environment))
+      KTEnvironment.expects(:readable).returns(stub(:find_by => environment))
 
       get :index, :environment_id => environment.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/packages/index)
+      assert_template "katello/api/v2/packages/index"
     end
 
     def test_index_parameters
@@ -72,14 +72,14 @@ module Katello
       get :show, :id => @rpm.id
 
       assert_response :success
-      assert_template %w(katello/api/v2/packages/show)
+      assert_template "katello/api/v2/packages/show"
     end
 
     def test_show_uuid
       get :show, :id => @rpm.uuid
 
       assert_response :success
-      assert_template %w(katello/api/v2/packages/show)
+      assert_template "katello/api/v2/packages/show"
     end
 
     def test_show_package_not_found

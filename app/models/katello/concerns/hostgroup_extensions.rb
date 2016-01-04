@@ -12,6 +12,8 @@ module Katello
 
         validates_with Katello::Validators::ContentViewEnvironmentValidator
 
+        attr_accessible :content_view_id, :lifecycle_environment_id
+
         scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
         scoped_search :in => :content_view, :on => :name, :complete_value => true, :rename => :content_view
         scoped_search :in => :lifecycle_environment, :on => :name, :complete_value => true, :rename => :lifecycle_environment
@@ -19,18 +21,18 @@ module Katello
 
       def content_view
         return super if ancestry.nil? || self.content_view_id.present?
-        Katello::ContentView.find_by_id(inherited_content_view_id)
+        Katello::ContentView.find_by(:id => inherited_content_view_id)
       end
 
       def lifecycle_environment
         return super if ancestry.nil? || self.lifecycle_environment_id.present?
-        Katello::KTEnvironment.find_by_id(inherited_lifecycle_environment_id)
+        Katello::KTEnvironment.find_by(:id => inherited_lifecycle_environment_id)
       end
 
       # instead of calling nested_attribute_for(:content_source_id) in Foreman, define the methods explictedly
       def content_source
         return super if ancestry.nil? || self.content_source_id.present?
-        SmartProxy.find_by_id(inherited_content_source_id)
+        SmartProxy.find_by(:id => inherited_content_source_id)
       end
 
       def inherited_content_source_id

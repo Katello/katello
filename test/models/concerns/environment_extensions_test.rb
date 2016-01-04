@@ -6,14 +6,22 @@ module Katello
   class EnvironmentExtensionsTest < ActiveSupport::TestCase
     def setup
       User.current = User.find(users(:admin))
+      set_default_location
       @katello_id = "KT_Org_Env_View_1"
 
       @org = get_organization
-      @org.label = @org.label.gsub(' ', '_')
+      @org.label = @org.label.tr(' ', '_')
       @env = katello_environments(:dev)
       @content_view = katello_content_views(:library_dev_view)
       @content_view_puppet_env = katello_content_view_puppet_environments(:library_view_puppet_environment)
-      Environment.create!(:name => "env_for_test", :content_view_puppet_environment => @content_view_puppet_env)
+      @environment = Environment.new
+      @environment.name = "env_for_test"
+      @environment.content_view_puppet_environment = @content_view_puppet_env
+      @environment.save!
+    end
+
+    def teardown
+      @environment.destroy!
     end
 
     def test_search_by_content_view

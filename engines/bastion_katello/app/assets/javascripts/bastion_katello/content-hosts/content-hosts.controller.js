@@ -34,6 +34,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
         $scope.contentHostTable = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
         $scope.nutupane = nutupane;
+        $scope.controllerName = 'katello_systems';
 
         nutupane.enableSelectAllResults();
 

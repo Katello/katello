@@ -32,7 +32,7 @@ module Client
 
     def strip_cert(cert)
       cert = cert.to_s.gsub("-----BEGIN CERTIFICATE-----", "").gsub("-----END CERTIFICATE-----", "")
-      cert.gsub!(' ', '')
+      cert.delete!(' ')
       cert.gsub!(/\n/, '')
       cert
     end

@@ -20,7 +20,7 @@ module Actions
           action_subject product, :cp_id => cp_id
 
           plan_self
-          plan_action ElasticSearch::Provider::ReindexSubscriptions, product.provider
+          plan_action Katello::Provider::ReindexSubscriptions, product.provider
         end
 
         def finalize

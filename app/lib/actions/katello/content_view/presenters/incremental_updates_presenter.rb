@@ -21,7 +21,7 @@ module Actions
             humanized_lines = []
 
             action.output[:changed_content].each do |output|
-              cvv = ::Katello::ContentViewVersion.find_by_id(output[:content_view_version][:id])
+              cvv = ::Katello::ContentViewVersion.find_by(:id => output[:content_view_version][:id])
               if cvv
                 humanized_lines << "Content View: #{cvv.content_view.name} version #{cvv.version}"
                 humanized_lines << _("Added Content:")

@@ -2,7 +2,6 @@
 //= require "katello/common/katello.common.js"
 //= require "katello/common/katello"
 //= require "katello/common/menu"
-//= require "katello/common/chosen.jquery"
 //= require "katello/common/spin.min"
 //= require "katello/common/jquery.jeditable.custominputs"
 //= require "katello/common/katello_object"

@@ -2,41 +2,19 @@ library_default_view_environment:
   name:           Published Library view library environment
   label:          'library_default_view_library'
   cp_id:          1
-  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-
-# TODO: REMOVE THESE TWO
-dev_default_view_environment:
-  name:           Published Dev view environment
-  label:          'dev_default_view_environment'
-  cp_id:          2
-  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:dev_default_version) %>
-  created_at: <%= Time.now %>
-  updated_at: <%= Time.now %>
-
-staging_default_view_environment:
-  name:           Published Staging view environment
-  label:          'dev_default_view_environment'
-  cp_id:          3
-  environment_id: <%= ActiveRecord::Fixtures.identify(:staging) %>
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:staging_default_version) %>
-  created_at: <%= Time.now %>
-  updated_at: <%= Time.now %>
-# END TODO: REMOVE THESE TWO
 
 library_view_library:
   name:           Published Library view library environment
   label:          'published_library_view_library'
   cp_id:          4
-  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version_2) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_view) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
@@ -44,9 +22,9 @@ library_dev_view_library:
   name:           Published Library and Dev view library environment
   label:          'published_dev_view_library'
   cp_id:          5
-  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_view) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_view_version) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
@@ -54,9 +32,9 @@ library_dev_view_dev:
   name:           Published Library and dev view dev environment
   label:          'published_dev_view_dev'
   cp_id:          6
-  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_view) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_view_version) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
@@ -64,9 +42,9 @@ library_dev_staging_view_library:
   name:           Published Library - staging- dev view staging environment
   label:          'library_dev_staging_view_library'
   cp_id:          10
-  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view_version) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_staging_view) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_staging_view_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
@@ -74,9 +52,9 @@ library_dev_staging_view_dev:
   name:           Published Library - staging- dev view staging environment
   label:          'library_dev_staging_view_dev'
   cp_id:          11
-  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view_version) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_staging_view) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_staging_view_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
@@ -84,9 +62,9 @@ library_dev_staging_view_staging:
   name:           Published Library - staging- dev view staging environment
   label:          'library_dev_staging_view_staging'
   cp_id:          12
-  environment_id: <%= ActiveRecord::Fixtures.identify(:staging) %>
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_staging_view_version) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:staging) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_staging_view) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_staging_view_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
@@ -95,18 +73,18 @@ candlepin_library_dev_cve:
   label:        'candlepin_library_dev_cve'
   content_view: candlepin_library_dev_cv
   cp_id:        8
-  environment_id: <%= ActiveRecord::Fixtures.identify(:candlepin_dev) %>
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:candlepin_library_dev_cv) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:candlepin_library_dev_cv_version) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:candlepin_dev) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:candlepin_library_dev_cv) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:candlepin_library_dev_cv_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
 library_composite_view:
   name: Published Library Composite Content View Environment
   label: 'library/composite_view'
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:composite_view) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:composite_view) %>
   cp_id: 9
-  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
-  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:composite_view_version_1) %>
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:composite_view_version_1) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>

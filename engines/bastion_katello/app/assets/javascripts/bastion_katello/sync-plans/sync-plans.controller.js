@@ -33,6 +33,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlansController',
             $scope.syncPlanTable = nutupane.table;
             $scope.removeRow = nutupane.removeRow;
             $scope.nutupane = nutupane;
+            $scope.controllerName = 'katello_sync_plans';
 
             nutupane.enableSelectAllResults();
 

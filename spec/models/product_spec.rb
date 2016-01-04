@@ -2,7 +2,7 @@ require 'katello_test_helper'
 require 'helpers/repo_test_data'
 
 module Katello
-  describe Product, :katello => true do
+  describe Product do
     include OrchestrationHelper
     include ProductHelperMethods
     include OrganizationHelperMethods
@@ -14,12 +14,9 @@ module Katello
 
       as_admin do
         @organization = get_organization
-
-        # Organization.find_or_create_by_label!(:name=>ProductTestData::ORG_ID, :label => 'admin-org-37070')
-        # ForemanTasks.trigger(::Actions::Katello::Organization::Create, @organization)
       end
 
-      @provider     = Provider.find_or_create_by_name!(:name => "customprovider", :organization => @organization, :provider_type => Provider::CUSTOM)
+      @provider     = Provider.where(:name => "customprovider", :organization => @organization, :provider_type => Provider::CUSTOM).first_or_create
       @cdn_mock = Resources::CDN::CdnResource.new("https://cdn.redhat.com", :ssl_client_cert => "456", :ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123")
       @substitutor_mock = Util::CdnVarSubstitutor.new(@cdn_mock)
       @substitutor_mock.stubs(:precalculate).returns do |_paths|

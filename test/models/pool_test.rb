@@ -48,10 +48,6 @@ module Katello
       assert_equal active_pool.systems, systems
     end
 
-    def test_return_find_by_cp_id
-      assert_equal Pool.find_by_cp_id("#{@pool_one.cp_id}"), @pool_one
-    end
-
     def test_with_identifiers
       assert_equal Pool.with_identifiers("#{@pool_one.cp_id}").first, @pool_one
       assert_equal Pool.with_identifiers("#{@pool_one.id}").first, @pool_one

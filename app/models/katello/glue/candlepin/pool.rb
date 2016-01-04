@@ -9,8 +9,8 @@ module Katello
         lazy_accessor :pool_facts, :initializer => lambda { |_s| self.import_lazy_attributes }
         lazy_accessor :subscription_facts, :initializer => lambda { |_s| self.subscription ? self.subscription.attributes : {} }
 
-        lazy_accessor :pool_derived, :owner, :source_pool_id, :host_id, :virt_only, :virt_limit, :arch, :description,
-          :product_family, :variant, :suggested_quantity, :unmapped_guest, :support_type, :product_id, :type,
+        lazy_accessor :pool_derived, :owner, :source_pool_id, :host_id, :virt_limit, :arch, :description,
+          :product_family, :variant, :suggested_quantity, :support_type, :product_id, :type,
           :initializer => :pool_facts
 
         lazy_accessor :name, :support_level, :org, :sockets, :cores, :stacking_id, :instance_multiplier,
@@ -28,11 +28,11 @@ module Katello
       end
 
       def get_for_owner(organization)
-        Katello::Resources::Candlepin::Pool.get_for_owner(organization)
+        Katello::Resources::Candlepin::Pool.get_for_owner(organization, true)
       end
 
       def import_pool(cp_pool_id)
-        pool = Katello::Pool.find_or_create_by_cp_id(cp_pool_id)
+        pool = Katello::Pool.where(:cp_id => cp_pool_id).first_or_create
         pool.import_data
       end
     end
@@ -43,17 +43,16 @@ module Katello
         json = self.backend_data
 
         pool_attributes = json["attributes"] + json["productAttributes"]
+        json["virt_only"] = false
         pool_attributes.each do |attr|
           json[attr["name"]] = attr["value"]
           case attr["name"]
           when 'requires_host'
             json["host_id"] = attr['value']
-          when 'virt_only'
-            json["virtual"] = json["virt_only"] = attr['value'] == 'true' ? true : false
           when 'virt_limit'
             json["virt_limit"] = attr['value'].to_i
-          when 'unmapped_guests_only'
-            json['unmapped_guest'] = attr['value'] == 'true' ? true : false
+          when 'support_type'
+            json['support_type'] = attr['value']
           end
         end
 
@@ -87,7 +86,12 @@ module Katello
 
         product_attributes.map { |attr| pool_attributes[attr["name"].underscore.to_sym] = attr["value"] }
 
-        subscription = ::Katello::Subscription.where(:cp_id => pool_json["subscriptionId"])
+        if !pool_json["sourceStackId"].nil?
+          subscription = ::Katello::Subscription.where(:product_id => pool_json["sourceStackId"])
+        else
+          subscription = ::Katello::Subscription.where(:cp_id => pool_json["subscriptionId"])
+        end
+
         pool_attributes[:subscription_id] = subscription.first.id if subscription.any?
 
         %w(accountNumber contractNumber quantity startDate endDate accountNumber consumed).each do |json_attribute|
@@ -98,7 +102,15 @@ module Katello
         if pool_attributes.key?(:multi_entitlement)
           pool_attributes[:multi_entitlement] = pool_attributes[:multi_entitlement] == "yes" ? true : false
         end
+
+        if pool_attributes.key?(:virtual)
+          pool_attributes[:virt_only] = pool_attributes["virtual"] == 'true' ? true : false
+        end
         pool_attributes[:host_id] = pool_attributes["requiresHost"] if pool_attributes.key?("requiresHost")
+
+        if pool_attributes.key?(:unmapped_guests_only) && pool_attributes[:unmapped_guests_only] == 'true'
+          pool_attributes[:unmapped_guest] = true
+        end
 
         exceptions = pool_attributes.keys.map(&:to_sym) - self.attribute_names.map(&:to_sym)
         self.update_attributes(pool_attributes.except!(*exceptions))
@@ -117,12 +129,12 @@ module Katello
         end
         related_keys = ::Katello::ActivationKey.where(:cp_id => activation_key_ids.compact)
         related_keys.each do |key|
-          Katello::PoolActivationKey.find_or_create_by_activation_key_id_and_pool_id(key.id, self.id)
+          Katello::PoolActivationKey.where(:activation_key_id => key.id, :pool_id => self.id).first_or_create
         end
       end
 
       def host
-        System.find_by_uuid(self.host_id) if self.host_id
+        System.find_by(:uuid => host_id) if host_id
       end
     end
   end

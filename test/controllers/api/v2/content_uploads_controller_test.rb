@@ -21,7 +21,6 @@ module Katello
     def setup
       setup_controller_defaults_api
       login_user(User.find(users(:admin)))
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
       models
       permissions
     end

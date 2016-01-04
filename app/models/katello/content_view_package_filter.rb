@@ -31,7 +31,7 @@ module Katello
     protected
 
     def query_rpms(repo, rule)
-      query_name = rule.name.gsub("*", "%")
+      query_name = rule.name.tr("*", "%")
       query = Rpm.in_repositories(repo).where("#{Rpm.table_name}.name ilike ?", query_name)
       if !rule.version.blank?
         query = query.search_version_equal(rule.version)

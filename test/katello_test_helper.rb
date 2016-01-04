@@ -11,11 +11,9 @@ require "#{Katello::Engine.root}/spec/helpers/organization_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/system_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/product_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/repository_helper_methods"
-require "#{Katello::Engine.root}/spec/helpers/search_helper_methods"
 require "#{Katello::Engine.root}/test/support/vcr"
 require "#{Katello::Engine.root}/test/support/runcible"
 require "#{Katello::Engine.root}/test/support/controller_support"
-require "#{Katello::Engine.root}/test/support/search_service"
 require "#{Katello::Engine.root}/test/support/capsule_support"
 require "#{Katello::Engine.root}/test/support/pulp/repository_support"
 require "#{Katello::Engine.root}/test/support/fixtures_support"
@@ -30,8 +28,6 @@ require "#{Katello::Engine.root}/test/support/foreman_tasks/task"
 
 FactoryGirl.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
 FactoryGirl.find_definitions
-
-SETTINGS[:katello][:elastic_index] = 'katello_test'
 
 module MiniTest::Expectations
   infect_an_assertion :assert_redirected_to, :must_redirect_to
@@ -63,7 +59,7 @@ module FixtureTestCase
     FileUtils.cp(Dir.glob("#{Katello::Engine.root}/test/fixtures/models/*"), self.fixture_path)
     FileUtils.cp(Dir.glob("#{Rails.root}/test/fixtures/*"), self.fixture_path)
     fixtures(:all)
-    FIXTURES = load_fixtures
+    FIXTURES = load_fixtures(ActiveRecord::Base)
 
     load_permissions
     configure_vcr
@@ -88,6 +84,7 @@ class ActionController::TestCase
     set_default_locale
     setup_engine_routes if load_engine_routes
     @controller.stubs(:require_org).returns({})
+    load_permissions
   end
 
   def set_user(user = nil, is_api = false)
@@ -120,6 +117,7 @@ class ActiveSupport::TestCase
 
   before do
     stub_ping
+    Setting::Katello.load_defaults
   end
 
   def self.stubbed_ping_response
@@ -164,7 +162,7 @@ class ActiveSupport::TestCase
 
   def mock_active_records(*records)
     records.each do |record|
-      record.class.stubs(:instantiate).with(has_entry('id', record.id.to_s)).returns(record)
+      record.class.stubs(:instantiate).with(has_entry('id', record.id.to_s), instance_of(Hash)).returns(record)
       record.stubs(:reload).returns(record)
     end
   end
@@ -190,6 +188,19 @@ class ActiveSupport::TestCase
   def assert_service_used(service_class)
     service_class.any_instance.expects(:backend_data).returns({})
     yield
+  end
+
+  def stub_cp_consumer_with_uuid(uuid)
+    cp_consumer_user = ::Katello::CpConsumerUser.new
+    cp_consumer_user.uuid = uuid
+    cp_consumer_user.login = uuid
+    User.stubs(:current).returns(cp_consumer_user)
+  end
+
+  def set_default_location
+    loc = Location.first
+    loc.katello_default = true
+    loc.save!
   end
 end
 

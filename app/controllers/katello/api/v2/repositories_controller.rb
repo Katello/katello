@@ -7,7 +7,7 @@ module Katello
     before_filter :find_product, :only => [:index, :auto_complete_search]
     before_filter :find_product_for_create, :only => [:create]
     before_filter :find_organization_from_product, :only => [:create]
-    before_filter :find_repository, :only => [:show, :update, :destroy, :sync,
+    before_filter :find_repository, :only => [:show, :update, :destroy, :sync, :export,
                                               :remove_content, :upload_content,
                                               :import_uploads, :gpg_key_content]
     before_filter :find_content, :only => :remove_content
@@ -49,7 +49,6 @@ module Katello
     param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' is supported."),
           :required => false
     param_group :search, Api::V2::ApiController
-    # rubocop:disable Metrics/MethodLength
     def index
       options = {:includes => [:gpg_key, :product, :environment]}
       respond(:collection => scoped_search(index_relation.uniq, :name, :desc, options))
@@ -57,8 +56,7 @@ module Katello
 
     def index_relation
       query = Repository.readable
-      query = query.joins(:product).where("#{Product.table_name}.organization_id" => @organization) if @organization
-      query = query.where(:product_id => @product.id) if @product
+      query = index_relation_product(query)
       query = query.where(:content_type => params[:content_type]) if params[:content_type]
       query = query.where(:name => params[:name]) if params[:name]
 
@@ -76,15 +74,29 @@ module Katello
                   .where("#{PuppetModule.table_name}.id" => PuppetModule.with_identifiers(params[:puppet_module_id]))
       end
 
+      query = index_relation_content_view(query)
+      query = index_relation_environment(query)
+
+      query
+    end
+
+    def index_relation_product(query)
+      query = query.joins(:product).where("#{Product.table_name}.organization_id" => @organization) if @organization
+      query = query.where(:product_id => @product.id) if @product
+      query
+    end
+
+    def index_relation_content_view(query)
       if params[:content_view_version_id]
         query = query.where(:content_view_version_id => params[:content_view_version_id])
         query = Repository.where(:id => query.map(&:library_instance_id)) if params[:library]
-      end
-
-      if params[:content_view_id]
+      elsif params[:content_view_id]
         query = filter_by_content_view(query, params[:content_view_id], params[:environment_id], params[:available_for] == 'content_view')
       end
+      query
+    end
 
+    def index_relation_environment(query)
       if params[:environment_id] && !params[:library]
         query = query.where(:environment_id => params[:environment_id])
       elsif params[:environment_id] && params[:library]
@@ -95,7 +107,6 @@ module Katello
       elsif (params[:library] && !params[:environment_id]) || (params[:environment_id].blank? && params[:content_view_version_id].blank? && params[:content_view_id].blank?)
         query = query.where(:content_view_version_id => @organization.default_content_view.versions.first.id)
       end
-
       query
     end
 
@@ -128,8 +139,34 @@ module Katello
 
     api :POST, "/repositories/:id/sync", N_("Sync a repository")
     param :id, :identifier, :required => true, :desc => N_("repository ID")
+    param :source_url, String, :desc => N_("temporarily override feed URL for sync"), :required => false
     def sync
-      task = async_task(::Actions::Katello::Repository::Sync, @repository)
+      if params[:source_url].present? && params[:source_url] !~ /\A#{URI.regexp}\z/
+        fail HttpErrors::BadRequest, _("source URL is malformed")
+      end
+
+      if params[:source_url].blank? && @repository.url.blank?
+        fail HttpErrors::BadRequest, _("attempted to sync without a feed URL")
+      end
+
+      task = async_task(::Actions::Katello::Repository::Sync, @repository, nil, params[:source_url])
+      respond_for_async :resource => task
+    end
+
+    api :POST, "/repositories/:id/export", N_("Export a repository")
+    param :id, :identifier, :required => true, :desc => N_("repository ID")
+    param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z), useful for exporting deltas. If not specified, a full export will occur."), :required => false
+    def export
+      if params[:since].present?
+        begin
+          params[:since].to_datetime
+        rescue
+          raise HttpErrors::BadRequest, _("Invalid date provided.")
+        end
+      end
+
+      task = async_task(::Actions::Katello::Repository::Export,
+                        @repository, params[:since].try(:to_datetime))
       respond_for_async :resource => task
     end
 

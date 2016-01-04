@@ -38,6 +38,13 @@ module Katello
         def update
           process_response @hostgroup.update_attributes(params[:hostgroup])
         end
+
+        api :GET, "/hostgroups/:id", N_("Show a host group")
+        param :id, :identifier, :required => true
+        def show
+          @render_template = 'katello/api/v2/hostgroups_extensions/show'
+          render @render_template
+        end
       end
     end
   end
