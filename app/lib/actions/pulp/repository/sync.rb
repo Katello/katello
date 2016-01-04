@@ -37,9 +37,22 @@ module Actions
           end
         end
 
+        def finalize
+          check_error_details
+        end
+
         def external_task=(tasks)
           output[:contents_changed] = contents_changed?(tasks)
           super
+        end
+
+        def check_error_details
+          output[:pulp_tasks].each do |pulp_task|
+            error_details = pulp_task.try(:[], "progress_report").try(:[], "yum_importer").try(:[], "content").try(:[], "error_details")
+            if error_details && error_details[0]
+              fail _("An error occurred during the sync \n%{error_message}") % {:error_message => error_details[0]}
+            end
+          end
         end
 
         def contents_changed?(tasks)
