@@ -19,7 +19,7 @@ module Katello
     has_many :systems, :through => :system_activation_keys
 
     has_many :pools, :through => :pool_activation_keys, :class_name => "Katello::Pool"
-    has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :activation_keys
+    has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :activation_key
 
     before_validation :set_default_content_view, :unless => :persisted?
 
