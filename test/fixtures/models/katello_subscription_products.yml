@@ -1,0 +1,11 @@
+basic_fedora:
+    subscription_id: <%= ActiveRecord::FixtureSet.identify(:basic_subscription) %>
+    product_id: <%= ActiveRecord::FixtureSet.identify(:fedora) %>
+
+basic_redhat:
+    subscription_id: <%= ActiveRecord::FixtureSet.identify(:basic_subscription) %>
+    product_id: <%= ActiveRecord::FixtureSet.identify(:redhat) %>
+
+other_sub_fedora:
+    subscription_id: <%= ActiveRecord::FixtureSet.identify(:other_subscription) %>
+    product_id: <%= ActiveRecord::FixtureSet.identify(:fedora) %>
