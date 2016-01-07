@@ -15,15 +15,26 @@ module Actions
         # @param pulp_sync_task_id in case the sync was triggered outside
         #   of Katello and we just need to finish the rest of the orchestration
         # @param source_url optional url to override source URL with
-        def plan(repo, pulp_sync_task_id = nil, source_url = nil)
+        def plan(repo, pulp_sync_task_id = nil, source_url = nil, incremental = false)
           action_subject(repo)
 
           if repo.url.blank? && source_url.blank?
             fail _("Unable to sync repo. This repository does not have a feed url.")
           end
 
+          if incremental && URI(source_url).scheme != 'file'
+            fail _("URL must be of scheme 'file' for incremental import")
+          end
+
           sequence do
-            output = plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id, task_id: pulp_sync_task_id, source_url: source_url).output
+            if incremental
+              output = plan_action(Katello::Repository::IncrementalImport, repo,
+                                    URI(source_url).path).output
+            else
+              output = plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id,
+                                   task_id: pulp_sync_task_id, source_url: source_url).output
+            end
+
             contents_changed = output[:contents_changed]
             plan_action(Katello::Repository::IndexContent, :id => repo.id, :contents_changed => contents_changed)
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)

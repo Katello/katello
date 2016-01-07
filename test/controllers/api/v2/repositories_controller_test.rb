@@ -562,6 +562,17 @@ module Katello
       assert_response :success
     end
 
+    def test_sync_with_incremental_flag
+      assert_async_task ::Actions::Katello::Repository::Sync do |repo, pulp_task_id, source_url, incremental|
+        repo.id.must_equal(@repository.id)
+        pulp_task_id.must_equal(nil)
+        source_url.must_equal('file:///tmp/')
+        incremental.must_equal true
+      end
+      post :sync, :id => @repository.id, :source_url => 'file:///tmp/', :incremental => true
+      assert_response :success
+    end
+
     def test_sync_with_bad_url_override
       post :sync, :id => @repository.id, :source_url => 'file:|||tmp/'
       assert_response 400

@@ -45,4 +45,31 @@ module ::Actions::Katello::ContentViewVersion
                                 :override_config => {:resolve_dependencies => false}, :include_result => true)
     end
   end
+  class ExportTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentViewVersion::Export }
+    let(:action) { create_action action_class }
+
+    let(:library) do
+      katello_environments(:library)
+    end
+
+    let(:content_view_version) do
+      katello_content_view_versions(:library_view_version_2)
+    end
+
+    let(:library_repo) do
+      katello_repositories(:rhel_7_x86_64)
+    end
+
+    it 'plans' do
+      stub_remote_user
+
+      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
+      action.stubs(:task).returns(task)
+      plan_action(action, content_view_version, false, nil, 0)
+      # verify everything bubbles through to the export action as we expect
+      assert_action_planed_with(action, ::Actions::Katello::Repository::Export, ["3"], false, nil,
+                                0, "-published_library_view-v2.0")
+    end
+  end
 end

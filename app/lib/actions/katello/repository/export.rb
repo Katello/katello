@@ -9,22 +9,45 @@ module Actions
           param :export_result, Hash
         end
 
-        # @param repo
-        # @param since date for computing incremental exports
-        # @param export_suffix suffix to use on export dir
-        def plan(repo, since = nil, export_suffix = 'repo_export')
-          pulp_override_config = {'export_dir' => File.join(Setting['pulp_export_destination'],
-                                                            export_suffix)}
-          pulp_override_config[:start_date] = since.iso8601 if since
+        EXPORT_OUTPUT_BASEDIR = "/var/lib/pulp/published/yum/master/group_export_distributor/"
 
-          plan_action(Pulp::Repository::DistributorPublish,
-                      pulp_id: repo.pulp_id,
-                      distributor_type_id: Runcible::Models::ExportDistributor.type_id,
-                      override_config: pulp_override_config)
+        def plan(repo_pulp_ids, export_to_iso, since, iso_size, group_id)
+          # assemble data to feed to Pulp
+          start_date = since ? since.iso8601 : nil
+
+          unless since.nil?
+            group_id += "-incremental"
+          end
+
+          # create an export path that's the same as the ISO export path. Pulp
+          # only uses this when exporting to a directory, but we want to keep
+          # things as similar as possible.
+          # Additionally, we want Pulp to export to dirs that Pulp owns, and
+          # then Katello can copy it over as needed. This is needed for SELinux
+          # reasons.
+          export_directory = File.join(EXPORT_OUTPUT_BASEDIR, group_id,
+                                       Time.now.getutc.to_f.round(2).to_s)
+
+          sequence do
+            plan_action(Pulp::RepositoryGroup::Create, :id => group_id,
+                                                       :pulp_ids => repo_pulp_ids)
+            plan_action(Pulp::RepositoryGroup::Export, :id => group_id,
+                                                       :export_to_iso => export_to_iso,
+                                                       :iso_size => iso_size,
+                                                       :start_date => start_date,
+                                                       :export_directory => export_directory)
+            plan_self(:group_id => group_id, :export_to_iso => export_to_iso)
+            # NB: the delete will also make Pulp delete our exported data under /var/lib/pulp
+            plan_action(Pulp::RepositoryGroup::Delete, :id => group_id)
+          end
         end
 
         def run
-          output[:export_result] = input[:export_result]
+          # copy the export to a place we have permission to write to. We let
+          # Pulp do the deletion as part of repo group delete since it's under
+          # /v/l/p.
+          export_location = File.join(EXPORT_OUTPUT_BASEDIR, input[:group_id])
+          FileUtils.cp_r(export_location, Setting['pulp_export_destination'])
         end
 
         def humanized_name

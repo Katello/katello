@@ -3,7 +3,7 @@ module Katello
     include Concerns::Api::V2::BulkSystemsExtensions
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_filter :find_content_view_version, :only => [:show, :promote, :destroy]
+    before_filter :find_content_view_version, :only => [:show, :promote, :destroy, :export]
     before_filter :find_content_view, :except => [:incremental_update]
     before_filter :find_environment, :only => [:promote, :index]
     before_filter :authorize_promotable, :only => [:promote]
@@ -50,6 +50,31 @@ module Katello
       is_force = ::Foreman::Cast.to_bool(params[:force])
       task = async_task(::Actions::Katello::ContentView::Promote,
                         @version, @environment, is_force)
+      respond_for_async :resource => task
+    end
+
+    api :POST, "/content_view_versions/:id/export", N_("Export a content view version")
+    param :id, :identifier, :desc => N_("Content view version identifier"), :required => true
+    param :export_to_iso, :bool, :desc => N_("Export to ISO format"), :required => false
+    param :iso_mb_size, :number, :desc => N_("maximum size of each ISO in MB"), :required => false
+    param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z)"), :required => false
+    def export
+      if !params[:export_to_iso].present? && params[:iso_mb_size].present?
+        fail HttpErrors::BadRequest, _("ISO export must be enabled when specifying ISO size")
+      end
+
+      if params[:since].present?
+        begin
+          params[:since].to_datetime
+        rescue
+          raise HttpErrors::BadRequest, _("Invalid date provided.")
+        end
+      end
+
+      task = async_task(::Actions::Katello::ContentViewVersion::Export, @version,
+                        ::Foreman::Cast.to_bool(params[:export_to_iso]),
+                        params[:since].try(:to_datetime),
+                        params[:iso_mb_size])
       respond_for_async :resource => task
     end
 

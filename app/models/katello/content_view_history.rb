@@ -43,6 +43,8 @@ module Katello
 
     def humanized_action
       case self.task.label
+      when "Actions::Katello::ContentViewVersion::Export"
+        _("Exported version")
       when "Actions::Katello::ContentView::Publish"
         _("Published new version")
       when "Actions::Katello::ContentView::Promote"
