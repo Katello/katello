@@ -6,7 +6,7 @@ module Actions
 
         def plan(version, environment, is_force = false)
           action_subject(version.content_view)
-          version.check_ready_to_promote!
+          version.check_ready_to_promote!(environment)
 
           fail ::Katello::HttpErrors::BadRequest, _("Cannot promote environment out of sequence. Use force to bypass restriction.") if !is_force && !version.promotable?(environment)
 
