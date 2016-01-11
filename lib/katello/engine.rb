@@ -66,6 +66,10 @@ module Katello
       SETTINGS[:katello] = {:assets => {:precompile => precompile } }
     end
 
+    initializer 'katello.assets.precompile', :after => 'katello.configure_assets' do |app|
+      app.config.assets.precompile += SETTINGS[:katello][:assets][:precompile]
+    end
+
     initializer "katello.apipie" do
       Apipie.configuration.checksum_path += ['/katello/api/']
       require 'katello/apipie/validators'
