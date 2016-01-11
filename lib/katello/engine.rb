@@ -40,7 +40,7 @@ module Katello
       require_dependency File.expand_path('../../../app/models/setting/katello.rb', __FILE__) if (Setting.table_exists? rescue(false))
     end
 
-    initializer 'katello.configure_assets', :group => :assets do
+    initializer 'katello.configure_assets' do
       def find_assets(args = {})
         type = args.fetch(:type, nil)
         asset_dir = "#{Katello::Engine.root}/app/assets/#{type}/"
