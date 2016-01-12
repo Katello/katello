@@ -10,8 +10,8 @@
  *   Controls the creation of an empty GPGKey object for use by sub-controllers.
  */
 angular.module('Bastion.gpg-keys').controller('NewGPGKeyController',
-    ['$scope', 'GPGKey', 'CurrentOrganization',
-    function ($scope, GPGKey, CurrentOrganization) {
+    ['$scope', 'GPGKey', 'CurrentOrganization', 'GlobalNotification',
+    function ($scope, GPGKey, CurrentOrganization, GlobalNotification) {
 
         $scope.panel = {loading: false};
         $scope.gpgKey = new GPGKey();
@@ -27,7 +27,7 @@ angular.module('Bastion.gpg-keys').controller('NewGPGKeyController',
                     $scope.uploadStatus = 'success';
                     $scope.transitionTo('gpgKeys.index');
                 } else {
-                    $scope.errorMessages = [content.displayMessage];
+                    GlobalNotification.setErrorMessage("An error occurred while creating the GPG key: " + content.displayMessage);
                     $scope.uploadStatus = 'error';
                 }
 

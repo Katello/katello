@@ -15,8 +15,8 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductFormController',
-    ['$scope', '$q', 'Product', 'GPGKey', 'SyncPlan', 'FormUtils',
-    function ($scope, $q, Product, GPGKey, SyncPlan, FormUtils) {
+    ['$scope', '$q', 'Product', 'GPGKey', 'SyncPlan', 'FormUtils', 'GlobalNotification',
+    function ($scope, $q, Product, GPGKey, SyncPlan, FormUtils, GlobalNotification) {
 
         function fetchGpgKeys() {
             return GPGKey.queryUnpaged(function (gpgKeys) {
@@ -42,7 +42,7 @@ angular.module('Bastion.products').controller('ProductFormController',
                     $scope.productForm[field].$setValidity('server', false);
                     $scope.productForm[field].$error.messages = errors;
                 } else {
-                    $scope.$parent.errorMessages = [errors];
+                    GlobalNotification.setErrorMessage("An error occurred while saving the Product: " + field + " " + errors);
                 }
             });
         }
@@ -57,7 +57,6 @@ angular.module('Bastion.products').controller('ProductFormController',
         });
 
         $scope.save = function (product) {
-            $scope.$parent.errorMessages = [];
             product.$save(success, error);
         };
 

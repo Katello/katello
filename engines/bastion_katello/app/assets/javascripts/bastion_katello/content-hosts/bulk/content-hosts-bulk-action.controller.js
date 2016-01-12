@@ -30,10 +30,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionContro
             working: false
         };
 
-        $scope.setState = function (working, success, errors) {
+        $scope.setState = function (working, success, error) {
             $scope.state.working = working;
             $scope.state.successMessages = success;
-            $scope.state.errorMessages = errors;
+            $scope.state.errorMessages = error;
         };
 
         $scope.showConfirmDialog = function () {

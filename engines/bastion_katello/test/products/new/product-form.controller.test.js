@@ -1,6 +1,7 @@
 describe('Controller: ProductFormController', function() {
     var $scope,
         FormUtils,
+        GlobalNotification,
         $httpBackend;
 
     beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
@@ -17,6 +18,7 @@ describe('Controller: ProductFormController', function() {
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
         FormUtils = $injector.get('FormUtils');
+        GlobalNotification = $injector.get('GlobalNotification');
 
         $scope.productForm = $injector.get('MockForm');
         $scope.productTable = {
@@ -34,7 +36,8 @@ describe('Controller: ProductFormController', function() {
             Provider: Provider,
             GPGKey: GPGKey,
             SyncPlan: SyncPlan,
-            FormUtils: FormUtils
+            FormUtils: FormUtils,
+            GlobalNotification: GlobalNotification
         });
     }));
 

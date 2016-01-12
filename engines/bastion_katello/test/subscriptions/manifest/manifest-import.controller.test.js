@@ -35,6 +35,8 @@ describe('Controller: ManifestImportController', function() {
             translate;
         Organization = $injector.get('Organization');
         Subscription = $injector.get('Subscription');
+        GlobalNotification = $injector.get('GlobalNotification');
+
         $httpBackend.expectGET('/api/organization/ACME/subscriptions/manifest_history').respond([]);
         $httpBackend.expectGET('/api/v2/organizations/ACME/redhat_provider').respond({name: "Red Hat"});
         $httpBackend.expectGET('/api/organization/ACME').respond(organization);
@@ -44,6 +46,9 @@ describe('Controller: ManifestImportController', function() {
         $q = $injector.get('$q');
         $scope.redhatProvider = Organization.redhatProvider();
         $scope.histories = Subscription.manifestHistory();
+
+        spyOn(GlobalNotification, "setSuccessMessage");
+        spyOn(GlobalNotification, "setErrorMessage");
 
         Task = {registerSearch: function() {}};
 
@@ -56,7 +61,8 @@ describe('Controller: ManifestImportController', function() {
             CurrentOrganization: "ACME",
             Organization: Organization,
             Subscription: Subscription,
-            Task: Task
+            Task: Task,
+            GlobalNotification: GlobalNotification
         });
     }));
 
@@ -79,8 +85,8 @@ describe('Controller: ManifestImportController', function() {
         $httpBackend.expectPUT('/api/v2/organizations/ACME/');
         promise = $scope.saveCdnUrl($scope.organization);
         promise.then(function() {
-            expect($scope.successMessages.length).toBe(1);
-            expect($scope.errorMessages.length).toBe(0);
+            expect(GlobalNotification.setErrorMessage).not.toHaveBeenCalled();
+            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
         });
     });
 
@@ -89,8 +95,8 @@ describe('Controller: ManifestImportController', function() {
         spyOn(Subscription, 'deleteManifest').andCallThrough();
         $scope.deleteManifest($scope.organization);
         $q.all([$scope.organization.$promise]).then(function () {
-            expect($scope.successMessages.length).toBe(1);
-            expect($scope.errorMessages.length).toBe(0);
+            expect(GlobalNotification.setErrorMessage).not.toHaveBeenCalled();
+            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
         });
     });
 
@@ -99,8 +105,8 @@ describe('Controller: ManifestImportController', function() {
         spyOn(Subscription, 'refreshManifest').andCallThrough();
         $scope.refreshManifest($scope.organization);
         $q.all([$scope.organization.$promise]).then(function () {
-            expect($scope.successMessages.length).toBe(1);
-            expect($scope.errorMessages.length).toBe(0);
+            expect(GlobalNotification.setErrorMessage).not.toHaveBeenCalled();
+            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
         });
     });
 
@@ -108,7 +114,7 @@ describe('Controller: ManifestImportController', function() {
         $q.all([$scope.organization.$promise]).then(function () {
             $scope.uploadManifest('<pre>"There was an error"</pre>', true);
 
-            expect($scope.successMessages.length).toBe(0);
+            expect(GlobalNotification.setSuccessMessage).not.toHaveBeenCalled();
             expect($scope.uploadErrorMessages.length).toBe(1);
         });
     });
@@ -120,7 +126,7 @@ describe('Controller: ManifestImportController', function() {
 
             expect($scope.saveSuccess).toBe(true);
             expect($scope.uploadErrorMessages.length).toBe(0);
-            expect($scope.successMessages.length).toBe(1);
+            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
             expect($scope.refreshTable).toHaveBeenCalled();
         });
     });
