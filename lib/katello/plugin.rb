@@ -164,4 +164,8 @@ Foreman::Plugin.register :katello do
 
   register_custom_status(Katello::ErrataStatus)
   register_custom_status(Katello::SubscriptionStatus)
+
+  extend_page("smart_proxies/show") do |context|
+    context.add_pagelet :service_features, :name => "Pulp", :partial => "foreman/smart_proxies/pulp"
+  end
 end
