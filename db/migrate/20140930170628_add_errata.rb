@@ -55,7 +55,9 @@ class AddErrata < ActiveRecord::Migration
       t.references :repository, :null => true
     end
 
-    add_index :katello_repository_errata, [:erratum_id, :repository_id], :unique => true
+    add_index :katello_repository_errata, [:erratum_id, :repository_id],
+              :unique => true,
+              :name => 'index_katello_repository_errata_on_erratum_id_and_repo_id'
 
     add_foreign_key "katello_repository_errata", "katello_errata",
                     :name => "katello_repository_errata_errata_id_fk", :column => "erratum_id"
