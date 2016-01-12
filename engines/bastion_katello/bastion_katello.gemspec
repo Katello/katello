@@ -16,5 +16,5 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,lib}/**/*"] + ["README"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "bastion", ">= 2.0.0", "< 3.0.0"
+  s.add_dependency "bastion", ">= 3.0.0", "< 4.0.0"
 end

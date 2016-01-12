@@ -40,7 +40,7 @@ module Katello
       require_dependency File.expand_path('../../../app/models/setting/katello.rb', __FILE__) if (Setting.table_exists? rescue(false))
     end
 
-    initializer 'katello.configure_assets' do
+    initializer 'katello.configure_assets', :group => :all do
       def find_assets(args = {})
         type = args.fetch(:type, nil)
         asset_dir = "#{Katello::Engine.root}/app/assets/#{type}/"
@@ -63,7 +63,8 @@ module Katello
       precompile.concat(javascripts)
       precompile.concat(images)
 
-      SETTINGS[:katello] = {:assets => {:precompile => precompile } }
+      SETTINGS[:katello] = {} unless SETTINGS.key?(:katello)
+      SETTINGS[:katello][:assets] = {:precompile => precompile}
     end
 
     initializer 'katello.assets.precompile', :after => 'katello.configure_assets' do |app|
@@ -110,16 +111,6 @@ module Katello
       app.config.autoload_paths += Dir["#{config.root}/app/presenters"]
       app.config.autoload_paths += Dir["#{config.root}/app/services/katello"]
       app.config.autoload_paths += Dir["#{config.root}/app/views/foreman"]
-    end
-
-    initializer "katello.assets.paths", :group => :all do |app|
-      if Rails.env.production?
-        app.config.assets.paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion',
-                                                             'font-awesome', 'scss')
-      else
-        app.config.sass.load_paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion',
-                                                                'font-awesome', 'scss')
-      end
     end
 
     initializer "katello.paths" do |app|
@@ -204,7 +195,7 @@ module Katello
       ::Api::V2::HostgroupsController.send :include, Katello::Concerns::Api::V2::HostgroupsControllerExtensions
     end
 
-    initializer 'katello.register_plugin', :after => :finisher_hook do
+    config.after_initialize do
       require 'katello/plugin'
       require 'katello/permissions'
     end
