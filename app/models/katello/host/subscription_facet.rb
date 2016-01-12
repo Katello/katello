@@ -22,7 +22,7 @@ module Katello
         {
           :autoheal => autoheal,
           :serviceLevel => service_level,
-          :release_version => release_version,
+          :releaseVer => release_version,
           :lastCheckin => last_checkin,
           :environment => {:id => self.candlepin_environment_id}
         }

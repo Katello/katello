@@ -17,6 +17,8 @@ module Actions
           end
 
           if system.foreman_host.subscription_facet
+            release_version = system.releaseVer.is_a?(Hash) ? system.releaseVer['releaseVer'] : system.releaseVer
+            system.foreman_host.subscription_facet.release_version = release_version
             system.foreman_host.subscription_facet.service_level = system.serviceLevel
             system.foreman_host.subscription_facet.autoheal = system.autoheal
           end
