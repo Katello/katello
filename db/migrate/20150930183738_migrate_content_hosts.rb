@@ -60,7 +60,7 @@ class MigrateContentHosts < ActiveRecord::Migration
 
     if system.backend_data
       subscription_facet.service_level = system.backend_data['serviceLevel']
-      subscription_facet.release_version = system.backend_data['releaseVer']
+      subscription_facet.release_version = system.backend_data['releaseVer']['releaseVer']
       subscription_facet.last_checkin = system.backend_data['lastCheckin']
       subscription_facet.autoheal = system.backend_data['autoheal']
     end
