@@ -1,5 +1,5 @@
 describe('Controller: NewGPGKeyController', function() {
-    var $scope, translate;
+    var $scope, translate, GlobalNotification;
 
     beforeEach(module(
         'Bastion.gpg-keys',
@@ -13,6 +13,7 @@ describe('Controller: NewGPGKeyController', function() {
             CurrentOrganization = "Foo";
 
         $scope = $injector.get('$rootScope').$new();
+        GlobalNotification = $injector.get('GlobalNotification');
 
         $scope.table = {
             addRow: function() {},
@@ -23,6 +24,7 @@ describe('Controller: NewGPGKeyController', function() {
             $scope: $scope,
             GPGKey: GPGKey,
             CurrentOrganization:CurrentOrganization,
+            GlobalNotification: GlobalNotification,
         });
 
     }));
@@ -34,9 +36,10 @@ describe('Controller: NewGPGKeyController', function() {
     it('should save a new gpg key resource', function() {
         spyOn($scope.table, 'addRow');
         spyOn($scope, 'transitionTo');
+        spyOn(GlobalNotification, "setErrorMessage");
         $scope.uploadContent({"status": "success"});
 
-        expect($scope.errorMessages).not.toBeDefined();
+        expect(GlobalNotification.setErrorMessage).not.toHaveBeenCalled();
         expect($scope.uploadStatus).toBe('success');
 
         expect($scope.table.addRow).toHaveBeenCalled();
@@ -46,9 +49,11 @@ describe('Controller: NewGPGKeyController', function() {
     it('should error on a new gpg key resource', function() {
         spyOn($scope.table, 'addRow');
         spyOn($scope, 'transitionTo');
+        spyOn(GlobalNotification, "setErrorMessage");
         $scope.uploadContent({"errors": "....", "displayMessage":"......"});
 
-        expect($scope.errorMessages.length).toBe(1);
+        expect(GlobalNotification.setErrorMessage).toHaveBeenCalled();
+
         expect($scope.uploadStatus).toBe('error');
         expect($scope.table.addRow).not.toHaveBeenCalled();
     });

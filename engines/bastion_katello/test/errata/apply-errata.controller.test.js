@@ -37,6 +37,8 @@ describe('Controller: ApplyErrataController', function() {
 
         $scope = $injector.get('$rootScope').$new();
         $scope.checkIfIncrementalUpdateRunning = function () {};
+        $scope.errorMessages = [];
+        $scope.successMessages = [];
 
         dependencies = {
             $scope: $scope,

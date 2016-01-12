@@ -12,12 +12,12 @@
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', 'Repository', 'GPGKey', 'FormUtils', 'translate',
-    function ($scope, Repository, GPGKey, FormUtils, translate) {
+    ['$scope', 'Repository', 'GPGKey', 'FormUtils', 'translate', 'GlobalNotification',
+    function ($scope, Repository, GPGKey, FormUtils, translate, GlobalNotification) {
 
         function success(response) {
             $scope.detailsTable.rows.push(response);
-            $scope.successMessages.push(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
+            GlobalNotification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
             $scope.transitionTo('products.details.repositories.index', {productId: $scope.$stateParams.productId});
         }
 
@@ -41,7 +41,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             });
 
             if (!foundError) {
-                $scope.errorMessages = [response.data.displayMessage];
+                GlobalNotification.setErrorMessage(response.data.displayMessage);
             }
         }
 

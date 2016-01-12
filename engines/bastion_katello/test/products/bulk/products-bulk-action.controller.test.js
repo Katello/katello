@@ -1,5 +1,5 @@
 describe('Controller: ProductsBulkActionController', function() {
-    var $scope, $q, translate, ProductBulkAction, CurrentOrganization, selected;
+    var $scope, $q, translate, ProductBulkAction, CurrentOrganization, GlobalNotification, selected;
 
     beforeEach(module('Bastion.products'));
 
@@ -15,9 +15,10 @@ describe('Controller: ProductsBulkActionController', function() {
         CurrentOrganization = 'foo';
     });
 
-    beforeEach(inject(function($controller, $rootScope, _$q_) {
+    beforeEach(inject(function(_GlobalNotification_, $controller, $rootScope, _$q_) {
         $scope = $rootScope.$new();
         $q = _$q_;
+        GlobalNotification = _GlobalNotification_;
 
         $scope.productTable = {
             getSelected: function () { return selected; }
@@ -27,7 +28,8 @@ describe('Controller: ProductsBulkActionController', function() {
             $scope: $scope,
             translate: translate,
             ProductBulkAction: ProductBulkAction,
-            CurrentOrganization: CurrentOrganization
+            CurrentOrganization: CurrentOrganization,
+            GlobalNotification: GlobalNotification
         });
     }));
 

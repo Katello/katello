@@ -11,24 +11,28 @@
  *   A controller for providing bulk sync plan functionality for products.
  */
 angular.module('Bastion.products').controller('ProductsBulkActionSyncPlanController',
-    ['$scope', 'Nutupane', 'SyncPlan', 'ProductBulkAction',
-    function ($scope, Nutupane, SyncPlan, ProductBulkAction) {
+    ['$scope', 'Nutupane', 'SyncPlan', 'ProductBulkAction', 'GlobalNotification',
+    function ($scope, Nutupane, SyncPlan, ProductBulkAction, GlobalNotification) {
         var syncPlanNutupane = new Nutupane(SyncPlan);
-
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
 
         $scope.syncPlanTable = syncPlanNutupane.table;
         syncPlanNutupane.query();
 
         function success(response) {
-            $scope.$parent.successMessages = response.displayMessages.success;
-            $scope.$parent.errorMessages = response.displayMessages.error;
+            angular.forEach(response.displayMessages.success, function(message) {
+                GlobalNotification.setSuccessMessage(message);
+            });
+
+            angular.forEach(response.displayMessages.error, function(message) {
+                GlobalNotification.setErrorMessage(message);
+            });
             $scope.updatingSyncPlans = false;
         }
 
         function error(response) {
-            $scope.$parent.errorMessages = response.data.errors;
+            angular.forEach(response.data.errors, function(message) {
+                GlobalNotification.setErrorMessage("An error occurred updating the sync plan: " + message);
+            });
             $scope.updatingSyncPlans = false;
         }
 
