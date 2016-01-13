@@ -107,6 +107,7 @@ module Actions
         def plan_subscription_facet(host, activation_keys, consumer_params)
           subscription_facet = host.subscription_facet || ::Katello::Host::SubscriptionFacet.new
           subscription_facet.host = host
+          subscription_facet.last_checkin = DateTime.now
           subscription_facet.update_from_consumer_attributes(consumer_params)
           subscription_facet.save! # persist to obtain an id
           subscription_facet.activation_keys = activation_keys

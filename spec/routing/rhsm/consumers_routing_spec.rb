@@ -15,7 +15,7 @@ module Katello
         {:controller => proxies_controller, :action => "regenerate_identity_certificates", :id => "1"}.must_recognize(:method => "post", :path => "/rhsm/consumers/1")
         {:controller => proxies_controller, :action => "consumer_destroy", :id => "1"}.must_recognize(:method => "delete", :path => "/rhsm/consumers/1")
         ({:controller => proxies_controller, :action => "get", :id => "1"}).must_recognize(:method => "get", :path => "/rhsm/consumers/1/certificates")
-        ({:controller => proxies_controller, :action => "get", :id => "1"}).must_recognize(:method => "get", :path => "/rhsm/consumers/1/certificates/serials")
+        ({:controller => proxies_controller, :action => "serials", :id => "1"}).must_recognize(:method => "get", :path => "/rhsm/consumers/1/certificates/serials")
         ({:controller => proxies_controller, :action => "get", :id => "1"}).must_recognize(:method => "get", :path => "/rhsm/consumers/1/entitlements")
         ({:controller => proxies_controller, :action => "post", :id => "1"}).must_recognize(:method => "post", :path => "/rhsm/consumers/1/entitlements")
         ({:controller => proxies_controller, :action => "delete", :id => "1"}).must_recognize(:method => "delete", :path => "/rhsm/consumers/1/entitlements")
