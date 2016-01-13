@@ -14,7 +14,7 @@ Foreman::Plugin.find(:katello).security_block :products do
                'katello/errata' => [:short_details, :auto_complete],
                'katello/packages' => [:details, :auto_complete],
                'katello/puppet_modules' => [:show],
-               'katello/repositories' => [:auto_complete_library],
+               'katello/repositories' => [:auto_complete_library, :repository_types],
                'katello/content_search' => [:index,
                                             :products,
                                             :repos,

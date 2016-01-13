@@ -20,6 +20,11 @@ describe('Controller: NewRepositoryController', function() {
         $scope.$stateParams = {productId: 1};
         $scope.repositoryForm = $injector.get('MockForm');
 
+        Repository.repositoryTypes = function (data, func) {
+            $scope.repositoryTypesTestData = data;
+            $scope.repositoryTypesTestCalled = true;
+        };
+
         $controller('NewRepositoryController', {
             $scope: $scope,
             $http: $http,
@@ -33,7 +38,8 @@ describe('Controller: NewRepositoryController', function() {
     });
 
     it('should define a set of repository types', function() {
-        expect($scope.repositoryTypes).toBeDefined();
+        expect($scope.repositoryTypesTestCalled).toBe(true);
+        expect($scope.repositoryTypesTestData["creatable"]).toBeDefined();
     });
 
     it('should fetch available GPG Keys', function() {

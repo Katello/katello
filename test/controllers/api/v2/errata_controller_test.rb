@@ -76,7 +76,19 @@ module Katello
       response_ids = body["results"].map { |item| item["errata_id"] }
 
       assert_response :success
-      assert !(response_ids.include? filtered_id)
+      refute response_ids.include? filtered_id
+      assert response_ids.length > 0
+    end
+
+    def test_index_available_errata_for_content_view_filter_with_updated
+      filtered_id = @errata_filter.erratum_rules.first["errata_id"]
+
+      get :index, :filterId => @errata_filter, :available_for => "content_view_filter", :date_type => "updated"
+      body = JSON.parse(response.body)
+      response_ids = body["results"].map { |item| item["errata_id"] }
+
+      assert_response :success
+      refute response_ids.include? filtered_id
       assert response_ids.length > 0
     end
 

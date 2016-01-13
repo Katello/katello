@@ -43,6 +43,12 @@ def load_permissions
   end
 end
 
+def load_repository_types
+  Dir["#{File.expand_path("#{Katello::Engine.root}/lib/katello/repository_types", __FILE__)}/*.rb"].each do |file|
+    load file
+  end
+end
+
 module FixtureTestCase
   extend ActiveSupport::Concern
 
@@ -62,6 +68,7 @@ module FixtureTestCase
     FIXTURES = load_fixtures(ActiveRecord::Base)
 
     load_permissions
+    load_repository_types
     configure_vcr
 
     Setting::Katello.load_defaults

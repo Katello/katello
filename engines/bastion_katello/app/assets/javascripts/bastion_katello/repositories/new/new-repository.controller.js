@@ -47,7 +47,10 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
 
         $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true,
             'checksum_type': null});
-        $scope.repositoryTypes = [{}, {name: 'yum'}, {name: 'puppet'}, {name: 'docker'}, {name: 'ostree'}];
+
+        Repository.repositoryTypes({'creatable': true}, function (data) {
+            $scope.repositoryTypes = data;
+        });
 
         $scope.$watch('repository.name', function () {
             if ($scope.repositoryForm.name) {

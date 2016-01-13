@@ -31,6 +31,7 @@
         <th bst-table-column translate>Errata ID</th>
         <th bst-table-column translate>Errata Type</th>
         <th bst-table-column translate>Issued</th>
+        <th bst-table-column translate>Updated</th>
         <th bst-table-column translate>Title</th>
       </tr>
     </thead>
@@ -43,6 +44,9 @@
         </td>
         <td bst-table-cell>
           {{ errata.issued | date:'M/d/yy' }}
+        </td>
+        <td bst-table-cell>
+          {{ errata.updated | date:'M/d/yy' }}
         </td>
         <td bst-table-cell>{{ errata.title }}</td>
       </tr>

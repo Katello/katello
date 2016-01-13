@@ -6,12 +6,6 @@ module BastionKatello
       app.middleware.use ::ActionDispatch::Static, "#{BastionKatello::Engine.root}/app/assets/javascripts/bastion_katello"
     end
 
-    initializer "bastion.assets.paths", :group => :all do |app|
-      if defined? Less::Rails
-        app.config.less.paths << "#{BastionKatello::Engine.root}/app/assets/stylesheets/bastion_katello"
-      end
-    end
-
     config.to_prepare do
       consumer_cert_rpm = 'katello-ca-consumer-latest.noarch.rpm'
       consumer_cert_rpm = SETTINGS[:katello][:consumer_cert_rpm] if SETTINGS.key?(:katello)

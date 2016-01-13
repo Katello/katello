@@ -405,16 +405,8 @@ module Katello
       end
 
       def products
-        all_products = []
-
-        self.entitlements.each do |entitlement|
-          pool = Katello::Pool.find_by(:cp_id => entitlement['pool']['id'])
-          Katello::Product.where(:cp_id => pool.product_id).each do |product|
-            all_products << product
-          end
-        end
-
-        return all_products
+        pool_ids = self.entitlements.map { |entitlement| entitlement['pool']['id'] }
+        Katello::Product.joins(:subscriptions => :pools).where("#{Katello::Pool.table_name}.cp_id" => pool_ids).enabled.uniq
       end
 
       def find_entitlement(pool_id)
