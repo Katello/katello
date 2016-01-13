@@ -15,5 +15,13 @@ module Katello
       org.destroy!
       assert_nil Organization.find_by_id(id)
     end
+
+    def test_org_katello_params
+      org = Organization.new(:name => 'My Org', :label => 'my_org')
+      org.instance_variable_set('@service_level', 'foo')
+      org.stubs(:service_level=)
+      org.update_attributes(:service_level => 'bar')
+      assert(org.valid?)
+    end
   end
 end

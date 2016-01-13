@@ -22,7 +22,7 @@ class CreatePuppetModules < ActiveRecord::Migration
     add_index :katello_repository_puppet_modules,
               [:puppet_module_id, :repository_id],
               :unique => true,
-              :name => 'index_katello_repository_puppet_module_on_module_id_and_repo_id'
+              :name => 'index_katello_repo_puppet_module_on_module_id_and_repo_id'
 
     add_foreign_key "katello_repository_puppet_modules", "katello_puppet_modules",
                     :name => "katello_repository_puppet_modules_puppet_module_id_fk",

@@ -9,7 +9,7 @@ module Katello
     around_filter :repackage_message
     before_filter :find_host, :only => [:consumer_show, :consumer_destroy, :consumer_checkin, :enabled_repos,
                                         :upload_package_profile, :regenerate_identity_certificates, :facts,
-                                        :available_releases]
+                                        :available_releases, :serials]
     before_filter :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
     before_filter :authorize_client_or_user, :only => [:consumer_show, :upload_package_profile, :regenerate_identity_certificates]
     before_filter :authorize_client_or_admin, :only => [:hypervisors_update]
@@ -248,6 +248,12 @@ module Katello
         @host.subscription_facet.update_facts(rhsm_params[:facts]) unless rhsm_params[:facts].blank?
       end
       render :json => {:content => _("Facts successfully updated.")}, :status => 200
+    end
+
+    def serials
+      @host.subscription_facet.last_checkin = DateTime.now
+      @host.subscription_facet.save!
+      render :json => Katello::Resources::Candlepin::Consumer.serials(@host.subscription_facet.uuid)
     end
 
     private

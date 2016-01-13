@@ -35,6 +35,10 @@ angular.module('Bastion.content-views').controller('DateTypeErrataFilterControll
                     $scope.types[type] = true;
                 }
             });
+
+            if (angular.isUndefined($scope.rule['date_type'])) {
+                $scope.rule['date_type'] = "updated";
+            }
         });
 
         $scope.updateTypes = function (types) {

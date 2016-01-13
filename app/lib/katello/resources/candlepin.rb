@@ -132,6 +132,11 @@ module Katello
             self.delete(path(uuid), User.cp_oauth_header).code.to_i
           end
 
+          def serials(uuid)
+            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'certificates/serials'))
+            JSON.parse(response.body)
+          end
+
           def checkin(uuid, checkin_date)
             checkin_date ||= DateTime.now
             self.put(path(uuid), {:lastCheckin => checkin_date}.to_json, self.default_headers).body

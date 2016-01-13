@@ -213,6 +213,7 @@ Katello::Engine.routes.draw do
           collection do
             post :sync_complete
             get :auto_complete_search
+            get :repository_types
           end
         end
 

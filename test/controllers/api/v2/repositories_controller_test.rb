@@ -46,6 +46,29 @@ module Katello
       assert_template 'api/v2/repositories/index'
     end
 
+    def test_repository_types
+      get :repository_types
+
+      assert_response :success
+      body = JSON.parse(response.body)
+      assert_equal RepositoryTypeManager.repository_types.size, body.size
+      body.each do |repo|
+        assert RepositoryTypeManager.find(repo["name"]).present?
+      end
+    end
+
+    def test_creatable_repository_types
+      get :repository_types, :creatable => "true"
+
+      assert_response :success
+      body = JSON.parse(response.body)
+      assert_equal RepositoryTypeManager.creatable_repository_types.size, body.size
+      body.each do |repo|
+        assert RepositoryTypeManager.find(repo["name"]).present?
+        assert RepositoryTypeManager.creatable_by_user?(repo["name"])
+      end
+    end
+
     def assert_response_ids(response, expected)
       body = JSON.parse(response.body)
       found_ids = body['results'].map { |item| item['id'] }
@@ -409,7 +432,8 @@ module Katello
 
     def test_create_without_label_or_name
       post :create, :product_id => @product.id
-      assert_response 500
+      #should raise an error along the lines of invalid content type provided
+      assert_response 422
     end
 
     def test_create_protected

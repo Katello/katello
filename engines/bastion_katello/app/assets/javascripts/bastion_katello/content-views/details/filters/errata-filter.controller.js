@@ -16,7 +16,8 @@ angular.module('Bastion.content-views').controller('ErrataFilterController',
         $scope.rule = {
             errataType: 'all',
             'start_date': null,
-            'end_date': null
+            'end_date': null,
+            'date_type': "updated"
         };
 
         $scope.date = {

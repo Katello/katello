@@ -241,5 +241,21 @@ module Katello
         assert_response 200
       end
     end
+
+    describe "consumer serials" do
+      before do
+        Resources::Candlepin::Consumer.stubs(:serials).returns([{'serial' => 'asdf'}])
+      end
+
+      it "can fetch serials" do
+        uuid = @host.subscription_facet.uuid
+        assert_nil @host.subscription_facet.last_checkin
+        stub_cp_consumer_with_uuid(uuid)
+
+        get :serials, :id => uuid
+        assert_response 200
+        refute_nil @host.subscription_facet.reload.last_checkin
+      end
+    end
   end
 end

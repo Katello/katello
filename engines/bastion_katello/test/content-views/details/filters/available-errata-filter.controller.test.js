@@ -87,4 +87,24 @@ describe('Controller: AvailableErrataFilterController', function() {
         expect($scope.nutupane.getParam('end_date')).toBe(date.toISOString().split('T')[0]);
     });
 
+    it("should update the errata by when asked to search on the updated date", function () {
+        spyOn($scope.nutupane, 'refresh');
+        $scope.rule['date_type'] = "updated" ;
+        $scope.updateDateType();
+
+        expect($scope.nutupane.refresh).toHaveBeenCalled();
+        expect($scope.nutupane.getParam('sort_by')).toBe("updated");
+        expect($scope.nutupane.getParam('date_type')).toBe("updated");
+    });
+
+    it("should update the errata by when asked to search on the issued date", function () {
+        spyOn($scope.nutupane, 'refresh');
+        $scope.rule['date_type'] = "issued" ;
+        $scope.updateDateType();
+
+        expect($scope.nutupane.refresh).toHaveBeenCalled();
+        expect($scope.nutupane.getParam('sort_by')).toBe("issued");
+        expect($scope.nutupane.getParam('date_type')).toBe("issued");
+    });
+
 });
