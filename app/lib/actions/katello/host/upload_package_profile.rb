@@ -19,6 +19,10 @@ module Actions
           _("Package Profile Update for %s") % input[:hostname]
         end
 
+        def resource_locks
+          :link
+        end
+
         def rescue_strategy
           Dynflow::Action::Rescue::Skip
         end
