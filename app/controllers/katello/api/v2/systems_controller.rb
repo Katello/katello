@@ -155,7 +155,7 @@ module Katello
     def available_host_collections
       system_org_id = @system.environment.organization_id
 
-      collection = HostCollection.readable.where(:organization_id => system_org_id).where("id not in (?)", @system.host_collection_ids)
+      collection = HostCollection.readable.where(:organization_id => system_org_id).where.not(:id => @system.host_collection_ids)
 
       respond_for_index(:collection => scoped_search(collection, :name, :desc, :resource_class => HostCollection))
     end
