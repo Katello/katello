@@ -20,8 +20,6 @@ module Katello
     FILE_TYPE = 'file'
     PUPPET_TYPE = 'puppet'
     DOCKER_TYPE = 'docker'
-    TYPES = [YUM_TYPE, FILE_TYPE, PUPPET_TYPE, DOCKER_TYPE]
-    SELECTABLE_TYPES = [YUM_TYPE, PUPPET_TYPE, DOCKER_TYPE]
     CHECKSUM_TYPES = %w(sha1 sha256)
 
     belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
@@ -82,9 +80,9 @@ module Katello
       :attributes => :url, :nil_allowed => proc { |o| o.custom? }, :field_name => :url,
       :if => proc { |o| o.in_default_view? }
     validates :content_type, :inclusion => {
-      :in => TYPES,
+      :in => ->(_) { Katello::RepositoryTypeManager.repository_types.keys },
       :allow_blank => false,
-      :message => (_("must be one of the following: %s") % TYPES.join(', '))
+      :message => ->(_, _) { _("must be one of the following: %s") % Katello::RepositoryTypeManager.repository_types.keys.join(', ') }
     }
     validate :ensure_valid_docker_attributes, :if => :docker?
     validate :ensure_docker_repo_unprotected, :if => :docker?
@@ -102,7 +100,9 @@ module Katello
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :rename => :product, :on => :name, :in => :product, :complete_value => true
-    scoped_search :on => :content_type, :complete_value => Katello::Repository::TYPES.each_with_object({})  { |value, hash| hash[value.to_sym] = value }
+    scoped_search :on => :content_type, :complete_value => -> do
+      Katello::RepositoryTypeManager.repository_types.keys.each_with_object({}) { |value, hash| hash[value.to_sym] = value }
+    end
     scoped_search :on => :content_view_id, :in => :content_view_repositories
     scoped_search :on => :distribution_version, :complete_value => true
     scoped_search :on => :distribution_arch, :complete_value => true

@@ -198,6 +198,7 @@ module Katello
     config.after_initialize do
       require 'katello/plugin'
       require 'katello/permissions'
+      require 'katello/repository_types'
     end
 
     rake_tasks do
