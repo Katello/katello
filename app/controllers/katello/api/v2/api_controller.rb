@@ -36,7 +36,6 @@ module Katello
       @resource_class ||= "Katello::#{resource_name.classify}".constantize
     end
 
-    # rubocop:disable MethodLength
     def scoped_search(query, default_sort_by, default_sort_order, options = {})
       resource = options[:resource_class] || resource_class
       includes = options.fetch(:includes, [])
@@ -68,13 +67,21 @@ module Katello
       else
         query = query.paginate(paginate_options)
       end
+      page =  params[:page] || 1
+      per_page = params[:per_page]  || ::Setting::General.entries_per_page
 
+      scoped_search_results(query, sub_total, total, page, per_page)
+    rescue ScopedSearch::QueryNotSupported
+      return scoped_search_results([], 0, 0, page, per_page)
+    end
+
+    def scoped_search_results(query, sub_total, total, page, per_page)
       {
         :results  => query,
         :subtotal => sub_total,
         :total    => total,
-        :page     => params[:page] || 1,
-        :per_page => params[:per_page]  || ::Setting::General.entries_per_page
+        :page     => page,
+        :per_page => per_page
       }
     end
 
