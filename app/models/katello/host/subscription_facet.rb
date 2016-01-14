@@ -36,6 +36,10 @@ module Katello
         end
       end
 
+      def update_subscription_status
+        host.get_status(::Katello::SubscriptionStatus).refresh!
+      end
+
       def self.new_host_from_rhsm_params(params, org, location)
         facts = params[:facts]
         fqdn = facts['network.hostname']
