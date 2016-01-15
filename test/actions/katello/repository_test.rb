@@ -355,7 +355,6 @@ module ::Actions::Katello::Repository
 
     it 'plans' do
       plan_action(action, repository)
-      assert_action_planed_with(action, ::Actions::Katello::Repository::NodeMetadataGenerate, repository)
       assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::Sync, capsule_content, :repository => repository)
     end
   end

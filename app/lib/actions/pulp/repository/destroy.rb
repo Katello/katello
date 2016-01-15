@@ -4,6 +4,7 @@ module Actions
       class Destroy < Pulp::AbstractAsyncTask
         input_format do
           param :pulp_id
+          param :capsule_id
         end
 
         def invoke_external_task

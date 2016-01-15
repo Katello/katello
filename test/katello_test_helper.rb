@@ -127,6 +127,7 @@ class ActiveSupport::TestCase
 
   before do
     stub_ping
+    stub_certs
     Setting::Katello.load_defaults
   end
 
@@ -136,6 +137,14 @@ class ActiveSupport::TestCase
       status[:services][service] = {:status => Katello::Ping::OK_RETURN_CODE}
     end
     status
+  end
+
+  def stub_certs
+    unless ENV['mode'] == 'all'
+      Cert::Certs.stubs(:ca_cert).returns("file")
+      Cert::Certs.stubs(:ssl_client_cert).returns("ssl_client_cert")
+      Cert::Certs.stubs(:ssl_client_key).returns("ssl_client_key")
+    end
   end
 
   def self.stub_ping

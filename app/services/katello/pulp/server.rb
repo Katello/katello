@@ -10,9 +10,9 @@ module Katello
           :user => user_remote_id,
           :timeout => SETTINGS[:katello][:rest_client_timeout],
           :open_timeout => SETTINGS[:katello][:rest_client_timeout],
-          :oauth => {
-            :oauth_secret => SETTINGS[:katello][:pulp][:oauth_secret],
-            :oauth_key => SETTINGS[:katello][:pulp][:oauth_key]
+          :cert_auth => {
+            :ssl_client_cert => ::Cert::Certs.ssl_client_cert,
+            :ssl_client_key => ::Cert::Certs.ssl_client_key
           },
           :logging => {
             :logger => ::Foreman::Logging.logger('katello/pulp_rest'),

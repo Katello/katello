@@ -23,7 +23,7 @@ child @lifecycle_environments => :lifecycle_environments do
       :content_views => env.content_views.non_default.count,
       :products => env.products.enabled.count
     }
-    repo_data = @capsule_content.pulp_repositories_data(env)
+    repo_data = @capsule_content.current_repositories_data(env)
     counts.merge!(Katello::Pulp::ContentCountsCalculator.new(repo_data).calculate)
   end
 
@@ -40,7 +40,7 @@ child @lifecycle_environments => :lifecycle_environments do
           :products => content_view.products.enabled.count
         }
       }
-      repo_data = @capsule_content.pulp_repositories_data(env, content_view)
+      repo_data = @capsule_content.current_repositories_data(env, content_view)
       attributes[:counts].merge!(Katello::Pulp::ContentCountsCalculator.new(repo_data).calculate)
       attributes
     end

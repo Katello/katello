@@ -6,6 +6,7 @@ module Katello
 
     let(:organization) { taxonomies(:empty_organization) }
     let(:environment) { katello_environments(:organization1_library) }
+    let(:content_view) { katello_content_views(:library_view) }
 
     specify "listing available environments to add" do
       capsule_content.available_lifecycle_environments(organization.id).wont_include(environment)
@@ -128,7 +129,7 @@ module Katello
       end
     end
 
-    describe "pulp_repositories_data" do
+    describe "current_repositories_data" do
       let(:repo_lib_cv1) do
         { "id" => FIXTURES['katello_repositories']['p_forge']['pulp_id'].to_s }
       end
@@ -158,7 +159,7 @@ module Katello
       end
 
       test "filters by environment" do
-        repo_ids = capsule_content.pulp_repositories_data(lib).map { |repo| repo['id'] }
+        repo_ids = capsule_content.current_repositories_data(lib).map { |repo| repo['id'] }
         expected_repo_ids = [
           repo_lib_cv1['id'],
           repo_lib_cv2['id']
@@ -168,7 +169,7 @@ module Katello
       end
 
       test "filters by environment and content view" do
-        repo_ids = capsule_content.pulp_repositories_data(lib, cv1).map { |repo| repo['id'] }
+        repo_ids = capsule_content.current_repositories_data(lib, cv1).map { |repo| repo['id'] }
         expected_repo_ids = [
           repo_lib_cv1['id']
         ]
@@ -177,7 +178,7 @@ module Katello
       end
 
       test "returns all repositories" do
-        repo_ids = capsule_content.pulp_repositories_data.map { |repo| repo['id'] }
+        repo_ids = capsule_content.current_repositories_data.map { |repo| repo['id'] }
         expected_repo_ids = [
           repo_lib_cv1['id'],
           repo_lib_cv2['id'],

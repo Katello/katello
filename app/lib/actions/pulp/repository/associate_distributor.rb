@@ -7,10 +7,11 @@ module Actions
           param :type_id
           param :config
           param :hash
+          param :capsule_id
         end
 
         def run
-          output[:response] = ::Katello.pulp_server.extensions.repository.
+          output[:response] = pulp_resources.repository.
             associate_distributor(*input.values_at(:repo_id, :type_id, :config, :hash))
         end
       end

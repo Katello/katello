@@ -265,7 +265,6 @@ module ::Actions::Katello::ContentView
 
     it 'plans' do
       plan_action(action, content_view, library)
-      assert_action_planed_with(action, ::Actions::Katello::ContentView::NodeMetadataGenerate, content_view, library)
       assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::Sync, capsule_content, :content_view => content_view, :environment => library)
     end
   end

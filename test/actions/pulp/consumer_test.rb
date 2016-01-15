@@ -59,70 +59,11 @@ module ::Actions::Pulp
       it_runs(action, :extensions, :consumer, :uninstall_content)
     end
 
-    def test_sync_node
-      action = create_and_plan_action(::Actions::Pulp::Consumer::SyncNode,
-                                      consumer_uuid: uuid,
-                                      repo_ids: nil)
-      it_runs(action, :extensions, :consumer, :update_content) do |stub|
-        stub.with(uuid, 'node', nil, {})
-      end
-
-      action = create_and_plan_action(::Actions::Pulp::Consumer::SyncNode,
-                                      consumer_uuid: uuid,
-                                      repo_ids: nil,
-                                      skip_content: true)
-      it_runs(action, :extensions, :consumer, :update_content) do |stub|
-        stub.with(uuid, 'node', nil, skip_content_update: true)
-      end
-
-      action = create_and_plan_action(::Actions::Pulp::Consumer::SyncNode,
-                                      consumer_uuid: uuid,
-                                      repo_ids: ["1"])
-      it_runs(action, :extensions, :consumer, :update_content) do |stub|
-        stub.with(uuid, 'repository', ["1"], {})
-      end
-    end
-
     def plan_consumer_action(action_class)
       create_and_plan_action(action_class,
                              consumer_uuid: uuid,
                              type: type,
                              args: args)
-    end
-  end
-
-  class NodeBindingsTest < ConsumerTestBase
-    let(:repository) do
-      katello_repositories(:fedora_17_x86_64_dev)
-    end
-
-    def setup
-      set_user
-      ::Katello::RepositorySupport.create_repo(repository.id)
-    end
-
-    def teardown
-      ::Katello::RepositorySupport.destroy_repo
-    end
-
-    def test_bind_node_distributor
-      action = create_and_plan_action(::Actions::Pulp::Consumer::BindNodeDistributor,
-                                      consumer_uuid: uuid,
-                                      repo_id: repository.pulp_id,
-                                      bind_options: {})
-
-      it_runs(action, :resources, :consumer, :bind) do |stub|
-        stub.with(uuid, repository.pulp_id, "#{repository.pulp_id}_nodes", {})
-      end
-    end
-
-    def test_unbind_node_distributor
-      action = create_and_plan_action(::Actions::Pulp::Consumer::UnbindNodeDistributor,
-                                      consumer_uuid: uuid,
-                                      repo_id: repository.pulp_id)
-      it_runs(action, :resources, :consumer, :unbind) do |stub|
-        stub.with(uuid, repository.pulp_id, "#{repository.pulp_id}_nodes")
-      end
     end
   end
 end

@@ -4,6 +4,7 @@ require 'support/pulp/task_support'
 module Katello
   class GluePulpRepoTestBase < ActiveSupport::TestCase
     include TaskSupport
+    include Dynflow::Testing
 
     def setup
       set_user
@@ -38,9 +39,9 @@ module Katello
                               pulp_id: repository.pulp_id,
                               name: repository.name,
                               feed: repository.url,
-                              ssl_ca_cert: repository.feed_ca,
-                              ssl_client_cert: repository.feed_cert,
-                              ssl_client_key: repository.feed_key,
+                              ssl_ca_cert: "foo",
+                              ssl_client_cert: "foo",
+                              ssl_client_key: "foo",
                               unprotected: repository.unprotected,
                               checksum_type: repository.checksum_type,
                               path: repository.relative_path,

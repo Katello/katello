@@ -13,7 +13,12 @@ module Katello
       scope
     end
 
-    def pulp_repos(environments = lifecycle_environments, content_view = nil)
+    def pulp_server
+      Katello::Pulp::Server.config(pulp_url, User.remote_user)
+    end
+
+    def repos_available_to_capsule(environments = nil, content_view = nil)
+      environments = lifecycle_environments if environments.nil?
       yum_repos = Katello::Repository.in_environment(environments)
       yum_repos = yum_repos.in_content_views([content_view]) if content_view
       yum_repos = yum_repos.find_all { |repo| repo.node_syncable? }
@@ -74,7 +79,7 @@ module Katello
       last_sync_time.nil? || env.content_view_environments.where('updated_at > ?', last_sync_time).any?
     end
 
-    def pulp_repositories_data(environment = nil, content_view = nil)
+    def current_repositories_data(environment = nil, content_view = nil)
       @pulp_repositories ||= @capsule.pulp_repositories
 
       repos = Katello::Repository
@@ -99,6 +104,41 @@ module Katello
 
     def default_capsule?
       @capsule.default_capsule?
+    end
+
+    def current_repositories(environment_id = nil, content_view_id = nil)
+      @current_repositories ||= @capsule.pulp_repositories
+      katello_repo_ids = []
+      puppet_repo_ids = []
+
+      @current_repositories.each do |repo|
+        found_repo = Katello::Repository.where(:pulp_id => repo[:id]).first
+        if !found_repo
+          found_puppet = Katello::ContentViewPuppetEnvironment.where(:pulp_id => repo[:id]).first
+          puppet_repo_ids << found_puppet.id if found_puppet
+        else
+          katello_repo_ids << found_repo.id if found_repo
+        end
+      end
+
+      katello_repos = Katello::Repository.where(:id => katello_repo_ids)
+      puppet_repos = Katello::ContentViewPuppetEnvironment.where(:id => puppet_repo_ids)
+
+      if environment_id
+        katello_repos = katello_repos.where(:environment_id => environment_id)
+        puppet_repos = puppet_repos.where(:environment_id => environment_id)
+      end
+
+      if content_view_id
+        katello_repos = katello_repos.in_content_views([content_view_id])
+        puppet_repos = puppet_repos.in_content_view(content_view_id)
+      end
+
+      katello_repos + puppet_repos
+    end
+
+    def pulp_url
+      self.capsule.url + "/pulp/api/v2/"
     end
 
     def self.with_environment(environment, include_default = false)

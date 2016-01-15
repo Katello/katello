@@ -18,6 +18,7 @@ module Actions
           param :with_importer
           param :docker_upstream_name
           param :download_policy
+          param :capsule_id
         end
 
         def run
@@ -56,6 +57,9 @@ module Actions
               importer.ssl_client_key  = input[:ssl_client_key]
             when ::Katello::Repository::PUPPET_TYPE
               importer.feed            = input[:feed]
+              importer.ssl_ca_cert     = input[:ssl_ca_cert]
+              importer.ssl_client_cert = input[:ssl_client_cert]
+              importer.ssl_client_key  = input[:ssl_client_key]
             when ::Katello::Repository::DOCKER_TYPE
               importer.upstream_name   = input[:docker_upstream_name] if input[:docker_upstream_name]
               importer.feed            = input[:feed]
@@ -68,17 +72,19 @@ module Actions
         def distributors
           case input[:content_type]
           when ::Katello::Repository::YUM_TYPE
-            [yum_distributor, yum_clone_distributor, export_distributor]
+            distributors = [yum_distributor, yum_clone_distributor]
           when ::Katello::Repository::FILE_TYPE
-            [iso_distributor]
+            distributors = [iso_distributor]
           when ::Katello::Repository::PUPPET_TYPE
-            distributors = input[:path].blank? ? [] : [puppet_install_distributor, nodes_distributor]
+            distributors = input[:path].blank? ? [] : [puppet_install_distributor]
             distributors << puppet_distributor
           when ::Katello::Repository::DOCKER_TYPE
-            [docker_distributor, nodes_distributor]
+            distributors =  [docker_distributor]
           else
             fail _("Unexpected repo type %s") % input[:content_type]
           end
+
+          distributors
         end
 
         def yum_distributor
@@ -95,16 +101,6 @@ module Actions
         def yum_clone_distributor
           Runcible::Models::YumCloneDistributor.new(id: "#{input[:pulp_id]}_clone",
                                                     destination_distributor_id: input[:pulp_id])
-        end
-
-        def export_distributor
-          # (false, false) means "no http export, no https export". We only
-          # export to a directory.
-          Runcible::Models::ExportDistributor.new(false, false, input[:path])
-        end
-
-        def nodes_distributor
-          Runcible::Models::NodesHttpDistributor.new(:id => "#{input[:pulp_id]}_nodes", :auto_publish => true)
         end
 
         def iso_distributor

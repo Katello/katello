@@ -16,6 +16,10 @@ module ::Actions::Katello::CapsuleContent
       katello_repositories(:fedora_17_x86_64_dev)
     end
 
+    let(:custom_repository) do
+      katello_repositories(:fedora_17_x86_64)
+    end
+
     before do
       set_user
       @capsule_system = create(:katello_system,
@@ -24,6 +28,16 @@ module ::Actions::Katello::CapsuleContent
                                capsule: proxy_with_pulp,
                                environment: environment,
                                content_view: katello_content_views(:library_dev_view))
+    end
+
+    def synced_repos(action, repos)
+      synced_repos = []
+      repos.each do |_repo|
+        assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncCapsule) do |(input)|
+          synced_repos << input[:repo_pulp_id]
+        end
+      end
+      synced_repos
     end
   end
 
@@ -39,20 +53,20 @@ module ::Actions::Katello::CapsuleContent
 
     it 'plans' do
       capsule_content.add_lifecycle_environment(environment)
-      plan_action(action, capsule_content)
-      assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncNode) do |(input)|
-        input.must_equal(consumer_uuid: @capsule_system.uuid,
-                         repo_ids: capsule_content.pulp_repos.map(&:pulp_id))
-      end
+      capsule_content_sync = plan_action(action, capsule_content)
+      synced_repos = synced_repos(capsule_content_sync, capsule_content.repos_available_to_capsule)
+
+      assert_equal synced_repos.sort.uniq, capsule_content.repos_available_to_capsule.map { |repo| repo.pulp_id }.sort.uniq
     end
 
     it 'allows limiting scope of the syncing to one environment' do
       capsule_content.add_lifecycle_environment(dev_environment)
-      plan_action(action, capsule_content, :environment => dev_environment)
-      assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncNode) do |(input)|
-        input[:repo_ids].size.must_equal 6
-      end
+      capsule_content_sync = plan_action(action, capsule_content, :environment => dev_environment)
+      synced_repos = synced_repos(capsule_content_sync, capsule_content.repos_available_to_capsule)
+
+      assert_equal synced_repos.uniq.count, 6
     end
+
     it 'fails when trying to sync to the default capsule' do
       Katello::CapsuleContent.any_instance.stubs(:default_capsule?).returns(true)
       assert_raises(RuntimeError) do
@@ -69,61 +83,84 @@ module ::Actions::Katello::CapsuleContent
     end
   end
 
-  class UpdateWithoutContentTest < TestBase
-    let(:action_class) { ::Actions::Katello::CapsuleContent::UpdateWithoutContent }
+  class CreateOrUpdateTest < TestBase
+    include VCR::TestCase
 
-    it 'plans' do
+    let(:action_class) { ::Actions::Katello::CapsuleContent::CreateOrUpdate }
+
+    let(:cert) do
+      {
+        :key=>"this is a key",
+        :cert=>"this is a cert",
+        :id=>"123",
+        :serial=>{
+          :id=>132,
+          :revoked=>false,
+          :collected=>false,
+          :expiration=>"2116-01-28t19:43:26.317+0000",
+          :serial=>53,
+          :created=>"2016-01-28t19:43:26.770+0000",
+          :updated=>"2016-01-28T19:43:26.770+0000"
+        },
+        :created=>"2016-01-28T19:43:26.780+0000",
+        :updated=>"2016-01-28T19:43:26.780+0000"
+      }
+    end
+
+    before do
       capsule_content.add_lifecycle_environment(environment)
+      ::Cert::Certs.stubs(:ca_cert).returns(cert)
+      ::Cert::Certs.stubs(:ueber_cert).with(repository.organization).returns(cert)
+    end
 
-      action = create_and_plan_action(action_class, environment)
-      assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncNode) do |(input)|
-        input.must_equal(consumer_uuid: @capsule_system.uuid, skip_content: true)
+    it 'creates repos needed on the capsule' do
+      capsule_content.stubs(:current_repositories).returns([custom_repository])
+      capsule_content.stubs(:repos_available_to_capsule).returns([custom_repository, repository])
+
+      action = create_and_plan_action(action_class, capsule_content)
+
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::Create) do |(input)|
+        input.must_equal(content_type: repository.content_type,
+                         pulp_id: repository.pulp_id,
+                         name: repository.name,
+                         feed: repository.full_path,
+                         ssl_ca_cert: ::Cert::Certs.ca_cert,
+                         ssl_client_cert: cert[:cert],
+                         ssl_client_key: cert[:key],
+                         unprotected: repository.unprotected,
+                         checksum_type: repository.checksum_type,
+                         path: repository.relative_path,
+                         with_importer: true,
+                         docker_upstream_name: repository.try(:docker_upstream_name),
+                         capsule_id: capsule_content.capsule.id
+                        )
       end
     end
-  end
 
-  class RepositoryTestBase < TestBase
-    include VCR::TestCase
-    include FactoryGirl::Syntax::Methods
+    it "updates repos on the capsule" do
+      capsule_content.stubs(:current_repositories).returns([repository])
+      capsule_content.stubs(:repos_available_to_capsule).returns([repository])
 
-    def setup
-      ::Katello::RepositorySupport.create_repo(repository.id)
-    end
-
-    def teardown
-      ::Katello::RepositorySupport.destroy_repo
-    end
-  end
-
-  class ManageBoundRepositoriesAddTest < RepositoryTestBase
-    let(:action_class) { ::Actions::Katello::CapsuleContent::ManageBoundRepositories }
-
-    before do
-      ::Katello::System.any_instance.stubs(:bound_node_repos).returns([])
-      capsule_content.add_lifecycle_environment(repository.environment)
-    end
-
-    it 'plans' do
       action = create_and_plan_action(action_class, capsule_content)
-      assert_action_planed_with(action, ::Actions::Pulp::Consumer::BindNodeDistributor,
-                                consumer_uuid: @capsule_system.uuid,
-                                repo_id: repository.pulp_id,
-                                bind_options: { notify_agent: false, binding_config: { strategy: 'mirror' }})
+      assert_action_planed_with(action,
+                                ::Actions::Pulp::Repository::Refresh,
+                                repository,
+                                :capsule_id => capsule_content.capsule.id
+                                )
     end
   end
 
-  class ManageBoundRepositoriesRemoveTest < RepositoryTestBase
-    let(:action_class) { ::Actions::Katello::CapsuleContent::ManageBoundRepositories }
+  class RemoveUnneededReposTest < TestBase
+    let(:action_class) { ::Actions::Katello::CapsuleContent::RemoveUnneededRepos }
 
-    before do
-      ::Katello::System.any_instance.stubs(:bound_node_repos).returns([repository.pulp_id])
-    end
+    it "removes unneeded repos" do
+      capsule_content.stubs(:current_repositories).returns([custom_repository, repository])
+      capsule_content.stubs(:repos_available_to_capsule).returns([custom_repository])
 
-    it 'plans' do
       action = create_and_plan_action(action_class, capsule_content)
-      assert_action_planed_with(action, ::Actions::Pulp::Consumer::UnbindNodeDistributor,
-                                consumer_uuid: @capsule_system.uuid,
-                                repo_id: repository.pulp_id)
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::Destroy) do |(input)|
+        input.must_equal(:pulp_id => repository.pulp_id, :capsule_id => capsule_content.capsule.id)
+      end
     end
   end
 end
