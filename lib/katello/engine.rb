@@ -56,6 +56,7 @@ module Katello
 
       precompile = [
         'katello/katello.css',
+        'katello/containers/container.css',
         'bastion_katello/bastion_katello.css',
         'bastion_katello/bastion_katello.js',
         /bastion_katello\S+.(?:svg|eot|woff|ttf)$/
