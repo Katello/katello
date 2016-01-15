@@ -1,159 +1,42 @@
---- 
-http_interactions: 
-- request: 
-    method: post
-    uri: https://localhost/pulp/api/v2/repositories/
-    body: 
-      encoding: US-ASCII
-      base64_string: |
-        eyJpZCI6IkZlZG9yYV8xNyIsImRpc3BsYXlfbmFtZSI6IkZlZG9yYSAxNyB4
-        ODZfNjQiLCJpbXBvcnRlcl90eXBlX2lkIjoieXVtX2ltcG9ydGVyIiwiaW1w
-        b3J0ZXJfY29uZmlnIjp7InNzbF9jYV9jZXJ0IjpudWxsLCJzc2xfY2xpZW50
-        X2NlcnQiOm51bGwsInNzbF9jbGllbnRfa2V5IjpudWxsLCJmZWVkIjoiZmls
-        ZTovLy92YXIvd3d3L3Rlc3RfcmVwb3Mvem9vIn0sIm5vdGVzIjp7Il9yZXBv
-        LXR5cGUiOiJycG0tcmVwbyJ9LCJkaXN0cmlidXRvcnMiOlt7ImRpc3RyaWJ1
-        dG9yX3R5cGVfaWQiOiJ5dW1fZGlzdHJpYnV0b3IiLCJkaXN0cmlidXRvcl9j
-        b25maWciOnsicmVsYXRpdmVfdXJsIjoiL3Rlc3RfcGF0aC8iLCJodHRwIjpm
-        YWxzZSwiaHR0cHMiOnRydWUsInByb3RlY3RlZCI6dHJ1ZX0sImF1dG9fcHVi
-        bGlzaCI6dHJ1ZSwiZGlzdHJpYnV0b3JfaWQiOiJGZWRvcmFfMTcifSx7ImRp
-        c3RyaWJ1dG9yX3R5cGVfaWQiOiJ5dW1fY2xvbmVfZGlzdHJpYnV0b3IiLCJk
-        aXN0cmlidXRvcl9jb25maWciOnsiZGVzdGluYXRpb25fZGlzdHJpYnV0b3Jf
-        aWQiOiJGZWRvcmFfMTcifSwiYXV0b19wdWJsaXNoIjpmYWxzZSwiZGlzdHJp
-        YnV0b3JfaWQiOiJGZWRvcmFfMTdfY2xvbmUifSx7ImRpc3RyaWJ1dG9yX3R5
-        cGVfaWQiOiJub2Rlc19odHRwX2Rpc3RyaWJ1dG9yIiwiZGlzdHJpYnV0b3Jf
-        Y29uZmlnIjp7fSwiYXV0b19wdWJsaXNoIjp0cnVlLCJkaXN0cmlidXRvcl9p
-        ZCI6IkZlZG9yYV8xN19ub2RlcyJ9LHsiZGlzdHJpYnV0b3JfdHlwZV9pZCI6
-        ImV4cG9ydF9kaXN0cmlidXRvciIsImRpc3RyaWJ1dG9yX2NvbmZpZyI6eyJo
-        dHRwIjpmYWxzZSwiaHR0cHMiOmZhbHNlfSwiYXV0b19wdWJsaXNoIjpmYWxz
-        ZSwiZGlzdHJpYnV0b3JfaWQiOiJleHBvcnRfZGlzdHJpYnV0b3IifV19
-
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="kslbVqz9RlbPh2efWwfsypbHj6sbyMag6U8M8OcKBQ", oauth_signature="1Ee404rCZ7NI1l%2FsyHDAQT4QPiA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448945158", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "897"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 201
-      message: Created
-    headers: 
-      Date: 
-      - Tue, 01 Dec 2015 04:45:58 GMT
-      Server: 
-      - Apache/2.4.6 (CentOS)
-      Location: 
-      - Fedora_17
-      Content-Length: 
-      - "320"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      base64_string: |
-        eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiRmVkb3JhIDE3
-        IHg4Nl82NCIsICJkZXNjcmlwdGlvbiI6IG51bGwsICJsYXN0X3VuaXRfYWRk
-        ZWQiOiBudWxsLCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicnBtLXJlcG8i
-        fSwgImxhc3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9j
-        b3VudHMiOiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAi
-        NTY1ZDI2MDYyNjAxMzk1MjI2ZTIzZGQ0In0sICJpZCI6ICJGZWRvcmFfMTci
-        LCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9GZWRvcmFf
-        MTcvIn0=
-
-    http_version: 
-  recorded_at: Tue, 01 Dec 2015 04:45:58 GMT
-- request: 
-    method: delete
-    uri: https://localhost/pulp/api/v2/repositories/Fedora_17/
-    body: 
-      encoding: US-ASCII
-      base64_string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="k2YWoZMSf06btUKVX3UrfznOtRnorAudtHDMIh8bac", oauth_signature="6tHlxonUP3XLfORTOIlFbPK5PN8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448945158", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 202
-      message: Accepted
-    headers: 
-      Date: 
-      - Tue, 01 Dec 2015 04:45:58 GMT
-      Server: 
-      - Apache/2.4.6 (CentOS)
-      Content-Encoding: 
-      - utf-8
-      Content-Length: 
-      - "172"
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      base64_string: |
-        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzL2ZiMTJjYzU5LWRlZTctNDNkMC05NjhjLWIwYTRiZTc2OGI3Yy8iLCAi
-        dGFza19pZCI6ICJmYjEyY2M1OS1kZWU3LTQzZDAtOTY4Yy1iMGE0YmU3Njhi
-        N2MifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
-
-    http_version: 
-  recorded_at: Tue, 01 Dec 2015 04:45:58 GMT
-- request: 
+---
+http_interactions:
+- request:
     method: get
     uri: https://localhost/pulp/api/v2/tasks/fb12cc59-dee7-43d0-968c-b0a4be768b7c/
-    body: 
+    body:
       encoding: US-ASCII
-      base64_string: ""
-    headers: 
-      Accept: 
+      base64_string: ''
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Type: 
+      Content-Type:
       - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="pgIFkRKh04H4p24Pl1EdjH6ca1COiXgAReLAMWnHLpk", oauth_signature="S7ggCTLwp5dmaXR74QEiOkRYRjQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448945158", oauth_version="1.0"
-      Pulp-User: 
+      Authorization:
+      - OAuth oauth_consumer_key="katello", oauth_nonce="pgIFkRKh04H4p24Pl1EdjH6ca1COiXgAReLAMWnHLpk",
+        oauth_signature="S7ggCTLwp5dmaXR74QEiOkRYRjQ%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1448945158", oauth_version="1.0"
+      Pulp-User:
       - admin
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Date: 
+    headers:
+      Date:
       - Tue, 01 Dec 2015 04:45:58 GMT
-      Server: 
+      Server:
       - Apache/2.4.6 (CentOS)
-      Content-Length: 
-      - "621"
-      Connection: 
+      Content-Length:
+      - '621'
+      Connection:
       - close
-      Content-Type: 
+      Content-Type:
       - application/json
-    body: 
+    body:
       encoding: US-ASCII
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
@@ -170,44 +53,45 @@ http_interactions:
         c3lzLnJlZGhhdC5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVs
         bCwgIl9pZCI6IHsiJG9pZCI6ICI1NjVkMjYwNjE3NjhmZWJkOGY4NzQ2MzIi
         fSwgImlkIjogIjU2NWQyNjA2MjYwMTM5NTJjNDNjZTA1YiJ9
-
     http_version: 
   recorded_at: Tue, 01 Dec 2015 04:45:58 GMT
-- request: 
+- request:
     method: get
     uri: https://localhost/pulp/api/v2/tasks/fb12cc59-dee7-43d0-968c-b0a4be768b7c/
-    body: 
+    body:
       encoding: US-ASCII
-      base64_string: ""
-    headers: 
-      Accept: 
+      base64_string: ''
+    headers:
+      Accept:
       - application/json
-      Accept-Encoding: 
+      Accept-Encoding:
       - gzip, deflate
-      Content-Type: 
+      Content-Type:
       - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="6VDqJh7okVqO3Zd9WvQ4BmRW0g1Gm7ykp0UgTFpzM", oauth_signature="zFuYYn1qxY0oxavGuN0G6SXgAV8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1448945159", oauth_version="1.0"
-      Pulp-User: 
+      Authorization:
+      - OAuth oauth_consumer_key="katello", oauth_nonce="6VDqJh7okVqO3Zd9WvQ4BmRW0g1Gm7ykp0UgTFpzM",
+        oauth_signature="zFuYYn1qxY0oxavGuN0G6SXgAV8%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1448945159", oauth_version="1.0"
+      Pulp-User:
       - admin
-      User-Agent: 
+      User-Agent:
       - Ruby
-  response: 
-    status: 
+  response:
+    status:
       code: 200
       message: OK
-    headers: 
-      Date: 
+    headers:
+      Date:
       - Tue, 01 Dec 2015 04:45:59 GMT
-      Server: 
+      Server:
       - Apache/2.4.6 (CentOS)
-      Content-Length: 
-      - "680"
-      Connection: 
+      Content-Length:
+      - '680'
+      Connection:
       - close
-      Content-Type: 
+      Content-Type:
       - application/json
-    body: 
+    body:
       encoding: US-ASCII
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
@@ -226,7 +110,564 @@ http_interactions:
         LCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2NWQyNjA2MTc2
         OGZlYmQ4Zjg3NDYzMiJ9LCAiaWQiOiAiNTY1ZDI2MDYyNjAxMzk1MmM0M2Nl
         MDViIn0=
-
     http_version: 
   recorded_at: Tue, 01 Dec 2015 04:45:59 GMT
+- request:
+    method: get
+    uri: https://fortello2.devel/pulp/api/v2/tasks/338f70d1-a1b5-4c52-89b2-170b4205b393/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="23A3ezxrGTTAgeCLz3PgPY5ndfs9T9oy", oauth_nonce="1kl5kmAFxoDQkeoBoMMdQTlPObwyAFAzxrGAVno",
+        oauth_signature="ROD6SDFH7cAyMSClScj5sTOFVqc%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1453256131", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 20 Jan 2016 02:15:31 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux)
+      Content-Length:
+      - '527'
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8zMzhmNzBkMS1hMWI1LTRjNTItODliMi0xNzBiNDIwNWIz
+        OTMvIiwgInRhc2tfaWQiOiAiMzM4ZjcwZDEtYTFiNS00YzUyLTg5YjItMTcw
+        YjQyMDViMzkzIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
+        bmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjU2OWVlZGMzODUzZDEwMjhkODc1NmZlZSJ9LCAi
+        aWQiOiAiNTY5ZWVkYzNlMzllNWU0M2I3MTBiYjFlIn0=
+    http_version: 
+  recorded_at: Wed, 20 Jan 2016 02:15:31 GMT
+- request:
+    method: get
+    uri: https://fortello2.devel/pulp/api/v2/tasks/338f70d1-a1b5-4c52-89b2-170b4205b393/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="23A3ezxrGTTAgeCLz3PgPY5ndfs9T9oy", oauth_nonce="PFQWjGe0rsYvFNCmoOIvUw4uxooahvc5S9r3zmvJE",
+        oauth_signature="PQo%2BaZgEO%2FBq4k2JnVzpuQEjt0E%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1453256132", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 20 Jan 2016 02:15:32 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux)
+      Content-Length:
+      - '664'
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8zMzhmNzBkMS1hMWI1LTRjNTItODliMi0xNzBiNDIwNWIz
+        OTMvIiwgInRhc2tfaWQiOiAiMzM4ZjcwZDEtYTFiNS00YzUyLTg5YjItMTcw
+        YjQyMDViMzkzIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
+        MDE2LTAxLTIwVDAyOjE1OjMxWiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE2LTAxLTIwVDAyOjE1OjMxWiIsICJ0cmFjZWJh
+        Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
+        b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
+        MEBmb3J0ZWxsbzIuZGV2ZWwuZHEiLCAic3RhdGUiOiAiZmluaXNoZWQiLCAi
+        d29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAZm9y
+        dGVsbG8yLmRldmVsIiwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGws
+        ICJfaWQiOiB7IiRvaWQiOiAiNTY5ZWVkYzM4NTNkMTAyOGQ4NzU2ZmVlIn0s
+        ICJpZCI6ICI1NjllZWRjM2UzOWU1ZTQ0NGU5ODhiYzUifQ==
+    http_version: 
+  recorded_at: Wed, 20 Jan 2016 02:15:32 GMT
+- request:
+    method: get
+    uri: https://fortello2.devel/pulp/api/v2/tasks/a0e15135-f79a-4588-b7ba-7dd42b7ec43d/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="23A3ezxrGTTAgeCLz3PgPY5ndfs9T9oy", oauth_nonce="piFVGAomUR46gqAf9DxUcW1PvomQvNXhaoYV5jLlW3g",
+        oauth_signature="h6Hz84SW6wy25x0cgs8oa8c81P8%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1453256218", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 20 Jan 2016 02:16:58 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux)
+      Content-Length:
+      - '527'
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9hMGUxNTEzNS1mNzlhLTQ1ODgtYjdiYS03ZGQ0MmI3ZWM0
+        M2QvIiwgInRhc2tfaWQiOiAiYTBlMTUxMzUtZjc5YS00NTg4LWI3YmEtN2Rk
+        NDJiN2VjNDNkIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
+        bmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjU2OWVlZTFhODUzZDEwMjhkODc1NzE1YiJ9LCAi
+        aWQiOiAiNTY5ZWVlMWFlMzllNWU0M2I3MTBiZDU5In0=
+    http_version: 
+  recorded_at: Wed, 20 Jan 2016 02:16:58 GMT
+- request:
+    method: get
+    uri: https://fortello2.devel/pulp/api/v2/tasks/a0e15135-f79a-4588-b7ba-7dd42b7ec43d/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="23A3ezxrGTTAgeCLz3PgPY5ndfs9T9oy", oauth_nonce="0M6ULFyY5OHdpvooH3EpgbhKA0GS2v8aR7U7INXs",
+        oauth_signature="7iHxshuV%2Fc4YNiY3AFi7heVZA68%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1453256219", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 20 Jan 2016 02:16:59 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux)
+      Content-Length:
+      - '664'
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9hMGUxNTEzNS1mNzlhLTQ1ODgtYjdiYS03ZGQ0MmI3ZWM0
+        M2QvIiwgInRhc2tfaWQiOiAiYTBlMTUxMzUtZjc5YS00NTg4LWI3YmEtN2Rk
+        NDJiN2VjNDNkIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
+        MDE2LTAxLTIwVDAyOjE2OjU4WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE2LTAxLTIwVDAyOjE2OjU4WiIsICJ0cmFjZWJh
+        Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
+        b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
+        MEBmb3J0ZWxsbzIuZGV2ZWwuZHEiLCAic3RhdGUiOiAiZmluaXNoZWQiLCAi
+        d29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAZm9y
+        dGVsbG8yLmRldmVsIiwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGws
+        ICJfaWQiOiB7IiRvaWQiOiAiNTY5ZWVlMWE4NTNkMTAyOGQ4NzU3MTViIn0s
+        ICJpZCI6ICI1NjllZWUxYWUzOWU1ZTQ0NGU5ODhkZmEifQ==
+    http_version: 
+  recorded_at: Wed, 20 Jan 2016 02:16:59 GMT
+- request:
+    method: get
+    uri: https://fortello2.devel/pulp/api/v2/tasks/c9a4729b-3f31-4296-a73f-1aeca7743efc/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="23A3ezxrGTTAgeCLz3PgPY5ndfs9T9oy", oauth_nonce="u0v3tyFj6WBf7LiNvCf2DbPJoyacF7zhVAZCN0af3U",
+        oauth_signature="2ND9gYl%2FxgwtR6GHQO0p2RXjc28%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1453740466", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 25 Jan 2016 16:47:46 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux)
+      Content-Length:
+      - '527'
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9jOWE0NzI5Yi0zZjMxLTQyOTYtYTczZi0xYWVjYTc3NDNl
+        ZmMvIiwgInRhc2tfaWQiOiAiYzlhNDcyOWItM2YzMS00Mjk2LWE3M2YtMWFl
+        Y2E3NzQzZWZjIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
+        bmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjU2YTY1MWIyYWJlMGE3MWQwNmFlNmQyNiJ9LCAi
+        aWQiOiAiNTZhNjUxYjJlMzllNWUzZmIyMDYxYmYwIn0=
+    http_version: 
+  recorded_at: Mon, 25 Jan 2016 16:47:46 GMT
+- request:
+    method: get
+    uri: https://fortello2.devel/pulp/api/v2/tasks/c9a4729b-3f31-4296-a73f-1aeca7743efc/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="23A3ezxrGTTAgeCLz3PgPY5ndfs9T9oy", oauth_nonce="bpHPrImdUiHOLDQyll6XxJSsguEOcwpY7XFMuzC8",
+        oauth_signature="uaDJwsRJgjqNwrrFhPRVqFrsB0U%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1453740467", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 25 Jan 2016 16:47:47 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux)
+      Content-Length:
+      - '664'
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9jOWE0NzI5Yi0zZjMxLTQyOTYtYTczZi0xYWVjYTc3NDNl
+        ZmMvIiwgInRhc2tfaWQiOiAiYzlhNDcyOWItM2YzMS00Mjk2LWE3M2YtMWFl
+        Y2E3NzQzZWZjIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
+        MDE2LTAxLTI1VDE2OjQ3OjQ2WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE2LTAxLTI1VDE2OjQ3OjQ2WiIsICJ0cmFjZWJh
+        Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
+        b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
+        MEBmb3J0ZWxsbzIuZGV2ZWwuZHEiLCAic3RhdGUiOiAiZmluaXNoZWQiLCAi
+        d29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAZm9y
+        dGVsbG8yLmRldmVsIiwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGws
+        ICJfaWQiOiB7IiRvaWQiOiAiNTZhNjUxYjJhYmUwYTcxZDA2YWU2ZDI2In0s
+        ICJpZCI6ICI1NmE2NTFiMmUzOWU1ZTQwNTE5YmJhZGYifQ==
+    http_version: 
+  recorded_at: Mon, 25 Jan 2016 16:47:47 GMT
+- request:
+    method: post
+    uri: https://fortello2.devel/pulp/api/v2/repositories/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJpZCI6IkZlZG9yYV8xNyIsImRpc3BsYXlfbmFtZSI6IkZlZG9yYSAxNyB4
+        ODZfNjQiLCJpbXBvcnRlcl90eXBlX2lkIjoieXVtX2ltcG9ydGVyIiwiaW1w
+        b3J0ZXJfY29uZmlnIjp7ImZlZWQiOiJmaWxlOi8vL3Zhci93d3cvdGVzdF9y
+        ZXBvcy96b28iLCJzc2xfY2FfY2VydCI6bnVsbCwic3NsX2NsaWVudF9jZXJ0
+        IjpudWxsLCJzc2xfY2xpZW50X2tleSI6bnVsbH0sIm5vdGVzIjp7Il9yZXBv
+        LXR5cGUiOiJycG0tcmVwbyJ9LCJkaXN0cmlidXRvcnMiOlt7ImRpc3RyaWJ1
+        dG9yX3R5cGVfaWQiOiJ5dW1fZGlzdHJpYnV0b3IiLCJkaXN0cmlidXRvcl9j
+        b25maWciOnsicmVsYXRpdmVfdXJsIjoiL3Rlc3RfcGF0aC8iLCJodHRwIjpm
+        YWxzZSwiaHR0cHMiOnRydWUsInByb3RlY3RlZCI6dHJ1ZX0sImF1dG9fcHVi
+        bGlzaCI6dHJ1ZSwiZGlzdHJpYnV0b3JfaWQiOiJGZWRvcmFfMTcifSx7ImRp
+        c3RyaWJ1dG9yX3R5cGVfaWQiOiJ5dW1fY2xvbmVfZGlzdHJpYnV0b3IiLCJk
+        aXN0cmlidXRvcl9jb25maWciOnsiZGVzdGluYXRpb25fZGlzdHJpYnV0b3Jf
+        aWQiOiJGZWRvcmFfMTcifSwiYXV0b19wdWJsaXNoIjpmYWxzZSwiZGlzdHJp
+        YnV0b3JfaWQiOiJGZWRvcmFfMTdfY2xvbmUifSx7ImRpc3RyaWJ1dG9yX3R5
+        cGVfaWQiOiJub2Rlc19odHRwX2Rpc3RyaWJ1dG9yIiwiZGlzdHJpYnV0b3Jf
+        Y29uZmlnIjp7fSwiYXV0b19wdWJsaXNoIjp0cnVlLCJkaXN0cmlidXRvcl9p
+        ZCI6IkZlZG9yYV8xN19ub2RlcyJ9LHsiZGlzdHJpYnV0b3JfdHlwZV9pZCI6
+        ImV4cG9ydF9kaXN0cmlidXRvciIsImRpc3RyaWJ1dG9yX2NvbmZpZyI6eyJo
+        dHRwIjpmYWxzZSwiaHR0cHMiOmZhbHNlfSwiYXV0b19wdWJsaXNoIjpmYWxz
+        ZSwiZGlzdHJpYnV0b3JfaWQiOiJleHBvcnRfZGlzdHJpYnV0b3IifV19
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="23A3ezxrGTTAgeCLz3PgPY5ndfs9T9oy",
+        oauth_nonce="jTiHVcQpf85Wr1sl87Qp6ABIX89OikRQ4f5R51kuM", oauth_signature="%2F%2BZATVrp%2BZRaR5tyYOmLNJe5z1A%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1453740561", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      Content-Length:
+      - '897'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Mon, 25 Jan 2016 16:49:21 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux)
+      Location:
+      - Fedora_17
+      Content-Length:
+      - '320'
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiRmVkb3JhIDE3
+        IHg4Nl82NCIsICJkZXNjcmlwdGlvbiI6IG51bGwsICJsYXN0X3VuaXRfYWRk
+        ZWQiOiBudWxsLCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicnBtLXJlcG8i
+        fSwgImxhc3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9j
+        b3VudHMiOiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAi
+        NTZhNjUyMTFlMzllNWUzZmIyMDYxZTI2In0sICJpZCI6ICJGZWRvcmFfMTci
+        LCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9GZWRvcmFf
+        MTcvIn0=
+    http_version: 
+  recorded_at: Mon, 25 Jan 2016 16:49:21 GMT
+- request:
+    method: delete
+    uri: https://fortello2.devel/pulp/api/v2/repositories/Fedora_17/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="23A3ezxrGTTAgeCLz3PgPY5ndfs9T9oy", oauth_nonce="tU5TkoZOlvqPg47aCSwGrAmU8GAlDOKj2TNPo2DXGo",
+        oauth_signature="R%2BMD7iqm9fCz26vrq8qgs7uVM4U%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1453740561", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Mon, 25 Jan 2016 16:49:21 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux)
+      Content-Encoding:
+      - utf-8
+      Content-Length:
+      - '172'
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzL2IzZTRkYWIxLTMwYzAtNDQ3YS04MGQyLWJiZWIyMjc0MzZiNy8iLCAi
+        dGFza19pZCI6ICJiM2U0ZGFiMS0zMGMwLTQ0N2EtODBkMi1iYmViMjI3NDM2
+        YjcifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+    http_version: 
+  recorded_at: Mon, 25 Jan 2016 16:49:21 GMT
+- request:
+    method: get
+    uri: https://fortello2.devel/pulp/api/v2/tasks/b3e4dab1-30c0-447a-80d2-bbeb227436b7/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="23A3ezxrGTTAgeCLz3PgPY5ndfs9T9oy", oauth_nonce="7CGH1TSC5CiNXQMGm6HxWsaP0IBHbicqAmV0KiAeA",
+        oauth_signature="KyjzbEA96Tsu%2FXUlkwWYJOY5Vck%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1453740561", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 25 Jan 2016 16:49:21 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux)
+      Content-Length:
+      - '605'
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9iM2U0ZGFiMS0zMGMwLTQ0N2EtODBkMi1iYmViMjI3NDM2
+        YjcvIiwgInRhc2tfaWQiOiAiYjNlNGRhYjEtMzBjMC00NDdhLTgwZDItYmJl
+        YjIyNzQzNmI3IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0wQGZvcnRlbGxvMi5k
+        ZXZlbC5kcSIsICJzdGF0ZSI6ICJ3YWl0aW5nIiwgIndvcmtlcl9uYW1lIjog
+        InJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0wQGZvcnRlbGxvMi5kZXZlbCIs
+        ICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lk
+        IjogIjU2YTY1MjExYWJlMGE3MWQwNmFlNmU5NyJ9LCAiaWQiOiAiNTZhNjUy
+        MTFlMzllNWU0MDUxOWJiZDBiIn0=
+    http_version: 
+  recorded_at: Mon, 25 Jan 2016 16:49:21 GMT
+- request:
+    method: get
+    uri: https://fortello2.devel/pulp/api/v2/tasks/b3e4dab1-30c0-447a-80d2-bbeb227436b7/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Authorization:
+      - OAuth oauth_consumer_key="23A3ezxrGTTAgeCLz3PgPY5ndfs9T9oy", oauth_nonce="D2QpfBFYWAIlmTq84OVD7WZfPDssUa6a1gYnaIFmE",
+        oauth_signature="e80aAeUdj7%2B6eFHV6UHfaPSFqS0%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1453740562", oauth_version="1.0"
+      Pulp-User:
+      - admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 25 Jan 2016 16:49:22 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux)
+      Content-Length:
+      - '664'
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9iM2U0ZGFiMS0zMGMwLTQ0N2EtODBkMi1iYmViMjI3NDM2
+        YjcvIiwgInRhc2tfaWQiOiAiYjNlNGRhYjEtMzBjMC00NDdhLTgwZDItYmJl
+        YjIyNzQzNmI3IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
+        MDE2LTAxLTI1VDE2OjQ5OjIxWiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE2LTAxLTI1VDE2OjQ5OjIxWiIsICJ0cmFjZWJh
+        Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
+        b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
+        MEBmb3J0ZWxsbzIuZGV2ZWwuZHEiLCAic3RhdGUiOiAiZmluaXNoZWQiLCAi
+        d29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAZm9y
+        dGVsbG8yLmRldmVsIiwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGws
+        ICJfaWQiOiB7IiRvaWQiOiAiNTZhNjUyMTFhYmUwYTcxZDA2YWU2ZTk3In0s
+        ICJpZCI6ICI1NmE2NTIxMWUzOWU1ZTQwNTE5YmJkMGIifQ==
+    http_version: 
+  recorded_at: Mon, 25 Jan 2016 16:49:22 GMT
 recorded_with: VCR 2.9.3

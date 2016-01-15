@@ -64,7 +64,8 @@ module Actions
           when ::Katello::Repository::FILE_TYPE
             [iso_distributor]
           when ::Katello::Repository::PUPPET_TYPE
-            input[:path].blank? ? [] : [puppet_install_distributor, nodes_distributor]
+            distributors = input[:path].blank? ? [] : [puppet_install_distributor, nodes_distributor]
+            distributors << puppet_distributor
           when ::Katello::Repository::DOCKER_TYPE
             [docker_distributor, nodes_distributor]
           else
@@ -102,6 +103,14 @@ module Actions
           Runcible::Models::IsoDistributor.new(true, true).tap do |dist|
             dist.auto_publish = true
           end
+        end
+
+        def puppet_distributor
+          options = { id: "#{input[:pulp_id]}_puppet", auto_publish: true }
+          Runcible::Models::PuppetDistributor.new(nil,
+                                                  input[:unprotected] || false,
+                                                  true,
+                                                  options)
         end
 
         def puppet_install_distributor
