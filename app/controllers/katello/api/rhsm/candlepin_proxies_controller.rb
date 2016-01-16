@@ -196,7 +196,6 @@ module Katello
 
       sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, content_view_environment)
       host.reload
-      host.subscription_facet.update_facts(rhsm_params[:facts]) unless rhsm_params[:facts].blank?
 
       render :json => Resources::Candlepin::Consumer.get(host.subscription_facet.uuid)
     end
@@ -216,14 +215,13 @@ module Katello
     def consumer_activate
       # Activation keys are userless by definition so use the internal generic user
       # Set it before calling find_activation_keys to allow communication with candlepin
-      User.current    = User.anonymous_admin
+      User.current = User.anonymous_admin
       activation_keys = find_activation_keys
       host = Katello::Host::SubscriptionFacet.find_or_create_host(params[:facts]['network.hostname'],
                                     activation_keys.first.organization, rhsm_params)
 
       sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, nil, activation_keys)
       host.reload
-      host.subscription_facet.update_facts(rhsm_params[:facts]) unless rhsm_params[:facts].blank?
 
       render :json => Resources::Candlepin::Consumer.get(host.subscription_facet.uuid)
     end
@@ -245,7 +243,7 @@ module Katello
     def facts
       User.as_anonymous_admin do
         sync_task(::Actions::Katello::Host::Update, @host, rhsm_params)
-        @host.subscription_facet.update_facts(rhsm_params[:facts]) unless rhsm_params[:facts].blank?
+        Katello::Host::SubscriptionFacet.update_facts(@host, rhsm_params[:facts])
       end
       render :json => {:content => _("Facts successfully updated.")}, :status => 200
     end

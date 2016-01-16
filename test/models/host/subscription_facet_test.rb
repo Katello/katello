@@ -45,9 +45,9 @@ module Katello
     end
 
     def test_update_foreman_facts
-      subscription_facet.update_facts(:rhsm_fact => 'rhsm_value')
+      Katello::Host::SubscriptionFacet.update_facts(host, :rhsm_fact => 'rhsm_value')
 
-      values = subscription_facet.host.fact_values
+      values = host.fact_values
       assert_equal 2, values.count
       assert_include values.map(&:value), 'rhsm_value'
       assert_includes values.map(&:name), 'rhsm_fact'

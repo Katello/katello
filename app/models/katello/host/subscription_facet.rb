@@ -39,26 +39,20 @@ module Katello
         host.get_status(::Katello::SubscriptionStatus).refresh!
       end
 
-      def self.new_host_from_rhsm_params(params, org, location)
-        facts = params[:facts]
-        fqdn = facts['network.hostname']
-
-        ::Host::Managed.new(:name => fqdn, :organization => org, :location => location,
-                          :managed => false, :interfaces => new_interfaces(facts))
+      def self.new_host_from_facts(facts, org, location)
+        ::Host::Managed.new(:name => facts['network.hostname'], :organization => org, :location => location, :managed => false)
       end
 
-      def self.new_interfaces(facts)
-        mac_keys = facts.keys.select { |f| f =~ /net\.interface\..*\.mac_address/ }
-        interfaces = mac_keys.map { |key| key.sub("net.interface.", '').sub('.mac_address', '') }
-        interfaces.map do |interface|
-          Nic::Interface.new(:mac => facts["net.interface.#{interface}.mac_address"].dup, :identifier => interface.dup,
-                             :ip => facts["net.interface.#{interface}.ipv4_address"].dup)
-        end
+      def self.update_facts(host, rhsm_facts)
+        return if host.build?
+        rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
+        rhsm_facts[:_timestamp] = DateTime.now.to_s
+        host.import_facts(rhsm_facts)
       end
 
       def self.find_or_create_host(name, organization, rhsm_params)
         host = find_host(name, organization)
-        host = Katello::Host::SubscriptionFacet.new_host_from_rhsm_params(rhsm_params, organization,
+        host = Katello::Host::SubscriptionFacet.new_host_from_facts(rhsm_params[:facts], organization,
                                           Location.default_location) unless host
         host.organization = organization unless host.organization
         host
@@ -78,13 +72,6 @@ module Katello
         end
 
         ForemanTasks.sync_task(Actions::Katello::Host::RemoveSubscriptions, self.host, entitlements.flatten)
-      end
-
-      def update_facts(rhsm_facts)
-        return if self.host.build?
-        rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
-        rhsm_facts[:_timestamp] = DateTime.now.to_s
-        host.import_facts(rhsm_facts)
       end
 
       def self.find_host(name, organization)
