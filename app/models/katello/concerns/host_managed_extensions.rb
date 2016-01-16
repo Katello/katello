@@ -29,6 +29,10 @@ module Katello
         self.organization.label
       end
 
+      def self.available_locks
+        [:update]
+      end
+
       def smart_proxy_ids_with_katello
         ids = smart_proxy_ids_without_katello
         ids << content_source_id

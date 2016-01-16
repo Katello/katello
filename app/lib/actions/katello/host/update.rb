@@ -30,6 +30,10 @@ module Actions
           plan_self(:hostname => host.name)
         end
 
+        def resource_locks
+          :update
+        end
+
         def rescue_strategy
           Dynflow::Action::Rescue::Skip
         end
