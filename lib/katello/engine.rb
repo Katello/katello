@@ -112,6 +112,7 @@ module Katello
       app.config.autoload_paths += Dir["#{config.root}/app/presenters"]
       app.config.autoload_paths += Dir["#{config.root}/app/services/katello"]
       app.config.autoload_paths += Dir["#{config.root}/app/views/foreman"]
+      app.config.autoload_paths += Dir["#{config.root}/lib"]
     end
 
     initializer "katello.paths" do |app|
@@ -162,6 +163,7 @@ module Katello
       ::OperatingsystemsController.send :include, Katello::Concerns::OperatingsystemsControllerExtensions
       ::HostsController.send :include, Katello::Concerns::HostsControllerExtensions
       ::Containers::StepsController.send :include, Katello::Concerns::Containers::StepsControllerExtensions
+      ::SmartProxiesController.send :include, Katello::Concerns::SmartProxiesControllerExtensions
 
       ::FactImporter.register_fact_importer(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactImporter)
       ::FactParser.register_fact_parser(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactParser)
@@ -177,6 +179,7 @@ module Katello
         rescue ActiveRecord::StatementInvalid
           Rails.logger.info('Database was not initialized yet: skipping smart proxy katello extension')
       end
+      ::ProxyStatus.status_registry.add(Katello::ProxyStatus::Pulp)
 
       # Organization controller extensions
       ::OrganizationsController.send :include, Katello::Concerns::OrganizationsControllerExtensions

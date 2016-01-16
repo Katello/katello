@@ -1,0 +1,27 @@
+<%= javascript "katello/smart_proxies/capsule_status" %>
+<div class="row">
+  <h3><%= _('Pulp') %></h3>
+</div>
+
+<div class="row">
+  <%= render :partial => 'smart_proxies/plugins/plugin_version', :locals => { :feature => "pulp", :proxy => smart_proxy } %>
+  <div class="col-md-4">
+    <%= _('Pulp Status') %>
+  </div>
+  <div class="col-md-8">
+    <span id="pulp-status" data-url="<%= pulp_status_smart_proxy_path(@smart_proxy) %>">
+       <%= spinner %>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <%= _('Pulp Version') %>
+  </div>
+  <div class="col-md-8">
+    <span id="pulp-version">
+      <%= spinner %>
+    </span>
+  </div>
+</div>
