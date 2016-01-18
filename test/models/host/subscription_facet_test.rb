@@ -76,5 +76,15 @@ module Katello
 
       assert_includes ::Host::Managed.search_for("subscription_status = invalid"), host
     end
+
+    def test_remove_subscriptions
+      pool = katello_pools(:pool_one)
+      entitlements = [{'pool' => {'id' => pool.cp_id}, 'quantity' => 1, :id => 5}]
+
+      host.subscription_facet.candlepin_consumer.stubs(:entitlements).returns(entitlements)
+      ForemanTasks.expects(:sync_task).with(Actions::Katello::Host::RemoveSubscriptions, host, entitlements)
+
+      host.subscription_facet.remove_subscriptions([PoolWithQuantities.new(pool, [1])])
+    end
   end
 end

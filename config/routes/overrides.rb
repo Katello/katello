@@ -39,6 +39,16 @@ Foreman::Application.routes.draw do
               put :upgrade_all
             end
           end
+
+          resources :subscriptions, :only => [:index], :controller => :host_subscriptions do
+            collection do
+              put :auto_attach
+              get :product_content
+              get :events
+              put :remove_subscriptions
+              put :add_subscriptions
+            end
+          end
         end
       end
     end

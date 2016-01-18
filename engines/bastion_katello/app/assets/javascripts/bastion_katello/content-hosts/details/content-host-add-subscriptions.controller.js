@@ -14,25 +14,30 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Subscription', 'ContentHost', 'SubscriptionsHelper',
-    function ($scope, $location, translate, Nutupane, CurrentOrganization, Subscription, ContentHost, SubscriptionsHelper) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'HostSubscription', 'Subscription', 'ContentHost', 'SubscriptionsHelper',
+    function ($scope, $location, translate, Nutupane, CurrentOrganization, HostSubscription, Subscription, ContentHost, SubscriptionsHelper) {
 
         var params = {
-            'system_id': $scope.$stateParams.contentHostId,
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
             'sort_order': 'ASC',
-            'available_for': 'content_host'
+            'available_for': 'host'
         };
 
         $scope.contentNutupane = new Nutupane(Subscription, params);
+        $scope.contentNutupane.table.initialLoad = false;
         $scope.detailsTable = $scope.contentNutupane.table;
         $scope.contentNutupane.setSearchKey('subscriptionSearch');
-
         $scope.contentNutupane.masterOnly = true;
         $scope.isAdding = false;
-
         $scope.groupedSubscriptions = {};
+
+        $scope.contentHost.$promise.then(function() {
+            params['host_id'] = $scope.contentHost.host.id;
+            $scope.contentNutupane.setParams(params);
+            $scope.contentNutupane.load(true);
+        });
+
         $scope.$watch('detailsTable.rows', function (rows) {
             $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
         });
@@ -46,7 +51,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
             selected = SubscriptionsHelper.getSelectedSubscriptionAmounts($scope.detailsTable);
 
             $scope.isAdding = true;
-            ContentHost.addSubscriptions({uuid: $scope.contentHost.uuid, 'subscriptions': selected}, function () {
+            HostSubscription.addSubscriptions({id: $scope.contentHost.host.id, 'subscriptions': selected}, function () {
                 ContentHost.get({id: $scope.$stateParams.contentHostId}, function (host) {
                     $scope.$parent.contentHost = host;
                     $scope.successMessages.push(translate("Successfully added %s subscriptions.").replace('%s', selected.length));

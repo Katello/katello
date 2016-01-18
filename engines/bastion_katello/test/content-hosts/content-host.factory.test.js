@@ -44,14 +44,6 @@ describe('Factory: ContentHost', function() {
         });
     });
 
-    it("provides a way to get the available subscriptions for a content host", function() {
-        $httpBackend.expectGET('/katello/api/systems').respond(availableSubscriptions);
-
-        ContentHost.subscriptions({ id: contentHostsCollection.results[0].id }, function (data) {
-            expect(data).toEqual(availableSubscriptions);
-        });
-    });
-
     it('ContentHost.contentOverride PUT /api/v2/content_hosts/1/content_override', function() {
         $httpBackend.expectPUT('/katello/api/v2/content_hosts/1/content_override').respond(contentHostsCollection.results[0]);
 

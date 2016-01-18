@@ -154,40 +154,6 @@ module Katello
       end
     end
 
-    def filtered_pools(match_system, match_installed, no_overlap)
-      if match_system
-        pools = self.available_pools
-      else
-        pools = self.all_available_pools
-      end
-
-      # Only available pool's with a product on the system'
-      if match_installed
-        pools = pools.select do |pool|
-          self.installedProducts.any? do |installed_product|
-            pool['providedProducts'].any? do |provided_product|
-              installed_product['productId'] == provided_product['productId']
-            end
-          end
-        end
-      end
-
-      # None of the available pool's products overlap a consumed pool's products
-      if no_overlap
-        pools = pools.select do |pool|
-          pool['providedProducts'].all? do |provided_product|
-            self.entitlements.all? do |consumed_entitlement|
-              consumed_entitlement.providedProducts.all? do |consumed_product|
-                consumed_product.cp_id != provided_product['productId']
-              end
-            end
-          end
-        end
-      end
-
-      return pools
-    end
-
     def save_bound_repos_by_path!(paths)
       repos = []
       paths.each do |path|

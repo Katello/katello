@@ -136,30 +136,6 @@ module Katello
       end
     end
 
-    def test_refresh_subscriptions
-      input = {
-        :id => @system.id
-      }
-      where_stub = System.where(:id => @system.id)
-      System.stubs(:where).returns(where_stub)
-      System.any_instance.stubs(:first).returns(@system)
-      assert_sync_task(::Actions::Katello::System::AutoAttachSubscriptions) do |sys|
-        sys.must_equal @system
-      end
-      put :refresh_subscriptions, input
-      assert_response :success
-      assert_template 'api/v2/systems/show'
-    end
-
-    def test_refresh_subscriptions_protected
-      allowed_perms = [@update_permission]
-      denied_perms = [@create_permission, @view_permission, @destroy_permission]
-
-      assert_protected_action(:refresh_subscriptions, allowed_perms, denied_perms) do
-        put :refresh_subscriptions, :id => @system.uuid
-      end
-    end
-
     def test_available_host_collections
       get :available_host_collections, :id => @system.uuid
 
@@ -263,22 +239,6 @@ module Katello
     def test_search_by_environment
       systems = System.search_for("environment = \"#{@system.environment.name}\"")
       assert_includes systems, @system
-    end
-
-    def test_add_subscriptions_protected
-      allowed_perms = [@update_permission]
-      denied_perms = [@view_permission, @create_permission, @destroy_permission]
-
-      assert_protected_action(:add_subscriptions, allowed_perms, denied_perms) do
-        post :add_subscriptions, :id => @system.uuid, :subscriptions => [{:id => 'redhat', :quantity => 1}]
-      end
-    end
-
-    def test_add_subscriptions
-      post :add_subscriptions, :id => @system.uuid, :subscriptions => [{:id => @pool_one.id, :quantity => 1}]
-
-      assert_response :success
-      assert_template 'katello/api/v2/systems/show'
     end
   end
 end

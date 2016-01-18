@@ -36,6 +36,14 @@ module Katello
       @resource_class ||= "Katello::#{resource_name.classify}".constantize
     end
 
+    def full_result_response(collection)
+      { :results => collection,
+        :total => collection.count,
+        :page => 1,
+        :per_page => collection.count,
+        :subtotal => collection.count }
+    end
+
     # rubocop:disable MethodLength
     def scoped_search(query, default_sort_by, default_sort_order, options = {})
       resource = options[:resource_class] || resource_class
@@ -130,6 +138,11 @@ module Katello
       else
         fail HttpErrors::NotFound, _("You have not set a default organization on the user %s.") % current_user.login
       end
+    end
+
+    def find_host_with_subscriptions(id, permission)
+      @host = resource_finder(::Host.authorized(permission), id)
+      fail HttpErrors::BadRequest, _("Host has not been registered with subscription-manager") if @host.subscription_facet.nil?
     end
   end
 end

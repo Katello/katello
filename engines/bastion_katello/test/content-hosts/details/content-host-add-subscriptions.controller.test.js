@@ -3,6 +3,7 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
         $controller,
         translate,
         ContentHost,
+        HostSubscription,
         Subscription,
         Nutupane,
         expectedTable,
@@ -23,11 +24,11 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
             $q = $injector.get('$q');
 
         ContentHost = $injector.get('MockResource').$new();
+        HostSubscription = $injector.get('MockResource').$new();
+        HostSubscription.addSubscriptions = function() {};
         $scope = $injector.get('$rootScope').$new();
         $location = $injector.get('$location');
         SubscriptionsHelper = $injector.get('SubscriptionsHelper');
-
-        ContentHost.addSubscriptions = function() {};
 
         translate = function(message) {
             return message;
@@ -52,7 +53,9 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
             this.get = function() {};
             this.query = function() {};
             this.refresh = function() {};
-            this.setSearchKey = function() {};  
+            this.setSearchKey = function() {};
+            this.setParams = function() {};
+            this.load = function() {};
         };
         translate = function(message) {
             return message;
@@ -70,7 +73,8 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
 
         $scope.contentHost = new ContentHost({
             uuid: 12345,
-            subscriptions: [{id: 1, quantity: 11}, {id: 2, quantity: 22}]
+            subscriptions: [{id: 1, quantity: 11}, {id: 2, quantity: 22}],
+            host: {id: 1}
         });
 
         $scope.addSubscriptionsPane = {
@@ -86,7 +90,8 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
             Subscription: Subscription,
             ContentHost: ContentHost,
             Nutupane: Nutupane,
-            SubscriptionsHelper: SubscriptionsHelper
+            SubscriptionsHelper: SubscriptionsHelper,
+            HostSubscription: HostSubscription
         });
     }));
 
@@ -96,12 +101,12 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
 
     it("allows adding subscriptions to the content host", function() {
 
-        var expected = {uuid: 12345, subscriptions: [
+        var expected = {id: 1, subscriptions: [
                                                       {id: 2, quantity: 0},
                                                       {id: 3, quantity: 1},
                                                       {id: 4, quantity: 1}
                                                     ]};
-        spyOn(ContentHost, 'addSubscriptions');
+        spyOn(HostSubscription, 'addSubscriptions');
 
         $scope.detailsTable.getSelected = function() {
             return [
@@ -112,7 +117,7 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
         };
 
         $scope.addSelected();
-        expect(ContentHost.addSubscriptions).toHaveBeenCalledWith(expected, jasmine.any(Function), jasmine.any(Function));
+        expect(HostSubscription.addSubscriptions).toHaveBeenCalledWith(expected, jasmine.any(Function), jasmine.any(Function));
     });
 
     /*

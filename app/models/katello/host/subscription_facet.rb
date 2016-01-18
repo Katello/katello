@@ -23,7 +23,6 @@ module Katello
           :autoheal => autoheal,
           :serviceLevel => service_level,
           :releaseVer => release_version,
-          :lastCheckin => last_checkin,
           :environment => {:id => self.candlepin_environment_id}
         }
       end
@@ -73,6 +72,14 @@ module Katello
         host
       end
 
+      def remove_subscriptions(pools_with_quantities)
+        entitlements = pools_with_quantities.map do |pool_with_quantities|
+          candlepin_consumer.filter_entitlements(pool_with_quantities.pool.cp_id, pool_with_quantities.quantities)
+        end
+
+        ForemanTasks.sync_task(Actions::Katello::Host::RemoveSubscriptions, self.host, entitlements.flatten)
+      end
+
       def update_facts(rhsm_facts)
         return if self.host.build?
         rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
@@ -88,6 +95,10 @@ module Katello
           fail _("Host is currently registered to a different org, please migrate host to %s.") %  organization.name
         end
         hosts.first
+      end
+
+      def candlepin_consumer
+        @candlepin_consumer ||= Katello::Candlepin::Consumer.new(self.uuid)
       end
     end
   end
