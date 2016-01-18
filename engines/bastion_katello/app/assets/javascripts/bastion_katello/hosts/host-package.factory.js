@@ -1,21 +1,22 @@
 /**
  * @ngdoc service
- * @name  Bastion.content-hosts.factory:ContentHostPackage
+ * @name  Bastion.hosts.factory:HostPackage
  *
  * @requires BastionResource
  *
  * @description
  *   Provides a BastionResource for the packages of a single content host
  */
-angular.module('Bastion.content-hosts').factory('ContentHostPackage',
+angular.module('Bastion.hosts').factory('HostPackage',
     ['BastionResource', function (BastionResource) {
 
-        return BastionResource('/katello/api/v2/systems/:id/packages/:action', {id: '@uuid'}, {
+        return BastionResource('/api/v2/hosts/:id/packages/:action', {id: '@id'}, {
             get: {method: 'GET', isArray: false},
             remove: {method: 'PUT', params: {action: 'remove'}},
             install: {method: 'PUT', params: {action: 'install'}},
             update: {method: 'PUT', params: {action: 'upgrade'}},
-            updateAll: {method: 'PUT', params: {action: 'upgrade_all'}}
+            updateAll: {method: 'PUT', params: {action: 'upgrade_all'}},
+            autocomplete: {method: 'GET', isArray: true, params: {action: 'auto_complete_search'}}
         });
 
     }]

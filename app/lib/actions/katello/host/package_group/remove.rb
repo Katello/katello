@@ -1,14 +1,14 @@
 module Actions
   module Katello
-    module System
+    module Host
       module PackageGroup
         class Remove < Actions::EntryAction
           include Helpers::Presenter
 
-          def plan(system, groups)
-            action_subject(system, :groups => groups)
+          def plan(host, groups)
+            action_subject(host, :groups => groups)
             plan_action(Pulp::Consumer::ContentUninstall,
-                        consumer_uuid: system.uuid,
+                        consumer_uuid: host.content_facet.uuid,
                         type:          'package_group',
                         args:          groups)
           end
