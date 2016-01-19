@@ -6,7 +6,7 @@ module Katello
     VALID = 0
 
     def self.status_name
-      N_("Subscription Status")
+      N_("Subscription")
     end
 
     def to_label(_options = {})

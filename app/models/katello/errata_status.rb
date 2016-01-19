@@ -6,7 +6,7 @@ module Katello
     UP_TO_DATE = 0
 
     def self.status_name
-      N_("Errata Status")
+      N_("Errata")
     end
 
     def to_label(_options = {})

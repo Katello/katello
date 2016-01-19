@@ -83,6 +83,12 @@ module Katello
 
         filtered
       end
+
+      def compliance_reasons
+        Resources::Candlepin::Consumer.compliance(uuid)['reasons'].map do |reason|
+          "#{reason['attributes']['name']}: #{reason['message']}"
+        end
+      end
     end
   end
 end
