@@ -41,12 +41,11 @@ module Katello
 
       it "should register" do
         system = katello_systems(:simple_server)
-        host = @host
         Resources::Candlepin::Consumer.stubs(:get)
 
         System.expects(:new).returns(system)
-        ::Katello::Host::SubscriptionFacet.expects(:new_host_from_rhsm_params).returns(host)
-        assert_sync_task(::Actions::Katello::Host::Register, host, system, {'facts' => @facts}, nil, [@activation_key])
+        ::Katello::Host::SubscriptionFacet.expects(:new_host_from_facts).returns(@host)
+        assert_sync_task(::Actions::Katello::Host::Register, @host, system, {'facts' => @facts}, nil, [@activation_key])
 
         post(:consumer_activate, :organization_id => @activation_key.organization.label,
              :activation_keys => @activation_key.name, :facts => @facts)
@@ -63,12 +62,11 @@ module Katello
 
       it "should register" do
         system = katello_systems(:simple_server)
-        host = @host
         Resources::Candlepin::Consumer.stubs(:get)
 
         System.expects(:new).returns(system)
-        ::Katello::Host::SubscriptionFacet.expects(:new_host_from_rhsm_params).returns(host)
-        assert_sync_task(::Actions::Katello::Host::Register, host, system, {'facts' => @facts}, @content_view_environment)
+        ::Katello::Host::SubscriptionFacet.expects(:new_host_from_facts).returns(@host)
+        assert_sync_task(::Actions::Katello::Host::Register, @host, system, {'facts' => @facts }, @content_view_environment)
 
         post(:consumer_create, :organization_id => @content_view_environment.content_view.organization.label,
              :environment_id => @content_view_environment.cp_id, :facts => @facts)
@@ -105,6 +103,15 @@ module Katello
         Host::ContentFacet.any_instance.expects(:update_repositories_by_paths).with(["/pulp/repos/foo", "/pulp/repos/bar"])
         System.any_instance.expects(:save_bound_repos_by_path!).with(["/pulp/repos/foo", "/pulp/repos/bar"])
         put :enabled_repos, :id => @host.subscription_facet.uuid, :enabled_repos => enabled_repos
+        assert_equal 200, response.status
+      end
+
+      it "should update facts" do
+        facts = {:rhsm_fact => 'rhsm_value'}
+        Host::SubscriptionFacet.expects(:update_facts)
+        assert_sync_task(::Actions::Katello::Host::Update)
+
+        put :facts, :id => @host.subscription_facet.uuid, :facts => facts
         assert_equal 200, response.status
       end
     end

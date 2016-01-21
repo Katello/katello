@@ -19,7 +19,7 @@ module Katello::Host
     let(:action_class) { ::Actions::Katello::Host::Register }
     let(:candlepin_class) { ::Actions::Candlepin::Consumer::Create }
     let(:pulp_class) { ::Actions::Pulp::Consumer::Create }
-    let(:rhsm_params) { {:name => 'foobar', :facts => {}, :type => 'system'} }
+    let(:rhsm_params) { {:name => 'foobar', :facts => {'a' => 'b'}, :type => 'system'} }
     let(:new_system) { Katello::System.new(:name => :foobar, :cp_type => 'system') }
 
     describe 'Host Register' do
@@ -27,6 +27,7 @@ module Katello::Host
         action = create_action action_class
         new_host = Host::Managed.new(:name => 'foobar', :managed => false)
         action.stubs(:action_subject).with(new_host)
+        ::Katello::Host::SubscriptionFacet.expects(:update_facts).with(new_host, rhsm_params[:facts])
         plan_action action, new_host, new_system, rhsm_params, @content_view_environment
 
         assert_action_planed_with(action, candlepin_class, :cp_environment_id => @content_view_environment.cp_id,
@@ -72,8 +73,12 @@ module Katello::Host
       end
 
       it 'plans with existing host' do
+        system = katello_systems(:simple_server)
+        system.content_view = @content_view
+        system.environment = @library
+        system.save!
         @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
-                                   :lifecycle_environment => @library, :content_host => katello_systems(:simple_server))
+                                   :lifecycle_environment => @library, :content_host => system)
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
         plan_action action, @host, new_system, rhsm_params, @content_view_environment
