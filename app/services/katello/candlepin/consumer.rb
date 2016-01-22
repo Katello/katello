@@ -13,7 +13,6 @@ module Katello
       lazy_accessor :installed_products, :initializer => lambda { |_s| consumer_attributes['installedProducts'] }
       lazy_accessor :available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(uuid, false) }
       lazy_accessor :all_available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(uuid, true) }
-      lazy_accessor :consumer_info, :initializer => :backend_data
 
       attr_accessor :uuid
 
@@ -30,7 +29,7 @@ module Katello
       end
 
       def entitlement_status
-        consumer_info[:entitlementStatus]
+        consumer_attributes[:entitlementStatus]
       end
 
       def filtered_pools(match_attached, match_host, match_installed, no_overlap)
