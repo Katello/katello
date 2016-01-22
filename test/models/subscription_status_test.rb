@@ -40,5 +40,11 @@ module Katello
       status.status = Katello::SubscriptionStatus::PARTIAL
       assert_equal HostStatus::Global::WARN, status.to_global
     end
+
+    def test_update
+      host.save!
+      stub_status(Katello::Candlepin::Consumer::ENTITLEMENTS_VALID)
+      assert status.refresh!
+    end
   end
 end
