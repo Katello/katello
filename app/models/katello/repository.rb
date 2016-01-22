@@ -169,15 +169,12 @@ module Katello
     end
 
     def other_repos_with_same_product_and_content
-      list = Repository.in_product(Product.find(self.product.id)).where(:content_id => self.content_id).all
-      list.destroy(self)
-      list
+      Repository.in_product(Product.find(self.product.id)).where(:content_id => self.content_id)
+          .where("#{self.class.table_name}.id != #{self.id}")
     end
 
     def other_repos_with_same_content
-      list = Repository.where(:content_id => self.content_id).all
-      list.destroy(self)
-      list
+      Repository.where(:content_id => self.content_id).where("#{self.class.table_name}.id != #{self.id}")
     end
 
     def yum_gpg_key_url
