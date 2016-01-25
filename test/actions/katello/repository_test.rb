@@ -148,9 +148,9 @@ module ::Actions::Katello::Repository
       assert_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
     end
 
-    it "doesn't plan metadata generate for puppet repository" do
+    it "does plan metadata generate for puppet repository" do
       plan_action action, puppet_repository
-      refute_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
+      assert_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
     end
   end
 

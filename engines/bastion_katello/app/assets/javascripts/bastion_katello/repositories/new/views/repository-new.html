@@ -71,10 +71,10 @@
 
     </div>
 
-    <div ng-show="repository.content_type === 'yum'">
+    <div ng-show="repository.content_type === 'yum' || repository.content_type === 'puppet'">
       <h4 ng-show="repository.content_type !== undefined" translate> Published Repository Information </h4>
 
-      <div bst-form-group label="{{ 'Checksum' | translate }}">
+      <div bst-form-group label="{{ 'Checksum' | translate }}" ng-show="repository.content_type === 'yum'">
         <select tabindex="4"
                 id="checksum_type"
                 name="checksum_type"
@@ -94,7 +94,7 @@
                tabindex="6"/>
       </div>
 
-      <div bst-form-group label="{{ 'GPG Key' | translate }}">
+      <div bst-form-group label="{{ 'GPG Key' | translate }}" ng-show="repository.content_type === 'yum'">
         <select id="gpg_key_id"
                 name="gpg_key_id"
                 ng-model="repository.gpg_key_id"

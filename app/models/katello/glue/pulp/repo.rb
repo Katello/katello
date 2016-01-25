@@ -1,4 +1,5 @@
 module Katello
+  # rubocop:disable ModuleLength
   module Glue::Pulp::Repo
     # TODO: move into submodules
     # rubocop:disable MethodLength
@@ -114,9 +115,9 @@ module Katello
         distributors = generate_distributors
 
         Katello.pulp_server.extensions.repository.create_with_importer_and_distributors(self.pulp_id,
-            importer,
-            distributors,
-            :display_name => self.name)
+                                                                                        importer,
+                                                                                        distributors,
+                                                                                        :display_name => self.name)
       rescue RestClient::ServiceUnavailable => e
         message = _("Pulp service unavailable during creating repository '%s', please try again later.") % self.name
         raise PulpErrors::ServiceUnavailable.new(message, e)
@@ -166,15 +167,19 @@ module Katello
           dist.auto_publish = true
           [dist]
         when Repository::PUPPET_TYPE
+          dist_options = { :id => self.pulp_id, :auto_publish => true }
           repo_path =  File.join(SETTINGS[:katello][:puppet_repo_root],
                                  Environment.construct_name(self.organization,
                                                             self.environment,
                                                             self.content_view),
                                  'modules')
-          puppet_install_dist =
-              Runcible::Models::PuppetInstallDistributor.new(repo_path,
-                                                             :id => self.pulp_id, :auto_publish => true)
-          [puppet_install_dist, nodes_distributor]
+          puppet_install_dist = Runcible::Models::PuppetInstallDistributor.new(repo_path, dist_options)
+
+          dist_options[:id] = "#{self.pulp_id}_puppet"
+          puppet_dist = Runcible::Models::PuppetDistributor.new(self.relative_path, (self.unprotected || false),
+                                                                true, dist_options)
+
+          [puppet_dist, puppet_install_dist, nodes_distributor]
         when Repository::DOCKER_TYPE
           options = { :protected => !self.unprotected, :id => self.pulp_id, :auto_publish => true }
           docker_dist = Runcible::Models::DockerDistributor.new(options)
@@ -715,6 +720,8 @@ module Katello
         "#{pulp_uri.host.downcase}:5000/#{pulp_id}"
       elsif file?
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/isos/#{pulp_id}"
+      elsif puppet?
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/puppet/#{pulp_id}"
       else
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
       end
