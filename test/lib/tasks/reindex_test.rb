@@ -18,12 +18,12 @@ module Katello
     end
 
     describe 'Report Bad Objects' do
-      test "runs and acknowledges messages when candlepin return empty response for given uuid" do
+      test 'runs and acknowledges messages when candlepin return empty response for given uuid' do
         Katello::Resources::Candlepin::Consumer.expects(:get).with(system.uuid).returns(nil)
         @reindex_helper.report_bad_objects([[system, @exception]], Katello::System)
       end
 
-     test "runs and doesn't print any message when candlepin return valid response for given system uuid" do
+      test 'runs and should not print any message when candlepin return valid response for given system uuid' do
         Katello::Resources::Candlepin::Consumer.expects(:get).with(system.uuid).returns(true)
         @reindex_helper.report_bad_objects([[system, @exception]], Katello::System)
       end
