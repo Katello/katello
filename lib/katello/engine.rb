@@ -194,12 +194,13 @@ module Katello
       #Api controller extensions
       ::Api::V2::HostsController.send :include, Katello::Concerns::Api::V2::HostsControllerExtensions
       ::Api::V2::HostgroupsController.send :include, Katello::Concerns::Api::V2::HostgroupsControllerExtensions
+
+      load 'katello/repository_types.rb'
     end
 
     config.after_initialize do
       require 'katello/plugin'
       require 'katello/permissions'
-      require 'katello/repository_types'
     end
 
     rake_tasks do
