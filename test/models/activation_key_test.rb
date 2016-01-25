@@ -102,6 +102,11 @@ module Katello
       assert_includes activation_keys, @dev_staging_view_key
     end
 
+    def test_search_description
+      activation_keys = ActivationKey.search_for("description = \"#{@dev_staging_view_key.description}\"")
+      assert_includes activation_keys, @dev_staging_view_key
+    end
+
     def test_valid_content_label?
       @dev_key.stubs(:available_content).returns([OpenStruct.new(:content => OpenStruct.new(:label => 'some-label'))])
       assert @dev_key.valid_content_label?('some-label')
