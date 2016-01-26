@@ -1,0 +1,7 @@
+<% if @smart_proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) -%>
+  <div ng-controller="CapsuleContentController">
+    <%= render :file => 'smart_proxies/show' %>
+  </div>
+<% else -%>
+  <%= render :file => 'smart_proxies/show' %>
+<% end -%>

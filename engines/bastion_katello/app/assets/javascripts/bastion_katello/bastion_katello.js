@@ -31,6 +31,9 @@
 //= require "bastion_katello/capsules/capsules.module.js"
 //= require_tree "./capsules"
 
+//= require "bastion_katello/capsule-content/capsule-content.module.js"
+//= require_tree "./capsule-content"
+
 //= require "bastion_katello/organizations/organizations.module.js"
 //= require_tree "./organizations"
 

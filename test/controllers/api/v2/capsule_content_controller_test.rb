@@ -85,5 +85,27 @@ module Katello
         post :sync, :id => proxy_with_pulp.id, :environment_id => environment.id
       end
     end
+
+    def test_sync_status
+      get :sync_status, :id => proxy_with_pulp.id
+      assert_response :success
+    end
+
+    def test_sync_status_protected
+      assert_protected_action(:sync, allowed_perms, denied_perms) do
+        get :sync_status, :id => proxy_with_pulp.id
+      end
+    end
+
+    def test_cancel_sync
+      get :cancel_sync, :id => proxy_with_pulp.id
+      assert_response :success
+    end
+
+    def test_cancel_sync_protected
+      assert_protected_action(:sync, allowed_perms, denied_perms) do
+        get :cancel_sync, :id => proxy_with_pulp.id
+      end
+    end
   end
 end

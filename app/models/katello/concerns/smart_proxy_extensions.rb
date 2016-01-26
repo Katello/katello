@@ -7,6 +7,8 @@ module Katello
       PULP_NODE_FEATURE = "Pulp Node"
 
       included do
+        include ForemanTasks::Concerns::ActionSubject
+
         before_create :associate_organizations
         before_create :associate_default_location
         before_create :associate_lifecycle_environments

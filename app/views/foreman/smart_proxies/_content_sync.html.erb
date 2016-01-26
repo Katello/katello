@@ -1,0 +1,35 @@
+<div>
+  <h3><%= _('Content Sync') %></h3>
+
+  <div bst-alerts error-messages="syncErrorMessages"></div>
+
+  {{ syncStatusText(syncState, syncStatus) }}
+  <div ng-show="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED, syncState.FAILURE)">
+    {{syncTask.progressbar.value || 0}}%
+    <a href="<%= @task_search_url %>" target="_self">
+      <div ng-class="{ active: isTaskInProgress(syncTask) }" class="progress progress-striped">
+        <span progressbar
+          animate="false"
+          value="syncTask.progressbar.value || 0"
+          type="{{ progressbarType(syncTask) }}"></span>
+      </div>
+    </a>
+  </div>
+
+  <div>
+    <span translate>Last sync:</span> {{ syncStatus.last_sync_time }}
+  </div>
+
+  <br>
+
+  <div>
+    <a ng-show="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED)"
+      ng-click="cancelSync()" class="btn btn-default" ng-disabled="!syncState.is(syncState.SYNCING)">
+      <span translate>Cancel Sync</span>
+    </a>
+    <a ng-hide="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED)"
+      ng-click="syncCapsule()" class="btn btn-default">
+      <span translate>Synchronize</span>
+    </a>
+  </div>
+</div>

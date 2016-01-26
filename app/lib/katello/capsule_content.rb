@@ -53,6 +53,31 @@ module Katello
       @consumer
     end
 
+    def sync_tasks
+      ForemanTasks::Task.for_resource(self.capsule)
+    end
+
+    def active_sync_tasks
+      sync_tasks.where(:result => 'pending')
+    end
+
+    def last_failed_sync_tasks
+      sync_tasks.where('started_at > ?', last_sync_time).where.not(:result => 'pending')
+    end
+
+    def last_sync_time
+      task = sync_tasks.where.not(:ended_at => nil).where(:result => 'success').order(:ended_at).last
+      task.ended_at unless task.nil?
+    end
+
+    def environment_syncable?(env)
+      last_sync_time.nil? || env.content_view_environments.where('updated_at > ?', last_sync_time).any?
+    end
+
+    def cancel_sync
+      active_sync_tasks.map(&:cancel)
+    end
+
     def ==(other)
       other.class == self.class && other.capsule == capsule
     end

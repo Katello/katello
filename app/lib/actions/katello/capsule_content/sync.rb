@@ -2,11 +2,17 @@ module Actions
   module Katello
     module CapsuleContent
       class Sync < ::Actions::EntryAction
+        def resource_locks
+          :link
+        end
+
         def humanized_name
           _("Synchronize capsule content")
         end
 
         def plan(capsule_content, options = {})
+          action_subject(capsule_content.capsule)
+
           environment = options.fetch(:environment, nil)
           repository = options.fetch(:repository, nil)
           content_view = options.fetch(:content_view, nil)

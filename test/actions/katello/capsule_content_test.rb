@@ -31,10 +31,15 @@ module ::Actions::Katello::CapsuleContent
     let(:action_class) { ::Actions::Katello::CapsuleContent::Sync }
     let(:staging_environment) { katello_environments(:staging) }
     let(:dev_environment) { katello_environments(:dev) }
+    let(:action) { create_action(action_class) }
+
+    before do
+      action.expects(:action_subject).with(capsule_content.capsule)
+    end
 
     it 'plans' do
       capsule_content.add_lifecycle_environment(environment)
-      action = create_and_plan_action(action_class, capsule_content)
+      plan_action(action, capsule_content)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncNode) do |(input)|
         input.must_equal(consumer_uuid: @capsule_system.uuid,
                          repo_ids: capsule_content.pulp_repos.map(&:pulp_id))
@@ -43,7 +48,7 @@ module ::Actions::Katello::CapsuleContent
 
     it 'allows limiting scope of the syncing to one environment' do
       capsule_content.add_lifecycle_environment(dev_environment)
-      action = create_and_plan_action(action_class, capsule_content, :environment => dev_environment)
+      plan_action(action, capsule_content, :environment => dev_environment)
       assert_action_planed_with(action, ::Actions::Pulp::Consumer::SyncNode) do |(input)|
         input[:repo_ids].size.must_equal 6
       end
@@ -51,7 +56,7 @@ module ::Actions::Katello::CapsuleContent
     it 'fails when trying to sync to the default capsule' do
       Katello::CapsuleContent.any_instance.stubs(:default_capsule?).returns(true)
       assert_raises(RuntimeError) do
-        create_and_plan_action(action_class, capsule_content, :environment => environment)
+        plan_action(action, capsule_content, :environment => dev_environment)
       end
     end
     it 'fails when trying to sync a lifecyle environment that is not attached' do
@@ -59,7 +64,7 @@ module ::Actions::Katello::CapsuleContent
 
       Katello::CapsuleContent.any_instance.stubs(:lifecycle_environments).returns([])
       assert_raises(RuntimeError) do
-        create_and_plan_action(action_class, capsule_content, :environment => staging_environment)
+        plan_action(action, capsule_content, :environment => staging_environment)
       end
     end
   end
