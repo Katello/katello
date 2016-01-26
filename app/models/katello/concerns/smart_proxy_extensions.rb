@@ -8,12 +8,15 @@ module Katello
 
       included do
         include ForemanTasks::Concerns::ActionSubject
+        include LazyAccessor
 
         before_create :associate_organizations
         before_create :associate_default_location
         before_create :associate_lifecycle_environments
         before_create :associate_content_host
         attr_accessible :lifecycle_environment_ids
+
+        lazy_accessor :pulp_repositories, :initializer => lambda { |_s| pulp_node.extensions.repository.retrieve_all }
 
         has_many :containers,
                  :class_name => "Container",
@@ -47,6 +50,14 @@ module Katello
         def self.default_capsule
           with_features(PULP_FEATURE).first
         end
+      end
+
+      def pulp_node
+        @pulp_node ||= User.runcible_instance(pulp_url, User.remote_user)
+      end
+
+      def pulp_url
+        "#{url}/pulp/api/v2/"
       end
 
       def default_capsule?

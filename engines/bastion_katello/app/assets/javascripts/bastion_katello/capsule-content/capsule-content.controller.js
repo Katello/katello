@@ -13,8 +13,8 @@
  *   Provides the functionality for the capsule-content page.
  */
 angular.module('Bastion.capsule-content').controller('CapsuleContentController',
-    ['$scope', '$urlMatcherFactory', '$location', 'translate', 'CapsuleContent', 'AggregateTask', 'syncState',
-    function ($scope, $urlMatcherFactory, $location, translate, CapsuleContent, AggregateTask, syncState) {
+    ['$scope', '$urlMatcherFactory', '$location', 'translate', 'CapsuleContent', 'AggregateTask', 'CurrentOrganization', 'syncState',
+    function ($scope, $urlMatcherFactory, $location, translate, CapsuleContent, AggregateTask, CurrentOrganization, syncState) {
 
         var refreshSyncStatus;
         var urlMatcher = $urlMatcherFactory.compile("/smart_proxies/:capsuleId");
@@ -69,7 +69,14 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
         }
 
         refreshSyncStatus = function () {
-            CapsuleContent.syncStatus({id: capsuleId}).$promise.then(function (syncStatus) {
+            var params = {
+                id: capsuleId
+            };
+            if ( CurrentOrganization !== '' ) {
+                params['organization_id'] = CurrentOrganization;
+            }
+
+            CapsuleContent.syncStatus(params).$promise.then(function (syncStatus) {
                 $scope.syncStatus = syncStatus;
                 if (syncStatus['last_sync_time'] === null) {
                     $scope.syncStatus['last_sync_time'] = translate('Never');
@@ -93,6 +100,8 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
         };
 
         $scope.syncState = syncState;
+
+        $scope.expandEnvironments = {};
 
         refreshSyncStatus();
 
@@ -144,6 +153,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                 message = translate("Synchronization is being cancelled...");
             } else {
                 syncableEnvs = _.where(syncStatus['lifecycle_environments'], {syncable: true});
+
                 if (syncableEnvs.length > 0) {
                     envNames = _.pluck(syncableEnvs, 'name').join(', ');
                     message = translate("%count environment(s) can be synchronized: %envs")
@@ -154,6 +164,15 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                 }
             }
             return message;
+        };
+
+        $scope.toggleExpandEnvironment = function (environment) {
+            $scope.expandEnvironments[environment.id] = !$scope.expandEnvironments[environment.id];
+            return $scope.expandEnvironments[environment.id];
+        };
+
+        $scope.isEnvronmentExpanded = function (environment) {
+            return $scope.expandEnvironments[environment.id];
         };
 
         $scope.progressbarType = function (syncTask) {

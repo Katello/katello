@@ -163,6 +163,10 @@ Foreman::Plugin.register :katello do
   widget 'host_collection_widget', :name => 'Host Collection Widget', :sizey => 1, :sizex => 6
 
   extend_page("smart_proxies/show") do |context|
+    context.add_pagelet :main_tabs,
+      :name => _("Content"),
+      :partial => "foreman/smart_proxies/content_tab",
+      :onlyif => proc { |proxy| proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) }
     context.add_pagelet :details_content,
       :name => _("Content Sync"),
       :partial => "foreman/smart_proxies/content_sync",

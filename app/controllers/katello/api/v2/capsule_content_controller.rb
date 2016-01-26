@@ -6,6 +6,7 @@ module Katello
 
     before_filter :find_capsule
     before_filter :find_environment, :only => [:add_lifecycle_environment, :remove_lifecycle_environment]
+    before_filter :find_optional_organization, :only => [:sync_status]
 
     def_param_group :lifecycle_environments do
       param :id, Integer, :desc => N_('Id of the capsule'), :required => true
@@ -56,8 +57,10 @@ module Katello
 
     api :GET, '/capsules/:id/content/sync', N_('Get current capsule synchronization status')
     param :id, Integer, :desc => N_('Id of the capsule'), :required => true
+    param :organization_id, Integer, :desc => N_('Id of the organization to get the status for'), :required => false
     def sync_status
       @capsule_content = capsule_content
+      @lifecycle_environments = @capsule_content.lifecycle_environments(@organization)
     end
 
     api :DELETE, '/capsules/:id/content/sync', N_('Cancel running capsule synchronization.')

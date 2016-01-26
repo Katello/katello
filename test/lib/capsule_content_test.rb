@@ -127,5 +127,65 @@ module Katello
         refute capsule_content.environment_syncable?(environment)
       end
     end
+
+    describe "pulp_repositories_data" do
+      let(:repo_lib_cv1) do
+        { "id" => FIXTURES['katello_repositories']['p_forge']['pulp_id'].to_s }
+      end
+
+      let(:repo_lib_cv2) do
+        { "id" => FIXTURES['katello_repositories']['lib_p_forge']['pulp_id'].to_s }
+      end
+
+      let(:repo_dev_cv2) do
+        { "id" => FIXTURES['katello_repositories']['dev_p_forge']['pulp_id'].to_s }
+      end
+
+      let(:lib) do
+        katello_environments(:library)
+      end
+
+      let(:cv1) do
+        katello_content_views(:acme_default)
+      end
+
+      before do
+        capsule_content.capsule.stubs(:pulp_repositories).returns([
+          repo_lib_cv1,
+          repo_lib_cv2,
+          repo_dev_cv2
+        ])
+      end
+
+      test "filters by environment" do
+        repo_ids = capsule_content.pulp_repositories_data(lib).map { |repo| repo['id'] }
+        expected_repo_ids = [
+          repo_lib_cv1['id'],
+          repo_lib_cv2['id']
+        ]
+
+        assert_equal expected_repo_ids, repo_ids
+      end
+
+      test "filters by environment and content view" do
+        repo_ids = capsule_content.pulp_repositories_data(lib, cv1).map { |repo| repo['id'] }
+        expected_repo_ids = [
+          repo_lib_cv1['id']
+        ]
+
+        assert_equal expected_repo_ids, repo_ids
+      end
+
+      test "returns all repositories" do
+        repo_ids = capsule_content.pulp_repositories_data.map { |repo| repo['id'] }
+        expected_repo_ids = [
+          repo_lib_cv1['id'],
+          repo_lib_cv2['id'],
+          repo_dev_cv2['id']
+        ]
+
+        assert_equal expected_repo_ids, repo_ids
+      end
+    end
   end
 end
