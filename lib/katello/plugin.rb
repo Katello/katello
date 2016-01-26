@@ -164,4 +164,11 @@ Foreman::Plugin.register :katello do
 
   register_custom_status(Katello::ErrataStatus)
   register_custom_status(Katello::SubscriptionStatus)
+
+  extend_page "smart_proxies/show" do |cx|
+    cx.add_pagelet :details_content,
+                   :name => _('Storage'),
+                   :partial => 'smart_proxies/show/storage',
+                   :onlyif => proc { |proxy| proxy.has_feature?(SmartProxy::PULP_FEATURE) }
+  end
 end
