@@ -56,7 +56,13 @@ module Actions
         end
 
         def contents_changed?(tasks)
-          sync_task = tasks.find { |task| (task['tags'] || []).include?('pulp:action:sync') }
+          if tasks.is_a?(Hash)
+            # note: for syncs initiated by a sync plan, tasks is a hash input
+            sync_task = tasks
+          else
+            sync_task = tasks.find { |task| (task['tags'] || []).include?('pulp:action:sync') }
+          end
+
           if sync_task && sync_task['state'] == 'finished' && sync_task[:result]
             sync_task['result']['added_count'] > 0 || sync_task['result']['removed_count'] > 0 || sync_task['result']['updated_count'] > 0
           else
