@@ -56,6 +56,7 @@ module Katello
     scoped_search :rename => :environment, :on => :name, :in => :environment, :complete_value => true
     scoped_search :rename => :content_view, :on => :name, :in => :content_view, :complete_value => true
     scoped_search :on => :content_view_id, :complete_value => true
+    scoped_search :on => :description, :complete_value => true
 
     def environment_exists
       if environment_id && environment.nil?
