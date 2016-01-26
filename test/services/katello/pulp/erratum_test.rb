@@ -10,7 +10,6 @@ module Katello
 
       def setup
         User.current = User.find(FIXTURES['users']['admin']['id'])
-        configure_runcible
 
         VCR.insert_cassette('services/pulp/erratum')
 

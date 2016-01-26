@@ -27,11 +27,6 @@ module Actions
         ::User.cp_config('cp-user' => cp_user, &block)
       end
 
-      def as_pulp_user(&block)
-        fail 'missing :remote_user' unless remote_user
-        User.pulp_config(remote_user, &block)
-      end
-
       def remote_user
         action.input[:remote_user]
       end
@@ -42,9 +37,7 @@ module Actions
 
       def as_remote_user
         as_cp_user do
-          as_pulp_user do
-            yield
-          end
+          yield
         end
       end
     end

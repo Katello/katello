@@ -3,7 +3,6 @@ require 'katello_test_helper'
 module Katello
   class SystemTestBase < ActiveSupport::TestCase
     def setup
-      configure_runcible
       @acme_corporation   = get_organization
 
       @fedora             = Product.find(katello_products(:fedora).id)

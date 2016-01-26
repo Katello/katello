@@ -18,7 +18,6 @@ module ::Actions::Pulp
     end
 
     def teardown
-      configure_runcible
       ::Katello.pulp_server.resources.consumer.delete(uuid)
     rescue RestClient::ResourceNotFound => e
       puts "Failed to delete consumer #{e.message}"
@@ -40,7 +39,6 @@ module ::Actions::Pulp
 
   class ConsumerTest < ConsumerTestBase
     def test_create
-      configure_runcible
       consumer = ::Katello.pulp_server.resources.consumer.retrieve(uuid)
       refute_nil consumer
       assert_equal name, consumer[:display_name]

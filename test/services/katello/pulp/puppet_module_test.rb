@@ -6,7 +6,6 @@ module Katello
     class PuppetModuleTest < ActiveSupport::TestCase
       def setup
         set_user
-        configure_runcible
 
         VCR.insert_cassette('services/pulp/puppet_module')
 
