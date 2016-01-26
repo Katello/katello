@@ -25,6 +25,13 @@ Foreman::Application.routes.draw do
     get 'puppet_environment_for_content_view', :on => :collection
   end
 
+  resources :smart_proxies do
+    member do
+      get :pulp_storage
+      get :pulp_status
+    end
+  end
+
   scope :module => "katello" do
     namespace :api do
       scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v2/, :constraints => ApiConstraints.new(:version => 2, :default => true) do

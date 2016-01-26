@@ -162,6 +162,7 @@ module Katello
       ::OperatingsystemsController.send :include, Katello::Concerns::OperatingsystemsControllerExtensions
       ::HostsController.send :include, Katello::Concerns::HostsControllerExtensions
       ::Containers::StepsController.send :include, Katello::Concerns::Containers::StepsControllerExtensions
+      ::SmartProxiesController.send :include, Katello::Concerns::SmartProxiesControllerExtensions
 
       ::FactImporter.register_fact_importer(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactImporter)
       ::FactParser.register_fact_parser(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactParser)
@@ -169,6 +170,10 @@ module Katello
       #Helper Extensions
       ::Containers::StepsController.class_eval do
         helper Katello::Concerns::ForemanDocker::ContainerStepsHelperExtensions
+      end
+
+      ::SmartProxiesController.class_eval do
+        helper Katello::Concerns::SmartProxyHelperExtensions
       end
 
       #Handle Smart Proxy items separately
@@ -183,12 +188,14 @@ module Katello
 
       # Service extensions
       require "#{Katello::Engine.root}/app/services/katello/puppet_class_importer_extensions"
+      require "#{Katello::Engine.root}/lib/proxy_api/pulp"
 
       # We need to explicitly load this files because Foreman has
       # similar strucuture and if the Foreman files are loaded first,
       # autoloading doesn't work.
       require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/api_controller"
       require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v2/api_controller"
+      require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp"
       ::PuppetClassImporter.send :include, Katello::Services::PuppetClassImporterExtensions
 
       #Api controller extensions
