@@ -289,11 +289,6 @@ module Katello
         !found.nil?
       end
 
-      def generate_applicability
-        task = Katello.pulp_server.extensions.repository.regenerate_applicability_by_ids([self.pulp_id])
-        PulpTaskStatus.using_pulp_task(task)
-      end
-
       def other_repos_with_same_product_and_content
         Repository.where(:content_id => self.content_id).in_product(self.product).pluck(:pulp_id) - [self.pulp_id]
       end
