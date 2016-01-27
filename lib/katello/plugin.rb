@@ -169,6 +169,6 @@ Foreman::Plugin.register :katello do
     cx.add_pagelet :details_content,
                    :name => _('Storage'),
                    :partial => 'smart_proxies/show/storage',
-                   :onlyif => proc { |proxy| proxy.has_feature?(SmartProxy::PULP_FEATURE) }
+                   :onlyif => proc { |proxy| proxy.has_feature?(SmartProxy::PULP_FEATURE) || proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) }
   end
 end
