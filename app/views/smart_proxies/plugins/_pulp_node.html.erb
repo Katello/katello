@@ -1,0 +1,7 @@
+<div class="row">
+  <h3><%= _('Pulp node') %></h3>
+  <%= render :partial => 'smart_proxies/plugins/plugin_version', :locals => {:feature => feature.delete('_'), :proxy => @smart_proxy} %>
+  <div class="pulp_status" data-ajax-url="<%= pulp_status_smart_proxy_path(@smart_proxy) %>">
+    <%= spinner %>
+  </div>
+</div>
