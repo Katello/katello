@@ -62,13 +62,13 @@ describe('Controller: ContentHostSubscriptionsController', function() {
         $scope.contentHost = new ContentHost({
             uuid: 12345,
             host: {id: 9389},
-            subscriptions: [{id: 1, cp_id: "cpid1", quantity: 11}, {id: 2, cp_id: "cpid2", quantity: 22}]
+            subscriptions: [{id: 1, cp_id: "cpid1", quantity_consumed: 11}, {id: 2, cp_id: "cpid2", quantity_consumed: 22}]
         });
 
         $scope.subscriptionsPane = {
             refresh: function() {},
             table: {}
-        }
+        };
 
         $controller('ContentHostSubscriptionsController', {
             $scope: $scope,
@@ -92,7 +92,7 @@ describe('Controller: ContentHostSubscriptionsController', function() {
         spyOn(HostSubscription, 'removeSubscriptions');
 
         $scope.detailsTable.getSelected = function() {
-            return [{id: 2, cp_id: "cpid2", quantity: 5}];
+            return [{id: 2, cp_id: "cpid2", quantity_consumed: 5}];
         };
 
         $scope.removeSelected();
