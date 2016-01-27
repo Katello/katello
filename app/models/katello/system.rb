@@ -23,8 +23,9 @@ module Katello
     has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
     has_many :activation_keys, :through => :system_activation_keys
 
-    has_many :system_host_collections, :class_name => "Katello::SystemHostCollection", :dependent => :destroy
-    has_many :host_collections, :through      => :system_host_collections
+    has_many :host_collection_hosts, :through => :foreman_host, :class_name => "::Katello::HostCollectionHosts",
+             :foreign_key => :host_id
+    has_many :host_collections, :through => :host_collection_hosts, :foreign_key => :host_id
 
     has_many :audits, :class_name => "::Audit", :as => :auditable, :dependent => :destroy
 
@@ -56,9 +57,11 @@ module Katello
     scoped_search :in => :fact_values, :on => :value, :in_key => :fact_names, :on_key => :name, :rename => :facts, :complete_value => true,
                   :only_explicit => true, :ext_method => :search_cast_facts
     scoped_search :on => :description, :complete_value => true
-    scoped_search :in => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
+    scoped_search :in => :foreman_host, :on => :name, :complete_value => true, :rename => :host
     scoped_search :in => :environment, :on => :name, :complete_value => true, :rename => :environment
-
+    # scoped_search :in => :host_collections, :on => :name, :rename => :host_collection, :complete_value => true,
+    #               :ext_method => :search_host_collections
+    scoped_search :in => :host_collections, :on => :name, :rename => :host_collection, :complete_value => true
     has_many :fact_values, :through => :foreman_host
     has_many :fact_names, :through => :fact_values
 
@@ -298,6 +301,16 @@ module Katello
     end
 
     private
+
+    def self.search_host_collections(_key, operator, value)
+      conditions = sanitize_sql_for_conditions(["#{Katello::HostCollection.table_name}.name #{operator} '#{value}'"])
+      systems_matching_query = Katello::System.joins("INNER JOIN #{Katello::HostCollectionHosts.table_name} ON \
+        (#{Katello::HostCollectionHosts.table_name}.host_id = #{Katello::System.table_name}.host_id)").
+        joins("INNER JOIN #{Katello::HostCollection.table_name} ON \
+        (#{Katello::HostCollectionHosts.table_name}.host_collection_id = #{Katello::HostCollection.table_name}.id)").
+        where(conditions).select("id").to_sql
+      { :conditions => "#{Katello::System.table_name}.id in (#{systems_matching_query})", :include => :host_collections }
+    end
 
     def self.search_cast_facts(key, operator, value)
       {

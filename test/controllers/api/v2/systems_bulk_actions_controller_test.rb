@@ -22,6 +22,11 @@ module Katello
       @system2 = System.find(katello_systems(:simple_server2))
       @systems = [@system1, @system2]
       @system_ids = @systems.map(&:uuid)
+      @host1 = hosts(:one)
+      @host2 = hosts(:two)
+
+      @system1.foreman_host = @host1
+      @system2.foreman_host = @host2
 
       @org = get_organization
       @view = katello_content_views(:library_view)
@@ -35,23 +40,23 @@ module Katello
     end
 
     def test_add_host_collection
-      assert_equal 1, @system1.host_collections.count # system initially has simple_host_collection
+      assert_equal 1, @system1.foreman_host.host_collections.count # system initially has simple_host_collection
       put :bulk_add_host_collections, :included => {:ids => @system_ids},
                                       :organization_id => @org.id,
                                       :host_collection_ids => [@host_collection1.id, @host_collection2.id]
 
       assert_response :success
-      assert_equal 2, @system1.host_collections.count
+      assert_equal 2, @system1.foreman_host.host_collections.count
     end
 
     def test_remove_host_collection
-      assert_equal 1, @system1.host_collections.count # system initially has simple_host_collection
+      assert_equal 1, @system1.foreman_host.host_collections.count # system initially has simple_host_collection
       put :bulk_remove_host_collections, :included => {:ids => @system_ids},
                                          :organization_id => @org.id,
                                          :host_collection_ids => [@host_collection1.id, @host_collection2.id]
 
       assert_response :success
-      assert_equal 0, @system1.host_collections.count
+      assert_equal 0, @system1.foreman_host.host_collections.count
     end
 
     def test_install_package

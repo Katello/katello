@@ -28,8 +28,8 @@ child :foreman_host => :host do
   end
 end
 
-child :host_collections => :hostCollections do
-  attributes :id, :name, :description, :max_content_hosts, :unlimited_content_hosts, :total_content_hosts
+child @resource.foreman_host.host_collections => :hostCollections do
+  attributes :id, :name, :description, :max_hosts, :unlimited_hosts, :total_hosts
 end
 
 attributes :serviceLevel => :service_level

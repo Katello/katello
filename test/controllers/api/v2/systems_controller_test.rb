@@ -16,6 +16,7 @@ module Katello
       @host = ::Host::Managed.new
       @host.name = "testhost"
       @host.managed = false
+      @host.host_collections = [katello_host_collections(:simple_host_collection)]
       @host.content_host = @system
       @host.save!
       @pool_one = katello_pools(:pool_one)
@@ -136,22 +137,6 @@ module Katello
       end
     end
 
-    def test_available_host_collections
-      get :available_host_collections, :id => @system.uuid
-
-      assert_response :success
-      assert_template 'api/v2/systems/available_host_collections'
-    end
-
-    def test_available_host_collections_protected
-      allowed_perms = [@view_permission]
-      denied_perms = [@create_permission, @update_permission, @destroy_permission]
-
-      assert_protected_action(:available_host_collections, allowed_perms, denied_perms) do
-        get :available_host_collections, :id => @system.uuid
-      end
-    end
-
     def test_update
       input = {
         :id => @system.id,
@@ -231,8 +216,8 @@ module Katello
       assert_includes systems, @system
     end
 
-    def test_search_by_host_collection
-      systems = System.search_for("host_collection = \"#{@system.host_collections.first}\"")
+    def test_search_by_host
+      systems = System.search_for("host = \"#{@system.foreman_host}\"")
       assert_includes systems, @system
     end
 

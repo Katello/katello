@@ -25,6 +25,7 @@ module ::Actions::Katello::System
 
       foreman_host = FactoryGirl.create(:host)
       system.host_id = foreman_host.id
+      system.foreman_host = foreman_host
       system.content_view = library_view
       system.environment = library
       system.save!
@@ -46,7 +47,6 @@ module ::Actions::Katello::System
     it 'plans' do
       stub_remote_user
       system.expects(:update_attributes!).with(input)
-
       plan_action(action, system, input)
 
       assert_action_planed_with(action, ::Actions::Katello::Host::Update, system.foreman_host)
@@ -96,24 +96,6 @@ module ::Actions::Katello::System
       plan_action(action, system)
 
       assert_action_planed_with(action, ::Actions::Katello::Host::Destroy, system.foreman_host, {})
-    end
-  end
-
-  class ActivationKeyTest < TestBase
-    let(:action_class) { ::Actions::Katello::System::ActivationKeys }
-
-    let(:system) { Katello::System.new }
-
-    let(:activation_keys) do
-      [katello_activation_keys(:simple_key),
-       katello_activation_keys(:library_dev_staging_view_key)]
-    end
-
-    it 'plans' do
-      plan_action(action, system, activation_keys)
-
-      assert_equal system.environment, activation_keys[1].environment
-      assert_equal system.content_view, activation_keys[1].content_view
     end
   end
 end

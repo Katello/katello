@@ -17,11 +17,6 @@ angular.module('Bastion.content-hosts').factory('ContentHost',
             releaseVersions: {method: 'GET', params: {action: 'releases'}},
             products: {method: 'GET', params: {action: 'products'}},
             tasks: {method: 'GET', params: {action: 'tasks', paged: true}},
-            availableHostCollections: {method: 'GET', params: {action: 'available_host_collections'}},
-            hostCollections: {method: 'GET', transformResponse: function (data) {
-                var contentHost = angular.fromJson(data);
-                return {results: contentHost.hostCollections};
-            }},
             contentOverride: {method: 'PUT', isArray: false, params: {action: 'content_override'}},
             autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
         });

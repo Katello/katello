@@ -136,11 +136,10 @@ Katello::Engine.routes.draw do
         api_resources :host_collections, :only => [:index, :show, :create, :update, :destroy] do
           member do
             post :copy
-            put :add_systems
-            put :remove_systems
+            put :add_hosts
+            put :remove_hosts
           end
           get :auto_complete_search, :on => :collection
-          api_resources :systems, :only => [:index, :show, :create, :update, :destroy]
         end
 
         api_resources :organizations, :only => [:index, :show, :update, :create, :destroy] do
@@ -232,7 +231,6 @@ Katello::Engine.routes.draw do
 
         api_resources :systems, :only => [:index, :show, :create, :update, :destroy] do
           member do
-            get :available_host_collections, :action => :available_host_collections
             post :host_collections, :action => :add_host_collections
             delete :host_collections, :action => :remove_host_collections
             get :pools
@@ -286,7 +284,7 @@ Katello::Engine.routes.draw do
 
         api_resources :host_collections do
           member do
-            delete :destroy_systems
+            delete :destroy_hosts
           end
         end
 

@@ -1,22 +1,22 @@
 /**
  * @ngdoc object
- * @name  Bastion.host-collections.controller:HostCollectionAddContentHostsController
+ * @name  Bastion.host-collections.controller:HostCollectionAddHostsController
  *
  * @requires $scope
  * @requires $location
  * @requires translate
  * @requires Nutupane
  * @requires CurrentOrganization
- * @requires ContentHost
+ * @requires Host
  * @requires HostCollection
  *
  * @description
  *   Provides the functionality for the host collection add content hosts pane.
  */
-angular.module('Bastion.host-collections').controller('HostCollectionAddContentHostsController',
-    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'ContentHost', 'HostCollection',
-    function ($scope, $state, $location, translate, Nutupane, CurrentOrganization, ContentHost, HostCollection) {
-        var params;
+angular.module('Bastion.host-collections').controller('HostCollectionAddHostsController',
+    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostCollection',
+    function ($scope, $state, $location, translate, Nutupane, CurrentOrganization, Host, HostCollection) {
+        var contentNutupane, params;
 
         params = {
             'organization_id': CurrentOrganization,
@@ -24,17 +24,22 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddContentH
             'page': 1,
             'sort_by': 'name',
             'sort_order': 'ASC',
-            'paged': true,
-            'available_for': 'host_collection',
-            'host_collection_id': $scope.$stateParams.hostCollectionId
+            'paged': true
         };
 
-        $scope.contentNutupane = new Nutupane(ContentHost, params);
+        contentNutupane = new Nutupane(Host, params);
+        contentNutupane.searchTransform = function (term) {
+            var addition = "-host_collection_id=" + $scope.$stateParams.hostCollectionId;
+            if (term === "" || angular.isUndefined(term)) {
+                return addition;
+            }
 
-        $scope.contentNutupane.masterOnly = true;
-        $scope.detailsTable = $scope.contentNutupane.table;
+            return term + " and " + addition;
+        };
+
+        $scope.detailsTable = contentNutupane.table;
         $scope.isAdding = false;
-        $scope.contentNutupane.setSearchKey('contentHostSearch');
+        $scope.detailsTable.closeItem = function () {};
 
         $scope.disableAddButton = function () {
             return $scope.detailsTable.numSelected === 0 || $scope.isAdding;
@@ -42,10 +47,10 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddContentH
 
         $scope.addSelected = function () {
             var selected;
-            selected = _.pluck($scope.detailsTable.getSelected(), 'uuid');
+            selected = _.pluck($scope.detailsTable.getSelected(), 'id');
 
             $scope.isAdding = true;
-            HostCollection.addContentHosts({id: $scope.hostCollection.id, 'system_ids': selected}, function (data) {
+            HostCollection.addHosts({id: $scope.hostCollection.id, 'host_ids': selected}, function (data) {
                 angular.forEach(data.displayMessages.success, function (success) {
                     $scope.$parent.successMessages.push(success);
                 });
@@ -55,7 +60,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddContentH
                 });
 
                 $scope.isAdding = false;
-                $scope.contentNutupane.refresh();
+                contentNutupane.refresh();
                 $scope.refreshHostCollection();
             }, function (response) {
                 $scope.$parent.errorMessages.push(response.data.displayMessage);

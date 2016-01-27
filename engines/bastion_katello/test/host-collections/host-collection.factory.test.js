@@ -44,29 +44,19 @@ describe('Factory: HostCollection', function() {
         });
     });
 
-    it('provides a way to add content hosts', function() {
-        var contentHosts = {test: 'this'};
-        $httpBackend.expectPUT('/katello/api/host_collections/0/add_systems').respond(contentHosts);
-        HostCollection.addContentHosts({'host_collection': {'system_ids': [1,2]} , id: 0}, function(response) {
+    it('provides a way to add hosts', function() {
+        var hosts = {test: 'this'};
+        $httpBackend.expectPUT('/katello/api/host_collections/0/add_hosts').respond(hosts);
+        HostCollection.addHosts({'host_collection': {'host_ids': [1,2]} , id: 0}, function(response) {
             expect(response.test).toBe('this');
         });
     });
 
-    it('provides a way to remove content hosts', function() {
-        var contentHosts = {test: 'this'};
-        $httpBackend.expectPUT('/katello/api/host_collections/0/remove_systems').respond(contentHosts);
-        HostCollection.removeContentHosts({'host_collection': {'system_ids': [1,2]} , id: 0}, function(response) {
+    it('provides a way to remove hosts', function() {
+        var hosts = {test: 'this'};
+        $httpBackend.expectPUT('/katello/api/host_collections/0/remove_hosts').respond(hosts);
+        HostCollection.removeHosts({'host_collection': {'host_ids': [1,2]} , id: 0}, function(response) {
             expect(response.test).toBe('this');
         });
     });
-
-    it('provides a way to list content hosts', function() {
-        var contentHosts = {results: [{id: 1}, {id: 2}]};
-        $httpBackend.expectGET('/katello/api/host_collections/0/systems').respond(contentHosts);
-        HostCollection.contentHosts({id: 0}, function(response) {
-            expect(response).toBeDefined();
-            expect(response.length).toBe(contentHosts.length);
-        });
-    });
-
 });

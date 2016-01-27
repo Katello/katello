@@ -1,7 +1,8 @@
 describe('Controller: HostCollectionsController', function() {
     var $scope,
         HostCollection,
-        Nutupane;
+        Nutupane,
+        urlencodeFilter;
 
     beforeEach(module('Bastion.host-collections', 'Bastion.test-mocks'));
 
@@ -12,7 +13,10 @@ describe('Controller: HostCollectionsController', function() {
             };
             this.get = function() {};
         };
+
         HostCollection = {};
+
+        urlencodeFilter = function () {};
     });
 
     beforeEach(inject(function($controller, $rootScope, $location) {
@@ -24,7 +28,8 @@ describe('Controller: HostCollectionsController', function() {
             Nutupane: Nutupane,
             translate: function(){},
             HostCollection: HostCollection,
-            CurrentOrganization: 'CurrentOrganization'
+            CurrentOrganization: 'CurrentOrganization',
+            urlencodeFilter: urlencodeFilter
         });
     }));
 
