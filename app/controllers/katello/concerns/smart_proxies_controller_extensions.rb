@@ -9,7 +9,8 @@ module Katello
         alias_method_chain :action_permission, :katello
 
         def pulp_storage
-          @storage = @proxy_status[:pulp].storage
+          pulp_connection = @proxy_status[:pulp] || @proxy_status[:pulpnode]
+          @storage = pulp_connection.storage
           respond_to do |format|
             format.html { render :layout => false }
             format.json { render :json => {:success => true, :message => @storage} }
@@ -23,7 +24,8 @@ module Katello
         end
 
         def pulp_status
-          @pulp_status = @proxy_status[:pulp].status
+          pulp_connection = @proxy_status[:pulp] || @proxy_status[:pulpnode]
+          @pulp_status = pulp_connection.status
           if @pulp_status['fatal']
             Rails.logger.warn @pulp_status['fatal']
             respond_to do |format|
