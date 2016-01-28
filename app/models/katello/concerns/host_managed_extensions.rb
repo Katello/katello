@@ -72,6 +72,22 @@ module Katello
           self.installed_packages.create!(:name => simple_package.name, :nvra => simple_package.nvra) unless existing_nvras.include?(simple_package.nvra)
         end
       end
+
+      def subscription_status
+        @subscription_status ||= get_status(::Katello::SubscriptionStatus).status
+      end
+
+      def subscription_status_label(options = {})
+        @subscription_status_label ||= get_status(::Katello::SubscriptionStatus).to_label(options)
+      end
+
+      def errata_status
+        @errata_status ||= get_status(::Katello::ErrataStatus).status
+      end
+
+      def errata_status_label(options = {})
+        @errata_status_label ||= get_status(::Katello::ErrataStatus).to_label(options)
+      end
     end
   end
 end

@@ -37,6 +37,13 @@ module Katello
         assert_equal [ENTITLEMENT_A, ENTITLEMENT_B], @consumer.filter_entitlements(1, [1, 1])
         assert_equal [ENTITLEMENT_A, ENTITLEMENT_C], @consumer.filter_entitlements(1, [1, 3])
       end
+
+      def test_compliance_reasons
+        reasons = [{"key"=>"NOTCOVERED", "message"=>"Not supported by a valid subscription.", "attributes"=>{"product_id"=>"69", "name"=>"Red Hat Server"}}]
+        Resources::Candlepin::Consumer.stubs(:compliance).returns('reasons' => reasons)
+
+        assert_equal ["Red Hat Server: Not supported by a valid subscription."], @consumer.compliance_reasons
+      end
     end
   end
 end

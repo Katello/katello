@@ -16,6 +16,10 @@ module Katello
     def test_create
       empty_host.content_facet = Katello::Host::ContentFacet.create!(:content_view => view, :lifecycle_environment => library, :host => empty_host)
     end
+
+    def test_content_view_version
+      assert_equal view.version(library), host.content_facet.content_view_version
+    end
   end
 
   class ImportApplicabilityTest < ContentFacetBase
