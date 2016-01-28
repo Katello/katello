@@ -37,8 +37,8 @@
         <span ng-show="errata.severity">- {{ errata.severity | errataSeverity}}</span>
       </td>
       <td bst-table-cell>
-        <span translate>{{ errata.systems_applicable_count || 0 }} Applicable, </span>
-        <span translate>{{ errata.systems_available_count || 0 }} Installable</span>
+        <span translate>{{ errata.hosts_applicable_count || 0 }} Applicable, </span>
+        <span translate>{{ errata.hosts_available_count || 0 }} Installable</span>
       </td>
       <td bst-table-cell>{{ errata.updated | date:'shortDate'}}</td>
     </tr>

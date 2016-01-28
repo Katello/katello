@@ -114,10 +114,11 @@ module Katello
     end
 
     def test_install_errata
-      query = System.editable.where(:uuid => @system_ids).where(:environment_id => @org.kt_environments)
+      query = System.editable.where(:uuid => @system_ids).
+          where(:environment_id => @org.kt_environments).collect { |system| system.foreman_host }
       errata = katello_errata("bugfix")
 
-      @controller.expects(:async_task).with(::Actions::BulkAction, ::Actions::Katello::System::Erratum::ApplicableErrataInstall,
+      @controller.expects(:async_task).with(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall,
                                             query, [errata.uuid]).returns({})
 
       put :install_content, :included => {:ids => @system_ids}, :organization_id => @org.id,
@@ -201,10 +202,17 @@ module Katello
 
       @errata_system = System.find(katello_systems(:errata_server))
       @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
-      @errata_system.bound_repositories = [@view_repo]
+
+      @errata_system.foreman_host = hosts(:one)
+      @errata_system.foreman_host.content_facet = katello_content_facets(:one)
+      @errata_system.foreman_host.content_facet.applicable_errata = @view_repo.errata
       @errata_system.save!
 
-      unavailable = @errata_system.applicable_errata - @errata_system.installable_errata
+      @cv = katello_content_views(:library_dev_view)
+      @env = katello_environments(:dev)
+
+      unavailable = @errata_system.foreman_host.content_facet.applicable_errata -
+          @errata_system.foreman_host.content_facet.installable_errata(@env, @cv)
       @missing_erratum = unavailable.first
 
       assert @missing_erratum

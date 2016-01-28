@@ -89,7 +89,8 @@ module Katello
         N_("Fetch applicable errata for a system."), :deprecated => true
     param_group :bulk_params
     def applicable_errata
-      respond_for_index(:collection => scoped_search(Katello::Erratum.installable_for_systems(@systems), 'updated', 'desc',
+      @hosts = @systems.find_all { |system| system.foreman_host }
+      respond_for_index(:collection => scoped_search(Katello::Erratum.installable_for_hosts(@hosts), 'updated', 'desc',
                                                      :resource_class => Erratum))
     end
 
@@ -154,15 +155,17 @@ module Katello
     param :errata_ids, Array, :desc => N_("List of Errata ids")
     def available_incremental_updates
       version_environments = {}
-      systems = System.with_non_installable_errata(@errata).where("#{System.table_name}.id" => @systems)
+      host_ids = @systems.pluck(:host_id)
+      content_facets = Katello::Host::ContentFacet.with_non_installable_errata(@errata).
+          where("#{Katello::Host::ContentFacet.table_name}.host_id" => host_ids)
 
-      ContentViewEnvironment.for_systems(systems).each do |cve|
+      ContentViewEnvironment.for_content_facets(content_facets).each do |cve|
         version = cve.content_view_version
         version_environment = version_environments[version] || {:content_view_version => version, :environments => []}
         version_environment[:environments] << cve.environment unless version_environment[:environments].include?(cve.environment)
         version_environment[:next_version] ||= version.next_incremental_version
         version_environment[:content_host_count] ||= 0
-        version_environment[:content_host_count] += systems.where(:content_view_id => cve.content_view).where(:environment_id => cve.environment).count
+        version_environment[:content_host_count] += content_facets.where(:content_view_id => cve.content_view).where(:lifecycle_environment_id => cve.environment).count
 
         if version.content_view.composite?
           version_environment[:components] = version.components_needing_errata(@errata)
@@ -219,9 +222,10 @@ module Katello
 
     def content_action
       if params[:content_type] == 'errata'
+        @hosts = @systems.collect { |i| i.foreman_host }
         errata_uuids = Katello::Erratum.where(:errata_id => params[:content]).pluck(:uuid)
         errata_uuids += Katello::Erratum.where(:uuid => params[:content]).pluck(:uuid)
-        task = async_task(::Actions::BulkAction, ::Actions::Katello::System::Erratum::ApplicableErrataInstall, @systems, errata_uuids.uniq)
+        task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, @hosts, errata_uuids.uniq)
         respond_for_async :resource => task
       else
         action = Katello::BulkActions.new(@systems)

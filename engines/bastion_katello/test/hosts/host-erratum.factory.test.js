@@ -1,12 +1,12 @@
-describe('Factory: ContentHostErratum', function($provide) {
+describe('Factory: HostErratum', function() {
     var $httpBackend,
         task,
         errata,
-        ContentHostErratum;
+        HostErratum;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.utils', 'Bastion.test-mocks'));
 
-    beforeEach(module(function($provide) {
+    beforeEach(module(function() {
         errata = {
             records: [
                 { errata_id: 'RHSA-1' },
@@ -20,7 +20,7 @@ describe('Factory: ContentHostErratum', function($provide) {
 
     beforeEach(inject(function($injector) {
         $httpBackend = $injector.get('$httpBackend');
-        ContentHostErratum = $injector.get('ContentHostErratum');
+        HostErratum = $injector.get('HostErratum');
     }));
 
     afterEach(function() {
@@ -28,15 +28,15 @@ describe('Factory: ContentHostErratum', function($provide) {
     });
 
     it('provides a way to get a list of errata', function() {
-        $httpBackend.expectGET('/katello/api/v2/systems/SYS_ID/errata').respond(errata);
-        ContentHostErratum.get({ id: 'SYS_ID' }, function(results) {
+        $httpBackend.expectGET('/api/v2/hosts/HOST_ID/errata').respond(errata);
+        HostErratum.get({ id: 'HOST_ID' }, function(results) {
             expect(results.total).toBe(2);
         });
     });
 
     it('provides a way to apply a list of errata', function() {
-        $httpBackend.expectPUT('/katello/api/v2/systems/SYS_ID/errata/apply').respond(task);
-        ContentHostErratum.apply({ uuid: 'SYS_ID', errata_ids: ['RHSA-1'] }, function(results) {
+        $httpBackend.expectPUT('/api/v2/hosts/HOST_ID/errata/apply').respond(task);
+        HostErratum.apply({ id: 'HOST_ID', errata_ids: ['RHSA-1'] }, function(results) {
             expect(results.id).toBe(task.id);
         });
     });

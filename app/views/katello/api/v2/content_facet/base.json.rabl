@@ -4,7 +4,7 @@ attributes :uuid
 
 node :errata_counts do |content_facet|
   if content_facet.host.content_host
-    errata = content_facet.host.content_host.installable_errata
+    errata = content_facet.installable_errata
     partial('katello/api/v2/errata/counts', :object => Katello::RelationPresenter.new(errata))
   end
 end

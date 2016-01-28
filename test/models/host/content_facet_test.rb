@@ -22,6 +22,80 @@ module Katello
     end
   end
 
+  class ContentFacetErrataTest < ContentFacetBase
+    let(:host) { hosts(:one) }
+
+    def test_applicable_errata
+      refute_empty content_facet.applicable_errata
+    end
+
+    def test_available_and_applicable_errta
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64))
+      content_facet.bound_repositories = [@view_repo]
+      content_facet.save!
+      assert_equal_arrays content_facet.applicable_errata, content_facet.installable_errata
+    end
+
+    def test_installable_errata
+      lib_applicable = content_facet.applicable_errata
+
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
+      content_facet.bound_repositories = [@view_repo]
+      content_facet.save!
+
+      assert_equal_arrays lib_applicable, content_facet.applicable_errata
+      refute_equal_arrays lib_applicable, content_facet.installable_errata
+      assert_includes content_facet.installable_errata, Erratum.find(katello_errata(:security))
+    end
+
+    def test_with_installable_errata
+      content_facet.bound_repositories = [Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))]
+      content_facet.save!
+
+      content_facet_dev = katello_content_facets(:two)
+      content_facet_dev.bound_repositories = [Katello::Repository.find(katello_repositories(:fedora_17_x86_64_dev))]
+      content_facet_dev.save!
+
+      installable = content_facet_dev.applicable_errata & content_facet_dev.installable_errata
+      non_installable = content_facet_dev.applicable_errata - content_facet_dev.installable_errata
+
+      refute_empty non_installable
+      refute_empty installable
+      content_facets = Katello::Host::ContentFacet.with_installable_errata([installable.first])
+      assert_includes content_facets, content_facet_dev
+
+      content_facets = Katello::Host::ContentFacet.with_installable_errata([non_installable.first])
+      refute content_facets.include?(content_facet_dev)
+
+      content_facets = Katello::Host::ContentFacet.with_installable_errata([installable.first, non_installable.first])
+      refute content_facets.include?(content_facet_dev)
+    end
+
+    def test_with_non_installable_errata
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
+      content_facet.bound_repositories = [@view_repo]
+      content_facet.save!
+
+      unavailable = content_facet.applicable_errata - content_facet.installable_errata
+      refute_empty unavailable
+      content_facets = Katello::Host::ContentFacet.with_non_installable_errata([unavailable.first])
+      assert_includes content_facets, content_facet
+
+      content_facets = Katello::Host::ContentFacet.with_non_installable_errata([content_facet.installable_errata.first])
+      refute content_facets.include?(content_facet)
+    end
+
+    def test_available_errata_other_view
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
+      content_facet.bound_repositories = [@view_repo]
+      content_facet.save!
+
+      available_in_view = content_facet.installable_errata(@library, @library_view)
+      assert_equal 1, available_in_view.length
+      assert_includes available_in_view, Erratum.find(katello_errata(:security))
+    end
+  end
+
   class ImportApplicabilityTest < ContentFacetBase
     let(:enhancement_errata) { katello_errata(:enhancement) }
 

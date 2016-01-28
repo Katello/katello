@@ -1,6 +1,6 @@
 <%= _("The following hosts have errata that apply to them: ") %>
 
-<% @content_hosts.group_by(&:organization).each do |org, hosts| %>
+<% @hosts.group_by(&:organization).each do |org, hosts| %>
 
 <%= _("Organization") %>: <%= org %>
 

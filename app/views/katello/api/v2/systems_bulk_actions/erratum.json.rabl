@@ -1,7 +1,7 @@
 extends "katello/api/v2/errata/show"
 
 node :applicable_consumers do |erratum|
-  erratum.systems_available.where(:id => @systems.map(&:id)).
-  select(["#{Katello::System.table_name}.uuid", "#{Katello::System.table_name}.name"]).
+  erratum.hosts_available.where(:host_id => @systems.map(&:host_id)).
+  select(["#{Katello::Host::ContentFacet.table_name}.uuid", "#{Host.table_name}.name"]).
   collect { |system| {:name => system.name, :uuid => system.uuid} }
 end

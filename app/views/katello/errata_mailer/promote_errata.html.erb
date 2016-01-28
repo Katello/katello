@@ -28,7 +28,7 @@
               <table border="0" width="100%" id="emailHeader" style="background-color: #e1e2e3;" bgcolor="#e1e2e3">
                 <tr>
                   <td align="left" valign="top" style="padding: 0px 20px;">
-                      <%= render :partial => 'host_dashboard', :locals => {:content_hosts => @content_hosts, :title => _("Hosts with Installable Errata")} %>
+                      <%= render :partial => 'host_dashboard', :locals => {:hosts => @hosts, :title => _("Hosts with Installable Errata")} %>
 
                       <% if @errata.count > 100 %>
                         <%= _("A large number of errata are unapplied in this content view, so only the first 100 are shown.") %>

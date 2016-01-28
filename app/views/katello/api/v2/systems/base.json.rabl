@@ -30,6 +30,6 @@ attributes :release, :ipv4_address
 attributes :checkin_time, :created
 attributes :installedProducts
 
-node :errata_counts do |system|
-  partial('katello/api/v2/errata/counts', :object => Katello::RelationPresenter.new(system.installable_errata))
+node(:errata_counts, :if => lambda { |system| system.foreman_host && system.foreman_host.content_facet }) do |system|
+  partial('katello/api/v2/errata/counts', :object => Katello::RelationPresenter.new(system.foreman_host.content_facet.installable_errata))
 end

@@ -9,9 +9,9 @@
 <%= _("Environment") %>:  <%= @environment %>
 
 Hosts with Installable Errata:
-  <%= _("Security") %>:    <%= host_count(@content_hosts, :security) %>
-  <%= _("Bugfix") %>:      <%= host_count(@content_hosts, :bugfix) %>
-  <%= _("Enhancement") %>: <%= host_count(@content_hosts, :enhancement) %>
+  <%= _("Security") %>:    <%= host_count(@hosts, :security) %>
+  <%= _("Bugfix") %>:      <%= host_count(@hosts, :bugfix) %>
+  <%= _("Enhancement") %>: <%= host_count(@hosts, :enhancement) %>
 
 <% @errata = @errata.take(100).group_by(&:errata_type) %>
 

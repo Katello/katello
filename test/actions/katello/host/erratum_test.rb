@@ -1,20 +1,21 @@
 require 'katello_test_helper'
 
-module ::Actions::Katello::System::Erratum
+module ::Actions::Katello::Host::Erratum
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
 
-    let(:system) { mock('a_system', uuid: 'uuid').mimic!(::Katello::System) }
+    let(:content_facet) { mock('a_system', uuid: 'uuid').mimic!(::Katello::Host::ContentFacet) }
+    let(:host) { mock('a_host', content_facet: content_facet).mimic!(::Host::Managed) }
     let(:action) do
       action = create_action action_class
-      action.stubs(:action_subject).with(system, :errata => errata = %w(RHBA-2014-1234))
-      plan_action action, system, errata
+      action.stubs(:action_subject).with(host, :errata => errata = %w(RHBA-2014-1234))
+      plan_action action, host, errata
     end
   end
 
   class InstallTest < TestBase
-    let(:action_class) { ::Actions::Katello::System::Erratum::Install }
+    let(:action_class) { ::Actions::Katello::Host::Erratum::Install }
     let(:pulp_action_class) { ::Actions::Pulp::Consumer::ContentInstall }
 
     specify { assert_action_planed action, pulp_action_class }

@@ -22,8 +22,8 @@ module Katello
     def setup
       setup_controller_defaults_api
 
-      Katello::Erratum.any_instance.stubs(:systems_applicable).returns([])
-      Katello::Erratum.any_instance.stubs(:systems_available).returns([])
+      Katello::Erratum.any_instance.stubs(:hosts_applicable).returns([])
+      Katello::Erratum.any_instance.stubs(:hosts_available).returns([])
 
       models
       permissions

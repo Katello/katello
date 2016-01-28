@@ -1,15 +1,15 @@
 errata_server_security:
   erratum_id: <%= ActiveRecord::FixtureSet.identify(:security) %>
-  system_id: <%= ActiveRecord::FixtureSet.identify(:errata_server) %>
+  content_facet_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
 
 errata_server_bugfix:
   erratum_id: <%= ActiveRecord::FixtureSet.identify(:bugfix) %>
-  system_id: <%= ActiveRecord::FixtureSet.identify(:errata_server) %>
+  content_facet_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
 
 errata_server_dev_security:
   erratum_id: <%= ActiveRecord::FixtureSet.identify(:security) %>
-  system_id: <%= ActiveRecord::FixtureSet.identify(:errata_server_dev) %>
+  content_facet_id: <%= ActiveRecord::FixtureSet.identify(:two) %>
 
 errata_server_dev_bugfix:
   erratum_id: <%= ActiveRecord::FixtureSet.identify(:bugfix) %>
-  system_id: <%= ActiveRecord::FixtureSet.identify(:errata_server_dev) %>
+  content_facet_id: <%= ActiveRecord::FixtureSet.identify(:two) %>

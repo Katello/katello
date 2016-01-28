@@ -9,14 +9,12 @@ module Katello
     def models
       @system = katello_systems(:simple_server)
       @errata_system = katello_systems(:errata_server)
-      @host_collections = katello_host_collections
       @organization = get_organization
       @repo = Repository.find(katello_repositories(:rhel_6_x86_64))
       @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_dev_view_library))
       @host = ::Host::Managed.new
       @host.name = "testhost"
       @host.managed = false
-      @host.host_collections = [katello_host_collections(:simple_host_collection)]
       @host.content_host = @system
       @host.save!
       @pool_one = katello_pools(:pool_one)

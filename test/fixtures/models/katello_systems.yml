@@ -32,6 +32,7 @@ errata_server:
   uuid:         010E99C0-3276-11E2-81C1-0800200Czzzzz
   environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
+  host_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
 
 errata_server_dev:
   name:         Errata Dev Server
@@ -39,3 +40,5 @@ errata_server_dev:
   uuid:         010E99C0-3276-11E2-81C1-0800200Czzzz1
   environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
+  host_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
+

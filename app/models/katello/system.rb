@@ -13,9 +13,6 @@ module Katello
     belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :systems
     belongs_to :foreman_host, :class_name => "::Host::Managed", :foreign_key => :host_id, :inverse_of => :content_host
 
-    has_many :applicable_errata, :through => :system_errata, :class_name => "Katello::Erratum", :source => :erratum
-    has_many :system_errata, :class_name => "Katello::SystemErratum", :dependent => :destroy, :inverse_of => :system
-
     has_many :bound_repositories, :through => :system_repositories, :class_name => "Katello::Repository", :source => :repository
     has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy, :inverse_of => :system
 
@@ -69,10 +66,6 @@ module Katello
       where(:environment_id => organization.kt_environments.pluck(:id))
     end
 
-    def self.in_organizations(organizations)
-      where(:environment_id => organizations.collect { |org| org.kt_environments.pluck(:id) })
-    end
-
     def self.in_content_view_version_environments(version_environments)
       #takes a structure of [{:content_view_version => ContentViewVersion, :environments => [KTEnvironment]}]
       queries = version_environments.map do |version_environment|
@@ -88,25 +81,6 @@ module Katello
       ids_not_found = Set.new(uuids).subtract(systems.pluck(:uuid))
       fail Errors::NotFound, _("Systems [%s] not found.") % ids_not_found.to_a.join(',') unless ids_not_found.blank?
       systems.pluck(:id)
-    end
-
-    def self.with_non_installable_errata(errata)
-      subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems
-                 .where("#{Katello::SystemRepository.table_name}.system_id = #{Katello::System.table_name}.id").to_sql
-      self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata).where("#{Katello::Erratum.table_name}.id NOT IN (#{subquery})").uniq
-    end
-
-    def self.with_applicable_errata(errata)
-      self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata)
-    end
-
-    def self.with_installable_errata(errata)
-      non_installable = System.with_non_installable_errata(errata)
-      subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_systems.where("#{Katello::SystemRepository.table_name}.system_id = #{Katello::System.table_name}.id")
-
-      query = self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata).where("#{Katello::Erratum.table_name}.id" => subquery)
-      query = query.where.not("katello_systems.id" => non_installable) unless non_installable.empty?
-      query.uniq
     end
 
     def registered_by
@@ -129,16 +103,6 @@ module Katello
 
     def consumed_pool_ids
       self.pools.collect { |t| t['id'] }
-    end
-
-    def installable_errata(env = nil, content_view = nil)
-      repos = if env && content_view
-                Katello::Repository.in_environment(env).in_content_views([content_view])
-              else
-                self.bound_repositories.pluck(:id)
-              end
-
-      self.applicable_errata.in_repositories(repos).uniq
     end
 
     def available_releases
@@ -166,7 +130,7 @@ module Katello
         else
           repos << possible_repos.first
           Rails.logger.warn("System #{self.name} (#{self.id}) requested binding to path #{path} matching \
-                       #{possible_repos.size} repositories.") if possible_repos.size > 1
+                            #{possible_repos.size} repositories.") if possible_repos.size > 1
         end
       end
 
@@ -198,11 +162,6 @@ module Katello
     def uninstall_package_groups(groups)
       pulp_task = self.uninstall_package_group(groups)
       save_task_status(pulp_task, :package_group_remove, :groups, groups)
-    end
-
-    def install_errata(errata_ids)
-      pulp_task = self.install_consumer_errata(errata_ids)
-      save_task_status(pulp_task, :errata_install, :errata_ids, errata_ids)
     end
 
     def as_json(options)
@@ -276,26 +235,6 @@ module Katello
       super.merge(uuid => uuid)
     end
 
-    def import_applicability(partial = true)
-      consumer = self
-      ::Katello::Util::Support.active_record_retry do
-        ActiveRecord::Base.transaction do
-          errata_uuids = pulp_errata_uuids
-          if partial
-            consumer_uuids = consumer.applicable_errata.pluck("#{Erratum.table_name}.uuid")
-            to_remove = consumer_uuids - errata_uuids
-            to_add = errata_uuids - consumer_uuids
-          else
-            to_add = errata_uuids
-            to_remove = nil
-            Katello::SystemErratum.where(:system_id => self.id).delete_all
-          end
-          insert_errata_applicability(to_add) unless to_add.blank?
-          remove_errata_applicability(to_remove) unless to_remove.blank?
-        end
-      end
-    end
-
     def available_content
       self.products.flat_map(&:available_content)
     end
@@ -306,9 +245,9 @@ module Katello
       conditions = sanitize_sql_for_conditions(["#{Katello::HostCollection.table_name}.name #{operator} '#{value}'"])
       systems_matching_query = Katello::System.joins("INNER JOIN #{Katello::HostCollectionHosts.table_name} ON \
         (#{Katello::HostCollectionHosts.table_name}.host_id = #{Katello::System.table_name}.host_id)").
-        joins("INNER JOIN #{Katello::HostCollection.table_name} ON \
+          joins("INNER JOIN #{Katello::HostCollection.table_name} ON \
         (#{Katello::HostCollectionHosts.table_name}.host_collection_id = #{Katello::HostCollection.table_name}.id)").
-        where(conditions).select("id").to_sql
+          where(conditions).select("id").to_sql
       { :conditions => "#{Katello::System.table_name}.id in (#{systems_matching_query})", :include => :host_collections }
     end
 
@@ -331,20 +270,6 @@ module Katello
         casted = "fact_values.value #{operator} '#{value}'"
       end
       casted
-    end
-
-    def insert_errata_applicability(uuids)
-      applicable_errata_ids = ::Katello::Erratum.where(:uuid => uuids).pluck(:id)
-      unless applicable_errata_ids.empty?
-        inserts = applicable_errata_ids.map { |erratum_id| "(#{erratum_id.to_i}, #{id.to_i})" }
-        sql = "INSERT INTO katello_system_errata (erratum_id, system_id) VALUES #{inserts.join(', ')}"
-        ActiveRecord::Base.connection.execute(sql)
-      end
-    end
-
-    def remove_errata_applicability(uuids)
-      applicable_errata_ids = ::Katello::Erratum.where(:uuid => uuids).pluck(:id)
-      Katello::SystemErratum.where(:system_id => self.id, :erratum_id => applicable_errata_ids).delete_all
     end
 
     def refresh_running_tasks

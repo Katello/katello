@@ -305,13 +305,6 @@ Katello::Engine.routes.draw do
             match '/bulk/available_incremental_updates' => 'systems_bulk_actions#available_incremental_updates', :via => :post
             get :auto_complete_search
           end
-
-          api_resources :errata, :only => [:show, :index], :controller => :system_errata do
-            collection do
-              put :apply
-              get :auto_complete_search
-            end
-          end
         end
 
         api_resources :repositories, :only => [], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do

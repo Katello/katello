@@ -1,16 +1,16 @@
 /**
  * @ngdoc service
- * @name  Bastion.content-hosts.factory:ContentHostErratum
+ * @name  Bastion.content-hosts.factory:HostErratum
  *
  * @requires BastionResource
  *
  * @description
  *   Provides a BastionResource for the errata of a single content host
  */
-angular.module('Bastion.content-hosts').factory('ContentHostErratum',
+angular.module('Bastion.hosts').factory('HostErratum',
     ['BastionResource', function (BastionResource) {
 
-        return BastionResource('/katello/api/v2/systems/:id/errata/:errata_id/:action', {id: '@uuid'}, {
+        return BastionResource('/api/v2/hosts/:id/errata/:errata_id/:action', {id: '@id'}, {
             get: {method: 'GET', isArray: false, transformResponse: function (data) {
                 data = angular.fromJson(data);
                 angular.forEach(data.results, function (errata) {
