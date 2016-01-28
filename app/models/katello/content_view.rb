@@ -53,6 +53,8 @@ module Katello
     validate :check_repo_conflicts
     validate :check_puppet_conflicts
     validates :composite, :inclusion => [true, false]
+    validate :content_view_composite
+    validate :check_repo_membership
 
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
@@ -652,6 +654,24 @@ module Katello
 
       PulpTaskStatus.wait_for_tasks([repo.clone_distribution(cloned)])
       PulpTaskStatus.wait_for_tasks([repo.clone_file_metadata(cloned)])
+    end
+
+    def content_view_composite
+      if composite?
+        errors.add(:base, _("Cannot add repositories to a composite content view"))
+      end
+    end
+
+    def check_repo_membership
+      repositories.each do |repository|
+        unless organization == repository.product.organization
+          errors.add(:base, _("Cannot add a repository from an Organization other than %s.") % content_view.organization.name)
+        end
+
+        unless repository.content_view.default?
+          errors.add(:base, _("Repositories from published Content Views are not allowed."))
+        end
+      end
     end
 
     def related_resources
