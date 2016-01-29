@@ -257,10 +257,9 @@
     </table>
   </section>
 
-  <section class="well" ng-if="permitted('edit_products', product) && !product.redhat">
+  <section class="well" ng-if="permitted('edit_products', product) && !product.redhat && repository.content_type != 'docker'">
     <h5 translate ng-show="repository.content_type == 'puppet'">Upload Puppet Module</h5>
     <h5 translate ng-show="repository.content_type == 'yum'">Upload Package</h5>
-    <h5 translate ng-show="repository.content_type == 'docker'">Upload Docker Image</h5>
 
     <div bst-alerts success-messages="uploadSuccessMessages" error-messages="uploadErrorMessages"></div>
 
