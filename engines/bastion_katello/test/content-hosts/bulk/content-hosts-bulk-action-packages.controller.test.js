@@ -1,11 +1,11 @@
 describe('Controller: ContentHostsBulkActionPackagesController', function() {
-    var $scope, $q, translate, ContentHostBulkAction, HostCollection, Organization,
+    var $scope, $q, translate, HostBulkAction, HostCollection, Organization,
         Task, CurrentOrganization, selected;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
     beforeEach(function() {
-        ContentHostBulkAction = {
+        HostBulkAction = {
             addHostCollections: function() {},
             removeHostCollections: function() {},
             installContent: function() {},
@@ -37,7 +37,7 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
 
         $controller('ContentHostsBulkActionPackagesController', {$scope: $scope,
             $q: $q,
-            ContentHostBulkAction: ContentHostBulkAction,
+            HostBulkAction: HostBulkAction,
             HostCollection: HostCollection,
             translate: translate,
             Organization: Organization,
@@ -52,10 +52,10 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
             content: 'zip, zsh, xterm'
         };
 
-        spyOn(ContentHostBulkAction, 'installContent');
+        spyOn(HostBulkAction, 'installContent');
         $scope.performContentAction();
 
-        expect(ContentHostBulkAction.installContent).toHaveBeenCalledWith(
+        expect(HostBulkAction.installContent).toHaveBeenCalledWith(
             _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
@@ -71,10 +71,10 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
             content: 'zip, zsh, xterm'
         };
 
-        spyOn(ContentHostBulkAction, 'updateContent');
+        spyOn(HostBulkAction, 'updateContent');
         $scope.performContentAction();
 
-        expect(ContentHostBulkAction.updateContent).toHaveBeenCalledWith(
+        expect(HostBulkAction.updateContent).toHaveBeenCalledWith(
             _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
@@ -90,10 +90,10 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
             content: 'zip, zsh, xterm'
         };
 
-        spyOn(ContentHostBulkAction, 'removeContent');
+        spyOn(HostBulkAction, 'removeContent');
         $scope.performContentAction();
 
-        expect(ContentHostBulkAction.removeContent).toHaveBeenCalledWith(
+        expect(HostBulkAction.removeContent).toHaveBeenCalledWith(
             _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
@@ -109,10 +109,10 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
             content: 'Backup Client, Development Tools'
         };
 
-        spyOn(ContentHostBulkAction, 'installContent');
+        spyOn(HostBulkAction, 'installContent');
         $scope.performContentAction();
 
-        expect(ContentHostBulkAction.installContent).toHaveBeenCalledWith(
+        expect(HostBulkAction.installContent).toHaveBeenCalledWith(
             _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
@@ -128,10 +128,10 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
             content: 'Backup Client, Development Tools'
         };
 
-        spyOn(ContentHostBulkAction, 'updateContent');
+        spyOn(HostBulkAction, 'updateContent');
         $scope.performContentAction();
 
-        expect(ContentHostBulkAction.updateContent).toHaveBeenCalledWith(
+        expect(HostBulkAction.updateContent).toHaveBeenCalledWith(
             _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
@@ -147,10 +147,10 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
             content: 'Backup Client, Development Tools'
         };
 
-        spyOn(ContentHostBulkAction, 'removeContent');
+        spyOn(HostBulkAction, 'removeContent');
         $scope.performContentAction();
 
-        expect(ContentHostBulkAction.removeContent).toHaveBeenCalledWith(
+        expect(HostBulkAction.removeContent).toHaveBeenCalledWith(
             _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)

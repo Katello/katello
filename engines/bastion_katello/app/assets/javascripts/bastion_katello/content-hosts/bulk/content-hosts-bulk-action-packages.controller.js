@@ -5,8 +5,7 @@
  * @requires $scope
  * @requires $q
  * @resource $location
- * @requires ContentHostBulkAction
- * @requires HostCollection
+ * @requires HostBulkAction
  * @requires CurrentOrganization
  * @requires translate
  *
@@ -14,8 +13,8 @@
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackagesController',
-    ['$scope', '$q', '$location', 'ContentHostBulkAction', 'HostCollection', 'CurrentOrganization', 'translate',
-    function ($scope, $q, $location, ContentHostBulkAction, HostCollection, CurrentOrganization, translate) {
+    ['$scope', '$q', '$location', 'HostBulkAction', 'CurrentOrganization', 'translate',
+    function ($scope, $q, $location, HostBulkAction, CurrentOrganization, translate) {
 
         function successMessage(type) {
             var messages = {
@@ -74,11 +73,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
 
             params = installParams();
             if ($scope.content.action === "install") {
-                ContentHostBulkAction.installContent(params, success, error);
+                HostBulkAction.installContent(params, success, error);
             } else if ($scope.content.action === "update") {
-                ContentHostBulkAction.updateContent(params, success, error);
+                HostBulkAction.updateContent(params, success, error);
             } else if ($scope.content.action === "remove") {
-                ContentHostBulkAction.removeContent(params, success, error);
+                HostBulkAction.removeContent(params, success, error);
             }
 
             return deferred.promise;

@@ -1,11 +1,11 @@
 describe('Controller: ContentHostsBulkActionErrataController', function() {
-    var $scope, $q, translate, ContentHostBulkAction, HostCollection, selectedErrata,
+    var $scope, $q, translate, HostBulkAction, HostCollection, selectedErrata,
          selectedContentHosts, CurrentOrganization, Nutupane;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
     beforeEach(function() {
-        ContentHostBulkAction = {
+        HostBulkAction = {
             installContent: function() {}
         };
         translate = function() {};
@@ -44,7 +44,7 @@ describe('Controller: ContentHostsBulkActionErrataController', function() {
 
         $controller('ContentHostsBulkActionErrataController', {$scope: $scope,
             $q: $q,
-            ContentHostBulkAction: ContentHostBulkAction,
+            HostBulkAction: HostBulkAction,
             HostCollection: HostCollection,
             Nutupane: Nutupane,
             translate: translate,
@@ -54,10 +54,10 @@ describe('Controller: ContentHostsBulkActionErrataController', function() {
 
     it("can install errata on multiple content hosts", function () {
 
-        spyOn(ContentHostBulkAction, 'installContent');
+        spyOn(HostBulkAction, 'installContent');
         $scope.installErrata();
 
-        expect(ContentHostBulkAction.installContent).toHaveBeenCalledWith(
+        expect(HostBulkAction.installContent).toHaveBeenCalledWith(
             _.extend(selectedContentHosts, {
                 content_type: 'errata',
                 content: [1, 2, 3]

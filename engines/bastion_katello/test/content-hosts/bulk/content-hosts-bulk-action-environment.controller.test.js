@@ -38,7 +38,7 @@ describe('Controller: ContentHostsBulkActionEnvironmentController', function() {
         };
 
         $controller('ContentHostsBulkActionEnvironmentController', {$scope: $scope,
-            ContentHostBulkAction: BulkAction,
+            HostBulkAction: BulkAction,
             Organization: Organization,
             CurrentOrganization: CurrentOrganization,
             ContentView: ContentView

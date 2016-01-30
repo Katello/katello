@@ -1,9 +1,9 @@
 module Katello
   module Concerns
-    module Api::V2::BulkSystemsExtensions
+    module Api::V2::BulkHostsExtensions
       extend ActiveSupport::Concern
 
-      def find_bulk_systems(permission, bulk_params, restrict_to = nil)
+      def find_bulk_hosts(permission, bulk_params, restrict_to = nil)
         #works on a structure of param_group bulk_params and transforms it into a list of systems
         organization = find_organization
         bulk_params[:included] ||= {}

@@ -23,30 +23,3 @@ angular.module('Bastion.content-hosts').factory('ContentHost',
 
     }]
 );
-
-/**
- * @ngdoc service
- * @name  Bastion.content-hosts.factory:ContentHostBulkAction
- *
- * @requires BastionResource
- *
- * @description
- *   Provides a BastionResource for bulk actions on content hosts.
- */
-angular.module('Bastion.content-hosts').factory('ContentHostBulkAction',
-    ['BastionResource', function (BastionResource) {
-
-        return BastionResource('/katello/api/v2/systems/bulk/:action', {}, {
-            addHostCollections: {method: 'PUT', params: {action: 'add_host_collections'}},
-            applicableErrata: {method: 'POST', params: {action: 'applicable_errata'}},
-            removeHostCollections: {method: 'PUT', params: {action: 'remove_host_collections'}},
-            installContent: {method: 'PUT', params: {action: 'install_content'}},
-            updateContent: {method: 'PUT', params: {action: 'update_content'}},
-            removeContent: {method: 'PUT', params: {action: 'remove_content'}},
-            unregisterContentHosts: {method: 'PUT', params: {action: 'destroy'}},
-            environmentContentView: {method: 'PUT', params: {action: 'environment_content_view'}},
-            availableIncrementalUpdates: {method: 'POST', isArray: true, params: {action: 'available_incremental_updates'}}
-        });
-
-    }]
-);

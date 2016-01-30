@@ -10,7 +10,7 @@
               ng-hide="denied('destroy_content_hosts')"
               ng-disabled="removingContentHosts"
               ng-click="openModal()">
-        Unregister Content Hosts
+        Remove Hosts
       </button>
 
       <span ng-show="removingContentHosts">
@@ -23,9 +23,9 @@
         {{ "Close" | translate }}
       </button>
 
-      <div bst-modal="performUnregisterContentHosts()">
-        <div data-block="modal-header" translate>Unregister {{ contentHostTable.numSelected  }} Content Hosts?</div>
-        <div data-block="modal-body" translate>Are you sure you want to unregister the {{ contentHostTable.numSelected }} content host(s) selected?</div>
+      <div bst-modal="performDestroyHosts()">
+        <div data-block="modal-header" translate>Remove {{ contentHostTable.numSelected  }} Hosts?</div>
+        <div data-block="modal-body" translate>Are you sure you want to remove the {{ contentHostTable.numSelected }} host(s) selected?</div>
       </div>
     </div>
   </header>

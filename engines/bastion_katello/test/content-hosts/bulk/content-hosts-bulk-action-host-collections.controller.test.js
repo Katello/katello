@@ -1,12 +1,12 @@
 describe('Controller: ContentHostsBulkActionHostCollectionsController', function() {
-    var $scope, $q, translate, ContentHostBulkAction, HostCollection, Organization,
+    var $scope, $q, translate, HostBulkAction, HostCollection, Organization,
         Task, CurrentOrganization, Nutupane, $location, hostCollectionIds;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
     beforeEach(function() {
         hostCollectionIds =  ['hostCollection1', 'hostCollection2'];
-        ContentHostBulkAction = {
+        HostBulkAction = {
             addHostCollections: function() {},
             removeHostCollections: function() {},
             installContent: function() {},
@@ -56,7 +56,7 @@ describe('Controller: ContentHostsBulkActionHostCollectionsController', function
         $controller('ContentHostsBulkActionHostCollectionsController', {$scope: $scope,
             $q: $q,
             $location: $location,
-            ContentHostBulkAction: ContentHostBulkAction,
+            HostBulkAction: HostBulkAction,
             HostCollection: HostCollection,
             Nutupane: Nutupane,
             translate: translate,
@@ -70,13 +70,13 @@ describe('Controller: ContentHostsBulkActionHostCollectionsController', function
             action: 'add'
         };
 
-        spyOn(ContentHostBulkAction, 'addHostCollections');
+        spyOn(HostBulkAction, 'addHostCollections');
         $scope.performHostCollectionAction();
 
         expected = $scope.nutupane.getAllSelectedResults();
         expected.host_collection_ids = hostCollectionIds;
         expected.organization_id = CurrentOrganization;
-        expect(ContentHostBulkAction.addHostCollections).toHaveBeenCalledWith(expected,
+        expect(HostBulkAction.addHostCollections).toHaveBeenCalledWith(expected,
             jasmine.any(Function), jasmine.any(Function));
     });
 
@@ -85,13 +85,13 @@ describe('Controller: ContentHostsBulkActionHostCollectionsController', function
             action: 'remove'
         };
 
-        spyOn(ContentHostBulkAction, 'removeHostCollections');
+        spyOn(HostBulkAction, 'removeHostCollections');
         $scope.performHostCollectionAction();
 
         expected = $scope.nutupane.getAllSelectedResults();
         expected.host_collection_ids = hostCollectionIds;
         expected.organization_id = CurrentOrganization;
-        expect(ContentHostBulkAction.removeHostCollections).toHaveBeenCalledWith(expected,
+        expect(HostBulkAction.removeHostCollections).toHaveBeenCalledWith(expected,
             jasmine.any(Function), jasmine.any(Function));
     });
 

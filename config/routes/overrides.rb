@@ -53,6 +53,18 @@ Foreman::Application.routes.draw do
             end
           end
 
+          collection do
+            match '/bulk/add_host_collections' => 'hosts_bulk_actions#bulk_add_host_collections', :via => :put
+            match '/bulk/remove_host_collections' => 'hosts_bulk_actions#bulk_remove_host_collections', :via => :put
+            match '/bulk/install_content' => 'hosts_bulk_actions#install_content', :via => :put
+            match '/bulk/installable_errata' => 'hosts_bulk_actions#installable_errata', :via => :post
+            match '/bulk/update_content' => 'hosts_bulk_actions#update_content', :via => :put
+            match '/bulk/remove_content' => 'hosts_bulk_actions#remove_content', :via => :put
+            match '/bulk/destroy' => 'hosts_bulk_actions#destroy_hosts', :via => :put
+            match '/bulk/environment_content_view' => 'hosts_bulk_actions#environment_content_view', :via => :put
+            match '/bulk/available_incremental_updates' => 'hosts_bulk_actions#available_incremental_updates', :via => :post
+          end
+
           resources :packages, :only => [:index], :controller => :host_packages do
             get :auto_complete_search, :on => :collection
 

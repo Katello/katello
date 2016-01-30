@@ -1,17 +1,17 @@
 describe('Controller: ContentHostsBulkActionController', function() {
-    var $scope, $q, selected, translate, ContentHostBulkAction, HostCollection, Organization, Task, CurrentOrganization;
+    var $scope, $q, selected, translate, HostBulkAction, HostCollection, Organization, Task, CurrentOrganization;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
     beforeEach(function() {
         selected = {included: {ids: [1, 2, 3]}};
-        ContentHostBulkAction = {
+        HostBulkAction = {
             addHostCollections: function() {},
             removeHostCollections: function() {},
             installContent: function() {},
             updateContent: function() {},
             removeContent: function() {},
-            unregisterContentHosts: function() {}
+            destroyHosts: function() {}
         };
         HostCollection = {
             query: function() {}
@@ -36,7 +36,7 @@ describe('Controller: ContentHostsBulkActionController', function() {
 
         $controller('ContentHostsBulkActionController', {$scope: $scope,
             $q: $q,
-            ContentHostBulkAction: ContentHostBulkAction,
+            HostBulkAction: HostBulkAction,
             HostCollection: HostCollection,
             CurrentOrganization: 'foo',
             translate: translate,
@@ -46,10 +46,10 @@ describe('Controller: ContentHostsBulkActionController', function() {
     }));
 
     it("can unregister multiple content hosts", function() {
-        spyOn(ContentHostBulkAction, 'unregisterContentHosts');
-        $scope.performUnregisterContentHosts();
+        spyOn(HostBulkAction, 'destroyHosts');
+        $scope.performDestroyHosts();
 
-        expect(ContentHostBulkAction.unregisterContentHosts).toHaveBeenCalledWith(_.extend(selected, {'organization_id': 'foo'}),
+        expect(HostBulkAction.destroyHosts).toHaveBeenCalledWith(_.extend(selected, {'organization_id': 'foo'}),
             jasmine.any(Function), jasmine.any(Function)
         );
     });
