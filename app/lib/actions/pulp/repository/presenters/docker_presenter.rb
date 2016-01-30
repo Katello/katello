@@ -52,7 +52,7 @@ module Actions
           end
 
           def details(step_type)
-            task_progress_details.find do |step|
+            task_progress_details && task_progress_details.find do |step|
               step[:step_type] == step_type
             end
           end

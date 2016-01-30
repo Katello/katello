@@ -21,6 +21,7 @@ module Katello
     end
 
     def test_index_db_docker_images
+      skip "TODO: images will be removed as part of docker v2; therefore, skipping this test"
       @repo.index_db_docker_images
       assert_equal 3, DockerImage.count
       assert_equal 3, @repo.docker_images.count
@@ -32,6 +33,7 @@ module Katello
     end
 
     def test_index_db_docker_images_with_duplicate_tags
+      skip "TODO: images will be removed as part of docker v2; therefore, skipping this test"
       @repo.docker_images.create!(:image_id => "abc123")
       docker_image = @repo.docker_images.first
       @repo.docker_tags.create!(:docker_image => docker_image,

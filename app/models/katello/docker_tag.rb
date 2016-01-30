@@ -2,10 +2,11 @@ module Katello
   class DockerTag < Katello::Model
     include ScopedSearchExtensions
     belongs_to :docker_image, :inverse_of => :docker_tags
+    belongs_to :docker_manifest, :inverse_of => :docker_tag
     belongs_to :repository, :inverse_of => :docker_tags, :class_name => "Katello::Repository"
 
     validates :name, presence: true, uniqueness: {scope: :repository_id}
-    validates :docker_image, presence: true
+    validates :docker_manifest, presence: true
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :in => :docker_image, :on => :image_id, :rename => :image,

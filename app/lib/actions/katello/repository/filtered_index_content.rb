@@ -17,7 +17,7 @@ module Actions
             repo.index_db_puppet_modules
           elsif repo.docker?
             # have to call Repository#index_db_docker_images to get the repo's tags
-            repo.index_db_docker_images
+            repo.index_db_docker_manifests
           else
             ::Katello::Rpm.import_all(unit_ids, true)
           end

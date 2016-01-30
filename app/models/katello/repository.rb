@@ -43,6 +43,9 @@ module Katello
     has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :destroy
     has_many :puppet_modules, :through => :repository_puppet_modules
 
+    has_many :repository_docker_manifests, :class_name => "Katello::RepositoryDockerManifest", :dependent => :destroy
+    has_many :docker_manifests, :through => :repository_docker_manifests
+
     has_many :repository_docker_images, :class_name => "Katello::RepositoryDockerImage", :dependent => :destroy
     has_many :docker_images, :through => :repository_docker_images
     has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag"

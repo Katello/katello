@@ -385,6 +385,32 @@ module Katello
         tmp_packages
       end
 
+      def index_db_docker_manifests
+        docker_manifests_json.each do |manifest_json|
+          manifest = DockerManifest.where(:uuid => manifest_json[:_id]).first_or_create
+          manifest.update_from_json(manifest_json)
+          create_docker_tag(manifest, manifest_json[:tag])
+        end
+        DockerManifest.sync_repository_associations(self, pulp_docker_manifest_ids)
+      end
+
+      def docker_manifests_json
+        docker_manifests = []
+        pulp_docker_manifest_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
+          docker_manifests.concat(Katello.pulp_server.extensions.docker_manifest.find_all_by_unit_ids(sub_list))
+        end
+        docker_manifests
+      end
+
+      def create_docker_tag(manifest, tag_name)
+        tag = unit_search(:type_ids => [Runcible::Extensions::DockerTag.content_type],
+                          :filters => { :unit => { :manifest_digest => manifest.digest,
+                                                   :name => tag_name } }).first
+
+        DockerTag.where(:repository_id => id, :docker_manifest_id => manifest.id,
+                        :name => tag[:metadata][:name], :uuid => tag[:metadata][:_id]).first_or_create
+      end
+
       def index_db_docker_images
         docker_tags.destroy_all
 
@@ -434,6 +460,10 @@ module Katello
 
       def pulp_puppet_module_ids
         Katello.pulp_server.extensions.repository.puppet_module_ids(self.pulp_id)
+      end
+
+      def pulp_docker_manifest_ids
+        Katello.pulp_server.extensions.repository.docker_manifest_ids(self.pulp_id)
       end
 
       def pulp_docker_image_ids
@@ -732,6 +762,7 @@ module Katello
     def index_content
       self.index_db_rpms
       self.index_db_errata
+      self.index_db_docker_manifests
       self.index_db_docker_images
       self.index_db_puppet_modules
       self.index_db_package_groups
