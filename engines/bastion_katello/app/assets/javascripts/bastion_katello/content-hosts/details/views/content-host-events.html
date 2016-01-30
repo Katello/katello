@@ -1,5 +1,9 @@
 <section class="nutupane-sub-section">
-  <div bst-container-scroll>
+  <div ng-if="!host.hasSubscription()">
+    <div data-extend-template="common/registration.html"></div>
+  </div>
+
+  <div bst-container-scroll ng-if="host.hasSubscription()">
     <div infinite-scroll="eventTable.nextPage()" infinite-scroll-container="'.nutupane-sub-section .container-scroll-wrapper'">
       <table bst-table="eventTable" class="table table-striped">
         <thead>

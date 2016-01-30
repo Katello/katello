@@ -17,6 +17,7 @@ node :systems do |subscription|
     facts = sys.facts
     {
       uuid: sys.uuid,
+      host_id: sys.host_id,
       name: sys.name,
       environment: { id: sys.environment.id, name: sys.environment.name },
       content_view: { id: sys.content_view.id, name: sys.content_view.name },

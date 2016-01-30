@@ -25,7 +25,7 @@ angular.module('Bastion.subscriptions').controller('SubscriptionAssociationsCont
             $scope.working = false;
         });
 
-        $scope.getStatusColor = ContentHostsHelper.getStatusColor;
+        $scope.getSubscriptionStatusColor = ContentHostsHelper.getSubscriptionStatusColor;
 
         $scope.memory = ContentHostsHelper.memory;
 

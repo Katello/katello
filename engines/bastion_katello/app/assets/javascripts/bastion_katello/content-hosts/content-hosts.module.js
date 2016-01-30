@@ -62,7 +62,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
 
     $stateProvider.state("content-hosts.details", {
         abstract: true,
-        url: '/content_hosts/:contentHostId',
+        url: '/content_hosts/:hostId',
         permission: 'view_content_hosts',
         collapsed: true,
         views: {

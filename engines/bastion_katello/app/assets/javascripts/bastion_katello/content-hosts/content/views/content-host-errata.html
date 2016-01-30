@@ -1,109 +1,115 @@
-<span page-title ng-model="contentHost">{{ 'Errata for: ' | translate }} {{ contentHost.name }}</span>
+<span page-title ng-model="host">{{ 'Errata for: ' | translate }} {{ host.name }}</span>
 
-<div data-block="messages" ng-show="detailsTable.rows.length > 0">
-  <p bst-alert="info" ng-hide="selectedErrataOption === 'current'">
-        <span translate>
-          Some of the Errata shown below may not be installable as they are not in this Content Host's
-          Content View and Lifecycle Environment.  In order to apply such Errata an Incremental Update is required.
-        </span>
-
-    <a ui-sref="errata.index" translate>Click here to select Errata for an Incremental Update.</a>
-  </p>
+<div class="details fl" ng-hide="host.hasContent()">
+  <div data-extend-template="common/registration.html"></div>
 </div>
 
-<div bst-feature-flag="remote_actions">
-  <p bst-alert="info" ng-hide="contentHost.katello_agent_installed">
-    <span translate>
-      The katello-agent package is required to manage errata on this Host.
-      Please install the katello-agent package to manage errata on
-      {{ contentHost.name }}.
-    </span>
-  </p>
-</div>
+<div ng-if="host && host.hasContent()">
+  <div data-block="messages" ng-show="detailsTable.rows.length > 0">
+    <p bst-alert="info" ng-hide="selectedErrataOption === 'current'">
+          <span translate>
+            Some of the Errata shown below may not be installable as they are not in this Content Host's
+            Content View and Lifecycle Environment.  In order to apply such Errata an Incremental Update is required.
+          </span>
 
-<div data-extend-template="layouts/details-nutupane.html">
-  <div data-block="header" bst-feature-flag="remote_actions">
-    <span translate ng-hide="selectedErrataOption === 'current'">Applicable Errata</span>
-    <span translate ng-show="selectedErrataOption === 'current'">Installable Errata</span>
+      <a ui-sref="errata.index" translate>Click here to select Errata for an Incremental Update.</a>
+    </p>
   </div>
 
-  <span data-block="filters" bst-feature-flag="remote_actions">
-    <form class="well form-horizontal col-sm-12">
-      <div class="form-group">
-        <label translate class="control-label col-sm-1">
-          Show from:
-        </label>
-        <div class="col-sm-3">
-          <select class="form-control"
-                  ng-model="selectedErrataOption"
-                  ng-change="refreshErrata(selectedErrataOption)"
-                  ng-options="option.label as option.name for option in errataOptions | orderBy: 'order'"></select>
+  <div bst-feature-flag="remote_actions">
+    <p bst-alert="info" ng-hide="contentHost.katello_agent_installed">
+      <span translate>
+        The katello-agent package is required to manage errata on this Host.
+        Please install the katello-agent package to manage errata on
+        {{ host.name }}.
+      </span>
+    </p>
+  </div>
+
+  <div data-extend-template="layouts/details-nutupane.html">
+    <div data-block="header" bst-feature-flag="remote_actions">
+      <span translate ng-hide="selectedErrataOption === 'current'">Applicable Errata</span>
+      <span translate ng-show="selectedErrataOption === 'current'">Installable Errata</span>
+    </div>
+
+    <span data-block="filters" bst-feature-flag="remote_actions">
+      <form class="well form-horizontal col-sm-12">
+        <div class="form-group">
+          <label translate class="control-label col-sm-1">
+            Show from:
+          </label>
+          <div class="col-sm-3">
+            <select class="form-control"
+                    ng-model="selectedErrataOption"
+                    ng-change="refreshErrata(selectedErrataOption)"
+                    ng-options="option.label as option.name for option in errataOptions | orderBy: 'order'"></select>
+          </div>
         </div>
-      </div>
-    </form>
-  </span>
+      </form>
+    </span>
 
-  <span data-block="actions" bst-feature-flag="remote_actions">
+    <span data-block="actions" bst-feature-flag="remote_actions">
 
-      <div bst-modal="applySelected()">
-        <div data-block="modal-header" translate>Apply Errata to Content Host "{{contentHost.name}}"?</div>
-        <div data-block="modal-body" translate>Are you sure you want to apply Errata to content host "{{ contentHost.name }}"?</div>
-        <div data-block="modal-confirm-button" translate>Apply</div>
-      </div>
+        <div bst-modal="applySelected()">
+          <div data-block="modal-header" translate>Apply Errata to Content Host "{{host.name}}"?</div>
+          <div data-block="modal-body" translate>Are you sure you want to apply Errata to content host "{{ host.name }}"?</div>
+          <div data-block="modal-confirm-button" translate>Apply</div>
+        </div>
 
-      <div ng-hide="contentHost.readonly" class="fr">
-         <button class="btn btn-primary"
-                 translate
-                 ng-hide="denied('edit_content_hosts', contentHost)"
-                 ng-disabled="detailsTable.getSelected().length == 0"
-                 ng-click="openModal()">
-           Apply Selected
-         </button>
-      </div>
-  </span>
+        <div ng-hide="contentHost.readonly" class="fr">
+           <button class="btn btn-primary"
+                   translate
+                   ng-hide="denied('edit_content_hosts', contentHost)"
+                   ng-disabled="detailsTable.getSelected().length == 0"
+                   ng-click="openModal()">
+             Apply Selected
+           </button>
+        </div>
+    </span>
 
-  <span data-block="no-rows-message" translate>
-    There are no Errata to display.
-  </span>
+    <span data-block="no-rows-message" translate>
+      There are no Errata to display.
+    </span>
 
-  <div data-block="table">
-    <table class="table table-striped table-bordered" ng-class="{'table-mask': detailsTable.working}">
-      <thead>
-        <tr bst-table-head row-select>
-          <th bst-table-column="type" translate>Type</th>
-          <th bst-table-column="errata_id" translate>Id</th>
-          <th bst-table-column="title" translate>Title</th>
-          <th bst-table-column="issued" translate>Issued</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr bst-table-row ng-repeat="erratum in detailsTable.rows | filter:detailsTable.errataCompare" row-select="erratum">
-          <td bst-table-cell>
-              <span ng-show="erratum.type == 'security'">
-                <i class="fa fa-warning inline-icon" title="{{ 'Security' | translate }}"></i>
-              </span>
+    <div data-block="table">
+      <table class="table table-striped table-bordered" ng-class="{'table-mask': detailsTable.working}">
+        <thead>
+          <tr bst-table-head row-select>
+            <th bst-table-column="type" translate>Type</th>
+            <th bst-table-column="errata_id" translate>Id</th>
+            <th bst-table-column="title" translate>Title</th>
+            <th bst-table-column="issued" translate>Issued</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr bst-table-row ng-repeat="erratum in detailsTable.rows | filter:detailsTable.errataCompare" row-select="erratum">
+            <td bst-table-cell>
+                <span ng-show="erratum.type == 'security'">
+                  <i class="fa fa-warning inline-icon" title="{{ 'Security' | translate }}"></i>
+                </span>
 
-              <span ng-show="erratum.type == 'bugfix'">
-                <i class="fa fa-bug inline-icon" title="{{ 'Bug Fix' | translate }}"></i>
-              </span>
+                <span ng-show="erratum.type == 'bugfix'">
+                  <i class="fa fa-bug inline-icon" title="{{ 'Bug Fix' | translate }}"></i>
+                </span>
 
-              <span ng-show="erratum.type == 'enhancement'">
-                <i class="fa fa-plus-square inline-icon" title="{{ 'Enhancement' | translate }}"></i>
-              </span>
+                <span ng-show="erratum.type == 'enhancement'">
+                  <i class="fa fa-plus-square inline-icon" title="{{ 'Enhancement' | translate }}"></i>
+                </span>
 
-            {{ erratum.type | errataType}}
-            <span ng-show="erratum.severity">- {{ erratum.severity | errataSeverity}}</span>
-          </td>
-          <td bst-table-cell >
-            <a ng-click="transitionToErratum(erratum)">
-              {{ erratum.errata_id }}
-            </a>
-          </td>
-          <td bst-table-cell >{{ erratum.title }}</td>
-          <td bst-table-cell >{{ erratum.updated | date:'shortDate' }}</td>
-        </tr>
-      </tbody>
-    </table>
+              {{ erratum.type | errataType}}
+              <span ng-show="erratum.severity">- {{ erratum.severity | errataSeverity}}</span>
+            </td>
+            <td bst-table-cell >
+              <a ng-click="transitionToErratum(erratum)">
+                {{ erratum.errata_id }}
+              </a>
+            </td>
+            <td bst-table-cell >{{ erratum.title }}</td>
+            <td bst-table-cell >{{ erratum.updated | date:'shortDate' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
-
 </div>

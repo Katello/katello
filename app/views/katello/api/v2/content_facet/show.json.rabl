@@ -8,4 +8,16 @@ child :content_facet => :content do
       :content_view_version_id => version.id
     }
   end
+
+  node :content_view_default? do |content_facet|
+    content_facet.content_view.default?
+  end
+
+  node :lifecycle_environment_library? do |content_facet|
+    content_facet.lifecycle_environment.library?
+  end
+end
+
+child :host_collections => :host_collections do
+  attributes :id, :name
 end

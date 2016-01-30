@@ -71,7 +71,7 @@
         <tr bst-table-row ng-repeat="contentHost in detailsTable.rows" row-select="contentHost"
             ng-controller="ContentHostStatusController">
           <td bst-table-cell>
-            <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
+            <a ui-sref="content-hosts.details.info({hostId: contentHost.host_id})">
               {{ contentHost.name }}
             </a>
           </td>

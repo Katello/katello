@@ -13,7 +13,6 @@
       <th bst-table-column="os"><span translate>OS</span></th>
       <th bst-table-column="environment"><span sortable translate>Environment</span></th>
       <th bst-table-column="contentView"><span translate>Content View</span></th>
-      <th bst-table-column="registeredBy"><span translate>Registered By</span></th>
       <th bst-table-column="registered"><span translate>Registered</span></th>
       <th bst-table-column="lastCheckin" sortable><span translate>Last Checkin</span></th>
     </tr>
@@ -22,36 +21,27 @@
   <div data-extend-template="layouts/select-all-results.html"></div>
 
   <tbody>
-    <tr bst-table-row ng-repeat="contentHost in contentHostTable.rows" row-select="contentHost"
+    <tr bst-table-row ng-repeat="host in contentHostTable.rows" row-select="host"
         ng-controller="ContentHostStatusController">
       <td bst-table-cell>
-        <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
-          {{ contentHost.name }}
+        <a ui-sref="content-hosts.details.info({hostId: host.id})">
+          {{ host.name }}
         </a>
       </td>
       <td bst-table-cell>
-        <span class="fa fa-circle" ng-class="contentHostTable.getStatusColor(contentHost.entitlementStatus)">
+        <span class="fa fa-circle" ng-class="contentHostTable.getSubscriptionStatusColor(host.subscription_status)">
         </span>
       </td>
       <td>
-        <a ui-sref="content-hosts.details.errata.index({contentHostId: contentHost.uuid})">
-          <span class="aligned-errata-count" errata-counts="contentHost.errata_counts"></span>
+        <a ui-sref="content-hosts.details.errata.index({hostId: host.id})">
+          <span class="aligned-errata-count" errata-counts="host.content.errata_counts"></span>
         </a>
       </td>
-      <td bst-table-cell>{{ contentHost.distribution }}</td>
-      <td bst-table-cell>{{ contentHost.environment.name }}</td>
-      <td bst-table-cell>{{ contentHost.content_view.name || "" }}</td>
-      <td bst-table-cell>
-        <span class="info-value" ng-show="contentHost.activation_keys.length == 0">{{ contentHost.registered_by }}</span>
-        <span class="info-value" ng-show="contentHost.activation_keys.length > 0"
-              translate
-              translate-n="contentHost.activation_keys.length"
-              translate-plural="Activation Keys">
-          Activation Key
-        </span>
-      </td>
-      <td bst-table-cell>{{ contentHost.created | date:'short' }}</td>
-      <td bst-table-cell>{{ (contentHost.checkin_time | date:'short') || ("Never checked in" | translate) }}</td>
+      <td bst-table-cell>{{ host.operatingsystem_name }}</td>
+      <td bst-table-cell>{{ host.content.lifecycle_environment_name }}</td>
+      <td bst-table-cell>{{ host.content.content_view_name || "" }}</td>
+      <td bst-table-cell>{{ host.created_at | date:'short' }}</td>
+      <td bst-table-cell>{{ (host.subscription.last_checkin | date:'short') || ("Never checked in" | translate) }}</td>
     </tr>
   </tbody>
 </table>

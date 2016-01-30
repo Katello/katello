@@ -22,23 +22,17 @@ angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsCo
             'search': $location.search().search || "",
             'sort_by': 'name',
             'sort_order': 'ASC',
-            'paged': true
+            'paged': true,
+            'host_id': $scope.$stateParams.hostId
         };
 
         hostCollectionsPane = new Nutupane(HostCollection, params);
-        hostCollectionsPane.table.initialLoad = false;
         $scope.hostCollectionsTable = hostCollectionsPane.table;
-
-        $scope.contentHost.$promise.then(function(contentHost) {
-            params['host_id'] = contentHost.host.id;
-            hostCollectionsPane.setParams(params);
-            hostCollectionsPane.load(true);
-        });
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
-        $scope.removeHostCollections = function (contentHost) {
+        $scope.removeHostCollections = function (host) {
             var deferred = $q.defer(),
                 success,
                 error,
@@ -48,11 +42,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsCo
 
             success = function (response) {
                 $scope.successMessages = [translate('Removed %x host collections from content host "%y".')
-                    .replace('%x', $scope.hostCollectionsTable.numSelected).replace('%y', $scope.contentHost.name)];
+                    .replace('%x', $scope.hostCollectionsTable.numSelected).replace('%y', host.name)];
                 $scope.hostCollectionsTable.working = false;
                 $scope.hostCollectionsTable.selectAll(false);
                 hostCollectionsPane.refresh();
-                $scope.contentHost.$get();
+                $scope.host.$get();
                 deferred.resolve(response);
             };
 
@@ -63,12 +57,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsCo
             };
 
             $scope.hostCollectionsTable.working = true;
-
-            hostCollections = _.pluck($scope.contentHost.hostCollections, 'id');
+            hostCollections = _.pluck(host['host_collections'], 'id');
             hostCollectionsToRemove = _.pluck($scope.hostCollectionsTable.getSelected(), 'id');
-            data = {"host_collection_ids": _.difference(hostCollections, hostCollectionsToRemove)};
 
-            Host.updateHostCollections({id: contentHost.host.id}, data, success, error);
+            data = {"host_collection_ids": _.difference(hostCollections, hostCollectionsToRemove)};
+            Host.updateHostCollections({id: host.id}, data, success, error);
 
             return deferred.promise;
         };

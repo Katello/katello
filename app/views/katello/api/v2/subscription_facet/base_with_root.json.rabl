@@ -5,3 +5,5 @@ end
 node :content_host_id do |host|
   host.content_host.id
 end
+
+attributes :subscription_status, :subscription_status_label, :if => @object.get_status(Katello::SubscriptionStatus).relevant?

@@ -3,9 +3,11 @@ describe('Controller: ContentHostDetailsController', function() {
         $controller,
         translate,
         ContentHost,
+        Host,
         Organization,
         MenuExpander,
-        mockContentHost;
+        mockContentHost,
+        mockHost;
 
     beforeEach(module('Bastion.content-hosts',
                        'content-hosts/views/content-hosts.html'));
@@ -28,7 +30,7 @@ describe('Controller: ContentHostDetailsController', function() {
 
         mockContentHost = {
             failed: false,
-            uuid: 2,
+            uuid: "abcd-1234",
             facts: {
                 cpu: "Itanium",
                 "lscpu.architecture": "Intel Itanium architecture",
@@ -43,6 +45,20 @@ describe('Controller: ContentHostDetailsController', function() {
                 }
             }
         };
+
+        mockHost = {
+            id: 4,
+            subscription: {uuid: mockContentHost.uuid},
+            content_host_id: mockContentHost.uuid
+        };
+
+        Host = {
+            get: function(params, callback) {
+                callback(mockHost);
+                return mockHost;
+            },
+            $promise: {then: function(callback) {callback(mockHost)}}
+        };
         ContentHost = {
             get: function(params, callback) {
                 callback(mockContentHost);
@@ -54,13 +70,16 @@ describe('Controller: ContentHostDetailsController', function() {
         MenuExpander = {};
 
         spyOn(ContentHost, 'get').andCallThrough();
+        spyOn(Host, 'get').andCallThrough();
 
-        $scope.$stateParams = {contentHostId: 2};
+
+        $scope.$stateParams = {hostId: mockHost.id};
 
         $controller('ContentHostDetailsController', {
             $scope: $scope,
             $state: $state,
             translate: translate,
+            Host: Host,
             ContentHost: ContentHost,
             Organization: Organization,
             MenuExpander: MenuExpander
@@ -72,8 +91,13 @@ describe('Controller: ContentHostDetailsController', function() {
     });
 
     it("gets the content host using the ContentHost service and puts it on the $scope.", function() {
-        expect(ContentHost.get).toHaveBeenCalledWith({id: 2}, jasmine.any(Function));
+        expect(ContentHost.get).toHaveBeenCalledWith({id: mockContentHost.uuid}, jasmine.any(Function));
         expect($scope.contentHost).toBe(mockContentHost);
+    });
+
+    it("gets the host using the Host service and puts it on the $scope.", function() {
+        expect(Host.get).toHaveBeenCalledWith({id: mockHost.id}, jasmine.any(Function));
+        expect($scope.host).toBe(mockHost);
     });
 
     it('provides a method to transition states when a content host is present', function() {

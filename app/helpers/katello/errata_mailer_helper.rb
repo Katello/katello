@@ -1,8 +1,7 @@
 module Katello
   module ErrataMailerHelper
     def content_host_errata_path(host)
-      uuid = host.content_facet.uuid
-      "#{Setting[:foreman_url]}/content_hosts/#{uuid}/errata"
+      "#{Setting[:foreman_url]}/content_hosts/#{host.id}/errata"
     end
 
     def content_view_environment_errata_path(content_view, environment)

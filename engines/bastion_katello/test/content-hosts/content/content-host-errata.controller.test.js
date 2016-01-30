@@ -1,6 +1,6 @@
 describe('Controller: ContentHostErrataController', function() {
     var $scope, Nutupane, HostErratum, Environment, Organization,
-        mockContentHost, mockTask, mockErratum, ContentHost, mockHost, mockContentView, nutupaneMock;
+        mockTask, mockErratum, mockContentView, nutupaneMock, host;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
@@ -8,15 +8,9 @@ describe('Controller: ContentHostErrataController', function() {
         mockErratum = {
             errata_id: "RHSA-1024"
         };
-        mockContentHost = {
-            uuid: 5
-        };
         mockTask = {
             pending: true,
             id: 7
-        };
-        mockHost = {
-            id: 123
         };
         mockContentView = {
             id: 5,
@@ -26,6 +20,15 @@ describe('Controller: ContentHostErrataController', function() {
             setParams: function() {},
             refresh: function(){},
             load: function () {}
+        };
+        host = {
+            id: 5,
+            organization_id: 'org-id-5',
+            content: {uuid: 4,
+                lifecycle_environment_id: 'env_id_stage',
+                content_view_id: 'content-view-id'
+            },
+            $promise: {then: function(callback) {callback(host)}}
         };
         Nutupane = function() {
             this.table = {
@@ -48,29 +51,24 @@ describe('Controller: ContentHostErrataController', function() {
     });
 
     beforeEach(inject(function($controller, $rootScope, $injector) {
-        $scope = $rootScope.$new();
+        $scope =  $rootScope.$new();
+        $scope.host = host;
+
         Environment = $injector.get('MockResource').$new();
         Organization = $injector.get('MockResource').$new();
-        ContentHost = $injector.get('MockResource').$new();
 
         Organization.mockResources.results[0].id = 'org-id-5';
         Organization.mockResources.results[0].default_content_view_id = 'def-content-view-id-77';
         Organization.mockResources.results[0].library_id = 'library-id';
 
 
+        Environment.mockResources.results[0].id = 'env_id_stage'
         Environment.mockResources.results[0].prior = {name: "Dev", id: 8999};
         Environment.mockResources.results[0].organization = Organization.mockResources.results[0];
         Environment.mockResources.results[0].library = false;
+        Environment.mockResources.results[0].$promise = {then: function(callback) {callback(Environment.mockResources.results[0])}};
 
-        ContentHost.mockResources.results[0].uuid = 5;
-        ContentHost.mockResources.results[0].content_view_id = 'content-view-id';
-        ContentHost.mockResources.results[0].environment = Environment.mockResources.results[0];
-        ContentHost.mockResources.results[0].content_view = mockContentView;
-        ContentHost.mockResources.results[0].host = mockHost;
-        mockContentHost =  ContentHost.mockResources.results[0];
-
-        $scope.contentHost = ContentHost.get({id: mockContentHost.id});
-        $scope.$stateParams = {contentHostId: $scope.contentHost.id};
+        $scope.$stateParams = {hostId: $scope.host.id};
 
         $controller('ContentHostErrataController', {$scope: $scope,
                                                HostErratum: HostErratum,
@@ -88,7 +86,7 @@ describe('Controller: ContentHostErrataController', function() {
         spyOn($scope.detailsTable, "selectAll");
         spyOn($scope, "transitionTo");
         $scope.applySelected();
-        expect(HostErratum.apply).toHaveBeenCalledWith({id: mockHost.id, errata_ids: [mockErratum.errata_id]},
+        expect(HostErratum.apply).toHaveBeenCalledWith({id: host.id, errata_ids: [mockErratum.errata_id]},
                                                          jasmine.any(Function));
         expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.details.tasks.details', {taskId: mockTask.id});
         expect($scope.detailsTable.selectAll).toHaveBeenCalledWith(false);
@@ -98,7 +96,7 @@ describe('Controller: ContentHostErrataController', function() {
         spyOn(nutupaneMock, 'setParams');
         spyOn(nutupaneMock, 'refresh');
         $scope.refreshErrata('current');
-        expect(nutupaneMock.setParams).toHaveBeenCalledWith({id: mockHost.id});
+        expect(nutupaneMock.setParams).toHaveBeenCalledWith({id: host.id});
         expect(nutupaneMock.refresh).toHaveBeenCalled();
     });
 
@@ -106,8 +104,8 @@ describe('Controller: ContentHostErrataController', function() {
         spyOn(nutupaneMock, 'setParams');
         spyOn(nutupaneMock, 'refresh');
         $scope.refreshErrata('prior');
-        expect(nutupaneMock.setParams).toHaveBeenCalledWith({id: mockHost.id,
-            content_view_id: $scope.contentHost.content_view_id, environment_id: $scope.contentHost.environment.prior.id});
+        expect(nutupaneMock.setParams).toHaveBeenCalledWith({id: host.id,
+            content_view_id: $scope.host.content.content_view_id, environment_id: Environment.mockResources.results[0].prior.id});
         expect(nutupaneMock.refresh).toHaveBeenCalled();
     });
 
@@ -115,7 +113,7 @@ describe('Controller: ContentHostErrataController', function() {
         spyOn(nutupaneMock, 'setParams');
         spyOn(nutupaneMock, 'refresh');
         $scope.refreshErrata('library');
-        expect(nutupaneMock.setParams).toHaveBeenCalledWith({id: mockHost.id,
+        expect(nutupaneMock.setParams).toHaveBeenCalledWith({id: host.id,
             content_view_id: Organization.mockResources.results[0].default_content_view_id,
             environment_id: Organization.mockResources.results[0].library_id});
         expect(nutupaneMock.refresh).toHaveBeenCalled();
@@ -129,13 +127,13 @@ describe('Controller: ContentHostErrataController', function() {
         expect($scope.errataOptions.length).toBe(3);
         expect(defaultLib.environment_id).toBe(Organization.mockResources.results[0].library_id);
         expect(defaultLib.content_view_id).toBe(Organization.mockResources.results[0].default_content_view_id);
-        expect(prior.environment_id).toBe( ContentHost.mockResources.results[0].environment.prior.id);
-        expect(prior.content_view_id).toBe( ContentHost.mockResources.results[0].content_view_id);
+        expect(prior.environment_id).toBe(Environment.mockResources.results[0].prior.id);
+        expect(prior.content_view_id).toBe(host.content.content_view_id);
     });
 
     it("By default should have 3 options, with appropriate values after setupOptions", function() {
         var defaultLib, prior;
-        $scope.setupErrataOptions($scope.contentHost);
+        $scope.setupErrataOptions($scope.host);
 
         defaultLib = _.find($scope.errataOptions, function(opt) { return opt.label === 'library'; });
         prior = _.find($scope.errataOptions, function(opt) { return opt.label === 'prior'; });
@@ -143,15 +141,15 @@ describe('Controller: ContentHostErrataController', function() {
         expect($scope.errataOptions.length).toBe(3);
         expect(defaultLib.environment_id).toBe(Organization.mockResources.results[0].library_id);
         expect(defaultLib.content_view_id).toBe(Organization.mockResources.results[0].default_content_view_id);
-        expect(prior.environment_id).toBe( ContentHost.mockResources.results[0].environment.prior.id);
-        expect(prior.content_view_id).toBe( ContentHost.mockResources.results[0].content_view_id);
+        expect(prior.environment_id).toBe(Environment.mockResources.results[0].prior.id);
+        expect(prior.content_view_id).toBe(host.content.content_view_id);
     });
 
 
     it("If no prior, do not include it as an option", function() {
         Environment.mockResources.results[0].library = true;
-        $scope.contentHost.environment.library = true;
-        $scope.setupErrataOptions($scope.contentHost);
+        $scope.host.content['lifecycle_environment_library?'] = true;
+        $scope.setupErrataOptions($scope.host);
 
         var defaultLib = _.find($scope.errataOptions, function(opt) { return opt.label === 'library'; }),
         prior = _.find($scope.errataOptions, function(opt) { return opt.label === 'prior'; });
@@ -164,10 +162,10 @@ describe('Controller: ContentHostErrataController', function() {
 
     it("If already the default content view,, do not include it as an option", function() {
         Environment.mockResources.results[0].library = true;
-        $scope.contentHost.environment.library = true;
-        $scope.contentHost.content_view_id = Organization.mockResources.results[0].default_content_view_id
-        $scope.contentHost.content_view = {default: true};
-        $scope.setupErrataOptions($scope.contentHost);
+        $scope.host.content['lifecycle_environment_library?'] = true;
+        $scope.host.content.content_view_id = Organization.mockResources.results[0].default_content_view_id
+        $scope.host.content['content_view_default?'] = true;
+        $scope.setupErrataOptions($scope.host);
 
         var defaultLib = _.find($scope.errataOptions, function(opt) { return opt.label === 'library'; }),
         prior = _.find($scope.errataOptions, function(opt) { return opt.label === 'prior'; });
@@ -176,8 +174,5 @@ describe('Controller: ContentHostErrataController', function() {
         expect(defaultLib).toBe(undefined);
         expect(prior).toBe(undefined);
      });
-
-
-
 
 });

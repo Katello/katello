@@ -9,15 +9,15 @@
 
   <tbody>
     <tr bst-table-row
-        ng-repeat="contentHost in contentHostTable.rows"
-        row-select="contentHost"
-        active-row="stateIncludes('content-hosts.details', {contentHostId: contentHost.uuid})"
+        ng-repeat="host in contentHostTable.rows"
+        row-select="host"
+        active-row="stateIncludes('content-hosts.details', {hostId: host.id})"
         ng-controller="ContentHostStatusController">
       <td bst-table-cell>
-        <span class="fa fa-circle" ng-class="contentHostTable.getStatusColor(contentHost.entitlementStatus)">
+        <span class="fa fa-circle" ng-class="contentHostTable.getSubscriptionStatusColor(host.subscription_status)">
         </span>
-        <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
-          {{ contentHost.name }}
+        <a ui-sref="content-hosts.details.info({hostId: host.id})">
+          {{ host.name }}
         </a>
       </td>
     </tr>

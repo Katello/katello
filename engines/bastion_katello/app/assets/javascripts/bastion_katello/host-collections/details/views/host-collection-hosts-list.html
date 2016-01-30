@@ -32,19 +32,19 @@
       </thead>
 
       <tbody>
-        <tr bst-table-row ng-repeat="contentHost in detailsTable.rows">
+        <tr bst-table-row ng-repeat="host in detailsTable.rows">
           <td class="row-select">
             <input type="checkbox"
-                   ng-model="contentHost.selected"
-                   ng-change="itemSelected(contentHost)"/>
+                   ng-model="host.selected"
+                   ng-change="itemSelected(host)"/>
           </td>
           <td bst-table-cell >
-            <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
-              {{ contentHost.name}}
+            <a ui-sref="content-hosts.details.info({hostId: host.id})">
+              {{ host.name}}
             </a>
           </td>
-          <td bst-table-cell >{{ contentHost.environment.name}}</td>
-          <td bst-table-cell >{{ contentHost.content_view.name}}</td>
+          <td bst-table-cell >{{ host.content.lifecycle_environment_name}}</td>
+          <td bst-table-cell >{{ host.content.content_view_name}}</td>
         </tr>
 
       </tbody>

@@ -4,7 +4,7 @@ object @resource
 
 node(:id) { |resource| resource.uuid }
 attributes :id => :katello_id
-attributes :uuid, :name, :description
+attributes :uuid, :name, :description, :host_id
 attributes :location
 attributes :content_view_id
 attributes :distribution
