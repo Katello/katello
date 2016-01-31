@@ -172,6 +172,7 @@ module Katello
     end
 
     def test_install_consumer_errata
+      skip "skip until https://pulp.plan.io/issues/1604 is resolved"
       erratum_id = RepositorySupport.repo.errata_json.find { |errata| errata['id'] == 'RHEA-2010:0002' }['id']
       profile = [{"vendor" => "FedoraHosted", "name" => "elephant",
                   "version" => "0.3", "release" => "0.8",
