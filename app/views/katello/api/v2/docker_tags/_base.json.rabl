@@ -1,7 +1,7 @@
 object @resource
 
 attributes :id, :name, :full_name
-attributes :repository_id, :image_id
+attributes :repository_id, :manifest_id
 
 child :repository => :repository do
   attributes :id, :name, :full_path

@@ -4,8 +4,8 @@ module Katello
   class Api::V2::DockerTagsControllerTest < ActionController::TestCase
     def models
       @repo = Repository.find(katello_repositories(:redis))
-      @image = @repo.docker_images.create!(:image_id => "abc123", :uuid => "123")
-      @tag = @repo.docker_tags.create!(:name => "wat", :docker_image => @image)
+      @manifest = @repo.docker_manifests.create!(:name => "abc123", :uuid => "123xyz")
+      @tag = @repo.docker_tags.create!(:name => "wat", :docker_manifest => @manifest)
     end
 
     def setup
