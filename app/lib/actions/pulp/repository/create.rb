@@ -41,8 +41,13 @@ module Actions
 
           if input[:with_importer]
             case input[:content_type]
-            when ::Katello::Repository::YUM_TYPE,
-                 ::Katello::Repository::FILE_TYPE
+            when ::Katello::Repository::YUM_TYPE
+              importer.feed            = input[:feed]
+              importer.ssl_ca_cert     = input[:ssl_ca_cert]
+              importer.ssl_client_cert = input[:ssl_client_cert]
+              importer.ssl_client_key  = input[:ssl_client_key]
+              importer.download_policy = input[:download_policy]
+            when ::Katello::Repository::FILE_TYPE
               importer.feed            = input[:feed]
               importer.ssl_ca_cert     = input[:ssl_ca_cert]
               importer.ssl_client_cert = input[:ssl_client_cert]
