@@ -223,6 +223,7 @@ module Katello
         'yum',
         true,
         nil,
+        nil,
         nil
       ])
 
@@ -252,6 +253,7 @@ module Katello
         nil,
         'yum',
         true,
+        nil,
         nil,
         nil
       ])
@@ -287,6 +289,7 @@ module Katello
         'yum',
         true,
         key,
+        nil,
         nil
       ])
       product.expect(:organization, @organization)
@@ -313,7 +316,8 @@ module Katello
         'yum',
         true,
         nil,
-        'sha256'
+        'sha256',
+        nil
       ])
 
       product.expect(:editable?, @product.editable?)
@@ -334,6 +338,37 @@ module Katello
       end
     end
 
+    def test_create_with_download_policy
+      product = MiniTest::Mock.new
+      product.expect(:add_repo, @repository, [
+        'Fedora_Repository',
+        'Fedora Repository',
+        nil,
+        'yum',
+        true,
+        nil,
+        nil,
+        'on_demand'
+      ])
+
+      product.expect(:editable?, @product.editable?)
+      product.expect(:gpg_key, nil)
+      product.expect(:organization, @organization)
+      product.expect(:redhat?, false)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
+
+      Product.stub(:find, product) do
+        post :create, :name => 'Fedora Repository',
+                      :product_id => @product.id,
+                      :url => '',
+                      :content_type => 'yum',
+                      :download_policy => 'on_demand'
+
+        assert_response :success
+        assert_template 'api/v2/repositories/show'
+      end
+    end
+
     def test_create_with_protected_true
       product = MiniTest::Mock.new
       product.expect(:add_repo, @repository, [
@@ -342,6 +377,7 @@ module Katello
         'http://www.google.com',
         'yum',
         false,
+        nil,
         nil,
         nil
       ])
@@ -374,6 +410,7 @@ module Katello
         'http://hub.registry.com',
         'docker',
         true,
+        nil,
         nil,
         nil
       ])

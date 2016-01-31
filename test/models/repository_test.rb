@@ -37,6 +37,7 @@ module Katello
     def test_docker_repository_docker_upstream_name_url
       @repo.unprotected = true
       @repo.content_type = 'docker'
+      @repo.download_policy = nil
       @repo.docker_upstream_name = ""
       @repo.url = "http://registry.com"
       refute @repo.valid?
@@ -55,6 +56,7 @@ module Katello
     def test_docker_repository_docker_upstream_name_format
       @repo.unprotected = true
       @repo.content_type = 'docker'
+      @repo.download_policy = nil
       @repo.docker_upstream_name = 'valid'
       assert @repo.valid?
       @repo.docker_upstream_name = 'Invalid'
@@ -82,9 +84,27 @@ module Katello
     def test_docker_full_path
       full_path = @repo.full_path
       @repo.content_type = 'docker'
+      @repo.download_policy = nil
       refute_equal full_path, @repo.full_path
       @repo.pulp_id = "abc123"
       assert @repo.full_path =~ /abc123/
+    end
+
+    def test_download_policy
+      @repo.content_type = 'yum'
+
+      @repo.download_policy = 'immediate'
+      assert @repo.valid?
+      @repo.download_policy = 'on_demand'
+      assert @repo.valid?
+
+      @repo.download_policy = 'invalid'
+      refute @repo.valid?
+      assert @repo.errors.include?(:download_policy)
+
+      @repo.content_type = 'puppet'
+      refute @repo.valid?
+      assert @repo.errors.include?(:download_policy)
     end
 
     def test_unique_repository_label_per_product_and_environment
@@ -109,6 +129,7 @@ module Katello
 
     def test_content_type
       @repo.content_type = "puppet"
+      @repo.download_policy = nil
       assert @repo.save
       assert_equal "puppet", Repository.find(@repo.id).content_type
     end
@@ -120,6 +141,7 @@ module Katello
       @repo.content_type = Repository::DOCKER_TYPE
       @repo.docker_upstream_name = "haha"
       @repo.unprotected = true
+      @repo.download_policy = nil
       assert @repo.save
       assert @repo.pulp_id.ends_with?('pulp-id')
     end
@@ -130,6 +152,7 @@ module Katello
       @repo.content_type = Repository::DOCKER_TYPE
       @repo.docker_upstream_name = "haha"
       @repo.unprotected = true
+      @repo.download_policy = nil
       assert @repo.save
       @repo.unprotected = false
       refute @repo.save
@@ -145,6 +168,7 @@ module Katello
     def test_puppet_type_pulp_id
       @repo.pulp_id = 'PULP-ID'
       @repo.content_type = Repository::PUPPET_TYPE
+      @repo.download_policy = nil
       assert @repo.save
       assert @repo.pulp_id.ends_with?('PULP-ID')
     end
@@ -380,6 +404,7 @@ module Katello
     def test_create_clone_preserve_type
       @fedora_17_library_library_view.stubs(:checksum_type).returns(nil)
       @fedora_17_library_library_view.content_type = 'file'
+      @fedora_17_library_library_view.download_policy = nil
       @fedora_17_library_library_view.save!
       clone = @fedora_17_library_library_view.create_clone(:environment => @staging, :content_view => @library_dev_staging_view)
       assert clone.id

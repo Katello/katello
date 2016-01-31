@@ -24,6 +24,7 @@ module Actions
                                         unprotected: repository.unprotected,
                                         checksum_type: repository.checksum_type,
                                         path: path,
+                                        download_policy: repository.download_policy,
                                         with_importer: true)
 
             return if create_action.error

@@ -6,6 +6,7 @@ FactoryGirl.define do
     sequence(:content_id)
     sequence(:relative_path) { |n| "/ACME_Corporation/DEV/Repo#{n}" }
     url "http://localhost/foo"
+    download_policy "on_demand"
 
     trait :fedora_17_el6 do
       name "Fedora 17 el6"
@@ -28,14 +29,17 @@ FactoryGirl.define do
       name "dockeruser/repo"
       label "dockeruser_repo"
       relative_path "empty_organization-fedora_label-dockeruser_repo"
+      download_policy ""
     end
 
     trait :puppet do
       content_type "puppet"
+      download_policy ""
     end
 
     trait :iso do
       content_type "file"
+      download_policy ""
     end
 
     factory :docker_repository, traits: [:docker]
