@@ -8,7 +8,6 @@
   </a>
 
   <div class="fr">
-
     <button class="btn btn-default"
             ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})"
             ng-hide="repository.content_type !== 'yum' || product.readonly">
@@ -25,6 +24,12 @@
             ui-sref="products.details.repositories.manage-content.docker-images({productId: product.id, repositoryId: repository.id})"
             ng-hide="repository.content_type !== 'docker' || product.readonly">
       <span translate>Manage Docker Images</span>
+    </button>
+
+    <button class="btn btn-default"
+            ui-sref="products.details.repositories.manage-ostree-branches({productId: product.id, repositoryId: repository.id})"
+            ng-hide="repository.content_type !== 'ostree' || product.readonly">
+      <span translate>Manage Branches</span>
     </button>
 
     <button class="btn btn-default"
@@ -229,7 +234,7 @@
             </a>
           </td>
         </tr>
-        <tr ng-show="repository.content_type == 'yum'">
+        <tr ng-show="repository.content_type === 'yum'">
           <td translate>Package Groups</td>
           <td class="align-center">
             <a ui-sref="products.details.repositories.manage-content.package-groups({productId: product.id, repositoryId: repository.id})">
@@ -237,7 +242,7 @@
             </a>
           </td>
         </tr>
-        <tr ng-show="repository.content_type == 'puppet'">
+        <tr ng-show="repository.content_type === 'puppet'">
           <td translate>Puppet Modules</td>
           <td class="align-center">
             <a ui-sref="products.details.repositories.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})">
@@ -245,21 +250,47 @@
             </a>
           </td>
         </tr>
-        <tr ng-show="repository.content_type == 'docker'">
+        <tr ng-show="repository.content_type === 'docker'">
           <td translate>Docker Images</td>
           <td class="align-center">{{ repository.content_counts.docker_image || 0 }}</td>
         </tr>
-        <tr ng-show="repository.content_type == 'docker'">
+        <tr ng-show="repository.content_type === 'docker'">
           <td translate>Docker Tags</td>
           <td class="align-center">{{ repository.content_counts.docker_tag || 0 }}</td>
+        </tr>
+        <tr ng-show="repository.content_type === 'ostree'">
+          <td translate>OSTree Units</td>
+          <td class="align-center">{{ repository.content_counts.ostree || 0 }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="divider" ng-if="repository.content_type === 'ostree'"/>
+  </section>
+
+  <section  ng-if="repository.content_type === 'ostree'">
+      <table class="table table-striped">
+      <thead>
+        <tr>
+          <th translate>Branches</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr ng-if ="repository.ostree_branches === undefined || repository.ostree_branches.length === 0">
+          <td translate> No Branches </td>
+        </tr>
+
+        <tr ng-repeat="branch in repository.ostree_branches" row-select="branch">
+          <td>{{ branch }}</td>
         </tr>
       </tbody>
     </table>
   </section>
 
-  <section class="well" ng-if="permitted('edit_products', product) && !product.redhat && repository.content_type != 'docker'">
-    <h5 translate ng-show="repository.content_type == 'puppet'">Upload Puppet Module</h5>
-    <h5 translate ng-show="repository.content_type == 'yum'">Upload Package</h5>
+  <section class="well" ng-if="permitted('edit_products', product) && !product.redhat && repository.content_type !== 'docker' && repository.content_type !== 'ostree'">
+    <h5 translate ng-show="repository.content_type === 'puppet'">Upload Puppet Module</h5>
+    <h5 translate ng-show="repository.content_type === 'yum'">Upload Package</h5>
 
     <div bst-alerts success-messages="uploadSuccessMessages" error-messages="uploadErrorMessages"></div>
 

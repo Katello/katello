@@ -4,6 +4,7 @@ class Setting::Katello < Setting
 
     self.transaction do
       [
+        self.set('default_cdn_ostree_branch_name', N_("Name of the default OSTree branch when enabling a Red Hat OSTree repo"), 'rhel-atomic-host/7/x86_64/standard'),
         self.set('katello_default_provision', N_("Default provisioning template for new Operating Systems"), 'Katello Kickstart Default'),
         self.set('katello_default_finish', N_("Default finish template for new Operating Systems"), 'Katello Kickstart Default Finish'),
         self.set('katello_default_user_data', N_("Default user data for new Operating Systems"), 'Katello Kickstart Default User Data'),
