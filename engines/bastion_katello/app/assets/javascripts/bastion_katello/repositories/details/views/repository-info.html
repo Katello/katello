@@ -246,8 +246,8 @@
           </td>
         </tr>
         <tr ng-show="repository.content_type == 'docker'">
-          <td translate>Docker Images</td>
-          <td class="align-center">{{ repository.content_counts.docker_image || 0 }}</td>
+            <td translate>Docker Manifests</td>
+            <td class="align-center">{{ repository.content_counts.docker_manifest || 0 }}</td>
         </tr>
         <tr ng-show="repository.content_type == 'docker'">
           <td translate>Docker Tags</td>
