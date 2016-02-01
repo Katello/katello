@@ -5,7 +5,10 @@ extends 'katello/api/v2/common/timestamps'
 
 attributes :content_type
 attributes :docker_upstream_name
-attributes :unprotected, :full_path, :checksum_type, :container_repository_name, :download_policy
+attributes :unprotected, :full_path, :checksum_type, :container_repository_name
+if @resource.yum?
+  attributes :download_policy
+end
 attributes :url,
            :relative_path
 extends 'katello/api/v2/repositories/base'
