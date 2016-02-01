@@ -52,6 +52,7 @@ module Actions
             when ::Katello::Repository::DOCKER_TYPE
               importer.upstream_name   = input[:docker_upstream_name] if input[:docker_upstream_name]
               importer.feed            = input[:feed]
+              importer.enable_v1       = false
             end
           end
           importer
