@@ -84,6 +84,8 @@ module Katello
       :allow_blank => false,
       :message => ->(_, _) { _("must be one of the following: %s") % Katello::RepositoryTypeManager.repository_types.keys.join(', ') }
     }
+    validates :download_policy, inclusion: { in: ::Runcible::Models::Importer::DOWNLOAD_POLICIES }, if: :yum?
+    validate :ensure_no_download_policy, if: ->o { !o.yum? }
     validate :ensure_valid_docker_attributes, :if => :docker?
     validate :ensure_docker_repo_unprotected, :if => :docker?
 
@@ -570,6 +572,12 @@ module Katello
       unless unprotected
         errors.add(:base, N_("Docker Repositories are not protected at this time. " \
                              "They need to be published via http to be available to containers."))
+      end
+    end
+
+    def ensure_no_download_policy
+      if !yum? && download_policy.present?
+        errors.add(:download_policy, N_("cannot be set for non-yum repositories."))
       end
     end
 
