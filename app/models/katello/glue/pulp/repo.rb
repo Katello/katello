@@ -62,6 +62,7 @@ module Katello
       end
     end
 
+    # rubocop:disable Metrics/ModuleLength
     module InstanceMethods
       # This module is too long. See https://projects.theforeman.org/issues/12584.
       def last_sync
@@ -144,6 +145,16 @@ module Katello
           options[:upstream_name] = self.docker_upstream_name
           options[:feed] = self.url if self.respond_to?(:url)
           Runcible::Models::DockerImporter.new(options)
+        when Repository::OSTREE_TYPE
+          options = {
+            :ssl_ca_cert => self.feed_ca,
+            :ssl_client_cert => self.feed_cert,
+            :ssl_client_key => self.feed_key
+          }
+
+          options[:feed] = self.url if self.respond_to?(:url)
+          options[:branches] = self.ostree_branch_names
+          Runcible::Models::OstreeImporter.new(options)
         else
           fail _("Unexpected repo type %s") % self.content_type
         end
@@ -184,6 +195,12 @@ module Katello
           options = { :protected => !self.unprotected, :id => self.pulp_id, :auto_publish => true }
           docker_dist = Runcible::Models::DockerDistributor.new(options)
           [docker_dist, nodes_distributor]
+        when Repository::OSTREE_TYPE
+          options = { :id => self.pulp_id,
+                      :auto_publish => true,
+                      :relative_path => relative_path }
+          dist = Runcible::Models::OstreeDistributor.new(options)
+          [dist]
         else
           fail _("Unexpected repo type %s") % self.content_type
         end
@@ -203,6 +220,8 @@ module Katello
           Runcible::Models::PuppetImporter::ID
         when Repository::DOCKER_TYPE
           Runcible::Models::DockerImporter::ID
+        when Repository::OSTREE_TYPE
+          Runcible::Models::OstreeImporter::ID
         else
           fail _("Unexpected repo type %s") % self.content_type
         end
@@ -465,6 +484,7 @@ module Katello
       end
 
       def pulp_update_needed?
+        return true if ostree?
         changeable_attributes = %w(url unprotected checksum_type docker_upstream_name)
         changeable_attributes << "name" if docker?
         changeable_attributes.any? { |key| previous_changes.key?(key) }
@@ -663,6 +683,8 @@ module Katello
           "puppet_module"
         when Repository::DOCKER_TYPE
           "docker_image"
+        when Repository::OSTREE_TYPE
+          "ostree"
         end
       end
 
