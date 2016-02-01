@@ -4,6 +4,9 @@
 //= require "bastion_katello/content-hosts/content-hosts.module.js"
 //= require_tree "./content-hosts"
 
+//= require "bastion_katello/hosts/hosts.module.js"
+//= require_tree "./hosts"
+
 //= require "bastion_katello/subscriptions/subscriptions.module.js"
 //= require_tree "./subscriptions"
 

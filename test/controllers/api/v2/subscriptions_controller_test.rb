@@ -25,7 +25,6 @@ module Katello
       login_user(User.find(users(:admin)))
       System.any_instance.stubs(:subscribe).returns(true)
       System.any_instance.stubs(:unsubscribe).returns(true)
-      System.any_instance.stubs(:unsubscribe_all).returns(true)
       System.any_instance.stubs(:filtered_pools).returns([])
       System.any_instance.stubs(:releaseVer).returns(1)
       System.any_instance.stubs(:entitlements).returns([])
@@ -61,39 +60,6 @@ module Katello
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
         get :index, :organization_id => @organization.id
-      end
-    end
-
-    def test_available
-      get :available, :system_id => @system.uuid
-
-      assert_response :success
-      assert_template 'api/v2/subscriptions/index'
-    end
-
-    def test_available_protected
-      allowed_perms = [@read_permission]
-      denied_perms = [@attach_permission, @unattach_permission, @import_permission, @delete_permission]
-
-      assert_protected_action(:available, allowed_perms, denied_perms) do
-        get :available, :system_id => @system.uuid
-      end
-    end
-
-    def test_destroy
-      System.any_instance.expects(:unsubscribe)
-      delete :destroy, :system_id => @system.uuid, :subscriptions => [:subscription => {:id => 1}]
-
-      assert_response :success
-      assert_template 'katello/api/v2/subscriptions/index'
-    end
-
-    def test_destroy_protected
-      allowed_perms = [@unattach_permission]
-      denied_perms = [@read_permission, @attach_permission, @import_permission, @delete_permission]
-
-      assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        delete :destroy, :system_id => @system.uuid, :subscriptions => [:subscription => {:id => 1}]
       end
     end
 

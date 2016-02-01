@@ -13,8 +13,8 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostBaseSubscriptionsController',
-    ['$scope', '$location', 'translate', 'CurrentOrganization', 'Subscription', 'ContentHost',
-    function ($scope, $location, translate, CurrentOrganization, Subscription, ContentHost) {
+    ['$scope', '$location', 'translate', 'CurrentOrganization', 'Subscription', 'ContentHost', 'HostSubscription',
+    function ($scope, $location, translate, CurrentOrganization, Subscription, ContentHost, HostSubscription) {
 
         function success() {
             $scope.subscription.workingMode = false;
@@ -33,7 +33,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostBaseSubscriptions
 
         $scope.autoAttachSubscriptions = function () {
             $scope.subscription.workingMode = true;
-            ContentHost.refreshSubscriptions({uuid: $scope.contentHost.uuid}, success, failure);
+            HostSubscription.autoAttach({id: $scope.contentHost.host.id}, success, failure);
         };
 
     }]

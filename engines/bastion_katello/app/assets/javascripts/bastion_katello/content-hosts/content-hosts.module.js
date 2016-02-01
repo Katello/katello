@@ -14,6 +14,7 @@ angular.module('Bastion.content-hosts', [
     'Bastion.organizations',
     'Bastion.subscriptions',
     'Bastion.capsules',
+    'Bastion.hosts',
     'Bastion.errata',
     'Bastion.host-collections'
 ]);

@@ -59,6 +59,10 @@ module Katello
         end
       end
 
+      def content_view_version
+        content_view.version(lifecycle_environment)
+      end
+
       def available_releases
         self.content_view.version(self.lifecycle_environment).available_releases
       end

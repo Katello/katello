@@ -296,6 +296,50 @@ module Katello
       assert view.check_ready_to_destroy!
     end
 
+    def test_check_composite_action_allowed_when_setting_enabled
+      # Testing composite content view restrictions (Setting: restrict_composite_view=true)
+      Setting.create(:name => 'restrict_composite_view', :category => 'Setting::Katello',
+                     :settings_type => 'boolean', :default => true)
+
+      library = KTEnvironment.find(katello_environments(:library))
+      composite = ContentView.find(katello_content_views(:composite_view))
+      # version with no envs
+      library_view_version_1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
+      # version in library & dev
+      library_dev_view_version = ContentViewVersion.find(katello_content_view_versions(:library_dev_view_version))
+
+      composite.components = [library_view_version_1]
+      composite.save!
+      assert_raises RuntimeError do
+        composite.check_composite_action_allowed!(library)
+      end
+
+      composite.components = [library_dev_view_version]
+      composite.save!
+      assert composite.check_composite_action_allowed!(library)
+    end
+
+    def test_check_composite_action_allowed_when_setting_disabled
+      # Testing the default behavior (Setting: restrict_composite_view=false)
+      Setting.create(:name => 'restrict_composite_view', :category => 'Setting::Katello',
+                     :settings_type => 'boolean', :default => false)
+
+      library = KTEnvironment.find(katello_environments(:library))
+      composite = ContentView.find(katello_content_views(:composite_view))
+      # version with no envs
+      library_view_version_1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
+      # version in library & dev
+      library_dev_view_version = ContentViewVersion.find(katello_content_view_versions(:library_dev_view_version))
+
+      composite.components = [library_view_version_1]
+      composite.save!
+      assert composite.check_composite_action_allowed!(library)
+
+      composite.components = [library_dev_view_version]
+      composite.save!
+      assert composite.check_composite_action_allowed!(library)
+    end
+
     def test_next_version
       cv = ContentView.create!(:name => "test",
                                :organization => @organization

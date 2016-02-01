@@ -130,7 +130,7 @@ module Katello
     end
 
     def self.in_organization(org)
-      where(:environment_id => org.kt_environments)
+      where("#{Repository.table_name}.environment_id" => org.kt_environments.pluck("#{KTEnvironment.table_name}.id"))
     end
 
     def self.in_environment(env_id)
@@ -179,15 +179,12 @@ module Katello
     end
 
     def other_repos_with_same_product_and_content
-      list = Repository.in_product(Product.find(self.product.id)).where(:content_id => self.content_id).all
-      list.destroy(self)
-      list
+      Repository.in_product(Product.find(self.product.id)).where(:content_id => self.content_id)
+          .where("#{self.class.table_name}.id != #{self.id}")
     end
 
     def other_repos_with_same_content
-      list = Repository.where(:content_id => self.content_id).all
-      list.destroy(self)
-      list
+      Repository.where(:content_id => self.content_id).where("#{self.class.table_name}.id != #{self.id}")
     end
 
     def yum_gpg_key_url

@@ -8,12 +8,15 @@
  * @requires Nutupane
  */
 angular.module('Bastion.content-hosts').controller('ContentHostEventsController',
-    ['$scope', 'translate', 'ContentHost', 'Nutupane',
-    function ($scope, translate, ContentHost, Nutupane) {
-        var params = {id: $scope.$stateParams.contentHostId },
-            nutupane = new Nutupane(ContentHost, params, 'events');
+    ['$scope', 'translate', 'HostSubscription', 'Nutupane',
+    function ($scope, translate, HostSubscription, Nutupane) {
+        $scope.eventTable = {};
+        $scope.contentHost.$promise.then(function() {
+            var params = {id: $scope.contentHost.host.id },
+                nutupane = new Nutupane(HostSubscription, params, 'events');
 
-        $scope.eventTable = nutupane.table;
-
+            $scope.eventTable = nutupane.table;
+            nutupane.refresh();
+        });
     }]
 );

@@ -167,28 +167,33 @@ module Actions
           copy_outputs
         end
 
-        def puppet_module_names(uuids)
-          ::Katello::PuppetModule.id_search(uuids).map(&:name)
+        def puppet_module_names(ids)
+          find_puppet_modules(ids).pluck(:name).uniq
         end
 
         def remove_puppet_names(repo, names)
           plan_action(Pulp::Repository::RemovePuppetModule, :pulp_id => repo.pulp_id, :clauses => {:unit => {:name => {'$in' => names}}})
         end
 
-        def copy_puppet_content(new_repo, puppet_module_uuids)
+        def copy_puppet_content(new_repo, puppet_module_ids)
           copy_outputs = []
-          unless puppet_module_uuids.blank?
-            remove_puppet_names(new_repo, puppet_module_names(puppet_module_uuids))
-            copy_outputs = puppet_module_uuids.map { |uuid| copy_puppet_module(new_repo, uuid).output }
+          unless puppet_module_ids.blank?
+            remove_puppet_names(new_repo, puppet_module_names(puppet_module_ids))
+            copy_outputs = puppet_module_ids.map { |module_id| copy_puppet_module(new_repo, module_id).output }
             plan_action(Pulp::ContentViewPuppetEnvironment::IndexContent, id: new_repo.id)
           end
           copy_outputs
         end
 
-        def copy_puppet_module(new_repo, uuid)
-          possible_repos = ::Katello::PuppetModule.find(uuid).repositories.in_organization(new_repo.organization).in_default_view
+        def find_puppet_modules(ids)
+          ::Katello::PuppetModule.with_identifiers(ids)
+        end
+
+        def copy_puppet_module(new_repo, module_id)
+          puppet_module = find_puppet_modules([module_id]).first
+          possible_repos = puppet_module.repositories.in_organization(new_repo.organization).in_default_view
           plan_action(Pulp::Repository::CopyPuppetModule, :source_pulp_id => possible_repos.first.pulp_id,
-                    :target_pulp_id => new_repo.pulp_id, :clauses =>  {'unit_id' => uuid}, :include_result => true)
+                    :target_pulp_id => new_repo.pulp_id, :clauses =>  {'unit_id' => puppet_module.uuid}, :include_result => true)
         end
 
         def plan_copy(action_class, source_repo, target_repo, clauses = nil, override_config = nil)

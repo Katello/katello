@@ -48,11 +48,11 @@ module Katello
         display_messages = []
 
         @host_collections.each do |host_collection|
-          pre_host_collection_count = host_collection.system_ids.count
-          host_collection.system_ids =  (host_collection.system_ids + @systems.collect { |s| s.id }).uniq
+          pre_host_collection_count = host_collection.host_ids.count
+          host_collection.host_ids =  (host_collection.host_ids + @systems.collect { |s| s.foreman_host.id }).uniq
           host_collection.save!
 
-          final_count = host_collection.system_ids.count - pre_host_collection_count
+          final_count = host_collection.host_ids.count - pre_host_collection_count
           display_messages << _("Successfully added %{count} content host(s) to host collection %{host_collection}.") %
               {:count => final_count, :host_collection => host_collection.name }
         end
@@ -71,11 +71,11 @@ module Katello
 
       unless params[:host_collection_ids].blank?
         @host_collections.each do |host_collection|
-          pre_host_collection_count = host_collection.system_ids.count
-          host_collection.system_ids =  (host_collection.system_ids - @systems.collect { |s| s.id }).uniq
+          pre_host_collection_count = host_collection.host_ids.count
+          host_collection.host_ids =  (host_collection.host_ids - @systems.collect { |s| s.host_id }).uniq
           host_collection.save!
 
-          final_count = pre_host_collection_count - host_collection.system_ids.count
+          final_count = pre_host_collection_count - host_collection.host_ids.count
           display_messages << _("Successfully removed %{count} content host(s) from host collection %{host_collection}.") %
               {:count => final_count, :host_collection => host_collection.name }
         end
@@ -202,18 +202,18 @@ module Katello
     end
 
     def validate_host_collection_membership_limit
-      max_content_hosts_exceeded = []
-      system_ids = @systems.collect { |i| i.id }
+      max_hosts_exceeded = []
+      host_ids = @systems.collect { |i| i.foreman_host.id }
 
       @host_collections.each do |host_collection|
-        computed_count = (host_collection.system_ids + system_ids).uniq.length
-        if !host_collection.unlimited_content_hosts && computed_count > host_collection.max_content_hosts
-          max_content_hosts_exceeded.push(host_collection.name)
+        computed_count = (host_collection.host_ids + host_ids).uniq.length
+        if !host_collection.unlimited_hosts && computed_count > host_collection.max_hosts
+          max_hosts_exceeded.push(host_collection.name)
         end
       end
 
-      unless max_content_hosts_exceeded.empty?
-        fail HttpErrors::BadRequest, _("Maximum number of content hosts exceeded for host collection(s): %s") % max_content_hosts_exceeded.join(', ')
+      unless max_hosts_exceeded.empty?
+        fail HttpErrors::BadRequest, _("Maximum number of content hosts exceeded for host collection(s): %s") % max_hosts_exceeded.join(', ')
       end
     end
 

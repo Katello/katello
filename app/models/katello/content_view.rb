@@ -453,7 +453,25 @@ module Katello
     def check_ready_to_publish!
       fail _("User must be logged in.") if ::User.current.nil?
       fail _("Cannot publish default content view") if default?
+      check_composite_action_allowed!(organization.library)
       check_distribution_conflicts!
+      true
+    end
+
+    def check_composite_action_allowed!(env)
+      if composite? && Setting['restrict_composite_view']
+        # verify that the composite's component view versions exist in the target environment.
+        components.each do |component|
+          unless component.environments.include?(env)
+            fail _("The action requested on this composite view cannot be performed until all of the "\
+                   "component content view versions have been promoted to the target environment: %{env}.  "\
+                   "This restriction is optional and can be modified in the Administrator -> Settings "\
+                   "page using the restrict_composite_view flag.") %
+                   { :env => env.name }
+          end
+        end
+      end
+      true
     end
 
     def check_remove_from_environment!(env)

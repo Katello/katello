@@ -38,6 +38,7 @@ module Actions
             end
           else
             host.get_status(::Katello::ErrataStatus).destroy
+            host.get_status(::Katello::SubscriptionStatus).destroy
           end
         end
 

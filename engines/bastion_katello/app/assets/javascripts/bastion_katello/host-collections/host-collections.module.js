@@ -69,24 +69,24 @@ angular.module('Bastion.host-collections').config(['$stateProvider', function ($
         collapsed: true,
         templateUrl: 'host-collections/details/views/host-collection-info.html'
     })
-    .state('host-collections.details.content-hosts', {
+    .state('host-collections.details.hosts', {
         abstract: true,
         collapsed: true,
-        templateUrl: 'host-collections/details/views/host-collection-content-hosts.html'
+        templateUrl: 'host-collections/details/views/host-collection-hosts.html'
     })
-    .state('host-collections.details.content-hosts.list', {
-        url: '/content-hosts',
+    .state('host-collections.details.hosts.list', {
+        url: '/hosts',
         permission: 'view_host_collections',
         collapsed: true,
-        controller: 'HostCollectionContentHostsController',
-        templateUrl: 'host-collections/details/views/host-collection-content-hosts-list.html'
+        controller: 'HostCollectionHostsController',
+        templateUrl: 'host-collections/details/views/host-collection-hosts-list.html'
     })
-    .state('host-collections.details.content-hosts.add', {
-        url: '/add-content-hosts',
+    .state('host-collections.details.hosts.add', {
+        url: '/add-hosts',
         permission: 'edit_host_collections',
         collapsed: true,
-        controller: 'HostCollectionAddContentHostsController',
-        templateUrl: 'host-collections/details/views/host-collection-add-content-hosts.html'
+        controller: 'HostCollectionAddHostsController',
+        templateUrl: 'host-collections/details/views/host-collection-add-hosts.html'
     })
     .state('host-collections.details.actions', {
         url: '/actions',

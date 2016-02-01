@@ -13,6 +13,9 @@ class Setting::Katello < Setting
         self.set('katello_default_ptable', N_("Default partitioning table for new Operating Systems"), 'Kickstart default'),
         self.set('content_action_accept_timeout', N_("Time in seconds to wait for a Host to pickup a remote action"), 20),
         self.set('content_action_finish_timeout', N_("Time in seconds to wait for a Host to finish a remote action"), 3600),
+        self.set('restrict_composite_view', N_("If set to true, a composite content view may not be published or "\
+                 "promoted, unless the component content view versions that it includes exist in the target environment."),
+                 false),
         self.set('pulp_sync_node_action_accept_timeout', N_("Time in seconds to wait for a pulp node to remote action"), 20),
         self.set('pulp_sync_node_action_finish_timeout', N_("Time in seconds to wait for a pulp node to finish sync"), 12.hours.to_i),
         self.set('check_services_before_actions', N_("Whether or not to check the status of backend services such as pulp and candlepin prior to performing some actions."), true),

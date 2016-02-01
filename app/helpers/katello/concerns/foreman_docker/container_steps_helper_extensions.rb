@@ -13,7 +13,7 @@ module Katello
                                      :class => "form-control spinner-form-control"
                                     )
           if spinner_id
-            spinner = image_tag("/assets/spinner.gif", :id => spinner_id, :class => "hide")
+            spinner = image_tag("spinner.gif", :id => spinner_id, :class => "hide")
             select + spinner
           else
             select

@@ -1,0 +1,15 @@
+<div class="card-pf">
+  <div class="card-pf-body">
+    <div class="progress-description" title="<%= disk['header'] %>">
+      <%= disk['header'] %>
+    </div>
+    <div class="progress progress-label-top-right">
+      <div class="progress-bar progress-bar-<%= disk['size_status'] %>" role="progressbar" aria-valuenow="<%= disk['percent'].delete('%') %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= disk['percent'] %>;" data-toggle="tooltip" title="<%= _('%s Used') % disk['used'] %>">
+        <span><strong><%= _('%{used} of %{total}') % {:used => disk['used'],:total => disk['total']} %></strong> Used</span>
+      </div>
+      <div class="progress-bar progress-bar-remaining" role="progressbar" aria-valuenow="<%= disk['available_percent'].delete('%') %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= disk['available_percent'] %>;" data-toggle="tooltip" title="<%= _('%s Available') % disk['available'] %>">
+        <span class="sr-only"><%= _('%s Available') % disk['available'] %></span>
+      </div>
+    </div>
+  </div>
+</div>

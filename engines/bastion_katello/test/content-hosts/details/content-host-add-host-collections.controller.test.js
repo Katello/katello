@@ -2,7 +2,8 @@ describe('Controller: ContentHostAddHostCollectionsController', function() {
     var $scope,
         $controller,
         translate,
-        ContentHost,
+        Host,
+        HostCollection,
         CurrentOrganization;
 
     beforeEach(module(
@@ -18,10 +19,12 @@ describe('Controller: ContentHostAddHostCollectionsController', function() {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q');
 
-        ContentHost = $injector.get('MockResource').$new();
+        Host = $injector.get('MockResource').$new();
+        HostCollection = $injector.get('MockResource').$new();
+
         $scope = $injector.get('$rootScope').$new();
 
-        ContentHost.saveHostCollections = function() {};
+        Host.updateHostCollections = function() {};
 
         CurrentOrganization = 'foo';
 
@@ -29,18 +32,29 @@ describe('Controller: ContentHostAddHostCollectionsController', function() {
             return message;
         };
 
+
+        $scope.contentHost = new Host({
+            uuid: 2,
+            hostCollections: [{id: 1, name: "lalala"}],
+            host_collection_ids: [1],
+            host: {
+                id: 1
+            }
+        });
+
+        $scope.contentHost.$promise = {
+            then: function (callback) {
+                callback($scope.contentHost);
+            }
+        };
+
         $controller('ContentHostAddHostCollectionsController', {
             $scope: $scope,
             $q: $q,
             translate: translate,
-            ContentHost: ContentHost,
+            Host: Host,
+            HostCollection: HostCollection,
             CurrentOrganization: CurrentOrganization
-        });
-
-        $scope.contentHost = new ContentHost({
-            uuid: 2,
-            hostCollections: [{id: 1, name: "lalala"}],
-            host_collection_ids: [1]
         });
     }));
 
@@ -49,13 +63,14 @@ describe('Controller: ContentHostAddHostCollectionsController', function() {
     });
 
     it("allows adding host collections to the content host", function() {
-        spyOn($scope.contentHost, '$update');
+        spyOn(Host, 'updateHostCollections');
 
         $scope.hostCollectionsTable.getSelected = function() {
             return [{id: 2, name: "hello!"}];
         };
 
         $scope.addHostCollections($scope.contentHost);
-        expect($scope.contentHost.$update).toHaveBeenCalledWith({id: 2}, jasmine.any(Function), jasmine.any(Function));
+        expect(Host.updateHostCollections).toHaveBeenCalledWith({id: 1}, {host_collection_ids: [1, 2]},
+            jasmine.any(Function), jasmine.any(Function));
     });
 });

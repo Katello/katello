@@ -1,4 +1,5 @@
 <span page-title ng-model="contentHost">{{ 'Packages for: ' | translate }} {{ contentHost.name }}</span>
+
 <section ng-hide="denied('edit_content_hosts', contentHost)" bst-feature-flag="remote_actions">
   <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
   <h4 translate>Package Actions</h4>
@@ -41,81 +42,45 @@
   </section>
 </section>
 
-<section>
+<div data-extend-template="layouts/details-nutupane.html">
   <h4 translate>Installed Packages</h4>
 
-  <div class="row">
-    <form>
-      <input type="text"
-             class="form-control filter-input"
-             placeholder="{{ 'Filter' | translate }}"
-             ng-model="currentPackagesTable.filter"/>
-    </form>
-    <span class="nutupane-info" translate>Showing {{ currentPackagesTable.resource.total }} Packages</span>
+  <span data-block="no-rows-message" translate>
+    The host has not reported any installed packages, registering with subscription-manager should cause these to be reported.
+  </span>
 
-    <div class="fr" ng-hide="denied('edit_content_hosts', contentHost)" bst-feature-flag="remote_actions">
-       <button class="btn btn-primary"
-               translate
-               ng-click="updateAll()"
-               ng-disabled="working">
-         Update All
-       </button>
+  <div data-block="actions" bst-feature-flag="remote_actions">
+    <div ng-hide="denied('edit_content_hosts', contentHost)" class="nutupane-actions fr">
+      <button class="btn btn-primary"
+              translate
+              ng-disabled="working || detailsTable.numSelected === 0"
+              ng-click="removeSelectedPackages()">
+        {{ 'Remove Selected' | translate }}
+      </button>
+      <button class="btn btn-primary"
+              translate
+              ng-disabled="working || detailsTable.numSelected === 0"
+              ng-click="updateAll()">
+        Update All
+      </button>
     </div>
   </div>
 
-  <p bst-alert="info" ng-show="currentPackagesTable.rows.length === 0">
-    <span translate>You currently do not have any Packages installed. You can use Package Actions above this message to install new Packages.</span>
-  </p>
+  <div data-block="table">
+    <table ng-class="{'table-mask': detailsTable.working}" class="table table-full table-striped">
+      <thead>
+      <tr bst-table-head row-select>
+        <th bst-table-column="name" translate>Installed Package</th>
+      </tr>
+      </thead>
 
-  <div class="current-packages" bst-table="currentPackagesTable" ng-show="currentPackagesTable.rows.length > 0">
-    <div bst-container-scroll data="currentPackagesTable.rows">
-      <div infinite-scroll="currentPackagesTable.nextPage()" infinite-scroll-container="'.current-packages .container-scroll-wrapper'">
-
-        <table ng-class="{'table-mask': currentPackagesTable.working}" class="table table-striped">
-          <thead>
-            <tr bst-table-head>
-              <th bst-table-column="name" translate>Installed Package</th>
-              <th bst-table-column="remove" bst-feature-flag="remote_actions" ng-hide="currentPackagesTable.contentHost.readonly">
-                <span translate>Remove</span>
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-              <tr bst-table-row ng-repeat="package in currentPackagesTable.rows | filter: currentPackagesTable.filter | limitTo: currentPackagesTable.limit" >
-              <td bst-table-cell>{{ package.nvrea }}</td>
-              <td bst-table-cell ng-hide="currentPackagesTable.contentHost.readonly" bst-feature-flag="remote_actions">
-
-                  <i class="active fa fa-remove-sign" ng-hide="package.removeTask" tooltip="{{ 'Remove' | translate }}"
-                     ng-click="currentPackagesTable.removePackage(package)"></i>
-
-                  <i class="fa fa-spinner fa-spin" ng-show="package.removeTask.pending"></i>
-                  <span ng-show="package.removeTask && !package.removeTask.pending">
-
-                    <i ng-show="currentPackagesTable.taskFailed(package.removeTask)" class="fa fa-exclamation-sign" tooltip="{{ 'Failed' | translate }}"></i>
-                    <i ng-hide="currentPackagesTable.taskFailed(package.removeTask)" class="fa fa-check-sign" tooltip="{{ 'Success' | translate }}"></i>
-
-                    <a ng-click="currentPackagesTable.openEventInfo(package.removeTask)" >
-                      <span translate ng-show="package.removeTask.affected_units == 1">
-                        {{ package.removeTask.affected_units }} package removed
-                      </span>
-
-                      <span translate ng-show="!package.removeTask.failed && package.removeTask.affected_units != 1">
-                        {{ package.removeTask.affected_units }} packages removed
-                      </span>
-
-                      <span translate ng-show="package.removeTask.failed">
-                          Package removal failed
-                      </span>
-                    </a>
-                  </span>
-              </td>
-
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <tbody>
+        <tr bst-table-row ng-repeat="package in detailsTable.rows" row-select="package">
+          <td class="row-select"></td>
+          <td bst-table-cell>{{ package.nvra }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-</section>
+</div>
+

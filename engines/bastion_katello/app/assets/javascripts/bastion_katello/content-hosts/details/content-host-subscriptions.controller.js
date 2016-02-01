@@ -13,25 +13,30 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Subscription', 'ContentHost', 'SubscriptionsHelper',
-    function ($scope, $location, translate, Nutupane, CurrentOrganization, Subscription, ContentHost, SubscriptionsHelper) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Subscription', 'ContentHost', 'HostSubscription', 'SubscriptionsHelper',
+    function ($scope, $location, translate, Nutupane, CurrentOrganization, Subscription, ContentHost, HostSubscription, SubscriptionsHelper) {
 
         var params = {
-            'id': $scope.$stateParams.contentHostId,
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
             'sort_order': 'ASC'
         };
 
-        $scope.contentNutupane = new Nutupane(ContentHost, params, 'subscriptions');
+        $scope.contentNutupane = new Nutupane(HostSubscription, params);
+        $scope.contentNutupane.table.initialLoad = false;
         $scope.detailsTable = $scope.contentNutupane.table;
-
         $scope.contentNutupane.masterOnly = true;
         $scope.isRemoving = false;
 
         $scope.groupedSubscriptions = {};
         $scope.$watch('detailsTable.rows', function (rows) {
             $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
+        });
+
+        $scope.contentHost.$promise.then(function() {
+            params.id = $scope.contentHost.host.id;
+            $scope.contentNutupane.setParams(params);
+            $scope.contentNutupane.load(true);
         });
 
         $scope.disableRemoveButton = function () {
@@ -43,7 +48,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
             selected = SubscriptionsHelper.getSelectedSubscriptions($scope.detailsTable);
 
             $scope.isRemoving = true;
-            ContentHost.removeSubscriptions({uuid: $scope.contentHost.uuid, 'subscriptions': selected}, function () {
+            HostSubscription.removeSubscriptions({id: $scope.contentHost.host.id, 'subscriptions': selected}, function () {
                 ContentHost.get({id: $scope.$stateParams.contentHostId}, function (host) {
                     $scope.$parent.contentHost = host;
                     $scope.contentNutupane.table.selectAll(false);

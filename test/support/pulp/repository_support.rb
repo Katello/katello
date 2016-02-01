@@ -3,7 +3,7 @@ require 'support/pulp/task_support'
 module Katello
   module RepositorySupport
     include TaskSupport
-
+    PULP_TMP_DIR = "/var/lib/pulp/published/puppet_katello_test"
     @repo_url = "file:///var/www/test_repos/zoo"
     @puppet_repo_url = "http://davidd.fedorapeople.org/repos/random_puppet/"
     @repo     = nil
@@ -27,8 +27,8 @@ module Katello
 
     def self.create_repo(repo_id)
       @repo = Repository.find(repo_id)
-      @repo.relative_path = '/test_path/'
-      @repo.url = @repo.content_type == 'puppet' ? @puppet_repo_url : @repo_url
+      @repo.relative_path = @repo.puppet? ? PULP_TMP_DIR : 'test_path'
+      @repo.url = @repo.puppet? ? @puppet_repo_url : @repo_url
 
       ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Create,
                                content_type: @repo.content_type,
@@ -43,6 +43,13 @@ module Katello
                                path: @repo.relative_path,
                                with_importer: true
                               )
+
+      if @repo.puppet?
+        ForemanTasks.sync_task(::Actions::Pulp::Repository::DistributorPublish,
+                               :pulp_id => @repo.pulp_id,
+                               :distributor_type_id => Runcible::Models::PuppetInstallDistributor.type_id)
+      end
+
       return @repo
     end
 
