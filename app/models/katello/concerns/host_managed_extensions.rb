@@ -12,13 +12,18 @@ module Katello
         alias_method_chain :smart_proxy_ids, :katello
 
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
-                               :dependent => :restrict_with_exception, :inverse_of => :foreman_host
+                               :dependent => :destroy, :inverse_of => :foreman_host
         belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hosts
 
         has_many :host_installed_packages, :class_name => "::Katello::HostInstalledPackage", :foreign_key => :host_id, :dependent => :destroy
         has_many :installed_packages, :class_name => "::Katello::InstalledPackage", :through => :host_installed_packages
 
+        has_many :host_collection_hosts, :class_name => "::Katello::HostCollectionHosts", :foreign_key => :host_id, :dependent => :destroy
+        has_many :host_collections, :class_name => "::Katello::HostCollection", :through => :host_collection_hosts
+
         scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
+        scoped_search :in => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id
+        scoped_search :in => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
       end
 
       def validate_media_with_capsule?
@@ -27,6 +32,10 @@ module Katello
 
       def rhsm_organization_label
         self.organization.label
+      end
+
+      def self.available_locks
+        [:update]
       end
 
       def smart_proxy_ids_with_katello
@@ -62,6 +71,22 @@ module Katello
         simple_packages.each do |simple_package|
           self.installed_packages.create!(:name => simple_package.name, :nvra => simple_package.nvra) unless existing_nvras.include?(simple_package.nvra)
         end
+      end
+
+      def subscription_status
+        @subscription_status ||= get_status(::Katello::SubscriptionStatus).status
+      end
+
+      def subscription_status_label(options = {})
+        @subscription_status_label ||= get_status(::Katello::SubscriptionStatus).to_label(options)
+      end
+
+      def errata_status
+        @errata_status ||= get_status(::Katello::ErrataStatus).status
+      end
+
+      def errata_status_label(options = {})
+        @errata_status_label ||= get_status(::Katello::ErrataStatus).to_label(options)
       end
     end
   end

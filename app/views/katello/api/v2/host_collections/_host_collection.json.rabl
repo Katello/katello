@@ -1,9 +1,8 @@
-attribute :pulp_id, :name, :organization_id, :max_content_hosts, :description, :total_content_hosts, :unlimited_content_hosts
+attribute :pulp_id, :name, :organization_id, :max_hosts, :description, :total_hosts, :unlimited_hosts
 
 node :id do |host_collection|
   host_collection.id.to_i
 end
-attributes :system_ids
 
 extends "katello/api/v2/common/timestamps"
 

@@ -4,7 +4,8 @@ module Katello
 
     include Katello::Concerns::FilteredAutoCompleteSearch
     before_filter :find_organization, :only => [:create, :index, :auto_complete_search]
-    before_filter :find_plan, :only => [:update, :show, :destroy, :add_products, :remove_products]
+    before_filter :find_plan, :only => [:update, :show, :destroy, :sync,
+                                        :add_products, :remove_products]
 
     def_param_group :sync_plan do
       param :name, String, :desc => N_("sync plan name"), :required => true, :action_aware => true
@@ -96,6 +97,22 @@ module Katello
     def remove_products
       sync_task(::Actions::Katello::SyncPlan::RemoveProducts, @sync_plan, params[:product_ids])
       respond_for_show
+    end
+
+    api :PUT, "/sync_plans/:id/sync", N_("Initiate a sync of the products attached to the sync plan")
+    api :PUT, "/organizations/:organization_id/sync_plans/:id/sync", N_("Initiate a sync of the products attached to the sync plan")
+    param :id, String, :desc => N_("ID of the sync plan"), :required => true
+    def sync
+      syncable_products = @sync_plan.products.syncable
+      syncable_repositories = Repository.where(:product_id => syncable_products).has_url
+
+      task = async_task(::Actions::BulkAction,
+                        ::Actions::Katello::Repository::Sync,
+                        syncable_repositories)
+
+      respond_for_async :resource => task
+    rescue Foreman::Exception
+      raise HttpErrors::BadRequest, _("No products within sync plan")
     end
 
     protected

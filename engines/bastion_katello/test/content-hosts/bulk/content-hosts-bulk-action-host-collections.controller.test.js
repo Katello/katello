@@ -12,7 +12,7 @@ describe('Controller: ContentHostsBulkActionHostCollectionsController', function
             installContent: function() {},
             updateContent: function() {},
             removeContent: function() {},
-            removeContentHosts: function() {}
+            removeHosts: function() {}
         };
         HostCollection = {
             query: function() {}

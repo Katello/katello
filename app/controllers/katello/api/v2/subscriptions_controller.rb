@@ -3,11 +3,12 @@ module Katello
     include Katello::Concerns::FilteredAutoCompleteSearch
 
     before_filter :find_activation_key
-    before_filter :find_system
+    before_filter :find_host, :only => :index
     before_filter :find_optional_organization, :only => [:index, :available, :show]
     before_filter :find_organization, :only => [:upload, :delete_manifest,
                                                 :refresh_manifest, :manifest_history]
     before_filter :find_provider
+    before_filter :deprecated, :only => [:create, :destroy]
 
     skip_before_filter :check_content_type, :only => [:upload]
 
@@ -20,18 +21,18 @@ module Katello
     api :GET, "/subscriptions"
     param_group :search, Api::V2::ApiController
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
-    param :system_id, String, :desc => N_("UUID of a content host"), :required => false
+    param :host_id, String, :desc => N_("id of a host"), :required => false
     param :activation_key_id, String, :desc => N_("Activation key ID"), :required => false
-    param :available_for, String, :desc => N_("Object to show subscriptions available for, either 'content_host' or 'activation_key'"), :required => false
-    param :match_system, :bool, :desc => N_("Return subscriptions that match content_host")
-    param :match_installed, :bool, :desc => N_("Return subscriptions that match installed products")
+    param :available_for, String, :desc => N_("Object to show subscriptions available for, either 'host' or 'activation_key'"), :required => false
+    param :match_host, :bool, :desc => N_("Ignore subscriptions that are unavailable to the specified host")
+    param :match_installed, :bool, :desc => N_("Return subscriptions that match installed products of the specified host")
     param :no_overlap, :bool, :desc => N_("Return subscriptions which do not overlap with a currently-attached subscription")
     def index
-      respond(:collection => scoped_search(index_relation.uniq, :cp_id, :asc, :resource_class => Pool))
+      respond(:collection => scoped_search(index_relation.uniq, :cp_id, :asc, :resource_class => Pool, :includes => [:subscription]))
     end
 
     def index_relation
-      return available_for_system if params[:available_for] == "content_host"
+      return for_host if params[:host_id]
       return available_for_activation_key if params[:available_for] == "activation_key"
       collection = Pool.readable
       collection = collection.where(:unmapped_guest => false)
@@ -48,22 +49,8 @@ module Katello
       respond(:resource => @resource)
     end
 
-    def available
-      subscriptions = if @system
-                        available_for_system
-                      elsif @activation_key
-                        available_for_activation_key
-                      else
-                        Organization.find(params[:organization_id]).subscriptions if params[:organization_id]
-                      end
-
-      respond_for_index(:collection => scoped_search(subscriptions.uniq, :cp_id, :asc, :resource_class => Pool), :template => "index")
-    end
-
-    api :POST, "/systems/:system_id/subscriptions", N_("Add a subscription to a content host"), :deprecated => true
-    api :POST, "/activation_keys/:activation_key_id/subscriptions", N_("Add a subscription to an activation key")
+    api :POST, "/activation_keys/:activation_key_id/subscriptions", N_("Add a subscription to an activation key"), :deprecated => true
     param :id, String, :desc => N_("Subscription Pool uuid"), :required => false
-    param :system_id, String, :desc => N_("UUID of a content host"), :required => false
     param :activation_key_id, String, :desc => N_("ID of the activation key"), :required => false
     param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => false
     param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
@@ -71,49 +58,25 @@ module Katello
       param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
     end
     def create
-      object = @system || @activation_key
-
       if params[:subscriptions]
         params[:subscriptions].each do |sub|
           subscription = Pool.find(sub[:id])
-          object.subscribe(subscription.cp_id, subscription[:quantity])
+          @activation_key.subscribe(subscription.cp_id, subscription[:quantity])
         end
       elsif params[:id] && params.key?(:quantity)
         sub = subscription.find(params[:id])
-        object.subscribe(sub.cp_id, params[:quantity])
+        @activation_key.subscribe(sub.cp_id, params[:quantity])
       end
 
-      subscriptions = if @system
-                        index_system
-                      elsif @activation_key
-                        index_activation_key
-                      end
-
+      subscriptions = index_activation_key
       respond_for_index(:collection => subscriptions, :template => 'index')
     end
 
-    api :DELETE, "/systems/:system_id/subscriptions/:id", N_("Unattach a subscription"), :deprecated => true
-    api :DELETE, "/activation_keys/:activation_key_id/subscriptions/:id", N_("Unattach a subscription")
+    api :DELETE, "/activation_keys/:activation_key_id/subscriptions/:id", N_("Unattach a subscription"), :deprecated => true
     param :id, String, :desc => N_("Subscription ID"), :required => false
-    param :system_id, String, :desc => N_("UUID of a content host")
     param :activation_key_id, String, :desc => N_("activation key ID")
-    param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
-      param :id, String, :desc => N_("Subscription Pool uuid")
-    end
     def destroy
-      object = @system || @activation_key
-
-      if @system
-        params[:subscriptions].each do |subscription|
-          entitlement_id = @system.find_entitlement(subscription[:id])
-          object.unsubscribe(entitlement_id)
-        end
-      elsif params[:id]
-        object.unsubscribe(params[:id])
-      else
-        @system.unsubscribe_all
-      end
-
+      @activation_key.unsubscribe(params[:id])
       respond_for_index(:collection => scoped_search(import_subscriptions.uniq, :cp_id, :asc, :resource_class => Pool), :template => "index")
     end
 
@@ -167,30 +130,19 @@ module Katello
       respond_with_template_collection(params[:action], "subscriptions", collection: @manifest_history)
     end
 
-    api :GET, "/systems/:system_id/subscriptions/available", N_("List available subscriptions"), :deprecated => true
-    param :system_id, String, :desc => N_("UUID of a content host"), :required => true
-    param :match_system, :bool, :desc => N_("Return subscriptions that match a content host")
-    param :match_installed, :bool, :desc => N_("Return subscriptions that match installed products")
-    param :no_overlap, :bool, :desc => N_("Return subscriptions which do not overlap with a currently-attached subscription")
-    def available_for_system
-      params[:match_system] = ::Foreman::Cast.to_bool(params[:match_system]) if params[:match_system]
+    def for_host
+      match_attached = params[:available_for] != "host"
+      params[:match_host] = ::Foreman::Cast.to_bool(params[:match_host]) if params[:match_host]
       params[:match_installed] = ::Foreman::Cast.to_bool(params[:match_installed]) if params[:match_installed]
       params[:no_overlap] = ::Foreman::Cast.to_bool(params[:no_overlap]) if params[:no_overlap]
-      pools = @system.filtered_pools(params[:match_system], params[:match_installed],
-                                     params[:no_overlap])
-      if pools
-        available = pools.collect { |cp_pool| ::Katello::Pool.find_by(:cp_id => cp_pool['id']) }
-        available.compact!
-        available.select { |pool| pool.provider?(Organization.find(params[:organization_id])) }
-      end
 
-      available || []
+      @host.subscription_facet.candlepin_consumer.filtered_pools(match_attached, params[:match_host], params[:match_installed], params[:no_overlap])
     end
 
     protected
 
-    def find_system
-      @system = System.find_by!(:uuid => params[:system_id]) if params[:system_id]
+    def find_host
+      find_host_with_subscriptions(params[:host_id], :view_hosts) if params[:host_id]
     end
 
     def find_activation_key
@@ -215,20 +167,13 @@ module Katello
     end
 
     def import_subscriptions
-      subscriptions = if @system
-                        index_system
-                      elsif @activation_key
+      subscriptions = if @activation_key
                         index_activation_key
                       else
                         index_organization
                       end
       cp_ids = subscriptions.collect { |x| x["id"] }
       index_relation.where("cp_id not in (?)", cp_ids)
-    end
-
-    def index_system
-      Katello::Pool.import_all
-      @system.entitlements
     end
 
     def index_activation_key
@@ -241,6 +186,11 @@ module Katello
 
     def available_for_activation_key
       @activation_key.available_subscriptions
+    end
+
+    def deprecated
+      ::Foreman::Deprecation.api_deprecation_warning("it will be removed in Katello 2.6, Please see /api/v2/activation_keys/:id/add_subscriptions and \
+          /api/v2/activation_keys/:id/remove_subscriptions")
     end
   end
 end

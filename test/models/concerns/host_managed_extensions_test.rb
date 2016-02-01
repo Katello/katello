@@ -24,9 +24,11 @@ module Katello
       @foreman_host.environment = new_puppet_environment
     end
 
-    def teardown
-      @foreman_host.content_host.destroy
-      @foreman_host.reload.destroy
+    def test_destroy_host
+      system_id = @foreman_host.content_host.id
+
+      assert @foreman_host.destroy
+      assert_nil Katello::System.find_by_id(system_id)
     end
 
     def test_smart_proxy_ids_with_katello

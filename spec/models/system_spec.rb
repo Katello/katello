@@ -79,34 +79,6 @@ module Katello
       end
     end
 
-    describe "unsubscribe an entitlement" do
-      before { @system.uuid = uuid }
-      entitlement_id = "foo"
-      it "should call Resources::Candlepin::Consumer.remove_entitlement" do
-        Resources::Candlepin::Consumer.expects(:remove_entitlement).once.with(uuid, entitlement_id).returns(true)
-        @system.unsubscribe entitlement_id
-      end
-    end
-
-    describe "unsubscribe an certificate by serial" do
-      before { @system.uuid = uuid }
-
-      it "should call Resources::Candlepin::Consumer.remove_certificate" do
-        serial_id = "foo"
-        Resources::Candlepin::Consumer.expects(:remove_certificate).once.with(uuid, serial_id).returns(true)
-        @system.unsubscribe_by_serial serial_id
-      end
-    end
-
-    describe "unsubscribe all entitlements" do
-      before { @system.uuid = uuid }
-
-      it "should call Resources::Candlepin::Consumer.remove_entitlements" do
-        Resources::Candlepin::Consumer.expects(:remove_entitlements).once.with(uuid).returns(true)
-        @system.unsubscribe_all
-      end
-    end
-
     describe "update system" do
       before(:each) do
         @system.save!
@@ -199,20 +171,6 @@ module Katello
 
           specify { @system.href.must_equal(href) }
           specify { @system.pools.must_equal(pools) }
-        end
-
-        it "should access candlepin if available_pools is uninitialized" do
-          Resources::Candlepin::Consumer.expects(:available_pools).once.with(uuid, false).returns([])
-          @system.available_pools
-        end
-
-        describe "shouldn't access candlepin available_pools if initialized" do
-          before(:each) do
-            @system.available_pools = available_pools
-            Resources::Candlepin::Consumer.expects(:get).never
-            Resources::Candlepin::Consumer.expects(:available_pools).never
-          end
-          specify { @system.available_pools.must_equal(available_pools) }
         end
       end
 

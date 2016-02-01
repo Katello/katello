@@ -1,0 +1,53 @@
+<span page-title ng-model="hostCollection">{{ 'Content Hosts for: ' | translate }} {{ hostCollection.name }}</span>
+
+<div data-extend-template="layouts/details-nutupane.html">
+
+  <div data-block="messages"></div>
+
+  <div data-block="actions">
+    <div ng-hide="denied('edit_content_hosts')" class="nutupane-actions fr">
+       <button class="btn btn-primary"
+               translate
+               ng-disabled="detailsTable.getSelected().length == 0 || isRemoving"
+               ng-click="removeSelected()">
+         Remove Selected
+       </button>
+    </div>
+  </div>
+
+  <span data-block="no-rows-message" translate>
+    You currently don't have any Hosts in this Host Group, you can add Content Hosts after selecting the 'Add' tab.
+  </span>
+
+  <div data-block="table">
+    <table ng-class="{'table-mask': detailsTable.working}"
+           class="table table-full table-striped"
+           ng-show="detailsTable.rows.length > 0">
+      <thead>
+        <tr bst-table-head row-select>
+          <th bst-table-column="name" translate>Name</th>
+          <th bst-table-column="environment" translate>Environment</th>
+          <th bst-table-column="content_view" translate>Content View</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row ng-repeat="contentHost in detailsTable.rows">
+          <td class="row-select">
+            <input type="checkbox"
+                   ng-model="contentHost.selected"
+                   ng-change="itemSelected(contentHost)"/>
+          </td>
+          <td bst-table-cell >
+            <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
+              {{ contentHost.name}}
+            </a>
+          </td>
+          <td bst-table-cell >{{ contentHost.environment.name}}</td>
+          <td bst-table-cell >{{ contentHost.content_view.name}}</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>

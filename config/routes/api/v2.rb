@@ -136,11 +136,10 @@ Katello::Engine.routes.draw do
         api_resources :host_collections, :only => [:index, :show, :create, :update, :destroy] do
           member do
             post :copy
-            put :add_systems
-            put :remove_systems
+            put :add_hosts
+            put :remove_hosts
           end
           get :auto_complete_search, :on => :collection
-          api_resources :systems, :only => [:index, :show, :create, :update, :destroy]
         end
 
         api_resources :organizations, :only => [:index, :show, :update, :create, :destroy] do
@@ -232,16 +231,12 @@ Katello::Engine.routes.draw do
 
         api_resources :systems, :only => [:index, :show, :create, :update, :destroy] do
           member do
-            get :available_host_collections, :action => :available_host_collections
             post :host_collections, :action => :add_host_collections
             delete :host_collections, :action => :remove_host_collections
-            get :packages, :action => :package_profile
             get :pools
             get :releases
-            put :refresh_subscriptions
             put :content_override
             get :product_content
-            get :subscriptions, :action => :subscriptions
             post :subscriptions, :action => :add_subscriptions
           end
           collection do
@@ -250,13 +245,6 @@ Katello::Engine.routes.draw do
           api_resources :activation_keys, :only => [:index]
           api_resources :host_collections, :only => [:index]
           api_resources :products, :only => [:index]
-          api_resources :subscriptions, :only => [:destroy] do
-            collection do
-              match '/' => 'subscriptions#destroy', :via => :put
-              match '/available' => 'subscriptions#available', :via => :get
-              match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
-            end
-          end
         end
 
         ##############################
@@ -267,6 +255,7 @@ Katello::Engine.routes.draw do
             member do
               put :add_products
               put :remove_products
+              put :sync
             end
             collection do
               get :auto_complete_search
@@ -295,7 +284,7 @@ Katello::Engine.routes.draw do
 
         api_resources :host_collections do
           member do
-            delete :destroy_systems
+            delete :destroy_hosts
           end
         end
 
@@ -316,14 +305,7 @@ Katello::Engine.routes.draw do
             match '/bulk/available_incremental_updates' => 'systems_bulk_actions#available_incremental_updates', :via => :post
             get :auto_complete_search
           end
-          resource :packages, :only => [], :controller => :system_packages do
-            collection do
-              put :remove
-              put :install
-              put :upgrade
-              put :upgrade_all
-            end
-          end
+
           api_resources :errata, :only => [:show, :index], :controller => :system_errata do
             collection do
               put :apply
@@ -409,6 +391,7 @@ Katello::Engine.routes.draw do
 
         api_resources :sync_plans, :only => [:index, :show, :update, :destroy] do
           get :auto_complete_search, :on => :collection
+          put :sync
         end
       end # module v2
     end # '/api' namespace

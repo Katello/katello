@@ -13,7 +13,7 @@ module Katello
       @fedora_17_x86_64 = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
       @fedora_17_library_library_view = Repository.find(FIXTURES['katello_repositories']['fedora_17_library_library_view']['id'])
       @library_dev_staging_view = katello_content_views(:library_dev_staging_view)
-      @fedora_17_x86_64.relative_path = '/test_path/'
+      @fedora_17_x86_64.relative_path = 'test_path/'
       @fedora_17_x86_64.url = "file:///var/www/test_repos/zoo"
     end
 
@@ -68,7 +68,7 @@ module Katello
       VCR.insert_cassette('pulp/repository/repository')
       self.create_repo(@fedora_17_x86_64)
       @fedora_17_x86_64 = @fedora_17_x86_64
-      @fedora_17_x86_64.relative_path = '/test_path/'
+      @fedora_17_x86_64.relative_path = 'test_path/'
     end
 
     def teardown
@@ -82,13 +82,13 @@ module Katello
     end
 
     def test_relative_path
-      assert_equal '/test_path/', @fedora_17_x86_64.relative_path
+      assert_equal 'test_path/', @fedora_17_x86_64.relative_path
     end
 
     def test_relative_path=
-      @fedora_17_x86_64.relative_path = '/new_path/'
+      @fedora_17_x86_64.relative_path = 'new_path/'
 
-      refute_equal '/test_path/', @fedora_17_x86_64.relative_path
+      refute_equal 'test_path/', @fedora_17_x86_64.relative_path
     end
 
     def test_generate_distributors
@@ -144,7 +144,7 @@ module Katello
       VCR.insert_cassette('pulp/repository/after_sync')
       create_repo(@fedora_17_x86_64)
       @fedora_17_x86_64 = @fedora_17_x86_64
-      @fedora_17_x86_64.relative_path = '/test_path/'
+      @fedora_17_x86_64.relative_path = 'test_path/'
     end
 
     def teardown
@@ -175,11 +175,13 @@ module Katello
       super
       VCR.insert_cassette('pulp/repository/puppet')
       @p_forge = Repository.find(FIXTURES['katello_repositories']['p_forge']['id'])
-      @p_forge.relative_path = '/test_path/'
+      @p_forge.relative_path = RepositorySupport::PULP_TMP_DIR
       @p_forge.url = "http://davidd.fedorapeople.org/repos/random_puppet/"
       create_repo(@p_forge)
       @p_forge = @p_forge
-      @p_forge.relative_path = '/test_path/'
+      ForemanTasks.sync_task(Actions::Pulp::Repository::DistributorPublish,
+                             :pulp_id => @p_forge.pulp_id,
+                             :distributor_type_id => Runcible::Models::PuppetInstallDistributor.type_id)
     end
 
     def teardown

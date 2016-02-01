@@ -49,7 +49,7 @@ angular.module('Bastion.subscriptions').service('SubscriptionsHelper',
 
             selected = [];
             angular.forEach(table.getSelected(), function (subscription) {
-                selected.push({"id": subscription.cp_id});
+                selected.push({"id": subscription.id, "quantity": subscription.quantity_consumed});
             });
             return selected;
         };

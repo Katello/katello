@@ -9,7 +9,7 @@ module Katello
       lazy_accessor :package_profile, :initializer => lambda { |_s| fetch_package_profile }
       lazy_accessor :simple_packages, :initializer => (lambda do |_s|
                                                          fetch_package_profile["profile"].
-                                                           collect { |package| Glue::Pulp::SimplePackage.new(package) }
+                                                           collect { |package| Katello::Pulp::SimplePackage.new(package) }
                                                        end)
 
       def initialize(uuid)

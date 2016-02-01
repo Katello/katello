@@ -24,10 +24,14 @@ module Actions
 
           sequence do
             plan_action(::Actions::Candlepin::Consumer::Update, host.subscription_facet.uuid, consumer_params)
-            plan_action(::Actions::Candlepin::Consumer::AutoAttachSubscriptions, host.subscription_facet) if host.subscription_facet.autoheal
+            plan_action(::Actions::Candlepin::Consumer::AutoAttachSubscriptions, :uuid => host.subscription_facet.uuid) if host.subscription_facet.autoheal
           end
 
           plan_self(:hostname => host.name)
+        end
+
+        def resource_locks
+          :update
         end
 
         def rescue_strategy

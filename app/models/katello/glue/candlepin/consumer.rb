@@ -26,8 +26,6 @@ module Katello
 
         lazy_accessor :entitlements, :initializer => lambda { |_s| Resources::Candlepin::Consumer.entitlements(uuid) }
         lazy_accessor :pools, :initializer => lambda { |_s| entitlements.collect { |ent| Resources::Candlepin::Pool.find ent["pool"]["id"] } }
-        lazy_accessor :available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(uuid, false) }
-        lazy_accessor :all_available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(uuid, true) }
         lazy_accessor :virtual_host, :initializer => (lambda do |_s|
                                                         host_attributes = Resources::Candlepin::Consumer.virtual_host(self.uuid)
                                                         (System.find_by(:uuid => host_attributes['uuid']) || System.new(host_attributes)) if host_attributes
@@ -112,36 +110,6 @@ module Katello
       def export
         Rails.logger.debug "Exporting manifest"
         Resources::Candlepin::Consumer.export self.uuid
-      rescue => e
-        Rails.logger.debug e.backtrace.join("\n\t")
-        raise e
-      end
-
-      def unsubscribe(entitlement)
-        Rails.logger.debug "Unsubscribing from entitlement '#{entitlement}' for : #{name}"
-        fail _("Subscription id is nil.") unless entitlement
-        Resources::Candlepin::Consumer.remove_entitlement self.uuid, entitlement
-        #ents = self.entitlements.collect {|ent| ent["id"] if ent["pool"]["id"] == pool}.compact
-        #raise ArgumentError, "Not subscribed to the pool #{pool}" if ents.count < 1
-        #ents.each { |ent|
-        #  Resources::Candlepin::Consumer.remove_entitlement self.uuid, ent
-        #}
-      rescue => e
-        Rails.logger.debug e.backtrace.join("\n\t")
-        raise e
-      end
-
-      def unsubscribe_by_serial(serial)
-        Rails.logger.debug "Unsubscribing from certificate '#{serial}' for : #{name}"
-        Resources::Candlepin::Consumer.remove_certificate self.uuid, serial
-      rescue => e
-        Rails.logger.debug e.backtrace.join("\n\t")
-        raise e
-      end
-
-      def unsubscribe_all
-        Rails.logger.debug "Unsubscribing from all entitlements for : #{name}"
-        Resources::Candlepin::Consumer.remove_entitlements self.uuid
       rescue => e
         Rails.logger.debug e.backtrace.join("\n\t")
         raise e
@@ -303,53 +271,6 @@ module Katello
         else total_mem = (total_mem / (1024 * 1024))
         end
         total_mem.round(2)
-      end
-
-      # TODO: break up method
-      # rubocop:disable MethodLength
-      def available_pools_full(listall = false)
-        # The available pools can be constrained to match the system (number of sockets, etc.), or
-        # all of the pools that could be applied to the system, even if not a perfect match.
-        if listall
-          pools = self.all_available_pools
-        else
-          pools = self.available_pools
-        end
-        avail_pools = pools.collect do |pool|
-          sockets = ""
-          multi_entitlement = false
-          support_level = ""
-          pool["productAttributes"].each do |attr|
-            if attr["name"] == "sockets"
-              sockets = attr["value"]
-            elsif attr["name"] == "multi-entitlement"
-              multi_entitlement = true
-            elsif attr["name"] == "support_level"
-              support_level = attr["value"]
-            end
-          end
-
-          provided_products = []
-          pool['providedProducts'].each do |cp_product|
-            product = Katello::Product.where(:cp_id => cp_product["productId"]).first
-            if product
-              provided_products << product
-            end
-          end
-
-          OpenStruct.new(:poolId => pool["id"],
-                         :poolName => pool["productName"],
-                         :endDate => Date.parse(pool["endDate"]),
-                         :startDate => Date.parse(pool["startDate"]),
-                         :consumed => pool["consumed"],
-                         :quantity => pool["quantity"],
-                         :sockets => sockets,
-                         :supportLevel => support_level,
-                         :multiEntitlement => multi_entitlement,
-                         :providedProducts => provided_products)
-        end
-        avail_pools.sort! { |a, b| a.poolName <=> b.poolName }
-        avail_pools
       end
 
       def set_content_override(content_label, name, value = nil)

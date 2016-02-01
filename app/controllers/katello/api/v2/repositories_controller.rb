@@ -253,6 +253,8 @@ module Katello
     def upload_content
       filepaths = Array.wrap(params[:content]).compact.map(&:path)
 
+      fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Docker content.") if @repository.docker?
+
       if !filepaths.blank?
         sync_task(::Actions::Katello::Repository::UploadFiles, @repository, filepaths)
         render :json => {:status => "success"}

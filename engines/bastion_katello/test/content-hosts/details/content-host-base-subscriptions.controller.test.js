@@ -3,6 +3,7 @@ describe('Controller: ContentHostBaseSubscriptionsController', function() {
         $controller,
         translate,
         ContentHost,
+        HostSubscription,
         Subscription,
         Nutupane,
         expectedTable,
@@ -22,17 +23,13 @@ describe('Controller: ContentHostBaseSubscriptionsController', function() {
             $q = $injector.get('$q');
 
         ContentHost = $injector.get('MockResource').$new();
+        HostSubscription = $injector.get('MockResource').$new();
         $scope = $injector.get('$rootScope').$new();
         $location = $injector.get('$location');
         
-        ContentHost.refreshSubscriptions = function() {};
-
-        translate = function(message) {
-            return message;
-        };
+        HostSubscription.autoAttach = function() {};
 
         expectedRows = [];
-
         expectedTable = {
             showColumns: function() {},
             getSelected: function() {
@@ -57,6 +54,7 @@ describe('Controller: ContentHostBaseSubscriptionsController', function() {
 
         $scope.contentHost = new ContentHost({
             uuid: 12345,
+            host: {id: 10},
             subscriptions: [{id: 1, quantity: 11}, {id: 2, quantity: 22}]
         });
 
@@ -68,13 +66,14 @@ describe('Controller: ContentHostBaseSubscriptionsController', function() {
             CurrentOrganization: 'organization',
             Subscription: Subscription,
             ContentHost: ContentHost,
+            HostSubscription: HostSubscription,
             Nutupane: Nutupane
         });
     }));
 
     it("allows auto attaching subscriptions to the content host", function() {
-        spyOn(ContentHost, 'refreshSubscriptions');
+        spyOn(HostSubscription, 'autoAttach');
         $scope.autoAttachSubscriptions();
-        expect(ContentHost.refreshSubscriptions).toHaveBeenCalledWith({uuid: $scope.contentHost.uuid}, jasmine.any(Function), jasmine.any(Function));
+        expect(HostSubscription.autoAttach).toHaveBeenCalledWith({id: $scope.contentHost.host.id}, jasmine.any(Function), jasmine.any(Function));
     });
 });

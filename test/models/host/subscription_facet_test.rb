@@ -45,9 +45,9 @@ module Katello
     end
 
     def test_update_foreman_facts
-      subscription_facet.update_facts(:rhsm_fact => 'rhsm_value')
+      Katello::Host::SubscriptionFacet.update_facts(host, :rhsm_fact => 'rhsm_value')
 
-      values = subscription_facet.host.fact_values
+      values = host.fact_values
       assert_equal 2, values.count
       assert_include values.map(&:value), 'rhsm_value'
       assert_includes values.map(&:name), 'rhsm_fact'
@@ -66,6 +66,25 @@ module Katello
       host = Katello::Host::SubscriptionFacet.find_or_create_host(no_org_host.name, org, 'facts' => {'network.hostname' => no_org_host.name})
 
       assert_equal org, host.organization
+    end
+
+    def test_subscription_status
+      status = Katello::SubscriptionStatus.new(:host => host)
+      status.status = Katello::SubscriptionStatus::INVALID
+      status.reported_at = DateTime.now
+      status.save!
+
+      assert_includes ::Host::Managed.search_for("subscription_status = invalid"), host
+    end
+
+    def test_remove_subscriptions
+      pool = katello_pools(:pool_one)
+      entitlements = [{'pool' => {'id' => pool.cp_id}, 'quantity' => 1, :id => 5}]
+
+      host.subscription_facet.candlepin_consumer.stubs(:entitlements).returns(entitlements)
+      ForemanTasks.expects(:sync_task).with(Actions::Katello::Host::RemoveSubscriptions, host, entitlements)
+
+      host.subscription_facet.remove_subscriptions([PoolWithQuantities.new(pool, [1])])
     end
   end
 end

@@ -15,8 +15,8 @@
  *   within the table.
  */
 angular.module('Bastion.host-collections').controller('HostCollectionsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'HostCollection', 'CurrentOrganization',
-    function ($scope, $location, translate, Nutupane, HostCollection, CurrentOrganization) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'HostCollection', 'CurrentOrganization', 'urlencodeFilter',
+    function ($scope, $location, translate, Nutupane, HostCollection, CurrentOrganization, urlencodeFilter) {
 
         var params = {
             'organization_id': CurrentOrganization,
@@ -33,6 +33,11 @@ angular.module('Bastion.host-collections').controller('HostCollectionsController
 
         $scope.table.closeItem = function () {
             $scope.transitionTo('host-collections.index');
+        };
+
+        $scope.getHostCollectionSearchUrl = function (hostCollectionName) {
+            var search = 'host_collection="%s"'.replace('%s', hostCollectionName);
+            return '?select_all=true&search=' + urlencodeFilter(search);
         };
 
         $scope.$on("updateContentHostCollection", function (event, hostCollectionRow) {

@@ -3,6 +3,7 @@ describe('Controller: ContentHostSubscriptionsController', function() {
         $controller,
         translate,
         ContentHost,
+        HostSubscription,
         Subscription,
         Nutupane,
         expectedTable,
@@ -23,11 +24,12 @@ describe('Controller: ContentHostSubscriptionsController', function() {
             $q = $injector.get('$q');
 
         ContentHost = $injector.get('MockResource').$new();
+        HostSubscription = $injector.get('MockResource').$new();
         $scope = $injector.get('$rootScope').$new();
         $location = $injector.get('$location');
         SubscriptionsHelper = $injector.get('SubscriptionsHelper');
 
-        ContentHost.removeSubscriptions = function() {};
+        HostSubscription.removeSubscriptions = function() {};
 
         translate = function(message) {
             return message;
@@ -53,17 +55,20 @@ describe('Controller: ContentHostSubscriptionsController', function() {
             this.query = function() {};
             this.refresh = function() {};
             this.setSearchKey = function() {};
+            this.setParams = function() {};
+            this.load = function() {};
         };
 
         $scope.contentHost = new ContentHost({
             uuid: 12345,
-            subscriptions: [{id: 1, cp_id: "cpid1", quantity: 11}, {id: 2, cp_id: "cpid2", quantity: 22}]
+            host: {id: 9389},
+            subscriptions: [{id: 1, cp_id: "cpid1", quantity_consumed: 11}, {id: 2, cp_id: "cpid2", quantity_consumed: 22}]
         });
 
         $scope.subscriptionsPane = {
             refresh: function() {},
             table: {}
-        }
+        };
 
         $controller('ContentHostSubscriptionsController', {
             $scope: $scope,
@@ -72,6 +77,7 @@ describe('Controller: ContentHostSubscriptionsController', function() {
             Subscription: Subscription,
             Nutupane: Nutupane,
             ContentHost: ContentHost,
+            HostSubscription: HostSubscription,
             SubscriptionsHelper: SubscriptionsHelper
         });
     }));
@@ -82,14 +88,14 @@ describe('Controller: ContentHostSubscriptionsController', function() {
 
     it("allows removing subscriptions from the content host", function() {
 
-        var expected = {uuid: 12345, subscriptions: [{id: "cpid2"}]};
-        spyOn(ContentHost, 'removeSubscriptions');
+        var expected = {id: $scope.contentHost.host.id, subscriptions: [{id: 2, quantity: 5}]};
+        spyOn(HostSubscription, 'removeSubscriptions');
 
         $scope.detailsTable.getSelected = function() {
-            return [{id: 2, cp_id: "cpid2"}];
+            return [{id: 2, cp_id: "cpid2", quantity_consumed: 5}];
         };
 
         $scope.removeSelected();
-        expect(ContentHost.removeSubscriptions).toHaveBeenCalledWith(expected, jasmine.any(Function), jasmine.any(Function));
+        expect(HostSubscription.removeSubscriptions).toHaveBeenCalledWith(expected, jasmine.any(Function), jasmine.any(Function));
     });
 });

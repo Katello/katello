@@ -4,7 +4,7 @@
   <thead>
     <tr bst-table-head>
       <th bst-table-column="name" sortable><span translate>Name</span></th>
-      <th bst-table-column="content-hosts"><span translate>Content Hosts</span></th>
+      <th bst-table-column="hosts"><span translate>Content Hosts</span></th>
       <th bst-table-column="limit"><span translate>Limit</span></th>
     </tr>
   </thead>
@@ -18,11 +18,11 @@
         <i class="fa fa-chevron-right selected-icon" ng-show="hostCollection.selected"></i>
       </td>
       <td bst-table-cell>
-        <a ui-sref="host-collections.details.content-hosts.list({hostCollectionId: hostCollection.id})">
-          {{ hostCollection.total_content_hosts }}
+        <a ui-sref="host-collections.details.hosts.list({hostCollectionId: hostCollection.id})">
+          {{ hostCollection.total_hosts }}
         </a>
       </td>
-      <td bst-table-cell>{{ hostCollection.max_content_hosts | unlimitedFilter:hostCollection.unlimited_content_hosts }}</td>
+      <td bst-table-cell>{{ hostCollection.max_hosts | unlimitedFilter:hostCollection.unlimited_hosts }}</td>
     </tr>
   </tbody>
 </table>
