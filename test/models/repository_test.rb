@@ -402,13 +402,13 @@ module Katello
                                         :version => @fedora_17_x86_64.content_view_version,
                                         :content_view => @fedora_17_x86_64.content_view
                                        )
-      assert_equal "/content_views/org_default_label/1.0/library/fedora_17_label", path
+      assert_equal "ACME_Corporation/content_views/org_default_label/1.0/fedora_17_label", path
 
       path = Repository.clone_repo_path(:repository => @fedora_17_x86_64,
                                         :environment => @fedora_17_x86_64.organization.library,
                                         :content_view => @fedora_17_x86_64.content_view
                                        )
-      assert_equal "/library_default_view_library/library/fedora_17_label", path
+      assert_equal "ACME_Corporation/library_default_view_library/fedora_17_label", path
     end
 
     def test_docker_clone_repo_path
@@ -438,14 +438,14 @@ module Katello
       relative_path = Repository.clone_repo_path(repository: @fedora_17_x86_64,
                                                  environment: library,
                                                  content_view: cv)
-      assert_equal "/#{cve.label}/library/fedora_17_label", relative_path
+      assert_equal "ACME_Corporation/#{cve.label}/fedora_17_label", relative_path
 
       # archive path
       version = stub(:version => 1)
       relative_path = Repository.clone_repo_path(repository: @fedora_17_x86_64,
                                                  version: version,
                                                  content_view: cv)
-      assert_equal "/content_views/composite_view/1/library/fedora_17_label", relative_path
+      assert_equal "ACME_Corporation/content_views/composite_view/1/fedora_17_label", relative_path
     end
 
     def new_custom_repo
