@@ -214,11 +214,6 @@ module Katello
       assert_includes systems, @system
     end
 
-    def test_search_by_description
-      systems = System.search_for("description = \"#{@system.description}\"")
-      assert_includes systems, @system
-    end
-
     def test_search_by_host
       systems = System.search_for("host = \"#{@system.foreman_host}\"")
       assert_includes systems, @system

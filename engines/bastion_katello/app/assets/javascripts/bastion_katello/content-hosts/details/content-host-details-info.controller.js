@@ -17,12 +17,12 @@
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoController',
     ['$scope', '$q', 'translate', 'ContentHost', 'ContentView', 'Organization', 'CurrentOrganization', 'ContentHostsHelper',
     function ($scope, $q, translate, ContentHost, ContentView, Organization, CurrentOrganization, ContentHostsHelper) {
-        function dotNotationToObj(dotString) {
-            var dotObject = {}, tempObject, parts, part, key, property;
+        function doubleColonNotationToObject(dotString) {
+            var doubleColonObject = {}, tempObject, parts, part, key, property;
             for (property in dotString) {
                 if (dotString.hasOwnProperty(property)) {
-                    tempObject = dotObject;
-                    parts = property.split('.');
+                    tempObject = doubleColonObject;
+                    parts = property.split('::');
                     key = parts.pop();
                     while (parts.length) {
                         part = parts.shift();
@@ -31,27 +31,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
                     tempObject[key] = dotString[property];
                 }
             }
-            return dotObject;
+            return doubleColonObject;
         }
 
-        function populateExcludedFacts() {
-            var index = 0;
-
-            $scope.advancedInfoLeft = {};
-            $scope.advancedInfoRight = {};
-
-            angular.forEach($scope.contentHostFacts, function (value, key) {
-                if (index % 2 === 0) {
-                    $scope.advancedInfoLeft[key] = value;
-                } else {
-                    $scope.advancedInfoRight[key] = value;
-                }
-                index = index + 1;
-            });
-            $scope.hasAdvancedInfo = Object.keys($scope.advancedInfoLeft).length > 0 ||
-                Object.keys($scope.advancedInfoRight).length > 0;
-
-        }
+        $scope.host.$promise.then(function (host) {
+            $scope.hostFactsAsObject = doubleColonNotationToObject(host.facts);
+            $scope.originalEnvironment = host.content.lifecycle_environment;
+        });
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -63,13 +49,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
 
         $scope.environments = Organization.readableEnvironments({id: CurrentOrganization});
 
-        $scope.contentHost.$promise.then(function () {
-            $scope.contentHostFacts = dotNotationToObj($scope.contentHost.facts);
-            populateExcludedFacts();
-            $scope.originalEnvironment = $scope.contentHost.environment;
-        });
-
-        $scope.$watch('contentHost.environment', function (environment) {
+        $scope.$watch('host.content.lifecycle_environment', function (environment) {
             if (environment && $scope.originalEnvironment) {
                 if (environment.id !== $scope.originalEnvironment.id) {
                     $scope.editContentView = true;
@@ -85,15 +65,16 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         $scope.cancelContentViewUpdate = function () {
             if ($scope.editContentView) {
                 $scope.editContentView = false;
-                $scope.contentHost.environment = $scope.originalEnvironment;
+                $scope.host.content['lifecycle_environment'] = $scope.originalEnvironment;
                 $scope.disableEnvironmentSelection = false;
             }
         };
 
-        $scope.saveContentView = function (contentHost) {
+        $scope.saveContentView = function (host) {
             $scope.editContentView = false;
-            $scope.save(contentHost).then(function (response) {
-                $scope.originalEnvironment = response.environment;
+
+            $scope.saveContentFacet(host).then(function (response) {
+                $scope.originalEnvironment = response.content.lifecycle_environment;
             });
             $scope.disableEnvironmentSelection = false;
         };
@@ -101,7 +82,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         $scope.releaseVersions = function () {
             var deferred = $q.defer();
 
-            ContentHost.releaseVersions({ id: $scope.contentHost.uuid }, function (response) {
+            ContentHost.releaseVersions({ id: $scope.host.subscription.uuid }, function (response) {
                 if (response.total === 0) {
                     $scope.showVersionAlert = true;
                 }
@@ -112,19 +93,19 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         };
 
         $scope.clearReleaseVersion = function () {
-            $scope.contentHost['release_ver'] = '';
-            $scope.save($scope.contentHost);
+            $scope.host.subscription['release_version'] = '';
+            $scope.saveSubscriptionFacet($scope.host);
         };
 
         $scope.clearServiceLevel = function () {
-            $scope.contentHost['service_level'] = '';
-            $scope.save($scope.contentHost);
+            $scope.host.subscription['service_level'] = '';
+            $scope.saveSubscriptionFacet($scope.host);
         };
 
         $scope.contentViews = function () {
             var deferred = $q.defer();
 
-            ContentView.queryUnpaged({ 'environment_id': $scope.contentHost.environment.id}, function (response) {
+            ContentView.queryUnpaged({ 'environment_id': $scope.host.content.lifecycle_environment.id}, function (response) {
                 deferred.resolve(response.results);
                 $scope.contentViews = response.results;
             });
@@ -136,20 +117,12 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
             return '/activation_keys!=&panel=activation_key_%s&panelpage=edit'.replace('%s', activationKey.id);
         };
 
-        $scope.getTemplateForType = function (value) {
-            var template = 'content-hosts/details/views/partials/content-host-detail-value.html';
-            if (angular.isObject(value)) {
-                template = 'content-hosts/details/views/partials/content-host-detail-object.html';
-            }
-            return template;
-        };
-
         $scope.memory = ContentHostsHelper.memory;
 
-        $scope.virtualGuestIds = function (contentHost) {
+        $scope.virtualGuestIds = function (host) {
             var ids = [];
-            angular.forEach(contentHost['virtual_guests'], function (host) {
-                ids.push('id:%s'.replace('%s', host.id));
+            angular.forEach(host.subscription['virtual_guests'], function (guest) {
+                ids.push('id:%s'.replace('%s', guest.id));
             });
 
             return ids.join(" ");

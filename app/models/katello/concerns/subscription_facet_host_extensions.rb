@@ -17,6 +17,8 @@ module Katello
         has_one :subscription_status_object, :class_name => 'Katello::SubscriptionStatus', :foreign_key => 'host_id'
         scoped_search :on => :status, :in => :subscription_status_object, :rename => :subscription_status,
                       :complete_value => SUBSCRIPTION_STATUS_MAP
+
+        attr_accessible :subscription_facet_attributes
       end
 
       def update_action

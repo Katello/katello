@@ -10,6 +10,7 @@
 angular.module('Bastion.hosts').factory('Host',
     ['BastionResource', function (BastionResource) {
         var resource = BastionResource('/api/v2/hosts/:id/:action', {id: '@id'}, {
+            update: {method: 'PUT'},
             updateHostCollections: {method: 'PUT', params: {action: 'host_collections'}}
         });
         resource.prototype.hasContent = function () {

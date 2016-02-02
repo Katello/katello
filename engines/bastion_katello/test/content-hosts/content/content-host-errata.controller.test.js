@@ -24,7 +24,12 @@ describe('Controller: ContentHostErrataController', function() {
         host = {
             id: 5,
             organization_id: 'org-id-5',
-            content: {uuid: 4,
+            content: {
+                uuid: 4,
+                lifecycle_environment: {
+                    id: 'env_id_stage',
+                    name: 'env stage'
+                },
                 lifecycle_environment_id: 'env_id_stage',
                 content_view_id: 'content-view-id'
             },

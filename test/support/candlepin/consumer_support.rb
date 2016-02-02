@@ -16,7 +16,6 @@ module Katello
       @system = System.new
       @system.cp_type = 'system'
       @system.name = name
-      @system.description = 'New System'
       @system.environment = env
       @system.content_view = cv
       @system.facts = {}

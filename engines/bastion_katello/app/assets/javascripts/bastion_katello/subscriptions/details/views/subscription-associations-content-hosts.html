@@ -54,7 +54,7 @@
         <td bst-table-cell>{{ contentHost.service_level }}</td>
         <td bst-table-cell>{{ contentHost.facts.cpu['cpu_socket(s)'] }}</td>
         <td bst-table-cell>{{ contentHost.facts.cpu['core(s)_per_socket'] }}</td>
-        <td bst-table-cell>{{ memory(contentHost.facts) }}</td>
+        <td bst-table-cell>{{ host.facts["dmi::memory::size"]) }}</td>
       </tr>
     </tbody>
   </table>
