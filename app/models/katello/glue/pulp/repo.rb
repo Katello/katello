@@ -763,7 +763,6 @@ module Katello
       self.index_db_rpms
       self.index_db_errata
       self.index_db_docker_manifests
-      self.index_db_docker_images
       self.index_db_puppet_modules
       self.index_db_package_groups
       self.import_distribution_data

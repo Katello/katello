@@ -1,9 +1,9 @@
 module Actions
   module Pulp
     module Repository
-      class CopyDockerImage < Pulp::Repository::AbstractCopyContent
+      class CopyDockerManifest < Pulp::Repository::AbstractCopyContent
         def content_extension
-          pulp_extensions.docker_image
+          pulp_extensions.docker_manifest
         end
       end
     end
