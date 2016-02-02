@@ -45,7 +45,7 @@
       <tr bst-table-head>
         <th bst-table-column="environment" translate>Environment</th>
         <th bst-table-column="version" translate>Content View Version</th>
-        <th bst-table-column="image" translate>Image</th>
+        <th bst-table-column="manifest" translate>Manifest</th>
         <th bst-table-column="path" translate>Published At</th>
       </tr>
     </thead>
@@ -60,7 +60,7 @@
           {{ tag.content_view_version.name }}
         </td>
         <td bst-table-cell>
-          {{ tag.image_id | limitTo:20 }}...
+          {{ tag.manifest.name | limitTo:20 }}...
         </td>
         <td bst-table-cell>
           {{ tag.repository.full_path }}:{{ tag.name }}
