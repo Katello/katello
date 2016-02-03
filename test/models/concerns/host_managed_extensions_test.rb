@@ -41,8 +41,7 @@ module Katello
       assert_equal @foreman_host.info['parameters']['content_view'], nil
       assert_equal @foreman_host.info['parameters']['lifecycle_environment'], nil
 
-      @foreman_host.content_facet = Katello::Host::ContentFacet.new(:content_view => @view, :lifecycle_environment => @library)
-      @foreman_host.reload
+      Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
 
       assert_equal @foreman_host.info['parameters']['content_view'], @foreman_host.content_view.label
       assert_equal @foreman_host.info['parameters']['lifecycle_environment'], @foreman_host.lifecycle_environment.label
@@ -52,8 +51,7 @@ module Katello
       assert_equal @foreman_host.info['parameters']['kt_cv'], nil
       assert_equal @foreman_host.info['parameters']['kt_env'], nil
 
-      @foreman_host.content_facet = Katello::Host::ContentFacet.new(:content_view => @view, :lifecycle_environment => @library)
-      @foreman_host.reload
+      Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
 
       assert_equal @foreman_host.info['parameters']['kt_cv'], @foreman_host.content_view.label
       assert_equal @foreman_host.info['parameters']['kt_env'], @foreman_host.lifecycle_environment.label
@@ -80,17 +78,17 @@ module Katello
 
     def test_update_with_cv_env
       host = FactoryGirl.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
-      host.content_view = @library_view
-      host.lifecycle_environment = @library
-      assert host.save!
+      host.content_facet.content_view = @library_view
+      host.content_facet.lifecycle_environment = @library
+      assert host.content_facet.save!
     end
 
     def test_update_with_invalid_cv_env_combo
       host = FactoryGirl.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
-      host.content_view = @library_view
-      host.lifecycle_environment = @dev
+      host.content_facet.content_view = @library_view
+      host.content_facet.lifecycle_environment = @dev
       assert_raises(ActiveRecord::RecordInvalid) do
-        host.save!
+        host.content_facet.save!
       end
     end
   end
