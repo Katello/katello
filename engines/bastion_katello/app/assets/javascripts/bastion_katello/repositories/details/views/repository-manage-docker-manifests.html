@@ -1,4 +1,4 @@
-<span page-title ng-model="repository">{{ 'Manage Docker Images for Repository:' | translate }} {{ repository.name }}</span>
+<span page-title ng-model="repository">{{ 'Manage Docker Manifests for Repository:' | translate }} {{ repository.name }}</span>
 
 <a ui-sref="products.details.repositories.info({productId: product.id, repositoryId: repository.id})">
   <i class="fa fa-angle-double-left"></i>
@@ -22,20 +22,20 @@
   </div>
 
   <div data-block="header">
-    <h3 translate>Docker Images in {{ repository.name }}</h3>
+    <h3 translate>Docker Manifests in {{ repository.name }}</h3>
   </div>
 
   <div data-block="actions">
     <div bst-modal="removeContent()">
       <div data-block="modal-header"
            translate-n="detailsTable.numSelected"
-           translate-plural="Remove {{ detailsTable.numSelected  }} Docker Images?">
-        Remove {{ detailsTable.numSelected  }} Docker Image?
+           translate-plural="Remove {{ detailsTable.numSelected  }} Docker Manifests?">
+        Remove {{ detailsTable.numSelected  }} Docker Manifest?
       </div>
       <div data-block="modal-body"
            translate-n="detailsTable.numSelected"
-           translate-plural="Are you sure you want to remove the {{ detailsTable.numSelected }} Docker images selected?">
-        Are you sure you want to remove the {{ detailsTable.numSelected }} Docker image selected?
+           translate-plural="Are you sure you want to remove the {{ detailsTable.numSelected }} Docker manifests selected?">
+        Are you sure you want to remove the {{ detailsTable.numSelected }} Docker manifest selected?
       </div>
     </div>
 
@@ -44,7 +44,7 @@
             ng-hide="denied('edit_products')"
             ng-disabled="detailsTable.working || detailsTable.numSelected === 0">
       <i class="fa fa-trash-o" ng-hide="detailsTable.working"></i>
-      <span translate>Remove Docker Images</span>
+      <span translate>Remove Docker Manifests</span>
     </button>
   </div>
 
@@ -53,18 +53,18 @@
 
       <thead>
         <tr bst-table-head row-select>
-          <th bst-table-column><span translate>Image ID</span></th>
-          <th bst-table-column><span translate>Tags</span></th>
+          <th bst-table-column><span translate>Manifest Name</span></th>
+          <th bst-table-column><span translate>Tag</span></th>
         </tr>
       </thead>
 
       <tbody>
         <tr bst-table-row ng-repeat="item in detailsTable.rows" row-select="item">
           <td bst-table-cell>
-            {{ item.image_id }}
+            {{ item.name }}
           </td>
           <td bst-table-cell>
-            {{ formatRepoDockerTags(item, repository.id) }}
+            {{ item.tag.name }}
           </td>
         </tr>
       </tbody>

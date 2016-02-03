@@ -548,7 +548,7 @@ module Katello
       if yum?
         self.rpms
       elsif docker?
-        self.docker_images
+        self.docker_manifests
       elsif puppet?
         self.puppet_modules
       else
@@ -585,13 +585,13 @@ module Katello
       end
     end
 
-    def remove_docker_content(images)
-      self.docker_tags.where(:docker_image_id => images.map(&:id)).destroy_all
-      self.docker_images -= images
+    def remove_docker_content(manifests)
+      self.docker_tags.where(:docker_manifest_id => manifests.map(&:id)).destroy_all
+      self.docker_manifests -= manifests
 
-      # destroy any orphan docker images
-      images.reload.each do |image|
-        image.destroy if image.repositories.empty?
+      # destroy any orphan docker manifests
+      manifests.each do |manifest|
+        manifest.destroy if manifest.repositories.empty?
       end
     end
   end

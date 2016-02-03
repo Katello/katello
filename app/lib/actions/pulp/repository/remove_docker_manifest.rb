@@ -1,9 +1,9 @@
 module Actions
   module Pulp
     module Repository
-      class RemoveDockerImage < Pulp::Repository::AbstractRemoveContent
+      class RemoveDockerManifest < Pulp::Repository::AbstractRemoveContent
         def content_extension
-          pulp_extensions.docker_image
+          pulp_extensions.docker_manifest
         end
       end
     end

@@ -20,7 +20,7 @@ module Actions
                         when ::Katello::Repository::PUPPET_TYPE
                           Pulp::Repository::RemovePuppetModule
                         when ::Katello::Repository::DOCKER_TYPE
-                          Pulp::Repository::RemoveDockerImage
+                          Pulp::Repository::RemoveDockerManifest
                         end
 
           uuids = content_units.map(&:uuid)

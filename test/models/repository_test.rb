@@ -378,14 +378,14 @@ module Katello
 
     def test_units_for_removal_docker
       ['one', 'two', 'three'].each do |str|
-        @redis.docker_images.create!(:image_id => str) do |image|
-          image.uuid = str
+        @redis.docker_manifests.create!(:name => str) do |manifest|
+          manifest.uuid = str
         end
       end
 
-      images = @redis.docker_images.sample(2).sort_by { |obj| obj.id }
-      refute_empty images
-      assert_equal images, @redis.units_for_removal(images.map(&:id)).sort_by { |obj| obj.id }
+      manifests = @redis.docker_manifests.sample(2).sort_by { |obj| obj.id }
+      refute_empty manifests
+      assert_equal manifests, @redis.units_for_removal(manifests.map(&:id)).sort_by { |obj| obj.id }
     end
 
     def test_environmental_instances

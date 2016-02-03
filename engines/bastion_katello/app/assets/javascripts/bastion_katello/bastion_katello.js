@@ -16,8 +16,8 @@
 //= require "bastion_katello/content-views/content-views.module"
 //= require_tree "./content-views"
 
-//= require "bastion_katello/docker-images/docker-images.module.js"
-//= require_tree "./docker-images"
+//= require "bastion_katello/docker-manifests/docker-manifests.module.js"
+//= require_tree "./docker-manifests"
 
 //= require "bastion_katello/docker-tags/docker-tags.module.js"
 //= require_tree "./docker-tags"

@@ -1,13 +1,13 @@
-describe('Factory: DockerImage', function () {
+describe('Factory: DockerManifest', function () {
     var $httpBackend,
-        dockerImages;
+        dockerManifests;
 
-    beforeEach(module('Bastion.docker-images', 'Bastion.test-mocks'));
+    beforeEach(module('Bastion.docker-manifests', 'Bastion.test-mocks'));
 
     beforeEach(module(function ($provide) {
-        dockerImages = {
+        dockerManifests = {
             records: [
-                { image_id: 'abc123', id: 1 }
+                { name: 'abc123', id: 1 }
             ],
             total: 2,
             subtotal: 1
@@ -16,7 +16,7 @@ describe('Factory: DockerImage', function () {
 
     beforeEach(inject(function ($injector) {
         $httpBackend = $injector.get('$httpBackend');
-        DockerImage = $injector.get('DockerImage');
+        DockerManifest = $injector.get('DockerManifest');
     }));
 
     afterEach(function () {
@@ -26,10 +26,10 @@ describe('Factory: DockerImage', function () {
     });
 
     it('provides a way to get a list of repositories', function () {
-        $httpBackend.expectGET('/katello/api/v2/docker_images').respond(dockerImages);
+        $httpBackend.expectGET('/katello/api/v2/docker_manifests').respond(dockerManifests);
 
-        DockerImage.queryPaged(function (dockerImages) {
-            expect(dockerImages.records.length).toBe(1);
+        DockerManifest.queryPaged(function (dockerManifests) {
+            expect(dockerManifests.records.length).toBe(1);
         });
     });
 

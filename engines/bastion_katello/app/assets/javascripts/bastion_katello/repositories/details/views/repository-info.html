@@ -22,9 +22,9 @@
     </button>
 
     <button class="btn btn-default"
-            ui-sref="products.details.repositories.manage-content.docker-images({productId: product.id, repositoryId: repository.id})"
+            ui-sref="products.details.repositories.manage-content.docker-manifests({productId: product.id, repositoryId: repository.id})"
             ng-hide="repository.content_type !== 'docker' || product.readonly">
-      <span translate>Manage Docker Images</span>
+      <span translate>Manage Docker Manifests</span>
     </button>
 
     <button class="btn btn-default"
