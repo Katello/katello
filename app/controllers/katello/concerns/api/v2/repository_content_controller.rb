@@ -196,8 +196,6 @@ module Katello
           _("Puppet Module")
         when "Katello::DockerManifest"
           _("Docker Manifest")
-        when "Katello::DockerImage"
-          _("Docker Image")
         when "Katello::DockerTag"
           _("Docker Tag")
         else

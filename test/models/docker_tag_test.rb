@@ -9,7 +9,6 @@ module Katello
     def setup
       @repo = Repository.find(katello_repositories(:busybox))
       @tag = create(:docker_tag, :repository => @repo)
-      @image = @tag.docker_image
 
       @repo.library_instances_inverse.each do |repo|
         repo.docker_tags << @tag.dup

@@ -3,7 +3,6 @@ FactoryGirl.define do
     sequence(:name) { |n| "2.#{n}" }
     repository :docker_repository
     docker_manifest
-    docker_image
   end
 
   trait :latest do

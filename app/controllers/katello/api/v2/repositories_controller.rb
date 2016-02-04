@@ -233,7 +233,7 @@ module Katello
     end
 
     api :PUT, "/repositories/:id/remove_packages"
-    api :PUT, "/repositories/:id/remove_docker_images"
+    api :PUT, "/repositories/:id/remove_docker_manifests"
     api :PUT, "/repositories/:id/remove_puppet_modules"
     api :PUT, "/repositories/:id/remove_content"
     desc "Remove content from a repository"

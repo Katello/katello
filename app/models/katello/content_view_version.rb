@@ -222,13 +222,6 @@ module Katello
       manifest_counts.sum
     end
 
-    def docker_image_count
-      image_counts = repositories.archived.docker_type.map do |repo|
-        repo.docker_images.count
-      end
-      image_counts.sum
-    end
-
     def docker_tags
       archived_repos.docker_type.flat_map(&:docker_tags)
     end
@@ -248,10 +241,6 @@ module Katello
 
     def docker_manifests
       DockerManifest.in_repositories(archived_repos).uniq
-    end
-
-    def docker_images
-      DockerImage.in_repositories(archived_repos).uniq
     end
 
     def package_groups
