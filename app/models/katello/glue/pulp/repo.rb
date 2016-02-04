@@ -162,7 +162,7 @@ module Katello
           clone_dist = Runcible::Models::YumCloneDistributor.new(:id => "#{self.pulp_id}_clone",
                                                                  :destination_distributor_id => yum_dist_id)
           export_dist = Runcible::Models::ExportDistributor.new(false, false)
-          [yum_dist, clone_dist, nodes_distributor, export_dist]
+          [yum_dist, clone_dist, export_dist]
         when Repository::FILE_TYPE
           dist = Runcible::Models::IsoDistributor.new(true, true)
           dist.auto_publish = true

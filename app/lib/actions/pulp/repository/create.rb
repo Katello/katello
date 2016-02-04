@@ -61,7 +61,7 @@ module Actions
         def distributors
           case input[:content_type]
           when ::Katello::Repository::YUM_TYPE
-            [yum_distributor, yum_clone_distributor, nodes_distributor, export_distributor]
+            [yum_distributor, yum_clone_distributor, export_distributor]
           when ::Katello::Repository::FILE_TYPE
             [iso_distributor]
           when ::Katello::Repository::PUPPET_TYPE

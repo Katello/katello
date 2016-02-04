@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://katello-devbox.example.com/pulp/api/v2/consumers/
+    uri: https://katello-2-8-dev.example.com/pulp/api/v2/consumers/
     body:
       encoding: UTF-8
       base64_string: |
@@ -15,9 +15,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello",
-        oauth_nonce="WDkGV7gkPgyXXhncQUwXgYbMyFPkgFPWIowt9dFX1U", oauth_signature="LY2psz9nBjzqcIh5SfTxGPybX1w%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1454628839", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="WhqJhRh94gkhNXvNxnueN3AEmQzWgK2f",
+        oauth_nonce="G8vOOhGB51nUbNft7YvOnyVfV76X4LfurhyroB5m1TI", oauth_signature="zm8yKnDznqasb5HCdDqH6T%2BlOGc%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1454681079", oauth_version="1.0"
       Pulp-User:
       - admin
       Content-Length:
@@ -27,77 +27,76 @@ http_interactions:
   response:
     status:
       code: 201
-      message: Created
+      message: CREATED
     headers:
       Date:
-      - Thu, 04 Feb 2016 23:33:59 GMT
+      - Fri, 05 Feb 2016 14:04:39 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Location:
-      - "/pulp/api/v2/consumers/uuid/"
       Content-Length:
-      - '2169'
+      - '2158'
+      Location:
+      - https://katello-2-8-dev.example.com/pulp/api/v2/consumers/uuid/
       Connection:
       - close
       Content-Type:
-      - application/json
+      - application/json; charset=utf-8
     body:
       encoding: UTF-8
       base64_string: |
         eyJjb25zdW1lciI6IHsiZGlzcGxheV9uYW1lIjogIm5hbWUiLCAiZGVzY3Jp
         cHRpb24iOiBudWxsLCAiX25zIjogImNvbnN1bWVycyIsICJub3RlcyI6IHt9
         LCAicnNhX3B1YiI6IG51bGwsICJjYXBhYmlsaXRpZXMiOiB7fSwgIl9pZCI6
-        IHsiJG9pZCI6ICI1NmIzZGZlNzg0YTA5YzA3MDYzNDMxYTkifSwgImlkIjog
-        InV1aWQiLCAiX2hyZWYiOiB7Il9ocmVmIjogIi9wdWxwL2FwaS92Mi9jb25z
-        dW1lcnMvdXVpZC8ifX0sICJjZXJ0aWZpY2F0ZSI6ICItLS0tLUJFR0lOIFJT
-        QSBQUklWQVRFIEtFWS0tLS0tXG5NSUlDWFFJQkFBS0JnUUROVjZGUTdNaDdC
-        cEdwVTliTlk4UCtodWpsL0R2WnAvY1kzYTRNYWNjVGhmS2tPY2d3XG5CcTNx
-        TzBGUksvM21RdjlneTV4cTBmNkNFd3NSODNCV2FoZ0pPRmxwZHlKV3h0Uitt
-        RGZ0VElnRlQvaklvamhtXG41RWpQbHplSUcvaEtaVnFuY01RUTYyT2pENFEx
-        UUZIWlcxeGZMN09WNzRycGJWYVZrOTc0YVdSM1R3SURBUUFCXG5Bb0dBUXhI
-        aVVPcG1PVGpXRHZhaGJJaXZsYzArK1EvQUJNSEdCY3N5ZEQrQWxMSGxwUnB5
-        ZHExWDFPL3h6NitNXG55TThOVnZKcWJzR1VYYXdXcTVCV0d3T2dRWnk0Z05x
-        Q2hSZXlTN09PSkVpenJCK3NXVkJnY0hQbWpVMGxGK05RXG5idk5oWEhmOHhJ
-        aXdaTFlQOVpVVGJYM3ZUNnlvdGtTWVhaZ0REZ3N0UzR5M2I1RUNRUUR4bi9i
-        VGJtRXNDY0ZuXG4rV2VHU2JBV25LaTYwTkUrK1FsbEpRUk1ZUEFkSHlCZFEv
-        akV6eUhNQzVaTHhXeGt4OUdjY3dOUjl6VzRvVDlvXG5IeXhPR3VVckFrRUEy
-        WThSdTcraTZteU9HRHRlQXY4LzkrT2luQ2p1bUQxMlQ3UGhmckhtS1BHQWFT
-        Tkl3bmhQXG42Z2dpNXNKbktKdTFsMXlSK2wrT3JPMVVSMCt1dGVpc2JRSkFL
-        RFZ3ZzdySW5PVjZzK3pERjR2SHE5dWlFSVNUXG5iYUZQdU84eUNldlB5V2pX
-        bis2aHhVNmExelBPYlFtTGdqSG1aZHlWM3R2K3FwemF5bDcxcG9HL1JRSkJB
-        TmRSXG5iNzJmbHIvb25HR0RNREpMS2FaUFZ2cXkwQ0ZBZ3oyeXpEUTJJWkxZ
-        SWJ6c3ZQQXJYdnhDL1RmaG8zTmZXRVByXG56RlkrQ05sQk1pNDV3TEl0QzZr
-        Q1FRQ3lYYklOK0x4WnZGS0VRSmIzZndvQVdiY0xHWjhBWWg1UHVEc2VWZWta
-        XG5zRUs1SFlHS0xRWFFrV2RxYVpWTm9hMzcwOFNvbHVObng1Q2ozNjY2NTBt
-        RlxuLS0tLS1FTkQgUlNBIFBSSVZBVEUgS0VZLS0tLS1cbi0tLS0tQkVHSU4g
-        Q0VSVElGSUNBVEUtLS0tLVxuTUlJQ3NEQ0NBWmdDQWdJVU1BMEdDU3FHU0li
-        M0RRRUJCUVVBTUlHRk1Rc3dDUVlEVlFRR0V3SlZVekVYTUJVR1xuQTFVRUNC
-        TU9UbTl5ZEdnZ1EyRnliMnhwYm1FeEVEQU9CZ05WQkFjVEIxSmhiR1ZwWjJn
-        eEVEQU9CZ05WQkFvVFxuQjB0aGRHVnNiRzh4RkRBU0JnTlZCQXNUQzFOdmJX
-        VlBjbWRWYm1sME1TTXdJUVlEVlFRREV4cHJZWFJsYkd4dlxuTFdSbGRtSnZl
-        QzVsZUdGdGNHeGxMbU52YlRBZUZ3MHhOakF5TURReU16TXpOVGxhRncweU5q
-        QXlNREV5TXpNelxuTlRsYU1Ea3hEVEFMQmdOVkJBTVRCSFYxYVdReEtEQW1C
-        Z29Ka2lhSmsvSXNaQUVCRXhnMU5tSXpaR1psTnpnMFxuWVRBNVl6QTNNRFl6
-        TkRNeFlUa3dnWjh3RFFZSktvWklodmNOQVFFQkJRQURnWTBBTUlHSkFvR0JB
-        TTFYb1ZEc1xueUhzR2thbFQxczFqdy82RzZPWDhPOW1uOXhqZHJneHB4eE9G
-        OHFRNXlEQUdyZW83UVZFci9lWkMvMkRMbkdyUlxuL29JVEN4SHpjRlpxR0Fr
-        NFdXbDNJbGJHMUg2WU4rMU1pQVZQK01paU9HYmtTTStYTjRnYitFcGxXcWR3
-        eEJEclxuWTZNUGhEVkFVZGxiWEY4dnM1WHZpdWx0VnBXVDN2aHBaSGRQQWdN
-        QkFBRXdEUVlKS29aSWh2Y05BUUVGQlFBRFxuZ2dFQkFBY2xwYWhKWWNtc0Q2
-        SEJSZWVJbFlzdDRRck51NGIxOWdGK0p3VjYwWEw1Uy9vdGRLLzVLV2ZBWEYy
-        QlxuOC9seFdlTEYrSFVXUXpLVlVQMXBLOENnTXhvaDhvSGlTV09EUXFhK2hm
-        RzU1dmxRZnI1MEV6SEdPTWRvY2xKRFxuRWdNa3B4eG9kRUVQcmtPd1dPNHh2
-        V2Zwem9ibHBjWTFCOUFDaVY3M0cxQzVxT25ERERTdmpOdW53SndlZnlvOFxu
-        ODJQeVVxSXVRTVBZUVNlbFFvMlczZEE2dE9mcWJrNlNjQjRJakw0U1JNZWh3
-        c1JKVkNlcTBMTDRuU3p0OE1CSVxuRTRkelpCVWtkRzB5aXhSY2kwSDhUWU9T
-        OXhqUk9TR1BTK3VQcHRLM2VPMTJHREpPWjVDeklRMnhsRktEa2N1TVxuV1NU
-        cXM1TFlyT3hKaGNjU2pPcHhtSDhFMEVvPVxuLS0tLS1FTkQgQ0VSVElGSUNB
-        VEUtLS0tLSJ9
+        IHsiJG9pZCI6ICI1NmI0YWJmN2M3ODIxYjMzMDVjZTUwY2UifSwgImlkIjog
+        InV1aWQiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL2NvbnN1bWVycy91dWlk
+        LyJ9LCAiY2VydGlmaWNhdGUiOiAiLS0tLS1CRUdJTiBSU0EgUFJJVkFURSBL
+        RVktLS0tLVxuTUlJQ1hRSUJBQUtCZ1FEUTJFeVZZczF4di9TbGhnT3FhcmdE
+        L2hrTTF5Z2hESTIzMmVkRWFCYTN1R0tZWENBSFxuSnowSUg3eGQwNURMeHFH
+        eFlSbHJWd1ZuUUhiM2RBZzhzKzFla1BjTStxVkVkdzg3Qy8wYS9nOG9vYSts
+        S1FZalxubzJ2SmNTelN5MW5STUFRTkMxamtQRnVGY05YTCtsdjR4TnorMzVw
+        VkpJeno1aDQ2VHpGUll6d3N5d0lEQVFBQlxuQW9HQVRSTjIrQzhWdVdScHF1
+        a1IwMFE5azZPa3BSdUhBT044TGgwcWdCR1dTTW14QWFBR1pmMXlSZHhJamF3
+        MlxuSlM2eW9COUEzVitwYTlqYnp5bXduSTZmREhzK0NoY2gvNm9FQ3lYZjly
+        aEpZMkY1MEdIMnd2N3VzK3B0TzlTTlxucS9iVG5vakl6Z1ZSK0RlUHJhTi9z
+        N1lIK3Y3TkUrYjRaUTFjM0RBeDVuRWVabEVDUVFEOUtiN1lSTXFRSHJsaFxu
+        UGdCRDF1bmk0NE03dmZzL2tyTld5WmorSzllYzN5aUE4NHBDSEQvZW9ISm1t
+        SlpDWEtDOTNCeGQ1NXhWR200d1xuOU5xcWxJUmpBa0VBMHk5cXpoZ00rQ20r
+        ZnNkUHV2Mi83LzJkZW9RUWxDMjYwdFk3SUhOa0pFemExMW1hNWxFMFxuejR1
+        QXo1cEl2WFZzWVdWSk1RajdRTytMUHpubi9rSWVlUUpBSWFWWXJkbUdxbHpL
+        K25lSkJYc2Nub0RxUWhoZlxudWZVL1RIdUNqOVUzMUt0NzhKZHRlcGZTalQz
+        NXRsVDFNMkNvSkZPS21aaGNtSnJvcGkwRW1zTWVUUUpCQUxlUFxuUzRKL25T
+        WkhBbkVueE1GL3RjbGY0L1dOdk90UEpFZ0dOYlpyRmV3SGNXQWxYbUk2eTNC
+        cWpUZmxucnd1eUZtUFxudENLTzcvVHRRVmRmZWFxaXhlRUNRUUNRNVpKcjFi
+        dEFtWWpJNmlWdmRIcktUb3JaaWJCdVZDK2Qxb0Jva01zb1xuWEZuMGNMeE5n
+        YS9wOFRvUlJuT1hjZmszYnFnYVVEQVdOeWVOZVZHeGRHUzhcbi0tLS0tRU5E
+        IFJTQSBQUklWQVRFIEtFWS0tLS0tXG4tLS0tLUJFR0lOIENFUlRJRklDQVRF
+        LS0tLS1cbk1JSUNzRENDQVpnQ0FUOHdEUVlKS29aSWh2Y05BUUVGQlFBd2dZ
+        WXhDekFKQmdOVkJBWVRBbFZUTVJjd0ZRWURcblZRUUlFdzVPYjNKMGFDQkRZ
+        WEp2YkdsdVlURVFNQTRHQTFVRUJ4TUhVbUZzWldsbmFERVFNQTRHQTFVRUNo
+        TUhcblMyRjBaV3hzYnpFVU1CSUdBMVVFQ3hNTFUyOXRaVTl5WjFWdWFYUXhK
+        REFpQmdOVkJBTVRHMnRoZEdWc2JHOHRcbk1pMDRMV1JsZGk1bGVHRnRjR3hs
+        TG1OdmJUQWVGdzB4TmpBeU1EVXhOREEwTXpsYUZ3MHlOakF5TURJeE5EQTBc
+        bk16bGFNRGt4RFRBTEJnTlZCQU1UQkhWMWFXUXhLREFtQmdvSmtpYUprL0lz
+        WkFFQkV4ZzFObUkwWVdKbU4yTTNcbk9ESXhZak16TURWalpUVXdZMlV3Z1o4
+        d0RRWUpLb1pJaHZjTkFRRUJCUUFEZ1kwQU1JR0pBb0dCQU5EWVRKVmlcbnpY
+        Ry85S1dHQTZwcXVBUCtHUXpYS0NFTWpiZlo1MFJvRnJlNFlwaGNJQWNuUFFn
+        ZnZGM1RrTXZHb2JGaEdXdFhcbkJXZEFkdmQwQ0R5ejdWNlE5d3o2cFVSM0R6
+        c0wvUnIrRHlpaHI2VXBCaU9qYThseExOTExXZEV3QkEwTFdPUThcblc0Vncx
+        Y3Y2Vy9qRTNQN2ZtbFVralBQbUhqcFBNVkZqUEN6TEFnTUJBQUV3RFFZSktv
+        WklodmNOQVFFRkJRQURcbmdnRUJBT3l2K2RLdERpUWFUWnNVRmxneVVYN2RU
+        OW5hcHJSRTNCUFhSL3kwTkZydkpCQUtEd1dCNVlZMVBpMkxcbmIvOFZUdERr
+        T3V0K3owRVBUK3hBcFJpd25DNUVmWEM1akdqS21RdmhDSmRmNTliQzUzTHJV
+        alRrR3lKOTJNbEJcbkI3cE5aY3Q5bzEzQklIL3d0QnRLOUl2bnhzdW1iUzhS
+        NHpSb0RINEE1MHV4T01yV3JidkVHVlJ2RHZ5Qk1rQzRcbnU2K1JHa25TaDB3
+        ZEVOdHE5bWVGK1Nxc3lnK1gxajRkOTlKSGs2c1IvOW9UVjJjd2pNbXYzYTFQ
+        UktvQWZydURcblovUVhma1cyOStvcUMwdFlqQTVVdG0veDZGcnJzUHZyd1hS
+        V29mZSswOEtTWHdBMVpzKzB1Ri9RU3lld2s3bVRcblZjaGExVDgxU2dzMURH
+        ZXptNXkzck5mZzJWRT1cbi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0ifQ==
     http_version: 
-  recorded_at: Thu, 04 Feb 2016 23:33:59 GMT
+  recorded_at: Fri, 05 Feb 2016 14:04:39 GMT
 - request:
     method: delete
-    uri: https://katello-devbox.example.com/pulp/api/v2/consumers/uuid/
+    uri: https://katello-2-8-dev.example.com/pulp/api/v2/consumers/uuid/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -109,9 +108,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="katello", oauth_nonce="JCcZgZgUigvgorHY2SExrivryMWtAqYby3hX4UmOmvA",
-        oauth_signature="kDkaE0IeCw%2FJ3x61SDqmsqR7BSA%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454628839", oauth_version="1.0"
+      - OAuth oauth_consumer_key="WhqJhRh94gkhNXvNxnueN3AEmQzWgK2f", oauth_nonce="IPVdgMqtKRvDJD8eL2V4cR5VWdfJQTqUVENiSKEbDE",
+        oauth_signature="iwKbl02lUnViZltUwz%2FKEkvCvy0%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454681079", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -122,7 +121,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 04 Feb 2016 23:33:59 GMT
+      - Fri, 05 Feb 2016 14:04:39 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
@@ -130,11 +129,11 @@ http_interactions:
       Connection:
       - close
       Content-Type:
-      - application/json
+      - application/json; charset=utf-8
     body:
       encoding: UTF-8
       base64_string: |
         bnVsbA==
     http_version: 
-  recorded_at: Thu, 04 Feb 2016 23:34:00 GMT
+  recorded_at: Fri, 05 Feb 2016 14:04:39 GMT
 recorded_with: VCR 2.9.3
