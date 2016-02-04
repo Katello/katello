@@ -7,9 +7,10 @@ module Katello
       @security = katello_errata(:security)
       @bugfix = katello_errata(:bugfix)
       @enhancement = katello_errata(:enhancement)
-      @errata_server = katello_systems(:errata_server)
-      @errata_server_dev = katello_systems(:errata_server_dev)
-      @simple_server = katello_systems(:simple_server)
+      @host = hosts(:one)
+      @host_dev = hosts(:two)
+      @host_without_errata = @host.clone
+      @host_without_errata.content_facet.applicable_errata = []
     end
   end
 
@@ -40,15 +41,15 @@ module Katello
       refute Erratum.of_type(Erratum::SECURITY).include?(@enhancement)
     end
 
-    def test_applicable_to_systems
-      errata =  Erratum.applicable_to_systems([@errata_server, @simple_server])
+    def test_applicable_to_hosts
+      errata =  Erratum.applicable_to_hosts([@host, @host_without_errata])
       assert_includes errata, @security
       assert_includes errata, @bugfix
       refute_includes errata, @enhancement
     end
 
-    def test_not_applicable_to_systems
-      assert_empty Erratum.applicable_to_systems([@simple_server])
+    def test_not_applicable_to_hosts
+      assert_empty Erratum.applicable_to_hosts([@host_without_errata])
     end
 
     def test_update_from_json
@@ -110,34 +111,35 @@ module Katello
     def setup
       super
       Katello::System.any_instance.stubs(:save_candlepin_orchestration).returns(:true)
-      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
-      @errata_server.bound_repositories = [@view_repo]
-      @errata_server.save!
+      @host = hosts(:one)
+      @host.content_facet.content_view = katello_content_views(:acme_default)
+      @host.content_facet.bound_repositories = [@repo]
+      @host.content_facet.save!
     end
 
-    def test_systems_available
-      assert_includes @security.systems_available, @errata_server
-      refute_includes @security.systems_available, @simple_server
-      refute_includes @bugfix.systems_available, @simple_server
+    def test_hosts_available
+      assert_includes @security.hosts_available, @host.content_facet
+      refute_includes @security.hosts_available, @host_without_errata
+      refute_includes @bugfix.hosts_available, @host_without_errata
     end
 
-    def test_installable_for_systems
-      errata = Erratum.installable_for_systems([@errata_server, @simple_server])
+    def test_installable_for_hosts
+      errata = Erratum.installable_for_hosts([@host, @host_without_errata])
       assert_includes errata, @security
       assert_includes errata, @bugfix
       refute_includes errata, @enhancement
     end
 
-    def test_installable_for_systems_dev_environment
-      errata = Erratum.installable_for_systems([@errata_server_dev, @simple_server])
+    def test_installable_for_hosts_dev_environment
+      errata = Erratum.installable_for_hosts([@host_dev, @host_without_errata])
       assert_includes errata, @security
       assert_includes errata, @bugfix
       refute_includes errata, @enhancement
     end
 
-    def test_installable_for_systems_dev_environment_with_repos
+    def test_installable_for_hosts_dev_environment_with_repos
       #Tests issue #10681
-      errata = Erratum.installable_for_systems([@errata_server_dev, @simple_server]).in_repositories(@repo)
+      errata = Erratum.installable_for_hosts([@host_dev, @host_without_errata]).in_repositories(@repo)
       assert_includes errata, @security
       assert_includes errata, @bugfix
       refute_includes errata, @enhancement

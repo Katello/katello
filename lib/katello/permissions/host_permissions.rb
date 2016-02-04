@@ -2,6 +2,7 @@ require 'katello/plugin.rb'
 
 Foreman::AccessControl.permission(:edit_hosts).actions << [
   'api/v2/hosts/host_collections',
+  'katello/api/v2/host_errata/apply',
   'katello/api/v2/host_packages/install',
   'katello/api/v2/host_packages/upgrade',
   'katello/api/v2/host_packages/upgrade_all',
@@ -12,6 +13,8 @@ Foreman::AccessControl.permission(:edit_hosts).actions << [
 ]
 
 Foreman::AccessControl.permission(:view_hosts).actions << [
+  'katello/api/v2/host_errata/index',
+  'katello/api/v2/host_errata/show',
   'katello/api/v2/host_subscriptions/index',
   'katello/api/v2/host_subscriptions/events'
 ]

@@ -4,17 +4,17 @@
   <table class="summary" style="border: 1px solid; padding: 5px; background-color: #ffffff; border-collapse: collapse; text-align: center; width: 100%;" bgcolor="#ffffff">
     <tr>
       <td style="width: 33%; padding: 5px; border: 1px solid #ccc;">
-        <b class="counter" style="color: #6bb5df;"><%= host_count(content_hosts, :security) %></b>
+        <b class="counter" style="color: #6bb5df;"><%= host_count(hosts, :security) %></b>
 
         <p class="summary-title" style="font-size: 80%; font-weight: bold; margin: 5px; padding: 0px;"><%= _("Security").upcase %></p>
       </td>
       <td style="width: 33%; padding: 5px; border: 1px solid #ccc;">
-        <b class="counter" style="color: #6bb5df;"><%= host_count(content_hosts, :bugfix) %></b>
+        <b class="counter" style="color: #6bb5df;"><%= host_count(hosts, :bugfix) %></b>
 
         <p class="summary-title" style="font-size: 80%; font-weight: bold; margin: 5px; padding: 0px;"><%= _("Bugfix").upcase %></p>
       </td>
       <td style="width: 33%; padding: 5px; border: 1px solid #ccc;">
-        <b class="counter" style="color: #6bb5df;"><%= host_count(content_hosts, :enhancement) %></b>
+        <b class="counter" style="color: #6bb5df;"><%= host_count(hosts, :enhancement) %></b>
 
         <p class="summary-title" style="font-size: 80%; font-weight: bold; margin: 5px; padding: 0px;"><%= _("Enhancement").upcase %></p>
       </td>

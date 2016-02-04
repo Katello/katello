@@ -1,16 +1,16 @@
 module Actions
   module Katello
-    module System
+    module Host
       module Erratum
         class Install < Actions::EntryAction
           include Helpers::Presenter
 
-          def plan(system, errata_ids)
-            Type! system, ::Katello::System
+          def plan(host, errata_ids)
+            Type! host, ::Host::Managed
 
-            action_subject(system, :errata => errata_ids)
+            action_subject(host, :errata => errata_ids)
             plan_action(Pulp::Consumer::ContentInstall,
-                        consumer_uuid: system.uuid,
+                        consumer_uuid: host.content_facet.uuid,
                         type:          'erratum',
                         args:          errata_ids)
           end

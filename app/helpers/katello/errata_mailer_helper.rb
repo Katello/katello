@@ -1,7 +1,7 @@
 module Katello
   module ErrataMailerHelper
-    def content_host_errata_path(content_host)
-      uuid = Katello::System.find(content_host).uuid
+    def content_host_errata_path(host)
+      uuid = host.content_facet.uuid
       "#{Setting[:foreman_url]}/content_hosts/#{uuid}/errata"
     end
 
@@ -25,8 +25,8 @@ module Katello
     end
 
     def errata_count(host, errata_type)
-      available = host.installable_errata.send(errata_type.to_sym).count
-      applicable = host.applicable_errata.send(errata_type.to_sym).count - available
+      available = host.content_facet.installable_errata.send(errata_type.to_sym).count
+      applicable = host.content_facet.applicable_errata.send(errata_type.to_sym).count - available
       "#{available} (#{applicable})"
     end
 
@@ -35,7 +35,7 @@ module Katello
     end
 
     def host_count(hosts, errata_type)
-      hosts.to_a.count { |host| host.installable_errata.send(errata_type.to_sym).any? }
+      hosts.to_a.count { |host| host.content_facet.installable_errata.send(errata_type.to_sym).any? }
     end
   end
 end

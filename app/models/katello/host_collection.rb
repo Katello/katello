@@ -120,7 +120,7 @@ module Katello
     end
 
     def errata(type = nil)
-      query = Erratum.joins(:system_errata).where("#{SystemErratum.table_name}.system_id" => self.consumer_ids)
+      query = Erratum.joins(:content_facet_errata).where("#{Katello::Host::ContentFacet.table_name}.host_id" => self.host_ids)
       type ? query.of_type(type) : query
     end
 

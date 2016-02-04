@@ -3,8 +3,8 @@
 </h4>
 
 <% organizations = Organization.current.present? ? [Organization.current] : User.current.allowed_organizations %>
-<% systems = Katello::System.in_organizations(organizations).readable %>
-<% errata = Katello::Erratum.applicable_to_systems(systems).order('updated desc').limit(6) %>
+<% hosts = ::Host::Managed.authorized("view_hosts") %>
+<% errata = Katello::Erratum.applicable_to_hosts(hosts).order('updated desc').limit(6) %>
 
 <% if errata.empty? %>
   <p class="ca"><%= _("There are no errata that need to be applied to registered content hosts.") %></p>
@@ -18,13 +18,13 @@
     </thead>
     <tbody>
       <% errata.each do |erratum| %>
-        <% content_hosts = erratum.systems_applicable.in_organizations(organizations).readable %>
+        <% hosts = erratum.hosts_applicable %>
 
         <tr>
           <th class="" title="<%= erratum.errata_type %>"><%= erratum.errata_type %></th>
           <th>
             <a href="/errata/<%= erratum.uuid %>/info">
-              <%= erratum.errata_id %> (<%= content_hosts.length %> _('Content Hosts')))
+              <%= erratum.errata_id %> (<%= hosts.length %> _('Hosts'))
             </a>
           </th>
         </tr>

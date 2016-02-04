@@ -46,6 +46,13 @@ Foreman::Application.routes.draw do
     namespace :api do
       scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v2/, :constraints => ApiConstraints.new(:version => 2, :default => true) do
         resources :hosts, :only => [] do
+          resources :errata, :only => [:show, :index], :controller => :host_errata do
+            collection do
+              put :apply
+              get :auto_complete_search
+            end
+          end
+
           resources :packages, :only => [:index], :controller => :host_packages do
             get :auto_complete_search, :on => :collection
 

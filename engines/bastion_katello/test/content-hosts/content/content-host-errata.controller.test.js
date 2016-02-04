@@ -1,6 +1,6 @@
 describe('Controller: ContentHostErrataController', function() {
-    var $scope, Nutupane, ContentHostErratum, Environment, Organization,
-        mockContentHost, mockTask, mockErratum, ContentHost, mockContentView, nutupaneMock;
+    var $scope, Nutupane, HostErratum, Environment, Organization,
+        mockContentHost, mockTask, mockErratum, ContentHost, mockHost, mockContentView, nutupaneMock;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
@@ -15,13 +15,17 @@ describe('Controller: ContentHostErrataController', function() {
             pending: true,
             id: 7
         };
+        mockHost = {
+            id: 123
+        };
         mockContentView = {
             id: 5,
             default: false
         };
         nutupaneMock = {
             setParams: function() {},
-            refresh: function(){}
+            refresh: function(){},
+            load: function () {}
         };
         Nutupane = function() {
             this.table = {
@@ -32,8 +36,9 @@ describe('Controller: ContentHostErrataController', function() {
             this.get = function() {};
             this.setParams = function(args) {nutupaneMock.setParams(args)};
             this.refresh = function() {nutupaneMock.refresh()};
+            this.load = function () {nutupaneMock.load()};
         };
-        ContentHostErratum = {
+        HostErratum = {
             get: function() {return []},
             apply: function(errata, success) {
                 success(mockTask);
@@ -61,13 +66,14 @@ describe('Controller: ContentHostErrataController', function() {
         ContentHost.mockResources.results[0].content_view_id = 'content-view-id';
         ContentHost.mockResources.results[0].environment = Environment.mockResources.results[0];
         ContentHost.mockResources.results[0].content_view = mockContentView;
+        ContentHost.mockResources.results[0].host = mockHost;
         mockContentHost =  ContentHost.mockResources.results[0];
 
         $scope.contentHost = ContentHost.get({id: mockContentHost.id});
         $scope.$stateParams = {contentHostId: $scope.contentHost.id};
 
         $controller('ContentHostErrataController', {$scope: $scope,
-                                               ContentHostErratum: ContentHostErratum,
+                                               HostErratum: HostErratum,
                                                Nutupane: Nutupane,
                                                Environment: Environment,
                                                Organization: Organization});
@@ -78,11 +84,11 @@ describe('Controller: ContentHostErrataController', function() {
     });
 
     it("provide a way to apply errata", function() {
-        spyOn(ContentHostErratum, "apply").andCallThrough();
+        spyOn(HostErratum, "apply").andCallThrough();
         spyOn($scope.detailsTable, "selectAll");
         spyOn($scope, "transitionTo");
         $scope.applySelected();
-        expect(ContentHostErratum.apply).toHaveBeenCalledWith({uuid: mockContentHost.uuid, errata_ids: [mockErratum.errata_id]},
+        expect(HostErratum.apply).toHaveBeenCalledWith({id: mockHost.id, errata_ids: [mockErratum.errata_id]},
                                                          jasmine.any(Function));
         expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.details.tasks.details', {taskId: mockTask.id});
         expect($scope.detailsTable.selectAll).toHaveBeenCalledWith(false);
@@ -92,7 +98,7 @@ describe('Controller: ContentHostErrataController', function() {
         spyOn(nutupaneMock, 'setParams');
         spyOn(nutupaneMock, 'refresh');
         $scope.refreshErrata('current');
-        expect(nutupaneMock.setParams).toHaveBeenCalledWith({id: $scope.contentHost.id});
+        expect(nutupaneMock.setParams).toHaveBeenCalledWith({id: mockHost.id});
         expect(nutupaneMock.refresh).toHaveBeenCalled();
     });
 
@@ -100,7 +106,7 @@ describe('Controller: ContentHostErrataController', function() {
         spyOn(nutupaneMock, 'setParams');
         spyOn(nutupaneMock, 'refresh');
         $scope.refreshErrata('prior');
-        expect(nutupaneMock.setParams).toHaveBeenCalledWith({id: $scope.contentHost.id,
+        expect(nutupaneMock.setParams).toHaveBeenCalledWith({id: mockHost.id,
             content_view_id: $scope.contentHost.content_view_id, environment_id: $scope.contentHost.environment.prior.id});
         expect(nutupaneMock.refresh).toHaveBeenCalled();
     });
@@ -109,7 +115,7 @@ describe('Controller: ContentHostErrataController', function() {
         spyOn(nutupaneMock, 'setParams');
         spyOn(nutupaneMock, 'refresh');
         $scope.refreshErrata('library');
-        expect(nutupaneMock.setParams).toHaveBeenCalledWith({id: $scope.contentHost.id,
+        expect(nutupaneMock.setParams).toHaveBeenCalledWith({id: mockHost.id,
             content_view_id: Organization.mockResources.results[0].default_content_view_id,
             environment_id: Organization.mockResources.results[0].library_id});
         expect(nutupaneMock.refresh).toHaveBeenCalled();
@@ -160,7 +166,7 @@ describe('Controller: ContentHostErrataController', function() {
         Environment.mockResources.results[0].library = true;
         $scope.contentHost.environment.library = true;
         $scope.contentHost.content_view_id = Organization.mockResources.results[0].default_content_view_id
-        $scope.contentHost.content_view = {default: true}
+        $scope.contentHost.content_view = {default: true};
         $scope.setupErrataOptions($scope.contentHost);
 
         var defaultLib = _.find($scope.errataOptions, function(opt) { return opt.label === 'library'; }),

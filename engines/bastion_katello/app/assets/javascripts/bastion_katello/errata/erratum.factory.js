@@ -16,7 +16,7 @@ angular.module('Bastion.errata').factory('Erratum',
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
                 applicableContentHosts: {method: 'GET', transformResponse: function (data) {
                     var erratum = angular.fromJson(data),
-                        systems = erratum['systems_applicable'];
+                        systems = erratum['hosts_applicable'];
                     return {results: systems, subtotal: systems.length, total: systems.length};
                 }}
             }

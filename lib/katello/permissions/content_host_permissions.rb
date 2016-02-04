@@ -6,7 +6,6 @@ Foreman::Plugin.find(:katello).security_block :content_hosts do
                'katello/content_hosts'        => [:auto_complete_search],
                'katello/api/v2/systems' => [:index, :show, :errata, :package_profile, :product_content,
                                             :report, :releases, :available_host_collections],
-               'katello/api/v2/system_errata' => [:index, :show],
                'katello/api/v2/systems_bulk_actions' => [:applicable_errata],
                'katello/api/v2/host_collections' => [:systems]
              },
@@ -20,7 +19,6 @@ Foreman::Plugin.find(:katello).security_block :content_hosts do
   permission :edit_content_hosts,
              {
                'katello/api/v2/systems' => [:update, :content_override],
-               'katello/api/v2/system_errata' => [:apply],
                'katello/api/v2/systems_bulk_actions' => [:install_content, :update_content,
                                                          :remove_content, :environment_content_view,
                                                          :bulk_add_host_collections, :bulk_remove_host_collections],

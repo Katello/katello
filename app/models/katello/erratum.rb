@@ -9,11 +9,9 @@ module Katello
     TYPES = [SECURITY, BUGZILLA, ENHANCEMENT]
     CONTENT_TYPE = Pulp::Erratum::CONTENT_TYPE
 
-    has_many :systems_applicable, :through => :system_errata, :class_name => "Katello::System", :source => :system
-    has_many :system_errata, :class_name => "Katello::SystemErratum", :dependent => :destroy, :inverse_of => :erratum
-
     has_many :content_facets, :through => :content_facet_errata, :class_name => "Katello::Host::ContentFacet", :source => :content_facet
     has_many :content_facet_errata, :class_name => "Katello::ContentFacetErratum", :dependent => :destroy, :inverse_of => :content_facet
+    has_many :content_facets_applicable, :through => :content_facet_errata, :class_name => "Katello::Host::ContentFacet", :source => :content_facet
 
     has_many :repositories, :through => :repository_errata, :class_name => "Katello::Repository"
     has_many :repository_errata, :class_name => "Katello::RepositoryErratum", :dependent => :destroy, :inverse_of => :erratum
@@ -47,31 +45,37 @@ module Katello
       RepositoryErratum
     end
 
-    def self.applicable_to_systems(systems)
-      self.joins(:system_errata).where("#{SystemErratum.table_name}.system_id" => systems).uniq
+    def self.applicable_to_hosts(hosts)
+      self.joins(:content_facet_errata).joins(:content_facets).
+          where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).uniq
     end
 
     def <=>(other)
       return self.errata_id <=> other.errata_id
     end
 
-    def systems_available
-      self.systems_applicable.joins("INNER JOIN #{Katello::RepositoryErratum.table_name} on \
-        #{Katello::RepositoryErratum.table_name}.erratum_id = #{self.id}").joins(:system_repositories).
-        where("#{Katello::SystemRepository.table_name}.repository_id = #{Katello::RepositoryErratum.table_name}.repository_id").uniq
+    def hosts_applicable
+      self.content_facets_applicable.joins(:host)
     end
 
-    def systems_unavailable
-      self.systems_applicable.where("#{Katello::System.table_name}.id not in (#{self.systems_available.select("#{Katello::System.table_name}.id").to_sql})")
+    def hosts_available
+      self.hosts_applicable.joins("INNER JOIN #{Katello::RepositoryErratum.table_name} on \
+        #{Katello::RepositoryErratum.table_name}.erratum_id = #{self.id}").joins(:content_facet_repositories).
+        where("#{Katello::ContentFacetRepository.table_name}.repository_id = #{Katello::RepositoryErratum.table_name}.repository_id").uniq
     end
 
-    def self.installable_for_systems(systems = nil)
-      query = Katello::Erratum.joins(:system_errata).joins(:repository_errata).joins("INNER JOIN #{Katello::SystemRepository.table_name} on \
-        #{Katello::SystemRepository.table_name}.system_id = #{Katello::SystemErratum.table_name}.system_id").
-        joins("INNER JOIN #{Katello::RepositoryErratum.table_name} AS system_repo_errata ON \
-          system_repo_errata.erratum_id = #{Katello::Erratum.table_name}.id").
-        where("#{Katello::SystemRepository.table_name}.repository_id = system_repo_errata.repository_id")
-      query.where("#{Katello::SystemRepository.table_name}.system_id" => [systems.map(&:id)]) if systems
+    def hosts_unavailable
+      self.hosts_applicable.where("#{Katello::System.table_name}.id not in (#{self.hosts_available.select("#{Katello::System.table_name}.id").to_sql})")
+    end
+
+    def self.installable_for_hosts(hosts = nil)
+      query = Katello::Erratum.joins(:content_facet_errata).joins(:repository_errata).
+        joins("INNER JOIN #{Katello::ContentFacetRepository.table_name} on \
+        #{Katello::ContentFacetRepository.table_name}.content_facet_id = #{Katello::ContentFacetErratum.table_name}.content_facet_id").
+        joins("INNER JOIN #{Katello::RepositoryErratum.table_name} AS host_repo_errata ON \
+          host_repo_errata.erratum_id = #{Katello::Erratum.table_name}.id").
+        where("#{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_errata.repository_id")
+      query.where("#{Katello::Host::ContentFacet.table_name}.host_id" => [hosts.map(&:id)]) if hosts
       query
     end
 

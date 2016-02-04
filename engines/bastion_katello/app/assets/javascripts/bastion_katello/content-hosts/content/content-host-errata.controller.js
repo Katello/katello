@@ -3,7 +3,7 @@
  * @name  Bastion.content-hosts.controller:ContentHostErrataController
  *
  * @requires $scope
- * @requires ContentHostErratum
+ * @requires HostErratum
  * @requires Nutupane
  *
  * @description
@@ -11,10 +11,9 @@
  */
 /*jshint camelcase:false*/
 angular.module('Bastion.content-hosts').controller('ContentHostErrataController',
-    ['$scope', 'translate', 'ContentHostErratum', 'Nutupane', 'Organization', 'Environment',
-    function ($scope, translate, ContentHostErratum, Nutupane, Organization, Environment) {
+    ['$scope', 'translate', 'HostErratum', 'Nutupane', 'Organization', 'Environment',
+    function ($scope, translate, HostErratum, Nutupane, Organization, Environment) {
         var errataNutupane, params = {
-            'id': $scope.$stateParams.contentHostId,
             'sort_by': 'updated',
             'sort_order': 'DESC',
             'paged': true,
@@ -22,11 +21,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         };
 
         function loadErratum(errataId) {
-            $scope.erratum = ContentHostErratum.get({'id': $scope.$stateParams.contentHostId,
+            $scope.erratum = HostErratum.get({'id': $scope.contentHost.host.id,
                 'errata_id': errataId});
         }
 
-        errataNutupane = new Nutupane(ContentHostErratum, params, 'get');
+        errataNutupane = new Nutupane(HostErratum, params, 'get');
 
         errataNutupane.masterOnly = true;
         $scope.detailsTable = errataNutupane.table;
@@ -63,11 +62,16 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
                 });
             }
         };
-        $scope.contentHost.$promise.then($scope.setupErrataOptions);
+        $scope.contentHost.$promise.then(function (contentHost) {
+            $scope.setupErrataOptions(contentHost);
+            params.id = $scope.contentHost.host.id;
+            errataNutupane.setParams(params);
+            errataNutupane.load();
+        });
 
         $scope.refreshErrata = function (selected) {
             var option, errataParams;
-            errataParams = {'id': $scope.$stateParams.contentHostId};
+            errataParams = {'id': $scope.contentHost.host.id};
 
             $scope.selectedErrataOption = selected;
 
@@ -95,7 +99,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
                 angular.forEach(selected, function (value) {
                     errataIds.push(value.errata_id);
                 });
-                ContentHostErratum.apply({uuid: $scope.contentHost.uuid, 'errata_ids': errataIds},
+                HostErratum.apply({id: $scope.contentHost.host.id, 'errata_ids': errataIds},
                                    function (task) {
                                         $scope.detailsTable.selectAll(false);
                                         $scope.transitionTo('content-hosts.details.tasks.details', {taskId: task.id});

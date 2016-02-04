@@ -15,7 +15,7 @@ describe('Factory: Erratum', function() {
         var applicable_systems = [2, 3, 4],
             erratum = {
                 id: 1,
-                'systems_applicable': applicable_systems
+                'hosts_applicable': applicable_systems
             };
 
         $httpBackend.expectGET('/api/v2/errata/1').respond(erratum);

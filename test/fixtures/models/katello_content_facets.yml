@@ -3,3 +3,9 @@ one:
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_view) %>
   lifecycle_environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
   uuid: "abcdefghi"
+
+two:
+  host_id:  <%= ActiveRecord::FixtureSet.identify(:two) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view) %>
+  lifecycle_environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
+  uuid: "abcdefghi"

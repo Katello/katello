@@ -25,7 +25,7 @@ module Actions
               if cvv
                 humanized_lines << "Content View: #{cvv.content_view.name} version #{cvv.version}"
                 humanized_lines << _("Added Content:")
-                [::Katello::Erratum, ::Katello::Package, ::Katello::PuppetModule].each do |content_type|
+                [::Katello::Erratum, ::Katello::Rpm, ::Katello::PuppetModule].each do |content_type|
                   unless output[:added_units][content_type::CONTENT_TYPE].blank?
                     humanized_lines << "  #{HUMANIZED_TYPES[content_type::CONTENT_TYPE]}:"
                     humanized_lines += output[:added_units][content_type::CONTENT_TYPE].sort.map { |unit| "        #{unit}" }

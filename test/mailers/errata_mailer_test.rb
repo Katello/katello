@@ -30,15 +30,15 @@ module Katello
       @user.mail_notifications << MailNotification[:katello_sync_errata]
       @user.mail_notifications << MailNotification[:katello_promote_errata]
 
-      @errata_system = katello_systems(:errata_server)
+      @errata_host = hosts(:one)
     end
 
     def test_host_errata
       ActionMailer::Base.deliveries = []
       @user.user_mail_notifications.first.deliver
       email = ActionMailer::Base.deliveries.first
-      assert email.body.encoded.include? @errata_system.name
-      assert email.body.encoded.include? 'http://foreman.some.host.fqdn/content_hosts/010E99C0-3276-11E2-81C1-0800200Czzzzz/errata'
+      assert email.body.encoded.include? @errata_host.name
+      assert email.body.encoded.include? 'http://foreman.some.host.fqdn/content_hosts/abcdefghi/errata'
     end
 
     def test_sync_errata
@@ -51,8 +51,14 @@ module Katello
     end
 
     def test_promote_errata
+      view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
+      @errata_host.content_facet.bound_repositories = [view_repo]
+      @errata_host.content_facet.content_view = katello_content_views(:acme_default)
+      @errata_host.content_facet.save!
+
       ActionMailer::Base.deliveries = []
-      MailNotification[:katello_promote_errata].deliver(:users => [@user], :content_view => @errata_system.content_view, :environment => @errata_system.environment)
+      MailNotification[:katello_promote_errata].deliver(:users => [@user], :content_view => @errata_host.content_facet.content_view,
+                                                        :environment => @errata_host.content_facet.lifecycle_environment)
       email = ActionMailer::Base.deliveries.first
       assert email.body.encoded.include? 'RHSA-1999-1231'
     end
