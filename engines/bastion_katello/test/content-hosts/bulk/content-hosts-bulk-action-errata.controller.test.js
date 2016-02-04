@@ -21,7 +21,8 @@ describe('Controller: ContentHostsBulkActionErrataController', function() {
         };
     });
 
-    beforeEach(inject(function($controller, $rootScope, $q) {
+    beforeEach(inject(function($controller, $rootScope, $q, $window) {
+        $window.AUTH_TOKEN = 'secret_token';
         $scope = $rootScope.$new();
         $scope.nutupane = {
             table: {

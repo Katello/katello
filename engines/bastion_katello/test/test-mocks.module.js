@@ -12,8 +12,8 @@ angular.module('Bastion.test-mocks').config(['$provide', function ($provide) {
 
 }]);
 
-angular.module('Bastion.test-mocks').run(['$state', '$stateParams', '$rootScope',
-    function($state, $stateParams, $rootScope) {
+angular.module('Bastion.test-mocks').run(['$state', '$stateParams', '$rootScope', '$window',
+    function($state, $stateParams, $rootScope, $window) {
 
         $rootScope.transitionTo = function(state, params) {};
         $rootScope.$state = $state;

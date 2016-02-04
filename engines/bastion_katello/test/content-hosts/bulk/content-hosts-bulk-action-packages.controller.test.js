@@ -29,7 +29,8 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
         selected = {included: {ids: [1, 2, 3]}}
     });
 
-    beforeEach(inject(function($controller, $rootScope, $q) {
+    beforeEach(inject(function($controller, $rootScope, $q, $window) {
+        $window.AUTH_TOKEN = 'secret_token';
         $scope = $rootScope.$new();
         $scope.nutupane = {};
         $scope.nutupane.getAllSelectedResults = function () { return selected }

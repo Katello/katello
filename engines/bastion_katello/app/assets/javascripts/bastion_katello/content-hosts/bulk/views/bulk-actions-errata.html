@@ -25,19 +25,40 @@
     <div data-block="header" translate>Content Host Errata Management</div>
 
     <div data-block="actions">
-      <button class="btn btn-default"
+      <button class="btn btn-default fl"
               ng-disabled="table.numSelected === 0 || detailsTable.working"
               ng-click="fetchErrata()">
         <i class="fa fa-refresh"></i>
         {{ "Refresh Table" | translate }}
       </button>
 
-      <button class="btn btn-primary"
-              ng-disabled="table.numSelected === 0 || detailsTable.working || detailsTable.numSelected === 0"
-              ng-click="showConfirmDialog()">
-        <i class="fa fa-plus"></i>
-        {{ "Install Selected" | translate }}
-      </button>
+      <span class="input-group-btn">
+        <button class="btn btn-primary"
+                ng-disabled="table.numSelected === 0 || detailsTable.working || detailsTable.numSelected === 0"
+                ng-click="showConfirmDialog()">
+          <i class="fa fa-plus"></i>
+          {{ "Install Selected" | translate }}
+        </button>
+        <button class="btn btn-primary dropdown-toggle"
+                ng-hide="!remoteExecutionPresent"
+                ng-disabled="table.numSelected === 0 || detailsTable.working || detailsTable.numSelected === 0"
+                type="button" id="use-remote-execution" data-toggle="dropdown">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="use-remote-execution">
+          <li role="presentation"><a ng-click="installErrataViaKatelloAgent()" role="menuitem" tabindex="-1" href="#" translate>via Katello agent</a></li>
+          <li role="presentation"><a ng-click="installErrataViaRemoteExecution(false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
+          <li role="presentation"><a ng-click="installErrataViaRemoteExecution(true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
+        </ul>
+        <form id="errataBulkActionForm" name="errataBulkActionForm" class="form" method="post" action="/katello/remote_execution">
+          <input type="hidden" name="name" ng-value="errataActionFormValues.errata"/>
+          <input type="hidden" name="remote_action" ng-value="errataActionFormValues.remoteAction"/>
+          <input type="hidden" name="scoped_search" ng-value="errataActionFormValues.search"/>
+          <input type="hidden" name="host_ids" ng-value="errataActionFormValues.hostIds"/>
+          <input type="hidden" name="authenticity_token" ng-value="errataActionFormValues.authenticityToken"/>
+          <input type="hidden" name="customize" ng-value="errataActionFormValues.customize"/>
+        </form>
+      </span>
     </div>
 
     <span data-block="no-rows-message" translate>

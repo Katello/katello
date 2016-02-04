@@ -57,13 +57,33 @@
         </div>
 
         <div ng-hide="contentHost.readonly" class="fr">
-           <button class="btn btn-primary"
-                   translate
-                   ng-hide="denied('edit_content_hosts', contentHost)"
-                   ng-disabled="detailsTable.getSelected().length == 0"
-                   ng-click="openModal()">
-             Apply Selected
-           </button>
+          <span class="input-group-btn">
+            <button class="btn btn-primary"
+                    translate
+                    ng-hide="denied('edit_content_hosts', contentHost)"
+                    ng-disabled="detailsTable.getSelected().length == 0"
+                    ng-click="openModal()">
+              Apply Selected
+            </button>
+            <button class="btn btn-primary dropdown-toggle"
+                    ng-hide="!remoteExecutionPresent || denied('edit_content_hosts', contentHost)"
+                    ng-disabled="detailsTable.getSelected().length == 0"
+                    type="button" id="use-remote-execution" data-toggle="dropdown">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="use-remote-execution">
+              <li role="presentation"><a ng-click="performViaKatelloAgent()" role="menuitem" tabindex="-1" href="#" translate>via Katello agent</a></li>
+              <li role="presentation"><a ng-click="performViaRemoteExecution(false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
+              <li role="presentation"><a ng-click="performViaRemoteExecution(true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
+            </ul>
+            <form id="errataActionForm" method="post" action="/katello/remote_execution">
+              <input type="hidden" name="remote_action" value="errata_install"/>
+              <input type="hidden" name="name" ng-value="errataActionFormValues.errata"/>
+              <input type="hidden" name="host_ids" ng-value="errataActionFormValues.hostIds"/>
+              <input type="hidden" name="customize" ng-value="errataActionFormValues.customize"/>
+              <input type="hidden" name="authenticity_token" ng-value="errataActionFormValues.authenticityToken"/>
+            </form>
+          </span>
         </div>
     </span>
 

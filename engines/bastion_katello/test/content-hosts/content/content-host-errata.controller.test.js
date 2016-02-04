@@ -50,7 +50,8 @@ describe('Controller: ContentHostErrataController', function() {
         };
     });
 
-    beforeEach(inject(function($controller, $rootScope, $injector) {
+    beforeEach(inject(function($controller, $rootScope, $injector, $window) {
+        $window.AUTH_TOKEN = 'secret_token';
         $scope =  $rootScope.$new();
         $scope.host = host;
 

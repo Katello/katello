@@ -39,7 +39,8 @@ describe('Controller: ContentHostPackagesController', function() {
 
     });
 
-    beforeEach(inject(function($controller, $rootScope, MockResource) {
+    beforeEach(inject(function($controller, $rootScope, $window, MockResource) {
+        $window.AUTH_TOKEN = 'secret_token';
         $scope = $rootScope.$new();
         $scope.host = mockHost;
         $scope.$stateParams = {hostId: mockHost.id};

@@ -1,0 +1,13 @@
+<%#
+kind: job_template
+name: Remove Group - Katello SSH Default
+job_category: Katello
+description_format: 'Remove package group(s) %{package}'
+feature: katello_group_remove
+provider_type: SSH
+foreign_input_sets:
+- template: Package Action - SSH Default
+  exclude: action
+%>
+
+<%= render_template('Package Action - SSH Default', :action => 'group remove') %>

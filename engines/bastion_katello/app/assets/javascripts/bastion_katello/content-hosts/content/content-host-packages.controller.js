@@ -3,6 +3,8 @@
  * @name  Bastion.content-hosts.controller:ContentHostPackagesController
  *
  * @requires $scope
+ * @resource $timeout
+ * @resource $window
  * @requires ContentHostPackage
  * @requires translate
  * @requires Nutupane
@@ -11,8 +13,8 @@
  *   Provides the functionality for the content host packages list and actions.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostPackagesController',
-    ['$scope', 'HostPackage', 'translate', 'Nutupane',
-    function ($scope, HostPackage, translate, Nutupane) {
+    ['$scope', '$timeout', '$window', 'HostPackage', 'translate', 'Nutupane', 'BastionConfig',
+    function ($scope, $timeout, $window, HostPackage, translate, Nutupane, BastionConfig) {
         var packagesNutupane, packageActions, openEventInfo, errorHandler;
 
         openEventInfo = function (event) {
@@ -34,6 +36,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
         $scope.packageAction = {actionType: 'packageInstall'}; //default to packageInstall
         $scope.errorMessages = [];
         $scope.working = false;
+        $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
+        $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;
+        $scope.packageActionFormValues = {
+            authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, '')
+        };
 
         $scope.updateAll = function () {
             $scope.working = true;
@@ -53,11 +60,30 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
         };
 
         $scope.performPackageAction = function () {
+            if ($scope.remoteExecutionByDefault) {
+                $scope.performViaRemoteExecution();
+            } else {
+                $scope.performViaKatelloAgent();
+            }
+        };
+
+        $scope.performViaKatelloAgent = function () {
             var action, terms;
             action = $scope.packageAction.actionType;
             terms = $scope.packageAction.term.split(/ *, */);
             $scope.working = true;
             packageActions[action](terms);
+        };
+
+        $scope.performViaRemoteExecution = function(customize) {
+            $scope.packageActionFormValues.package = $scope.packageAction.term;
+            $scope.packageActionFormValues.remoteAction = $scope.packageAction.actionType;
+            $scope.packageActionFormValues.hostIds = $scope.contentHost.host.id;
+            $scope.packageActionFormValues.customize = customize;
+
+            $timeout(function () {
+                angular.element('#packageActionForm').submit();
+            }, 0);
         };
 
         packageActions = {
