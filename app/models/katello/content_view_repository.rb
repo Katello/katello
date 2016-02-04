@@ -2,7 +2,10 @@ module Katello
   class ContentViewRepository < Katello::Model
     self.include_root_in_json = false
 
-    ALLOWED_REPOSITORY_TYPES = [Repository::YUM_TYPE, Repository::DOCKER_TYPE]
+    ALLOWED_REPOSITORY_TYPES = [Repository::YUM_TYPE,
+                                Repository::DOCKER_TYPE,
+                                Repository::OSTREE_TYPE
+                               ]
 
     belongs_to :content_view, :inverse_of => :content_view_repositories,
                               :class_name => "Katello::ContentView"
