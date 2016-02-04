@@ -7,6 +7,7 @@ module Katello
         append_view_path('app/views/foreman')
         before_filter :find_resource_and_status, :only => [:pulp_storage, :pulp_status]
         alias_method_chain :action_permission, :katello
+        alias_method_chain :show, :content
 
         def pulp_storage
           pulp_connection = @proxy_status[:pulp] || @proxy_status[:pulpnode]
@@ -39,6 +40,11 @@ module Katello
             end
           end
         end
+      end
+
+      def show_with_content
+        @task_search_url = main_app.foreman_tasks_tasks_path(:search=>"resource_id = #{@smart_proxy.id} AND resource_type = #{@smart_proxy.class}")
+        render 'foreman/smart_proxies/show', :layout => 'katello/layouts/foreman_with_bastion'
       end
 
       private

@@ -1,0 +1,44 @@
+<br />
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th translate>Content View Name</th>
+      <th translate>Composite</th>
+      <th translate>Last Published</th>
+      <th translate>Hosts</th>
+      <th translate>Products</th>
+      <th translate>Yum repos</th>
+      <th translate>Docker repos</th>
+      <th translate>Packages</th>
+      <th translate>Errata</th>
+      <th translate>Puppet modules</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat-start="env in syncStatus.lifecycle_environments">
+      <td colspan="10"
+          ng-click="toggleExpandEnvironment(env)"
+          class="expander {{isEnvronmentExpanded(env) ? '' : 'collapsed'}}">
+        <span class="caret"></span>
+        {{ env.name }}
+      </td>
+    </tr>
+    <tr ng-repeat-end ng-repeat="cv in env.content_views" ng-show="isEnvronmentExpanded(env)">
+      <td>
+        <a href="/content_views/{{cv.id}}/versions" target="_self">
+          {{ cv.name }}
+        </a>
+      </td>
+      <td>{{ cv.composite | booleanToYesNo }}</td>
+      <td>{{ cv.last_published }}</td>
+      <td>{{ cv.counts.content_hosts }}</td>
+      <td>{{ cv.counts.products }}</td>
+      <td>{{ cv.counts.yum_repositories }}</td>
+      <td>{{ cv.counts.docker_repositories }}</td>
+      <td>{{ cv.counts.packages }}</td>
+      <td>{{ cv.counts.errata }}</td>
+      <td>{{ cv.counts.puppet_modules }}</td>
+    </td>
+  </tbody>
+</table>

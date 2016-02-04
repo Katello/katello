@@ -54,9 +54,16 @@ module Katello
             end
 
             def self.pulp_config(user_remote_id, &_block)
-              uri = URI.parse(SETTINGS[:katello][:pulp][:url])
+              Katello.pulp_server = runcible_instance(SETTINGS[:katello][:pulp][:url], user_remote_id)
+              yield if block_given?
+            ensure
+              Katello.pulp_server = nil if block_given?
+            end
 
-              Katello.pulp_server = Runcible::Instance.new(
+            def self.runcible_instance(pulp_url, user_remote_id)
+              uri = URI.parse(pulp_url)
+
+              Runcible::Instance.new(
                 :url      => "#{uri.scheme}://#{uri.host.downcase}",
                 :api_path => uri.path,
                 :user     => user_remote_id,
@@ -69,9 +76,6 @@ module Katello
                               :info       => true,
                               :debug      => true }
               )
-              yield if block_given?
-            ensure
-              Katello.pulp_server = nil if block_given?
             end
 
             def self.cp_config(cp_oauth_header)

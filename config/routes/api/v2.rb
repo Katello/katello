@@ -21,6 +21,8 @@ Katello::Engine.routes.draw do
               get :lifecycle_environments
               get :available_lifecycle_environments
               post :sync
+              get :sync, :action => :sync_status
+              delete :sync, :action => :cancel_sync
               post '/lifecycle_environments' => 'capsule_content#add_lifecycle_environment'
               delete '/lifecycle_environments/:environment_id' => 'capsule_content#remove_lifecycle_environment'
             end

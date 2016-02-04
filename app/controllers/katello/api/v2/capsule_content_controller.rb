@@ -6,52 +6,72 @@ module Katello
 
     before_filter :find_capsule
     before_filter :find_environment, :only => [:add_lifecycle_environment, :remove_lifecycle_environment]
+    before_filter :find_optional_organization, :only => [:sync_status]
 
     def_param_group :lifecycle_environments do
-      param :id, Integer, :desc => 'Id of the capsule', :required => true
-      param :organization_id, Integer, :desc => 'Id of the organization to limit environments on'
+      param :id, Integer, :desc => N_('Id of the capsule'), :required => true
+      param :organization_id, Integer, :desc => N_('Id of the organization to limit environments on')
     end
 
     def_param_group :update_lifecycle_environments do
-      param :id, Integer, :desc => 'Id of the capsule', :required => true
-      param :environment_id, Integer, :desc => 'Id of the lifecycle environment', :required => true
+      param :id, Integer, :desc => N_('Id of the capsule'), :required => true
+      param :environment_id, Integer, :desc => N_('Id of the lifecycle environment'), :required => true
     end
 
-    api :GET, '/capsules/:id/content/lifecycle_environments', 'List the lifecycle environments attached to the capsule'
+    api :GET, '/capsules/:id/content/lifecycle_environments', N_('List the lifecycle environments attached to the capsule')
     param_group :lifecycle_environments
     def lifecycle_environments
       environments = capsule_content.lifecycle_environments(params[:organization_id]).readable
       respond_for_lifecycle_environments_index(environments)
     end
 
-    api :GET, '/capsules/:id/content/available_lifecycle_environments', 'List the lifecycle environments not attached to the capsule'
+    api :GET, '/capsules/:id/content/available_lifecycle_environments', N_('List the lifecycle environments not attached to the capsule')
     param_group :lifecycle_environments
     def available_lifecycle_environments
       environments = capsule_content.available_lifecycle_environments(params[:organization_id]).readable
       respond_for_lifecycle_environments_index(environments)
     end
 
-    api :POST, '/capsules/:id/content/lifecycle_environments', 'Add lifecycle environments to the capsule'
+    api :POST, '/capsules/:id/content/lifecycle_environments', N_('Add lifecycle environments to the capsule')
     param_group :update_lifecycle_environments
     def add_lifecycle_environment
       capsule_content.add_lifecycle_environment(@environment)
       respond_for_lifecycle_environments_index(capsule_content.lifecycle_environments)
     end
 
-    api :DELETE, '/capsules/:id/content/lifecycle_environments/:environment_id',  'Remove lifecycle environments from the capsule'
+    api :DELETE, '/capsules/:id/content/lifecycle_environments/:environment_id', N_('Remove lifecycle environments from the capsule')
     param_group :update_lifecycle_environments
     def remove_lifecycle_environment
       capsule_content.remove_lifecycle_environment(@environment)
       respond_for_lifecycle_environments_index(capsule_content.lifecycle_environments)
     end
 
-    api :POST, '/capsules/:id/content/sync',  'Synchronize the content to the capsule'
-    param :id, Integer, :desc => 'Id of the capsule', :required => true
-    param :environment_id, Integer, :desc => 'Id of the environment to limit the synchronization on'
+    api :POST, '/capsules/:id/content/sync', N_('Synchronize the content to the capsule')
+    param :id, Integer, :desc => N_('Id of the capsule'), :required => true
+    param :environment_id, Integer, :desc => N_('Id of the environment to limit the synchronization on')
     def sync
       find_environment if params[:environment_id]
       task = async_task(::Actions::Katello::CapsuleContent::Sync, capsule_content, :environment => @environment)
       respond_for_async :resource => task
+    end
+
+    api :GET, '/capsules/:id/content/sync', N_('Get current capsule synchronization status')
+    param :id, Integer, :desc => N_('Id of the capsule'), :required => true
+    param :organization_id, Integer, :desc => N_('Id of the organization to get the status for'), :required => false
+    def sync_status
+      @capsule_content = capsule_content
+      @lifecycle_environments = @capsule_content.lifecycle_environments(@organization)
+    end
+
+    api :DELETE, '/capsules/:id/content/sync', N_('Cancel running capsule synchronization.')
+    param :id, Integer, :desc => N_('Id of the capsule'), :required => true
+    def cancel_sync
+      tasks = capsule_content.cancel_sync
+      if tasks.empty?
+        render_message _('There\'s no running synchronization for this capsule.')
+      else
+        render_message _('Trying to cancel the synchronization...')
+      end
     end
 
     protected

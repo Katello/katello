@@ -1,4 +1,5 @@
 BASTION_MODULES.push(
+    'Bastion.capsule-content',
     'Bastion.activation-keys',
     'Bastion.content-views',
     'Bastion.content-views.versions',

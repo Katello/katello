@@ -53,6 +53,46 @@ module Katello
       @consumer
     end
 
+    def sync_tasks
+      ForemanTasks::Task.for_resource(self.capsule)
+    end
+
+    def active_sync_tasks
+      sync_tasks.where(:result => 'pending')
+    end
+
+    def last_failed_sync_tasks
+      sync_tasks.where('started_at > ?', last_sync_time).where.not(:result => 'pending')
+    end
+
+    def last_sync_time
+      task = sync_tasks.where.not(:ended_at => nil).where(:result => 'success').order(:ended_at).last
+      task.ended_at unless task.nil?
+    end
+
+    def environment_syncable?(env)
+      last_sync_time.nil? || env.content_view_environments.where('updated_at > ?', last_sync_time).any?
+    end
+
+    def pulp_repositories_data(environment = nil, content_view = nil)
+      @pulp_repositories ||= @capsule.pulp_repositories
+
+      repos = Katello::Repository
+      repos = repos.in_environment(environment) if environment
+      repos = repos.in_content_views([content_view]) if content_view
+      puppet_envs = Katello::ContentViewPuppetEnvironment
+      puppet_envs = puppet_envs.in_environment(environment) if environment
+      puppet_envs = puppet_envs.in_content_view(content_view) if content_view
+
+      repo_ids = repos.pluck(:pulp_id) + puppet_envs.pluck(:pulp_id)
+
+      @pulp_repositories.select { |r| repo_ids.include?(r['id']) }
+    end
+
+    def cancel_sync
+      active_sync_tasks.map(&:cancel)
+    end
+
     def ==(other)
       other.class == self.class && other.capsule == capsule
     end
