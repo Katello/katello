@@ -89,6 +89,17 @@ module Katello
           "#{reason['attributes']['name']}: #{reason['message']}"
         end
       end
+
+      def self.distribution_to_puppet_os(name)
+        name = name.downcase
+        if name =~ /red\s*hat/
+          'RedHat'
+        elsif name =~ /centos/
+          'CentOS'
+        elsif name =~ /fedora/
+          'Fedora'
+        end
+      end
     end
   end
 end

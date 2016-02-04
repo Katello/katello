@@ -44,6 +44,21 @@ module Katello
 
         assert_equal ["Red Hat Server: Not supported by a valid subscription."], @consumer.compliance_reasons
       end
+
+      def test_distribution_to_puppet_os
+        assert_equal 'RedHat', Candlepin::Consumer.distribution_to_puppet_os('Red Hat Enterprise Linux Server')
+        assert_equal 'RedHat', Candlepin::Consumer.distribution_to_puppet_os('Red Hat Enterprise Linux Desktop')
+        assert_equal 'RedHat', Candlepin::Consumer.distribution_to_puppet_os('Redhat')
+        assert_equal 'RedHat', Candlepin::Consumer.distribution_to_puppet_os('something Red hat')
+
+        assert_equal 'Fedora', Candlepin::Consumer.distribution_to_puppet_os('Fedora')
+        assert_equal 'Fedora', Candlepin::Consumer.distribution_to_puppet_os('fedora')
+
+        assert_equal 'CentOS', Candlepin::Consumer.distribution_to_puppet_os('CentOS')
+        assert_equal 'CentOS', Candlepin::Consumer.distribution_to_puppet_os('centosGood')
+
+        assert_equal nil, Candlepin::Consumer.distribution_to_puppet_os('RedHot')
+      end
     end
   end
 end
