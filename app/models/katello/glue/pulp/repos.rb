@@ -254,6 +254,7 @@ module Katello
 
       def add_repo(label, name, url, repo_type, unprotected = false, gpg = nil, checksum_type = nil)
         unprotected = unprotected.nil? ? false : unprotected
+        download_policy = Setting[:default_download_policy] if download_policy.blank? && yum?
         rel_path = if repo_type == 'docker'
                      Glue::Pulp::Repos.custom_docker_repo_path(self.library, self, label)
                    else
