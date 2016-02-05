@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :docker_tag, :class => Katello::DockerTag do
     sequence(:name) { |n| "2.#{n}" }
     repository :docker_repository
-    docker_image
+    docker_manifest
   end
 
   trait :latest do

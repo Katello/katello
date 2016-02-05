@@ -13,7 +13,7 @@ end
 
 node :content_counts do |repo|
   {
-    :docker_image => repo.docker_images.count,
+    :docker_manifest => repo.docker_manifests.count,
     :docker_tag => repo.docker_tags.count,
     :rpm => repo.rpms.count,
     :package => repo.rpms.count,

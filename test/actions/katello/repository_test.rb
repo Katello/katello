@@ -101,21 +101,21 @@ module ::Actions::Katello::Repository
     end
   end
 
-  class RemoveDockerImagesTest < TestBase
+  class RemoveDockerManifestsTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::RemoveContent }
     let(:docker_repo) { katello_repositories(:redis) }
     let(:uuids) { ["abc123", "def123", "ghi123"] }
 
     it 'plans' do
       uuids.each do |str|
-        docker_repo.docker_images.create!(:image_id => str) do |image|
-          image.uuid = str
+        docker_repo.docker_manifests.create!(:name => str) do |manifest|
+          manifest.uuid = str
         end
       end
 
       action.expects(:action_subject).with(docker_repo)
-      plan_action action, docker_repo, docker_repo.docker_images
-      assert_empty docker_repo.docker_images.reload
+      plan_action action, docker_repo, docker_repo.docker_manifests
+      assert_empty docker_repo.docker_manifests.reload
     end
   end
 
@@ -246,7 +246,7 @@ module ::Actions::Katello::Repository
     it 'plans' do
       action = create_action action_class
       plan_action(action, source_repo, target_repo)
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::CopyDockerImage,
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::CopyDockerManifest,
                                 source_pulp_id: source_repo.pulp_id,
                                 target_pulp_id: target_repo.pulp_id)
 

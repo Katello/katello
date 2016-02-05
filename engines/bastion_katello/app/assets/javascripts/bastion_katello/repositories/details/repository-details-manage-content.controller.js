@@ -10,14 +10,14 @@
  * @requires Package
  * @requires PackageGroup
  * @requires PuppetModule
- * @requires DockerImage
+ * @requires DockerManifest
  *
  * @description
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryManageContentController',
-    ['$scope', '$state', 'translate', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerImage',
-    function ($scope, $state, translate, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerImage) {
+    ['$scope', '$state', 'translate', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerManifest',
+    function ($scope, $state, translate, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerManifest) {
         var currentState, contentTypes;
 
         function success(response, selected) {
@@ -48,7 +48,7 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
             'packages': { type: Package },
             'package-groups': { type: PackageGroup },
             'puppet-modules': { type: PuppetModule },
-            'docker-images': { type: DockerImage }
+            'docker-manifests': { type: DockerManifest }
         };
 
         $scope.contentNutupane = new Nutupane(contentTypes[currentState].type, {
@@ -73,20 +73,6 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
 
         $scope.clearTaskId = function () {
             $scope.generationTaskId = undefined;
-        };
-
-        $scope.formatRepoDockerTags = function (image, repoId) {
-            var tags = '';
-
-            if (!_.isEmpty(image.tags)) {
-                tags = _.filter(image.tags, function (tag) {
-                    return tag["repository_id"] === repoId;
-                });
-
-                tags = _.pluck(tags, 'name').join(', ');
-            }
-
-            return tags;
         };
 
     }]

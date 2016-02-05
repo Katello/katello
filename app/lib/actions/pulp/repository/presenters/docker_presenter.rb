@@ -31,7 +31,7 @@ module Actions
 
             if content_started?(download_details)
               if items_total(download_details) > 0
-                ret << (_("New images: %{count}.") % {:count => count_summary})
+                ret << (_("New blobs: %{count}.") % {:count => count_summary})
               end
             elsif sync_task["state"] == "running"
               ret << _("Processing metadata")
@@ -52,7 +52,7 @@ module Actions
           end
 
           def details(step_type)
-            task_progress_details.find do |step|
+            task_progress_details && task_progress_details.find do |step|
               step[:step_type] == step_type
             end
           end

@@ -1,9 +1,9 @@
 object @resource
 
 attributes :uuid => :id
-attributes :size, :image_id
+attributes :name, :schema_version, :digest, :downloaded
 
-child :docker_tags => :tags do
+child :docker_tag => :tag do
   attributes :repository_id
   attributes :name
 end

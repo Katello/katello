@@ -1,5 +1,5 @@
 describe('Controller: RepositoryManageContentController', function() {
-    var $scope, translate, Repository, Nutupane, PuppetModule, Package, PackageGroup, DockerImage;
+    var $scope, translate, Repository, Nutupane, PuppetModule, Package, PackageGroup, DockerManifest;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -41,7 +41,7 @@ describe('Controller: RepositoryManageContentController', function() {
             PuppetModule: PuppetModule,
             Package: Package,
             PackageGroup: PackageGroup,
-            DockerImage: DockerImage,
+            DockerManifest: DockerManifest,
         });
     }));
 
@@ -61,22 +61,6 @@ describe('Controller: RepositoryManageContentController', function() {
 
         expect(Repository.removeContent).toHaveBeenCalledWith({id: $scope.repository.id, uuids: ['foo']},
             jasmine.any(Function), jasmine.any(Function));
-    });
-
-    it('formats tags for a docker image', function() {
-        var repoId = 1,
-            tags,
-            image,
-            output = "latest, 2.11";
-
-        tags = [
-                {"name": "latest", "repository_id": 1},
-                {"name": "latest", "repository_id": 2},
-                {"name": "2.11",   "repository_id": 1}
-               ];
-        image = {"tags": tags};
-
-        expect($scope.formatRepoDockerTags(image, repoId)).toEqual(output);
     });
 
 });

@@ -1,5 +1,4 @@
 module Katello
-  # rubocop:disable ModuleLength
   module Glue::Pulp::Repo
     # TODO: move into submodules
     # rubocop:disable MethodLength
@@ -385,41 +384,30 @@ module Katello
         tmp_packages
       end
 
-      def index_db_docker_images
-        docker_tags.destroy_all
-
-        docker_images_json.each do |image_json|
-          image = DockerImage.where(:uuid => image_json[:_id]).first_or_create
-          image.update_from_json(image_json)
-          create_docker_tags(image, image_json[:tags])
+      def index_db_docker_manifests
+        docker_manifests_json.each do |manifest_json|
+          manifest = DockerManifest.where(:uuid => manifest_json[:_id]).first_or_create
+          manifest.update_from_json(manifest_json)
+          create_docker_tag(manifest, manifest_json[:tag])
         end
-
-        DockerImage.sync_repository_associations(self, pulp_docker_image_ids)
+        DockerManifest.sync_repository_associations(self, pulp_docker_manifest_ids)
       end
 
-      def docker_images_json
-        docker_images = []
-
-        # retrieve the docker image tags
-        repo_attrs = Katello.pulp_server.extensions.repository.retrieve_with_details(pulp_id)
-        tags = repo_attrs.try(:[], :scratchpad).try(:[], :tags) || []
-
-        pulp_docker_image_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
-          docker_images.concat(Katello.pulp_server.extensions.docker_image.find_all_by_unit_ids(sub_list))
+      def docker_manifests_json
+        docker_manifests = []
+        pulp_docker_manifest_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
+          docker_manifests.concat(Katello.pulp_server.extensions.docker_manifest.find_all_by_unit_ids(sub_list))
         end
-        # add the docker tags in
-        docker_images.each do |attrs|
-          attrs[:tags] = tags.select { |tag| tag[:image_id] == attrs[:image_id] }.map { |tag| tag[:tag] }
-        end
-        docker_images
+        docker_manifests
       end
 
-      def create_docker_tags(image, tags)
-        return if tags.empty?
+      def create_docker_tag(manifest, tag_name)
+        tag = unit_search(:type_ids => [Runcible::Extensions::DockerTag.content_type],
+                          :filters => { :unit => { :manifest_digest => manifest.digest,
+                                                   :name => tag_name } }).first
 
-        tags.each do |tag|
-          DockerTag.where(:repository_id => id, :docker_image_id => image.id, :name => tag).first_or_create
-        end
+        DockerTag.where(:repository_id => id, :docker_manifest_id => manifest.id,
+                        :name => tag[:metadata][:name], :uuid => tag[:metadata][:_id]).first_or_create
       end
 
       def package_group_categories(search_args = {})
@@ -436,18 +424,8 @@ module Katello
         Katello.pulp_server.extensions.repository.puppet_module_ids(self.pulp_id)
       end
 
-      def pulp_docker_image_ids
-        Katello.pulp_server.extensions.repository.docker_image_ids(self.pulp_id)
-      end
-
-      def docker_image_count
-        self.docker_images.count
-      end
-
-      def docker_image_tag_hash
-        docker_tags.map do |tag|
-          {:tag => tag.name, :image_id => tag.docker_image.image_id}
-        end
+      def pulp_docker_manifest_ids
+        Katello.pulp_server.extensions.repository.docker_manifest_ids(self.pulp_id)
       end
 
       def sync_schedule(date_and_time)
@@ -732,7 +710,7 @@ module Katello
     def index_content
       self.index_db_rpms
       self.index_db_errata
-      self.index_db_docker_images
+      self.index_db_docker_manifests
       self.index_db_puppet_modules
       self.index_db_package_groups
       self.import_distribution_data

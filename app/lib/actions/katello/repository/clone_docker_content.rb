@@ -4,7 +4,7 @@ module Actions
       class CloneDockerContent < Actions::Base
         def plan(source_repo, target_repo)
           sequence do
-            plan_action(Pulp::Repository::CopyDockerImage,
+            plan_action(Pulp::Repository::CopyDockerManifest,
                         source_pulp_id: source_repo.pulp_id,
                         target_pulp_id: target_repo.pulp_id)
             plan_action(Pulp::Repository::CopyDockerTag,

@@ -59,17 +59,17 @@ module Katello
       cv = katello_content_views(:library_view)
       cvv = cv.versions.first
       assert cvv.repositories.archived.docker_type.count > 0
-      image_count = 0
+      manifest_count = 0
       tag_count = 0
       cvv.repositories.archived.docker_type.each do |repo|
-        image = repo.docker_images.create!(:image_id => "abc123", :uuid => "123")
-        repo.docker_tags.create!(:name => "wat", :docker_image => image)
-        image_count += repo.docker_images.count
+        manifest = repo.docker_manifests.create!(:name => "abc123", :uuid => "123")
+        repo.docker_tags.create!(:name => "wat", :docker_manifest => manifest)
+        manifest_count += repo.docker_manifests.count
         tag_count += repo.docker_tags.count
       end
 
       assert cvv.repositories.archived.docker_type.count > 0
-      assert_equal image_count, cvv.docker_image_count
+      assert_equal manifest_count, cvv.docker_manifest_count
       assert_equal tag_count, cvv.docker_tag_count
     end
 

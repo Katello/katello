@@ -112,9 +112,9 @@
             <span ng-hide="repository.url" translate>N/A</span>
           </td>
           <td bst-table-cell>
-            <div ng-if="repository.content_counts.docker_image && repository.content_counts.docker_image > 0">
+            <div ng-if="repository.content_counts.docker_manifest && repository.content_counts.docker_manifest > 0">
               <span translate>
-                {{ repository.content_counts.docker_image }} Docker Images
+                {{ repository.content_counts.docker_manifest }} Docker Manifests
               </span>
             </div>
             <div ng-if="repository.content_counts.docker_tag && repository.content_counts.docker_tag > 0">

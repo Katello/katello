@@ -11,7 +11,7 @@ module Katello
         {:id => :debug, :name => _('Debug RPMs'), :products => {}},
         {:id => :beta, :name => _('Beta'), :products => {}},
         {:id => :isos, :name => _('ISOs'), :products => {}},
-        {:id => :docker_images, :name => _('Docker Images'), :products => {}},
+        {:id => :docker_manifests, :name => _('Docker Manifests'), :products => {}},
         {:id => :other, :name => _('Other'), :products => {}}
       ]
     end
@@ -24,7 +24,7 @@ module Katello
         product.productContent.each do |prod_content|
           name = prod_content.content.name
           if prod_content.content.type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
-            key = :docker_images
+            key = :docker_manifests
           elsif name.include?(" Beta ")
             key = :beta
           elsif name.include?("(Source RPMs)")

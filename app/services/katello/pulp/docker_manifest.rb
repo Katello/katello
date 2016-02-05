@@ -1,6 +1,6 @@
 module Katello
   module Pulp
-    class DockerImage < PulpContentUnit
+    class DockerManifest < PulpContentUnit
       CONTENT_TYPE = "docker"
     end
   end

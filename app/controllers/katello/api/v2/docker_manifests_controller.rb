@@ -1,12 +1,12 @@
 module Katello
-  class Api::V2::DockerImagesController < Api::V2::ApiController
-    apipie_concern_subst(:a_resource => N_("a docker image"), :resource => "docker_images")
+  class Api::V2::DockerManifestsController < Api::V2::ApiController
+    apipie_concern_subst(:a_resource => N_("a docker manifest"), :resource => "docker_manifests")
     include Katello::Concerns::Api::V2::RepositoryContentController
 
     private
 
     def resource_class
-      DockerImage
+      DockerManifest
     end
 
     def filter_by_content_view_filter(filter)

@@ -10,7 +10,7 @@ attributes :default
 attributes :description
 attributes :package_count
 attributes :puppet_module_count
-attributes :docker_image_count
+attributes :docker_manifest_count
 attributes :docker_tag_count
 
 node :errata_counts do |version|

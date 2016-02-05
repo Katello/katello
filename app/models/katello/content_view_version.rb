@@ -215,11 +215,11 @@ module Katello
       Katello::Rpm.in_repositories(self.repositories.archived).count
     end
 
-    def docker_image_count
-      image_counts = repositories.archived.docker_type.map do |repo|
-        repo.docker_images.count
+    def docker_manifest_count
+      manifest_counts = repositories.archived.docker_type.map do |repo|
+        repo.docker_manifests.count
       end
-      image_counts.sum
+      manifest_counts.sum
     end
 
     def docker_tags
@@ -239,8 +239,8 @@ module Katello
       errata
     end
 
-    def docker_images
-      DockerImage.in_repositories(archived_repos).uniq
+    def docker_manifests
+      DockerManifest.in_repositories(archived_repos).uniq
     end
 
     def package_groups

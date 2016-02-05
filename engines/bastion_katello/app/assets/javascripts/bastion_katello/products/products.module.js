@@ -180,11 +180,11 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         collapsed: true,
         templateUrl: 'repositories/details/views/repository-manage-puppet-modules.html'
     })
-    .state('products.details.repositories.manage-content.docker-images', {
-        url: '/repositories/:repositoryId/content/docker_images',
+    .state('products.details.repositories.manage-content.docker-manifests', {
+        url: '/repositories/:repositoryId/content/docker_manifests',
         permission: 'view_products',
         collapsed: true,
-        templateUrl: 'repositories/details/views/repository-manage-docker-images.html'
+        templateUrl: 'repositories/details/views/repository-manage-docker-manifests.html'
     });
 
     $stateProvider.state('products.details.tasks', {
