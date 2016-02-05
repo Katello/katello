@@ -30,6 +30,7 @@ module Katello
       param :content_type, String, :required => true, :desc => N_("type of repo (either 'yum', 'puppet' or 'docker')")
       param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.'")
       param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
+      param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
     end
 
     api :GET, "/repositories", N_("List of enabled repositories")
@@ -126,7 +127,7 @@ module Katello
       unprotected =  repo_params.key?(:unprotected) ? repo_params[:unprotected] : true
       repository = @product.add_repo(repo_params[:label], repo_params[:name], repo_params[:url],
                                      repo_params[:content_type], unprotected,
-                                     gpg_key, repository_params[:checksum_type])
+                                     gpg_key, repository_params[:checksum_type], repo_params[:download_policy])
       repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
       sync_task(::Actions::Katello::Repository::Create, repository, false, true)
       repository = Repository.find(repository.id)
@@ -188,6 +189,7 @@ module Katello
     param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.'")
     param :url, String, :desc => N_("the feed url of the original repository ")
     param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
+    param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
     def update
       repo_params = repository_params
       repo_params[:url] = nil if repository_params[:url].blank?
@@ -318,7 +320,7 @@ module Katello
     end
 
     def repository_params
-      keys = [:url, :gpg_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name]
+      keys = [:url, :gpg_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name, :download_policy]
       keys += [:label, :content_type] if params[:action] == "create"
       params.require(:repository).permit(*keys)
     end

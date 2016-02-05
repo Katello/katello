@@ -77,13 +77,15 @@ module Katello
     validates_with Validators::RepositoryUniqueAttributeValidator, :attributes => :label
     validates_with Validators::RepositoryUniqueAttributeValidator, :attributes => :name
     validates_with Validators::KatelloUrlFormatValidator,
-      :attributes => :url, :nil_allowed => proc { |o| o.custom? }, :field_name => :url,
-      :if => proc { |o| o.in_default_view? }
+      :attributes => :url, :nil_allowed => proc { |repo| repo.custom? }, :field_name => :url,
+      :if => proc { |repo| repo.in_default_view? }
     validates :content_type, :inclusion => {
       :in => ->(_) { Katello::RepositoryTypeManager.repository_types.keys },
       :allow_blank => false,
       :message => ->(_, _) { _("must be one of the following: %s") % Katello::RepositoryTypeManager.repository_types.keys.join(', ') }
     }
+    validates :download_policy, inclusion: { in: ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES }, if: :yum?
+    validate :ensure_no_download_policy, if: ->(repo) { !repo.yum? }
     validate :ensure_valid_docker_attributes, :if => :docker?
     validate :ensure_docker_repo_unprotected, :if => :docker?
 
@@ -372,6 +374,7 @@ module Katello
                      :content_id => self.content_id,
                      :content_view_version => to_version,
                      :content_type => self.content_type,
+                     :download_policy => download_policy,
                      :unprotected => self.unprotected) do |clone|
         clone.checksum_type = self.checksum_type
         clone.pulp_id = clone.clone_id(to_env, content_view, version.try(:version))
@@ -570,6 +573,12 @@ module Katello
       unless unprotected
         errors.add(:base, N_("Docker Repositories are not protected at this time. " \
                              "They need to be published via http to be available to containers."))
+      end
+    end
+
+    def ensure_no_download_policy
+      if !yum? && download_policy.present?
+        errors.add(:download_policy, N_("cannot be set for non-yum repositories."))
       end
     end
 

@@ -129,7 +129,8 @@ module Katello
           Runcible::Models::YumImporter.new(:ssl_ca_cert => self.feed_ca,
                                             :ssl_client_cert => self.feed_cert,
                                             :ssl_client_key => self.feed_key,
-                                            :feed => self.url)
+                                            :feed => self.url,
+                                            :download_policy => self.download_policy)
         when Repository::FILE_TYPE
           Runcible::Models::IsoImporter.new(:ssl_ca_cert => self.feed_ca,
                                             :ssl_client_cert => self.feed_cert,
