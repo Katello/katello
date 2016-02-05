@@ -4,8 +4,6 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
-        include Util::ThreadSession::UserModel
-
         has_many :task_statuses, :dependent => :destroy, :class_name => "Katello::TaskStatus"
         has_many :activation_keys, :dependent => :nullify, :class_name => "Katello::ActivationKey"
 
@@ -14,12 +12,14 @@ module Katello
         end
 
         def self.cp_oauth_header
-          fail Errors::UserNotSet, "unauthenticated to call a backend engine" if Thread.current[:cp_oauth_header].nil?
-          Thread.current[:cp_oauth_header]
+          { 'cp-user' => User.anonymous_admin.login }
         end
 
-        def cp_oauth_header
-          { 'cp-user' => self.username }
+        def self.cp_config(cp_oauth_header)
+          Thread.current[:cp_oauth_header] = cp_oauth_header
+          yield if block_given?
+        ensure
+          Thread.current[:cp_oauth_header] = nil if block_given?
         end
 
         # is the current user consumer? (rhsm)

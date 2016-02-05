@@ -7,7 +7,6 @@ module Katello
 
     def setup
       set_user
-      configure_runcible
 
       @fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
       @fedora_17_x86_64 = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])

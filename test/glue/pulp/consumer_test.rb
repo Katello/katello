@@ -7,7 +7,6 @@ module Katello
     include RepositorySupport
     def setup
       set_user
-      configure_runcible
       @simple_server = katello_systems(:simple_server)
       @simple_server.foreman_host = @host
       @simple_server.save!

@@ -38,7 +38,7 @@ module Katello
 
       describe "TaskStatus should have correct attributes for a completed task" do
         before do
-          Katello.pulp_server.resources.task.stubs(:poll).returns(pulp_task_without_error)
+          Runcible::Resources::Task.any_instance.stubs(:poll).returns(pulp_task_without_error)
           @t = PulpTaskStatus.using_pulp_task(pulp_task_with_error)
         end
         specify { @t.uuid.must_equal(pulp_task_without_error[:task_id]) }
@@ -50,7 +50,7 @@ module Katello
 
       describe "TaskStatus should have correct attributes for a failed task" do
         before do
-          Katello.pulp_server.resources.task.stubs(:poll).returns(pulp_task_with_error)
+          Runcible::Resources::Task.any_instance.stubs(:poll).returns(pulp_task_with_error)
           @t = PulpTaskStatus.using_pulp_task(pulp_task_with_error)
         end
         specify { @t.result.must_equal(:errors => [pulp_task_with_error[:exception], pulp_task_with_error[:traceback]]) }
@@ -60,27 +60,21 @@ module Katello
         before(:each) do
           disable_org_orchestration
           @organization = Organization.create!(:name => 'test_org', :label => 'test_org')
-          Katello.pulp_server.resources.task.stubs(:poll).returns(pulp_task_without_error)
+          Runcible::Resources::Task.any_instance.stubs(:poll).returns(pulp_task_without_error)
           @t = PulpTaskStatus.using_pulp_task(pulp_task_without_error) do |t|
             t.organization = @organization
             t.user = users(:one)
           end
           @t.save!
-
-          Katello.pulp_server.resources.task.stubs(:poll).returns(updated_pulp_task)
-        end
-
-        it "should fetch data from pulp" do
-          Katello.pulp_server.resources.task.expects(:poll).once.with(@t.uuid).returns(updated_pulp_task)
-          @t.refresh
+          Runcible::Resources::Task.any_instance.stubs(:poll).returns(updated_pulp_task)
         end
 
         it "should update attributes with values from pulp" do
           @t.refresh
 
-          @t.state = updated_pulp_task[:state]
-          @t.finish_time = updated_pulp_task[:finish_time]
-          @t.result = updated_pulp_task[:result]
+          assert_equal @t.state, updated_pulp_task[:state]
+          assert_equal @t.finish_time, updated_pulp_task[:finish_time]
+          assert_equal @t.result, updated_pulp_task[:result]
         end
       end
     end

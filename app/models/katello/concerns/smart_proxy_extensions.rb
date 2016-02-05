@@ -53,7 +53,7 @@ module Katello
       end
 
       def pulp_node
-        @pulp_node ||= User.runcible_instance(pulp_url, User.remote_user)
+        @pulp_node ||= Katello::Pulp::Server.config(pulp_url, User.remote_user)
       end
 
       def pulp_url

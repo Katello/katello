@@ -1,3 +1,5 @@
+require 'katello/util/data'
+
 module Katello
   module Resources
     require 'rest_client'
